@@ -1655,7 +1655,7 @@ class_header[] { ENTRY_DEBUG } :
 
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
-        compound_name_inner[false] (class_specifier)*
+        compound_name_inner[false] (specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : generic_type_constraint))*
@@ -1675,17 +1675,6 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
                 endMode();
         }
 ;
-
-class_specifier[]  { SingleElement element(this); ENTRY_DEBUG } :
-        {
-            startElement(SFUNCTION_SPECIFIER);
-        }
-    (
-        FINAL | OVERRIDE
-
-    )
-
-    ;
 
 // Each instance of an access specifier defines a region in the class
 access_specifier_region[] { ENTRY_DEBUG } :
