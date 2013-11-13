@@ -194,12 +194,12 @@ COMMENT_TEXT {
         '\051' /* ')' */ { if(rawstring) {
 
                 int pos = 0;
-                while(pos < delimiter.size() && LA(1) == delimiter[pos]) {
+                while(pos < delimiter.size() && LA(1) == delimiter[pos] && LA(1) != '\n') {
                     ++pos;
                     consume();
                 }
 
-                if(pos == delimiter.size()) {
+                if(pos == delimiter.size() || LA(1) =='\n') {
                     rawstring = false;
                 }
 
