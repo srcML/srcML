@@ -76,6 +76,7 @@ STRING_START :
             // note that the "abc does not end at the end of this line,
             // but the #define must end, so EOL is not a valid string character
             '"' {
+
                 if(rawstring) {
                     while(LA(1) != '(' && LA(1) != '\n') {
                         delimiter += LA(1);
@@ -83,10 +84,9 @@ STRING_START :
                     }
 
                     if(LA(1) == '\n') {
-                        rawstring = false;
-                        delimiter = "";
+                         delimiter = "";
                     } else {
-                        consume();
+                        match('(');
                     }
 
                 }
