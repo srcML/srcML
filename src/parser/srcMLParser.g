@@ -3215,11 +3215,26 @@ function_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         ({ LA(1) != ASYNC }? specifier |
 
-        // pure virtual specifier
-        EQUAL literal |
+        // pure virtual specifier = default and = delete
+        EQUAL (literal | function_equal_specifier) |
 
         simple_name_optional_template)
 ;
+
+function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // only markup strings in literal option
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        (
+
+            DEFAULT | DELETE
+
+
+        )
+
+;
+
 
 specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="constructor">
+
+<unit>
+<class>class <name>A</name> <block>{<private type="default"> <constructor_decl><specifier>virtual</specifier> <name>A</name><parameter_list>()</parameter_list> = 0;</constructor_decl> </private>}</block>;</class>
+</unit>
+
+<unit>
+<class>class <name>NonCopyable</name> <block>{<private type="default"> <constructor_decl><name>NonCopyable</name><parameter_list>()</parameter_list> = <specifier>default</specifier>;</constructor_decl> </private>}</block>;</class>
+</unit>
+
+<unit>
+<class>class <name>NonCopyable</name> <block>{<private type="default"> <constructor_decl><name>NonCopyable</name><parameter_list>(<param><decl><type><specifier>const</specifier></type> <name>NonCopyable</name>&amp;</decl></param>)</parameter_list> = <specifier>delete</specifier>;</constructor_decl> </private>}</block>;</class>
+</unit>
+
+</unit>
