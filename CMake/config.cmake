@@ -35,8 +35,6 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
       set(CMAKE_CXX_FLAGS_RELEASE "-O3 -NDEBUG")
 endif()
 
-
-
 # Adding SVN Configuration.
 option(ENABLE_SVN_INTEGRATION "Build with SVN integration." ON)
 set_property(GLOBAL PROPERTY SVN_ENABLED ${ENABLE_SVN_INTEGRATION})

@@ -20,3 +20,8 @@
 
 srcMLExec(src2srcml src2srcml.cpp srcml_static)
 srcMLExec(srcml2src srcml2src.cpp srcml_static)
+
+install(TARGETS src2srcml srcml2src
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)

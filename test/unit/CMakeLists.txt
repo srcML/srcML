@@ -52,6 +52,8 @@ addUnitTest(test_Language test_Language.cpp)
 addUnitTest(test_Options test_Options.cpp)
 addUnitTest(test_State test_State.cpp)
 addUnitTest(test_UTF8CharBuffer test_UTF8CharBuffer.cpp ${LIBXML2_LIBRARIES})
+copyDependentFile(test_UTF8CharBuffer.cpp)
+
 addUnitTest(test_srcMLState test_srcMLState.cpp)
 addUnitTest(test_srcMLStateStack test_srcMLStateStack.cpp)
 addUnitTest(test_srcMLTranslatorCore test_srcMLTranslatorCore.cpp ${LIBXML2_LIBRARIES})

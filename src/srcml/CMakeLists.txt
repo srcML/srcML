@@ -26,4 +26,7 @@ add_library(tempLib STATIC ${SRCML_HEADERS} ${SRCML_SOURCE})
 
 srcMLExec(srcml srcml.cpp tempLib srcml_static)
 
-
+install(TARGETS srcml
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)

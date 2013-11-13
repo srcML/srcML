@@ -27,7 +27,6 @@ get_property(BOOST_PROGRAM_OPTIONS_LIB GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB
 get_property(ANTLR_LIB GLOBAL PROPERTY ANTLR_LIB)
 get_property(LIBARCHIVE_LIBS  GLOBAL PROPERTY LIBARCHIVE_LIBS)
 
-# 
 # buildLib
 #  Used to help with the creation of the srcML library.
 #  - LIB_NAME is the name of the library and target
@@ -45,3 +44,9 @@ set_target_properties(srcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_B
 
 buildLib(srcml_shared SHARED)
 set_target_properties(srcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+
+install(TARGETS srcml_shared srcml_static
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)

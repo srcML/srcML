@@ -37,3 +37,6 @@ macro(addUnitTest TEST_NAME FILE_NAME)
     add_test(${TEST_NAME} ${TEST_NAME})
 endmacro()
 
+macro(copyDependentFile TARGET_NAME )
+    file(COPY ${TARGET_NAME} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME} )
+endmacro()
