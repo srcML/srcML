@@ -226,6 +226,7 @@ tokens {
     SYNCHRONIZED;
     NATIVE;
     STRICTFP;
+
 }
 
 {
@@ -362,6 +363,10 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "false"         , FALSE         , LANGUAGE_OO }, 
         { "true"          , TRUE          , LANGUAGE_OO }, 
 
+        // C++ specifiers
+        { "final"          , FINAL          , LANGUAGE_CXX_ONLY },
+        { "override"       , OVERRIDE       , LANGUAGE_CXX_ONLY },
+ 
         // specifiers that are not needed for parsing
         /*
           { "mutable"     , MUTABLE       , LANGUAGE_CXX_FAMILY }, 
@@ -399,14 +404,14 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "synchronized"  , SYNCHRONIZED  , LANGUAGE_JAVA },
 
         // native
-        { "native"  , NATIVE  , LANGUAGE_JAVA },
+        { "native"        , NATIVE        , LANGUAGE_JAVA },
 
         // strictfp
-        { "strictfp"  , STRICTFP  , LANGUAGE_JAVA },
-        { "transient"      , TRANSIENT      , LANGUAGE_JAVA }, 
+        { "strictfp"      , STRICTFP      , LANGUAGE_JAVA },
+        { "transient"     , TRANSIENT     , LANGUAGE_JAVA }, 
 
         // catch seperator
-	    { "|"             , BAR         , LANGUAGE_JAVA }, 
+	    { "|"             , BAR           , LANGUAGE_JAVA }, 
 
 
         // add all C# specific keywords to the literals table
