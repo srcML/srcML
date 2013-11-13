@@ -20,4 +20,20 @@
 # 
 # Testing macros/functions and additional variables. These functions will also allow
 # for the specification of additional resource locations.
-# 
+#
+
+#
+# addUnitTest
+# Creates a unit test from a given file with a given name.
+# - TEST_NAME the name of the test.
+# - FILE_NAME the name of the unit test file.
+# All arguments after the file name are considered to be linker arguments.
+# By default all tests are linked against the srcml_static library.
+#
+#
+macro(addUnitTest TEST_NAME FILE_NAME)
+    add_executable(${TEST_NAME} ${FILE_NAME})
+    target_link_libraries(${TEST_NAME} srcml_static ${ARGN})
+    add_test(${TEST_NAME} ${TEST_NAME})
+endmacro()
+

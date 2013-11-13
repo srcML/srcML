@@ -45,6 +45,7 @@ add_definitions(-fPIC)
 if(CMAKE_COMPILER_IS_GNUXX)
     add_definitions(-fPIC)
 endif()
+
 get_property(SVN_ENABLED GLOBAL PROPERTY SVN_ENABLED)
 if(${SVN_ENABLED})
     add_definitions(-DSVN)

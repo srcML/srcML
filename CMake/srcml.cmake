@@ -18,6 +18,7 @@
 
 
 include (config)
+include (testing)
 include (doc)
 include (build)
 include (buildExec)

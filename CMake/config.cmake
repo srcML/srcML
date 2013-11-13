@@ -25,9 +25,17 @@
 #       include
 #       lib
 
-MESSAGE(STATUS "Fix file: config.cmake")
+# set(GLOBAL_FLAGS "")
+# set(RELEASE_FLAGS "")
+# set(DBG_FLAGS "")
+# Adding Compiler Configuration options
+if(${CMAKE_COMPILER_IS_GNUCXX})
+      set(CMAKE_CXX_FLAGS "-pedantic -Wall -Wno-long-long")
+      set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -DDEBUG --coverage -fprofile-arcs -DNO_DLLOAD")
+      set(CMAKE_CXX_FLAGS_RELEASE "-O3 -NDEBUG")
+endif()
 
-MESSAGE(STATUS "Configuring Project")
+
 
 # Adding SVN Configuration.
 option(ENABLE_SVN_INTEGRATION "Build with SVN integration." ON)
