@@ -75,14 +75,19 @@ STRING_START :
             // #define a "abc
             // note that the "abc does not end at the end of this line,
             // but the #define must end, so EOL is not a valid string character
-            '"' { if(rawstring) {
-                    //rawstring = false;
-                    //std::string delimiter;
-                    while(LA(1) != '(') {
+            '"' {
+
+                if(rawstring) {
+                    while(LA(1) != '(' && LA(1) != '\n') {
                         delimiter += LA(1);
                         consume();
                     }
-                    consume();
+
+                    if(LA(1) == '\n') {
+                         delimiter = "";
+                    } else {
+                        match('(');
+                    }
 
                 }
                 changetotextlexer(STRING_END); } |
