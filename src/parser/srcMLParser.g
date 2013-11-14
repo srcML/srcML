@@ -1655,7 +1655,7 @@ class_header[] { ENTRY_DEBUG } :
 
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
-        compound_name_inner[false]
+        { LA(1) != FINAL }? compound_name_inner[false] (specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : generic_type_constraint))*
@@ -2398,7 +2398,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
-                { _tokenSet_21.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON))}?
+                { _tokenSet_21.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || LA(1) == CONST]
                 (specifier | (SIGNAL COLON)=>SIGNAL)
@@ -2736,7 +2736,7 @@ lead_type_identifier[] { ENTRY_DEBUG } :
 //        (macro_call_paren identifier)=> macro_call |
 
         // typical type name
-        { LA(1) != ASYNC }?
+        { LA(1) != ASYNC && (inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE)) }?
         compound_name |
 
         pure_lead_type_identifier
@@ -3084,7 +3084,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
-            SIGNAL |
+            SIGNAL | FINAL | OVERRIDE |
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |

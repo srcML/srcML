@@ -21,4 +21,12 @@
 <function_decl><type><name>NonCopyable</name> &amp;</type> <name>operator=</name><parameter_list>(<param><decl><type><specifier>const</specifier></type> <name>NonCopyable</name>&amp;</decl></param>)</parameter_list> = <specifier>delete</specifier>;</function_decl>
 </unit>
 
+<unit>
+<function_decl><type><specifier>virtual</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <specifier>final</specifier>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><specifier>virtual</specifier> <name>void</name></type> <name>some_func</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list> <specifier>override</specifier>;</function_decl>
+</unit>
+
 </unit>
