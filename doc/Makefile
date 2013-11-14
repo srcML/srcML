@@ -1,8 +1,8 @@
 MAN_PAGES= src2srcml.1 srcml2src.1
 HTML_PAGES = src2srcml.html srcml2src.html
 MAN_GZIP= src2srcml.1.gz srcml2src.1.gz
-SRC2SRCML=../bin/src2srcml
-SRCML2SRC=../bin/srcml2src
+SRC2SRCML=../build/src2srcml
+SRCML2SRC=../build/srcml2src
 
 DOCBOOK2XMAN=${firstword ${wildcard /usr/bin/db2x_docbook2man /usr/bin/docbook2x-man /opt/local/bin/docbook2man /usr/local/bin/docbook2man}}
 MAN2HTML=${firstword ${wildcard /usr/bin/man2html /opt/local/bin/man2html} /usr/local/bin/man2html}
@@ -36,7 +36,7 @@ src2srcml.html : src2srcml.1
 srcml2src.html : srcml2src.1
 	man ./$< | ${MAN2HTML} | tail -n +3 > $@
 
-OPTION_SRC= ../src/src2srcml.cpp ../src/srcml2src.cpp ../src/srcmlapps.hpp ../src/srcmlns.hpp
+OPTION_SRC= ../src/oldclient/src2srcml.cpp ../src/oldclient/srcml2src.cpp ../src/srcml/srcmlapps.hpp ../src/parser/srcmlns.hpp
 option.dtd : ${OPTION_SRC}
 	${ECHO} -n "<!ENTITY DATE \"" > option.dtd
 	date | perl -p -e "s|\n||" >> option.dtd
