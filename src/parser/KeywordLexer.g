@@ -227,6 +227,8 @@ tokens {
     NATIVE;
     STRICTFP;
 
+    CONSTEXPR;
+
 }
 
 {
@@ -374,6 +376,8 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         */
 
         // add all C++ specific keywords to the literals table
+        { "constexpr"     , CONSTEXPR        , LANGUAGE_CXX_ONLY }, 
+
         // concepts
 //        { "auto"          , AUTO          , LANGUAGE_CXX_11 }, 
 
