@@ -29,8 +29,7 @@ WIN_ZIP=${BASE}-Win.zip
 # directories
 SRC_DIR_BASE=${BASE}-src
 SRC_DIR=${SRC_DIR_BASE}/src
-OBJ_DIR=${SRC_DIR_BASE}/obj
-BIN_DIR=${SRC_DIR_BASE}/bin
+BIN_DIR=${SRC_DIR_BASE}/build
 DOC_DIR=${SRC_DIR_BASE}/doc
 WINBIN_DIR=${BASE}-windows
 DLL_DIR=../../../dlls
@@ -66,11 +65,10 @@ exp :
 	@echo ${GITREVISION}
 	make cleansrc
 	mkdir ${SRC_DIR_BASE}
-	cd ..; git archive master src doc | tar xv -C dist/${SRC_DIR_BASE}
+	cd ..; git archive master CMakeLists.txt CMake src doc | tar xv -C dist/${SRC_DIR_BASE}
 	git log -n 1 --remotes --format="Trunk ${GITREVISION} %cd" > ${SRC_DIR_BASE}/src/VERSION
 	${ECHO} "${GITREVISION}" > ${SRC_DIR_BASE}/src/REVISION
-	mkdir ${SRC_DIR_BASE}/obj
-	mkdir ${SRC_DIR_BASE}/bin
+	mkdir ${SRC_DIR_BASE}/build
 
 clean :
 	make cleansrc
@@ -85,22 +83,22 @@ cleansrc :
 src : ${SRC_TAR_GZ} ${SRC_ZIP}
 
 ${SRC_TAR_GZ} : exp
-	tar czf $@ ${SRC_DIR} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
+	tar czf $@ ${SRC_DIR} ${BIN_DIR} ${DOC_DIR}
 	gunzip --test $@
 
 ${SRC_ZIP} : exp
-	zip -orql $@ ${SRC_DIR} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
+	zip -orql $@ ${SRC_DIR} ${BIN_DIR} ${DOC_DIR}
 	unzip -uq $@
 
 ##
 # bin
 bin : ${SRC_TAR_GZ}
 	tar xzf ${SRC_TAR_GZ}
-	cd ${SRC_DIR} && cmake . && make
+	cd ${SRC_DIR_BASE} && cmake . && make
 	cd ${DOC_DIR} && make
 	strip ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
 	mkdir ${BASE} && ${CP} ${DIST_FILES} ${BASE}
-	( test -e ${LIBSRCML_SO} && cp ${LIBSRCML_SO} ${BASE} ) || ( test -e ${LIBSRCML_DYLIB} && cp ${LIBSRCML_DYLIB} ${BASE} )
+#	( test -e ${LIBSRCML_SO} && cp ${LIBSRCML_SO} ${BASE} ) || ( test -e ${LIBSRCML_DYLIB} && cp ${LIBSRCML_DYLIB} ${BASE} )
 	tar czf ${UNIX_TAR_GZ} ${BASE}
 
 windows : ${SRC_ZIP}
