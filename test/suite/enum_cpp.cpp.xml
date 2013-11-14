@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="decl_simple" filename="enum_cpp">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="enum" filename="enum_cpp">
 
 <unit>
 <decl_stmt><decl><type>enum <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<enum>enum <name>Enum2</name> : <type><name>unsigned</name> <name>int</name></type>;</enum>
+</unit>
+
+<unit>
+<enum>enum class <name>Enum3</name>;</enum>
+</unit>
+
+<unit>
+<enum>enum class <name>Enum4</name> : <type><name>unsigned</name> <name>int</name></type>;</enum>
 </unit>
 
 <unit>
