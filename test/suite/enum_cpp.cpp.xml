@@ -9,4 +9,8 @@
 <decl_stmt><decl><type><specifier>const</specifier> <enum>enum <name>a</name> <block>{ <expr><name>b</name> = 0</expr> }</block></enum></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<enum>enum class <name>Enum2</name> : <type><name>unsigned</name> <name>int</name></type> <block>{<expr><name>Val1</name></expr>, <expr><name>Val2</name></expr>}</block>;</enum>
+</unit>
+
 </unit>
