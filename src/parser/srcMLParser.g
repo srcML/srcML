@@ -4765,7 +4765,7 @@ enum_definition[] { ENTRY_DEBUG } :
 ;
 
 enum_class_header[] {} :
-        (CLASS)? variable_identifier (COLON enum_type)?
+        (CLASS)* variable_identifier (COLON enum_type)*
 
     ;
 
