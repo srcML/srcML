@@ -14,7 +14,7 @@ macro(add_unit_test TEST_NAME FILE_NAME)
 endmacro(add_unit_test)
 
 include_directories(../../../src/parser ../../../src/translator ../../../src/libsrcml ../../../src/SAX2Framework)
-link_directories(../../../build)
+link_directories(../../../bin)
 
 # set compile and linker flags
 add_definitions(-g)

@@ -7,7 +7,7 @@ if(LIBXML2_FOUND)
 endif()
 
 include_directories(../../../src/parser ../../../src/libsrcml)
-link_directories(../../../build)
+link_directories(../../../bin)
 enable_testing()
 
 add_executable(srcml_convenient srcml_convenient.c)

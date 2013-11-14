@@ -29,7 +29,7 @@ WIN_ZIP=${BASE}-Win.zip
 # directories
 SRC_DIR_BASE=${BASE}-src
 SRC_DIR=${SRC_DIR_BASE}/src
-BIN_DIR=${SRC_DIR_BASE}/build
+BIN_DIR=${SRC_DIR_BASE}/bin
 DOC_DIR=${SRC_DIR_BASE}/doc
 WINBIN_DIR=${BASE}-windows
 DLL_DIR=../../../dlls
@@ -68,7 +68,7 @@ exp :
 	cd ..; git archive master CMakeLists.txt CMake src doc | tar xv -C dist/${SRC_DIR_BASE}
 	git log -n 1 --remotes --format="Trunk ${GITREVISION} %cd" > ${SRC_DIR_BASE}/src/VERSION
 	${ECHO} "${GITREVISION}" > ${SRC_DIR_BASE}/src/REVISION
-	mkdir ${SRC_DIR_BASE}/build
+	mkdir ${SRC_DIR_BASE}/bin
 
 clean :
 	make cleansrc

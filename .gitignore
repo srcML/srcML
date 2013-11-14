@@ -32,7 +32,7 @@ srcMLParserTokenTypes.hpp
 srcMLParserTokenTypes.txt
 srcMLParserTokenTypesMacro.hpp
 
-build
+bin
 
 # cmake/ctest/cpack
 CMakeCache.txt
@@ -224,3 +224,9 @@ xslt.xml
 # timing ignore
 timing_*.xml
 *.hv2
+
+# dist
+srcML-src.tar.gz
+srcML-src.zip
+srcML-src
+srcML.tar.gz
