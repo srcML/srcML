@@ -2044,6 +2044,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         variable_declaration_nameinit |
 
         // variable name
+        { inMode(MODE_ENUM) }?
+        enum_class_header |
+
+        // variable name
         { inMode(MODE_VARIABLE_NAME) }?
         variable_identifier |
 
@@ -4760,12 +4764,24 @@ enum_definition[] { ENTRY_DEBUG } :
         ENUM
 ;
 
+enum_class_header[] {} :
+        (CLASS)? variable_identifier (COLON enum_type)?
+
+    ;
+
+enum_type { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(STYPE);
+        }
+        (compound_name)*
+    ;
+
 // Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
 // enum must be parsed since it is part of the type.
 enum_definition_complete[] { CompleteElement element(this); ENTRY_DEBUG } :
         enum_definition
 
-        (variable_identifier)*
+        (enum_class_header)*
 
         // start of enum definition block
         {
