@@ -52,11 +52,11 @@
 </unit>
 
 <unit>
-<template>template class <name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><name>MyClass</name></argument>&gt;</argument_list></name></name>;</template>
+<template>template <class_decl>class <name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><name>MyClass</name></argument>&gt;</argument_list></name></name>;</class_decl></template>
 </unit>
 
 <unit>
-<template><specifier>extern</specifier> template class <name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><name>MyClass</name></argument>&gt;</argument_list></name></name>;</template>
+<template><specifier>extern</specifier> template <class_decl>class <name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><name>MyClass</name></argument>&gt;</argument_list></name></name>;</class_decl></template>
 </unit>
 
 </unit>
