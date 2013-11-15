@@ -39,11 +39,9 @@ add_definitions(-DREVISION=\"1\")
 
 #MESSAGE(STATUS "${VERSION} ${REVISION}")
 # This is being moved to be more compiler independent.
-add_definitions(-fPIC)
 
-# Adding global compiler definitions.
-# This allows for compilation of a re-locatable execuatable on GCC I need to be sure that I
-# can make this portable to compilers other than GCC.
+
+
 if(CMAKE_COMPILER_IS_GNUXX)
     add_definitions(-fPIC)
 endif()

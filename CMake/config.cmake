@@ -25,14 +25,16 @@
 #       include
 #       lib
 
-# set(GLOBAL_FLAGS "")
-# set(RELEASE_FLAGS "")
-# set(DBG_FLAGS "")
+
 # Adding Compiler Configuration options
 if(${CMAKE_COMPILER_IS_GNUCXX})
       set(CMAKE_CXX_FLAGS "-pedantic -Wall -Wno-long-long")
       set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -DDEBUG --coverage -fprofile-arcs -DNO_DLLOAD")
       set(CMAKE_CXX_FLAGS_RELEASE "-O3 -NDEBUG")
+      # Adding global compiler definitions.
+      # This allows for compilation of a re-locatable execuatable on GCC I need to be sure that I
+      # can make this portable to compilers other than GCC.
+      add_definitions(-fPIC)
 endif()
 
 # Adding SVN Configuration.
