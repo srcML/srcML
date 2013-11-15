@@ -2100,6 +2100,9 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         for_increment |
 
         { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) }?
+        template_class_decl |
+
+        { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) }?
         template_param_list |
 
         // expecting a template parameter
@@ -4523,7 +4526,6 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
 ;
 
 // Template
-
 template_declaration[] { ENTRY_DEBUG } :
         {
             // template with nested statement (function or class)
@@ -4537,6 +4539,12 @@ template_declaration[] { ENTRY_DEBUG } :
         {
             startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT | MODE_TEMPLATE_PARAMETER_LIST);
         }
+;
+
+template_class_decl[] { ENTRY_DEBUG } :
+
+        CLASS compound_name (template_argument_list)* TERMINATE
+
 ;
 
 template_param_list[] { ENTRY_DEBUG } :
