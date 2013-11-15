@@ -4786,7 +4786,7 @@ enum_type { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(STYPE);
         }
-        (compound_name)*
+        (specifier | compound_name)*
     ;
 
 // Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
