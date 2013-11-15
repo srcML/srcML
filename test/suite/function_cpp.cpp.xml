@@ -53,4 +53,12 @@
 <function><type><name>int</name></type> <name>get_five</name><parameter_list>()</parameter_list> <specifier>const</specifier> <block>{<return>return <expr>5</expr>;</return>}</block></function>
 </unit>
 
+<unit>
+<function><type><name>auto</name></type> <name>func_name</name><parameter_list>(<param><decl><type><name>int</name></type> <name>x</name></decl></param>, <param><decl><type><name>int</name></type> <name>y</name></decl></param>)</parameter_list> -&gt; <type><name>int</name></type> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>auto</name></type> <name>func_name</name><parameter_list>(<param><decl><type><name>int</name></type> <name>x</name></decl></param>, <param><decl><type><name>int</name></type> <name>y</name></decl></param>)</parameter_list> -&gt; <type><specifier>const</specifier> <name>int</name></type> <block>{}</block></function>
+</unit>
+
 </unit>
