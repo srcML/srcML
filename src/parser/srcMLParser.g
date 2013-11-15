@@ -624,6 +624,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != EXTERN || next_token() == TEMPLATE)}? keyword_statements |
 
         { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED LPAREN)=>synchronized_statement |
+        { inLanguage(LANGUAGE_CXX_ONLY) && inMode(MODE_USING) }? using_aliasing |
 
         // statements identified by pattern (i.e., do not start with a keyword)
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? pattern_statements |
@@ -1467,12 +1468,18 @@ namespace_block[] { ENTRY_DEBUG } :
 namespace_directive[] { ENTRY_DEBUG } :
         {
             // statement with an expected namespace name after the keywords
-            startNewMode(MODE_STATEMENT | MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+            startNewMode(MODE_STATEMENT | MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT | MODE_USING);
 
             // start the using directive
             startElement(SUSING_DIRECTIVE);
         }
         USING
+;
+
+using_aliasing[]  { ENTRY_DEBUG } :
+
+        EQUAL pattern_statements
+
 ;
 
 /* Declarations Definitions CFG */
@@ -2507,7 +2514,9 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_int[type_count, endbracket ? type_count - 1 : type_count]
 
         // have a sequence of type tokens, last one is function/variable name
-        // (except for function pointer, which is handled later)
+        // (except for function pointer, which is handled later).
+        // Using also has no name so counter operation.
+        set_int[type_count, inMode(MODE_USING) ? type_count + 1: type_count]
         set_int[type_count, type_count > 1 ? type_count - 1 : 0]
 
         // special case for what looks like a destructor declaration

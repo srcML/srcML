@@ -150,6 +150,8 @@ public:
 
     const static State::MODE_TYPE MODE_END_AT_COMMA;
 
+    const static State::MODE_TYPE MODE_USING;
+
 public:
 
     Mode(TokenParser* ptp, int lang)
