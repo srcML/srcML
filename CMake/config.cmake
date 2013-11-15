@@ -90,23 +90,30 @@ set_property(GLOBAL PROPERTY GREP_EXE ${GREP_EXE})
 #  Figure out exactly what package curl is and where it is located.
 # find_package(libcurl3)
 
+
 # Locating python libraries and executables for use
 # in compiling and testing.
 find_package(PythonLibs REQUIRED)
-
-# message("Build Type Output: ${CMAKE_BUILD_TYPE}")
-# if(${CMAKE_BUILD_TYPE} MATCHES "DEBUG")
-#     message("Build type DEBUG")
-# else()
-#     message("Build type RELEASE")
-# endif()
-# set(CMAKE_CXX_LINKER_FLAGS
 # PYTHONLIBS_FOUND = have the Python libs been found
 # PYTHON_LIBRARIES = path to the python library
 # PYTHON_INCLUDE_PATH = path to where Python.h is found
 # PYTHON_DEBUG_LIBRARIES = path to the debug library
 
+
 find_package(PythonInterp REQUIRED)
+# Enforcing that the version of python being used must have a major version of 2.
+# and the minor version be greater than version 6 (this means version 2.7 of python 
+# version 2 or newer).
+if(NOT ${PYTHON_VERSION_MAJOR} EQUAL "2")
+    message(FATAL_ERROR "Version of python found does not have a major version of 2.")
+    if(${PYTHON_VERSION_MINOR} LESS EQUAL 6)
+        message(FATAL_ERROR "Minor version of python is not greater than 6.")
+    endif()
+endif()
+set_property(GLOBAL PROPERTY PYTHON_INTERP_EXE ${PYTHON_EXECUTABLE})
+
+
+# message(STATUS "Python Executable: ${PYTHON_EXECUTABLE}")
 # PYTHONINTERP_FOUND = Was the Python executable found.
 # PYTHON_EXECUTABLE = Path to the Python interpreter.
 # PYTHON_VERSION_STRING = Python version found e.g. 2.5.2.
