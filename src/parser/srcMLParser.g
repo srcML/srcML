@@ -2099,7 +2099,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { inMode(MODE_FOR_INCREMENT | MODE_EXPECT) }?
         for_increment |
 
-        { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) }?
+        { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) && !inMode(MODE_TEMPLATE_PARAMETER_LIST)}?
         template_class_decl |
 
         { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) }?
@@ -4537,7 +4537,10 @@ template_declaration[] { ENTRY_DEBUG } :
         }
         TEMPLATE
         {
-            startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT | MODE_TEMPLATE_PARAMETER_LIST);
+            if(LA(1) == CLASS)
+                startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
+            else
+                startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT | MODE_TEMPLATE_PARAMETER_LIST);
         }
 ;
 
