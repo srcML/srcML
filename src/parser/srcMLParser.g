@@ -621,7 +621,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
 
         // statements that clearly start with a keyword
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? keyword_statements |
+        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != EXTERN || next_token() == TEMPLATE)}? keyword_statements |
 
         { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED LPAREN)=>synchronized_statement |
 
@@ -4535,7 +4535,7 @@ template_declaration[] { ENTRY_DEBUG } :
             // start the template
             startElement(STEMPLATE);
         }
-        TEMPLATE
+        (template_specifier)* TEMPLATE
         {
             if(LA(1) == CLASS)
                 startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
@@ -4544,9 +4544,17 @@ template_declaration[] { ENTRY_DEBUG } :
         }
 ;
 
+template_specifier{ SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+
+        EXTERN
+    ;
+
 template_class_decl[] { ENTRY_DEBUG } :
 
-        CLASS compound_name (template_argument_list)* TERMINATE
+        CLASS compound_name (template_argument_list)* TERMINATE terminate_post
 
 ;
 
