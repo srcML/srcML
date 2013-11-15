@@ -16,6 +16,7 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+
 # 
 # It is epxected that the windows dependency directoy will contain a folder
 # named dep which will contain all of the dependencies. For windows.
@@ -29,9 +30,8 @@
 # Adding Compiler Configuration options
 if(${CMAKE_COMPILER_IS_GNUCXX})
       # Adding global compiler definitions.
-      set(CMAKE_CXX_FLAGS "-pedantic -Wall -Wno-long-long")
-      set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -DDEBUG --coverage -fprofile-arcs -DNO_DLLOAD")
-      set(CMAKE_CXX_FLAGS_RELEASE "-O3 -NDEBUG")
+      set(CMAKE_CXX_FLAGS_DEBUG "-pedantic -Wall -Wno-long-long -g -O0 -DDEBUG --coverage -fprofile-arcs -DNO_DLLOAD")
+      set(CMAKE_CXX_FLAGS_RELEASE "-pedantic -Wall -Wno-long-long -O3 -NDEBUG")
       
       # This allows for compilation of a re-locatable execuatable on GCC I need to be sure that I
       # can make this portable to compilers other than GCC.
@@ -104,15 +104,23 @@ set_property(GLOBAL PROPERTY GREP_EXE ${GREP_EXE})
 # Locating python libraries and executables for use
 # in compiling and testing.
 find_package(PythonLibs REQUIRED)
-#  PYTHONLIBS_FOUND     = have the Python libs been found
-#  PYTHON_LIBRARIES     = path to the python library
-#  PYTHON_INCLUDE_PATH  = path to where Python.h is found
-#  PYTHON_DEBUG_LIBRARIES = path to the debug library
+
+
+if(${CMAKE_BUILD_TYPE} MATCHES DEBUG)
+    message("Build type DEBUG")
+else()
+    message("Build type RELEASE")
+endif()
+
+# PYTHONLIBS_FOUND = have the Python libs been found
+# PYTHON_LIBRARIES = path to the python library
+# PYTHON_INCLUDE_PATH = path to where Python.h is found
+# PYTHON_DEBUG_LIBRARIES = path to the debug library
 
 find_package(PythonInterp REQUIRED)
-# PYTHONINTERP_FOUND      Was the Python executable found.
-# PYTHON_EXECUTABLE       Path to the Python interpreter.
-# PYTHON_VERSION_STRING   Python version found e.g. 2.5.2.
-# PYTHON_VERSION_MAJOR    Python major version found e.g. 2.
-# PYTHON_VERSION_MINOR    Python minor version found e.g. 5.
-# PYTHON_VERSION_PATCH    Python patch version found e.g. 2.
+# PYTHONINTERP_FOUND = Was the Python executable found.
+# PYTHON_EXECUTABLE = Path to the Python interpreter.
+# PYTHON_VERSION_STRING = Python version found e.g. 2.5.2.
+# PYTHON_VERSION_MAJOR = Python major version found e.g. 2.
+# PYTHON_VERSION_MINOR = Python minor version found e.g. 5.
+# PYTHON_VERSION_PATCH = Python patch version found e.g. 2.

@@ -24,6 +24,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(srcML)
 
+set(CMAKE_BUILD_TYPE DEBUG)
+
 enable_testing()
 
 # Setting up Project includes.
