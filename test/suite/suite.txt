@@ -74,6 +74,7 @@ LANGUAGE_CXX cast_cpp
 LANGUAGE_CXX func_decl_cpp
 LANGUAGE_CXX constructor_cpp
 LANGUAGE_CXX enum_cpp
+LANGUAGE_CXX using_aliasing
 
 LANGUAGE_CSHARP_GEN asm
 LANGUAGE_CSHARP_GEN extern
