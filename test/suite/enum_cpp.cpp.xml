@@ -25,4 +25,8 @@
 <enum>enum class <name>Enum2</name> : <type><name>unsigned</name> <name>int</name></type> <block>{<expr><name>Val1</name></expr>, <expr><name>Val2</name></expr>}</block>;</enum>
 </unit>
 
+<unit>
+<enum>enum class <name>Enum2</name> : <type><specifier>const</specifier> <name>unsigned</name> <name>int</name></type> <block>{<expr><name>Val1</name></expr>, <expr><name>Val2</name></expr>}</block>;</enum>
+</unit>
+
 </unit>
