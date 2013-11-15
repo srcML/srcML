@@ -2100,7 +2100,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         for_increment |
 
         { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) && !inMode(MODE_TEMPLATE_PARAMETER_LIST)}?
-        template_class_decl |
+        class_declaration |
 
         { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) }?
         template_param_list |
@@ -4551,12 +4551,6 @@ template_specifier{ SingleElement element(this); ENTRY_DEBUG } :
 
         EXTERN
     ;
-
-template_class_decl[] { ENTRY_DEBUG } :
-
-        CLASS compound_name (template_argument_list)* TERMINATE terminate_post
-
-;
 
 template_param_list[] { ENTRY_DEBUG } :
         {
