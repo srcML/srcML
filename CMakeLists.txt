@@ -85,7 +85,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY bin)
 
 # Run antlr
-add_custom_command(OUTPUT src/parser/CommentTextLexer.cpp src/parser/CommentTextLexer.hpp src/parser/CommentTextLexerTokenTypes.txt src/parser/CommentTextLexerTokenTypes.hpp 
+add_custom_command(OUTPUT src/parser/CommentTextLexer.cpp src/parser/CommentTextLexer.hpp src/parser/CommentTextLexerTokenTypes.txt src/parser/CommentTextLexerTokenTypes.hpp src/parser/expandedCommentTextLexer.g
 COMMAND ${ANTLR} -o src/parser src/parser/CommentTextLexer.g DEPENDS src/parser/CommentTextLexer.g
 COMMAND touch src/parser/CommentTextLexer.cpp src/parser/CommentTextLexer.hpp src/parser/CommentTextLexerTokenTypes.txt src/parser/CommentTextLexerTokenTypes.hpp src/parser/expandedCommentTextLexer.g 
 )
@@ -103,7 +103,6 @@ COMMAND touch src/parser/OperatorLexer.cpp src/parser/OperatorLexer.hpp src/pars
 add_custom_command(OUTPUT src/parser/KeywordLexer.cpp src/parser/KeywordLexer.hpp src/parser/KeywordLexerTokenTypes.txt src/parser/KeywordLexerTokenTypes.hpp src/parser/expandedKeywordLexer.g
 COMMAND ${ANTLR} -o src/parser -glib \"src/parser/OperatorLexer.g\;src/parser/TextLexer.g\" src/parser/KeywordLexer.g DEPENDS src/parser/KeywordLexer.g src/parser/OperatorLexer.cpp
 COMMAND touch src/parser/KeywordLexer.cpp src/parser/KeywordLexer.hpp src/parser/KeywordLexerTokenTypes.txt src/parser/KeywordLexerTokenTypes.hpp src/parser/expandedKeywordLexer.g
-#COMMAND rm -rf OperatorLexerTokenTypes.txt TextLexerTokenTypes.txt
 )
 
 add_custom_command(OUTPUT src/parser/srcMLParser.cpp src/parser/srcMLParser.hpp src/parser/srcMLParserTokenTypes.txt src/parser/srcMLParserTokenTypes.hpp
