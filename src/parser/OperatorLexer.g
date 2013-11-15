@@ -57,6 +57,7 @@ PREPROC;
 COLON; // = ":";
 QMARK;
 BAR; // |
+TRETURN; // ->
 
 // define value in master grammar so that it depends on language
 DCOLON;
@@ -117,7 +118,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; static int lastp
            '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3; gt = true; }) { ++realbegin; } )+ */ 
 
        '+' ('+' | '=')? |
-       '-' ('-' | '=' | '>' { star = true; $setText("-&gt;"); })? ({ star }? '*' { $setText("-&gt;*"); })? |
+       '-' ('-' | '=' | '>' { star = true; $setText("-&gt;"); $setType(TRETURN);})? ({ star }? '*' { $setText("-&gt;*"); $setType(OPERATORS); })? |
        '*' ('=')? |
 //       '/' ('=')? |
        '%' ('=')? |
