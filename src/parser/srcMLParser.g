@@ -621,7 +621,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
 
         // statements that clearly start with a keyword
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? keyword_statements |
+        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != EXTERN || next_token() == TEMPLATE)}? keyword_statements |
 
         { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED LPAREN)=>synchronized_statement |
 
@@ -2098,6 +2098,9 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // inside of for group expecting initialization
         { inMode(MODE_FOR_INCREMENT | MODE_EXPECT) }?
         for_increment |
+
+        { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) && !inMode(MODE_TEMPLATE_PARAMETER_LIST)}?
+        class_declaration |
 
         { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) }?
         template_param_list |
@@ -4523,7 +4526,6 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
 ;
 
 // Template
-
 template_declaration[] { ENTRY_DEBUG } :
         {
             // template with nested statement (function or class)
@@ -4533,11 +4535,22 @@ template_declaration[] { ENTRY_DEBUG } :
             // start the template
             startElement(STEMPLATE);
         }
-        TEMPLATE
+        (template_specifier)* TEMPLATE
         {
-            startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT | MODE_TEMPLATE_PARAMETER_LIST);
+            if(LA(1) == CLASS)
+                startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
+            else
+                startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT | MODE_TEMPLATE_PARAMETER_LIST);
         }
 ;
+
+template_specifier{ SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+
+        EXTERN
+    ;
 
 template_param_list[] { ENTRY_DEBUG } :
         {
