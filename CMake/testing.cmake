@@ -37,6 +37,12 @@ macro(addUnitTest TEST_NAME FILE_NAME)
     add_test(${TEST_NAME} ${TEST_NAME})
 endmacro()
 
+
+# 
+# copyDependentFile 
+# This copies a file given as TARGET_NAME to the current bunary directory
+# of the build.
+# 
 macro(copyDependentFile TARGET_NAME )
     file(COPY ${TARGET_NAME} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endmacro()
