@@ -27,17 +27,6 @@
 #       lib
 
 
-# Adding Compiler Configuration options
-if(${CMAKE_COMPILER_IS_GNUCXX})
-      # Adding global compiler definitions.
-      set(CMAKE_CXX_FLAGS_DEBUG "-pedantic -Wall -Wno-long-long -g -O0 -DDEBUG --coverage -fprofile-arcs -DNO_DLLOAD")
-      set(CMAKE_CXX_FLAGS_RELEASE "-pedantic -Wall -Wno-long-long -O3 -NDEBUG")
-      
-      # This allows for compilation of a re-locatable execuatable on GCC I need to be sure that I
-      # can make this portable to compilers other than GCC.
-      add_definitions(-fPIC)
-endif()
-
 # Adding SVN Configuration.
 option(ENABLE_SVN_INTEGRATION "Build with SVN integration." ON)
 set_property(GLOBAL PROPERTY SVN_ENABLED ${ENABLE_SVN_INTEGRATION})
@@ -105,13 +94,13 @@ set_property(GLOBAL PROPERTY GREP_EXE ${GREP_EXE})
 # in compiling and testing.
 find_package(PythonLibs REQUIRED)
 
-
-if(${CMAKE_BUILD_TYPE} MATCHES DEBUG)
-    message("Build type DEBUG")
-else()
-    message("Build type RELEASE")
-endif()
-
+# message("Build Type Output: ${CMAKE_BUILD_TYPE}")
+# if(${CMAKE_BUILD_TYPE} MATCHES "DEBUG")
+#     message("Build type DEBUG")
+# else()
+#     message("Build type RELEASE")
+# endif()
+# set(CMAKE_CXX_LINKER_FLAGS
 # PYTHONLIBS_FOUND = have the Python libs been found
 # PYTHON_LIBRARIES = path to the python library
 # PYTHON_INCLUDE_PATH = path to where Python.h is found
@@ -124,3 +113,14 @@ find_package(PythonInterp REQUIRED)
 # PYTHON_VERSION_MAJOR = Python major version found e.g. 2.
 # PYTHON_VERSION_MINOR = Python minor version found e.g. 5.
 # PYTHON_VERSION_PATCH = Python patch version found e.g. 2.
+
+# Adding Compiler Configuration options
+if(${CMAKE_COMPILER_IS_GNUCXX})
+      # Adding global compiler definitions.
+      set(CMAKE_CXX_FLAGS "-pedantic -Wall -Wno-long-long -g -O0 -DDEBUG --coverage -fprofile-arcs -DNO_DLLOAD")
+      set(CMAKE_CXX_FLAGS_RELEASE "-pedantic -Wall -Wno-long-long -O3 -DNDEBUG")
+      
+      # This allows for compilation of a re-locatable execuatable on GCC I need to be sure that I
+      # can make this portable to compilers other than GCC.
+      add_definitions(-fPIC)
+endif()
