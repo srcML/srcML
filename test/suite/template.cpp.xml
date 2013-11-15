@@ -51,4 +51,8 @@
 </public>}</block>;</struct></template>
 </unit>
 
+<unit>
+<template>template class <name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><name>MyClass</name></argument>&gt;</argument_list></name></name>;</template>
+</unit>
+
 </unit>
