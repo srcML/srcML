@@ -2007,6 +2007,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { (inLanguage(LANGUAGE_OO)) && inMode(MODE_FUNCTION_TAIL) }?
         throw_list |
 
+        // throw list at end of function header
+        { (inLanguage(LANGUAGE_CXX_ONLY))&& inTransparentMode(MODE_FUNCTION_TAIL) }?
+        noexcept_list |
+
         // K&R function parameters
         { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && inMode(MODE_FUNCTION_TAIL) &&
           pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
@@ -2746,6 +2750,16 @@ throw_list[] { ENTRY_DEBUG } :
             startElement(STHROW_SPECIFIER_JAVA);
         }
         THROWS
+;
+
+noexcept_list[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
+
+            startElement(STHROW_SPECIFIER);
+        }
+        NOEXCEPT (LPAREN)*
 ;
 
 complete_throw_list[] { ENTRY_DEBUG } :
