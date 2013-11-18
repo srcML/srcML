@@ -1726,6 +1726,11 @@ lcurly[] { ENTRY_DEBUG } :
                 endMode(MODE_CONDITION);
             }
 
+            if(inTransparentMode(MODE_TRAILING_RETURN)) {
+                endDownToMode(MODE_TRAILING_RETURN);
+                endMode(MODE_TRAILING_RETURN);
+            }
+
             if (inMode(MODE_IF)) {
 
                 // then part of the if statement (after the condition)
@@ -1873,6 +1878,12 @@ terminate_pre[] { ENTRY_DEBUG } :
             if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST))
                 endDownToModeSet(MODE_STATEMENT | MODE_EXPRESSION_BLOCK |
                                    MODE_INTERNAL_END_CURLY | MODE_INTERNAL_END_PAREN);
+
+            if(inTransparentMode(MODE_TRAILING_RETURN)) {
+                endDownToMode(MODE_TRAILING_RETURN);
+                endMode(MODE_TRAILING_RETURN);
+            }
+
         }
 ;
 
@@ -2011,6 +2022,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // function specifier at end of function header
         { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
         function_specifier |
+
+        // function specifier at end of function header
+        { inLanguage(LANGUAGE_CXX_ONLY) && inMode(MODE_FUNCTION_TAIL) }?
+        trailing_return |
 
         // start of argument for return or throw statement
         { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
@@ -2274,6 +2289,9 @@ function_tail[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_OO) }?
             complete_throw_list |
 
+            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            trailing_return |
+
             // K&R
             { inLanguage(LANGUAGE_C) }? (
 
@@ -2284,6 +2302,13 @@ function_tail[] { ENTRY_DEBUG } :
               parameter (MULTOPS | NAME | COMMA)* TERMINATE
             )
         )*
+;
+
+trailing_return [] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+
+        TRETURN
+        ({ pattern_check(stmt_type, secondtoken, type_count, true) && (stmt_type == FUNCTION || stmt_type == FUNCTION_DECL)}?
+        {startNewMode(MODE_TRAILING_RETURN);} function_declaration[type_count] function_identifier parameter_list | function_type[type_count + 1])
 ;
 
 pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false] returns [bool isdecl] {
@@ -2678,6 +2703,25 @@ type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
         overloaded_operator |
 
         type_identifier | MAIN
+;
+
+type_identifier_count_check returns [int type_count] {
+
+
+    int start = mark();
+    ++inputState->guessing;
+
+    type_count = type_identifier_count_check_core();
+
+    rewind(start);
+    --inputState->guessing;
+} :
+;
+
+type_identifier_count_check_core returns [int type_count] { type_count = 0; ENTRY_DEBUG } :
+
+        (type_identifier_count[type_count])*
+
 ;
 
 /*
@@ -4000,7 +4044,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
                 startElement(SOPERATOR);
         }
         (
-        OPERATORS | TEMPOPS |
+        OPERATORS | TRETURN | TEMPOPS |
             TEMPOPE ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? EQUAL)? |
     EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF |
             QMARK ({ SkipBufferSize() == 0 }? QMARK)? | { inLanguage(LANGUAGE_JAVA) }? BAR |
@@ -4795,7 +4839,7 @@ enum_type { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(STYPE);
         }
-        (compound_name)*
+        (specifier | compound_name)*
     ;
 
 // Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
