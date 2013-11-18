@@ -2268,11 +2268,11 @@ function_tail[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             TRY |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) }?
-            trailing_return |
-
             { inLanguage(LANGUAGE_OO) }?
             complete_throw_list |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            trailing_return |
 
             // K&R
             { inLanguage(LANGUAGE_C) }? (
@@ -2286,9 +2286,11 @@ function_tail[] { ENTRY_DEBUG } :
         )*
 ;
 
-trailing_return [] { int type_count; ENTRY_DEBUG } :
+trailing_return [] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
 
-        TRETURN { (type_count = type_identifier_count_check()) }? function_type[type_count]
+        TRETURN
+        ({ pattern_check(stmt_type, secondtoken, type_count, true) && (stmt_type == FUNCTION || stmt_type == FUNCTION_DECL)}?
+        function_declaration[type_count] function_identifier parameter_list | function_type[type_count + 1])
 ;
 
 pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false] returns [bool isdecl] {
