@@ -441,6 +441,7 @@ tokens {
 	STHROW_STATEMENT;
 	STHROW_SPECIFIER;
 	STHROW_SPECIFIER_JAVA;
+	SNOEXCEPT;
 
 	STEMPLATE;
     STEMPLATE_ARGUMENT;
@@ -2757,7 +2758,7 @@ noexcept_list[] { ENTRY_DEBUG } :
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
 
-            startElement(STHROW_SPECIFIER);
+            startElement(SNOEXCEPT);
         }
         NOEXCEPT (LPAREN)*
 ;
