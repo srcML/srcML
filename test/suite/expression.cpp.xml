@@ -103,4 +103,12 @@
   + <name>LRFoo</name> + <name>URFoo</name> + <name>uRFoo</name> + <name>u8RFoo</name> + <name>RFoo</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+  <expr_stmt><expr><noexcept>noexcept</noexcept></expr>;</expr_stmt>
+</unit>
+
+<unit>
+  <expr_stmt><expr><noexcept>noexcept(<argument><expr><name>A</name></expr></argument>)</noexcept></expr>;</expr_stmt>
+</unit>
+
 </unit>
