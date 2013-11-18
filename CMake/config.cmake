@@ -94,13 +94,29 @@ set_property(GLOBAL PROPERTY GREP_EXE ${GREP_EXE})
 # Locating python libraries and executables for use
 # in compiling and testing.
 find_package(PythonLibs REQUIRED)
+# Variables defiend by find_package(PythonLibs) implementation.
 # PYTHONLIBS_FOUND = have the Python libs been found
 # PYTHON_LIBRARIES = path to the python library
 # PYTHON_INCLUDE_PATH = path to where Python.h is found
 # PYTHON_DEBUG_LIBRARIES = path to the debug library
 
+if(${CMAKE_BUILD_TYPE} MATCHES "RELEASE")
+    link_directories(${PYTHON_LIBRARIES})
+else()
+    link_directories(${PYTHON_DEBUG_LIBRARIES})
+endif()
+include_directories(${PYTHON_INCLUDE_PATH})
+
 
 find_package(PythonInterp REQUIRED)
+# Variables defiend by find_package(PythonInterp)
+# PYTHONINTERP_FOUND = Was the Python executable found.
+# PYTHON_EXECUTABLE = Path to the Python interpreter.
+# PYTHON_VERSION_STRING = Python version found e.g. 2.5.2.
+# PYTHON_VERSION_MAJOR = Python major version found e.g. 2.
+# PYTHON_VERSION_MINOR = Python minor version found e.g. 5.
+# PYTHON_VERSION_PATCH = Python patch version found e.g. 2.
+
 # Enforcing that the version of python being used must have a major version of 2.
 # and the minor version be greater than version 6 (this means version 2.7 of python 
 # version 2 or newer).
@@ -113,21 +129,16 @@ endif()
 set_property(GLOBAL PROPERTY PYTHON_INTERP_EXE ${PYTHON_EXECUTABLE})
 
 
-# message(STATUS "Python Executable: ${PYTHON_EXECUTABLE}")
-# PYTHONINTERP_FOUND = Was the Python executable found.
-# PYTHON_EXECUTABLE = Path to the Python interpreter.
-# PYTHON_VERSION_STRING = Python version found e.g. 2.5.2.
-# PYTHON_VERSION_MAJOR = Python major version found e.g. 2.
-# PYTHON_VERSION_MINOR = Python minor version found e.g. 5.
-# PYTHON_VERSION_PATCH = Python patch version found e.g. 2.
 
-# Adding Compiler Configuration options
+# Adding compiler configuration for GCC.
+# The default configuration is to compile in DEBUG mode. These flags can be directly
+# overridden by setting the property of a target you wish to change them for.
 if(${CMAKE_COMPILER_IS_GNUCXX})
-      # Adding global compiler definitions.
-      set(CMAKE_CXX_FLAGS "-pedantic -Wall -Wno-long-long -g -O0 -DDEBUG --coverage -fprofile-arcs -DNO_DLLOAD")
-      set(CMAKE_CXX_FLAGS_RELEASE "-pedantic -Wall -Wno-long-long -O3 -DNDEBUG")
-      
-      # This allows for compilation of a re-locatable execuatable on GCC I need to be sure that I
-      # can make this portable to compilers other than GCC.
-      add_definitions(-fPIC)
+    # Adding global compiler definitions.
+    set(CMAKE_CXX_FLAGS "-pedantic -Wall -Wno-long-long -g -O0 -DDEBUG --coverage -fprofile-arcs -DNO_DLLOAD")
+    set(CMAKE_CXX_FLAGS_RELEASE "-pedantic -Wall -Wno-long-long -O3 -DNDEBUG")
+    
+    # This allows for compilation of a re-locatable execuatable on GCC I need to be sure that I
+    # can make this portable to compilers other than GCC.
+    add_definitions(-fPIC)
 endif()
