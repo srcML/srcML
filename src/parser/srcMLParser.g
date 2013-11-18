@@ -2283,6 +2283,9 @@ function_tail[] { ENTRY_DEBUG } :
             complete_throw_list |
 
             { inLanguage(LANGUAGE_CXX_ONLY) }?
+            complete_noexcept_list |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) }?
             trailing_return |
 
             // K&R
@@ -2747,6 +2750,10 @@ throw_list[] { ENTRY_DEBUG } :
 
 complete_throw_list[] { ENTRY_DEBUG } :
         THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java | COMMA)*
+;
+
+complete_noexcept_list[] { ENTRY_DEBUG } :
+        NOEXCEPT (paren_pair)*
 ;
 
 // type identifier
