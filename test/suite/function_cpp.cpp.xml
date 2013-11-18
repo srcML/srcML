@@ -66,6 +66,10 @@
 </unit>
 
 <unit>
+<function><type><name>void</name></type> <name>bar</name><parameter_list>()</parameter_list> <noexcept>noexcept</noexcept> <block>{}</block></function>
+</unit>
+
+<unit>
 <function><type><name>void</name></type> <name>bar</name><parameter_list>()</parameter_list> <noexcept>noexcept(<argument><expr>true</expr></argument>)</noexcept> <block>{}</block></function>
 </unit>
 
