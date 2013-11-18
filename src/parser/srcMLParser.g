@@ -663,7 +663,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         template_declaration |
 
         // exception statements
-        { inLanguage(LANGUAGE_JAVA) }? (TRY LPAREN)=>try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement |
+        { inLanguage(LANGUAGE_JAVA) }? (TRY LPAREN)=>try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement | noexcept_call | 
 
         // namespace statements
         namespace_definition | using_namespace_statement |
@@ -3887,6 +3887,18 @@ throw_statement[] { ENTRY_DEBUG } :
             startElement(STHROW_STATEMENT);
         }
         THROW
+;
+
+noexcept_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+            startElement(SFUNCTION_CALL);
+        }
+        NOEXCEPT
+        call_argument_list
 ;
 
 expression_statement_process[] { ENTRY_DEBUG } :
