@@ -1719,6 +1719,11 @@ lcurly[] { ENTRY_DEBUG } :
                 endMode(MODE_CONDITION);
             }
 
+            if(inTransparentMode(MODE_TRAILING_RETURN)) {
+                endDownToMode(MODE_TRAILING_RETURN);
+                endMode(MODE_TRAILING_RETURN);
+            }
+
             if (inMode(MODE_IF)) {
 
                 // then part of the if statement (after the condition)
@@ -1866,6 +1871,12 @@ terminate_pre[] { ENTRY_DEBUG } :
             if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST))
                 endDownToModeSet(MODE_STATEMENT | MODE_EXPRESSION_BLOCK |
                                    MODE_INTERNAL_END_CURLY | MODE_INTERNAL_END_PAREN);
+
+            if(inTransparentMode(MODE_TRAILING_RETURN)) {
+                endDownToMode(MODE_TRAILING_RETURN);
+                endMode(MODE_TRAILING_RETURN);
+            }
+
         }
 ;
 
@@ -2290,7 +2301,7 @@ trailing_return [] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_t
 
         TRETURN
         ({ pattern_check(stmt_type, secondtoken, type_count, true) && (stmt_type == FUNCTION || stmt_type == FUNCTION_DECL)}?
-        function_declaration[type_count] function_identifier parameter_list | function_type[type_count + 1])
+        {startNewMode(MODE_TRAILING_RETURN);} function_declaration[type_count] function_identifier parameter_list | function_type[type_count + 1])
 ;
 
 pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false] returns [bool isdecl] {
