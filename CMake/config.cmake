@@ -36,6 +36,7 @@ option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" OFF)
 set_property(GLOBAL PROPERTY SAX2_ENABLED ${LIBSRCML_SAX2_ENABLED})
 
 # Locating packages.
+find_program(xsltproc REQUIRED)
 find_package(LibArchive REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(LibXslt)
@@ -55,6 +56,14 @@ if(LIBXSLT_EXSLT_LIBRARY)
     set_property(GLOBAL PROPERTY LIBXSLT_LIBS ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY})
 else()
     set_property(GLOBAL PROPERTY LIBXSLT_LIBS "")
+endif()
+
+# Finding xsltproc program.
+find_program(Xslt_BIN xsltproc)
+if(NOT ${Xslt_BIN} STREQUAL "Xslt_BIN-NOTFOUND")
+    set_property(GLOBAL PROPERTY XSLTPROC "${Xslt_BIN}")
+else()
+    message(FATAL_ERROR "Failed to locate the xsltproc executable. This is required in order to run the test suite.")
 endif()
 
 # Setting some windows only properties.
