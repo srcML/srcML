@@ -2760,7 +2760,7 @@ noexcept_list[] { ENTRY_DEBUG } :
 
             startElement(SNOEXCEPT);
         }
-        NOEXCEPT (LPAREN)*
+        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (LPAREN)*
 ;
 
 complete_throw_list[] { ENTRY_DEBUG } :
