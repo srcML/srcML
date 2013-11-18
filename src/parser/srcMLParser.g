@@ -663,7 +663,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         template_declaration |
 
         // exception statements
-        { inLanguage(LANGUAGE_JAVA) }? (TRY LPAREN)=>try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement | noexcept_call | 
+        { inLanguage(LANGUAGE_JAVA) }? (TRY LPAREN)=>try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
         namespace_definition | using_namespace_statement |
@@ -2763,6 +2763,16 @@ noexcept_list[] { ENTRY_DEBUG } :
         NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (LPAREN)*
 ;
 
+noexcept_operator[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
+
+            startElement(SNOEXCEPT);
+        }
+        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (LPAREN)*
+;
+
 complete_throw_list[] { ENTRY_DEBUG } :
         THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java | COMMA)*
 ;
@@ -3889,18 +3899,6 @@ throw_statement[] { ENTRY_DEBUG } :
         THROW
 ;
 
-noexcept_call[] { ENTRY_DEBUG } :
-        {
-            // start a new mode that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST);
-
-            // start the function call element
-            startElement(SFUNCTION_CALL);
-        }
-        NOEXCEPT
-        call_argument_list
-;
-
 expression_statement_process[] { ENTRY_DEBUG } :
         {
             // statement with an embedded expression
@@ -4295,7 +4293,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         } |
 
         // variable or literal
-        variable_identifier | string_literal | char_literal | literal | boolean |
+        variable_identifier | string_literal | char_literal | literal | boolean | noexcept_operator | 
 
         variable_identifier_array_grammar_sub[flag]
 ;
