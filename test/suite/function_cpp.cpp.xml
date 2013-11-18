@@ -65,4 +65,20 @@
 <function><type><name>auto</name></type> <name>fpif</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list>-&gt;<function_decl><type><name>int</name></type> (*)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
 </unit>
 
+<unit>
+<function><type><name>void</name></type> <name>bar</name><parameter_list>()</parameter_list> <noexcept>noexcept</noexcept> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>bar</name><parameter_list>()</parameter_list> <noexcept>noexcept(<argument><expr>true</expr></argument>)</noexcept> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <noexcept>noexcept(<noexcept>noexcept(<argument><expr><call><name>T</name><argument_list>()</argument_list></call></expr></argument>)</noexcept>)</noexcept> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <specifier>const</specifier> <noexcept>noexcept(<noexcept>noexcept(<argument><expr><call><name>T</name><argument_list>()</argument_list></call></expr></argument>)</noexcept>)</noexcept> -&gt; <function_decl><type><name>int</name></type> (*)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
+</unit>
+
 </unit>

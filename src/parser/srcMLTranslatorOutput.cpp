@@ -176,6 +176,7 @@ namespace {
   ELEMENT_MAP(STHROW_STATEMENT, "throw")
   ELEMENT_MAP(STHROW_SPECIFIER, "throw")
   ELEMENT_MAP(STHROW_SPECIFIER_JAVA, "throws")
+  ELEMENT_MAP(SNOEXCEPT, "noexcept")
 
   // template
   ELEMENT_MAP(STEMPLATE, "template")

@@ -441,6 +441,7 @@ tokens {
 	STHROW_STATEMENT;
 	STHROW_SPECIFIER;
 	STHROW_SPECIFIER_JAVA;
+	SNOEXCEPT;
 
 	STEMPLATE;
     STEMPLATE_ARGUMENT;
@@ -2007,6 +2008,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { (inLanguage(LANGUAGE_OO)) && inMode(MODE_FUNCTION_TAIL) }?
         throw_list |
 
+        // throw list at end of function header
+        { (inLanguage(LANGUAGE_CXX_ONLY))&& inTransparentMode(MODE_FUNCTION_TAIL) }?
+        noexcept_list |
+
         // K&R function parameters
         { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && inMode(MODE_FUNCTION_TAIL) &&
           pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
@@ -2281,6 +2286,9 @@ function_tail[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_OO) }?
             complete_throw_list |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            complete_noexcept_list |
 
             { inLanguage(LANGUAGE_CXX_ONLY) }?
             trailing_return |
@@ -2745,8 +2753,32 @@ throw_list[] { ENTRY_DEBUG } :
         THROWS
 ;
 
+noexcept_list[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
+
+            startElement(SNOEXCEPT);
+        }
+        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (LPAREN)*
+;
+
+noexcept_operator[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
+
+            startElement(SNOEXCEPT);
+        }
+        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (LPAREN)*
+;
+
 complete_throw_list[] { ENTRY_DEBUG } :
         THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java | COMMA)*
+;
+
+complete_noexcept_list[] { ENTRY_DEBUG } :
+        NOEXCEPT (paren_pair)*
 ;
 
 // type identifier
@@ -4261,7 +4293,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         } |
 
         // variable or literal
-        variable_identifier | string_literal | char_literal | literal | boolean |
+        variable_identifier | string_literal | char_literal | literal | boolean | noexcept_operator | 
 
         variable_identifier_array_grammar_sub[flag]
 ;
