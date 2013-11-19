@@ -393,6 +393,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "or"            , OPERATORS        , LANGUAGE_CXX_ONLY }, 
         { "or_eq"         , OPERATORS        , LANGUAGE_CXX_ONLY }, 
         { "xor"           , OPERATORS        , LANGUAGE_CXX_ONLY }, 
+        { "xor_eq"        , OPERATORS        , LANGUAGE_CXX_ONLY }, 
 
         // concepts
 //        { "auto"          , AUTO          , LANGUAGE_CXX_11 }, 
