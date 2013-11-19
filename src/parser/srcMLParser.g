@@ -2282,7 +2282,7 @@ function_tail[] { ENTRY_DEBUG } :
             function_specifier |
 
             { inLanguage(LANGUAGE_CXX_ONLY) }?
-            REFOPS (REFOPS)* |
+            ref_qualifier |
 
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             TRY |
@@ -2306,6 +2306,11 @@ function_tail[] { ENTRY_DEBUG } :
               parameter (MULTOPS | NAME | COMMA)* TERMINATE
             )
         )*
+;
+
+ref_qualifier [] { ENTRY_DEBUG } :
+
+        REFOPS | RVALUEREF
 ;
 
 trailing_return [] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
