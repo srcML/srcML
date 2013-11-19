@@ -229,6 +229,17 @@ set(GEN_PREPROC "${CPP_SEP_PLUSNO_PREPROC_NAMES} ${CPP_JAVA_NAMES} ${CPP_C_NAMES
 # # generated test cases for preproc
 generateFileGroup("ifthenelse" GEN_IFTHENELSE "extra_c.ifthenelse.c.xml extra_cpp.ifthenelse.cpp.xml")
 
+add_custom_target(
+    allinall
+    COMMAND @echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" 
+#     COMMAND echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" dir=\"allinall.c\">" >> allinall.c.xml
+#     COMMAND find ../suite -name "*.all.c.xml" | xargs -i tail +3 {} | sed "s|</unit>||" >> allinall.c.xml
+#     COMMAND echo "</unit>" >> allinall.c.xml
+)
+# > allinall.c.xml
+# 
+
+
 # allinall.c.xml :
 #         @echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > allinall.c.xml
 #         @echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" dir=\"allinall.c\">" >> allinall.c.xml
