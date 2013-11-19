@@ -230,6 +230,8 @@ tokens {
     CONSTEXPR;
     NOEXCEPT;
 
+    OPERATORS;
+
 }
 
 {
@@ -379,6 +381,18 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         // add all C++ specific keywords to the literals table
         { "constexpr"     , CONSTEXPR        , LANGUAGE_CXX_ONLY }, 
         { "noexcept"      , NOEXCEPT         , LANGUAGE_CXX_ONLY }, 
+
+        // Add alternative operators
+        { "and"           , OPERATORS        , LANGUAGE_CXX_ONLY }, 
+        { "and_eq"        , OPERATORS        , LANGUAGE_CXX_ONLY }, 
+        { "bitand"        , OPERATORS        , LANGUAGE_CXX_ONLY }, 
+        { "bitor"         , OPERATORS        , LANGUAGE_CXX_ONLY }, 
+        { "compl"         , OPERATORS        , LANGUAGE_CXX_ONLY }, 
+        { "not"           , OPERATORS        , LANGUAGE_CXX_ONLY }, 
+        { "not_eq"        , OPERATORS        , LANGUAGE_CXX_ONLY }, 
+        { "or"            , OPERATORS        , LANGUAGE_CXX_ONLY }, 
+        { "or_eq"         , OPERATORS        , LANGUAGE_CXX_ONLY }, 
+        { "xor"           , OPERATORS        , LANGUAGE_CXX_ONLY }, 
 
         // concepts
 //        { "auto"          , AUTO          , LANGUAGE_CXX_11 }, 
