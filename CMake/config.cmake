@@ -28,7 +28,7 @@
 
 
 # Adding SVN Configuration.
-option(ENABLE_SVN_INTEGRATION "Build with SVN integration." ON)
+option(ENABLE_SVN_INTEGRATION "Build with SVN integration." OFF)
 set_property(GLOBAL PROPERTY SVN_ENABLED ${ENABLE_SVN_INTEGRATION})
 
 # Adding SAX to configuration.
