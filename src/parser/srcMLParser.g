@@ -734,7 +734,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0;
         // TODO:  Why no interface declaration?
 
         { stmt_type == GLOBAL_ATTRIBUTE }?
-        attribute |
+        attribute_csharp |
 
         { stmt_type == PROPERTY_ACCESSOR }?
         property_method[SFUNCTION_DEFINITION] |
@@ -887,7 +887,7 @@ property_method[int element] { ENTRY_DEBUG } :
             // start the function definition element
             startElement(element);
         }
-        (attribute)*
+        (attribute_csharp)*
         property_method_name
 ;
 
@@ -1491,7 +1491,7 @@ class_declaration[] { ENTRY_DEBUG } :
             startElement(SCLASS_DECLARATION);
         }
         ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)*
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp)*
         (specifier)* CLASS class_header
 ;
 
@@ -1517,7 +1517,7 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
 
 class_preamble[] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)*
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp)*
         (specifier)*
 ;
 
@@ -2806,7 +2806,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_JAVA) }? annotation |
 
-        { inLanguage(LANGUAGE_CSHARP) }? attribute |
+        { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
         pure_lead_type_identifier_no_specifiers
 ;
@@ -3071,7 +3071,7 @@ variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
         )*
 ;
 
-attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
+attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
@@ -3080,14 +3080,14 @@ attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         LBRACKET
 
-        ({ next_token() == COLON }? attribute_target COLON)*
+        ({ next_token() == COLON }? attribute_csharp_target COLON)*
 
         complete_expression
 
         RBRACKET
 ;
 
-attribute_target[] { SingleElement element(this); ENTRY_DEBUG } :
+attribute_csharp_target[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(STARGET);
         }
@@ -3385,7 +3385,7 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_JAVA) }? annotation |
 
-            { inLanguage(LANGUAGE_CSHARP) }? attribute |
+            { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
             specifier |
 
@@ -3442,7 +3442,7 @@ destructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_JAVA) }? annotation |
 
-            { inLanguage(LANGUAGE_CSHARP) }? attribute |
+            { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
             specifier |
 
