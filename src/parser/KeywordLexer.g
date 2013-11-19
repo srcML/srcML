@@ -230,6 +230,7 @@ tokens {
     CONSTEXPR;
     NOEXCEPT;
     THREADLOCAL;
+    NULLPTR;
 
 }
 
@@ -381,6 +382,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "constexpr"     , CONSTEXPR        , LANGUAGE_CXX_ONLY }, 
         { "noexcept"      , NOEXCEPT         , LANGUAGE_CXX_ONLY }, 
         { "thread_local"  , THREADLOCAL      , LANGUAGE_CXX_ONLY }, 
+        { "nullptr"       , NULLPTR          , LANGUAGE_CXX_ONLY }, 
 
         // concepts
 //        { "auto"          , AUTO          , LANGUAGE_CXX_11 }, 
