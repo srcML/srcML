@@ -229,6 +229,7 @@ tokens {
 
     CONSTEXPR;
     NOEXCEPT;
+    THREADLOCAL;
 
 }
 
@@ -379,6 +380,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         // add all C++ specific keywords to the literals table
         { "constexpr"     , CONSTEXPR        , LANGUAGE_CXX_ONLY }, 
         { "noexcept"      , NOEXCEPT         , LANGUAGE_CXX_ONLY }, 
+        { "thread_local"  , THREADLOCAL      , LANGUAGE_CXX_ONLY }, 
 
         // concepts
 //        { "auto"          , AUTO          , LANGUAGE_CXX_11 }, 
