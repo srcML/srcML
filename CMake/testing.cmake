@@ -47,3 +47,16 @@ macro(copyDependentFile TARGET_NAME)
     file(COPY ${TARGET_NAME} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endmacro()
 
+# 
+# Process string list of files
+# This takes a list of files and creates the generated names for each file.
+# The string list is not a list but a space separated string of files.
+# 
+macro(stringListTofileNames INPUT FILE_SUFFIX OUTPUT)
+    string(REPLACE " " ";" OUTPUT_LIST ${INPUT})
+    set(outputTemp "")
+    foreach(temp ${OUTPUT_LIST})
+        set(outputTemp "${outputTemp}${temp}${FILE_SUFFIX} ")
+    endforeach()
+    set(${OUTPUT} ${outputTemp})
+endmacro()

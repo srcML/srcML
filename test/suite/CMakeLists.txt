@@ -164,103 +164,71 @@ set(SEP_BASE "${BASE_COMMON} ${BASE_C_FAMILY} ${BASE_CXX} ${BASE_OO}")
 set(GEN_SEP "${GEN_BASE} ${GEN_BASE_CXX}")
 
 # generated cases for C++ from base
-# list(GEN_SEP_LIST UNIX_COMMAND ${GEN_SEP})
-string(REPLACE " " ";" GEN_SEP_LIST ${GEN_SEP})
-set(GEN_PART "")
-foreach(temp ${GEN_SEP_LIST})
-    list(APPEND GEN_PART "${temp}.cpp.xml")
-endforeach()
+stringListTofileNames(${GEN_SEP} ".cpp.xml" GEN_PART)
 
-# GEN_PART=${foreach nm, $(GEN_SEP), $(nm).cpp.xml}
+set(SEP_FILES "${SEP_BASE} preprocessor")
+
+# base for all of Java
+set(BASE_JAVA_ALL_GEN "${BASE_COMMON} ${GEN_BASE} ${BASE_OO}")
+set(BASE_JAVA_ALL "${BASE_COMMON} ${GEN_BASE} ${BASE_OO} ${BASE_JAVA}")
+stringListTofileNames(${BASE_JAVA_ALL_GEN} ".java.xml" GEN_JAVA)
+
+# Base for all C.
+set(BASE_C_ALL_GEN "${BASE_COMMON} ${GEN_BASE} ${BASE_C_FAMILY}")
+set(BASE_C_ALL "${BASE_COMMON} ${GEN_BASE} ${BASE_C_FAMILY} ${BASE_C}")
+stringListTofileNames(${BASE_C_ALL_GEN} ".c.xml" GEN_C)
+
+# base for all C#
+set(BASE_CS_ALL_GEN "${BASE_COMMON} ${GEN_BASE} ${BASE_CS_GEN}")
+set(BASE_CS_ALL "${BASE_COMMON} ${GEN_BASE} ${BASE_CS} ${BASE_CS_GEN}")
+stringListTofileNames(${BASE_CS_ALL_GEN} ".cs.xml" GEN_CS)
+
+set(SEP_PLUS "${SEP_FILES} ${GEN_SEP}")
+set(SEP_PLUSNOPREPROC "${SEP_BASE} ${GEN_SEP}")
+ 
+set(SEP_STRUCT "function function_const function_cpp function_decl function_ns function_operator function_pointer function_throw ")
+
+macro(generateFileGroup FILE_EXT_PREFIX OUTPUT)
+    stringListTofileNames(${SEP_PLUS} ".${FILE_EXT_PREFIX}.cpp.xml" SEP_PLUS_NAMES)
+    stringListTofileNames(${BASE_JAVA_ALL} ".${FILE_EXT_PREFIX}.java.xml" JAVA_NAMES)
+    stringListTofileNames(${BASE_C_ALL} ".${FILE_EXT_PREFIX}.c.xml" C_NAMES)
+    stringListTofileNames(${BASE_CS_ALL} ".${FILE_EXT_PREFIX}.cs.xml" CS_NAMES)    
+    # stringListTofileNames(${BASE_ASPECTJ_ALL} ".${FILE_EXT_PREFIX}.aj.xml" AJ_NAMES)
+    # stringListTofileNames(${BASE_CXX_11_ALL} ".${FILE_EXT_PREFIX}.cpp11.xml" CPP11_NAMES)
+    set(${OUTPUT} "${SEP_PLUS_NAMES} ${JAVA_NAMES} ${C_NAMES} ${CS_NAMES} ${ARGN}")
+    # Remember to add second statemement when and if these are added back into the test suite.
+    # set(${OUTPUT} "${OUTPUT} ${AJ_NAMES} ${CPP11_NAMES}")
+endmacro()
+
+#
+# generate cases for all
 # 
-# SEP_FILES=$(SEP_BASE) preprocessor
-# 
-# # base for all of Java
-# BASE_JAVA_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO)
-# 
-# BASE_JAVA_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
-# 
-# GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL_GEN), $(nm).java.xml}
-# 
-# #BASE_ASPECTJ_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
-# 
-# #GEN_ASPECTJ= ${foreach nm, $(BASE_ASPECTJ_ALL_GEN), $(nm).aj.xml}
-# 
-# #BASE_CXX_11_ALL_GEN = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
-# 
-# #BASE_CXX_11_ALL = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
-# 
-# #GEN_CXX_11= ${foreach nm, $(BASE_CXX_11_ALL_GEN), $(nm).cpp11.xml}
-# 
-# BASE_C_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_C_FAMILY)
-# BASE_C_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_C_FAMILY) $(BASE_C)
-# GEN_C= ${foreach nm, $(BASE_C_ALL_GEN), $(nm).c.xml}
-# 
-# BASE_CS_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_CS_GEN)
-# BASE_CS_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_CS) $(BASE_CS_GEN)
-# GEN_CS= ${foreach nm, $(BASE_CS_ALL_GEN), $(nm).cs.xml}
-# 
-# SEP_PLUS= ${SEP_FILES} ${GEN_SEP}
-# SEP_PLUSNOPREPROC= ${SEP_BASE} ${GEN_SEP}
-# 
-# SEP_STRUCT = function function_const function_cpp function_decl function_ns function_operator function_pointer function_throw 
-# 
-# ##
-# # generate cases for all
-# GEN_ALL= ${foreach nm, $(SEP_PLUS), $(nm).all.cpp.xml} extra_cpp.all.cpp.xml \
-#                ${foreach nm, $(BASE_JAVA_ALL), $(nm).all.java.xml} \
-#                ${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).all.aj.xml} \
-#                ${foreach nm, $(BASE_CXX_11_ALL), $(nm).all.cpp11.xml} \
-#                ${foreach nm, $(BASE_C_ALL), $(nm).all.c.xml} \
-#                ${foreach nm, $(BASE_CS_ALL), $(nm).all.cs.xml} \
-#                 extra_c.all.c.xml extra_cpp.all.cpp.xml
-# 
-# # generated cases for blocks
-# GEN_BLOCK= ${foreach nm, $(SEP_PLUS),          $(nm).block.cpp.xml} \
-#                ${foreach nm, $(BASE_C_ALL),    $(nm).block.c.xml} \
-#                ${foreach nm, $(BASE_CS_ALL),    $(nm).block.cs.xml} \
-#                ${foreach nm, $(BASE_CXX_11_ALL), $(nm).block.cpp11.xml} \
-#                ${foreach nm, $(BASE_JAVA_ALL), $(nm).block.java.xml} \
-#                ${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).block.aj.xml} \
-#                  extra_c.block.c.xml extra_cpp.block.cpp.xml
-# 
-# # generated cases for structs
-# GEN_STRUCT= ${foreach nm, $(SEP_STRUCT),          $(nm).struct.cpp.xml}
-# 
-# # generated cases for comments
-# GEN_COMMENT= ${foreach nm, $(SEP_PLUS),          $(nm).comment.cpp.xml} \
-#                ${foreach nm, $(BASE_C_ALL),    $(nm).comment.c.xml} \
-#                ${foreach nm, $(BASE_CS_ALL),    $(nm).comment.cs.xml} \
-#                ${foreach nm, $(BASE_CXX_11_ALL), $(nm).comment.cpp11.xml} \
-#                ${foreach nm, $(BASE_JAVA_ALL), $(nm).comment.java.xml} \
-#                ${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).comment.aj.xml} \
-#                    extra_c.comment.c.xml extra_cpp.comment.cpp.xml
-# 
+
+# These are removed until they are defined again.
+generateFileGroup("all" GEN_ALL "extra_cpp.all.cpp.xml extra_c.all.c.xml")
+
+# generated cases for blocks
+generateFileGroup("block" GEN_BLOCK "extra_c.block.c.xml extra_cpp.block.cpp.xml") 
+
+# generated cases for structs
+stringListTofileNames(${SEP_STRUCT} ".struct.cpp.xml" GEN_STRUCT)
+
+# generated cases for comments
+generateFileGroup("comment" GEN_COMMENT "extra_c.comment.c.xml extra_cpp.comment.cpp.xml")
+
 # # generated cases for formfeed
-# GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          $(nm).formfeed.cpp.xml} \
-#                      ${foreach nm, $(BASE_C_ALL),    $(nm).formfeed.c.xml} \
-#                      ${foreach nm, $(BASE_CS_ALL),    $(nm).formfeed.cs.xml} \
-#                      ${foreach nm, $(BASE_CXX_11_ALL), $(nm).formfeed.cpp11.xml} \
-#                      ${foreach nm, $(BASE_JAVA_ALL), $(nm).formfeed.java.xml} \
-#                      ${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).formfeed.aj.xml} \
-#                      extra_c.formfeed.c.xml extra_cpp.formfeed.cpp.xml
-# 
+generateFileGroup("formfeed" GEN_FORMFEED "extra_c.formfeed.c.xml extra_cpp.formfeed.cpp.xml")
+
+# generated test cases for preproc
+stringListTofileNames(${SEP_PLUSNOPREPROC} ".preproc.cpp.xml" CPP_SEP_PLUSNO_PREPROC_NAMES)
+stringListTofileNames(${BASE_JAVA_ALL} ".preproc.java.xml" CPP_JAVA_NAMES)
+stringListTofileNames(${BASE_C_ALL} ".preproc.c.xml" CPP_C_NAMES)
+stringListTofileNames(${BASE_CS_ALL} ".preproc.cs.xml" CPP_CS_NAMES)
+set(GEN_PREPROC "${CPP_SEP_PLUSNO_PREPROC_NAMES} ${CPP_JAVA_NAMES} ${CPP_C_NAMES} ${CPP_CS_NAMES}")
+
 # # generated test cases for preproc
-# GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), $(nm).preproc.cpp.xml} \
-#                    ${foreach nm, $(BASE_CXX_11_ALL), $(nm).preproc.cpp11.xml} \
-#                    ${foreach nm, $(BASE_C_ALL), $(nm).preproc.c.xml} \
-#                    ${foreach nm, $(BASE_CS_ALL), $(nm).preproc.cs.xml} \
-#                    extra_c.preproc.c.xml extra_cpp.preproc.cpp.xml
-# 
-# # generated test cases for preproc
-# GEN_IFTHENELSE= ${foreach nm, $(SEP_PLUS), $(nm).ifthenelse.cpp.xml} \
-#                    ${foreach nm, $(BASE_CXX_11_ALL), $(nm).ifthenelse.cpp11.xml} \
-#                    ${foreach nm, $(BASE_C_ALL), $(nm).ifthenelse.c.xml} \
-#                    ${foreach nm, $(BASE_CS_ALL), $(nm).ifthenelse.cs.xml} \
-#                    ${foreach nm, $(BASE_JAVA_ALL), $(nm).ifthenelse.java.xml} \
-#                    ${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).ifthenelse.aj.xml} \
-#                    extra_c.ifthenelse.c.xml extra_cpp.ifthenelse.cpp.xml
-# 
+generateFileGroup("ifthenelse" GEN_IFTHENELSE "extra_c.ifthenelse.c.xml extra_cpp.ifthenelse.cpp.xml")
+
 # allinall.c.xml :
 #         @echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > allinall.c.xml
 #         @echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" dir=\"allinall.c\">" >> allinall.c.xml
