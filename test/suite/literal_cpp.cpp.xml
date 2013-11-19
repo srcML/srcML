@@ -60,4 +60,8 @@
 <expr_stmt><expr><lit:literal type="string">UR"(This is a "raw UTF-32" string.)"</lit:literal></expr>;</expr_stmt> 
 </unit>
 
+<unit>
+<expr_stmt><expr><lit:literal type="number">nullptr</lit:literal></expr>;</expr_stmt> 
+</unit>
+
 </unit>

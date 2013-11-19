@@ -4346,7 +4346,7 @@ literal[] { LightweightElement element(this); ENTRY_DEBUG } :
             if (isoption(parseoptions, OPTION_LITERAL))
                 startElement(SLITERAL);
         }
-        CONSTANTS
+        (CONSTANTS | NULLPTR)
 ;
 
 boolean[] { LightweightElement element(this); ENTRY_DEBUG } :
