@@ -2308,7 +2308,12 @@ function_tail[] { ENTRY_DEBUG } :
         )*
 ;
 
-ref_qualifier [] { ENTRY_DEBUG } :
+ref_qualifier []  { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // markup type modifiers if option is on
+            if (isoption(parseoptions, OPTION_MODIFIER))
+                startElement(SMODIFIER);
+        }
 
         REFOPS | RVALUEREF
 ;
