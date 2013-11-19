@@ -2281,6 +2281,9 @@ function_tail[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             function_specifier |
 
+            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            REFOPS (REFOPS)* |
+
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             TRY |
 
