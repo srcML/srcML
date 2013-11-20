@@ -76,6 +76,14 @@
 </unit>
 
 <unit>
+<template>template<parameter_list>&lt;<param><type><template>template<parameter_list>&lt;<param><type><name>typename</name></type></param>&gt;</parameter_list></template> <name>class</name></type> <name>T</name></param>&gt;</parameter_list> <struct_decl>struct <name>C</name>;</struct_decl></template>
+</unit>
+
+<unit>
+<template>template<parameter_list>&lt;<param><type><template>template<parameter_list>&lt;<param><type><name>typename</name></type></param>&gt;</parameter_list></template> <name>class</name></type> <name>T</name> =<init> <expr><name>b</name></expr></init></param>&gt;</parameter_list> <struct_decl>struct <name>C</name>;</struct_decl></template>
+</unit>
+
+<unit>
 <template>template<parameter_list>&lt;<param><type><template>template<parameter_list>&lt;<param><type><name>typename</name></type></param>&gt;</parameter_list></template> <name>class</name> ...</type> <name>T</name></param>&gt;</parameter_list> <struct_decl>struct <name>C</name>;</struct_decl></template>
 </unit>
 
