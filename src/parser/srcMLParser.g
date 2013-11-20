@@ -4681,7 +4681,6 @@ template_param[] { ENTRY_DEBUG } :
 
 template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; } :
 
-
         template_parameter_list_full
         { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : type_count = 1)}?
         eat_type[type_count]//parameter_declaration_initialization
@@ -4704,7 +4703,7 @@ template_parameter_list_full[] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
 
-        template_declaration template_param_list template_param tempope { if(inMode(MODE_TEMPLATE)) endMode();}
+        template_declaration template_param_list template_param (variable_declaration_initialization)* tempope { if(inMode(MODE_TEMPLATE)) endMode();}
 
 ;
 
