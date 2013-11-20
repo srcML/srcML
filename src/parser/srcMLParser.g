@@ -2831,7 +2831,8 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
 class_lead_type_identifier[]  { SingleElement element(this); ENTRY_DEBUG } :
         {
-            startElement(SNAME);
+            if(inTransparentMode(MODE_TEMPLATE))
+                startElement(SNAME);
         }
         (CLASS | STRUCT | UNION)
 ;
@@ -4683,7 +4684,7 @@ template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STM
 
         template_parameter_list_full
         { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : type_count = 1)}?
-        eat_type[type_count]//parameter_declaration_initialization
+        eat_type[type_count]
         {
             endMode();
 
@@ -4703,7 +4704,19 @@ template_parameter_list_full[] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
 
-        template_declaration template_param_list template_param (variable_declaration_initialization)* tempope { if(inMode(MODE_TEMPLATE)) endMode();}
+        template_declaration template_param_list template_param (template_declaration_initialization)* tempope { if(inMode(MODE_TEMPLATE)) endMode();}
+
+;
+
+template_declaration_initialization[] { ENTRY_DEBUG } :
+        EQUAL
+        {
+            // end the init correctly
+            setMode(MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the initialization element
+            startNoSkipElement(SDECLARATION_INITIALIZATION);
+        } compound_name
 
 ;
 
