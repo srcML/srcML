@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 18 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 18 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -2343,8 +2343,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 
     } catch (...) {
 
-        if (type == VARIABLE && type_count == 0)
+        if (type == VARIABLE && type_count == 0) {
             type_count = 1;
+        }
+
     }
 
     // may just have an expression
@@ -4611,7 +4613,7 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
             // start of type
             startElement(STYPE);
         }
-        { pattern_check(stmt_type, secondtoken, type_count) }?
+        { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : type_count = 1)}?
         eat_type[type_count]
 ;
 
@@ -4664,7 +4666,18 @@ template_param[] { ENTRY_DEBUG } :
             // expect a name initialization
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         } |
-        template_declaration
+        {
+            // local mode so start element will end correctly                                                          
+            startNewMode(MODE_LOCAL);
+            
+            // start of type                                                                                           
+            startElement(STYPE);
+        }
+        template_declaration template_param_list template_param tempope
+        { endMode(); }
+        CLASS (tripledotop)*
+        { endMode(); }
+        compound_name
     )
 ;
 
