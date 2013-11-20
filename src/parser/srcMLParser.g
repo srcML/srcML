@@ -4666,19 +4666,35 @@ template_param[] { ENTRY_DEBUG } :
             // expect a name initialization
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         } |
+        template_inner_full
+    )
+;
+
+template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; } :
+
+
+        template_parameter_list_full
+        { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : type_count = 1)}?
+        eat_type[type_count]//parameter_declaration_initialization
         {
-            // local mode so start element will end correctly                                                          
+            // expect a name initialization
+            setMode(MODE_VARIABLE_NAME | MODE_INIT);
+        }
+
+;
+
+template_parameter_list_full[] { ENTRY_DEBUG } :
+
+        {
+            // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
             
-            // start of type                                                                                           
+            // start of type
             startElement(STYPE);
         }
-        template_declaration template_param_list template_param tempope
-        { endMode(); }
-        CLASS (tripledotop)*
-        { endMode(); }
-        compound_name
-    )
+
+        template_declaration template_param_list template_param tempope { if(inMode(MODE_TEMPLATE)) endMode();}
+
 ;
 
 template_argument_list[] { CompleteElement element(this); std::string namestack_save[2]; ENTRY_DEBUG } :
