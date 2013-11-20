@@ -2746,6 +2746,7 @@ deduct[int& type_count] { --type_count; } :;
 eat_type[int & count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
 
         type_identifier
+
         set_int[count, count - 1]
         eat_type[count]
 
@@ -2817,7 +2818,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         // class/struct/union before a name in a type, e.g., class A f();
-        CLASS | STRUCT | UNION |
+        class_lead_type_identifier |
 
         // enum use in a type
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
@@ -2826,6 +2827,13 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
         // entire enum definition
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         enum_definition_complete
+;
+
+class_lead_type_identifier[]  { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+        (CLASS | STRUCT | UNION)
 ;
 
 lead_type_identifier[] { ENTRY_DEBUG } :
@@ -4666,6 +4674,7 @@ template_param[] { ENTRY_DEBUG } :
             // expect a name initialization
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         } |
+
         template_inner_full
     )
 ;
@@ -4677,6 +4686,8 @@ template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STM
         { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : type_count = 1)}?
         eat_type[type_count]//parameter_declaration_initialization
         {
+            endMode();
+
             // expect a name initialization
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         }
