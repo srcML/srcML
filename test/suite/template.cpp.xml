@@ -6,7 +6,7 @@
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<param><type>class</type> <name>n</name></param>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+<template>template <parameter_list>&lt;<param><type><name>class</name></type> <name>n</name></param>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
 </unit>
 
 <unit>
