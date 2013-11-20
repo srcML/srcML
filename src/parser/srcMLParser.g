@@ -2833,6 +2833,8 @@ class_lead_type_identifier[]  { SingleElement element(this); ENTRY_DEBUG } :
         {
             if(inTransparentMode(MODE_TEMPLATE))
                 startElement(SNAME);
+            else
+                startElement(SNOP);
         }
         (CLASS | STRUCT | UNION)
 ;
