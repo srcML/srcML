@@ -95,6 +95,8 @@
 }</block></function></template>
 </unit>
 
-<template>template <parameter_list>&lt;<param><type><template>template <parameter_list>&lt;<param><type><name>class</name></type> = <name>float</name></param>&gt;</parameter_list></template> <name>class</name></type> <name>T</name></param>&gt;</parameter_list> <class_decl>class <name>A</name>;</class_decl></template>
+<unit>
+<template>template <parameter_list>&lt;<param><type><template>template <parameter_list>&lt;<param><type><name>class</name></type> =<init> <name>float</name></init></param>&gt;</parameter_list></template> <name>class</name></type> <name>T</name></param>&gt;</parameter_list> <class_decl>class <name>A</name>;</class_decl></template>
+</unit>
 
 </unit>
