@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="struct" filename="struct_cs">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="struct_cs">
 
 <unit>
-<struct>struct <name>A</name> <block>{}</block></struct>
-</unit>
-
-<unit>
-<struct>struct <name>A</name> <super>: <name>B</name>, <name>C</name></super> <block>{}</block></struct>
-</unit>
-
-<unit>
-<struct><specifier>public</specifier> struct <name>A</name> <super>: <name>B</name>, <name>C</name></super> <block>{}</block></struct>
+<struct>struct <name>A</name> <block>{
+  <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{
+    <expr_stmt><expr><call><name>~<name>d</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  }</block></function>
+}</block></struct>
 </unit>
 
 </unit>
