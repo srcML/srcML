@@ -602,13 +602,17 @@ void srcMLTranslatorOutput::processEndLineToken(const antlr::RefToken& token) {
 
   int size = token->getText().size();
 
-  if (size > 1)
+  bool output = false;
+  if (size > 1 || token->getText()[0] != '\n') {
     processText(token);
+    output = true;
+  }
+
 
   xmlTextWriterEndElement(xout);
   --openelementcount;
 
-  if (size == 1)
+  if (size == 1 && !output)
     processText(token);
 }
 
