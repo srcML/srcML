@@ -105,6 +105,9 @@ private:
             // is needed (preprocessing lines end at EOL, or the start of
             // a line comment)
         case Base::LINECOMMENT_START:
+        case Base::JAVADOC_COMMENT_START:
+	case Base::DOXYGEN_COMMENT_START:
+	case Base::LINE_DOXYGEN_COMMENT_START:
         case Base::EOL:
 
             return !inskip;

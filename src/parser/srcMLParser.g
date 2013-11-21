@@ -5112,7 +5112,7 @@ eol[int directive_token, bool markblockzero] {
 
             endMode(MODE_PARSE_EOL);
 ENTRY_DEBUG } :
-        (EOL | LINECOMMENT_START | eof)
+        (EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | eof)
         eol_post[directive_token, markblockzero]
 ;
 
