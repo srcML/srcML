@@ -3184,9 +3184,7 @@ identifier_list[] { ENTRY_DEBUG } :
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
-            INTO | THIS |
-
-            { inLanguage(LANGUAGE_CSHARP) }? UNION
+            INTO | THIS
 ;
 
 // most basic name
