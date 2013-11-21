@@ -34,7 +34,7 @@ add_definitions(-fPIC)
 find_package(LibArchive REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(LibXslt)
-find_package(Boost COMPONENTS program_options filesystem system)
+find_package(Boost COMPONENTS program_options system filesystem)
 
 include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
 
@@ -164,7 +164,7 @@ endif()
 
 # srcml
 add_executable(srcml EXCLUDE_FROM_ALL src/srcml/srcml.cpp src/srcml/srcmlCLI.cpp)
-target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY} ${LibArchive_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${CURL_LIBRARIES} srcml_static)
+target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${LibArchive_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${CURL_LIBRARIES} srcml_static)
 
 # src2srcml
 if(NOT SVN_ENABLED)
