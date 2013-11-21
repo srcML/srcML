@@ -314,7 +314,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "pragma"        , PRAGMA        , LANGUAGE_C_FAMILY }, 
         { "undef"         , UNDEF         , LANGUAGE_C_FAMILY }, 
 
-        { "union"         , UNION         , LANGUAGE_C_FAMILY }, 
+        { "union"         , UNION         , LANGUAGE_CXX_ONLY | LANGUAGE_C }, 
         { "struct"        , STRUCT        , LANGUAGE_C_FAMILY }, 
 
         { "inline"        , INLINE        , LANGUAGE_C_FAMILY }, 
