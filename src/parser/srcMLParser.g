@@ -4173,18 +4173,21 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
         }
 ;
 
-rcurly_argument[] { ENTRY_DEBUG } :
+rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
         {
 
-            // additional right parentheses indicates end of non-list modes
-            endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE | MODE_INTERNAL_END_CURLY);
+            if(isempty) {
+
+                // additional right parentheses indicates end of non-list modes
+                endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE | MODE_INTERNAL_END_CURLY);
+            }
 
         }
         RCURLY
         {
             // end the single mode that started the list
             // don't end more than one since they may be nested
-            if (inMode(MODE_LIST))
+            if (isempty && inMode(MODE_LIST))
                 endMode(MODE_LIST);
             else if(inMode(MODE_EXPRESSION | MODE_LIST))
                 endMode(MODE_EXPRESSION | MODE_LIST);
@@ -4531,7 +4534,7 @@ complete_parameter[] { ENTRY_DEBUG } :
 
 argument[] { ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false] |
-        rcurly_argument |
+        { getCurly() == 0 }? rcurly_argument |
         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
