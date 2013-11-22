@@ -590,7 +590,11 @@ public:
 
   Order of evaluation is important.
 */
-start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
+start[] { ENTRY_DEBUG_START ENTRY_DEBUG 
+
+fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, inTransparentMode(MODE_CALL));
+
+} :
 
         // end of file
         eof |
@@ -609,7 +613,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         // don't confuse with expression block
         { (inTransparentMode(MODE_CONDITION) ||
-            (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) && !inTransparentMode(MODE_CALL) }? lcurly |
+            (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN) }? lcurly |
 
         // switch cases @test switch
         { !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }?
