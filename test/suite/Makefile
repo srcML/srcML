@@ -590,7 +590,11 @@ struct_cs.cs.xml : class_cs.cs.xml ${XSLT_CLASS2STRUCT_XSL}
 	${XSLT_CLASS2STRUCT} $< > $@
 
 # union from struct
-union_cs.cs.xml : struct_cs.cs.xml ${XSLT_STRUCT2UNION_XSL}
+#union_cs.cs.xml : struct_cs.cs.xml ${XSLT_STRUCT2UNION_XSL}
+	#${XSLT_STRUCT2UNION} $< > $@
+
+# union from struct
+cunion.cpp.xml : cstruct.cpp.xml ${XSLT_STRUCT2UNION_XSL}
 	${XSLT_STRUCT2UNION} $< > $@
 
 # interface from class
