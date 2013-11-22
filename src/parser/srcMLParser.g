@@ -1714,6 +1714,9 @@ access_specifier_region[] { ENTRY_DEBUG } :
 */
 lcurly[] { ENTRY_DEBUG } :
         {
+
+            incCurly();
+
             // special end for conditions
             if (inTransparentMode(MODE_CONDITION)) {
                 endDownToMode(MODE_CONDITION);
@@ -1824,6 +1827,9 @@ block_end[] { ENTRY_DEBUG } :
 // right curly brace.  Not used directly, but called by block_end
 rcurly[] { ENTRY_DEBUG } :
         {
+
+            decCurly();
+
             // end any elements inside of the block
             endDownToMode(MODE_TOP);
 
