@@ -34,6 +34,7 @@
 #include <archive.h>
 #include <archive_entry.h>
 //#include <curl/curl.h>
+#include <boost/filesystem.hpp>
 #include <pthread.h>
 
 #include <iostream>
@@ -60,14 +61,12 @@ struct ParseRequest {
 ParseRequest NullParseRequest;
 
 bool checkLocalFile(const std::string& pos_arg) {
-  FILE * local;
-  if(pos_arg.find("http:") == std::string::npos){
-    local = fopen(pos_arg.c_str(),"r");
-    if (local == NULL) {
+  if (pos_arg.find("http:") == std::string::npos){
+    boost::filesystem3::path localFile (pos_arg);
+    if (!exists(localFile)) {
       std::cerr << "File " << pos_arg << " not found.\n";
       return false;
     }
-    fclose(local);
   }
   return true;
 }
@@ -92,9 +91,9 @@ bool convenienceCheck(const std::string& filename) {
 
   archive_read_support_filter_all(arch);
 
-  if(archive_read_open_filename(arch, filename.c_str(), 16384) == ARCHIVE_OK) {
-    if(archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
-      if(archive_filter_code(arch,0) == ARCHIVE_FILTER_NONE &&
+  if (archive_read_open_filename(arch, filename.c_str(), 16384) == ARCHIVE_OK) {
+    if (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
+      if (archive_filter_code(arch,0) == ARCHIVE_FILTER_NONE &&
         archive_format(arch) == ARCHIVE_FORMAT_RAW){
         archive_read_finish(arch);
         return true;
@@ -152,13 +151,13 @@ int main(int argc, char * argv[]) {
 
   srcml_set_tabstop(srcml_request.tabs);
 
-  for(int i = 0; i < srcml_request.register_ext.size(); ++i) {
+  for (int i = 0; i < srcml_request.register_ext.size(); ++i) {
     int pos = srcml_request.register_ext[i].find('=');
     srcml_register_file_extension(srcml_request.register_ext[i].substr(0,pos).c_str(),
           srcml_request.register_ext[i].substr(pos+1).c_str());
   }
 
-  for(int i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
+  for (int i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
     int pos = srcml_request.xmlns_prefix[i].find('=');
     srcml_register_namespace(srcml_request.xmlns_prefix[i].substr(0,pos).c_str(),
            srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
@@ -221,7 +220,7 @@ int main(int argc, char * argv[]) {
 
     archive_read_support_filter_all(arch);
 
-    if(archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384) == ARCHIVE_OK) {
+    if (archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384) == ARCHIVE_OK) {
       const void* buffer;
       const char* cptr;
       size_t size;
