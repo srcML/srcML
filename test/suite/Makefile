@@ -594,7 +594,7 @@ struct_cs.cs.xml : class_cs.cs.xml ${XSLT_CLASS2STRUCT_XSL}
 	#${XSLT_STRUCT2UNION} $< > $@
 
 # union from struct
-union_c.cc.xml : struct_c.c.xml ${XSLT_STRUCT2UNION_XSL}
+union_c.c.xml : struct_c.c.xml ${XSLT_STRUCT2UNION_XSL}
 	${XSLT_STRUCT2UNION} $< > $@
 
 # interface from class

@@ -171,6 +171,27 @@ public:
         st.top().decParen();
     }
 
+    // curly count
+    int getCurly() const {
+        return !st.empty() ? st.top().getCurly() : 0;
+    }
+
+    // increment the curly count
+    void incCurly() {
+        if (st.empty())
+            throw Segmentation_Fault();
+
+        st.top().incCurly();
+    }
+
+    // decrement the curly count
+    void decCurly() {
+        if (st.empty())
+            throw Segmentation_Fault();
+
+        st.top().decCurly();
+    }
+
     // type count
     int getTypeCount() const {
         return !st.empty() ? st.top().getTypeCount() : 0;

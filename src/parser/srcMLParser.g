@@ -264,7 +264,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options
     if (!_tokenSet_13.member(INCLUDE))
         fprintf(stderr, "src2srcml:  Incorrect token set B\n");
 
-    if (!_tokenSet_21.member(CLASS))
+    if (!_tokenSet_22.member(CLASS))
         fprintf(stderr, "src2srcml:  Incorrect token set C\n");
 
     // root, single mode
@@ -608,8 +608,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         terminate |
 
         // don't confuse with expression block
-        { inTransparentMode(MODE_CONDITION) ||
-            (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)) }? lcurly |
+        { (inTransparentMode(MODE_CONDITION) ||
+            (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN) }? lcurly |
 
         // switch cases @test switch
         { !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }?
@@ -1714,6 +1714,7 @@ access_specifier_region[] { ENTRY_DEBUG } :
 */
 lcurly[] { ENTRY_DEBUG } :
         {
+
             // special end for conditions
             if (inTransparentMode(MODE_CONDITION)) {
                 endDownToMode(MODE_CONDITION);
@@ -1745,8 +1746,12 @@ lcurly[] { ENTRY_DEBUG } :
         }
         lcurly_base
         {
+
+            incCurly();
+
             // alter the modes set in lcurly_base
             setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST);
+
         }
 ;
 
@@ -1824,6 +1829,8 @@ block_end[] { ENTRY_DEBUG } :
 // right curly brace.  Not used directly, but called by block_end
 rcurly[] { ENTRY_DEBUG } :
         {
+
+
             // end any elements inside of the block
             endDownToMode(MODE_TOP);
 
@@ -1833,6 +1840,10 @@ rcurly[] { ENTRY_DEBUG } :
 
             // end any sections inside the mode
             endDownOverMode(MODE_TOP_SECTION);
+
+            if(getCurly() != 0)
+                decCurly();
+
         }
         RCURLY
         {
@@ -2045,7 +2056,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         expression_part_plus_linq |
 
         // call list in member initialization list
-        { inMode(MODE_CALL | MODE_LIST) }?
+        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
         call |
 
         /*
@@ -2454,7 +2465,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
-                { _tokenSet_21.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
+                { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || LA(1) == CONST]
                 (specifier | (SIGNAL COLON)=>SIGNAL)
@@ -2804,7 +2815,7 @@ complete_noexcept_list[] { ENTRY_DEBUG } :
 pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         // specifiers that occur in a type
-		{ _tokenSet_21.member(LA(1)) }?
+		{ _tokenSet_22.member(LA(1)) }?
         specifier |
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
@@ -3505,7 +3516,7 @@ call_argument_list[] { ENTRY_DEBUG } :
             // start the argument list
             startElement(SARGUMENT_LIST);
         }
-        LPAREN
+        (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
 macro_call_check[] { ENTRY_DEBUG } :
@@ -4167,6 +4178,32 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
         }
 ;
 
+rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
+        {
+            if(isempty) {
+
+                // additional right parentheses indicates end of non-list modes
+                endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE | MODE_INTERNAL_END_CURLY);
+            }
+
+        }
+        RCURLY
+        {
+
+            // end the single mode that started the list
+            // don't end more than one since they may be nested
+            if (isempty && inMode(MODE_LIST))
+                endDownOverMode(MODE_LIST);
+            
+            else if(inTransparentMode(MODE_EXPRESSION | MODE_LIST))
+                endDownOverMode(MODE_EXPRESSION | MODE_LIST);
+
+            if(!isempty)
+                decCurly();
+        }
+
+;
+
 // Dot (period) operator
 period[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
@@ -4277,7 +4314,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         {
             // stop at this matching paren, or a preprocessor statement
             endDownToModeSet(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
-
+            
             if (inMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN))
                 endMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
         }
@@ -4293,21 +4330,20 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         }
         LCURLY
         {
+            incCurly();
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_CURLY);
         } |
-
-        // right curly brace
         { inTransparentMode(MODE_INTERNAL_END_CURLY) }?
         {
-            endDownToMode(MODE_INTERNAL_END_CURLY);
 
-            endMode(MODE_INTERNAL_END_CURLY);
+            if(!inTransparentMode(MODE_CALL)) {
+                endDownToMode(MODE_INTERNAL_END_CURLY);
+
+                endMode(MODE_INTERNAL_END_CURLY);
+
+            }
         }
-        RCURLY
-        {
-            if (inMode(MODE_EXPRESSION | MODE_LIST))
-                endMode(MODE_EXPRESSION | MODE_LIST);
-        } |
+        rcurly_argument |
 
         // variable or literal
         variable_identifier | string_literal | char_literal | literal | boolean | noexcept_operator | 
@@ -4508,6 +4544,7 @@ complete_parameter[] { ENTRY_DEBUG } :
 
 argument[] { ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false] |
+        { getCurly() == 0 }? rcurly_argument |
         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -4516,10 +4553,11 @@ argument[] { ENTRY_DEBUG } :
             startElement(SARGUMENT);
         }
         (
-        { !(LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression |
+        { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }? expression |
 
         type_identifier
         )
+
 ;
 
 annotation_argument[] { ENTRY_DEBUG } :

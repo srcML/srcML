@@ -29,11 +29,11 @@ class srcMLState : public State {
 public:
 
     srcMLState(const State::MODE_TYPE& mode, const State::MODE_TYPE& transmode, const State::MODE_TYPE& prevmode)
-        : State(mode, transmode, prevmode), parencount(0), typecount(0)
+      : State(mode, transmode, prevmode), parencount(0), curlycount(0), typecount(0)
         {}
 
     srcMLState()
-        : State(), parencount(0), typecount(0)
+      : State(), parencount(0), curlycount(0), typecount(0)
         {}
 
     // parentheses count
@@ -49,6 +49,21 @@ public:
     // decrement the parentheses count
     void decParen() {
         --parencount;
+    }
+
+    // curly count
+    int getCurly() const {
+        return curlycount;
+    }
+
+    // increment the curly count
+    void incCurly() {
+        ++curlycount;
+    }
+
+    // decrement the curly count
+    void decCurly() {
+        --curlycount;
     }
 
     // type count
@@ -76,6 +91,7 @@ public:
 
 private:
     int parencount;
+    int curlycount;
     int typecount;
 };
 
