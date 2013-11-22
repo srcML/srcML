@@ -4189,12 +4189,14 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
         }
         RCURLY
         {
+
             // end the single mode that started the list
             // don't end more than one since they may be nested
             if (isempty && inMode(MODE_LIST))
-                endMode(MODE_LIST);
-            else if(inMode(MODE_EXPRESSION | MODE_LIST))
-                endMode(MODE_EXPRESSION | MODE_LIST);
+                endDownOverMode(MODE_LIST);
+            
+            else if(inTransparentMode(MODE_EXPRESSION | MODE_LIST))
+                endDownOverMode(MODE_EXPRESSION | MODE_LIST);
 
             if(!isempty)
                 decCurly();
