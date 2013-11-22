@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 18 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 18 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -3500,12 +3500,12 @@ call[] { ENTRY_DEBUG } :
 call_argument_list[] { ENTRY_DEBUG } :
         {
             // list of parameters
-            setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN);
+            setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN | MODE_INTERNAL_END_CURLY);
 
             // start the argument list
             startElement(SARGUMENT_LIST);
         }
-        LPAREN
+        (LPAREN | LCURLY)
 ;
 
 macro_call_check[] { ENTRY_DEBUG } :
@@ -4167,6 +4167,24 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
         }
 ;
 
+rcurly_argument[] { ENTRY_DEBUG } :
+        {
+
+            // additional right parentheses indicates end of non-list modes
+            endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE | MODE_INTERNAL_END_CURLY);
+
+
+        }
+        RCURLY
+        {
+            // end the single mode that started the list
+            // don't end more than one since they may be nested
+            if (inMode(MODE_LIST))
+                endMode(MODE_LIST);
+        }
+
+;
+
 // Dot (period) operator
 period[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
@@ -4508,6 +4526,7 @@ complete_parameter[] { ENTRY_DEBUG } :
 
 argument[] { ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false] |
+        rcurly_argument |
         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -4516,7 +4535,7 @@ argument[] { ENTRY_DEBUG } :
             startElement(SARGUMENT);
         }
         (
-        { !(LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression |
+        { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }? expression |
 
         type_identifier
         )
