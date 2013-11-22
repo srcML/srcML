@@ -4173,7 +4173,6 @@ rcurly_argument[] { ENTRY_DEBUG } :
             // additional right parentheses indicates end of non-list modes
             endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE | MODE_INTERNAL_END_CURLY);
 
-
         }
         RCURLY
         {
@@ -4181,6 +4180,8 @@ rcurly_argument[] { ENTRY_DEBUG } :
             // don't end more than one since they may be nested
             if (inMode(MODE_LIST))
                 endMode(MODE_LIST);
+            else if(inMode(MODE_EXPRESSION | MODE_LIST))
+                endMode(MODE_EXPRESSION | MODE_LIST);
         }
 
 ;
@@ -4295,7 +4296,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         {
             // stop at this matching paren, or a preprocessor statement
             endDownToModeSet(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
-
+            
             if (inMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN))
                 endMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
         }
@@ -4314,18 +4315,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_CURLY);
         } |
 
-        // right curly brace
-        { inTransparentMode(MODE_INTERNAL_END_CURLY) }?
-        {
-            endDownToMode(MODE_INTERNAL_END_CURLY);
-
-            endMode(MODE_INTERNAL_END_CURLY);
-        }
-        RCURLY
-        {
-            if (inMode(MODE_EXPRESSION | MODE_LIST))
-                endMode(MODE_EXPRESSION | MODE_LIST);
-        } |
+        rcurly_argument |
 
         // variable or literal
         variable_identifier | string_literal | char_literal | literal | boolean | noexcept_operator | 
@@ -4539,6 +4529,7 @@ argument[] { ENTRY_DEBUG } :
 
         type_identifier
         )
+
 ;
 
 annotation_argument[] { ENTRY_DEBUG } :
