@@ -17,4 +17,8 @@
 <class>class <name>Base1</name> <specifier>final</specifier> <block>{<private type="default"> </private>}</block>;</class>
 </unit>
 
+<unit>
+<macro><name>MACRO</name></macro> <class>class <block>{<private type="default"/>}</block> <decl><name>u</name></decl>;</class>
+</unit>
+
 </unit>

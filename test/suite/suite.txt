@@ -69,6 +69,8 @@ LANGUAGE_CXX enum_cpp
 LANGUAGE_CXX operator_cpp
 LANGUAGE_CXX call_cpp
 LANGUAGE_CXX class_cpp
+LANGUAGE_CXX struct_cpp
+LANGUAGE_CXX union_cpp
 LANGUAGE_CXX decl_simple_cpp
 LANGUAGE_CXX cast_cpp
 LANGUAGE_CXX function_decl_cpp
