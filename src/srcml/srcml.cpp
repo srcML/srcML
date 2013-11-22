@@ -187,9 +187,6 @@ int main(int argc, char * argv[]) {
   // Check if local files/directories are present
   if (!checkLocalFile(srcml_request.positional_args))
     return 1; 
-  else
-    std::cerr << "SUCCESS\n";
-    return 0;
   
   if (srcml_request.positional_args.size() == 1) {
     if(convenienceCheck(srcml_request.positional_args[0])) {
