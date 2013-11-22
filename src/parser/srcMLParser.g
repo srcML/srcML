@@ -610,7 +610,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         // don't confuse with expression block
         { (inTransparentMode(MODE_CONDITION) ||
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
-        && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN) 
+        && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
         && (!inLanguage(LANGUAGE_CXX_ONLY) || !inMode(MODE_INIT | MODE_EXPECT)) }? lcurly |
 
         // switch cases @test switch
@@ -4338,7 +4338,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         { inTransparentMode(MODE_INTERNAL_END_CURLY) }?
         {
 
-            if(!inTransparentMode(MODE_CALL)) {
+            if(!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT)) {
                 endDownToMode(MODE_INTERNAL_END_CURLY);
 
                 endMode(MODE_INTERNAL_END_CURLY);
