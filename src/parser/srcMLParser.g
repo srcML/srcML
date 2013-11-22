@@ -2359,6 +2359,9 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     else if (type == 0 && type_count == 0 && _tokenSet_1.member(LA(1)))
         type = SINGLE_MACRO;
 
+    else if(type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == STRUCT || LA(1) == UNION))
+        type = SINGLE_MACRO;
+
     // may just have an expression
     else if (type == DESTRUCTOR && !inLanguage(LANGUAGE_CXX_FAMILY))
         type = NULLOPERATOR;
@@ -2521,7 +2524,10 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
 
                 // type parts that can occur before other type parts (excluding specifiers)
-                { LA(1) != LBRACKET }?
+                // do not match a struct class or union.  If was class/struct/union decl will not reach here.
+                // if elaborated type specifier should also be handled above. Reached here because 
+                // non-specifier then class/struct/union.
+                { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != STRUCT && LA(1) != UNION)}?
                 pure_lead_type_identifier_no_specifiers set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)

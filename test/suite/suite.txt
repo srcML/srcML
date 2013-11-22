@@ -31,7 +31,6 @@ LANGUAGE_CXX_FAMILY union
 
 LANGUAGE_C_FAMILY asm
 LANGUAGE_C_FAMILY macro
-LANGUAGE_C_FAMILY cstruct
 LANGUAGE_C_FAMILY extern
 LANGUAGE_C_FAMILY main
 LANGUAGE_C_FAMILY function_pointer
@@ -44,6 +43,8 @@ LANGUAGE_C_FAMILY expression_pointer
 LANGUAGE_C_ONLY function_c
 LANGUAGE_C_ONLY cast_c
 LANGUAGE_C_ONLY enum_c
+LANGUAGE_C_ONLY struct_c
+LANGUAGE_C_ONLY union_c
 
 LANGUAGE_CXX friend
 LANGUAGE_CXX namespace
@@ -69,6 +70,8 @@ LANGUAGE_CXX enum_cpp
 LANGUAGE_CXX operator_cpp
 LANGUAGE_CXX call_cpp
 LANGUAGE_CXX class_cpp
+LANGUAGE_CXX struct_cpp
+LANGUAGE_CXX union_cpp
 LANGUAGE_CXX decl_simple_cpp
 LANGUAGE_CXX cast_cpp
 LANGUAGE_CXX function_decl_cpp

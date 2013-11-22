@@ -73,7 +73,6 @@ comment.c.xml
 comment.cs.xml
 comment.java.xml
 constructor_explicit.cpp.xml
-cstruct.c.xml
 decl_pointer.c.xml
 decl_pointer.cs.xml
 decl_simple.c.xml
@@ -154,6 +153,7 @@ string.c.xml
 string.cs.xml
 string.java.xml
 struct.cpp.xml
+struct_cpp.cpp.xml
 struct_cs.cs.xml
 switch.c.xml
 switch.cs.xml
@@ -165,6 +165,8 @@ try.cs.xml
 try.java.xml
 typedef.c.xml
 union.cpp.xml
+union_c.c.xml
+union_cpp.cpp.xml
 variable_names.c.xml
 variable_names.cs.xml
 variable_names.java.xml
