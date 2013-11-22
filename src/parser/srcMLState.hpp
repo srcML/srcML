@@ -51,6 +51,21 @@ public:
         --parencount;
     }
 
+    // curly count
+    int getCurly() const {
+        return curlycount;
+    }
+
+    // increment the curly count
+    void incCurly() {
+        ++curlycount;
+    }
+
+    // decrement the curly count
+    void decCurly() {
+        --curlycount;
+    }
+
     // type count
     int getTypeCount() const {
         return typecount;
@@ -76,6 +91,7 @@ public:
 
 private:
     int parencount;
+    int curlycount;
     int typecount;
 };
 
