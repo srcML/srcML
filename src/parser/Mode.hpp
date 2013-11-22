@@ -192,6 +192,21 @@ protected:
         statev.decParen();
     }
 
+    int getCurly() const {
+
+        return statev.getCurly();
+    }
+
+    void incCurly() {
+
+        statev.incCurly();
+    }
+
+    void decCurly() {
+
+        statev.decCurly();
+    }
+
     int getTypeCount() const {
 
         return statev.getTypeCount();
