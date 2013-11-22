@@ -60,12 +60,15 @@ struct ParseRequest {
 
 ParseRequest NullParseRequest;
 
-bool checkLocalFile(const std::string& pos_arg) {
-  if (pos_arg.find("http:") == std::string::npos){
-    boost::filesystem3::path localFile (pos_arg);
-    if (!exists(localFile)) {
-      std::cerr << "File " << pos_arg << " not found.\n";
-      return false;
+bool checkLocalFile(std::vector<std::string>& pos_args) {
+  for (int i = 0; i < pos_args.size(); ++i) {
+    
+    if (pos_args[i].find("http:") == std::string::npos){
+      boost::filesystem3::path localFile (pos_args[i]);
+      if (!exists(localFile)) {
+	std::cerr << "File " << pos_args[i] << " not found.\n";
+	return false;
+      }
     }
   }
   return true;
@@ -181,11 +184,13 @@ int main(int argc, char * argv[]) {
     return 0;
   }
   
-  for (int i = 0; i < srcml_request.positional_args.size(); ++i) {
-    if (!checkLocalFile(srcml_request.positional_args[i]))
-      return 1;
-  } 
-
+  // Check if local files/directories are present
+  if (!checkLocalFile(srcml_request.positional_args))
+    return 1; 
+  else
+    std::cerr << "SUCCESS\n";
+    return 0;
+  
   if (srcml_request.positional_args.size() == 1) {
     if(convenienceCheck(srcml_request.positional_args[0])) {
       srcml(srcml_request.positional_args[0].c_str(), srcml_request.output.c_str());
