@@ -611,7 +611,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { (inTransparentMode(MODE_CONDITION) ||
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
         && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
-        && (!inLanguage(LANGUAGE_CXX_ONLY) || !inMode(MODE_INIT | MODE_EXPECT)) }? lcurly |
+        && (!inLanguage(LANGUAGE_CXX_ONLY) || !inTransparentMode(MODE_INIT | MODE_EXPECT)) }? lcurly |
 
         // switch cases @test switch
         { !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }?
