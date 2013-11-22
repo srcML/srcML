@@ -1715,8 +1715,6 @@ access_specifier_region[] { ENTRY_DEBUG } :
 lcurly[] { ENTRY_DEBUG } :
         {
 
-            incCurly();
-
             // special end for conditions
             if (inTransparentMode(MODE_CONDITION)) {
                 endDownToMode(MODE_CONDITION);
@@ -1748,8 +1746,12 @@ lcurly[] { ENTRY_DEBUG } :
         }
         lcurly_base
         {
+
+            incCurly();
+
             // alter the modes set in lcurly_base
             setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST);
+
         }
 ;
 
@@ -1828,7 +1830,6 @@ block_end[] { ENTRY_DEBUG } :
 rcurly[] { ENTRY_DEBUG } :
         {
 
-            decCurly();
 
             // end any elements inside of the block
             endDownToMode(MODE_TOP);
@@ -1839,6 +1840,10 @@ rcurly[] { ENTRY_DEBUG } :
 
             // end any sections inside the mode
             endDownOverMode(MODE_TOP_SECTION);
+
+            if(getCurly() != 0)
+                decCurly();
+
         }
         RCURLY
         {
@@ -4175,7 +4180,6 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
 
 rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
         {
-
             if(isempty) {
 
                 // additional right parentheses indicates end of non-list modes
@@ -4191,6 +4195,9 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
                 endMode(MODE_LIST);
             else if(inMode(MODE_EXPRESSION | MODE_LIST))
                 endMode(MODE_EXPRESSION | MODE_LIST);
+
+            if(!isempty)
+                decCurly();
         }
 
 ;
@@ -4321,6 +4328,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         }
         LCURLY
         {
+            incCurly();
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_CURLY);
         } |
         { inTransparentMode(MODE_INTERNAL_END_CURLY) }?
