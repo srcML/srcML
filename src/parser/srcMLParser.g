@@ -2045,7 +2045,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         expression_part_plus_linq |
 
         // call list in member initialization list
-        { inMode(MODE_CALL | MODE_LIST) }?
+        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
         call |
 
         /*
@@ -3500,12 +3500,12 @@ call[] { ENTRY_DEBUG } :
 call_argument_list[] { ENTRY_DEBUG } :
         {
             // list of parameters
-            setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN | MODE_INTERNAL_END_CURLY);
+            setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN);
 
             // start the argument list
             startElement(SARGUMENT_LIST);
         }
-        (LPAREN | LCURLY)
+        (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
 macro_call_check[] { ENTRY_DEBUG } :
