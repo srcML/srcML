@@ -60,7 +60,7 @@ struct ParseRequest {
 
 ParseRequest NullParseRequest;
 
-bool checkLocalFile(std::vector<std::string>& pos_args) {
+bool checkLocalFiles(std::vector<std::string>& pos_args) {
   for (int i = 0; i < pos_args.size(); ++i) {
     
     if (pos_args[i].find("http:") == std::string::npos){
@@ -185,7 +185,7 @@ int main(int argc, char * argv[]) {
   }
   
   // Check if local files/directories are present
-  if (!checkLocalFile(srcml_request.positional_args))
+  if (!checkLocalFiles(srcml_request.positional_args))
     return 1; 
   
   if (srcml_request.positional_args.size() == 1) {
