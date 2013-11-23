@@ -187,16 +187,14 @@ int main(int argc, char * argv[]) {
   // Check if local files/directories are present
   if (!checkLocalFiles(srcml_request.positional_args))
     return 1;
-
-  int test = srcml_request.markup_options & SRCML_OPTION_ARCHIVE;
-  std::cerr << "RESULT: " << test << "\n";
-  if (test != 1) {
-      if (srcml_request.positional_args.size() == 1) {
-	if(convenienceCheck(srcml_request.positional_args[0])) {
-	  srcml(srcml_request.positional_args[0].c_str(), srcml_request.output.c_str());
-	  return 0;
-	}
+  
+  if (!(srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) {
+    if (srcml_request.positional_args.size() == 1) {
+      if(convenienceCheck(srcml_request.positional_args[0])) {
+	srcml(srcml_request.positional_args[0].c_str(), srcml_request.output.c_str());
+	return 0;
       }
+    }
   }
   
   // libsrcML Setup
