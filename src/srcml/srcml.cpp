@@ -199,6 +199,11 @@ int main(int argc, char * argv[]) {
   
   // libsrcML Setup
   srcml_archive * srcml_arch = srcml_create_archive();
+
+  // Set options for the archive
+  if (srcml_request.markup_options > 0) {
+    srcml_archive_set_all_options(srcml_arch, srcml_request.markup_options);
+  }
   srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
   for (int i = 0; i < srcml_request.positional_args.size(); ++i) {
