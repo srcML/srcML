@@ -73,4 +73,36 @@
 <decl_stmt><decl><type><attribute>[[]]</attribute> <name>int</name></type> <name><name>a</name><index>[]</index></name> <attribute>[[]]</attribute></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<class_decl>class <attribute>[[]]</attribute> <name>a</name>;</class_decl>
+</unit>
+
+<unit>
+<class>class <attribute>[[]]</attribute> <name>a</name> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
+<unit>
+<struct_decl>struct <attribute>[[]]</attribute> <name>a</name>;</struct_decl>
+</unit>
+
+<unit>
+<struct>struct <attribute>[[]]</attribute> <name>a</name> <block>{<public type="default"/>}</block>;</struct>
+</unit>
+
+<unit>
+<union>union <attribute>[[]]</attribute> <name>a</name> <block>{<public type="default"/>}</block>;</union>
+</unit>
+
+<unit>
+<enum>enum <attribute>[[]]</attribute> <name>a</name> <block>{}</block></enum>
+</unit>
+
+<unit>
+<enum>enum class <attribute>[[]]</attribute> <name>a</name> <block>{}</block></enum>
+</unit>
+
+<unit>
+<enum>enum class <attribute>[[]]</attribute> <name>Enum2</name> : <type><specifier>const</specifier> <name>unsigned</name> <name>int</name></type> <block>{<expr><name>Val1</name></expr>, <expr><name>Val2</name></expr>}</block>;</enum>
+</unit>
+
 </unit>

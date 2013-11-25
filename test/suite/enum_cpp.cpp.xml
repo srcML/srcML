@@ -14,6 +14,10 @@
 </unit>
 
 <unit>
+<enum>enum struct <name>Enum3</name>;</enum>
+</unit>
+
+<unit>
 <enum>enum class <name>Enum4</name> : <type><name>unsigned</name> <name>int</name></type>;</enum>
 </unit>
 
