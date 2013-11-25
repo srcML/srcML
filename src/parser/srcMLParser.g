@@ -1805,7 +1805,7 @@ block_end[] { ENTRY_DEBUG } :
         {
             if (inMode(MODE_ANONYMOUS)) {
                 endMode();
-                if(LA(1) == LPAREN) { startNewMode(); call_argument_list(); }
+                if(LA(1) == LPAREN) { startNewMode(MODE_ARGUMENT | MODE_LIST); call_argument_list(); }
                 return;
             }
 
