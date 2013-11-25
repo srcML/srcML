@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 20 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 20 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -608,10 +608,10 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         terminate |
 
         // don't confuse with expression block
-        { (inTransparentMode(MODE_CONDITION) ||
+        { ((inTransparentMode(MODE_CONDITION) ||
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
         && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
-        && (!inLanguage(LANGUAGE_CXX_ONLY) || !inTransparentMode(MODE_INIT | MODE_EXPECT)) }? lcurly |
+        && (!inLanguage(LANGUAGE_CXX_ONLY) || !inTransparentMode(MODE_INIT | MODE_EXPECT))) || inTransparentMode(MODE_LAMBDA) }? lcurly |
 
         // switch cases @test switch
         { !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }?
@@ -869,6 +869,17 @@ function_declaration[int type_count] { ENTRY_DEBUG } :
             startElement(SFUNCTION_DECLARATION);
         }
         function_header[type_count]
+;
+
+lambda_expression_cpp[] { ENTRY_DEBUG } :
+		{
+            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_LAMBDA);
+
+            startElement(SFUNCTION_DEFINITION);
+        }
+
+        LBRACKET RBRACKET
+
 ;
 
 function_definition[int type_count] { ENTRY_DEBUG } :
@@ -4329,6 +4340,8 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
 
         { next_token() == LCURLY }?
         lambda_anonymous |
+
+        (LBRACKET RBRACKET LPAREN) => lambda_expression_cpp |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
