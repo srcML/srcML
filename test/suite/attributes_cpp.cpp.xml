@@ -13,11 +13,11 @@
 </unit>
 
 <unit>
-<class><attribute>[[<expr><name>System</name></expr>]]</attribute> class <name>C</name> <block>{<private type="default"/>}</block></class>
+<class><attribute>[[<expr><name>System</name></expr>]]</attribute> class <name>C</name> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 <unit>
-<struct><attribute>[[<expr><name>System</name></expr>]]</attribute> struct <name>C</name> <block>{<public type="default"/>}</block></struct>
+<struct><attribute>[[<expr><name>System</name></expr>]]</attribute> struct <name>C</name> <block>{<public type="default"/>}</block>;</struct>
 </unit>
 
 <unit>
@@ -57,7 +57,7 @@
 </unit>
 
 <unit>
-<class><attribute>[[<target>type</target>: <expr><name>SomeAttr</name></expr>]]</attribute> <specifier>static</specifier> class <name>C</name> <block>{<private type="default"/>}</block></class>
+<class><attribute>[[<target>type</target>: <expr><name>SomeAttr</name></expr>]]</attribute> <specifier>static</specifier> class <name>C</name> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 </unit>
