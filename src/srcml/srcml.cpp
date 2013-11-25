@@ -34,6 +34,7 @@
 #include <archive.h>
 #include <archive_entry.h>
 //#include <curl/curl.h>
+#include <boost/filesystem.hpp>
 #include <pthread.h>
 
 #include <iostream>
@@ -59,15 +60,16 @@ struct ParseRequest {
 
 ParseRequest NullParseRequest;
 
-bool checkLocalFile(const std::string& pos_arg) {
-  FILE * local;
-  if(pos_arg.find("http:") == std::string::npos){
-    local = fopen(pos_arg.c_str(),"r");
-    if (local == NULL) {
-      std::cerr << "File " << pos_arg << " not found.\n";
-      return false;
+bool checkLocalFiles(std::vector<std::string>& pos_args) {
+  for (int i = 0; i < pos_args.size(); ++i) {
+    
+    if (pos_args[i].find("http:") == std::string::npos){
+      boost::filesystem3::path localFile (pos_args[i]);
+      if (!exists(localFile)) {
+	std::cerr << "File " << pos_args[i] << " not found.\n";
+	return false;
+      }
     }
-    fclose(local);
   }
   return true;
 }
@@ -92,9 +94,9 @@ bool convenienceCheck(const std::string& filename) {
 
   archive_read_support_filter_all(arch);
 
-  if(archive_read_open_filename(arch, filename.c_str(), 16384) == ARCHIVE_OK) {
-    if(archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
-      if(archive_filter_code(arch,0) == ARCHIVE_FILTER_NONE &&
+  if (archive_read_open_filename(arch, filename.c_str(), 16384) == ARCHIVE_OK) {
+    if (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
+      if (archive_filter_code(arch,0) == ARCHIVE_FILTER_NONE &&
         archive_format(arch) == ARCHIVE_FORMAT_RAW){
         archive_read_finish(arch);
         return true;
@@ -105,27 +107,7 @@ bool convenienceCheck(const std::string& filename) {
   return false;
 }
 
-int main(int argc, char * argv[]) {
-  
-  srcml_request_t srcml_request = srcmlCLI::parseCLI(argc, argv);
-
-  // CHECK FOR INVALID GLOBAL FLAGS
-  if (srcml_request.encoding != "" && srcml_check_encoding(srcml_request.encoding.c_str()) == 0) {
-    std::cerr << "Invalid Encoding.\n";
-    return 1; //ERROR CODE TBD
-  }
-
-  if (srcml_request.language != "" && srcml_check_language(srcml_request.language.c_str()) == 0) {
-    std::cerr << "Invalid Language.\n";
-    return 1; //ERROR CODE TBD
-  }
-
-  if (srcml_request.tabs <= 0) {
-    std::cerr << "Invalid Tab Stop.\n";
-    return 1; //ERROR CODE TBD
-  }
-  
-  // SET GLOBAL OPTIONS
+void setGlobalOptions(const struct srcml_request_t& srcml_request) {
   if (srcml_request.encoding != "") {
     srcml_set_encoding(srcml_request.encoding.c_str());
   }
@@ -152,17 +134,78 @@ int main(int argc, char * argv[]) {
 
   srcml_set_tabstop(srcml_request.tabs);
 
-  for(int i = 0; i < srcml_request.register_ext.size(); ++i) {
+  for (int i = 0; i < srcml_request.register_ext.size(); ++i) {
     int pos = srcml_request.register_ext[i].find('=');
     srcml_register_file_extension(srcml_request.register_ext[i].substr(0,pos).c_str(),
           srcml_request.register_ext[i].substr(pos+1).c_str());
   }
 
-  for(int i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
+  for (int i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
     int pos = srcml_request.xmlns_prefix[i].find('=');
     srcml_register_namespace(srcml_request.xmlns_prefix[i].substr(0,pos).c_str(),
            srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
   }
+}
+
+void setArchiveOptions(srcml_archive* srcml_arch, const struct srcml_request_t& srcml_request) {
+  if (srcml_request.encoding != "") {
+    srcml_archive_set_encoding(srcml_arch, srcml_request.encoding.c_str());
+  }
+  if (srcml_request.filename != "") {
+    srcml_archive_set_filename(srcml_arch, srcml_request.filename.c_str());
+  }
+  //TODO: THIS NEEDS A FLAG TOO AS "" CAN BE A VALID DIRECTORY
+  if (srcml_request.directory != "") {
+    srcml_archive_set_directory(srcml_arch, srcml_request.directory.c_str());
+  }
+  if (srcml_request.src_versions != "") {
+    srcml_archive_set_version(srcml_arch, srcml_request.src_versions.c_str());
+  }
+  if (srcml_request.markup_options != 0) {
+    srcml_archive_set_all_options(srcml_arch, srcml_request.markup_options);
+  }
+
+  if (srcml_request.language != "") {
+    srcml_archive_set_language(srcml_arch, srcml_request.language.c_str());  
+  }
+  else {
+    srcml_archive_set_language(srcml_arch, SRCML_LANGUAGE_NONE);  
+  }
+
+  srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
+
+  for (int i = 0; i < srcml_request.register_ext.size(); ++i) {
+    int pos = srcml_request.register_ext[i].find('=');
+    srcml_archive_register_file_extension(srcml_arch, srcml_request.register_ext[i].substr(0,pos).c_str(),
+          srcml_request.register_ext[i].substr(pos+1).c_str());
+  }
+
+  for (int i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
+    int pos = srcml_request.xmlns_prefix[i].find('=');
+    srcml_archive_register_namespace(srcml_arch, srcml_request.xmlns_prefix[i].substr(0,pos).c_str(),
+           srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
+  }
+}
+
+int main(int argc, char * argv[]) {
+  
+  srcml_request_t srcml_request = srcmlCLI::parseCLI(argc, argv);
+
+  // CHECK FOR INVALID GLOBAL FLAGS
+  if (srcml_request.encoding != "" && srcml_check_encoding(srcml_request.encoding.c_str()) == 0) {
+    std::cerr << "Invalid Encoding.\n";
+    return 1; //ERROR CODE TBD
+  }
+
+  if (srcml_request.language != "" && srcml_check_language(srcml_request.language.c_str()) == 0) {
+    std::cerr << "Invalid Language.\n";
+    return 1; //ERROR CODE TBD
+  }
+
+  if (srcml_request.tabs <= 0) {
+    std::cerr << "Invalid Tab Stop.\n";
+    return 1; //ERROR CODE TBD
+  }  
 
   /* 
     MIGHT USE THIS LATER:
@@ -182,20 +225,27 @@ int main(int argc, char * argv[]) {
     return 0;
   }
   
-  for (int i = 0; i < srcml_request.positional_args.size(); ++i) {
-    if (!checkLocalFile(srcml_request.positional_args[i]))
-      return 1;
-  } 
-
-  if (srcml_request.positional_args.size() == 1) {
-    if(convenienceCheck(srcml_request.positional_args[0])) {
-      srcml(srcml_request.positional_args[0].c_str(), srcml_request.output.c_str());
-      return 0;
+  // Check if local files/directories are present
+  if (!checkLocalFiles(srcml_request.positional_args))
+    return 1;
+  
+  if (!(srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) {
+    if (srcml_request.positional_args.size() == 1) {
+      if (convenienceCheck(srcml_request.positional_args[0])) {
+        // SET GLOBAL OPTIONS
+        setGlobalOptions(srcml_request);
+        srcml(srcml_request.positional_args[0].c_str(), srcml_request.output.c_str());
+        return 0;
+      }
     }
   }
   
   // libsrcML Setup
   srcml_archive * srcml_arch = srcml_create_archive();
+
+  // Set options for the archive
+  setArchiveOptions(srcml_arch, srcml_request);
+
   srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
   for (int i = 0; i < srcml_request.positional_args.size(); ++i) {
@@ -221,7 +271,7 @@ int main(int argc, char * argv[]) {
 
     archive_read_support_filter_all(arch);
 
-    if(archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384) == ARCHIVE_OK) {
+    if (archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384) == ARCHIVE_OK) {
       const void* buffer;
       const char* cptr;
       size_t size;

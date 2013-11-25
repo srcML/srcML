@@ -89,5 +89,24 @@
 <decl_stmt><decl><type><name>signal</name></type> <name>final</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><specifier>thread_local</specifier> <name>unsigned</name> <name>int</name></type> <name>rage</name> =<init><expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{}</argument_list></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr>1</expr></argument>, <argument><expr>2</expr></argument>}</argument_list></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr><block>{<expr>1</expr>}</block></expr></argument>}</argument_list></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr>1</expr></argument>, <argument><expr><block>{<expr><name>a</name></expr>}</block></expr></argument>}</argument_list></decl>;</decl_stmt>
+</unit>
 
 </unit>

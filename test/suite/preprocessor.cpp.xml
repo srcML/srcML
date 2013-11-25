@@ -164,4 +164,12 @@
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><macro><name>a</name><argument_list>(<argument>b c</argument>)</argument_list></macro></expr></cpp:if>
 </unit>
 
+<unit>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif> <comment type="line">//</comment>
+</unit>
+
+<unit>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif> <comment type="block">/* */</comment>
+</unit>
+
 </unit>

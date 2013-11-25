@@ -12,9 +12,6 @@ import difflib
 import string
 from datetime import datetime, time
 
-sys.path.append("../src/libsrcml/python")
-from libsrcml import *
-
 maxcount = 700
 error_filename = "srcMLTestReport"
 error_filename_extension = ".txt"
@@ -375,7 +372,10 @@ if use_exec :
         print src2srcmlversion()
         print srcml2srcversion()
 else :
+	sys.path.append("../src/libsrcml/python")
+	from libsrcml import *
         print version_string()
+
 print
 
 specname = ""

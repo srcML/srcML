@@ -229,6 +229,8 @@ tokens {
 
     CONSTEXPR;
     NOEXCEPT;
+    THREADLOCAL;
+    NULLPTR;
 
 }
 
@@ -312,7 +314,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "pragma"        , PRAGMA        , LANGUAGE_C_FAMILY }, 
         { "undef"         , UNDEF         , LANGUAGE_C_FAMILY }, 
 
-        { "union"         , UNION         , LANGUAGE_C_FAMILY }, 
+        { "union"         , UNION         , LANGUAGE_CXX_ONLY | LANGUAGE_C }, 
         { "struct"        , STRUCT        , LANGUAGE_C_FAMILY }, 
 
         { "inline"        , INLINE        , LANGUAGE_C_FAMILY }, 
@@ -379,6 +381,8 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         // add all C++ specific keywords to the literals table
         { "constexpr"     , CONSTEXPR        , LANGUAGE_CXX_ONLY }, 
         { "noexcept"      , NOEXCEPT         , LANGUAGE_CXX_ONLY }, 
+        { "thread_local"  , THREADLOCAL      , LANGUAGE_CXX_ONLY }, 
+        { "nullptr"       , NULLPTR          , LANGUAGE_CXX_ONLY }, 
 
         // concepts
 //        { "auto"          , AUTO          , LANGUAGE_CXX_11 }, 
