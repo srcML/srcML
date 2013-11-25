@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="lambda" filename="lambda_cpp">
+
+<unit>
+<expr_stmt><expr><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{<return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{<return>return <expr><name>i</name> + 1</expr>;</return>}</block></function><argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><name>call</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>auto</name></type> <name>f</name> =<init> <expr><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{<return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>auto</name></type> <name>ret</name> =<init> <expr><call><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{<return>return <expr><name>i</name> + 1</expr>;</return>}</block></function><argument_list>(<argument><expr>1</expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
+</unit>
