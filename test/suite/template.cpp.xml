@@ -59,4 +59,28 @@
 <template><specifier>extern</specifier> template <class_decl>class <name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr><name>MyClass</name></expr></argument>&gt;</argument_list></name></name>;</class_decl></template>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr>1&lt;2</expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr>(1&gt;2)</expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr>((1&gt;2))</expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr>(<name>A</name> &gt; (1&gt;2))</expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr><name><name>SomeType</name><argument_list>&lt;<argument><expr>1&lt;2</expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr><name><name>SomeType</name><argument_list>&lt;<argument><expr>(1&gt;2)</expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
