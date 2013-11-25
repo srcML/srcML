@@ -37,57 +37,57 @@ get_property(XSLTPROC GLOBAL PROPERTY XSLTPROC)
 
 # Merge separate srcML units into one
 set(XSLT_MERGEUNIT_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/mergeunit.xsl)
-set(XSLT_MERGEUNIT "${XSLTPROC} ${XSLT_MERGEUNIT_XSL}")
+set(XSLT_MERGEUNIT ${XSLTPROC} ${XSLT_MERGEUNIT_XSL})
 set(XSLT_MERGEUNIT_PROBLEM_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/mergeunitproblem.xsl)
-set(XSLT_MERGEUNIT_PROBLEM "${XSLTPROC} ${XSLT_MERGEUNIT_PROBLEM_XSL}")
+set(XSLT_MERGEUNIT_PROBLEM ${XSLTPROC} ${XSLT_MERGEUNIT_PROBLEM_XSL})
  
 # generate nested conditionals
 set(XSLT_NESTCOND_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/nestcond.xsl)
-set(XSLT_NESTCOND "${XSLTPROC} ${XSLT_NESTCOND_XSL}")
+set(XSLT_NESTCOND ${XSLTPROC} ${XSLT_NESTCOND_XSL})
 
 # if to while conversion
 set(XSLT_IF2WHILE_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/if2while.xsl)
-set(XSLT_IF2WHILE "${XSLTPROC} ${XSLT_IF2WHILE_XSL}")
+set(XSLT_IF2WHILE ${XSLTPROC} ${XSLT_IF2WHILE_XSL})
 
 # definition to declaration conversion
 set(XSLT_DEFN2DECL_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/defn2decl.xsl)
-set(XSLT_DEFN2DECL "${XSLTPROC} ${XSLT_DEFN2DECL_XSL}")
+set(XSLT_DEFN2DECL ${XSLTPROC} ${XSLT_DEFN2DECL_XSL})
 
 # wrap in a block
-set(XSLT_BLOCKUNIT "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertblock.xsl")
+set(XSLT_BLOCKUNIT ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertblock.xsl)
 
-set(XSLT_BLOCKUNIT_PROBLEM "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertblockproblem.xsl")
+set(XSLT_BLOCKUNIT_PROBLEM ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertblockproblem.xsl)
 
-set(XSLT_STRUCTUNIT "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertstruct.xsl")
+set(XSLT_STRUCTUNIT ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertstruct.xsl)
 
-set(XSLT_BLOCKUNIT_JAVA "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertblock.java.xsl")
-set(XSLT_BLOCKUNIT_PROBLEM_JAVA "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertblockproblem.java.xsl")
+set(XSLT_BLOCKUNIT_JAVA ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertblock.java.xsl)
+set(XSLT_BLOCKUNIT_PROBLEM_JAVA ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertblockproblem.java.xsl)
 
-set(XSLT_ADDEXPLICIT "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/addexplicit.xsl")
+set(XSLT_ADDEXPLICIT ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/addexplicit.xsl)
 
-set(XSLT_ADDVIRTUAL "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/addvirtual.xsl")
+set(XSLT_ADDVIRTUAL ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/addvirtual.xsl)
 
-set(XSLT_ADDCONST "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/addconst.xsl")
+set(XSLT_ADDCONST ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/addconst.xsl)
 
-set(XSLT_IDENTITY "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/identity.xsl")
+set(XSLT_IDENTITY ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/identity.xsl)
 
-set(XSLT_INSERTEXPR "${XSLTPROC} --stringparam expr_filename \"${CMAKE_CURRENT_SOURCE_DIR}/expression.cpp.xml\" ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertexpr.xsl")
-set(XSLT_INSERTEXPR_XSL "${CMAKE_CURRENT_SOURCE_DIR}/expression.cpp.xml ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertexpr.xsl")
+set(XSLT_INSERTEXPR ${XSLTPROC} --stringparam expr_filename "\"${CMAKE_CURRENT_SOURCE_DIR}/expression.cpp.xml\"" ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertexpr.xsl)
+set(XSLT_INSERTEXPR_XSL ${CMAKE_CURRENT_SOURCE_DIR}/expression.cpp.xml ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertexpr.xsl)
 
-set(XSLT_INSERTDECL "${XSLTPROC} --stringparam decl_filename \"${CMAKE_CURRENT_SOURCE_DIR}/decl_simple.cpp.xml\" ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertparam.xsl")
-set(XSLT_INSERTDECL_XSL "${CMAKE_CURRENT_SOURCE_DIR}/decl_simple.cpp.xml ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertdecl.xsl")
+set(XSLT_INSERTDECL ${XSLTPROC} --stringparam decl_filename "\"${CMAKE_CURRENT_SOURCE_DIR}/decl_simple.cpp.xml\"" ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertparam.xsl)
+set(XSLT_INSERTDECL_XSL ${CMAKE_CURRENT_SOURCE_DIR}/decl_simple.cpp.xml ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertdecl.xsl)
 
 set(XSLT_STRUCT2UNION_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/struct2union.xsl)
-set(XSLT_STRUCT2UNION "${XSLTPROC} ${XSLT_STRUCT2UNION_XSL}")
+set(XSLT_STRUCT2UNION ${XSLTPROC} ${XSLT_STRUCT2UNION_XSL})
 
 set(XSLT_CLASS2STRUCT_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/class2struct.xsl)
-set(XSLT_CLASS2STRUCT "${XSLTPROC} ${XSLT_CLASS2STRUCT_XSL}")
+set(XSLT_CLASS2STRUCT ${XSLTPROC} ${XSLT_CLASS2STRUCT_XSL})
 
 set(XSLT_CLASS2INTERFACE_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/class2interface.xsl)
-set(XSLT_CLASS2INTERFACE "${XSLTPROC} ${XSLT_CLASS2INTERFACE_XSL}")
+set(XSLT_CLASS2INTERFACE ${XSLTPROC} ${XSLT_CLASS2INTERFACE_XSL})
 
 set(XSLT_IF2IFBLOCK_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/if2ifblock.xsl)
-set(XSLT_IF2IFBLOCK "${XSLTPROC} ${XSLT_IF2IFBLOCK_XSL}")
+set(XSLT_IF2IFBLOCK ${XSLTPROC} ${XSLT_IF2IFBLOCK_XSL})
 
 ##
 # Comments and preprocessor statements are handled out of the normal grammar rules
@@ -95,24 +95,24 @@ set(XSLT_IF2IFBLOCK "${XSLTPROC} ${XSLT_IF2IFBLOCK_XSL}")
 # generated from the non-comment and preprocessor cases.
 
 # insert comments
-set(XSLT_INSERTCOMMENT "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertcomments.xsl")
+set(XSLT_INSERTCOMMENT ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertcomments.xsl)
 
-set(XSLT_INSERTCOMMENT_PROBLEM "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertcommentsproblem.xsl")
+set(XSLT_INSERTCOMMENT_PROBLEM ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertcommentsproblem.xsl)
 
 # insert preprocessor
-set(XSLT_INSERTPREPROC "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertpreproc.xsl")
+set(XSLT_INSERTPREPROC ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertpreproc.xsl)
 
-set(XSLT_INSERTPREPROC_PROBLEM "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertpreprocproblem.xsl")
+set(XSLT_INSERTPREPROC_PROBLEM ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertpreprocproblem.xsl)
 
 # nest if
-set(XSLT_INSERTIFTHENELSE "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/nestif.xsl")
-set(XSLT_INSERTIFTHENELSE_JAVA "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/nestif.java.xsl")
-set(XSLT_INSERTIFTHENELSE_PROBLEM "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/nestifproblem.xsl")
-set(XSLT_INSERTIFTHENELSE_PROBLEM_JAVA "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/nestifproblem.java.xsl")
+set(XSLT_INSERTIFTHENELSE ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/nestif.xsl)
+set(XSLT_INSERTIFTHENELSE_JAVA ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/nestif.java.xsl)
+set(XSLT_INSERTIFTHENELSE_PROBLEM ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/nestifproblem.xsl)
+set(XSLT_INSERTIFTHENELSE_PROBLEM_JAVA ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/nestifproblem.java.xsl)
 
 # insert form feed
-set(XSLT_INSERTFORMFEED "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertformfeed.xsl")
-set(XSLT_INSERTFORMFEED_PROBLEM "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertformfeedproblem.xsl")
+set(XSLT_INSERTFORMFEED ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertformfeed.xsl)
+set(XSLT_INSERTFORMFEED_PROBLEM ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/insertformfeedproblem.xsl)
 
 #
 # Test cases for one language are generated from test cases for another language.
@@ -120,42 +120,41 @@ set(XSLT_INSERTFORMFEED_PROBLEM "${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/ins
 
 set(XSLT_SETLANGUAGE_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/setlanguage.xsl)
 set(XSLT_SETLANGUAGE_PROBLEM_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/setlanguageproblem.xsl)
-
 set(XSLT_REMOVECPP_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/removecpp.xsl)
 set(XSLT_REMOVECPP_PROBLEM_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/removecppproblem.xsl)
 set(XSLT_REMOVECPP_LITERAL_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/removecppliteral.xsl)
 set(XSLT_REMOVECPP_OPERATOR_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/removecppoperator.xsl)
 
-set(XSLT_SETLANGUAGE "${XSLTPROC} ${XSLT_SETLANGUAGE_XSL}")
+set(XSLT_SETLANGUAGE ${XSLTPROC} ${XSLT_SETLANGUAGE_XSL})
 
-set(XSLT_SETLANGUAGE_C "${XSLTPROC} --stringparam language \"C\" ${XSLT_SETLANGUAGE_XSL}")
+set(XSLT_SETLANGUAGE_C ${XSLTPROC} --stringparam language "\"C\"" ${XSLT_SETLANGUAGE_XSL})
 
-set(XSLT_SETLANGUAGE_CS "${XSLTPROC} --stringparam language \"C#\" ${XSLT_SETLANGUAGE_XSL}")
+set(XSLT_SETLANGUAGE_CS ${XSLTPROC} --stringparam language "\"C#\"" ${XSLT_SETLANGUAGE_XSL})
 
-set(XSLT_SETLANGUAGE_CXX "${XSLTPROC} --stringparam language \"CXX\" ${XSLT_SETLANGUAGE_XSL}")
+set(XSLT_SETLANGUAGE_CXX ${XSLTPROC} --stringparam language "\"CXX\"" ${XSLT_SETLANGUAGE_XSL})
 
-set(XSLT_SETLANGUAGE_CXX_11 "${XSLTPROC} --stringparam language \"C++11\" ${XSLT_SETLANGUAGE_XSL}")
+set(XSLT_SETLANGUAGE_CXX_11 ${XSLTPROC} --stringparam language "\"C++11\"" ${XSLT_SETLANGUAGE_XSL})
 
-set(XSLT_SETLANGUAGE_JAVA "${XSLTPROC} --stringparam language \"Java\" ${XSLT_SETLANGUAGE_XSL}")
-set(XSLT_SETLANGUAGE_ASPECTJ "${XSLTPROC} --stringparam language \"AspectJ\" ${XSLT_SETLANGUAGE_XSL}")
+set(XSLT_SETLANGUAGE_JAVA ${XSLTPROC} --stringparam language "\"Java\"" ${XSLT_SETLANGUAGE_XSL})
+set(XSLT_SETLANGUAGE_ASPECTJ ${XSLTPROC} --stringparam language "\"AspectJ\"" ${XSLT_SETLANGUAGE_XSL})
 
-set(XSLT_SETLANGUAGE_PROBLEM "${XSLTPROC} ${XSLT_SETLANGUAGE_PROBLEM_XSL}")
+set(XSLT_SETLANGUAGE_PROBLEM ${XSLTPROC} ${XSLT_SETLANGUAGE_PROBLEM_XSL})
 
-set(XSLT_SETLANGUAGE_PROBLEM_C "${XSLTPROC} --stringparam language \"C\" ${XSLT_SETLANGUAGE_PROBLEM_XSL}")
+set(XSLT_SETLANGUAGE_PROBLEM_C ${XSLTPROC} --stringparam language "\"C\"" ${XSLT_SETLANGUAGE_PROBLEM_XSL})
 
-set(XSLT_SETLANGUAGE_PROBLEM_CS "${XSLTPROC} --stringparam language \"C#\" ${XSLT_SETLANGUAGE_PROBLEM_XSL}")
+set(XSLT_SETLANGUAGE_PROBLEM_CS ${XSLTPROC} --stringparam language \""C#\"" ${XSLT_SETLANGUAGE_PROBLEM_XSL})
 
-set(XSLT_SETLANGUAGE_PROBLEM_CXX "${XSLTPROC} --stringparam language \"CXX\" ${XSLT_SETLANGUAGE_PROBLEM_XSL}")
+set(XSLT_SETLANGUAGE_PROBLEM_CXX ${XSLTPROC} --stringparam language "\"CXX\"" ${XSLT_SETLANGUAGE_PROBLEM_XSL})
 
-set(XSLT_SETLANGUAGE_PROBLEM_CXX_11 "${XSLTPROC} --stringparam language \"C++11\" ${XSLT_SETLANGUAGE_PROBLEM_XSL}")
+set(XSLT_SETLANGUAGE_PROBLEM_CXX_11 ${XSLTPROC} --stringparam language "\"C++11\"" ${XSLT_SETLANGUAGE_PROBLEM_XSL})
 
-set(XSLT_SETLANGUAGE_PROBLEM_JAVA "${XSLTPROC} --stringparam language \"Java\" ${XSLT_SETLANGUAGE_PROBLEM_XSL}")
-set(XSLT_SETLANGUAGE_PROBLEM_ASPECTJ "${XSLTPROC} --stringparam language \"AspectJ\" ${XSLT_SETLANGUAGE_PROBLEM_XSL}")
+set(XSLT_SETLANGUAGE_PROBLEM_JAVA ${XSLTPROC} --stringparam language "\"Java\"" ${XSLT_SETLANGUAGE_PROBLEM_XSL})
+set(XSLT_SETLANGUAGE_PROBLEM_ASPECTJ ${XSLTPROC} --stringparam language "\"AspectJ\"" ${XSLT_SETLANGUAGE_PROBLEM_XSL})
 
-set(XSLT_REMOVECPP "${XSLTPROC} ${XSLT_REMOVECPP_XSL}")
-set(XSLT_REMOVECPP_PROBLEM "${XSLTPROC} ${XSLT_REMOVECPP_PROBLEM_XSL}")
-set(XSLT_REMOVECPP_LITERAL "${XSLTPROC} ${XSLT_REMOVECPP_LITERAL_XSL}")
-set(XSLT_REMOVECPP_OPERATOR "${XSLTPROC} ${XSLT_REMOVECPP_OPERATOR_XSL}")
+set(XSLT_REMOVECPP ${XSLTPROC} ${XSLT_REMOVECPP_XSL})
+set(XSLT_REMOVECPP_PROBLEM ${XSLTPROC} ${XSLT_REMOVECPP_PROBLEM_XSL})
+set(XSLT_REMOVECPP_LITERAL ${XSLTPROC} ${XSLT_REMOVECPP_LITERAL_XSL})
+set(XSLT_REMOVECPP_OPERATOR ${XSLTPROC} ${XSLT_REMOVECPP_OPERATOR_XSL})
 
 set(SEP_BASE "${BASE_COMMON} ${BASE_C_FAMILY} ${BASE_CXX} ${BASE_OO}")
 
@@ -185,7 +184,7 @@ stringListTofileNames(${BASE_CS_ALL_GEN} ".cs.xml" GEN_CS)
 
 set(SEP_PLUS "${SEP_FILES} ${GEN_SEP}")
 set(SEP_PLUSNOPREPROC "${SEP_BASE} ${GEN_SEP}")
- 
+
 set(SEP_STRUCT "function function_const function_cpp function_decl function_ns function_operator function_pointer function_throw ")
 
 macro(generateFileGroup FILE_EXT_PREFIX OUTPUT)
@@ -231,16 +230,19 @@ generateFileGroup("ifthenelse" GEN_IFTHENELSE "extra_c.ifthenelse.c.xml extra_cp
 
 
 # TODO FIXME 
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/allinall.c.xml "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
-  <unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" dir=\"allinall.c\">
-")
-file(GLOB allinallCXMLFiles "${CMAKE_CURRENT_BINARY_DIR}/*.all.c.xml" DEPENDS allinall)
+# file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/allinall.c.xml "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
+#   <unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" dir=\"allinall.c\">
+# ")
+# file(GLOB allinallCXMLFiles "${CMAKE_CURRENT_BINARY_DIR}/*.all.c.xml" DEPENDS allinall)
+# 
+# file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/allinall.c.xml "</unit>")
+# add_custom_target(allinall DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/allinall.c.xml ${allinallCXMLFiles})
 
-file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/allinall.c.xml "</unit>")
-add_custom_target(allinall DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/allinall.c.xml ${allinallCXMLFiles})
 
-
-
+# FIXME FIXME FIXME FIXME FIXME
+# Not sure of any of this actually works correctly. It doesn't when
+# I tried it using the original make file
+# FIXME FIXME FIXME FIXME FIXME
 # allinall.c.xml :
 #         @echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > allinall.c.xml
 #         @echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" dir=\"allinall.c\">" >> allinall.c.xml
@@ -284,85 +286,156 @@ add_custom_target(allinall DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/allinall.c.xml ${
 # 
 # cleanall :
 #         rm -f allinall.*
-# 
+
+# FIXME End of all in one file generation commands FIXME
+
+
 # problem.java.xml : problem.cpp.xml
 #         ${XSLT_SETLANGUAGE_PROBLEM_JAVA} $< | ${XSLT_REMOVECPP_PROBLEM} - > $@
-# 
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.java.xml
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.cpp.xml
+    COMMAND ${XSLT_SETLANGUAGE_JAVA} ${CMAKE_CURRENT_SOURCE_DIR}/problem.cpp.xml | ${XSLT_REMOVECPP_PROBLEM} - > ${CMAKE_CURRENT_SOURCE_DIR}/problem.java.xml
+    COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.java.xml
+)
+
 # problem.aj.xml : problem.java.xml
 #         ${XSLT_SETLANGUAGE_PROBLEM_ASPECTJ} $< > $@
-# 
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.aj.xml
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.java.xml
+    COMMAND ${XSLT_SETLANGUAGE_PROBLEM_ASPECTJ} ${CMAKE_CURRENT_SOURCE_DIR}/problem.java.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.aj.xml
+    COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.aj.xml
+)
+
 # problem.c.xml : problem.cpp.xml
 #         ${XSLT_SETLANGUAGE_PROBLEM_C} $< > $@
-# 
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.c.xml
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.cpp.xml
+    COMMAND ${XSLT_SETLANGUAGE_PROBLEM_C} ${CMAKE_CURRENT_SOURCE_DIR}/problem.cpp.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.c.xml
+    COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.c.xml
+)
+
 # problem.cs.xml : problem.cpp.xml
 #         ${XSLT_SETLANGUAGE_PROBLEM_CS} $< > $@
-# 
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.cs.xml
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.cpp.xml
+    COMMAND ${XSLT_SETLANGUAGE_PROBLEM_C} ${CMAKE_CURRENT_SOURCE_DIR}/problem.cpp.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.cs.xml
+    COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.cs.xml
+)
+
+# TODO Remove in the future.
+add_custom_target(problem.cs.xml
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.cs.xml
+    COMMAND echo "Built problem.cs.xml"
+)
+
+
 # problem.all.cpp.xml : problem.cpp.xml
 #         ${XSLT_MERGEUNIT_PROBLEM} $< > $@
+
+
 # problem.all.c.xml : problem.c.xml
 #         ${XSLT_MERGEUNIT_PROBLEM} $< > $@
+
+
 # problem.all.cs.xml : problem.cs.xml
 #         ${XSLT_MERGEUNIT_PROBLEM} $< > $@
+
+
 # problem.all.java.xml : problem.java.xml
 #         ${XSLT_MERGEUNIT_PROBLEM} $< > $@
+
+
 # problem.all.aj.xml : problem.aj.xml
 #         ${XSLT_MERGEUNIT_PROBLEM} $< > $@
-# 
+
+ 
 # problem.block.cpp.xml : problem.cpp.xml
 #         ${XSLT_BLOCKUNIT_PROBLEM} $< > $@
+
+
 # problem.block.c.xml : problem.c.xml
 #         ${XSLT_BLOCKUNIT_PROBLEM} $< > $@
+
+
 # problem.block.cs.xml : problem.cs.xml
 #         ${XSLT_BLOCKUNIT_PROBLEM} $< > $@
+
+
 # problem.block.java.xml : problem.java.xml
 #         ${XSLT_BLOCKUNIT_PROBLEM_JAVA} $< > $@
+
+
 # problem.block.aj.xml : problem.aj.xml
 #         ${XSLT_BLOCKUNIT_PROBLEM_JAVA} $< > $@
-# 
+ 
+
 # problem.comment.cpp.xml : problem.cpp.xml
 #         ${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
+
 # problem.comment.c.xml : problem.c.xml
 #         ${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
+
 # problem.comment.cs.xml : problem.cs.xml
 #         ${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
+
 # problem.comment.java.xml : problem.java.xml
 #         ${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
+
 # problem.comment.aj.xml : problem.aj.xml
 #         ${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
-# 
+ 
 # problem.preproc.cpp.xml : problem.cpp.xml
 #         ${XSLT_INSERTPREPROC_PROBLEM} $< > $@
+
 # problem.preproc.c.xml : problem.c.xml
 #         ${XSLT_INSERTPREPROC_PROBLEM} $< > $@
+
 # problem.preproc.cs.xml : problem.cs.xml
 #         ${XSLT_INSERTPREPROC_PROBLEM} $< > $@
+
 # problem.preproc.java.xml : problem.java.xml
 #         ${XSLT_INSERTPREPROC_PROBLEM} $< > $@
+
 # problem.preproc.aj.xml : problem.aj.xml
 #         ${XSLT_INSERTPREPROC_PROBLEM} $< > $@
-# 
+
 # problem.ifthenelse.cpp.xml : problem.cpp.xml
 #         ${XSLT_INSERTIFTHENELSE_PROBLEM} $< > $@
+
 # problem.ifthenelse.c.xml : problem.c.xml
 #         ${XSLT_INSERTIFTHENELSE_PROBLEM} $< > $@
+
 # problem.ifthenelse.cs.xml : problem.cs.xml
 #         ${XSLT_INSERTIFTHENELSE_PROBLEM} $< > $@
+
 # problem.ifthenelse.java.xml : problem.java.xml
 #         ${XSLT_INSERTIFTHENELSE_PROBLEM_JAVA} $< > $@
+
 # problem.ifthenelse.aj.xml : problem.aj.xml
 #         ${XSLT_INSERTIFTHENELSE_PROBLEM_JAVA} $< > $@
-# 
+ 
 # problem.formfeed.cpp.xml : problem.cpp.xml
 #         ${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
+
 # problem.formfeed.c.xml : problem.c.xml
 #         ${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
+
 # problem.formfeed.cs.xml : problem.cs.xml
 #         ${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
+
 # problem.formfeed.java.xml : problem.java.xml
 #         ${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
+
 # problem.formfeed.aj.xml : problem.aj.xml
 #         ${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
-# 
+
+
+
+
 # %.cpp : %.cpp.xml
 #         ${XSLT_IDENTITY} $< > $@
 # 
