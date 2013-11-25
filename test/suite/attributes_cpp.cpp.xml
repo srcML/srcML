@@ -61,5 +61,8 @@
 <decl_stmt><decl><type><attribute>[[<expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>, <expr><name>System</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><attribute>[[<expr><call><name><name>System</name>::<name>system</name></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+</unit>
 
 </unit>
