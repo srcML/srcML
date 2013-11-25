@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 18 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 18 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -2493,6 +2493,21 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 RBRACKET
                 set_int[attribute_count, attribute_count + 1] |
 
+                { inLanguage(LANGUAGE_CXX_ONLY) }?
+                LBRACKET LBRACKET
+                        (COMMA)*
+
+                        //(RETURN | EVENT | set_type[type, GLOBAL_ATTRIBUTE, check_global()]
+                        //throw_exception[type == GLOBAL_ATTRIBUTE] 
+                        //identifier)?
+
+                        (COLON)*
+
+                        //complete_expression
+                        (~(RBRACKET))*
+                RBRACKET RBRACKET
+                set_int[attribute_count, attribute_count + 1] |
+
                 { type_count == attribute_count }?
                 property_method_name
                 set_type[type, PROPERTY_ACCESSOR, true] |
@@ -2827,6 +2842,8 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
+        { inLanguage(LANGUAGE_CXX_ONLY) }? attribute_cpp |
+
         pure_lead_type_identifier_no_specifiers
 ;
 
@@ -3111,6 +3128,22 @@ attribute_csharp_target[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(STARGET);
         }
         (RETURN | EVENT | identifier_list)
+;
+
+attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+
+            startElement(SATTRIBUTE);
+        }
+        LBRACKET LBRACKET
+
+        ({ next_token() == COLON }? attribute_csharp_target COLON)*
+
+        complete_expression
+
+        RBRACKET RBRACKET
 ;
 
 // Full, complete expression matched all at once (no stream).
