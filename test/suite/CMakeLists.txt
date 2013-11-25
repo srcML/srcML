@@ -326,35 +326,63 @@ add_custom_command(
     COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.cs.xml
 )
 
-# TODO Remove in the future.
-add_custom_target(problem.cs.xml
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.cs.xml
-    COMMAND echo "Built problem.cs.xml"
+# This is used to simplfy the handling of each of the different programming languages
+# so that it could be done more easily using macros.
+set(PROGRAMMING_LANGUAGES cpp c java aj)
+
+# Handling the problem.all files.
+
+# 
+# This macro helps build a custom command based on the supplied language which is
+# performs the merge unit command for each of the different languages.
+# 
+macro(problemAll LANGUAGE_EXT)
+    add_custom_command(
+        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.all.${LANGUAGE_EXT}.xml
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml
+        COMMAND ${XSLT_MERGEUNIT_PROBLEM} ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.all.${LANGUAGE_EXT}.xml
+        COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.all.${LANGUAGE_EXT}.xml
+    )    
+endmacro()
+
+
+
+# 
+# This function simply creates a dependency so that the problemAll 
+# can be invoked via a rule within the make file.
+# 
+macro(createProbAllDep LANGUAGE_EXT)
+    add_custom_target(problem.all.${LANGUAGE_EXT}.xml
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.all.${LANGUAGE_EXT}.xml
+        COMMAND echo "Built problem.all.${LANGUAGE_EXT}.xml"
+    )    
+endmacro()
+
+
+set(PROBLEM_ALL_TARGETS "")
+foreach(LANG ${PROGRAMMING_LANGUAGES})
+    problemAll(${LANG})
+    createProbAllDep(${LANG})
+    list(APPEND PROBLEM_ALL_TARGETS problem.all.${LANG}.xml)
+    
+endforeach()
+add_custom_target(problem_all
+    DEPENDS ${PROBLEM_ALL_TARGETS}
+    COMMAND echo "Built all PROBLEM_ALL_TARGETS"
 )
-
-
-# problem.all.cpp.xml : problem.cpp.xml
-#         ${XSLT_MERGEUNIT_PROBLEM} $< > $@
-
-
-# problem.all.c.xml : problem.c.xml
-#         ${XSLT_MERGEUNIT_PROBLEM} $< > $@
-
-
-# problem.all.cs.xml : problem.cs.xml
-#         ${XSLT_MERGEUNIT_PROBLEM} $< > $@
-
-
-# problem.all.java.xml : problem.java.xml
-#         ${XSLT_MERGEUNIT_PROBLEM} $< > $@
-
-
-# problem.all.aj.xml : problem.aj.xml
-#         ${XSLT_MERGEUNIT_PROBLEM} $< > $@
-
  
 # problem.block.cpp.xml : problem.cpp.xml
 #         ${XSLT_BLOCKUNIT_PROBLEM} $< > $@
+# add_custom_command(
+#     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.block.cpp.xml
+#     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.block.xml
+#     COMMAND ${XSLT_BLOCKUNIT_PROBLEM} ${CMAKE_CURRENT_SOURCE_DIR}/problem.cpp.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.block.aj.xml
+#     COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.all.aj.xml
+# )
+# add_custom_target(problem.all.aj.xml
+#     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.all.aj.xml
+#     COMMAND echo "Built problem.all.aj.xml"
+# )
 
 
 # problem.block.c.xml : problem.c.xml
