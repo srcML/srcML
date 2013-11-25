@@ -44,20 +44,22 @@
 <function><type><attribute>[[<expr><name>System</name></expr>, <expr><name>System</name></expr>]]</attribute> <specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>(<param><decl><type><attribute>[[<expr><name>In</name></expr>, <expr><name>Out</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
+
 <unit>
-<function><type><attribute>[[<target>method</target>: <expr><name>SomeAttr</name></expr>]]</attribute> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<decl_stmt><decl><type><attribute>[[<expr><call><name>System</name><argument_list>()</argument_list></call></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><attribute>[[<target>field</target>: <expr><name>SomeAttr</name></expr>]]</attribute> <specifier>static</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><attribute>[[<expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<function><type><specifier>static</specifier> <name>void</name></type> <name>f</name><parameter_list>( <param><decl><type><attribute>[[<target>param</target>: <expr><name>SomeAttr</name></expr>]]</attribute><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+<decl_stmt><decl><type><attribute>[[<expr><name>System</name></expr>, <expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<class><attribute>[[<target>type</target>: <expr><name>SomeAttr</name></expr>]]</attribute> <specifier>static</specifier> class <name>C</name> <block>{<private type="default"/>}</block>;</class>
+<decl_stmt><decl><type><attribute>[[<expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>, <expr><name>System</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
+
 
 </unit>
