@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 18 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 18 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -2356,6 +2356,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     int fla = 0;
 
     try {
+
         pattern_check_core(token, fla, type_count, type, inparam, sawenum, posin);
 
     } catch (...) {
@@ -2453,7 +2454,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         */
         { next_token_check(LPAREN, LCURLY) }? DELEGATE set_type[type, DELEGATE_FUNCTION] |
         (
-        ({ inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0) || LA(1) != LBRACKET }?
+        ({ inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0) || LA(1) != LBRACKET || (LA(1) == LBRACKET && next_token() == LBRACKET) }?
 
             set_bool[qmark, (qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
 
@@ -4635,6 +4636,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
             startElement(SPARAMETER);
         }
         (
+
             { pattern_check(stmt_type, secondtoken, type_count, true) && stmt_type == FUNCTION }?
             function_declaration[type_count]
 
