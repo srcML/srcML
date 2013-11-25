@@ -4812,7 +4812,8 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             template_extends_java |
 
-            template_super_java | qmark_marked
+            template_super_java | qmark_marked |
+            paren_pair
         )+
 ;
 
