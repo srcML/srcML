@@ -4808,13 +4808,12 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         (options { greedy = true; } :
             { LA(1) != SUPER && LA(1) != QMARK }?
-            type_identifier |
-
-            literal | char_literal | string_literal | boolean |
+        (type_identifier |
+            literal | char_literal | string_literal | boolean) (template_operators)* |
 
             template_extends_java |
 
-            template_super_java | qmark_marked | template_operators |
+            template_super_java | qmark_marked |
             template_argument_expression
         )+
 ;
