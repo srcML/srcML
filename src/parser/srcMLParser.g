@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 18 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 20 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -736,7 +736,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0;
         // TODO:  Why no interface declaration?
 
         { stmt_type == GLOBAL_ATTRIBUTE }?
-        attribute |
+        attribute_csharp |
 
         { stmt_type == PROPERTY_ACCESSOR }?
         property_method[SFUNCTION_DEFINITION] |
@@ -889,7 +889,7 @@ property_method[int element] { ENTRY_DEBUG } :
             // start the function definition element
             startElement(element);
         }
-        (attribute)*
+        (attribute_csharp)*
         property_method_name
 ;
 
@@ -1493,8 +1493,10 @@ class_declaration[] { ENTRY_DEBUG } :
             startElement(SCLASS_DECLARATION);
         }
         ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)*
-        (specifier)* CLASS class_header
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp)*
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+
+        (specifier)* CLASS ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* class_header
 ;
 
 class_preprocessing[int token] { ENTRY_DEBUG } :
@@ -1519,14 +1521,16 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
 
 class_preamble[] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)*
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp)*
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+
         (specifier)*
 ;
 
 class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SCLASS]
 
-        class_preamble CLASS (class_header lcurly | lcurly)
+        class_preamble CLASS ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* (class_header lcurly | lcurly)
         {
             if (inLanguage(LANGUAGE_CXX_ONLY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
@@ -1537,6 +1541,8 @@ enum_class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SENUM]
 
         class_preamble ENUM (class_header lcurly | lcurly)
+
+        // this might only be called for java so this might be able to be removed.
         {
             if (inLanguage(LANGUAGE_CXX_ONLY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
@@ -1597,13 +1603,13 @@ struct_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SSTRUCT_DECLARATION);
         }
-        class_preamble STRUCT class_header
+        class_preamble STRUCT ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* class_header
 ;
 
 struct_union_definition[int element_token] { ENTRY_DEBUG } :
         class_preprocessing[element_token]
 
-        class_preamble (STRUCT | UNION) (class_header lcurly | lcurly)
+        class_preamble (STRUCT | UNION) ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* (class_header lcurly | lcurly)
         {
            if (inLanguage(LANGUAGE_CXX_ONLY))
                class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
@@ -1810,7 +1816,7 @@ block_end[] { ENTRY_DEBUG } :
                 endMode();
             }
 
-            if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP))
+            if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP | LANGUAGE_CXX_ONLY))
                 endMode();
 
             if (!(anonymous_class) && (!(inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM))
@@ -2024,6 +2030,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // throw list at end of function header
         { (inLanguage(LANGUAGE_CXX_ONLY))&& inTransparentMode(MODE_FUNCTION_TAIL) }?
         noexcept_list |
+
+        // throw list at end of function header
+        { (inLanguage(LANGUAGE_CXX_ONLY))&& inTransparentMode(MODE_FUNCTION_TAIL) && next_token() == LBRACKET }?
+        attribute_cpp |
 
         // K&R function parameters
         { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && inMode(MODE_FUNCTION_TAIL) &&
@@ -2306,6 +2316,9 @@ function_tail[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_CXX_ONLY) }?
             complete_noexcept_list |
 
+            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}?
+            attribute_cpp |
+
             { inLanguage(LANGUAGE_CXX_ONLY) }?
             trailing_return |
 
@@ -2352,6 +2365,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     int fla = 0;
 
     try {
+
         pattern_check_core(token, fla, type_count, type, inparam, sawenum, posin);
 
     } catch (...) {
@@ -2365,8 +2379,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         type_count = posin - 1;
 
     // enum
-    else if (type == 0 && sawenum)
+    else if (type == 0 && sawenum) {
         type = ENUM_DECL;
+
+    }
 
     // may just have a single macro (no parens possibly) before a statement
     else if (type == 0 && type_count == 0 && _tokenSet_1.member(LA(1)))
@@ -2449,7 +2465,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         */
         { next_token_check(LPAREN, LCURLY) }? DELEGATE set_type[type, DELEGATE_FUNCTION] |
         (
-        ({ inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0) || LA(1) != LBRACKET }?
+        ({ inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0) || LA(1) != LBRACKET || (LA(1) == LBRACKET && next_token() == LBRACKET) }?
 
             set_bool[qmark, (qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
 
@@ -2493,6 +2509,15 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 RBRACKET
                 set_int[attribute_count, attribute_count + 1] |
 
+                { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}?
+                LBRACKET LBRACKET
+                        (COMMA)*
+
+                        //complete_expression
+                        (~(RBRACKET))*
+                RBRACKET RBRACKET
+                set_int[attribute_count, attribute_count + 1] |
+
                 { type_count == attribute_count }?
                 property_method_name
                 set_type[type, PROPERTY_ACCESSOR, true] |
@@ -2506,6 +2531,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  INTERFACE           set_type[type, INTERFACE_DECL] |
                  ATSIGN INTERFACE set_type[type, INTERFACE_DECL])
                 set_bool[lcurly, LA(1) == LCURLY]
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
                 (class_header | LCURLY)
                 set_type[type, CLASS_DEFN,     type == CLASS_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
@@ -2825,7 +2851,9 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_JAVA) }? annotation |
 
-        { inLanguage(LANGUAGE_CSHARP) }? attribute |
+        { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+
+        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp |
 
         pure_lead_type_identifier_no_specifiers
 ;
@@ -3090,7 +3118,7 @@ variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
         )*
 ;
 
-attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
+attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
@@ -3099,18 +3127,32 @@ attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         LBRACKET
 
-        ({ next_token() == COLON }? attribute_target COLON)*
+        ({ next_token() == COLON }? attribute_csharp_target COLON)*
 
         complete_expression
 
         RBRACKET
 ;
 
-attribute_target[] { SingleElement element(this); ENTRY_DEBUG } :
+attribute_csharp_target[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(STARGET);
         }
         (RETURN | EVENT | identifier_list)
+;
+
+attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+
+            startElement(SATTRIBUTE);
+        }
+        LBRACKET LBRACKET
+
+        complete_expression
+
+        RBRACKET RBRACKET
 ;
 
 // Full, complete expression matched all at once (no stream).
@@ -3216,7 +3258,9 @@ simple_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
 compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
         compound_name_inner[true]
-        (options { greedy = true; } : variable_identifier_array_grammar_sub[iscompound])*
+        (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX_ONLY) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound])*      
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+
 ;
 
 compound_name_inner[bool index] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
@@ -3253,8 +3297,13 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
         compound_name_cpp[iscompound]
         )
-        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) }?
-            variable_identifier_array_grammar_sub[iscompound])*
+
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+
+        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) && (!inLanguage(LANGUAGE_CXX_ONLY) || next_token() != LBRACKET)}?
+            variable_identifier_array_grammar_sub[iscompound]
+        )*
+
         {
             // if it isn't a compound name, nop the element
             if (!iscompound)
@@ -3402,7 +3451,9 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_JAVA) }? annotation |
 
-            { inLanguage(LANGUAGE_CSHARP) }? attribute |
+            { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp |
 
             specifier |
 
@@ -3459,7 +3510,9 @@ destructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_JAVA) }? annotation |
 
-            { inLanguage(LANGUAGE_CSHARP) }? attribute |
+            { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp |
 
             specifier |
 
@@ -4587,6 +4640,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
             startElement(SPARAMETER);
         }
         (
+
             { pattern_check(stmt_type, secondtoken, type_count, true) && stmt_type == FUNCTION }?
             function_declaration[type_count]
 
@@ -4911,7 +4965,9 @@ enum_definition[] { ENTRY_DEBUG } :
 ;
 
 enum_class_header[] {} :
-        (CLASS)* variable_identifier (COLON enum_type)*
+        (CLASS | STRUCT)* 
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        variable_identifier (COLON enum_type)*
 
     ;
 
@@ -4927,7 +4983,7 @@ enum_type { LightweightElement element(this); ENTRY_DEBUG } :
 enum_definition_complete[] { CompleteElement element(this); ENTRY_DEBUG } :
         enum_definition
 
-        (enum_class_header)*
+        (variable_identifier)*
 
         // start of enum definition block
         {

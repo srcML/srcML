@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="attributes" filename="attributes_cpp">
+
+<unit>
+<function><type><attribute>[[<expr><name>System</name></expr>]]</attribute>
+<specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+        <function><type><attribute>[[<expr><name>System</name></expr>]]</attribute>
+        <specifier>static</specifier> <name>void</name></type> <name>OperationsBaseData</name><parameter_list>()</parameter_list> <block>{
+        }</block></function>
+</unit>
+
+<unit>
+<class><attribute>[[<expr><name>System</name></expr>]]</attribute> class <name>C</name> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
+<unit>
+<struct><attribute>[[<expr><name>System</name></expr>]]</attribute> struct <name>C</name> <block>{<public type="default"/>}</block>;</struct>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><attribute>[[<expr><name>System</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><attribute>[[<expr><name>System</name></expr>]]</attribute> <specifier>const</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<function><type><attribute>[[<expr><name>System</name></expr>]]</attribute> <specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>(<param><decl><type><attribute>[[<expr><name>In</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><attribute>[[<expr><name>System</name></expr>]]</attribute> <specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>(<param><decl><type><attribute>[[<expr><name>In</name></expr>]]</attribute><attribute>[[<expr><name>Out</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><attribute>[[<expr><name>System</name></expr>]]</attribute> <specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>(<param><decl><type><attribute>[[<expr><name>In</name></expr>, <expr><name>Out</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><attribute>[[<expr><name>System</name></expr>, <expr><name>System</name></expr>]]</attribute> <specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>(<param><decl><type><attribute>[[<expr><name>In</name></expr>, <expr><name>Out</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+
+<unit>
+<decl_stmt><decl><type><attribute>[[<expr><call><name>System</name><argument_list>()</argument_list></call></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><attribute>[[<expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><attribute>[[<expr><name>System</name></expr>, <expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><attribute>[[<expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>, <expr><name>System</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><attribute>[[<expr><call><name><name>System</name>::<name>system</name></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><attribute>[[]]</attribute> <name>int</name> &amp; <attribute>[[]]</attribute></type> <name>b</name> =<init> <expr><name>a</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><attribute>[[]]</attribute> <name>int</name></type> <name><name>a</name><index>[]</index></name> <attribute>[[]]</attribute></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<class_decl>class <attribute>[[]]</attribute> <name>a</name>;</class_decl>
+</unit>
+
+<unit>
+<class>class <attribute>[[]]</attribute> <name>a</name> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
+<unit>
+<struct_decl>struct <attribute>[[]]</attribute> <name>a</name>;</struct_decl>
+</unit>
+
+<unit>
+<struct>struct <attribute>[[]]</attribute> <name>a</name> <block>{<public type="default"/>}</block>;</struct>
+</unit>
+
+<unit>
+<union>union <attribute>[[]]</attribute> <name>a</name> <block>{<public type="default"/>}</block>;</union>
+</unit>
+
+<unit>
+<enum>enum <attribute>[[]]</attribute> <name>a</name> <block>{}</block></enum>
+</unit>
+
+<unit>
+<enum>enum class <attribute>[[]]</attribute> <name>a</name> <block>{}</block></enum>
+</unit>
+
+<unit>
+<enum>enum class <attribute>[[]]</attribute> <name>Enum2</name> : <type><specifier>const</specifier> <name>unsigned</name> <name>int</name></type> <block>{<expr><name>Val1</name></expr>, <expr><name>Val2</name></expr>}</block>;</enum>
+</unit>
+
+</unit>
