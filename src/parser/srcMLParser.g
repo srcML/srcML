@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 18 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 18 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -1496,7 +1496,7 @@ class_declaration[] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp)*
         ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
 
-        (specifier)* CLASS class_header
+        (specifier)* CLASS ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* class_header
 ;
 
 class_preprocessing[int token] { ENTRY_DEBUG } :
@@ -1530,7 +1530,7 @@ class_preamble[] { ENTRY_DEBUG } :
 class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SCLASS]
 
-        class_preamble CLASS (class_header lcurly | lcurly)
+        class_preamble CLASS ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* (class_header lcurly | lcurly)
         {
             if (inLanguage(LANGUAGE_CXX_ONLY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
@@ -1541,6 +1541,8 @@ enum_class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SENUM]
 
         class_preamble ENUM (class_header lcurly | lcurly)
+
+        // this might only be called for java so this might be able to be removed.
         {
             if (inLanguage(LANGUAGE_CXX_ONLY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
@@ -1601,13 +1603,13 @@ struct_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SSTRUCT_DECLARATION);
         }
-        class_preamble STRUCT class_header
+        class_preamble STRUCT ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* class_header
 ;
 
 struct_union_definition[int element_token] { ENTRY_DEBUG } :
         class_preprocessing[element_token]
 
-        class_preamble (STRUCT | UNION) (class_header lcurly | lcurly)
+        class_preamble (STRUCT | UNION) ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* (class_header lcurly | lcurly)
         {
            if (inLanguage(LANGUAGE_CXX_ONLY))
                class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
@@ -1814,7 +1816,7 @@ block_end[] { ENTRY_DEBUG } :
                 endMode();
             }
 
-            if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP))
+            if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP | LANGUAGE_CXX_ONLY))
                 endMode();
 
             if (!(anonymous_class) && (!(inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM))
@@ -2377,8 +2379,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         type_count = posin - 1;
 
     // enum
-    else if (type == 0 && sawenum)
+    else if (type == 0 && sawenum) {
         type = ENUM_DECL;
+
+    }
 
     // may just have a single macro (no parens possibly) before a statement
     else if (type == 0 && type_count == 0 && _tokenSet_1.member(LA(1)))
@@ -2527,6 +2531,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  INTERFACE           set_type[type, INTERFACE_DECL] |
                  ATSIGN INTERFACE set_type[type, INTERFACE_DECL])
                 set_bool[lcurly, LA(1) == LCURLY]
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
                 (class_header | LCURLY)
                 set_type[type, CLASS_DEFN,     type == CLASS_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
@@ -4960,7 +4965,9 @@ enum_definition[] { ENTRY_DEBUG } :
 ;
 
 enum_class_header[] {} :
-        (CLASS)* variable_identifier (COLON enum_type)*
+        (CLASS | STRUCT)* 
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        variable_identifier (COLON enum_type)*
 
     ;
 
@@ -4976,7 +4983,7 @@ enum_type { LightweightElement element(this); ENTRY_DEBUG } :
 enum_definition_complete[] { CompleteElement element(this); ENTRY_DEBUG } :
         enum_definition
 
-        (enum_class_header)*
+        (variable_identifier)*
 
         // start of enum definition block
         {
