@@ -1494,6 +1494,8 @@ class_declaration[] { ENTRY_DEBUG } :
         }
         ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
         ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp)*
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+
         (specifier)* CLASS class_header
 ;
 
@@ -1520,6 +1522,8 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
 class_preamble[] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
         ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp)*
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+
         (specifier)*
 ;
 
@@ -2493,7 +2497,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 RBRACKET
                 set_int[attribute_count, attribute_count + 1] |
 
-                { inLanguage(LANGUAGE_CXX_ONLY) }?
+                { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}?
                 LBRACKET LBRACKET
                         (COMMA)*
 
@@ -2842,7 +2846,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
-        { inLanguage(LANGUAGE_CXX_ONLY) }? attribute_cpp |
+        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp |
 
         pure_lead_type_identifier_no_specifiers
 ;
@@ -3139,11 +3143,18 @@ attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         LBRACKET LBRACKET
 
-        ({ next_token() == COLON }? attribute_csharp_target COLON)*
+        ({ next_token() == COLON }? attribute_cpp_target COLON)*
 
         complete_expression
 
         RBRACKET RBRACKET
+;
+
+attribute_cpp_target[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(STARGET);
+        }
+        identifier_list
 ;
 
 // Full, complete expression matched all at once (no stream).
@@ -3437,6 +3448,8 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
+            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp |
+
             specifier |
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }? template_argument_list
@@ -3493,6 +3506,8 @@ destructor_header[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_JAVA) }? annotation |
 
             { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp |
 
             specifier |
 
