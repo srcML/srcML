@@ -233,3 +233,10 @@ srcML-src.tar.gz
 srcML-src.zip
 srcML-src
 srcML.tar.gz
+
+# doc
+doc/option.dtd
+doc/src2srcml.1.gz
+doc/src2srcml.html
+doc/srcml2src.1.gz
+doc/srcml2src.html
