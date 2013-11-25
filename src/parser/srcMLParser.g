@@ -4803,8 +4803,10 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
             startNewMode(MODE_LOCAL);
 
             startElement(STEMPLATE_ARGUMENT);
+
+            startElement(SEXPRESSION);
         }
-        ( options { greedy = true; } :
+        (options { greedy = true; } :
             { LA(1) != SUPER && LA(1) != QMARK }?
             type_identifier |
 
@@ -4812,27 +4814,29 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             template_extends_java |
 
-            template_super_java | qmark_marked |
+            template_super_java | qmark_marked | template_operators |
             template_argument_expression
         )+
 ;
 
 template_argument_expression[] { ENTRY_DEBUG } :
-        {
-
-            startNewMode(MODE_LOCAL);
-
-            // start the expression element
-            if(inTransparentMode(MODE_EXPRESSION))
-               startElement(SEXPRESSION);
-        }
 
         lparen_marked
-
         ( { LA(1) != RPAREN }? (variable_identifier | string_literal | char_literal | literal | type_identifier | general_operators | template_argument_expression))*
+       rparen_operator[true]
 
-        rparen_operator[true]
+;
 
+// All possible operators
+template_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR))
+                startElement(SOPERATOR);
+        }
+        (
+        OPERATORS | TRETURN | TEMPOPS | EQUAL | MULTOPS | REFOPS | DOTDOT | RVALUEREF |
+        QMARK | NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
+        )
 ;
 
 template_extends_java[] { CompleteElement element(this); ENTRY_DEBUG } :
