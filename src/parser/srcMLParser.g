@@ -4823,12 +4823,15 @@ template_argument_expression[] { ENTRY_DEBUG } :
             startNewMode(MODE_LOCAL);
 
             // start the expression element
-            startElement(SEXPRESSION);
+            if(inTransparentMode(MODE_EXPRESSION))
+               startElement(SEXPRESSION);
         }
 
-        LPAREN
-        ( { LA(1) != RPAREN }? variable_identifier | string_literal | char_literal | literal | type_identifier | general_operators)*
-        RPAREN
+        lparen_marked
+
+        ( { LA(1) != RPAREN }? (variable_identifier | string_literal | char_literal | literal | type_identifier | general_operators | template_argument_expression))*
+
+        rparen_operator[true]
 
 ;
 
