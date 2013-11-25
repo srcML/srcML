@@ -2502,12 +2502,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 LBRACKET LBRACKET
                         (COMMA)*
 
-                        //(RETURN | EVENT | set_type[type, GLOBAL_ATTRIBUTE, check_global()]
-                        //throw_exception[type == GLOBAL_ATTRIBUTE] 
-                        //identifier)?
-
-                        (COLON)*
-
                         //complete_expression
                         (~(RBRACKET))*
                 RBRACKET RBRACKET
@@ -3144,18 +3138,9 @@ attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         LBRACKET LBRACKET
 
-        ({ next_token() == COLON }? attribute_cpp_target COLON)*
-
         complete_expression
 
         RBRACKET RBRACKET
-;
-
-attribute_cpp_target[] { SingleElement element(this); ENTRY_DEBUG } :
-        {
-            startElement(STARGET);
-        }
-        identifier_list
 ;
 
 // Full, complete expression matched all at once (no stream).
