@@ -873,12 +873,47 @@ function_declaration[int type_count] { ENTRY_DEBUG } :
 
 lambda_expression_cpp[] { ENTRY_DEBUG } :
 		{
-            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
+
+            bool iscall = lambda_call_check();
+            if(iscall) {
+
+                // start a new mode that will end after the argument list
+                startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+                // start the function call element
+                startElement(SFUNCTION_CALL);
+
+            }
+
+            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
 
             startElement(SFUNCTION_DEFINITION);
         }
 
         LBRACKET RBRACKET
+
+;
+
+lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG 
+
+    iscall = false;
+
+    int start = mark();
+    inputState->guessing++;
+
+    try {
+
+        lambda_expression_full_cpp();
+
+        if(LA(1) == LPAREN) iscall = true;
+
+    } catch(...) {}
+
+    inputState->guessing--;
+    rewind(start);
+
+
+} :
 
 ;
 
@@ -1805,7 +1840,7 @@ block_end[] { ENTRY_DEBUG } :
         {
             if (inMode(MODE_ANONYMOUS)) {
                 endMode();
-                if(LA(1) == LPAREN) { startNewMode(MODE_ARGUMENT | MODE_LIST); call_argument_list(); }
+        //        if(LA(1) == LPAREN) { startNewMode(MODE_ARGUMENT | MODE_LIST); call_argument_list(); }
                 return;
             }
 
