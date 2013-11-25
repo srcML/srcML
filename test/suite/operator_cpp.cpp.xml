@@ -201,5 +201,93 @@
 <expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>delete</op:operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>and_eq</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>bitand</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>bitor</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>compl</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>not</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>not_eq</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>or</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>or_eq</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>xor</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>xor_eq</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>and</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>and_eq</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>bitand</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>bitor</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>compl</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>not</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>not_eq</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>or</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>or_eq</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>xor</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>xor_eq</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
 </unit>
  
