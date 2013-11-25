@@ -69,4 +69,8 @@
 <decl_stmt><decl><type><attribute>[[]]</attribute> <name>int</name> &amp; <attribute>[[]]</attribute></type> <name>b</name> =<init> <expr><name>a</name></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><attribute>[[]]</attribute> <name>int</name></type> <name><name>a</name><index>[]</index></name> <attribute>[[]]</attribute></decl>;</decl_stmt>
+</unit>
+
 </unit>

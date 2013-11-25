@@ -3253,7 +3253,9 @@ simple_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
 compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
         compound_name_inner[true]
-        (options { greedy = true; } : variable_identifier_array_grammar_sub[iscompound])*
+        (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX_ONLY) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound])*      
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+
 ;
 
 compound_name_inner[bool index] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
@@ -3293,8 +3295,10 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
 
         ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
 
-        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) }?
-            variable_identifier_array_grammar_sub[iscompound])*
+        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) && (!inLanguage(LANGUAGE_CXX_ONLY) || next_token() != LBRACKET)}?
+            variable_identifier_array_grammar_sub[iscompound]
+        )*
+
         {
             // if it isn't a compound name, nop the element
             if (!iscompound)
