@@ -2029,6 +2029,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { (inLanguage(LANGUAGE_CXX_ONLY))&& inTransparentMode(MODE_FUNCTION_TAIL) }?
         noexcept_list |
 
+        // throw list at end of function header
+        { (inLanguage(LANGUAGE_CXX_ONLY))&& inTransparentMode(MODE_FUNCTION_TAIL) && next_token() == LBRACKET }?
+        attribute_cpp |
+
         // K&R function parameters
         { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && inMode(MODE_FUNCTION_TAIL) &&
           pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
@@ -2309,6 +2313,9 @@ function_tail[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CXX_ONLY) }?
             complete_noexcept_list |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}?
+            attribute_cpp |
 
             { inLanguage(LANGUAGE_CXX_ONLY) }?
             trailing_return |
