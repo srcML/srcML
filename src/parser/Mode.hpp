@@ -152,8 +152,6 @@ public:
 
     const static State::MODE_TYPE MODE_TRAILING_RETURN;
 
-    const static State::MODE_TYPE MODE_LAMBDA;
-
 public:
 
     Mode(TokenParser* ptp, int lang)

@@ -611,7 +611,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { ((inTransparentMode(MODE_CONDITION) ||
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
         && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
-        && (!inLanguage(LANGUAGE_CXX_ONLY) || !inTransparentMode(MODE_INIT | MODE_EXPECT))) || inTransparentMode(MODE_LAMBDA) }? lcurly |
+        && (!inLanguage(LANGUAGE_CXX_ONLY) || !inTransparentMode(MODE_INIT | MODE_EXPECT))) || inTransparentMode(MODE_ANONYMOUS) }? lcurly |
 
         // switch cases @test switch
         { !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }?
@@ -873,7 +873,7 @@ function_declaration[int type_count] { ENTRY_DEBUG } :
 
 lambda_expression_cpp[] { ENTRY_DEBUG } :
 		{
-            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_LAMBDA);
+            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
 
             startElement(SFUNCTION_DEFINITION);
         }
