@@ -890,8 +890,13 @@ lambda_expression_cpp[] { ENTRY_DEBUG } :
             startElement(SFUNCTION_DEFINITION);
         }
 
-        LBRACKET (compound_name | comma | multops)* RBRACKET
+        LBRACKET (lambda_capture)* RBRACKET
 
+;
+
+lambda_capture[] { ENTRY_DEBUG } :
+
+        compound_name | comma | lambda_capture_modifiers
 ;
 
 lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG 
@@ -920,6 +925,16 @@ lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG
 lambda_expression_full_cpp[] { ENTRY_DEBUG } :
 
         LBRACKET (~RBRACKET)* RBRACKET (paren_pair)* function_tail curly_pair
+
+;
+
+lambda_capture_modifiers[] { ENTRY_DEBUG } :
+        {
+            // markup type modifiers if option is on
+            if (isoption(parseoptions, OPTION_MODIFIER))
+                    startElement(SMODIFIER);
+        }
+        (EQUAL | REFOPS)
 
 ;
 
