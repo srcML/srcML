@@ -896,14 +896,28 @@ lambda_expression_cpp[] { ENTRY_DEBUG } :
 
 ;
 
-lambda_capture[] {  CompleteElement element(this); ENTRY_DEBUG } :
+lambda_capture[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LIST | MODE_LOCAL | MODE_ARGUMENT);
 
             startElement(SLAMBDA_CAPTURE);
 
         }
-        LBRACKET (compound_name | comma | lambda_capture_modifiers)* RBRACKET
+        (
+
+            LBRACKET (comma | { LA(1) != RBRACKET }? lambda_capture_argument)* RBRACKET
+
+        )
+;
+
+lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
+
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SARGUMENT);
+        }
+        (lambda_capture_modifiers | compound_name)*
 ;
 
 lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG 
