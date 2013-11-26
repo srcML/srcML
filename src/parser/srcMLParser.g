@@ -3500,7 +3500,7 @@ specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // C++
             FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
-            CONSTEXPR | THREADLOCAL | 
+            CONSTEXPR | THREADLOCAL | alignas |
 
             // C# & Java
             INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
@@ -3509,6 +3509,30 @@ specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             CONST
         )
+;
+
+alignas[] { } :
+
+        ALIGNAS
+        {
+            // start a mode for the macro argument list                                                                         
+            startNewMode(MODE_LIST | MODE_TOP);
+
+            // start the argument list                                                                                          
+            startElement(SARGUMENT_LIST);
+        }
+        LPAREN
+        macro_call_contents
+        {
+            // end anything started inside of the macro argument list                                                           
+            endDownToMode(MODE_LIST | MODE_TOP);
+        }
+        RPAREN
+        {
+            // end the macro argument list                                                                                      
+            endMode(MODE_LIST | MODE_TOP);
+        }
+
 ;
 
 constructor_declaration[] { ENTRY_DEBUG } :
