@@ -890,13 +890,15 @@ lambda_expression_cpp[] { ENTRY_DEBUG } :
             startElement(SFUNCTION_DEFINITION);
         }
 
-        LBRACKET (lambda_capture)* RBRACKET
+        LBRACKET lambda_capture RBRACKET
 
 ;
 
 lambda_capture[] { ENTRY_DEBUG } :
-
-        compound_name | comma | lambda_capture_modifiers
+        {
+            startNewMode(MODE_LIST);
+        }
+        (compound_name | comma | lambda_capture_modifiers)*
 ;
 
 lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG 
