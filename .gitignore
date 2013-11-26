@@ -5,33 +5,6 @@
 *.pyc
 .DS_Store
 
-# antlr gen
-CommentTextLexer.cpp
-CommentTextLexer.hpp
-CommentTextLexerTokenTypes.hpp
-CommentTextLexerTokenTypes.txt
-KeywordLexer.cpp
-KeywordLexer.hpp
-KeywordLexerTokenTypes.hpp
-KeywordLexerTokenTypes.txt
-OperatorLexer.cpp
-OperatorLexer.hpp
-OperatorLexerTokenTypes.hpp
-OperatorLexerTokenTypes.txt
-TextLexer.cpp
-TextLexer.hpp
-TextLexerTokenTypes.hpp
-TextLexerTokenTypes.txt
-expandedCommentTextLexer.g
-expandedKeywordLexer.g
-expandedOperatorLexer.g
-expandedTextLexer.g
-srcMLParser.cpp
-srcMLParser.hpp
-srcMLParserTokenTypes.hpp
-srcMLParserTokenTypes.txt
-srcMLParserTokenTypesMacro.hpp
-
 bin
 
 # cmake/ctest/cpack
@@ -51,32 +24,6 @@ Makefile
 !test/cli/Makefile
 !test/Makefile
 !timing/Makefile
-
-# libsrcml examples
-srcml_convenient
-srcml_copy_archive
-srcml_create_archive_fd
-srcml_create_archive_file
-srcml_create_archive_filename
-srcml_create_archive_full
-srcml_create_archive_memory
-srcml_direct_language
-srcml_direct_language_list
-srcml_direct_language_xml
-srcml_direct_src2srcml
-srcml_direct_srcml2src
-srcml_list
-srcml_read_archive_fd
-srcml_read_archive_file
-srcml_read_archive_filename
-srcml_read_archive_full
-srcml_read_archive_memory
-srcml_relaxng
-srcml_sort_archive
-srcml_split_archive
-srcml_transform
-srcml_xpath
-srcml_xslt
 
 # libsrcml test executables
 test_*
