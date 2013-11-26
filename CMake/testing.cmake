@@ -60,3 +60,26 @@ macro(stringListTofileNames INPUT FILE_SUFFIX OUTPUT)
     endforeach()
     set(${OUTPUT} ${outputTemp})
 endmacro()
+
+
+# 
+# Removes the file extension from a current file, this is used while generating files
+# duing testing when we need to convert a file from for example .cpp.xml to .cpp.
+# 
+# NOTICE: This makes the assumption that there IS a file extension present it 
+# will fail if there isn't.
+# 
+# 
+macro(stripFileExt FILE_NAME OUTPUT)
+    string(FIND ${FILE_NAME} "." LAST_POINT REVERSE)
+    string(SUBSTRING ${FILE_NAME} 0 ${LAST_POINT} ${OUTPUT})
+endmacro()
+
+# 
+# Locates the first dot and creates a sub string from
+# upto that point in the provided FILE_NAME string
+# 
+macro(stripAllFileExts FILE_NAME OUTPUT)
+    string(FIND ${FILE_NAME} "." LAST_POINT)
+    string(SUBSTRING ${FILE_NAME} 0 ${LAST_POINT} ${OUTPUT})
+endmacro()

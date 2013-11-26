@@ -435,100 +435,96 @@ add_custom_target(problem_comment
     COMMAND echo "Built all PROBLEM_COMMENT_TARGETS"
 )
 
-# problem.comment.cpp.xml : problem.cpp.xml
-#         ${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
-# problem.comment.c.xml : problem.c.xml
-#         ${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
-# problem.comment.cs.xml : problem.cs.xml
-#         ${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
-# problem.comment.java.xml : problem.java.xml
-#         ${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
-# problem.comment.aj.xml : problem.aj.xml
-#         ${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
- 
-
 # Handling the processing of insertion of preprocessor nodes into the files.
-# macro(problemComment LANGUAGE_EXT)
-#     
-# endmacro()
-# 
-# set(PROBLEM_COMMENT_TARGETS "")
-# foreach(LANG ${PROGRAMMING_LANGUAGES})
-#     problemBlock(${LANG})
-#     createProbDep(comment ${LANG})
-#     list(APPEND PROBLEM_BLOCK_TARGETS problem.comment.${LANG}.xml)
-# endforeach()
-# 
-# add_custom_target(problem_comment
-#     DEPENDS ${PROBLEM_COMMENT_TARGETS}
-#     COMMAND echo "Built all PROBLEM_COMMENT_TARGETS"
-# )
-# problem.preproc.cpp.xml : problem.cpp.xml
-#         ${XSLT_INSERTPREPROC_PROBLEM} $< > $@
-# problem.preproc.c.xml : problem.c.xml
-#         ${XSLT_INSERTPREPROC_PROBLEM} $< > $@
-# problem.preproc.cs.xml : problem.cs.xml
-#         ${XSLT_INSERTPREPROC_PROBLEM} $< > $@
-# problem.preproc.java.xml : problem.java.xml
-#         ${XSLT_INSERTPREPROC_PROBLEM} $< > $@
-# problem.preproc.aj.xml : problem.aj.xml
-#         ${XSLT_INSERTPREPROC_PROBLEM} $< > $@
+macro(problemPreproc LANGUAGE_EXT)
+    add_custom_command(
+        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.preproc.${LANGUAGE_EXT}.xml
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml
+        COMMAND ${XSLT_INSERTPREPROC_PROBLEM} ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.preproc.${LANGUAGE_EXT}.xml
+        COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.preproc.${LANGUAGE_EXT}.xml
+    )
+endmacro()
+
+set(PROBLEM_INSERT_PREPROC_TARGETS "")
+foreach(LANG ${PROGRAMMING_LANGUAGES})
+    problemPreproc(${LANG})
+    createProbDep(preproc ${LANG})
+    list(APPEND PROBLEM_INSERT_PREPROC_TARGETS problem.preproc.${LANG}.xml)
+endforeach()
+
+add_custom_target(problem_preproc
+    DEPENDS ${PROBLEM_INSERT_PREPROC_TARGETS}
+    COMMAND echo "Built all PROBLEM_INSERT_PREPROC_TARGETS"
+)
 
 # Handling the insertion of ifthanelse into the files.
-# macro(problemComment LANGUAGE_EXT)
-#     
-# endmacro()
-# 
-# set(PROBLEM_COMMENT_TARGETS "")
-# foreach(LANG ${PROGRAMMING_LANGUAGES})
-#     problemBlock(${LANG})
-#     createProbDep(comment ${LANG})
-#     list(APPEND PROBLEM_BLOCK_TARGETS problem.comment.${LANG}.xml)
-# endforeach()
-# 
-# add_custom_target(problem_comment
-#     DEPENDS ${PROBLEM_COMMENT_TARGETS}
-#     COMMAND echo "Built all PROBLEM_COMMENT_TARGETS"
-# )
-# problem.ifthenelse.cpp.xml : problem.cpp.xml
-#         ${XSLT_INSERTIFTHENELSE_PROBLEM} $< > $@
-# problem.ifthenelse.c.xml : problem.c.xml
-#         ${XSLT_INSERTIFTHENELSE_PROBLEM} $< > $@
-# problem.ifthenelse.cs.xml : problem.cs.xml
-#         ${XSLT_INSERTIFTHENELSE_PROBLEM} $< > $@
-# problem.ifthenelse.java.xml : problem.java.xml
-#         ${XSLT_INSERTIFTHENELSE_PROBLEM_JAVA} $< > $@
-# problem.ifthenelse.aj.xml : problem.aj.xml
-#         ${XSLT_INSERTIFTHENELSE_PROBLEM_JAVA} $< > $@
+macro(problemIfThenElse LANGUAGE_EXT)
+    add_custom_command(
+        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.ifthenelse.${LANGUAGE_EXT}.xml
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml
+        COMMAND ${XSLT_INSERTIFTHENELSE_PROBLEM} ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.ifthenelse.${LANGUAGE_EXT}.xml
+        COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.ifthenelse.${LANGUAGE_EXT}.xml
+    )
+endmacro()
+
+set(PROBLEM_IFTHENELSE_TARGETS "")
+foreach(LANG ${PROGRAMMING_LANGUAGES})
+    problemIfThenElse(${LANG})
+    createProbDep(ifthenelse ${LANG})
+    list(APPEND PROBLEM_IFTHENELSE_TARGETS problem.ifthenelse.${LANG}.xml)
+endforeach()
+
+add_custom_target(problem_ifthenelse
+    DEPENDS ${PROBLEM_IFTHENELSE_TARGETS}
+    COMMAND echo "Built all PROBLEM_IFTHENELSE_TARGETS"
+)
 
 # Handling the insertion of the form feed into the files.
-# macro(problemComment LANGUAGE_EXT)
-#     
-# endmacro()
-# 
-# set(PROBLEM_COMMENT_TARGETS "")
-# foreach(LANG ${PROGRAMMING_LANGUAGES})
-#     problemBlock(${LANG})
-#     createProbDep(comment ${LANG})
-#     list(APPEND PROBLEM_BLOCK_TARGETS problem.comment.${LANG}.xml)
-# endforeach()
-# 
-# add_custom_target(problem_comment
-#     DEPENDS ${PROBLEM_COMMENT_TARGETS}
-#     COMMAND echo "Built all PROBLEM_COMMENT_TARGETS"
-# )
-# problem.formfeed.cpp.xml : problem.cpp.xml
-#         ${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
-# problem.formfeed.c.xml : problem.c.xml
-#         ${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
-# problem.formfeed.cs.xml : problem.cs.xml
-#         ${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
-# problem.formfeed.java.xml : problem.java.xml
-#         ${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
-# problem.formfeed.aj.xml : problem.aj.xml
-#         ${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
+macro(problemFormFeed LANGUAGE_EXT)
+    add_custom_command(
+        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.formfeed.${LANGUAGE_EXT}.xml
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml
+        COMMAND ${XSLT_INSERTFORMFEED_PROBLEM} ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.formfeed.${LANGUAGE_EXT}.xml
+        COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.formfeed.${LANGUAGE_EXT}.xml
+    )
+endmacro()
 
+set(PROBLEM_FORMFEED_TARGETS "")
+foreach(LANG ${PROGRAMMING_LANGUAGES})
+    problemFormFeed(${LANG})
+    createProbDep(formfeed ${LANG})
+    list(APPEND PROBLEM_FORMFEED_TARGETS problem.formfeed.${LANG}.xml)
+endforeach()
 
+add_custom_target(problem_formfeed
+    DEPENDS ${PROBLEM_FORMFEED_TARGETS}
+    COMMAND echo "Built all PROBLEM_FORMFEED_TARGETS"
+)
+
+# Testing command which forces ALL depencies to be built which start with "problem_"
+add_custom_target(build_all_problems
+    DEPENDS problem_comment problem_block problem_all problem_preproc problem_ifthenelse problem_formfeed
+    COMMAND echo "Built all."
+)
+
+# Xml building stuff.
+set(ALL_CPP_FILES "")
+file(GLOB ALL_CPP_XML_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp.xml)
+foreach(CPP_XML_FILE ${ALL_CPP_XML_FILES})
+    stripFileExt(${CPP_XML_FILE} FILE_EXT_REMOVED)
+    add_custom_command(
+        OUTPUT ${FILE_EXT_REMOVED}
+        DEPENDS ${CPP_XML_FILE}
+        COMMAND ${XSLT_IDENTITY} ${CPP_XML_FILE} > ${FILE_EXT_REMOVED}
+        COMMAND touch ${FILE_EXT_REMOVED}
+    )
+    list(APPEND ALL_CPP_FILES ${FILE_EXT_REMOVED})
+endforeach()
+
+add_custom_target(identity_cpp
+    DEPENDS ${ALL_CPP_FILES}
+    COMMAND echo "Building all CPP files"
+)
 
 # %.cpp : %.cpp.xml
 #         ${XSLT_IDENTITY} $< > $@
