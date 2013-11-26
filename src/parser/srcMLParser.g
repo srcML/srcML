@@ -1620,11 +1620,15 @@ class_preamble[] { ENTRY_DEBUG } :
 class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SCLASS]
 
-        class_preamble CLASS ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* (class_header lcurly | lcurly)
+        class_preamble CLASS class_post (class_header lcurly | lcurly)
         {
             if (inLanguage(LANGUAGE_CXX_ONLY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
         }
+;
+
+class_post[] { ENTRY_DEBUG } :
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* (specifier)*
 ;
 
 enum_class_definition[] { ENTRY_DEBUG } :
@@ -2623,7 +2627,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  INTERFACE           set_type[type, INTERFACE_DECL] |
                  ATSIGN INTERFACE set_type[type, INTERFACE_DECL])
                 set_bool[lcurly, LA(1) == LCURLY]
-        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+                class_post
                 (class_header | LCURLY)
                 set_type[type, CLASS_DEFN,     type == CLASS_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
