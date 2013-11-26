@@ -24,27 +24,3 @@ Makefile
 !test/cli/Makefile
 !test/Makefile
 !timing/Makefile
-
-# libsrcml test executables
-test_*
-!test_*.cpp
-!test_srcML
-!test_srcML_web
-
-# libsrcml examples
-a.cpp
-a.cpp.xml
-main.cpp.xml
-test/libsrcml/examples/project.xml
-project2.xml
-project_include.xml
-project_other.xml
-project_tmp.xml
-relaxng.xml
-transform.xml
-xpath.xml
-xslt.xml
-
-# timing ignore
-timing_*.xml
-*.hv2
