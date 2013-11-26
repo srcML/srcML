@@ -52,10 +52,6 @@ Makefile
 !test/Makefile
 !timing/Makefile
 
-# testing report files
-srcMLTestReport*
-
-
 # libsrcml examples
 srcml_convenient
 srcml_copy_archive
@@ -105,16 +101,3 @@ xslt.xml
 # timing ignore
 timing_*.xml
 *.hv2
-
-# dist
-srcML-src.tar.gz
-srcML-src.zip
-srcML-src
-srcML.tar.gz
-
-# doc
-doc/option.dtd
-doc/src2srcml.1.gz
-doc/src2srcml.html
-doc/srcml2src.1.gz
-doc/srcml2src.html
