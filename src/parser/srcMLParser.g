@@ -898,7 +898,7 @@ lambda_expression_cpp[] { ENTRY_DEBUG } :
 
 lambda_capture[] {  CompleteElement element(this); ENTRY_DEBUG } :
         {
-            startNewMode(MODE_LIST | MODE_LOCAL);
+            startNewMode(MODE_LIST | MODE_LOCAL | MODE_ARGUMENT);
 
             startElement(SLAMBDA_CAPTURE);
 
