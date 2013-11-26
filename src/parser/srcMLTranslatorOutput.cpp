@@ -136,6 +136,7 @@ namespace {
   ELEMENT_MAP(SKRPARAMETER,          "krparam")
   ELEMENT_MAP(SARGUMENT_LIST,        "argument_list")
   ELEMENT_MAP(SARGUMENT,             "argument")
+  ELEMENT_MAP(SLAMBDA_CAPTURE,  "capture")
 
   // struct, union
   ELEMENT_MAP(SSTRUCT, "struct")

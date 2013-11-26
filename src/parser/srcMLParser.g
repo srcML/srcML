@@ -404,6 +404,7 @@ tokens {
 	SKRPARAMETER;
 	SARGUMENT_LIST;
 	SARGUMENT;
+    SLAMBDA_CAPTURE;
 
     // class, struct, union
 	SCLASS;
@@ -608,10 +609,10 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         terminate |
 
         // don't confuse with expression block
-        { (inTransparentMode(MODE_CONDITION) ||
+        { ((inTransparentMode(MODE_CONDITION) ||
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
         && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
-        && (!inLanguage(LANGUAGE_CXX_ONLY) || !inTransparentMode(MODE_INIT | MODE_EXPECT)) }? lcurly |
+        && (!inLanguage(LANGUAGE_CXX_ONLY) || !inTransparentMode(MODE_INIT | MODE_EXPECT))) || inTransparentMode(MODE_ANONYMOUS) }? lcurly |
 
         // switch cases @test switch
         { !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }?
@@ -871,6 +872,93 @@ function_declaration[int type_count] { ENTRY_DEBUG } :
         function_header[type_count]
 ;
 
+lambda_expression_cpp[] { ENTRY_DEBUG } :
+		{
+
+            bool iscall = lambda_call_check();
+            if(iscall) {
+
+                // start a new mode that will end after the argument list
+                startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+                // start the function call element
+                startElement(SFUNCTION_CALL);
+
+            }
+
+            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+
+            startElement(SFUNCTION_DEFINITION);
+
+        }
+
+        lambda_capture
+
+;
+
+lambda_capture[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LIST | MODE_LOCAL | MODE_ARGUMENT);
+
+            startElement(SLAMBDA_CAPTURE);
+
+        }
+        (
+
+            LBRACKET (comma | { LA(1) != RBRACKET }? lambda_capture_argument)* RBRACKET
+
+        )
+;
+
+lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
+
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SARGUMENT);
+        }
+        (lambda_capture_modifiers | compound_name)*
+;
+
+lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG 
+
+    iscall = false;
+
+    int start = mark();
+    inputState->guessing++;
+
+    try {
+
+        lambda_expression_full_cpp();
+
+        if(LA(1) == LPAREN) iscall = true;
+
+    } catch(...) {}
+
+    inputState->guessing--;
+    rewind(start);
+
+
+} :
+
+;
+
+lambda_expression_full_cpp[] { ENTRY_DEBUG } :
+
+        LBRACKET (~RBRACKET)* RBRACKET (paren_pair)* function_tail curly_pair
+
+;
+
+lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // markup type modifiers if option is on
+            if (isoption(parseoptions, OPTION_MODIFIER))
+                    startElement(SMODIFIER);
+        }
+        (EQUAL | REFOPS)
+
+;
+
 function_definition[int type_count] { ENTRY_DEBUG } :
 		{
             startNewMode(MODE_STATEMENT);
@@ -991,6 +1079,8 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
 
             { next_token_check(LCURLY, LPAREN) }?
             lambda_anonymous |
+
+            (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_full_cpp  |
 
             // found two names in a row, so this is not an expression
             // cause this to fail by explicitly throwing exception
@@ -1788,6 +1878,7 @@ block_end[] { ENTRY_DEBUG } :
         {
             if (inMode(MODE_ANONYMOUS)) {
                 endMode();
+                if(LA(1) == LPAREN) { call_argument_list(); }
                 return;
             }
 
@@ -1831,6 +1922,7 @@ block_end[] { ENTRY_DEBUG } :
             // TODO:  Need a test case that makes this necessary
             // end of block may lead to adjustment of cpp modes
             cppmode_adjust();
+
         }
 ;
 
@@ -4330,6 +4422,8 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         { next_token() == LCURLY }?
         lambda_anonymous |
 
+        (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_cpp |
+
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
 
@@ -4886,6 +4980,10 @@ typedef_statement[] { ENTRY_DEBUG } :
 
 paren_pair[] :
         LPAREN (paren_pair | ~(LPAREN | RPAREN))* RPAREN
+;
+
+curly_pair[] :
+        LCURLY (curly_pair | ~(LCURLY | RCURLY))* RCURLY
 ;
 
 optional_paren_pair[] {
