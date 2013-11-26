@@ -30,7 +30,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <specifier>mutable</specifier> <noexcept>noexcept()</noexcept> -&gt; <type><name>int</name></type> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr>;</expr_stmt>
+<expr_stmt><expr><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <attribute>[[]]</attribute> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <specifier>mutable</specifier> <noexcept>noexcept()</noexcept> <attribute>[[]]</attribute> -&gt; <type><name>int</name></type> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr>;</expr_stmt>
 </unit>
 
 <unit>
