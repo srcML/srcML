@@ -109,4 +109,12 @@
 <decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr>1</expr></argument>, <argument><expr><block>{<expr><name>a</name></expr>}</block></expr></argument>}</argument_list></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>unsigned</name> <name>int</name></type> <name>a</name> :<range> <expr>3</expr></range></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>unsigned</name> <name>int</name></type> <name>a</name> :<range> <expr>3</expr></range>, <name>b</name> :<range> <expr>4</expr></range>, <name>c</name> :<range> <expr>5</expr></range></decl>;</decl_stmt>
+</unit>
+
 </unit>
