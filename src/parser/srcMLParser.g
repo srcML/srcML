@@ -928,7 +928,7 @@ lambda_expression_full_cpp[] { ENTRY_DEBUG } :
 
 ;
 
-lambda_capture_modifiers[] { ENTRY_DEBUG } :
+lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
             if (isoption(parseoptions, OPTION_MODIFIER))
