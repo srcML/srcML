@@ -17,4 +17,12 @@
 <decl_stmt><decl><type><name>auto</name></type> <name>ret</name> =<init> <expr><call><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{<return>return <expr><name>i</name> + 1</expr>;</return>}</block></function><argument_list>(<argument><expr>1</expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function><argument_list>(<argument><expr>0</expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
 </unit>
