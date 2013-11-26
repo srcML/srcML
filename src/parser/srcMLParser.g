@@ -919,7 +919,7 @@ lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG
 
 lambda_expression_full_cpp[] { ENTRY_DEBUG } :
 
-        LBRACKET RBRACKET paren_pair function_tail curly_pair
+        LBRACKET RBRACKET (paren_pair)* function_tail curly_pair
 
 ;
 
@@ -1044,7 +1044,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             { next_token_check(LCURLY, LPAREN) }?
             lambda_anonymous |
 
-            (LBRACKET RBRACKET LPAREN) => lambda_expression_full_cpp  |
+            (LBRACKET RBRACKET (LPAREN | LCURLY)) => lambda_expression_full_cpp  |
 
             // found two names in a row, so this is not an expression
             // cause this to fail by explicitly throwing exception
@@ -4386,7 +4386,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         { next_token() == LCURLY }?
         lambda_anonymous |
 
-        (LBRACKET RBRACKET LPAREN) => lambda_expression_cpp |
+        (LBRACKET RBRACKET (LPAREN | LCURLY)) => lambda_expression_cpp |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |

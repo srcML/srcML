@@ -38,6 +38,10 @@
 </unit>
 
 <unit>
+<expr_stmt><expr><function>[] <block>{ <return>return <expr>1</expr>;</return>}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
 <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
