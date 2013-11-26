@@ -49,4 +49,28 @@
 <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><function><capture>[]</capture><parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function><argument_list>(<argument><expr>0</expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><function><capture>[<argument><name>a</name></argument>]</capture><parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument>&amp;<name>a</name></argument>]</capture><parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument><name>a</name></argument>, <argument>&amp;<name>b</name></argument>]</capture><parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument><name>a</name></argument>, <argument><name>b</name></argument>, <argument><name>c</name></argument>]</capture><parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument>&amp;</argument>]</capture><parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument>=</argument>]</capture><parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr>;</expr_stmt>
+</unit>
+
 </unit>
