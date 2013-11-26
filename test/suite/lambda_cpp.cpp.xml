@@ -18,6 +18,22 @@
 </unit>
 
 <unit>
+<expr_stmt><expr><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> -&gt; <type><name>int</name></type> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <specifier>mutable</specifier> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <noexcept>noexcept()</noexcept> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <specifier>mutable</specifier> <noexcept>noexcept()</noexcept> -&gt; <type><name>int</name></type> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
 <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><function>[]<parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></function></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
