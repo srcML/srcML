@@ -22,21 +22,21 @@
 # cmake_policy(SET CMP0015 NEW)
 # 
 # # set includes and link locations
-# find_package(LibXml2)
-# if(LIBXML2_FOUND)
-#         include_directories(${LIBXML2_INCLUDE_DIR})
-# endif()
+find_package(LibXml2)
+if(LIBXML2_FOUND)
+    include_directories(${LIBXML2_INCLUDE_DIR})
+endif()
 
 
 
 macro(add_unit_test TEST_NAME FILE_NAME)
     add_executable(${TEST_NAME} ${FILE_NAME})
-    target_link_libraries(${TEST_NAME} srcml_static ${ARGN})
+    target_link_libraries(${TEST_NAME} srcml ${ARGN})
     add_test(${TEST_NAME} ${TEST_NAME})
 endmacro(add_unit_test)
 
-# include_directories(../../src ../../src/libsrcml)
-# link_directories(../../bin)
+include_directories(../../src/parser ../../src/translator ../../src/libsrcml)
+link_directories(../../bin)
 # 
 # # set compile and linker flags
 # add_definitions(-g)
