@@ -1586,7 +1586,7 @@ class_declaration[] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp)*
         ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
 
-        (specifier)* CLASS ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* class_header
+        (specifier)* CLASS class_post class_header
 ;
 
 class_preprocessing[int token] { ENTRY_DEBUG } :
@@ -1697,13 +1697,13 @@ struct_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SSTRUCT_DECLARATION);
         }
-        class_preamble STRUCT ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* class_header
+        class_preamble STRUCT class_post class_header
 ;
 
 struct_union_definition[int element_token] { ENTRY_DEBUG } :
         class_preprocessing[element_token]
 
-        class_preamble (STRUCT | UNION) ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* (class_header lcurly | lcurly)
+        class_preamble (STRUCT | UNION) class_post (class_header lcurly | lcurly)
         {
            if (inLanguage(LANGUAGE_CXX_ONLY))
                class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
@@ -1718,7 +1718,7 @@ union_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SUNION_DECLARATION);
         }
-        class_preamble UNION class_header
+        class_preamble UNION class_post class_header
 ;
 
 // default private/public section for C++
