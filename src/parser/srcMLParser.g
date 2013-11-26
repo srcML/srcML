@@ -404,6 +404,7 @@ tokens {
 	SKRPARAMETER;
 	SARGUMENT_LIST;
 	SARGUMENT;
+    SLAMBDA_CAPTURE;
 
     // class, struct, union
 	SCLASS;
@@ -888,17 +889,21 @@ lambda_expression_cpp[] { ENTRY_DEBUG } :
             startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
 
             startElement(SFUNCTION_DEFINITION);
+
         }
 
-        LBRACKET lambda_capture RBRACKET
+        lambda_capture
 
 ;
 
-lambda_capture[] { ENTRY_DEBUG } :
+lambda_capture[] {  CompleteElement element(this); ENTRY_DEBUG } :
         {
-            startNewMode(MODE_LIST);
+            startNewMode(MODE_LIST | MODE_LOCAL);
+
+            startElement(SLAMBDA_CAPTURE);
+
         }
-        (compound_name | comma | lambda_capture_modifiers)*
+        LBRACKET (compound_name | comma | lambda_capture_modifiers)* RBRACKET
 ;
 
 lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG 
