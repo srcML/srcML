@@ -73,4 +73,24 @@
 <comment type="line" format="doxygen">//! </comment>
 </unit>
 
+<unit>
+<comment type="line" format="doxygen">///</comment>
+</unit>
+
+<unit>
+<comment type="line" format="doxygen">//!</comment>
+</unit>
+
+<unit>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif> <comment type="line" format="doxygen">///</comment>
+</unit>
+
+<unit>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif> <comment type="line" format="doxygen">//!</comment>
+</unit>
+
+<unit>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif> <comment type="block" format="doxygen">/***/</comment>
+</unit>
+
 </unit>

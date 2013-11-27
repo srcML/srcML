@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 18 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 20 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -264,7 +264,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options
     if (!_tokenSet_13.member(INCLUDE))
         fprintf(stderr, "src2srcml:  Incorrect token set B\n");
 
-    if (!_tokenSet_21.member(CLASS))
+    if (!_tokenSet_22.member(CLASS))
         fprintf(stderr, "src2srcml:  Incorrect token set C\n");
 
     // root, single mode
@@ -404,6 +404,7 @@ tokens {
 	SKRPARAMETER;
 	SARGUMENT_LIST;
 	SARGUMENT;
+    SLAMBDA_CAPTURE;
 
     // class, struct, union
 	SCLASS;
@@ -441,6 +442,7 @@ tokens {
 	STHROW_STATEMENT;
 	STHROW_SPECIFIER;
 	STHROW_SPECIFIER_JAVA;
+	SNOEXCEPT;
 
 	STEMPLATE;
     STEMPLATE_ARGUMENT;
@@ -607,8 +609,10 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         terminate |
 
         // don't confuse with expression block
-        { inTransparentMode(MODE_CONDITION) ||
-            (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)) }? lcurly |
+        { ((inTransparentMode(MODE_CONDITION) ||
+            (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
+        && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
+        && (!inLanguage(LANGUAGE_CXX_ONLY) || !inTransparentMode(MODE_INIT | MODE_EXPECT))) || inTransparentMode(MODE_ANONYMOUS) }? lcurly |
 
         // switch cases @test switch
         { !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }?
@@ -621,7 +625,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
 
         // statements that clearly start with a keyword
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? keyword_statements |
+        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != EXTERN || next_token() == TEMPLATE)}? keyword_statements |
 
         { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED LPAREN)=>synchronized_statement |
 
@@ -733,7 +737,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0;
         // TODO:  Why no interface declaration?
 
         { stmt_type == GLOBAL_ATTRIBUTE }?
-        attribute |
+        attribute_csharp |
 
         { stmt_type == PROPERTY_ACCESSOR }?
         property_method[SFUNCTION_DEFINITION] |
@@ -868,6 +872,93 @@ function_declaration[int type_count] { ENTRY_DEBUG } :
         function_header[type_count]
 ;
 
+lambda_expression_cpp[] { ENTRY_DEBUG } :
+		{
+
+            bool iscall = lambda_call_check();
+            if(iscall) {
+
+                // start a new mode that will end after the argument list
+                startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+                // start the function call element
+                startElement(SFUNCTION_CALL);
+
+            }
+
+            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+
+            startElement(SFUNCTION_DEFINITION);
+
+        }
+
+        lambda_capture
+
+;
+
+lambda_capture[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LIST | MODE_LOCAL | MODE_ARGUMENT);
+
+            startElement(SLAMBDA_CAPTURE);
+
+        }
+        (
+
+            LBRACKET (comma | { LA(1) != RBRACKET }? lambda_capture_argument)* RBRACKET
+
+        )
+;
+
+lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
+
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SARGUMENT);
+        }
+        (lambda_capture_modifiers | compound_name)*
+;
+
+lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG 
+
+    iscall = false;
+
+    int start = mark();
+    inputState->guessing++;
+
+    try {
+
+        lambda_expression_full_cpp();
+
+        if(LA(1) == LPAREN) iscall = true;
+
+    } catch(...) {}
+
+    inputState->guessing--;
+    rewind(start);
+
+
+} :
+
+;
+
+lambda_expression_full_cpp[] { ENTRY_DEBUG } :
+
+        LBRACKET (~RBRACKET)* RBRACKET (paren_pair)* function_tail curly_pair
+
+;
+
+lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // markup type modifiers if option is on
+            if (isoption(parseoptions, OPTION_MODIFIER))
+                    startElement(SMODIFIER);
+        }
+        (EQUAL | REFOPS)
+
+;
+
 function_definition[int type_count] { ENTRY_DEBUG } :
 		{
             startNewMode(MODE_STATEMENT);
@@ -886,7 +977,7 @@ property_method[int element] { ENTRY_DEBUG } :
             // start the function definition element
             startElement(element);
         }
-        (attribute)*
+        (attribute_csharp)*
         property_method_name
 ;
 
@@ -988,6 +1079,8 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
 
             { next_token_check(LCURLY, LPAREN) }?
             lambda_anonymous |
+
+            (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_full_cpp  |
 
             // found two names in a row, so this is not an expression
             // cause this to fail by explicitly throwing exception
@@ -1490,8 +1583,10 @@ class_declaration[] { ENTRY_DEBUG } :
             startElement(SCLASS_DECLARATION);
         }
         ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)*
-        (specifier)* CLASS class_header
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp)*
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+
+        (specifier)* CLASS ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* class_header
 ;
 
 class_preprocessing[int token] { ENTRY_DEBUG } :
@@ -1516,14 +1611,16 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
 
 class_preamble[] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)*
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp)*
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+
         (specifier)*
 ;
 
 class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SCLASS]
 
-        class_preamble CLASS (class_header lcurly | lcurly)
+        class_preamble CLASS ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* (class_header lcurly | lcurly)
         {
             if (inLanguage(LANGUAGE_CXX_ONLY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
@@ -1534,6 +1631,8 @@ enum_class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SENUM]
 
         class_preamble ENUM (class_header lcurly | lcurly)
+
+        // this might only be called for java so this might be able to be removed.
         {
             if (inLanguage(LANGUAGE_CXX_ONLY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
@@ -1594,13 +1693,13 @@ struct_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SSTRUCT_DECLARATION);
         }
-        class_preamble STRUCT class_header
+        class_preamble STRUCT ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* class_header
 ;
 
 struct_union_definition[int element_token] { ENTRY_DEBUG } :
         class_preprocessing[element_token]
 
-        class_preamble (STRUCT | UNION) (class_header lcurly | lcurly)
+        class_preamble (STRUCT | UNION) ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* (class_header lcurly | lcurly)
         {
            if (inLanguage(LANGUAGE_CXX_ONLY))
                class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
@@ -1655,7 +1754,7 @@ class_header[] { ENTRY_DEBUG } :
 
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
-        compound_name_inner[false]
+        { LA(1) != FINAL }? compound_name_inner[false] (specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : generic_type_constraint))*
@@ -1713,10 +1812,16 @@ access_specifier_region[] { ENTRY_DEBUG } :
 */
 lcurly[] { ENTRY_DEBUG } :
         {
+
             // special end for conditions
             if (inTransparentMode(MODE_CONDITION)) {
                 endDownToMode(MODE_CONDITION);
                 endMode(MODE_CONDITION);
+            }
+
+            if(inTransparentMode(MODE_TRAILING_RETURN)) {
+                endDownToMode(MODE_TRAILING_RETURN);
+                endMode(MODE_TRAILING_RETURN);
             }
 
             if (inMode(MODE_IF)) {
@@ -1739,8 +1844,12 @@ lcurly[] { ENTRY_DEBUG } :
         }
         lcurly_base
         {
+
+            incCurly();
+
             // alter the modes set in lcurly_base
             setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST);
+
         }
 ;
 
@@ -1769,6 +1878,7 @@ block_end[] { ENTRY_DEBUG } :
         {
             if (inMode(MODE_ANONYMOUS)) {
                 endMode();
+                if(LA(1) == LPAREN) { call_argument_list(); }
                 return;
             }
 
@@ -1797,7 +1907,7 @@ block_end[] { ENTRY_DEBUG } :
                 endMode();
             }
 
-            if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP))
+            if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP | LANGUAGE_CXX_ONLY))
                 endMode();
 
             if (!(anonymous_class) && (!(inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM))
@@ -1812,12 +1922,15 @@ block_end[] { ENTRY_DEBUG } :
             // TODO:  Need a test case that makes this necessary
             // end of block may lead to adjustment of cpp modes
             cppmode_adjust();
+
         }
 ;
 
 // right curly brace.  Not used directly, but called by block_end
 rcurly[] { ENTRY_DEBUG } :
         {
+
+
             // end any elements inside of the block
             endDownToMode(MODE_TOP);
 
@@ -1827,6 +1940,10 @@ rcurly[] { ENTRY_DEBUG } :
 
             // end any sections inside the mode
             endDownOverMode(MODE_TOP_SECTION);
+
+            if(getCurly() != 0)
+                decCurly();
+
         }
         RCURLY
         {
@@ -1866,6 +1983,12 @@ terminate_pre[] { ENTRY_DEBUG } :
             if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST))
                 endDownToModeSet(MODE_STATEMENT | MODE_EXPRESSION_BLOCK |
                                    MODE_INTERNAL_END_CURLY | MODE_INTERNAL_END_PAREN);
+
+            if(inTransparentMode(MODE_TRAILING_RETURN)) {
+                endDownToMode(MODE_TRAILING_RETURN);
+                endMode(MODE_TRAILING_RETURN);
+            }
+
         }
 ;
 
@@ -1996,6 +2119,14 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { (inLanguage(LANGUAGE_OO)) && inMode(MODE_FUNCTION_TAIL) }?
         throw_list |
 
+        // throw list at end of function header
+        { (inLanguage(LANGUAGE_CXX_ONLY))&& inTransparentMode(MODE_FUNCTION_TAIL) }?
+        noexcept_list |
+
+        // throw list at end of function header
+        { (inLanguage(LANGUAGE_CXX_ONLY))&& inTransparentMode(MODE_FUNCTION_TAIL) && next_token() == LBRACKET }?
+        attribute_cpp |
+
         // K&R function parameters
         { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && inMode(MODE_FUNCTION_TAIL) &&
           pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
@@ -2004,6 +2135,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // function specifier at end of function header
         { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
         function_specifier |
+
+        // function specifier at end of function header
+        { inLanguage(LANGUAGE_CXX_ONLY) && inMode(MODE_FUNCTION_TAIL) }?
+        trailing_return |
 
         // start of argument for return or throw statement
         { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
@@ -2025,7 +2160,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         expression_part_plus_linq |
 
         // call list in member initialization list
-        { inMode(MODE_CALL | MODE_LIST) }?
+        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
         call |
 
         /*
@@ -2042,6 +2177,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // start of argument for return or throw statement
         { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
         variable_declaration_nameinit |
+
+        // variable name
+        { inMode(MODE_ENUM) }?
+        enum_class_header |
 
         // variable name
         { inMode(MODE_VARIABLE_NAME) }?
@@ -2094,6 +2233,9 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // inside of for group expecting initialization
         { inMode(MODE_FOR_INCREMENT | MODE_EXPECT) }?
         for_increment |
+
+        { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) && !inMode(MODE_TEMPLATE_PARAMETER_LIST)}?
+        class_declaration |
 
         { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) }?
         template_param_list |
@@ -2254,11 +2396,23 @@ function_tail[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             function_specifier |
 
+            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            ref_qualifier |
+
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             TRY |
 
             { inLanguage(LANGUAGE_OO) }?
             complete_throw_list |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            complete_noexcept_list |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}?
+            attribute_cpp |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            trailing_return |
 
             // K&R
             { inLanguage(LANGUAGE_C) }? (
@@ -2270,6 +2424,23 @@ function_tail[] { ENTRY_DEBUG } :
               parameter (MULTOPS | NAME | COMMA)* TERMINATE
             )
         )*
+;
+
+ref_qualifier []  { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // markup type modifiers if option is on
+            if (isoption(parseoptions, OPTION_MODIFIER))
+                startElement(SMODIFIER);
+        }
+
+        REFOPS | RVALUEREF
+;
+
+trailing_return [] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+
+        TRETURN
+        ({ pattern_check(stmt_type, secondtoken, type_count, true) && (stmt_type == FUNCTION || stmt_type == FUNCTION_DECL)}?
+        {startNewMode(MODE_TRAILING_RETURN);} function_declaration[type_count] function_identifier parameter_list | function_type[type_count + 1])
 ;
 
 pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false] returns [bool isdecl] {
@@ -2286,6 +2457,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     int fla = 0;
 
     try {
+
         pattern_check_core(token, fla, type_count, type, inparam, sawenum, posin);
 
     } catch (...) {
@@ -2299,11 +2471,16 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         type_count = posin - 1;
 
     // enum
-    else if (type == 0 && sawenum)
+    else if (type == 0 && sawenum) {
         type = ENUM_DECL;
+
+    }
 
     // may just have a single macro (no parens possibly) before a statement
     else if (type == 0 && type_count == 0 && _tokenSet_1.member(LA(1)))
+        type = SINGLE_MACRO;
+
+    else if(type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == STRUCT || LA(1) == UNION))
         type = SINGLE_MACRO;
 
     // may just have an expression
@@ -2380,7 +2557,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         */
         { next_token_check(LPAREN, LCURLY) }? DELEGATE set_type[type, DELEGATE_FUNCTION] |
         (
-        ({ inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0) || LA(1) != LBRACKET }?
+        ({ inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0) || LA(1) != LBRACKET || (LA(1) == LBRACKET && next_token() == LBRACKET) }?
 
             set_bool[qmark, (qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
 
@@ -2398,7 +2575,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
-                { _tokenSet_21.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON))}?
+                { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || LA(1) == CONST]
                 (specifier | (SIGNAL COLON)=>SIGNAL)
@@ -2424,6 +2601,15 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 RBRACKET
                 set_int[attribute_count, attribute_count + 1] |
 
+                { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}?
+                LBRACKET LBRACKET
+                        (COMMA)*
+
+                        //complete_expression
+                        (~(RBRACKET))*
+                RBRACKET RBRACKET
+                set_int[attribute_count, attribute_count + 1] |
+
                 { type_count == attribute_count }?
                 property_method_name
                 set_type[type, PROPERTY_ACCESSOR, true] |
@@ -2437,6 +2623,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  INTERFACE           set_type[type, INTERFACE_DECL] |
                  ATSIGN INTERFACE set_type[type, INTERFACE_DECL])
                 set_bool[lcurly, LA(1) == LCURLY]
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
                 (class_header | LCURLY)
                 set_type[type, CLASS_DEFN,     type == CLASS_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
@@ -2468,7 +2655,10 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
 
                 // type parts that can occur before other type parts (excluding specifiers)
-                { LA(1) != LBRACKET }?
+                // do not match a struct class or union.  If was class/struct/union decl will not reach here.
+                // if elaborated type specifier should also be handled above. Reached here because 
+                // non-specifier then class/struct/union.
+                { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != STRUCT && LA(1) != UNION)}?
                 pure_lead_type_identifier_no_specifiers set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
@@ -2664,6 +2854,25 @@ type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
         type_identifier | MAIN
 ;
 
+type_identifier_count_check returns [int type_count] {
+
+
+    int start = mark();
+    ++inputState->guessing;
+
+    type_count = type_identifier_count_check_core();
+
+    rewind(start);
+    --inputState->guessing;
+} :
+;
+
+type_identifier_count_check_core returns [int type_count] { type_count = 0; ENTRY_DEBUG } :
+
+        (type_identifier_count[type_count])*
+
+;
+
 /*
 deduct[int& type_count] { --type_count; } :;
 */
@@ -2694,15 +2903,39 @@ throw_list[] { ENTRY_DEBUG } :
         THROWS
 ;
 
+noexcept_list[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
+
+            startElement(SNOEXCEPT);
+        }
+        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (LPAREN)*
+;
+
+noexcept_operator[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
+
+            startElement(SNOEXCEPT);
+        }
+        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (LPAREN)*
+;
+
 complete_throw_list[] { ENTRY_DEBUG } :
         THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java | COMMA)*
+;
+
+complete_noexcept_list[] { ENTRY_DEBUG } :
+        NOEXCEPT (paren_pair)*
 ;
 
 // type identifier
 pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         // specifiers that occur in a type
-		{ _tokenSet_21.member(LA(1)) }?
+		{ _tokenSet_22.member(LA(1)) }?
         specifier |
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
@@ -2710,7 +2943,9 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_JAVA) }? annotation |
 
-        { inLanguage(LANGUAGE_CSHARP) }? attribute |
+        { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+
+        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp |
 
         pure_lead_type_identifier_no_specifiers
 ;
@@ -2736,7 +2971,7 @@ lead_type_identifier[] { ENTRY_DEBUG } :
 //        (macro_call_paren identifier)=> macro_call |
 
         // typical type name
-        { LA(1) != ASYNC }?
+        { LA(1) != ASYNC && (inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE)) }?
         compound_name |
 
         pure_lead_type_identifier
@@ -2975,7 +3210,7 @@ variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
         )*
 ;
 
-attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
+attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
@@ -2984,18 +3219,32 @@ attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         LBRACKET
 
-        ({ next_token() == COLON }? attribute_target COLON)*
+        ({ next_token() == COLON }? attribute_csharp_target COLON)*
 
         complete_expression
 
         RBRACKET
 ;
 
-attribute_target[] { SingleElement element(this); ENTRY_DEBUG } :
+attribute_csharp_target[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(STARGET);
         }
         (RETURN | EVENT | identifier_list)
+;
+
+attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+
+            startElement(SATTRIBUTE);
+        }
+        LBRACKET LBRACKET
+
+        complete_expression
+
+        RBRACKET RBRACKET
 ;
 
 // Full, complete expression matched all at once (no stream).
@@ -3084,13 +3333,11 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
-            SIGNAL |
+            SIGNAL | FINAL | OVERRIDE |
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
-            INTO | THIS |
-
-            { inLanguage(LANGUAGE_CSHARP) }? UNION
+            INTO | THIS
 ;
 
 // most basic name
@@ -3103,7 +3350,9 @@ simple_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
 compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
         compound_name_inner[true]
-        (options { greedy = true; } : variable_identifier_array_grammar_sub[iscompound])*
+        (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX_ONLY) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound])*      
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+
 ;
 
 compound_name_inner[bool index] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
@@ -3140,8 +3389,13 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
         compound_name_cpp[iscompound]
         )
-        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) }?
-            variable_identifier_array_grammar_sub[iscompound])*
+
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+
+        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) && (!inLanguage(LANGUAGE_CXX_ONLY) || next_token() != LBRACKET)}?
+            variable_identifier_array_grammar_sub[iscompound]
+        )*
+
         {
             // if it isn't a compound name, nop the element
             if (!iscompound)
@@ -3215,11 +3469,26 @@ function_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         ({ LA(1) != ASYNC }? specifier |
 
-        // pure virtual specifier
-        EQUAL literal |
+        // pure virtual specifier = default and = delete
+        EQUAL (literal | function_equal_specifier) |
 
         simple_name_optional_template)
 ;
+
+function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // only markup strings in literal option
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        (
+
+            DEFAULT | DELETE
+
+
+        )
+
+;
+
 
 specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
@@ -3231,6 +3500,7 @@ specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // C++
             FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
+            CONSTEXPR | THREADLOCAL | 
 
             // C# & Java
             INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
@@ -3273,7 +3543,9 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_JAVA) }? annotation |
 
-            { inLanguage(LANGUAGE_CSHARP) }? attribute |
+            { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp |
 
             specifier |
 
@@ -3330,7 +3602,9 @@ destructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_JAVA) }? annotation |
 
-            { inLanguage(LANGUAGE_CSHARP) }? attribute |
+            { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp |
 
             specifier |
 
@@ -3389,7 +3663,7 @@ call_argument_list[] { ENTRY_DEBUG } :
             // start the argument list
             startElement(SARGUMENT_LIST);
         }
-        LPAREN
+        (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
 macro_call_check[] { ENTRY_DEBUG } :
@@ -3968,7 +4242,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
                 startElement(SOPERATOR);
         }
         (
-        OPERATORS | TEMPOPS |
+        OPERATORS | TRETURN | TEMPOPS |
             TEMPOPE ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? EQUAL)? |
     EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF |
             QMARK ({ SkipBufferSize() == 0 }? QMARK)? | { inLanguage(LANGUAGE_JAVA) }? BAR |
@@ -4051,6 +4325,32 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
         }
 ;
 
+rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
+        {
+            if(isempty) {
+
+                // additional right parentheses indicates end of non-list modes
+                endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE | MODE_INTERNAL_END_CURLY);
+            }
+
+        }
+        RCURLY
+        {
+
+            // end the single mode that started the list
+            // don't end more than one since they may be nested
+            if (isempty && inMode(MODE_LIST))
+                endDownOverMode(MODE_LIST);
+            
+            else if(inTransparentMode(MODE_EXPRESSION | MODE_LIST))
+                endDownOverMode(MODE_EXPRESSION | MODE_LIST);
+
+            if(!isempty)
+                decCurly();
+        }
+
+;
+
 // Dot (period) operator
 period[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
@@ -4122,6 +4422,8 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         { next_token() == LCURLY }?
         lambda_anonymous |
 
+        (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_cpp |
+
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
 
@@ -4161,7 +4463,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         {
             // stop at this matching paren, or a preprocessor statement
             endDownToModeSet(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
-
+            
             if (inMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN))
                 endMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
         }
@@ -4177,24 +4479,23 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         }
         LCURLY
         {
+            incCurly();
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_CURLY);
         } |
-
-        // right curly brace
         { inTransparentMode(MODE_INTERNAL_END_CURLY) }?
         {
-            endDownToMode(MODE_INTERNAL_END_CURLY);
 
-            endMode(MODE_INTERNAL_END_CURLY);
+            if(!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT)) {
+                endDownToMode(MODE_INTERNAL_END_CURLY);
+
+                endMode(MODE_INTERNAL_END_CURLY);
+
+            }
         }
-        RCURLY
-        {
-            if (inMode(MODE_EXPRESSION | MODE_LIST))
-                endMode(MODE_EXPRESSION | MODE_LIST);
-        } |
+        rcurly_argument |
 
         // variable or literal
-        variable_identifier | string_literal | char_literal | literal | boolean |
+        variable_identifier | string_literal | char_literal | literal | boolean | noexcept_operator | 
 
         variable_identifier_array_grammar_sub[flag]
 ;
@@ -4234,7 +4535,7 @@ literal[] { LightweightElement element(this); ENTRY_DEBUG } :
             if (isoption(parseoptions, OPTION_LITERAL))
                 startElement(SLITERAL);
         }
-        CONSTANTS
+        (CONSTANTS | NULLPTR)
 ;
 
 boolean[] { LightweightElement element(this); ENTRY_DEBUG } :
@@ -4392,6 +4693,7 @@ complete_parameter[] { ENTRY_DEBUG } :
 
 argument[] { ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false] |
+        { getCurly() == 0 }? rcurly_argument |
         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -4400,10 +4702,11 @@ argument[] { ENTRY_DEBUG } :
             startElement(SARGUMENT);
         }
         (
-        { !(LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression |
+        { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }? expression |
 
         type_identifier
         )
+
 ;
 
 annotation_argument[] { ENTRY_DEBUG } :
@@ -4431,6 +4734,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
             startElement(SPARAMETER);
         }
         (
+
             { pattern_check(stmt_type, secondtoken, type_count, true) && stmt_type == FUNCTION }?
             function_declaration[type_count]
 
@@ -4503,7 +4807,6 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
 ;
 
 // Template
-
 template_declaration[] { ENTRY_DEBUG } :
         {
             // template with nested statement (function or class)
@@ -4513,11 +4816,22 @@ template_declaration[] { ENTRY_DEBUG } :
             // start the template
             startElement(STEMPLATE);
         }
-        TEMPLATE
+        (template_specifier)* TEMPLATE
         {
-            startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT | MODE_TEMPLATE_PARAMETER_LIST);
+            if(LA(1) == CLASS)
+                startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
+            else
+                startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT | MODE_TEMPLATE_PARAMETER_LIST);
         }
 ;
+
+template_specifier{ SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+
+        EXTERN
+    ;
 
 template_param_list[] { ENTRY_DEBUG } :
         {
@@ -4668,6 +4982,10 @@ paren_pair[] :
         LPAREN (paren_pair | ~(LPAREN | RPAREN))* RPAREN
 ;
 
+curly_pair[] :
+        LCURLY (curly_pair | ~(LCURLY | RCURLY))* RCURLY
+;
+
 optional_paren_pair[] {
 
     if (LA(1) != LPAREN)
@@ -4743,6 +5061,20 @@ enum_definition[] { ENTRY_DEBUG } :
         }
         ENUM
 ;
+
+enum_class_header[] {} :
+        (CLASS | STRUCT)* 
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        variable_identifier (COLON enum_type)*
+
+    ;
+
+enum_type { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(STYPE);
+        }
+        (specifier | compound_name)*
+    ;
 
 // Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
 // enum must be parsed since it is part of the type.
@@ -4978,7 +5310,7 @@ eol[int directive_token, bool markblockzero] {
 
             endMode(MODE_PARSE_EOL);
 ENTRY_DEBUG } :
-        (EOL | LINECOMMENT_START | eof)
+        (EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | eof)
         eol_post[directive_token, markblockzero]
 ;
 

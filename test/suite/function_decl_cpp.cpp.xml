@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="function_decl" filename="function_decl_cpp">
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> =<init> <expr>0</expr></init></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> =<init> <expr><name>b</name></expr></init></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> =<init> <expr><name>b</name> + <name>c</name></expr></init></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><specifier>virtual</specifier> <name>NonCopyable</name> &amp;</type> <name>operator=</name><parameter_list>(<param><decl><type><specifier>const</specifier></type> <name>NonCopyable</name>&amp;</decl></param>)</parameter_list> = 0;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>NonCopyable</name> &amp;</type> <name>operator=</name><parameter_list>(<param><decl><type><specifier>const</specifier></type> <name>NonCopyable</name>&amp;</decl></param>)</parameter_list> = <specifier>delete</specifier>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><specifier>virtual</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <specifier>final</specifier>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><specifier>virtual</specifier> <name>void</name></type> <name>some_func</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list> <specifier>override</specifier>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>auto</name></type> <name>func_name</name><parameter_list>(<param><decl><type><name>int</name></type> <name>x</name></decl></param>, <param><decl><type><name>int</name></type> <name>y</name></decl></param>)</parameter_list> -&gt; <type><name>int</name></type>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>auto</name></type> <name>func_name</name><parameter_list>(<param><decl><type><name>int</name></type> <name>x</name></decl></param>, <param><decl><type><name>int</name></type> <name>y</name></decl></param>)</parameter_list> -&gt; <type><specifier>const</specifier> <name>int</name></type>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>auto</name></type> <name>fpif</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list>-&gt;<function_decl><type><name>int</name></type> (*)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl>;</function_decl>
+</unit>
+
+</unit>

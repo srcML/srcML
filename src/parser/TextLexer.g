@@ -75,14 +75,19 @@ STRING_START :
             // #define a "abc
             // note that the "abc does not end at the end of this line,
             // but the #define must end, so EOL is not a valid string character
-            '"' { if(rawstring) {
-                    //rawstring = false;
-                    //std::string delimiter;
-                    while(LA(1) != '(') {
+            '"' {
+
+                if(rawstring) {
+                    while(LA(1) != '(' && LA(1) != '\n') {
                         delimiter += LA(1);
                         consume();
                     }
-                    consume();
+
+                    if(LA(1) == '\n') {
+                         delimiter = "";
+                    } else {
+                        match('(');
+                    }
 
                 }
                 changetotextlexer(STRING_END); } |
@@ -106,9 +111,18 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
         (
 
             { lastchar == 'L' || lastchar == 'U' || lastchar == 'u' }?
-            { $setType(STRING_START); } ('8' | { rawstring = true; } 'R')* STRING_START |
+            { $setType(STRING_START); } STRING_START |
 
             { lastchar == 'R' }?
+            { $setType(STRING_START); rawstring = true; } STRING_START |
+
+            { lastchar == 'u' }? ('8' '"')=> '8'
+            { $setType(STRING_START); } STRING_START |
+
+            { lastchar == 'u' }? ('8' 'R' '"')=> '8' 'R'
+            { $setType(STRING_START); rawstring = true; } STRING_START |
+
+            { lastchar == 'L' || lastchar == 'U' | lastchar == 'u'}? ('R' '"')=> 'R'
             { $setType(STRING_START); rawstring = true; } STRING_START |
 
             (options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')*

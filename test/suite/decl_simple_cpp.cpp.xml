@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="decl_simple_cpp">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="decl_simple" filename="decl_simple_cpp">
 
 <unit>
 <decl_stmt><decl><type><specifier>const</specifier> <name><name>std</name>::<name>s</name></name>&amp;</type> <name>a</name></decl>;</decl_stmt>
@@ -67,6 +67,46 @@
 
 <unit>
 <decl_stmt><decl><type><specifier>volatile</specifier> <name>var</name></type> <name>signal</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>final</name></type> <name>signal</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>override</name></type> <name>signal</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>signal</name></type> <name>override</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>final</name></type> <name>signal</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>signal</name></type> <name>final</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>thread_local</specifier> <name>unsigned</name> <name>int</name></type> <name>rage</name> =<init><expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{}</argument_list></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr>1</expr></argument>, <argument><expr>2</expr></argument>}</argument_list></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr><block>{<expr>1</expr>}</block></expr></argument>}</argument_list></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr>1</expr></argument>, <argument><expr><block>{<expr><name>a</name></expr>}</block></expr></argument>}</argument_list></decl>;</decl_stmt>
 </unit>
 
 </unit>

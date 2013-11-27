@@ -18,34 +18,6 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-# cmake_minimum_required(VERSION 2.8)
-# cmake_policy(SET CMP0015 NEW)
-# 
-# # set includes and link locations
-# find_package(LibXml2)
-# if(LIBXML2_FOUND)
-#         include_directories(${LIBXML2_INCLUDE_DIR})
-# endif()
-
-
-
-
-
-# include_directories(../../src ../../src/libsrcml)
-# link_directories(../../bin)
-# 
-# # set compile and linker flags
-# add_definitions(-g)
-# add_definitions(--coverage)
-# add_definitions(-O0)
-# set(CMAKE_EXE_LINKER_FLAGS -fprofile-arcs)
-
-# ctest
-#include(CTest)
-
-set(CTEST_DROP_SITE_CDASH FALSE)
-set(MEMORYCHECK_COMMAND /usr/local/bin/valgrind)
-set(COVERAGE_COMMAND /usr/bin/gcov)
 
 
 addUnitTest(test_Language test_Language.cpp)

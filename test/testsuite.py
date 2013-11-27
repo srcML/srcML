@@ -12,9 +12,6 @@ import difflib
 import string
 from datetime import datetime, time
 
-sys.path.append("../src/libsrcml/python")
-from libsrcml import *
-
 maxcount = 700
 error_filename = "srcMLTestReport"
 error_filename_extension = ".txt"
@@ -27,11 +24,11 @@ xml_filename = ""
 
 srcmltranslator = os.environ.get("SRC2SRCML")
 if srcmltranslator == "" or srcmltranslator == None:
-	srcmltranslator = "../build/src2srcml"
+	srcmltranslator = "../bin/src2srcml"
 
 srcmlutility = os.environ.get("SRCML2SRC")
 if srcmlutility == "" or srcmlutility == None:
-	srcmlutility = "../build/srcml2src"
+	srcmlutility = "../bin/srcml2src"
 
 # Walk into directories in filesystem
 # Ripped from os module and slightly modified
@@ -375,7 +372,10 @@ if use_exec :
         print src2srcmlversion()
         print srcml2srcversion()
 else :
+	sys.path.append("../src/libsrcml/python")
+	from libsrcml import *
         print version_string()
+
 print
 
 specname = ""

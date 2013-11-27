@@ -226,6 +226,12 @@ tokens {
     SYNCHRONIZED;
     NATIVE;
     STRICTFP;
+
+    CONSTEXPR;
+    NOEXCEPT;
+    THREADLOCAL;
+    NULLPTR;
+
 }
 
 {
@@ -243,7 +249,7 @@ struct keyword { char const * const text; int token; int language; };
 void changetotextlexer(int typeend);
 
 KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
-    : antlr::CharScanner(pinput,true), Language(language), onpreprocline(false), startline(true), atstring(false)
+    : antlr::CharScanner(pinput,true), Language(language), onpreprocline(false), startline(true), atstring(false), rawstring(false), delimiter("")
 {
     setTokenObjectFactory(srcMLToken::factory);
 
@@ -308,7 +314,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "pragma"        , PRAGMA        , LANGUAGE_C_FAMILY }, 
         { "undef"         , UNDEF         , LANGUAGE_C_FAMILY }, 
 
-        { "union"         , UNION         , LANGUAGE_C_FAMILY }, 
+        { "union"         , UNION         , LANGUAGE_CXX_ONLY | LANGUAGE_C }, 
         { "struct"        , STRUCT        , LANGUAGE_C_FAMILY }, 
 
         { "inline"        , INLINE        , LANGUAGE_C_FAMILY }, 
@@ -334,7 +340,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "public"        , PUBLIC        , LANGUAGE_OO }, 
         { "private"       , PRIVATE       , LANGUAGE_OO }, 
         { "protected"     , PROTECTED     , LANGUAGE_OO }, 
-        { "signal"        , SIGNAL        , LANGUAGE_CXX }, 
+        { "signal"        , SIGNAL        , LANGUAGE_CXX_ONLY }, 
 
         { "new"           , NEW           , LANGUAGE_OO }, 
 
@@ -356,12 +362,16 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         
         // special C++ operators
         { "::"            , DCOLON        , LANGUAGE_CXX_FAMILY }, 
-        { "&&"            , RVALUEREF     , LANGUAGE_CXX_FAMILY }, 
+        { "&amp;&amp;"            , RVALUEREF     , LANGUAGE_CXX_FAMILY }, 
 
         // special C++ constant values
         { "false"         , FALSE         , LANGUAGE_OO }, 
         { "true"          , TRUE          , LANGUAGE_OO }, 
 
+        // C++ specifiers
+        { "final"          , FINAL          , LANGUAGE_CXX_ONLY },
+        { "override"       , OVERRIDE       , LANGUAGE_CXX_ONLY },
+ 
         // specifiers that are not needed for parsing
         /*
           { "mutable"     , MUTABLE       , LANGUAGE_CXX_FAMILY }, 
@@ -369,6 +379,11 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         */
 
         // add all C++ specific keywords to the literals table
+        { "constexpr"     , CONSTEXPR        , LANGUAGE_CXX_ONLY }, 
+        { "noexcept"      , NOEXCEPT         , LANGUAGE_CXX_ONLY }, 
+        { "thread_local"  , THREADLOCAL      , LANGUAGE_CXX_ONLY }, 
+        { "nullptr"       , NULLPTR          , LANGUAGE_CXX_ONLY }, 
+
         // concepts
 //        { "auto"          , AUTO          , LANGUAGE_CXX_11 }, 
 
@@ -399,14 +414,14 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "synchronized"  , SYNCHRONIZED  , LANGUAGE_JAVA },
 
         // native
-        { "native"  , NATIVE  , LANGUAGE_JAVA },
+        { "native"        , NATIVE        , LANGUAGE_JAVA },
 
         // strictfp
-        { "strictfp"  , STRICTFP  , LANGUAGE_JAVA },
-        { "transient"      , TRANSIENT      , LANGUAGE_JAVA }, 
+        { "strictfp"      , STRICTFP      , LANGUAGE_JAVA },
+        { "transient"     , TRANSIENT     , LANGUAGE_JAVA }, 
 
         // catch seperator
-	    { "|"             , BAR         , LANGUAGE_JAVA }, 
+	    { "|"             , BAR           , LANGUAGE_JAVA }, 
 
 
         // add all C# specific keywords to the literals table

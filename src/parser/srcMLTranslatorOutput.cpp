@@ -136,6 +136,7 @@ namespace {
   ELEMENT_MAP(SKRPARAMETER,          "krparam")
   ELEMENT_MAP(SARGUMENT_LIST,        "argument_list")
   ELEMENT_MAP(SARGUMENT,             "argument")
+  ELEMENT_MAP(SLAMBDA_CAPTURE,  "capture")
 
   // struct, union
   ELEMENT_MAP(SSTRUCT, "struct")
@@ -176,6 +177,7 @@ namespace {
   ELEMENT_MAP(STHROW_STATEMENT, "throw")
   ELEMENT_MAP(STHROW_SPECIFIER, "throw")
   ELEMENT_MAP(STHROW_SPECIFIER_JAVA, "throws")
+  ELEMENT_MAP(SNOEXCEPT, "noexcept")
 
   // template
   ELEMENT_MAP(STEMPLATE, "template")
@@ -601,13 +603,17 @@ void srcMLTranslatorOutput::processEndLineToken(const antlr::RefToken& token) {
 
   int size = token->getText().size();
 
-  if (size > 1)
+  bool output = false;
+  if (size > 1 || token->getText()[0] != '\n') {
     processText(token);
+    output = true;
+  }
+
 
   xmlTextWriterEndElement(xout);
   --openelementcount;
 
-  if (size == 1)
+  if (size == 1 && !output)
     processText(token);
 }
 

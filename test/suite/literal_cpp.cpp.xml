@@ -34,6 +34,21 @@
 </unit>
 
 <unit>
+<expr_stmt><expr><lit:literal type="string">R"The</lit:literal></expr>
+;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><lit:literal type="string">R"(The String Data \ Stuff</lit:literal></expr>
+;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><lit:literal type="string">R"(The String Data \ Stuff)</lit:literal></expr>
+;</expr_stmt>
+</unit>
+
+<unit>
 <expr_stmt><expr><lit:literal type="string">u8R"XXX(I'm a "raw UTF-8" string.)XXX"</lit:literal></expr>;</expr_stmt> 
 </unit>
 
@@ -43,6 +58,10 @@
 
 <unit>
 <expr_stmt><expr><lit:literal type="string">UR"(This is a "raw UTF-32" string.)"</lit:literal></expr>;</expr_stmt> 
+</unit>
+
+<unit>
+<expr_stmt><expr><lit:literal type="number">nullptr</lit:literal></expr>;</expr_stmt> 
 </unit>
 
 </unit>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="enum" filename="enum_c">
+
+<unit>
+<decl_stmt><decl><type>enum <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<enum>enum <name>Enum2</name> : <type><name>unsigned</name> <name>int</name></type>;</enum>
+</unit>
+<unit>
+<decl_stmt><decl><type><specifier>const</specifier> <enum>enum <name>a</name> <block>{ <expr><name>b</name> = 0</expr> }</block></enum></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+</unit>

@@ -97,4 +97,10 @@
 <expr_stmt><expr><name>num</name> = <name>value</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><name>L</name> + <name>U</name> + <name>u</name> + <name>R</name>
+  + <name>u8</name> + <name>LR</name> + <name>UR</name> + <name>uR</name> + <name>u8R</name>
+  + <name>LRFoo</name> + <name>URFoo</name> + <name>uRFoo</name> + <name>u8RFoo</name> + <name>RFoo</name></expr>;</expr_stmt>
+</unit>
+
 </unit>

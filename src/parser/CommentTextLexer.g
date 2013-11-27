@@ -133,6 +133,14 @@ COMMENT_TEXT {
 
             prevLA = prevprevLA;
             prevprevLA = LA(1);
+
+            if(rawstring && first && LA(1) == '\012') {
+
+                rawstring = false;
+                $setType(mode);
+                selector->pop();
+                continue;
+            }
          }
          (
         '\000'..'\010'
@@ -147,7 +155,9 @@ COMMENT_TEXT {
               newline();
 
               // end at EOL when for line comment, or the end of a string or char on a preprocessor line
-              if (mode == LINECOMMENT_END || ((mode == STRING_END || mode == CHAR_END) && onpreprocline)) {
+              if (mode == LINECOMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline || rawstring))) {
+
+                  rawstring = false;
                   $setType(mode); selector->pop();
               }
         } |
@@ -191,18 +201,20 @@ COMMENT_TEXT {
 
         '\050' |
 
-        '\051' /* ')' */ {
+        '\051' /* ')' */ { if(rawstring) {
 
                 int pos = 0;
-                while(pos < delimiter.size() && LA(1) == delimiter[pos]) {
+                while(pos < delimiter.size() && LA(1) == delimiter[pos] && LA(1) != '\n') {
                     ++pos;
                     consume();
                 }
 
-                if(pos == delimiter.size()) {
+                if(pos == delimiter.size() && LA(1) != '\n') {
                     rawstring = false;
                 }
-        }|
+
+            }
+        } |
 
         '\052'..'\056' |
 
@@ -256,15 +268,15 @@ COMMENT_TEXT {
 
             ++realbegin;
 
-            // not the first character anymoe
+            // not the first character anymore
             first = false;
 
             // about to read a newline, or the end of the files.  Line comments need to end before the newline is consumed.
             // strings and characters on a preprocessor line also need to end, even if unterminated
             if (_ttype == COMMENT_TEXT && (LA(1) == '\n' || LA(1) == EOF_CHAR) &&
-                (((mode == STRING_END || mode == CHAR_END) && onpreprocline)
+                (((mode == STRING_END || mode == CHAR_END) && (onpreprocline || rawstring))
                  || (mode == LINECOMMENT_END))) {
-
+                rawstring = false;
                 $setType(mode);
                 selector->pop();
             }

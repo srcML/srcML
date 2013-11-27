@@ -299,14 +299,14 @@ allinall.1.cpp.xml :
 	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > allinall.1.cpp.xml
 	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"allinall.1.cpp\">" >> allinall.1.cpp.xml
 
-	@find ../suite -name "*.all.cpp.xml" | sed "s|cstruct.all.cpp.xml||" | sed "s|functionkr.all.cpp.xml||" | head -30 | xargs -i tail +3 {} | sed "s|</unit>||" >> allinall.1.cpp.xml
+	@find ../suite -name "*.all.cpp.xml" | sed "s|struct_c.all.c.xml||" | sed "s|functionkr.all.cpp.xml||" | head -30 | xargs -i tail +3 {} | sed "s|</unit>||" >> allinall.1.cpp.xml
 	@echo "</unit>" >> allinall.1.cpp.xml
 
 allinall.2.cpp.xml :
 	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > allinall.2.cpp.xml
 	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"allinall.2.cpp\">" >> allinall.2.cpp.xml
 
-	@find ../suite -name "*.all.cpp.xml" | sed "s|cstruct.all.cpp.xml||" | sed "s|functionkr.all.cpp.xml||" | tail -18 | xargs -i tail +3 {} | sed "s|</unit>||" >> allinall.2.cpp.xml
+	@find ../suite -name "*.all.cpp.xml" | sed "s|struct_c.all.c.xml||" | sed "s|functionkr.all.cpp.xml||" | tail -18 | xargs -i tail +3 {} | sed "s|</unit>||" >> allinall.2.cpp.xml
 	@echo "</unit>" >> allinall.2.cpp.xml
 
 allinone : allinonecpp allinonec allinonejava
@@ -590,7 +590,11 @@ struct_cs.cs.xml : class_cs.cs.xml ${XSLT_CLASS2STRUCT_XSL}
 	${XSLT_CLASS2STRUCT} $< > $@
 
 # union from struct
-union_cs.cs.xml : struct_cs.cs.xml ${XSLT_STRUCT2UNION_XSL}
+#union_cs.cs.xml : struct_cs.cs.xml ${XSLT_STRUCT2UNION_XSL}
+	#${XSLT_STRUCT2UNION} $< > $@
+
+# union from struct
+union_c.c.xml : struct_c.c.xml ${XSLT_STRUCT2UNION_XSL}
 	${XSLT_STRUCT2UNION} $< > $@
 
 # interface from class

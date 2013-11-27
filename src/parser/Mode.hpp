@@ -150,6 +150,8 @@ public:
 
     const static State::MODE_TYPE MODE_END_AT_COMMA;
 
+    const static State::MODE_TYPE MODE_TRAILING_RETURN;
+
 public:
 
     Mode(TokenParser* ptp, int lang)
@@ -188,6 +190,21 @@ protected:
     void decParen() {
 
         statev.decParen();
+    }
+
+    int getCurly() const {
+
+        return statev.getCurly();
+    }
+
+    void incCurly() {
+
+        statev.incCurly();
+    }
+
+    void decCurly() {
+
+        statev.decCurly();
     }
 
     int getTypeCount() const {

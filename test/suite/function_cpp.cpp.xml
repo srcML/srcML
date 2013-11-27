@@ -40,16 +40,61 @@
 <function><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name>*</type> <name>a</name></decl></param>)</parameter_list><block>{}</block></function>
 </unit>
 
+
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> =<init> <expr>0</expr></init></decl></param>)</parameter_list>;</function_decl>
+<function><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name>*</type> <name>a</name></decl></param>)</parameter_list><block>{}</block></function>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> =<init> <expr><name>b</name></expr></init></decl></param>)</parameter_list>;</function_decl>
+<function><type><specifier>constexpr</specifier> <name>int</name></type> <name>get_five</name><parameter_list>()</parameter_list> <block>{<return>return <expr>5</expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> =<init> <expr><name>b</name> + <name>c</name></expr></init></decl></param>)</parameter_list>;</function_decl>
+<function><type><name>int</name></type> <name>get_five</name><parameter_list>()</parameter_list> <specifier>const</specifier> <block>{<return>return <expr>5</expr>;</return>}</block></function>
+</unit>
+
+<unit>
+<function><type><name>auto</name></type> <name>func_name</name><parameter_list>(<param><decl><type><name>int</name></type> <name>x</name></decl></param>, <param><decl><type><name>int</name></type> <name>y</name></decl></param>)</parameter_list> -&gt; <type><name>int</name></type> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>auto</name></type> <name>func_name</name><parameter_list>(<param><decl><type><name>int</name></type> <name>x</name></decl></param>, <param><decl><type><name>int</name></type> <name>y</name></decl></param>)</parameter_list> -&gt; <type><specifier>const</specifier> <name>int</name></type> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>auto</name></type> <name>fpif</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list>-&gt;<function_decl><type><name>int</name></type> (*)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>bar</name><parameter_list>()</parameter_list> <noexcept>noexcept</noexcept> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>bar</name><parameter_list>()</parameter_list> <noexcept>noexcept(<argument><expr>true</expr></argument>)</noexcept> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <noexcept>noexcept(<noexcept>noexcept(<argument><expr><call><name>T</name><argument_list>()</argument_list></call></expr></argument>)</noexcept>)</noexcept> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>bar</name><parameter_list>()</parameter_list> <attribute>[[<expr><name>System</name></expr>]]</attribute> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> &amp; <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> &amp;&amp; <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <specifier>const</specifier> &amp; <noexcept>noexcept(<noexcept>noexcept(<argument><expr><call><name>T</name><argument_list>()</argument_list></call></expr></argument>)</noexcept>)</noexcept> <attribute>[[<expr><name>System</name></expr>]]</attribute> -&gt; <function_decl><type><name>int</name></type> (*)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <specifier>const</specifier> &amp;&amp; <noexcept>noexcept(<noexcept>noexcept(<argument><expr><call><name>T</name><argument_list>()</argument_list></call></expr></argument>)</noexcept>)</noexcept> <attribute>[[<expr><name>System</name></expr>]]</attribute> -&gt; <function_decl><type><name>int</name></type> (*)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
 </unit>
 
 </unit>

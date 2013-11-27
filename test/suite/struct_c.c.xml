@@ -32,4 +32,8 @@
 }</block>;</struct>
 </unit>
 
+<unit>
+<macro><name>MACRO</name></macro> <struct>struct <block>{}</block> <decl><name>u</name></decl>;</struct>
+</unit>
+
 </unit>
