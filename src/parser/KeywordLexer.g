@@ -231,7 +231,7 @@ tokens {
     NOEXCEPT;
     THREADLOCAL;
     NULLPTR;
-
+    DECLTYPE;
 }
 
 {
@@ -383,6 +383,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "noexcept"      , NOEXCEPT         , LANGUAGE_CXX_ONLY }, 
         { "thread_local"  , THREADLOCAL      , LANGUAGE_CXX_ONLY }, 
         { "nullptr"       , NULLPTR          , LANGUAGE_CXX_ONLY }, 
+        { "decltype"      , DECLTYPE         , LANGUAGE_CXX_ONLY }, 
 
         // concepts
 //        { "auto"          , AUTO          , LANGUAGE_CXX_11 }, 

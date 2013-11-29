@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 20 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 20 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -2543,7 +2543,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
-        // trick is to look for function declarations/definitions, and along the way record
+        // trick isv to look for function declarations/definitions, and along the way record
         // if a declaration
 
         // int -> NONE
@@ -2961,7 +2961,10 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         // entire enum definition
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
-        enum_definition_complete
+        enum_definition_complete |
+
+         decltype_call
+
 ;
 
 lead_type_identifier[] { ENTRY_DEBUG } :
@@ -2993,6 +2996,17 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) && look_past(LBRACKET) == RBRACKET }?
         variable_identifier_array_grammar_sub[iscomplex]
+;
+
+decltype_call[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
+
+            // start the macro call element
+            startElement(SMACRO_CALL);
+        }
+        DECLTYPE optional_paren_pair
 ;
 
 // set of balanced parentheses
