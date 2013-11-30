@@ -118,7 +118,8 @@ COMMAND ${GREP} '=' src/parser/srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e
 set(PARSER_SRC src/parser/srcMLParser.cpp;src/parser/KeywordLexer.cpp;src/parser/srcMLOutput.cpp;src/parser/srcMLTranslatorOutput.cpp;src/parser/Mode.cpp;src/parser/CommentTextLexer.cpp;src/parser/srcMLParserTokenTypesMacro.hpp)
 file(GLOB TRANSLATOR_SRC src/translator/*.cpp)
 set(SRCMLAPPS_SRC src/srcml/srcmlapps.cpp)
-file(GLOB LIBSRCML_SRC src/libsrcml/*.cpp src/SAX2Framework/*.cpp)
+#file(GLOB LIBSRCML_SRC src/libsrcml/*.cpp src/SAX2Framework/*.cpp)
+set(LIBSRCML_SRC src/libsrcml/libsrcml.cpp;src/libsrcml/srcml_archive.cpp;src/libsrcml/srcml_transform.cpp;src/libsrcml/SAX2ExtractUnitsSrc.cpp;src/libsrcml/srcml_info.cpp;src/libsrcml/srcml_unit.cpp;src/libsrcml/SAX2TextWriter.cpp;src/libsrcml/srcMLReader.cpp;src/libsrcml/srcMLUtility.cpp;src/libsrcml/SAX2Utilities.cpp;src/libsrcml/srcexfun.cpp;src/libsrcml/srcml_sax2_utilities.cpp)
 
 if(LIBSRCML_SAX2_ENABLED)
     add_definitions(-DSAX2)
