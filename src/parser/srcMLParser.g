@@ -351,6 +351,7 @@ tokens {
 	SCONDITION;
 	SBLOCK;
     SINDEX;
+    SDECLTYPE;
 
     // statements
 	STYPEDEF;
@@ -683,7 +684,6 @@ keyword_statements[] { ENTRY_DEBUG } :
         // C/C++ assembly block
         asm_declaration
 ;
-
 /*
   Statements, declarations, and definitions that must be matched by pattern.
 
@@ -2963,7 +2963,7 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         enum_definition_complete |
 
-         decltype_call
+        decltype_call
 
 ;
 
@@ -2998,15 +2998,36 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
         variable_identifier_array_grammar_sub[iscomplex]
 ;
 
-decltype_call[] { CompleteElement element(this); ENTRY_DEBUG } :
+decltype_call[] { CompleteElement element(this); bool first = true; int paren_count = 0; ENTRY_DEBUG} :
         {
             // start a mode for the macro that will end after the argument list
-            startNewMode(MODE_STATEMENT | MODE_TOP);
+            startNewMode(MODE_STATEMENT | MODE_TOP | MODE_ARGUMENT);
 
             // start the macro call element
-            startElement(SMACRO_CALL);
+            startElement(SDECLTYPE);
+         
         }
-        DECLTYPE optional_paren_pair
+        DECLTYPE call_argument_list (RPAREN | {LA(1) != RPAREN }? decltype_argument[paren_count] { endDownToMode(MODE_TOP); } RPAREN)
+;
+
+decltype_argument[int & paren_count] { ENTRY_DEBUG } :
+        {
+            // argument with nested expression
+            startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the argument
+            startElement(SARGUMENT);
+        }
+        (
+        { LA(1) != RPAREN || paren_count != 0 }? decl_expression[paren_count] |
+
+        type_identifier
+        )*
+
+;
+
+decl_expression[int & paren_count] {if(LA(1) == LPAREN) ++paren_count; else if(LA(1) == RPAREN) --paren_count; ENTRY_DEBUG } :
+        {inputState->guessing}? rparen | expression
 ;
 
 // set of balanced parentheses
