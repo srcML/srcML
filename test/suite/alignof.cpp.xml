@@ -50,7 +50,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><alignof><name>a</name><argument_list>(<argument><expr>("a", (<name>mAccWrapCreated</name>-<name>mAccWrapDeleted</name>))</expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+<expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr>("a", (<name>mAccWrapCreated</name>-<name>mAccWrapDeleted</name>))</expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -65,5 +65,26 @@
 <unit>
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name>&amp;</expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
+
+<unit>
+<expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></alignof></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></alignof> + <name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></alignof></expr></argument>)</argument_list></alignof> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></alignof> + <name>b</name></expr></argument>)</argument_list></alignof> + <name>c</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></alignof> + <alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+</unit>
+
 
 </unit>
