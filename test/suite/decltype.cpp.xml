@@ -17,4 +17,11 @@
 <decl_stmt><decl><type><decltype>decltype<argument_list>(<argument><expr>(<name>A</name>)</expr></argument>)</argument_list></decltype></type> <name>x1</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><decltype>decltype<argument_list>(<argument><expr><call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></decltype></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>const</specifier> <decltype>decltype<argument_list>(<argument><expr>(<call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call>)</expr></argument>)</argument_list></decltype> <name>A</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
 </unit>
