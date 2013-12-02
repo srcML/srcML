@@ -44,6 +44,7 @@ if(${SVN_ENABLED})
     add_definitions(-DSVN)
 endif()
 
+
 get_property(SAX2_ENABLED GLOBAL PROPERTY SAX2_ENABLED)
 if(${SAX2_ENABLED})
     add_definitions(-DSAX2)
