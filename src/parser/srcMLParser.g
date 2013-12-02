@@ -3010,7 +3010,7 @@ decltype_call[] { int paren_count = 0; ENTRY_DEBUG} :
         {
 
             // start a mode for the macro that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST);
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_DECLTYPE);
 
             // start the macro call element
             startElement(SDECLTYPE);
@@ -4329,7 +4329,7 @@ rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DE
         RPAREN
     ;
 
-rparen[bool markup = true] { bool isempty = getParen() == 0; bool update_type = inTransparentMode(MODE_EAT_TYPE) && inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY); ENTRY_DEBUG } :
+rparen[bool markup = true] { bool isempty = getParen() == 0; bool update_type = false; ENTRY_DEBUG } :
         {
             if (isempty) {
 
@@ -4367,6 +4367,7 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; bool update_type = 
 
                 // end the single mode that started the list
                 // don't end more than one since they may be nested
+                update_type = inMode(MODE_DECLTYPE);
                 if (inMode(MODE_LIST))
                     endMode(MODE_LIST);
             }
