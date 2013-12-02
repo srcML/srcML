@@ -515,6 +515,8 @@ tokens {
 
     SANNOTATION;
 
+    SALIGNAS;
+
     // Last token used for boundary
     END_ELEMENT_TOKEN;
 }
@@ -3493,8 +3495,11 @@ function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 ;
 
+specifier[] { ENTRY_DEBUG } :
+        single_keyword_specifier | alignas
+;
 
-specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
@@ -3504,7 +3509,7 @@ specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // C++
             FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
-            CONSTEXPR | THREADLOCAL | alignas |
+            CONSTEXPR | THREADLOCAL |
 
             // C# & Java
             INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
@@ -3515,25 +3520,29 @@ specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         )
 ;
 
-alignas[] { } :
+alignas[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
 
+            startElement(SALIGNAS);
+        }
         ALIGNAS
         {
-            // start a mode for the macro argument list                                                                         
+            // start a mode for the macro argument list
             startNewMode(MODE_LIST | MODE_TOP);
 
-            // start the argument list                                                                                          
+            // start the argument list
             startElement(SARGUMENT_LIST);
         }
         LPAREN
         macro_call_contents
         {
-            // end anything started inside of the macro argument list                                                           
+            // end anything started inside of the macro argument list
             endDownToMode(MODE_LIST | MODE_TOP);
         }
         RPAREN
         {
-            // end the macro argument list                                                                                      
+            // end the macro argument list
             endMode(MODE_LIST | MODE_TOP);
         }
 

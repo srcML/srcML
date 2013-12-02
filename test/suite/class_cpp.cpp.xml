@@ -22,7 +22,7 @@
 </unit>
 
 <unit>
-<class>class <specifier>alignas<argument_list>(<argument>a</argument>)</argument_list></specifier> <name>A</name> <block>{<private type="default"/>}</block>;</class>
+<class>class <alignas>alignas<argument_list>(<argument>a</argument>)</argument_list></alignas> <name>A</name> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 </unit>
