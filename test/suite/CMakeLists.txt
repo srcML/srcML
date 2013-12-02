@@ -539,44 +539,55 @@ foreach(CURRENT_CPP ${ALL_CPP_XML_FILES})
 endforeach()
 
 
+# %.java.xml : %.cpp.xml
+#         ( test $@ != "literal.java.xml" -a $@ != "operator.java.xml" && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@ ) || echo -n ""
+#         ( test $@ = "literal.java.xml" && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_LITERAL} - > $@ ) || echo -n ""
+#         ( test $@ = "operator_base.java.xml" && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_OPERATOR} - > $@ ) || echo -n ""
+
+# %.aj.xml : %.java.xml
+#         ${XSLT_SETLANGUAGE_ASPECTJ} $< > $@
+
+
 # %.all.cpp.xml : %.cpp.xml
 #         ${XSLT_MERGEUNIT} $< > $@
 set(ALL_ALL_CPP_XML_TARGETS "")
 foreach(CURRENT_CPP ${CPP_FILE_NAMES_NO_EXT})
-    set(OUTPUT_FILE_NAME ${CURRENT_CPP}.all.cpp.xml)
-    set(INPUT_FILE_NAME ${CURRENT_CPP}.cpp.xml)
-
-    # extracting full file name for use as target name.
-    string(REGEX MATCH "[^/|\\]*\\.all\\.cpp\\.xml$" FILE_TARGET_NAME ${OUTPUT_FILE_NAME})
+#     string(REGEX MATCH "[^/|\\]*$" FILE_NAME ${CURRENT_CPP})
+    message(STATUS "${CURRENT_CPP}")
+#     set(OUTPUT_FILE_NAME ${CURRENT_CPP}.all.cpp.xml)
+#     set(INPUT_FILE_NAME ${CURRENT_CPP}.cpp.xml)
+# 
+#     # extracting full file name for use as target name.
+#     string(REGEX MATCH "[^/|\\]*\\.all\\.cpp\\.xml$" FILE_TARGET_NAME ${OUTPUT_FILE_NAME})
     if(NOT ${FILE_TARGET_NAME} MATCHES "problem")
-        add_custom_command(
-            OUTPUT ${OUTPUT_FILE_NAME}
-            COMMAND ${XSLT_MERGEUNIT} ${INPUT_FILE_NAME} > ${OUTPUT_FILE_NAME}
-            DEPENDS ${INPUT_FILE_NAME}
-        )
-
-        list(APPEND ALL_ALL_CPP_XML_TARGETS ${FILE_TARGET_NAME})
-        add_custom_target(
-            ${FILE_TARGET_NAME}
-            COMMAND echo "Built ${FILE_TARGET_NAME}"
-            DEPENDS ${OUTPUT_FILE_NAME} 
-        )
-    else()
-        set(OUTPUT_FILE_NAME ${CURRENT_CPP}_2.all.cpp.xml)
-        set(INPUT_FILE_NAME ${CURRENT_CPP}.cpp.xml)
-        string(REGEX MATCH "[^/|\\]*\\.all\\.cpp\\.xml$" FILE_TARGET_NAME ${OUTPUT_FILE_NAME})
-        add_custom_command(
-            OUTPUT ${OUTPUT_FILE_NAME}
-            COMMAND ${XSLT_MERGEUNIT} ${INPUT_FILE_NAME} > ${OUTPUT_FILE_NAME}
-            DEPENDS ${INPUT_FILE_NAME}
-        )
-
-        list(APPEND ALL_ALL_CPP_XML_TARGETS ${FILE_TARGET_NAME})
-        add_custom_target(
-            ${FILE_TARGET_NAME}_2
-            COMMAND echo "Built ${FILE_TARGET_NAME}_2"
-            DEPENDS ${OUTPUT_FILE_NAME} 
-        )
+#         add_custom_command(
+#             OUTPUT ${OUTPUT_FILE_NAME}
+#             COMMAND ${XSLT_MERGEUNIT} ${INPUT_FILE_NAME} > ${OUTPUT_FILE_NAME}
+#             DEPENDS ${INPUT_FILE_NAME}
+#         )
+# 
+#         list(APPEND ALL_ALL_CPP_XML_TARGETS ${FILE_TARGET_NAME})
+#         add_custom_target(
+#             ${FILE_TARGET_NAME}
+#             COMMAND echo "Built ${FILE_TARGET_NAME}"
+#             DEPENDS ${OUTPUT_FILE_NAME} 
+#         )
+#     else()
+#         set(OUTPUT_FILE_NAME ${CURRENT_CPP}_2.all.cpp.xml)
+#         set(INPUT_FILE_NAME ${CURRENT_CPP}.cpp.xml)
+#         string(REGEX MATCH "[^/|\\]*\\.all\\.cpp\\.xml$" FILE_TARGET_NAME ${OUTPUT_FILE_NAME})
+#         add_custom_command(
+#             OUTPUT ${OUTPUT_FILE_NAME}
+#             COMMAND ${XSLT_MERGEUNIT} ${INPUT_FILE_NAME} > ${OUTPUT_FILE_NAME}
+#             DEPENDS ${INPUT_FILE_NAME}
+#         )
+# 
+#         list(APPEND ALL_ALL_CPP_XML_TARGETS ${FILE_TARGET_NAME})
+#         add_custom_target(
+#             ${FILE_TARGET_NAME}_2
+#             COMMAND echo "Built ${FILE_TARGET_NAME}_2"
+#             DEPENDS ${OUTPUT_FILE_NAME} 
+#         )
     endif()
 endforeach()
 
@@ -585,113 +596,90 @@ add_custom_target(all_all_cpp_xml_files
     COMMAND echo "Built all ALL_ALL_CPP_XML_TARGETS"
 )
 
-# %.all.c.xml : %.c.xml
+# %.all.cpp.xml : %.cpp.xml
 #         ${XSLT_MERGEUNIT} $< > $@
-# 
-# %.all.cs.xml : %.cs.xml
-#         ${XSLT_MERGEUNIT} $< > $@
-# 
-# %.all.java.xml : %.java.xml
-#         ${XSLT_MERGEUNIT} $< > $@
-# 
-# %.all.aj.xml : %.aj.xml
-#         ${XSLT_MERGEUNIT} $< > $@
-# 
-# %.block.cpp.xml : %.cpp.xml
-#         ${XSLT_BLOCKUNIT} $< > $@
-# 
-# %.struct.cpp.xml : %.cpp.xml
-#         ${XSLT_STRUCTUNIT} $< > $@
-# 
-# %.block.c.xml : %.c.xml
-#         ${XSLT_BLOCKUNIT} $< > $@
-# 
-# %.block.cs.xml : %.cs.xml
-#         ${XSLT_BLOCKUNIT} $< > $@
-# 
-# %.block.java.xml : %.java.xml
-#         ${XSLT_BLOCKUNIT_JAVA} $< > $@
-# 
-# %.block.aj.xml : %.aj.xml
-#         ${XSLT_BLOCKUNIT_JAVA} $< > $@
-# 
 # %.comment.cpp.xml : %.cpp.xml
 #         ${XSLT_INSERTCOMMENT} $< > $@
-# 
-# %.comment.c.xml : %.c.xml
-#         ${XSLT_INSERTCOMMENT} $< > $@
-# 
-# %.comment.cs.xml : %.cs.xml
-#         ${XSLT_INSERTCOMMENT} $< > $@
-# 
-# %.comment.java.xml : %.java.xml
-#         ${XSLT_INSERTCOMMENT} $< > $@
-# 
-# %.comment.aj.xml : %.aj.xml
-#         ${XSLT_INSERTCOMMENT} $< > $@
-# 
 # %.preproc.cpp.xml : %.cpp.xml
 #         ${XSLT_INSERTPREPROC} $< > $@
-# 
-# %.preproc.c.xml : %.c.xml
-#         ${XSLT_INSERTPREPROC} $< > $@
-# 
-# %.preproc.cs.xml : %.cs.xml
-#         ${XSLT_INSERTPREPROC} $< > $@
-# 
-# %.preproc.java.xml : %.java.xml
-#         ${XSLT_INSERTPREPROC} $< > $@
-# 
-# %.preproc.aj.xml : %.aj.xml
-#         ${XSLT_INSERTPREPROC} $< > $@
-# 
+# %.block.cpp.xml : %.cpp.xml
+#         ${XSLT_BLOCKUNIT} $< > $@
+# %.struct.cpp.xml : %.cpp.xml
+#         ${XSLT_STRUCTUNIT} $< > $@
 # %.ifthenelse.cpp.xml : %.cpp.xml
 #         ${XSLT_INSERTIFTHENELSE} $< > $@
-# 
-# %.ifthenelse.c.xml : %.c.xml
-#         ${XSLT_INSERTIFTHENELSE} $< > $@
-# 
-# %.ifthenelse.cs.xml : %.cs.xml
-#         ${XSLT_INSERTIFTHENELSE} $< > $@
-# 
-# %.ifthenelse.java.xml : %.java.xml
-#         ${XSLT_INSERTIFTHENELSE_JAVA} $< > $@
-# 
-# %.ifthenelse.aj.xml : %.aj.xml
-#         ${XSLT_INSERTIFTHENELSE_JAVA} $< > $@
-# 
 # %.formfeed.cpp.xml : %.cpp.xml
 #         ${XSLT_INSERTFORMFEED} $< > $@
-# 
-# %.formfeed.c.xml : %.c.xml
-#         ${XSLT_INSERTFORMFEED} $< > $@
-# 
-# %.formfeed.cs.xml : %.cs.xml
-#         ${XSLT_INSERTFORMFEED} $< > $@
-# 
-# %.formfeed.java.xml : %.java.xml
-#         ${XSLT_INSERTFORMFEED} $< > $@
-# 
-# %.formfeed.aj.xml : %.aj.xml
-#         ${XSLT_INSERTFORMFEED} $< > $@
-# 
-# %.java.xml : %.cpp.xml
-#         ( test $@ != "literal.java.xml" -a $@ != "operator.java.xml" && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@ ) || echo -n ""
-#         ( test $@ = "literal.java.xml" && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_LITERAL} - > $@ ) || echo -n ""
-#         ( test $@ = "operator_base.java.xml" && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_OPERATOR} - > $@ ) || echo -n ""
-# 
-# 
-# %.aj.xml : %.java.xml
-#         ${XSLT_SETLANGUAGE_ASPECTJ} $< > $@
-# 
-# %.c.xml : %.cpp.xml
-#         ${XSLT_SETLANGUAGE_C} $< > $@
-# 
-# %.cs.xml : %.cpp.xml
-#         ${XSLT_SETLANGUAGE_CS} $< > $@
-# 
 # %.cpp11.xml : %.cpp.xml
 #         ${XSLT_SETLANGUAGE_CXX_11} $< > $@
+# %.c.xml : %.cpp.xml
+#         ${XSLT_SETLANGUAGE_C} $< > $@
+# %.cs.xml : %.cpp.xml
+#         ${XSLT_SETLANGUAGE_CS} $< > $@
+
+
+# %.all.c.xml : %.c.xml
+#         ${XSLT_MERGEUNIT} $< > $@
+# %.block.c.xml : %.c.xml
+#         ${XSLT_BLOCKUNIT} $< > $@
+# %.comment.c.xml : %.c.xml
+#         ${XSLT_INSERTCOMMENT} $< > $@
+# %.preproc.c.xml : %.c.xml
+#         ${XSLT_INSERTPREPROC} $< > $@
+# %.ifthenelse.c.xml : %.c.xml
+#         ${XSLT_INSERTIFTHENELSE} $< > $@
+# %.formfeed.c.xml : %.c.xml
+#         ${XSLT_INSERTFORMFEED} $< > $@
+
+
+# C#
+# %.all.cs.xml : %.cs.xml
+#         ${XSLT_MERGEUNIT} $< > $@
+# %.block.cs.xml : %.cs.xml
+#         ${XSLT_BLOCKUNIT} $< > $@ 
+# %.comment.cs.xml : %.cs.xml
+#         ${XSLT_INSERTCOMMENT} $< > $@
+# %.preproc.cs.xml : %.cs.xml
+#         ${XSLT_INSERTPREPROC} $< > $@
+# %.ifthenelse.cs.xml : %.cs.xml
+#         ${XSLT_INSERTIFTHENELSE} $< > $@
+# %.formfeed.cs.xml : %.cs.xml
+#         ${XSLT_INSERTFORMFEED} $< > $@
+
+
+# Java
+# %.all.java.xml : %.java.xml
+#         ${XSLT_MERGEUNIT} $< > $@
+# %.block.java.xml : %.java.xml
+#         ${XSLT_BLOCKUNIT_JAVA} $< > $@
+# %.comment.java.xml : %.java.xml
+#         ${XSLT_INSERTCOMMENT} $< > $@
+# %.preproc.java.xml : %.java.xml
+#         ${XSLT_INSERTPREPROC} $< > $@
+# %.ifthenelse.java.xml : %.java.xml
+#         ${XSLT_INSERTIFTHENELSE_JAVA} $< > $@
+# %.formfeed.java.xml : %.java.xml
+#         ${XSLT_INSERTFORMFEED} $< > $@
+
+
+# AspectJ
+# %.all.aj.xml : %.aj.xml
+#         ${XSLT_MERGEUNIT} $< > $@
+# %.block.aj.xml : %.aj.xml
+#         ${XSLT_BLOCKUNIT_JAVA} $< > $@
+# %.comment.aj.xml : %.aj.xml
+#         ${XSLT_INSERTCOMMENT} $< > $@
+# %.preproc.aj.xml : %.aj.xml
+#         ${XSLT_INSERTPREPROC} $< > $@
+# %.ifthenelse.aj.xml : %.aj.xml
+#         ${XSLT_INSERTIFTHENELSE_JAVA} $< > $@ 
+# %.formfeed.aj.xml : %.aj.xml
+#         ${XSLT_INSERTFORMFEED} $< > $@ 
+
+
+
+
+
 # 
 # GEN_FILES= $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_CXX_11) $(GEN_ASPECTJ) ${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_IFTHENELSE} ${GEN_FORMFEED} ${GEN_STRUCT}
 # 
