@@ -2659,7 +2659,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // if elaborated type specifier should also be handled above. Reached here because 
                 // non-specifier then class/struct/union.
                 { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != STRUCT && LA(1) != UNION)}?
-                pure_lead_type_identifier_no_specifiers set_bool[foundpure] |
+        (decltype_full | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
                 non_lead_type_identifier throw_exception[!foundpure]
@@ -2831,6 +2831,8 @@ function_type[int type_count] { ENTRY_DEBUG } :
 update_typecount[State::MODE_TYPE mode] {} :
         {
             decTypeCount();
+            if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY))
+                return;
 
             if (getTypeCount() <= 0) {
                 endMode();
@@ -2998,16 +3000,21 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
         variable_identifier_array_grammar_sub[iscomplex]
 ;
 
-decltype_call[] { CompleteElement element(this); bool first = true; int paren_count = 0; ENTRY_DEBUG} :
+decltype_call[] { int paren_count = 0; ENTRY_DEBUG} :
         {
+
             // start a mode for the macro that will end after the argument list
-            startNewMode(MODE_STATEMENT | MODE_TOP | MODE_ARGUMENT);
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the macro call element
             startElement(SDECLTYPE);
          
         }
-        DECLTYPE call_argument_list (RPAREN | {LA(1) != RPAREN }? decltype_argument[paren_count] { endDownToMode(MODE_TOP); } RPAREN)
+        DECLTYPE call_argument_list //(RPAREN | {LA(1) != RPAREN }? decltype_argument[paren_count] { endDownToMode(MODE_TOP); } RPAREN)
+;
+
+decltype_full[] {}:
+        DECLTYPE paren_pair
 ;
 
 decltype_argument[int & paren_count] { ENTRY_DEBUG } :
@@ -4316,7 +4323,7 @@ rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DE
         RPAREN
     ;
 
-rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
+rparen[bool markup = true] { bool isempty = getParen() == 0; bool update_type = inTransparentMode(MODE_EAT_TYPE) && inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY); ENTRY_DEBUG } :
         {
             if (isempty) {
 
@@ -4357,6 +4364,9 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
                 if (inMode(MODE_LIST))
                     endMode(MODE_LIST);
             }
+
+            if(update_type)
+                 update_typecount(MODE_VARIABLE_NAME | MODE_INIT);
         }
 ;
 
