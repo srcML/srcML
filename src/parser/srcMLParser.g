@@ -3016,7 +3016,7 @@ decltype_call[] { int paren_count = 0; ENTRY_DEBUG} :
             startElement(SDECLTYPE);
          
         }
-        DECLTYPE call_argument_list //(RPAREN | {LA(1) != RPAREN }? decltype_argument[paren_count] { endDownToMode(MODE_TOP); } RPAREN)
+        DECLTYPE call_argument_list
 ;
 
 decltype_full[] { ENTRY_DEBUG }:
