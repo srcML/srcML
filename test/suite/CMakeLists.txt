@@ -526,18 +526,164 @@ add_custom_target(identity_cpp
     COMMAND echo "Building all CPP files"
 )
 
-# %.cpp : %.cpp.xml
-#         ${XSLT_IDENTITY} $< > $@
-# 
 
-# Removing all file extensions from xml files.
 
-set(CPP_FILE_NAMES_NO_EXT "")
+
+
+
+
+# Modified list of all cpp.xml files to process (this excludes those which don't
+# directly end only the extension .cpp.xml).
+set(ALL_NON_GENERATED_CPP_XML_FILES "")
 foreach(CURRENT_CPP ${ALL_CPP_XML_FILES})
-    string(REGEX REPLACE "\\.cpp\\.xml$" "" STRIPPED_NAME ${CURRENT_CPP})
-    list(APPEND CPP_FILE_NAMES_NO_EXT ${STRIPPED_NAME})
+    string(REGEX MATCH "[/|\\|^][^/|\\|\\.]*\\.cpp\\.xml$" FILE_NAME ${CURRENT_CPP})
+    if(NOT ${FILE_NAME} EQUAL "")
+        string(REGEX REPLACE "[/|\\]" "" FILE_NAME ${FILE_NAME})
+        string(REPLACE ".cpp.xml" "" FILE_NAME ${FILE_NAME})
+        list(APPEND ALL_NON_GENERATED_CPP_XML_FILES ${FILE_NAME})
+    endif()
 endforeach()
 
+# 
+# This macro helps create tules to be built to create all of the
+# .cpp.xml files.
+# 
+macro(buildXMLTarget COMMAND_NAME INPUT_FILE OUTPUT_FILE_TITLE SUFFIX) 
+    set(OUTPUT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/${OUTPUT_FILE_TITLE}${SUFFIX})
+    add_custom_command(
+        OUTPUT ${OUTPUT_FILE_NAME}
+        COMMAND ${${COMMAND_NAME}} ${INPUT_FILE} > ${OUTPUT_FILE_NAME}
+        DEPENDS ${INPUT_FILE}
+    )
+    foreach(LIST_TO_ADD_TO ${ARGN})
+        list(APPEND ${LIST_TO_ADD_TO} ${OUTPUT_FILE_NAME})
+    endforeach()
+endmacro()
+
+set(CPP_XML_TARGETS "")
+set(ALL_ALL_CPP_XML_TARGETS "")
+set(ALL_COMMENT_CPP_XML_TARGETS "")
+set(ALL_PREPROC_CPP_XML_TARGETS "")
+set(ALL_BLOCK_CPP_XML_TARGETS "")
+set(ALL_STRUCT_CPP_XML_TARGETS "")
+set(ALL_IFTHENELSE_CPP_XML_TARGETS "")
+set(ALL_FORMFEED_CPP_XML_TARGETS "")
+set(ALL_CPP11_CPP_XML_TARGETS "")
+set(ALL_C_CPP_XML_TARGETS "")
+set(ALL_CS_CPP_XML_TARGETS "")
+foreach(CURRENT_FILE_TITLE ${ALL_NON_GENERATED_CPP_XML_FILES})
+    set(INPUT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_FILE_TITLE}.cpp.xml)
+    if(${CURRENT_FILE_TITLE} MATCHES "problem")
+        set(CURRENT_FILE_TITLE ${CURRENT_FILE_TITLE}_2)
+    endif()
+#     message(STATUS "Processing ${CURRENT_FILE_TITLE}")
+    
+    
+    # %.all.cpp.xml : %.cpp.xml
+    #         ${XSLT_MERGEUNIT} $< > $@
+    buildXMLTarget(XSLT_MERGEUNIT
+        ${INPUT_FILE_NAME}
+        ${CURRENT_FILE_TITLE}
+        .all.cpp.xml
+        ALL_ALL_CPP_XML_TARGETS
+        CPP_XML_TARGETS
+    )
+    
+    # %.comment.cpp.xml : %.cpp.xml
+    #         ${XSLT_INSERTCOMMENT} $< > $@
+    buildXMLTarget(XSLT_INSERTCOMMENT
+        ${INPUT_FILE_NAME}
+        ${CURRENT_FILE_TITLE}
+        .comment.cpp.xml
+        ALL_COMMENT_CPP_XML_TARGETS
+        CPP_XML_TARGETS
+    )
+    
+    # %.preproc.cpp.xml : %.cpp.xml
+    #         ${XSLT_INSERTPREPROC} $< > $@
+    buildXMLTarget(XSLT_INSERTPREPROC
+        ${INPUT_FILE_NAME}
+        ${CURRENT_FILE_TITLE}
+        .preproc.cpp.xml
+        ALL_PREPROC_CPP_XML_TARGETS
+        CPP_XML_TARGETS
+    )
+    
+    # %.block.cpp.xml : %.cpp.xml
+    #         ${XSLT_BLOCKUNIT} $< > $@
+    buildXMLTarget(XSLT_BLOCKUNIT
+        ${INPUT_FILE_NAME}
+        ${CURRENT_FILE_TITLE}
+        .block.cpp.xml
+        ALL_BLOCK_CPP_XML_TARGETS
+        CPP_XML_TARGETS
+    )
+
+    # %.struct.cpp.xml : %.cpp.xml
+    #         ${XSLT_STRUCTUNIT} $< > $@
+    buildXMLTarget(XSLT_STRUCTUNIT
+        ${INPUT_FILE_NAME}
+        ${CURRENT_FILE_TITLE}
+        .struct.cpp.xml
+        ALL_STRUCT_CPP_XML_TARGETS
+        CPP_XML_TARGETS
+    )
+
+    # %.ifthenelse.cpp.xml : %.cpp.xml
+    #         ${XSLT_INSERTIFTHENELSE} $< > $@
+    buildXMLTarget(XSLT_INSERTIFTHENELSE
+        ${INPUT_FILE_NAME}
+        ${CURRENT_FILE_TITLE}
+        .ifthenelse.cpp.xml
+        ALL_IFTHENELSE_CPP_XML_TARGETS
+        CPP_XML_TARGETS
+    )
+
+    # %.formfeed.cpp.xml : %.cpp.xml
+    #         ${XSLT_INSERTFORMFEED} $< > $@
+    buildXMLTarget(XSLT_INSERTFORMFEED
+        ${INPUT_FILE_NAME}
+        ${CURRENT_FILE_TITLE}
+        .formfeed.cpp.xml
+        ALL_FORMFEED_CPP_XML_TARGETS 
+        CPP_XML_TARGETS
+    )
+
+    # %.cpp11.xml : %.cpp.xml
+    #         ${XSLT_SETLANGUAGE_CXX_11} $< > $@
+    buildXMLTarget(XSLT_SETLANGUAGE_CXX_11
+        ${INPUT_FILE_NAME}
+        ${CURRENT_FILE_TITLE}
+        .cpp11.xml
+        ALL_CPP11_CPP_XML_TARGETS
+        CPP_XML_TARGETS
+    )
+
+    # %.c.xml : %.cpp.xml
+    #         ${XSLT_SETLANGUAGE_C} $< > $@
+    buildXMLTarget(XSLT_SETLANGUAGE_C
+        ${INPUT_FILE_NAME}
+        ${CURRENT_FILE_TITLE}
+        .c.xml
+        ALL_C_CPP_XML_TARGETS
+        CPP_XML_TARGETS
+    )
+
+    # %.cs.xml : %.cpp.xml
+    #         ${XSLT_SETLANGUAGE_CS} $< > $@
+    buildXMLTarget(XSLT_SETLANGUAGE_CS
+        ${INPUT_FILE_NAME}
+        ${CURRENT_FILE_TITLE}
+        .cs.xml
+        ALL_CS_CPP_XML_TARGETS
+        CPP_XML_TARGETS
+    )
+endforeach()
+
+add_custom_target(all_all_cpp_xml_files
+    DEPENDS ${CPP_XML_TARGETS}
+    COMMAND echo "Built all ALL_ALL_CPP_XML_TARGETS"
+)
 
 # %.java.xml : %.cpp.xml
 #         ( test $@ != "literal.java.xml" -a $@ != "operator.java.xml" && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@ ) || echo -n ""
@@ -546,55 +692,6 @@ endforeach()
 
 # %.aj.xml : %.java.xml
 #         ${XSLT_SETLANGUAGE_ASPECTJ} $< > $@
-
-
-# %.all.cpp.xml : %.cpp.xml
-#         ${XSLT_MERGEUNIT} $< > $@
-set(ALL_ALL_CPP_XML_TARGETS "")
-foreach(CURRENT_CPP ${CPP_FILE_NAMES_NO_EXT})
-#     string(REGEX MATCH "[^/|\\]*$" FILE_NAME ${CURRENT_CPP})
-    message(STATUS "${CURRENT_CPP}")
-#     set(OUTPUT_FILE_NAME ${CURRENT_CPP}.all.cpp.xml)
-#     set(INPUT_FILE_NAME ${CURRENT_CPP}.cpp.xml)
-# 
-#     # extracting full file name for use as target name.
-#     string(REGEX MATCH "[^/|\\]*\\.all\\.cpp\\.xml$" FILE_TARGET_NAME ${OUTPUT_FILE_NAME})
-    if(NOT ${FILE_TARGET_NAME} MATCHES "problem")
-#         add_custom_command(
-#             OUTPUT ${OUTPUT_FILE_NAME}
-#             COMMAND ${XSLT_MERGEUNIT} ${INPUT_FILE_NAME} > ${OUTPUT_FILE_NAME}
-#             DEPENDS ${INPUT_FILE_NAME}
-#         )
-# 
-#         list(APPEND ALL_ALL_CPP_XML_TARGETS ${FILE_TARGET_NAME})
-#         add_custom_target(
-#             ${FILE_TARGET_NAME}
-#             COMMAND echo "Built ${FILE_TARGET_NAME}"
-#             DEPENDS ${OUTPUT_FILE_NAME} 
-#         )
-#     else()
-#         set(OUTPUT_FILE_NAME ${CURRENT_CPP}_2.all.cpp.xml)
-#         set(INPUT_FILE_NAME ${CURRENT_CPP}.cpp.xml)
-#         string(REGEX MATCH "[^/|\\]*\\.all\\.cpp\\.xml$" FILE_TARGET_NAME ${OUTPUT_FILE_NAME})
-#         add_custom_command(
-#             OUTPUT ${OUTPUT_FILE_NAME}
-#             COMMAND ${XSLT_MERGEUNIT} ${INPUT_FILE_NAME} > ${OUTPUT_FILE_NAME}
-#             DEPENDS ${INPUT_FILE_NAME}
-#         )
-# 
-#         list(APPEND ALL_ALL_CPP_XML_TARGETS ${FILE_TARGET_NAME})
-#         add_custom_target(
-#             ${FILE_TARGET_NAME}_2
-#             COMMAND echo "Built ${FILE_TARGET_NAME}_2"
-#             DEPENDS ${OUTPUT_FILE_NAME} 
-#         )
-    endif()
-endforeach()
-
-add_custom_target(all_all_cpp_xml_files
-    DEPENDS ${ALL_ALL_CPP_XML_TARGETS}
-    COMMAND echo "Built all ALL_ALL_CPP_XML_TARGETS"
-)
 
 # %.all.cpp.xml : %.cpp.xml
 #         ${XSLT_MERGEUNIT} $< > $@
