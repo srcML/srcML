@@ -2820,7 +2820,13 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        lead_type_identifier { decTypeCount(); }
+        lead_type_identifier 
+        { 
+            decTypeCount();
+            if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY))
+                return;
+        }
+
         ({getTypeCount() > 0}? type_identifier { decTypeCount(); })*
         {
             endMode(MODE_EAT_TYPE);
@@ -3013,7 +3019,7 @@ decltype_call[] { int paren_count = 0; ENTRY_DEBUG} :
         DECLTYPE call_argument_list //(RPAREN | {LA(1) != RPAREN }? decltype_argument[paren_count] { endDownToMode(MODE_TOP); } RPAREN)
 ;
 
-decltype_full[] {}:
+decltype_full[] { ENTRY_DEBUG }:
         DECLTYPE paren_pair
 ;
 
@@ -4365,8 +4371,18 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; bool update_type = 
                     endMode(MODE_LIST);
             }
 
-            if(update_type)
-                 update_typecount(MODE_VARIABLE_NAME | MODE_INIT);
+            if(update_type) {
+
+                if(!inTransparentMode(MODE_VARIABLE_NAME)) {
+                    while(getTypeCount() - 1 > 0) {
+                        type_identifier();
+                        decTypeCount();
+                    }
+                    endMode(MODE_EAT_TYPE);
+                    setMode(MODE_FUNCTION_NAME);
+                } else
+                    update_typecount(MODE_VARIABLE_NAME | MODE_INIT);
+            }
         }
 ;
 
