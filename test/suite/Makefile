@@ -408,6 +408,7 @@ problem.formfeed.aj.xml : problem.aj.xml
 
 %.all.cpp.xml : %.cpp.xml
 	${XSLT_MERGEUNIT} $< > $@
+	echo "$<"
 
 %.all.c.xml : %.c.xml
 	${XSLT_MERGEUNIT} $< > $@

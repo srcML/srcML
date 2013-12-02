@@ -529,9 +529,62 @@ add_custom_target(identity_cpp
 # %.cpp : %.cpp.xml
 #         ${XSLT_IDENTITY} $< > $@
 # 
+
+# Removing all file extensions from xml files.
+
+set(CPP_FILE_NAMES_NO_EXT "")
+foreach(CURRENT_CPP ${ALL_CPP_XML_FILES})
+    string(REGEX REPLACE "\\.cpp\\.xml$" "" STRIPPED_NAME ${CURRENT_CPP})
+    list(APPEND CPP_FILE_NAMES_NO_EXT ${STRIPPED_NAME})
+endforeach()
+
+
 # %.all.cpp.xml : %.cpp.xml
 #         ${XSLT_MERGEUNIT} $< > $@
-# 
+set(ALL_ALL_CPP_XML_TARGETS "")
+foreach(CURRENT_CPP ${CPP_FILE_NAMES_NO_EXT})
+    set(OUTPUT_FILE_NAME ${CURRENT_CPP}.all.cpp.xml)
+    set(INPUT_FILE_NAME ${CURRENT_CPP}.cpp.xml)
+
+    # extracting full file name for use as target name.
+    string(REGEX MATCH "[^/|\\]*\\.all\\.cpp\\.xml$" FILE_TARGET_NAME ${OUTPUT_FILE_NAME})
+    if(NOT ${FILE_TARGET_NAME} MATCHES "problem")
+        add_custom_command(
+            OUTPUT ${OUTPUT_FILE_NAME}
+            COMMAND ${XSLT_MERGEUNIT} ${INPUT_FILE_NAME} > ${OUTPUT_FILE_NAME}
+            DEPENDS ${INPUT_FILE_NAME}
+        )
+
+        list(APPEND ALL_ALL_CPP_XML_TARGETS ${FILE_TARGET_NAME})
+        add_custom_target(
+            ${FILE_TARGET_NAME}
+            COMMAND echo "Built ${FILE_TARGET_NAME}"
+            DEPENDS ${OUTPUT_FILE_NAME} 
+        )
+    else()
+        set(OUTPUT_FILE_NAME ${CURRENT_CPP}_2.all.cpp.xml)
+        set(INPUT_FILE_NAME ${CURRENT_CPP}.cpp.xml)
+        string(REGEX MATCH "[^/|\\]*\\.all\\.cpp\\.xml$" FILE_TARGET_NAME ${OUTPUT_FILE_NAME})
+        add_custom_command(
+            OUTPUT ${OUTPUT_FILE_NAME}
+            COMMAND ${XSLT_MERGEUNIT} ${INPUT_FILE_NAME} > ${OUTPUT_FILE_NAME}
+            DEPENDS ${INPUT_FILE_NAME}
+        )
+
+        list(APPEND ALL_ALL_CPP_XML_TARGETS ${FILE_TARGET_NAME})
+        add_custom_target(
+            ${FILE_TARGET_NAME}_2
+            COMMAND echo "Built ${FILE_TARGET_NAME}_2"
+            DEPENDS ${OUTPUT_FILE_NAME} 
+        )
+    endif()
+endforeach()
+
+add_custom_target(all_all_cpp_xml_files
+    DEPENDS ${ALL_ALL_CPP_XML_TARGETS}
+    COMMAND echo "Built all ALL_ALL_CPP_XML_TARGETS"
+)
+
 # %.all.c.xml : %.c.xml
 #         ${XSLT_MERGEUNIT} $< > $@
 # 
