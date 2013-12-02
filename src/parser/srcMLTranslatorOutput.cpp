@@ -238,6 +238,7 @@ namespace {
   // special characters
   ELEMENT_MAP(CONTROL_CHAR,   "escape")
   ELEMENT_MAP(SANNOTATION,    "annotation")
+  ELEMENT_MAP(SALIGNOF,    "alignof")
 
   //
   ELEMENT_MAP(SEMPTY,         "empty_stmt")

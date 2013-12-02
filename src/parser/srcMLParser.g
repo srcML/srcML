@@ -514,6 +514,7 @@ tokens {
     SINTO;
 
     SANNOTATION;
+    SALIGNOF;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -1043,7 +1044,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        function_identifier
+        (function_identifier | ALIGNOF)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -2161,7 +2162,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // call list in member initialization list
         { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
-        call |
+        (call | alignof)
 
         /*
           MODE_VARIABLE_NAME
@@ -3666,6 +3667,18 @@ call_argument_list[] { ENTRY_DEBUG } :
         (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
+alignof[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+            startElement(SALIGNOF);
+        }
+        ALIGNOF
+        call_argument_list
+;
+
 macro_call_check[] { ENTRY_DEBUG } :
         NAME optional_paren_pair
 ;
@@ -4439,7 +4452,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
             // however I believe parameter_list matches a right paren of the call.
-            call argument |
+            (call argument | alignof argument) |
 
         // macro call
         { type == MACRO }? macro_call |

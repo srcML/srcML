@@ -227,10 +227,12 @@ tokens {
     NATIVE;
     STRICTFP;
 
+    // C++11
     CONSTEXPR;
     NOEXCEPT;
     THREADLOCAL;
     NULLPTR;
+    ALIGNOF;
 
 }
 
@@ -383,6 +385,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "noexcept"      , NOEXCEPT         , LANGUAGE_CXX_ONLY }, 
         { "thread_local"  , THREADLOCAL      , LANGUAGE_CXX_ONLY }, 
         { "nullptr"       , NULLPTR          , LANGUAGE_CXX_ONLY }, 
+        { "alignof"       , ALIGNOF          , LANGUAGE_CXX_ONLY }, 
 
         // concepts
 //        { "auto"          , AUTO          , LANGUAGE_CXX_11 }, 
