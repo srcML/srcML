@@ -3496,7 +3496,7 @@ function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 specifier[] { ENTRY_DEBUG } :
-        single_keyword_specifier | alignas
+        single_keyword_specifier | alignas_specifier
 ;
 
 single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
@@ -3520,7 +3520,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         )
 ;
 
-alignas[] { CompleteElement element(this); ENTRY_DEBUG } :
+alignas_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
