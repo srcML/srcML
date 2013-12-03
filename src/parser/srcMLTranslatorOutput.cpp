@@ -130,6 +130,7 @@ namespace {
   ELEMENT_MAP(SFUNCTION_SPECIFIER,   "specifier")
   ELEMENT_MAP(SRETURN_STATEMENT,     "return")
   ELEMENT_MAP(SFUNCTION_CALL,        "call")
+  ELEMENT_MAP(SSIZEOF_CALL,          "sizeof")
   ELEMENT_MAP(SPARAMETER_LIST,       "parameter_list")
   ELEMENT_MAP(SPARAMETER,            "param")
   ELEMENT_MAP(SKRPARAMETER_LIST,     "krparameter_list")
