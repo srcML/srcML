@@ -189,6 +189,7 @@ namespace {
   // cpp
   ELEMENT_MAP(SCPP_DIRECTIVE, "directive")
   ELEMENT_MAP(SCPP_FILENAME,  "file")
+  ELEMENT_MAP(SCPP_NUMBER,  "number")
   ELEMENT_MAP(SCPP_INCLUDE,   "include")
   ELEMENT_MAP(SCPP_DEFINE,    "define")
   ELEMENT_MAP(SCPP_UNDEF,     "undef")
