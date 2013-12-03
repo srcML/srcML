@@ -39,6 +39,7 @@ LANGUAGE_C_FAMILY typedef
 LANGUAGE_C_FAMILY decl_pointer
 LANGUAGE_C_FAMILY goto
 LANGUAGE_C_FAMILY expression_pointer
+LANGUAGE_C_FAMILY sizeof
 
 LANGUAGE_C_ONLY function_c
 LANGUAGE_C_ONLY cast_c
@@ -131,6 +132,7 @@ LANGUAGE_CSHARP call_cs
 LANGUAGE_CSHARP class_cs
 LANGUAGE_CSHARP using_directive_cs
 LANGUAGE_CSHARP using_statement_cs
+LANGUAGE_CSHARP sizeof
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java

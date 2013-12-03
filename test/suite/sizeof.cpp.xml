@@ -86,4 +86,8 @@
 <expr_stmt><expr><sizeof>sizeof<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></sizeof> + <sizeof>sizeof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></sizeof></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><sizeof>sizeof...<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></sizeof> + <sizeof>sizeof...<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></sizeof></expr>;</expr_stmt>
+</unit>
+
 </unit>

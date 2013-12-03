@@ -1045,7 +1045,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | SIZEOF)
+        (function_identifier | SIZEOF (DOTDOTDOT)*)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -3677,6 +3677,7 @@ sizeof_call[] { ENTRY_DEBUG } :
             startElement(SSIZEOF_CALL);
         }
         SIZEOF
+        (DOTDOTDOT)*
         call_argument_list
 ;
 
