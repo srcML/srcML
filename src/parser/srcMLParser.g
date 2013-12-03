@@ -2162,7 +2162,11 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // call list in member initialization list
         { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
-        (call | alignof)
+        call |
+
+        // call list in member initialization list
+        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
+        alignof_call |
 
         /*
           MODE_VARIABLE_NAME
@@ -3667,7 +3671,7 @@ call_argument_list[] { ENTRY_DEBUG } :
         (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
-alignof[] { ENTRY_DEBUG } :
+alignof_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST);
@@ -4452,7 +4456,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
             // however I believe parameter_list matches a right paren of the call.
-            (call argument | alignof argument) |
+            (call argument | alignof_call argument) |
 
         // macro call
         { type == MACRO }? macro_call |

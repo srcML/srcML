@@ -379,10 +379,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><call><name>alignof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
@@ -556,10 +552,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><call><name>sizeof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><call><name>alignof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -739,10 +731,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><call><name>alignof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
@@ -916,10 +904,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><call><name>sizeof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><call><name>alignof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1099,10 +1083,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><call><name>alignof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
@@ -1276,10 +1256,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><call><name>sizeof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><call><name>alignof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1459,10 +1435,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><call><name>alignof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
@@ -1636,10 +1608,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><call><name>sizeof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><call><name>alignof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1819,10 +1787,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><call><name>alignof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
@@ -1999,10 +1963,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><call><name>alignof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
@@ -2176,10 +2136,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><call><name>sizeof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><call><name>alignof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
