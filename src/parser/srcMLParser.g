@@ -453,6 +453,7 @@ tokens {
     // cpp internal elements
 	SCPP_DIRECTIVE;
     SCPP_FILENAME;
+    SCPP_NUMBER;
 
     // cpp directives
 	SCPP_ERROR;
@@ -5492,6 +5493,6 @@ cpp_filename[] { SingleElement element(this); ENTRY_DEBUG } :
         (string_literal | char_literal | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
 ;
 
-cpp_linenumber[] :
-        (options { greedy = true; } : literal)*
+cpp_linenumber[] { SingleElement element(this); bool first = true; ENTRY_DEBUG } :
+        (options { greedy = true; } : { if(first) { startElement(SCPP_NUMBER); first = false; } } literal)*
 ;
