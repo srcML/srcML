@@ -92,6 +92,8 @@ return.java.xml
 return_base.c.xml
 return_base.cs.xml
 return_base.java.xml
+sizeof.c.xml
+sizeof.cs.xml
 string.c.xml
 string.cs.xml
 string.java.xml

@@ -231,6 +231,7 @@ tokens {
     NOEXCEPT;
     THREADLOCAL;
     NULLPTR;
+    SIZEOF;
 
 }
 
@@ -323,6 +324,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "asm"           , ASM           , LANGUAGE_C_FAMILY }, 
 
         { "goto"          , GOTO          , LANGUAGE_C_FAMILY }, 
+        { "sizeof"        , SIZEOF        , LANGUAGE_C_FAMILY }, 
 
         { "const"         , CONST         , LANGUAGE_ALL }, 
         { "mutable"       , MUTABLE       , LANGUAGE_CXX }, 

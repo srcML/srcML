@@ -83,11 +83,11 @@
 </unit>
 
 <unit>
-<cpp:line>#<cpp:directive>line</cpp:directive> 456</cpp:line>
+<cpp:line>#<cpp:directive>line</cpp:directive> <cpp:number>456</cpp:number></cpp:line>
 </unit>
 
 <unit>
-<cpp:line>#<cpp:directive>line</cpp:directive> 456 <cpp:file>"abc"</cpp:file></cpp:line>
+<cpp:line>#<cpp:directive>line</cpp:directive> <cpp:number>456</cpp:number> <cpp:file>"abc"</cpp:file></cpp:line>
 </unit>
 
 <unit>

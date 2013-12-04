@@ -264,7 +264,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options
     if (!_tokenSet_13.member(INCLUDE))
         fprintf(stderr, "src2srcml:  Incorrect token set B\n");
 
-    if (!_tokenSet_22.member(CLASS))
+    if (!_tokenSet_23.member(CLASS))
         fprintf(stderr, "src2srcml:  Incorrect token set C\n");
 
     // root, single mode
@@ -378,6 +378,7 @@ tokens {
 	SEXPRESSION_STATEMENT;
 	SEXPRESSION;
 	SFUNCTION_CALL;
+	SSIZEOF_CALL;
 
 	SDECLARATION_STATEMENT;
 	SDECLARATION;
@@ -453,6 +454,7 @@ tokens {
     // cpp internal elements
 	SCPP_DIRECTIVE;
     SCPP_FILENAME;
+    SCPP_NUMBER;
 
     // cpp directives
 	SCPP_ERROR;
@@ -1043,7 +1045,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        function_identifier
+        (function_identifier | SIZEOF (DOTDOTDOT)*)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -2162,6 +2164,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // call list in member initialization list
         { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
         call |
+
+        // call list in member initialization list
+        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
+        sizeof_call |
 
         /*
           MODE_VARIABLE_NAME
@@ -3666,6 +3672,19 @@ call_argument_list[] { ENTRY_DEBUG } :
         (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
+sizeof_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+            startElement(SSIZEOF_CALL);
+        }
+        SIZEOF
+        (DOTDOTDOT)*
+        call_argument_list
+;
+
 macro_call_check[] { ENTRY_DEBUG } :
         NAME optional_paren_pair
 ;
@@ -4439,8 +4458,8 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
             // however I believe parameter_list matches a right paren of the call.
-            call argument |
-
+           (call | sizeof_call) argument |
+            
         // macro call
         { type == MACRO }? macro_call |
 
@@ -5492,6 +5511,6 @@ cpp_filename[] { SingleElement element(this); ENTRY_DEBUG } :
         (string_literal | char_literal | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
 ;
 
-cpp_linenumber[] :
-        (options { greedy = true; } : literal)*
+cpp_linenumber[] { SingleElement element(this); bool first = true; ENTRY_DEBUG } :
+        (options { greedy = true; } : { if(first) { startElement(SCPP_NUMBER); first = false; } } literal)*
 ;
