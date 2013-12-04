@@ -160,6 +160,10 @@
 </unit>
 
 <unit>
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> =<init> <expr><linq><where>where <expr>(<name>a</name> % 2) == 2</expr></where></linq></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
 <expr_stmt><expr><name>select</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -172,7 +176,272 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>var</name></type> <name>a</name> =<init> <expr><linq><where>where <expr>(<name>a</name> % 2) == 2</expr></where></linq></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>select</name></type> <name>s</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
 </unit>
+
+<unit>
+<decl_stmt><decl><type><name>s</name></type> <name>select</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>from</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>from</name> =+ <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>from</name> += <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>from</name></type> <name>s</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>s</name></type> <name>from</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>where</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>where</name> =+ <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>where</name> += <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>where</name></type> <name>s</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>s</name></type> <name>where</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>group</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>group</name> =+ <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>group</name> += <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>group</name></type> <name>s</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>s</name></type> <name>group</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>into</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>into</name> =+ <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>into</name> += <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>into</name></type> <name>s</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>s</name></type> <name>into</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>orderby</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>orderby</name> =+ <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>orderby</name> += <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>orderby</name></type> <name>s</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>s</name></type> <name>orderby</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>join</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>join</name> =+ <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>join</name> += <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>join</name></type> <name>s</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>s</name></type> <name>join</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>let</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>let</name> =+ <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>let</name> += <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>let</name></type> <name>s</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>s</name></type> <name>let</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>in</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>in</name> =+ <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>in</name> += <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>in</name></type> <name>s</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>s</name></type> <name>in</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>on</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>on</name> =+ <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>on</name> += <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>on</name></type> <name>s</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>s</name></type> <name>on</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>equals</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>equals</name> =+ <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>equals</name> += <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>equals</name></type> <name>s</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>s</name></type> <name>equals</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>by</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>by</name> =+ <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>by</name> += <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>by</name></type> <name>s</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>s</name></type> <name>by</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>ascending</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>ascending</name> =+ <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>ascending</name> += <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>ascending</name></type> <name>s</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>s</name></type> <name>ascending</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>descending</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>descending</name> =+ <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>descending</name> += <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>descending</name></type> <name>s</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>s</name></type> <name>descending</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
 
 </unit>
