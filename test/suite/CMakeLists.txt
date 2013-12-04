@@ -512,7 +512,7 @@ set(ALL_CPP_FILES "")
 file(GLOB ALL_CPP_XML_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp.xml)
 
 # Adding generated dependent files because they don't get picked up by the file GLOB.
-list(APPEND ALL_CPP_XML_FILES
+list(REMOVE_ITEM ALL_CPP_XML_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/function_decl.cpp.xml
     #     Removed because the test file doesn't exist at the moment.
     #     ${CMAKE_CURRENT_SOURCE_DIR}/function_asterisk_decl.cpp.xml
@@ -639,8 +639,20 @@ set(ASPECTJ_PROCESSING_COLLECTION
     ".ifthenelse.aj.xml\;XSLT_INSERTIFTHENELSE_JAVA"
     ".formfeed.aj.xml\;XSLT_INSERTFORMFEED"
 )
+# ATTEMPT TO USE THESE TO GENERATE FILES OF SPECIFIED TYPES. This might help!
+# set(BASE_COMMON "comment string variable_names expression decl_simple if for do switch call function enum return_base problem literal operator_base whitespace ")
+# set(GEN_BASE "while ifnestcond return function_decl ifblock ")
+# set(GEN_BASE_CXX "throw constructor_explicit destructor_virtual function_const struct union ")
+# set(BASE_C_FAMILY "sm macro cstruct extern main function_pointer decl_struct typedef decl_pointer goto expression_pointer enum_cpp ")
+# set(BASE_C "function_c cast_c ")
+# set(BASE_OO "catch_form foreach try ")
+# set(BASE_CXX "throw constructor_explicit destructor_virtual function_const struct union friend namespace template typedef_template constructor destructor throw_base function_throw class function_operator typedef_ns variable_names_ns function_ns decl_ns try typedef_struct operator function_cpp call_ns expression_pointer enum_cpp operator_cpp call_cpp class_cpp decl_simple_cpp cast_cpp doxygen ")
+# set(BASE_CS "asm extern main decl_pointer goto throw namespace throw_base try operator expression_pointer interface_cs abstract_cs override_cs operator_cs finally_cs checked_cs delegate_cs event_cs explicit_cs fixed_cs foreach_cs implicit_cs internal_cs lock_cs function_operator_cs function_cs decl_cs sealed_cs unchecked_cs unsafe_cs generics_cs linq_cs accessor_cs partial_cs yield_cs class_cs struct_cs constructor_cs destructor_cs literal_cs indexers_cs attributes_cs string_cs lambda_cs enum_cs call_cs class_cs using_directive_cs using_statement_cs ")
+# set(BASE_CS_GEN "asm extern main decl_pointer goto throw namespace throw_base try operator expression_pointer ")
+# set(BASE_JAVA "class_java constructor_java keyword_java interface_java package_java finally_java generics_java literal_java operator_java anonymous_class_java synchronized_specifier_java synchronized_statement_java javadoc_java native_java strictfp_java catch_form_java try_java decl_java ")
 foreach(CURRENT_FILE_TITLE ${ALL_NON_GENERATED_CPP_XML_FILES})
 
+#     message(STATUS "${CURRENT_FILE_TITLE}")
     # Handling special case for problem.cpp.xml
     set(INPUT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_FILE_TITLE}.cpp.xml)
     if(${CURRENT_FILE_TITLE} MATCHES "problem")
@@ -755,108 +767,113 @@ foreach(CURRENT_FILE_TITLE ${ALL_NON_GENERATED_CPP_XML_FILES})
             ALL_XML_TARGETS
         )
     endforeach()
-    
-    # Processing all of the C# files
-    # %.cs.xml : %.cpp.xml
-    #         ${XSLT_SETLANGUAGE_CS} $< > $@
-    buildXMLTarget(XSLT_SETLANGUAGE_CS
-        ${INPUT_FILE_NAME}
-        ${CURRENT_FILE_TITLE}
-        .cs.xml
-        ALL_XML_TARGETS
-    )
-    
-    set(CURRENT_CS_INPUT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_FILE_TITLE}.cs.xml)
-    # %.all.cs.xml : %.cs.xml
-    #         ${XSLT_MERGEUNIT} $< > $@
-    # %.block.cs.xml : %.cs.xml
-    #         ${XSLT_BLOCKUNIT} $< > $@ 
-    # %.comment.cs.xml : %.cs.xml
-    #         ${XSLT_INSERTCOMMENT} $< > $@
-    # %.preproc.cs.xml : %.cs.xml
-    #         ${XSLT_INSERTPREPROC} $< > $@
-    # %.ifthenelse.cs.xml : %.cs.xml
-    #         ${XSLT_INSERTIFTHENELSE} $< > $@
-    # %.formfeed.cs.xml : %.cs.xml
-    #         ${XSLT_INSERTFORMFEED} $< > $@
-    foreach(PROC_INSTRUCTIONS ${CS_PROCESSING_COLLECTION})
-        list(GET PROC_INSTRUCTIONS 0 SUFFIX)
-        list(GET PROC_INSTRUCTIONS 1 CMD)
-        buildXMLTarget(
-            ${CMD}
-            ${CURRENT_CS_INPUT_FILE}
+#     string(COMPARE EQUAL ${CURRENT_FILE_TITLE} "asm" IS_ASM_EQUAL)
+#     string(COMPARE EQUAL ${CURRENT_FILE_TITLE} "attributes_cpp" IS_ATTR_CPP_EQUAL)
+#     math(EXPR 
+    if(NOT ${ARE_EQUAL})
+        # Processing all of the C# files
+        # %.cs.xml : %.cpp.xml
+        #         ${XSLT_SETLANGUAGE_CS} $< > $@
+        buildXMLTarget(XSLT_SETLANGUAGE_CS
+            ${INPUT_FILE_NAME}
             ${CURRENT_FILE_TITLE}
-            ${SUFFIX}
+            .cs.xml
             ALL_XML_TARGETS
         )
-    endforeach()
-    
-    # Handling java conversion.
-    buildJavaXmlTarget(
-        ${INPUT_FILE_NAME}
-        ${CURRENT_FILE_TITLE}
-        ALL_XML_TARGETS
-    )
-    set(CURRENT_JAVA_INPUT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_FILE_TITLE}.java.xml)
-    # Java
-    # %.all.java.xml : %.java.xml
-    #         ${XSLT_MERGEUNIT} $< > $@
-    # %.block.java.xml : %.java.xml
-    #         ${XSLT_BLOCKUNIT_JAVA} $< > $@
-    # %.comment.java.xml : %.java.xml
-    #         ${XSLT_INSERTCOMMENT} $< > $@
-    # %.preproc.java.xml : %.java.xml
-    #         ${XSLT_INSERTPREPROC} $< > $@
-    # %.ifthenelse.java.xml : %.java.xml
-    #         ${XSLT_INSERTIFTHENELSE_JAVA} $< > $@
-    # %.formfeed.java.xml : %.java.xml
-    #         ${XSLT_INSERTFORMFEED} $< > $@
-    foreach(PROC_INSTRUCTIONS ${JAVA_PROCESSING_COLLECTION})
-        list(GET PROC_INSTRUCTIONS 0 SUFFIX)
-        list(GET PROC_INSTRUCTIONS 1 CMD)
-        buildXMLTarget(
-            ${CMD}
+        
+        set(CURRENT_CS_INPUT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_FILE_TITLE}.cs.xml)
+        # %.all.cs.xml : %.cs.xml
+        #         ${XSLT_MERGEUNIT} $< > $@
+        # %.block.cs.xml : %.cs.xml
+        #         ${XSLT_BLOCKUNIT} $< > $@ 
+        # %.comment.cs.xml : %.cs.xml
+        #         ${XSLT_INSERTCOMMENT} $< > $@
+        # %.preproc.cs.xml : %.cs.xml
+        #         ${XSLT_INSERTPREPROC} $< > $@
+        # %.ifthenelse.cs.xml : %.cs.xml
+        #         ${XSLT_INSERTIFTHENELSE} $< > $@
+        # %.formfeed.cs.xml : %.cs.xml
+        #         ${XSLT_INSERTFORMFEED} $< > $@
+        foreach(PROC_INSTRUCTIONS ${CS_PROCESSING_COLLECTION})
+            list(GET PROC_INSTRUCTIONS 0 SUFFIX)
+            list(GET PROC_INSTRUCTIONS 1 CMD)
+            buildXMLTarget(
+                ${CMD}
+                ${CURRENT_CS_INPUT_FILE}
+                ${CURRENT_FILE_TITLE}
+                ${SUFFIX}
+                ALL_XML_TARGETS
+            )
+        endforeach()
+        
+        # Handling java conversion.
+        buildJavaXmlTarget(
+            ${INPUT_FILE_NAME}
+            ${CURRENT_FILE_TITLE}
+            ALL_XML_TARGETS
+        )
+        set(CURRENT_JAVA_INPUT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_FILE_TITLE}.java.xml)
+        # Java
+        # %.all.java.xml : %.java.xml
+        #         ${XSLT_MERGEUNIT} $< > $@
+        # %.block.java.xml : %.java.xml
+        #         ${XSLT_BLOCKUNIT_JAVA} $< > $@
+        # %.comment.java.xml : %.java.xml
+        #         ${XSLT_INSERTCOMMENT} $< > $@
+        # %.preproc.java.xml : %.java.xml
+        #         ${XSLT_INSERTPREPROC} $< > $@
+        # %.ifthenelse.java.xml : %.java.xml
+        #         ${XSLT_INSERTIFTHENELSE_JAVA} $< > $@
+        # %.formfeed.java.xml : %.java.xml
+        #         ${XSLT_INSERTFORMFEED} $< > $@
+        foreach(PROC_INSTRUCTIONS ${JAVA_PROCESSING_COLLECTION})
+            list(GET PROC_INSTRUCTIONS 0 SUFFIX)
+            list(GET PROC_INSTRUCTIONS 1 CMD)
+            buildXMLTarget(
+                ${CMD}
+                ${CURRENT_JAVA_INPUT_FILE}
+                ${CURRENT_FILE_TITLE}
+                ${SUFFIX}
+                ALL_XML_TARGETS
+            )
+        endforeach()
+        
+        # Processing all java files into AspectJ
+        # %.aj.xml : %.java.xml
+        #         ${XSLT_SETLANGUAGE_ASPECTJ} $< > $@
+        buildXMLTarget(XSLT_SETLANGUAGE_ASPECTJ
             ${CURRENT_JAVA_INPUT_FILE}
             ${CURRENT_FILE_TITLE}
-            ${SUFFIX}
+            .aj.xml
             ALL_XML_TARGETS
         )
-    endforeach()
+        set(CURRENT_ASPECTJ_INPUT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_FILE_TITLE}.aj.xml)
+        # AspectJ
+        # %.all.aj.xml : %.aj.xml
+        #         ${XSLT_MERGEUNIT} $< > $@
+        # %.block.aj.xml : %.aj.xml
+        #         ${XSLT_BLOCKUNIT_JAVA} $< > $@
+        # %.comment.aj.xml : %.aj.xml
+        #         ${XSLT_INSERTCOMMENT} $< > $@
+        # %.preproc.aj.xml : %.aj.xml
+        #         ${XSLT_INSERTPREPROC} $< > $@
+        # %.ifthenelse.aj.xml : %.aj.xml
+        #         ${XSLT_INSERTIFTHENELSE_JAVA} $< > $@ 
+        # %.formfeed.aj.xml : %.aj.xml
+        #         ${XSLT_INSERTFORMFEED} $< > $@ 
+        foreach(PROC_INSTRUCTIONS ${ASPECTJ_PROCESSING_COLLECTION})
+            list(GET PROC_INSTRUCTIONS 0 SUFFIX)
+            list(GET PROC_INSTRUCTIONS 1 CMD)
+            buildXMLTarget(
+                ${CMD}
+                ${CURRENT_ASPECTJ_INPUT_FILE}
+                ${CURRENT_FILE_TITLE}
+                ${SUFFIX}
+                ALL_XML_TARGETS
+            )
+        endforeach()
     
-    # Processing all java files into AspectJ
-    # %.aj.xml : %.java.xml
-    #         ${XSLT_SETLANGUAGE_ASPECTJ} $< > $@
-    buildXMLTarget(XSLT_SETLANGUAGE_ASPECTJ
-        ${CURRENT_JAVA_INPUT_FILE}
-        ${CURRENT_FILE_TITLE}
-        .aj.xml
-        ALL_XML_TARGETS
-    )
-    set(CURRENT_ASPECTJ_INPUT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_FILE_TITLE}.aj.xml)
-    # AspectJ
-    # %.all.aj.xml : %.aj.xml
-    #         ${XSLT_MERGEUNIT} $< > $@
-    # %.block.aj.xml : %.aj.xml
-    #         ${XSLT_BLOCKUNIT_JAVA} $< > $@
-    # %.comment.aj.xml : %.aj.xml
-    #         ${XSLT_INSERTCOMMENT} $< > $@
-    # %.preproc.aj.xml : %.aj.xml
-    #         ${XSLT_INSERTPREPROC} $< > $@
-    # %.ifthenelse.aj.xml : %.aj.xml
-    #         ${XSLT_INSERTIFTHENELSE_JAVA} $< > $@ 
-    # %.formfeed.aj.xml : %.aj.xml
-    #         ${XSLT_INSERTFORMFEED} $< > $@ 
-    foreach(PROC_INSTRUCTIONS ${ASPECTJ_PROCESSING_COLLECTION})
-        list(GET PROC_INSTRUCTIONS 0 SUFFIX)
-        list(GET PROC_INSTRUCTIONS 1 CMD)
-        buildXMLTarget(
-            ${CMD}
-            ${CURRENT_ASPECTJ_INPUT_FILE}
-            ${CURRENT_FILE_TITLE}
-            ${SUFFIX}
-            ALL_XML_TARGETS
-        )
-    endforeach()
+    endif()
 endforeach()
 
 
