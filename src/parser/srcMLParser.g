@@ -4916,17 +4916,40 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
             startNewMode(MODE_LOCAL);
 
             startElement(STEMPLATE_ARGUMENT);
-        }
-        ( options { greedy = true; } :
-            { LA(1) != SUPER && LA(1) != QMARK }?
-            type_identifier |
 
-            literal | char_literal | string_literal | boolean |
+            if(inLanguage(LANGUAGE_CXX_ONLY))
+               startElement(SEXPRESSION);
+        }
+        (options { greedy = true; } :
+            { LA(1) != SUPER && LA(1) != QMARK }?
+        (type_identifier |
+            literal | char_literal | string_literal | boolean) (template_operators)* |
 
             template_extends_java |
 
-            template_super_java | qmark_marked
+            template_super_java | qmark_marked |
+            template_argument_expression
         )+
+;
+
+template_argument_expression[] { ENTRY_DEBUG } :
+
+        lparen_marked
+        ( { LA(1) != RPAREN }? (general_operators | variable_identifier | string_literal | char_literal | literal | type_identifier | template_argument_expression))*
+       rparen_operator[true]
+
+;
+
+// All possible operators
+template_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR))
+                startElement(SOPERATOR);
+        }
+        (
+        OPERATORS | TRETURN | TEMPOPS | EQUAL | MULTOPS | REFOPS | DOTDOT | RVALUEREF |
+        QMARK | NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
+        )
 ;
 
 template_extends_java[] { CompleteElement element(this); ENTRY_DEBUG } :
