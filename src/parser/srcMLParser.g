@@ -5154,6 +5154,7 @@ preprocessor[] {
         // mode for any preprocessor elements
         startNewMode(MODE_PREPROC);
         } :
+
         {
             // assume error.  will set to proper one later
             startElement(SCPP_ERROR);
@@ -5168,7 +5169,7 @@ preprocessor[] {
             startElement(SCPP_DIRECTIVE);
             setTokenPosition(tp_directive);
         }
-        (
+        (options { generateAmbigWarnings = false; } : 
         INCLUDE
         {
             endMode();
