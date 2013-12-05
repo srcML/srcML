@@ -83,3 +83,81 @@ macro(stripAllFileExts FILE_NAME OUTPUT)
     string(FIND ${FILE_NAME} "." LAST_POINT)
     string(SUBSTRING ${FILE_NAME} 0 ${LAST_POINT} ${OUTPUT})
 endmacro()
+
+
+# 
+# appendFileExtToList
+# Takes a list of files as the extra arguments and appends a suffix to each one
+# and stores them in OUTPUT.
+# 
+macro(appendFileExtToList FILE_SUFFIX OUTPUT)
+    set(${OUTPUT} "")
+    foreach(temp ${ARGN})
+        list(APPEND ${OUTPUT} ${temp}${FILE_SUFFIX} )
+    endforeach()
+endmacro()
+
+# 
+# Creates a temporary target which is used 
+# for debugging the build system.
+# 
+# 
+macro(tempTarget TARGET)
+    string(REPLACE ";" " " DISPLAYED_ARGN "${ARGN}")
+    add_custom_target(${TARGET}
+        COMMAND echo "Build ${TARGET}: dpenedencies: ${DISPLAYED_ARGN}"
+        DEPENDS ${ARGN}
+    )
+endmacro()
+
+
+# 
+# This function assists with the creation of dependencies with targets being built
+# by other functions within this file. This allows individual targets to be invoked
+# with make using the file name as the target name.
+# 
+macro(createProbDep PROBLEM_TYPE LANGUAGE_EXT)
+    add_custom_target(problem.${PROBLEM_TYPE}.${LANGUAGE_EXT}.xml
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${PROBLEM_TYPE}.${LANGUAGE_EXT}.xml
+        COMMAND echo "Built problem.${PROBLEM_TYPE}.${LANGUAGE_EXT}.xml"
+    )    
+endmacro()
+
+# 
+# This macro helps build a custom command based on the supplied language which is
+# performs the merge unit command for each of the different languages.
+# 
+macro(problemAll LANGUAGE_EXT)
+    add_custom_command(
+        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.all.${LANGUAGE_EXT}.xml
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml
+        COMMAND ${XSLT_MERGEUNIT_PROBLEM} ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.all.${LANGUAGE_EXT}.xml
+        COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.all.${LANGUAGE_EXT}.xml
+    )    
+endmacro()
+
+
+#
+# Creates a list of unique items with a given name.
+#
+macro(createUniqueList OUTPUT)
+    set(${OUTPUT} "")
+    foreach(ITEM ${ARGN})
+        list(REMOVE_ITEM ${OUTPUT} ${ITEM})
+        list(APPEND ${OUTPUT} ${ITEM})
+    endforeach()
+endmacro()
+
+# 
+# Check to see if an element is a match for one of the elements within
+# the list given to ARGN and returns true if so otherwise false.
+# 
+macro(matchesOneInList OUTPUT INPUT)
+    set(${OUTPUT} OFF)
+    foreach(ELEMENT ${ARGN})
+        if(${INPUT} MATCHES ${ELEMENT})
+            set(${OUTPUT} ON)
+            break()
+        endif()
+    endforeach()
+endmacro()
