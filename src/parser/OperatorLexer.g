@@ -109,6 +109,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; static int lastp
                 onpreprocline = true; 
 
                 int start = mark();
+                ++inputState->guessing;
                 if(LA(1) == 'l') {
                     consume();
                     if(LA(1) == 'i') {
@@ -120,6 +121,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; static int lastp
                         }
                     }
                 }
+                --inputState->guessing;
                 rewind(start);
 
             }
