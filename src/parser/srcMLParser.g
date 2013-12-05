@@ -924,7 +924,7 @@ lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SARGUMENT);
         }
-        (lambda_capture_modifiers | compound_name)*
+        (options { warnWhenFollowAmbig = false; } : lambda_capture_modifiers | compound_name)*
 ;
 
 lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG 
