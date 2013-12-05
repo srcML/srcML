@@ -108,21 +108,23 @@ OPERATORS options { testLiterals = true; } { bool star = false; static int lastp
                 // a preprocessor line will end at the right spot
                 onpreprocline = true; 
 
-                int start = mark();
-                ++inputState->guessing;
-                if(LA(1) == 'l') {
-                    consume();
-                    if(LA(1) == 'i') {
-                        consume();
-                        if(LA(1) == 'n') {
+                if(isoption(options, OPTION_LINE)) {
+                    int start = mark();
+                    ++inputState->guessing;
+                    if(LA(1) == 'l') {
+                        consume();  
+                        if(LA(1) == 'i') {
                             consume();
-                            if(LA(1) == 'e')
-                                isline = true;
+                            if(LA(1) ==  'n') {
+                                consume();
+                                if(LA(1) ==  'e')
+                                    isline = true;
+                            }
                         }
                     }
+                    --inputState->guessing;
+                    rewind(start);
                 }
-                --inputState->guessing;
-                rewind(start);
 
             }
         }   |

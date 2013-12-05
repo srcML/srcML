@@ -31,6 +31,7 @@ header {
    #include "antlr/TokenStreamSelector.hpp"
    #include "CommentTextLexer.hpp"
    #include "srcMLToken.hpp"
+   #include "Options.hpp"
 }
 
 header "post_include_cpp" {
@@ -238,6 +239,7 @@ tokens {
 {
 public:
 
+OPTION_TYPE & options;
 bool onpreprocline;
 bool startline;
 bool atstring;
@@ -251,8 +253,8 @@ struct keyword { char const * const text; int token; int language; };
 
 void changetotextlexer(int typeend);
 
-KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
-    : antlr::CharScanner(pinput,true), Language(language), onpreprocline(false), startline(true), atstring(false), rawstring(false), delimiter("")
+KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_TYPE & options)
+    : antlr::CharScanner(pinput,true), Language(language), options(options), onpreprocline(false), startline(true), atstring(false), rawstring(false), delimiter("")
 {
     setTokenObjectFactory(srcMLToken::factory);
 
