@@ -2598,8 +2598,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                         throw_exception[type == GLOBAL_ATTRIBUTE] 
                         identifier)?
 
-                        (COLON)*
-
                         //complete_expression
                         (~(RBRACKET))*
                 RBRACKET
@@ -2607,7 +2605,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                 { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}?
                 LBRACKET LBRACKET
-                        (COMMA)*
 
                         //complete_expression
                         (~(RBRACKET))*
