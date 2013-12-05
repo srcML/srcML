@@ -38,7 +38,7 @@ header "post_include_cpp" {
 
 void KeywordLexer::changetotextlexer(int typeend) {
           selector->push("text"); 
-           ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, rawstring, delimiter, isline, line_number);
+           ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, rawstring, delimiter, isline, line_number, options);
 }
 }
 
@@ -254,8 +254,10 @@ struct keyword { char const * const text; int token; int language; };
 void changetotextlexer(int typeend);
 
 KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_TYPE & options)
-    : antlr::CharScanner(pinput,true), Language(language), options(options), onpreprocline(false), startline(true), atstring(false), rawstring(false), delimiter("")
+    : antlr::CharScanner(pinput,true), Language(language), options(options), onpreprocline(false), startline(true), atstring(false), rawstring(false), delimiter(""), isline(false), line_number(1)
 {
+    if(isoption(options, OPTION_LINE))
+       setLine(getLine() + (1 << 16));
     setTokenObjectFactory(srcMLToken::factory);
 
     keyword keyword_map[] = {

@@ -197,7 +197,8 @@ EOL :
 
             // record to new lines for optional positions
             newline();
-
+            if(isoption(options, OPTION_LINE))
+                setLine(getLine() + (1 << 16));
             if(isline) setLine(line_number << 16 | (getLine() & 0xFFFF));
             isline = false;
         }
