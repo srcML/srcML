@@ -254,7 +254,7 @@ struct keyword { char const * const text; int token; int language; };
 void changetotextlexer(int typeend);
 
 KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_TYPE & options)
-    : antlr::CharScanner(pinput,true), Language(language), options(options), onpreprocline(false), startline(true), atstring(false), rawstring(false), delimiter(""), isline(false), line_number(1)
+    : antlr::CharScanner(pinput,true), Language(language), options(options), onpreprocline(false), startline(true), atstring(false), rawstring(false), delimiter(""), isline(false), line_number(-1)
 {
     if(isoption(options, OPTION_LINE))
        setLine(getLine() + (1 << 16));

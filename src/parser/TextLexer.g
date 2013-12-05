@@ -199,8 +199,9 @@ EOL :
             newline();
             if(isoption(options, OPTION_LINE))
                 setLine(getLine() + (1 << 16));
-            if(isline) setLine(line_number << 16 | (getLine() & 0xFFFF));
+            if(isline && line_number > -1) setLine(line_number << 16 | (getLine() & 0xFFFF));
             isline = false;
+            line_number = -1;
         }
 ;
 /*
