@@ -73,8 +73,10 @@ bool rawstring;
 
 std::string delimiter;
 
+bool isline;
+
 CommentTextLexer(const antlr::LexerSharedInputState& state)
-	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), rawstring(false), delimiter("")
+	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), rawstring(false), delimiter(""), isline(false)
 {}
 
 private:
@@ -86,7 +88,7 @@ public:
     }
 
     // reinitialize comment lexer
-    void init(int m, bool onpreproclinestate, bool nescape = false, bool rstring = false, std::string dstring = "") {
+    void init(int m, bool onpreproclinestate, bool nescape = false, bool rstring = false, std::string dstring = "", bool is_line = false) {
 
         onpreprocline = onpreproclinestate;
 
@@ -97,6 +99,8 @@ public:
         rawstring = rstring;
 
         delimiter = dstring;
+
+        isline = is_line;
     }
 }
 

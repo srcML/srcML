@@ -103,6 +103,14 @@ CONSTANTS :
         ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' | '_' )*
         (options { greedy = true; } : "." | '0'..'9')*
         (options { greedy = true; } : NAME)*
+
+        {
+            if(onpreprocline && isline) {
+                setLine(atoi(text.substr(_begin, text.length()-_begin).c_str()) - 1); 
+                isline = false;
+            }
+        }
+
 ;
 
 NAME options { testLiterals = true; } { char lastchar = LA(1); } :
