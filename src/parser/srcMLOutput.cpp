@@ -148,6 +148,13 @@ const char * srcMLOutput::columnAttributeValue(const antlr::RefToken& token) {
   return out;
 }
 
+const char * srcMLOutput::lineAttributeValue(int aline) {
+
+  snprintf(out, 20, "%d", aline);
+
+  return out;
+}
+
 void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer) {
 
     // figure out which namespaces are needed
@@ -300,6 +307,15 @@ void srcMLOutput::processTextPosition(const antlr::RefToken& token) {
   processText(token->getText());
 }
 
+void srcMLOutput::processTextPositionLine(const antlr::RefToken& token) {
+
+  xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token->getLine() & 0xFFFF));
+  xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token->getLine() >> 16));
+
+  xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
+
+  processText(token->getText());
+}
 
 xmlTextWriter * srcMLOutput::getWriter() {
 
