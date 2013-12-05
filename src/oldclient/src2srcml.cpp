@@ -762,7 +762,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case LINE_FLAG_CODE:
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       options |= OPTION_LINE;
       break;
 
