@@ -5169,6 +5169,8 @@ preprocessor[] {
             startElement(SCPP_DIRECTIVE);
             setTokenPosition(tp_directive);
         }
+
+        // Suppress warnings that should be caused by empty rule.
         (options { generateAmbigWarnings = false; } : 
         INCLUDE
         {
