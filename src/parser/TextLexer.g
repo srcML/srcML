@@ -198,7 +198,7 @@ EOL :
             // record to new lines for optional positions
             newline();
 
-            if(isline) setLine(line_number);
+            if(isline) setLine(line_number << 16 | (getLine() & 0xFFFF));
             isline = false;
         }
 ;
