@@ -907,7 +907,7 @@ lambda_capture[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         (
 
-            LBRACKET (comma | { LA(1) != RBRACKET }? lambda_capture_argument)* RBRACKET
+            LBRACKET ({ LA(1) == COMMA }? comma | { LA(1) != RBRACKET }? lambda_capture_argument)* RBRACKET
 
         )
 ;
