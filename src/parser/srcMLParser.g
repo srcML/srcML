@@ -1585,8 +1585,8 @@ class_declaration[] { ENTRY_DEBUG } :
             startElement(SCLASS_DECLARATION);
         }
         ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp)*
-        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
 
         (specifier)* CLASS ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* class_header
 ;
