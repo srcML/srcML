@@ -324,26 +324,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>in</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>in</name> =+ <name>a</name> + <name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>in</name> += <name>a</name> + <name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><name>in</name></type> <name>s</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><name>s</name></type> <name>in</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>on</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
 </unit>
 
