@@ -702,7 +702,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { LITERAL_FLAG, no_argument, &curoption, OPTION_LITERAL },
     { OPERATOR_FLAG, no_argument, &curoption, OPTION_OPERATOR },
     { MODIFIER_FLAG, no_argument, &curoption, OPTION_MODIFIER },
-    { LINE_FLAG, no_argument, &curoption, LINE_FLAG_CODE },
+    { LINE_FLAG, no_argument, NULL, LINE_FLAG_CODE },
 #ifdef SVN
     { SVN_FLAG, required_argument, NULL, SVN_FLAG_CODE },
 #endif
@@ -762,6 +762,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case LINE_FLAG_CODE:
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       options |= OPTION_LINE;
       break;
 
