@@ -1603,8 +1603,7 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
 
             // start the class definition
             startElement(token);
-
-            // java classes end at the end of the block
+            // classes end at the end of the block
             if (intypedef || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) {
                 setMode(MODE_END_AT_BLOCK);
             }
@@ -1612,9 +1611,8 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
 ;
 
 class_preamble[] { ENTRY_DEBUG } :
-        ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp)*
-        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        ({ inLanguage(LANGUAGE_JAVA) }? annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
 
         (specifier)*
 ;
