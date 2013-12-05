@@ -106,8 +106,7 @@ CONSTANTS :
 
         {
             if(onpreprocline && isline) {
-                setLine(atoi(text.substr(_begin, text.length()-_begin).c_str()) - 1); 
-                isline = false;
+                line_number = atoi(text.substr(_begin, text.length()-_begin).c_str()); 
             }
         }
 
@@ -181,7 +180,7 @@ WS :
             // horizontal tab
             '\t'
         )+
-;
+    ;
 
 // end of line
 EOL :
@@ -198,6 +197,9 @@ EOL :
 
             // record to new lines for optional positions
             newline();
+
+            if(isline) setLine(line_number);
+            isline = false;
         }
 ;
 /*

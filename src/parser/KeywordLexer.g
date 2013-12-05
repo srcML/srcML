@@ -37,7 +37,7 @@ header "post_include_cpp" {
 
 void KeywordLexer::changetotextlexer(int typeend) {
           selector->push("text"); 
-           ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, rawstring, delimiter, isline);
+           ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, rawstring, delimiter, isline, line_number);
 }
 }
 
@@ -244,6 +244,7 @@ bool atstring;
 bool rawstring;
 std::string delimiter;
 bool isline;
+long line_number;
 
 // map from text of literal to token number, adjusted to language
 struct keyword { char const * const text; int token; int language; };
