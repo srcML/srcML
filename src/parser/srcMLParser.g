@@ -2928,7 +2928,7 @@ noexcept_operator[] { ENTRY_DEBUG } :
 
             startElement(SNOEXCEPT);
         }
-        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (LPAREN)*
+        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (options { greedy = true;} : LPAREN)*
 ;
 
 complete_throw_list[] { ENTRY_DEBUG } :
@@ -2936,7 +2936,7 @@ complete_throw_list[] { ENTRY_DEBUG } :
 ;
 
 complete_noexcept_list[] { ENTRY_DEBUG } :
-        NOEXCEPT (paren_pair)*
+        NOEXCEPT (options { greedy = true;} : paren_pair)*
 ;
 
 // type identifier
