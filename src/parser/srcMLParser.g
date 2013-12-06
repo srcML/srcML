@@ -4479,7 +4479,8 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         { type == MACRO }? macro_call |
 
         // general math operators
-        general_operators
+        // looks like general operators and variable identifier can match same thing
+        (options { generateAmbigWarnings = false; }: general_operators
         {
             if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
                 general_operators();
@@ -4529,7 +4530,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         rcurly_argument |
 
         // variable or literal
-        variable_identifier | string_literal | char_literal | literal | boolean | noexcept_operator | 
+        variable_identifier) | string_literal | char_literal | literal | boolean | noexcept_operator | 
 
         variable_identifier_array_grammar_sub[flag]
 ;
@@ -4752,7 +4753,8 @@ annotation_argument[] { ENTRY_DEBUG } :
             // start the argument
             startElement(SARGUMENT);
         }
-        (
+        // suppress warning of ()*
+        (options { greedy = true; } :
         { !(LA(1) == RPAREN) }? expression |
 
         type_identifier
