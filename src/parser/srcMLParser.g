@@ -3648,8 +3648,13 @@ annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         function_identifier
 
-        // a whole lot of lookahead warnings need to look into further
-        (call_argument_list ({ LA(1) != RPAREN && LA(1) != COMMA }? annotation_argument (comma)*)* rparen)*
+        // warnings seem to be caused by antlr ()* ending the rules.
+        // first greedy eliminates LPAREN LCURLY
+        (options { greedy = true; } : call_argument_list 
+        // second greedy get rid of rparen
+        (options { greedy = true; } : { LA(1) != RPAREN && LA(1) != COMMA }? annotation_argument 
+        // third greedy gets rid of comma
+        (options { greedy = true; } : comma)*)* rparen)*
 ;
 
 // call  function call, macro, etc.
