@@ -3223,7 +3223,8 @@ attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         LBRACKET
 
-        ({ next_token() == COLON }? attribute_csharp_target COLON)*
+        // do not warn as identifier list and colon are in complete expression as well, but need special processing here.
+        (options { warnWhenFollowAmbig = false; } : { next_token() == COLON }? attribute_csharp_target COLON)*
 
         complete_expression
 
