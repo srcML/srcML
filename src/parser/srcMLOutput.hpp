@@ -108,6 +108,7 @@ public:
 
     // output line attribute content
     std::string lineAttribute;
+    std::string line2Attribute;
     std::string columnAttribute;
     char out[21];
 
