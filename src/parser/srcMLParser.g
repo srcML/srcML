@@ -2601,13 +2601,15 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                 { inLanguage(LANGUAGE_CSHARP) }?
                 LBRACKET
-                        (COMMA)*
+                        // suppress warning
+                        (options { greedy = true; } : COMMA)*
 
-                        (RETURN | EVENT |
+                        // ~RBRACKET matches these as well suppress warning. 
+                        (options { warnWhenFollowAmbig = false; } : (RETURN | EVENT |
 
                         set_type[type, GLOBAL_ATTRIBUTE, check_global()]
                         throw_exception[type == GLOBAL_ATTRIBUTE] 
-                        identifier)?
+                        identifier))?
 
                         //complete_expression
                         (~(RBRACKET))*
