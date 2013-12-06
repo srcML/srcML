@@ -907,8 +907,13 @@ lambda_capture[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         (
 
-            LBRACKET ({ LA(1) == COMMA }? comma | { LA(1) != RBRACKET }? lambda_capture_argument)* RBRACKET
-
+            LBRACKET 
+            // suppress warning most likely compound_name's can match RBRACKET and it also is matched by RBRACKET
+            // after wards.  
+            (options { warnWhenFollowAmbig = false; } :
+            { /* warning suppression */ LA(1) == COMMA }? comma | { LA(1) != RBRACKET }? lambda_capture_argument)* 
+            RBRACKET
+    
         )
 ;
 
@@ -919,7 +924,8 @@ lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SARGUMENT);
         }
-        (lambda_capture_modifiers | compound_name)*
+        // suppress warning of another case where REFOPS or something is in both alts.
+        (options { warnWhenFollowAmbig = false; } : lambda_capture_modifiers | compound_name)*
 ;
 
 lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG 
@@ -2598,8 +2604,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                         throw_exception[type == GLOBAL_ATTRIBUTE] 
                         identifier)?
 
-                        (COLON)*
-
                         //complete_expression
                         (~(RBRACKET))*
                 RBRACKET
@@ -2607,7 +2611,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                 { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}?
                 LBRACKET LBRACKET
-                        (COMMA)*
 
                         //complete_expression
                         (~(RBRACKET))*
