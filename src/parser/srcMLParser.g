@@ -4785,7 +4785,9 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
                     type_count = 1;
             }
             { stmt_type == VARIABLE || LA(1) == DOTDOTDOT}?
-            parameter_type_count[type_count] ({ LA(1) == BAR }? bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
+            parameter_type_count[type_count]
+            // suppress warning caused by ()*
+            (options { greedy = true; } : { LA(1) == BAR }? bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
             {
                 // expect a name initialization
                 setMode(MODE_VARIABLE_NAME | MODE_INIT);
