@@ -4710,7 +4710,8 @@ kr_parameter[int type_count] { ENTRY_DEBUG } :
 ;
 
 kr_parameter_type[int type_count] { ENTRY_DEBUG} :
-        variable_declaration_statement[type_count] ({ inMode(MODE_EAT_TYPE) }? type_identifier update_typecount[MODE_FUNCTION_NAME])* 
+        // suppress ()* warning
+        variable_declaration_statement[type_count] (options { greedy = true; } : { inMode(MODE_EAT_TYPE) }? type_identifier update_typecount[MODE_FUNCTION_NAME])* 
 ;
 
 kr_parameter_name[] { ENTRY_DEBUG } :
@@ -4723,7 +4724,8 @@ kr_parameter_terminate[] { ENTRY_DEBUG }:
 
 complete_parameter[] { ENTRY_DEBUG } :
         parameter
-        (options { greedy = true; } : parameter_declaration_initialization ({LA(1) != RPAREN }? expression)*)*
+        // suppress ()* warning
+        (options { greedy = true; } : parameter_declaration_initialization (options { greedy = true; } : {LA(1) != RPAREN }? expression)*)*
 ;
 
 argument[] { ENTRY_DEBUG } :
