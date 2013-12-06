@@ -5115,6 +5115,7 @@ enum_type { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(STYPE);
         }
+        // suppress warning compound_name seems to have some tokens in common with specifier.
         (options { generateAmbigWarnings = false; } : specifier | compound_name)*
     ;
 
@@ -5312,7 +5313,8 @@ preprocessor[] {
         } |
 
         /* blank preproc */
-         { tp_directive.setType(SNOP); endMode(); } (cpp_garbage)*
+        // suppress ()* warning
+        { tp_directive.setType(SNOP); endMode(); } (options { greedy = true; } : cpp_garbage)*
 
         )
         eol_skip[directive_token, markblockzero]
