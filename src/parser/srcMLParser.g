@@ -3648,6 +3648,7 @@ annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         function_identifier
 
+        // a whole lot of lookahead warnings need to look into further
         (call_argument_list ({ LA(1) != RPAREN && LA(1) != COMMA }? annotation_argument (comma)*)* rparen)*
 ;
 
@@ -4871,7 +4872,9 @@ template_param[] { ENTRY_DEBUG } :
             // start the parameter element
             startElement(STEMPLATE_PARAMETER);
         }
-        (
+
+        // Both can contain extern however an extern template should not be a template param so should not be a problem
+        (options { generateAmbigWarnings = false; } :
         parameter_type
         {
             // expect a name initialization
