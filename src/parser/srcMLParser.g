@@ -5115,7 +5115,7 @@ enum_type { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(STYPE);
         }
-        (specifier | compound_name)*
+        (options { generateAmbigWarnings = false; } : specifier | compound_name)*
     ;
 
 // Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
