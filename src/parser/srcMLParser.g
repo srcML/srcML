@@ -3400,7 +3400,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         compound_name_cpp[iscompound]
         )
 
-        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
 
         (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) && (!inLanguage(LANGUAGE_CXX_ONLY) || next_token() != LBRACKET)}?
             variable_identifier_array_grammar_sub[iscompound]
