@@ -2833,7 +2833,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
         lead_type_identifier { decTypeCount(); }
-        ({getTypeCount() > 0}? type_identifier { decTypeCount(); })*
+        (options { greedy = true; } : {getTypeCount() > 0}? type_identifier { decTypeCount(); })*
         {
             endMode(MODE_EAT_TYPE);
             setMode(MODE_FUNCTION_NAME);
