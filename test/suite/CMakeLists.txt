@@ -18,18 +18,73 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-# message("Added file for Suite")
 
-set(BASE_COMMON comment string variable_names expression decl_simple if for do switch call function enum return_base problem literal operator_base whitespace)
-set(GEN_BASE while ifnestcond return function_decl ifblock)
-set(GEN_BASE_CXX throw constructor_explicit destructor_virtual function_const struct union)
-set(BASE_C_FAMILY asm macro cstruct extern main function_pointer decl_struct typedef decl_pointer goto expression_pointer enum_cpp)
-set(BASE_C function_c cast_c)
-set(BASE_OO catch_form foreach try)
-set(BASE_CXX throw constructor_explicit destructor_virtual function_const struct union friend namespace template typedef_template constructor destructor throw_base function_throw class function_operator typedef_ns variable_names_ns function_ns decl_ns try typedef_struct operator function_cpp call_ns expression_pointer enum_cpp operator_cpp call_cpp class_cpp decl_simple_cpp cast_cpp doxygen)
-set(BASE_CS asm extern main decl_pointer goto throw namespace throw_base try operator expression_pointer interface_cs abstract_cs override_cs operator_cs finally_cs checked_cs delegate_cs event_cs explicit_cs fixed_cs foreach_cs implicit_cs internal_cs lock_cs function_operator_cs function_cs decl_cs sealed_cs unchecked_cs unsafe_cs generics_cs linq_cs accessor_cs partial_cs yield_cs class_cs struct_cs constructor_cs destructor_cs literal_cs indexers_cs attributes_cs string_cs lambda_cs enum_cs call_cs class_cs using_directive_cs using_statement_cs)
-set(BASE_CS_GEN asm extern main decl_pointer goto throw namespace throw_base try operator expression_pointer)
-set(BASE_JAVA class_java constructor_java keyword_java interface_java package_java finally_java generics_java literal_java operator_java anonymous_class_java synchronized_specifier_java synchronized_statement_java javadoc_java native_java strictfp_java catch_form_java try_java decl_java)
+
+# message(STATUS "${SUITE_CONTENTS}")
+
+# Read suite.txt and extract names to be used in testing from it.
+# # original base of cases for all languages
+# BASE_COMMON=${call language,'LANGUAGE_ALL_BASE'}
+# 
+# # base for all languages generated from original cases
+# GEN_BASE=${call language,'LANGUAGE_ALL_GEN'}
+# 
+# # base for C++ generated from original cases
+# GEN_BASE_CXX=${call language,'LANGUAGE_CXX_FAMILY'}
+# 
+# # base for C only
+# #BASE_C=functionkr # typedef_cstruct
+# 
+# # base for C family
+# BASE_C_FAMILY=${call language,'LANGUAGE_C_FAMILY'}
+# 
+# # base for C family
+# BASE_C=${call language,'LANGUAGE_C_ONLY'}
+# 
+# # base for object-oriented languages
+# BASE_OO=${call language,'LANGUAGE_OO'}
+# 
+# # base for C++ only
+# BASE_CXX=${call language,'LANGUAGE_CXX'}
+# 
+# # base for C# only
+# BASE_CS=${call language,'LANGUAGE_CSHARP'}
+# 
+# # base for C# only
+# BASE_CS_GEN=${call language,'LANGUAGE_CSHARP_GEN'}
+# 
+# # base for Java only
+# BASE_JAVA=${call language,'LANGUAGE_JAVA'}
+
+# 
+# Reads suite using a regular expression to extract information from the suite.txt
+# file and create lists of things which need to be generated. It returns a list with
+# the given name. Any of the items given as extra arguments are removed from the list
+# after it has been read in.
+# 
+macro(readSuiteAndMakeList LIST_PREFIX OUTPUT)
+    set(${OUTPUT} "")
+    file(STRINGS suite.txt RESULTS_FROM_SUITE REGEX "^${LIST_PREFIX} ")
+    foreach(SUITE_RESULT ${RESULTS_FROM_SUITE})
+        string(REPLACE "${LIST_PREFIX} " "" RESULT ${SUITE_RESULT})
+        string(STRIP ${RESULT} RESULT)
+        list(APPEND ${OUTPUT} ${RESULT})
+    endforeach()
+    math(EXPR NUMBER_TO_REMOVE "${ARGC} - 2")
+    if(${NUMBER_TO_REMOVE} GREATER 0)
+        list(REMOVE_ITEM BASE_COMMON ${ARGN})
+    endif()
+endmacro()
+readSuiteAndMakeList(LANGUAGE_ALL_BASE BASE_COMMON "problem")
+readSuiteAndMakeList(LANGUAGE_ALL_GEN GEN_BASE)
+readSuiteAndMakeList(LANGUAGE_CXX_FAMILY GEN_BASE_CXX)
+readSuiteAndMakeList(LANGUAGE_C_FAMILY BASE_C_FAMILY)
+readSuiteAndMakeList(LANGUAGE_C_ONLY BASE_C)
+readSuiteAndMakeList(LANGUAGE_OO BASE_OO)
+readSuiteAndMakeList(LANGUAGE_CXX BASE_CXX)
+readSuiteAndMakeList(LANGUAGE_CSHARP BASE_CS)
+readSuiteAndMakeList(LANGUAGE_CSHARP_GEN BASE_CS_GEN)
+readSuiteAndMakeList(LANGUAGE_JAVA BASE_JAVA)
 
 add_custom_target(echobase COMMAND echo ${BASE_COMMON})
 add_custom_target(echogen COMMAND echo ${GEN_BASE})
@@ -161,41 +216,20 @@ set(XSLT_REMOVECPP_OPERATOR ${XSLTPROC} ${XSLT_REMOVECPP_OPERATOR_XSL})
 set(ALL_XML_TARGETS "")
 set(SEP_BASE ${BASE_COMMON} ${BASE_C_FAMILY} ${BASE_CXX} ${BASE_OO})
 
-# set(C_PROCESSING_COLLECTION
-#     ".all.c.xml\;XSLT_MERGEUNIT"
-#     ".block.c.xml\;XSLT_BLOCKUNIT"
-#     ".comment.c.xml\;XSLT_INSERTCOMMENT"
-#     ".preproc.c.xml\;XSLT_INSERTPREPROC"
-#     ".ifthenelse.c.xml\;XSLT_INSERTIFTHENELSE"
-#     ".formfeed.c.xml\;XSLT_INSERTFORMFEED"
-# )
-# set(CS_PROCESSING_COLLECTION
-#     ".all.cs.xml\;XSLT_MERGEUNIT"
-#     ".block.cs.xml\;XSLT_BLOCKUNIT"
-#     ".comment.cs.xml\;XSLT_INSERTCOMMENT"
-#     ".preproc.cs.xml\;XSLT_INSERTPREPROC"
-#     ".ifthenelse.cs.xml\;XSLT_INSERTIFTHENELSE"
-#     ".formfeed.cs.xml\;XSLT_INSERTFORMFEED"
-# )
-# set(JAVA_PROCESSING_COLLECTION
-#     ".all.java.xml\;XSLT_MERGEUNIT"
-#     ".block.java.xml\;XSLT_BLOCKUNIT_JAVA"
-#     ".comment.java.xml\;XSLT_INSERTCOMMENT"
-#     ".preproc.java.xml\;XSLT_INSERTPREPROC"
-#     ".ifthenelse.java.xml\;XSLT_INSERTIFTHENELSE_JAVA"
-#     ".formfeed.java.xml\;XSLT_INSERTFORMFEED"
-# )
-# set(ASPECTJ_PROCESSING_COLLECTION
-#     ".all.aj.xml\;XSLT_MERGEUNIT"
-#     ".block.aj.xml\;XSLT_BLOCKUNIT_JAVA"
-#     ".comment.aj.xml\;XSLT_INSERTCOMMENT"
-#     ".preproc.aj.xml\;XSLT_INSERTPREPROC"
-#     ".ifthenelse.aj.xml\;XSLT_INSERTIFTHENELSE_JAVA"
-#     ".formfeed.aj.xml\;XSLT_INSERTFORMFEED"
-# )
+# basic generated C++ files
+set(GEN_SEP ${GEN_BASE} ${GEN_BASE_CXX})
+
+# generated cases for C++ from base
+# appendFileExtToList(.cpp.xml GEN_PART ${GEN_SEP})
+
+
+set(SEP_FILES ${SEP_BASE} preprocessor)
+set(SEP_PLUS ${SEP_FILES} ${GEN_SEP})
+set(SEP_PLUSNOPREPROC ${SEP_BASE} ${GEN_SEP})
+set(SEP_STRUCT function function_const function_cpp function_decl function_ns function_operator function_pointer function_throw)
 
 # 
-# This macro helps create tules to be built to create all of the
+# This macro helps create rules to be built to create all of the
 # .cpp.xml files.
 # 
 macro(buildXMLTarget COMMAND_NAME INPUT_FILE OUTPUT_FILE_TITLE SUFFIX) 
@@ -240,28 +274,17 @@ macro(buildJavaXmlTarget INPUT_FILE OUTPUT_FILE_TITLE)
         list(APPEND ${LIST_TO_ADD_TO} ${OUTPUT_FILE_NAME})
     endforeach()
 endmacro()
-# basic generated C++ files
-set(GEN_SEP ${GEN_BASE} ${GEN_BASE_CXX})
-
-# generated cases for C++ from base
-appendFileExtToList(.cpp.xml GEN_PART ${GEN_SEP})
 
 
-set(SEP_FILES ${SEP_BASE} preprocessor)
-
-# tempTarget(sep_files ${SEP_FILES})
 # base for all of Java
 createUniqueList(BASE_JAVA_ALL_GEN ${BASE_COMMON} ${GEN_BASE} ${BASE_OO})
 createUniqueList(BASE_JAVA_ALL     ${BASE_COMMON} ${GEN_BASE} ${BASE_OO} ${BASE_JAVA})
 foreach(JAVA_BASE_FILE_NAME ${BASE_JAVA_ALL_GEN})
-    matchesOneInList(SHOULD_IGNORE ${JAVA_BASE_FILE_NAME} "problem")
-    if(NOT ${SHOULD_IGNORE})
-        buildJavaXmlTarget(
-            ${CMAKE_CURRENT_SOURCE_DIR}/${JAVA_BASE_FILE_NAME}.cpp.xml
-            ${JAVA_BASE_FILE_NAME}
-            ALL_XML_TARGETS
-        )
-    endif()
+    buildJavaXmlTarget(
+        ${CMAKE_CURRENT_SOURCE_DIR}/${JAVA_BASE_FILE_NAME}.cpp.xml
+        ${JAVA_BASE_FILE_NAME}
+        ALL_XML_TARGETS
+    )
 endforeach()
 
 
@@ -269,85 +292,137 @@ endforeach()
 set(BASE_C_ALL_GEN ${BASE_COMMON} ${GEN_BASE} ${BASE_C_FAMILY})
 set(BASE_C_ALL     ${BASE_COMMON} ${GEN_BASE} ${BASE_C_FAMILY} ${BASE_C})
 foreach(C_BASE_FILE_NAME ${BASE_C_ALL_GEN})
-    matchesOneInList(SHOULD_IGNORE ${C_BASE_FILE_NAME} "cstruct" "problem")
-    if(NOT ${SHOULD_IGNORE})
-        buildXMLTarget(
-            XSLT_SETLANGUAGE_C
-            ${CMAKE_CURRENT_SOURCE_DIR}/${C_BASE_FILE_NAME}.cpp.xml
-            ${C_BASE_FILE_NAME}
-            .c.xml
-            ALL_XML_TARGETS
-        )
-    endif()
+    buildXMLTarget(
+        XSLT_SETLANGUAGE_C
+        ${CMAKE_CURRENT_SOURCE_DIR}/${C_BASE_FILE_NAME}.cpp.xml
+        ${C_BASE_FILE_NAME}
+        .c.xml
+        ALL_XML_TARGETS
+    )
 endforeach()
 
 
 # base for all C#
 set(BASE_CS_ALL_GEN ${BASE_COMMON} ${GEN_BASE} ${BASE_CS_GEN})
-set(BASE_CS_ALL     ${BASE_COMMON} ${GEN_BASE} ${BASE_CS} ${BASE_CS_GEN})
+set(BASE_CS_ALL     ${BASE_COMMON} ${GEN_BASE} ${BASE_CS_GEN} ${BASE_CS})
 foreach(CS_BASE_FILE_NAME ${BASE_CS_ALL_GEN})
-    matchesOneInList(SHOULD_IGNORE ${CS_BASE_FILE_NAME} "problem")
-    if(NOT ${SHOULD_IGNORE})
-        # Processing all of the C# files
-        # %.cs.xml : %.cpp.xml
-        #         ${XSLT_SETLANGUAGE_CS} $< > $@
-        buildXMLTarget(
-            XSLT_SETLANGUAGE_CS
-            ${CMAKE_CURRENT_SOURCE_DIR}/${CS_BASE_FILE_NAME}.cpp.xml
-            ${CS_BASE_FILE_NAME}
-            .cs.xml
-            ALL_XML_TARGETS
-        )
-    endif()
+    # Processing all of the C# files
+    # %.cs.xml : %.cpp.xml
+    #         ${XSLT_SETLANGUAGE_CS} $< > $@
+    buildXMLTarget(
+        XSLT_SETLANGUAGE_CS
+        ${CMAKE_CURRENT_SOURCE_DIR}/${CS_BASE_FILE_NAME}.cpp.xml
+        ${CS_BASE_FILE_NAME}
+        .cs.xml
+        ALL_XML_TARGETS
+    )
 endforeach()
 
-# appendFileExtToList(.cs.xml GEN_CS ${BASE_CS_ALL_GEN})
+# generate cases for all
 
-set(SEP_PLUS ${SEP_FILES} ${GEN_SEP})
-set(SEP_PLUSNOPREPROC ${SEP_BASE} ${GEN_SEP})
+macro(generateRulesSet SUFFIX C_CMD JAVA_CMD )
+    # .${SUFFIX}.cpp.xml
+    foreach(CURRENT_TITLE ${SEP_PLUS} extra_cpp)
+        buildXMLTarget(
+            ${C_CMD}
+            ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_TITLE}.cpp.xml
+            ${CURRENT_TITLE}
+            .${SUFFIX}.cpp.xml
+            ALL_XML_TARGETS
+        )
+    endforeach()
 
-set(SEP_STRUCT function function_const function_cpp function_decl function_ns function_operator function_pointer function_throw)
+    # Generating .${SUFFIX}.java.xml
+    foreach(CURRENT_TITLE ${BASE_JAVA_ALL})
+        buildXMLTarget(
+            ${JAVA_CMD}
+            ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_TITLE}.java.xml
+            ${CURRENT_TITLE}
+            .${SUFFIX}.java.xml
+            ALL_XML_TARGETS
+        )
+    endforeach()
 
-macro(generateFileGroup FILE_EXT_PREFIX OUTPUT)
-    appendFileExtToList(.${FILE_EXT_PREFIX}.cpp.xml SEP_PLUS_NAMES ${SEP_PLUS})
-    appendFileExtToList(.${FILE_EXT_PREFIX}.java.xml JAVA_NAMES ${BASE_JAVA_ALL})
-    appendFileExtToList(.${FILE_EXT_PREFIX}.c.xml C_NAMES ${BASE_C_ALL})
-    appendFileExtToList(.${FILE_EXT_PREFIX}.cs.xml CS_NAMES ${BASE_CS_ALL})
-    # appendFileExtToList(${BASE_ASPECTJ_ALL} .${FILE_EXT_PREFIX}.aj.xml AJ_NAMES)
-    # appendFileExtToList(${BASE_CXX_11_ALL} .${FILE_EXT_PREFIX}.cpp11.xml CPP11_NAMES)
-    set(${OUTPUT} ${SEP_PLUS_NAMES} ${JAVA_NAMES} ${C_NAMES} ${CS_NAMES} ${ARGN})
-    # Remember to add second statemement when and if these are added back into the test suite.
-    # set(${OUTPUT} ${OUTPUT} ${AJ_NAMES} ${CPP11_NAMES})
+    # Generating .all.c.xml
+    foreach(CURRENT_TITLE ${BASE_C_ALL} extra_c)
+        buildXMLTarget(
+            ${C_CMD}
+            ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_TITLE}.c.xml
+            ${CURRENT_TITLE}
+            .${SUFFIX}.c.xml
+            ALL_XML_TARGETS
+        )
+    endforeach()
+
+    # Generating .all.cs.xml
+    foreach(CURRENT_TITLE ${BASE_CS_ALL})
+        buildXMLTarget(
+            ${C_CMD}
+            ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_TITLE}.cs.xml
+            ${CURRENT_TITLE}
+            .${SUFFIX}.cs.xml
+            ALL_XML_TARGETS
+        )
+    endforeach()
 endmacro()
 
-#
-# generate cases for all
-# 
-
-# These are removed until they are defined again.
-generateFileGroup(all GEN_ALL extra_cpp.all.cpp.xml extra_c.all.c.xml)
+generateRulesSet(all XSLT_MERGEUNIT XSLT_MERGEUNIT)
 
 # generated cases for blocks
-generateFileGroup(block GEN_BLOCK extra_c.block.c.xml extra_cpp.block.cpp.xml) 
+generateRulesSet(block XSLT_BLOCKUNIT XSLT_BLOCKUNIT_JAVA)
 
 # generated cases for structs
-appendFileExtToList(.struct.cpp.xml GEN_STRUCT ${SEP_STRUCT})
+foreach(CURRENT_TITLE ${SEP_STRUCT})
+    buildXMLTarget(
+        XSLT_STRUCTUNIT
+        ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_TITLE}.cpp.xml
+        ${CURRENT_TITLE}
+        .struct.cpp.xml
+        ALL_XML_TARGETS
+    )
+endforeach()
+
 
 # generated cases for comments
-generateFileGroup(comment GEN_COMMENT extra_c.comment.c.xml extra_cpp.comment.cpp.xml)
+generateRulesSet(comment XSLT_INSERTCOMMENT XSLT_INSERTCOMMENT)
 
-# # generated cases for formfeed
-generateFileGroup(formfeed GEN_FORMFEED extra_c.formfeed.c.xml extra_cpp.formfeed.cpp.xml)
+# generated cases for formfeed
+generateRulesSet(formfeed XSLT_INSERTFORMFEED XSLT_INSERTFORMFEED)
+
+# generated cases for ifthenelse
+generateRulesSet(ifthenelse XSLT_INSERTIFTHENELSE XSLT_INSERTIFTHENELSE_JAVA)
 
 # generated test cases for preproc
-appendFileExtToList(.preproc.cpp.xml CPP_SEP_PLUSNO_PREPROC_NAMES ${SEP_PLUSNOPREPROC})
-appendFileExtToList(.preproc.java.xml CPP_JAVA_NAMES ${BASE_JAVA_ALL})
-appendFileExtToList(.preproc.c.xml CPP_C_NAMES ${BASE_C_ALL} )
-appendFileExtToList(.preproc.cs.xml CPP_CS_NAMES ${BASE_CS_ALL})
-set(GEN_PREPROC ${CPP_SEP_PLUSNO_PREPROC_NAMES} ${CPP_JAVA_NAMES} ${CPP_C_NAMES} ${CPP_CS_NAMES})
+foreach(CURRENT_TITLE ${SEP_PLUSNOPREPROC} extra_cpp)
+    buildXMLTarget(
+        XSLT_INSERTPREPROC
+        ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_TITLE}.cpp.xml
+        ${CURRENT_TITLE}
+        .preproc.cpp.xml
+        ALL_XML_TARGETS
+    )
+endforeach()
+foreach(CURRENT_TITLE ${BASE_C_ALL} extra_c)
+    buildXMLTarget(
+        XSLT_INSERTPREPROC
+        ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_TITLE}.c.xml
+        ${CURRENT_TITLE}
+        .preproc.c.xml
+        ALL_XML_TARGETS
+    )
+endforeach()
+foreach(CURRENT_TITLE ${BASE_CS_ALL})
+    buildXMLTarget(
+        XSLT_INSERTPREPROC
+        ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_TITLE}.cs.xml
+        ${CURRENT_TITLE}
+        .preproc.cs.xml
+        ALL_XML_TARGETS
+    )
+endforeach()
 
 # # generated test cases for preproc
-generateFileGroup(ifthenelse GEN_IFTHENELSE extra_c.ifthenelse.c.xml extra_cpp.ifthenelse.cpp.xml)
+
 
 
 # TODO FIXME 
@@ -411,6 +486,7 @@ generateFileGroup(ifthenelse GEN_IFTHENELSE extra_c.ifthenelse.c.xml extra_cpp.i
 # FIXME End of all in one file generation commands FIXME
 
 
+set(PROBLEM_ALL_TARGETS "")
 # problem.java.xml : problem.cpp.xml
 #         ${XSLT_SETLANGUAGE_PROBLEM_JAVA} $< | ${XSLT_REMOVECPP_PROBLEM} - > $@
 add_custom_command(
@@ -420,14 +496,14 @@ add_custom_command(
     COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.java.xml
 )
 
-# problem.aj.xml : problem.java.xml
-#         ${XSLT_SETLANGUAGE_PROBLEM_ASPECTJ} $< > $@
-add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.aj.xml
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.java.xml
-    COMMAND ${XSLT_SETLANGUAGE_PROBLEM_ASPECTJ} ${CMAKE_CURRENT_SOURCE_DIR}/problem.java.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.aj.xml
-    COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.aj.xml
-)
+# # problem.aj.xml : problem.java.xml
+# #         ${XSLT_SETLANGUAGE_PROBLEM_ASPECTJ} $< > $@
+# add_custom_command(
+#     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.aj.xml
+#     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.java.xml
+#     COMMAND ${XSLT_SETLANGUAGE_PROBLEM_ASPECTJ} ${CMAKE_CURRENT_SOURCE_DIR}/problem.java.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.aj.xml
+#     COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.aj.xml
+# )
 
 # problem.c.xml : problem.cpp.xml
 #         ${XSLT_SETLANGUAGE_PROBLEM_C} $< > $@
@@ -449,181 +525,96 @@ add_custom_command(
 
 # This is used to simplfy the handling of each of the different programming languages
 # so that it could be done more easily using macros.
-set(PROGRAMMING_LANGUAGES cpp c java aj)
+set(PROGRAMMING_LANGUAGES cpp c cs java) #Removed  aj
+set(PROGRAMMING_LANGUAGES_BUT_JAVA_AND_AJ cpp c cs)
 
 # Handling the problem.all files.
-set(PROBLEM_ALL_TARGETS "")
 foreach(LANG ${PROGRAMMING_LANGUAGES})
-    problemAll(${LANG})
-    createProbDep(all ${LANG})
-    list(APPEND PROBLEM_ALL_TARGETS problem.all.${LANG}.xml)
+    buildXMLTarget(
+        XSLT_MERGEUNIT_PROBLEM
+        ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANG}.xml
+        "problem"
+        .all.${LANG}.xml
+        ALL_XML_TARGETS
+    )
 endforeach()
-
-add_custom_target(problem_all
-    DEPENDS ${PROBLEM_ALL_TARGETS}
-    COMMAND echo "Built all PROBLEM_ALL_TARGETS"
-)
-
 
 # Handling problem.block files.
-
-#
-# This function assists with the processing of the problem.block targets
-# 
-macro(problemBlock LANGUAGE_EXT)
-    if((${LANGUAGE_EXT} MATCHES "java") OR (${LANGUAGE_EXT} MATCHES "aj"))
-        add_custom_command(
-            OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.block.${LANGUAGE_EXT}.xml
-            DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml
-            COMMAND ${XSLT_BLOCKUNIT_PROBLEM_JAVA} ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.block.${LANGUAGE_EXT}.xml
-            COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.block.${LANGUAGE_EXT}.xml
-        )
-    else()
-        add_custom_command(
-            OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.block.${LANGUAGE_EXT}.xml
-            DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml
-            COMMAND ${XSLT_BLOCKUNIT_PROBLEM} ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.block.${LANGUAGE_EXT}.xml
-            COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.block.${LANGUAGE_EXT}.xml
-        )
-    endif()
-endmacro()
-
-
-set(PROBLEM_BLOCK_TARGETS "")
-foreach(LANG ${PROGRAMMING_LANGUAGES})
-    problemBlock(${LANG})
-    createProbDep(block ${LANG})
-    list(APPEND PROBLEM_BLOCK_TARGETS problem.block.${LANG}.xml)
-endforeach()
-
-add_custom_target(problem_block
-    DEPENDS ${PROBLEM_BLOCK_TARGETS}
-    COMMAND echo "Built all PROBLEM_BLOCK_TARGETS"
-)
-
- 
-# Handling problem.comment files..
-
-# 
-# This function handles the processing of language extensions so
-# they can be run through XSLTPROC and comments inseted.
-# 
-macro(problemComment LANGUAGE_EXT)
-    add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.comment.${LANGUAGE_EXT}.xml
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml
-        COMMAND ${XSLT_INSERTCOMMENT_PROBLEM} ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.comment.${LANGUAGE_EXT}.xml
-        COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.comment.${LANGUAGE_EXT}.xml
+foreach(LANG ${PROGRAMMING_LANGUAGES_BUT_JAVA_AND_AJ})
+    buildXMLTarget(
+        XSLT_BLOCKUNIT_PROBLEM
+        ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANG}.xml
+        "problem"
+        .block.${LANG}.xml
+        ALL_XML_TARGETS
     )
-endmacro()
-
-set(PROBLEM_COMMENT_TARGETS "")
-foreach(LANG ${PROGRAMMING_LANGUAGES})
-    problemComment(${LANG})
-    createProbDep(comment ${LANG})
-    list(APPEND PROBLEM_COMMENT_TARGETS problem.comment.${LANG}.xml)
 endforeach()
 
-add_custom_target(problem_comment
-    DEPENDS ${PROBLEM_COMMENT_TARGETS}
-    COMMAND echo "Built all PROBLEM_COMMENT_TARGETS"
+# Handling problem.block.java.xml
+buildXMLTarget(
+    XSLT_BLOCKUNIT_PROBLEM_JAVA
+    ${CMAKE_CURRENT_SOURCE_DIR}/problem.java.xml
+    "problem"
+    .block.java.xml
+    ALL_XML_TARGETS
 )
+
+# Handling problem.comment files.
+foreach(LANG ${PROGRAMMING_LANGUAGES})
+    buildXMLTarget(
+        XSLT_INSERTCOMMENT_PROBLEM
+        ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANG}.xml
+        "problem"
+        .comment.${LANG}.xml
+        ALL_XML_TARGETS
+    )
+endforeach()
 
 # Handling the processing of insertion of preprocessor nodes into the files.
-macro(problemPreproc LANGUAGE_EXT)
-    add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.preproc.${LANGUAGE_EXT}.xml
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml
-        COMMAND ${XSLT_INSERTPREPROC_PROBLEM} ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.preproc.${LANGUAGE_EXT}.xml
-        COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.preproc.${LANGUAGE_EXT}.xml
+foreach(LANG ${PROGRAMMING_LANGUAGES_BUT_JAVA_AND_AJ})
+    buildXMLTarget(
+        XSLT_INSERTPREPROC_PROBLEM
+        ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANG}.xml
+        "problem"
+        .preproc.${LANG}.xml
+        ALL_XML_TARGETS
     )
-endmacro()
-
-set(PROBLEM_INSERT_PREPROC_TARGETS "")
-foreach(LANG ${PROGRAMMING_LANGUAGES})
-    problemPreproc(${LANG})
-    createProbDep(preproc ${LANG})
-    list(APPEND PROBLEM_INSERT_PREPROC_TARGETS problem.preproc.${LANG}.xml)
 endforeach()
-
-add_custom_target(problem_preproc
-    DEPENDS ${PROBLEM_INSERT_PREPROC_TARGETS}
-    COMMAND echo "Built all PROBLEM_INSERT_PREPROC_TARGETS"
-)
 
 # Handling the insertion of ifthanelse into the files.
-macro(problemIfThenElse LANGUAGE_EXT)
-    add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.ifthenelse.${LANGUAGE_EXT}.xml
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml
-        COMMAND ${XSLT_INSERTIFTHENELSE_PROBLEM} ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.ifthenelse.${LANGUAGE_EXT}.xml
-        COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.ifthenelse.${LANGUAGE_EXT}.xml
+foreach(LANG ${PROGRAMMING_LANGUAGES_BUT_JAVA_AND_AJ})
+    buildXMLTarget(
+        XSLT_INSERTIFTHENELSE_PROBLEM
+        ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANG}.xml
+        "problem"
+        .ifthenelse.${LANG}.xml
+        ALL_XML_TARGETS
     )
-endmacro()
-
-set(PROBLEM_IFTHENELSE_TARGETS "")
-foreach(LANG ${PROGRAMMING_LANGUAGES})
-    problemIfThenElse(${LANG})
-    createProbDep(ifthenelse ${LANG})
-    list(APPEND PROBLEM_IFTHENELSE_TARGETS problem.ifthenelse.${LANG}.xml)
 endforeach()
-
-add_custom_target(problem_ifthenelse
-    DEPENDS ${PROBLEM_IFTHENELSE_TARGETS}
-    COMMAND echo "Built all PROBLEM_IFTHENELSE_TARGETS"
+buildXMLTarget(
+    XSLT_INSERTIFTHENELSE_PROBLEM_JAVA
+    ${CMAKE_CURRENT_SOURCE_DIR}/problem.java.xml
+    "problem"
+    .ifthenelse.java.xml
+    ALL_XML_TARGETS
 )
+
 
 # Handling the insertion of the form feed into the files.
-macro(problemFormFeed LANGUAGE_EXT)
-    add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.formfeed.${LANGUAGE_EXT}.xml
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml
-        COMMAND ${XSLT_INSERTFORMFEED_PROBLEM} ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.formfeed.${LANGUAGE_EXT}.xml
-        COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.formfeed.${LANGUAGE_EXT}.xml
-    )
-endmacro()
-
-set(PROBLEM_FORMFEED_TARGETS "")
 foreach(LANG ${PROGRAMMING_LANGUAGES})
-    problemFormFeed(${LANG})
-    createProbDep(formfeed ${LANG})
-    list(APPEND PROBLEM_FORMFEED_TARGETS problem.formfeed.${LANG}.xml)
+    buildXMLTarget(
+        XSLT_INSERTFORMFEED_PROBLEM
+        ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANG}.xml
+        "problem"
+        .formfeed.${LANG}.xml
+        ALL_XML_TARGETS
+    )
 endforeach()
 
-add_custom_target(problem_formfeed
-    DEPENDS ${PROBLEM_FORMFEED_TARGETS}
-    COMMAND echo "Built all PROBLEM_FORMFEED_TARGETS"
-)
-
-# Testing command which forces ALL depencies to be built which start with "problem_"
-add_custom_target(build_all_problems
-    DEPENDS problem_comment problem_block problem_all problem_preproc problem_ifthenelse problem_formfeed
-    COMMAND echo "Built all."
-)
 
 # Xml building stuff.
 set(ALL_CPP_FILES "")
 file(GLOB ALL_CPP_XML_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp.xml)
-
-# Adding generated dependent files because they don't get picked up by the file GLOB.
-list(REMOVE_ITEM ALL_CPP_XML_FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/function_decl.cpp.xml
-    #     Removed because the test file doesn't exist at the moment.
-    #     ${CMAKE_CURRENT_SOURCE_DIR}/function_asterisk_decl.cpp.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/function_const.cpp.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/while.cpp.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/ifnestcond.cpp.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/return.cpp.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/constructor.cpp.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/constructor_explicit.cpp.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/destructor_virtual.cpp.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/throw.cpp.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/struct.cpp.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/union.cpp.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/struct_cpp.cpp.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/union_cpp.cpp.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/ifblock.cpp.xml
-)
 
 foreach(CPP_XML_FILE ${ALL_CPP_XML_FILES})
     stripFileExt(${CPP_XML_FILE} FILE_EXT_REMOVED)
@@ -640,261 +631,6 @@ add_custom_target(identity_cpp
     DEPENDS ${ALL_CPP_FILES}
     COMMAND echo "Building all CPP files"
 )
-
-# Modified list of all cpp.xml files to process (this excludes those which don't
-# end with the extension .cpp.xml (i.e. .all.cpp.xml is excluded)).
-set(ALL_NON_GENERATED_CPP_XML_FILES "")
-foreach(CURRENT_CPP ${ALL_CPP_XML_FILES})
-    string(REGEX MATCH "[/|\\|^][^/|\\|\\.]*\\.cpp\\.xml$" FILE_NAME ${CURRENT_CPP})
-    if(NOT ${FILE_NAME} EQUAL "")
-        string(REGEX REPLACE "[/|\\]" "" FILE_NAME ${FILE_NAME})
-        string(REPLACE ".cpp.xml" "" FILE_NAME ${FILE_NAME})
-        list(APPEND ALL_NON_GENERATED_CPP_XML_FILES ${FILE_NAME})
-    endif()
-endforeach()
-
-
-
-
-
-
-# ATTEMPT TO USE THESE TO GENERATE FILES OF SPECIFIED TYPES. This might help!
-# set(BASE_COMMON "comment string variable_names expression decl_simple if for do switch call function enum return_base problem literal operator_base whitespace ")
-# set(GEN_BASE "while ifnestcond return function_decl ifblock ")
-# set(GEN_BASE_CXX "throw constructor_explicit destructor_virtual function_const struct union ")
-# set(BASE_C_FAMILY "sm macro cstruct extern main function_pointer decl_struct typedef decl_pointer goto expression_pointer enum_cpp ")
-# set(BASE_C "function_c cast_c ")
-# set(BASE_OO "catch_form foreach try ")
-# set(BASE_CXX "throw constructor_explicit destructor_virtual function_const struct union friend namespace template typedef_template constructor destructor throw_base function_throw class function_operator typedef_ns variable_names_ns function_ns decl_ns try typedef_struct operator function_cpp call_ns expression_pointer enum_cpp operator_cpp call_cpp class_cpp decl_simple_cpp cast_cpp doxygen ")
-# set(BASE_CS "asm extern main decl_pointer goto throw namespace throw_base try operator expression_pointer interface_cs abstract_cs override_cs operator_cs finally_cs checked_cs delegate_cs event_cs explicit_cs fixed_cs foreach_cs implicit_cs internal_cs lock_cs function_operator_cs function_cs decl_cs sealed_cs unchecked_cs unsafe_cs generics_cs linq_cs accessor_cs partial_cs yield_cs class_cs struct_cs constructor_cs destructor_cs literal_cs indexers_cs attributes_cs string_cs lambda_cs enum_cs call_cs class_cs using_directive_cs using_statement_cs ")
-# set(BASE_CS_GEN "asm extern main decl_pointer goto throw namespace throw_base try operator expression_pointer ")
-# set(BASE_JAVA "class_java constructor_java keyword_java interface_java package_java finally_java generics_java literal_java operator_java anonymous_class_java synchronized_specifier_java synchronized_statement_java javadoc_java native_java strictfp_java catch_form_java try_java decl_java ")
-# foreach(CURRENT_FILE_TITLE ${ALL_NON_GENERATED_CPP_XML_FILES})
-# 
-# #     message(STATUS "${CURRENT_FILE_TITLE}")
-#     # Handling special case for problem.cpp.xml
-#     set(INPUT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_FILE_TITLE}.cpp.xml)
-#     if(${CURRENT_FILE_TITLE} MATCHES "problem")
-#         set(CURRENT_FILE_TITLE ${CURRENT_FILE_TITLE}_2)
-#     endif()
-#     
-#     
-#     # %.all.cpp.xml : %.cpp.xml
-#     #         ${XSLT_MERGEUNIT} $< > $@
-#     buildXMLTarget(XSLT_MERGEUNIT
-#         ${INPUT_FILE_NAME}
-#         ${CURRENT_FILE_TITLE}
-#         .all.cpp.xml
-#         ALL_XML_TARGETS
-#     )
-#     
-#     # %.comment.cpp.xml : %.cpp.xml
-#     #         ${XSLT_INSERTCOMMENT} $< > $@
-#     buildXMLTarget(XSLT_INSERTCOMMENT
-#         ${INPUT_FILE_NAME}
-#         ${CURRENT_FILE_TITLE}
-#         .comment.cpp.xml
-#         ALL_XML_TARGETS
-#     )
-#     
-#     # %.preproc.cpp.xml : %.cpp.xml
-#     #         ${XSLT_INSERTPREPROC} $< > $@
-#     buildXMLTarget(XSLT_INSERTPREPROC
-#         ${INPUT_FILE_NAME}
-#         ${CURRENT_FILE_TITLE}
-#         .preproc.cpp.xml
-#         ALL_XML_TARGETS
-#     )
-#     
-#     # %.block.cpp.xml : %.cpp.xml
-#     #         ${XSLT_BLOCKUNIT} $< > $@
-#     buildXMLTarget(XSLT_BLOCKUNIT
-#         ${INPUT_FILE_NAME}
-#         ${CURRENT_FILE_TITLE}
-#         .block.cpp.xml
-#         ALL_XML_TARGETS
-#     )
-# 
-#     # %.struct.cpp.xml : %.cpp.xml
-#     #         ${XSLT_STRUCTUNIT} $< > $@
-#     buildXMLTarget(XSLT_STRUCTUNIT
-#         ${INPUT_FILE_NAME}
-#         ${CURRENT_FILE_TITLE}
-#         .struct.cpp.xml
-#         ALL_XML_TARGETS
-#     )
-# 
-#     # %.ifthenelse.cpp.xml : %.cpp.xml
-#     #         ${XSLT_INSERTIFTHENELSE} $< > $@
-#     buildXMLTarget(XSLT_INSERTIFTHENELSE
-#         ${INPUT_FILE_NAME}
-#         ${CURRENT_FILE_TITLE}
-#         .ifthenelse.cpp.xml
-#         ALL_XML_TARGETS
-#     )
-# 
-#     # %.formfeed.cpp.xml : %.cpp.xml
-#     #         ${XSLT_INSERTFORMFEED} $< > $@
-#     buildXMLTarget(XSLT_INSERTFORMFEED
-#         ${INPUT_FILE_NAME}
-#         ${CURRENT_FILE_TITLE}
-#         .formfeed.cpp.xml
-#         ALL_XML_TARGETS
-#     )
-# 
-#     # %.cpp11.xml : %.cpp.xml
-#     #         ${XSLT_SETLANGUAGE_CXX_11} $< > $@
-#     buildXMLTarget(XSLT_SETLANGUAGE_CXX_11
-#         ${INPUT_FILE_NAME}
-#         ${CURRENT_FILE_TITLE}
-#         .cpp11.xml
-#         ALL_XML_TARGETS
-#     )
-# 
-#     # Handling all of the C file conversions and depencies.
-#     # %.c.xml : %.cpp.xml
-#     #         ${XSLT_SETLANGUAGE_C} $< > $@
-#     buildXMLTarget(XSLT_SETLANGUAGE_C
-#         ${INPUT_FILE_NAME}
-#         ${CURRENT_FILE_TITLE}
-#         .c.xml
-#         ALL_XML_TARGETS
-#     )
-#     
-#     set(CURRENT_C_INPUT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_FILE_TITLE}.c.xml)
-#     
-#     # %.all.c.xml : %.c.xml
-#     #         ${XSLT_MERGEUNIT} $< > $@
-#     # %.block.c.xml : %.c.xml
-#     #         ${XSLT_BLOCKUNIT} $< > $@
-#     # %.comment.c.xml : %.c.xml
-#     #         ${XSLT_INSERTCOMMENT} $< > $@
-#     # %.preproc.c.xml : %.c.xml
-#     #         ${XSLT_INSERTPREPROC} $< > $@
-#     # %.ifthenelse.c.xml : %.c.xml
-#     #         ${XSLT_INSERTIFTHENELSE} $< > $@
-#     # %.formfeed.c.xml : %.c.xml
-#     #         ${XSLT_INSERTFORMFEED} $< > $@
-#     foreach(PROC_INSTRUCTIONS ${C_PROCESSING_COLLECTION})
-#         list(GET PROC_INSTRUCTIONS 0 SUFFIX)
-#         list(GET PROC_INSTRUCTIONS 1 CMD)
-#         buildXMLTarget(
-#             ${CMD}
-#             ${CURRENT_C_INPUT_FILE}
-#             ${CURRENT_FILE_TITLE}
-#             ${SUFFIX}
-#             ALL_XML_TARGETS
-#         )
-#     endforeach()
-# #     string(COMPARE EQUAL ${CURRENT_FILE_TITLE} "asm" IS_ASM_EQUAL)
-# #     string(COMPARE EQUAL ${CURRENT_FILE_TITLE} "attributes_cpp" IS_ATTR_CPP_EQUAL)
-# #     math(EXPR 
-#     if(NOT ${ARE_EQUAL})
-#         # Processing all of the C# files
-#         # %.cs.xml : %.cpp.xml
-#         #         ${XSLT_SETLANGUAGE_CS} $< > $@
-#         buildXMLTarget(XSLT_SETLANGUAGE_CS
-#             ${INPUT_FILE_NAME}
-#             ${CURRENT_FILE_TITLE}
-#             .cs.xml
-#             ALL_XML_TARGETS
-#         )
-#         
-#         set(CURRENT_CS_INPUT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_FILE_TITLE}.cs.xml)
-#         # %.all.cs.xml : %.cs.xml
-#         #         ${XSLT_MERGEUNIT} $< > $@
-#         # %.block.cs.xml : %.cs.xml
-#         #         ${XSLT_BLOCKUNIT} $< > $@ 
-#         # %.comment.cs.xml : %.cs.xml
-#         #         ${XSLT_INSERTCOMMENT} $< > $@
-#         # %.preproc.cs.xml : %.cs.xml
-#         #         ${XSLT_INSERTPREPROC} $< > $@
-#         # %.ifthenelse.cs.xml : %.cs.xml
-#         #         ${XSLT_INSERTIFTHENELSE} $< > $@
-#         # %.formfeed.cs.xml : %.cs.xml
-#         #         ${XSLT_INSERTFORMFEED} $< > $@
-#         foreach(PROC_INSTRUCTIONS ${CS_PROCESSING_COLLECTION})
-#             list(GET PROC_INSTRUCTIONS 0 SUFFIX)
-#             list(GET PROC_INSTRUCTIONS 1 CMD)
-#             buildXMLTarget(
-#                 ${CMD}
-#                 ${CURRENT_CS_INPUT_FILE}
-#                 ${CURRENT_FILE_TITLE}
-#                 ${SUFFIX}
-#                 ALL_XML_TARGETS
-#             )
-#         endforeach()
-#         
-#         # Handling java conversion.
-#         buildJavaXmlTarget(
-#             ${INPUT_FILE_NAME}
-#             ${CURRENT_FILE_TITLE}
-#             ALL_XML_TARGETS
-#         )
-#         set(CURRENT_JAVA_INPUT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_FILE_TITLE}.java.xml)
-#         # Java
-#         # %.all.java.xml : %.java.xml
-#         #         ${XSLT_MERGEUNIT} $< > $@
-#         # %.block.java.xml : %.java.xml
-#         #         ${XSLT_BLOCKUNIT_JAVA} $< > $@
-#         # %.comment.java.xml : %.java.xml
-#         #         ${XSLT_INSERTCOMMENT} $< > $@
-#         # %.preproc.java.xml : %.java.xml
-#         #         ${XSLT_INSERTPREPROC} $< > $@
-#         # %.ifthenelse.java.xml : %.java.xml
-#         #         ${XSLT_INSERTIFTHENELSE_JAVA} $< > $@
-#         # %.formfeed.java.xml : %.java.xml
-#         #         ${XSLT_INSERTFORMFEED} $< > $@
-#         foreach(PROC_INSTRUCTIONS ${JAVA_PROCESSING_COLLECTION})
-#             list(GET PROC_INSTRUCTIONS 0 SUFFIX)
-#             list(GET PROC_INSTRUCTIONS 1 CMD)
-#             buildXMLTarget(
-#                 ${CMD}
-#                 ${CURRENT_JAVA_INPUT_FILE}
-#                 ${CURRENT_FILE_TITLE}
-#                 ${SUFFIX}
-#                 ALL_XML_TARGETS
-#             )
-#         endforeach()
-#         
-#         # Processing all java files into AspectJ
-#         # %.aj.xml : %.java.xml
-#         #         ${XSLT_SETLANGUAGE_ASPECTJ} $< > $@
-#         buildXMLTarget(XSLT_SETLANGUAGE_ASPECTJ
-#             ${CURRENT_JAVA_INPUT_FILE}
-#             ${CURRENT_FILE_TITLE}
-#             .aj.xml
-#             ALL_XML_TARGETS
-#         )
-#         set(CURRENT_ASPECTJ_INPUT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_FILE_TITLE}.aj.xml)
-#         # AspectJ
-#         # %.all.aj.xml : %.aj.xml
-#         #         ${XSLT_MERGEUNIT} $< > $@
-#         # %.block.aj.xml : %.aj.xml
-#         #         ${XSLT_BLOCKUNIT_JAVA} $< > $@
-#         # %.comment.aj.xml : %.aj.xml
-#         #         ${XSLT_INSERTCOMMENT} $< > $@
-#         # %.preproc.aj.xml : %.aj.xml
-#         #         ${XSLT_INSERTPREPROC} $< > $@
-#         # %.ifthenelse.aj.xml : %.aj.xml
-#         #         ${XSLT_INSERTIFTHENELSE_JAVA} $< > $@ 
-#         # %.formfeed.aj.xml : %.aj.xml
-#         #         ${XSLT_INSERTFORMFEED} $< > $@ 
-#         foreach(PROC_INSTRUCTIONS ${ASPECTJ_PROCESSING_COLLECTION})
-#             list(GET PROC_INSTRUCTIONS 0 SUFFIX)
-#             list(GET PROC_INSTRUCTIONS 1 CMD)
-#             buildXMLTarget(
-#                 ${CMD}
-#                 ${CURRENT_ASPECTJ_INPUT_FILE}
-#                 ${CURRENT_FILE_TITLE}
-#                 ${SUFFIX}
-#                 ALL_XML_TARGETS
-#             )
-#         endforeach()
-#     
-#     endif()
-# endforeach()
-
 
 # #  Test cases generated from other test cases
 # 
@@ -1053,12 +789,12 @@ list(APPEND ALL_XML_TARGETS ${CMAKE_CURRENT_SOURCE_DIR}/struct_cs.cs.xml)
 # union from struct
 # union_cs.cs.xml : struct_cs.cs.xml ${XSLT_STRUCT2UNION_XSL}
 #         ${XSLT_STRUCT2UNION} $< > $@
-add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/union_cs.cs.xml
-    COMMAND ${XSLT_STRUCT2UNION} ${CMAKE_CURRENT_SOURCE_DIR}/struct_cs.cs.xml > ${CMAKE_CURRENT_SOURCE_DIR}/union_cs.cs.xml
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/struct_cs.cs.xml ${XSLT_STRUCT2UNION_XSL}
-)
-list(APPEND ALL_XML_TARGETS ${CMAKE_CURRENT_SOURCE_DIR}/union_cs.cs.xml)
+# add_custom_command(
+#     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/union_cs.cs.xml
+#     COMMAND ${XSLT_STRUCT2UNION} ${CMAKE_CURRENT_SOURCE_DIR}/struct_cs.cs.xml > ${CMAKE_CURRENT_SOURCE_DIR}/union_cs.cs.xml
+#     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/struct_cs.cs.xml ${XSLT_STRUCT2UNION_XSL}
+# )
+# list(APPEND ALL_XML_TARGETS ${CMAKE_CURRENT_SOURCE_DIR}/union_cs.cs.xml)
 
 # interface from class
 # interface_java.java.xml : class_java.java.xml ${XSLT_CLASS2INTERFACE_XSL}

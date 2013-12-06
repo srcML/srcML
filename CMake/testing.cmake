@@ -123,20 +123,6 @@ macro(createProbDep PROBLEM_TYPE LANGUAGE_EXT)
     )    
 endmacro()
 
-# 
-# This macro helps build a custom command based on the supplied language which is
-# performs the merge unit command for each of the different languages.
-# 
-macro(problemAll LANGUAGE_EXT)
-    add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.all.${LANGUAGE_EXT}.xml
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml
-        COMMAND ${XSLT_MERGEUNIT_PROBLEM} ${CMAKE_CURRENT_SOURCE_DIR}/problem.${LANGUAGE_EXT}.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.all.${LANGUAGE_EXT}.xml
-        COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.all.${LANGUAGE_EXT}.xml
-    )    
-endmacro()
-
-
 #
 # Creates a list of unique items with a given name.
 #
