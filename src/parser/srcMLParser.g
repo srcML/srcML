@@ -1762,10 +1762,13 @@ class_header[] { ENTRY_DEBUG } :
 
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
-        { LA(1) != FINAL }? compound_name_inner[false] (specifier)*
+        // suppress ()* warning
+        { LA(1) != FINAL }? compound_name_inner[false] (options { greedy = true; } : specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
-        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : generic_type_constraint))*
+
+        // move suppressed ()* warning to begin
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_type_constraint)*
 
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } extends_list))*
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) }?
