@@ -197,7 +197,7 @@ set(XSLT_SETLANGUAGE_PROBLEM ${XSLTPROC} ${XSLT_SETLANGUAGE_PROBLEM_XSL})
 
 set(XSLT_SETLANGUAGE_PROBLEM_C ${XSLTPROC} --stringparam language "\"C\"" ${XSLT_SETLANGUAGE_PROBLEM_XSL})
 
-set(XSLT_SETLANGUAGE_PROBLEM_CS ${XSLTPROC} --stringparam language \""C#\"" ${XSLT_SETLANGUAGE_PROBLEM_XSL})
+set(XSLT_SETLANGUAGE_PROBLEM_CS ${XSLTPROC} --stringparam language "\"C#\"" ${XSLT_SETLANGUAGE_PROBLEM_XSL})
 
 set(XSLT_SETLANGUAGE_PROBLEM_CXX ${XSLTPROC} --stringparam language "\"CXX\"" ${XSLT_SETLANGUAGE_PROBLEM_XSL})
 
@@ -244,19 +244,20 @@ macro(buildXMLTarget COMMAND_NAME INPUT_FILE OUTPUT_FILE_TITLE SUFFIX)
     endforeach()
 endmacro()
 
-# 
-# This is a macro to assist with the creation of a .java.xml file from a .cpp.xml
-# file.
-# 
-macro(buildJavaXmlTarget INPUT_FILE OUTPUT_FILE_TITLE)
-    set(OUTPUT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/${OUTPUT_FILE_TITLE}.java.xml)
-    if(${OUTPUT_FILE_TITLE} EQUAL "operator_base")
+
+# base for all of Java
+createUniqueList(BASE_JAVA_ALL_GEN ${BASE_COMMON} ${GEN_BASE} ${BASE_OO})
+createUniqueList(BASE_JAVA_ALL     ${BASE_COMMON} ${GEN_BASE} ${BASE_OO} ${BASE_JAVA})
+foreach(JAVA_BASE_FILE_NAME ${BASE_JAVA_ALL_GEN})
+    set(INPUT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${JAVA_BASE_FILE_NAME}.cpp.xml)
+    set(OUTPUT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/${JAVA_BASE_FILE_NAME}.java.xml)
+    if(${JAVA_BASE_FILE_NAME} MATCHES "operator_base")
         add_custom_command(
             OUTPUT ${OUTPUT_FILE_NAME}
             COMMAND ${XSLT_SETLANGUAGE_JAVA} ${INPUT_FILE} | ${XSLT_REMOVECPP_OPERATOR} - > ${OUTPUT_FILE_NAME}
             DEPENDS ${INPUT_FILE}
         )
-    elseif(${OUTPUT_FILE_TITLE} EQUAL "literal")
+    elseif(${JAVA_BASE_FILE_NAME} MATCHES "literal")
         add_custom_command(
             OUTPUT ${OUTPUT_FILE_NAME}
             COMMAND ${XSLT_SETLANGUAGE_JAVA} ${INPUT_FILE} | ${XSLT_REMOVECPP_LITERAL} - > ${OUTPUT_FILE_NAME}
@@ -270,21 +271,7 @@ macro(buildJavaXmlTarget INPUT_FILE OUTPUT_FILE_TITLE)
         )
     endif()
 
-    foreach(LIST_TO_ADD_TO ${ARGN})
-        list(APPEND ${LIST_TO_ADD_TO} ${OUTPUT_FILE_NAME})
-    endforeach()
-endmacro()
-
-
-# base for all of Java
-createUniqueList(BASE_JAVA_ALL_GEN ${BASE_COMMON} ${GEN_BASE} ${BASE_OO})
-createUniqueList(BASE_JAVA_ALL     ${BASE_COMMON} ${GEN_BASE} ${BASE_OO} ${BASE_JAVA})
-foreach(JAVA_BASE_FILE_NAME ${BASE_JAVA_ALL_GEN})
-    buildJavaXmlTarget(
-        ${CMAKE_CURRENT_SOURCE_DIR}/${JAVA_BASE_FILE_NAME}.cpp.xml
-        ${JAVA_BASE_FILE_NAME}
-        ALL_XML_TARGETS
-    )
+    list(APPEND ALL_XML_TARGETS ${OUTPUT_FILE_NAME})
 endforeach()
 
 
@@ -320,7 +307,7 @@ endforeach()
 
 # generate cases for all
 
-macro(generateRulesSet SUFFIX C_CMD JAVA_CMD )
+macro(generateRulesSet SUFFIX C_CMD JAVA_CMD)
     # .${SUFFIX}.cpp.xml
     foreach(CURRENT_TITLE ${SEP_PLUS} extra_cpp)
         buildXMLTarget(
@@ -519,7 +506,7 @@ add_custom_command(
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.cs.xml
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.cpp.xml
-    COMMAND ${XSLT_SETLANGUAGE_PROBLEM_C} ${CMAKE_CURRENT_SOURCE_DIR}/problem.cpp.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.cs.xml
+    COMMAND ${XSLT_SETLANGUAGE_PROBLEM_CS} ${CMAKE_CURRENT_SOURCE_DIR}/problem.cpp.xml > ${CMAKE_CURRENT_SOURCE_DIR}/problem.cs.xml
     COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/problem.cs.xml
 )
 
@@ -660,7 +647,7 @@ list(APPEND ALL_XML_TARGETS ${CMAKE_CURRENT_SOURCE_DIR}/function_decl.cpp.xml)
 
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/function_const.cpp.xml
-    COMMAND ${XSLT_DEFN2DECL} ${CMAKE_CURRENT_SOURCE_DIR}/function.cpp.xml > ${CMAKE_CURRENT_SOURCE_DIR}/function_const.cpp.xml 
+    COMMAND ${XSLT_ADDCONST} ${CMAKE_CURRENT_SOURCE_DIR}/function.cpp.xml > ${CMAKE_CURRENT_SOURCE_DIR}/function_const.cpp.xml 
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/function.cpp.xml ${XSLT_DEFN2DECL_XSL}
 )
 list(APPEND ALL_XML_TARGETS ${CMAKE_CURRENT_SOURCE_DIR}/function_const.cpp.xml)
