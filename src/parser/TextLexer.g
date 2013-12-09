@@ -113,16 +113,16 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
             { lastchar == 'L' || lastchar == 'U' || lastchar == 'u' }?
             { $setType(STRING_START); } STRING_START |
 
-            { lastchar == 'R' }?
+            { inLanguage(LANGUAGE_CXX_ONLY) && lastchar == 'R' }?
             { $setType(STRING_START); rawstring = true; } STRING_START |
 
             { lastchar == 'u' }? ('8' '"')=> '8'
             { $setType(STRING_START); } STRING_START |
 
-            { lastchar == 'u' }? ('8' 'R' '"')=> '8' 'R'
+            { inLanguage(LANGUAGE_CXX_ONLY) && lastchar == 'u' }? ('8' 'R' '"')=> '8' 'R'
             { $setType(STRING_START); rawstring = true; } STRING_START |
 
-            { lastchar == 'L' || lastchar == 'U' | lastchar == 'u'}? ('R' '"')=> 'R'
+            { inLanguage(LANGUAGE_CXX_ONLY) && lastchar == 'L' || lastchar == 'U' | lastchar == 'u'}? ('R' '"')=> 'R'
             { $setType(STRING_START); rawstring = true; } STRING_START |
 
             (options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')*
