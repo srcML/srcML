@@ -19,44 +19,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-
-# message(STATUS "${SUITE_CONTENTS}")
-
 # Read suite.txt and extract names to be used in testing from it.
-# # original base of cases for all languages
-# BASE_COMMON=${call language,'LANGUAGE_ALL_BASE'}
-# 
-# # base for all languages generated from original cases
-# GEN_BASE=${call language,'LANGUAGE_ALL_GEN'}
-# 
-# # base for C++ generated from original cases
-# GEN_BASE_CXX=${call language,'LANGUAGE_CXX_FAMILY'}
-# 
-# # base for C only
-# #BASE_C=functionkr # typedef_cstruct
-# 
-# # base for C family
-# BASE_C_FAMILY=${call language,'LANGUAGE_C_FAMILY'}
-# 
-# # base for C family
-# BASE_C=${call language,'LANGUAGE_C_ONLY'}
-# 
-# # base for object-oriented languages
-# BASE_OO=${call language,'LANGUAGE_OO'}
-# 
-# # base for C++ only
-# BASE_CXX=${call language,'LANGUAGE_CXX'}
-# 
-# # base for C# only
-# BASE_CS=${call language,'LANGUAGE_CSHARP'}
-# 
-# # base for C# only
-# BASE_CS_GEN=${call language,'LANGUAGE_CSHARP_GEN'}
-# 
-# # base for Java only
-# BASE_JAVA=${call language,'LANGUAGE_JAVA'}
-
-# 
+#
 # Reads suite using a regular expression to extract information from the suite.txt
 # file and create lists of things which need to be generated. It returns a list with
 # the given name. Any of the items given as extra arguments are removed from the list
@@ -172,7 +136,6 @@ set(XSLT_INSERTFORMFEED_PROBLEM ${XSLTPROC} ${CMAKE_CURRENT_SOURCE_DIR}/xsl/inse
 #
 # Test cases for one language are generated from test cases for another language.
 # 
-
 set(XSLT_SETLANGUAGE_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/setlanguage.xsl)
 set(XSLT_SETLANGUAGE_PROBLEM_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/setlanguageproblem.xsl)
 set(XSLT_REMOVECPP_XSL ${CMAKE_CURRENT_SOURCE_DIR}/xsl/removecpp.xsl)
@@ -293,9 +256,6 @@ endforeach()
 set(BASE_CS_ALL_GEN ${BASE_COMMON} ${GEN_BASE} ${BASE_CS_GEN})
 set(BASE_CS_ALL     ${BASE_COMMON} ${GEN_BASE} ${BASE_CS_GEN} ${BASE_CS})
 foreach(CS_BASE_FILE_NAME ${BASE_CS_ALL_GEN})
-    # Processing all of the C# files
-    # %.cs.xml : %.cpp.xml
-    #         ${XSLT_SETLANGUAGE_CS} $< > $@
     buildXMLTarget(
         XSLT_SETLANGUAGE_CS
         ${CMAKE_CURRENT_SOURCE_DIR}/${CS_BASE_FILE_NAME}.cpp.xml
@@ -305,8 +265,12 @@ foreach(CS_BASE_FILE_NAME ${BASE_CS_ALL_GEN})
     )
 endforeach()
 
-# generate cases for all
 
+# 
+# generateRulesSet
+# This macro assists with the creation of rules for each of the titles
+# which reqire a different suffix but similar file conversion.
+# 
 macro(generateRulesSet SUFFIX C_CMD JAVA_CMD)
     # .${SUFFIX}.cpp.xml
     foreach(CURRENT_TITLE ${SEP_PLUS} extra_cpp)
@@ -330,7 +294,7 @@ macro(generateRulesSet SUFFIX C_CMD JAVA_CMD)
         )
     endforeach()
 
-    # Generating .all.c.xml
+    # Generating .${SUFFIX}.c.xml
     foreach(CURRENT_TITLE ${BASE_C_ALL} extra_c)
         buildXMLTarget(
             ${C_CMD}
@@ -340,8 +304,8 @@ macro(generateRulesSet SUFFIX C_CMD JAVA_CMD)
             ALL_XML_TARGETS
         )
     endforeach()
-
-    # Generating .all.cs.xml
+    
+    # Generating .${SUFFIX}.cs.xml
     foreach(CURRENT_TITLE ${BASE_CS_ALL})
         buildXMLTarget(
             ${C_CMD}
@@ -353,10 +317,20 @@ macro(generateRulesSet SUFFIX C_CMD JAVA_CMD)
     endforeach()
 endmacro()
 
+# generate cases for all
 generateRulesSet(all XSLT_MERGEUNIT XSLT_MERGEUNIT)
 
 # generated cases for blocks
 generateRulesSet(block XSLT_BLOCKUNIT XSLT_BLOCKUNIT_JAVA)
+
+# generated cases for comments
+generateRulesSet(comment XSLT_INSERTCOMMENT XSLT_INSERTCOMMENT)
+
+# generated cases for formfeed
+generateRulesSet(formfeed XSLT_INSERTFORMFEED XSLT_INSERTFORMFEED)
+
+# generated cases for ifthenelse
+generateRulesSet(ifthenelse XSLT_INSERTIFTHENELSE XSLT_INSERTIFTHENELSE_JAVA)
 
 # generated cases for structs
 foreach(CURRENT_TITLE ${SEP_STRUCT})
@@ -368,16 +342,6 @@ foreach(CURRENT_TITLE ${SEP_STRUCT})
         ALL_XML_TARGETS
     )
 endforeach()
-
-
-# generated cases for comments
-generateRulesSet(comment XSLT_INSERTCOMMENT XSLT_INSERTCOMMENT)
-
-# generated cases for formfeed
-generateRulesSet(formfeed XSLT_INSERTFORMFEED XSLT_INSERTFORMFEED)
-
-# generated cases for ifthenelse
-generateRulesSet(ifthenelse XSLT_INSERTIFTHENELSE XSLT_INSERTIFTHENELSE_JAVA)
 
 # generated test cases for preproc
 foreach(CURRENT_TITLE ${SEP_PLUSNOPREPROC} extra_cpp)
@@ -407,9 +371,6 @@ foreach(CURRENT_TITLE ${BASE_CS_ALL})
         ALL_XML_TARGETS
     )
 endforeach()
-
-# # generated test cases for preproc
-
 
 
 # TODO FIXME 
@@ -474,8 +435,6 @@ endforeach()
 
 
 set(PROBLEM_ALL_TARGETS "")
-# problem.java.xml : problem.cpp.xml
-#         ${XSLT_SETLANGUAGE_PROBLEM_JAVA} $< | ${XSLT_REMOVECPP_PROBLEM} - > $@
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/problem.java.xml
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.cpp.xml
@@ -644,13 +603,23 @@ list(APPEND ALL_XML_TARGETS ${CMAKE_CURRENT_SOURCE_DIR}/function_decl.cpp.xml)
 # # const function from function
 # function_const.cpp.xml : function.cpp.xml ${XSLT_DEFN2DECL_XSL}
 #         ${XSLT_ADDCONST} $< > $@
-
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/function_const.cpp.xml
     COMMAND ${XSLT_ADDCONST} ${CMAKE_CURRENT_SOURCE_DIR}/function.cpp.xml > ${CMAKE_CURRENT_SOURCE_DIR}/function_const.cpp.xml 
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/function.cpp.xml ${XSLT_DEFN2DECL_XSL}
 )
 list(APPEND ALL_XML_TARGETS ${CMAKE_CURRENT_SOURCE_DIR}/function_const.cpp.xml)
+
+# return from return base
+# return.cpp.xml : return_base.cpp.xml ${XSLT_INSRT_XSL}
+#         ${XSLT_INSERTEXPR} $< > $@
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/return.cpp.xml
+    COMMAND ${XSLT_INSERTEXPR} ${CMAKE_CURRENT_SOURCE_DIR}/return_base.cpp.xml > ${CMAKE_CURRENT_SOURCE_DIR}/return.cpp.xml
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/return_base.cpp.xml ${XSLT_INSRT_XSL}
+)
+list(APPEND ALL_XML_TARGETS ${CMAKE_CURRENT_SOURCE_DIR}/return.cpp.xml)
+
 
 # while from if
 # while.cpp.xml : if.cpp.xml ${XSLT_IF2WHILE_XSL}
@@ -672,15 +641,7 @@ add_custom_command(
 )
 list(APPEND ALL_XML_TARGETS ${CMAKE_CURRENT_SOURCE_DIR}/ifnestcond.cpp.xml)
 
-# return from return base
-# return.cpp.xml : return_base.cpp.xml ${XSLT_INSRT_XSL}
-#         ${XSLT_INSERTEXPR} $< > $@
-add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/return.cpp.xml
-    COMMAND ${XSLT_INSERTEXPR} ${CMAKE_CURRENT_SOURCE_DIR}/return_base.cpp.xml > ${CMAKE_CURRENT_SOURCE_DIR}/return.cpp.xml
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/return_base.cpp.xml ${XSLT_INSRT_XSL}
-)
-list(APPEND ALL_XML_TARGETS ${CMAKE_CURRENT_SOURCE_DIR}/return.cpp.xml)
+
 
 # constructor from constructor base
 # constructor.cpp.xml : constructor_base.cpp.xml ${XSLT_DEFN2DECL_XSL}
