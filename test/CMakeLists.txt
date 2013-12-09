@@ -22,5 +22,4 @@
 # Including the unit tests before building the tests in this file.
 subdirs(unit suite)
 
-
 # Additional test suite.
