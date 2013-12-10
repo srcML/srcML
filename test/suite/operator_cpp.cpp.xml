@@ -201,5 +201,9 @@
 <expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>delete</op:operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<template>template<parameter_list>&lt;<param><type/><name>A</name></param>, <param><type/><name>B</name></param>&gt;</parameter_list> <class_decl>class <name>A</name>;</class_decl></template>
+</unit>
+
 </unit>
  
