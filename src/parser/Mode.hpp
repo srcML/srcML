@@ -257,6 +257,11 @@ protected:
         statev.setMode(m);
     }
 
+    const State::MODE_TYPE getMode() {
+    
+      return statev.getMode();
+    }
+
     void clearMode(const State::MODE_TYPE& m) {
 
         statev.clearMode(m);

@@ -789,7 +789,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0;
         extern_definition |
 
         // call
-        { isoption(parseoptions, OPTION_CPP) && perform_call_check(type, secondtoken) && type == MACRO }?
+        { isoption(parseoptions, OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, secondtoken) && type == MACRO)) }?
         macro_call |
 
         expression_statement[type]
