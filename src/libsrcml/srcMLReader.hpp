@@ -64,8 +64,8 @@ public:
   ~srcMLReader();
 
   // read attribute and namespace information from root unit.  Does not advance read.
-  int readRootUnitAttributes(std::string ** language, std::string ** filename,
-                             std::string ** directory, std::string ** version,
+  int readRootUnitAttributes(std::string *& language, std::string *& filename,
+                             std::string *& directory, std::string *& version,
                              std::vector<std::string> & attributes,
                              std::vector<std::string> & prefixes,
                              std::vector<std::string> & namespaces,
@@ -73,13 +73,13 @@ public:
                              int & tabstop);
 
   // helper function for processing unit attributes.  Does not advance read.
-  int readUnitAttributesInternal(std::string ** language, std::string ** filename,
-                                  std::string ** directory, std::string ** version);
+  int readUnitAttributesInternal(std::string *& language, std::string *& filename,
+                                  std::string *& directory, std::string *& version);
   /* finds next unit tag if not current unit and sets attributes.  Consumes unit.
      Unit is still avaible for readsrcML or read.  But not readUnitAttributes.
    */
-  int readUnitAttributes(std::string ** language, std::string ** filename,
-                         std::string ** directory, std::string ** version);
+  int readUnitAttributes(std::string *& language, std::string *& filename,
+                         std::string *& directory, std::string *& version);
 
   // read the next unit add write it to writer as srcML
   int readsrcML(xmlTextWriterPtr writer);

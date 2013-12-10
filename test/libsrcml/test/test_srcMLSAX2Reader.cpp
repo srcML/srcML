@@ -145,7 +145,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -164,7 +164,7 @@ int main(int argc, char * argv[]) {
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -191,7 +191,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -210,7 +210,7 @@ int main(int argc, char * argv[]) {
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -237,7 +237,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -256,7 +256,7 @@ int main(int argc, char * argv[]) {
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -283,7 +283,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -302,7 +302,7 @@ int main(int argc, char * argv[]) {
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -329,7 +329,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -346,7 +346,7 @@ int main(int argc, char * argv[]) {
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -372,13 +372,13 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
 
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
   }
 
   {
@@ -390,13 +390,13 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
 
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
   }
 
   {
@@ -408,10 +408,10 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
 
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
   }
 
   {
@@ -423,10 +423,10 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
 
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
   }
 
   {
@@ -438,71 +438,10 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
 
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-  }
-
-  {
-    srcMLSAX2Reader reader("project.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-    std::vector<std::string> attributes;
-    std::vector<std::string> prefixes;
-    std::vector<std::string> namespaces;
-    OPTION_TYPE options = 0;
-    int tabstop = 0;
-    assert(reader.readRootUnitAttributes(0, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    delete language, delete filename, delete directory, delete version;
-  }
-
-  {
-    srcMLSAX2Reader reader("project.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-    std::vector<std::string> attributes;
-    std::vector<std::string> prefixes;
-    std::vector<std::string> namespaces;
-    OPTION_TYPE options = 0;
-    int tabstop = 0;
-    assert(reader.readRootUnitAttributes(0, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    delete language, delete filename, delete directory, delete version;
-  }
-
-  {
-    srcMLSAX2Reader reader("project.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-    std::vector<std::string> attributes;
-    std::vector<std::string> prefixes;
-    std::vector<std::string> namespaces;
-    OPTION_TYPE options = 0;
-    int tabstop = 0;
-    assert(reader.readRootUnitAttributes(&language, 0, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    delete language, delete filename, delete directory, delete version;
-  }
-
-  {
-    srcMLSAX2Reader reader("project.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-    std::vector<std::string> attributes;
-    std::vector<std::string> prefixes;
-    std::vector<std::string> namespaces;
-    OPTION_TYPE options = 0;
-    int tabstop = 0;
-    assert(reader.readRootUnitAttributes(&language, &filename, 0, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    delete language, delete filename, delete directory, delete version;
-  }
-
-  {
-    srcMLSAX2Reader reader("project.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-    std::vector<std::string> attributes;
-    std::vector<std::string> prefixes;
-    std::vector<std::string> namespaces;
-    OPTION_TYPE options = 0;
-    int tabstop = 0;
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, 0, attributes, prefixes, namespaces, options, tabstop) == 0);
-
-    delete language, delete filename, delete directory, delete version;
+    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
   }
 
   /*
@@ -512,115 +451,87 @@ int main(int argc, char * argv[]) {
   {
     srcMLSAX2Reader reader("project.xml");
     std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     assert(*language == "C++");
     assert(*filename == "a.cpp");
     assert(*directory == "test");
     assert(*version == "1");
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     assert(*language == "C++");
     assert(*filename == "b.cpp");
     assert(directory == 0);
     assert(version == 0);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
-    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
+    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
   }
 
   {
     srcMLSAX2Reader reader("project_ns.xml");
     std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     assert(*language == "C++");
     assert(*filename == "a.cpp");
     assert(directory == 0);
     assert(version == 0);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     assert(*language == "C++");
     assert(*filename == "b.cpp");
     assert(directory == 0);
     assert(version == 0);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
-    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
+    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
   }
 
   {
     srcMLSAX2Reader reader("project_single.xml");
     std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
     assert(*version == "1");
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
-    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
+    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
   }
 
   {
     srcMLSAX2Reader reader("project_empty_single.xml");
     std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
     assert(*version == "1");
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
-    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
+    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
   }
 
   {
     srcMLSAX2Reader reader("project_empty_nested.xml");
     std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     assert(*language == "C++");
     assert(*filename == "a.cpp");
     assert(directory == 0);
     assert(version == 0);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     assert(*language == "C++");
     assert(*filename == "b.cpp");
     assert(directory == 0);
     assert(version == 0);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
-    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
-  }
-
-  {
-    srcMLSAX2Reader reader("project.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-    assert(reader.readUnitAttributes(0, &filename, &directory, &version) == 0);
-    delete language, delete filename, delete directory, delete version;
-  }
-
-  {
-    srcMLSAX2Reader reader("project.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-    assert(reader.readUnitAttributes(&language, 0, &directory, &version) == 0);
-    delete language, delete filename, delete directory, delete version;
-  }
-
-  {
-    srcMLSAX2Reader reader("project.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-    assert(reader.readUnitAttributes(&language, &filename, 0, &version) == 0);
-    delete language, delete filename, delete directory, delete version;
-  }
-
-  {
-    srcMLSAX2Reader reader("project.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-    assert(reader.readUnitAttributes(&language, &filename, &directory, 0) == 0);
-    delete language, delete filename, delete directory, delete version;
+    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
+    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
   }
 
   /*
@@ -703,7 +614,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -721,7 +632,7 @@ int main(int argc, char * argv[]) {
     assert(tabstop == 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     assert(*language == "C++");
     assert(*filename == "a.cpp");
     assert(*directory == "test");
@@ -731,7 +642,7 @@ int main(int argc, char * argv[]) {
     std::string * unit = reader.readsrcML();
     assert(*unit == srcml_a);
     delete unit;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     assert(*language == "C++");
     assert(*filename == "b.cpp");
     assert(directory == 0);
@@ -742,8 +653,8 @@ int main(int argc, char * argv[]) {
     delete unit;
     unit = reader.readsrcML();
     assert(unit == 0);
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
     assert(reader.readsrcML() == 0);
   }
 
@@ -755,7 +666,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -773,7 +684,7 @@ int main(int argc, char * argv[]) {
     assert(tabstop == 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     assert(*language == "C++");
     assert(*filename == "a.cpp");
     assert(directory == 0);
@@ -783,7 +694,7 @@ int main(int argc, char * argv[]) {
     std::string * unit = reader.readsrcML();
     assert(*unit == srcml_ns_a);
     delete unit;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     assert(*language == "C++");
     assert(*filename == "b.cpp");
     assert(directory == 0);
@@ -794,8 +705,8 @@ int main(int argc, char * argv[]) {
     delete unit;
     unit = reader.readsrcML();
     assert(unit == 0);
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
     assert(reader.readsrcML() == 0);
   }
 
@@ -807,7 +718,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -825,7 +736,7 @@ int main(int argc, char * argv[]) {
     assert(tabstop == 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -835,8 +746,8 @@ int main(int argc, char * argv[]) {
     std::string * unit = reader.readsrcML();
     assert(*unit == srcml_single_a);
     delete unit;
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
     assert(reader.readsrcML() == 0);
   }
 
@@ -848,7 +759,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -866,7 +777,7 @@ int main(int argc, char * argv[]) {
     assert(tabstop == 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -876,8 +787,8 @@ int main(int argc, char * argv[]) {
     std::string * unit = reader.readsrcML();
     assert(*unit == srcml_empty_single_as_unit);
     delete unit;
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
     assert(reader.readsrcML() == 0);
   }
 
@@ -889,7 +800,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
     assert(*directory == "test");
@@ -905,7 +816,7 @@ int main(int argc, char * argv[]) {
     assert(tabstop == 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
-    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    reader.readUnitAttributes(language, filename, directory, version);
     assert(*language == "C++");
     assert(*filename == "a.cpp");
     assert(directory == 0);
@@ -918,8 +829,8 @@ int main(int argc, char * argv[]) {
     unit = reader.readsrcML();
     assert(*unit == srcml_empty_nested_b);
     delete unit;
-    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
     assert(reader.readsrcML() == 0);
   }
 

@@ -63,8 +63,8 @@ public :
   ~srcMLSAX2Reader();
 
   // read attribute and namespace information from root unit.  Does not advance read.
-  int readRootUnitAttributes(std::string ** language, std::string ** filename,
-                             std::string ** directory, std::string ** version,
+  int readRootUnitAttributes(std::string *& language, std::string *& filename,
+                             std::string *& directory, std::string *& version,
                              std::vector<std::string> & attributes,
                              std::vector<std::string> & prefixes,
                              std::vector<std::string> & namespaces,
@@ -75,8 +75,8 @@ public :
   /* finds next unit tag if not current unit and sets attributes.  Consumes unit.
      Unit is still avaible for readsrcML or read.  But not readUnitAttributes.
    */
-  int readUnitAttributes(std::string ** language, std::string ** filename,
-                         std::string ** directory, std::string ** version);
+  int readUnitAttributes(std::string *& language, std::string *& filename,
+                         std::string *& directory, std::string *& version);
 
   // reads the next unit and returns it srcML
   std::string * readsrcML();
