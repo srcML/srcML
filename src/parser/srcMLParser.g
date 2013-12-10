@@ -4875,6 +4875,8 @@ template_specifier{ SingleElement element(this); ENTRY_DEBUG } :
 
 template_param_list[] { ENTRY_DEBUG } :
         {
+            startNewMode(MODE_PARAMETER | MODE_LIST);
+
             // start the template parameter list
             startElement(STEMPLATE_PARAMETER_LIST);
         }
@@ -4884,7 +4886,7 @@ template_param_list[] { ENTRY_DEBUG } :
 template_param[] { ENTRY_DEBUG } :
         {
             // end parameter correctly
-            startNewMode(MODE_PARAMETER);
+            startNewMode(MODE_LOCAL);
 
             // start the parameter element
             startElement(STEMPLATE_PARAMETER);
@@ -4991,7 +4993,7 @@ tempope[] { ENTRY_DEBUG } :
         TEMPOPE
         {
             // end the mode created by the start template operator
-            if (inMode(MODE_LIST))
+            while (inMode(MODE_LIST))
                 endMode(MODE_LIST);
         }
 ;
