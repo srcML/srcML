@@ -16,4 +16,18 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-MESSAGE(STATUS "Fix file: build_exec.cmake")
+
+
+#
+# This is the function used for building exeucables for srcML.
+# This outputs the executable into the bin directory at the top level.
+# - EXEC_NAME is the name of the target and the name out of the output by default.
+# - EXEC_FILE is the name of the file containing main.
+#
+# - All subsequent arguments are linked as libraries.
+#
+macro(srcMLExec EXEC_NAME EXEC_FILE)
+    add_executable(${EXEC_NAME} ${EXEC_FILE})
+    target_link_libraries(${EXEC_NAME} ${ARGN})
+    set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+endmacro()
