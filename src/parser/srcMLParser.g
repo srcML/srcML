@@ -2717,7 +2717,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             - There is nothing in the type (what was the name is the type)
               and it is part of a parameter list
         */
-        set_type[type, VARIABLE, (((type_count - specifier_count > 0 && (LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET ||
+        set_type[type, VARIABLE, (((type_count - specifier_count > 0 && (!inMode(MODE_ACCESS_REGION) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET ||
                                               ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && LA(1) == EQUAL)))) ||
                                  (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET ||
                                               ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && LA(1) == EQUAL))))]
