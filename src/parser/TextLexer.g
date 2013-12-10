@@ -122,7 +122,7 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
             { inLanguage(LANGUAGE_CXX_ONLY) && lastchar == 'u' }? ('8' 'R' '"')=> '8' 'R'
             { $setType(STRING_START); rawstring = true; } STRING_START |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) && lastchar == 'L' || lastchar == 'U' | lastchar == 'u'}? ('R' '"')=> 'R'
+            { inLanguage(LANGUAGE_CXX_ONLY) && (lastchar == 'L' || lastchar == 'U' || lastchar == 'u')}? ('R' '"')=> 'R'
             { $setType(STRING_START); rawstring = true; } STRING_START |
 
             (options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')*
