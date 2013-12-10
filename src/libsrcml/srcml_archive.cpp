@@ -757,7 +757,7 @@ void srcml_read_internal(srcml_archive * archive) {
   archive->type = SRCML_ARCHIVE_READ;
 
   std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-  bool done = !archive->reader->readRootUnitAttributes(&language, &filename, &directory, &version,
+  bool done = !archive->reader->readRootUnitAttributes(language, filename, directory, version,
                                                        archive->attributes, archive->prefixes,
                                                        archive->namespaces,
                                                        archive->options,
@@ -964,7 +964,7 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
   if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
   std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-  archive->reader->readUnitAttributes(&language, &filename, &directory, &version);
+  archive->reader->readUnitAttributes(language, filename, directory, version);
   std::string * read_unit = archive->reader->readsrcML();
 
   srcml_unit * unit = 0;
