@@ -4176,7 +4176,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
         lead_type_identifier { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
-        ({ !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }? type_identifier { decTypeCount(); })* 
+        (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }? type_identifier { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
