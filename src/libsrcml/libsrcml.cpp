@@ -677,6 +677,8 @@ int srcml_check_format(const char* format) {
   int length = strlen(format);
 
   char * reverse = (char *)malloc((length + 1) * sizeof(char));
+  if(reverse == NULL) return SRCML_STATUS_ERROR;
+
   for(int i = 0; i < length; ++i)
     reverse[i] = format[length - i - 1];
   reverse[length] = 0;

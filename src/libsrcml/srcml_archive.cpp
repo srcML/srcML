@@ -73,10 +73,19 @@ srcml_archive* srcml_create_archive()
 
   } catch(...) { return 0; }
 
-  memset(archive, 0, sizeof(srcml_archive));
   archive->type = SRCML_ARCHIVE_INVALID;
-
+  archive->filename = 0;
+  archive->encoding = 0;
+  archive->xml_encoding = 0;
+  archive->language = 0;
+  archive->directory = 0;
+  archive->version = 0;
+  archive->options = 0;
   archive->tabstop = 8;
+  archive->translator = 0;
+  archive->reader = 0;
+  archive->input = 0;
+  archive->close_input = 0;
 
   // default prefixes
   srcml_archive_register_namespace(archive, SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);

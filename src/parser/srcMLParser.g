@@ -2514,6 +2514,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     else if (type == FUNCTION && fla == TERMINATE)
         type = FUNCTION_DECL;
 
+    // we actually have a macro and then a constructor
+    else if(type == FUNCTION && fla == COLON)
+        type = SINGLE_MACRO;
+
     // not really a destructor
     if (type == DESTRUCTOR_DECL && (!inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_FUNCTION_TAIL)))
         type = EXPRESSION;
@@ -4176,7 +4180,8 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        lead_type_identifier
+        lead_type_identifier { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+        (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }? type_identifier { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
@@ -4876,6 +4881,8 @@ template_specifier{ SingleElement element(this); ENTRY_DEBUG } :
 
 template_param_list[] { ENTRY_DEBUG } :
         {
+            startNewMode(MODE_PARAMETER | MODE_LIST);
+
             // start the template parameter list
             startElement(STEMPLATE_PARAMETER_LIST);
         }
@@ -4885,7 +4892,7 @@ template_param_list[] { ENTRY_DEBUG } :
 template_param[] { ENTRY_DEBUG } :
         {
             // end parameter correctly
-            startNewMode(MODE_PARAMETER);
+            startNewMode(MODE_LOCAL);
 
             // start the parameter element
             startElement(STEMPLATE_PARAMETER);
@@ -4992,7 +4999,7 @@ tempope[] { ENTRY_DEBUG } :
         TEMPOPE
         {
             // end the mode created by the start template operator
-            if (inMode(MODE_LIST))
+            while (inMode(MODE_LIST))
                 endMode(MODE_LIST);
         }
 ;
