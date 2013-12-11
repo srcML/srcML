@@ -33,4 +33,8 @@
 <constructor><name><name>A</name>::<name>A</name></name><parameter_list>()</parameter_list> <member_list>: <call><name>a</name><argument_list>{<argument><expr><block>{<expr><name>a</name></expr>, <expr><block>{<expr>1</expr>}</block></expr>}</block></expr></argument>}</argument_list></call></member_list> <block>{}</block></constructor>
 </unit>
 
+<unit>
+<macro><name>MACRO</name></macro> <constructor><name><name>A</name>::<name>A</name></name><parameter_list>()</parameter_list> <member_list>: <call><name>a</name><argument_list>()</argument_list></call> </member_list><block>{}</block></constructor>
+</unit>
+
 </unit>

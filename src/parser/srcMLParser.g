@@ -2514,6 +2514,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     else if (type == FUNCTION && fla == TERMINATE)
         type = FUNCTION_DECL;
 
+    // we actually have a macro and then a constructor
+    else if(type == FUNCTION && fla == COLON)
+        type = SINGLE_MACRO;
+
     // not really a destructor
     if (type == DESTRUCTOR_DECL && (!inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_FUNCTION_TAIL)))
         type = EXPRESSION;
