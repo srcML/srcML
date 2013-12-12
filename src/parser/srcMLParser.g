@@ -2594,7 +2594,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
-                { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
+                { _tokenSet_23.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || LA(1) == CONST]
                 (specifier | (SIGNAL COLON)=>SIGNAL)
@@ -2953,7 +2953,7 @@ complete_noexcept_list[] { ENTRY_DEBUG } :
 pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         // specifiers that occur in a type
-		{ _tokenSet_22.member(LA(1)) }?
+		{ _tokenSet_23.member(LA(1)) }?
         specifier |
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
