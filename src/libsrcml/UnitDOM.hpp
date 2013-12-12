@@ -213,7 +213,9 @@ public :
         pstate->stopUnit(ctx);
 
       // free up the document that has this particular unit
-      xmlFreeNode(ctxt->myDoc->children);
+      xmlNodePtr aroot = ctxt->myDoc->children;
+      xmlUnlinkNode(ctxt->myDoc->children);
+      xmlFreeNodeList(aroot);
       ctxt->myDoc->children = 0;
       //free((void *)prefix_name);
       //prefix_name = 0;
