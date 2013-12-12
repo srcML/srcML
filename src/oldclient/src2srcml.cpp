@@ -787,6 +787,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case MACRO_LIST_FLAG_CODE:
       options |= OPTION_MACRO_LIST;
+      poptions.user_macro_list_filename = optarg;
       break;
 
 #ifdef SVN
@@ -1729,6 +1730,31 @@ void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions) 
 void read_macro_list(srcMLTranslator& translator, const char * filename) {
 
   std::vector<std::string> user_macro_list;
+
+  try {
+
+    // get all macro names in line separated file
+    URIStream uriinput(filename);
+    char* line;
+
+    while ((line = uriinput.readline())) {
+
+      // skip over whitespace
+      // TODO:  Other types of whitespace?  backspace?
+      line += strspn(line, " \t\f");
+
+      // skip blank lines or comment lines
+      if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
+        continue;
+
+      user_macro_list.push_back(line);
+    }
+
+  } catch (URIStreamFileError) {
+    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, filename);
+    exit(STATUS_INPUTFILE_PROBLEM);
+  }
+
 
   translator.setMacroList(user_macro_list);
 
