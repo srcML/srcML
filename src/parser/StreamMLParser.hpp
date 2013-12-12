@@ -206,8 +206,15 @@ private:
         }
 
         // macro call
-	if (!inskip && Base::LA(1) == Base::MACRO_NAME) {
-	  inskip = true;
+	if (Base::LA(1) == Base::MACRO_NAME) {
+
+	  if(inskip) {
+
+	    Base::LT(1)->setType(Base::NAME);
+
+	  } else {
+
+	    inskip = true;
 
             // use preprocessor token buffers
             pouttb = &pretb;
@@ -227,6 +234,8 @@ private:
             skiptb.splice(skiptb.end(), pretb);
 
 	  inskip = false;
+
+	  }
 
 	}
 
