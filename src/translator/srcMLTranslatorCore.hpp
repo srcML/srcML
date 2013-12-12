@@ -85,6 +85,8 @@ public:
                         std::string * suri = 0
         );
 
+    void setMacroList(std::vector<std::string> list);
+
     void* setInput(const char* path);
     void* setInput(xmlParserInputBufferPtr input);
     void* setInputString(const char* source, int size);
@@ -118,6 +120,7 @@ private:
     OPTION_TYPE& options;
     srcMLTranslatorOutput out;
     int tabsize;
+    std::vector<std::string> user_macro_list;
 };
 
 #endif
