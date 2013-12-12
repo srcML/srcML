@@ -2581,7 +2581,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
-                { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
+                { _tokenSet_23.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || LA(1) == CONST]
                 (specifier | (SIGNAL COLON)=>SIGNAL)
@@ -2941,7 +2941,7 @@ complete_noexcept_list[] { ENTRY_DEBUG } :
 pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         // specifiers that occur in a type
-		{ _tokenSet_22.member(LA(1)) }?
+		{ _tokenSet_23.member(LA(1)) }?
         specifier |
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
@@ -3735,7 +3735,7 @@ macro_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEB
             // start the macro call element
             startElement(SMACRO_CALL);
         }
-        identifier
+        (identifier | MACRO_NAME)
         (options { greedy = true; } : { first }?
         {
             // start a mode for the macro argument list
@@ -3763,7 +3763,6 @@ catch[antlr::RecognitionException] {
         if (isoption(parseoptions, OPTION_DEBUG))
             emptyElement(SERROR_PARSE);
 }
-
 macro_call_contents[] {
 
     ENTRY_DEBUG
