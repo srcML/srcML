@@ -213,8 +213,7 @@ public :
         pstate->stopUnit(ctx);
 
       // free up the document that has this particular unit
-      xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-      xmlFreeNode(onode);
+      xmlFreeNode(ctxt->myDoc->children);
       ctxt->myDoc->children = 0;
       //free((void *)prefix_name);
       //prefix_name = 0;
@@ -242,15 +241,15 @@ public :
       xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
       onode->name = NULL;
 
-      // free up the document that has this particular unit
       //free((void *)prefix_name);
       //      prefix_name = 0;
 
     }
 
-      xmlFreeDoc(ctxt->myDoc);
-      ctxt->myDoc = 0;
-
+    // free up the document that has this particular unit
+    xmlFreeDoc(ctxt->myDoc);
+    ctxt->myDoc = 0;
+      
     // end the output
     endOutput(ctx);
   }
