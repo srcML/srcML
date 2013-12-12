@@ -4508,6 +4508,8 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
 
         { notdestructor }? sole_destop { notdestructor = false; } |
 
+        macro_pattern_call | 
+
         // call
         // distinguish between a call and a macro
         { type == CALL || (perform_call_check(type, -1) && type == CALL) }?
@@ -5197,7 +5199,7 @@ eof[] :
 
     Match on the directive itself not the entire directive
 */
-preprocessor[] {
+preprocessor[] { ENTRY_DEBUG
 
         int directive_token = 0;
         bool markblockzero = false;
