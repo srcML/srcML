@@ -342,7 +342,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "public"        , PUBLIC        , LANGUAGE_OO }, 
         { "private"       , PRIVATE       , LANGUAGE_OO }, 
         { "protected"     , PROTECTED     , LANGUAGE_OO }, 
-        { "signal"        , SIGNAL        , LANGUAGE_CXX_ONLY }, 
+        { "signals"       , SIGNAL        , LANGUAGE_CXX_ONLY }, 
 
         { "new"           , NEW           , LANGUAGE_OO }, 
 
