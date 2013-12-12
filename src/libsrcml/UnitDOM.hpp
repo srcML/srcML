@@ -63,6 +63,9 @@ public :
 
     // setup output
     startOutput(ctx);
+
+    xmlSAX2StartDocument(ctx);
+
   }
 
   // collect namespaces from root unit.  Start to build the tree if OPTION_APPLY_ROOT
@@ -78,8 +81,6 @@ public :
 
     }
     rootsize = data.size();
-
-      xmlSAX2StartDocument(ctx);
 
     // if we are building the entire tree, start now
     if (isoption(options, OPTION_APPLY_ROOT)) {
