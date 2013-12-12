@@ -205,8 +205,8 @@ private:
             return true;
         }
 
-        // actual whitespace
-	if (!inskip && Base::LA(1) == Base::MACRO_NAME) {
+        // macro call
+	if (Base::LA(1) == Base::MACRO_NAME) {
 	  inskip = true;
 
             // use preprocessor token buffers
@@ -228,7 +228,9 @@ private:
 
 	  inskip = false;
 
-	} if (isSkipToken(Base::LA(1))) {
+	}
+
+	if (isSkipToken(Base::LA(1))) {
             // skipped tokens are put on a special buffer
             pushSkipToken();
 

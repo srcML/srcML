@@ -4508,8 +4508,6 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
 
         { notdestructor }? sole_destop { notdestructor = false; } |
 
-        macro_pattern_call | 
-
         // call
         // distinguish between a call and a macro
         { type == CALL || (perform_call_check(type, -1) && type == CALL) }?
