@@ -79,10 +79,11 @@ public :
     }
     rootsize = data.size();
 
+      xmlSAX2StartDocument(ctx);
+
     // if we are building the entire tree, start now
     if (isoption(options, OPTION_APPLY_ROOT)) {
 
-      xmlSAX2StartDocument(ctx);
       xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
                             nb_defaulted, attributes);
 
@@ -107,6 +108,7 @@ public :
       Dynamically allocate for now.
 
     */
+    /*
     std::string full_name = "";
     if(prefix) {
       full_name = (const char *)prefix;
@@ -115,6 +117,7 @@ public :
     full_name += (const char *)localname;
 
     prefix_name = (const xmlChar *)strdup(full_name.c_str());
+    */
 
     // remove per-unit namespaces
     data.resize(rootsize);
@@ -152,10 +155,10 @@ public :
     }
 
     // start the document for this unit
-    xmlSAX2StartDocument(ctx);
+    //xmlSAX2StartDocument(ctx);
 
     // start the unit (element) at the root using the merged namespaces
-    xmlSAX2StartElementNs(ctx, prefix_name, 0, URI, data.size() / 2,
+    xmlSAX2StartElementNs(ctx, localname, prefix, URI, data.size() / 2,
                           &data[0], nb_attributes, nb_defaulted, attributes);
 
   }
@@ -210,10 +213,11 @@ public :
         pstate->stopUnit(ctx);
 
       // free up the document that has this particular unit
-      xmlFreeDoc(ctxt->myDoc);
-      ctxt->myDoc = 0;
-      free((void *)prefix_name);
-      prefix_name = 0;
+      xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
+      xmlFreeNode(onode);
+      ctxt->myDoc->children = 0;
+      //free((void *)prefix_name);
+      //prefix_name = 0;
 
     }
 
@@ -239,12 +243,13 @@ public :
       onode->name = NULL;
 
       // free up the document that has this particular unit
-      xmlFreeDoc(ctxt->myDoc);
-      ctxt->myDoc = 0;
-      free((void *)prefix_name);
-      prefix_name = 0;
+      //free((void *)prefix_name);
+      //      prefix_name = 0;
 
     }
+
+      xmlFreeDoc(ctxt->myDoc);
+      ctxt->myDoc = 0;
 
     // end the output
     endOutput(ctx);
