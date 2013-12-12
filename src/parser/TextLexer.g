@@ -56,6 +56,7 @@ tokens {
     DOXYGEN_COMMENT_START;
     LINE_DOXYGEN_COMMENT_START;
     CHAR_START;
+    MACRO_NAME;
 }
 
 {
@@ -138,20 +139,24 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
 
         {
 
-            std::string temp_name = text.substr(_begin, text.length()-_begin);
-            static const char * const regex = "[A-Z][A-Z_]+";
+            if(isoption(options, OPTION_MACRO_PATTERN)) {
 
-            // setup the regular expression
-            regex_t preg = { 0 };
-            int errorcode = regcomp(&preg, regex, REG_EXTENDED);
+                std::string temp_name = text.substr(_begin, text.length()-_begin);
+                static const char * const regex = "[A-Z][A-Z_]+";
 
-            // evalue the regex
-            regmatch_t pmatch[3];
-            errorcode = errorcode || regexec(&preg, temp_name.c_str(), 3, pmatch, 0);
+                // setup the regular expression
+                regex_t preg = { 0 };
+                int errorcode = regcomp(&preg, regex, REG_EXTENDED);
 
-            // minus 1 to remove starting .
-            bool is_regex_match = (pmatch[0].rm_eo - pmatch[0].rm_so) == temp_name.size();
-            regfree(&preg);
+                // evalue the regex
+                regmatch_t pmatch[3];
+                errorcode = errorcode || regexec(&preg, temp_name.c_str(), 3, pmatch, 0);
+
+                bool is_regex_match = (pmatch[0].rm_eo - pmatch[0].rm_so) == temp_name.size();
+                regfree(&preg);
+                if(is_regex_match) $setType(MACRO_NAME);
+                
+            }
 
         }
 ;
