@@ -206,7 +206,7 @@ private:
         }
 
         // macro call
-	if (Base::LA(1) == Base::MACRO_NAME) {
+	if (!inskip && Base::LA(1) == Base::MACRO_NAME) {
 	  inskip = true;
 
             // use preprocessor token buffers
