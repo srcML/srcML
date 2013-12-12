@@ -254,8 +254,10 @@ struct keyword { char const * const text; int token; int language; };
 
 void changetotextlexer(int typeend);
 
-KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_TYPE & options)
-    : antlr::CharScanner(pinput,true), Language(language), options(options), onpreprocline(false), startline(true), atstring(false), rawstring(false), delimiter(""), isline(false), line_number(-1)
+KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_TYPE & options,
+             std::vector<std::string> user_macro_list)
+    : antlr::CharScanner(pinput,true), Language(language), options(options), onpreprocline(false), startline(true),
+    atstring(false), rawstring(false), delimiter(""), isline(false), line_number(-1)
 {
     if(isoption(options, OPTION_LINE))
        setLine(getLine() + (1 << 16));
@@ -490,6 +492,9 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
     for (unsigned int i = 0; i < (sizeof(keyword_map) / sizeof(keyword_map[0])); ++i)
         if (inLanguage(keyword_map[i].language))
             literals[keyword_map[i].text] = keyword_map[i].token;
+
+    for (unsigned int i = 0; i < user_macro_list.size(); ++i)
+            literals[user_macro_list.at(i).c_str()] = MACRO_NAME;
 
 }
 
