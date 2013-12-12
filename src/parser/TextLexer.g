@@ -32,6 +32,7 @@
 header {
 
     #include <iostream>
+
 }
 
 options {
@@ -134,6 +135,25 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
 
             (options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')*
         )
+
+        {
+
+            std::string temp_name = text.substr(_begin, text.length()-_begin);
+            static const char * const regex = "[A-Z][A-Z_]+";
+
+            // setup the regular expression
+            regex_t preg = { 0 };
+            int errorcode = regcomp(&preg, regex, REG_EXTENDED);
+
+            // evalue the regex
+            regmatch_t pmatch[3];
+            errorcode = errorcode || regexec(&preg, temp_name.c_str(), 3, pmatch, 0);
+
+            // minus 1 to remove starting .
+            bool is_regex_match = (pmatch[0].rm_eo - pmatch[0].rm_so) == temp_name.size();
+            regfree(&preg);
+
+        }
 ;
 
 // Single-line comments (no EOL)
