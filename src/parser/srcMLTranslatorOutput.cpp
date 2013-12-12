@@ -552,7 +552,7 @@ void srcMLTranslatorOutput::processJavadocCommentStart(const antlr::RefToken& to
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
   xmlTextWriterWriteAttribute(xout, BAD_CAST "format", BAD_CAST JAVADOC_COMMENT_ATTR);
 
-  processText(token);
+  ((*this).*num2process[2])(token);
 }
 
 void srcMLTranslatorOutput::processDoxygenCommentStart(const antlr::RefToken& token) {
@@ -565,7 +565,7 @@ void srcMLTranslatorOutput::processDoxygenCommentStart(const antlr::RefToken& to
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
   xmlTextWriterWriteAttribute(xout, BAD_CAST "format", BAD_CAST DOXYGEN_COMMENT_ATTR);
 
-  processText(token);
+  ((*this).*num2process[2])(token);
 }
 
 void srcMLTranslatorOutput::processLineDoxygenCommentStart(const antlr::RefToken& token) {
@@ -578,7 +578,7 @@ void srcMLTranslatorOutput::processLineDoxygenCommentStart(const antlr::RefToken
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST LINE_COMMENT_ATTR);
   xmlTextWriterWriteAttribute(xout, BAD_CAST "format", BAD_CAST DOXYGEN_COMMENT_ATTR);
 
-  processText(token);
+  ((*this).*num2process[2])(token);
 }
 
 void srcMLTranslatorOutput::processBlockCommentStart(const antlr::RefToken& token) {
@@ -589,7 +589,7 @@ void srcMLTranslatorOutput::processBlockCommentStart(const antlr::RefToken& toke
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
 
-  processText(token);
+  ((*this).*num2process[2])(token);
 }
 
 void srcMLTranslatorOutput::processLineCommentStart(const antlr::RefToken& token) {
@@ -600,7 +600,7 @@ void srcMLTranslatorOutput::processLineCommentStart(const antlr::RefToken& token
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST LINE_COMMENT_ATTR);
 
-  processText(token);
+  ((*this).*num2process[2])(token);
 }
 
 void srcMLTranslatorOutput::processEndLineToken(const antlr::RefToken& token) {

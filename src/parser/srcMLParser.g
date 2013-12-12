@@ -907,8 +907,13 @@ lambda_capture[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         (
 
-            LBRACKET (comma | { LA(1) != RBRACKET }? lambda_capture_argument)* RBRACKET
-
+            LBRACKET 
+            // suppress warning most likely compound_name's can match RBRACKET and it also is matched by RBRACKET
+            // after wards.  
+            (options { warnWhenFollowAmbig = false; } :
+            { /* warning suppression */ LA(1) == COMMA }? comma | { LA(1) != RBRACKET }? lambda_capture_argument)* 
+            RBRACKET
+    
         )
 ;
 
@@ -919,7 +924,8 @@ lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SARGUMENT);
         }
-        (lambda_capture_modifiers | compound_name)*
+        // suppress warning of another case where REFOPS or something is in both alts.
+        (options { warnWhenFollowAmbig = false; } : lambda_capture_modifiers | compound_name)*
 ;
 
 lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG 
@@ -947,7 +953,8 @@ lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG
 
 lambda_expression_full_cpp[] { ENTRY_DEBUG } :
 
-        LBRACKET (~RBRACKET)* RBRACKET (paren_pair)* function_tail curly_pair
+        // paren_pair and curly_pair seem to have nondeterminism because both can match LPAREN
+        LBRACKET (~RBRACKET)* RBRACKET (options { warnWhenFollowAmbig = false; } : paren_pair)* function_tail curly_pair
 
 ;
 
@@ -1585,8 +1592,8 @@ class_declaration[] { ENTRY_DEBUG } :
             startElement(SCLASS_DECLARATION);
         }
         ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp)*
-        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
 
         (specifier)* CLASS ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* class_header
 ;
@@ -1603,8 +1610,7 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
 
             // start the class definition
             startElement(token);
-
-            // java classes end at the end of the block
+            // classes end at the end of the block
             if (intypedef || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) {
                 setMode(MODE_END_AT_BLOCK);
             }
@@ -1612,9 +1618,9 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
 ;
 
 class_preamble[] { ENTRY_DEBUG } :
-        ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp)*
-        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        // suppress warning probably do to only having ()*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_JAVA) }? annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
 
         (specifier)*
 ;
@@ -1756,10 +1762,13 @@ class_header[] { ENTRY_DEBUG } :
 
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
-        { LA(1) != FINAL }? compound_name_inner[false] (specifier)*
+        // suppress ()* warning
+        { LA(1) != FINAL }? compound_name_inner[false] (options { greedy = true; } : specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
-        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : generic_type_constraint))*
+
+        // move suppressed ()* warning to begin
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_type_constraint)*
 
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } extends_list))*
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) }?
@@ -2505,6 +2514,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     else if (type == FUNCTION && fla == TERMINATE)
         type = FUNCTION_DECL;
 
+    // we actually have a macro and then a constructor
+    else if(type == FUNCTION && fla == COLON)
+        type = SINGLE_MACRO;
+
     // not really a destructor
     if (type == DESTRUCTOR_DECL && (!inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_FUNCTION_TAIL)))
         type = EXPRESSION;
@@ -2592,15 +2605,15 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                 { inLanguage(LANGUAGE_CSHARP) }?
                 LBRACKET
-                        (COMMA)*
+                        // suppress warning
+                        (options { greedy = true; } : COMMA)*
 
-                        (RETURN | EVENT |
+                        // ~RBRACKET matches these as well suppress warning. 
+                        (options { warnWhenFollowAmbig = false; } : (RETURN | EVENT |
 
                         set_type[type, GLOBAL_ATTRIBUTE, check_global()]
                         throw_exception[type == GLOBAL_ATTRIBUTE] 
-                        identifier)?
-
-                        (COLON)*
+                        identifier))?
 
                         //complete_expression
                         (~(RBRACKET))*
@@ -2609,7 +2622,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                 { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}?
                 LBRACKET LBRACKET
-                        (COMMA)*
 
                         //complete_expression
                         (~(RBRACKET))*
@@ -2827,7 +2839,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
         lead_type_identifier { decTypeCount(); }
-        ({getTypeCount() > 0}? type_identifier { decTypeCount(); })*
+        (options { greedy = true; } : {getTypeCount() > 0}? type_identifier { decTypeCount(); })*
         {
             endMode(MODE_EAT_TYPE);
             setMode(MODE_FUNCTION_NAME);
@@ -2926,7 +2938,7 @@ noexcept_operator[] { ENTRY_DEBUG } :
 
             startElement(SNOEXCEPT);
         }
-        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (LPAREN)*
+        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (options { greedy = true;} : LPAREN)*
 ;
 
 complete_throw_list[] { ENTRY_DEBUG } :
@@ -2934,7 +2946,7 @@ complete_throw_list[] { ENTRY_DEBUG } :
 ;
 
 complete_noexcept_list[] { ENTRY_DEBUG } :
-        NOEXCEPT (paren_pair)*
+        NOEXCEPT (options { greedy = true;} : paren_pair)*
 ;
 
 // type identifier
@@ -3225,7 +3237,8 @@ attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         LBRACKET
 
-        ({ next_token() == COLON }? attribute_csharp_target COLON)*
+        // do not warn as identifier list and colon are in complete expression as well, but need special processing here.
+        (options { warnWhenFollowAmbig = false; } : { next_token() == COLON }? attribute_csharp_target COLON)*
 
         complete_expression
 
@@ -3356,8 +3369,8 @@ simple_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
 compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
         compound_name_inner[true]
-        (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX_ONLY) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound])*      
-        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX_ONLY) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound] |
+        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
 
 ;
 
@@ -3396,7 +3409,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         compound_name_cpp[iscompound]
         )
 
-        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
 
         (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) && (!inLanguage(LANGUAGE_CXX_ONLY) || next_token() != LBRACKET)}?
             variable_identifier_array_grammar_sub[iscompound]
@@ -3645,7 +3658,13 @@ annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         function_identifier
 
-        (call_argument_list ({ LA(1) != RPAREN && LA(1) != COMMA }? annotation_argument (comma)*)* rparen)*
+        // warnings seem to be caused by antlr ()* ending the rules.
+        // first greedy eliminates LPAREN LCURLY
+        (options { greedy = true; } : call_argument_list 
+        // second greedy get rid of rparen
+        (options { greedy = true; } : { LA(1) != RPAREN && LA(1) != COMMA }? annotation_argument 
+        // third greedy gets rid of comma
+        (options { greedy = true; } : comma)*)* rparen)*
 ;
 
 // call  function call, macro, etc.
@@ -4217,7 +4236,8 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        lead_type_identifier
+        lead_type_identifier { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+        (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }? type_identifier { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
@@ -4521,7 +4541,8 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         { type == MACRO }? macro_call |
 
         // general math operators
-        general_operators
+        // looks like general operators and variable identifier can match same thing
+        (options { generateAmbigWarnings = false; }: general_operators
         {
             if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
                 general_operators();
@@ -4571,7 +4592,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         rcurly_argument |
 
         // variable or literal
-        variable_identifier | string_literal | char_literal | literal | boolean | noexcept_operator | 
+        variable_identifier) | string_literal | char_literal | literal | boolean | noexcept_operator | 
 
         variable_identifier_array_grammar_sub[flag]
 ;
@@ -4751,7 +4772,8 @@ kr_parameter[int type_count] { ENTRY_DEBUG } :
 ;
 
 kr_parameter_type[int type_count] { ENTRY_DEBUG} :
-        variable_declaration_statement[type_count] ({ inMode(MODE_EAT_TYPE) }? type_identifier update_typecount[MODE_FUNCTION_NAME])* 
+        // suppress ()* warning
+        variable_declaration_statement[type_count] (options { greedy = true; } : { inMode(MODE_EAT_TYPE) }? type_identifier update_typecount[MODE_FUNCTION_NAME])* 
 ;
 
 kr_parameter_name[] { ENTRY_DEBUG } :
@@ -4764,7 +4786,8 @@ kr_parameter_terminate[] { ENTRY_DEBUG }:
 
 complete_parameter[] { ENTRY_DEBUG } :
         parameter
-        (options { greedy = true; } : parameter_declaration_initialization ({LA(1) != RPAREN }? expression)*)*
+        // suppress ()* warning
+        (options { greedy = true; } : parameter_declaration_initialization (options { greedy = true; } : {LA(1) != RPAREN }? expression)*)*
 ;
 
 argument[] { ENTRY_DEBUG } :
@@ -4794,7 +4817,8 @@ annotation_argument[] { ENTRY_DEBUG } :
             // start the argument
             startElement(SARGUMENT);
         }
-        (
+        // suppress warning of ()*
+        (options { greedy = true; } :
         { !(LA(1) == RPAREN) }? expression |
 
         type_identifier
@@ -4829,7 +4853,9 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
                     type_count = 1;
             }
             { stmt_type == VARIABLE || LA(1) == DOTDOTDOT}?
-            parameter_type_count[type_count] ({ LA(1) == BAR }? bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
+            parameter_type_count[type_count]
+            // suppress warning caused by ()*
+            (options { greedy = true; } : { LA(1) == BAR }? bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
             {
                 // expect a name initialization
                 setMode(MODE_VARIABLE_NAME | MODE_INIT);
@@ -4911,6 +4937,8 @@ template_specifier{ SingleElement element(this); ENTRY_DEBUG } :
 
 template_param_list[] { ENTRY_DEBUG } :
         {
+            startNewMode(MODE_PARAMETER | MODE_LIST);
+
             // start the template parameter list
             startElement(STEMPLATE_PARAMETER_LIST);
         }
@@ -4920,12 +4948,14 @@ template_param_list[] { ENTRY_DEBUG } :
 template_param[] { ENTRY_DEBUG } :
         {
             // end parameter correctly
-            startNewMode(MODE_PARAMETER);
+            startNewMode(MODE_LOCAL);
 
             // start the parameter element
             startElement(STEMPLATE_PARAMETER);
         }
-        (
+
+        // Both can contain extern however an extern template should not be a template param so should not be a problem
+        (options { generateAmbigWarnings = false; } :
         parameter_type
         {
             // expect a name initialization
@@ -5025,7 +5055,7 @@ tempope[] { ENTRY_DEBUG } :
         TEMPOPE
         {
             // end the mode created by the start template operator
-            if (inMode(MODE_LIST))
+            while (inMode(MODE_LIST))
                 endMode(MODE_LIST);
         }
 ;
@@ -5149,7 +5179,8 @@ enum_type { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(STYPE);
         }
-        (specifier | compound_name)*
+        // suppress warning compound_name seems to have some tokens in common with specifier.
+        (options { generateAmbigWarnings = false; } : specifier | compound_name)*
     ;
 
 // Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
@@ -5211,6 +5242,7 @@ preprocessor[] { ENTRY_DEBUG
         // mode for any preprocessor elements
         startNewMode(MODE_PREPROC);
         } :
+
         {
             // assume error.  will set to proper one later
             startElement(SCPP_ERROR);
@@ -5225,7 +5257,9 @@ preprocessor[] { ENTRY_DEBUG
             startElement(SCPP_DIRECTIVE);
             setTokenPosition(tp_directive);
         }
-        (
+
+        // Suppress warnings that should be caused by empty rule.
+        (options { generateAmbigWarnings = false; } : 
         INCLUDE
         {
             endMode();
@@ -5343,7 +5377,8 @@ preprocessor[] { ENTRY_DEBUG
         } |
 
         /* blank preproc */
-         { tp_directive.setType(SNOP); endMode(); } (cpp_garbage)*
+        // suppress ()* warning
+        { tp_directive.setType(SNOP); endMode(); } (options { greedy = true; } : cpp_garbage)*
 
         )
         eol_skip[directive_token, markblockzero]

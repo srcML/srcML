@@ -32,7 +32,7 @@
 #ifndef INCLUDED_SRCML_H
 #define INCLUDED_SRCML_H
 
-#include <sys/types.h> /* size_t */
+#include <stddef.h> /* size_t */
 #include <stdio.h> /* FILE * */
 
 #ifdef __cplusplus

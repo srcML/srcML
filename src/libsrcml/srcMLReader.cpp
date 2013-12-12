@@ -142,10 +142,8 @@ srcMLReader::~srcMLReader() {
  *
  * @returns 0 on success and 1 on failure.
  */
-int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string ** filename,
-                                            std::string ** directory, std::string ** version) {
-
-  if(language == 0 || filename == 0 || directory == 0 || version == 0) return 1;
+int srcMLReader::readUnitAttributesInternal(std::string *& language, std::string *& filename,
+                                            std::string *& directory, std::string *& version) {
 
   xmlAttrPtr attribute = save_nodes.back()->properties;
   while (attribute) {
@@ -154,20 +152,20 @@ int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string
     try {
 
       if(name == "language")
-        (*language) = new std::string((const char *)attribute->children->content);
+        language = new std::string((const char *)attribute->children->content);
       else if(name == "filename")
-        (*filename) = new std::string((const char *)attribute->children->content);
+        filename = new std::string((const char *)attribute->children->content);
       else if(name == "dir")
-        (*directory) = new std::string((const char *)attribute->children->content);
+        directory = new std::string((const char *)attribute->children->content);
       else if(name == "version")
-        (*version) = new std::string((const char *)attribute->children->content);
+        version = new std::string((const char *)attribute->children->content);
 
     } catch(...) {
 
-      if(*language) delete *language, (*language) = 0;
-      if(*filename) delete *filename, (*filename) = 0;
-      if(*directory) delete *directory, (*directory) = 0;
-      if(*version) delete *version, (*version) = 0;
+      if(language) delete language, language = 0;
+      if(filename) delete filename, filename = 0;
+      if(directory) delete directory, directory = 0;
+      if(version) delete version, version = 0;
       return 1;
 
     }
@@ -196,15 +194,13 @@ int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** filename,
-                                        std::string ** directory, std::string ** version,
+int srcMLReader::readRootUnitAttributes(std::string *& language, std::string *& filename,
+                                        std::string *& directory, std::string *& version,
                                         std::vector<std::string> & attributes,
                                         std::vector<std::string> & prefixes,
                                         std::vector<std::string> & namespaces,
                                         OPTION_TYPE & options,
                                         int & tabstop) {
-
-  if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
 
   if(done) return 0;
   if(is_single || is_archive) return 0;
@@ -226,13 +222,13 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
     try {
 
       if(name == "language")
-        (*language) = new std::string((const char *)attribute->children->content);
+        language = new std::string((const char *)attribute->children->content);
       else if(name == "filename")
-        (*filename) = new std::string((const char *)attribute->children->content);
+        filename = new std::string((const char *)attribute->children->content);
       else if(name == "dir")
-        (*directory) = new std::string((const char *)attribute->children->content);
+        directory = new std::string((const char *)attribute->children->content);
       else if(name == "version")
-        (*version) = new std::string((const char *)attribute->children->content);
+        version = new std::string((const char *)attribute->children->content);
       else if(name == "tabs")
         tabstop = atoi((const char *)attribute->children->content);
       else {
@@ -244,10 +240,10 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
 
     } catch(...) {
 
-      if(*language) delete *language, (*language) = 0;
-      if(*filename) delete *filename, (*filename) = 0;
-      if(*directory) delete *directory, (*directory) = 0;
-      if(*version) delete *version, (*version) = 0;
+      if(language) delete language, language = 0;
+      if(filename) delete filename, filename = 0;
+      if(directory) delete directory, directory = 0;
+      if(version) delete version, version = 0;
       return 0;
 
     }
@@ -264,11 +260,11 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
 
     if(ns == SRCML_CPP_NS_URI) {
 
-      if(*language) {
+      if(language) {
 
-        if((**language) == "C++" || (**language) == "C")
+        if((*language) == "C++" || (*language) == "C")
           options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
-        else if((**language) == "C#")
+        else if((*language) == "C#")
           options |= SRCML_OPTION_CPP_NOMACRO;
         else
           options |= SRCML_OPTION_CPP;
@@ -321,10 +317,8 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcMLReader::readUnitAttributes(std::string ** language, std::string ** filename,
-                                    std::string ** directory, std::string ** version) {
-
-  if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
+int srcMLReader::readUnitAttributes(std::string *& language, std::string *& filename,
+                                    std::string *& directory, std::string *& version) {
 
   if(!save_nodes.empty()) {
 
@@ -378,10 +372,10 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
       xmlNodePtr save_node = save_nodes.back();
       save_nodes.clear();
       save_nodes.push_back(save_node);
-      if(*language) delete *language, (*language) = 0;
-      if(*filename) delete *filename, (*filename) = 0;
-      if(*directory) delete *directory, (*directory) = 0;
-      if(*version) delete *version, (*version) = 0;
+      if(language) delete language, language = 0;
+      if(filename) delete filename, filename = 0;
+      if(directory) delete directory, directory = 0;
+      if(version) delete version, version = 0;
       if(readUnitAttributesInternal(language, filename, directory, version)) return 0;
       break;
     }

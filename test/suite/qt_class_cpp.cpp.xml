@@ -18,7 +18,7 @@
 </unit>
 
 <unit>
-<class>class <block>{<signal>signal: </signal>}</block>;</class>
+<class>class <block>{<signal>signals: </signal>}</block>;</class>
 </unit>
 
 </unit>

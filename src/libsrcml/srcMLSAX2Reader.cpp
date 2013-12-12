@@ -120,22 +120,20 @@ srcMLSAX2Reader::~srcMLSAX2Reader() {
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcMLSAX2Reader::readRootUnitAttributes(std::string ** language, std::string ** filename,
-                                        std::string ** directory, std::string ** version,
+int srcMLSAX2Reader::readRootUnitAttributes(std::string *& language, std::string *& filename,
+                                        std::string *& directory, std::string *& version,
                                         std::vector<std::string> & attributes,
                                         std::vector<std::string> & prefixes,
                                         std::vector<std::string> & namespaces,
                                         OPTION_TYPE & options,
                                         int & tabstop) {
 
-  if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
-
   if(handler.read_root) return 0;
 
-  if(handler.archive->language) *language = new std::string(*handler.archive->language);
-  if(handler.archive->filename) *filename = new std::string(*handler.archive->filename);
-  if(handler.archive->directory) *directory = new std::string(*handler.archive->directory);
-  if(handler.archive->version) *version = new std::string(*handler.archive->version);
+  if(handler.archive->language) language = new std::string(*handler.archive->language);
+  if(handler.archive->filename) filename = new std::string(*handler.archive->filename);
+  if(handler.archive->directory) directory = new std::string(*handler.archive->directory);
+  if(handler.archive->version) version = new std::string(*handler.archive->version);
   attributes = handler.archive->attributes;
   prefixes = handler.archive->prefixes;
   namespaces = handler.archive->namespaces;
@@ -156,10 +154,8 @@ int srcMLSAX2Reader::readRootUnitAttributes(std::string ** language, std::string
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcMLSAX2Reader::readUnitAttributes(std::string ** language, std::string ** filename,
-                                    std::string ** directory, std::string ** version) {
-
-  if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
+int srcMLSAX2Reader::readUnitAttributes(std::string *& language, std::string *& filename,
+                                    std::string *& directory, std::string *& version) {
 
   if(handler.is_done) return 0;
 
@@ -169,10 +165,10 @@ int srcMLSAX2Reader::readUnitAttributes(std::string ** language, std::string ** 
 
   if(handler.is_done) return 0;
 
-  if(handler.unit->language) *language = new std::string(*handler.unit->language);
-  if(handler.unit->filename) *filename = new std::string(*handler.unit->filename);
-  if(handler.unit->directory) *directory = new std::string(*handler.unit->directory);
-  if(handler.unit->version) *version = new std::string(*handler.unit->version);
+  if(handler.unit->language) language = new std::string(*handler.unit->language);
+  if(handler.unit->filename) filename = new std::string(*handler.unit->filename);
+  if(handler.unit->directory) directory = new std::string(*handler.unit->directory);
+  if(handler.unit->version) version = new std::string(*handler.unit->version);
 
   return 1;
 

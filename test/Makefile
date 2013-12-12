@@ -43,3 +43,4 @@ shortjava : testbase
 clean :
 	cd suite && make clean
 	cd ..
+	rm -f srcMLTestReport*
