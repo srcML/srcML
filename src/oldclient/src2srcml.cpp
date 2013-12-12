@@ -131,6 +131,9 @@ const int SVN_FLAG_CODE = 256 + 13;
 const char* const MACRO_PATTERN_FLAG = "macro-pattern";
 const int MACRO_PATTERN_FLAG_CODE = 256 + 14;
 
+const char* const MACRO_LIST_FLAG = "macro-list";
+const int MACRO_LIST_FLAG_CODE = 256 + 15;
+
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
@@ -368,6 +371,10 @@ struct process_options
   int revision;
 
 #endif
+
+  
+  const char * user_macro_list_filename;
+
 };
 
 process_options* gpoptions = 0;
@@ -376,6 +383,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
 void src2srcml_dir_top(srcMLTranslator& translator, const char* dname, process_options& poptions);
 void src2srcml_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, const struct stat& outstat);
 void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions);
+void read_macro_list(srcMLTranslator& translator, const char * filename);
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
@@ -429,7 +437,7 @@ int main(int argc, char* argv[]) {
 #ifdef SVN
       SVN_INVALID_REVNUM,
 #endif
-
+      0,
     };
 
   gpoptions = &poptions;
@@ -591,6 +599,8 @@ int main(int argc, char* argv[]) {
                                urisprefix,
                                poptions.tabsize);
 
+    if(isoption(options, OPTION_MACRO_LIST))
+       read_macro_list(translator, poptions.user_macro_list_filename);
 
     // translate input filenames from list in file
     if (isoption(options, OPTION_FILELIST)) {
@@ -708,6 +718,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { MODIFIER_FLAG, no_argument, &curoption, OPTION_MODIFIER },
     { LINE_FLAG, no_argument, NULL, LINE_FLAG_CODE },
     { MACRO_PATTERN_FLAG, no_argument, NULL, MACRO_PATTERN_FLAG_CODE },
+    { MACRO_LIST_FLAG, required_argument, NULL, MACRO_LIST_FLAG_CODE },
 #ifdef SVN
     { SVN_FLAG, required_argument, NULL, SVN_FLAG_CODE },
 #endif
@@ -772,6 +783,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case MACRO_PATTERN_FLAG_CODE:
       options |= OPTION_MACRO_PATTERN;
+      break;
+
+    case MACRO_LIST_FLAG_CODE:
+      options |= OPTION_MACRO_LIST;
       break;
 
 #ifdef SVN
@@ -1709,4 +1724,12 @@ void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions) 
     fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, poptions.src_filename);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
+}
+
+void read_macro_list(srcMLTranslator& translator, const char * filename) {
+
+  std::vector<std::string> user_macro_list;
+
+  translator.setMacroList(user_macro_list);
+
 }
