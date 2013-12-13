@@ -2477,8 +2477,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 
     } catch (...) {
 
-        if (type == VARIABLE && type_count == 0)
+        if (type == VARIABLE && type_count == 0) {
             type_count = 1;
+        }
+
     }
 
     // may just have an expression
@@ -2641,7 +2643,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  INTERFACE           set_type[type, INTERFACE_DECL] |
                  ATSIGN INTERFACE set_type[type, INTERFACE_DECL])
                 set_bool[lcurly, LA(1) == LCURLY]
-        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+                ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+                ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
                 (class_header | LCURLY)
                 set_type[type, CLASS_DEFN,     type == CLASS_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
@@ -2906,6 +2909,7 @@ deduct[int& type_count] { --type_count; } :;
 eat_type[int & count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
 
         type_identifier
+
         set_int[count, count - 1]
         eat_type[count]
 
@@ -2979,7 +2983,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         // class/struct/union before a name in a type, e.g., class A f();
-        CLASS | STRUCT | UNION |
+        class_lead_type_identifier |
 
         // enum use in a type
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
@@ -2991,6 +2995,16 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         {inputState->guessing}? decltype_full | decltype_call
 
+;
+
+class_lead_type_identifier[]  { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            if(inTransparentMode(MODE_TEMPLATE))
+                startElement(SNAME);
+            else
+                startElement(SNOP);
+        }
+        (CLASS | STRUCT | UNION)
 ;
 
 lead_type_identifier[] { ENTRY_DEBUG } :
@@ -4909,7 +4923,7 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
             // start of type
             startElement(STYPE);
         }
-        { pattern_check(stmt_type, secondtoken, type_count) }?
+        { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : type_count = 1)}?
         eat_type[type_count]
 ;
 
@@ -4966,8 +4980,49 @@ template_param[] { ENTRY_DEBUG } :
             // expect a name initialization
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         } |
-        template_declaration
+
+        template_inner_full
     )
+;
+
+template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; } :
+
+        template_parameter_list_full
+        { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : type_count = 1)}?
+        eat_type[type_count]
+        {
+            endMode();
+
+            // expect a name initialization
+            setMode(MODE_VARIABLE_NAME | MODE_INIT);
+        }
+
+;
+
+template_parameter_list_full[] { ENTRY_DEBUG } :
+
+        {
+            // local mode so start element will end correctly
+            startNewMode(MODE_LOCAL);
+            
+            // start of type
+            startElement(STYPE);
+        }
+
+        template_declaration template_param_list template_param (template_declaration_initialization)* tempope { if(inMode(MODE_TEMPLATE)) endMode();}
+
+;
+
+template_declaration_initialization[] { ENTRY_DEBUG } :
+        EQUAL
+        {
+            // end the init correctly
+            setMode(MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the initialization element
+            startNoSkipElement(SDECLARATION_INITIALIZATION);
+        } compound_name
+
 ;
 
 template_argument_list[] { CompleteElement element(this); std::string namestack_save[2]; ENTRY_DEBUG } :

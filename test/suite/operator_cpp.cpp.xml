@@ -202,7 +202,7 @@
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<param><type/><name>A</name></param>, <param><type/><name>B</name></param>&gt;</parameter_list> <class_decl>class <name>A</name>;</class_decl></template>
+<template>template<parameter_list>&lt;<param><type><name>A</name></type></param>, <param><type><name>B</name></type></param>&gt;</parameter_list> <class_decl>class <name>A</name>;</class_decl></template>
 </unit>
 
 <unit>
