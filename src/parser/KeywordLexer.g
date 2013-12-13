@@ -263,6 +263,9 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
        setLine(getLine() + (1 << 16));
     setTokenObjectFactory(srcMLToken::factory);
 
+    for (unsigned int i = 0; i < user_macro_list.size(); ++i)
+            literals[user_macro_list.at(i).c_str()] = MACRO_NAME;
+
     keyword keyword_map[] = {
         // common keywords
         { "if"            , IF            , LANGUAGE_ALL }, 
@@ -492,9 +495,6 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
     for (unsigned int i = 0; i < (sizeof(keyword_map) / sizeof(keyword_map[0])); ++i)
         if (inLanguage(keyword_map[i].language))
             literals[keyword_map[i].text] = keyword_map[i].token;
-
-    for (unsigned int i = 0; i < user_macro_list.size(); ++i)
-            literals[user_macro_list.at(i).c_str()] = MACRO_NAME;
 
 }
 
