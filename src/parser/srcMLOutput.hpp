@@ -73,9 +73,11 @@ public:
     void processText(const char* s, int size);
 
     void processTextPosition(const antlr::RefToken& token);
+    void processTextPositionLine(const antlr::RefToken& token);
 
     const char * lineAttributeValue(const antlr::RefToken& token);
     const char * columnAttributeValue(const antlr::RefToken& token);
+    const char * lineAttributeValue(int aline);
 
     virtual inline const char * convert_num2prefix(unsigned int i) const;
 
@@ -106,6 +108,7 @@ public:
 
     // output line attribute content
     std::string lineAttribute;
+    std::string line2Attribute;
     std::string columnAttribute;
     char out[21];
 

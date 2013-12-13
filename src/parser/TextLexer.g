@@ -103,6 +103,13 @@ CONSTANTS :
         ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' | '_' )*
         (options { greedy = true; } : "." | '0'..'9')*
         (options { greedy = true; } : NAME)*
+
+        {
+            if(onpreprocline && isline) {
+                line_number = atoi(text.substr(_begin, text.length()-_begin).c_str()); 
+            }
+        }
+
 ;
 
 NAME options { testLiterals = true; } { char lastchar = LA(1); } :
@@ -173,7 +180,7 @@ WS :
             // horizontal tab
             '\t'
         )+
-;
+    ;
 
 // end of line
 EOL :
@@ -190,6 +197,11 @@ EOL :
 
             // record to new lines for optional positions
             newline();
+            if(isoption(options, OPTION_LINE))
+                setLine(getLine() + (1 << 16));
+            if(isline && line_number > -1) setLine(line_number << 16 | (getLine() & 0xFFFF));
+            isline = false;
+            line_number = -1;
         }
 ;
 /*

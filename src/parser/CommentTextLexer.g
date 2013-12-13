@@ -29,6 +29,7 @@ header "pre_include_hpp" {
 header {
    #include <iostream>
    #include "antlr/TokenStreamSelector.hpp"
+   #include "Options.hpp"
 }
 
 options {
@@ -73,8 +74,14 @@ bool rawstring;
 
 std::string delimiter;
 
+bool isline;
+
+long line_number;
+
+OPTION_TYPE options;
+
 CommentTextLexer(const antlr::LexerSharedInputState& state)
-	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), rawstring(false), delimiter("")
+	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), rawstring(false), delimiter(""), isline(false), line_number(-1)
 {}
 
 private:
@@ -86,7 +93,7 @@ public:
     }
 
     // reinitialize comment lexer
-    void init(int m, bool onpreproclinestate, bool nescape = false, bool rstring = false, std::string dstring = "") {
+    void init(int m, bool onpreproclinestate, bool nescape = false, bool rstring = false, std::string dstring = "", bool is_line = false, long lnumber = -1, OPTION_TYPE op = 0) {
 
         onpreprocline = onpreproclinestate;
 
@@ -97,6 +104,12 @@ public:
         rawstring = rstring;
 
         delimiter = dstring;
+
+        isline = is_line;
+
+        line_number = lnumber;
+
+        options = op;
     }
 }
 
@@ -153,6 +166,8 @@ COMMENT_TEXT {
 
               // make sure to count newlines even when inside of comments
               newline();
+              if(isoption(options, OPTION_LINE))
+                  setLine(getLine() + (1 << 16));
 
               // end at EOL when for line comment, or the end of a string or char on a preprocessor line
               if (mode == LINECOMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline || rawstring))) {
@@ -254,6 +269,8 @@ COMMENT_TEXT {
 
                             consume();
                             newline();
+                            if(isoption(options, OPTION_LINE))
+                                setLine(getLine() + (1 << 16));
                             prevLA = 0;
                             prevprevLA = 0;
                         }

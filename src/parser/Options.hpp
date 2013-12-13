@@ -260,4 +260,7 @@ const OPTION_TYPE OPTION_NULL  = ull(1) << 41;
 // @src2srcml
 const OPTION_TYPE OPTION_SVN  = ull(1) << 42;
 
+// @src2srcml
+const OPTION_TYPE OPTION_LINE  = ull(1) << 43;
+
 #endif

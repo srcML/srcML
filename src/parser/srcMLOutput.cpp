@@ -92,6 +92,9 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     lineAttribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
     lineAttribute += ":line";
 
+    line2Attribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
+    line2Attribute += ":line2";
+
     columnAttribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
     columnAttribute += ":column";
   }
@@ -144,6 +147,13 @@ const char * srcMLOutput::lineAttributeValue(const antlr::RefToken& token) {
 const char * srcMLOutput::columnAttributeValue(const antlr::RefToken& token) {
 
   snprintf(out, 20, "%d", token->getColumn());
+
+  return out;
+}
+
+const char * srcMLOutput::lineAttributeValue(int aline) {
+
+  snprintf(out, 20, "%d", aline);
 
   return out;
 }
@@ -300,6 +310,15 @@ void srcMLOutput::processTextPosition(const antlr::RefToken& token) {
   processText(token->getText());
 }
 
+void srcMLOutput::processTextPositionLine(const antlr::RefToken& token) {
+
+  xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token->getLine() & 0xFFFF));
+  xmlTextWriterWriteAttribute(xout, BAD_CAST line2Attribute.c_str(), BAD_CAST lineAttributeValue(token->getLine() >> 16));
+
+  xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
+
+  processText(token->getText());
+}
 
 xmlTextWriter * srcMLOutput::getWriter() {
 

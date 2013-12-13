@@ -107,6 +107,25 @@ OPERATORS options { testLiterals = true; } { bool star = false; static int lastp
                 // primarily so that unterminated strings in
                 // a preprocessor line will end at the right spot
                 onpreprocline = true; 
+
+                if(isoption(options, OPTION_LINE)) {
+                    int start = mark();
+                    ++inputState->guessing;
+                    if(LA(1) == 'l') {
+                        consume();  
+                        if(LA(1) == 'i') {
+                            consume();
+                            if(LA(1) ==  'n') {
+                                consume();
+                                if(LA(1) ==  'e')
+                                    isline = true;
+                            }
+                        }
+                    }
+                    --inputState->guessing;
+                    rewind(start);
+                }
+
             }
         }   |
 /*

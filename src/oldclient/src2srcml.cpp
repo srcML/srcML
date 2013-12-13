@@ -72,8 +72,10 @@ const char* const OPERATOR_FLAG = "operator";
 const char* const MODIFIER_FLAG = "modifier";
 
 const char* const POSITION_FLAG = "position";
+const char* const LINE_FLAG = "line";
+const int LINE_FLAG_CODE = 256 + 0;
 const char* const TABS_FLAG = "tabs";
-const int TABS_FLAG_CODE = 256 + 0;
+const int TABS_FLAG_CODE = 256 + 1;
 const char* const TABS_FLAG_FULL = "tabs=NUMBER";
 const int DEFAULT_TABSIZE = 8;
 
@@ -81,16 +83,16 @@ const char* const INTERACTIVE_FLAG = "interactive";
 const char INTERACTIVE_FLAG_SHORT = 'c';
 
 const char* const CPP_MARKUP_ELSE_FLAG = "cpp-markup-else";
-const int CPP_MARKUP_ELSE_FLAG_CODE = 256 + 1;
+const int CPP_MARKUP_ELSE_FLAG_CODE = 256 + 2;
 
 const char* const CPP_TEXTONLY_ELSE_FLAG = "cpp-text-else";
-const int CPP_TEXTONLY_ELSE_FLAG_CODE = 256 + 2;
+const int CPP_TEXTONLY_ELSE_FLAG_CODE = 256 + 3;
 
 const char* const CPP_MARKUP_IF0_FLAG = "cpp-markup-if0";
-const int CPP_MARKUP_IF0_FLAG_CODE = 256 + 3;
+const int CPP_MARKUP_IF0_FLAG_CODE = 256 + 4;
 
 const char* const CPP_TEXTONLY_IF0_FLAG = "cpp-text-if0";
-const int CPP_TEXTONLY_IF0_FLAG_CODE = 256 + 4;
+const int CPP_TEXTONLY_IF0_FLAG_CODE = 256 + 5;
 
 const char* const EXPRESSION_MODE_FLAG = "expression";
 const char EXPRESSION_MODE_FLAG_SHORT = 'e';
@@ -98,32 +100,32 @@ const char EXPRESSION_MODE_FLAG_SHORT = 'e';
 const char* const SELF_VERSION_FLAG = "self-version";
 
 const char* const FILELIST_FLAG = "files-from";
-const int FILELIST_FLAG_CODE = 256 + 5;
+const int FILELIST_FLAG_CODE = 256 + 6;
 const char* const FILELIST_FLAG_FULL = "files-from=INPUT";
 
 const char* const XMLNS_FLAG = "xmlns";
-const int XMLNS_FLAG_CODE = 256 + 6;
+const int XMLNS_FLAG_CODE = 256 + 7;
 const char* const XMLNS_DEFAULT_FLAG_FULL = "xmlns=URI";
 const char* const XMLNS_FLAG_FULL = "xmlns:PREFIX=URI";
 
 const char* const REGISTER_EXT_FLAG = "register-ext";
 const char* const REGISTER_EXT_FLAG_FULL = "register-ext EXT=LANG";
-const int REGISTER_EXT_FLAG_CODE = 256 + 7;
+const int REGISTER_EXT_FLAG_CODE = 256 + 8;
 
 const char* const OLD_FILENAME_FLAG = "old-filename";
-const int OLD_FILENAME_FLAG_CODE = 256 + 8;
+const int OLD_FILENAME_FLAG_CODE = 256 + 9;
 
 const char* const RECURSIVE_FLAG = "recursive";
-const int RECURSIVE_FLAG_CODE = 256 + 9;
+const int RECURSIVE_FLAG_CODE = 256 +10;
 
 const char* const REVISION_FLAG = "revision";
-const int REVISION_FLAG_CODE = 256 + 10;
+const int REVISION_FLAG_CODE = 256 + 11;
 
 const char* const CPP_FLAG = "cpp";
-const int CPP_FLAG_CODE = 256 + 11;
+const int CPP_FLAG_CODE = 256 + 12;
 
 const char* const SVN_FLAG = "svn";
-const int SVN_FLAG_CODE = 256 + 12;
+const int SVN_FLAG_CODE = 256 + 13;
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
@@ -700,6 +702,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { LITERAL_FLAG, no_argument, &curoption, OPTION_LITERAL },
     { OPERATOR_FLAG, no_argument, &curoption, OPTION_OPERATOR },
     { MODIFIER_FLAG, no_argument, &curoption, OPTION_MODIFIER },
+    { LINE_FLAG, no_argument, NULL, LINE_FLAG_CODE },
 #ifdef SVN
     { SVN_FLAG, required_argument, NULL, SVN_FLAG_CODE },
 #endif
@@ -757,6 +760,11 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       poptions.srcml_filename = optarg;
       break;
+
+    case LINE_FLAG_CODE:
+      options |= OPTION_LINE;
+      break;
+
 #ifdef SVN
     case SVN_FLAG_CODE:
 
