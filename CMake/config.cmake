@@ -16,6 +16,7 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+
 # 
 # It is epxected that the windows dependency directoy will contain a folder
 # named dep which will contain all of the dependencies. For windows.
@@ -25,19 +26,21 @@
 #       include
 #       lib
 
-MESSAGE(STATUS "Fix file: config.cmake")
-
-MESSAGE(STATUS "Configuring Project")
 
 # Adding SVN Configuration.
-option(ENABLE_SVN_INTEGRATION "Build with SVN integration." ON)
+option(ENABLE_SVN_INTEGRATION "Build with SVN integration." OFF)
 set_property(GLOBAL PROPERTY SVN_ENABLED ${ENABLE_SVN_INTEGRATION})
 
 # Adding SAX to configuration.
 option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" OFF)
 set_property(GLOBAL PROPERTY SAX2_ENABLED ${LIBSRCML_SAX2_ENABLED})
 
+# Adding build option for srcml executable.
+option(ENABLE_NEW_SRCML_EXEC_BUILD "Build the newer version of the srcML executable." OFF)
+set_property(GLOBAL PROPERTY ENABLE_NEW_SRCML_EXEC_BUILD ${ENABLE_NEW_SRCML_EXEC_BUILD})
+
 # Locating packages.
+find_program(xsltproc REQUIRED)
 find_package(LibArchive REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(LibXslt)
@@ -57,6 +60,14 @@ if(LIBXSLT_EXSLT_LIBRARY)
     set_property(GLOBAL PROPERTY LIBXSLT_LIBS ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY})
 else()
     set_property(GLOBAL PROPERTY LIBXSLT_LIBS "")
+endif()
+
+# Finding xsltproc program.
+find_program(Xslt_BIN xsltproc)
+if(NOT ${Xslt_BIN} STREQUAL "Xslt_BIN-NOTFOUND")
+    set_property(GLOBAL PROPERTY XSLTPROC "${Xslt_BIN}")
+else()
+    message(FATAL_ERROR "Failed to locate the xsltproc executable. This is required in order to run the test suite.")
 endif()
 
 # Setting some windows only properties.
@@ -89,11 +100,58 @@ set_property(GLOBAL PROPERTY SED_EXE ${SED_EXE})
 find_program(GREP_EXE grep PATHS /bin /usr/bin ${WINDOWS_DEP_PATH}/bin)
 set_property(GLOBAL PROPERTY GREP_EXE ${GREP_EXE})
 
-
 #  Figure out exactly what package curl is and where it is located.
 # find_package(libcurl3)
 
-# Configuring output directories for libraries and executables.
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+# Locating python libraries and executables for use
+# in compiling and testing.
+find_package(PythonLibs REQUIRED)
+# Variables defiend by find_package(PythonLibs) implementation.
+# PYTHONLIBS_FOUND = have the Python libs been found
+# PYTHON_LIBRARIES = path to the python library
+# PYTHON_INCLUDE_PATH = path to where Python.h is found
+# PYTHON_DEBUG_LIBRARIES = path to the debug library
+
+if(${CMAKE_BUILD_TYPE} MATCHES "RELEASE")
+    link_directories(${PYTHON_LIBRARIES})
+else()
+    link_directories(${PYTHON_DEBUG_LIBRARIES})
+endif()
+include_directories(${PYTHON_INCLUDE_PATH})
+
+
+find_package(PythonInterp REQUIRED)
+# Variables defiend by find_package(PythonInterp)
+# PYTHONINTERP_FOUND = Was the Python executable found.
+# PYTHON_EXECUTABLE = Path to the Python interpreter.
+# PYTHON_VERSION_STRING = Python version found e.g. 2.5.2.
+# PYTHON_VERSION_MAJOR = Python major version found e.g. 2.
+# PYTHON_VERSION_MINOR = Python minor version found e.g. 5.
+# PYTHON_VERSION_PATCH = Python patch version found e.g. 2.
+
+# Enforcing that the version of python being used must have a major version of 2.
+# and the minor version be greater than version 6 (this means version 2.7 of python 
+# version 2 or newer).
+if(NOT ${PYTHON_VERSION_MAJOR} EQUAL "2")
+    message(FATAL_ERROR "Version of python found does not have a major version of 2.")
+    if(${PYTHON_VERSION_MINOR} LESS EQUAL 6)
+        message(FATAL_ERROR "Minor version of python is not greater than 6.")
+    endif()
+endif()
+set_property(GLOBAL PROPERTY PYTHON_INTERP_EXE ${PYTHON_EXECUTABLE})
+
+
+
+# Adding compiler configuration for GCC.
+# The default configuration is to compile in DEBUG mode. These flags can be directly
+# overridden by setting the property of a target you wish to change them for.
+if(${CMAKE_COMPILER_IS_GNUCXX})
+    # Adding global compiler definitions.
+    set(CMAKE_CXX_FLAGS "-pedantic -Wall -Wno-long-long -g -O0 -DDEBUG --coverage -fprofile-arcs -DNO_DLLOAD")
+    set(CMAKE_CXX_FLAGS_RELEASE "-pedantic -Wall -Wno-long-long -O3 -DNDEBUG")
+    
+    # This allows for compilation of a re-locatable execuatable on GCC I need to be sure that I
+    # can make this portable to compilers other than GCC.
+    add_definitions(-fPIC)
+endif()

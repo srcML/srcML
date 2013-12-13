@@ -110,11 +110,16 @@ list(REMOVE_ITEM PARSER_SOURCE
     ${CommentTextLexerOutputFiles}
 )
 
+get_property(SVN_ENABLED GLOBAL PROPERTY SVN_ENABLED)
+if(NOT ${SVN_ENABLED})
+    list(REMOVE_ITEM PARSER_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/svn_io.cpp)
+endif()
+
 add_library(parser OBJECT
     ${SrcMLParserOutputFiles}
     ${KeywordLexerOutputFiles}
     ${CommentTextLexerOutputFiles}
+    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
     ${PARSER_HEADERS}
     ${PARSER_SOURCE}
-    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
 )
