@@ -134,4 +134,8 @@
 <decl_stmt><decl><type><alignas>alignas<argument_list>(<argument><expr><name>float</name></expr></argument>)</argument_list></alignas> <name>unsigned</name> <name>char</name></type> <name><name>c</name><index>[]</index></name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><alignas>alignas<argument_list>(<argument><expr>(<name>float</name>)</expr></argument>)</argument_list></alignas> <name>unsigned</name> <name>char</name></type> <name><name>c</name><index>[]</index></name></decl>;</decl_stmt>
+</unit>
+
 </unit>
