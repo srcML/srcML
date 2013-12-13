@@ -100,10 +100,10 @@ XSLT_ADDCONST=${XSLT} xsl/addconst.xsl
 
 XSLT_IDENTITY=${XSLT} xsl/identity.xsl
 
-XSLT_INSERTEXPR=${XSLT} --stringparam expr_filename "expression.cpp.xml" xsl/insertexpr.xsl
+XSLT_INSERTEXPR=${XSLT} --stringparam expr_filename "../expression.cpp.xml" xsl/insertexpr.xsl
 XSLT_INSERTEXPR_XSL= expression.cpp.xml xsl/insertexpr.xsl
 
-XSLT_INSERTDECL=${XSLT} --stringparam decl_filename "decl_simple.cpp.xml" xsl/insertparam.xsl
+XSLT_INSERTDECL=${XSLT} --stringparam decl_filename "../decl_simple.cpp.xml" xsl/insertparam.xsl
 XSLT_INSERTDECL_XSL= decl_simple.cpp.xml xsl/insertdecl.xsl
 
 XSLT_STRUCT2UNION_XSL=xsl/struct2union.xsl
