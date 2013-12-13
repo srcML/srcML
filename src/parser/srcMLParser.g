@@ -3351,7 +3351,7 @@ complete_argument[] { CompleteElement element(this); int count_paren = 1; ENTRY_
         ( { count_paren > 0 }?
         ({ LA(1) == LPAREN }? expression { ++count_paren; } |
 
-        rparen[true] { --count_paren; } |
+        { LA(1) == RPAREN }? expression { --count_paren; } |
 
         expression |
 
