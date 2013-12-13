@@ -15,7 +15,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -DDEBUG -DNO_DLLOAD")
 set(CMAKE_CXX_FLAGS_RELEASE -O3)
 
 option(SVN_ENABLED "Build with svn" off)
-option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" on)
+option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" off)
 
 # specify g++ compiler
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -122,8 +122,8 @@ COMMAND ${GREP} '=' ${srcML_SOURCE_DIR}/src/parser/srcMLParserTokenTypes.hpp | $
 set(PARSER_SRC ${srcML_SOURCE_DIR}/src/parser/srcMLParser.cpp;${srcML_SOURCE_DIR}/src/parser/KeywordLexer.cpp;${srcML_SOURCE_DIR}/src/parser/srcMLOutput.cpp;${srcML_SOURCE_DIR}/src/parser/srcMLTranslatorOutput.cpp;${srcML_SOURCE_DIR}/src/parser/Mode.cpp;${srcML_SOURCE_DIR}/src/parser/CommentTextLexer.cpp;${srcML_SOURCE_DIR}/src/parser/srcMLParserTokenTypesMacro.hpp)
 file(GLOB TRANSLATOR_SRC src/translator/*.cpp)
 set(SRCMLAPPS_SRC src/srcml/srcmlapps.cpp)
-file(GLOB LIBSRCML_SRC src/libsrcml/*.cpp src/SAX2Framework/*.cpp)
-#set(LIBSRCML_SRC src/libsrcml/libsrcml.cpp;src/libsrcml/srcml_archive.cpp;src/libsrcml/srcml_transform.cpp;src/libsrcml/SAX2ExtractUnitsSrc.cpp;src/libsrcml/srcml_info.cpp;src/libsrcml/srcml_unit.cpp;src/libsrcml/SAX2TextWriter.cpp;src/libsrcml/srcMLReader.cpp;src/libsrcml/srcMLUtility.cpp;src/libsrcml/SAX2Utilities.cpp;src/libsrcml/srcexfun.cpp;src/libsrcml/srcml_sax2_utilities.cpp)
+#file(GLOB LIBSRCML_SRC src/libsrcml/*.cpp src/SAX2Framework/*.cpp)
+set(LIBSRCML_SRC src/libsrcml/libsrcml.cpp;src/libsrcml/srcml_archive.cpp;src/libsrcml/srcml_transform.cpp;src/libsrcml/SAX2ExtractUnitsSrc.cpp;src/libsrcml/srcml_info.cpp;src/libsrcml/srcml_unit.cpp;src/libsrcml/SAX2TextWriter.cpp;src/libsrcml/srcMLReader.cpp;src/libsrcml/srcMLUtility.cpp;src/libsrcml/SAX2Utilities.cpp;src/libsrcml/srcexfun.cpp;src/libsrcml/srcml_sax2_utilities.cpp)
 
 if(LIBSRCML_SAX2_ENABLED)
     add_definitions(-DSAX2)
