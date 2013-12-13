@@ -21,4 +21,8 @@
 <macro><name>MACRO</name></macro> <class>class <block>{<private type="default"/>}</block> <decl><name>u</name></decl>;</class>
 </unit>
 
+<unit>
+<class>class <alignas>alignas<argument_list>(<argument>a</argument>)</argument_list></alignas> <name>A</name> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
 </unit>

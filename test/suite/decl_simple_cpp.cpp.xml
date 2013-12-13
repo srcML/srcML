@@ -130,4 +130,8 @@
 <decl_stmt><decl><type><name>unsigned</name> <name>int</name></type> <name>a</name> <range>: <expr>3</expr></range>, <name>b</name> <range>: <expr>4</expr></range>, <name>c</name> <range>: <expr>5</expr></range></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><alignas>alignas<argument_list>(<argument>float</argument>)</argument_list></alignas> <name>unsigned</name> <name>char</name></type> <name><name>c</name><index>[]</index></name></decl>;</decl_stmt>
+</unit>
+
 </unit>

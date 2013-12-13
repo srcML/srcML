@@ -242,6 +242,9 @@ namespace {
   ELEMENT_MAP(CONTROL_CHAR,   "escape")
   ELEMENT_MAP(SANNOTATION,    "annotation")
 
+  // C++11
+  ELEMENT_MAP(SALIGNAS,    "alignas")
+
   //
   ELEMENT_MAP(SEMPTY,         "empty_stmt")
 };

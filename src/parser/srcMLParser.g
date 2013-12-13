@@ -518,6 +518,8 @@ tokens {
 
     SANNOTATION;
 
+    SALIGNAS;
+
     // Last token used for boundary
     END_ELEMENT_TOKEN;
 }
@@ -1595,7 +1597,7 @@ class_declaration[] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
         { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
 
-        (specifier)* CLASS ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* class_header
+        (specifier)* CLASS class_post class_header
 ;
 
 class_preprocessing[int token] { ENTRY_DEBUG } :
@@ -1628,11 +1630,15 @@ class_preamble[] { ENTRY_DEBUG } :
 class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SCLASS]
 
-        class_preamble CLASS ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* (class_header lcurly | lcurly)
+        class_preamble CLASS class_post (class_header lcurly | lcurly)
         {
             if (inLanguage(LANGUAGE_CXX_ONLY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
         }
+;
+
+class_post[] { ENTRY_DEBUG } :
+        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* (specifier)*
 ;
 
 enum_class_definition[] { ENTRY_DEBUG } :
@@ -1701,13 +1707,13 @@ struct_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SSTRUCT_DECLARATION);
         }
-        class_preamble STRUCT ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* class_header
+        class_preamble STRUCT class_post class_header
 ;
 
 struct_union_definition[int element_token] { ENTRY_DEBUG } :
         class_preprocessing[element_token]
 
-        class_preamble (STRUCT | UNION) ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* (class_header lcurly | lcurly)
+        class_preamble (STRUCT | UNION) class_post (class_header lcurly | lcurly)
         {
            if (inLanguage(LANGUAGE_CXX_ONLY))
                class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
@@ -1722,7 +1728,7 @@ union_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SUNION_DECLARATION);
         }
-        class_preamble UNION class_header
+        class_preamble UNION class_post class_header
 ;
 
 // default private/public section for C++
@@ -2645,6 +2651,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_bool[lcurly, LA(1) == LCURLY]
                 ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
+                class_post
                 (class_header | LCURLY)
                 set_type[type, CLASS_DEFN,     type == CLASS_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
@@ -3570,8 +3577,11 @@ function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 ;
 
+specifier[] { ENTRY_DEBUG } :
+        single_keyword_specifier | alignas_specifier
+;
 
-specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
@@ -3581,7 +3591,7 @@ specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // C++
             FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
-            CONSTEXPR | THREADLOCAL | 
+            CONSTEXPR | THREADLOCAL |
 
             // C# & Java
             INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
@@ -3590,6 +3600,34 @@ specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             CONST
         )
+;
+
+alignas_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SALIGNAS);
+        }
+        ALIGNAS
+        {
+            // start a mode for the macro argument list
+            startNewMode(MODE_LIST | MODE_TOP);
+
+            // start the argument list
+            startElement(SARGUMENT_LIST);
+        }
+        LPAREN
+        macro_call_contents
+        {
+            // end anything started inside of the macro argument list
+            endDownToMode(MODE_LIST | MODE_TOP);
+        }
+        RPAREN
+        {
+            // end the macro argument list
+            endMode(MODE_LIST | MODE_TOP);
+        }
+
 ;
 
 constructor_declaration[] { ENTRY_DEBUG } :

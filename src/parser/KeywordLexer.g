@@ -235,6 +235,7 @@ tokens {
     NULLPTR;
     SIZEOF;
     DECLTYPE;
+    ALIGNAS;
 
     OPERATORS;
 
@@ -401,6 +402,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
         { "thread_local"  , THREADLOCAL      , LANGUAGE_CXX_ONLY }, 
         { "nullptr"       , NULLPTR          , LANGUAGE_CXX_ONLY }, 
         { "decltype"      , DECLTYPE         , LANGUAGE_CXX_ONLY }, 
+        { "alignas"       , ALIGNAS          , LANGUAGE_CXX_ONLY }, 
 
         // Add alternative operators
         { "and"           , OPERATORS        , LANGUAGE_CXX_ONLY }, 
