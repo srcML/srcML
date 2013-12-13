@@ -4361,14 +4361,14 @@ variable_declaration_initialization[] { ENTRY_DEBUG } :
 ;
 
 variable_declaration_range[] { ENTRY_DEBUG } :
-        COLON
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
 
             // start the initialization element
-            startNoSkipElement(SDECLARATION_RANGE);
+            startElement(SDECLARATION_RANGE);
         }
+        COLON
 ;
 
 parameter_declaration_initialization[] { ENTRY_DEBUG } :

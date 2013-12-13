@@ -122,4 +122,12 @@
 <decl_stmt><decl><type><name>foo</name> <name>foo</name> <name>A</name></type> <name>a</name><argument_list>(<argument><expr><call><name>b</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>unsigned</name> <name>int</name></type> <name>a</name> <range>: <expr>3</expr></range></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>unsigned</name> <name>int</name></type> <name>a</name> <range>: <expr>3</expr></range>, <name>b</name> <range>: <expr>4</expr></range>, <name>c</name> <range>: <expr>5</expr></range></decl>;</decl_stmt>
+</unit>
+
 </unit>
