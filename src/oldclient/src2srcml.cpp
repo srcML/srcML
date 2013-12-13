@@ -72,8 +72,11 @@ const char* const OPERATOR_FLAG = "operator";
 const char* const MODIFIER_FLAG = "modifier";
 
 const char* const POSITION_FLAG = "position";
+const char* const LINE_FLAG = "line";
+const int LINE_FLAG_CODE = 256 + 0;
+
 const char* const TABS_FLAG = "tabs";
-const int TABS_FLAG_CODE = 256 + 0;
+const int TABS_FLAG_CODE = 256 + 1;
 const char* const TABS_FLAG_FULL = "tabs=NUMBER";
 const int DEFAULT_TABSIZE = 8;
 
@@ -81,16 +84,16 @@ const char* const INTERACTIVE_FLAG = "interactive";
 const char INTERACTIVE_FLAG_SHORT = 'c';
 
 const char* const CPP_MARKUP_ELSE_FLAG = "cpp-markup-else";
-const int CPP_MARKUP_ELSE_FLAG_CODE = 256 + 1;
+const int CPP_MARKUP_ELSE_FLAG_CODE = 256 + 2;
 
 const char* const CPP_TEXTONLY_ELSE_FLAG = "cpp-text-else";
-const int CPP_TEXTONLY_ELSE_FLAG_CODE = 256 + 2;
+const int CPP_TEXTONLY_ELSE_FLAG_CODE = 256 + 3;
 
 const char* const CPP_MARKUP_IF0_FLAG = "cpp-markup-if0";
-const int CPP_MARKUP_IF0_FLAG_CODE = 256 + 3;
+const int CPP_MARKUP_IF0_FLAG_CODE = 256 + 4;
 
 const char* const CPP_TEXTONLY_IF0_FLAG = "cpp-text-if0";
-const int CPP_TEXTONLY_IF0_FLAG_CODE = 256 + 4;
+const int CPP_TEXTONLY_IF0_FLAG_CODE = 256 + 5;
 
 const char* const EXPRESSION_MODE_FLAG = "expression";
 const char EXPRESSION_MODE_FLAG_SHORT = 'e';
@@ -98,32 +101,38 @@ const char EXPRESSION_MODE_FLAG_SHORT = 'e';
 const char* const SELF_VERSION_FLAG = "self-version";
 
 const char* const FILELIST_FLAG = "files-from";
-const int FILELIST_FLAG_CODE = 256 + 5;
+const int FILELIST_FLAG_CODE = 256 + 6;
 const char* const FILELIST_FLAG_FULL = "files-from=INPUT";
 
 const char* const XMLNS_FLAG = "xmlns";
-const int XMLNS_FLAG_CODE = 256 + 6;
+const int XMLNS_FLAG_CODE = 256 + 7;
 const char* const XMLNS_DEFAULT_FLAG_FULL = "xmlns=URI";
 const char* const XMLNS_FLAG_FULL = "xmlns:PREFIX=URI";
 
 const char* const REGISTER_EXT_FLAG = "register-ext";
 const char* const REGISTER_EXT_FLAG_FULL = "register-ext EXT=LANG";
-const int REGISTER_EXT_FLAG_CODE = 256 + 7;
+const int REGISTER_EXT_FLAG_CODE = 256 + 8;
 
 const char* const OLD_FILENAME_FLAG = "old-filename";
-const int OLD_FILENAME_FLAG_CODE = 256 + 8;
+const int OLD_FILENAME_FLAG_CODE = 256 + 9;
 
 const char* const RECURSIVE_FLAG = "recursive";
-const int RECURSIVE_FLAG_CODE = 256 + 9;
+const int RECURSIVE_FLAG_CODE = 256 +10;
 
 const char* const REVISION_FLAG = "revision";
-const int REVISION_FLAG_CODE = 256 + 10;
+const int REVISION_FLAG_CODE = 256 + 11;
 
 const char* const CPP_FLAG = "cpp";
-const int CPP_FLAG_CODE = 256 + 11;
+const int CPP_FLAG_CODE = 256 + 12;
 
 const char* const SVN_FLAG = "svn";
-const int SVN_FLAG_CODE = 256 + 12;
+const int SVN_FLAG_CODE = 256 + 13;
+
+const char* const MACRO_PATTERN_FLAG = "macro-pattern";
+const int MACRO_PATTERN_FLAG_CODE = 256 + 14;
+
+const char* const MACRO_LIST_FLAG = "macro-list";
+const int MACRO_LIST_FLAG_CODE = 256 + 15;
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
@@ -362,6 +371,10 @@ struct process_options
   int revision;
 
 #endif
+
+  
+  const char * user_macro_list_filename;
+
 };
 
 process_options* gpoptions = 0;
@@ -370,6 +383,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
 void src2srcml_dir_top(srcMLTranslator& translator, const char* dname, process_options& poptions);
 void src2srcml_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, const struct stat& outstat);
 void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions);
+void read_macro_list(srcMLTranslator& translator, const char * filename);
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
@@ -423,7 +437,7 @@ int main(int argc, char* argv[]) {
 #ifdef SVN
       SVN_INVALID_REVNUM,
 #endif
-
+      0,
     };
 
   gpoptions = &poptions;
@@ -585,6 +599,8 @@ int main(int argc, char* argv[]) {
                                urisprefix,
                                poptions.tabsize);
 
+    if(isoption(options, OPTION_MACRO_LIST))
+       read_macro_list(translator, poptions.user_macro_list_filename);
 
     // translate input filenames from list in file
     if (isoption(options, OPTION_FILELIST)) {
@@ -700,6 +716,9 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { LITERAL_FLAG, no_argument, &curoption, OPTION_LITERAL },
     { OPERATOR_FLAG, no_argument, &curoption, OPTION_OPERATOR },
     { MODIFIER_FLAG, no_argument, &curoption, OPTION_MODIFIER },
+    { LINE_FLAG, no_argument, NULL, LINE_FLAG_CODE },
+    { MACRO_PATTERN_FLAG, no_argument, NULL, MACRO_PATTERN_FLAG_CODE },
+    { MACRO_LIST_FLAG, required_argument, NULL, MACRO_LIST_FLAG_CODE },
 #ifdef SVN
     { SVN_FLAG, required_argument, NULL, SVN_FLAG_CODE },
 #endif
@@ -757,6 +776,20 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       poptions.srcml_filename = optarg;
       break;
+
+    case LINE_FLAG_CODE:
+      options |= OPTION_LINE;
+      break;
+
+    case MACRO_PATTERN_FLAG_CODE:
+      options |= OPTION_MACRO_PATTERN;
+      break;
+
+    case MACRO_LIST_FLAG_CODE:
+      options |= OPTION_MACRO_LIST;
+      poptions.user_macro_list_filename = optarg;
+      break;
+
 #ifdef SVN
     case SVN_FLAG_CODE:
 
@@ -1692,4 +1725,37 @@ void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions) 
     fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, poptions.src_filename);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
+}
+
+void read_macro_list(srcMLTranslator& translator, const char * filename) {
+
+  std::vector<std::string> user_macro_list;
+
+  try {
+
+    // get all macro names in line separated file
+    URIStream uriinput(filename);
+    char* line;
+
+    while ((line = uriinput.readline())) {
+
+      // skip over whitespace
+      // TODO:  Other types of whitespace?  backspace?
+      line += strspn(line, " \t\f");
+
+      // skip blank lines or comment lines
+      if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
+        continue;
+
+      user_macro_list.push_back(line);
+    }
+
+  } catch (URIStreamFileError) {
+    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, filename);
+    exit(STATUS_INPUTFILE_PROBLEM);
+  }
+
+
+  translator.setMacroList(user_macro_list);
+
 }

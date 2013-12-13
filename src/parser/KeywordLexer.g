@@ -21,7 +21,8 @@
 */
 
 header "pre_include_hpp" {
-   #include <cstring>
+    #include <cstring>
+    #include <regex.h>
 }
 
 header {
@@ -31,13 +32,14 @@ header {
    #include "antlr/TokenStreamSelector.hpp"
    #include "CommentTextLexer.hpp"
    #include "srcMLToken.hpp"
+   #include "Options.hpp"
 }
 
 header "post_include_cpp" {
 
 void KeywordLexer::changetotextlexer(int typeend) {
           selector->push("text"); 
-           ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, rawstring, delimiter);
+           ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, rawstring, delimiter, isline, line_number, options);
 }
 }
 
@@ -241,21 +243,31 @@ tokens {
 {
 public:
 
+OPTION_TYPE & options;
 bool onpreprocline;
 bool startline;
 bool atstring;
 bool rawstring;
 std::string delimiter;
+bool isline;
+long line_number;
 
 // map from text of literal to token number, adjusted to language
 struct keyword { char const * const text; int token; int language; };
 
 void changetotextlexer(int typeend);
 
-KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
-    : antlr::CharScanner(pinput,true), Language(language), onpreprocline(false), startline(true), atstring(false), rawstring(false), delimiter("")
+KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_TYPE & options,
+             std::vector<std::string> user_macro_list)
+    : antlr::CharScanner(pinput,true), Language(language), options(options), onpreprocline(false), startline(true),
+    atstring(false), rawstring(false), delimiter(""), isline(false), line_number(-1)
 {
+    if(isoption(options, OPTION_LINE))
+       setLine(getLine() + (1 << 16));
     setTokenObjectFactory(srcMLToken::factory);
+
+    for (unsigned int i = 0; i < user_macro_list.size(); ++i)
+            literals[user_macro_list.at(i).c_str()] = MACRO_NAME;
 
     keyword keyword_map[] = {
         // common keywords

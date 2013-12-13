@@ -32,6 +32,7 @@
 header {
 
     #include <iostream>
+
 }
 
 options {
@@ -55,6 +56,7 @@ tokens {
     DOXYGEN_COMMENT_START;
     LINE_DOXYGEN_COMMENT_START;
     CHAR_START;
+    MACRO_NAME;
 }
 
 {
@@ -103,6 +105,13 @@ CONSTANTS :
         ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' | '_' )*
         (options { greedy = true; } : "." | '0'..'9')*
         (options { greedy = true; } : NAME)*
+
+        {
+            if(onpreprocline && isline) {
+                line_number = atoi(text.substr(_begin, text.length()-_begin).c_str()); 
+            }
+        }
+
 ;
 
 NAME options { testLiterals = true; } { char lastchar = LA(1); } :
@@ -127,6 +136,29 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
 
             (options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')*
         )
+
+        {
+
+            if(isoption(options, OPTION_MACRO_PATTERN)) {
+
+                std::string temp_name = text.substr(_begin, text.length()-_begin);
+                static const char * const regex = "[A-Z][A-Z_]+";
+
+                // setup the regular expression
+                regex_t preg = { 0 };
+                int errorcode = regcomp(&preg, regex, REG_EXTENDED);
+
+                // evalue the regex
+                regmatch_t pmatch[3];
+                errorcode = errorcode || regexec(&preg, temp_name.c_str(), 3, pmatch, 0);
+
+                bool is_regex_match = (pmatch[0].rm_eo - pmatch[0].rm_so) == temp_name.size();
+                regfree(&preg);
+                if(is_regex_match) $setType(MACRO_NAME);
+                
+            }
+
+        }
 ;
 
 // Single-line comments (no EOL)
@@ -173,7 +205,7 @@ WS :
             // horizontal tab
             '\t'
         )+
-;
+    ;
 
 // end of line
 EOL :
@@ -190,6 +222,11 @@ EOL :
 
             // record to new lines for optional positions
             newline();
+            if(isoption(options, OPTION_LINE))
+                setLine(getLine() + (1 << 16));
+            if(isline && line_number > -1) setLine(line_number << 16 | (getLine() & 0xFFFF));
+            isline = false;
+            line_number = -1;
         }
 ;
 /*

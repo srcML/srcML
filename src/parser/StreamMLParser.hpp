@@ -205,8 +205,41 @@ private:
             return true;
         }
 
-        // actual whitespace
-        if (isSkipToken(Base::LA(1))) {
+        // macro call
+	if (Base::LA(1) == Base::MACRO_NAME) {
+
+	  if(inskip) {
+
+	    Base::LT(1)->setType(Base::NAME);
+
+	  } else {
+
+	    inskip = true;
+
+            // use preprocessor token buffers
+            pouttb = &pretb;
+            pskiptb = &skippretb;
+
+            // parse macro_call
+            Base::macro_pattern_call();
+
+            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
+            pretb.splice(pretb.end(), skippretb);
+
+            // move back to normal buffer
+            pskiptb = &skiptb;
+            pouttb = &tb;
+
+            // put preprocessor buffer into skipped buffer
+            skiptb.splice(skiptb.end(), pretb);
+
+	  inskip = false;
+
+	  }
+
+	}
+
+	if (isSkipToken(Base::LA(1))) {
             // skipped tokens are put on a special buffer
             pushSkipToken();
 

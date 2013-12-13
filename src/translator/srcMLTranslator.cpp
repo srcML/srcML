@@ -107,6 +107,10 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
   translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, writer, op, directory, filename, version, uri, tabsize, suri);
 }
 
+void srcMLTranslator::setMacroList(std::vector<std::string> list) {
+  translator->setMacroList(list);
+}
+
 // translate from input stream to output stream
 void* srcMLTranslator::setInput(const char* path) {
 
