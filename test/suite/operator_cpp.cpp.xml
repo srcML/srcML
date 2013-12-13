@@ -34,19 +34,19 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name><name>const_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name><name>const_cast</name><argument_list>&lt;<argument><expr><name>type</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name><name>static_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name><name>static_cast</name><argument_list>&lt;<argument><expr><name>type</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name><name>dynamic_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name><name>dynamic_cast</name><argument_list>&lt;<argument><expr><name>type</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name><name>reinterpret_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name><name>reinterpret_cast</name><argument_list>&lt;<argument><expr><name>type</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -203,6 +203,11 @@
 
 <unit>
 <template>template<parameter_list>&lt;<param><type/><name>A</name></param>, <param><type/><name>B</name></param>&gt;</parameter_list> <class_decl>class <name>A</name>;</class_decl></template>
+<decl_stmt><decl><type><name><name><name>A</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><op:operator>::</op:operator><name>b</name></name></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name><name>A</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><op:operator>::</op:operator>*<name>b</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
 </unit>
