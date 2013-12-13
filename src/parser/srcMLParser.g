@@ -1632,6 +1632,7 @@ class_definition[] { ENTRY_DEBUG } :
 
         class_preamble CLASS class_post (class_header lcurly | lcurly)
         {
+
             if (inLanguage(LANGUAGE_CXX_ONLY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
         }
@@ -3337,6 +3338,22 @@ attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 // Full, complete expression matched all at once (no stream).
 // Colon matches range(?) for bits.
+complete_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
+        (options { greedy = true; } : {LA(1) != RPAREN}? (
+
+        // commas as in a list
+        { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
+        comma |
+
+        // argument mode (as part of call)
+        { inTransparentMode(MODE_ARGUMENT) }? argument |
+
+        // expression with right parentheses if a previous match is in one
+        { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
+
+        COLON))*
+;
+
 complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
@@ -3604,29 +3621,13 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
 alignas_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
-            startNewMode(MODE_LOCAL);
+            startNewMode(MODE_LOCAL | MODE_ARGUMENT);
 
             startElement(SALIGNAS);
         }
         ALIGNAS
-        {
-            // start a mode for the macro argument list
-            startNewMode(MODE_LIST | MODE_TOP);
 
-            // start the argument list
-            startElement(SARGUMENT_LIST);
-        }
-        LPAREN
-        macro_call_contents
-        {
-            // end anything started inside of the macro argument list
-            endDownToMode(MODE_LIST | MODE_TOP);
-        }
-        RPAREN
-        {
-            // end the macro argument list
-            endMode(MODE_LIST | MODE_TOP);
-        }
+        call_argument_list complete_argument RPAREN
 
 ;
 
