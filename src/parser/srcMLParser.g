@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 20 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 20 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -3338,20 +3338,26 @@ attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 // Full, complete expression matched all at once (no stream).
 // Colon matches range(?) for bits.
-complete_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
-        (options { greedy = true; } : {LA(1) != RPAREN}? (
+complete_argument[] { CompleteElement element(this); int count_paren = 1; ENTRY_DEBUG } :
+        { getParen() == 0 }? rparen[false] |
+        { getCurly() == 0 }? rcurly_argument |
+        {
+            // argument with nested expression
+            startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
 
-        // commas as in a list
-        { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
-        comma |
+            // start the argument
+            startElement(SARGUMENT);
+        }
+        ( { count_paren > 0 }?
+        ({ LA(1) == LPAREN }? expression { ++count_paren; } |
 
-        // argument mode (as part of call)
-        { inTransparentMode(MODE_ARGUMENT) }? argument |
+        rparen[true] { --count_paren; } |
 
-        // expression with right parentheses if a previous match is in one
-        { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
+        expression |
 
-        COLON))*
+        type_identifier
+        ))*
+
 ;
 
 complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -3627,7 +3633,9 @@ alignas_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         ALIGNAS
 
-        call_argument_list complete_argument RPAREN
+        ({ inputState->guessing }? paren_pair | 
+
+        call_argument_list complete_argument)
 
 ;
 
