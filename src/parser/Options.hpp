@@ -263,4 +263,7 @@ const OPTION_TYPE OPTION_SVN  = ull(1) << 42;
 // @src2srcml
 const OPTION_TYPE OPTION_LINE  = ull(1) << 43;
 
+// @src2srcml
+const OPTION_TYPE OPTION_MACRO_PATTERN  = ull(1) << 44;
+
 #endif

@@ -74,6 +74,7 @@ const char* const MODIFIER_FLAG = "modifier";
 const char* const POSITION_FLAG = "position";
 const char* const LINE_FLAG = "line";
 const int LINE_FLAG_CODE = 256 + 0;
+
 const char* const TABS_FLAG = "tabs";
 const int TABS_FLAG_CODE = 256 + 1;
 const char* const TABS_FLAG_FULL = "tabs=NUMBER";
@@ -126,6 +127,9 @@ const int CPP_FLAG_CODE = 256 + 12;
 
 const char* const SVN_FLAG = "svn";
 const int SVN_FLAG_CODE = 256 + 13;
+
+const char* const MACRO_PATTERN_FLAG = "macro-pattern";
+const int MACRO_PATTERN_FLAG_CODE = 256 + 14;
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
@@ -703,6 +707,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { OPERATOR_FLAG, no_argument, &curoption, OPTION_OPERATOR },
     { MODIFIER_FLAG, no_argument, &curoption, OPTION_MODIFIER },
     { LINE_FLAG, no_argument, NULL, LINE_FLAG_CODE },
+    { MACRO_PATTERN_FLAG, no_argument, NULL, MACRO_PATTERN_FLAG_CODE },
 #ifdef SVN
     { SVN_FLAG, required_argument, NULL, SVN_FLAG_CODE },
 #endif
@@ -763,6 +768,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case LINE_FLAG_CODE:
       options |= OPTION_LINE;
+      break;
+
+    case MACRO_PATTERN_FLAG_CODE:
+      options |= OPTION_MACRO_PATTERN;
       break;
 
 #ifdef SVN

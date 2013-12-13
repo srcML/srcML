@@ -21,7 +21,8 @@
 */
 
 header "pre_include_hpp" {
-   #include <cstring>
+    #include <cstring>
+    #include <regex.h>
 }
 
 header {
