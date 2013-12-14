@@ -141,15 +141,15 @@ if(NOT ${PYTHON_VERSION_MAJOR} EQUAL "2")
 endif()
 set_property(GLOBAL PROPERTY PYTHON_INTERP_EXE ${PYTHON_EXECUTABLE})
 
-
+set(CMAKE_CXX_FLAGS "-Wall -O3")
 
 # Adding compiler configuration for GCC.
 # The default configuration is to compile in DEBUG mode. These flags can be directly
 # overridden by setting the property of a target you wish to change them for.
 if(${CMAKE_COMPILER_IS_GNUCXX})
     # Adding global compiler definitions.
-    set(CMAKE_CXX_FLAGS "-pedantic -Wall -Wno-long-long -g -O0 -DDEBUG --coverage -fprofile-arcs -DNO_DLLOAD")
     set(CMAKE_CXX_FLAGS_RELEASE "-pedantic -Wall -Wno-long-long -O3 -DNDEBUG")
+    set(CMAKE_CXX_FLAGS_DEBUG "-pedantic -Wall -Wno-long-long -g -O0 -DDEBUG --coverage -fprofile-arcs -DNO_DLLOAD")
     
     # This allows for compilation of a re-locatable execuatable on GCC I need to be sure that I
     # can make this portable to compilers other than GCC.
