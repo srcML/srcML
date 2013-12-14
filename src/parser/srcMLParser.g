@@ -3437,7 +3437,10 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
 
 identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
-            startElement(SNAME);
+            if(LA(1) == TYPENAME && inTransparentMode(MODE_TEMPLATE))
+                startElement(SNOP);
+            else
+                startElement(SNAME);
         }
         identifier_list
 ;
@@ -3445,7 +3448,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
-            SIGNAL | FINAL | OVERRIDE |
+            SIGNAL | FINAL | OVERRIDE | TYPENAME |
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
