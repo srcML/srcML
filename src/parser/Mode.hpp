@@ -152,6 +152,8 @@ public:
 
     const static State::MODE_TYPE MODE_TRAILING_RETURN;
 
+    const static State::MODE_TYPE MODE_DECLTYPE;
+
 public:
 
     Mode(TokenParser* ptp, int lang)
@@ -255,6 +257,11 @@ protected:
     void setMode(const State::MODE_TYPE& m) {
 
         statev.setMode(m);
+    }
+
+    const State::MODE_TYPE getMode() {
+    
+      return statev.getMode();
     }
 
     void clearMode(const State::MODE_TYPE& m) {

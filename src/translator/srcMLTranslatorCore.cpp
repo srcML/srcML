@@ -109,6 +109,9 @@ srcMLTranslatorCore::srcMLTranslatorCore(int language,                // program
 
 }
 
+void srcMLTranslatorCore::setMacroList(std::vector<std::string> list) {
+  user_macro_list = list;
+}
 
 // translate from input stream to output stream
 void* srcMLTranslatorCore::setInput(xmlParserInputBufferPtr input) {
@@ -206,7 +209,7 @@ void srcMLTranslatorCore::translate(const char* path, const char* unit_directory
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input
-      KeywordLexer lexer(pinput, encoding, language);
+      KeywordLexer lexer(pinput, encoding, language, options, user_macro_list);
       lexer.setSelector(&selector);
       lexer.setTabsize(tabsize);
 
@@ -259,7 +262,7 @@ void srcMLTranslatorCore::translate_separate(const char* path, const char* unit_
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input
-      KeywordLexer lexer(pinput, encoding, language);
+      KeywordLexer lexer(pinput, encoding, language, options, user_macro_list);
       lexer.setSelector(&selector);
       lexer.setTabsize(tabsize);
 

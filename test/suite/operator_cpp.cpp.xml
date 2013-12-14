@@ -34,19 +34,19 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name><name>const_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name><name>const_cast</name><argument_list>&lt;<argument><expr><name>type</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name><name>static_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name><name>static_cast</name><argument_list>&lt;<argument><expr><name>type</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name><name>dynamic_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name><name>dynamic_cast</name><argument_list>&lt;<argument><expr><name>type</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name><name>reinterpret_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name><name>reinterpret_cast</name><argument_list>&lt;<argument><expr><name>type</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -202,7 +202,99 @@
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<param><type/><name>A</name></param>, <param><type/><name>B</name></param>&gt;</parameter_list> <class_decl>class <name>A</name>;</class_decl></template>
+<template>template<parameter_list>&lt;<param><type><name>A</name></type></param>, <param><type><name>B</name></type></param>&gt;</parameter_list> <class_decl>class <name>A</name>;</class_decl></template>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name><name>A</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><op:operator>::</op:operator>*<name>b</name></name></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>and_eq</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>bitand</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>bitor</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>compl</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>not</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>not_eq</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>or</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>or_eq</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>xor</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>xor_eq</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>and</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>and_eq</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>bitand</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>bitor</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>compl</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>not</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>not_eq</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>or</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>or_eq</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>xor</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>xor_eq</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 </unit>

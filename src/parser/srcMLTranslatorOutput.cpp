@@ -82,6 +82,7 @@ namespace {
   ELEMENT_MAP(SCONDITION, "condition")
   ELEMENT_MAP(SBLOCK, "block")
   ELEMENT_MAP(SINDEX, "index")
+  ELEMENT_MAP(SDECLTYPE, "decltype")
 
   ELEMENT_MAP(SEXPRESSION_STATEMENT, "expr_stmt")
   ELEMENT_MAP(SEXPRESSION, "expr")
@@ -241,6 +242,9 @@ namespace {
   ELEMENT_MAP(CONTROL_CHAR,   "escape")
   ELEMENT_MAP(SANNOTATION,    "annotation")
 
+  // C++11
+  ELEMENT_MAP(SALIGNAS,    "alignas")
+
   //
   ELEMENT_MAP(SEMPTY,         "empty_stmt")
 };
@@ -313,7 +317,9 @@ srcMLTranslatorOutput::srcMLTranslatorOutput(TokenStream* ints,
 			 )
   : srcMLOutput(ints, filename, language, xml_enc, op, curi, ts, output_buffer, writer, suri)
 {
-  if (isoption(OPTION_POSITION))
+  if (isoption(OPTION_POSITION) && isoption(OPTION_LINE))
+      num2process[2] = &srcMLTranslatorOutput::processTextPositionLine;
+  else if (isoption(OPTION_POSITION))
       num2process[2] = &srcMLTranslatorOutput::processTextPosition;
 }
 
