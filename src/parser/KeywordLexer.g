@@ -236,6 +236,7 @@ tokens {
     SIZEOF;
     DECLTYPE;
     ALIGNAS;
+    TYPENAME;
 
     OPERATORS;
 
@@ -403,6 +404,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
         { "nullptr"       , NULLPTR          , LANGUAGE_CXX_ONLY }, 
         { "decltype"      , DECLTYPE         , LANGUAGE_CXX_ONLY }, 
         { "alignas"       , ALIGNAS          , LANGUAGE_CXX_ONLY }, 
+        { "typename"      , TYPENAME         , LANGUAGE_CXX_ONLY }, 
 
         // Add alternative operators
         { "and"           , OPERATORS        , LANGUAGE_CXX_ONLY }, 
