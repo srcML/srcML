@@ -699,7 +699,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0;
 
         // detect the declaration/definition type
         pattern_check(stmt_type, secondtoken, type_count);
-fprintf(stderr, "HERE %d\n", type_count);
+
         ENTRY_DEBUG } :
 
         // variable declaration
@@ -2463,7 +2463,8 @@ trailing_return [] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_t
 
         TRETURN
         ({ pattern_check(stmt_type, secondtoken, type_count, true) && (stmt_type == FUNCTION || stmt_type == FUNCTION_DECL)}?
-        {startNewMode(MODE_TRAILING_RETURN);} function_declaration[type_count] function_identifier parameter_list | function_type[type_count + 1])
+        {startNewMode(MODE_TRAILING_RETURN);} function_declaration[type_count] function_identifier parameter_list | function_type[type_count + 1]
+        )
 ;
 
 pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false] returns [bool isdecl] {
@@ -2851,13 +2852,13 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        lead_type_identifier 
+        (TYPENAME)* lead_type_identifier
+
         { 
             decTypeCount();
             if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY))
                 return;
         }
-
         (options { greedy = true; } : {getTypeCount() > 0}? type_identifier { decTypeCount(); })*
         {
             endMode(MODE_EAT_TYPE);
@@ -2993,7 +2994,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         // class/struct/union before a name in a type, e.g., class A f();
-        class_lead_type_identifier |
+        TYPENAME | class_lead_type_identifier |
 
         // enum use in a type
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
@@ -3335,7 +3336,16 @@ complete_argument[] { CompleteElement element(this); int count_paren = 1; ENTRY_
 
         { LA(1) == RPAREN }? expression { --count_paren; } |
 
-        expression
+        expression |
+         comma
+        {
+            // argument with nested expression
+            startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the argument
+            startElement(SARGUMENT);
+        }
+
         ))*
 
 ;
@@ -3416,9 +3426,6 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
 
 identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
-            if(LA(1) == TYPENAME && inTransparentMode(MODE_TEMPLATE))
-                startElement(SNOP);
-            else
                 startElement(SNAME);
         }
         identifier_list
@@ -3427,7 +3434,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
-            SIGNAL | FINAL | OVERRIDE | TYPENAME |
+            SIGNAL | FINAL | OVERRIDE |
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
