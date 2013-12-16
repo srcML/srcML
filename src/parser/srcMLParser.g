@@ -699,7 +699,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0;
 
         // detect the declaration/definition type
         pattern_check(stmt_type, secondtoken, type_count);
-
+fprintf(stderr, "HERE %d\n", type_count);
         ENTRY_DEBUG } :
 
         // variable declaration
@@ -3058,7 +3058,7 @@ decltype_call[] { ENTRY_DEBUG} :
             startElement(SDECLTYPE);
          
         }
-        DECLTYPE call_argument_list
+        DECLTYPE call_argument_list complete_argument
 ;
 
 decltype_full[] { ENTRY_DEBUG }:
@@ -5155,13 +5155,14 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
                startElement(SEXPRESSION);
         }
         (options { greedy = true; } :
-//            { LA(1) != SUPER && LA(1) != QMARK }?
+        { LA(1) != SUPER && LA(1) != QMARK }?
 
-        (options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators)*
+        ((options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators)*
 
         (type_identifier |
             literal | char_literal | string_literal | boolean)
-            (options { generateAmbigWarnings = false; } :template_operators)* |
+            (options { generateAmbigWarnings = false; } :template_operators)*
+            ) |
 
             template_extends_java |
 
