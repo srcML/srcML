@@ -3048,7 +3048,7 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
         variable_identifier_array_grammar_sub[iscomplex]
 ;
 
-decltype_call[] { int paren_count = 0; ENTRY_DEBUG} :
+decltype_call[] { ENTRY_DEBUG} :
         {
 
             // start a mode for the macro that will end after the argument list
@@ -3063,26 +3063,6 @@ decltype_call[] { int paren_count = 0; ENTRY_DEBUG} :
 
 decltype_full[] { ENTRY_DEBUG }:
         DECLTYPE paren_pair
-;
-
-decltype_argument[int & paren_count] { ENTRY_DEBUG } :
-        {
-            // argument with nested expression
-            startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
-
-            // start the argument
-            startElement(SARGUMENT);
-        }
-        (
-        { LA(1) != RPAREN || paren_count != 0 }? decl_expression[paren_count] |
-
-        type_identifier
-        )*
-
-;
-
-decl_expression[int & paren_count] {if(LA(1) == LPAREN) ++paren_count; else if(LA(1) == RPAREN) --paren_count; ENTRY_DEBUG } :
-        {inputState->guessing}? rparen | expression
 ;
 
 // set of balanced parentheses
