@@ -24,23 +24,15 @@
 #    1 optional parameter INCLUDE_GRAMMAR
 # Use with named arguments.
 #
-get_property(ANTLR_EXEC GLOBAL PROPERTY ANTLR_EXE)
-macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES)
-	    message("HERE OUTPUT: " ${OUTPUT_FILES})
-	    message("HERE  INPUT: " ${INPUT_FILES})
-    
-	    add_custom_command(OUTPUT  ${OUTPUT_FILES}
-            COMMAND ${ANTLR_EXEC} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES} ${INCLUDE_GRAMMAR}
-            COMMAND touch ${OUTPUT_FILES}
-        )
-endmacro(RunAntlr)
-
 macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
 	    message("HERE OUTPUT: " ${OUTPUT_FILES})
 	    message("HERE  INPUT: " ${INPUT_FILES})
-    
+	    message("HERE  DEPEN: " ${DEPENDENCIES})
+	    message("HERE  INCLU: " ${INCLUDE_GRAMMAR})
+    	    message("\n")
+
 	    add_custom_command(OUTPUT  ${OUTPUT_FILES}
-            COMMAND ${ANTLR_EXEC} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES} ${INCLUDE_GRAMMAR}
+            COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES} ${INCLUDE_GRAMMAR}
             COMMAND touch ${OUTPUT_FILES}
         )
 endmacro(RunAntlr)
