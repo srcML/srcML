@@ -1639,7 +1639,8 @@ class_definition[] { ENTRY_DEBUG } :
 ;
 
 class_post[] { ENTRY_DEBUG } :
-        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)* (specifier)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        (options { greedy = true; } : specifier)*
 ;
 
 enum_class_definition[] { ENTRY_DEBUG } :
@@ -2650,7 +2651,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  INTERFACE           set_type[type, INTERFACE_DECL] |
                  ATSIGN INTERFACE set_type[type, INTERFACE_DECL])
                 set_bool[lcurly, LA(1) == LCURLY]
-                ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+                (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
                 class_post
                 (class_header | LCURLY)
@@ -2688,7 +2689,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // if elaborated type specifier should also be handled above. Reached here because 
                 // non-specifier then class/struct/union.
                 { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != STRUCT && LA(1) != UNION)}?
-        (decltype_full | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
+        ({LA(1) == DECLTYPE }? decltype_full | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
                 non_lead_type_identifier throw_exception[!foundpure]
@@ -3349,14 +3350,12 @@ complete_argument[] { CompleteElement element(this); int count_paren = 1; ENTRY_
             // start the argument
             startElement(SARGUMENT);
         }
-        ( { count_paren > 0 }?
+        (options {warnWhenFollowAmbig = false; } : { count_paren > 0 }?
         ({ LA(1) == LPAREN }? expression { ++count_paren; } |
 
         { LA(1) == RPAREN }? expression { --count_paren; } |
 
-        expression |
-
-        type_identifier
+        expression
         ))*
 
 ;
@@ -5142,7 +5141,7 @@ template_argument_list[] { CompleteElement element(this); std::string namestack_
         }
         savenamestack[namestack_save]
 
-        tempops (COMMA | template_argument)* tempope
+        tempops (options { generateAmbigWarnings = false; } : COMMA | template_argument)* tempope
 
         (options { greedy = true; } : generic_type_constraint)*
 
@@ -5177,8 +5176,8 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         (options { greedy = true; } :
             { LA(1) != SUPER && LA(1) != QMARK }?
-        (type_identifier |
-            literal | char_literal | string_literal | boolean) (template_operators)* |
+        (options { warnWhenFollowAmbig = false; } : (type_identifier |
+            literal | char_literal | string_literal | boolean) (template_operators))* |
 
             template_extends_java |
 
@@ -5190,7 +5189,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 template_argument_expression[] { ENTRY_DEBUG } :
 
         lparen_marked
-        ( { LA(1) != RPAREN }? (general_operators | variable_identifier | string_literal | char_literal | literal | type_identifier | template_argument_expression))*
+        ({ LA(1) != RPAREN }? ((general_operators)=>general_operators | (variable_identifier)=>variable_identifier | string_literal | char_literal | literal | type_identifier | template_argument_expression))*
        rparen_operator[true]
 
 ;

@@ -199,7 +199,6 @@ tokens {
     ENDREGION;
     UNSAFE;
     READONLY;
-    VOLATILE;
     GET;
     SET;
     ADD;
@@ -238,7 +237,6 @@ tokens {
     ALIGNAS;
     TYPENAME;
 
-    OPERATORS;
 
 }
 
