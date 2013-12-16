@@ -66,7 +66,7 @@ set(KeywordLexerOutputFiles
 )
 RunAntlr(${KeywordLexerOutputFiles}
   ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.g
-  ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexer.cpp;${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.g;${OperatorLexerOutputFiles}
+  ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexer.cpp;
   ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexer.g;${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.g
 )
 
