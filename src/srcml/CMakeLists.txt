@@ -22,9 +22,8 @@
 file(GLOB SRCML_HEADERS *.hpp)
 file(GLOB SRCML_SOURCE *.cpp)
 list(REMOVE_ITEM SRCML_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcml.cpp)
-add_library(tempLib STATIC ${SRCML_HEADERS} ${SRCML_SOURCE})
 
-srcMLExec(srcml srcml.cpp tempLib srcml_static)
+srcMLExec(srcml srcml.cpp ${SRCML_HEADERS} ${SRCML_SOURCE} srcml_static)
 
 install(TARGETS srcml
     RUNTIME DESTINATION bin
