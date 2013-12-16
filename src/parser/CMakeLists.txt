@@ -24,7 +24,7 @@ file(GLOB PARSER_SOURCE *.cpp)
 # Running ANTLR on CommentTextLexer.g
 set(CommentTextLexerOutputFiles ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.cpp;${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.hpp;${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexerTokenTypes.hpp;${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexerTokenTypes.txt;${CMAKE_CURRENT_SOURCE_DIR}/expandedCommentTextLexer.g
 )
-RunAntlr("${CommentTextLexerOutputFiles}" ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.g)
+RunAntlr("${CommentTextLexerOutputFiles}" ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.g "" "")
 
 # Running ANTLR on TextLexer.g
 set(TextLexerOutputFiles
@@ -35,7 +35,7 @@ set(TextLexerOutputFiles
     ${CMAKE_CURRENT_SOURCE_DIR}/expandedTextLexer.g
 )
 
-RunAntlr("${TextLexerOutputFiles}" ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.g ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.cpp)
+RunAntlr("${TextLexerOutputFiles}" ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.g ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.cpp "")
 
 # Running ANTLR on OperatorLexer.g
 set(OperatorLexerOutputFiles
