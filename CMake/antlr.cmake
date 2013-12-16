@@ -25,6 +25,7 @@
 # Use with named arguments.
 #
 macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
+	    message("HERE  ANTLR:" ${ANTLR_EXE})
 	    message("HERE OUTPUT: " ${OUTPUT_FILES})
 	    message("HERE  INPUT: " ${INPUT_FILES})
 	    message("HERE  DEPEN: " ${DEPENDENCIES})
@@ -32,7 +33,7 @@ macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
     	    message("\n")
 
 	    add_custom_command(OUTPUT  ${OUTPUT_FILES}
-            COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES} ${INCLUDE_GRAMMAR}
+            COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
             COMMAND touch ${OUTPUT_FILES}
         )
 endmacro(RunAntlr)
