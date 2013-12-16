@@ -26,37 +26,34 @@ set(CommentTextLexerOutputFiles
     ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.hpp 
     ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexerTokenTypes.hpp
-    
+    ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexerTokenTypes.txt 
+    ${CMAKE_CURRENT_SOURCE_DIR}/expandedCommentTextLexer.g
 )
-RunAntlr(
-  OUTPUT_FILES ${CommentTextLexerOutputFiles} ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexerTokenTypes.txt ${CMAKE_CURRENT_SOURCE_DIR}/expandedCommentTextLexer.g
-  INPUT_FILES ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.g
-)
+RunAntlr(${CommentTextLexerOutputFiles} ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.g)
 
 # Running ANTLR on TextLexer.g
 set(TextLexerOutputFiles
     ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/TextLexerTokenTypes.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/TextLexerTokenTypes.txt 
+    ${CMAKE_CURRENT_SOURCE_DIR}/expandedTextLexer.g
 )
 
-RunAntlr(
-  OUTPUT_FILES ${TextLexerOutputFiles} ${CMAKE_CURRENT_SOURCE_DIR}/TextLexerTokenTypes.txt ${CMAKE_CURRENT_SOURCE_DIR}/expandedTextLexer.g
-  INPUT_FILES ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.g
-  DEPENDENCIES ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.cpp
-)
+RunAntlr(${TextLexerOutputFiles} ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.g ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.cpp)
 
 # Running ANTLR on OperatorLexer.g
 set(OperatorLexerOutputFiles
     ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexer.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexerTokenTypes.hpp    
+    ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexerTokenTypes.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/expandedOperatorLexer.g
 )
-RunAntlr(
-  OUTPUT_FILES ${OperatorLexerOutputFiles} ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexerTokenTypes.txt ${CMAKE_CURRENT_SOURCE_DIR}/expandedOperatorLexer.g
-  INPUT_FILES ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexer.g
-  DEPENDENCIES ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.cpp
-  INCLUDE_GRAMMAR ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.g
+RunAntlr(${OperatorLexerOutputFiles}
+  ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexer.g
+  ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.g
 )
 
 # Running ANTLR on KeywordLexer.g
@@ -64,12 +61,13 @@ set(KeywordLexerOutputFiles
     ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexerTokenTypes.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexerTokenTypes.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/expandedKeywordLexer.g
 )
-RunAntlr(
-  OUTPUT_FILES ${KeywordLexerOutputFiles} ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexerTokenTypes.txt ${CMAKE_CURRENT_SOURCE_DIR}/expandedKeywordLexer.g
-  INPUT_FILES ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.g
-  DEPENDENCIES ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexer.cpp ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.g ${OperatorLexerOutputFiles}
-  INCLUDE_GRAMMAR ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexer.g ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.g
+RunAntlr(${KeywordLexerOutputFiles}
+  ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.g
+  ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexer.cpp;${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.g;${OperatorLexerOutputFiles}
+  ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexer.g;${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.g
 )
 
 # Running ANTLR on srcMLParser.g
@@ -77,12 +75,12 @@ set(SrcMLParserOutputFiles
     ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypes.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypes.txt	
 )
-RunAntlr(
-  OUTPUT_FILES ${SrcMLParserOutputFiles} ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypes.txt
-  INPUT_FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.g
-  DEPENDENCIES ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.g ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.cpp
-  INCLUDE_GRAMMAR ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexer.g ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.g ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.g
+RunAntlr(${SrcMLParserOutputFiles}
+  ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.g
+  ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.g;${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexer.g;${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.g;${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.g
 )
 
 # Running SED/GREP macro for token extraction.
@@ -116,9 +114,9 @@ if(NOT ${SVN_ENABLED})
 endif()
 
 add_library(parser OBJECT
-    ${SrcMLParserOutputFiles}
-    ${KeywordLexerOutputFiles}
-    ${CommentTextLexerOutputFiles}
+    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
     ${PARSER_HEADERS}
     ${PARSER_SOURCE}

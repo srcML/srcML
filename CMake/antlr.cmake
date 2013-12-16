@@ -25,31 +25,16 @@
 # Use with named arguments.
 #
 get_property(ANTLR_EXEC GLOBAL PROPERTY ANTLR_EXE)
-macro(RunAntlr)
-    set(multiValueArgs OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
-    cmake_parse_arguments(RunAntlr "" "" "${multiValueArgs}" ${ARGN})
-    list(LENGTH RunAntlr_INCLUDE_GRAMMAR incGrammarLength)
-    if(${incGrammarLength} GREATER 0)
-        math(EXPR incGrammarLength "${incGrammarLength} - 1")
-        set(glibs "")
-        FOREACH(index RANGE 0 ${incGrammarLength})
-            list(GET RunAntlr_INCLUDE_GRAMMAR ${index} temp)
-            if(index LESS ${incGrammarLength})    
-                set(glibs "${glibs}${temp}\;")
-            else()
-                set(glibs "${glibs}${temp}")
-            endif()
-        ENDFOREACH()
-        add_custom_command(
-            OUTPUT  ${RunAntlr_OUTPUT_FILES}
-            COMMAND ${ANTLR_EXEC} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${glibs}\" ${RunAntlr_INPUT_FILES} DEPENDS ${RunAntlr_INPUT_FILES} ${RunAntlr_DEPENDENCIES} ${RunAntlr_INCLUDE_GRAMMAR}
+macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES)
+        add_custom_command(OUTPUT  ${OUTPUT_FILES}
+            COMMAND ${ANTLR_EXEC} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES} ${INCLUDE_GRAMMAR}
             COMMAND touch ${RunAntlr_OUTPUT_FILES}
         )
-    else()
-        add_custom_command(
-            OUTPUT  ${RunAntlr_OUTPUT_FILES}
-            COMMAND ${ANTLR_EXEC} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" ${RunAntlr_INPUT_FILES} DEPENDS ${RunAntlr_INPUT_FILES} ${RunAntlr_DEPENDENCIES}
+endmacro(RunAntlr)
+
+macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
+        add_custom_command(OUTPUT  ${OUTPUT_FILES}
+            COMMAND ${ANTLR_EXEC} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${glibs}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES} ${INCLUDE_GRAMMAR}
             COMMAND touch ${RunAntlr_OUTPUT_FILES}
         )
-    endif()
 endmacro(RunAntlr)
