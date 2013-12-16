@@ -28,13 +28,13 @@ get_property(ANTLR_EXEC GLOBAL PROPERTY ANTLR_EXE)
 macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES)
         add_custom_command(OUTPUT  ${OUTPUT_FILES}
             COMMAND ${ANTLR_EXEC} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES} ${INCLUDE_GRAMMAR}
-            COMMAND touch ${RunAntlr_OUTPUT_FILES}
+            COMMAND touch ${OUTPUT_FILES}
         )
 endmacro(RunAntlr)
 
 macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
         add_custom_command(OUTPUT  ${OUTPUT_FILES}
             COMMAND ${ANTLR_EXEC} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${glibs}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES} ${INCLUDE_GRAMMAR}
-            COMMAND touch ${RunAntlr_OUTPUT_FILES}
+            COMMAND touch ${OUTPUT_FILES}
         )
 endmacro(RunAntlr)
