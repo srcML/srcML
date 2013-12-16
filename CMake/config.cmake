@@ -44,7 +44,7 @@ find_program(xsltproc REQUIRED)
 find_package(LibArchive REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(LibXslt)
-find_package(Boost COMPONENTS program_options REQUIRED)
+find_package(Boost COMPONENTS program_options filesystem system REQUIRED)
 set_property(GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB ${Boost_LIBRARIES})
 set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS ${LibArchive_LIBRARIES})
 
