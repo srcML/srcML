@@ -43,7 +43,7 @@ private:
     xmlParserInputBufferPtr input;
     unsigned int startpos;
     unsigned int endpos;
-    bool first;
+    //bool first;
     bool eof;
     bool done;
 };

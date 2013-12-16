@@ -249,7 +249,7 @@ void srcMLTranslatorCore::translate_separate(const char* path, const char* unit_
                                            int language, xmlBuffer* output_buffer) {
 
   // save old output
-  int depth = out.getDepth();
+  //int depth = out.getDepth();
   out.setDepth(1);
   xmlTextWriter * save_writer = out.getWriter();
 

@@ -116,7 +116,6 @@ private:
     const char* root_filename;
     const char* root_version;
     const char* encoding;
-    int language;
     OPTION_TYPE& options;
     srcMLTranslatorOutput out;
     int tabsize;

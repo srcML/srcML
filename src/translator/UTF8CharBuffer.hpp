@@ -61,7 +61,7 @@ private:
     int growBuffer();
     int pos;
     int size;
-    bool eof;
+    //bool eof;
     bool lastcr;
     xmlParserInputBufferPtr input;
     bool free;

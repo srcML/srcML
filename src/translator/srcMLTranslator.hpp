@@ -129,7 +129,6 @@ public:
 private:
     xmlBuffer * output_buffer;
     srcMLTranslatorCore * translator;
-    OPTION_TYPE options;
     char ** str_buffer;
     int * size;
 

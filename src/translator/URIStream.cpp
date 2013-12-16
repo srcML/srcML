@@ -24,7 +24,7 @@
 #include <cstring>
 
 URIStream::URIStream(const char* uriname)
-  : startpos(0), endpos(-1), first(true), eof(false), done(false)
+  : startpos(0), endpos(-1)/*, first(true)*/, eof(false), done(false)
 {
   if (!(input = xmlParserInputBufferCreateFilename(uriname, XML_CHAR_ENCODING_NONE)))
     throw URIStreamFileError();

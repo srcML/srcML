@@ -30,7 +30,7 @@
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
-  : antlr::CharBuffer(std::cin), pos(0), size(0), eof(false), lastcr(false), free(true)
+  : antlr::CharBuffer(std::cin), pos(0), size(0)/*, eof(false)*/, lastcr(false), free(true)
 {
   const char* enc = encoding;
 
@@ -48,7 +48,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char* source, int asize, const char * encoding)
-  : antlr::CharBuffer(std::cin), pos(0), size(asize), eof(false), lastcr(false), free(true)
+  : antlr::CharBuffer(std::cin), pos(0), size(asize)/*, eof(false)*/, lastcr(false), free(true)
 {
   const char * enc = encoding;
 
@@ -89,9 +89,9 @@ UTF8CharBuffer::UTF8CharBuffer(const char* source, int asize, const char * encod
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(xmlParserInputBufferPtr pinput, const char * encoding)
-  : antlr::CharBuffer(std::cin), pos(0), size(0), eof(false), lastcr(false), input(pinput), free(false)
+  : antlr::CharBuffer(std::cin), pos(0), size(0)/*, eof(false)*/, lastcr(false), input(pinput), free(false)
 {
-  const char * enc = encoding;
+    //const char * enc = encoding;
 
   /* Use a libxml2 parser input buffer to support URIs.
      If an encoding is specified, then use it.  Otherwise, assume none, and
