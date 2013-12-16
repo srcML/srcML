@@ -103,24 +103,6 @@ set_property(GLOBAL PROPERTY GREP_EXE ${GREP_EXE})
 #  Figure out exactly what package curl is and where it is located.
 # find_package(libcurl3)
 
-
-# Locating python libraries and executables for use
-# in compiling and testing.
-find_package(PythonLibs REQUIRED)
-# Variables defiend by find_package(PythonLibs) implementation.
-# PYTHONLIBS_FOUND = have the Python libs been found
-# PYTHON_LIBRARIES = path to the python library
-# PYTHON_INCLUDE_PATH = path to where Python.h is found
-# PYTHON_DEBUG_LIBRARIES = path to the debug library
-
-if(${CMAKE_BUILD_TYPE} MATCHES "RELEASE")
-    link_directories(${PYTHON_LIBRARIES})
-else()
-    link_directories(${PYTHON_DEBUG_LIBRARIES})
-endif()
-include_directories(${PYTHON_INCLUDE_PATH})
-
-
 find_package(PythonInterp REQUIRED)
 # Variables defiend by find_package(PythonInterp)
 # PYTHONINTERP_FOUND = Was the Python executable found.
