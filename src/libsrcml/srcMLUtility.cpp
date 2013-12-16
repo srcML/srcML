@@ -66,7 +66,7 @@
 static xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile);
 static xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int size);
 static void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly);
-static xmlParserCtxtPtr srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input);
+//static xmlParserCtxtPtr srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input);
 
 static bool incount = false;
 

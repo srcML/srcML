@@ -50,7 +50,7 @@ public :
   XPathQueryUnits(const char* a_context_element, const char* a_ofilename, int options,
                   xmlXPathCompExprPtr compiled_xpath, int fd = 0)
     : UnitDOM(options), ofilename(a_ofilename), options(options),
-      compiled_xpath(compiled_xpath), total(0), found(false), needroot(true), fd(fd), closetag(false) {
+      compiled_xpath(compiled_xpath), total(0), found(false), needroot(true), closetag(false), fd(fd) {
   }
 
   virtual ~XPathQueryUnits() {
@@ -70,7 +70,7 @@ public :
       buf = xmlOutputBufferCreateFd(fd, NULL);
     // TODO:  Detect error
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+      //xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
 
     // allow for all exslt functions
     //    exsltRegisterAll();
@@ -636,7 +636,7 @@ public :
     bool closetag;
     bool isarchive;
     int fd;
-    const char * src_prefix;
+    //const char * src_prefix;
   };
 
 #endif

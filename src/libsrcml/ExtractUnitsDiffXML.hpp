@@ -34,7 +34,7 @@
 class ExtractUnitsDiffXML : public ExtractUnitsXML {
 public :
     ExtractUnitsDiffXML(const char* to_dir, const char* filename, const char* output_encoding, const char* version)
-        : ExtractUnitsXML(to_dir, filename, output_encoding), version(version) {
+        : ExtractUnitsXML(to_dir, filename, output_encoding)/*, version(version)*/ {
 
         status = strcmp(version, "1") == 0 ? DIFF_OLD : DIFF_NEW;
         st.push(DIFF_COMMON);
@@ -42,7 +42,7 @@ public :
 
 private :
     enum DIFF { DIFF_COMMON, DIFF_OLD, DIFF_NEW };
-    const char* version;
+    //const char* version;
     std::stack<DIFF> st;
     int status;
 

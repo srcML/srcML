@@ -31,19 +31,19 @@
 class ExtractUnitsXML : public ProcessUnit {
 public :
     ExtractUnitsXML(const char* to_dir, const char* filename, const char* output_encoding)
-        : to_directory(to_dir), ofilename(filename), buffer(0) {
+        : /*to_directory(to_dir),*/ ofilename(filename), buffer(0) {
 
         handler = xmlFindCharEncodingHandler(output_encoding);
     }
 
     ExtractUnitsXML(xmlBufferPtr buffer, const char* output_encoding)
-        : to_directory(0), ofilename(0), buffer(buffer) {
+        : /*to_directory(0),*/ ofilename(0), buffer(buffer) {
 
         handler = xmlFindCharEncodingHandler(output_encoding);
     }
 
 private :
-    const char* to_directory;
+    //const char* to_directory;
     const char* ofilename;
     xmlBufferPtr buffer;
     xmlCharEncodingHandlerPtr handler;
@@ -227,7 +227,7 @@ public :
     }
 
 private :
-    const char* filename;      // output filename
+    //const char* filename;      // output filename
     xmlTextWriterPtr writer;   // output text writer
 };
 

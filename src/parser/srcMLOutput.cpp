@@ -61,8 +61,8 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          std::string * string_uri
 			 )
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
-    unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), openelementcount(0), curline(0),
-    curcolumn(0), tabsize(ts), depth(0), num2sprefix(string_uri)
+    unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), num2sprefix(string_uri)
+    , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0)
 {
   // open the output text writer stream
   // "-" filename is standard output
