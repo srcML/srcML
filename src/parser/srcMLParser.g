@@ -5155,9 +5155,12 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
                startElement(SEXPRESSION);
         }
         (options { greedy = true; } :
-            { LA(1) != SUPER && LA(1) != QMARK }?
+//            { LA(1) != SUPER && LA(1) != QMARK }?
+
+        (options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators)*
+
         (type_identifier |
-            literal | char_literal | string_literal | boolean) 
+            literal | char_literal | string_literal | boolean)
             (options { generateAmbigWarnings = false; } :template_operators)* |
 
             template_extends_java |
