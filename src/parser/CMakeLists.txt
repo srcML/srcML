@@ -93,7 +93,7 @@ if(NOT ${SVN_ENABLED})
     list(REMOVE_ITEM PARSER_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/svn_io.cpp)
 endif()
 
-add_library(parser STATIC
+add_library(parser OBJECT
     ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.cpp

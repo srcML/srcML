@@ -40,10 +40,9 @@ get_property(LIBARCHIVE_LIBS  GLOBAL PROPERTY LIBARCHIVE_LIBS)
 #  - LIB_TYPE is either STATIC or SHARED.
 # 
 macro(buildLib LIB_NAME LIB_TYPE)
-    add_library(${LIB_NAME} ${LIB_TYPE} srcml/srcmlapps.cpp)
-
+    add_library(${LIB_NAME} ${LIB_TYPE} $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:libsrcml> srcml/srcmlapps.cpp)
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml)
-    target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} dl parser translator libsrcml)
+    target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} dl)
 endmacro()
 
 # Building static and dynamic libraries for srcML.
