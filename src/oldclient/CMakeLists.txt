@@ -18,8 +18,8 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-srcMLExec(src2srcml src2srcml.cpp srcml_static parser translator libsrcml)
-srcMLExec(srcml2src srcml2src.cpp srcml_static parser translator libsrcml)
+srcMLExec(src2srcml src2srcml.cpp srcml_static)
+srcMLExec(srcml2src srcml2src.cpp srcml_static)
 
 install(TARGETS src2srcml srcml2src
     RUNTIME DESTINATION bin
