@@ -45,7 +45,7 @@ macro(buildLib LIB_NAME LIB_TYPE)
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
     target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} dl)
 else()
-    target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} ${ANTLR_LIB} ${LIBARCHIVE_LIBS})
+    target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} regex)
 endif()
 endmacro()
 
