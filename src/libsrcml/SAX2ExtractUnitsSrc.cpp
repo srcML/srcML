@@ -367,7 +367,7 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname,
     int filename_size = attributes[filename_pos + 4] - attributes[filename_pos + 3];
     std::string filename_attribute = "";
     filename_attribute.append((const char *)attributes[filename_pos + 3], filename_size);
-    fprintf(stderr, "%d filename:  %s\n", ++count, filename_attribute.c_str());
+    fprintf(stderr, "%5d %s\n", ++count, filename_attribute.c_str());
 
   }
 
