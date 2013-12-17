@@ -4707,7 +4707,8 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         // variable or literal
         variable_identifier) | string_literal | char_literal | literal | boolean | noexcept_operator | 
 
-        variable_identifier_array_grammar_sub[flag]
+        variable_identifier_array_grammar_sub[flag] |
+        specifier
 ;
 
 expression_part_default[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
