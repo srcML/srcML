@@ -4,18 +4,20 @@ import os
 import sys
 
 machines = [
-  '"Fedora Linux 17 Build"'
- , '"Fedora Linux 17 Test"'
- , '"Fedora Linux 18 Build"'
+   '"Fedora Linux 18 Build"'
  , '"Fedora Linux 18 Test"'
  , '"Fedora Linux 19 Build"'
  , '"Fedora Linux 19 Test"'
+ , '"Fedora Linux 20 Build"'
+ , '"Fedora Linux 20 Test"'
  , '"Fedora Linux 17 Build (64-bit)"'
  , '"Fedora Linux 17 Test (64-bit)"'
  , '"Fedora Linux 18 Build (64-bit)"'
  , '"Fedora Linux 18 Test (64-bit)"'
  , '"Fedora Linux 19 Build (64-bit)"'
  , '"Fedora Linux 19 Test (64-bit)"'
+ , '"Fedora Linux 20 Build (64-bit)"'
+ , '"Fedora Linux 20 Test (64-bit)"'
  , '"OpenSUSE Linux 13.1 Build"'
  , '"OpenSUSE Linux 13.1 Test"'
  , '"OpenSUSE Linux 13.1 Build (64-bit)"'
