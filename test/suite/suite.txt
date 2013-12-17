@@ -15,6 +15,7 @@ LANGUAGE_ALL_BASE problem
 LANGUAGE_ALL_BASE literal
 LANGUAGE_ALL_BASE operator_base
 LANGUAGE_ALL_BASE whitespace
+LANGUAGE_ALL_BASE specifier
 
 LANGUAGE_ALL_GEN while
 LANGUAGE_ALL_GEN ifnestcond 
@@ -157,3 +158,4 @@ LANGUAGE_JAVA decl_java
 LANGUAGE_OO catch_form
 LANGUAGE_OO foreach
 LANGUAGE_OO try
+LANGUAGE_OO specifier_oo
