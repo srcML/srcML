@@ -2533,8 +2533,14 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     if (type == DESTRUCTOR_DECL && (!inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_FUNCTION_TAIL)))
         type = EXPRESSION;
 
+    int save_la = LA(1);
+
     inputState->guessing--;
     rewind(start);
+
+    if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 && _tokenSet_27.member(LA(1)) && save_la == TERMINATE)
+        type = VARIABLE;
+
 } :
 ;
 
@@ -2737,6 +2743,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_type[type, VARIABLE, (((type_count - specifier_count > 0 && (!inMode(MODE_ACCESS_REGION) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET ||
                                               ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && LA(1) == EQUAL)))) ||
                                  (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET ||
+
                                               ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && LA(1) == EQUAL))))]
 
         // need to see if we possibly have a constructor/destructor name, with no type
@@ -4707,8 +4714,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         // variable or literal
         variable_identifier) | string_literal | char_literal | literal | boolean | noexcept_operator | 
 
-        variable_identifier_array_grammar_sub[flag] |
-        specifier
+        variable_identifier_array_grammar_sub[flag]
 ;
 
 expression_part_default[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
