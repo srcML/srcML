@@ -360,6 +360,17 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname,
   // so we did find another element in the root
   pstate->rootonly = false;
 
+  if(isoption(*(pstate->poptions), OPTION_VERBOSE) && strcmp((const char *)localname, "unit") == 0) {
+    static int count = 0;
+
+    int filename_pos = find_attribute_index(nb_attributes, attributes, "filename");
+    int filename_size = attributes[filename_pos + 4] - attributes[filename_pos + 3];
+    std::string filename_attribute = "";
+    filename_attribute.append((const char *)attributes[filename_pos + 3], filename_size);
+    fprintf(stderr, "%5d %s\n", ++count, filename_attribute.c_str());
+
+  }
+
   // setup for diff tracking
   diff_filename = true;
   if (isoption(*(pstate->poptions), OPTION_DIFF)) {
