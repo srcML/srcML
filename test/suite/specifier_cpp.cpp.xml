@@ -14,10 +14,6 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>volatile</specifier></type></decl>;</decl_stmt>
-</unit>
-
-<unit>
 <decl_stmt><decl><type><specifier>virtual</specifier></type></decl>;</decl_stmt>
 </unit>
 

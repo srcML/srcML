@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="specifier" filename="specifier_java">
+
+<unit>
+<decl_stmt><decl><type><specifier>final</specifier></type></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>synchronized</specifier></type></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>abstract</specifier></type></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>native</specifier></type></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>strictfp</specifier></type></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>transient</specifier></type></decl>;</decl_stmt>
+</unit>
+
+</unit>
