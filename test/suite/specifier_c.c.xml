@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="specifier" filename="specifier_c">
+
+<unit>
+<decl_stmt><decl><type><specifier>inline</specifier></type></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>extern</specifier></type></decl>;</decl_stmt>
+</unit>
+
+</unit>

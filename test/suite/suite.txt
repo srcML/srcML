@@ -47,6 +47,7 @@ LANGUAGE_C_ONLY cast_c
 LANGUAGE_C_ONLY enum_c
 LANGUAGE_C_ONLY struct_c
 LANGUAGE_C_ONLY union_c
+LANGUAGE_C_ONLY specifier_c
 
 LANGUAGE_CXX friend
 LANGUAGE_CXX namespace
