@@ -2538,7 +2538,8 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     inputState->guessing--;
     rewind(start);
 
-    if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 && _tokenSet_27.member(LA(1)) && save_la == TERMINATE)
+    if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
+       && _tokenSet_27.member(LA(1)) && !(LA(1) == FINAL || LA(1) == OVERRIDE) && save_la == TERMINATE)
         type = VARIABLE;
 
 } :
