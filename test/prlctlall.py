@@ -10,8 +10,6 @@ machines = [
  , '"Fedora Linux 19 Test"'
  , '"Fedora Linux 20 Build"'
  , '"Fedora Linux 20 Test"'
- , '"Fedora Linux 17 Build (64-bit)"'
- , '"Fedora Linux 17 Test (64-bit)"'
  , '"Fedora Linux 18 Build (64-bit)"'
  , '"Fedora Linux 18 Test (64-bit)"'
  , '"Fedora Linux 19 Build (64-bit)"'

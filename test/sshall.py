@@ -10,8 +10,6 @@ machines = [
     , "fedora19test"
     , "fedora20build"
     , "fedora20test"
-    , "fedora17build64"
-    , "fedora17test64"
     , "fedora18build64"
     , "fedora18test64"
     , "fedora19build64"
