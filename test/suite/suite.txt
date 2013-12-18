@@ -15,6 +15,7 @@ LANGUAGE_ALL_BASE problem
 LANGUAGE_ALL_BASE literal
 LANGUAGE_ALL_BASE operator_base
 LANGUAGE_ALL_BASE whitespace
+LANGUAGE_ALL_BASE specifier
 
 LANGUAGE_ALL_GEN while
 LANGUAGE_ALL_GEN ifnestcond 
@@ -46,6 +47,7 @@ LANGUAGE_C_ONLY cast_c
 LANGUAGE_C_ONLY enum_c
 LANGUAGE_C_ONLY struct_c
 LANGUAGE_C_ONLY union_c
+LANGUAGE_C_ONLY specifier_c
 
 LANGUAGE_CXX friend
 LANGUAGE_CXX namespace
@@ -82,6 +84,8 @@ LANGUAGE_CXX expression_cpp
 LANGUAGE_CXX attributes_cpp
 LANGUAGE_CXX lambda_cpp
 LANGUAGE_CXX decltype
+LANGUAGE_CXX specifier_cpp
+LANGUAGE_CXX foreach
 
 LANGUAGE_CSHARP_GEN asm
 LANGUAGE_CSHARP_GEN extern
@@ -134,6 +138,7 @@ LANGUAGE_CSHARP call_cs
 LANGUAGE_CSHARP class_cs
 LANGUAGE_CSHARP using_directive_cs
 LANGUAGE_CSHARP using_statement_cs
+LANGUAGE_CSHARP specifier_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
@@ -153,7 +158,9 @@ LANGUAGE_JAVA strictfp_java
 LANGUAGE_JAVA catch_form_java
 LANGUAGE_JAVA try_java
 LANGUAGE_JAVA decl_java
+LANGUAGE_JAVA specifier_java
+LANGUAGE_JAVA foreach
 
 LANGUAGE_OO catch_form
-LANGUAGE_OO foreach
 LANGUAGE_OO try
+LANGUAGE_OO specifier_oo

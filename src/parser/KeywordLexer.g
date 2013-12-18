@@ -290,6 +290,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
         { "enum"          , ENUM          , LANGUAGE_ALL }, 
 
         { "static"        , STATIC        , LANGUAGE_ALL }, 
+        { "const"         , CONST         , LANGUAGE_ALL }, 
  
         // operators and special characters
         { ")"             , RPAREN        , LANGUAGE_ALL }, 
@@ -341,7 +342,6 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
         { "goto"          , GOTO          , LANGUAGE_C_FAMILY }, 
         { "sizeof"        , SIZEOF        , LANGUAGE_C_FAMILY }, 
 
-        { "const"         , CONST         , LANGUAGE_ALL }, 
         { "mutable"       , MUTABLE       , LANGUAGE_CXX }, 
         { "volatile"      , VOLATILE      , LANGUAGE_OO }, 
 
