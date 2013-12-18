@@ -11,6 +11,7 @@ asm.cs.xml
 call.c.xml
 call.cs.xml
 call.java.xml
+catch_form.cs.xml
 catch_form.java.xml
 comment.c.xml
 comment.cs.xml
@@ -95,6 +96,11 @@ return_base.cs.xml
 return_base.java.xml
 sizeof.c.xml
 sizeof.cs.xml
+specifier.c.xml
+specifier.cs.xml
+specifier.java.xml
+specifier_oo.cs.xml
+specifier_oo.java.xml
 string.c.xml
 string.cs.xml
 string.java.xml
