@@ -2539,7 +2539,8 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     rewind(start);
 
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
-       && _tokenSet_27.member(LA(1)) && !(LA(1) == FINAL || LA(1) == OVERRIDE) && save_la == TERMINATE)
+       && _tokenSet_27.member(LA(1)) && (!inLanguage(LANGUAGE_CXX_ONLY) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
+       && save_la == TERMINATE)
         type = VARIABLE;
 
 } :
