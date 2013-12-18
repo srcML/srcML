@@ -5,4 +5,8 @@
 <decl_stmt><decl><type><specifier>const</specifier></type></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><specifier>static</specifier></type></decl>;</decl_stmt>
+</unit>
+
 </unit>

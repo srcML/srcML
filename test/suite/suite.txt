@@ -83,6 +83,7 @@ LANGUAGE_CXX expression_cpp
 LANGUAGE_CXX attributes_cpp
 LANGUAGE_CXX lambda_cpp
 LANGUAGE_CXX decltype
+LANGUAGE_CXX specifier_cpp
 
 LANGUAGE_CSHARP_GEN asm
 LANGUAGE_CSHARP_GEN extern
