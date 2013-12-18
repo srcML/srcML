@@ -42,4 +42,16 @@
 <expr_stmt><expr><name>override</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><specifier>constexpr</specifier></type></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>thread_local</specifier></type></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><alignas>alignas<argument_list>()</argument_list></alignas></type></decl>;</decl_stmt>
+</unit>
+
 </unit>
