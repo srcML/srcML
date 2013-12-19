@@ -19,11 +19,11 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
-srcMLExec(src2srcml src2srcml.cpp srcml_static)
-srcMLExec(srcml2src srcml2src.cpp srcml_static)
+    srcMLExec(src2srcml src2srcml.cpp srcml_static)
+    srcMLExec(srcml2src srcml2src.cpp srcml_static)
 else()
-srcMLExec(src2srcml src2srcml.cpp srcml_shared)
-srcMLExec(srcml2src srcml2src.cpp srcml_shared)
+    srcMLExec(src2srcml src2srcml.cpp srcml_shared)
+    srcMLExec(srcml2src srcml2src.cpp srcml_shared)
 endif()
 
 install(TARGETS src2srcml srcml2src
