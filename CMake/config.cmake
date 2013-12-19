@@ -45,29 +45,27 @@ find_package(LibArchive REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(LibXslt)
 find_package(Boost COMPONENTS program_options filesystem system REQUIRED)
-set_property(GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB ${Boost_LIBRARIES})
-set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS ${LibArchive_LIBRARIES})
 
+# add include directories
 include_directories(${LibArchive_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR})
-set_property(GLOBAL PROPERTY LIBXML2_LIBS ${LIBXML2_LIBRARIES})
 
 if(LIBXSLT_FOUND)
     include_directories(${LIBXSLT_INCLUDE_DIR})
 endif()
 
+if(ENABLE_SVN_INTEGRATION)
+    include_directories(/usr/include/apr-1.0 /usr/include/subversion-1 /usr/local/include/subversion-1)
+endif()
+
 # Setting Properties
+set_property(GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB ${Boost_LIBRARIES})
+set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS ${LibArchive_LIBRARIES})
+set_property(GLOBAL PROPERTY LIBXML2_LIBS ${LIBXML2_LIBRARIES})
+
 if(LIBXSLT_EXSLT_LIBRARY)
     set_property(GLOBAL PROPERTY LIBXSLT_LIBS ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY})
 else()
     set_property(GLOBAL PROPERTY LIBXSLT_LIBS "")
-endif()
-
-# Finding xsltproc program.
-find_program(Xslt_BIN xsltproc)
-if(NOT ${Xslt_BIN} STREQUAL "Xslt_BIN-NOTFOUND")
-    set_property(GLOBAL PROPERTY XSLTPROC "${Xslt_BIN}")
-else()
-    message(FATAL_ERROR "Failed to locate the xsltproc executable. This is required in order to run the test suite.")
 endif()
 
 # Setting some windows only properties.
@@ -78,11 +76,9 @@ if(WIN32)
     include_directories(${WINDOWS_DEP_PATH}/apr-1.0 ${WINDOWS_DEP_PATH}/subversion-1)
 else()
     set(WINDOWS_DEP_PATH "")
-    if(ENABLE_SVN_INTEGRATION)
-        include_directories(/usr/include/apr-1.0 /usr/include/subversion-1 /usr/local/include/subversion-1)
-    endif()
 endif()
 set_property(GLOBAL PROPERTY WINDOWS_DEP_PATH ${WINDOWS_DEP_PATH})
+
 
 # Locating the antlr library.
 find_library(ANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
@@ -96,7 +92,7 @@ set_property(GLOBAL PROPERTY ANTLR_EXE ${ANTLR_EXE})
 find_program(SED_EXE NAMES gsed sed PATHS /opt/local/bin /usr/local /bin ${WINDOWS_DEP_PATH}/bin)
 set_property(GLOBAL PROPERTY SED_EXE ${SED_EXE})
 
-#Finding GREP
+# Finding GREP
 find_program(GREP_EXE grep PATHS /bin /usr/bin ${WINDOWS_DEP_PATH}/bin)
 set_property(GLOBAL PROPERTY GREP_EXE ${GREP_EXE})
 
@@ -116,19 +112,21 @@ find_package(PythonInterp REQUIRED)
 # and the minor version be greater than version 6 (this means version 2.7 of python 
 # version 2 or newer).
 if(NOT ${PYTHON_VERSION_MAJOR} EQUAL "2")
-    message(FATAL_ERROR "Version of python found does not have a major version of 2.")
+    message(FATAL_ERROR "Version of python found is not 2.X.X")
     if(${PYTHON_VERSION_MINOR} LESS EQUAL 6)
-        message(FATAL_ERROR "Minor version of python is not greater than 6.")
+        message(FATAL_ERROR "Version of python found is not 2.6.X")
     endif()
 endif()
 set_property(GLOBAL PROPERTY PYTHON_INTERP_EXE ${PYTHON_EXECUTABLE})
 
+# @todo this needs place in a more appropriate location.
 set(CMAKE_CXX_FLAGS "-Wall -O3")
 
 # Adding compiler configuration for GCC.
 # The default configuration is to compile in DEBUG mode. These flags can be directly
 # overridden by setting the property of a target you wish to change them for.
 if(${CMAKE_COMPILER_IS_GNUCXX})
+
     # Adding global compiler definitions.
     set(CMAKE_CXX_FLAGS_RELEASE "-pedantic -Wall -Wno-long-long -O3 -DNDEBUG")
     set(CMAKE_CXX_FLAGS_DEBUG "-pedantic -Wall -Wno-long-long -g -O0 -DDEBUG --coverage -fprofile-arcs -DNO_DLLOAD")

@@ -26,4 +26,3 @@
 # 
 # # needs to be last so not overwritten
 # include(CPack)
-MESSAGE(STATUS "Fix file: packageConfig.cmake")
