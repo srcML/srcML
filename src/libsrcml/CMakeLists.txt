@@ -18,27 +18,21 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-
-# if(LIBSRCML_SAX2_ENABLED)
-#     file(GLOB LIBSRCML_SRC src/libsrcml/*.cpp)
-#     add_definitions(-DSAX2)
-# else()
-#     file(GLOB LIBSRCML_SRC src/libsrcml/srcml_*.cpp src/libsrcml/libsrcml.cpp src/libsrcml/srcMLReader.cpp)
-# endif()
 get_property(SAX2_ENABLED GLOBAL PROPERTY SAX2_ENABLED)
 if(${SAX2_ENABLED})
-    # TODO: Figure out what needs to be added/excluded in the event that the "SAX2" is enabled/disabled.
-    MESSAGE(WARNING "FIXME: Need to be told which headers/source files are NOT part of the \"SAX2\" interface. Only assuming that the current SAX2 stuff begins with SAX2 in the name of the file.")
+    add_definitions(-DSAX2)
 endif()
 
 file(GLOB LIBSRCML_HEADERS *.hpp)
 file(GLOB LIBSRCML_SOURCE *.cpp)
-list(REMOVE_ITEM LIBSRCML_HEADERS
-    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLReaderHandler.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLSAX2Reader.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/srcml_archive.hpp
-)
+if(NOT ${SAX2_ENABLED})
+    list(REMOVE_ITEM LIBSRCML_HEADERS
+        ${CMAKE_CURRENT_SOURCE_DIR}/srcMLReaderHandler.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/srcMLSAX2Reader.hpp
+    )
+    list(REMOVE_ITEM LIBSRCML_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcMLSAX2Reader.cpp)
 
-list(REMOVE_ITEM LIBSRCML_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcMLSAX2Reader.cpp)
+endif()
+
 add_library(libsrcml OBJECT ${LIBSRCML_HEADERS} ${LIBSRCML_SOURCE})
 
