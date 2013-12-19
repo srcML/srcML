@@ -140,6 +140,9 @@ void option_command(bool opt) {
     srcml_request.command |= command;
 }
 
+template <std::string* result>
+void option_value(const std::string& value) { *result = value; }
+
 void option_filename(const std::string& value) { srcml_request.filename = value; }
 void option_output(const std::string& value) {srcml_request.output = value;}
 void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value;}
@@ -244,7 +247,8 @@ srcml_request_t srcmlCLI::parseCLI(int argc, char* argv[]) {
       
     src2srcml_metadata.add_options()
       ("directory,d", prog_opts::value<std::string>()->notifier(&option_directory), "set the arg directory attribute")
-      ("filename,f", prog_opts::value<std::string>()->notifier(&option_filename), "set the arg filename attribute")
+//      ("filename,f", prog_opts::value<std::string>()->notifier(&option_filename), "set the arg filename attribute")
+      ("filename,f", prog_opts::value<std::string>()->notifier(&option_value<&srcml_request.filename>), "set the arg filename attribute")
       ("src-version,s", prog_opts::value<std::string>()->notifier(&option_src_versions), "set the arg version attribute")
       ;
 
