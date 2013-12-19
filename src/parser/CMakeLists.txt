@@ -30,7 +30,6 @@ RunAntlr("${CommentTextLexerOutputFiles}" ${CMAKE_CURRENT_SOURCE_DIR}/CommentTex
 set(TextLexerOutputFiles
     ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.cpp;${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.hpp;${CMAKE_CURRENT_SOURCE_DIR}/TextLexerTokenTypes.hpp;${CMAKE_CURRENT_SOURCE_DIR}/TextLexerTokenTypes.txt;${CMAKE_CURRENT_SOURCE_DIR}/expandedTextLexer.g
 )
-
 RunAntlr("${TextLexerOutputFiles}" ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.g ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.cpp "")
 
 # Running ANTLR on OperatorLexer.g
