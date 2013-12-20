@@ -1938,7 +1938,7 @@ block_end[] { ENTRY_DEBUG } :
             // end down to either a block or top section, or to an if, whichever is reached first
             endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
 
-            // if in elseif then endit
+            // if in elseif then end it
             if(inMode(MODE_IF | MODE_ELSE))
                 endMode();
 
@@ -2057,9 +2057,6 @@ terminate_post[] { ENTRY_DEBUG } :
                 // end down to either a block or top section, or to an if or else
                 endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE);
 
-                // if in elseif then endit
-                if(inMode(MODE_IF | MODE_ELSE))
-                   endMode();
             }
         }
         else_handling
@@ -2126,6 +2123,13 @@ else_handling[] { ENTRY_DEBUG } :
                     // following ELSE indicates end of outer then
                     if (inMode(MODE_THEN))
                         endMode();
+
+                    // if in elseif then end it
+                    if(inMode(MODE_IF | MODE_ELSE)) {
+                        endMode();
+                        --ifcount;
+                    }
+
                 }
             } else if (inTransparentMode(MODE_ELSE)) {
 
