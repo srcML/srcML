@@ -33,6 +33,7 @@ set(CPACK_PACKAGE_DIRECTORY ${CMAKE_HOME_DIRECTORY}/dist)
 
 # include other specific configurations
 include(debian)
+include(rpm)
 
 # needs to be last so not overwritten
 include(CPack)
