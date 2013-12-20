@@ -11,4 +11,4 @@ set(CPACK_RPM_PACKAGE_RELEASE 1)
 set(CPACK_RPM_PACKAGE_REQUIRES "libxml2 >= 2.7.8, libxslt >= 1.1.26, libarchive >= 3.0.3")
 
 # set what package provides
-set(CPACK_RPM_PACKAGE_PROVIDES)
+#set(CPACK_RPM_PACKAGE_PROVIDES "")
