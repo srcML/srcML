@@ -2,7 +2,7 @@
 set(CPACK_RPM_PACKAGE_NAME "srcML")
 
 # set architecture
-set(CPACK_RPM_PACKAGE_ARCHITECTURE "i386")
+set(CPACK_RPM_PACKAGE_ARCHITECTURE "i686")
 
 # package release number
 set(CPACK_RPM_PACKAGE_RELEASE 1)
