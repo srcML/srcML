@@ -152,7 +152,9 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
                 regmatch_t pmatch[3];
                 errorcode = errorcode || regexec(&preg, temp_name.c_str(), 3, pmatch, 0);
 
-                bool is_regex_match = (pmatch[0].rm_eo - pmatch[0].rm_so) == temp_name.size();
+                unsigned int match_length = (pmatch[0].rm_eo - pmatch[0].rm_so);
+
+                bool is_regex_match = match_length == temp_name.size();
                 regfree(&preg);
                 if(is_regex_match) $setType(MACRO_NAME);
                 
