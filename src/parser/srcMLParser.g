@@ -1938,6 +1938,10 @@ block_end[] { ENTRY_DEBUG } :
             // end down to either a block or top section, or to an if, whichever is reached first
             endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
 
+            // if in elseif then endit
+            if(inMode(MODE_IF | MODE_ELSE))
+                endMode();
+
             bool endstatement = inMode(MODE_END_AT_BLOCK);
             bool anonymous_class = inMode(MODE_CLASS) && inMode(MODE_END_AT_BLOCK);
 
@@ -2053,6 +2057,7 @@ terminate_post[] { ENTRY_DEBUG } :
                 // end down to either a block or top section, or to an if or else
                 endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE);
 
+                // if in elseif then endit
                 if(inMode(MODE_IF | MODE_ELSE))
                    endMode();
             }
