@@ -2861,7 +2861,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (TYPENAME)* lead_type_identifier
+        (options { greedy = true; } : TYPENAME)* lead_type_identifier
 
         { 
             decTypeCount();
