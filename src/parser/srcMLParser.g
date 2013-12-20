@@ -253,7 +253,7 @@ private:
 bool srcMLParser::BOOL;
 
 // constructor
-srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
+srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
     parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false)
 {
@@ -538,7 +538,7 @@ public:
     bool cpp_skipelse;
     int cpp_ifcount;
     bool isdestructor;
-    int parseoptions;
+    OPTION_TYPE & parseoptions;
     std::string namestack[2];
     int ifcount;
 #ifdef ENTRY_DEBUG
@@ -551,7 +551,7 @@ public:
     static bool BOOL;
 
     // constructor
-    srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX, int options = 0);
+    srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
 
     // destructor
     ~srcMLParser() {}
@@ -660,7 +660,7 @@ catch[...] {
 keyword_statements[] { ENTRY_DEBUG } :
 
         // conditional statements
-        if_statement | { next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
+        if_statement | { /*isoption(parseoptions, OPTION_ELSEIF) &&*/ next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
         while_statement | for_statement | do_statement | foreach_statement |

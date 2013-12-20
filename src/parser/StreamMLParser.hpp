@@ -28,6 +28,7 @@
 
 #include <antlr/TokenStream.hpp>
 #include "TokenStream.hpp"
+#include <Options.hpp>
 
 #include <list>
 #include <cassert>
@@ -40,7 +41,7 @@ class StreamMLParser : public Base, public TokenStream {
     // Follow example of ANTLR generated parsers
 public:
 
-    StreamMLParser(antlr::TokenStream& lexer, int language, int parsing_options = 0)
+    StreamMLParser(antlr::TokenStream& lexer, int language, OPTION_TYPE & parsing_options)
         : Base(lexer, language, parsing_options), options(parsing_options),
           inskip(false), _lexer(lexer) {
 
@@ -359,7 +360,7 @@ private:
     }
 
 private:
-    int options;
+    OPTION_TYPE & options;
     bool inskip;
     antlr::TokenStream& _lexer;
 
