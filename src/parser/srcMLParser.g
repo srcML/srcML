@@ -1939,8 +1939,10 @@ block_end[] { ENTRY_DEBUG } :
             endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
 
             // if in elseif then end it
-            if(inMode(MODE_IF | MODE_ELSE))
+            if(inMode(MODE_IF | MODE_ELSE)) {
                 endMode();
+                --ifcount;
+            }
 
             bool endstatement = inMode(MODE_END_AT_BLOCK);
             bool anonymous_class = inMode(MODE_CLASS) && inMode(MODE_END_AT_BLOCK);
@@ -2058,8 +2060,10 @@ terminate_post[] { ENTRY_DEBUG } :
                 endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE);
 
                 // if in elseif then end it
-                if(inMode(MODE_IF | MODE_ELSE))
+                if(inMode(MODE_IF | MODE_ELSE)) {
                     endMode();
+                    --ifcount;
+                }
 
             }
         }
