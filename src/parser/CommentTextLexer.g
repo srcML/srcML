@@ -218,7 +218,7 @@ COMMENT_TEXT {
 
         '\051' /* ')' */ { if(rawstring) {
 
-                int pos = 0;
+                unsigned int pos = 0;
                 while(pos < delimiter.size() && LA(1) == delimiter[pos] && LA(1) != '\n') {
                     ++pos;
                     consume();
