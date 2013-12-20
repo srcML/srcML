@@ -2057,6 +2057,10 @@ terminate_post[] { ENTRY_DEBUG } :
                 // end down to either a block or top section, or to an if or else
                 endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE);
 
+                // if in elseif then end it
+                if(inMode(MODE_IF | MODE_ELSE))
+                    endMode();
+
             }
         }
         else_handling
