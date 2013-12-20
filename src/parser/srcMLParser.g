@@ -1938,12 +1938,6 @@ block_end[] { ENTRY_DEBUG } :
             // end down to either a block or top section, or to an if, whichever is reached first
             endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
 
-            // if in elseif then end it
-            if(inMode(MODE_IF | MODE_ELSE)) {
-                endMode();
-                --ifcount;
-            }
-
             bool endstatement = inMode(MODE_END_AT_BLOCK);
             bool anonymous_class = inMode(MODE_CLASS) && inMode(MODE_END_AT_BLOCK);
 
@@ -2059,12 +2053,6 @@ terminate_post[] { ENTRY_DEBUG } :
                 // end down to either a block or top section, or to an if or else
                 endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE);
 
-                // if in elseif then end it
-                if(inMode(MODE_IF | MODE_ELSE)) {
-                    endMode();
-                    --ifcount;
-                }
-
             }
         }
         else_handling
@@ -2107,7 +2095,7 @@ else_handling[] { ENTRY_DEBUG } :
                 // when an ELSE is next and already in an else, must end properly (not needed for then)
                 } else if (LA(1) == ELSE && inMode(MODE_ELSE)) {
 
-                    while (inMode(MODE_ELSE)) {
+                    while (inMode(MODE_ELSE) && !inMode(MODE_IF)) {
 
                         // end the else
                         endMode();
