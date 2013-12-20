@@ -5026,7 +5026,7 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
             // start of type
             startElement(STYPE);
         }
-        { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : type_count = 1)}?
+        { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : (type_count = 1))}?
         eat_type[type_count]
 ;
 
