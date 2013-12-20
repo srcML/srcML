@@ -120,7 +120,7 @@ endif()
 set_property(GLOBAL PROPERTY PYTHON_INTERP_EXE ${PYTHON_EXECUTABLE})
 
 # @todo this needs place in a more appropriate location.
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-missing-field-initializers -O3")
+set(CMAKE_CXX_FLAGS "-Wall -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized  -O3")
 
 # Adding compiler configuration for GCC.
 # The default configuration is to compile in DEBUG mode. These flags can be directly
