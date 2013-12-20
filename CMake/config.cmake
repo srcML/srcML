@@ -128,8 +128,8 @@ set(CMAKE_CXX_FLAGS "-Wall -O3")
 if(${CMAKE_COMPILER_IS_GNUCXX})
 
     # Adding global compiler definitions.
-    set(CMAKE_CXX_FLAGS_RELEASE "-pedantic -Wall -Wno-long-long -O3 -DNDEBUG")
-    set(CMAKE_CXX_FLAGS_DEBUG "-pedantic -Wall -Wno-long-long -g -O0 -DDEBUG --coverage -fprofile-arcs -DNO_DLLOAD")
+    set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O3 -DNDEBUG")
+    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -O0 -DDEBUG --coverage -fprofile-arcs -DNO_DLLOAD")
     
     # This allows for compilation of a re-locatable execuatable on GCC I need to be sure that I
     # can make this portable to compilers other than GCC.
