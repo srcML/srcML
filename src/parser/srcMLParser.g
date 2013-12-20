@@ -660,7 +660,7 @@ catch[...] {
 keyword_statements[] { ENTRY_DEBUG } :
 
         // conditional statements
-        if_statement | else_statement | switch_statement | switch_case | switch_default |
+        if_statement | { next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
         while_statement | for_statement | do_statement | foreach_statement |
@@ -1324,6 +1324,36 @@ else_statement[] { ENTRY_DEBUG } :
             startElement(SELSE);
         }
         ELSE
+;
+
+/*
+ else if construct
+
+ else and if are detected on their own, and as part of termination (semicolon or
+ end of a block
+*/
+elseif_statement[] { ENTRY_DEBUG } :
+        {
+            // treat as a statement with a nested statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE);
+
+            ++ifcount;
+
+            // start the else part of the if statement
+            startElement(SELSEIF);
+        }
+        ELSE 
+
+        {
+
+            // start the if statement
+            startElement(SIF_STATEMENT);
+
+            // expect a condition
+            // start THEN after condition
+            startNewMode(MODE_CONDITION | MODE_EXPECT);
+        }
+        IF
 ;
 
 //  start of switch statement
@@ -2022,6 +2052,9 @@ terminate_post[] { ENTRY_DEBUG } :
 
                 // end down to either a block or top section, or to an if or else
                 endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE);
+
+                if(inMode(MODE_IF | MODE_ELSE))
+                   endMode();
             }
         }
         else_handling
