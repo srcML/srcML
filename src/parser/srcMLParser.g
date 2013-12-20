@@ -2095,6 +2095,7 @@ else_handling[] { ENTRY_DEBUG } :
                 // when an ELSE is next and already in an else, must end properly (not needed for then)
                 } else if (LA(1) == ELSE && inMode(MODE_ELSE)) {
 
+                    // when an else but not elseif
                     while (inMode(MODE_ELSE) && !inMode(MODE_IF)) {
 
                         // end the else
