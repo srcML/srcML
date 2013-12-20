@@ -13,6 +13,12 @@ endif()
  
 # set package name
 set(CPACK_PACKAGE_FILE_NAME "srcML-${CMAKE_SYSTEM_NAME}")
+
+# set summary
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")
+
+# contact
+set(CPACK_PACKAGE_CONTACT "Software Developement Laboratories <bugs@srcML.org>")
  
 # package version
 set(CPACK_PACKAGE_VERSION_MAJOR "1")
@@ -24,8 +30,6 @@ set(CPACK_PACKAGE_VERSION_PATCH "0")
  
 # set output directory
 set(CPACK_PACKAGE_DIRECTORY ${CMAKE_HOME_DIRECTORY}/dist)
-
-set(CPACK_PACKAGE_CONTACT "Software Developement Laboratories <bugs@srcML.org>")
 
 # include other specific configurations
 include(debian)
