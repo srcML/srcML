@@ -27,5 +27,8 @@ set(CPACK_PACKAGE_DIRECTORY ${CMAKE_HOME_DIRECTORY}/dist)
 
 set(CPACK_PACKAGE_CONTACT "Software Developement Laboratories <bugs@srcML.org>")
 
- # needs to be last so not overwritten
+# include other specific configurations
+include(debian)
+
+# needs to be last so not overwritten
 include(CPack)
