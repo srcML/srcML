@@ -4859,7 +4859,7 @@ parameter_list[] { CompleteElement element(this); bool lastwasparam = false; boo
         complete_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
 ;
 
-indexer_parameter_list[] { bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
+indexer_parameter_list[] { bool lastwasparam = false; ENTRY_DEBUG } :
         {
             // list of parameters
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
@@ -4871,14 +4871,14 @@ indexer_parameter_list[] { bool lastwasparam = false; bool foundparam = false; E
         // function detection
         LBRACKET
         { startNewMode(MODE_LIST); }
-        ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; }
+        ({ if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; }
         {
             // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
 //            if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
 //                endMode();
         } comma |
 
-        complete_parameter { foundparam = lastwasparam = true; })*
+        complete_parameter { lastwasparam = true; })*
 ;
 
 empty_element[int ele, bool cond] { LightweightElement element(this); ENTRY_DEBUG } :
