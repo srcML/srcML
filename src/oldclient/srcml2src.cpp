@@ -267,7 +267,6 @@ void output_version(const char* name) {
   else
     printf("libexslt %d (Compiled %d), ", exsltLibexsltVersion, LIBEXSLT_VERSION);
 #else
-  typedef void (*exsltRegisterAll_function)();
 
   void* handle = dlopen("libxslt.so", RTLD_LAZY);
   if (!handle) {
