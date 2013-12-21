@@ -68,7 +68,7 @@ std::string delimiter;
 
 }
 
-STRING_START :
+STRING_START { int zero_literal = 0; _saveIndex = 0; } :
         { startline = false; }
         (
             // double quoted string
@@ -98,10 +98,10 @@ STRING_START :
             '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
         )
         { atstring = false; rawstring = false; delimiter = ""; }
-        { _saveIndex = _saveIndex = 0; }
+        { _saveIndex = _saveIndex + zero_literal; }
 ;
 
-CONSTANTS :
+CONSTANTS { int zero_literal = 0; _saveIndex = 0; } :
         { startline = false; }
         ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' | '_' )*
         (options { greedy = true; } : "." | '0'..'9')*
@@ -112,7 +112,7 @@ CONSTANTS :
                 line_number = atoi(text.substr(_begin, text.length()-_begin).c_str()); 
             }
         }
-        { _saveIndex = _saveIndex = 0; }
+        { _saveIndex = _saveIndex + zero_literal; }
 ;
 
 NAME options { testLiterals = true; } { char lastchar = LA(1); int zero_literal = 0; _saveIndex = 0; } :
