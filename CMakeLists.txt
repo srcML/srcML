@@ -1,5 +1,5 @@
 #
-#    CMakeLists.txt
+# CMakeLists.txt
 # @copyright
 # 
 # Copyright (C) 2013  SDML (www.srcML.org)
