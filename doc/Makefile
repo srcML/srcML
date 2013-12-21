@@ -36,7 +36,7 @@ src2srcml.html : src2srcml.1
 srcml2src.html : srcml2src.1
 	man ./$< | ${MAN2HTML} | tail -n +3 > $@
 
-OPTION_SRC= ../src/oldclient/src2srcml.cpp ../src/oldclient/srcml2src.cpp ../src/srcml/srcmlapps.hpp ../src/parser/srcmlns.hpp
+OPTION_SRC= ../src/oldclient/src2srcml.cpp ../src/oldclient/srcml2src.cpp ../src/oldclient/srcmlapps.hpp ../src/oldclient/srcmlns.hpp
 option.dtd : ${OPTION_SRC}
 	${ECHO} -n "<!ENTITY DATE \"" > option.dtd
 	date | perl -p -e "s|\n||" >> option.dtd
