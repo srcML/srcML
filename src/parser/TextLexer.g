@@ -115,7 +115,7 @@ CONSTANTS :
         { _saveIndex = _saveIndex = 0; }
 ;
 
-NAME options { testLiterals = true; } { char lastchar = LA(1); } :
+NAME options { testLiterals = true; } { char lastchar = LA(1); int zero_literal = 0; _saveIndex = 0; } :
         { startline = false; }
         ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')
         (
@@ -162,11 +162,11 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
             }
 
         }
-        { _saveIndex = _saveIndex = 0; }
+        { _saveIndex = _saveIndex + zero_literal; }
 ;
 
 // Single-line comments (no EOL)
-LINECOMMENT_START
+LINECOMMENT_START  { int zero_literal = 0; _saveIndex = 0; }
     :   '/' ('/' { 
 
                 if(inLanguage(LANGUAGE_CXX) && (LA(1) == '/' || LA(1) == '!'))
@@ -199,11 +199,11 @@ LINECOMMENT_START
             { $setType(OPERATORS); }
         )
 
-        { _saveIndex = _saveIndex = 0; }
+        { _saveIndex = _saveIndex + zero_literal; }
 ;
 
 // whitespace (except for newline)
-WS :
+WS { int zero_literal = 0; _saveIndex = 0; } :
         (
             // single space
             ' '  |
@@ -212,11 +212,11 @@ WS :
             '\t'
         )+
 
-        { _saveIndex = _saveIndex = 0; }
+        { _saveIndex = _saveIndex + zero_literal; }
     ;
 
 // end of line
-EOL :
+EOL { int zero_literal = 0; _saveIndex = 0; } :
         '\n'
         { 
             // onpreprocline is turned on when on a preprocessor line
@@ -236,7 +236,7 @@ EOL :
             isline = false;
             line_number = -1;
         }
-        { _saveIndex = _saveIndex = 0; }
+        { _saveIndex = _saveIndex + zero_literal; }
 ;
 /*
 EOL_BACKSLASH :
@@ -247,12 +247,12 @@ EOL_BACKSLASH :
   Encode the control character in the text, so that is can be
   issued in an escape character.
 */
-CONTROL_CHAR :
+CONTROL_CHAR { int zero_literal = 0; _saveIndex = 0; } :
         { startline = true; }
         (
         '\000'..'\010' |
         '\013'..'\014' |
         '\016'..'\037'
         )
-        { _saveIndex = _saveIndex = 0; }
+        { _saveIndex = _saveIndex + zero_literal; }
 ;

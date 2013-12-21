@@ -528,5 +528,5 @@ public:
 protected
 SPECIAL_CHARS { int zero_literal = 0; _saveIndex = 0; } :
         '\3'..'\377'
-  { _saveIndex = _saveIndex = zero_literal; }
+  { _saveIndex = _saveIndex + zero_literal; }
 ;
