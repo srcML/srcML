@@ -185,4 +185,5 @@ OPERATORS options { testLiterals = true; } { bool star = false; static int lastp
         '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
         )
         { startline = false; lastpos = getColumn(); }
+        { _saveIndex = _saveIndex = 0; }
 ;

@@ -528,4 +528,5 @@ public:
 protected
 SPECIAL_CHARS :
         '\3'..'\377'
+  { _saveIndex = _saveIndex = 0; }
 ;
