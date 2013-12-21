@@ -78,29 +78,47 @@ bool convenienceCheck(const std::string& filename) {
   archive * arch = archive_read_new();
   archive_entry * arch_entry = archive_entry_new();
 
-  archive_read_support_format_7zip(arch);
   archive_read_support_format_ar(arch);
-  archive_read_support_format_cab(arch);
   archive_read_support_format_cpio(arch);
   archive_read_support_format_gnutar(arch);
   archive_read_support_format_iso9660(arch);
-  archive_read_support_format_lha(arch);
   archive_read_support_format_mtree(arch);
-  archive_read_support_format_rar(arch);
   archive_read_support_format_tar(arch);
   archive_read_support_format_xar(arch);
   archive_read_support_format_zip(arch);
   archive_read_support_format_raw(arch);
 
-  archive_read_support_filter_all(arch);
+  /*
+    CHECK LIBARCHIVE VERSION AND ENABLE VERSION
+    SPECIFIC FEATURES OR UTILIZE SPECIFIC SYNTAX
+  */
+  #if ARCHIVE_VERSION_NUMBER < 3000000
+    //V2 Only
+    archive_read_support_compression_all(arch);
+  #else
+    //V3 Only
+    archive_read_support_format_7zip(arch);
+    archive_read_support_format_cab(arch);
+    archive_read_support_format_lha(arch);
+    archive_read_support_format_rar(arch);
+    archive_read_support_filter_all(arch);
+  #endif
 
   if (archive_read_open_filename(arch, filename.c_str(), 16384) == ARCHIVE_OK) {
     if (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
-      if (archive_filter_code(arch,0) == ARCHIVE_FILTER_NONE &&
-        archive_format(arch) == ARCHIVE_FORMAT_RAW){
-        archive_read_finish(arch);
-        return true;
-      }
+      #if ARCHIVE_VERSION_NUMBER < 3000000
+        if (archive_compression(arch) == ARCHIVE_COMPRESSION_NONE &&
+          archive_format(arch) == ARCHIVE_FORMAT_RAW){
+          archive_read_finish(arch);
+          return true;
+        }
+      #else
+        if (archive_filter_code(arch,0) == ARCHIVE_FILTER_NONE &&
+          archive_format(arch) == ARCHIVE_FORMAT_RAW){
+          archive_read_finish(arch);
+          return true;
+        }
+      #endif
     }
   }
   archive_read_finish(arch);
@@ -207,17 +225,6 @@ int main(int argc, char * argv[]) {
     return 1; //ERROR CODE TBD
   }  
 
-  /* 
-    MIGHT USE THIS LATER:
-    CHECK TO SEE WHAT VERSION OF LIBARCHIVE IS RUNNING
-    SWITCH ON FEATURES (LIBARCHIVE FOR DIRECTORY, ETC.)
-    #if ARCHIVE_VERSION_NUMBER < 3000000
-      //YOU HAVE V2 OR LOWER
-    #else
-      //YOU HAVE V3 OR HIGHER
-    #endif
-  */
-
   ThreadQueue<ParseRequest, 10> queue;
   
   if (srcml_request.positional_args.empty()) {
@@ -254,22 +261,31 @@ int main(int argc, char * argv[]) {
     archive * arch = archive_read_new();
     archive_entry * arch_entry = archive_entry_new();
 
-    archive_read_support_format_7zip(arch);
     archive_read_support_format_ar(arch);
-    archive_read_support_format_cab(arch);
     archive_read_support_format_cpio(arch);
-    archive_read_support_format_empty(arch);
     archive_read_support_format_gnutar(arch);
     archive_read_support_format_iso9660(arch);
-    archive_read_support_format_lha(arch);
     archive_read_support_format_mtree(arch);
-    archive_read_support_format_rar(arch);
-    archive_read_support_format_raw(arch);
     archive_read_support_format_tar(arch);
     archive_read_support_format_xar(arch);
     archive_read_support_format_zip(arch);
+    archive_read_support_format_raw(arch);
 
-    archive_read_support_filter_all(arch);
+    /*
+      CHECK LIBARCHIVE VERSION AND ENABLE VERSION
+      SPECIFIC FEATURES OR UTILIZE SPECIFIC SYNTAX
+    */
+    #if ARCHIVE_VERSION_NUMBER < 3000000
+      //V2 Only
+      archive_read_support_compression_all(arch);
+    #else
+      //V3 Only
+      archive_read_support_format_7zip(arch);
+      archive_read_support_format_cab(arch);
+      archive_read_support_format_lha(arch);
+      archive_read_support_format_rar(arch);
+      archive_read_support_filter_all(arch);
+    #endif
 
     if (archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384) == ARCHIVE_OK) {
       const void* buffer;
