@@ -23,7 +23,7 @@ file(GLOB SRCML_HEADERS *.hpp)
 file(GLOB SRCML_SOURCE *.cpp)
 list(REMOVE_ITEM SRCML_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcml.cpp)
 
-srcMLExec(srcml "srcml.cpp;${SRCML_HEADERS};${SRCML_SOURCE}" srcml_static)
+srcMLExec(srcml "srcml.cpp;${SRCML_HEADERS};${SRCML_SOURCE}" srcml_static ${BOOST_PROGRAM_OPTIONS_LIB})
 
 install(TARGETS srcml
     RUNTIME DESTINATION bin
