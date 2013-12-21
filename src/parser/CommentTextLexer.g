@@ -297,5 +297,8 @@ COMMENT_TEXT {
                 $setType(mode);
                 selector->pop();
             }
-} )+
+
+        _saveIndex = _saveIndex + 0;
+
+       } )+
 ;
