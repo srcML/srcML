@@ -93,8 +93,7 @@ SPECIAL :
 */
 //ALLOPERATORS options { testLiterals = true; } : 
 
-OPERATORS options { testLiterals = true; } { bool star = false; static int lastpos = 0;
-
+OPERATORS options { testLiterals = true; } { bool star = false; static int lastpos = 0; int zero_literal = 0; _saveIndex = 0;
 } : 
         (
             '#' {
@@ -185,5 +184,5 @@ OPERATORS options { testLiterals = true; } { bool star = false; static int lastp
         '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
         )
         { startline = false; lastpos = getColumn(); }
-        { _saveIndex = _saveIndex = 0; }
+        { _saveIndex = _saveIndex + zero_literal; }
 ;
