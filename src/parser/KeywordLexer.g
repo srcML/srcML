@@ -526,7 +526,7 @@ public:
 }
 
 protected
-SPECIAL_CHARS :
+SPECIAL_CHARS { _saveIndex = 0; } :
         '\3'..'\377'
   { _saveIndex = _saveIndex = 0; }
 ;
