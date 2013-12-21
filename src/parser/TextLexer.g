@@ -68,7 +68,7 @@ std::string delimiter;
 
 }
 
-STRING_START :
+STRING_START { int zero_literal = 0; _saveIndex = 0; } :
         { startline = false; }
         (
             // double quoted string
@@ -98,9 +98,10 @@ STRING_START :
             '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
         )
         { atstring = false; rawstring = false; delimiter = ""; }
+        { _saveIndex = _saveIndex + zero_literal; }
 ;
 
-CONSTANTS :
+CONSTANTS { int zero_literal = 0; _saveIndex = 0; } :
         { startline = false; }
         ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' | '_' )*
         (options { greedy = true; } : "." | '0'..'9')*
@@ -111,10 +112,10 @@ CONSTANTS :
                 line_number = atoi(text.substr(_begin, text.length()-_begin).c_str()); 
             }
         }
-
+        { _saveIndex = _saveIndex + zero_literal; }
 ;
 
-NAME options { testLiterals = true; } { char lastchar = LA(1); } :
+NAME options { testLiterals = true; } { char lastchar = LA(1); int zero_literal = 0; _saveIndex = 0; } :
         { startline = false; }
         ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')
         (
@@ -152,17 +153,20 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
                 regmatch_t pmatch[3];
                 errorcode = errorcode || regexec(&preg, temp_name.c_str(), 3, pmatch, 0);
 
-                bool is_regex_match = (pmatch[0].rm_eo - pmatch[0].rm_so) == temp_name.size();
+                unsigned int match_length = (pmatch[0].rm_eo - pmatch[0].rm_so);
+
+                bool is_regex_match = match_length == temp_name.size();
                 regfree(&preg);
                 if(is_regex_match) $setType(MACRO_NAME);
                 
             }
 
         }
+        { _saveIndex = _saveIndex + zero_literal; }
 ;
 
 // Single-line comments (no EOL)
-LINECOMMENT_START
+LINECOMMENT_START  { int zero_literal = 0; _saveIndex = 0; }
     :   '/' ('/' { 
 
                 if(inLanguage(LANGUAGE_CXX) && (LA(1) == '/' || LA(1) == '!'))
@@ -194,10 +198,12 @@ LINECOMMENT_START
 
             { $setType(OPERATORS); }
         )
+
+        { _saveIndex = _saveIndex + zero_literal; }
 ;
 
 // whitespace (except for newline)
-WS :
+WS { int zero_literal = 0; _saveIndex = 0; } :
         (
             // single space
             ' '  |
@@ -205,10 +211,12 @@ WS :
             // horizontal tab
             '\t'
         )+
+
+        { _saveIndex = _saveIndex + zero_literal; }
     ;
 
 // end of line
-EOL :
+EOL { int zero_literal = 0; _saveIndex = 0; } :
         '\n'
         { 
             // onpreprocline is turned on when on a preprocessor line
@@ -228,6 +236,7 @@ EOL :
             isline = false;
             line_number = -1;
         }
+        { _saveIndex = _saveIndex + zero_literal; }
 ;
 /*
 EOL_BACKSLASH :
@@ -238,11 +247,12 @@ EOL_BACKSLASH :
   Encode the control character in the text, so that is can be
   issued in an escape character.
 */
-CONTROL_CHAR :
+CONTROL_CHAR { int zero_literal = 0; _saveIndex = 0; } :
         { startline = true; }
         (
         '\000'..'\010' |
         '\013'..'\014' |
         '\016'..'\037'
         )
+        { _saveIndex = _saveIndex + zero_literal; }
 ;

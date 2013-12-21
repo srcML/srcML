@@ -116,7 +116,7 @@ srcMLReader::~srcMLReader() {
 
     try {
 
-      for(int i = 0; i < save_nodes.size(); ++i)
+      for(unsigned int i = 0; i < save_nodes.size(); ++i)
         freeNode(save_nodes.at(i));
 
     } catch(...) {}
@@ -281,7 +281,7 @@ int srcMLReader::readRootUnitAttributes(std::string *& language, std::string *& 
     else if(ns == SRCML_EXT_POSITION_NS_URI)
       options |= SRCML_OPTION_POSITION;
 
-    int i;
+    unsigned int i;
     try {
 
       for(i = 0; i < prefixes.size(); ++i)
@@ -324,7 +324,7 @@ int srcMLReader::readUnitAttributes(std::string *& language, std::string *& file
 
     try {
 
-      for(int i = 0; i < save_nodes.size(); ++i)
+      for(unsigned int i = 0; i < save_nodes.size(); ++i)
         freeNode(save_nodes.at(i));
 
     } catch(...) {}
@@ -365,7 +365,7 @@ int srcMLReader::readUnitAttributes(std::string *& language, std::string *& file
 
       is_archive = true;
       try {
-        for(int i = 0; i < save_nodes.size() - 1; ++i)
+        for(unsigned int i = 0; i < save_nodes.size() - 1; ++i)
           freeNode(save_nodes.at(i));
 
       } catch(...) {}
@@ -430,10 +430,10 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
     try {
 
-      for(int i = 0; i < save_nodes.size(); ++i)
+      for(unsigned int i = 0; i < save_nodes.size(); ++i)
         output_node_srcml(*save_nodes.at(i), writer, is_single);
 
-      for(int i = 0; i < save_nodes.size(); ++i)
+      for(unsigned int i = 0; i < save_nodes.size(); ++i)
         freeNode(save_nodes.at(i));
 
     } catch(...) {}
@@ -470,7 +470,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
           try {
 
-            for(int i = 0; i < save_nodes.size() - 1; ++i)
+            for(unsigned int i = 0; i < save_nodes.size() - 1; ++i)
               freeNode(save_nodes.at(i));
 
           } catch(...) {}
@@ -508,10 +508,10 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
       try {
 
-        for(int i = 0; i < save_nodes.size(); ++i)
+        for(unsigned int i = 0; i < save_nodes.size(); ++i)
           output_node_srcml(*save_nodes.at(i), writer, is_single);
 
-        for(int i = 0; i < save_nodes.size() - 1; ++i)
+        for(unsigned int i = 0; i < save_nodes.size() - 1; ++i)
           freeNode(save_nodes.at(i));
 
       } catch(...) {}

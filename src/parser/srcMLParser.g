@@ -2861,7 +2861,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (TYPENAME)* lead_type_identifier
+        (options { greedy = true; } : TYPENAME)* lead_type_identifier
 
         { 
             decTypeCount();
@@ -4859,7 +4859,7 @@ parameter_list[] { CompleteElement element(this); bool lastwasparam = false; boo
         complete_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
 ;
 
-indexer_parameter_list[] { bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
+indexer_parameter_list[] { bool lastwasparam = false; ENTRY_DEBUG } :
         {
             // list of parameters
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
@@ -4871,14 +4871,14 @@ indexer_parameter_list[] { bool lastwasparam = false; bool foundparam = false; E
         // function detection
         LBRACKET
         { startNewMode(MODE_LIST); }
-        ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; }
+        ({ if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; }
         {
             // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
 //            if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
 //                endMode();
         } comma |
 
-        complete_parameter { foundparam = lastwasparam = true; })*
+        complete_parameter { lastwasparam = true; })*
 ;
 
 empty_element[int ele, bool cond] { LightweightElement element(this); ENTRY_DEBUG } :
@@ -5026,7 +5026,7 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
             // start of type
             startElement(STYPE);
         }
-        { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : type_count = 1)}?
+        { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : (type_count = 1))}?
         eat_type[type_count]
 ;
 
@@ -5091,7 +5091,7 @@ template_param[] { ENTRY_DEBUG } :
 template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; } :
 
         template_parameter_list_full
-        { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : type_count = 1)}?
+        { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : (type_count = 1))}?
         eat_type[type_count]
         {
             endMode();

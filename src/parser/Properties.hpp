@@ -194,8 +194,8 @@ public :
             fprintf(output, "%s\n", l);
           else if(buffer)
             (*buffer) << l << '\n';
-          else
-            ;
+          else {}
+
         else
           if(output)
             fprintf(output, "%s=\"%s\"\n", attribute_title, l);

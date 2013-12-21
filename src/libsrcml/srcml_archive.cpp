@@ -162,7 +162,7 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
   try {
 
-    for(int pos = 0; pos < archive->attributes.size(); ++pos)
+    for(unsigned int pos = 0; pos < archive->attributes.size(); ++pos)
       new_archive->attributes.push_back(archive->attributes.at(pos));
 
   } catch(...) {}
@@ -173,7 +173,7 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
   // clear out those added by srcml_create_archive
   new_archive->prefixes.clear();
   new_archive->namespaces.clear();
-  for(int pos = 0; pos < archive->namespaces.size(); ++pos) {
+  for(unsigned int pos = 0; pos < archive->namespaces.size(); ++pos) {
 
     try {
 
@@ -186,7 +186,7 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
   try {
     new_archive->registered_languages.clear();
-    for(int i = 0; i < archive->registered_languages.size(); ++i)
+    for(unsigned int i = 0; i < archive->registered_languages.size(); ++i)
       new_archive->registered_languages.push_back(archive->registered_languages.at(i));
 
   } catch(...) {}
@@ -459,7 +459,7 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
 
   try {
 
-    for(int i = 0; i < archive->prefixes.size(); ++i)
+    for(unsigned int i = 0; i < archive->prefixes.size(); ++i)
       if(archive->namespaces.at(i) == ns) {
 
         archive->prefixes.at(i) = prefix;
