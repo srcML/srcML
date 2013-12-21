@@ -98,6 +98,7 @@ STRING_START :
             '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
         )
         { atstring = false; rawstring = false; delimiter = ""; }
+        { _saveIndex = _saveIndex = 0; }
 ;
 
 CONSTANTS :
@@ -111,7 +112,7 @@ CONSTANTS :
                 line_number = atoi(text.substr(_begin, text.length()-_begin).c_str()); 
             }
         }
-
+        { _saveIndex = _saveIndex = 0; }
 ;
 
 NAME options { testLiterals = true; } { char lastchar = LA(1); } :
@@ -161,6 +162,7 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
             }
 
         }
+        { _saveIndex = _saveIndex = 0; }
 ;
 
 // Single-line comments (no EOL)
@@ -196,6 +198,8 @@ LINECOMMENT_START
 
             { $setType(OPERATORS); }
         )
+
+        { _saveIndex = _saveIndex = 0; }
 ;
 
 // whitespace (except for newline)
@@ -207,6 +211,8 @@ WS :
             // horizontal tab
             '\t'
         )+
+
+        { _saveIndex = _saveIndex = 0; }
     ;
 
 // end of line
@@ -230,6 +236,7 @@ EOL :
             isline = false;
             line_number = -1;
         }
+        { _saveIndex = _saveIndex = 0; }
 ;
 /*
 EOL_BACKSLASH :
@@ -247,4 +254,5 @@ CONTROL_CHAR :
         '\013'..'\014' |
         '\016'..'\037'
         )
+        { _saveIndex = _saveIndex = 0; }
 ;
