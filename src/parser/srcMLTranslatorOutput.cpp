@@ -259,6 +259,7 @@ enum { SRCML_SRC_NS_URI_POS,
 };
 
 #undef ELEMENT_MAP_CALL_NAME
+#undef ELEMENT_MAP_FIRST_TYPE
 #undef ELEMENT_MAP_SECOND_TYPE
 
 #define ELEMENT_MAP_CALL_NAME element_prefix
@@ -712,7 +713,7 @@ const char* const srcMLTranslatorOutput::ElementNames[] = {
 };
 
 // element prefix number
-const char srcMLTranslatorOutput::ElementPrefix[] = {
+int srcMLTranslatorOutput::ElementPrefix[] = {
 
   // fill the array with the prefixes
   #define BOOST_PP_LOCAL_MACRO(n)   element_prefix<n>(),

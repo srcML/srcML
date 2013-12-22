@@ -41,14 +41,14 @@ get_property(LIBARCHIVE_LIBS  GLOBAL PROPERTY LIBARCHIVE_LIBS)
 # 
 macro(buildLib LIB_NAME LIB_TYPE)
 
-    add_library(${LIB_NAME} ${LIB_TYPE} $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:libsrcml> srcml/srcmlapps.cpp)
+    add_library(${LIB_NAME} ${LIB_TYPE} $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:libsrcml> oldclient/srcmlapps.cpp)
 
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml)
 
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
-    target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} dl)
+    target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} dl)
 else()
-    target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} regex)
+    target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} regex)
 endif()
 endmacro()
 

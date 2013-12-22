@@ -143,7 +143,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     first = false;
     std::vector<pair> save_ext;
-    for(int i = 0; i < global_archive.registered_languages.size(); ++i)
+    for(unsigned int i = 0; i < global_archive.registered_languages.size(); ++i)
       try {
         save_ext.push_back(global_archive.registered_languages.at(i));
       } catch(...) {
@@ -152,7 +152,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     Language::register_standard_file_extensions(global_archive.registered_languages);
 
-    for(int i = 0; i < save_ext.size(); ++i)
+    for(unsigned int i = 0; i < save_ext.size(); ++i)
       try {
         global_archive.registered_languages.push_back(save_ext.at(i));
       } catch(...) {
@@ -162,7 +162,7 @@ int srcml(const char* input_filename, const char* output_filename) {
     std::vector<std::string> save_prefix;
     std::vector<std::string> save_ns;
     try {
-      for(int i = 0; i < global_archive.prefixes.size(); ++i) {
+      for(unsigned int i = 0; i < global_archive.prefixes.size(); ++i) {
         save_prefix.push_back(global_archive.prefixes.at(i));
         save_ns.push_back(global_archive.namespaces.at(i));
 
@@ -180,7 +180,7 @@ int srcml(const char* input_filename, const char* output_filename) {
     srcml_archive_register_namespace(&global_archive, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_URI);
     srcml_archive_register_namespace(&global_archive, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI);
 
-    for(int i = 0; i < save_prefix.size(); ++i) {
+    for(unsigned int i = 0; i < save_prefix.size(); ++i) {
       try {
         srcml_archive_register_namespace(&global_archive, save_prefix.at(i).c_str(), save_ns.at(i).c_str());
       } catch(...) {
@@ -564,7 +564,7 @@ const char* srcml_get_prefix_uri(const char* namespace_uri) {
 
   try {
 
-    for(int i = 0; i < global_archive.prefixes.size(); ++i)
+    for(unsigned int i = 0; i < global_archive.prefixes.size(); ++i)
       if(global_archive.namespaces.at(i) == namespace_uri)
         return global_archive.prefixes.at(i).c_str();
 
@@ -607,7 +607,7 @@ const char* srcml_get_namespace_prefix(const char* prefix) {
 
   try {
 
-    for(int i = 0; i < global_archive.namespaces.size(); ++i)
+    for(unsigned int i = 0; i < global_archive.namespaces.size(); ++i)
       if(global_archive.prefixes.at(i) == prefix)
         return global_archive.namespaces.at(i).c_str();
 

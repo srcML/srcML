@@ -74,7 +74,7 @@ srcMLTranslatorOutput::PROCESS_PTR srcMLTranslatorOutput::num2process[] = {
 
 #define ELEMENT_MAP_CALL_NAME element_process
 #define ELEMENT_MAP_FIRST_TYPE int
-#define ELEMENT_MAP_SECOND_TYPE int
+#define ELEMENT_MAP_SECOND_TYPE char
 #define ELEMENT_MAP_DEFAULT(s) template <ELEMENT_MAP_FIRST_TYPE n> inline ELEMENT_MAP_SECOND_TYPE \
     ELEMENT_MAP_CALL_NAME() { s }
 

@@ -84,7 +84,7 @@ private:
 
     // List of element names
     static const char* const ElementNames[];
-    static const char ElementPrefix[];
+    static int ElementPrefix[];
 
 public:
 

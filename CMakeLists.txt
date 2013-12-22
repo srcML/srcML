@@ -1,5 +1,5 @@
 #
-#    CMakeLists.txt
+# CMakeLists.txt
 # @copyright
 # 
 # Copyright (C) 2013  SDML (www.srcML.org)
@@ -32,7 +32,7 @@ include (srcml)
 
 
 # Setting up source include directories.
-include_directories(src/srcml src/libsrcml src/parser src/translator)
+include_directories(src/srcml src/oldclient src/libsrcml src/parser src/translator)
 
 # Setting major and minor version numbers (TODO fix this so that it is set using something
 # more correct that being input from within the build system).
