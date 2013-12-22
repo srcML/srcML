@@ -208,8 +208,7 @@ int main(int argc, char * argv[]) {
         if (srcml_request.filename != "") {
           srcml_set_filename(srcml_request.filename.c_str());
         }
-        //TODO: THIS NEEDS A FLAG TOO AS "" CAN BE A VALID DIRECTORY
-        if (srcml_request.directory != "") {
+        if (srcml_request.directory_set) {
           srcml_set_directory(srcml_request.directory.c_str());
         }
         if (srcml_request.src_versions != "") {
