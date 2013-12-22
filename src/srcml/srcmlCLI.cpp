@@ -148,7 +148,7 @@ void option_files_from(const std::string& value) {srcml_request.files_from = val
 void option_language(const std::string& value) {srcml_request.language = value; }
 void option_register_ext(const std::vector<std::string>& values) {srcml_request.register_ext = values; }
 void option_tabs(const int value) {srcml_request.tabs = value; }
-void option_directory(const std::string& value) {srcml_request.directory = value; }
+void option_directory(const std::string& value) {srcml_request.directory = value; srcml_request.directory_set = true; }
 void option_src_versions(const std::string& value) {srcml_request.src_versions = value; }
 void option_prefix(const std::string& value) {srcml_request.prefix = value; }
 void option_xmlns_uri(const std::string& value) {srcml_request.xmlns_uri = value; }
@@ -161,7 +161,7 @@ void option_unit(const int value) {srcml_request.unit = value; }
 void positional_args(const std::vector<std::string>& value) {srcml_request.positional_args = value; }
 
 void option_help(const std::string& help_opt) {
-  srcml_request.help = true;
+  srcml_request.help_set = true;
   if (help_opt == "") {
   //MIGHT NEED A NEW HEADER AND FOOTER FOR THE GENERAL OPTION
     std::cout << SRCML_HEADER << "\n";
