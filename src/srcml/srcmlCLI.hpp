@@ -74,6 +74,7 @@ struct srcml_request_t {
   std::string xslt;
   int unit;
   std::vector<std::string> positional_args;
+  bool help;
 };
 
 class srcmlCLI {
