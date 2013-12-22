@@ -351,7 +351,6 @@ tokens {
 	SCONDITION;
 	SBLOCK;
     SINDEX;
-    SDECLTYPE;
 
     // statements
 	STYPEDEF;
@@ -406,7 +405,6 @@ tokens {
 	SKRPARAMETER;
 	SARGUMENT_LIST;
 	SARGUMENT;
-    SLAMBDA_CAPTURE;
 
     // class, struct, union
 	SCLASS;
@@ -444,7 +442,6 @@ tokens {
 	STHROW_STATEMENT;
 	STHROW_SPECIFIER;
 	STHROW_SPECIFIER_JAVA;
-	SNOEXCEPT;
 
 	STEMPLATE;
     STEMPLATE_ARGUMENT;
@@ -518,7 +515,11 @@ tokens {
 
     SANNOTATION;
 
+    // C++ 11
     SALIGNAS;
+    SDECLTYPE;
+    SLAMBDA_CAPTURE;
+    SNOEXCEPT;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
