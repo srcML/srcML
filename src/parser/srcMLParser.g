@@ -3068,7 +3068,7 @@ decltype_call[] { ENTRY_DEBUG} :
             startElement(SDECLTYPE);
          
         }
-        DECLTYPE call_argument_list complete_argument
+        DECLTYPE complete_argument_list
 ;
 
 decltype_full[] { ENTRY_DEBUG }:
@@ -3328,9 +3328,13 @@ attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
         RBRACKET RBRACKET
 ;
 
+complete_argument_list[] { ENTRY_DEBUG } :
+        call_argument_list complete_arguments
+;
+
 // Full, complete expression matched all at once (no stream).
 // Colon matches range(?) for bits.
-complete_argument[] { CompleteElement element(this); int count_paren = 1; ENTRY_DEBUG } :
+complete_arguments[] { CompleteElement element(this); int count_paren = 1; ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false] |
         { getCurly() == 0 }? rcurly_argument |
         {
@@ -3634,7 +3638,7 @@ alignas_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         ({ inputState->guessing }? paren_pair | 
 
-        call_argument_list complete_argument)
+        complete_argument_list)
 
 ;
 
