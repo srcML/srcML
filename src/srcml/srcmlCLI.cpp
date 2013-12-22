@@ -141,26 +141,27 @@ void option_command(bool opt) {
 }
 
 void option_filename(const std::string& value) { srcml_request.filename = value; }
-void option_output(const std::string& value) {srcml_request.output = value;}
-void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value;}
-void option_encoding(const std::string& value) {srcml_request.encoding = value;}
-void option_files_from(const std::string& value) {srcml_request.files_from = value;}
-void option_language(const std::string& value) {srcml_request.language = value;}
-void option_register_ext(const std::vector<std::string>& values) {srcml_request.register_ext = values;}
-void option_tabs(const int value) {srcml_request.tabs = value;}
-void option_directory(const std::string& value) {srcml_request.directory = value;}
-void option_src_versions(const std::string& value) {srcml_request.src_versions = value;}
-void option_prefix(const std::string& value) {srcml_request.prefix = value;}
-void option_xmlns_uri(const std::string& value) {srcml_request.xmlns_uri = value;}
-void option_xmlns_prefix(const std::vector<std::string>& values) {srcml_request.xmlns_prefix = values;}
-void option_relaxng(const std::string& value) {srcml_request.relaxng = value;}
-void option_xpath(const std::string& value) {srcml_request.xpath = value;}
-void option_xpathparam(const std::vector<std::string>& values) {srcml_request.xpathparam = values;}
-void option_xslt(const std::string& value) {srcml_request.xslt = value;}
-void option_unit(const int value) {srcml_request.unit = value;}
-void positional_args(const std::vector<std::string>& value) {srcml_request.positional_args = value;}
+void option_output(const std::string& value) {srcml_request.output = value; }
+void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value; }
+void option_encoding(const std::string& value) {srcml_request.encoding = value; }
+void option_files_from(const std::string& value) {srcml_request.files_from = value; }
+void option_language(const std::string& value) {srcml_request.language = value; }
+void option_register_ext(const std::vector<std::string>& values) {srcml_request.register_ext = values; }
+void option_tabs(const int value) {srcml_request.tabs = value; }
+void option_directory(const std::string& value) {srcml_request.directory = value; }
+void option_src_versions(const std::string& value) {srcml_request.src_versions = value; }
+void option_prefix(const std::string& value) {srcml_request.prefix = value; }
+void option_xmlns_uri(const std::string& value) {srcml_request.xmlns_uri = value; }
+void option_xmlns_prefix(const std::vector<std::string>& values) {srcml_request.xmlns_prefix = values; }
+void option_relaxng(const std::string& value) {srcml_request.relaxng = value; }
+void option_xpath(const std::string& value) {srcml_request.xpath = value; }
+void option_xpathparam(const std::vector<std::string>& values) {srcml_request.xpathparam = values; }
+void option_xslt(const std::string& value) {srcml_request.xslt = value; }
+void option_unit(const int value) {srcml_request.unit = value; }
+void positional_args(const std::vector<std::string>& value) {srcml_request.positional_args = value; }
 
 void option_help(const std::string& help_opt) {
+  srcml_request.help = true;
   if (help_opt == "") {
   //MIGHT NEED A NEW HEADER AND FOOTER FOR THE GENERAL OPTION
     std::cout << SRCML_HEADER << "\n";

@@ -209,6 +209,13 @@ int main(int argc, char * argv[]) {
   
   srcml_request_t srcml_request = srcmlCLI::parseCLI(argc, argv);
 
+  // CHECK IF THERE ARE FILES TO BE PROCESSED
+  if (srcml_request.positional_args.empty()) {
+    if (!srcml_request.help)
+      std::cerr << "No input files found.\n";
+    return 0;
+  }
+
   // CHECK FOR INVALID GLOBAL FLAGS
   if (srcml_request.encoding != "" && srcml_check_encoding(srcml_request.encoding.c_str()) == 0) {
     std::cerr << "Invalid Encoding.\n";
@@ -226,11 +233,6 @@ int main(int argc, char * argv[]) {
   }  
 
   ThreadQueue<ParseRequest, 10> queue;
-  
-  if (srcml_request.positional_args.empty()) {
-    std::cerr << "No input files found.\n";
-    return 0;
-  }
   
   // Check if local files/directories are present
   if (!checkLocalFiles(srcml_request.positional_args))
