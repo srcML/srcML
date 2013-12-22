@@ -111,7 +111,9 @@
 <template>template<parameter_list>&lt;<param><type><template>template<parameter_list>&lt;<param><type>typename</type></param>&gt;</parameter_list></template> <name>class</name> ...</type> <name>T</name></param>&gt;</parameter_list> <struct_decl>struct <name>C</name>;</struct_decl></template>
 </unit>
 
+<unit>
 <template>template<parameter_list>&lt;<param><type><name>class</name> ...</type> <name>Types</name></param>&gt;</parameter_list> <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>Types</name> ...</type> <name>args</name></decl></param>)</parameter_list>;</function_decl></template>
+</unit>
 
 <unit>
 <template>template<parameter_list>&lt;<param><type>typename...</type> <name>Args</name></param>&gt;</parameter_list> <function><type><specifier>inline</specifier> <name>void</name></type> <name>expand</name><parameter_list>(<param><decl><type><name>Args</name>&amp;&amp;...</type> <name>args</name></decl></param>)</parameter_list> <block>{
