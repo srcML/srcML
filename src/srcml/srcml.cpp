@@ -89,14 +89,14 @@ bool convenienceCheck(const std::string& filename) {
   archive_read_support_format_raw(arch);
 
   /*
-    CHECK LIBARCHIVE VERSION AND ENABLE VERSION
-    SPECIFIC FEATURES OR UTILIZE SPECIFIC SYNTAX
+    Check libarchive version
+    enable version specific features/syntax
   */
   #if ARCHIVE_VERSION_NUMBER < 3000000
-    //V2 Only
+    // V2 Only
     archive_read_support_compression_all(arch);
   #else
-    //V3 Only
+    // V3 Only
     archive_read_support_format_7zip(arch);
     archive_read_support_format_cab(arch);
     archive_read_support_format_lha(arch);
@@ -168,14 +168,14 @@ int main(int argc, char * argv[]) {
   
   srcml_request_t srcml_request = srcmlCLI::parseCLI(argc, argv);
 
-  // CHECK IF THERE ARE FILES TO BE PROCESSED
+  // Check for files that need processing
   if (srcml_request.positional_args.empty()) {
     if (!srcml_request.help_set)
       std::cerr << "No input files found.\n";
     return 0;
   }
 
-  // CHECK FOR INVALID GLOBAL FLAGS
+  // Ensure all global flags are valid
   if (srcml_request.encoding != "" && srcml_check_encoding(srcml_request.encoding.c_str()) == 0) {
     std::cerr << "Invalid Encoding.\n";
     return 1; //ERROR CODE TBD
@@ -193,7 +193,7 @@ int main(int argc, char * argv[]) {
 
   ThreadQueue<ParseRequest, 10> queue;
   
-  // Check if local files/directories are present
+  // Check if local files/directories are present on filesystem
   if (!checkLocalFiles(srcml_request.positional_args))
     return 1;
   
@@ -201,7 +201,7 @@ int main(int argc, char * argv[]) {
     if (srcml_request.positional_args.size() == 1) {
       if (convenienceCheck(srcml_request.positional_args[0])) {
         
-        // SET GLOBAL OPTIONS
+        // Set the global options
         if (srcml_request.encoding != "") {
           srcml_set_encoding(srcml_request.encoding.c_str());
         }
@@ -240,7 +240,7 @@ int main(int argc, char * argv[]) {
                  srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
         }
 
-        // RUN SRCML CONVENIENCE OPTION
+        // srcML convenience function
         srcml(srcml_request.positional_args[0].c_str(), srcml_request.output.c_str());
         return 0;
       }
@@ -272,14 +272,14 @@ int main(int argc, char * argv[]) {
     archive_read_support_format_raw(arch);
 
     /*
-      CHECK LIBARCHIVE VERSION AND ENABLE VERSION
-      SPECIFIC FEATURES OR UTILIZE SPECIFIC SYNTAX
+      Check libarchive version
+      enable version specific features/syntax
     */
     #if ARCHIVE_VERSION_NUMBER < 3000000
-      //V2 Only
+      // V2 Only
       archive_read_support_compression_all(arch);
     #else
-      //V3 Only
+      // V3 Only
       archive_read_support_format_7zip(arch);
       archive_read_support_format_cab(arch);
       archive_read_support_format_lha(arch);
