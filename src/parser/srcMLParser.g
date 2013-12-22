@@ -3328,6 +3328,7 @@ attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
         RBRACKET RBRACKET
 ;
 
+// Do a complete argument list
 complete_argument_list[] { ENTRY_DEBUG } :
         call_argument_list complete_arguments
 ;
