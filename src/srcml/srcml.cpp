@@ -132,8 +132,7 @@ void setArchiveOptions(srcml_archive* srcml_arch, const struct srcml_request_t& 
   if (srcml_request.filename != "") {
     srcml_archive_set_filename(srcml_arch, srcml_request.filename.c_str());
   }
-  //TODO: THIS NEEDS A FLAG TOO AS "" CAN BE A VALID DIRECTORY
-  if (srcml_request.directory != "") {
+  if (srcml_request.directory_set) {
     srcml_archive_set_directory(srcml_arch, srcml_request.directory.c_str());
   }
   if (srcml_request.src_versions != "") {
@@ -171,7 +170,7 @@ int main(int argc, char * argv[]) {
 
   // CHECK IF THERE ARE FILES TO BE PROCESSED
   if (srcml_request.positional_args.empty()) {
-    if (!srcml_request.help)
+    if (!srcml_request.help_set)
       std::cerr << "No input files found.\n";
     return 0;
   }
