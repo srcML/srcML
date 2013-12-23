@@ -443,7 +443,14 @@ tokens {
 	SNAMESPACE;
 	SUSING_DIRECTIVE;
 
-    // cpp internal elements
+    // C++
+    SALIGNAS;
+    SDECLTYPE;
+    SLAMBDA_CAPTURE;
+    SNOEXCEPT;
+	SSIGNAL_ACCESS;
+
+    // cpp directive internal elements
 	SCPP_DIRECTIVE;
     SCPP_FILENAME;
     SCPP_NUMBER;
@@ -462,13 +469,14 @@ tokens {
 	SCPP_ELSE;
 	SCPP_ELIF;
 
-    // C# cpp directive
+    // C# cpp directives
     SCPP_REGION;
     SCPP_ENDREGION;
 
     // This HAS to mark the end of the CPP directives
 	SCPP_ENDIF;
 
+    // Debug elements
     SMARKER;
     SERROR_PARSE;
     SERROR_MODE;
@@ -504,13 +512,6 @@ tokens {
     SEQUALS;
     SBY;
     SINTO;
-
-    // C++
-    SALIGNAS;
-    SDECLTYPE;
-    SLAMBDA_CAPTURE;
-    SNOEXCEPT;
-	SSIGNAL_ACCESS;
 
     // misc
     SEMPTY;  // empty statement
