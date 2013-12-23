@@ -69,12 +69,10 @@ tokens {
     // statements
     BREAK;
 	CONTINUE;
-	GOTO;
 
     WHILE;
 	DO;
-	FOR;
-	ASM;
+	FOR;	
 
     IF;
     ELSE;
@@ -84,7 +82,22 @@ tokens {
 	DEFAULT;
 
 	ENUM;
+
+    // C Family
 	TYPEDEF;
+	GOTO;
+    ASM;
+    SIZEOF;
+    EXTERN;
+
+    // C++
+    CONSTEXPR;
+    NOEXCEPT;
+    THREADLOCAL;
+    NULLPTR;
+    DECLTYPE;
+    ALIGNAS;
+    TYPENAME;
 
     // aggregate types
     UNION;
@@ -107,19 +120,13 @@ tokens {
 
 	INLINE;
 
-    EXTERN;
-
     // specifiers that are not needed for parsing
     /*
     REGISTER = "register";
     MUTABLE = "mutable";
-	CONST = "const";
     VOLATILE = "volatile";
-    */
-    STATIC; // = "static";
 
     // Standard type keywords do not need to be identified
-    /*
     VOID = "void";
 	BOOL = "bool";
 	CHAR = "char";
@@ -158,6 +165,7 @@ tokens {
     DELETE;
 
     // specifiers
+    STATIC;
     CONST;
     MUTABLE;
     VOLATILE;
@@ -173,6 +181,9 @@ tokens {
     FINAL;
     ABSTRACT;
     SUPER;
+    SYNCHRONIZED;
+    NATIVE;
+    STRICTFP;
 
     // C# tokens
     FOREACH;
@@ -207,6 +218,7 @@ tokens {
     THIS;
     PARAMS;
 
+    // linq
     FROM;
     WHERE;
     SELECT;
@@ -220,19 +232,6 @@ tokens {
     ON;
     EQUALS;
     INTO;
-    SYNCHRONIZED;
-    NATIVE;
-    STRICTFP;
-
-    CONSTEXPR;
-    NOEXCEPT;
-    THREADLOCAL;
-    NULLPTR;
-    SIZEOF;
-    DECLTYPE;
-    ALIGNAS;
-    TYPENAME;
-
 
 }
 
