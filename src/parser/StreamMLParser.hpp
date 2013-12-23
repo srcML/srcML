@@ -31,7 +31,6 @@
 
 #include <list>
 #include <cassert>
-#include <Options.hpp>
 
 #include "srcMLToken.hpp"
 
@@ -49,8 +48,7 @@ public:
         pskiptb = &skiptb;
 
         Base::startUnit();
-	if(isoption(parsing_options, OPTION_MACRO_LIST))
-	  Base::macroList();
+	Base::macroList();
     }
 
     ~StreamMLParser() {}
