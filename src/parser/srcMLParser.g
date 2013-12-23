@@ -1899,7 +1899,6 @@ block_end[] { ENTRY_DEBUG } :
 
             // end all statements this statement is nested in
             // special case when ending then of if statement
-
             // end down to either a block or top section, or to an if, whichever is reached first
             endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
 
@@ -1915,7 +1914,6 @@ block_end[] { ENTRY_DEBUG } :
             }
 
             // looking for a terminate (';')
-
             // some statements end with the block if there is no terminate
             if (inMode(MODE_END_AT_BLOCK_NO_TERMINATE) && LA(1) != TERMINATE) {
                 endstatement = true;
@@ -1934,7 +1932,7 @@ block_end[] { ENTRY_DEBUG } :
             if (inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
 
-            // TODO:  Need a test case that makes this necessary
+            // @todo  Need a test case that makes this necessary
             // end of block may lead to adjustment of cpp modes
             cppmode_adjust();
 
@@ -1944,7 +1942,6 @@ block_end[] { ENTRY_DEBUG } :
 // right curly brace.  Not used directly, but called by block_end
 rcurly[] { ENTRY_DEBUG } :
         {
-
 
             // end any elements inside of the block
             endDownToMode(MODE_TOP);
@@ -2065,7 +2062,7 @@ else_handling[] { ENTRY_DEBUG } :
                         endMode();
 
                         /*
-                          TODO:  Can we only do this if we detect a cpp change?
+                          @todo  Can we only do this if we detect a cpp change?
                           This would occur EVEN if we have an ifcount of 2.
                         */
                         // we have an extra else that is rogue
@@ -2298,12 +2295,8 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         LPAREN
 ;
 
-bar[] { ENTRY_DEBUG }:
-        bar_marked
-;
-
 // marking comma operator
-bar_marked[] { LightweightElement element(this); ENTRY_DEBUG }:
+bar[] { LightweightElement element(this); ENTRY_DEBUG }:
         {
             if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER))
                 startElement(SOPERATOR);
