@@ -5193,7 +5193,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 template_argument_expression[] { ENTRY_DEBUG } :
 
         lparen_marked
-        ({ LA(1) != RPAREN }? ((general_operators)=>general_operators | (variable_identifier)=>variable_identifier | string_literal | char_literal | literal | type_identifier | template_argument_expression))*
+        ({ LA(1) != RPAREN }? ({ true }? general_operators | (variable_identifier)=>variable_identifier | string_literal | char_literal | literal | type_identifier | template_argument_expression))*
        rparen_operator[true]
 
 ;
