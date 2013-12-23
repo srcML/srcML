@@ -483,9 +483,6 @@ tokens {
     SINTERFACE;
     SSYNCHRONIZED_STATEMENT;
 
-    // @todo remove C++0x elements
-    SAUTO;
-
     // C#
     SCHECKED_STATEMENT;
     SUNCHECKED_STATEMENT;

@@ -111,7 +111,6 @@ tokens {
 
     // specifiers that are not needed for parsing
     /*
-	AUTO = "auto";
     REGISTER = "register";
     MUTABLE = "mutable";
 	CONST = "const";
@@ -174,9 +173,6 @@ tokens {
     FINAL;
     ABSTRACT;
     SUPER;
-
-    // C++0x tokens
-    AUTO;
 
     // C# tokens
     FOREACH;
@@ -416,9 +412,6 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
         { "or_eq"         , OPERATORS        , LANGUAGE_CXX_ONLY }, 
         { "xor"           , OPERATORS        , LANGUAGE_CXX_ONLY }, 
         { "xor_eq"        , OPERATORS        , LANGUAGE_CXX_ONLY }, 
-
-        // concepts
-//        { "auto"          , AUTO          , LANGUAGE_CXX_11 }, 
 
         // add all Java specific keywords to the literals table
         // exception handling
