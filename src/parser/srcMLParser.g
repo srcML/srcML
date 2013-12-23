@@ -3797,7 +3797,7 @@ sizeof_call[] { ENTRY_DEBUG } :
 ;
 
 macro_call_check[] { ENTRY_DEBUG } :
-        NAME optional_paren_pair
+        NAME (paren_pair)*
 ;
 
 eat_optional_macro_call[] {
@@ -5247,28 +5247,6 @@ paren_pair[] :
 curly_pair[] :
         LCURLY (curly_pair | ~(LCURLY | RCURLY))* RCURLY
 ;
-
-// @todo may want to try and remove
-optional_paren_pair[] {
-
-    if (LA(1) != LPAREN)
-        return;
-
-    consume();
-
-    int parencount = 1;
-    while (parencount > 0 && LA(1) != antlr::Token::EOF_TYPE) {
-
-        if (LA(1) == RPAREN)
-            --parencount;
-        else if (LA(1) == LPAREN)
-            ++parencount;
-
-        consume();
-    }
-
-    ENTRY_DEBUG
-}:;
 
 // See if there is a semicolon terminating a statement inside a block at the top level
 nested_terminate[] {
