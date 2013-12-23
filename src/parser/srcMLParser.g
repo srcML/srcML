@@ -353,10 +353,7 @@ tokens {
     SINDEX;
 
     // statements
-	STYPEDEF;
 	SENUM;
-	SASM;
-	SMACRO_CALL;
 
 	SIF_STATEMENT;
 	STHEN;
@@ -444,6 +441,11 @@ tokens {
     STEMPLATE_ARGUMENT_LIST;
     STEMPLATE_PARAMETER;
     STEMPLATE_PARAMETER_LIST;
+
+    // C Family elements
+	STYPEDEF;
+	SASM;
+	SMACRO_CALL;
 
     // cpp internal elements
 	SCPP_DIRECTIVE;
