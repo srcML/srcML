@@ -634,7 +634,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         // statements that clearly start with a keyword
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != EXTERN || next_token() == TEMPLATE)}? keyword_statements |
 
-        { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED LPAREN)=>synchronized_statement |
+        { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
 
         // statements identified by pattern (i.e., do not start with a keyword)
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? pattern_statements |
@@ -673,7 +673,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         template_declaration |
 
         // exception statements
-        { inLanguage(LANGUAGE_JAVA) }? (TRY LPAREN)=>try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement |
+        { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
         namespace_definition | using_namespace_statement |
