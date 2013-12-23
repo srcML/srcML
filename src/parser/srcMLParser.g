@@ -1515,7 +1515,7 @@ asm_declaration[] { ENTRY_DEBUG } :
             startElement(SASM);
         }
         ASM
-        (paren_pair | ~(LCURLY | RCURLY | TERMINATE))*
+        ({ true }? paren_pair | ~(LCURLY | RCURLY | TERMINATE))*
 ;
 
 // extern definition
@@ -2404,7 +2404,6 @@ function_tail[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
 
             /* order is important */
-
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             function_specifier |
 
@@ -2429,8 +2428,8 @@ function_tail[] { ENTRY_DEBUG } :
             // K&R
             { inLanguage(LANGUAGE_C) }? (
 
-            // FIXME:  Must be integrated into other C-based languages
-            // FIXME:  Wrong markup
+            // @todo:  Must be integrated into other C-based languages
+            // @todo:  Wrong markup
             (NAME paren_pair)=> macro_call |
             { look_past(NAME) == LCURLY }? NAME |
               parameter (MULTOPS | NAME | COMMA)* TERMINATE
@@ -2532,8 +2531,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
        && save_la == TERMINATE)
         type = VARIABLE;
 
-} :
-;
+} :;
 
 /*
   Figures out if we have a declaration, either variable or function.
@@ -2619,7 +2617,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                         // ~RBRACKET matches these as well suppress warning. 
                         (options { warnWhenFollowAmbig = false; } : (RETURN | EVENT |
 
-                        set_type[type, GLOBAL_ATTRIBUTE, check_global()]
+                        set_type[type, GLOBAL_ATTRIBUTE, check_global_attribute()]
                         throw_exception[type == GLOBAL_ATTRIBUTE] 
                         identifier))?
 
@@ -2799,7 +2797,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 ;
 
 // C# global attribute target
-check_global[] returns [bool flag] {
+check_global_attribute[] returns [bool flag] {
         const std::string& s = LT(1)->getText();
 
         flag = s == "module" || s == "assembly";
