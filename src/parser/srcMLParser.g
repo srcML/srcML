@@ -4677,7 +4677,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         rcurly_argument |
 
         // variable or literal
-        variable_identifier) | string_literal | char_literal | literal | boolean | noexcept_operator | 
+        variable_identifier) | literals | noexcept_operator | 
 
         variable_identifier_array_grammar_sub[flag]
 ;
@@ -4689,7 +4689,10 @@ expression_part_default[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
         call argument
 ;
 
-// @todo check if all literals are used in the same place, and combine into single rule.
+// rule for literals
+literals[] { ENTRY_DEBUG } :
+        string_literal | char_literal | literal | boolean
+;
 
 // Only start and end of strings are put directly through the parser.
 // The contents of the string are handled as whitespace.
@@ -5140,8 +5143,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         ((options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators)*
 
-        (type_identifier |
-            literal | char_literal | string_literal | boolean)
+        (type_identifier | literals)
             (options { generateAmbigWarnings = false; } :template_operators)*
             ) |
 
@@ -5155,7 +5157,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 template_argument_expression[] { ENTRY_DEBUG } :
 
         lparen_marked
-        ({ LA(1) != RPAREN }? ({ true }? general_operators | (variable_identifier)=>variable_identifier | string_literal | char_literal | literal | type_identifier | template_argument_expression))*
+        ({ LA(1) != RPAREN }? ({ true }? general_operators | (variable_identifier)=>variable_identifier | literals | type_identifier | template_argument_expression))*
        rparen_operator[true]
 
 ;
