@@ -4183,7 +4183,7 @@ lambda_anonymous[] { ENTRY_DEBUG } :
         lambda_marked
 
         /* completely parse a function until it is done */
-        ({ inputState->guessing }? curly_pair)*
+        (options { greedy = true; } : { inputState->guessing }? curly_pair)*
 ;
 
 delegate_anonymous[] { ENTRY_DEBUG } :
@@ -4198,7 +4198,7 @@ delegate_anonymous[] { ENTRY_DEBUG } :
         (options { greedy = true; } : parameter_list)*
 
         /* completely parse a function until it is done */
-        ({ inputState->guessing }? curly_pair)*
+        (options { greedy = true; } : { inputState->guessing }? curly_pair)*
 
 ;
 
