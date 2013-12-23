@@ -98,7 +98,7 @@ public:
     // token handlers
     void processAccess(const antlr::RefToken& token);
     void processToken(const antlr::RefToken& token);
-    void processTag(const antlr::RefToken& token);
+    void processMacroList(const antlr::RefToken& token);
     void processBlockCommentStart(const antlr::RefToken& token);
     void processJavadocCommentStart(const antlr::RefToken& token);
     void processDoxygenCommentStart(const antlr::RefToken& token);

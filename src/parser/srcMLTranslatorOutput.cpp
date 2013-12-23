@@ -555,7 +555,7 @@ void srcMLTranslatorOutput::processToken(const antlr::RefToken& token) {
   }
 }
 
-void srcMLTranslatorOutput::processTag(const antlr::RefToken& token) {
+void srcMLTranslatorOutput::processMacroList(const antlr::RefToken& token) {
 
   if(!isoption(OPTION_MACRO_LIST)) return;
 
