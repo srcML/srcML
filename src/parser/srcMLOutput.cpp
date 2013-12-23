@@ -285,6 +285,16 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
   }
 }
 
+
+void srcMLOutput::processTag(const antlr::RefToken& token) {
+
+    const char* s = token2name(token);
+
+      xmlTextWriterStartElement(xout, BAD_CAST s);
+      xmlTextWriterEndElement(xout);
+
+}
+
 // output text
 void srcMLOutput::processText(const std::string& str) {
 

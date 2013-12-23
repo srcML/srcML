@@ -118,6 +118,8 @@ public:
 
     void processUnit(const antlr::RefToken& token);
 
+    void processTag(const antlr::RefToken& token);
+
     void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer);
 
     bool isoption(const OPTION_TYPE& options) const;
