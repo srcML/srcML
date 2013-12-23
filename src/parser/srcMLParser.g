@@ -2670,7 +2670,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_int[type_count, type_count + 1] |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-                // (template_argument_list)=>
                 template_argument_list set_int[specifier_count, specifier_count + 1] |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
@@ -3040,7 +3039,9 @@ lead_type_identifier[] { ENTRY_DEBUG } :
 type_identifier[] { ENTRY_DEBUG } :
 
         // any identifier that can appear first can appear later
-        (lead_type_identifier)=> lead_type_identifier |
+        // true suppresses warning.  antlr forms rules as LA(1) && (true )
+        // so this does nothing.
+        { true }? lead_type_identifier |
 
         non_lead_type_identifier
 ;
