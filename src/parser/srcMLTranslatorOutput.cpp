@@ -557,9 +557,9 @@ void srcMLTranslatorOutput::processToken(const antlr::RefToken& token) {
 
 void srcMLTranslatorOutput::processTag(const antlr::RefToken& token) {
 
-  const char* s = token2name(token);
+  if(!isoption(OPTION_MACRO_LIST)) return;
 
-  
+  const char* s = token2name(token);
 
   xmlTextWriterStartElement(xout, BAD_CAST s);
   for(unsigned int i = 0; i < user_macro_list.size(); ++i)
