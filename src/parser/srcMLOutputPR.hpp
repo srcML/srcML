@@ -29,8 +29,8 @@
 enum {
     PROCESSTOKEN,
     PROCESSUNIT,
-    PROCESSMACROLIST,
     PROCESSTEXT,
+    PROCESSMACROLIST,
     PROCESSBLOCKCOMMENTSTART,
     PROCESSJAVADOCCOMMENTSTART,
     PROCESSDOXYGENCOMMENTSTART,
@@ -53,8 +53,8 @@ enum {
 srcMLTranslatorOutput::PROCESS_PTR srcMLTranslatorOutput::num2process[] = {
     &srcMLTranslatorOutput::processToken,
     &srcMLTranslatorOutput::processUnit,
-    &srcMLTranslatorOutput::processMacroList,
     &srcMLTranslatorOutput::processText,
+    &srcMLTranslatorOutput::processMacroList,
     &srcMLTranslatorOutput::processBlockCommentStart,
     &srcMLTranslatorOutput::processJavadocCommentStart,
     &srcMLTranslatorOutput::processDoxygenCommentStart,
