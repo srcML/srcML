@@ -580,6 +580,10 @@ public:
         emptyElement(SUNIT);
     }
 
+    void macroList() {
+        startElement(SMACRO_LIST);
+    }
+
     // sets to the current token in the output token stream
     void setTokenPosition(TokenPosition& tp) {
         tp.token = CurrentToken();

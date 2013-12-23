@@ -559,7 +559,12 @@ void srcMLTranslatorOutput::processTag(const antlr::RefToken& token) {
 
   const char* s = token2name(token);
 
+  
+
   xmlTextWriterStartElement(xout, BAD_CAST s);
+  for(unsigned int i = 0; i < user_macro_list.size(); ++i)
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "token", BAD_CAST user_macro_list[i].c_str());
+  
   xmlTextWriterEndElement(xout);
 
 }

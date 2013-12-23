@@ -111,6 +111,7 @@ srcMLTranslatorCore::srcMLTranslatorCore(int language,                // program
 
 void srcMLTranslatorCore::setMacroList(std::vector<std::string> list) {
   user_macro_list = list;
+  out.setMacroList(list);
 }
 
 // translate from input stream to output stream
