@@ -4183,7 +4183,7 @@ lambda_anonymous[] { ENTRY_DEBUG } :
         lambda_marked
 
         /* completely parse a function until it is done */
-        complete_block
+        ({ inputState->guessing }? curly_pair)*
 ;
 
 delegate_anonymous[] { ENTRY_DEBUG } :
@@ -4198,29 +4198,9 @@ delegate_anonymous[] { ENTRY_DEBUG } :
         (options { greedy = true; } : parameter_list)*
 
         /* completely parse a function until it is done */
-        complete_block
+        ({ inputState->guessing }? curly_pair)*
+
 ;
-
-// @todo may not be needed
-complete_block[] { ENTRY_DEBUG
-
-    if (inputState->guessing) {
-
-        int blockcount = 0;
-        while (LA(1) != 1) {
-
-            if (LA(1) == LCURLY)
-                ++blockcount;
-            else if (LA(1) == RCURLY)
-                --blockcount;
-
-            if (blockcount == 0)
-                break;
-
-            consume();
-        }
-    }
-}:;
 
 delegate_marked[] { SingleElement element(this); ENTRY_DEBUG } :
         {
