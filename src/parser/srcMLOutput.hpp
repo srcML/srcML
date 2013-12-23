@@ -34,6 +34,7 @@
 #include "Options.hpp"
 #include "srcMLException.hpp"
 #include <string>
+#include <vector>
 
 #include <libxml/xmlwriter.h>
 
@@ -117,8 +118,6 @@ public:
     void outputToken(const antlr::RefToken& token);
 
     void processUnit(const antlr::RefToken& token);
-
-    void processTag(const antlr::RefToken& token);
 
     void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer);
 

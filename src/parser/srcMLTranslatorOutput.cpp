@@ -330,6 +330,11 @@ srcMLTranslatorOutput::srcMLTranslatorOutput(TokenStream* ints,
 srcMLTranslatorOutput::~srcMLTranslatorOutput() {
 }
 
+void srcMLTranslatorOutput::setMacroList(std::vector<std::string> list) {
+  user_macro_list = list;
+}
+
+
 void srcMLTranslatorOutput::setTokenStream(TokenStream& ints) {
 
   input = &ints;
@@ -548,6 +553,15 @@ void srcMLTranslatorOutput::processToken(const antlr::RefToken& token) {
     xmlTextWriterEndElement(xout);
     --openelementcount;
   }
+}
+
+void srcMLTranslatorOutput::processTag(const antlr::RefToken& token) {
+
+  const char* s = token2name(token);
+
+  xmlTextWriterStartElement(xout, BAD_CAST s);
+  xmlTextWriterEndElement(xout);
+
 }
 
 void srcMLTranslatorOutput::processJavadocCommentStart(const antlr::RefToken& token) {

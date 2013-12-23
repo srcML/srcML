@@ -55,6 +55,8 @@ public:
                           std::string * suri = 0
         );
 
+    void setMacroList(std::vector<std::string> list);
+
     static bool checkEncoding(const char* encoding);
 
     // same srcml file can be generated from multiple input token streams
@@ -82,6 +84,8 @@ private:
 
     void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer);
 
+    std::vector<std::string> user_macro_list;
+
     // List of element names
     static const char* const ElementNames[];
     static int ElementPrefix[];
@@ -94,6 +98,7 @@ public:
     // token handlers
     void processAccess(const antlr::RefToken& token);
     void processToken(const antlr::RefToken& token);
+    void processTag(const antlr::RefToken& token);
     void processBlockCommentStart(const antlr::RefToken& token);
     void processJavadocCommentStart(const antlr::RefToken& token);
     void processDoxygenCommentStart(const antlr::RefToken& token);
