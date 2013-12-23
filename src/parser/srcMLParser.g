@@ -363,9 +363,6 @@ tokens {
 	SELSE;
 
     SWHILE_STATEMENT;
-    SLOCK_STATEMENT;
-    SSYNCHRONIZED_STATEMENT;
-    SFIXED_STATEMENT;
 	SDO_STATEMENT;
 
 	SFOR_STATEMENT;
@@ -419,7 +416,6 @@ tokens {
 	SPRIVATE_ACCESS;
 	SPRIVATE_ACCESS_DEFAULT;
 	SPROTECTED_ACCESS;
-	SSIGNAL_ACCESS;
     SMEMBER_INITIALIZATION_LIST;
 	SCONSTRUCTOR_DEFINITION;
 	SCONSTRUCTOR_DECLARATION;
@@ -485,8 +481,9 @@ tokens {
     SIMPORT;
     SPACKAGE;
     SINTERFACE;
+    SSYNCHRONIZED_STATEMENT;
 
-    // C++0x elements
+    // @todo remove C++0x elements
     SAUTO;
 
     // C#
@@ -495,10 +492,10 @@ tokens {
     SATTRIBUTE;
     STARGET;
     SUNSAFE_STATEMENT;
+    SLOCK_STATEMENT;
+    SFIXED_STATEMENT;
 
-    // misc
-    SEMPTY;  // empty statement
-
+    // linq
     SLINQ;
     SFROM;
     SWHERE;
@@ -513,13 +510,17 @@ tokens {
     SBY;
     SINTO;
 
-    SANNOTATION;
-
-    // C++ 11
+    // C++
     SALIGNAS;
     SDECLTYPE;
     SLAMBDA_CAPTURE;
     SNOEXCEPT;
+	SSIGNAL_ACCESS;
+
+    // misc
+    SEMPTY;  // empty statement
+
+    SANNOTATION;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
