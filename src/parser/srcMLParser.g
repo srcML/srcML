@@ -175,17 +175,20 @@ header "post_include_cpp" {
 class CompleteElement {
 public:
     CompleteElement(srcMLParser* parent) : parent(parent) {
-        if (parent->inputState->guessing)
-            return;
 
-        oldsize = parent->size();
+        // only run if not guessing
+        if (parent->inputState->guessing) return;
+
+        start_size = parent->size();
     }
 
     ~CompleteElement() {
-        if (parent->inputState->guessing)
-            return;
 
-        int n = parent->size() - oldsize;
+        // only run if not guessing
+        if (parent->inputState->guessing) return;
+
+        // Close all the modes opened in the current rule with their elements.
+        int n = parent->size() - start_size;
         for (int i = 0; i < n; ++i) {
             parent->endMode();
         }
@@ -193,26 +196,27 @@ public:
 
 private:
     srcMLParser* parent;
-    int oldsize;
+    int start_size;
 };
 
 // Makes sure that a grammar rule forms a complete element
-// Closes all elements opened in the current mode.
+// Closes all elements opened in the rule for this current mode.
 class LightweightElement {
 public:
     LightweightElement(srcMLParser* parent) : parent(parent) {
 
-        if (parent->inputState->guessing)
-            return;
+        // only run if not guessing
+        if (parent->inputState->guessing) return;
 
         size = parent->statev.currentState().size();
     }
 
     ~LightweightElement() {
 
-        if (parent->inputState->guessing)
-            return;
+        // only run if not guessing
+        if (parent->inputState->guessing) return;
 
+        // Close all elements opened by the rule in this mode.
         while (size < parent->statev.currentState().size())
             parent->endElement(parent->statev.currentState().openelements.top());
     }
@@ -230,9 +234,10 @@ public:
 
     ~SingleElement() {
 
-        if (parent->inputState->guessing)
-            return;
+        // only run if not guessing
+        if (parent->inputState->guessing) return;
 
+        // end last opened element.
         parent->endElement(parent->statev.currentState().openelements.top());
     }
 
@@ -548,14 +553,6 @@ public:
     bool notdestructor;
     bool operatorname;
 
-    static bool BOOL;
-
-    // constructor
-    srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX, int options = 0);
-
-    // destructor
-    ~srcMLParser() {}
-
     struct cppmodeitem {
         cppmodeitem(int current_size)
             : statesize(1, current_size), isclosed(false), skipelse(false) {}
@@ -566,8 +563,16 @@ public:
         bool isclosed;
         bool skipelse;
     };
-
     std::stack<cppmodeitem> cppmode;
+
+
+    static bool BOOL;
+
+    // constructor
+    srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX, int options = 0);
+
+    // destructor
+    ~srcMLParser() {}
 
     void startUnit() {
         startElement(SUNIT);
@@ -580,7 +585,6 @@ public:
         tp.sp = &(currentState().openelements.top());
     }
 
-public:
     void endAllModes();
 }
 
