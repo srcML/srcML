@@ -1649,11 +1649,6 @@ enum_class_definition[] { ENTRY_DEBUG } :
 
         class_preamble ENUM (class_header lcurly | lcurly)
 
-        // this might only be called for java so this might be able to be removed.
-        {
-            if (inLanguage(LANGUAGE_CXX_ONLY))
-                class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
-        }
 ;
 
 anonymous_class_definition[] { ENTRY_DEBUG } :
