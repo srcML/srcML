@@ -860,7 +860,6 @@ look_past_multiple[int skiptoken1, int skiptoken2, int skiptoken3] returns [int 
     int place = mark();
     inputState->guessing++;
 
-    // TODO:  Why the LANGUAGE_CSHARP check?
     while (LA(1) != antlr::Token::EOF_TYPE && (LA(1) == skiptoken1 || LA(1) == skiptoken2 || LA(1) == skiptoken3))
         consume();
 
@@ -951,8 +950,6 @@ lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG
 
     inputState->guessing--;
     rewind(start);
-
-
 } :
 
 ;
@@ -1518,7 +1515,7 @@ asm_declaration[] { ENTRY_DEBUG } :
             startElement(SASM);
         }
         ASM
-        (balanced_parentheses | ~(LCURLY | RCURLY | TERMINATE))*
+        (paren_pair | ~(LCURLY | RCURLY | TERMINATE))*
 ;
 
 // extern definition
@@ -3073,13 +3070,6 @@ decltype_call[] { ENTRY_DEBUG} :
 
 decltype_full[] { ENTRY_DEBUG }:
         DECLTYPE paren_pair
-;
-
-// set of balanced parentheses
-balanced_parentheses[] :
-        LCURLY
-        (balanced_parentheses | ~(LCURLY | RCURLY))*
-        RCURLY
 ;
 
 function_identifier[] { ENTRY_DEBUG } :
