@@ -372,7 +372,6 @@ tokens {
 	SEXPRESSION_STATEMENT;
 	SEXPRESSION;
 	SFUNCTION_CALL;
-	SSIZEOF_CALL;
 
 	SDECLARATION_STATEMENT;
 	SDECLARATION;
@@ -421,13 +420,6 @@ tokens {
 	SFRIEND;
 	SCLASS_SPECIFIER;
 
-    // extern definition
-    SEXTERN;
-
-    // namespaces
-	SNAMESPACE;
-	SUSING_DIRECTIVE;
-
     // exception handling
 	STRY_BLOCK;
 	SCATCH_BLOCK;
@@ -446,6 +438,10 @@ tokens {
 	STYPEDEF;
 	SASM;
 	SMACRO_CALL;
+	SSIZEOF_CALL;
+    SEXTERN;
+	SNAMESPACE;
+	SUSING_DIRECTIVE;
 
     // cpp internal elements
 	SCPP_DIRECTIVE;
