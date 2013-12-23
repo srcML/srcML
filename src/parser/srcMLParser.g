@@ -171,20 +171,24 @@ struct TokenPosition {
 header "post_include_cpp" {
 
 // Makes sure that a grammar rule forms a complete element
+// Ends all modes started in the rule and closes any elements started in the rule.
 class CompleteElement {
 public:
     CompleteElement(srcMLParser* parent) : parent(parent) {
-        if (parent->inputState->guessing)
-            return;
 
-        oldsize = parent->size();
+        // only run if not guessing
+        if (parent->inputState->guessing) return;
+
+        start_size = parent->size();
     }
 
     ~CompleteElement() {
-        if (parent->inputState->guessing)
-            return;
 
-        int n = parent->size() - oldsize;
+        // only run if not guessing
+        if (parent->inputState->guessing) return;
+
+        // Close all the modes opened in the current rule with their elements.
+        int n = parent->size() - start_size;
         for (int i = 0; i < n; ++i) {
             parent->endMode();
         }
@@ -192,44 +196,48 @@ public:
 
 private:
     srcMLParser* parent;
-    int oldsize;
+    int start_size;
 };
 
 // Makes sure that a grammar rule forms a complete element
+// Closes all elements opened in the rule for this current mode.
 class LightweightElement {
 public:
     LightweightElement(srcMLParser* parent) : parent(parent) {
 
-        if (parent->inputState->guessing)
-            return;
+        // only run if not guessing
+        if (parent->inputState->guessing) return;
 
-        size = parent->statev.currentState().size();
+        start_size = parent->statev.currentState().size();
     }
 
     ~LightweightElement() {
 
-        if (parent->inputState->guessing)
-            return;
+        // only run if not guessing
+        if (parent->inputState->guessing) return;
 
-        while (size < parent->statev.currentState().size())
+        // Close all elements opened by the rule in this mode.
+        while (start_size < parent->statev.currentState().size())
             parent->endElement(parent->statev.currentState().openelements.top());
     }
 
 private:
     srcMLParser* parent;
-    int size;
+    int start_size;
 };
 
 // Makes sure that a grammar rule forms a complete element
+// Ends the last opened tag.
 class SingleElement {
 public:
     SingleElement(srcMLParser* parent) : parent(parent) {}
 
     ~SingleElement() {
 
-        if (parent->inputState->guessing)
-            return;
+        // only run if not guessing
+        if (parent->inputState->guessing) return;
 
+        // end last opened element.
         parent->endElement(parent->statev.currentState().openelements.top());
     }
 
@@ -351,22 +359,15 @@ tokens {
 	SCONDITION;
 	SBLOCK;
     SINDEX;
-    SDECLTYPE;
 
     // statements
-	STYPEDEF;
 	SENUM;
-	SASM;
-	SMACRO_CALL;
 
 	SIF_STATEMENT;
 	STHEN;
 	SELSE;
 
     SWHILE_STATEMENT;
-    SLOCK_STATEMENT;
-    SSYNCHRONIZED_STATEMENT;
-    SFIXED_STATEMENT;
 	SDO_STATEMENT;
 
 	SFOR_STATEMENT;
@@ -379,7 +380,6 @@ tokens {
 	SEXPRESSION_STATEMENT;
 	SEXPRESSION;
 	SFUNCTION_CALL;
-	SSIZEOF_CALL;
 
 	SDECLARATION_STATEMENT;
 	SDECLARATION;
@@ -406,7 +406,6 @@ tokens {
 	SKRPARAMETER;
 	SARGUMENT_LIST;
 	SARGUMENT;
-    SLAMBDA_CAPTURE;
 
     // class, struct, union
 	SCLASS;
@@ -421,7 +420,6 @@ tokens {
 	SPRIVATE_ACCESS;
 	SPRIVATE_ACCESS_DEFAULT;
 	SPROTECTED_ACCESS;
-	SSIGNAL_ACCESS;
     SMEMBER_INITIALIZATION_LIST;
 	SCONSTRUCTOR_DEFINITION;
 	SCONSTRUCTOR_DECLARATION;
@@ -430,13 +428,6 @@ tokens {
 	SFRIEND;
 	SCLASS_SPECIFIER;
 
-    // extern definition
-    SEXTERN;
-
-    // namespaces
-	SNAMESPACE;
-	SUSING_DIRECTIVE;
-
     // exception handling
 	STRY_BLOCK;
 	SCATCH_BLOCK;
@@ -444,7 +435,6 @@ tokens {
 	STHROW_STATEMENT;
 	STHROW_SPECIFIER;
 	STHROW_SPECIFIER_JAVA;
-	SNOEXCEPT;
 
 	STEMPLATE;
     STEMPLATE_ARGUMENT;
@@ -452,7 +442,23 @@ tokens {
     STEMPLATE_PARAMETER;
     STEMPLATE_PARAMETER_LIST;
 
-    // cpp internal elements
+    // C Family elements
+	STYPEDEF;
+	SASM;
+	SMACRO_CALL;
+	SSIZEOF_CALL;
+    SEXTERN;
+	SNAMESPACE;
+	SUSING_DIRECTIVE;
+
+    // C++
+    SALIGNAS;
+    SDECLTYPE;
+    SLAMBDA_CAPTURE;
+    SNOEXCEPT;
+	SSIGNAL_ACCESS;
+
+    // cpp directive internal elements
 	SCPP_DIRECTIVE;
     SCPP_FILENAME;
     SCPP_NUMBER;
@@ -471,13 +477,14 @@ tokens {
 	SCPP_ELSE;
 	SCPP_ELIF;
 
-    // C# cpp directive
+    // C# cpp directives
     SCPP_REGION;
     SCPP_ENDREGION;
 
     // This HAS to mark the end of the CPP directives
 	SCPP_ENDIF;
 
+    // Debug elements
     SMARKER;
     SERROR_PARSE;
     SERROR_MODE;
@@ -488,9 +495,7 @@ tokens {
     SIMPORT;
     SPACKAGE;
     SINTERFACE;
-
-    // C++0x elements
-    SAUTO;
+    SSYNCHRONIZED_STATEMENT;
 
     // C#
     SCHECKED_STATEMENT;
@@ -498,10 +503,10 @@ tokens {
     SATTRIBUTE;
     STARGET;
     SUNSAFE_STATEMENT;
+    SLOCK_STATEMENT;
+    SFIXED_STATEMENT;
 
-    // misc
-    SEMPTY;  // empty statement
-
+    // linq
     SLINQ;
     SFROM;
     SWHERE;
@@ -516,9 +521,10 @@ tokens {
     SBY;
     SINTO;
 
-    SANNOTATION;
+    // misc
+    SEMPTY;  // empty statement
 
-    SALIGNAS;
+    SANNOTATION;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -547,14 +553,6 @@ public:
     bool notdestructor;
     bool operatorname;
 
-    static bool BOOL;
-
-    // constructor
-    srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX, int options = 0);
-
-    // destructor
-    ~srcMLParser() {}
-
     struct cppmodeitem {
         cppmodeitem(int current_size)
             : statesize(1, current_size), isclosed(false), skipelse(false) {}
@@ -565,8 +563,16 @@ public:
         bool isclosed;
         bool skipelse;
     };
-
     std::stack<cppmodeitem> cppmode;
+
+
+    static bool BOOL;
+
+    // constructor
+    srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX, int options = 0);
+
+    // destructor
+    ~srcMLParser() {}
 
     void startUnit() {
         startElement(SUNIT);
@@ -579,7 +585,6 @@ public:
         tp.sp = &(currentState().openelements.top());
     }
 
-public:
     void endAllModes();
 }
 
@@ -632,7 +637,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         // statements that clearly start with a keyword
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != EXTERN || next_token() == TEMPLATE)}? keyword_statements |
 
-        { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED LPAREN)=>synchronized_statement |
+        { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
 
         // statements identified by pattern (i.e., do not start with a keyword)
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? pattern_statements |
@@ -671,7 +676,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         template_declaration |
 
         // exception statements
-        { inLanguage(LANGUAGE_JAVA) }? (TRY LPAREN)=>try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement |
+        { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
         namespace_definition | using_namespace_statement |
@@ -738,7 +743,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0;
         { stmt_type == ACCESS_REGION }?
         access_specifier_region |
 
-        // TODO:  Why no interface declaration?
+        // @todo  Why no interface declaration?
 
         { stmt_type == GLOBAL_ATTRIBUTE }?
         attribute_csharp |
@@ -850,14 +855,12 @@ look_past[int skiptoken] returns [int token] {
 }:;
 
 // skips past any skiptokens to get the one after
-look_past_multiple[int skiptoken1, int skiptoken2, int skiptoken3, int skiptoken4] returns [int token] {
+look_past_multiple[int skiptoken1, int skiptoken2, int skiptoken3] returns [int token] {
 
     int place = mark();
     inputState->guessing++;
 
-    // TODO:  Why the LANGUAGE_CSHARP check?
-    while (LA(1) != antlr::Token::EOF_TYPE && (LA(1) == skiptoken1 || LA(1) == skiptoken2 || LA(1) == skiptoken3 ||
-          (inLanguage(LANGUAGE_CSHARP && LA(1) == skiptoken4))))
+    while (LA(1) != antlr::Token::EOF_TYPE && (LA(1) == skiptoken1 || LA(1) == skiptoken2 || LA(1) == skiptoken3))
         consume();
 
     token = LA(1);
@@ -947,8 +950,6 @@ lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG
 
     inputState->guessing--;
     rewind(start);
-
-
 } :
 
 ;
@@ -1514,7 +1515,7 @@ asm_declaration[] { ENTRY_DEBUG } :
             startElement(SASM);
         }
         ASM
-        (balanced_parentheses | ~(LCURLY | RCURLY | TERMINATE))*
+        ({ true }? paren_pair | ~(LCURLY | RCURLY | TERMINATE))*
 ;
 
 // extern definition
@@ -1648,11 +1649,6 @@ enum_class_definition[] { ENTRY_DEBUG } :
 
         class_preamble ENUM (class_header lcurly | lcurly)
 
-        // this might only be called for java so this might be able to be removed.
-        {
-            if (inLanguage(LANGUAGE_CXX_ONLY))
-                class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
-        }
 ;
 
 anonymous_class_definition[] { ENTRY_DEBUG } :
@@ -1903,7 +1899,6 @@ block_end[] { ENTRY_DEBUG } :
 
             // end all statements this statement is nested in
             // special case when ending then of if statement
-
             // end down to either a block or top section, or to an if, whichever is reached first
             endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
 
@@ -1919,7 +1914,6 @@ block_end[] { ENTRY_DEBUG } :
             }
 
             // looking for a terminate (';')
-
             // some statements end with the block if there is no terminate
             if (inMode(MODE_END_AT_BLOCK_NO_TERMINATE) && LA(1) != TERMINATE) {
                 endstatement = true;
@@ -1938,7 +1932,7 @@ block_end[] { ENTRY_DEBUG } :
             if (inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
 
-            // TODO:  Need a test case that makes this necessary
+            // @todo  Need a test case that makes this necessary
             // end of block may lead to adjustment of cpp modes
             cppmode_adjust();
 
@@ -1948,7 +1942,6 @@ block_end[] { ENTRY_DEBUG } :
 // right curly brace.  Not used directly, but called by block_end
 rcurly[] { ENTRY_DEBUG } :
         {
-
 
             // end any elements inside of the block
             endDownToMode(MODE_TOP);
@@ -2069,7 +2062,7 @@ else_handling[] { ENTRY_DEBUG } :
                         endMode();
 
                         /*
-                          TODO:  Can we only do this if we detect a cpp change?
+                          @todo  Can we only do this if we detect a cpp change?
                           This would occur EVEN if we have an ifcount of 2.
                         */
                         // we have an extra else that is rogue
@@ -2302,12 +2295,8 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         LPAREN
 ;
 
-bar[] { ENTRY_DEBUG }:
-        bar_marked
-;
-
 // marking comma operator
-bar_marked[] { LightweightElement element(this); ENTRY_DEBUG }:
+bar[] { LightweightElement element(this); ENTRY_DEBUG }:
         {
             if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER))
                 startElement(SOPERATOR);
@@ -2415,7 +2404,6 @@ function_tail[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
 
             /* order is important */
-
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             function_specifier |
 
@@ -2440,8 +2428,8 @@ function_tail[] { ENTRY_DEBUG } :
             // K&R
             { inLanguage(LANGUAGE_C) }? (
 
-            // FIXME:  Must be integrated into other C-based languages
-            // FIXME:  Wrong markup
+            // @todo:  Must be integrated into other C-based languages
+            // @todo:  Wrong markup
             (NAME paren_pair)=> macro_call |
             { look_past(NAME) == LCURLY }? NAME |
               parameter (MULTOPS | NAME | COMMA)* TERMINATE
@@ -2543,8 +2531,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
        && save_la == TERMINATE)
         type = VARIABLE;
 
-} :
-;
+} :;
 
 /*
   Figures out if we have a declaration, either variable or function.
@@ -2616,7 +2603,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 { _tokenSet_23.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || LA(1) == CONST]
-                (specifier | (SIGNAL COLON)=>SIGNAL)
+                (specifier | { next_token() == COLON }? SIGNAL)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
                         inLanguage(LANGUAGE_CXX) && look_past(NAME) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
@@ -2630,7 +2617,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                         // ~RBRACKET matches these as well suppress warning. 
                         (options { warnWhenFollowAmbig = false; } : (RETURN | EVENT |
 
-                        set_type[type, GLOBAL_ATTRIBUTE, check_global()]
+                        set_type[type, GLOBAL_ATTRIBUTE, check_global_attribute()]
                         throw_exception[type == GLOBAL_ATTRIBUTE] 
                         identifier))?
 
@@ -2673,7 +2660,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_int[type_count, type_count + 1] |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-                // (template_argument_list)=>
                 template_argument_list set_int[specifier_count, specifier_count + 1] |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
@@ -2811,7 +2797,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 ;
 
 // C# global attribute target
-check_global[] returns [bool flag] {
+check_global_attribute[] returns [bool flag] {
         const std::string& s = LT(1)->getText();
 
         flag = s == "module" || s == "assembly";
@@ -2899,8 +2885,8 @@ type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
         // overloaded parentheses operator
         { LA(1) == OPERATOR /* turns off ANTLR warning, and is nooped */ }?
         overloaded_operator |
-
-        type_identifier | MAIN
+        type_identifier |
+        MAIN
 ;
 
 type_identifier_count_check returns [int type_count] {
@@ -2913,8 +2899,7 @@ type_identifier_count_check returns [int type_count] {
 
     rewind(start);
     --inputState->guessing;
-} :
-;
+} :;
 
 type_identifier_count_check_core returns [int type_count] { type_count = 0; ENTRY_DEBUG } :
 
@@ -3043,7 +3028,9 @@ lead_type_identifier[] { ENTRY_DEBUG } :
 type_identifier[] { ENTRY_DEBUG } :
 
         // any identifier that can appear first can appear later
-        (lead_type_identifier)=> lead_type_identifier |
+        // true suppresses warning.  antlr forms rules as LA(1) && (true )
+        // so this does nothing.
+        { true }? lead_type_identifier |
 
         non_lead_type_identifier
 ;
@@ -3073,13 +3060,6 @@ decltype_call[] { ENTRY_DEBUG} :
 
 decltype_full[] { ENTRY_DEBUG }:
         DECLTYPE paren_pair
-;
-
-// set of balanced parentheses
-balanced_parentheses[] :
-        LCURLY
-        (balanced_parentheses | ~(LCURLY | RCURLY))*
-        RCURLY
 ;
 
 function_identifier[] { ENTRY_DEBUG } :
@@ -3328,6 +3308,7 @@ attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
         RBRACKET RBRACKET
 ;
 
+// Do a complete argument list
 complete_argument_list[] { ENTRY_DEBUG } :
         call_argument_list complete_arguments
 ;
@@ -3350,7 +3331,7 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; ENTRY
         { LA(1) == RPAREN }? expression { --count_paren; } |
 
         expression |
-         comma
+        comma
         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -3532,7 +3513,7 @@ compound_name_cpp[bool& iscompound = BOOL] { namestack[0] = namestack[1] = ""; E
             (DESTOP set_bool[isdestructor])*
             (multops)*
             (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
-            (options { greedy = true; } : { look_past_multiple(MULTOPS, REFOPS, RVALUEREF, QMARK) == DCOLON }? multops)*
+            (options { greedy = true; } : { look_past_multiple(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
         )*
 
         { notdestructor = LA(1) == DESTOP; }
@@ -3597,7 +3578,6 @@ function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
         (
 
             DEFAULT | DELETE
-
 
         )
 
@@ -3817,7 +3797,7 @@ sizeof_call[] { ENTRY_DEBUG } :
 ;
 
 macro_call_check[] { ENTRY_DEBUG } :
-        NAME optional_paren_pair
+        NAME (paren_pair)*
 ;
 
 eat_optional_macro_call[] {
@@ -4005,8 +3985,8 @@ try_statement_with_resource[] {  int type_count = 0; int secondtoken = 0;  STMT_
 
             // start of the try statement
             startElement(STRY_BLOCK);
-            // expect a condition to follow the keyword
 
+            // expect a condition to follow the keyword
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
         }
         TRY LPAREN
@@ -4203,7 +4183,7 @@ lambda_anonymous[] { ENTRY_DEBUG } :
         lambda_marked
 
         /* completely parse a function until it is done */
-        complete_block
+        (options { greedy = true; } : { inputState->guessing }? curly_pair)*
 ;
 
 delegate_anonymous[] { ENTRY_DEBUG } :
@@ -4218,28 +4198,9 @@ delegate_anonymous[] { ENTRY_DEBUG } :
         (options { greedy = true; } : parameter_list)*
 
         /* completely parse a function until it is done */
-        complete_block
+        (options { greedy = true; } : { inputState->guessing }? curly_pair)*
+
 ;
-
-complete_block[] { ENTRY_DEBUG
-
-    if (inputState->guessing) {
-
-        int blockcount = 0;
-        while (LA(1) != 1) {
-
-            if (LA(1) == LCURLY)
-                ++blockcount;
-            else if (LA(1) == RCURLY)
-                --blockcount;
-
-            if (blockcount == 0)
-                break;
-
-            consume();
-        }
-    }
-}:;
 
 delegate_marked[] { SingleElement element(this); ENTRY_DEBUG } :
         {
@@ -4249,8 +4210,6 @@ delegate_marked[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 lambda_marked[] { ENTRY_DEBUG } :
-        {
-        }
         LAMBDA
 ;
 
@@ -4450,9 +4409,9 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
                 startElement(SOPERATOR);
         }
         (
-        OPERATORS | TRETURN | TEMPOPS |
+            OPERATORS | TRETURN | TEMPOPS |
             TEMPOPE ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? EQUAL)? |
-    EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF |
+            EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF |
             QMARK ({ SkipBufferSize() == 0 }? QMARK)? | { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
@@ -4718,7 +4677,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         rcurly_argument |
 
         // variable or literal
-        variable_identifier) | string_literal | char_literal | literal | boolean | noexcept_operator | 
+        variable_identifier) | literals | noexcept_operator | 
 
         variable_identifier_array_grammar_sub[flag]
 ;
@@ -4728,6 +4687,11 @@ expression_part_default[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
         expression_process
 
         call argument
+;
+
+// rule for literals
+literals[] { ENTRY_DEBUG } :
+        string_literal | char_literal | literal | boolean
 ;
 
 // Only start and end of strings are put directly through the parser.
@@ -5179,8 +5143,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         ((options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators)*
 
-        (type_identifier |
-            literal | char_literal | string_literal | boolean)
+        (type_identifier | literals)
             (options { generateAmbigWarnings = false; } :template_operators)*
             ) |
 
@@ -5194,7 +5157,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 template_argument_expression[] { ENTRY_DEBUG } :
 
         lparen_marked
-        ({ LA(1) != RPAREN }? ((general_operators)=>general_operators | (variable_identifier)=>variable_identifier | string_literal | char_literal | literal | type_identifier | template_argument_expression))*
+        ({ LA(1) != RPAREN }? ({ true }? general_operators | (variable_identifier)=>variable_identifier | literals | type_identifier | template_argument_expression))*
        rparen_operator[true]
 
 ;
@@ -5287,27 +5250,6 @@ curly_pair[] :
         LCURLY (curly_pair | ~(LCURLY | RCURLY))* RCURLY
 ;
 
-optional_paren_pair[] {
-
-    if (LA(1) != LPAREN)
-        return;
-
-    consume();
-
-    int parencount = 1;
-    while (parencount > 0 && LA(1) != antlr::Token::EOF_TYPE) {
-
-        if (LA(1) == RPAREN)
-            --parencount;
-        else if (LA(1) == LPAREN)
-            ++parencount;
-
-        consume();
-    }
-
-    ENTRY_DEBUG
-}:;
-
 // See if there is a semicolon terminating a statement inside a block at the top level
 nested_terminate[] {
 
@@ -5339,7 +5281,7 @@ nested_terminate[] {
 
 enum_definition[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        (enum_class_definition nested_terminate)=> enum_class_definition |
+        (enum_class_definition nested_terminate)=>enum_class_definition |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) }?
         {
