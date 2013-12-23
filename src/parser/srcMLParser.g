@@ -171,6 +171,7 @@ struct TokenPosition {
 header "post_include_cpp" {
 
 // Makes sure that a grammar rule forms a complete element
+// Ends all modes started in the rule and closes any elements started in the rule.
 class CompleteElement {
 public:
     CompleteElement(srcMLParser* parent) : parent(parent) {
@@ -196,6 +197,7 @@ private:
 };
 
 // Makes sure that a grammar rule forms a complete element
+// Closes all elements opened in the current mode.
 class LightweightElement {
 public:
     LightweightElement(srcMLParser* parent) : parent(parent) {
@@ -221,6 +223,7 @@ private:
 };
 
 // Makes sure that a grammar rule forms a complete element
+// Ends the last opened tag.
 class SingleElement {
 public:
     SingleElement(srcMLParser* parent) : parent(parent) {}
