@@ -2885,8 +2885,8 @@ type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
         // overloaded parentheses operator
         { LA(1) == OPERATOR /* turns off ANTLR warning, and is nooped */ }?
         overloaded_operator |
-
-        type_identifier | MAIN
+        type_identifier |
+        MAIN
 ;
 
 type_identifier_count_check returns [int type_count] {
@@ -2899,8 +2899,7 @@ type_identifier_count_check returns [int type_count] {
 
     rewind(start);
     --inputState->guessing;
-} :
-;
+} :;
 
 type_identifier_count_check_core returns [int type_count] { type_count = 0; ENTRY_DEBUG } :
 
@@ -3332,7 +3331,7 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; ENTRY
         { LA(1) == RPAREN }? expression { --count_paren; } |
 
         expression |
-         comma
+        comma
         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -3579,7 +3578,6 @@ function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
         (
 
             DEFAULT | DELETE
-
 
         )
 
@@ -3987,8 +3985,8 @@ try_statement_with_resource[] {  int type_count = 0; int secondtoken = 0;  STMT_
 
             // start of the try statement
             startElement(STRY_BLOCK);
-            // expect a condition to follow the keyword
 
+            // expect a condition to follow the keyword
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
         }
         TRY LPAREN
@@ -4203,6 +4201,7 @@ delegate_anonymous[] { ENTRY_DEBUG } :
         complete_block
 ;
 
+// @todo may not be needed
 complete_block[] { ENTRY_DEBUG
 
     if (inputState->guessing) {
@@ -4432,9 +4431,9 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
                 startElement(SOPERATOR);
         }
         (
-        OPERATORS | TRETURN | TEMPOPS |
+            OPERATORS | TRETURN | TEMPOPS |
             TEMPOPE ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? EQUAL)? |
-    EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF |
+            EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF |
             QMARK ({ SkipBufferSize() == 0 }? QMARK)? | { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
@@ -4711,6 +4710,8 @@ expression_part_default[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
         call argument
 ;
+
+// @todo check if all literals are used in the same place, and combine into single rule.
 
 // Only start and end of strings are put directly through the parser.
 // The contents of the string are handled as whitespace.
@@ -5269,6 +5270,7 @@ curly_pair[] :
         LCURLY (curly_pair | ~(LCURLY | RCURLY))* RCURLY
 ;
 
+// @todo may want to try and remove
 optional_paren_pair[] {
 
     if (LA(1) != LPAREN)
@@ -5321,7 +5323,7 @@ nested_terminate[] {
 
 enum_definition[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        (enum_class_definition nested_terminate)=> enum_class_definition |
+        (enum_class_definition nested_terminate)=>enum_class_definition |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) }?
         {
