@@ -950,9 +950,7 @@ lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG
 
     inputState->guessing--;
     rewind(start);
-} :
-
-;
+} :;
 
 lambda_expression_full_cpp[] { ENTRY_DEBUG } :
 
@@ -1049,8 +1047,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
     inputState->guessing--;
     rewind(start);
 
-    ENTRY_DEBUG } :
-;
+    ENTRY_DEBUG } :;
 
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_DEBUG } :
 
@@ -3719,7 +3716,7 @@ destructor_header[] { ENTRY_DEBUG } :
 
             specifier |
 
-            // TODO:  'void' should be detected in lexer
+            // @todo  'void' should be detected in lexer
             { LT(1)->getText() == "void" }? simple_identifier
         )*
         compound_name_inner[false]
@@ -5144,7 +5141,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
         ((options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators)*
 
         (type_identifier | literals)
-            (options { generateAmbigWarnings = false; } :template_operators)*
+            (options { generateAmbigWarnings = false; } : template_operators)*
             ) |
 
             template_extends_java |
@@ -5666,8 +5663,8 @@ eol_post[int directive_token, bool markblockzero] {
                 consume();
         }
 
-        ENTRY_DEBUG } :
-;
+        ENTRY_DEBUG
+} :;
 
 // remove any finished or unneeded cppmodes
 cppmode_cleanup[] {
@@ -5682,8 +5679,8 @@ cppmode_cleanup[] {
         if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2))
             cppmode.pop();
 
-        ENTRY_DEBUG } :
-;
+        ENTRY_DEBUG 
+} :;
 
 // ended modes that may lead to needed updates
 cppmode_adjust[] {
@@ -5703,8 +5700,8 @@ cppmode_adjust[] {
             cppmode.pop();
        }
 
-    ENTRY_DEBUG } :
-;
+    ENTRY_DEBUG 
+} :;
 
 line_continuation[] { ENTRY_DEBUG } :
         {
