@@ -815,7 +815,7 @@ next_token[] returns [int token] {
 
     inputState->guessing--;
     rewind(place);
-}:;
+} :;
 
 next_token_string[] returns [std::string token] {
 
@@ -829,7 +829,7 @@ next_token_string[] returns [std::string token] {
 
     inputState->guessing--;
     rewind(place);
-}:;
+} :;
 
 // is the next token one of the parameters
 next_token_check[int token1, int token2] returns [bool result] {
@@ -837,7 +837,7 @@ next_token_check[int token1, int token2] returns [bool result] {
     int token = next_token();
 
     result = token == token1 || token == token2;
-}:;
+} :;
 
 // skips past any skiptokens to get the one after
 look_past[int skiptoken] returns [int token] {
@@ -852,7 +852,7 @@ look_past[int skiptoken] returns [int token] {
 
     inputState->guessing--;
     rewind(place);
-}:;
+} :;
 
 // skips past any skiptokens to get the one after
 look_past_multiple[int skiptoken1, int skiptoken2, int skiptoken3] returns [int token] {
@@ -867,7 +867,7 @@ look_past_multiple[int skiptoken1, int skiptoken2, int skiptoken3] returns [int 
 
     inputState->guessing--;
     rewind(place);
-}:;
+} :;
 
 // functions
 function_declaration[int type_count] { ENTRY_DEBUG } :
@@ -1104,7 +1104,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
 ;
 
 // records the current token, even in guessing mode
-markend[int& token] { token = LA(1); }:;
+markend[int& token] { token = LA(1); } :;
 
 /* Keyword Statements */
 
@@ -2293,7 +2293,7 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // marking comma operator
-bar[] { LightweightElement element(this); ENTRY_DEBUG }:
+bar[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER))
                 startElement(SOPERATOR);
@@ -2301,7 +2301,7 @@ bar[] { LightweightElement element(this); ENTRY_DEBUG }:
         BAR
 ;
 
-comma[] { ENTRY_DEBUG }:
+comma[] { ENTRY_DEBUG } :
         {
             // comma ends the current item in a list
             // or ends the current expression
@@ -2319,7 +2319,7 @@ comma[] { ENTRY_DEBUG }:
 ;
 
 // marking comma operator
-comma_marked[] { LightweightElement element(this); ENTRY_DEBUG }:
+comma_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT))
                 startElement(SOPERATOR);
@@ -2798,7 +2798,7 @@ check_global_attribute[] returns [bool flag] {
         const std::string& s = LT(1)->getText();
 
         flag = s == "module" || s == "assembly";
-}:;
+} :;
 
 /*
   Utility rules
@@ -3055,7 +3055,7 @@ decltype_call[] { ENTRY_DEBUG} :
         DECLTYPE complete_argument_list
 ;
 
-decltype_full[] { ENTRY_DEBUG }:
+decltype_full[] { ENTRY_DEBUG } :
         DECLTYPE paren_pair
 ;
 
@@ -3112,7 +3112,7 @@ overloaded_operator[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 /* linq expressions */
-linq_expression[] { CompleteElement element(this); ENTRY_DEBUG }:
+linq_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
@@ -3122,11 +3122,11 @@ linq_expression[] { CompleteElement element(this); ENTRY_DEBUG }:
         (options { greedy = true; } : linq_expression_pure)*
 ;
 
-linq_expression_pure[] { ENTRY_DEBUG }:
+linq_expression_pure[] { ENTRY_DEBUG } :
         linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby
 ;
 
-linq_from[] { CompleteElement element(this); ENTRY_DEBUG }:
+linq_from[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
@@ -3135,35 +3135,35 @@ linq_from[] { CompleteElement element(this); ENTRY_DEBUG }:
         FROM linq_expression_complete (options { greedy = true; } : linq_in)*
 ;
 
-linq_in[] { SingleElement element(this); ENTRY_DEBUG }:
+linq_in[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SIN);
         }
         IN linq_expression_complete
 ;
 
-linq_where[] { SingleElement element(this); ENTRY_DEBUG }:
+linq_where[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SWHERE);
         }
         WHERE linq_expression_complete
 ;
 
-linq_select[] { SingleElement element(this); ENTRY_DEBUG }:
+linq_select[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SSELECT);
         }
         SELECT linq_expression_complete
 ;
 
-linq_let[] { SingleElement element(this); ENTRY_DEBUG }:
+linq_let[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SLET);
         }
         LET linq_expression_complete
 ;
 
-linq_group[] { CompleteElement element(this); ENTRY_DEBUG }:
+linq_group[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
@@ -3174,21 +3174,21 @@ linq_group[] { CompleteElement element(this); ENTRY_DEBUG }:
         (options { greedy = true; } : linq_into)*
 ;
 
-linq_by[] { SingleElement element(this); ENTRY_DEBUG }:
+linq_by[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SBY);
         }
         BY linq_expression_complete
 ;
 
-linq_into[] { SingleElement element(this); ENTRY_DEBUG }:
+linq_into[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SINTO);
         }
         INTO linq_expression_complete
 ;
 
-linq_join[] { CompleteElement element(this); ENTRY_DEBUG }:
+linq_join[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
@@ -3199,21 +3199,21 @@ linq_join[] { CompleteElement element(this); ENTRY_DEBUG }:
         (options { greedy = true; } : linq_in | linq_on | linq_equals | linq_into)*
 ;
 
-linq_on[] { SingleElement element(this); ENTRY_DEBUG }:
+linq_on[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SON);
         }
         ON linq_expression_complete
 ;
 
-linq_equals[] { SingleElement element(this); ENTRY_DEBUG }:
+linq_equals[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SEQUALS);
         }
         EQUALS linq_expression_complete
 ;
 
-linq_orderby[] { CompleteElement element(this); ENTRY_DEBUG }:
+linq_orderby[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
@@ -3226,14 +3226,14 @@ linq_orderby[] { CompleteElement element(this); ENTRY_DEBUG }:
         (options { greedy = true; } : COMMA linq_expression_complete (options { greedy = true; } : linq_ascending | linq_descending)* )*
 ;
 
-linq_ascending[] { SingleElement element(this); ENTRY_DEBUG }:
+linq_ascending[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
         ASCENDING
 ;
 
-linq_descending[] { SingleElement element(this); ENTRY_DEBUG }:
+linq_descending[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
@@ -3501,7 +3501,7 @@ compound_name_cpp[bool& iscompound = BOOL] { namestack[0] = namestack[1] = ""; E
         (dcolon { iscompound = true; })*
         (DESTOP set_bool[isdestructor] { iscompound = true; })*
         (simple_name_optional_template | push_namestack overloaded_operator)
-        (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
+        (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
@@ -3524,7 +3524,7 @@ compound_name_csharp[bool& iscompound = BOOL] { namestack[0] = namestack[1] = ""
         (dcolon { iscompound = true; })*
         (DESTOP set_bool[isdestructor] { iscompound = true; })*
         (simple_name_optional_template | push_namestack overloaded_operator)
-        (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
+        (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
@@ -3962,7 +3962,7 @@ macro_call_contents[] {
         consume();
     }
 
-}:;
+} :;
 
 try_statement[] { ENTRY_DEBUG } :
         {
@@ -4432,7 +4432,7 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
         DESTOP
 ;
 
-general_operators_list[] { ENTRY_DEBUG }:
+general_operators_list[] { ENTRY_DEBUG } :
         OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
         DOTDOT | RVALUEREF | QMARK
 ;
@@ -4624,7 +4624,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
 
         // general math operators
         // looks like general operators and variable identifier can match same thing
-        (options { generateAmbigWarnings = false; }: general_operators
+        (options { generateAmbigWarnings = false; } : general_operators
         {
             if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
                 general_operators();
@@ -4867,7 +4867,7 @@ kr_parameter_name[] { ENTRY_DEBUG } :
         ((comma)* variable_declaration_nameinit)*
 ;
 
-kr_parameter_terminate[] { ENTRY_DEBUG }:
+kr_parameter_terminate[] { ENTRY_DEBUG } :
     terminate_pre terminate_token { endDownToModeSet(MODE_FUNCTION_TAIL); }
 ;
 
@@ -5272,7 +5272,7 @@ nested_terminate[] {
 
         consume();
     }
-}:
+} :
         TERMINATE
 ;
 
