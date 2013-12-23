@@ -4210,8 +4210,6 @@ delegate_marked[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 lambda_marked[] { ENTRY_DEBUG } :
-        {
-        }
         LAMBDA
 ;
 
