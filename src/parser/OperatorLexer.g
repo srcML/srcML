@@ -56,8 +56,15 @@ TERMINATE; // = ";";
 PREPROC;
 COLON; // = ":";
 QMARK;
+
+// Java
 BAR; // |
+
+// C++
 TRETURN; // ->
+
+// C#
+LAMBDA;
 
 // define value in master grammar so that it depends on language
 DCOLON;
@@ -72,10 +79,9 @@ RVALUEREF; // = "&&";
 DOTDOT;
 DOTDOTDOT;
 
+// literals
 FALSE;
 TRUE;
-
-LAMBDA;
 
 ATSIGN;
 
@@ -83,15 +89,6 @@ ALLOPERATORS;
 
 EOL_PLACEHOLD;
 }
-
-{
-}
-/*
-SPECIAL :
-        '@'
-;
-*/
-//ALLOPERATORS options { testLiterals = true; } : 
 
 OPERATORS options { testLiterals = true; } { bool star = false; static int lastpos = 0; int zero_literal = 0; _saveIndex = 0;
 } : 
