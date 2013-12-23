@@ -208,7 +208,7 @@ public:
         // only run if not guessing
         if (parent->inputState->guessing) return;
 
-        size = parent->statev.currentState().size();
+        start_size = parent->statev.currentState().size();
     }
 
     ~LightweightElement() {
@@ -217,13 +217,13 @@ public:
         if (parent->inputState->guessing) return;
 
         // Close all elements opened by the rule in this mode.
-        while (size < parent->statev.currentState().size())
+        while (start_size < parent->statev.currentState().size())
             parent->endElement(parent->statev.currentState().openelements.top());
     }
 
 private:
     srcMLParser* parent;
-    int size;
+    int start_size;
 };
 
 // Makes sure that a grammar rule forms a complete element
@@ -743,7 +743,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0;
         { stmt_type == ACCESS_REGION }?
         access_specifier_region |
 
-        // TODO:  Why no interface declaration?
+        // @todo  Why no interface declaration?
 
         { stmt_type == GLOBAL_ATTRIBUTE }?
         attribute_csharp |
@@ -855,14 +855,13 @@ look_past[int skiptoken] returns [int token] {
 }:;
 
 // skips past any skiptokens to get the one after
-look_past_multiple[int skiptoken1, int skiptoken2, int skiptoken3, int skiptoken4] returns [int token] {
+look_past_multiple[int skiptoken1, int skiptoken2, int skiptoken3] returns [int token] {
 
     int place = mark();
     inputState->guessing++;
 
     // TODO:  Why the LANGUAGE_CSHARP check?
-    while (LA(1) != antlr::Token::EOF_TYPE && (LA(1) == skiptoken1 || LA(1) == skiptoken2 || LA(1) == skiptoken3 ||
-          (inLanguage(LANGUAGE_CSHARP && LA(1) == skiptoken4))))
+    while (LA(1) != antlr::Token::EOF_TYPE && (LA(1) == skiptoken1 || LA(1) == skiptoken2 || LA(1) == skiptoken3))
         consume();
 
     token = LA(1);
@@ -3534,7 +3533,7 @@ compound_name_cpp[bool& iscompound = BOOL] { namestack[0] = namestack[1] = ""; E
             (DESTOP set_bool[isdestructor])*
             (multops)*
             (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
-            (options { greedy = true; } : { look_past_multiple(MULTOPS, REFOPS, RVALUEREF, QMARK) == DCOLON }? multops)*
+            (options { greedy = true; } : { look_past_multiple(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
         )*
 
         { notdestructor = LA(1) == DESTOP; }
