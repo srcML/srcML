@@ -3799,7 +3799,7 @@ sizeof_call[] { ENTRY_DEBUG } :
 ;
 
 macro_call_check[] { ENTRY_DEBUG } :
-        NAME (paren_pair)*
+        NAME (options { greedy = true; } : paren_pair)*
 ;
 
 eat_optional_macro_call[] {
