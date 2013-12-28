@@ -66,8 +66,8 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
     if (pos_args[i].find("http:") == std::string::npos){
       boost::filesystem::path localFile (pos_args[i]);
       if (!exists(localFile)) {
-	std::cerr << "File " << pos_args[i] << " not found.\n";
-	return false;
+        std::cerr << "File " << pos_args[i] << " not found.\n";
+        return false;
       }
     }
   }
