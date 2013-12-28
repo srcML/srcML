@@ -308,6 +308,10 @@ srcml_request_t srcmlCLI::parseCLI(int argc, char* argv[]) {
     //CHECK OPTION CONFLICTS
     conflicting_options(cli_map, "quiet", "verbose"); 
 
+    if (srcml_request.positional_args.empty()) {
+      srcml_request.positional_args.push_back("-");
+    }
+
   }
   catch(std::exception& e) {
     std::cerr << e.what() << "\n";
