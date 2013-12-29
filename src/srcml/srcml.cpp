@@ -62,12 +62,13 @@ ParseRequest NullParseRequest;
 
 bool checkLocalFiles(std::vector<std::string>& pos_args) {
   for (int i = 0; i < pos_args.size(); ++i) {
-    
-    if (pos_args[i].find("http:") == std::string::npos){
-      boost::filesystem::path localFile (pos_args[i]);
-      if (!exists(localFile)) {
-        std::cerr << "File " << pos_args[i] << " not found.\n";
-        return false;
+    if (pos_args[i] != "-") {
+      if (pos_args[i].find("http:") == std::string::npos){
+        boost::filesystem::path localFile (pos_args[i]);
+        if (!exists(localFile)) {
+          std::cerr << "File " << pos_args[i] << " not found.\n";
+          return false;
+        }
       }
     }
   }
@@ -282,7 +283,7 @@ int main(int argc, char * argv[]) {
       archive_read_support_filter_all(arch);
     #endif
 
-    if (archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384) == ARCHIVE_OK) {
+    if (archive_read_open_filename(arch, NULL, 16384) == ARCHIVE_OK) {
       const void* buffer;
       const char* cptr;
       size_t size;
