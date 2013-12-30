@@ -82,14 +82,16 @@ bool test_for_stdin() {
   // Use select to see if stdin has data
   int selectRetVal = select(sizeof(fds)*8, &fds, NULL, NULL, &timeout);
 
+  // Select failed
   if (selectRetVal == -1) {
-    std::cerr << "SELECT FAILED!\n";
     return false;
   }
+
+  // No data on stdin to fetch
   if (selectRetVal == 0) {
-    std::cerr << "NO DATA TO FETCH!\n";
     return false;
   }
+
   return true;
 }
 
