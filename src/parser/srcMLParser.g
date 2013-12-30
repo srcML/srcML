@@ -660,7 +660,7 @@ catch[...] {
 keyword_statements[] { ENTRY_DEBUG } :
 
         // conditional statements
-        if_statement | { /*isoption(parseoptions, OPTION_ELSEIF) &&*/ next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
+        if_statement | { isoption(parseoptions, OPTION_ELSEIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
         while_statement | for_statement | do_statement | foreach_statement |
