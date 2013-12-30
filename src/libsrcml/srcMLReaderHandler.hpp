@@ -199,7 +199,15 @@ public :
         srcml_archive_set_version(archive, value.c_str());
       else if(attribute == "tabs")
         archive->tabstop = atoi(value.c_str());
-      else {
+      else if(name == "options") {
+
+	std::istringstream soptions(value);
+	unsigned long long op;
+	soptions >> op;
+
+	options |= op;
+
+      } else {
         archive->attributes.push_back(attribute);
         archive->attributes.push_back(value);
       }

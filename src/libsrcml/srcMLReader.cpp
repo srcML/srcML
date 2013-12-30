@@ -26,6 +26,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <sstream>
+
 void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer, bool is_root);
 
 /**
@@ -231,7 +233,15 @@ int srcMLReader::readRootUnitAttributes(std::string *& language, std::string *& 
         version = new std::string((const char *)attribute->children->content);
       else if(name == "tabs")
         tabstop = atoi((const char *)attribute->children->content);
-      else {
+      else if(name == "options") {
+
+	std::istringstream soptions((const char *)attribute->children->content);
+	unsigned long long op;
+	soptions >> op;
+
+	options |= op;
+
+      } else {
 
         attributes.push_back(name);
         attributes.push_back((const char *)attribute->children->content);
