@@ -201,8 +201,37 @@ public :
         archive->tabstop = atoi(value.c_str());
       else if(name == "options") {
 
-	if(value == "ELSEIF")
-          options |= OPTION_ELSEIF;
+        while(!value.empty()) {
+
+          int pos = value.find(",");
+	  std::string option = value.substr(0, pos);
+          if(pos == std::string::npos)
+            value = "";
+          else
+            value = value.substr(value.find(",") + 1);
+
+          if(option == "XMLDECL")
+            options |= OPTION_XMLDECL;
+          if(option == "NAMESPACEDECL")
+            options |= OPTION_NAMESPACEDECL;
+          if(option == "CPP_TEXT_ELSE")
+            options |= OPTION_CPP_TEXT_ELSE;
+          if(option == "CPP_MARKUP_IF0")
+            options |= OPTION_CPP_MARKUP_IF0;
+          if(option == "EXPRESSION")
+            options |= OPTION_EXPRESSION;
+          if(option == "NAMESPACE")
+            options |= OPTION_NAMESPACE;
+          if(option == "LINE")
+            options |= OPTION_LINE;
+          if(option == "MACRO_PATTERN")
+            options |= OPTION_MACRO_PATTERN;
+          if(option == "MACRO_LIST")
+            options |= OPTION_MACRO_LIST;
+          if(option == "ELSEIF")
+            options |= OPTION_ELSEIF;
+
+        }
 
       } else {
         archive->attributes.push_back(attribute);
