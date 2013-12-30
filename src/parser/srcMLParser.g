@@ -288,8 +288,10 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options
 void srcMLParser::endAllModes() {
 
      // expression mode has an extra mode
-     if (isoption(parseoptions, OPTION_EXPRESSION))
-         endMode();
+     /*
+       if (isoption(parseoptions, OPTION_EXPRESSION))
+       endMode();
+     */
 
      // should only be one mode
      if (size() > 1 && isoption(parseoptions, OPTION_DEBUG))
