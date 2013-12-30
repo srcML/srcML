@@ -230,7 +230,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
   std::ostringstream soptions;
   if(isoption(OPTION_ELSEIF)) {
-    soptions << (options & OPTION_ELSEIF);
+    soptions << "ELSEIF";
   }
 
   // list of attributes

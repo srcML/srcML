@@ -201,11 +201,8 @@ public :
         archive->tabstop = atoi(value.c_str());
       else if(name == "options") {
 
-	std::istringstream soptions(value);
-	unsigned long long op;
-	soptions >> op;
-
-	options |= op;
+	if(value == "ELSEIF")
+          options |= OPTION_ELSEIF;
 
       } else {
         archive->attributes.push_back(attribute);

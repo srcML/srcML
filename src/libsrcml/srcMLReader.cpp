@@ -220,31 +220,29 @@ int srcMLReader::readRootUnitAttributes(std::string *& language, std::string *& 
   xmlAttrPtr attribute = node->properties;
   while (attribute) {
     std::string name = (const char *)attribute->name;
+    std::string value = (const char *)attribute->children->content;
 
     try {
 
       if(name == "language")
-        language = new std::string((const char *)attribute->children->content);
+        language = new std::string(value);
       else if(name == "filename")
-        filename = new std::string((const char *)attribute->children->content);
+        filename = new std::string(value);
       else if(name == "dir")
-        directory = new std::string((const char *)attribute->children->content);
+        directory = new std::string(value);
       else if(name == "version")
-        version = new std::string((const char *)attribute->children->content);
+        version = new std::string(value);
       else if(name == "tabs")
-        tabstop = atoi((const char *)attribute->children->content);
+        tabstop = atoi(value.c_str());
       else if(name == "options") {
 
-	std::istringstream soptions((const char *)attribute->children->content);
-	unsigned long long op;
-	soptions >> op;
-
-	options |= op;
+	if(value == "ELSEIF")
+	  options |= OPTION_ELSEIF;
 
       } else {
 
         attributes.push_back(name);
-        attributes.push_back((const char *)attribute->children->content);
+        attributes.push_back(value);
 
       }
 

@@ -476,7 +476,7 @@ void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, con
 
   std::ostringstream soptions;
   if(isoption(OPTION_ELSEIF)) {
-    soptions << (options & OPTION_ELSEIF);
+    soptions << "ELSEIF";
   }
 
   // list of attributes
