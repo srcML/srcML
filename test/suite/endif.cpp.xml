@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="if">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="if" filename="if">
 
 <unit>
 <if>if <condition>(<expr><name>a</name></expr>)</condition><then> <expr_stmt><expr><name>b</name></expr>;</expr_stmt></then></if>
@@ -78,22 +78,22 @@
       <expr_stmt><expr><name>x</name> = 1</expr>;</expr_stmt></then>
     <else>else
       <expr_stmt><expr><name>x</name> = 2</expr>;</expr_stmt></else></if></then>
-  <else>else
+  <elseif>else
     <if>if <condition>(<expr>3</expr>)</condition><then> 
-      <expr_stmt><expr><name>x</name> = 3</expr>;</expr_stmt></then>
+      <expr_stmt><expr><name>x</name> = 3</expr>;</expr_stmt></then></if></elseif>
     <else>else
-      <expr_stmt><expr><name>x</name> = 4</expr>;</expr_stmt></else></if></else></if>
+      <expr_stmt><expr><name>x</name> = 4</expr>;</expr_stmt></else></if>
 </unit>
 
 <unit>
   <if>if <condition>(<expr>1</expr>)</condition><then> 
     <if>if <condition>(<expr>2</expr>)</condition><then>
       <expr_stmt><expr><name>x</name> = 1</expr>;</expr_stmt></then>
-  <else>else
+  <elseif>else
     <if>if <condition>(<expr>3</expr>)</condition><then> 
-      <expr_stmt><expr><name>x</name> = 3</expr>;</expr_stmt></then>
+      <expr_stmt><expr><name>x</name> = 3</expr>;</expr_stmt></then></if></elseif>
     <else>else
-      <expr_stmt><expr><name>x</name> = 4</expr>;</expr_stmt></else></if></else></if></then></if>
+      <expr_stmt><expr><name>x</name> = 4</expr>;</expr_stmt></else></if></then></if>
 </unit>
 
 <unit>
@@ -103,22 +103,22 @@
 	<break>break;</break></then>
       <else>else
 	<break>break;</break></else></if></then>
-    <else>else
+    <elseif>else
       <if>if <condition>(<expr>4</expr>)</condition><then>
-	<break>break;</break></then>
+	<break>break;</break></then></if></elseif>
       <else>else
-	<break>break;</break></else></if></else></if></then>
-  <else>else
+	<break>break;</break></else></if></then>
+  <elseif>else
     <if>if <condition>(<expr>5</expr>)</condition><then> 
       <if>if <condition>(<expr>6</expr>)</condition><then>
 	<break>break;</break></then>
       <else>else
-	<break>break;</break></else></if></then>
-    <else>else
+	<break>break;</break></else></if></then></if></elseif>
+    <elseif>else
       <if>if <condition>(<expr>7</expr>)</condition><then>
-	<break>break;</break></then>
+	<break>break;</break></then></if></elseif>
       <else>else
-	<break>break;</break></else></if></else></if></else></if>
+	<break>break;</break></else></if>
 </unit>
 
 <unit>
@@ -128,22 +128,22 @@
 	<continue>continue;</continue></then>
       <else>else
 	<continue>continue;</continue></else></if></then>
-    <else>else
+    <elseif>else
       <if>if <condition>(<expr>4</expr>)</condition><then>
-	<continue>continue;</continue></then>
+	<continue>continue;</continue></then></if></elseif>
       <else>else
-	<continue>continue;</continue></else></if></else></if></then>
-  <else>else
+	<continue>continue;</continue></else></if></then>
+  <elseif>else
     <if>if <condition>(<expr>5</expr>)</condition><then> 
       <if>if <condition>(<expr>6</expr>)</condition><then>
 	<continue>continue;</continue></then>
       <else>else
-	<continue>continue;</continue></else></if></then>
-    <else>else
+	<continue>continue;</continue></else></if></then></if></elseif>
+    <elseif>else
       <if>if <condition>(<expr>7</expr>)</condition><then>
-	<continue>continue;</continue></then>
+	<continue>continue;</continue></then></if></elseif>
       <else>else
-	<continue>continue;</continue></else></if></else></if></else></if>
+	<continue>continue;</continue></else></if>
 </unit>
 
 </unit>
