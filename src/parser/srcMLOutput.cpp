@@ -229,9 +229,17 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
   }
 
   std::ostringstream soptions;
-  if(isoption(OPTION_ELSEIF)) {
-    soptions << "ELSEIF";
-  }
+  std::string SEP;
+  if(isoption(OPTION_XMLDECL))        { soptions << "XMLDECL"; }
+  if(isoption(OPTION_NAMESPACEDECL))  { if(!soptions.str().empty()) SEP = ","; soptions << SEP << "NAMESPACEDECL"; }
+  if(isoption(OPTION_CPP_TEXT_ELSE))  { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "CPP_TEXT_ELSE"; }
+  if(isoption(OPTION_CPP_MARKUP_IF0)) { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "CPP_MARKUP_IF0"; }
+  if(isoption(OPTION_EXPRESSION))     { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "EXPRESSION"; }
+  if(isoption(OPTION_NAMESPACE))      { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "NAMESPACE"; }
+  if(isoption(OPTION_LINE))           { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "LINE"; }
+  if(isoption(OPTION_MACRO_PATTERN))  { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "MACRO_PATTERN"; }
+  if(isoption(OPTION_MACRO_LIST))     { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "MACRO_LIST"; }
+  if(isoption(OPTION_ELSEIF))         { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "ELSEIF"; }
 
   // list of attributes
   const char* const attrs[][2] = {
