@@ -318,11 +318,17 @@ int main(int argc, char * argv[]) {
 
     int valid = 0;
 
-    if (!(test_for_stdin())) {
-     valid = archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384); 
+    if (srcml_request.positional_args[i] == "-") {
+     if (test_for_stdin()) {
+      valid = archive_read_open_filename(arch, NULL, 16384);
+     }
+     else {
+      std::cerr << "No data on stdin!\n";
+      return 1;
+     }
     }
     else {
-      valid = archive_read_open_filename(arch, NULL, 16384);
+      valid = archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384); 
     }
 
     if (valid == ARCHIVE_OK) {
