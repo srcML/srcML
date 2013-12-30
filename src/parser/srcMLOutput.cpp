@@ -228,6 +228,11 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     tabattribute.append(":tabs");
   }
 
+  std::ostringstream soptions;
+  if(isoption(OPTION_ELSEIF)) {
+    soptions << (options & OPTION_ELSEIF);
+  }
+
   // list of attributes
   const char* const attrs[][2] = {
 
@@ -248,6 +253,8 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
     // position tab setting
     { tabattribute.c_str(), isoption(OPTION_POSITION) ? stabs.str().c_str() : 0 },
+
+    { UNIT_ATTRIBUTE_OPTIONS,  isoption(OPTION_ELSEIF) ? soptions.str().c_str() : 0 },
   };
 
   // output attributes
