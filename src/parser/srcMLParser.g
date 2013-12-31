@@ -4122,6 +4122,7 @@ macro_call_contents[] {
 
 } :;
 
+// try statement
 try_statement[] { ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
@@ -4133,6 +4134,7 @@ try_statement[] { ENTRY_DEBUG } :
         TRY
 ;
 
+// try statement with resources
 try_statement_with_resource[] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
@@ -4165,6 +4167,7 @@ try_statement_with_resource[] {  int type_count = 0; int secondtoken = 0;  STMT_
 
 ;
 
+// a checked statement
 checked_statement[] { ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
@@ -4176,6 +4179,7 @@ checked_statement[] { ENTRY_DEBUG } :
         CHECKED
 ;
 
+// unsafe statement
 unsafe_statement[] { ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
@@ -4187,6 +4191,7 @@ unsafe_statement[] { ENTRY_DEBUG } :
         UNSAFE
 ;
 
+// using namespace 
 using_namespace_statement[] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_CSHARP) && next_token() == LPAREN }?
@@ -4195,6 +4200,7 @@ using_namespace_statement[] { ENTRY_DEBUG } :
         namespace_directive
 ;
 
+// using statement
 using_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
@@ -4226,6 +4232,7 @@ using_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_typ
         )
 ;
 
+// lock statement
 lock_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
@@ -4257,6 +4264,7 @@ lock_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type
         )
 ;
 
+// a synchonized statement
 synchronized_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
@@ -4288,6 +4296,7 @@ synchronized_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE s
         )
 ;
 
+// unchecked statement
 unchecked_statement[] { ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
@@ -4299,6 +4308,7 @@ unchecked_statement[] { ENTRY_DEBUG } :
         UNCHECKED
 ;
 
+// the catch statement
 catch_statement[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
@@ -4319,6 +4329,7 @@ catch_statement[] { ENTRY_DEBUG } :
         }
 ;
 
+// finally statement
 finally_statement[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
@@ -4330,6 +4341,7 @@ finally_statement[] { ENTRY_DEBUG } :
         FINALLY
 ;
 
+// lambda function
 lambda_anonymous[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
@@ -4341,6 +4353,7 @@ lambda_anonymous[] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inputState->guessing }? curly_pair)*
 ;
 
+// anonymous delegate
 delegate_anonymous[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
@@ -4357,6 +4370,7 @@ delegate_anonymous[] { ENTRY_DEBUG } :
 
 ;
 
+// mark the delegate function
 delegate_marked[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
@@ -4364,10 +4378,12 @@ delegate_marked[] { SingleElement element(this); ENTRY_DEBUG } :
         DELEGATE
 ;
 
+// lambda character
 lambda_marked[] { ENTRY_DEBUG } :
         LAMBDA
 ;
 
+// fix the statement
 fixed_statement[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
@@ -4384,6 +4400,7 @@ fixed_statement[] { ENTRY_DEBUG } :
         }
 ;
 
+// throw statement
 throw_statement[] { ENTRY_DEBUG } :
         {
             // statement with expected expression
@@ -4395,6 +4412,7 @@ throw_statement[] { ENTRY_DEBUG } :
         THROW
 ;
 
+// an expression statement pre processing
 expression_statement_process[] { ENTRY_DEBUG } :
         {
             // statement with an embedded expression
@@ -4405,6 +4423,7 @@ expression_statement_process[] { ENTRY_DEBUG } :
         }
 ;
 
+// an expression statment
 expression_statement[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
         expression_statement_process
@@ -4412,6 +4431,7 @@ expression_statement[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
         expression[type]
 ;
 
+// declartion statement
 variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
         {
             // statement
@@ -4431,6 +4451,7 @@ variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
         variable_declaration[type_count]
 ;
 
+// processing for short variable declaration
 short_variable_declaration[] { ENTRY_DEBUG } :
         {
             // declaration
@@ -4444,6 +4465,7 @@ short_variable_declaration[] { ENTRY_DEBUG } :
         }
 ;
 
+// more of the inner part of a declaration
 variable_declaration[int type_count] { ENTRY_DEBUG } :
         {
             // variable declarations may be in a list
@@ -4452,6 +4474,7 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
         variable_declaration_type[type_count]
 ;
 
+// declaration type
 variable_declaration_type[int type_count] { ENTRY_DEBUG } :
         {
             // start a mode for the type that will end in this grammar rule
@@ -4489,6 +4512,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
         }
 ;
 
+// initializtion of a function pointer.
 function_pointer_initialization[] { ENTRY_DEBUG } :
         EQUAL
         {
@@ -4501,6 +4525,7 @@ function_pointer_initialization[] { ENTRY_DEBUG } :
         (options { greedy = true; } : expression)*
 ;
 
+// initialization of a declared variable
 variable_declaration_initialization[] { ENTRY_DEBUG } :
         EQUAL
         {
@@ -4524,6 +4549,7 @@ variable_declaration_initialization[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
+// bit field
 variable_declaration_range[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -4535,6 +4561,7 @@ variable_declaration_range[] { ENTRY_DEBUG } :
         COLON
 ;
 
+// parameter variable initialization
 parameter_declaration_initialization[] { ENTRY_DEBUG } :
         EQUAL
         {
@@ -4546,6 +4573,7 @@ parameter_declaration_initialization[] { ENTRY_DEBUG } :
         }
 ;
 
+// expression block beginning and setup
 pure_expression_block[] { ENTRY_DEBUG } :
         lcurly_base
         {
