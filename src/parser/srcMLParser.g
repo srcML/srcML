@@ -4602,6 +4602,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         )
 ;
 
+// only new operator
 sole_new[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR))
@@ -4610,6 +4611,7 @@ sole_new[] { LightweightElement element(this); ENTRY_DEBUG } :
         NEW
 ;
 
+// only ~
 sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR))
@@ -4618,11 +4620,13 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
         DESTOP
 ;
 
+// list of operators
 general_operators_list[] { ENTRY_DEBUG } :
         OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
         DOTDOT | RVALUEREF | QMARK
 ;
 
+// mark up )
 rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (markup && isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_END_ONLY_AT_RPAREN))
@@ -4631,6 +4635,7 @@ rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DE
         RPAREN
     ;
 
+//processing on )
 rparen[bool markup = true] { bool isempty = getParen() == 0; bool update_type = false; ENTRY_DEBUG } :
         {
             if (isempty) {
@@ -4689,6 +4694,7 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; bool update_type = 
         }
 ;
 
+// } matching and processing
 rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
         {
             if(isempty) {
@@ -4733,6 +4739,7 @@ dcolon[] { LightweightElement element(this); ENTRY_DEBUG } :
         DCOLON
 ;
 
+// process portion of expression
 expression_process[] { ENTRY_DEBUG } :
         {
             // if expecting an expression start one. except if you are at a right curly brace
@@ -4748,6 +4755,7 @@ expression_process[] { ENTRY_DEBUG } :
         }
 ;
 
+// an expression
 expression[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
         expression_process
@@ -4755,6 +4763,7 @@ expression[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
         expression_part_plus_linq[type]
 ;
 
+// setup for expression linq
 expression_setup_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
         expression_process
@@ -4762,6 +4771,7 @@ expression_setup_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
         expression_part[type]
 ;
 
+// expression with linq
 expression_part_plus_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token_string().find('=') == std::string::npos }?
@@ -4770,6 +4780,7 @@ expression_part_plus_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
         expression_part[type]
 ;
 
+// the expression part
 expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
 
         // cast
@@ -4865,6 +4876,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         variable_identifier_array_grammar_sub[flag]
 ;
 
+// default()
 expression_part_default[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
         expression_process
@@ -4899,6 +4911,7 @@ char_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         (CHAR_START CHAR_END)
 ;
 
+// literals
 literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup literals in literal option
@@ -4908,6 +4921,8 @@ literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         (CONSTANTS | NULLPTR)
 ;
 
+
+// booleans
 boolean[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup boolean values in literal option
@@ -4917,6 +4932,7 @@ boolean[] { LightweightElement element(this); ENTRY_DEBUG } :
         (TRUE | FALSE)
 ;
 
+// a derived class
 derived[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
@@ -4940,6 +4956,7 @@ derived[] { CompleteElement element(this); ENTRY_DEBUG } :
         )*
 ;
 
+// super list
 super_list_java[] { ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
@@ -4950,6 +4967,7 @@ super_list_java[] { ENTRY_DEBUG } :
         }
 ;
 
+// extends list
 extends_list[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
@@ -4962,6 +4980,7 @@ extends_list[] { CompleteElement element(this); ENTRY_DEBUG } :
         super_list
 ;
 
+// implements list
 implements_list[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
@@ -4974,6 +4993,7 @@ implements_list[] { CompleteElement element(this); ENTRY_DEBUG } :
         super_list
 ;
 
+// super list
 super_list[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             (derive_access)*
@@ -4984,6 +5004,7 @@ super_list[] { ENTRY_DEBUG } :
         )*
 ;
 
+// a derive access
 derive_access[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SCLASS_SPECIFIER);
@@ -4991,6 +5012,7 @@ derive_access[] { SingleElement element(this); ENTRY_DEBUG } :
         (VIRTUAL)* (PUBLIC | PRIVATE | PROTECTED) (options { greedy = true; } : VIRTUAL)*
 ;
 
+// do a parameter list
 parameter_list[] { CompleteElement element(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
         {
             // list of parameters
@@ -5010,6 +5032,7 @@ parameter_list[] { CompleteElement element(this); bool lastwasparam = false; boo
         complete_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
 ;
 
+// indexer parameter list
 indexer_parameter_list[] { bool lastwasparam = false; ENTRY_DEBUG } :
         {
             // list of parameters
@@ -5032,6 +5055,7 @@ indexer_parameter_list[] { bool lastwasparam = false; ENTRY_DEBUG } :
         complete_parameter { lastwasparam = true; })*
 ;
 
+// an empty element
 empty_element[int ele, bool cond] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (cond)
@@ -5039,30 +5063,36 @@ empty_element[int ele, bool cond] { LightweightElement element(this); ENTRY_DEBU
         }
 ;
 
+// k & r C parameter
 kr_parameter[int type_count] { ENTRY_DEBUG } :
         kr_parameter_type[type_count] kr_parameter_name kr_parameter_terminate
         //complete_parameter terminate_pre terminate_token
 ;
 
+// k & r C parameter type
 kr_parameter_type[int type_count] { ENTRY_DEBUG} :
         // suppress ()* warning
         variable_declaration_statement[type_count] (options { greedy = true; } : { inMode(MODE_EAT_TYPE) }? type_identifier update_typecount[MODE_FUNCTION_NAME])* 
 ;
 
+// k & r C parameter name
 kr_parameter_name[] { ENTRY_DEBUG } :
         ((comma)* variable_declaration_nameinit)*
 ;
 
+// k & r C terminate
 kr_parameter_terminate[] { ENTRY_DEBUG } :
     terminate_pre terminate_token { endDownToModeSet(MODE_FUNCTION_TAIL); }
 ;
 
+// complete parameter
 complete_parameter[] { ENTRY_DEBUG } :
         parameter
         // suppress ()* warning
         (options { greedy = true; } : parameter_declaration_initialization (options { greedy = true; } : {LA(1) != RPAREN }? expression)*)*
 ;
 
+// an argument
 argument[] { ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false] |
         { getCurly() == 0 }? rcurly_argument |
@@ -5081,6 +5111,7 @@ argument[] { ENTRY_DEBUG } :
 
 ;
 
+// annotation argument
 annotation_argument[] { ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false] |
         {
@@ -5098,6 +5129,7 @@ annotation_argument[] { ENTRY_DEBUG } :
         )*
 ;
 
+// a parameter
 parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // end parameter correctly
@@ -5137,6 +5169,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
         )
 ;
 
+// count types in parameter
 parameter_type_count[int & type_count] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
@@ -5151,6 +5184,7 @@ parameter_type_count[int & type_count] { CompleteElement element(this); ENTRY_DE
         ( options { greedy = true; } : multops | tripledotop | LBRACKET RBRACKET)*
 ;
 
+// Modifier ops
 multops[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
@@ -5160,6 +5194,7 @@ multops[] { LightweightElement element(this); ENTRY_DEBUG } :
         (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[qmark, true])
 ;
 
+// ...
 tripledotop[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
@@ -5169,6 +5204,7 @@ tripledotop[] { LightweightElement element(this); ENTRY_DEBUG } :
         DOTDOTDOT
 ;
 
+// do a parameter type
 parameter_type[] { CompleteElement element(this); int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
@@ -5200,6 +5236,7 @@ template_declaration[] { ENTRY_DEBUG } :
         }
 ;
 
+// template specifiers
 template_specifier{ SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
@@ -5208,6 +5245,7 @@ template_specifier{ SingleElement element(this); ENTRY_DEBUG } :
         EXTERN
     ;
 
+// start parameter list for templates
 template_param_list[] { ENTRY_DEBUG } :
         {
             startNewMode(MODE_PARAMETER | MODE_LIST);
@@ -5218,6 +5256,7 @@ template_param_list[] { ENTRY_DEBUG } :
         tempops
 ;
 
+// parameter in template
 template_param[] { ENTRY_DEBUG } :
         {
             // end parameter correctly
@@ -5239,6 +5278,7 @@ template_param[] { ENTRY_DEBUG } :
     )
 ;
 
+// complete inner full for template
 template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; } :
 
         template_parameter_list_full
@@ -5253,6 +5293,7 @@ template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STM
 
 ;
 
+// entire template parameter list
 template_parameter_list_full[] { ENTRY_DEBUG } :
 
         {
@@ -5267,6 +5308,7 @@ template_parameter_list_full[] { ENTRY_DEBUG } :
 
 ;
 
+// template initialization
 template_declaration_initialization[] { ENTRY_DEBUG } :
         EQUAL
         {
@@ -5279,6 +5321,7 @@ template_declaration_initialization[] { ENTRY_DEBUG } :
 
 ;
 
+// template argument list
 template_argument_list[] { CompleteElement element(this); std::string namestack_save[2]; ENTRY_DEBUG } :
         {
             // local mode
@@ -5295,6 +5338,7 @@ template_argument_list[] { CompleteElement element(this); std::string namestack_
         restorenamestack[namestack_save]
 ;
 
+// generic type constraint
 generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // local mode
@@ -5307,10 +5351,13 @@ generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } : COMMA (compound_name_inner[false] | CLASS | STRUCT | NEW LPAREN RPAREN))*
 ;
 
+// save the namestack
 savenamestack[std::string namestack_save[]] { namestack_save[0].swap(namestack[0]); namestack_save[1].swap(namestack[1]); ENTRY_DEBUG } :;
 
+// restore the namestack
 restorenamestack[std::string namestack_save[]] { namestack[0].swap(namestack_save[0]); namestack[1].swap(namestack_save[1]); ENTRY_DEBUG } :;
 
+// template argument
 template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // local mode
@@ -5337,6 +5384,8 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
         )+
 ;
 
+
+// template argument expression
 template_argument_expression[] { ENTRY_DEBUG } :
 
         lparen_marked
@@ -5357,6 +5406,7 @@ template_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         )
 ;
 
+// template extends
 template_extends_java[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
@@ -5367,7 +5417,7 @@ template_extends_java[] { CompleteElement element(this); ENTRY_DEBUG } :
         compound_name_java
 ;
 
-
+// template super 
 template_super_java[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
@@ -5378,6 +5428,7 @@ template_super_java[] { CompleteElement element(this); ENTRY_DEBUG } :
         compound_name_java
 ;
 
+// beginning of template parameter list
 tempops[] { ENTRY_DEBUG } :
         {
             // make sure we are in a list mode so that we can end correctly
@@ -5388,6 +5439,7 @@ tempops[] { ENTRY_DEBUG } :
         TEMPOPS
 ;
 
+// end of template parameter list
 tempope[] { ENTRY_DEBUG } :
         {
             // end down to the mode created by the start template operator
