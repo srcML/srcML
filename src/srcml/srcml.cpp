@@ -58,6 +58,9 @@ ParseRequest NullParseRequest;
 
 bool checkLocalFiles(std::vector<std::string>& pos_args) {
   for (int i = 0; i < pos_args.size(); ++i) {
+    if (pos_args[i] == "/dev/stdin")
+      pos_args[i] = "-";
+    
     if (pos_args[i] != "-") {
       if (pos_args[i].find("http:") == std::string::npos){
         boost::filesystem::path localFile (pos_args[i]);
