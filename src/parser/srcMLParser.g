@@ -964,6 +964,9 @@ function_tail[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_CXX_ONLY) }?
             trailing_return |
 
+            { inLanguage(LANGUAGE_JAVA) }?
+            annotation_default |
+
             // K&R
             { inLanguage(LANGUAGE_C) }? (
 
@@ -974,6 +977,11 @@ function_tail[] { ENTRY_DEBUG } :
               parameter (MULTOPS | simple_identifier | COMMA)* TERMINATE
             )
         )*
+;
+
+// Java annotation default alues
+annotation_default[] { ENTRY_DEBUG } :
+            DEFAULT literals
 ;
 
 // Ref qualifiers in function tail
