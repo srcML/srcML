@@ -2432,10 +2432,12 @@ condition[] { ENTRY_DEBUG } :
 
 /* more functions @todo move this with the other function stuff*/
 
+// A function pointer name handle
 function_pointer_name_grammar[] { ENTRY_DEBUG } :
         LPAREN function_pointer_name_base RPAREN
 ;
 
+// inner portion of functon pointer name
 function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
 
         // special case for function pointer names that don't have '*'
@@ -2452,6 +2454,7 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
         (variable_identifier_array_grammar_sub[flag])*
 ;
 
+// header of a function
 function_header[int type_count] { ENTRY_DEBUG } :
 
         // no return value functions:  casting operator method and main
@@ -2461,6 +2464,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         function_type[type_count]
 ;
 
+// portion of function after paramter list and before block
 function_tail[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } :
@@ -2499,16 +2503,19 @@ function_tail[] { ENTRY_DEBUG } :
         )*
 ;
 
+// Ref qualifiers in function tail
 ref_qualifier []  { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
             if (isoption(parseoptions, OPTION_MODIFIER))
                 startElement(SMODIFIER);
         }
-
+        (
         REFOPS | RVALUEREF
+        )
 ;
 
+// trailing return in function tail
 trailing_return [] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
 
         TRETURN
@@ -2517,6 +2524,7 @@ trailing_return [] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_t
         )
 ;
 
+// perform an arbitrary look ahead looking for a pattern
 pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false] returns [bool isdecl] {
 
     isdecl = true;
@@ -2891,6 +2899,7 @@ traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::e
 marker[] { CompleteElement element(this); startNewMode(MODE_LOCAL); startElement(SMARKER); } :;
 */
 
+// Do the rest of the function and get the end
 function_rest[int& fla] { ENTRY_DEBUG } :
 
         eat_optional_macro_call
