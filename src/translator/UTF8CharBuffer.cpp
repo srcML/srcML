@@ -28,6 +28,13 @@
 #define xmlBufContent(b) (b->content)
 #endif
 
+UTF8CharBuffer::UTF8CharBuffer()
+  : antlr::CharBuffer(std::cin), pos(0), size(0)/*, eof(false)*/, lastcr(false), free(true) {
+
+    input = NULL;
+
+}
+
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
   : antlr::CharBuffer(std::cin), pos(0), size(0)/*, eof(false)*/, lastcr(false), free(true)
@@ -41,7 +48,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
   if (!(input = xmlParserInputBufferCreateFilename(ifilename,
                                                    enc ? xmlParseCharEncoding(enc) : XML_CHAR_ENCODING_NONE)))
     throw UTF8FileError();
-
   init(encoding);
 
 }
@@ -194,7 +200,7 @@ int UTF8CharBuffer::growBuffer() {
 // libxml context
 void* UTF8CharBuffer::getContext() const {
 
-  return input->context;
+  return input ? input->context : 0;
 }
 
 /*
@@ -205,6 +211,8 @@ void* UTF8CharBuffer::getContext() const {
   original encoding to UTF-8 in the utf8 buffer.
 */
 int UTF8CharBuffer::getChar() {
+
+  if(!input) return getchar();
 
   // need to refill the buffer
   if (size == 0 || pos >= size) {

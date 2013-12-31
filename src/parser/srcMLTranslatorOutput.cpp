@@ -352,8 +352,13 @@ void srcMLTranslatorOutput::consume(const char* language, const char* directory,
   while (consume_next() != antlr::Token::EOF_TYPE) {
 
     // in interactive mode flush after each token is discovered
-    if (isoption(OPTION_INTERACTIVE))
+    if (isoption(OPTION_INTERACTIVE)) {
       xmlTextWriterFlush(xout);
+
+      if(isoption(OPTION_TERMINATE)) break;
+ 
+   }
+
   }
 }
 

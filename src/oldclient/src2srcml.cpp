@@ -1278,7 +1278,7 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     void* context = translator.setInput(path);
 
     // check if file is bad
-    if (!context || archiveReadStatus(context) < 0 ) {
+    if (!isoption(options, OPTION_INTERACTIVE) && (!context || archiveReadStatus(context) < 0) ) {
       fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
 
       options = save_options;
@@ -1346,7 +1346,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
         context = translator.setInput(path);
 
         // check if file is bad
-        if (!context || archiveReadStatus(context) < 0 ) {
+        if (!isoption(options, OPTION_INTERACTIVE) && (!context || archiveReadStatus(context) < 0) ) {
           fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
           ++(gpoptions->error);
           return;
@@ -1388,7 +1388,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
         context = translator.setInput(path);
 
         // check if file is bad
-        if (!context || archiveReadStatus(context) < 0 ) {
+        if (!isoption(options, OPTION_INTERACTIVE) && (!context || archiveReadStatus(context) < 0) ) {
           fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
           ++(gpoptions->error);
           return;
