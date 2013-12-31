@@ -213,6 +213,8 @@ void* UTF8CharBuffer::getContext() const {
 */
 int UTF8CharBuffer::getChar() {
 
+  if(!input) return getchar();
+
   // need to refill the buffer
   if (size == 0 || pos >= size) {
 
