@@ -141,11 +141,14 @@ void* srcMLTranslatorCore::setInput(xmlParserInputBufferPtr input) {
 void* srcMLTranslatorCore::setInput(const char* path) {
 
   try {
-    pinput = new UTF8CharBuffer(path, encoding);
+
+    if(isoption(options, OPTION_INTERACTIVE))
+      pinput = new UTF8CharBuffer();
+      else
+      pinput = new UTF8CharBuffer(path, encoding);
 
     // return the libxml context of the file
-    if (pinput)
-      return pinput->getContext();
+    if (pinput) return pinput->getContext();
 
   } catch (const std::exception& e) {
     fprintf(stderr, "SRCML Exception: %s\n", e.what());
