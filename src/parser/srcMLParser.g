@@ -700,6 +700,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         // C/C++ assembly block
         asm_declaration
 ;
+
 /*
   Statements, declarations, and definitions that must be matched by pattern.
 
@@ -824,6 +825,7 @@ next_token[] returns [int token] {
     rewind(place);
 } :;
 
+// eficient way of getting the next token string value.
 next_token_string[] returns [std::string token] {
 
     int place = mark();
@@ -861,6 +863,7 @@ look_past[int skiptoken] returns [int token] {
     rewind(place);
 } :;
 
+// skip past all of the skiptoken1 and skiptoken2 and return the one after
 look_past_two[int skiptoken1, int skiptoken2] returns [int token] {
 
     int place = mark();
@@ -875,7 +878,7 @@ look_past_two[int skiptoken1, int skiptoken2] returns [int token] {
     rewind(place);
 } :;
 
-// skips past any skiptokens to get the one after
+// skip past all of the skiptoken1, skiptoken2 and skiptoken3 and return the one after
 look_past_three[int skiptoken1, int skiptoken2, int skiptoken3] returns [int token] {
 
     int place = mark();
@@ -890,7 +893,9 @@ look_past_three[int skiptoken1, int skiptoken2, int skiptoken3] returns [int tok
     rewind(place);
 } :;
 
-// functions
+/* functions */
+
+// beginning function declaration/header
 function_declaration[int type_count] { ENTRY_DEBUG } :
 		{
             startNewMode(MODE_STATEMENT);
@@ -900,6 +905,7 @@ function_declaration[int type_count] { ENTRY_DEBUG } :
         function_header[type_count]
 ;
 
+// handle a C++11 lambda expression
 lambda_expression_cpp[] { ENTRY_DEBUG } :
 		{
 
@@ -921,9 +927,9 @@ lambda_expression_cpp[] { ENTRY_DEBUG } :
         }
 
         lambda_capture
-
 ;
 
+// [capture] portion of a C++11 lambda function.
 lambda_capture[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LIST | MODE_LOCAL | MODE_ARGUMENT);
@@ -943,6 +949,7 @@ lambda_capture[] { CompleteElement element(this); ENTRY_DEBUG } :
         )
 ;
 
+// argument within the capture portion of a C++11 lambda
 lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         {
@@ -954,6 +961,7 @@ lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { warnWhenFollowAmbig = false; } : lambda_capture_modifiers | compound_name)*
 ;
 
+// check and see if the lambda is directly used as a call.
 lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG 
 
     iscall = false;
@@ -973,6 +981,7 @@ lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG
     rewind(start);
 } :;
 
+// completely match a C++ lambda expression
 lambda_expression_full_cpp[] { ENTRY_DEBUG } :
 
         // paren_pair and curly_pair seem to have nondeterminism because both can match LPAREN
@@ -980,6 +989,7 @@ lambda_expression_full_cpp[] { ENTRY_DEBUG } :
 
 ;
 
+// modifiers that can occur within a lambda capture.
 lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
@@ -990,6 +1000,7 @@ lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 ;
 
+// handle the beginning of a function definition
 function_definition[int type_count] { ENTRY_DEBUG } :
 		{
             startNewMode(MODE_STATEMENT);
@@ -999,7 +1010,8 @@ function_definition[int type_count] { ENTRY_DEBUG } :
         function_header[type_count]
 ;
 
-// property methods
+/* property methods */
+
 property_method[int element] { ENTRY_DEBUG } :
 		{
             // function definitions have a "nested" block statement
