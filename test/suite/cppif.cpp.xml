@@ -32,4 +32,34 @@
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<expr_stmt><expr><call><name>c</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<if>if<condition>()</condition><then> <block>{}</block></then>
+<else>else <block>{}</block></else>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<else>else <block>{}</block></else></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<if>if<condition>()</condition><then> <block>{}</block></then>
+<else>else <block>{}</block></else>
+<cpp:error>#<cpp:directive>elseif</cpp:directive></cpp:error>
+<else>else <block>{}</block></else>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<else>else <block>{}</block></else></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
 </unit>
