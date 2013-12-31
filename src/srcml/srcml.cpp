@@ -26,8 +26,6 @@
 
   Replaces the src2srcml and srcml2src of the original srcML toolkit.
 */
-#include <stdio.h>
-#include <unistd.h>
 #include <srcml.h>
 #include <srcmlCLI.hpp>
 #include <thread_queue.hpp>
@@ -37,9 +35,6 @@
 //#include <curl/curl.h>
 #include <boost/filesystem.hpp>
 #include <pthread.h>
-
-#include <iostream>
-#include <string>
 
 struct ParseRequest {
     ParseRequest() : buffer(0) {}
@@ -60,40 +55,6 @@ struct ParseRequest {
 };
 
 ParseRequest NullParseRequest;
-
-bool test_for_stdin() {
-  fd_set fds;
-  int c;
-
-  /* 
-   Need a timeout so the application doesn't
-    hang waiting for input that never comes
-  */
-  struct timeval timeout;
-
-  // Init file descriptor with stdin
-  FD_ZERO(&fds);
-  FD_SET(STDIN_FILENO, &fds);
-
-  // Set timeout to 0 (don't wait for input)
-  timeout.tv_sec = 0;
-  timeout.tv_usec = 0;
-
-  // Use select to see if stdin has data
-  int selectRetVal = select(sizeof(fds)*8, &fds, NULL, NULL, &timeout);
-
-  // Select failed
-  if (selectRetVal == -1) {
-    return false;
-  }
-
-  // No data on stdin to fetch
-  if (selectRetVal == 0) {
-    return false;
-  }
-
-  return true;
-}
 
 bool checkLocalFiles(std::vector<std::string>& pos_args) {
   for (int i = 0; i < pos_args.size(); ++i) {
@@ -320,17 +281,11 @@ int main(int argc, char * argv[]) {
 
     int valid = 0;
 
-    if (srcml_request.positional_args[i] == "-") {
-      if (test_for_stdin()) {
-        valid = archive_read_open_filename(arch, NULL, 16384);
-      }
-      else {
-        std::cerr << "No data on stdin!\n";
-        return 1;
-      }
+    if (srcml_request.positional_args[i] != "-") {
+      valid = archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384); 
     }
     else {
-      valid = archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384); 
+      valid = archive_read_open_filename(arch, NULL, 16384);
     }
 
     if (valid == ARCHIVE_OK) {
