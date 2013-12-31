@@ -5453,6 +5453,7 @@ tempope[] { ENTRY_DEBUG } :
         }
 ;
 
+// a label
 label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // statement
@@ -5464,6 +5465,7 @@ label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
         identifier COLON
 ;
 
+// typedef
 typedef_statement[] { ENTRY_DEBUG } :
         {
             // statement
@@ -5477,10 +5479,12 @@ typedef_statement[] { ENTRY_DEBUG } :
         TYPEDEF
 ;
 
+// matching set of parenthesis
 paren_pair[] :
         LPAREN (paren_pair | ~(LPAREN | RPAREN))* RPAREN
 ;
 
+// matching set of curly braces
 curly_pair[] :
         LCURLY (curly_pair | ~(LCURLY | RCURLY))* RCURLY
 ;
@@ -5514,6 +5518,7 @@ nested_terminate[] {
         TERMINATE
 ;
 
+// definition of an enum
 enum_definition[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (enum_class_definition nested_terminate)=>enum_class_definition |
@@ -5540,6 +5545,7 @@ enum_definition[] { ENTRY_DEBUG } :
         ENUM
 ;
 
+// header for enum class
 enum_class_header[] {} :
         (CLASS | STRUCT)* 
         ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
@@ -5547,6 +5553,7 @@ enum_class_header[] {} :
 
     ;
 
+// type portion of enum
 enum_type { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(STYPE);
@@ -5760,12 +5767,14 @@ catch[...] {
         eol_skip(directive_token, markblockzero);
 }
 
+// do all the cpp garbage
 cpp_garbage[] :
 
  ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | EOF)
 
 ;
 
+// skip to eol
 eol_skip[int directive_token, bool markblockzero] {
 
     while (LA(1) != EOL &&
@@ -5799,6 +5808,7 @@ ENTRY_DEBUG } :
         eol_post[directive_token, markblockzero]
 ;
 
+// post processing for eol
 eol_post[int directive_token, bool markblockzero] {
 
         // Flags to control skipping of #if 0 and #else.
@@ -5943,6 +5953,7 @@ cppmode_adjust[] {
     ENTRY_DEBUG 
 } :;
 
+// line continuation character
 line_continuation[] { ENTRY_DEBUG } :
         {
             // end all preprocessor modes
@@ -5951,6 +5962,7 @@ line_continuation[] { ENTRY_DEBUG } :
         EOL_BACKSLASH
 ;
 
+// condition in cpp
 cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG } :
 
         set_bool[markblockzero, LA(1) == CONSTANTS && LT(1)->getText() == "0"]
@@ -5958,14 +5970,17 @@ cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG 
         complete_expression
 ;
 
+// symbol in cpp
 cpp_symbol[] { ENTRY_DEBUG } :
         simple_identifier
 ;
 
+// optional symbol cpp 
 cpp_symbol_optional[] { ENTRY_DEBUG } :
         (options { greedy = true; } : cpp_symbol)*
 ;
 
+// filename cpp
 cpp_filename[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SCPP_FILENAME);
@@ -5973,6 +5988,7 @@ cpp_filename[] { SingleElement element(this); ENTRY_DEBUG } :
         (string_literal | char_literal | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
 ;
 
+// linenumber in cpp
 cpp_linenumber[] { SingleElement element(this); bool first = true; ENTRY_DEBUG } :
         (options { greedy = true; } : { if(first) { startElement(SCPP_NUMBER); first = false; } } literal)*
 ;
