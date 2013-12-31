@@ -347,6 +347,7 @@ tokens {
     SCHAR;          // string or char marked by single quotes
     SLITERAL;       // literal number, constant
     SBOOLEAN;       // boolean literal, i.e., true, false
+    SNULL;          // null types null, nullptr
 
     // operators
     SOPERATOR;

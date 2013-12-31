@@ -70,6 +70,7 @@ namespace {
   ELEMENT_MAP(SCHAR,    "literal")
   ELEMENT_MAP(SLITERAL, "literal")
   ELEMENT_MAP(SBOOLEAN, "literal")
+  ELEMENT_MAP(SNULL,    "literal")
 
   // operators
   ELEMENT_MAP(SOPERATOR, "operator")
@@ -690,6 +691,11 @@ void srcMLTranslatorOutput::processLiteral(const antlr::RefToken& token) {
 void srcMLTranslatorOutput::processBoolean(const antlr::RefToken& token) {
 
   processOptional(token, "type", "boolean");
+}
+
+void srcMLTranslatorOutput::processNull(const antlr::RefToken& token) {
+
+  processOptional(token, "type", "null");
 }
 
 #if DEBUG
