@@ -1023,7 +1023,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 
         // call syntax succeeded, however post call token is not legitimate
         if (isoption(parseoptions, OPTION_CPP) &&
-               (_tokenSet_1.member(postcalltoken) || postcalltoken == NAME
+               (_tokenSet_1.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
@@ -2431,9 +2431,9 @@ function_tail[] { ENTRY_DEBUG } :
 
             // @todo:  Must be integrated into other C-based languages
             // @todo:  Wrong markup
-            (NAME paren_pair)=> macro_call |
+            ((NAME | VOID) paren_pair)=> macro_call |
             { look_past(NAME) == LCURLY }? NAME |
-              parameter (MULTOPS | NAME | COMMA)* TERMINATE
+              parameter (MULTOPS | (NAME | VOID) | COMMA)* TERMINATE
             )
         )*
 ;
@@ -3429,7 +3429,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
-            SIGNAL | FINAL | OVERRIDE |
+            SIGNAL | FINAL | OVERRIDE | VOID |
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
@@ -3441,7 +3441,9 @@ simple_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
-        NAME
+        (
+        NAME | VOID
+        )
 ;
 
 compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
@@ -3721,7 +3723,7 @@ destructor_header[] { ENTRY_DEBUG } :
             specifier |
 
             // @todo  'void' should be detected in lexer
-            { LT(1)->getText() == "void" }? simple_identifier
+            { LA(1) == VOID }? simple_identifier
         )*
         compound_name_inner[false]
         parameter_list
@@ -3798,7 +3800,7 @@ sizeof_call[] { ENTRY_DEBUG } :
 ;
 
 macro_call_check[] { ENTRY_DEBUG } :
-        NAME (options { greedy = true; } : paren_pair)*
+        (NAME | VOID) (options { greedy = true; } : paren_pair)*
 ;
 
 eat_optional_macro_call[] {
@@ -3811,7 +3813,10 @@ eat_optional_macro_call[] {
 
     try {
         // check for the name
-        match(NAME);
+        if(LA(1) == NAME)
+            match(NAME);
+        else 
+            match(VOID);
 
         // handle the parentheses
         paren_pair();
@@ -5727,7 +5732,7 @@ cpp_symbol[] { SingleElement element(this); ENTRY_DEBUG } :
             // start of the name element
             startElement(SNAME);
         }
-        NAME
+        (NAME | VOID)
 ;
 
 cpp_symbol_optional[] { ENTRY_DEBUG } :
