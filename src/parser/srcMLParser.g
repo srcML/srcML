@@ -1012,6 +1012,7 @@ function_definition[int type_count] { ENTRY_DEBUG } :
 
 /* property methods */
 
+// C# property method GET/SET/ADD/REMOVE
 property_method[int element] { ENTRY_DEBUG } :
 		{
             // function definitions have a "nested" block statement
@@ -1024,6 +1025,7 @@ property_method[int element] { ENTRY_DEBUG } :
         property_method_name
 ;
 
+// handle the name portion of a property method
 property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
 		{
             startElement(SNAME);
@@ -1031,6 +1033,7 @@ property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
         (GET | SET | ADD | REMOVE)
 ;
 
+// Check and see if this is a call and what type
 perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 
     iscall = true;
@@ -1082,6 +1085,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 
     ENTRY_DEBUG } :;
 
+// check if call is call
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
@@ -1101,6 +1105,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_D
         )
 ;
 
+// check the contents of a call
 call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; ENTRY_DEBUG } :
 
         LPAREN
@@ -1247,6 +1252,7 @@ for_initialization_action[] { ENTRY_DEBUG } :
         }
 ;
 
+// handle initilization portion of a for.
 for_initialization[] { int type_count = 0;  int secondtoken = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         for_initialization_action
         (
@@ -1469,6 +1475,7 @@ yield_statements[] { int t = next_token(); ENTRY_DEBUG } :
         yield_break_statement
 ;
 
+// match a special yield specifier
 yield_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
@@ -1476,6 +1483,7 @@ yield_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
         YIELD
 ;
 
+// match a special yield specifier followed by return
 yield_return_statement[] { ENTRY_DEBUG } :
         {
             // statement with a possible expression
@@ -1487,6 +1495,7 @@ yield_return_statement[] { ENTRY_DEBUG } :
         yield_specifier RETURN
 ;
 
+// match a special yield specifier followed by break;
 yield_break_statement[] { ENTRY_DEBUG } :
         {
             // statement
@@ -1581,6 +1590,7 @@ namespace_definition[] { ENTRY_DEBUG } :
         NAMESPACE
 ;
 
+// a namespace alias
 namespace_alias[] { ENTRY_DEBUG } :
         EQUAL
         {
@@ -1590,6 +1600,7 @@ namespace_alias[] { ENTRY_DEBUG } :
         }
 ;
 
+// namespace block
 namespace_block[] { ENTRY_DEBUG } :
         {
             // nest a block inside the namespace
@@ -1612,6 +1623,7 @@ namespace_directive[] { ENTRY_DEBUG } :
 
 /* Declarations Definitions CFG */
 
+// check the ending token
 check_end[int& token] { token = LA(1); ENTRY_DEBUG } :
         LCURLY | TERMINATE | COLON | COMMA | RPAREN
 ;
