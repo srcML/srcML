@@ -861,8 +861,22 @@ look_past[int skiptoken] returns [int token] {
     rewind(place);
 } :;
 
+look_past_two[int skiptoken1, int skiptoken2] returns [int token] {
+
+    int place = mark();
+    inputState->guessing++;
+
+    while (LA(1) == skiptoken1 || LA(1) == skiptoken2)
+        consume();
+
+    token = LA(1);
+
+    inputState->guessing--;
+    rewind(place);
+} :;
+
 // skips past any skiptokens to get the one after
-look_past_multiple[int skiptoken1, int skiptoken2, int skiptoken3] returns [int token] {
+look_past_three[int skiptoken1, int skiptoken2, int skiptoken3] returns [int token] {
 
     int place = mark();
     inputState->guessing++;
@@ -1025,7 +1039,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 
         // call syntax succeeded, however post call token is not legitimate
         if (isoption(parseoptions, OPTION_CPP) &&
-               (_tokenSet_1.member(postcalltoken) || postcalltoken == NAME
+               (_tokenSet_1.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
@@ -2433,9 +2447,9 @@ function_tail[] { ENTRY_DEBUG } :
 
             // @todo:  Must be integrated into other C-based languages
             // @todo:  Wrong markup
-            (NAME paren_pair)=> macro_call |
-            { look_past(NAME) == LCURLY }? NAME |
-              parameter (MULTOPS | NAME | COMMA)* TERMINATE
+            (simple_identifier paren_pair)=> macro_call |
+            { look_past_two(NAME, VOID) == LCURLY }? simple_identifier |
+              parameter (MULTOPS | simple_identifier | COMMA)* TERMINATE
             )
         )*
 ;
@@ -2609,7 +2623,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 (specifier | { next_token() == COLON }? SIGNAL)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
-                        inLanguage(LANGUAGE_CXX) && look_past(NAME) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
+                        inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
                 throw_exception[type == ACCESS_REGION] |
 
                 { inLanguage(LANGUAGE_CSHARP) }?
@@ -3431,7 +3445,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
-            SIGNAL | FINAL | OVERRIDE |
+            SIGNAL | FINAL | OVERRIDE | VOID |
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
@@ -3443,7 +3457,9 @@ simple_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
-        NAME
+        (
+        NAME | VOID
+        )
 ;
 
 compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
@@ -3516,7 +3532,7 @@ compound_name_cpp[bool& iscompound = BOOL] { namestack[0] = namestack[1] = ""; E
             (DESTOP set_bool[isdestructor])*
             (multops)*
             (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
-            (options { greedy = true; } : { look_past_multiple(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
+            (options { greedy = true; } : { look_past_three(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
         )*
 
         { notdestructor = LA(1) == DESTOP; }
@@ -3722,8 +3738,7 @@ destructor_header[] { ENTRY_DEBUG } :
 
             specifier |
 
-            // @todo  'void' should be detected in lexer
-            { LT(1)->getText() == "void" }? simple_identifier
+            { LA(1) == VOID }? simple_identifier
         )*
         compound_name_inner[false]
         parameter_list
@@ -3800,7 +3815,7 @@ sizeof_call[] { ENTRY_DEBUG } :
 ;
 
 macro_call_check[] { ENTRY_DEBUG } :
-        NAME (options { greedy = true; } : paren_pair)*
+        simple_identifier (options { greedy = true; } : paren_pair)*
 ;
 
 eat_optional_macro_call[] {
@@ -3813,7 +3828,10 @@ eat_optional_macro_call[] {
 
     try {
         // check for the name
-        match(NAME);
+        if(LA(1) == NAME)
+            match(NAME);
+        else 
+            match(VOID);
 
         // handle the parentheses
         paren_pair();
@@ -5495,7 +5513,7 @@ preprocessor[] { ENTRY_DEBUG
             tp.setType(SCPP_ERROR);
         } |
 
-        NAME
+        (NAME | VOID)
         {
             endMode();
 
@@ -5544,7 +5562,8 @@ eol_skip[int directive_token, bool markblockzero] {
            LA(1) != LINE_DOXYGEN_COMMENT_START &&
            LA(1) != 1 /* EOF? */
         )
-                consume();
+         consume();
+
     ENTRY_DEBUG } :
     eol[directive_token, markblockzero]
 ;
@@ -5556,6 +5575,7 @@ eol_skip[int directive_token, bool markblockzero] {
   line.
 */
 eol[int directive_token, bool markblockzero] {
+
             // end all preprocessor modes
             endDownOverMode(MODE_PREPROC);
 
@@ -5724,12 +5744,8 @@ cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG 
         complete_expression
 ;
 
-cpp_symbol[] { SingleElement element(this); ENTRY_DEBUG } :
-        {
-            // start of the name element
-            startElement(SNAME);
-        }
-        NAME
+cpp_symbol[] { ENTRY_DEBUG } :
+        simple_identifier
 ;
 
 cpp_symbol_optional[] { ENTRY_DEBUG } :

@@ -103,6 +103,9 @@ tokens {
     UNION;
 	STRUCT;
 
+    // types
+    VOID;
+
     // functions
 	RETURN;
 
@@ -127,7 +130,6 @@ tokens {
     VOLATILE = "volatile";
 
     // Standard type keywords do not need to be identified
-    VOID = "void";
 	BOOL = "bool";
 	CHAR = "char";
     INT = "int";
@@ -325,6 +327,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
 
         { "union"        , UNION         , LANGUAGE_CXX_ONLY | LANGUAGE_C }, 
         { "struct"       , STRUCT        , LANGUAGE_C_FAMILY }, 
+        { "void"         , VOID          , LANGUAGE_ALL }, 
 
         { "inline"       , INLINE        , LANGUAGE_C_FAMILY }, 
         { "extern"       , EXTERN        , LANGUAGE_C_FAMILY }, 
