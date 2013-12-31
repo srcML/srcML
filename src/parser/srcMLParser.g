@@ -4880,7 +4880,7 @@ expression_part_default[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
 // rule for literals
 literals[] { ENTRY_DEBUG } :
-        string_literal | char_literal | literal | boolean
+        string_literal | char_literal | literal | boolean | named_literal
 ;
 
 // Only start and end of strings are put directly through the parser.
@@ -4906,13 +4906,24 @@ char_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // literals
+named_literal[]{ LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // only markup literals in literal option
+            if (isoption(parseoptions, OPTION_LITERAL))
+                startElement(SLITERAL);
+        }
+        (NULLPTR | NULLLITERAL)
+;
+
+
+// literals
 literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup literals in literal option
             if (isoption(parseoptions, OPTION_LITERAL))
                 startElement(SLITERAL);
         }
-        (CONSTANTS | NULLPTR | NULLLITERAL)
+        CONSTANTS
 ;
 
 
