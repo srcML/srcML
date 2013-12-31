@@ -28,7 +28,6 @@
 #define xmlBufContent(b) (b->content)
 #endif
 
-
 UTF8CharBuffer::UTF8CharBuffer()
   : antlr::CharBuffer(std::cin), pos(0), size(0)/*, eof(false)*/, lastcr(false), free(true) {
 
