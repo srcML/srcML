@@ -4912,7 +4912,7 @@ literal[] { LightweightElement element(this); ENTRY_DEBUG } :
             if (isoption(parseoptions, OPTION_LITERAL))
                 startElement(SLITERAL);
         }
-        (CONSTANTS | NULLPTR)
+        (CONSTANTS | NULLPTR | NULLLITERAL)
 ;
 
 
