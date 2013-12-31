@@ -3869,6 +3869,7 @@ destructor_header[] { ENTRY_DEBUG } :
         }
 ;
 
+// @interface
 interface_annotation[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // start the function call element
@@ -3878,6 +3879,7 @@ interface_annotation[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 ;
 
+// Java annotation
 annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -3912,6 +3914,7 @@ call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
+// argument list to a call
 call_argument_list[] { ENTRY_DEBUG } :
         {
             // list of parameters
@@ -3923,6 +3926,7 @@ call_argument_list[] { ENTRY_DEBUG } :
         (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
+// sizeof(...)
 sizeof_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -3936,10 +3940,12 @@ sizeof_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
+// check if macro call
 macro_call_check[] { ENTRY_DEBUG } :
         simple_identifier (options { greedy = true; } : paren_pair)*
 ;
 
+// eat an optional macro call
 eat_optional_macro_call[] {
 
     bool success = false;
@@ -3973,6 +3979,7 @@ eat_optional_macro_call[] {
     ENTRY_DEBUG
 } :;
 
+// markup macro call
 macro_call[] { ENTRY_DEBUG } :
         macro_call_inner
         {
@@ -3981,6 +3988,7 @@ macro_call[] { ENTRY_DEBUG } :
         }
 ;
 
+// handle the actual macro call
 macro_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
@@ -4018,6 +4026,7 @@ catch[antlr::RecognitionException] {
             emptyElement(SERROR_PARSE);
 }
 
+// handle macro list/pattern name by itself
 macro_pattern_name[]  { SingleElement element(this); ENTRY_DEBUG } :
         {
 
@@ -4027,6 +4036,7 @@ macro_pattern_name[]  { SingleElement element(this); ENTRY_DEBUG } :
         MACRO_NAME
 ;
 
+// do a macro call.
 macro_pattern_call[] { ENTRY_DEBUG } :
 
         macro_pattern_call_inner
@@ -4037,6 +4047,7 @@ macro_pattern_call[] { ENTRY_DEBUG } :
 */
 ;
 
+// inner part of call
 macro_pattern_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
@@ -4075,6 +4086,7 @@ catch[antlr::RecognitionException] {
             emptyElement(SERROR_PARSE);
 }
 
+// contents of macro call
 macro_call_contents[] {
 
     ENTRY_DEBUG
