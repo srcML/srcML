@@ -104,7 +104,7 @@ STRING_START { int zero_literal = 0; _saveIndex = 0; } :
 CONSTANTS { int zero_literal = 0; _saveIndex = 0; } :
         { startline = false; }
         ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' | '_' )*
-        (options { greedy = true; } : "." | '0'..'9')*
+        (options { greedy = true; } : '.' | '0'..'9')*
         (options { greedy = true; } : NAME)*
 
         {
