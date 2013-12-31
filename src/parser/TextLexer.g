@@ -118,12 +118,12 @@ CONSTANTS { int zero_literal = 0; _saveIndex = 0; } :
 DSIGN :
         '$'
         {
-            if(inLanguage(LANGUAGE_JAVA)) {
+            if(inLanguage(LANGUAGE_JAVA))
                 $setType(NAME);
-            } else
+            else
                 $setType(OPERATOR);
         }
-        { inLanguage(LANGUAGE_JAVA) }? NAME
+        ({ inLanguage(LANGUAGE_JAVA) }? NAME)?
 ;
 
 NAME options { testLiterals = true; } { char lastchar = LA(1); int zero_literal = 0; _saveIndex = 0; } :
