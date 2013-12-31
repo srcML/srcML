@@ -859,8 +859,22 @@ look_past[int skiptoken] returns [int token] {
     rewind(place);
 } :;
 
+look_past_two[int skiptoken1, int skiptoken2] returns [int token] {
+
+    int place = mark();
+    inputState->guessing++;
+
+    while (LA(1) == skiptoken1 || LA(1) == skiptoken2)
+        consume();
+
+    token = LA(1);
+
+    inputState->guessing--;
+    rewind(place);
+} :;
+
 // skips past any skiptokens to get the one after
-look_past_multiple[int skiptoken1, int skiptoken2, int skiptoken3] returns [int token] {
+look_past_three[int skiptoken1, int skiptoken2, int skiptoken3] returns [int token] {
 
     int place = mark();
     inputState->guessing++;
@@ -2432,7 +2446,7 @@ function_tail[] { ENTRY_DEBUG } :
             // @todo:  Must be integrated into other C-based languages
             // @todo:  Wrong markup
             (simple_identifier paren_pair)=> macro_call |
-            { look_past(NAME) == LCURLY }? NAME |
+            { look_past_two(NAME, VOID) == LCURLY }? NAME |
               parameter (MULTOPS | simple_identifier | COMMA)* TERMINATE
             )
         )*
@@ -2607,7 +2621,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 (specifier | { next_token() == COLON }? SIGNAL)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
-                        inLanguage(LANGUAGE_CXX) && look_past(NAME) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
+                        inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
                 throw_exception[type == ACCESS_REGION] |
 
                 { inLanguage(LANGUAGE_CSHARP) }?
@@ -3516,7 +3530,7 @@ compound_name_cpp[bool& iscompound = BOOL] { namestack[0] = namestack[1] = ""; E
             (DESTOP set_bool[isdestructor])*
             (multops)*
             (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
-            (options { greedy = true; } : { look_past_multiple(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
+            (options { greedy = true; } : { look_past_three(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
         )*
 
         { notdestructor = LA(1) == DESTOP; }
