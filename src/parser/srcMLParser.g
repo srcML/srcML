@@ -2431,9 +2431,9 @@ function_tail[] { ENTRY_DEBUG } :
 
             // @todo:  Must be integrated into other C-based languages
             // @todo:  Wrong markup
-            ((NAME | VOID) paren_pair)=> macro_call |
+            (simple_identifier paren_pair)=> macro_call |
             { look_past(NAME) == LCURLY }? NAME |
-              parameter (MULTOPS | (NAME | VOID) | COMMA)* TERMINATE
+              parameter (MULTOPS | simple_identifier | COMMA)* TERMINATE
             )
         )*
 ;
@@ -3800,7 +3800,7 @@ sizeof_call[] { ENTRY_DEBUG } :
 ;
 
 macro_call_check[] { ENTRY_DEBUG } :
-        (NAME | VOID) (options { greedy = true; } : paren_pair)*
+        simple_identifier (options { greedy = true; } : paren_pair)*
 ;
 
 eat_optional_macro_call[] {
@@ -5498,7 +5498,7 @@ preprocessor[] { ENTRY_DEBUG
             tp.setType(SCPP_ERROR);
         } |
 
-        NAME
+        (NAME | VOID)
         {
             endMode();
 
@@ -5547,7 +5547,8 @@ eol_skip[int directive_token, bool markblockzero] {
            LA(1) != LINE_DOXYGEN_COMMENT_START &&
            LA(1) != 1 /* EOF? */
         )
-                consume();
+         consume();
+
     ENTRY_DEBUG } :
     eol[directive_token, markblockzero]
 ;
@@ -5559,6 +5560,7 @@ eol_skip[int directive_token, bool markblockzero] {
   line.
 */
 eol[int directive_token, bool markblockzero] {
+
             // end all preprocessor modes
             endDownOverMode(MODE_PREPROC);
 
@@ -5727,12 +5729,8 @@ cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG 
         complete_expression
 ;
 
-cpp_symbol[] { SingleElement element(this); ENTRY_DEBUG } :
-        {
-            // start of the name element
-            startElement(SNAME);
-        }
-        (NAME | VOID)
+cpp_symbol[] { ENTRY_DEBUG } :
+        simple_identifier
 ;
 
 cpp_symbol_optional[] { ENTRY_DEBUG } :
