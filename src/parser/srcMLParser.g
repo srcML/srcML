@@ -2446,7 +2446,7 @@ function_tail[] { ENTRY_DEBUG } :
             // @todo:  Must be integrated into other C-based languages
             // @todo:  Wrong markup
             (simple_identifier paren_pair)=> macro_call |
-            { look_past_two(NAME, VOID) == LCURLY }? NAME |
+            { look_past_two(NAME, VOID) == LCURLY }? simple_identifier |
               parameter (MULTOPS | simple_identifier | COMMA)* TERMINATE
             )
         )*
