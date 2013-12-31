@@ -905,6 +905,185 @@ function_declaration[int type_count] { ENTRY_DEBUG } :
         function_header[type_count]
 ;
 
+// A function pointer name handle
+function_pointer_name_grammar[] { ENTRY_DEBUG } :
+        LPAREN function_pointer_name_base RPAREN
+;
+
+// inner portion of functon pointer name
+function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
+
+        // special case for function pointer names that don't have '*'
+        { _tokenSet_13.member(LA(1)) }?
+        compound_name_inner[false] |
+
+        // special name prefix of namespace or class
+        identifier (template_argument_list)* DCOLON function_pointer_name_base |
+
+        // typical function pointer name
+        MULTOPS (compound_name_inner[false])*
+
+        // optional array declaration
+        (variable_identifier_array_grammar_sub[flag])*
+;
+
+// header of a function
+function_header[int type_count] { ENTRY_DEBUG } :
+
+        // no return value functions:  casting operator method and main
+        { type_count == 0 }? function_identifier
+        { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
+
+        function_type[type_count]
+;
+
+// portion of function after paramter list and before block
+function_tail[] { ENTRY_DEBUG } :
+
+        (options { greedy = true; } :
+
+            /* order is important */
+            { inLanguage(LANGUAGE_CXX_FAMILY) }?
+            function_specifier |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            ref_qualifier |
+
+            { inLanguage(LANGUAGE_CXX_FAMILY) }?
+            TRY |
+
+            { inLanguage(LANGUAGE_OO) }?
+            complete_throw_list |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            complete_noexcept_list |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}?
+            attribute_cpp |
+
+            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            trailing_return |
+
+            // K&R
+            { inLanguage(LANGUAGE_C) }? (
+
+            // @todo:  Must be integrated into other C-based languages
+            // @todo:  Wrong markup
+            (simple_identifier paren_pair)=> macro_call |
+            { look_past_two(NAME, VOID) == LCURLY }? simple_identifier |
+              parameter (MULTOPS | simple_identifier | COMMA)* TERMINATE
+            )
+        )*
+;
+
+// Ref qualifiers in function tail
+ref_qualifier []  { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // markup type modifiers if option is on
+            if (isoption(parseoptions, OPTION_MODIFIER))
+                startElement(SMODIFIER);
+        }
+        (
+        REFOPS | RVALUEREF
+        )
+;
+
+// trailing return in function tail
+trailing_return [] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+
+        TRETURN
+        ({ pattern_check(stmt_type, secondtoken, type_count, true) && (stmt_type == FUNCTION || stmt_type == FUNCTION_DECL)}?
+        {startNewMode(MODE_TRAILING_RETURN);} function_declaration[type_count] function_identifier parameter_list | function_type[type_count + 1]
+        )
+;
+
+// Do the rest of the function and get the end
+function_rest[int& fla] { ENTRY_DEBUG } :
+
+        eat_optional_macro_call
+
+        parameter_list function_tail check_end[fla]
+;
+
+// function type, including specifiers
+function_type[int type_count] { ENTRY_DEBUG } :
+        {
+            // start a mode for the type that will end in this grammar rule
+            startNewMode(MODE_EAT_TYPE);
+
+            setTypeCount(type_count);
+
+            // type element begins
+            startElement(STYPE);
+        }
+        (options { greedy = true; } : TYPENAME)* lead_type_identifier
+
+        { 
+            decTypeCount();
+            if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY))
+                return;
+        }
+        (options { greedy = true; } : {getTypeCount() > 0}? type_identifier { decTypeCount(); })*
+        {
+            endMode(MODE_EAT_TYPE);
+            setMode(MODE_FUNCTION_NAME);
+        }
+;
+
+// check the functon type
+function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
+
+        lead_type_identifier
+        ( { inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }? type_identifier_count[type_count])*
+;
+
+// match a function identifier
+function_identifier[] { ENTRY_DEBUG } :
+
+        // typical name
+        compound_name_inner[false] |
+
+        function_identifier_main |
+
+        { inLanguage(LANGUAGE_CSHARP) }?
+        function_identifier_default |
+
+        // function pointer identifier with name marked separately
+        function_pointer_name_grammar eat_optional_macro_call
+;
+
+// default function name
+function_identifier_default[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+        DEFAULT
+;
+
+// special cases for main
+function_identifier_main[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+        MAIN
+;
+
+// overloaded operator name
+overloaded_operator[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+        set_bool[operatorname, true]
+        OPERATOR
+        (
+            // special case for 'operator()'
+            { LA(1) == LPAREN }? LPAREN RPAREN |
+
+            // general operator name case is anything from 'operator', operators, or names
+            (options { greedy = true; } : ~(LPAREN))*
+        )
+;
+
 // handle a C++11 lambda expression
 lambda_expression_cpp[] { ENTRY_DEBUG } :
 		{
@@ -1008,6 +1187,58 @@ function_definition[int type_count] { ENTRY_DEBUG } :
             startElement(SFUNCTION_DEFINITION);
         }
         function_header[type_count]
+;
+
+// throw list for a function
+throw_list[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
+
+            startElement(STHROW_SPECIFIER);
+        }
+        THROW LPAREN |
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT | MODE_END_LIST_AT_BLOCK);
+
+            startElement(STHROW_SPECIFIER_JAVA);
+        }
+        THROWS
+;
+
+// The next two rules may be equivalent.
+
+// noexcept list in a function
+noexcept_list[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
+
+            startElement(SNOEXCEPT);
+        }
+        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (LPAREN)*
+;
+
+// noexcept operator
+noexcept_operator[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
+
+            startElement(SNOEXCEPT);
+        }
+        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (options { greedy = true;} : LPAREN)*
+;
+
+// match a thow list completely
+complete_throw_list[] { ENTRY_DEBUG } :
+        THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java | COMMA)*
+;
+
+// match noexcept list completely
+complete_noexcept_list[] { ENTRY_DEBUG } :
+        NOEXCEPT (options { greedy = true;} : paren_pair)*
 ;
 
 /* property methods */
@@ -2430,100 +2661,6 @@ condition[] { ENTRY_DEBUG } :
         LPAREN
 ;
 
-/* more functions @todo move this with the other function stuff*/
-
-// A function pointer name handle
-function_pointer_name_grammar[] { ENTRY_DEBUG } :
-        LPAREN function_pointer_name_base RPAREN
-;
-
-// inner portion of functon pointer name
-function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
-
-        // special case for function pointer names that don't have '*'
-        { _tokenSet_13.member(LA(1)) }?
-        compound_name_inner[false] |
-
-        // special name prefix of namespace or class
-        identifier (template_argument_list)* DCOLON function_pointer_name_base |
-
-        // typical function pointer name
-        MULTOPS (compound_name_inner[false])*
-
-        // optional array declaration
-        (variable_identifier_array_grammar_sub[flag])*
-;
-
-// header of a function
-function_header[int type_count] { ENTRY_DEBUG } :
-
-        // no return value functions:  casting operator method and main
-        { type_count == 0 }? function_identifier
-        { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
-
-        function_type[type_count]
-;
-
-// portion of function after paramter list and before block
-function_tail[] { ENTRY_DEBUG } :
-
-        (options { greedy = true; } :
-
-            /* order is important */
-            { inLanguage(LANGUAGE_CXX_FAMILY) }?
-            function_specifier |
-
-            { inLanguage(LANGUAGE_CXX_ONLY) }?
-            ref_qualifier |
-
-            { inLanguage(LANGUAGE_CXX_FAMILY) }?
-            TRY |
-
-            { inLanguage(LANGUAGE_OO) }?
-            complete_throw_list |
-
-            { inLanguage(LANGUAGE_CXX_ONLY) }?
-            complete_noexcept_list |
-
-            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}?
-            attribute_cpp |
-
-            { inLanguage(LANGUAGE_CXX_ONLY) }?
-            trailing_return |
-
-            // K&R
-            { inLanguage(LANGUAGE_C) }? (
-
-            // @todo:  Must be integrated into other C-based languages
-            // @todo:  Wrong markup
-            (simple_identifier paren_pair)=> macro_call |
-            { look_past_two(NAME, VOID) == LCURLY }? simple_identifier |
-              parameter (MULTOPS | simple_identifier | COMMA)* TERMINATE
-            )
-        )*
-;
-
-// Ref qualifiers in function tail
-ref_qualifier []  { LightweightElement element(this); ENTRY_DEBUG } :
-        {
-            // markup type modifiers if option is on
-            if (isoption(parseoptions, OPTION_MODIFIER))
-                startElement(SMODIFIER);
-        }
-        (
-        REFOPS | RVALUEREF
-        )
-;
-
-// trailing return in function tail
-trailing_return [] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
-
-        TRETURN
-        ({ pattern_check(stmt_type, secondtoken, type_count, true) && (stmt_type == FUNCTION || stmt_type == FUNCTION_DECL)}?
-        {startNewMode(MODE_TRAILING_RETURN);} function_declaration[type_count] function_identifier parameter_list | function_type[type_count + 1]
-        )
-;
-
 // perform an arbitrary look ahead looking for a pattern
 pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false] returns [bool isdecl] {
 
@@ -2899,39 +3036,6 @@ traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::e
 marker[] { CompleteElement element(this); startNewMode(MODE_LOCAL); startElement(SMARKER); } :;
 */
 
-// Do the rest of the function and get the end
-function_rest[int& fla] { ENTRY_DEBUG } :
-
-        eat_optional_macro_call
-
-        parameter_list function_tail check_end[fla]
-;
-
-// function type, including specifiers
-function_type[int type_count] { ENTRY_DEBUG } :
-        {
-            // start a mode for the type that will end in this grammar rule
-            startNewMode(MODE_EAT_TYPE);
-
-            setTypeCount(type_count);
-
-            // type element begins
-            startElement(STYPE);
-        }
-        (options { greedy = true; } : TYPENAME)* lead_type_identifier
-
-        { 
-            decTypeCount();
-            if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY))
-                return;
-        }
-        (options { greedy = true; } : {getTypeCount() > 0}? type_identifier { decTypeCount(); })*
-        {
-            endMode(MODE_EAT_TYPE);
-            setMode(MODE_FUNCTION_NAME);
-        }
-;
-
 // update type count
 update_typecount[State::MODE_TYPE mode] {} :
         {
@@ -2945,14 +3049,6 @@ update_typecount[State::MODE_TYPE mode] {} :
             }
         }
 ;
-
-// check the functon type
-function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
-
-        lead_type_identifier
-        ( { inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }? type_identifier_count[type_count])*
-;
-
 
 // count type identifiers
 type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
@@ -2997,58 +3093,6 @@ eat_type[int & count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
         set_int[count, count - 1]
         eat_type[count]
 
-;
-
-// throw list for a function
-throw_list[] { ENTRY_DEBUG } :
-        {
-            // start a new mode that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
-
-            startElement(STHROW_SPECIFIER);
-        }
-        THROW LPAREN |
-        {
-            // start a new mode that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT | MODE_END_LIST_AT_BLOCK);
-
-            startElement(STHROW_SPECIFIER_JAVA);
-        }
-        THROWS
-;
-
-// The next two rules may be equivalent.
-
-// noexcept list in a function
-noexcept_list[] { ENTRY_DEBUG } :
-        {
-            // start a new mode that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
-
-            startElement(SNOEXCEPT);
-        }
-        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (LPAREN)*
-;
-
-// noexcept operator
-noexcept_operator[] { ENTRY_DEBUG } :
-        {
-            // start a new mode that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
-
-            startElement(SNOEXCEPT);
-        }
-        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (options { greedy = true;} : LPAREN)*
-;
-
-// match a thow list completely
-complete_throw_list[] { ENTRY_DEBUG } :
-        THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java | COMMA)*
-;
-
-// match noexcept list completely
-complete_noexcept_list[] { ENTRY_DEBUG } :
-        NOEXCEPT (options { greedy = true;} : paren_pair)*
 ;
 
 // type identifier
@@ -3154,59 +3198,12 @@ decltype_full[] { ENTRY_DEBUG } :
         DECLTYPE paren_pair
 ;
 
-// match a function identifier
-function_identifier[] { ENTRY_DEBUG } :
-
-        // typical name
-        compound_name_inner[false] |
-
-        function_identifier_main |
-
-        { inLanguage(LANGUAGE_CSHARP) }?
-        function_identifier_default |
-
-        // function pointer identifier with name marked separately
-        function_pointer_name_grammar eat_optional_macro_call
-;
-
 // qmark
 qmark_marked[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
         QMARK
-;
-
-// default function name
-function_identifier_default[] { SingleElement element(this); ENTRY_DEBUG } :
-        {
-            startElement(SNAME);
-        }
-        DEFAULT
-;
-
-// special cases for main
-function_identifier_main[] { SingleElement element(this); ENTRY_DEBUG } :
-        {
-            startElement(SNAME);
-        }
-        MAIN
-;
-
-// overloaded operator name
-overloaded_operator[] { SingleElement element(this); ENTRY_DEBUG } :
-        {
-            startElement(SNAME);
-        }
-        set_bool[operatorname, true]
-        OPERATOR
-        (
-            // special case for 'operator()'
-            { LA(1) == LPAREN }? LPAREN RPAREN |
-
-            // general operator name case is anything from 'operator', operators, or names
-            (options { greedy = true; } : ~(LPAREN))*
-        )
 ;
 
 /* linq expressions */
