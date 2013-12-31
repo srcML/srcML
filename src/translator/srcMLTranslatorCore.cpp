@@ -144,7 +144,7 @@ void* srcMLTranslatorCore::setInput(const char* path) {
 
     if(isoption(options, OPTION_INTERACTIVE))
       pinput = new UTF8CharBuffer();
-      else
+    else
       pinput = new UTF8CharBuffer(path, encoding);
 
     // return the libxml context of the file
