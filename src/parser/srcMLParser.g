@@ -1217,17 +1217,6 @@ noexcept_list[] { ENTRY_DEBUG } :
 
             startElement(SNOEXCEPT);
         }
-        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (LPAREN)*
-;
-
-// noexcept operator
-noexcept_operator[] { ENTRY_DEBUG } :
-        {
-            // start a new mode that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
-
-            startElement(SNOEXCEPT);
-        }
         NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (options { greedy = true;} : LPAREN)*
 ;
 
@@ -4868,7 +4857,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         rcurly_argument |
 
         // variable or literal
-        variable_identifier) | literals | noexcept_operator | 
+        variable_identifier) | literals | noexcept_list | 
 
         variable_identifier_array_grammar_sub[flag]
 ;
