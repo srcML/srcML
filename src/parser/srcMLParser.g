@@ -3373,6 +3373,7 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
         RBRACKET
 ;
 
+// contents of array index
 variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
         { !inLanguage(LANGUAGE_CSHARP) }? complete_expression |
 
@@ -3381,6 +3382,7 @@ variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
         )*
 ;
 
+// handle C# attribute
 attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
@@ -3398,6 +3400,7 @@ attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         RBRACKET
 ;
 
+// handle target for C# target
 attribute_csharp_target[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(STARGET);
@@ -3405,6 +3408,7 @@ attribute_csharp_target[] { SingleElement element(this); ENTRY_DEBUG } :
         (RETURN | EVENT | identifier_list)
 ;
 
+// C++11 attributes
 attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
@@ -3455,6 +3459,7 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; ENTRY
 
 ;
 
+// match a complete expression no stream
 complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
@@ -3478,6 +3483,7 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         COLON)*
 ;
 
+// match a linq_expression completely
 linq_expression_complete[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
@@ -3529,6 +3535,7 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
        )
 ;
 
+// an identifier
 identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
                 startElement(SNAME);
@@ -3536,6 +3543,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         identifier_list
 ;
 
+// the list of identifiers that are also marked up as tokens for other things.
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
@@ -3556,6 +3564,7 @@ simple_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         )
 ;
 
+// Markup names
 compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
         compound_name_inner[true]
         (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX_ONLY) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound] |
@@ -3563,6 +3572,7 @@ compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_
 
 ;
 
+// name markup internals
 compound_name_inner[bool index] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
         {
             // There is a problem detecting complex names from
@@ -3612,6 +3622,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         }
 ;
 
+// C++ compound name handling
 compound_name_cpp[bool& iscompound = BOOL] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
         (dcolon { iscompound = true; })*
@@ -3635,6 +3646,7 @@ exception
 catch[antlr::RecognitionException] {
 }
 
+// compound name for C#
 compound_name_csharp[bool& iscompound = BOOL] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
         (dcolon { iscompound = true; })*
@@ -3656,6 +3668,7 @@ exception
 catch[antlr::RecognitionException] {
 }
 
+// compound name for C
 compound_name_c[bool& iscompound = BOOL] { ENTRY_DEBUG } :
 
         identifier
@@ -3665,6 +3678,7 @@ compound_name_c[bool& iscompound = BOOL] { ENTRY_DEBUG } :
         )*
 ;
 
+// compound name for Java
 compound_name_java[bool& iscompound = BOOL] { ENTRY_DEBUG } :
 
         template_argument_list |
@@ -3672,6 +3686,7 @@ compound_name_java[bool& iscompound = BOOL] { ENTRY_DEBUG } :
         (options { greedy = true; } : (period { iscompound = true; } simple_name_optional_template))*
 ;
 
+// Specifier for a function
 function_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
         { LA(1) == WHERE }? generic_type_constraint |
 
@@ -3683,6 +3698,7 @@ function_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
         simple_name_optional_template)
 ;
 
+// function declaration can be set to delete or default.
 function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup strings in literal option
@@ -3696,10 +3712,12 @@ function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 ;
 
+// mark specifiers
 specifier[] { ENTRY_DEBUG } :
         single_keyword_specifier | alignas_specifier
 ;
 
+// match a single word specifier
 single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
@@ -3721,6 +3739,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         )
 ;
 
+// C++11 specifier
 alignas_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL | MODE_ARGUMENT);
@@ -3735,6 +3754,7 @@ alignas_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 ;
 
+// A constructor declaration
 constructor_declaration[] { ENTRY_DEBUG } :
         {
             // statement
@@ -3746,6 +3766,7 @@ constructor_declaration[] { ENTRY_DEBUG } :
         constructor_header
 ;
 
+// A constructor definition
 constructor_definition[] { ENTRY_DEBUG } :
         {
             // statement with nested block
@@ -3761,6 +3782,7 @@ constructor_definition[] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? member_initialization_list)*
 ;
 
+// header portion of constructor
 constructor_header[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } :
@@ -3782,6 +3804,7 @@ constructor_header[] { ENTRY_DEBUG } :
         }
 ;
 
+// member initialization list markup
 member_initialization_list[] { ENTRY_DEBUG } :
         {
             // handle member initialization list as a list of calls
@@ -3792,12 +3815,15 @@ member_initialization_list[] { ENTRY_DEBUG } :
         COLON
 ;
 
+// push name onto namestack
 push_namestack[] { namestack[1].swap(namestack[0]); namestack[0] = LT(1)->getText(); } :;
 
+// identifier stack
 identifier_stack[std::string s[]] { s[1].swap(s[0]); s[0] = LT(1)->getText(); ENTRY_DEBUG } :
         identifier
 ;
 
+// destructor definition
 destructor_definition[] { ENTRY_DEBUG } :
         {
             // statement with nested block
@@ -3809,6 +3835,7 @@ destructor_definition[] { ENTRY_DEBUG } :
         destructor_header
 ;
 
+// destructor declaration
 destructor_declaration[] { ENTRY_DEBUG } :
         {
             // just a statement
@@ -3820,6 +3847,7 @@ destructor_declaration[] { ENTRY_DEBUG } :
         destructor_header
 ;
 
+// a destructor header
 destructor_header[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } :
