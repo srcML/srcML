@@ -3736,7 +3736,6 @@ destructor_header[] { ENTRY_DEBUG } :
 
             specifier |
 
-            // @todo  'void' should be detected in lexer
             { LA(1) == VOID }? simple_identifier
         )*
         compound_name_inner[false]
