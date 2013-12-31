@@ -51,4 +51,10 @@ class <name>Person</name> <super><implements>implements <name>Serializable</name
 <specifier>private</specifier> <name>Integer</name></type> <name>id</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
+<unit>
+<class type="interface"><specifier>public</specifier> <annotation>@interface</annotation> <name>Edible</name> <block>{
+<function_decl><type><name>boolean</name></type> <name>value</name><parameter_list>()</parameter_list> default false;</function_decl>
+}</block></class>
+</unit>
+
 </unit>
