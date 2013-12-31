@@ -2932,6 +2932,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
         }
 ;
 
+// update type count
 update_typecount[State::MODE_TYPE mode] {} :
         {
             decTypeCount();
@@ -2945,12 +2946,15 @@ update_typecount[State::MODE_TYPE mode] {} :
         }
 ;
 
+// check the functon type
 function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
 
         lead_type_identifier
         ( { inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }? type_identifier_count[type_count])*
 ;
 
+
+// count type identifiers
 type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
 
         // overloaded parentheses operator
@@ -2960,6 +2964,7 @@ type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
         MAIN
 ;
 
+// check the type identifier count
 type_identifier_count_check returns [int type_count] {
 
 
@@ -2972,6 +2977,7 @@ type_identifier_count_check returns [int type_count] {
     --inputState->guessing;
 } :;
 
+// core functionality for type identifier count check
 type_identifier_count_check_core returns [int type_count] { type_count = 0; ENTRY_DEBUG } :
 
         (type_identifier_count[type_count])*
@@ -2979,9 +2985,11 @@ type_identifier_count_check_core returns [int type_count] { type_count = 0; ENTR
 ;
 
 /*
+// --a;
 deduct[int& type_count] { --type_count; } :;
 */
 
+// consume a type
 eat_type[int & count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
 
         type_identifier
@@ -3009,6 +3017,9 @@ throw_list[] { ENTRY_DEBUG } :
         THROWS
 ;
 
+// The next two rules may be equivalent.
+
+// noexcept list in a function
 noexcept_list[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -3019,6 +3030,7 @@ noexcept_list[] { ENTRY_DEBUG } :
         NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (LPAREN)*
 ;
 
+// noexcept operator
 noexcept_operator[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -3029,10 +3041,12 @@ noexcept_operator[] { ENTRY_DEBUG } :
         NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (options { greedy = true;} : LPAREN)*
 ;
 
+// match a thow list completely
 complete_throw_list[] { ENTRY_DEBUG } :
         THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java | COMMA)*
 ;
 
+// match noexcept list completely
 complete_noexcept_list[] { ENTRY_DEBUG } :
         NOEXCEPT (options { greedy = true;} : paren_pair)*
 ;
@@ -3056,6 +3070,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         pure_lead_type_identifier_no_specifiers
 ;
 
+// type identifier
 pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         // class/struct/union before a name in a type, e.g., class A f();
@@ -3073,6 +3088,7 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
 ;
 
+// more lead type identifier
 class_lead_type_identifier[]  { SingleElement element(this); ENTRY_DEBUG } :
         {
             if(inTransparentMode(MODE_TEMPLATE))
@@ -3083,6 +3099,7 @@ class_lead_type_identifier[]  { SingleElement element(this); ENTRY_DEBUG } :
         (CLASS | STRUCT | UNION)
 ;
 
+// type identifier
 lead_type_identifier[] { ENTRY_DEBUG } :
 
 //        specifier |
@@ -3096,6 +3113,7 @@ lead_type_identifier[] { ENTRY_DEBUG } :
         pure_lead_type_identifier
 ;
 
+// type identifier
 type_identifier[] { ENTRY_DEBUG } :
 
         // any identifier that can appear first can appear later
@@ -3106,6 +3124,7 @@ type_identifier[] { ENTRY_DEBUG } :
         non_lead_type_identifier
 ;
 
+// type identifier
 non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
 
         tripledotop |
@@ -3116,6 +3135,7 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
         variable_identifier_array_grammar_sub[iscomplex]
 ;
 
+// C++11 markup decltype 
 decltype_call[] { ENTRY_DEBUG} :
         {
 
@@ -3129,10 +3149,12 @@ decltype_call[] { ENTRY_DEBUG} :
         DECLTYPE complete_argument_list
 ;
 
+// C++ completely match without markup decltype
 decltype_full[] { ENTRY_DEBUG } :
         DECLTYPE paren_pair
 ;
 
+// match a function identifier
 function_identifier[] { ENTRY_DEBUG } :
 
         // typical name
