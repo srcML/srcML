@@ -1628,6 +1628,7 @@ check_end[int& token] { token = LA(1); ENTRY_DEBUG } :
         LCURLY | TERMINATE | COLON | COMMA | RPAREN
 ;
 
+// handle a class declaration
 class_declaration[] { ENTRY_DEBUG } :
         {
             // statement
@@ -1643,6 +1644,7 @@ class_declaration[] { ENTRY_DEBUG } :
         (specifier)* CLASS class_post class_header
 ;
 
+// class preprocessing items
 class_preprocessing[int token] { ENTRY_DEBUG } :
         {
             bool intypedef = inMode(MODE_TYPEDEF);
@@ -1662,6 +1664,7 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
         }
 ;
 
+// handle stuff before CLASS token
 class_preamble[] { ENTRY_DEBUG } :
         // suppress warning probably do to only having ()*
         (options { greedy = true; } : { inLanguage(LANGUAGE_JAVA) }? annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
@@ -1669,6 +1672,7 @@ class_preamble[] { ENTRY_DEBUG } :
         (specifier)*
 ;
 
+// a class definition
 class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SCLASS]
 
@@ -1680,11 +1684,13 @@ class_definition[] { ENTRY_DEBUG } :
         }
 ;
 
+// handle stuff after CLASS token
 class_post[] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
         (options { greedy = true; } : specifier)*
 ;
 
+// Handle an enum class
 enum_class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SENUM]
 
@@ -1692,6 +1698,7 @@ enum_class_definition[] { ENTRY_DEBUG } :
 
 ;
 
+// anonymous class definition
 anonymous_class_definition[] { ENTRY_DEBUG } :
         {
             // statement
@@ -1713,6 +1720,7 @@ anonymous_class_definition[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
+// super within an anonymous class
 anonymous_class_super[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // statement
@@ -1724,6 +1732,7 @@ anonymous_class_super[] { CompleteElement element(this); ENTRY_DEBUG } :
         compound_name_inner[false]
 ;
 
+// do an interface definition
 interface_definition[] { ENTRY_DEBUG } :
         {
             // statement
@@ -1738,6 +1747,7 @@ interface_definition[] { ENTRY_DEBUG } :
         class_preamble (interface_annotation | INTERFACE) class_header lcurly
 ;
 
+// match struct declaration
 struct_declaration[] { ENTRY_DEBUG } :
         {
             // statement
@@ -1749,6 +1759,7 @@ struct_declaration[] { ENTRY_DEBUG } :
         class_preamble STRUCT class_post class_header
 ;
 
+// handle struct union definition
 struct_union_definition[int element_token] { ENTRY_DEBUG } :
         class_preprocessing[element_token]
 
@@ -1759,6 +1770,7 @@ struct_union_definition[int element_token] { ENTRY_DEBUG } :
         }
 ;
 
+// process union declaration beginning
 union_declaration[] { ENTRY_DEBUG } :
         {
             // statement
@@ -1796,6 +1808,7 @@ class_default_access_action[int access_token] { ENTRY_DEBUG } :
         }
 ;
 
+// handle class header
 class_header[] { ENTRY_DEBUG } :
 
         { isoption(parseoptions, OPTION_CPP) }?
@@ -1805,6 +1818,7 @@ class_header[] { ENTRY_DEBUG } :
         class_header_base
 ;
 
+// class header base
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         // suppress ()* warning
@@ -2022,6 +2036,7 @@ terminate[] { ENTRY_DEBUG } :
         terminate_post
 ;
 
+// match the actual terminate token
 terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (inMode(MODE_STATEMENT | MODE_NEST) && !inMode(MODE_DECL))
@@ -2030,6 +2045,7 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
         TERMINATE
 ;
 
+// do the pre terminate processing
 terminate_pre[] { ENTRY_DEBUG } :
         {
             // end any elements inside of the statement
@@ -2045,6 +2061,7 @@ terminate_pre[] { ENTRY_DEBUG } :
         }
 ;
 
+// do the post terminate processing
 terminate_post[] { ENTRY_DEBUG } :
         {
             // end all statements this statement is nested in
@@ -2326,6 +2343,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         colon_marked
 ;
 
+// mark ( operator
 lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             incParen();
@@ -2336,7 +2354,7 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         LPAREN
 ;
 
-// marking comma operator
+// marking | operator
 bar[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER))
@@ -2345,6 +2363,7 @@ bar[] { LightweightElement element(this); ENTRY_DEBUG } :
         BAR
 ;
 
+// handle comma
 comma[] { ENTRY_DEBUG } :
         {
             // comma ends the current item in a list
@@ -2371,6 +2390,7 @@ comma_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         COMMA
 ;
 
+// mark COLON
 colon_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR))
@@ -2379,6 +2399,7 @@ colon_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         COLON
 ;
 
+// process colon not marked.
 colon[] { ENTRY_DEBUG } :
         {
             // colon ends the current item in a list
@@ -2409,7 +2430,7 @@ condition[] { ENTRY_DEBUG } :
         LPAREN
 ;
 
-/* functions */
+/* more functions @todo move this with the other function stuff*/
 
 function_pointer_name_grammar[] { ENTRY_DEBUG } :
         LPAREN function_pointer_name_base RPAREN
