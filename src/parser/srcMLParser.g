@@ -3169,6 +3169,7 @@ function_identifier[] { ENTRY_DEBUG } :
         function_pointer_name_grammar eat_optional_macro_call
 ;
 
+// qmark
 qmark_marked[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
@@ -3176,6 +3177,7 @@ qmark_marked[] { SingleElement element(this); ENTRY_DEBUG } :
         QMARK
 ;
 
+// default function name
 function_identifier_default[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
@@ -3218,10 +3220,12 @@ linq_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } : linq_expression_pure)*
 ;
 
+// match linq expressions
 linq_expression_pure[] { ENTRY_DEBUG } :
         linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby
 ;
 
+// a linq from
 linq_from[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
@@ -3231,6 +3235,7 @@ linq_from[] { CompleteElement element(this); ENTRY_DEBUG } :
         FROM linq_expression_complete (options { greedy = true; } : linq_in)*
 ;
 
+// a linq in
 linq_in[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SIN);
@@ -3238,6 +3243,7 @@ linq_in[] { SingleElement element(this); ENTRY_DEBUG } :
         IN linq_expression_complete
 ;
 
+// a linq where
 linq_where[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SWHERE);
@@ -3245,6 +3251,7 @@ linq_where[] { SingleElement element(this); ENTRY_DEBUG } :
         WHERE linq_expression_complete
 ;
 
+// a linq select
 linq_select[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SSELECT);
@@ -3252,6 +3259,7 @@ linq_select[] { SingleElement element(this); ENTRY_DEBUG } :
         SELECT linq_expression_complete
 ;
 
+// a linq let
 linq_let[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SLET);
@@ -3259,6 +3267,7 @@ linq_let[] { SingleElement element(this); ENTRY_DEBUG } :
         LET linq_expression_complete
 ;
 
+// a linq group
 linq_group[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
@@ -3270,6 +3279,7 @@ linq_group[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } : linq_into)*
 ;
 
+// linq by
 linq_by[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SBY);
@@ -3277,6 +3287,7 @@ linq_by[] { SingleElement element(this); ENTRY_DEBUG } :
         BY linq_expression_complete
 ;
 
+// linq into
 linq_into[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SINTO);
@@ -3284,6 +3295,7 @@ linq_into[] { SingleElement element(this); ENTRY_DEBUG } :
         INTO linq_expression_complete
 ;
 
+// linq join
 linq_join[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
@@ -3295,6 +3307,7 @@ linq_join[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } : linq_in | linq_on | linq_equals | linq_into)*
 ;
 
+// linq on
 linq_on[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SON);
@@ -3302,6 +3315,7 @@ linq_on[] { SingleElement element(this); ENTRY_DEBUG } :
         ON linq_expression_complete
 ;
 
+// linq equals
 linq_equals[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SEQUALS);
@@ -3309,6 +3323,7 @@ linq_equals[] { SingleElement element(this); ENTRY_DEBUG } :
         EQUALS linq_expression_complete
 ;
 
+// linq orderby
 linq_orderby[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
@@ -3322,6 +3337,7 @@ linq_orderby[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } : COMMA linq_expression_complete (options { greedy = true; } : linq_ascending | linq_descending)* )*
 ;
 
+// linq ascending
 linq_ascending[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
@@ -3329,6 +3345,7 @@ linq_ascending[] { SingleElement element(this); ENTRY_DEBUG } :
         ASCENDING
 ;
 
+// linq descending
 linq_descending[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
@@ -3336,6 +3353,7 @@ linq_descending[] { SingleElement element(this); ENTRY_DEBUG } :
         DESCENDING
 ;
 
+// variables array index
 variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             iscomplex = true;
