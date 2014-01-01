@@ -30,7 +30,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><literal type="null">null</literal></expr></expr_stmt>
+<expr_stmt><expr><lit:literal type="null">null</lit:literal></expr></expr_stmt>
 </unit>
 
 </unit>
