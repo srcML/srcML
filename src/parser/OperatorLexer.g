@@ -172,7 +172,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; static int lastp
             )
         |
 
-        '?' { if (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) $setType(QMARK); } | // part of ternary
+        '?' { if (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) $setType(QMARK); } ('?' { $setType(OPERATORS); })* | // part of ternary
         '~'  | // has to be separate if part of name
 
         '.' ('*' | '.' ( '.' { $setType(DOTDOTDOT); } | { $setType(DOTDOT); }) | { $setType(CONSTANTS); } CONSTANTS | ) |
