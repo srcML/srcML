@@ -113,6 +113,7 @@ public:
     void processChar(const antlr::RefToken& token);
     void processLiteral(const antlr::RefToken& token);
     void processBoolean(const antlr::RefToken& token);
+    void processNull(const antlr::RefToken& token);
     void processInterface(const antlr::RefToken& token);
     void processEscape(const antlr::RefToken& token);
 

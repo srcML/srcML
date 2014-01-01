@@ -61,7 +61,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="number">nullptr</lit:literal></expr>;</expr_stmt> 
+<expr_stmt><expr><lit:literal type="null">nullptr</lit:literal></expr>;</expr_stmt> 
 </unit>
 
 </unit>

@@ -186,6 +186,7 @@ tokens {
     SYNCHRONIZED;
     NATIVE;
     STRICTFP;
+    NULLLITERAL;
 
     // C# tokens
     FOREACH;
@@ -422,6 +423,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
         { "transient"     , TRANSIENT     , LANGUAGE_JAVA }, 
 	    { "|"             , BAR           , LANGUAGE_JAVA }, 
 	    { "@"             , ATSIGN        , LANGUAGE_JAVA }, 
+	    { "null"          , NULLLITERAL   , LANGUAGE_JAVA }, 
 
 
         // add all C# specific keywords to the literals table

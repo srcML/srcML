@@ -347,6 +347,7 @@ tokens {
     SCHAR;          // string or char marked by single quotes
     SLITERAL;       // literal number, constant
     SBOOLEAN;       // boolean literal, i.e., true, false
+    SNULL;          // null types null, nullptr
 
     // operators
     SOPERATOR;
@@ -4880,7 +4881,7 @@ expression_part_default[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
 // rule for literals
 literals[] { ENTRY_DEBUG } :
-        string_literal | char_literal | literal | boolean
+        string_literal | char_literal | literal | boolean | null_literal
 ;
 
 // Only start and end of strings are put directly through the parser.
@@ -4906,13 +4907,24 @@ char_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // literals
+null_literal[]{ LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // only markup literals in literal option
+            if (isoption(parseoptions, OPTION_LITERAL))
+                startElement(SNULL);
+        }
+        (NULLPTR | NULLLITERAL)
+;
+
+
+// literals
 literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup literals in literal option
             if (isoption(parseoptions, OPTION_LITERAL))
                 startElement(SLITERAL);
         }
-        (CONSTANTS | NULLPTR)
+        CONSTANTS
 ;
 
 
