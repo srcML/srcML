@@ -25,10 +25,6 @@
 <decl_stmt><decl><type><specifier>explicit</specifier></type></decl>;</decl_stmt>
 </unit>
 
-<unit>
-<decl_stmt><decl><type><specifier>explicit</specifier></type></decl>;</decl_stmt>
-</unit>
-
 <!-- final and override are contextual -->
 <unit>
 <expr_stmt><expr><name>final</name></expr>;</expr_stmt>

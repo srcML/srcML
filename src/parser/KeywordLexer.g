@@ -90,6 +90,9 @@ tokens {
     SIZEOF;
     EXTERN;
 
+    // C
+    RESTRICT;
+
     // C++
     CONSTEXPR;
     NOEXCEPT;
@@ -339,7 +342,8 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
         { "sizeof"       , SIZEOF        , LANGUAGE_C_FAMILY }, 
 
         { "mutable"      , MUTABLE       , LANGUAGE_CXX }, 
-        { "volatile"     , VOLATILE      , LANGUAGE_OO }, 
+        { "volatile"     , VOLATILE      , LANGUAGE_ALL }, 
+        { "restrict"     , RESTRICT      , LANGUAGE_C }, 
 
         // exception handling
         { "try"          , TRY           , LANGUAGE_OO }, 
