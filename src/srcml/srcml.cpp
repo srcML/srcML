@@ -162,6 +162,7 @@ int main(int argc, char * argv[]) {
   if (!checkLocalFiles(srcml_request.positional_args))
     return 1;
   
+  // libSrcml Convenience Function Check
   if (!(srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) {
     if (srcml_request.positional_args.size() == 1 && srcml_request.positional_args[0] != "-") {
       if (convenienceCheck(srcml_request.positional_args[0])) {
@@ -211,7 +212,7 @@ int main(int argc, char * argv[]) {
     }
   }
   
-  // libsrcML Setup
+  // libsrcML Full API Setup
   srcml_archive * srcml_arch = srcml_create_archive();
 
   // Set options for the archive
