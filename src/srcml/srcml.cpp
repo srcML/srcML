@@ -268,6 +268,7 @@ int main(int argc, char * argv[]) {
       valid = archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384); 
     }
     else {
+      // Setting libarchive's file input to NULL forces libarchive to read stdin
       valid = archive_read_open_filename(arch, NULL, 16384);
     }
 
