@@ -129,13 +129,6 @@ int main(int argc, char * argv[]) {
   
   srcml_request_t srcml_request = srcmlCLI::parseCLI(argc, argv);
 
-  // Check for files that need processing
-  if (srcml_request.positional_args.empty()) {
-    if (!srcml_request.help_set)
-      std::cerr << "No input files found.\n";
-    return 0;
-  }
-
   // Ensure all global flags are valid
   if (srcml_request.encoding != "" && srcml_check_encoding(srcml_request.encoding.c_str()) == 0) {
     std::cerr << "Invalid Encoding.\n";
