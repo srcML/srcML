@@ -304,14 +304,13 @@ int main(int argc, char * argv[]) {
           srcml_unit_set_language(unit, srcml_archive_check_extension(srcml_arch, filename.c_str()));
         }
         else {
-          srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str());
           if (srcml_request.positional_args[i] != "-") { 
+            srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str());
             srcml_unit_set_language(unit, srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[i].c_str()));
           }
           else {
             srcml_unit_set_language(unit, srcml_request.language.c_str());
           }
-
         }
         
         while (true) {
