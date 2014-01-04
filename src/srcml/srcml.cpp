@@ -287,15 +287,18 @@ int main(int argc, char * argv[]) {
           CLI arg.
         */
         if (filename.compare("data") != 0) {
+          // Input is a file from an archive
           srcml_unit_set_filename(unit, filename.c_str());
           srcml_unit_set_language(unit, srcml_archive_check_extension(srcml_arch, filename.c_str()));
         }
         else {
           if (srcml_request.positional_args[i] != "-") { 
+            // Input is a standalone source file
             srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str());
             srcml_unit_set_language(unit, srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[i].c_str()));
           }
           else {
+            // Input came from stdin
             srcml_unit_set_language(unit, srcml_request.language.c_str());
           }
         }
