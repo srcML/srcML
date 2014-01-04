@@ -74,10 +74,10 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
   return true;
 }
 
-bool convenienceCheck(const std::string& filename) {
-  archive * arch = archive_read_new();
-  archive_entry * arch_entry = archive_entry_new();
+void setupLibArchive(archive* a) {
 
+  archive * arch = a;
+  // Configure libarchive supported file formats
   archive_read_support_format_ar(arch);
   archive_read_support_format_cpio(arch);
   archive_read_support_format_gnutar(arch);
@@ -93,16 +93,27 @@ bool convenienceCheck(const std::string& filename) {
     enable version specific features/syntax
   */
   #if ARCHIVE_VERSION_NUMBER < 3000000
-    // V2 Only
+    // V2 Only Settings
+    // Compressions
     archive_read_support_compression_all(arch);
   #else
-    // V3 Only
+    // V3 Only Settings
+    // File Formats
     archive_read_support_format_7zip(arch);
     archive_read_support_format_cab(arch);
     archive_read_support_format_lha(arch);
     archive_read_support_format_rar(arch);
-    archive_read_support_filter_all(arch);
+
+    // Compressions
+    archive_read_support_filter_all(arch); 
   #endif
+}
+
+bool convenienceCheck(const std::string& filename) {
+  archive * arch = archive_read_new();
+  archive_entry * arch_entry = archive_entry_new();
+
+  setupLibArchive(arch);
 
   if (archive_read_open_filename(arch, filename.c_str(), 16384) == ARCHIVE_OK) {
     if (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
@@ -249,31 +260,7 @@ int main(int argc, char * argv[]) {
     archive * arch = archive_read_new();
     archive_entry * arch_entry = archive_entry_new();
 
-    archive_read_support_format_ar(arch);
-    archive_read_support_format_cpio(arch);
-    archive_read_support_format_gnutar(arch);
-    archive_read_support_format_iso9660(arch);
-    archive_read_support_format_mtree(arch);
-    archive_read_support_format_tar(arch);
-    archive_read_support_format_xar(arch);
-    archive_read_support_format_zip(arch);
-    archive_read_support_format_raw(arch);
-
-    /*
-      Check libarchive version
-      enable version specific features/syntax
-    */
-    #if ARCHIVE_VERSION_NUMBER < 3000000
-      // V2 Only
-      archive_read_support_compression_all(arch);
-    #else
-      // V3 Only
-      archive_read_support_format_7zip(arch);
-      archive_read_support_format_cab(arch);
-      archive_read_support_format_lha(arch);
-      archive_read_support_format_rar(arch);
-      archive_read_support_filter_all(arch);
-    #endif
+    setupLibArchive(arch);
 
     int valid = 0;
 
