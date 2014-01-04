@@ -1,5 +1,5 @@
 /*
-  srcmlCLI.hpp
+  srcmlCLI.cpp
 
   Copyright (C) 2004-2013  SDML (www.srcML.org)
 
