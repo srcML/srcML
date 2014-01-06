@@ -137,7 +137,6 @@ bool convenienceCheck(const std::string& filename) {
 }
 
 int main(int argc, char * argv[]) {
-  
   srcml_request_t srcml_request = srcmlCLI::parseCLI(argc, argv);
 
   // Ensure all global flags are valid
@@ -157,7 +156,7 @@ int main(int argc, char * argv[]) {
   }  
 
   ThreadQueue<ParseRequest, 10> queue;
-  
+
   // Check if local files/directories are present on filesystem
   if (!checkLocalFiles(srcml_request.positional_args))
     return 1;
@@ -280,6 +279,10 @@ int main(int argc, char * argv[]) {
       int64_t offset;
 
       while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
+
+        if (archive_entry_filetype(arch_entry) != AE_IFREG && srcml_request.positional_args[i] != "-")
+          continue;
+
         srcml_unit * unit = srcml_create_unit(srcml_arch);
         std::string filename = archive_entry_pathname(arch_entry);
 
@@ -290,8 +293,17 @@ int main(int argc, char * argv[]) {
         */
         if (filename.compare("data") != 0) {
           // Input is a file from an archive
-          srcml_unit_set_filename(unit, filename.c_str());
-          srcml_unit_set_language(unit, srcml_archive_check_extension(srcml_arch, filename.c_str()));
+          const char * language = srcml_archive_check_extension(srcml_arch, filename.c_str());
+          if (language) {
+            // Extension Valid
+            srcml_unit_set_filename(unit, filename.c_str());
+            srcml_unit_set_language(unit, language);
+          }
+          else {
+            // Extension Not So Valid
+            // Skip to next header
+            continue;  
+          }
         }
         else {
           if (srcml_request.positional_args[i] != "-") { 
