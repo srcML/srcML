@@ -320,7 +320,7 @@ srcml_request_t srcmlCLI::parseCLI(int argc, char* argv[]) {
     exit(1);
   }
     // Debug to see CLI inputs
-    //debug_cli_opts(srcml_request);
+    debug_cli_opts(srcml_request);
     return srcml_request;
 }
 
@@ -336,7 +336,7 @@ void debug_cli_opts(const struct srcml_request_t srcml_request) {
   std::cerr << "Files From: " << srcml_request.files_from << "\n";
   std::cerr << "Language: " << srcml_request.language << "\n";
 
-  for(int i = 0; i < srcml_request.register_ext.size(); ++i) {
+  for(size_t i = 0; i < srcml_request.register_ext.size(); ++i) {
     std::cerr << "Register Ext #" << i <<": " << srcml_request.register_ext[i] << "\n";
   }
   
@@ -346,21 +346,21 @@ void debug_cli_opts(const struct srcml_request_t srcml_request) {
   std::cerr << "Prefix: " << srcml_request.prefix << "\n";
   std::cerr << "Xmlns Uri: " << srcml_request.xmlns_uri << "\n";
   
-  for(int i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
+  for(size_t i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
     std::cerr << "Xmlns Prefix #" << i << ": " << srcml_request.xmlns_prefix[i] << "\n";
   }
   
   std::cerr << "Relaxng: " << srcml_request.relaxng << "\n";
   std::cerr << "Xpath: " << srcml_request.xpath << "\n";
 
-  for(int i = 0; i < srcml_request.xpathparam.size(); ++i) {
+  for(size_t i = 0; i < srcml_request.xpathparam.size(); ++i) {
     std::cerr << "Xpathparam #" << i <<": " << srcml_request.xpathparam[i] << "\n";
   }
 
   std::cerr << "Xslt: " << srcml_request.xslt << "\n";
   std::cerr << "Unit: " << srcml_request.unit << "\n";
 
-  for(int i = 0; i < srcml_request.positional_args.size(); ++i) {
+  for(size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
     std::cerr << "Arg #" << i <<": " << srcml_request.positional_args[i] << "\n";
   }
 }
