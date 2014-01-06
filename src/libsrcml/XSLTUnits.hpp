@@ -38,9 +38,6 @@ typedef xmlDocPtr (*xsltApplyStylesheetUser_function) (xsltStylesheetPtr,xmlDocP
                                                        xsltTransformContextPtr);
 typedef xmlDocPtr (*xsltApplyStylesheet_function) (xsltStylesheetPtr,xmlDocPtr,const char **);
 
-static xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;
-static xsltApplyStylesheet_function xsltApplyStylesheetDynamic;
-
 //typedef int (*xsltSaveResultTo_function) (xmlOutputBufferPtr, xmlDocPtr, xsltStylesheetPtr);
 //xsltSaveResultTo_function xsltSaveResultToDynamic;
 #else
@@ -344,6 +341,8 @@ private :
   const char** params;
   int fd;
   const xmlChar * root_prefix;
+  xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;
+  xsltApplyStylesheet_function xsltApplyStylesheetDynamic;
 };
 
 #endif
