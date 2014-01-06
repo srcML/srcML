@@ -63,6 +63,7 @@ int main(int argc, char * argv[]) {
     free(s);
   }
 
+  /*
   {
     char * s;
     int size;
@@ -78,9 +79,10 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
-    //assert(s == srcml_full);
+    assert(s == srcml_full);
     free(s);
   }
+  */
 
   {
     char * s;
@@ -101,6 +103,7 @@ int main(int argc, char * argv[]) {
     free(s);
   }
 
+  /*
   {
     char * s;
     int size;
@@ -116,9 +119,10 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
-    //assert(s == srcml_b_after);
+    assert(s == srcml_b_after);
     free(s);
   }
+  */
 
   {
     char * s;
@@ -139,6 +143,7 @@ int main(int argc, char * argv[]) {
     free(s);
   }
 
+  /*
   {
     char * s;
     int size;
@@ -157,6 +162,7 @@ int main(int argc, char * argv[]) {
     assert(s == srcml_full);
     free(s);
   }
+  */
 
   {
     char * s;
@@ -177,6 +183,7 @@ int main(int argc, char * argv[]) {
     free(s);
   }
 
+  /*
   {
     char * s;
     int size;
@@ -195,6 +202,7 @@ int main(int argc, char * argv[]) {
     assert(s == srcml_b_after);
     free(s);
   }
+  */
 
   {
     char * s;
@@ -215,6 +223,7 @@ int main(int argc, char * argv[]) {
     free(s);
   }
 
+  /*
   {
     char * s;
     int size;
@@ -233,6 +242,7 @@ int main(int argc, char * argv[]) {
     assert(s == srcml_full);
     free(s);
   }
+  */
 
   {
     char * s;
@@ -253,6 +263,7 @@ int main(int argc, char * argv[]) {
     free(s);
   }
 
+  /*
   {
     char * s;
     int size;
@@ -271,6 +282,7 @@ int main(int argc, char * argv[]) {
     assert(s == srcml_b_after);
     free(s);
   }
+  */
  
   srcml_cleanup_globals();
 
