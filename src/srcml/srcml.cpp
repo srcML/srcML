@@ -57,7 +57,7 @@ struct ParseRequest {
 ParseRequest NullParseRequest;
 
 bool checkLocalFiles(std::vector<std::string>& pos_args) {
-  for (int i = 0; i < pos_args.size(); ++i) {
+  for (size_t i = 0; i < pos_args.size(); ++i) {
     if (pos_args[i] == "/dev/stdin")
       pos_args[i] = "-";
     
@@ -192,13 +192,13 @@ int main(int argc, char * argv[]) {
 
         srcml_set_tabstop(srcml_request.tabs);
 
-        for (int i = 0; i < srcml_request.register_ext.size(); ++i) {
+        for (size_t i = 0; i < srcml_request.register_ext.size(); ++i) {
           int pos = srcml_request.register_ext[i].find('=');
           srcml_register_file_extension(srcml_request.register_ext[i].substr(0,pos).c_str(),
                 srcml_request.register_ext[i].substr(pos+1).c_str());
         }
 
-        for (int i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
+        for (size_t i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
           int pos = srcml_request.xmlns_prefix[i].find('=');
           srcml_register_namespace(srcml_request.xmlns_prefix[i].substr(0,pos).c_str(),
                  srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
@@ -240,13 +240,13 @@ int main(int argc, char * argv[]) {
 
   srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
 
-  for (int i = 0; i < srcml_request.register_ext.size(); ++i) {
+  for (size_t i = 0; i < srcml_request.register_ext.size(); ++i) {
     int pos = srcml_request.register_ext[i].find('=');
     srcml_archive_register_file_extension(srcml_arch, srcml_request.register_ext[i].substr(0,pos).c_str(),
           srcml_request.register_ext[i].substr(pos+1).c_str());
   }
 
-  for (int i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
+  for (size_t i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
     int pos = srcml_request.xmlns_prefix[i].find('=');
     srcml_archive_register_namespace(srcml_arch, srcml_request.xmlns_prefix[i].substr(0,pos).c_str(),
            srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
@@ -254,7 +254,7 @@ int main(int argc, char * argv[]) {
 
   srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
-  for (int i = 0; i < srcml_request.positional_args.size(); ++i) {
+  for (size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
     
     // libArchive Setup
     archive * arch = archive_read_new();
