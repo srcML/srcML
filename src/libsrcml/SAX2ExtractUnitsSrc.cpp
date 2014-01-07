@@ -370,6 +370,15 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname,
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+  int ns_length = pstate->root.nb_namespaces * 2;
+  for (int i = 0; i < ns_length; i += 2)
+    if(strcmp((const char *)pstate->root.namespaces[i], (const char *)prefix) == 0)
+      prefix = pstate->root.namespaces[i];
+
+  for (int i = 1; i < ns_length; i += 2)
+    if(strcmp((const char *)pstate->root.namespaces[i], (const char *)URI) == 0)
+      URI = pstate->root.namespaces[i];
+
   // so we did find another element in the root
   pstate->rootonly = false;
 
@@ -538,6 +547,15 @@ void SAX2ExtractUnitsSrc::startElementNsUnit(void* ctx, const xmlChar* localname
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  int ns_length = pstate->root.nb_namespaces * 2;
+  for (int i = 0; i < ns_length; i += 2)
+    if(strcmp((const char *)pstate->root.namespaces[i], (const char *)prefix) == 0)
+      prefix = pstate->root.namespaces[i];
+
+  for (int i = 1; i < ns_length; i += 2)
+    if(strcmp((const char *)pstate->root.namespaces[i], (const char *)URI) == 0)
+      URI = pstate->root.namespaces[i];
 
   // skipping when in deleted or inserted file
   if (!diff_filename)
