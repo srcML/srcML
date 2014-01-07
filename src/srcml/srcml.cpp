@@ -315,6 +315,8 @@ int main(int argc, char * argv[]) {
               srcml_unit_set_language(unit, srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[i].c_str()));
             }
             else {
+              // Extension Not So Valid
+              // Skip to next header
               continue;
             }
           }
