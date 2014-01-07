@@ -66,7 +66,6 @@ void SAX2ExtractUnitsSrc::endDocument(void *ctx) {
   pstate->pprocess->endDocument(ctx);
 
   int ns_length = pstate->root.nb_namespaces * 2;
-
   for (int i = 0; i < ns_length; ++i)
     if(pstate->root.namespaces[i] && pstate->root.namespaces[i] != pstate->root.prefix && pstate->root.namespaces[i] != pstate->root.URI)
       free((void *)pstate->root.namespaces[i]);
@@ -266,8 +265,14 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-  if(strcmp((const char *)prefix, (const char *)pstate->root.prefix) == 0)
-    prefix = pstate->root.namespaces[0];
+  int ns_length = pstate->root.nb_namespaces * 2;
+  for (int i = 0; i < ns_length; i += 2)
+    if(strcmp((const char *)pstate->root.namespaces[i], (const char *)prefix) == 0)
+      prefix = pstate->root.namespaces[i];
+
+  for (int i = 1; i < ns_length; i += 2)
+    if(strcmp((const char *)pstate->root.namespaces[i], (const char *)URI) == 0)
+      URI = pstate->root.namespaces[i];
 
   // so we have an element inside of the unit
   pstate->rootonly = false;
