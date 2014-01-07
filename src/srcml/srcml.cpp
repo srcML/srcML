@@ -280,9 +280,10 @@ int main(int argc, char * argv[]) {
 
       while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
 
+        /*
         if (archive_entry_filetype(arch_entry) != AE_IFREG && srcml_request.positional_args[i] != "-")
           continue;
-
+        */
         srcml_unit * unit = srcml_create_unit(srcml_arch);
         std::string filename = archive_entry_pathname(arch_entry);
 
@@ -308,15 +309,21 @@ int main(int argc, char * argv[]) {
         else {
           if (srcml_request.positional_args[i] != "-") { 
             // Input is a standalone source file
-            srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str());
-            srcml_unit_set_language(unit, srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[i].c_str()));
+            const char * language = srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[i].c_str());
+            if (language) {
+              srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str());
+              srcml_unit_set_language(unit, srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[i].c_str()));
+            }
+            else {
+              continue;
+            }
           }
           else {
             // Input came from stdin
             srcml_unit_set_language(unit, srcml_request.language.c_str());
           }
         }
-        
+
         while (true) {
           int readStatus = archive_read_data_block(arch, &buffer, &size, &offset);
           cptr = (char*)buffer;
