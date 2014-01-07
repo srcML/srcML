@@ -193,9 +193,9 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
   int ns_length = nb_namespaces * 2;
   pstate->root.namespaces = (const xmlChar**) malloc(ns_length * sizeof(namespaces[0]));
   for (int i = 0; i < ns_length; ++i)
-    if(strcmp((const char *)prefix, (const char *)namespaces[i]) == 0)
+    if(prefix && namespaces[i] && strcmp((const char *)prefix, (const char *)namespaces[i]) == 0)
       pstate->root.namespaces[i] = pstate->root.prefix;
-    else if(strcmp((const char *)URI, (const char *)namespaces[i]) == 0)
+    else if(URI && namespaces[i] && strcmp((const char *)URI, (const char *)namespaces[i]) == 0)
       pstate->root.namespaces[i] = pstate->root.URI;
     else
       pstate->root.namespaces[i] = namespaces[i] ? (xmlChar*) strdup((const char*) namespaces[i]) : 0;
@@ -267,11 +267,11 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
 
   int ns_length = pstate->root.nb_namespaces * 2;
   for (int i = 0; i < ns_length; i += 2)
-    if(strcmp((const char *)pstate->root.namespaces[i], (const char *)prefix) == 0)
+    if(prefix && pstate->root.namespaces[i] && strcmp((const char *)pstate->root.namespaces[i], (const char *)prefix) == 0)
       prefix = pstate->root.namespaces[i];
 
   for (int i = 1; i < ns_length; i += 2)
-    if(strcmp((const char *)pstate->root.namespaces[i], (const char *)URI) == 0)
+    if(URI && pstate->root.namespaces[i] && strcmp((const char *)pstate->root.namespaces[i], (const char *)URI) == 0)
       URI = pstate->root.namespaces[i];
 
   // so we have an element inside of the unit
@@ -372,11 +372,11 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname,
 
   int ns_length = pstate->root.nb_namespaces * 2;
   for (int i = 0; i < ns_length; i += 2)
-    if(strcmp((const char *)pstate->root.namespaces[i], (const char *)prefix) == 0)
+    if(prefix && pstate->root.namespaces[i] && strcmp((const char *)pstate->root.namespaces[i], (const char *)prefix) == 0)
       prefix = pstate->root.namespaces[i];
 
   for (int i = 1; i < ns_length; i += 2)
-    if(strcmp((const char *)pstate->root.namespaces[i], (const char *)URI) == 0)
+    if(URI && pstate->root.namespaces[i] && strcmp((const char *)pstate->root.namespaces[i], (const char *)URI) == 0)
       URI = pstate->root.namespaces[i];
 
   // so we did find another element in the root
@@ -550,11 +550,11 @@ void SAX2ExtractUnitsSrc::startElementNsUnit(void* ctx, const xmlChar* localname
 
   int ns_length = pstate->root.nb_namespaces * 2;
   for (int i = 0; i < ns_length; i += 2)
-    if(strcmp((const char *)pstate->root.namespaces[i], (const char *)prefix) == 0)
+    if(prefix && pstate->root.namespaces[i] && strcmp((const char *)pstate->root.namespaces[i], (const char *)prefix) == 0)
       prefix = pstate->root.namespaces[i];
 
   for (int i = 1; i < ns_length; i += 2)
-    if(strcmp((const char *)pstate->root.namespaces[i], (const char *)URI) == 0)
+    if(URI && pstate->root.namespaces[i] && strcmp((const char *)pstate->root.namespaces[i], (const char *)URI) == 0)
       URI = pstate->root.namespaces[i];
 
   // skipping when in deleted or inserted file
