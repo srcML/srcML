@@ -477,21 +477,26 @@ public :
       switch (nodetype) {
       case XPATH_NODESET:
 
+	{
+
+	std::string full_unit = "</";
+	if(pstate->root.prefix) {
+	  full_unit += (const char *)pstate->root.prefix;
+	  full_unit += ":";
+	}
+	full_unit += "unit>\n";
+
         // root unit end tag
-        if (!isoption(options, OPTION_APPLY_ROOT)) {
-          std::string full_unit = "</";
-          if(pstate->root.prefix) {
-            full_unit += (const char *)pstate->root.prefix;
-            full_unit += ":";
-          }
-          full_unit += "unit>\n";
+        if (!isoption(options, OPTION_APPLY_ROOT))
           xmlOutputBufferWriteString(buf, found ? full_unit.c_str() : "/>\n");
-        } else if(found)
-          xmlOutputBufferWriteString(buf, "</unit>\n");
+        else if(found)
+          xmlOutputBufferWriteString(buf, full_unit.c_str());
         else
           xmlOutputBufferWriteString(buf, "\n");
 
         break;
+
+	}
 
       case XPATH_NUMBER:
         if (isoption(options, OPTION_XPATH_TOTAL)) {
