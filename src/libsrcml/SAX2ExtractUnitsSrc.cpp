@@ -66,8 +66,8 @@ void SAX2ExtractUnitsSrc::endDocument(void *ctx) {
   pstate->pprocess->endDocument(ctx);
 
   if(pstate->root.localname) free((void *)pstate->root.localname);
-  if(pstate->root.prefix) free((void *)pstate->root.prefix);
-  if(pstate->root.URI) free((void *)pstate->root.URI);
+  if(pstate->root.prefix && (pstate->root.nb_namespaces < 1 || pstate->root.prefix != pstate->root.namespaces[0])) free((void *)pstate->root.prefix);
+  if(pstate->root.URI && (pstate->root.nb_namespaces < 1 || pstate->root.URI != pstate->root.namespaces[1])) free((void *)pstate->root.URI);
 
   int ns_length = pstate->root.nb_namespaces * 2;
 
@@ -194,7 +194,12 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
   int ns_length = nb_namespaces * 2;
   pstate->root.namespaces = (const xmlChar**) malloc(ns_length * sizeof(namespaces[0]));
   for (int i = 0; i < ns_length; ++i)
-    pstate->root.namespaces[i] = namespaces[i] ? (xmlChar*) strdup((const char*) namespaces[i]) : 0;
+    if(strcmp((const char *)prefix, (const char *)namespaces[i]) == 0)
+      pstate->root.namespaces[i] = pstate->root.prefix;
+    else if(strcmp((const char *)URI, (const char *)namespaces[i]) == 0)
+      pstate->root.namespaces[i] = pstate->root.URI;
+    else
+      pstate->root.namespaces[i] = namespaces[i] ? (xmlChar*) strdup((const char*) namespaces[i]) : 0;
 
   // TODO:  Do we still need this?
 #if 0
@@ -260,6 +265,9 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  if(strcmp((const char *)prefix, (const char *)pstate->root.prefix) == 0)
+    prefix = pstate->root.namespaces[0];
 
   // so we have an element inside of the unit
   pstate->rootonly = false;
