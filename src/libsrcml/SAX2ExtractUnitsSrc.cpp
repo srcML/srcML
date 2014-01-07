@@ -65,16 +65,16 @@ void SAX2ExtractUnitsSrc::endDocument(void *ctx) {
 
   pstate->pprocess->endDocument(ctx);
 
-  if(pstate->root.localname) free((void *)pstate->root.localname);
-  if(pstate->root.prefix && (pstate->root.nb_namespaces < 1 || pstate->root.prefix != pstate->root.namespaces[0])) free((void *)pstate->root.prefix);
-  if(pstate->root.URI && (pstate->root.nb_namespaces < 1 || pstate->root.URI != pstate->root.namespaces[1])) free((void *)pstate->root.URI);
-
   int ns_length = pstate->root.nb_namespaces * 2;
 
   for (int i = 0; i < ns_length; ++i)
-    if(pstate->root.namespaces[i])
+    if(pstate->root.namespaces[i] && pstate->root.namespaces[i] != pstate->root.prefix && pstate->root.namespaces[i] != pstate->root.URI)
       free((void *)pstate->root.namespaces[i]);
   if(pstate->root.namespaces) free((void *)pstate->root.namespaces);
+
+  if(pstate->root.localname) free((void *)pstate->root.localname);
+  if(pstate->root.prefix) free((void *)pstate->root.prefix);
+  if(pstate->root.URI) free((void *)pstate->root.URI);
 
   for (int i = 0, index = 0; i < pstate->root.nb_attributes; ++i, index += 5) {
     if(pstate->root.attributes[index])
