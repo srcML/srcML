@@ -35,6 +35,10 @@ set_property(GLOBAL PROPERTY SVN_ENABLED ${ENABLE_SVN_INTEGRATION})
 option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" OFF)
 set_property(GLOBAL PROPERTY SAX2_ENABLED ${LIBSRCML_SAX2_ENABLED})
 
+# Dynamic Load libraries (Unix only)
+option(DYNAMIC_LOAD_ENABLED "Build with SAX2Framework for srcML" ON)
+set_property(GLOBAL PROPERTY DYNAMIC_ENABLED ${DYNAMIC_LOAD_ENABLED})
+
 # Adding build option for srcml executable.
 option(ENABLE_NEW_SRCML_EXEC_BUILD "Build the newer version of the srcML executable." OFF)
 set_property(GLOBAL PROPERTY ENABLE_NEW_SRCML_EXEC_BUILD ${ENABLE_NEW_SRCML_EXEC_BUILD})
@@ -120,7 +124,11 @@ endif()
 set_property(GLOBAL PROPERTY PYTHON_INTERP_EXE ${PYTHON_EXECUTABLE})
 
 # @todo this needs place in a more appropriate location.
-set(CMAKE_CXX_FLAGS "-Wall -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized  -O3")
+if(DYNAMIC_LOAD_ENABLED)
+	set(CMAKE_CXX_FLAGS "-Wall -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -O3")
+else()
+	set(CMAKE_CXX_FLAGS "-Wall -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -O3 -DNO_DLLOAD")
+endif()
 
 # Adding compiler configuration for GCC.
 # The default configuration is to compile in DEBUG mode. These flags can be directly
