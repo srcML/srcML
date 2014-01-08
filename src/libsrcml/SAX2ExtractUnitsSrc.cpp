@@ -28,6 +28,7 @@
 #include <ProcessUnit.hpp>
 #include <ExtractUnitsSrc.hpp>
 #include <srcexfun.hpp>
+#include <srcml_wrapper.hpp>
 
 static bool diff_filename = true;
 static bool setupDiff(SAX2ExtractUnitsSrc* pstate,
@@ -191,7 +192,7 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
 
   pstate->root.nb_namespaces = nb_namespaces;
   int ns_length = nb_namespaces * 2;
-  pstate->root.namespaces = (const xmlChar**) malloc(ns_length * sizeof(namespaces[0]));
+  pstate->root.namespaces = (const xmlChar**) srcml_malloc(ns_length * sizeof(namespaces[0]));
   for (int i = 0; i < ns_length; ++i)
     if(prefix && namespaces[i] && strcmp((const char *)prefix, (const char *)namespaces[i]) == 0)
       pstate->root.namespaces[i] = pstate->root.prefix;
@@ -229,13 +230,13 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
   pstate->root.nb_defaulted = nb_defaulted;
 
   int nb_length = nb_attributes * 5;
-  pstate->root.attributes = (const xmlChar**) malloc(nb_length * sizeof(attributes[0]));
+  pstate->root.attributes = (const xmlChar**) srcml_malloc(nb_length * sizeof(attributes[0]));
   for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
     pstate->root.attributes[index] = attributes[index] ? (xmlChar*) strdup((const char*) attributes[index]) : 0;
     pstate->root.attributes[index + 1] = attributes[index + 1] ? (xmlChar*) strdup((const char*) attributes[index + 1]) : 0;
     pstate->root.attributes[index + 2] = attributes[index + 2] ? (xmlChar*) strdup((const char*) attributes[index + 2]) : 0;
     int vallength = attributes[index + 4] - attributes[index + 3];
-    pstate->root.attributes[index + 3] = (const xmlChar*) malloc(vallength + 1);
+    pstate->root.attributes[index + 3] = (const xmlChar*) srcml_malloc(vallength + 1);
     memset((void *)pstate->root.attributes[index + 3], 0, vallength + 1);
     strncpy((char *) pstate->root.attributes[index + 3], (const char*) attributes[index + 3], vallength);
     pstate->root.attributes[index + 4] = pstate->root.attributes[index + 3] + vallength;
