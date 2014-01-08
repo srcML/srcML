@@ -166,7 +166,6 @@ public :
 
         }
       }
-      dlclose(handle);
 #endif
 #endif
 
@@ -464,6 +463,11 @@ public :
       xmlXPathFreeObject(result_nodes);
       if(context) xmlXPathFreeContext(context);
 
+#if LIBEXSLT_VERSION > 813
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+      dlclose(handle);
+#endif
+#endif
       return true;
     }
 
