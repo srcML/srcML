@@ -203,7 +203,7 @@ srcml_request_t srcmlCLI::parseCLI(int argc, char* argv[]) {
       ("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
       ("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NO_NAMESPACE_DECL>), "do not output any namespace declarations")
       ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NO_XML_DECL>), "do not output the XML declaration")
-      ("output,o", prog_opts::value<std::string>()->notifier(&option_output)->default_value("-"), "write result ouput to arg which is a FILE or URI")
+      ("output,o", prog_opts::value<std::string>()->notifier(&option_output)->default_value("-")->value_name("OUTPUT"), "write result ouput to arg which is a FILE or URI")
       ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "suppresses status messages")
       ("src-encoding,t", prog_opts::value<std::string>()->notifier(&option_src_encoding), "set the input source encoding to arg (default:  ISO-8859-1)")
       ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")    
