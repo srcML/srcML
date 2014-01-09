@@ -34,6 +34,7 @@
 #include <srcml.h>
 #include <srcMLSAX2Reader.hpp>
 #include <srcmlns.hpp>
+#include "dassert.hpp"
 
 int main(int argc, char * argv[]) {
 
@@ -146,40 +147,40 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
-    assert(attributes.size() == 2);
-    assert(attributes.at(0) == "foo");
-    assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 2);
-    assert(prefixes.at(0) == "");
-    assert(prefixes.at(1) == "pos");
-    assert(namespaces.size() == 2);
-    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(namespaces.at(1) == "http://www.sdml.info/srcML/position");
-    assert(options == SRCML_OPTION_POSITION);
-    assert(tabstop == 4);
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
+    dassert(attributes.size(), 2);
+    dassert(attributes.at(0), "foo");
+    dassert(attributes.at(1), "bar");
+    dassert(prefixes.size(), 2);
+    dassert(prefixes.at(0), "");
+    dassert(prefixes.at(1), "pos");
+    dassert(namespaces.size(), 2);
+    dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+    dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
+    dassert(options, SRCML_OPTION_POSITION);
+    dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
-    assert(attributes.size() == 2);
-    assert(attributes.at(0) == "foo");
-    assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 2);
-    assert(prefixes.at(0) == "");
-    assert(prefixes.at(1) == "pos");
-    assert(namespaces.size() == 2);
-    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(namespaces.at(1) == "http://www.sdml.info/srcML/position");
-    assert(options == SRCML_OPTION_POSITION);
-    assert(tabstop == 4);
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
+    dassert(attributes.size(), 2);
+    dassert(attributes.at(0), "foo");
+    dassert(attributes.at(1), "bar");
+    dassert(prefixes.size(), 2);
+    dassert(prefixes.at(0), "");
+    dassert(prefixes.at(1), "pos");
+    dassert(namespaces.size(), 2);
+    dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+    dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
+    dassert(options, SRCML_OPTION_POSITION);
+    dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
   }
 
@@ -192,40 +193,40 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
-    assert(attributes.size() == 2);
-    assert(attributes.at(0) == "foo");
-    assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 2);
-    assert(prefixes.at(0) == "s");
-    assert(prefixes.at(1) == "pos");
-    assert(namespaces.size() == 2);
-    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(namespaces.at(1) == "http://www.sdml.info/srcML/position");
-    assert(options == SRCML_OPTION_POSITION);
-    assert(tabstop == 4);
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
+    dassert(attributes.size(), 2);
+    dassert(attributes.at(0), "foo");
+    dassert(attributes.at(1), "bar");
+    dassert(prefixes.size(), 2);
+    dassert(prefixes.at(0), "s");
+    dassert(prefixes.at(1), "pos");
+    dassert(namespaces.size(), 2);
+    dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+    dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
+    dassert(options, SRCML_OPTION_POSITION);
+    dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
-    assert(attributes.size() == 2);
-    assert(attributes.at(0) == "foo");
-    assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 2);
-    assert(prefixes.at(0) == "s");
-    assert(prefixes.at(1) == "pos");
-    assert(namespaces.size() == 2);
-    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(namespaces.at(1) == "http://www.sdml.info/srcML/position");
-    assert(options == SRCML_OPTION_POSITION);
-    assert(tabstop == 4);
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
+    dassert(attributes.size(), 2);
+    dassert(attributes.at(0), "foo");
+    dassert(attributes.at(1), "bar");
+    dassert(prefixes.size(), 2);
+    dassert(prefixes.at(0), "s");
+    dassert(prefixes.at(1), "pos");
+    dassert(namespaces.size(), 2);
+    dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+    dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
+    dassert(options, SRCML_OPTION_POSITION);
+    dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
   }
 
@@ -238,40 +239,40 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
-    assert(attributes.size() == 2);
-    assert(attributes.at(0) == "foo");
-    assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 2);
-    assert(prefixes.at(0) == "");
-    assert(prefixes.at(1) == "cpp");
-    assert(namespaces.size() == 2);
-    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(namespaces.at(1) == "http://www.sdml.info/srcML/cpp");
-    assert(options == (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
-    assert(tabstop == 4);
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
+    dassert(attributes.size(), 2);
+    dassert(attributes.at(0), "foo");
+    dassert(attributes.at(1), "bar");
+    dassert(prefixes.size(), 2);
+    dassert(prefixes.at(0), "");
+    dassert(prefixes.at(1), "cpp");
+    dassert(namespaces.size(), 2);
+    dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+    dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
+    dassert(options, (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
-    assert(attributes.size() == 2);
-    assert(attributes.at(0) == "foo");
-    assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 2);
-    assert(prefixes.at(0) == "");
-    assert(prefixes.at(1) == "cpp");
-    assert(namespaces.size() == 2);
-    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(namespaces.at(1) == "http://www.sdml.info/srcML/cpp");
-    assert(options == (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
-    assert(tabstop == 4);
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
+    dassert(attributes.size(), 2);
+    dassert(attributes.at(0), "foo");
+    dassert(attributes.at(1), "bar");
+    dassert(prefixes.size(), 2);
+    dassert(prefixes.at(0), "");
+    dassert(prefixes.at(1), "cpp");
+    dassert(namespaces.size(), 2);
+    dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+    dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
+    dassert(options, (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
   }
 
@@ -284,40 +285,40 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
-    assert(attributes.size() == 2);
-    assert(attributes.at(0) == "foo");
-    assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 2);
-    assert(prefixes.at(0) == "");
-    assert(prefixes.at(1) == "cpp");
-    assert(namespaces.size() == 2);
-    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(namespaces.at(1) == "http://www.sdml.info/srcML/cpp");
-    assert(options == (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
-    assert(tabstop == 4);
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
+    dassert(attributes.size(), 2);
+    dassert(attributes.at(0), "foo");
+    dassert(attributes.at(1), "bar");
+    dassert(prefixes.size(), 2);
+    dassert(prefixes.at(0), "");
+    dassert(prefixes.at(1), "cpp");
+    dassert(namespaces.size(), 2);
+    dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+    dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
+    dassert(options, (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
-    assert(attributes.size() == 2);
-    assert(attributes.at(0) == "foo");
-    assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 2);
-    assert(prefixes.at(0) == "");
-    assert(prefixes.at(1) == "cpp");
-    assert(namespaces.size() == 2);
-    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(namespaces.at(1) == "http://www.sdml.info/srcML/cpp");
-    assert(options == (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
-    assert(tabstop == 4);
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
+    dassert(attributes.size(), 2);
+    dassert(attributes.at(0), "foo");
+    dassert(attributes.at(1), "bar");
+    dassert(prefixes.size(), 2);
+    dassert(prefixes.at(0), "");
+    dassert(prefixes.at(1), "cpp");
+    dassert(namespaces.size(), 2);
+    dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+    dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
+    dassert(options, (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
   }
 
@@ -330,36 +331,36 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
-    assert(attributes.size() == 2);
-    assert(attributes.at(0) == "foo");
-    assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 1);
-    assert(prefixes.at(0) == "");
-    assert(namespaces.size() == 1);
-    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(options == 0);
-    assert(tabstop == 4);
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
+    dassert(attributes.size(), 2);
+    dassert(attributes.at(0), "foo");
+    dassert(attributes.at(1), "bar");
+    dassert(prefixes.size(), 1);
+    dassert(prefixes.at(0), "");
+    dassert(namespaces.size(), 1);
+    dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+    dassert(options, 0);
+    dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
-    assert(attributes.size() == 2);
-    assert(attributes.at(0) == "foo");
-    assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 1);
-    assert(prefixes.at(0) == "");
-    assert(namespaces.size() == 1);
-    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(options == 0);
-    assert(tabstop == 4);
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
+    dassert(attributes.size(), 2);
+    dassert(attributes.at(0), "foo");
+    dassert(attributes.at(1), "bar");
+    dassert(prefixes.size(), 1);
+    dassert(prefixes.at(0), "");
+    dassert(namespaces.size(), 1);
+    dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+    dassert(options, 0);
+    dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
   }
 
@@ -377,8 +378,8 @@ int main(int argc, char * argv[]) {
     language = 0, filename = 0, directory = 0, version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
   }
 
   {
@@ -395,8 +396,8 @@ int main(int argc, char * argv[]) {
     language = 0, filename = 0, directory = 0, version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
   }
 
   {
@@ -410,8 +411,8 @@ int main(int argc, char * argv[]) {
 
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
   }
 
   {
@@ -425,8 +426,8 @@ int main(int argc, char * argv[]) {
 
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
   }
 
   {
@@ -440,8 +441,8 @@ int main(int argc, char * argv[]) {
 
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
   }
 
   /*
@@ -452,86 +453,86 @@ int main(int argc, char * argv[]) {
     srcMLSAX2Reader reader("project.xml");
     std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
-    assert(*language == "C++");
-    assert(*filename == "a.cpp");
-    assert(*directory == "test");
-    assert(*version == "1");
+    dassert(*language, "C++");
+    dassert(*filename, "a.cpp");
+    dassert(*directory, "test");
+    dassert(*version, "1");
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
-    assert(*language == "C++");
-    assert(*filename == "b.cpp");
-    assert(directory == 0);
-    assert(version == 0);
+    dassert(*language, "C++");
+    dassert(*filename, "b.cpp");
+    dassert(directory, 0);
+    dassert(version, 0);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
-    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
+    dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
+    dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
   }
 
   {
     srcMLSAX2Reader reader("project_ns.xml");
     std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
-    assert(*language == "C++");
-    assert(*filename == "a.cpp");
-    assert(directory == 0);
-    assert(version == 0);
+    dassert(*language, "C++");
+    dassert(*filename, "a.cpp");
+    dassert(directory, 0);
+    dassert(version, 0);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
-    assert(*language == "C++");
-    assert(*filename == "b.cpp");
-    assert(directory == 0);
-    assert(version == 0);
+    dassert(*language, "C++");
+    dassert(*filename, "b.cpp");
+    dassert(directory, 0);
+    dassert(version, 0);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
-    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
+    dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
+    dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
   }
 
   {
     srcMLSAX2Reader reader("project_single.xml");
     std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
-    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
+    dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
+    dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
   }
 
   {
     srcMLSAX2Reader reader("project_empty_single.xml");
     std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
-    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
+    dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
+    dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
   }
 
   {
     srcMLSAX2Reader reader("project_empty_nested.xml");
     std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
-    assert(*language == "C++");
-    assert(*filename == "a.cpp");
-    assert(directory == 0);
-    assert(version == 0);
+    dassert(*language, "C++");
+    dassert(*filename, "a.cpp");
+    dassert(directory, 0);
+    dassert(version, 0);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
-    assert(*language == "C++");
-    assert(*filename == "b.cpp");
-    assert(directory == 0);
-    assert(version == 0);
+    dassert(*language, "C++");
+    dassert(*filename, "b.cpp");
+    dassert(directory, 0);
+    dassert(version, 0);
     delete language, delete filename, delete directory, delete version;
-    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
-    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
+    dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
+    dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
   }
 
   /*
@@ -541,65 +542,65 @@ int main(int argc, char * argv[]) {
   {
     srcMLSAX2Reader reader("project.xml");
     std::string * unit = reader.readsrcML();
-    assert(*unit == srcml_a);
+    dassert(*unit, srcml_a);
     delete unit;
     unit = reader.readsrcML();
-    assert(*unit == srcml_b);
+    dassert(*unit, srcml_b);
     delete unit;
     unit = reader.readsrcML();
-    assert(unit == 0);
+    dassert(unit, 0);
     unit = reader.readsrcML();
-    assert(unit == 0);
+    dassert(unit, 0);
   }
 
   {
     srcMLSAX2Reader reader("project_ns.xml");
     std::string * unit = reader.readsrcML();
-    assert(*unit == srcml_ns_a);
+    dassert(*unit, srcml_ns_a);
     delete unit;
     unit = reader.readsrcML();
-    assert(*unit == srcml_ns_b);
+    dassert(*unit, srcml_ns_b);
     delete unit;
     unit = reader.readsrcML();
-    assert(unit == 0);
+    dassert(unit, 0);
     unit = reader.readsrcML();
-    assert(unit == 0);
+    dassert(unit, 0);
   }
 
   {
     srcMLSAX2Reader reader("project_single.xml");
     std::string * unit = reader.readsrcML();
-    assert(*unit == srcml_single_a);
+    dassert(*unit, srcml_single_a);
     delete unit;
     unit = reader.readsrcML();
-    assert(unit == 0);
+    dassert(unit, 0);
     unit = reader.readsrcML();
-    assert(unit == 0);
+    dassert(unit, 0);
   }
 
   {
     srcMLSAX2Reader reader("project_empty_single.xml");
     std::string * unit = reader.readsrcML();
-    assert(*unit == srcml_empty_single_as_unit);
+    dassert(*unit, srcml_empty_single_as_unit);
     delete unit;
     unit = reader.readsrcML();
-    assert(unit == 0);
+    dassert(unit, 0);
     unit = reader.readsrcML();
-    assert(unit == 0);
+    dassert(unit, 0);
   }
 
   {
     srcMLSAX2Reader reader("project_empty_nested.xml");
     std::string * unit = reader.readsrcML();
-    assert(*unit == srcml_empty_nested_a);
+    dassert(*unit, srcml_empty_nested_a);
     delete unit;
     unit = reader.readsrcML();
-    assert(*unit == srcml_empty_nested_b);
+    dassert(*unit, srcml_empty_nested_b);
     delete unit;
     unit = reader.readsrcML();
-    assert(unit == 0);
+    dassert(unit, 0);
     unit = reader.readsrcML();
-    assert(unit == 0);
+    dassert(unit, 0);
   }
 
   /*
@@ -615,47 +616,47 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
-    assert(attributes.size() == 2);
-    assert(attributes.at(0) == "foo");
-    assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 2);
-    assert(prefixes.at(0) == "");
-    assert(prefixes.at(1) == "pos");
-    assert(namespaces.size() == 2);
-    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(namespaces.at(1) == "http://www.sdml.info/srcML/position");
-    assert(options == SRCML_OPTION_POSITION);
-    assert(tabstop == 4);
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
+    dassert(attributes.size(), 2);
+    dassert(attributes.at(0), "foo");
+    dassert(attributes.at(1), "bar");
+    dassert(prefixes.size(), 2);
+    dassert(prefixes.at(0), "");
+    dassert(prefixes.at(1), "pos");
+    dassert(namespaces.size(), 2);
+    dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+    dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
+    dassert(options, SRCML_OPTION_POSITION);
+    dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
-    assert(*language == "C++");
-    assert(*filename == "a.cpp");
-    assert(*directory == "test");
-    assert(*version == "1");
+    dassert(*language, "C++");
+    dassert(*filename, "a.cpp");
+    dassert(*directory, "test");
+    dassert(*version, "1");
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
     std::string * unit = reader.readsrcML();
-    assert(*unit == srcml_a);
+    dassert(*unit, srcml_a);
     delete unit;
     reader.readUnitAttributes(language, filename, directory, version);
-    assert(*language == "C++");
-    assert(*filename == "b.cpp");
-    assert(directory == 0);
-    assert(version == 0);
+    dassert(*language, "C++");
+    dassert(*filename, "b.cpp");
+    dassert(directory, 0);
+    dassert(version, 0);
     delete language, delete filename, delete directory, delete version;
     unit = reader.readsrcML();
-    assert(*unit == srcml_b);
+    dassert(*unit, srcml_b);
     delete unit;
     unit = reader.readsrcML();
-    assert(unit == 0);
-    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
-    assert(reader.readsrcML() == 0);
+    dassert(unit, 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
+    dassert(reader.readsrcML(), 0);
   }
 
   {
@@ -667,47 +668,47 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
-    assert(attributes.size() == 2);
-    assert(attributes.at(0) == "foo");
-    assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 2);
-    assert(prefixes.at(0) == "s");
-    assert(prefixes.at(1) == "pos");
-    assert(namespaces.size() == 2);
-    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(namespaces.at(1) == "http://www.sdml.info/srcML/position");
-    assert(options == SRCML_OPTION_POSITION);
-    assert(tabstop == 4);
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
+    dassert(attributes.size(), 2);
+    dassert(attributes.at(0), "foo");
+    dassert(attributes.at(1), "bar");
+    dassert(prefixes.size(), 2);
+    dassert(prefixes.at(0), "s");
+    dassert(prefixes.at(1), "pos");
+    dassert(namespaces.size(), 2);
+    dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+    dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
+    dassert(options, SRCML_OPTION_POSITION);
+    dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
-    assert(*language == "C++");
-    assert(*filename == "a.cpp");
-    assert(directory == 0);
-    assert(version == 0);
+    dassert(*language, "C++");
+    dassert(*filename, "a.cpp");
+    dassert(directory, 0);
+    dassert(version, 0);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
     std::string * unit = reader.readsrcML();
-    assert(*unit == srcml_ns_a);
+    dassert(*unit, srcml_ns_a);
     delete unit;
     reader.readUnitAttributes(language, filename, directory, version);
-    assert(*language == "C++");
-    assert(*filename == "b.cpp");
-    assert(directory == 0);
-    assert(version == 0);
+    dassert(*language, "C++");
+    dassert(*filename, "b.cpp");
+    dassert(directory, 0);
+    dassert(version, 0);
     delete language, delete filename, delete directory, delete version;
     unit = reader.readsrcML();
-    assert(*unit == srcml_ns_b);
+    dassert(*unit, srcml_ns_b);
     delete unit;
     unit = reader.readsrcML();
-    assert(unit == 0);
-    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
-    assert(reader.readsrcML() == 0);
+    dassert(unit, 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
+    dassert(reader.readsrcML(), 0);
   }
 
   {
@@ -719,36 +720,36 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
-    assert(attributes.size() == 2);
-    assert(attributes.at(0) == "foo");
-    assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 2);
-    assert(prefixes.at(0) == "");
-    assert(prefixes.at(1) == "cpp");
-    assert(namespaces.size() == 2);
-    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(namespaces.at(1) == "http://www.sdml.info/srcML/cpp");
-    assert(options == (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
-    assert(tabstop == 4);
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
+    dassert(attributes.size(), 2);
+    dassert(attributes.at(0), "foo");
+    dassert(attributes.at(1), "bar");
+    dassert(prefixes.size(), 2);
+    dassert(prefixes.at(0), "");
+    dassert(prefixes.at(1), "cpp");
+    dassert(namespaces.size(), 2);
+    dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+    dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
+    dassert(options, (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
     std::string * unit = reader.readsrcML();
-    assert(*unit == srcml_single_a);
+    dassert(*unit, srcml_single_a);
     delete unit;
-    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
-    assert(reader.readsrcML() == 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
+    dassert(reader.readsrcML(), 0);
   }
 
   {
@@ -760,36 +761,36 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
-    assert(attributes.size() == 2);
-    assert(attributes.at(0) == "foo");
-    assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 2);
-    assert(prefixes.at(0) == "");
-    assert(prefixes.at(1) == "cpp");
-    assert(namespaces.size() == 2);
-    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(namespaces.at(1) == "http://www.sdml.info/srcML/cpp");
-    assert(options == (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
-    assert(tabstop == 4);
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
+    dassert(attributes.size(), 2);
+    dassert(attributes.at(0), "foo");
+    dassert(attributes.at(1), "bar");
+    dassert(prefixes.size(), 2);
+    dassert(prefixes.at(0), "");
+    dassert(prefixes.at(1), "cpp");
+    dassert(namespaces.size(), 2);
+    dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+    dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
+    dassert(options, (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
     std::string * unit = reader.readsrcML();
-    assert(*unit == srcml_empty_single_as_unit);
+    dassert(*unit, srcml_empty_single_as_unit);
     delete unit;
-    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
-    assert(reader.readsrcML() == 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
+    dassert(reader.readsrcML(), 0);
   }
 
   {
@@ -801,37 +802,37 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
-    assert(*language == "C++");
-    assert(*filename == "project");
-    assert(*directory == "test");
-    assert(*version == "1");
-    assert(attributes.size() == 2);
-    assert(attributes.at(0) == "foo");
-    assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 1);
-    assert(prefixes.at(0) == "");
-    assert(namespaces.size() == 1);
-    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(options == 0);
-    assert(tabstop == 4);
+    dassert(*language, "C++");
+    dassert(*filename, "project");
+    dassert(*directory, "test");
+    dassert(*version, "1");
+    dassert(attributes.size(), 2);
+    dassert(attributes.at(0), "foo");
+    dassert(attributes.at(1), "bar");
+    dassert(prefixes.size(), 1);
+    dassert(prefixes.at(0), "");
+    dassert(namespaces.size(), 1);
+    dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+    dassert(options, 0);
+    dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
-    assert(*language == "C++");
-    assert(*filename == "a.cpp");
-    assert(directory == 0);
-    assert(version == 0);
+    dassert(*language, "C++");
+    dassert(*filename, "a.cpp");
+    dassert(directory, 0);
+    dassert(version, 0);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
     std::string * unit = reader.readsrcML();
-    assert(*unit == srcml_empty_nested_a);
+    dassert(*unit, srcml_empty_nested_a);
     delete unit;
     unit = reader.readsrcML();
-    assert(*unit == srcml_empty_nested_b);
+    dassert(*unit, srcml_empty_nested_b);
     delete unit;
-    assert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    assert(reader.readUnitAttributes(language, filename, directory, version) == 0);
-    assert(reader.readsrcML() == 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
+    dassert(reader.readsrcML(), 0);
   }
 
 
