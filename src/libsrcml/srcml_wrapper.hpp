@@ -15,5 +15,6 @@
 
 void * srcml_malloc(size_t size);
 
+char * srcml_strdup(const char * s1);
 
 #endif

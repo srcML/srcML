@@ -186,9 +186,9 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
   pstate->rootonly = true;
 
   // save all the info in case this is not a srcML archive
-  pstate->root.localname = localname ? (xmlChar*) strdup((const char*) localname) : 0;
-  pstate->root.prefix = prefix ? (xmlChar*) strdup((const char*) prefix) : 0;
-  pstate->root.URI = URI ? (xmlChar*) strdup((const char*) URI) : 0;
+  pstate->root.localname = localname ? (xmlChar*) srcml_strdup((const char*) localname) : 0;
+  pstate->root.prefix = prefix ? (xmlChar*) srcml_strdup((const char*) prefix) : 0;
+  pstate->root.URI = URI ? (xmlChar*) srcml_strdup((const char*) URI) : 0;
 
   pstate->root.nb_namespaces = nb_namespaces;
   int ns_length = nb_namespaces * 2;
@@ -199,7 +199,7 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
     else if(URI && namespaces[i] && strcmp((const char *)URI, (const char *)namespaces[i]) == 0)
       pstate->root.namespaces[i] = pstate->root.URI;
     else
-      pstate->root.namespaces[i] = namespaces[i] ? (xmlChar*) strdup((const char*) namespaces[i]) : 0;
+      pstate->root.namespaces[i] = namespaces[i] ? (xmlChar*) srcml_strdup((const char*) namespaces[i]) : 0;
 
   // TODO:  Do we still need this?
 #if 0
@@ -232,9 +232,9 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
   int nb_length = nb_attributes * 5;
   pstate->root.attributes = (const xmlChar**) srcml_malloc(nb_length * sizeof(attributes[0]));
   for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
-    pstate->root.attributes[index] = attributes[index] ? (xmlChar*) strdup((const char*) attributes[index]) : 0;
-    pstate->root.attributes[index + 1] = attributes[index + 1] ? (xmlChar*) strdup((const char*) attributes[index + 1]) : 0;
-    pstate->root.attributes[index + 2] = attributes[index + 2] ? (xmlChar*) strdup((const char*) attributes[index + 2]) : 0;
+    pstate->root.attributes[index] = attributes[index] ? (xmlChar*) srcml_strdup((const char*) attributes[index]) : 0;
+    pstate->root.attributes[index + 1] = attributes[index + 1] ? (xmlChar*) srcml_strdup((const char*) attributes[index + 1]) : 0;
+    pstate->root.attributes[index + 2] = attributes[index + 2] ? (xmlChar*) srcml_strdup((const char*) attributes[index + 2]) : 0;
     int vallength = attributes[index + 4] - attributes[index + 3];
     pstate->root.attributes[index + 3] = (const xmlChar*) srcml_malloc(vallength + 1);
     memset((void *)pstate->root.attributes[index + 3], 0, vallength + 1);
