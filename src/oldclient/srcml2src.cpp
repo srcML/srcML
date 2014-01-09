@@ -772,7 +772,7 @@ int main(int argc, char* argv[]) {
   }
 
   
-  if(!is_multi_op) break;
+  if(!is_multi_op || (exit_status && !(exit_status & STATUS_INPUTFILE_PROBLEM))) break;
 
   } while(curarg < argc);
 
