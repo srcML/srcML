@@ -23,8 +23,15 @@ subdirs(parser translator libsrcml oldclient)
 # Enabling an include for the new srcML executable only when it
 # is specified to be built.
 get_property(ENABLE_NEW_SRCML_EXEC_BUILD GLOBAL PROPERTY ENABLE_NEW_SRCML_EXEC_BUILD)
+get_property(LIBSRCML_SAX2_ENABLED GLOBAL PROPERTY LIBSRCML_SAX2_ENABLED)
+
 if(${ENABLE_NEW_SRCML_EXEC_BUILD})
     subdirs(srcml)
+endif()
+
+if(LIBSRCML_SAX2_ENABLED)
+    file(GLOB SAX2FRAMEWORK_HEADERS SAX2Framework/*.hpp)
+    file(GLOB SAX2FRAMEWORK_SOURCE SAX2Framework/*.cpp)
 endif()
 
 get_property(SAX2_ENABLED GLOBAL PROPERTY SAX2_ENABLED)
@@ -42,7 +49,8 @@ get_property(LIBARCHIVE_LIBS  GLOBAL PROPERTY LIBARCHIVE_LIBS)
 # 
 macro(buildLib LIB_NAME LIB_TYPE)
 
-    add_library(${LIB_NAME} ${LIB_TYPE} $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:libsrcml> oldclient/srcmlapps.cpp)
+    add_library(${LIB_NAME} ${LIB_TYPE} $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:libsrcml> oldclient/srcmlapps.cpp
+     ${SAX2FRAMEWORK_SOURCE} ${SAX2FRAMEWORK_HEADERS})
 
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml)
 
