@@ -584,7 +584,7 @@
 <refsect1>
   <title>BUGS</title>
   <para>
-    Java language mode does not contain all of Java 1.5 language elements.
+    Java language mode does may not contain every Java language element.
   </para>
   <para>
     Libxml2 directly supports many encodings beyond UTF-8, UTF-16, and ISO-8859-1 through iconv.
