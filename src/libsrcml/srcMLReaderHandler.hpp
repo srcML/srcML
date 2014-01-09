@@ -156,8 +156,8 @@ public :
    */
   void stop() {
 
-    resume();
     terminate = true;
+    resume();
 
   }
 
