@@ -217,8 +217,8 @@
 	  The programming language of the source-code file.  Allowable
 	  values are C, C++, C#, Java, or AspectJ.  The language affects
 	  parsing, the allowed markup, and what is considered a
-	  keyword.  The value is also stored as an attribute in the
-	  unit element.
+	  keyword.  The value is also stored individually as an attribute
+	  in each unit element.
 	</para>
 	<para>
 	  If not specified, the programming language is based on the
@@ -239,14 +239,14 @@
 	  The programming language of the source-code file.  Allowable
 	  values are C, C++, C#, Java, or AspectJ.  The language affects
 	  parsing, the allowed markup, and what is considered a
-	  keyword.  The value is also stored as an attribute of the
-	  root element unit.
+	  keyword.  The value is also stored individually as an attribute
+	  in each unit element.
 	</para>
 
 	<para>
 	  A common use of this is C++ files that use the .h extension for
-	  header files.  By default these will be translated as C sourc-coe files.
-	  This option can be used to override that behaviour.
+	  header files.  By default these will be translated as C source-code files.
+	  This option can be used to override this behaviour.
 	</para>
       </listitem>
     </varlistentry>
@@ -399,7 +399,7 @@
       <colspec colwidth='4.0in'/>
       <tbody>
 	<row><entry>PREFIX</entry><entry>URI</entry></row>
-    <row><entry></entry><entry>&SRCML_SRC_NS_URI;</entry></row>
+    <row><entry>(nil)</entry><entry>&SRCML_SRC_NS_URI;</entry></row>
     <row><entry>&SRCML_CPP_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_CPP_NS_URI;</entry></row>
     <row><entry>&SRCML_ERR_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_ERR_NS_URI;</entry></row>
     <row><entry>&SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_EXT_LITERAL_NS_URI;</entry></row>
