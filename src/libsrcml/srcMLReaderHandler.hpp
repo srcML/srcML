@@ -235,7 +235,7 @@ public :
       else if(ns == SRCML_EXT_POSITION_NS_URI)
         archive->options |= SRCML_OPTION_POSITION;
 
-      int index;
+      unsigned int index;
       try {
 
         for(index = 0; index < archive->prefixes.size(); ++index)
