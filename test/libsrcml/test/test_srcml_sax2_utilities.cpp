@@ -45,7 +45,7 @@ int main(int argc, char * argv[]) {
   {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
-    dassert(!ctxt, NULL);
+    dassert(!ctxt, 0);
     xmlFreeParserCtxt(ctxt);
   }
 
@@ -68,7 +68,7 @@ int main(int argc, char * argv[]) {
     const char * s = "test_srcml_xpath.cpp";
     xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename(s, xmlParseCharEncoding(0));
     xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(buffer_input);
-    dassert(!ctxt, NULL);
+    dassert(!ctxt, 0);
     xmlFreeParserCtxt(ctxt);
   }
 
