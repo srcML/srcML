@@ -36,7 +36,7 @@ option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" OFF)
 set_property(GLOBAL PROPERTY SAX2_ENABLED ${LIBSRCML_SAX2_ENABLED})
 
 # Dynamic Load libraries (Unix only)
-option(DYNAMIC_LOAD_ENABLED "Build with SAX2Framework for srcML" ON)
+option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and libexslt" ON)
 set_property(GLOBAL PROPERTY DYNAMIC_ENABLED ${DYNAMIC_LOAD_ENABLED})
 
 # Adding build option for srcml executable.
