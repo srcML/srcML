@@ -44,7 +44,6 @@ option(ENABLE_NEW_SRCML_EXEC_BUILD "Build the newer version of the srcML executa
 set_property(GLOBAL PROPERTY ENABLE_NEW_SRCML_EXEC_BUILD ${ENABLE_NEW_SRCML_EXEC_BUILD})
 
 # Locating packages.
-find_program(xsltproc REQUIRED)
 find_package(LibArchive REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(LibXslt)
