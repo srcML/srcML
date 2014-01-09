@@ -40,7 +40,7 @@
 #include <string>
 #include <fstream>
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>
 #endif
 
@@ -728,7 +728,7 @@ int srcml_check_encoding(const char* encoding) {
  * @returns Return 1 on success and 0 on failure.
  */ 
 int srcml_check_xslt() {
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
   void * handle = dlopen("libxslt.so", RTLD_LAZY);
   if (!handle) {
     handle = dlopen("libxslt.so.1", RTLD_LAZY);
@@ -754,7 +754,7 @@ int srcml_check_xslt() {
  * @returns Return 1 on success and 0 on failure.
  */
 int srcml_check_exslt() {
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
   void* handle = dlopen("libexslt.so", RTLD_LAZY);
   if (!handle) {
     handle = dlopen("libexslt.so.0", RTLD_LAZY);

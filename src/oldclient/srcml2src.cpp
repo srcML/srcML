@@ -40,7 +40,7 @@
 #include "srcexfun.hpp"
 #include "URIStream.hpp"
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>
 #else
 #include <libxslt/xslt.h>
