@@ -30,6 +30,8 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include "dassert.hpp"
+
 int main(int argc, char * argv[]) {
 
   {
@@ -37,12 +39,12 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     srcml_unit * unit = srcml_create_unit(archive);
    
-    assert(unit->archive == archive);
-    assert(unit->language == 0);
-    assert(unit->filename == 0);
-    assert(unit->directory == 0);
-    assert(unit->version == 0);
-    assert(unit->unit == 0);
+    dassert(unit->archive, archive);
+    dassert(unit->language, 0);
+    dassert(unit->filename, 0);
+    dassert(unit->directory, 0);
+    dassert(unit->version, 0);
+    dassert(unit->unit, 0);
 
     srcml_free_unit(unit);
     srcml_free_archive(archive);
@@ -50,7 +52,7 @@ int main(int argc, char * argv[]) {
 
   {
 
-    assert(srcml_create_unit(0) == 0);
+    dassert(srcml_create_unit(0), 0);
    
   }
 

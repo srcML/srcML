@@ -30,6 +30,8 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include "dassert.hpp"
+
 int main(int argc, char * argv[]) {
 
   {
@@ -57,47 +59,47 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * new_archive = srcml_clone_archive(archive);
 
-    assert(new_archive->type == SRCML_ARCHIVE_INVALID);
-    assert(*new_archive->filename == "f");
-    assert(*new_archive->encoding == "e");
-    assert(new_archive->xml_encoding == 0);
-    assert(*new_archive->language == "l");
-    assert(*new_archive->directory == "d");
-    assert(*new_archive->version == "v");
-    assert(new_archive->attributes.size() == 2);
-    assert(new_archive->attributes.at(0) == "a");
-    assert(new_archive->attributes.at(1) == "a");
+    dassert(new_archive->type, SRCML_ARCHIVE_INVALID);
+    dassert(*new_archive->filename, "f");
+    dassert(*new_archive->encoding, "e");
+    dassert(new_archive->xml_encoding, 0);
+    dassert(*new_archive->language, "l");
+    dassert(*new_archive->directory, "d");
+    dassert(*new_archive->version, "v");
+    dassert(new_archive->attributes.size(), 2);
+    dassert(new_archive->attributes.at(0), "a");
+    dassert(new_archive->attributes.at(1), "a");
 
-    assert(new_archive->options == (1 | 2));
+    dassert(new_archive->options, (1 | 2));
 
-    assert(new_archive->tabstop == 4);
-    assert(new_archive->prefixes.size() == 8);
-    assert(new_archive->namespaces.size() == 8);
-    assert(new_archive->registered_languages.size() == archive->registered_languages.size());
+    dassert(new_archive->tabstop, 4);
+    dassert(new_archive->prefixes.size(), 8);
+    dassert(new_archive->namespaces.size(), 8);
+    dassert(new_archive->registered_languages.size(), archive->registered_languages.size());
 
-    assert(new_archive->prefixes.at(0) == SRCML_SRC_NS_PREFIX_DEFAULT);
-    assert(new_archive->namespaces.at(0) == SRCML_SRC_NS_URI);
-    assert(new_archive->prefixes.at(1) == "c");
-    assert(new_archive->namespaces.at(1) == SRCML_CPP_NS_URI);
-    assert(new_archive->prefixes.at(2) == SRCML_ERR_NS_PREFIX_DEFAULT);
-    assert(new_archive->namespaces.at(2) == SRCML_ERR_NS_URI);
-    assert(new_archive->prefixes.at(3) == SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
-    assert(new_archive->namespaces.at(3) == SRCML_EXT_LITERAL_NS_URI);
-    assert(new_archive->prefixes.at(4) == SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
-    assert(new_archive->namespaces.at(4) == SRCML_EXT_OPERATOR_NS_URI);
-    assert(new_archive->prefixes.at(5) == SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
-    assert(new_archive->namespaces.at(5) == SRCML_EXT_MODIFIER_NS_URI);
-    assert(new_archive->prefixes.at(6) == SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
-    assert(new_archive->namespaces.at(6) == SRCML_EXT_POSITION_NS_URI);
-    assert(new_archive->prefixes.at(7) == "foo");
-    assert(new_archive->namespaces.at(7) == "bar");
+    dassert(new_archive->prefixes.at(0), SRCML_SRC_NS_PREFIX_DEFAULT);
+    dassert(new_archive->namespaces.at(0), SRCML_SRC_NS_URI);
+    dassert(new_archive->prefixes.at(1), "c");
+    dassert(new_archive->namespaces.at(1), SRCML_CPP_NS_URI);
+    dassert(new_archive->prefixes.at(2), SRCML_ERR_NS_PREFIX_DEFAULT);
+    dassert(new_archive->namespaces.at(2), SRCML_ERR_NS_URI);
+    dassert(new_archive->prefixes.at(3), SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
+    dassert(new_archive->namespaces.at(3), SRCML_EXT_LITERAL_NS_URI);
+    dassert(new_archive->prefixes.at(4), SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
+    dassert(new_archive->namespaces.at(4), SRCML_EXT_OPERATOR_NS_URI);
+    dassert(new_archive->prefixes.at(5), SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
+    dassert(new_archive->namespaces.at(5), SRCML_EXT_MODIFIER_NS_URI);
+    dassert(new_archive->prefixes.at(6), SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
+    dassert(new_archive->namespaces.at(6), SRCML_EXT_POSITION_NS_URI);
+    dassert(new_archive->prefixes.at(7), "foo");
+    dassert(new_archive->namespaces.at(7), "bar");
 
-    assert(new_archive->translator == 0);
-    assert(new_archive->reader == 0);
-    assert(new_archive->input == 0);
-    assert(new_archive->close_input == 0);
+    dassert(new_archive->translator, 0);
+    dassert(new_archive->reader, 0);
+    dassert(new_archive->input, 0);
+    dassert(new_archive->close_input, 0);
 
-    assert(new_archive->transformations.size() == 0);
+    dassert(new_archive->transformations.size(), 0);
 
     archive->translator = 0;
     archive->reader = 0;
@@ -108,7 +110,7 @@ int main(int argc, char * argv[]) {
 
   {
 
-    assert(srcml_clone_archive(0) == 0);
+    dassert(srcml_clone_archive(0), 0);
 
   }
 
