@@ -482,6 +482,7 @@ int main(int argc, char* argv[]) {
   // first command line parameter is input filename
   const char* filename = "-";
 
+  bool is_multi_input = (argc - curarg) > 1;
   bool is_multi_op = options & (OPTION_INFO | OPTION_LONG_INFO | OPTION_LIST | OPTION_UNIT | OPTION_NAMESPACE | OPTION_ARCHIVE);
 
   do {
@@ -653,9 +654,15 @@ int main(int argc, char* argv[]) {
       long count = su.unit_count(output);
 
       if (!isatty(fileno(output)))
-        fprintf(output, "%ld\n", count);
+	if(is_multi_input)
+	  fprintf(output, "%ld\t%s\n", count, filename);
+	else
+	  fprintf(output, "%ld\n", count);
       else
-        fprintf(output, "\n");
+	if(is_multi_input)
+	  fprintf(output, "\t%s\n", filename);
+	else
+	  fprintf(output, "\n");
 
       // if we terminated early, output the correct status
       if (isoption(options, OPTION_TERMINATE))
