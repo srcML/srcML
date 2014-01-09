@@ -34,6 +34,8 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include "dassert.hpp"
+
 int main(int argc, char * argv[]) {
 
   /* 
@@ -48,13 +50,13 @@ int main(int argc, char * argv[]) {
     xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
     const char * xpaths[2] = {"//src:unit", 0 };
     int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-    assert(srcml_xpath(buffer_input, "src:unit", xpaths, fd, 0) == SRCML_STATUS_OK);
+    dassert(srcml_xpath(buffer_input, "src:unit", xpaths, fd, 0), SRCML_STATUS_OK);
     std::ifstream in("project.xml");
     std::string output;
     std::string temp;
     while(in >> temp)
       output += temp;
-    assert(output == "<?xmlversion=\"1.0\"encoding=\"\"standalone=\"yes\"?><unit/>");
+    dassert(output, "<?xmlversion=\"1.0\"encoding=\"\"standalone=\"yes\"?><unit/>");
     xmlFreeParserInputBuffer(buffer_input);
     unlink("input.xml");
     unlink("project.xml");
@@ -63,7 +65,7 @@ int main(int argc, char * argv[]) {
   {
     const char * xpaths[2] = {"//src:unit", 0 };
     int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-    assert(srcml_xpath(0, "src:unit", xpaths, fd, 0) == SRCML_STATUS_ERROR);
+    dassert(srcml_xpath(0, "src:unit", xpaths, fd, 0), SRCML_STATUS_ERROR);
     unlink("project.xml");
   }
 
@@ -75,7 +77,7 @@ int main(int argc, char * argv[]) {
     xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
     const char * xpaths[2] = {"//src:unit", 0 };
     int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-    assert(srcml_xpath(buffer_input, 0, xpaths, fd, 0) == SRCML_STATUS_ERROR);
+    dassert(srcml_xpath(buffer_input, 0, xpaths, fd, 0), SRCML_STATUS_ERROR);
     xmlFreeParserInputBuffer(buffer_input);
     unlink("input.xml");
     unlink("project.xml");
@@ -88,7 +90,7 @@ int main(int argc, char * argv[]) {
     file.close();
     xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
     int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-    assert(srcml_xpath(buffer_input, "src:unit", 0, fd, 0) == SRCML_STATUS_ERROR);
+    dassert(srcml_xpath(buffer_input, "src:unit", 0, fd, 0), SRCML_STATUS_ERROR);
     xmlFreeParserInputBuffer(buffer_input);
     unlink("input.xml");
     unlink("project.xml");
@@ -102,7 +104,7 @@ int main(int argc, char * argv[]) {
     xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
     const char * xpaths[2] = {0, 0 };
     int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-    assert(srcml_xpath(buffer_input, "src:unit", xpaths, fd, 0) == SRCML_STATUS_ERROR);
+    dassert(srcml_xpath(buffer_input, "src:unit", xpaths, fd, 0), SRCML_STATUS_ERROR);
     xmlFreeParserInputBuffer(buffer_input);
     unlink("input.xml");
     unlink("project.xml");
@@ -116,7 +118,7 @@ int main(int argc, char * argv[]) {
     xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
     const char * xpaths[2] = {"//src:unit", 0 };
     int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-    assert(srcml_xpath(buffer_input, "src:unit", xpaths, -1, 0) == SRCML_STATUS_ERROR);
+    dassert(srcml_xpath(buffer_input, "src:unit", xpaths, -1, 0), SRCML_STATUS_ERROR);
     xmlFreeParserInputBuffer(buffer_input);
     unlink("input.xml");
   }

@@ -31,6 +31,8 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include "dassert.hpp"
+
 int main(int argc, char * argv[]) {
 
   const std::string srcml_a = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n";
@@ -59,7 +61,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
-    assert(s == srcml);
+    dassert(s, srcml);
     free(s);
   }
 
@@ -78,7 +80,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
-    assert(s == srcml_full);
+    dassert(s, srcml_full);
     free(s);
   }
 
@@ -97,7 +99,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
-    assert(s == srcml_a_after);
+    dassert(s, srcml_a_after);
     free(s);
   }
 
@@ -116,7 +118,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
-    assert(s == srcml_b_after);
+    dassert(s, srcml_b_after);
     free(s);
   }
 
@@ -135,7 +137,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
-    assert(s == srcml);
+    dassert(s, srcml);
     free(s);
   }
 
@@ -154,7 +156,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);
-    assert(s == srcml_full);
+    dassert(s, srcml_full);
     free(s);
   }
 
@@ -173,7 +175,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
-    assert(s == srcml_a_after);
+    dassert(s, srcml_a_after);
     free(s);
   }
 
@@ -192,7 +194,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
-    assert(s == srcml_b_after);
+    dassert(s, srcml_b_after);
     free(s);
   }
 
@@ -211,7 +213,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
-    assert(s == srcml);
+    dassert(s, srcml);
     free(s);
   }
 
@@ -230,7 +232,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
-    assert(s == srcml_full);
+    dassert(s, srcml_full);
     free(s);
   }
 
@@ -249,7 +251,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
-    assert(s == srcml_a_after);
+    dassert(s, srcml_a_after);
     free(s);
   }
 
@@ -268,7 +270,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
-    assert(s == srcml_b_after);
+    dassert(s, srcml_b_after);
     free(s);
   }
  

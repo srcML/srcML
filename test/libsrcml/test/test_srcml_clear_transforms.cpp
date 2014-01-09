@@ -31,6 +31,8 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include "dassert.hpp"
+
 int main(int argc, char * argv[]) {
 
   /* 
@@ -40,9 +42,9 @@ int main(int argc, char * argv[]) {
   {
     srcml_archive * archive = srcml_create_archive();
     archive->type = SRCML_ARCHIVE_RW;
-    assert(archive->transformations.size() == 0);
-    assert(srcml_clear_transforms(archive) == SRCML_STATUS_OK);
-    assert(archive->transformations.size() == 0);
+    dassert(archive->transformations.size(), 0);
+    dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
+    dassert(archive->transformations.size(), 0);
     srcml_free_archive(archive);  
   }
 
@@ -50,9 +52,9 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     archive->type = SRCML_ARCHIVE_RW;
     srcml_append_transform_xpath(archive, "//src:unit");
-    assert(archive->transformations.size() != 0);
-    assert(srcml_clear_transforms(archive) == SRCML_STATUS_OK);
-    assert(archive->transformations.size() == 0);
+    dassert(!archive->transformations.size(), 0);
+    dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
+    dassert(archive->transformations.size(), 0);
     srcml_free_archive(archive);  
   }
 
@@ -61,9 +63,9 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     archive->type = SRCML_ARCHIVE_RW;
     srcml_append_transform_xslt(archive, "copy.xsl");
-    assert(archive->transformations.size() != 0);
-    assert(srcml_clear_transforms(archive) == SRCML_STATUS_OK);
-    assert(archive->transformations.size() == 0);
+    dassert(!archive->transformations.size(), 0);
+    dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
+    dassert(archive->transformations.size(), 0);
     srcml_free_archive(archive);  
   }
 
@@ -71,9 +73,9 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     archive->type = SRCML_ARCHIVE_RW;
     srcml_append_transform_relaxng(archive, "schema.rng");
-    assert(archive->transformations.size() != 0);
-    assert(srcml_clear_transforms(archive) == SRCML_STATUS_OK);
-    assert(archive->transformations.size() == 0);
+    dassert(!archive->transformations.size(), 0);
+    dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
+    dassert(archive->transformations.size(), 0);
     srcml_free_archive(archive);  
   }
 
@@ -83,14 +85,14 @@ int main(int argc, char * argv[]) {
     srcml_append_transform_xpath(archive, "//src:unit");
     srcml_append_transform_xslt(archive, "copy.xsl");
     srcml_append_transform_relaxng(archive, "schema.rng");
-    assert(archive->transformations.size() != 0);
-    assert(srcml_clear_transforms(archive) == SRCML_STATUS_OK);
-    assert(archive->transformations.size() == 0);
+    dassert(!archive->transformations.size(), 0);
+    dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
+    dassert(archive->transformations.size(), 0);
     srcml_free_archive(archive);  
   }
 
   {
-    assert(srcml_clear_transforms(0) == SRCML_STATUS_ERROR);
+    dassert(srcml_clear_transforms(0), SRCML_STATUS_ERROR);
   }
 
   return 0;
