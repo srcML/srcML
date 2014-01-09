@@ -481,13 +481,15 @@ int main(int argc, char* argv[]) {
 
   // first command line parameter is input filename
   const char* filename = "-";
+
+  do {
+
   if (curarg < argc) {
     filename = argv[curarg];
     ++curarg;
   }
 
   /* Special checks for illegal combinations */
-
   // xml output and src-encoding (switch to encoding?)
   if (isoption(options, OPTION_XML) && isoption(options, OPTION_SRC_ENCODING)) {
 
@@ -650,6 +652,8 @@ int main(int argc, char* argv[]) {
 
       if (!isatty(fileno(output)))
         fprintf(output, "%ld\n", count);
+      else
+        fprintf(output, "\n");
 
       // if we terminated early, output the correct status
       if (isoption(options, OPTION_TERMINATE))
@@ -764,6 +768,8 @@ int main(int argc, char* argv[]) {
   if (strcmp(poptions.ofilename, "") != 0 && (strcmp(poptions.ofilename, "-") != 0)) {
     fclose(output);
   }
+
+  } while(curarg < argc);
 
   return exit_status;
 }
