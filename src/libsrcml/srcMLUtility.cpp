@@ -842,7 +842,7 @@ static void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
       fprintf(stderr, "\n");
 
     // report error
-    char* partmsg = strdup(ep->message);
+    char* partmsg = ep->message;
     partmsg[strlen(partmsg) - 1] = '\0';
     fprintf(stderr, "%s: %s in '%s'\n", "srcml2src", partmsg, ep->file);
     exit(STATUS_INPUTFILE_PROBLEM);
