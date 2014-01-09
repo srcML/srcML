@@ -482,6 +482,8 @@ int main(int argc, char* argv[]) {
   // first command line parameter is input filename
   const char* filename = "-";
 
+  bool is_multi_op = options & (OPTION_INFO | OPTION_LONG_INFO | OPTION_LIST | OPTION_UNIT | OPTION_NAMESPACE | OPTION_ARCHIVE);
+
   do {
 
   if (curarg < argc) {
@@ -768,6 +770,9 @@ int main(int argc, char* argv[]) {
   if (strcmp(poptions.ofilename, "") != 0 && (strcmp(poptions.ofilename, "-") != 0)) {
     fclose(output);
   }
+
+  
+  if(!is_multi_op) break;
 
   } while(curarg < argc);
 
