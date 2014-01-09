@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
     srcml_write_open_filename(otherarchive, "project_other.xml");
 
     /* copy the files from the input archive to the output archive */
-    while (unit = srcml_read_unit(iarchive)) {
+    while ((unit = srcml_read_unit(iarchive))) {
 
         /* Get the filename */
         const char* filename = srcml_unit_get_filename(unit);

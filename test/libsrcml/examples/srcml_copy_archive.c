@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
     srcml_write_open_filename(oarchive, "project2.xml");
 
     /* copy the files from the input archive to the output archive */
-    while (unit = srcml_read_unit(iarchive)) {
+    while ((unit = srcml_read_unit(iarchive))) {
 
         /* Translate to srcml and append to the archive */
         srcml_write_unit(oarchive, unit);
