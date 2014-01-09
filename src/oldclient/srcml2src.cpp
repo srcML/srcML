@@ -39,6 +39,7 @@
 #include "libxml_archive_write.hpp"
 #include "srcexfun.hpp"
 #include "URIStream.hpp"
+#include <srcml_wrapper.hpp>
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>
@@ -1052,7 +1053,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // registerext value
       end = optarg;
       strsep(&end, "=");
-      poptions.registerext[poptions.registerextcount] = (char*) malloc(strlen(end) + 1);
+      poptions.registerext[poptions.registerextcount] = (char*) srcml_malloc(strlen(end) + 1);
       strcpy((char *) poptions.registerext[poptions.registerextcount], end);
       poptions.registerextcount++;
       break;
@@ -1176,7 +1177,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // param value
       end = optarg;
       strsep(&end, "=");
-      poptions.params[poptions.paramcount] = (char*) malloc(strlen(end) + 1 + 2);
+      poptions.params[poptions.paramcount] = (char*) srcml_malloc(strlen(end) + 1 + 2);
       strcpy((char *) poptions.params[poptions.paramcount], "\'");
       strcat((char *) poptions.params[poptions.paramcount], end);
       strcat((char *) poptions.params[poptions.paramcount], "\'");
