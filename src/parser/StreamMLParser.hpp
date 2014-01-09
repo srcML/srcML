@@ -33,6 +33,7 @@
 #include <cassert>
 
 #include "srcMLToken.hpp"
+#include "Options.hpp"
 
 template <typename Base>
 class StreamMLParser : public Base, public TokenStream {
@@ -178,7 +179,7 @@ private:
     bool consumeSkippedToken() {
 
         // preprocessor (unless we already are in one)
-        if (!inskip && Base::LA(1) == Base::PREPROC) {
+      if (isoption(options, OPTION_CPP) && !inskip && Base::LA(1) == Base::PREPROC) {
 
             // start preprocessor handling
             inskip = true;
