@@ -297,5 +297,49 @@
 <expr_stmt><expr><name>a</name> <op:operator>xor_eq</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+</unit>
+
 </unit>
  

@@ -101,6 +101,7 @@ tokens {
     DECLTYPE;
     ALIGNAS;
     TYPENAME;
+    ALIGNOF;
 
     // aggregate types
     UNION;
@@ -395,6 +396,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
         { "decltype"      , DECLTYPE         , LANGUAGE_CXX_ONLY }, 
         { "alignas"       , ALIGNAS          , LANGUAGE_CXX_ONLY }, 
         { "typename"      , TYPENAME         , LANGUAGE_CXX_ONLY }, 
+        { "alignof"       , ALIGNOF          , LANGUAGE_CXX_ONLY }, 
 
         // Add alternative operators
         { "and"           , OPERATORS        , LANGUAGE_CXX_ONLY }, 

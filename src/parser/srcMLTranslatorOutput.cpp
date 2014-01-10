@@ -246,6 +246,7 @@ namespace {
   // special characters
   ELEMENT_MAP(CONTROL_CHAR,   "escape")
   ELEMENT_MAP(SANNOTATION,    "annotation")
+  ELEMENT_MAP(SALIGNOF,    "alignof")
 
   // C++11
   ELEMENT_MAP(SALIGNAS,    "alignas")
