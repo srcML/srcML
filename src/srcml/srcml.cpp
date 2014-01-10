@@ -46,6 +46,11 @@ struct ParseRequest {
 
         filename.swap(other.filename);
         buffer.swap(other.buffer);
+
+        //Swap Int
+        size ^= other.size;
+        other.size ^= size;
+        size ^= other.size;
     }
 
     // empty ParseRequests indicate termination
@@ -55,6 +60,7 @@ struct ParseRequest {
 
     std::string filename;
     std::vector<char> buffer;
+    size_t size;
 };
 
 ParseRequest NullParseRequest;
@@ -143,6 +149,12 @@ void setupLibArchive(archive* a) {
   #endif
 }
 
+void * srcml_consume(void * arg) {
+  ThreadQueue<ParseRequest, 3> * queue = (ThreadQueue<ParseRequest, 3> *) arg;
+  
+  return 0;
+}
+
 int main(int argc, char * argv[]) {
   srcml_request_t srcml_request = srcmlCLI::parseCLI(argc, argv);
 
@@ -214,7 +226,22 @@ int main(int argc, char * argv[]) {
   }
 
   srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
+  
+  // Setup threading
+  ThreadQueue<ParseRequest, 3> data_queue;
 
+  pthread_t writer;
+  pthread_attr_t tattr;
+  int newprio = 90;
+  sched_param param;
+
+  pthread_attr_init(&tattr);
+  pthread_attr_getschedparam (&tattr, &param);
+  param.sched_priority = newprio;
+  pthread_attr_setschedparam (&tattr, &param);
+  pthread_create(&writer, &tattr, srcml_consume, &data_queue);
+
+  // Main processing loop
   for (size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
     std::string * input_file = &srcml_request.positional_args[i];
     bool stdin = false;
@@ -285,7 +312,8 @@ int main(int argc, char * argv[]) {
         const char* cptr;
         size_t size;
         int64_t offset;
-        
+        std::vector<char> dbuff;
+
         while (true) {
           int readStatus = archive_read_data_block(arch, &buffer, &size, &offset);
           cptr = (char*)buffer;
@@ -294,6 +322,13 @@ int main(int argc, char * argv[]) {
             break;
           }
           
+          for (size_t i = 0; i < size; ++i) {
+            dbuff.push_back(cptr[i]);
+          }
+
+          ParseRequest pr;
+          pr.filename = filename
+
           srcml_parse_unit_memory(unit, cptr, size);
           srcml_write_unit(srcml_arch, unit);
         }
