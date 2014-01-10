@@ -52,12 +52,12 @@ int main(int argc, char * argv[]) {
   {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, 0);
-    dassert(ctxt, NULL);
+    dassert(ctxt, 0);
   }
 
   {
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(0, 1);
-    dassert(ctxt, NULL);
+    dassert(ctxt, 0);
   }
 
   /* 
@@ -74,7 +74,7 @@ int main(int argc, char * argv[]) {
 
   {
     xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(0);
-    dassert(ctxt, NULL);
+    dassert(ctxt, 0);
   }
 
   /* 
