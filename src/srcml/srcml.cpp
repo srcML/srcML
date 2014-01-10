@@ -216,7 +216,9 @@ int main(int argc, char * argv[]) {
   srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
   for (size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
-    
+    std::string * input_file = &srcml_request.positional_args[i];
+    bool stdin = false;
+
     // libArchive Setup
     archive * arch = archive_read_new();
     archive_entry * arch_entry = archive_entry_new();
@@ -226,12 +228,13 @@ int main(int argc, char * argv[]) {
     int valid = 0;
 
     // Regular file or archive
-    if (srcml_request.positional_args[i] != "-") {
-      valid = archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384); 
+    if (input_file->compare("-") != 0) {
+      valid = archive_read_open_filename(arch, input_file->c_str(), 16384); 
     }
     
     // Stdin
-    if (srcml_request.positional_args[i] == "-") {
+    if (input_file->compare("-") == 0) {
+      stdin = true;
       if (!test_for_stdin())
         return 1; // Stdin was requested, but no data was received
       
@@ -256,10 +259,10 @@ int main(int argc, char * argv[]) {
           That needs to be swapped out with the actual file name from the 
           CLI arg.
         */
-        if (entry_name.compare("data") == 0 && srcml_request.positional_args[i] != "-")
+        if (entry_name.compare("data") == 0 && !stdin)
           filename = srcml_request.positional_args[i].c_str();
 
-        if (entry_name.compare("data") != 0 && srcml_request.positional_args[i] != "-")
+        if (entry_name.compare("data") != 0 && !stdin)
           filename = entry_name.c_str();
 
         if (filename) {
