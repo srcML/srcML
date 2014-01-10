@@ -1,7 +1,7 @@
 /*
   StreamMLParser.hpp
 
-  Copyright (C) 2002-2013  SDML (www.srcML.org)
+  Copyright (C) 2002-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
