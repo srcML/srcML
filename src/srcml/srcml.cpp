@@ -271,7 +271,9 @@ int main(int argc, char * argv[]) {
           }
         }
         else {
-          // Stdin - needs to check if CLI lang has been declared otherwise error...
+          // Stdin language declared via CLI
+          if (srcml_archive_get_language(srcml_arch))
+            return 1; // Stdin used with no language specified.
         }
 
         srcml_unit_set_filename(unit, filename);
