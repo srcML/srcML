@@ -743,7 +743,7 @@ int main(int argc, char* argv[]) {
 
     fprintf(stderr, "%s: unit %d  was selected from srcML that only contains "
             "%d units\n", PROGRAM_NAME, poptions.unit, e.size);
-    exit_status = STATUS_UNIT_INVALID;
+    exit_status = STATUS_INVALID_ARGUMENT;
 
     return exit_status;
     /*
@@ -992,13 +992,13 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // validate type of unit number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {
         fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", PROGRAM_NAME, optarg);
-        exit(STATUS_UNIT_INVALID);
+        exit(STATUS_INVALID_ARGUMENT);
       }
 
       // validate range of unit number
       if (poptions.unit <= 0) {
         fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", PROGRAM_NAME, poptions.unit);
-        exit(STATUS_UNIT_INVALID);
+        exit(STATUS_INVALID_ARGUMENT);
       }
 
       break;
@@ -1259,15 +1259,15 @@ int option_error_status(int optopt) {
   switch (optopt) {
 
   case ENCODING_FLAG_SHORT:
-    return STATUS_XMLENCODING_MISSING;
+    return STATUS_INVALID_ARGUMENT;
     break;
 
   case SRC_ENCODING_FLAG_SHORT:
-    return STATUS_SRCENCODING_MISSING;
+    return STATUS_INVALID_ARGUMENT;
     break;
 
   case UNIT_FLAG_SHORT:
-    return STATUS_UNIT_MISSING;
+    return STATUS_INVALID_ARGUMENT;
     break;
 
   case INPUT_FORMAT_FLAG_CODE:
