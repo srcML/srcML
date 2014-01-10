@@ -195,56 +195,6 @@ int main(int argc, char * argv[]) {
   if (!checkLocalFiles(srcml_request.positional_args))
     return 1;
   
-  // libSrcml Convenience Function Check
-  if (!(srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) {
-    if (srcml_request.positional_args.size() == 1 && srcml_request.positional_args[0] != "-") {
-      if (convenienceCheck(srcml_request.positional_args[0])) {
-        
-        // Set the global options
-        if (srcml_request.encoding != "") {
-          srcml_set_encoding(srcml_request.encoding.c_str());
-        }
-        if (srcml_request.filename != "") {
-          srcml_set_filename(srcml_request.filename.c_str());
-        }
-        if (srcml_request.directory_set) {
-          srcml_set_directory(srcml_request.directory.c_str());
-        }
-        if (srcml_request.src_versions != "") {
-          srcml_set_version(srcml_request.src_versions.c_str());
-        }
-        if (srcml_request.markup_options != 0) {
-          srcml_set_all_options(srcml_request.markup_options);
-        }
-        
-        if (srcml_request.language != "") {
-          srcml_set_language(srcml_request.language.c_str());  
-        }
-        else {
-          srcml_set_language(SRCML_LANGUAGE_NONE);  
-        }
-
-        srcml_set_tabstop(srcml_request.tabs);
-
-        for (size_t i = 0; i < srcml_request.register_ext.size(); ++i) {
-          int pos = srcml_request.register_ext[i].find('=');
-          srcml_register_file_extension(srcml_request.register_ext[i].substr(0,pos).c_str(),
-                srcml_request.register_ext[i].substr(pos+1).c_str());
-        }
-
-        for (size_t i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
-          int pos = srcml_request.xmlns_prefix[i].find('=');
-          srcml_register_namespace(srcml_request.xmlns_prefix[i].substr(0,pos).c_str(),
-                 srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
-        }
-
-        // srcML convenience function
-        srcml(srcml_request.positional_args[0].c_str(), srcml_request.output.c_str());
-        return 0;
-      }
-    }
-  }
-  
   // libsrcML Full API Setup
   srcml_archive * srcml_arch = srcml_create_archive();
 
