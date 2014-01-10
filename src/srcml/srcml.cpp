@@ -241,51 +241,37 @@ int main(int argc, char * argv[]) {
 
       while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
 
-        /*
-        if (archive_entry_filetype(arch_entry) != AE_IFREG && srcml_request.positional_args[i] != "-")
-          continue;
-        */
         srcml_unit * unit = srcml_create_unit(srcml_arch);
-        std::string filename = archive_entry_pathname(arch_entry);
-
+        std::string entry_name = archive_entry_pathname(arch_entry);
+        const char * filename = NULL; // Assume Stdin for simplicity
+        
         /* 
           The header path for a standard file is just "data".
           That needs to be swapped out with the actual file name from the 
           CLI arg.
         */
-        if (filename.compare("data") != 0) {
-          // Input is a file from an archive
-          const char * language = srcml_archive_check_extension(srcml_arch, filename.c_str());
-          if (language) {
-            // Extension Valid
-            srcml_unit_set_filename(unit, filename.c_str());
-            srcml_unit_set_language(unit, language);
-          }
-          else {
+        if (entry_name.compare("data") == 0 && srcml_request.positional_args[i] != "-") {
+          filename = srcml_request.positional_args[i].c_str();
+        }
+
+        if (entry_name.compare("data") != 0 && srcml_request.positional_args[i] != "-") {
+          filename = entry_name.c_str();
+        }
+
+        if (filename) {
+          const char * language = srcml_archive_check_extension(srcml_arch, filename);
+          if (!language) {
             // Extension not supported
             // Skip to next header
             continue;  
           }
         }
         else {
-          if (srcml_request.positional_args[i] != "-") { 
-            // Input is a standalone source file
-            const char * language = srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[i].c_str());
-            if (language) {
-              srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str());
-              srcml_unit_set_language(unit, srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[i].c_str()));
-            }
-            else {
-              // Extension not supported
-              // Skip to next header
-              continue;
-            }
-          }
-          else {
-            // Input came from stdin
-            srcml_unit_set_language(unit, srcml_request.language.c_str());
-          }
+          // Stdin - needs to check if CLI lang has been declared otherwise error...
         }
+
+        srcml_unit_set_filename(unit, filename);
+        srcml_unit_set_language(unit, ((srcml_archive_get_language(srcml_arch)) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename)));
 
         while (true) {
           int readStatus = archive_read_data_block(arch, &buffer, &size, &offset);
