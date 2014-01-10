@@ -1,7 +1,7 @@
 /*
   UTF8CharBuffer.hpp
 
-  Copyright (C) 2008-2013  SDML (www.srcML.org)
+  Copyright (C) 2008-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -42,6 +42,7 @@ public:
     static const unsigned int SRCBUFSIZE = 512;
 
     // Create a character buffer
+    UTF8CharBuffer();
     UTF8CharBuffer(const char* ifilename, const char* encoding);
     UTF8CharBuffer(const char* source, int asize, const char * encoding);
     UTF8CharBuffer(xmlParserInputBufferPtr pinput, const char * encoding);

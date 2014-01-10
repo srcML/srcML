@@ -1,7 +1,7 @@
 /*
   test_srcml_relaxng.cpp
 
-  Copyright (C) 2013  SDML (www.srcML.org)
+  Copyright (C) 2013-2014  SDML (www.srcML.org)
 
   The srcML Toolkit is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -34,6 +34,8 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include "dassert.hpp"
+
 int main(int argc, char * argv[]) {
 
   /* 
@@ -48,13 +50,13 @@ int main(int argc, char * argv[]) {
     xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
     const char * relaxngs[2] = {"schema.rng", 0 };
     int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-    assert(srcml_relaxng(buffer_input, relaxngs, fd, 0) == SRCML_STATUS_OK);
+    dassert(srcml_relaxng(buffer_input, relaxngs, fd, 0), SRCML_STATUS_OK);
     std::ifstream in("project.xml");
     std::string output;
     std::string temp;
     while(in >> temp)
       output += temp;
-    assert(output == "<?xmlversion=\"1.0\"encoding=\"\"standalone=\"yes\"?><unit>a;</unit>");
+    dassert(output, "<?xmlversion=\"1.0\"encoding=\"\"standalone=\"yes\"?><unit>a;</unit>");
     xmlFreeParserInputBuffer(buffer_input);
     unlink("input.xml");
     unlink("project.xml");
@@ -63,7 +65,7 @@ int main(int argc, char * argv[]) {
   {
     const char * relaxngs[2] = {"schema.rng", 0 };
     int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-    assert(srcml_relaxng(0, relaxngs, fd, 0) == SRCML_STATUS_ERROR);
+    dassert(srcml_relaxng(0, relaxngs, fd, 0), SRCML_STATUS_ERROR);
     unlink("project.xml");
   }
 
@@ -74,7 +76,7 @@ int main(int argc, char * argv[]) {
     file.close();
     xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
     int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-    assert(srcml_relaxng(buffer_input, 0, fd, 0) == SRCML_STATUS_ERROR);
+    dassert(srcml_relaxng(buffer_input, 0, fd, 0), SRCML_STATUS_ERROR);
     xmlFreeParserInputBuffer(buffer_input);
     unlink("input.xml");
     unlink("project.xml");
@@ -88,7 +90,7 @@ int main(int argc, char * argv[]) {
     xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
     const char * relaxngs[2] = {0, 0 };
     int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-    assert(srcml_relaxng(buffer_input, relaxngs, fd, 0) == SRCML_STATUS_ERROR);
+    dassert(srcml_relaxng(buffer_input, relaxngs, fd, 0), SRCML_STATUS_ERROR);
     xmlFreeParserInputBuffer(buffer_input);
     unlink("input.xml");
     unlink("project.xml");
@@ -101,7 +103,7 @@ int main(int argc, char * argv[]) {
     file.close();
     xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
     const char * relaxngs[2] = {"schema.rng", 0 };
-    assert(srcml_relaxng(buffer_input, relaxngs, -1, 0) == SRCML_STATUS_ERROR);
+    dassert(srcml_relaxng(buffer_input, relaxngs, -1, 0), SRCML_STATUS_ERROR);
     xmlFreeParserInputBuffer(buffer_input);
     unlink("input.xml");
   }

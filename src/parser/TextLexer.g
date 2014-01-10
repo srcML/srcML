@@ -104,7 +104,8 @@ STRING_START { int zero_literal = 0; _saveIndex = 0; } :
 CONSTANTS { int zero_literal = 0; _saveIndex = 0; } :
         { startline = false; }
         ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' | '_' )*
-        (options { greedy = true; } : "." | '0'..'9')*
+        (options { greedy = true; } : '.' | '0'..'9')*
+        (options { greedy = true; } : 'e' | ('+' | '-') | '0'..'9')*
         (options { greedy = true; } : NAME)*
 
         {
@@ -112,6 +113,12 @@ CONSTANTS { int zero_literal = 0; _saveIndex = 0; } :
                 line_number = atoi(text.substr(_begin, text.length()-_begin).c_str()); 
             }
         }
+        { _saveIndex = _saveIndex + zero_literal; }
+;
+
+DSIGN { int zero_literal = 0; _saveIndex = 0; } :
+        '$' { $setType(OPERATOR); }
+        ({ inLanguage(LANGUAGE_JAVA) }? { $setType(NAME); } NAME)?
         { _saveIndex = _saveIndex + zero_literal; }
 ;
 

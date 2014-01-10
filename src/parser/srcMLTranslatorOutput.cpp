@@ -70,6 +70,7 @@ namespace {
   ELEMENT_MAP(SCHAR,    "literal")
   ELEMENT_MAP(SLITERAL, "literal")
   ELEMENT_MAP(SBOOLEAN, "literal")
+  ELEMENT_MAP(SNULL,    "literal")
 
   // operators
   ELEMENT_MAP(SOPERATOR, "operator")
@@ -292,6 +293,7 @@ namespace {
   ELEMENT_MAP(SCHAR,     SRCML_EXT_LITERAL_NS_URI_POS)
   ELEMENT_MAP(SLITERAL,  SRCML_EXT_LITERAL_NS_URI_POS)
   ELEMENT_MAP(SBOOLEAN,  SRCML_EXT_LITERAL_NS_URI_POS)
+  ELEMENT_MAP(SNULL,  SRCML_EXT_LITERAL_NS_URI_POS)
 
   // operator namespace
   ELEMENT_MAP(SOPERATOR, SRCML_EXT_OPERATOR_NS_URI_POS)
@@ -352,8 +354,13 @@ void srcMLTranslatorOutput::consume(const char* language, const char* directory,
   while (consume_next() != antlr::Token::EOF_TYPE) {
 
     // in interactive mode flush after each token is discovered
-    if (isoption(OPTION_INTERACTIVE))
+    if (isoption(OPTION_INTERACTIVE)) {
       xmlTextWriterFlush(xout);
+
+      if(isoption(OPTION_TERMINATE)) break;
+ 
+   }
+
   }
 }
 
@@ -685,6 +692,11 @@ void srcMLTranslatorOutput::processLiteral(const antlr::RefToken& token) {
 void srcMLTranslatorOutput::processBoolean(const antlr::RefToken& token) {
 
   processOptional(token, "type", "boolean");
+}
+
+void srcMLTranslatorOutput::processNull(const antlr::RefToken& token) {
+
+  processOptional(token, "type", "null");
 }
 
 #if DEBUG

@@ -156,8 +156,8 @@ public :
    */
   void stop() {
 
-    resume();
     terminate = true;
+    resume();
 
   }
 
@@ -235,7 +235,7 @@ public :
       else if(ns == SRCML_EXT_POSITION_NS_URI)
         archive->options |= SRCML_OPTION_POSITION;
 
-      int index;
+      unsigned int index;
       try {
 
         for(index = 0; index < archive->prefixes.size(); ++index)
@@ -258,6 +258,7 @@ public :
 
     // pause
     pthread_mutex_lock(&mutex);
+    if(terminate) stop_parser();
     wait_root = false;
     pthread_cond_broadcast(&is_done_cond);
     pthread_cond_wait(&cond, &mutex);
@@ -321,6 +322,7 @@ public :
 
       // pause
       pthread_mutex_lock(&mutex);
+      if(terminate) stop_parser();
       pthread_cond_broadcast(&is_done_cond);
       pthread_cond_wait(&cond, &mutex);
       pthread_mutex_unlock(&mutex);
@@ -396,6 +398,7 @@ public :
 #endif
 
     pthread_mutex_lock(&mutex);
+    if(terminate) stop_parser();
     is_done = true;
     pthread_cond_broadcast(&is_done_cond);
     pthread_mutex_unlock(&mutex);
@@ -429,6 +432,7 @@ public :
 
       // pause
       pthread_mutex_lock(&mutex);
+      if(terminate) stop_parser();
       pthread_cond_broadcast(&is_done_cond);
       pthread_cond_wait(&cond, &mutex);
       pthread_mutex_unlock(&mutex);

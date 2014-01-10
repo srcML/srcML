@@ -57,8 +57,6 @@ def sortedWalk(top, topdown=True, onerror=None):
     if not topdown:
         yield top, dirs, nondirs
 
-# srcExpr translator
-srcexprtranslator = '/home/collard/srcML/trunk/srcexpr/src/srcexpr'
 
 # extracts a particular unit from a srcML file
 def safe_communicate(command, inp):
@@ -217,19 +215,7 @@ def src2srcML(text_file, encoding, language, directory, filename, xmlns):
 
         return srcml
 
-# additional processing stages
-def srcML2srcMLStages(srcmlfile, otherxmlns):
 
-	newfile = srcmlfile
-	for a in otherxmlns:
-		url = a.split('=')[1]
-		if url == 'http://www.sdml.info/srcExpr':
-			command = [srcexprtranslator]
-			newfile = safe_communicate(command, newfile)
-		
-	return newfile
-
-#
 def getsrcmlattribute(xml_file, command):
 
 	last_line = safe_communicate([srcmlutility, command], xml_file)
@@ -540,7 +526,7 @@ try:
                                                         unitsrcmlraw = src2srcML(unittext, encoding, language, directory, filename, xmlns)
 
 						# additional, later stage processing
-						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
+						unitsrcml = unitsrcmlraw
 						
 						# find the difference
 						result = xmldiff(unitxml, unitsrcml)

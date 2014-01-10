@@ -1,7 +1,7 @@
 /*
   test_srcml_create_archive.cpp
 
-  Copyright (C) 2013  SDML (www.srcML.org)
+  Copyright (C) 2013-2014  SDML (www.srcML.org)
 
   The srcML Toolkit is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -30,48 +30,50 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include "dassert.hpp"
+
 int main(int argc, char * argv[]) {
 
   {
 
     srcml_archive * archive = srcml_create_archive();
-    assert(archive->type == SRCML_ARCHIVE_INVALID);
-    assert(archive->filename == 0);
-    assert(archive->encoding == 0);
-    assert(archive->xml_encoding == 0);
-    assert(archive->language == 0);
-    assert(archive->directory == 0);
-    assert(archive->version == 0);
-    assert(archive->attributes.size() == 0);
+    dassert(archive->type, SRCML_ARCHIVE_INVALID);
+    dassert(archive->filename, 0);
+    dassert(archive->encoding, 0);
+    dassert(archive->xml_encoding, 0);
+    dassert(archive->language, 0);
+    dassert(archive->directory, 0);
+    dassert(archive->version, 0);
+    dassert(archive->attributes.size(), 0);
 
-    assert(archive->options == 0);
+    dassert(archive->options, 0);
 
-    assert(archive->tabstop == 8);
-    assert(archive->prefixes.size() == 7);
-    assert(archive->namespaces.size() == 7);
-    assert(archive->registered_languages.size() != 0);
+    dassert(archive->tabstop, 8);
+    dassert(archive->prefixes.size(), 7);
+    dassert(archive->namespaces.size(), 7);
+    dassert(!archive->registered_languages.size(), 0);
 
-    assert(archive->prefixes.at(0) == SRCML_SRC_NS_PREFIX_DEFAULT);
-    assert(archive->namespaces.at(0) == SRCML_SRC_NS_URI);
-    assert(archive->prefixes.at(1) == SRCML_CPP_NS_PREFIX_DEFAULT);
-    assert(archive->namespaces.at(1) == SRCML_CPP_NS_URI);
-    assert(archive->prefixes.at(2) == SRCML_ERR_NS_PREFIX_DEFAULT);
-    assert(archive->namespaces.at(2) == SRCML_ERR_NS_URI);
-    assert(archive->prefixes.at(3) == SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
-    assert(archive->namespaces.at(3) == SRCML_EXT_LITERAL_NS_URI);
-    assert(archive->prefixes.at(4) == SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
-    assert(archive->namespaces.at(4) == SRCML_EXT_OPERATOR_NS_URI);
-    assert(archive->prefixes.at(5) == SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
-    assert(archive->namespaces.at(5) == SRCML_EXT_MODIFIER_NS_URI);
-    assert(archive->prefixes.at(6) == SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
-    assert(archive->namespaces.at(6) == SRCML_EXT_POSITION_NS_URI);
+    dassert(archive->prefixes.at(0), SRCML_SRC_NS_PREFIX_DEFAULT);
+    dassert(archive->namespaces.at(0), SRCML_SRC_NS_URI);
+    dassert(archive->prefixes.at(1), SRCML_CPP_NS_PREFIX_DEFAULT);
+    dassert(archive->namespaces.at(1), SRCML_CPP_NS_URI);
+    dassert(archive->prefixes.at(2), SRCML_ERR_NS_PREFIX_DEFAULT);
+    dassert(archive->namespaces.at(2), SRCML_ERR_NS_URI);
+    dassert(archive->prefixes.at(3), SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
+    dassert(archive->namespaces.at(3), SRCML_EXT_LITERAL_NS_URI);
+    dassert(archive->prefixes.at(4), SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
+    dassert(archive->namespaces.at(4), SRCML_EXT_OPERATOR_NS_URI);
+    dassert(archive->prefixes.at(5), SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
+    dassert(archive->namespaces.at(5), SRCML_EXT_MODIFIER_NS_URI);
+    dassert(archive->prefixes.at(6), SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
+    dassert(archive->namespaces.at(6), SRCML_EXT_POSITION_NS_URI);
 
-    assert(archive->translator == 0);
-    assert(archive->reader == 0);
-    assert(archive->input == 0);
-    assert(archive->close_input == 0);
+    dassert(archive->translator, 0);
+    dassert(archive->reader, 0);
+    dassert(archive->input, 0);
+    dassert(archive->close_input, 0);
 
-    assert(archive->transformations.size() == 0);
+    dassert(archive->transformations.size(), 0);
 
     srcml_free_archive(archive);
   }

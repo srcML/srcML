@@ -1,7 +1,7 @@
 /*
   srcMLOutputPR.hpp
 
-  Copyright (C) 2005-2013  SDML (www.srcML.org)
+  Copyright (C) 2005-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -46,6 +46,7 @@ enum {
     PROCESSCHAR,
     PROCESSLITERAL,
     PROCESSBOOLEAN,
+    PROCESSNULL,
     PROCESSINTERFACE,
     PROCESSESCAPE,
 };
@@ -70,6 +71,7 @@ srcMLTranslatorOutput::PROCESS_PTR srcMLTranslatorOutput::num2process[] = {
     &srcMLTranslatorOutput::processChar,
     &srcMLTranslatorOutput::processLiteral,
     &srcMLTranslatorOutput::processBoolean,
+    &srcMLTranslatorOutput::processNull,
     &srcMLTranslatorOutput::processInterface,
     &srcMLTranslatorOutput::processEscape,
 };
@@ -110,6 +112,7 @@ namespace {
     ELEMENT_MAP(SCHAR, PROCESSCHAR)
     ELEMENT_MAP(SLITERAL, PROCESSLITERAL)
     ELEMENT_MAP(SBOOLEAN, PROCESSBOOLEAN)
+    ELEMENT_MAP(SNULL, PROCESSNULL)
     ELEMENT_MAP(SINTERFACE, PROCESSINTERFACE)
     ELEMENT_MAP(CONTROL_CHAR, PROCESSESCAPE)
 

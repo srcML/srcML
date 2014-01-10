@@ -259,9 +259,11 @@
 	  Output most of the metadata of the srcML file.  Each
 	  individual piece of data, i.e., namespaces, encoding,
 	  language, directory, filename, and version, is on a separate
-	  line.  The form of the information is that same as that of
-	  the full flag option to src2srcml to form it, without the
-	  leading "--".
+	  line.  Each metadata is the value of the attribute of the root
+          element, or for a particular unit if specified with the
+          <option>&UNIT_FLAG;</option> option.  The form of the information
+	  is that same as that of the full flag option to src2srcml to form it,
+	  without the leading "--".
 	</para>
       </listitem>
     </varlistentry>
@@ -355,7 +357,7 @@
 	  Pass the parameter <replaceable>parameter_name</replaceable> and its corresponding
 	  <replaceable>parameter_value</replaceable> to the XSLT transformation.
 	  This is only valid with the <option>&XSLT_FLAG;</option> option.
-	  This is analagous to the &PARAM_FLAG; of xsltproc.  The xsltproc limit of 32
+	  This is analagous to the --param; of xsltproc.  The xsltproc limit of 32
 	  parameters applies here.
 	  Note that the internally generated parameters src:filename, src:directory, src:version,
 	  src:language, and src:position are automatically generated and are not part
@@ -374,7 +376,7 @@
 
 	<para>
 	  The RelaxNG grammar acts as a filter for individual units
-	  (files).  If the RelaxNG gramar is valid for a unit, then
+	  (files).  If the RelaxNG grammar is valid for a unit, then
 	  that unit is output.  The result is a srcML archive with
 	  only the files that are valid based on the given RelaxNG
 	  grammar.
@@ -430,9 +432,11 @@
   <para>&STATUS_INPUTFILE_PROBLEM;: Problem with input file</para>
   <para>&STATUS_UNKNOWN_OPTION;: Unknown option</para>
   <para>&STATUS_UNKNOWN_ENCODING;: Unknown encoding</para>
+<!--
   <para>&STATUS_SRCENCODING_MISSING;: Text encoding option specified, but value missing</para>
   <para>&STATUS_UNIT_MISSING;: Unit option specified, but value missing</para>
   <para>&STATUS_UNIT_INVALID;: Unit option value is not valid</para>
+-->
   <para>&STATUS_INVALID_OPTION_COMBINATION;: Invalid combination of options</para>
   <para>&STATUS_TERMINATED;: Incomplete output due to termination</para>
 

@@ -1,7 +1,7 @@
 /*
   srcml_copy_archive.c
 
-  Copyright (C) 2013  SDML (www.srcML.org)
+  Copyright (C) 2013-2014  SDML (www.srcML.org)
 
   The srcML Toolkit is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
     srcml_write_open_filename(oarchive, "project2.xml");
 
     /* copy the files from the input archive to the output archive */
-    while (unit = srcml_read_unit(iarchive)) {
+    while ((unit = srcml_read_unit(iarchive))) {
 
         /* Translate to srcml and append to the archive */
         srcml_write_unit(oarchive, unit);

@@ -1,7 +1,7 @@
 /*
   test_srcml_global.cpp
 
-  Copyright (C) 2013  SDML (www.srcML.org)
+  Copyright (C) 2013-2014  SDML (www.srcML.org)
 
   The srcML Toolkit is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -30,6 +30,8 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include "dassert.hpp"
+
 extern srcml_archive global_archive;
 
 int main(int argc, char * argv[]) {
@@ -39,19 +41,19 @@ int main(int argc, char * argv[]) {
    */
 
   {
-    assert(srcml_check_language("C") == 1);
+    dassert(srcml_check_language("C"), 1);
   }
 
   {
-    assert(srcml_check_language("C++") == 2);
+    dassert(srcml_check_language("C++"), 2);
   }
 
   {
-    assert(srcml_check_language("Java") == 8);
+    dassert(srcml_check_language("Java"), 8);
   }
 
   {
-    assert(srcml_check_language("C#") == 32);
+    dassert(srcml_check_language("C#"), 32);
   }
 
   /* 
@@ -59,23 +61,23 @@ int main(int argc, char * argv[]) {
    */
 
   {
-    assert(srcml_language_list()[0] == std::string("C"));
+    dassert(srcml_language_list()[0], std::string("C"));
   }
 
   {
-    assert(srcml_language_list()[1] == std::string("C++"));
+    dassert(srcml_language_list()[1], std::string("C++"));
   }
 
   {
-    assert(srcml_language_list()[2] == std::string("C#"));
+    dassert(srcml_language_list()[2], std::string("C#"));
   }
 
   {
-    assert(srcml_language_list()[3] == std::string("Java"));
+    dassert(srcml_language_list()[3], std::string("Java"));
   }
 
   {
-    assert(srcml_language_list()[4] == 0);
+    dassert(srcml_language_list()[4], 0);
   }
 
   /* 
@@ -84,19 +86,19 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_register_file_extension("cpp", "C++");
-    assert(srcml_check_extension("a.cpp") == std::string("C++"));
+    dassert(srcml_check_extension("a.cpp"), std::string("C++"));
   }
 
   {
-    assert(srcml_check_extension("a.cpp.gz") == std::string("C++"));
+    dassert(srcml_check_extension("a.cpp.gz"), std::string("C++"));
   }
 
   {
-    assert(srcml_check_extension("a.foo") == 0);
+    dassert(srcml_check_extension("a.foo"), 0);
   }
 
   {
-    assert(srcml_check_extension(0) == 0);
+    dassert(srcml_check_extension(0), 0);
   }
 
   /* 
@@ -104,31 +106,31 @@ int main(int argc, char * argv[]) {
    */
 
   {
-    assert(srcml_check_format("a.tar") == SRCML_STATUS_OK);
+    dassert(srcml_check_format("a.tar"), SRCML_STATUS_OK);
   }
 
   {
-    assert(srcml_check_format("a.tar.bz2") == SRCML_STATUS_OK);
+    dassert(srcml_check_format("a.tar.bz2"), SRCML_STATUS_OK);
   }
 
   {
-    assert(srcml_check_format("a.tar.gz") == SRCML_STATUS_OK);
+    dassert(srcml_check_format("a.tar.gz"), SRCML_STATUS_OK);
   }
 
   {
-    assert(srcml_check_format("a.tar.xz") == SRCML_STATUS_OK);
+    dassert(srcml_check_format("a.tar.xz"), SRCML_STATUS_OK);
   }
 
   {
-    assert(srcml_check_format("a.xz") == SRCML_STATUS_OK);
+    dassert(srcml_check_format("a.xz"), SRCML_STATUS_OK);
   }
 
   {
-    assert(srcml_check_format("a.foo") == SRCML_STATUS_ERROR);
+    dassert(srcml_check_format("a.foo"), SRCML_STATUS_ERROR);
   }
 
   {
-    assert(srcml_check_format(0) == SRCML_STATUS_ERROR);
+    dassert(srcml_check_format(0), SRCML_STATUS_ERROR);
   }
 
   /* 
@@ -136,15 +138,15 @@ int main(int argc, char * argv[]) {
    */
 
   {
-    assert(srcml_check_encoding("UTF-8") == SRCML_STATUS_OK);
+    dassert(srcml_check_encoding("UTF-8"), SRCML_STATUS_OK);
   }
 
   {
-    assert(srcml_check_encoding("foo") == SRCML_STATUS_ERROR);
+    dassert(srcml_check_encoding("foo"), SRCML_STATUS_ERROR);
   }
 
   {
-    assert(srcml_check_encoding(0) == SRCML_STATUS_ERROR);
+    dassert(srcml_check_encoding(0), SRCML_STATUS_ERROR);
   }
 
   return 0;

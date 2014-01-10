@@ -1,7 +1,7 @@
 /*
   srcMLTranslator.cpp
 
-  Copyright (C) 2003-2013  SDML (www.srcML.org)
+  Copyright (C) 2003-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -160,8 +160,12 @@ void srcMLTranslator::add_unit(const char* xml) {
 srcMLTranslator::~srcMLTranslator() {
 
   delete translator;
-  if(str_buffer) (*str_buffer) = strdup((const char *)output_buffer->content);
-  if(size) *size = strlen(*str_buffer);
+  if(str_buffer) {
+
+    (*str_buffer) = strdup((const char *)output_buffer->content);
+    if(size && *str_buffer) *size = strlen(*str_buffer);
+
+  }
 
 
   if(output_buffer)

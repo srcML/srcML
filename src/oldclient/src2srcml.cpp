@@ -1,7 +1,7 @@
 /*
   src2srcml.cpp
 
-  Copyright (C) 2002-2013  SDML (www.srcML.org)
+  Copyright (C) 2002-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -917,7 +917,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
         if (!ns_uri[0]) {
           if (!(optind < argc && argv[optind][0] != '-')) {
             fprintf(stderr, "%s: xmlns option selected but not specified.\n", PROGRAM_NAME);
-            exit(STATUS_LANGUAGE_MISSING);
+            exit(STATUS_INVALID_ARGUMENT);
           }
 
           ns_uri = argv[optind++];
@@ -1074,13 +1074,13 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       // validate type of tabsize number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {
         fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", PROGRAM_NAME, optarg);
-        exit(STATUS_UNIT_INVALID);
+        exit(STATUS_INVALID_ARGUMENT);
       }
 
       // validate range of unit number
       if (poptions.tabsize <= 0) {
         fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", PROGRAM_NAME, poptions.tabsize);
-        exit(STATUS_UNIT_INVALID);
+        exit(STATUS_INVALID_ARGUMENT);
       }
 
       break;
@@ -1166,27 +1166,27 @@ int option_error_status(int optopt) {
   switch (optopt) {
 
   case FILENAME_FLAG_SHORT:
-    return STATUS_FILENAME_MISSING;
+    return STATUS_INVALID_ARGUMENT;
     break;
 
   case LANGUAGE_FLAG_SHORT:
-    return STATUS_LANGUAGE_MISSING;
+    return STATUS_INVALID_ARGUMENT;
     break;
 
   case DIRECTORY_FLAG_SHORT:
-    return STATUS_DIRECTORY_MISSING;
+    return STATUS_INVALID_ARGUMENT;
     break;
 
   case SRCVERSION_FLAG_SHORT:
-    return STATUS_VERSION_MISSING;
+    return STATUS_INVALID_ARGUMENT;
     break;
 
   case ENCODING_FLAG_SHORT:
-    return STATUS_XMLENCODING_MISSING;
+    return STATUS_INVALID_ARGUMENT;
     break;
 
   case SRC_ENCODING_FLAG_SHORT:
-    return STATUS_SRCENCODING_MISSING;
+    return STATUS_INVALID_ARGUMENT;
     break;
     /*
       case INPUT_FORMAT_FLAG_CODE:
@@ -1278,7 +1278,7 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     void* context = translator.setInput(path);
 
     // check if file is bad
-    if (!context || archiveReadStatus(context) < 0 ) {
+    if (!isoption(options, OPTION_INTERACTIVE) && (!context || archiveReadStatus(context) < 0) ) {
       fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
 
       options = save_options;
@@ -1346,7 +1346,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
         context = translator.setInput(path);
 
         // check if file is bad
-        if (!context || archiveReadStatus(context) < 0 ) {
+        if (!isoption(options, OPTION_INTERACTIVE) && (!context || archiveReadStatus(context) < 0) ) {
           fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
           ++(gpoptions->error);
           return;
@@ -1388,7 +1388,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
         context = translator.setInput(path);
 
         // check if file is bad
-        if (!context || archiveReadStatus(context) < 0 ) {
+        if (!isoption(options, OPTION_INTERACTIVE) && (!context || archiveReadStatus(context) < 0) ) {
           fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
           ++(gpoptions->error);
           return;

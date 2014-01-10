@@ -1,7 +1,7 @@
 /*
   XPathQueryUnits.cpp
 
-  Copyright (C) 2008-2013  SDML (www.srcML.org)
+  Copyright (C) 2008-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -166,7 +166,6 @@ public :
 
         }
       }
-      dlclose(handle);
 #endif
 #endif
 
@@ -464,6 +463,11 @@ public :
       xmlXPathFreeObject(result_nodes);
       if(context) xmlXPathFreeContext(context);
 
+#if LIBEXSLT_VERSION > 813
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+      dlclose(handle);
+#endif
+#endif
       return true;
     }
 
@@ -477,21 +481,26 @@ public :
       switch (nodetype) {
       case XPATH_NODESET:
 
+	{
+
+	std::string full_unit = "</";
+	if(pstate->root.prefix) {
+	  full_unit += (const char *)pstate->root.prefix;
+	  full_unit += ":";
+	}
+	full_unit += "unit>\n";
+
         // root unit end tag
-        if (!isoption(options, OPTION_APPLY_ROOT)) {
-          std::string full_unit = "</";
-          if(pstate->root.prefix) {
-            full_unit += (const char *)pstate->root.prefix;
-            full_unit += ":";
-          }
-          full_unit += "unit>\n";
+        if (!isoption(options, OPTION_APPLY_ROOT))
           xmlOutputBufferWriteString(buf, found ? full_unit.c_str() : "/>\n");
-        } else if(found)
-          xmlOutputBufferWriteString(buf, "</unit>\n");
+        else if(found)
+          xmlOutputBufferWriteString(buf, full_unit.c_str());
         else
           xmlOutputBufferWriteString(buf, "\n");
 
         break;
+
+	}
 
       case XPATH_NUMBER:
         if (isoption(options, OPTION_XPATH_TOTAL)) {

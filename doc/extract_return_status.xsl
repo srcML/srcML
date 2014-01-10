@@ -18,7 +18,7 @@
 
 <!-- output an entity for a declaration -->
 <xsl:template match="src:enum[src:name='RETURN_STATUS']/src:block/src:expr">
-  <xsl:value-of select="concat('&lt;!ENTITY ', src:name, ' &quot;' , lit:literal, '&quot;&gt;')"/><xsl:text>
+  <xsl:value-of select='concat("&lt;!ENTITY ", src:name, " &apos;" , lit:literal, "&apos;&gt;")'/><xsl:text>
 </xsl:text>
 </xsl:template>
 

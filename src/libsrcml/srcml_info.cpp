@@ -2,7 +2,7 @@
  * @file srcml_info.cpp
  * @copyright
  *
- * Copyright (C) 2013  SDML (www.srcML.org)
+ * Copyright (C) 2013-2014  SDML (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,11 +44,22 @@ const char** srcml_list(const char* srcml_filename) {
     srcml_free_unit(unit);
   }
   const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
+  if(!output_carray) return 0;
 
   try {
 
-    for(unsigned int i = 0; i < output_array.size(); ++i)
+    for(unsigned int i = 0; i < output_array.size(); ++i) {
+
       output_carray[i] = strdup(output_array.at(i).c_str());
+	if(!output_carray[i]) {
+
+	  for(unsigned int j = 0; j < i; ++j)
+	    free((void *)output_carray[j]);
+	  return 0;
+
+	}
+
+    }
 
   } catch(...) {}
   output_carray[output_array.size()] = 0;
