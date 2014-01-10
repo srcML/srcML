@@ -348,6 +348,7 @@ tokens {
     SLITERAL;       // literal number, constant
     SBOOLEAN;       // boolean literal, i.e., true, false
     SNULL;          // null types null, nullptr
+    SCOMPLEX;       // complex numbers
 
     // operators
     SOPERATOR;
@@ -4952,7 +4953,7 @@ expression_part_default[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
 // rule for literals
 literals[] { ENTRY_DEBUG } :
-        string_literal | char_literal | literal | boolean | null_literal
+        string_literal | char_literal | literal | boolean | null_literal | complex_literal
 ;
 
 // Only start and end of strings are put directly through the parser.
@@ -4987,16 +4988,32 @@ null_literal[]{ LightweightElement element(this); ENTRY_DEBUG } :
         (NULLPTR | NULLLITERAL)
 ;
 
-
-// literals
-literal[] { LightweightElement element(this); ENTRY_DEBUG } :
+// complex numbers
+complex_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup literals in literal option
             if (isoption(parseoptions, OPTION_LITERAL))
-                startElement(SLITERAL);
+                startElement(SCOMPLEX);
         }
-        (COMPLEX_NUMBER ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == CONSTANTS }? OPERATORS CONSTANTS)* |
-    CONSTANTS ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == COMPLEX_NUMBER }? OPERATORS COMPLEX_NUMBER)*)
+        COMPLEX_NUMBER ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == CONSTANTS }? OPERATORS CONSTANTS)?
+  
+;
+
+
+// literal numbers
+literal[] { LightweightElement element(this); TokenPosition tp; ENTRY_DEBUG } :
+        {
+            // only markup literals in literal option
+            if (isoption(parseoptions, OPTION_LITERAL)) {
+
+                startElement(SLITERAL);
+
+                setTokenPosition(tp);
+
+            }
+
+        }
+        CONSTANTS ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == COMPLEX_NUMBER }? OPERATORS COMPLEX_NUMBER {  tp.setType(SCOMPLEX); })?
 ;
 
 
