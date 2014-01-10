@@ -235,8 +235,11 @@ int main(int argc, char * argv[]) {
     // Stdin
     if (input_file->compare("-") == 0) {
       stdin = true;
-      if (!test_for_stdin())
-        return 1; // Stdin was requested, but no data was received
+      // Check if we are using the terminal interactively
+      if(srcml_request.command & SRCML_COMMAND_INTERACTIVE) {
+        if (!test_for_stdin())
+          return 1; // Stdin was requested, but no data was received
+      }
       
       // Setting libarchive's file input to NULL forces libarchive to read stdin  
       valid = archive_read_open_filename(arch, NULL, 16384);
