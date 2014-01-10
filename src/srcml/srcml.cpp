@@ -151,7 +151,7 @@ void setupLibArchive(archive* a) {
 
 void * srcml_consume(void * arg) {
   ThreadQueue<ParseRequest, 3> * queue = (ThreadQueue<ParseRequest, 3> *) arg;
-  
+
   return 0;
 }
 
@@ -325,9 +325,6 @@ int main(int argc, char * argv[]) {
           for (size_t i = 0; i < size; ++i) {
             dbuff.push_back(cptr[i]);
           }
-
-          ParseRequest pr;
-          pr.filename = filename
 
           srcml_parse_unit_memory(unit, cptr, size);
           srcml_write_unit(srcml_arch, unit);
