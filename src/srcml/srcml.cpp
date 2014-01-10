@@ -34,7 +34,10 @@
 #include <archive_entry.h>
 //#include <curl/curl.h>
 #include <boost/filesystem.hpp>
+
 #include <pthread.h>
+#include <stdio.h>
+#include <unistd.h>
 
 struct ParseRequest {
     ParseRequest() : buffer(0) {}
@@ -55,6 +58,37 @@ struct ParseRequest {
 };
 
 ParseRequest NullParseRequest;
+
+bool test_for_stdin() {
+  fd_set fds;
+
+  /* 
+   Need a timeout so the application doesn't
+    hang waiting for input that never comes
+  */
+  struct timeval timeout;
+
+  // Init file descriptor with stdin
+  FD_ZERO(&fds);
+  FD_SET(STDIN_FILENO, &fds);
+
+  // Set timeout to 0 (don't wait for input)
+  timeout.tv_sec = 0;
+  timeout.tv_usec = 0;
+
+  // Use select to see if stdin has data
+  int selectRetVal = select(sizeof(fds)*8, &fds, NULL, NULL, &timeout);
+
+  if (selectRetVal == -1) {
+    std::cerr << "SELECT FAILED!\n";
+    return false;
+  }
+  if (selectRetVal == 0) {
+    std::cerr << "NO DATA TO FETCH!\n";
+    return false;
+  }
+  return true;
+}
 
 bool checkLocalFiles(std::vector<std::string>& pos_args) {
   for (size_t i = 0; i < pos_args.size(); ++i) {
