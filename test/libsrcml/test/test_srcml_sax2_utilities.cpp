@@ -1,7 +1,7 @@
 /*
   test_srcml_sax2_utilities.cpp
 
-  Copyright (C) 2013  SDML (www.srcML.org)
+  Copyright (C) 2013-2014  SDML (www.srcML.org)
 
   The srcML Toolkit is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -34,6 +34,8 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include "dassert.hpp"
+
 int main(int argc, char * argv[]) {
 
   /* 
@@ -43,19 +45,19 @@ int main(int argc, char * argv[]) {
   {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
-    assert(ctxt != NULL);
+    dassert(!ctxt, 0);
     xmlFreeParserCtxt(ctxt);
   }
 
   {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, 0);
-    assert(ctxt == NULL);
+    dassert(ctxt, NULL);
   }
 
   {
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(0, 1);
-    assert(ctxt == NULL);
+    dassert(ctxt, NULL);
   }
 
   /* 
@@ -66,13 +68,13 @@ int main(int argc, char * argv[]) {
     const char * s = "test_srcml_xpath.cpp";
     xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename(s, xmlParseCharEncoding(0));
     xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(buffer_input);
-    assert(ctxt != NULL);
+    dassert(!ctxt, 0);
     xmlFreeParserCtxt(ctxt);
   }
 
   {
     xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(0);
-    assert(ctxt == NULL);
+    dassert(ctxt, NULL);
   }
 
   /* 
@@ -82,7 +84,7 @@ int main(int argc, char * argv[]) {
   {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
-    assert(srcMLParseDocument(ctxt, true) == SRCML_STATUS_OK);
+    dassert(srcMLParseDocument(ctxt, true), SRCML_STATUS_OK);
     xmlFreeDoc(ctxt->myDoc);
     xmlFreeParserCtxt(ctxt);
   }
@@ -90,7 +92,7 @@ int main(int argc, char * argv[]) {
   {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
-    assert(srcMLParseDocument(ctxt, false) == SRCML_STATUS_OK);
+    dassert(srcMLParseDocument(ctxt, false), SRCML_STATUS_OK);
     xmlFreeDoc(ctxt->myDoc);
     xmlFreeParserCtxt(ctxt);
   }
@@ -98,7 +100,7 @@ int main(int argc, char * argv[]) {
   {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
-    assert(srcMLParseDocument(0, false) == SRCML_STATUS_ERROR);
+    dassert(srcMLParseDocument(0, false), SRCML_STATUS_ERROR);
     xmlFreeDoc(ctxt->myDoc);
     xmlFreeParserCtxt(ctxt);
   }

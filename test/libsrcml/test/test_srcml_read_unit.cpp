@@ -1,7 +1,7 @@
 /*
   test_srcml_read_unit.cpp
 
-  Copyright (C) 2013  SDML (www.srcML.org)
+  Copyright (C) 2013-2014  SDML (www.srcML.org)
 
   The srcML Toolkit is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -33,6 +33,8 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include "dassert.hpp"
+
 int main(int argc, char * argv[]) {
   const std::string srcml_a = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
 
@@ -56,7 +58,7 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
     srcml_unit * unit = srcml_read_unit(archive);
-    assert(*unit->unit == srcml_a);
+    dassert(*unit->unit, srcml_a);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);
@@ -68,11 +70,11 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_full.c_str(), srcml_full.size());
     srcml_unit * unit = srcml_read_unit(archive);
-    assert(srcml_unit_get_language(unit) == std::string("C++"));
-    assert(srcml_unit_get_filename(unit) == std::string("project"));
-    assert(srcml_unit_get_directory(unit) == std::string("test"));
-    assert(srcml_unit_get_version(unit) == std::string("1"));
-    assert(*unit->unit == srcml_b);
+    dassert(srcml_unit_get_language(unit), std::string("C++"));
+    dassert(srcml_unit_get_filename(unit), std::string("project"));
+    dassert(srcml_unit_get_directory(unit), std::string("test"));
+    dassert(srcml_unit_get_version(unit), std::string("1"));
+    dassert(*unit->unit, srcml_b);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);
@@ -84,11 +86,11 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_single.c_str(), srcml_single.size());
     srcml_unit * unit = srcml_read_unit(archive);
-    assert(srcml_unit_get_language(unit) == std::string("C++"));
-    assert(srcml_unit_get_filename(unit) == std::string("project"));
-    assert(srcml_unit_get_directory(unit) == std::string("test"));
-    assert(srcml_unit_get_version(unit) == std::string("1"));
-    assert(*unit->unit == srcml_b_single);
+    dassert(srcml_unit_get_language(unit), std::string("C++"));
+    dassert(srcml_unit_get_filename(unit), std::string("project"));
+    dassert(srcml_unit_get_directory(unit), std::string("test"));
+    dassert(srcml_unit_get_version(unit), std::string("1"));
+    dassert(*unit->unit, srcml_b_single);
 
     srcml_free_unit(unit);
     srcml_close_archive(archive);
@@ -98,12 +100,12 @@ int main(int argc, char * argv[]) {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    assert(srcml_read_unit(archive) == 0);
+    dassert(srcml_read_unit(archive), 0);
     srcml_free_archive(archive);
   }
 
   {
-    assert(srcml_read_unit(0) == 0);
+    dassert(srcml_read_unit(0), 0);
   }
 
   /*
@@ -114,8 +116,8 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
-    assert(srcml_skip_unit(archive) == 1);
-    assert(srcml_skip_unit(archive) == 0);
+    dassert(srcml_skip_unit(archive), 1);
+    dassert(srcml_skip_unit(archive), 0);
    
     srcml_close_archive(archive);
     srcml_free_archive(archive);
@@ -125,8 +127,8 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_full.c_str(), srcml_full.size());
-    assert(srcml_skip_unit(archive) == 1);
-    assert(srcml_skip_unit(archive) == 0);
+    dassert(srcml_skip_unit(archive), 1);
+    dassert(srcml_skip_unit(archive), 0);
    
     srcml_close_archive(archive);
     srcml_free_archive(archive);
@@ -136,8 +138,8 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_single.c_str(), srcml_single.size());
-    assert(srcml_skip_unit(archive) == 1);
-    assert(srcml_skip_unit(archive) == 0);
+    dassert(srcml_skip_unit(archive), 1);
+    dassert(srcml_skip_unit(archive), 0);
    
     srcml_close_archive(archive);
     srcml_free_archive(archive);
@@ -147,9 +149,9 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_two.c_str(), srcml_two.size());
-    assert(srcml_skip_unit(archive) == 1);
-    assert(srcml_skip_unit(archive) == 1);
-    assert(srcml_skip_unit(archive) == 0);
+    dassert(srcml_skip_unit(archive), 1);
+    dassert(srcml_skip_unit(archive), 1);
+    dassert(srcml_skip_unit(archive), 0);
    
     srcml_close_archive(archive);
     srcml_free_archive(archive);
@@ -158,13 +160,13 @@ int main(int argc, char * argv[]) {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    assert(srcml_skip_unit(archive) == 0);
+    dassert(srcml_skip_unit(archive), 0);
    
     srcml_free_archive(archive);
   }
 
   {
-    assert(srcml_skip_unit(0) == 0);
+    dassert(srcml_skip_unit(0), 0);
   }
 
   /*
@@ -176,7 +178,7 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
     srcml_unit * unit = srcml_read_unit_position(archive, 1);
-    assert(*unit->unit == srcml_a);
+    dassert(*unit->unit, srcml_a);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);
@@ -188,11 +190,11 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_full.c_str(), srcml_full.size());
     srcml_unit * unit = srcml_read_unit_position(archive, 1);
-    assert(srcml_unit_get_language(unit) == std::string("C++"));
-    assert(srcml_unit_get_filename(unit) == std::string("project"));
-    assert(srcml_unit_get_directory(unit) == std::string("test"));
-    assert(srcml_unit_get_version(unit) == std::string("1"));
-    assert(*unit->unit == srcml_b);
+    dassert(srcml_unit_get_language(unit), std::string("C++"));
+    dassert(srcml_unit_get_filename(unit), std::string("project"));
+    dassert(srcml_unit_get_directory(unit), std::string("test"));
+    dassert(srcml_unit_get_version(unit), std::string("1"));
+    dassert(*unit->unit, srcml_b);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);
@@ -204,11 +206,11 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_single.c_str(), srcml_single.size());
     srcml_unit * unit = srcml_read_unit_position(archive, 1);
-    assert(srcml_unit_get_language(unit) == std::string("C++"));
-    assert(srcml_unit_get_filename(unit) == std::string("project"));
-    assert(srcml_unit_get_directory(unit) == std::string("test"));
-    assert(srcml_unit_get_version(unit) == std::string("1"));
-    assert(*unit->unit == srcml_b_single);
+    dassert(srcml_unit_get_language(unit), std::string("C++"));
+    dassert(srcml_unit_get_filename(unit), std::string("project"));
+    dassert(srcml_unit_get_directory(unit), std::string("test"));
+    dassert(srcml_unit_get_version(unit), std::string("1"));
+    dassert(*unit->unit, srcml_b_single);
 
     srcml_free_unit(unit);
     srcml_close_archive(archive);
@@ -219,7 +221,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
-    assert(srcml_read_unit_position(archive, 2) == 0);
+    dassert(srcml_read_unit_position(archive, 2), 0);
    
     srcml_close_archive(archive);
     srcml_free_archive(archive);
@@ -229,7 +231,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_full.c_str(), srcml_full.size());
-    assert(srcml_read_unit_position(archive, 2) == 0);
+    dassert(srcml_read_unit_position(archive, 2), 0);
    
     srcml_close_archive(archive);
     srcml_free_archive(archive);
@@ -239,7 +241,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_single.c_str(), srcml_single.size());
-    assert(srcml_read_unit_position(archive, 2) == 0);
+    dassert(srcml_read_unit_position(archive, 2), 0);
    
     srcml_close_archive(archive);
     srcml_free_archive(archive);
@@ -249,7 +251,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
-    assert(srcml_read_unit_position(archive, 3) == 0);
+    dassert(srcml_read_unit_position(archive, 3), 0);
    
     srcml_close_archive(archive);
     srcml_free_archive(archive);
@@ -259,7 +261,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_full.c_str(), srcml_full.size());
-    assert(srcml_read_unit_position(archive, 3) == 0);
+    dassert(srcml_read_unit_position(archive, 3), 0);
    
     srcml_close_archive(archive);
     srcml_free_archive(archive);
@@ -269,7 +271,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_single.c_str(), srcml_single.size());
-    assert(srcml_read_unit_position(archive, 3) == 0);
+    dassert(srcml_read_unit_position(archive, 3), 0);
    
     srcml_close_archive(archive);
     srcml_free_archive(archive);
@@ -280,12 +282,12 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_two.c_str(), srcml_two.size());
     srcml_unit * unit = srcml_read_unit_position(archive, 1);
-    assert(*unit->unit == srcml_a);
+    dassert(*unit->unit, srcml_a);
     srcml_free_unit(unit);
     unit = srcml_read_unit_position(archive, 1);
-    assert(*unit->unit == srcml_b_two);
+    dassert(*unit->unit, srcml_b_two);
     srcml_free_unit(unit);
-    assert(srcml_read_unit_position(archive, 1) == 0);
+    dassert(srcml_read_unit_position(archive, 1), 0);
 
     srcml_close_archive(archive);
     srcml_free_archive(archive);
@@ -296,9 +298,9 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_two.c_str(), srcml_two.size());
     srcml_unit * unit = srcml_read_unit_position(archive, 2);
-    assert(*unit->unit == srcml_b_two);
+    dassert(*unit->unit, srcml_b_two);
     srcml_free_unit(unit);
-    assert(srcml_read_unit_position(archive, 1) == 0);
+    dassert(srcml_read_unit_position(archive, 1), 0);
 
     srcml_close_archive(archive);
     srcml_free_archive(archive);
@@ -308,7 +310,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_two.c_str(), srcml_two.size());
-    assert(srcml_read_unit_position(archive, 3) == 0);
+    dassert(srcml_read_unit_position(archive, 3), 0);
 
     srcml_close_archive(archive);
     srcml_free_archive(archive);
@@ -318,7 +320,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_two.c_str(), srcml_two.size());
-    assert(srcml_read_unit_position(archive, 4) == 0);
+    dassert(srcml_read_unit_position(archive, 4), 0);
 
     srcml_close_archive(archive);
     srcml_free_archive(archive);
@@ -327,31 +329,31 @@ int main(int argc, char * argv[]) {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    assert(srcml_read_unit_position(archive, 1) == 0);
+    dassert(srcml_read_unit_position(archive, 1), 0);
 
     srcml_close_archive(archive);
     srcml_free_archive(archive);
   }
 
   {
-    assert(srcml_read_unit_position(0, 1) == 0);
-  }
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-    srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
-    assert(srcml_read_unit_position(archive, 0) == 0);
-
-    srcml_close_archive(archive);
-    srcml_free_archive(archive);
+    dassert(srcml_read_unit_position(0, 1), 0);
   }
 
   {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
-    assert(srcml_read_unit_position(archive, -1) == 0);
+    dassert(srcml_read_unit_position(archive, 0), 0);
+
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
+    dassert(srcml_read_unit_position(archive, -1), 0);
 
     srcml_close_archive(archive);
     srcml_free_archive(archive);

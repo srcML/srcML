@@ -1,7 +1,7 @@
 /*
   srcml2src.cpp
 
-  Copyright (C) 2004-2013  SDML (www.srcML.org)
+  Copyright (C) 2004-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -39,8 +39,9 @@
 #include "libxml_archive_write.hpp"
 #include "srcexfun.hpp"
 #include "URIStream.hpp"
+#include <srcml_wrapper.hpp>
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>
 #else
 #include <libxslt/xslt.h>
@@ -481,13 +482,18 @@ int main(int argc, char* argv[]) {
 
   // first command line parameter is input filename
   const char* filename = "-";
+
+  bool is_multi_input = (argc - curarg) > 1;
+  bool is_multi_op = options & (OPTION_INFO | OPTION_LONG_INFO | OPTION_LIST | OPTION_UNIT | OPTION_NAMESPACE | OPTION_ARCHIVE);
+
+  do {
+
   if (curarg < argc) {
     filename = argv[curarg];
     ++curarg;
   }
 
   /* Special checks for illegal combinations */
-
   // xml output and src-encoding (switch to encoding?)
   if (isoption(options, OPTION_XML) && isoption(options, OPTION_SRC_ENCODING)) {
 
@@ -649,7 +655,15 @@ int main(int argc, char* argv[]) {
       long count = su.unit_count(output);
 
       if (!isatty(fileno(output)))
-        fprintf(output, "%ld\n", count);
+	if(is_multi_input)
+	  fprintf(output, "%ld\t%s\n", count, filename);
+	else
+	  fprintf(output, "%ld\n", count);
+      else
+	if(is_multi_input)
+	  fprintf(output, "\t%s\n", filename);
+	else
+	  fprintf(output, "\n");
 
       // if we terminated early, output the correct status
       if (isoption(options, OPTION_TERMINATE))
@@ -729,7 +743,7 @@ int main(int argc, char* argv[]) {
 
     fprintf(stderr, "%s: unit %d  was selected from srcML that only contains "
             "%d units\n", PROGRAM_NAME, poptions.unit, e.size);
-    exit_status = STATUS_UNIT_INVALID;
+    exit_status = STATUS_INVALID_ARGUMENT;
 
     return exit_status;
     /*
@@ -764,6 +778,11 @@ int main(int argc, char* argv[]) {
   if (strcmp(poptions.ofilename, "") != 0 && (strcmp(poptions.ofilename, "-") != 0)) {
     fclose(output);
   }
+
+  
+  if(!is_multi_op || (exit_status && !(exit_status & STATUS_INPUTFILE_PROBLEM))) break;
+
+  } while(curarg < argc);
 
   return exit_status;
 }
@@ -973,13 +992,13 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // validate type of unit number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {
         fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", PROGRAM_NAME, optarg);
-        exit(STATUS_UNIT_INVALID);
+        exit(STATUS_INVALID_ARGUMENT);
       }
 
       // validate range of unit number
       if (poptions.unit <= 0) {
         fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", PROGRAM_NAME, poptions.unit);
-        exit(STATUS_UNIT_INVALID);
+        exit(STATUS_INVALID_ARGUMENT);
       }
 
       break;
@@ -1034,7 +1053,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // registerext value
       end = optarg;
       strsep(&end, "=");
-      poptions.registerext[poptions.registerextcount] = (char*) malloc(strlen(end) + 1);
+      poptions.registerext[poptions.registerextcount] = (char*) srcml_malloc(strlen(end) + 1);
       strcpy((char *) poptions.registerext[poptions.registerextcount], end);
       poptions.registerextcount++;
       break;
@@ -1158,7 +1177,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // param value
       end = optarg;
       strsep(&end, "=");
-      poptions.params[poptions.paramcount] = (char*) malloc(strlen(end) + 1 + 2);
+      poptions.params[poptions.paramcount] = (char*) srcml_malloc(strlen(end) + 1 + 2);
       strcpy((char *) poptions.params[poptions.paramcount], "\'");
       strcat((char *) poptions.params[poptions.paramcount], end);
       strcat((char *) poptions.params[poptions.paramcount], "\'");
@@ -1240,15 +1259,15 @@ int option_error_status(int optopt) {
   switch (optopt) {
 
   case ENCODING_FLAG_SHORT:
-    return STATUS_XMLENCODING_MISSING;
+    return STATUS_INVALID_ARGUMENT;
     break;
 
   case SRC_ENCODING_FLAG_SHORT:
-    return STATUS_SRCENCODING_MISSING;
+    return STATUS_INVALID_ARGUMENT;
     break;
 
   case UNIT_FLAG_SHORT:
-    return STATUS_UNIT_MISSING;
+    return STATUS_INVALID_ARGUMENT;
     break;
 
   case INPUT_FORMAT_FLAG_CODE:

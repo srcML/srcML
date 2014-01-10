@@ -1,6 +1,6 @@
 # @copyright
 # 
-# Copyright (C) 2013  SDML (www.srcML.org)
+# Copyright (C) 2013-2014  SDML (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" OFF)
 set_property(GLOBAL PROPERTY SAX2_ENABLED ${LIBSRCML_SAX2_ENABLED})
 
 # Dynamic Load libraries (Unix only)
-option(DYNAMIC_LOAD_ENABLED "Build with SAX2Framework for srcML" ON)
+option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and libexslt" ON)
 set_property(GLOBAL PROPERTY DYNAMIC_ENABLED ${DYNAMIC_LOAD_ENABLED})
 
 # Adding build option for srcml executable.
@@ -44,7 +44,6 @@ option(ENABLE_NEW_SRCML_EXEC_BUILD "Build the newer version of the srcML executa
 set_property(GLOBAL PROPERTY ENABLE_NEW_SRCML_EXEC_BUILD ${ENABLE_NEW_SRCML_EXEC_BUILD})
 
 # Locating packages.
-find_program(xsltproc REQUIRED)
 find_package(LibArchive REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(LibXslt)

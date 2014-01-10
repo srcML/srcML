@@ -1,7 +1,7 @@
 /*
   test_srcml_write_open.cpp
 
-  Copyright (C) 2013  SDML (www.srcML.org)
+  Copyright (C) 2013-2014  SDML (www.srcML.org)
 
   The srcML Toolkit is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -33,6 +33,8 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include "dassert.hpp"
+
 int main(int argc, char * argv[]) {
 
   /* 
@@ -44,9 +46,9 @@ int main(int argc, char * argv[]) {
   srcml_archive * archive = srcml_create_archive();
   srcml_write_open_filename(archive, "project.xml");
 
-  assert(archive->type == SRCML_ARCHIVE_WRITE);
-  assert(archive->translator != 0);
-  assert(srcml_archive_get_options(archive) == SRCML_OPTION_ARCHIVE);
+  dassert(archive->type, SRCML_ARCHIVE_WRITE);
+  dassert(!archive->translator, 0);
+  dassert(srcml_archive_get_options(archive), SRCML_OPTION_ARCHIVE);
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -56,14 +58,14 @@ int main(int argc, char * argv[]) {
   {
 
   srcml_archive * archive = srcml_create_archive();
-  assert(srcml_write_open_filename(archive, 0) == SRCML_STATUS_ERROR);
+  dassert(srcml_write_open_filename(archive, 0), SRCML_STATUS_ERROR);
 
   srcml_free_archive(archive);
 
   }
 
   {
-  assert(srcml_write_open_filename(0, "project.xml") == SRCML_STATUS_ERROR);
+  dassert(srcml_write_open_filename(0, "project.xml"), SRCML_STATUS_ERROR);
   }
 
   /* 
@@ -77,9 +79,9 @@ int main(int argc, char * argv[]) {
   srcml_archive * archive = srcml_create_archive();
   srcml_write_open_memory(archive, &s, &size);
 
-  assert(archive->type == SRCML_ARCHIVE_WRITE);
-  assert(archive->translator != 0);
-  assert(srcml_archive_get_options(archive) == SRCML_OPTION_ARCHIVE);
+  dassert(archive->type, SRCML_ARCHIVE_WRITE);
+  dassert(!archive->translator, 0);
+  dassert(srcml_archive_get_options(archive), SRCML_OPTION_ARCHIVE);
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -90,7 +92,7 @@ int main(int argc, char * argv[]) {
 
   int size;
   srcml_archive * archive = srcml_create_archive();
-  assert(srcml_write_open_memory(archive, 0, &size) == SRCML_STATUS_ERROR);
+  dassert(srcml_write_open_memory(archive, 0, &size), SRCML_STATUS_ERROR);
 
   srcml_free_archive(archive);
   }
@@ -99,7 +101,7 @@ int main(int argc, char * argv[]) {
 
   char * s = 0;
   srcml_archive * archive = srcml_create_archive();
-  assert(srcml_write_open_memory(archive, &s, 0) == SRCML_STATUS_ERROR);
+  dassert(srcml_write_open_memory(archive, &s, 0), SRCML_STATUS_ERROR);
 
   srcml_free_archive(archive);
   free(s);
@@ -108,7 +110,7 @@ int main(int argc, char * argv[]) {
   {
     char * s = 0;
     int size;
-    assert(srcml_write_open_memory(0, &s, &size) == SRCML_STATUS_ERROR);
+    dassert(srcml_write_open_memory(0, &s, &size), SRCML_STATUS_ERROR);
   free(s);
   }
 
@@ -122,9 +124,9 @@ int main(int argc, char * argv[]) {
   srcml_archive * archive = srcml_create_archive();
   srcml_write_open_FILE(archive, file);
 
-  assert(archive->type == SRCML_ARCHIVE_WRITE);
-  assert(archive->translator != 0);
-  assert(srcml_archive_get_options(archive) == SRCML_OPTION_ARCHIVE);
+  dassert(archive->type, SRCML_ARCHIVE_WRITE);
+  dassert(!archive->translator, 0);
+  dassert(srcml_archive_get_options(archive), SRCML_OPTION_ARCHIVE);
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -135,7 +137,7 @@ int main(int argc, char * argv[]) {
   {
 
   srcml_archive * archive = srcml_create_archive();
-  assert(srcml_write_open_FILE(archive, 0) == SRCML_STATUS_ERROR);
+  dassert(srcml_write_open_FILE(archive, 0), SRCML_STATUS_ERROR);
 
   srcml_free_archive(archive);
 
@@ -143,7 +145,7 @@ int main(int argc, char * argv[]) {
 
   {
   FILE * file = fopen("project_ns.xml", "w");
-  assert(srcml_write_open_FILE(0, file) == SRCML_STATUS_ERROR);
+  dassert(srcml_write_open_FILE(0, file), SRCML_STATUS_ERROR);
   fclose(file);
   }
 
@@ -157,9 +159,9 @@ int main(int argc, char * argv[]) {
   srcml_archive * archive = srcml_create_archive();
   srcml_write_open_fd(archive, fd);
 
-  assert(archive->type == SRCML_ARCHIVE_WRITE);
-  assert(archive->translator != 0);
-  assert(srcml_archive_get_options(archive) == SRCML_OPTION_ARCHIVE);
+  dassert(archive->type, SRCML_ARCHIVE_WRITE);
+  dassert(!archive->translator, 0);
+  dassert(srcml_archive_get_options(archive), SRCML_OPTION_ARCHIVE);
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -170,7 +172,7 @@ int main(int argc, char * argv[]) {
   {
 
   srcml_archive * archive = srcml_create_archive();
-  assert(srcml_write_open_fd(archive, -1) == SRCML_STATUS_ERROR);
+  dassert(srcml_write_open_fd(archive, -1), SRCML_STATUS_ERROR);
 
   srcml_free_archive(archive);
 
@@ -178,7 +180,7 @@ int main(int argc, char * argv[]) {
 
   {
   int fd = open("project_ns.xml", O_WRONLY);
-  assert(srcml_write_open_fd(0, fd) == SRCML_STATUS_ERROR);
+  dassert(srcml_write_open_fd(0, fd), SRCML_STATUS_ERROR);
   close(fd);
   }
 

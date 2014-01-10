@@ -1,7 +1,7 @@
 /*
   test_srcml_unit_get.cpp
 
-  Copyright (C) 2013  SDML (www.srcML.org)
+  Copyright (C) 2013-2014  SDML (www.srcML.org)
 
   The srcML Toolkit is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -30,6 +30,8 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include "dassert.hpp"
+
 int main(int argc, char * argv[]) {
 
   srcml_archive * archive = srcml_create_archive();
@@ -42,7 +44,7 @@ int main(int argc, char * argv[]) {
 
     srcml_unit * unit = srcml_create_unit(archive);
     unit->language = 0;
-    assert(srcml_unit_get_language(unit) == 0);
+    dassert(srcml_unit_get_language(unit), 0);
     srcml_free_unit(unit);
   }
 
@@ -50,12 +52,12 @@ int main(int argc, char * argv[]) {
 
     srcml_unit * unit = srcml_create_unit(archive);
     unit->language = new std::string("foo");
-    assert(srcml_unit_get_language(unit) == std::string("foo"));
+    dassert(srcml_unit_get_language(unit), std::string("foo"));
     srcml_free_unit(unit);
   }
 
   {
-    assert(srcml_unit_get_language(0) == 0);
+    dassert(srcml_unit_get_language(0), 0);
   }
 
   /* 
@@ -66,7 +68,7 @@ int main(int argc, char * argv[]) {
 
     srcml_unit * unit = srcml_create_unit(archive);
     unit->filename = 0;
-    assert(srcml_unit_get_filename(unit) == 0);
+    dassert(srcml_unit_get_filename(unit), 0);
     srcml_free_unit(unit);
   }
 
@@ -74,12 +76,12 @@ int main(int argc, char * argv[]) {
 
     srcml_unit * unit = srcml_create_unit(archive);
     unit->filename = new std::string("foo");
-    assert(srcml_unit_get_filename(unit) == std::string("foo"));
+    dassert(srcml_unit_get_filename(unit), std::string("foo"));
     srcml_free_unit(unit);
   }
 
   {
-    assert(srcml_unit_get_filename(0) == 0);
+    dassert(srcml_unit_get_filename(0), 0);
   }
 
   /* 
@@ -90,7 +92,7 @@ int main(int argc, char * argv[]) {
 
     srcml_unit * unit = srcml_create_unit(archive);
     unit->directory = 0;
-    assert(srcml_unit_get_directory(unit) == 0);
+    dassert(srcml_unit_get_directory(unit), 0);
     srcml_free_unit(unit);
   }
 
@@ -98,12 +100,12 @@ int main(int argc, char * argv[]) {
 
     srcml_unit * unit = srcml_create_unit(archive);
     unit->directory = new std::string("foo");
-    assert(srcml_unit_get_directory(unit) == std::string("foo"));
+    dassert(srcml_unit_get_directory(unit), std::string("foo"));
     srcml_free_unit(unit);
   }
 
   {
-    assert(srcml_unit_get_directory(0) == 0);
+    dassert(srcml_unit_get_directory(0), 0);
   }
 
   /* 
@@ -114,7 +116,7 @@ int main(int argc, char * argv[]) {
 
     srcml_unit * unit = srcml_create_unit(archive);
     unit->version = 0;
-    assert(srcml_unit_get_version(unit) == 0);
+    dassert(srcml_unit_get_version(unit), 0);
     srcml_free_unit(unit);
   }
 
@@ -122,12 +124,12 @@ int main(int argc, char * argv[]) {
 
     srcml_unit * unit = srcml_create_unit(archive);
     unit->version = new std::string("foo");
-    assert(srcml_unit_get_version(unit) == std::string("foo"));
+    dassert(srcml_unit_get_version(unit), std::string("foo"));
     srcml_free_unit(unit);
   }
 
   {
-    assert(srcml_unit_get_version(0) == 0);
+    dassert(srcml_unit_get_version(0), 0);
   }
 
   /* 
@@ -138,7 +140,7 @@ int main(int argc, char * argv[]) {
 
     srcml_unit * unit = srcml_create_unit(archive);
     unit->unit = 0;
-    assert(srcml_unit_get_xml(unit) == 0);
+    dassert(srcml_unit_get_xml(unit), 0);
     srcml_free_unit(unit);
   }
 
@@ -146,12 +148,12 @@ int main(int argc, char * argv[]) {
 
     srcml_unit * unit = srcml_create_unit(archive);
     unit->unit = new std::string("<unit/>");
-    assert(srcml_unit_get_xml(unit) == std::string("<unit/>"));
+    dassert(srcml_unit_get_xml(unit), std::string("<unit/>"));
     srcml_free_unit(unit);
   }
 
   {
-    assert(srcml_unit_get_xml(0) == 0);
+    dassert(srcml_unit_get_xml(0), 0);
   }
 
   srcml_free_archive(archive);

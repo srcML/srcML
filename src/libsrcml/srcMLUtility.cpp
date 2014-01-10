@@ -1,7 +1,7 @@
 /*
   srcMLUtility.cpp
 
-  Copyright (C) 2004-2013  SDML (www.srcML.org)
+  Copyright (C) 2004-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -842,7 +842,7 @@ static void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
       fprintf(stderr, "\n");
 
     // report error
-    char* partmsg = strdup(ep->message);
+    char* partmsg = ep->message;
     partmsg[strlen(partmsg) - 1] = '\0';
     fprintf(stderr, "%s: %s in '%s'\n", "srcml2src", partmsg, ep->file);
     exit(STATUS_INPUTFILE_PROBLEM);

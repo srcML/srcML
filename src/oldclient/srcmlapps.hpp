@@ -1,7 +1,7 @@
 /*
   srcmlapps.hpp
 
-  Copyright (C) 2004-2013  SDML (www.srcML.org)
+  Copyright (C) 2004-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -36,7 +36,7 @@
 #define PATH_SEPARATOR '/'
 #endif
 
-const char* const COPYRIGHT = "Copyright (C) 2013 SDML";
+const char* const COPYRIGHT = "Copyright (C) 2014 SDML";
 
 const char* const EMAIL_ADDRESS = "collard@uakron.edu";
 
@@ -137,6 +137,7 @@ enum RETURN_STATUS {
     STATUS_UNKNOWN_ENCODING = 4,
     STATUS_LIBXML2_FEATURE = 5,
     STATUS_INVALID_LANGUAGE = 6,
+    /*
     STATUS_LANGUAGE_MISSING = 7,
     STATUS_FILENAME_MISSING = 8,
     STATUS_DIRECTORY_MISSING = 9,
@@ -145,9 +146,10 @@ enum RETURN_STATUS {
     STATUS_XMLENCODING_MISSING = 12,
     STATUS_UNIT_MISSING = 13,
     STATUS_UNIT_INVALID = 14,
-    STATUS_INVALID_OPTION_COMBINATION = 15,
-    STATUS_TERMINATED = 16,
-    STATUS_INVALID_ARGUMENT = 17,
+    */
+    STATUS_INVALID_OPTION_COMBINATION = 7,
+    STATUS_TERMINATED = 8,
+    STATUS_INVALID_ARGUMENT = 9,
 };
 
 
