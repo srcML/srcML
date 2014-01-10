@@ -71,6 +71,7 @@ namespace {
   ELEMENT_MAP(SLITERAL, "literal")
   ELEMENT_MAP(SBOOLEAN, "literal")
   ELEMENT_MAP(SNULL,    "literal")
+  ELEMENT_MAP(SCOMPLEX, "literal")
 
   // operators
   ELEMENT_MAP(SOPERATOR, "operator")
@@ -295,7 +296,8 @@ namespace {
   ELEMENT_MAP(SCHAR,     SRCML_EXT_LITERAL_NS_URI_POS)
   ELEMENT_MAP(SLITERAL,  SRCML_EXT_LITERAL_NS_URI_POS)
   ELEMENT_MAP(SBOOLEAN,  SRCML_EXT_LITERAL_NS_URI_POS)
-  ELEMENT_MAP(SNULL,  SRCML_EXT_LITERAL_NS_URI_POS)
+  ELEMENT_MAP(SNULL,     SRCML_EXT_LITERAL_NS_URI_POS)
+  ELEMENT_MAP(SCOMPLEX,  SRCML_EXT_LITERAL_NS_URI_POS)
 
   // operator namespace
   ELEMENT_MAP(SOPERATOR, SRCML_EXT_OPERATOR_NS_URI_POS)
@@ -715,6 +717,12 @@ void srcMLTranslatorOutput::processBoolean(const antlr::RefToken& token) {
 void srcMLTranslatorOutput::processNull(const antlr::RefToken& token) {
 
   processOptional(token, "type", "null");
+}
+
+
+void srcMLTranslatorOutput::processComplex(const antlr::RefToken& token) {
+
+  processOptional(token, "type", "complex");
 }
 
 #if DEBUG
