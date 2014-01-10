@@ -150,6 +150,8 @@ public:
 
     const static State::MODE_TYPE MODE_END_AT_COMMA;
 
+    const static State::MODE_TYPE MODE_USING;
+
     const static State::MODE_TYPE MODE_TRAILING_RETURN;
 
     const static State::MODE_TYPE MODE_DECLTYPE;
