@@ -569,12 +569,14 @@
   <para>&STATUS_UNKNOWN_OPTION;: Unknown option</para>
   <para>&STATUS_UNKNOWN_ENCODING;: Unknown encoding</para>
   <para>&STATUS_INVALID_LANGUAGE;: Invalid language</para>
+<!--
   <para>&STATUS_LANGUAGE_MISSING;: Language option specified, but value missing</para>
   <para>&STATUS_FILENAME_MISSING;: Filename option specified, but value missing</para>
   <para>&STATUS_DIRECTORY_MISSING;: Directory option specified, but value missing</para>
   <para>&STATUS_VERSION_MISSING;: Version option specified, but value missing</para>
   <para>&STATUS_SRCENCODING_MISSING;: Text encoding option specified, but value missing</para>
   <para>&STATUS_XMLENCODING_MISSING;: XML encoding option specified, but value missing</para>
+-->
   <para>&STATUS_INVALID_OPTION_COMBINATION;: Invalid combination of options</para>
   <para>&STATUS_TERMINATED;: Incomplete output due to termination</para>
 
