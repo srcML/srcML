@@ -143,33 +143,6 @@ void setupLibArchive(archive* a) {
   #endif
 }
 
-bool convenienceCheck(const std::string& filename) {
-  archive * arch = archive_read_new();
-  archive_entry * arch_entry = archive_entry_new();
-
-  setupLibArchive(arch);
-
-  if (archive_read_open_filename(arch, filename.c_str(), 16384) == ARCHIVE_OK) {
-    if (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
-      #if ARCHIVE_VERSION_NUMBER < 3000000
-        if (archive_compression(arch) == ARCHIVE_COMPRESSION_NONE &&
-          archive_format(arch) == ARCHIVE_FORMAT_RAW){
-          archive_read_finish(arch);
-          return true;
-        }
-      #else
-        if (archive_filter_code(arch,0) == ARCHIVE_FILTER_NONE &&
-          archive_format(arch) == ARCHIVE_FORMAT_RAW){
-          archive_read_finish(arch);
-          return true;
-        }
-      #endif
-    }
-  }
-  archive_read_finish(arch);
-  return false;
-}
-
 int main(int argc, char * argv[]) {
   srcml_request_t srcml_request = srcmlCLI::parseCLI(argc, argv);
 
