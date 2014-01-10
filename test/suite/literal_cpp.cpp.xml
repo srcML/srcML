@@ -84,4 +84,16 @@
 <expr_stmt><expr><lit:literal type="complex">3i + 2</lit:literal> + <lit:literal type="number">2</lit:literal></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><lit:literal type="complex">3.0i</lit:literal></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><lit:literal type="complex">2.0 + 3.0i</lit:literal></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><lit:literal type="complex">3.0i + 2.0</lit:literal></expr>;</expr_stmt>
+</unit>
+
 </unit>
