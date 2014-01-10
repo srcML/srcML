@@ -2098,16 +2098,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         // move suppressed ()* warning to begin
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_type_constraint)*
 
-        ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } extends_list))*
-        ({ inLanguage(LANGUAGE_JAVA_FAMILY) }?
-            {
-                if (!insuper) {
-                    insuper = true;
-                    super_list_java();
-                }
-            }
-            implements_list
-        )*
+        ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } (extends_list | implements_list) (extends_list | implements_list)*))*
         {
             if (insuper)
                 endMode();
