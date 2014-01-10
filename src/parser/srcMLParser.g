@@ -4995,7 +4995,8 @@ literal[] { LightweightElement element(this); ENTRY_DEBUG } :
             if (isoption(parseoptions, OPTION_LITERAL))
                 startElement(SLITERAL);
         }
-        (COMPLEX_NUMBER ({ next_token() == CONSTANTS }? OPERATORS CONSTANTS)* | CONSTANTS ({ next_token() == COMPLEX_NUMBER }? OPERATORS COMPLEX_NUMBER)*)
+        (COMPLEX_NUMBER ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == CONSTANTS }? OPERATORS CONSTANTS)* |
+    CONSTANTS ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == COMPLEX_NUMBER }? OPERATORS COMPLEX_NUMBER)*)
 ;
 
 
