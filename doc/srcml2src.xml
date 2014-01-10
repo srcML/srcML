@@ -357,7 +357,7 @@
 	  Pass the parameter <replaceable>parameter_name</replaceable> and its corresponding
 	  <replaceable>parameter_value</replaceable> to the XSLT transformation.
 	  This is only valid with the <option>&XSLT_FLAG;</option> option.
-	  This is analagous to the &PARAM_FLAG; of xsltproc.  The xsltproc limit of 32
+	  This is analagous to the --param; of xsltproc.  The xsltproc limit of 32
 	  parameters applies here.
 	  Note that the internally generated parameters src:filename, src:directory, src:version,
 	  src:language, and src:position are automatically generated and are not part
@@ -376,7 +376,7 @@
 
 	<para>
 	  The RelaxNG grammar acts as a filter for individual units
-	  (files).  If the RelaxNG gramar is valid for a unit, then
+	  (files).  If the RelaxNG grammar is valid for a unit, then
 	  that unit is output.  The result is a srcML archive with
 	  only the files that are valid based on the given RelaxNG
 	  grammar.
