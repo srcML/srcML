@@ -259,9 +259,11 @@
 	  Output most of the metadata of the srcML file.  Each
 	  individual piece of data, i.e., namespaces, encoding,
 	  language, directory, filename, and version, is on a separate
-	  line.  The form of the information is that same as that of
-	  the full flag option to src2srcml to form it, without the
-	  leading "--".
+	  line.  Each metadata is the value of the attribute of the root
+          element, or for a particular unit if specified with the
+          <option>&UNIT_FLAG;</option> option.  The form of the information
+	  is that same as that of the full flag option to src2srcml to form it,
+	  without the leading "--".
 	</para>
       </listitem>
     </varlistentry>
