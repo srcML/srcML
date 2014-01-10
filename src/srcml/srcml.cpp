@@ -256,13 +256,11 @@ int main(int argc, char * argv[]) {
           That needs to be swapped out with the actual file name from the 
           CLI arg.
         */
-        if (entry_name.compare("data") == 0 && srcml_request.positional_args[i] != "-") {
+        if (entry_name.compare("data") == 0 && srcml_request.positional_args[i] != "-")
           filename = srcml_request.positional_args[i].c_str();
-        }
 
-        if (entry_name.compare("data") != 0 && srcml_request.positional_args[i] != "-") {
+        if (entry_name.compare("data") != 0 && srcml_request.positional_args[i] != "-")
           filename = entry_name.c_str();
-        }
 
         if (filename) {
           const char * language = srcml_archive_check_extension(srcml_arch, filename);
