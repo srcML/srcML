@@ -1,7 +1,7 @@
 /*
   srcmlapps.hpp
 
-  Copyright (C) 2004-2013  SDML (www.srcML.org)
+  Copyright (C) 2004-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -36,7 +36,7 @@
 #define PATH_SEPARATOR '/'
 #endif
 
-const char* const COPYRIGHT = "Copyright (C) 2013 SDML";
+const char* const COPYRIGHT = "Copyright (C) 2014 SDML";
 
 const char* const EMAIL_ADDRESS = "collard@uakron.edu";
 
