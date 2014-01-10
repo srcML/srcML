@@ -116,9 +116,10 @@ CONSTANTS { int zero_literal = 0; _saveIndex = 0; } :
         { _saveIndex = _saveIndex + zero_literal; }
 ;
 
-DSIGN :
+DSIGN { int zero_literal = 0; _saveIndex = 0; } :
         '$' { $setType(OPERATOR); }
         ({ inLanguage(LANGUAGE_JAVA) }? { $setType(NAME); } NAME)?
+        { _saveIndex = _saveIndex + zero_literal; }
 ;
 
 NAME options { testLiterals = true; } { char lastchar = LA(1); int zero_literal = 0; _saveIndex = 0; } :
