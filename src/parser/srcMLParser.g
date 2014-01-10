@@ -2106,7 +2106,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
                     super_list_java();
                 }
             }
-            implements_list
+            implements_list (extends_list)*
         )*
         {
             if (insuper)
