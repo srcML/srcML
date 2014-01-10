@@ -261,7 +261,7 @@ private:
 bool srcMLParser::BOOL;
 
 // constructor
-srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
+srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
     parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false)
 {
@@ -370,6 +370,7 @@ tokens {
 	SIF_STATEMENT;
 	STHEN;
 	SELSE;
+	SELSEIF;
 
     SWHILE_STATEMENT;
 	SDO_STATEMENT;
@@ -547,7 +548,7 @@ public:
     bool cpp_skipelse;
     int cpp_ifcount;
     bool isdestructor;
-    int parseoptions;
+    OPTION_TYPE & parseoptions;
     std::string namestack[2];
     int ifcount;
 #ifdef ENTRY_DEBUG
@@ -556,6 +557,14 @@ public:
     bool qmark;
     bool notdestructor;
     bool operatorname;
+
+    static bool BOOL;
+
+    // constructor
+    srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
+
+    // destructor
+    ~srcMLParser() {}
 
     struct cppmodeitem {
         cppmodeitem(int current_size)
@@ -568,15 +577,6 @@ public:
         bool skipelse;
     };
     std::stack<cppmodeitem> cppmode;
-
-
-    static bool BOOL;
-
-    // constructor
-    srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX, int options = 0);
-
-    // destructor
-    ~srcMLParser() {}
 
     void startUnit() {
         startElement(SUNIT);
@@ -672,7 +672,7 @@ catch[...] {
 keyword_statements[] { ENTRY_DEBUG } :
 
         // conditional statements
-        if_statement | else_statement | switch_statement | switch_case | switch_default |
+        if_statement | { isoption(parseoptions, OPTION_ELSEIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
         while_statement | for_statement | do_statement | foreach_statement |
@@ -1591,6 +1591,36 @@ else_statement[] { ENTRY_DEBUG } :
         ELSE
 ;
 
+/*
+ else if construct
+
+ else and if are detected on their own, and as part of termination (semicolon or
+ end of a block
+*/
+elseif_statement[] { ENTRY_DEBUG } :
+        {
+            // treat as a statement with a nested statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE);
+
+            ++ifcount;
+
+            // start the else part of the if statement
+            startElement(SELSEIF);
+        }
+        ELSE 
+
+        {
+
+            // start the if statement
+            startElement(SIF_STATEMENT);
+
+            // expect a condition
+            // start THEN after condition
+            startNewMode(MODE_CONDITION | MODE_EXPECT);
+        }
+        IF
+;
+
 //  start of switch statement
 switch_statement[] { ENTRY_DEBUG } :
         {
@@ -2301,6 +2331,7 @@ terminate_post[] { ENTRY_DEBUG } :
 
                 // end down to either a block or top section, or to an if or else
                 endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE);
+
             }
         }
         else_handling
@@ -2343,7 +2374,8 @@ else_handling[] { ENTRY_DEBUG } :
                 // when an ELSE is next and already in an else, must end properly (not needed for then)
                 } else if (LA(1) == ELSE && inMode(MODE_ELSE)) {
 
-                    while (inMode(MODE_ELSE)) {
+                    // when an else but not elseif
+                    while (inMode(MODE_ELSE) && !inMode(MODE_IF)) {
 
                         // end the else
                         endMode();
@@ -2367,6 +2399,13 @@ else_handling[] { ENTRY_DEBUG } :
                     // following ELSE indicates end of outer then
                     if (inMode(MODE_THEN))
                         endMode();
+
+                    // if in elseif then end it
+                    if(inMode(MODE_IF | MODE_ELSE)) {
+                        endMode();
+                        --ifcount;
+                    }
+
                 }
             } else if (inTransparentMode(MODE_ELSE)) {
 
