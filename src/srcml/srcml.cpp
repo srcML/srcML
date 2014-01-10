@@ -72,7 +72,7 @@ bool test_for_stdin() {
   FD_ZERO(&fds);
   FD_SET(STDIN_FILENO, &fds);
 
-  // Set timeout to 0 (don't wait for input)
+  // Set timeout
   timeout.tv_sec = 5;
   timeout.tv_usec = 0;
 
