@@ -73,7 +73,7 @@ bool test_for_stdin() {
   FD_SET(STDIN_FILENO, &fds);
 
   // Set timeout to 0 (don't wait for input)
-  timeout.tv_sec = 0;
+  timeout.tv_sec = 5;
   timeout.tv_usec = 0;
 
   // Use select to see if stdin has data
