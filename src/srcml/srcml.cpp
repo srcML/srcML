@@ -173,6 +173,10 @@ bool convenienceCheck(const std::string& filename) {
 int main(int argc, char * argv[]) {
   srcml_request_t srcml_request = srcmlCLI::parseCLI(argc, argv);
 
+  // Help function was used. srcmlCLI displays, so srcml has no work to do.
+  if (srcml_request.help_set)
+    return 0;
+
   // Ensure all global flags are valid
   if (srcml_request.encoding != "" && srcml_check_encoding(srcml_request.encoding.c_str()) == 0) {
     std::cerr << "Invalid Encoding.\n";
