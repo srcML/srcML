@@ -26,6 +26,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <sstream>
+
 void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer, bool is_root);
 
 /**
@@ -218,23 +220,58 @@ int srcMLReader::readRootUnitAttributes(std::string *& language, std::string *& 
   xmlAttrPtr attribute = node->properties;
   while (attribute) {
     std::string name = (const char *)attribute->name;
+    std::string value = (const char *)attribute->children->content;
 
     try {
 
       if(name == "language")
-        language = new std::string((const char *)attribute->children->content);
+        language = new std::string(value);
       else if(name == "filename")
-        filename = new std::string((const char *)attribute->children->content);
+        filename = new std::string(value);
       else if(name == "dir")
-        directory = new std::string((const char *)attribute->children->content);
+        directory = new std::string(value);
       else if(name == "version")
-        version = new std::string((const char *)attribute->children->content);
+        version = new std::string(value);
       else if(name == "tabs")
-        tabstop = atoi((const char *)attribute->children->content);
-      else {
+        tabstop = atoi(value.c_str());
+      else if(name == "options") {
+
+	while(!value.empty()) {
+
+	  int pos = value.find(",");
+	  std::string option = value.substr(0, pos);
+	  if(pos == std::string::npos)
+	    value = "";
+	  else
+	    value = value.substr(value.find(",") + 1);
+
+	  if(option == "XMLDECL")
+	    options |= OPTION_XMLDECL;
+	  if(option == "NAMESPACEDECL")
+	    options |= OPTION_NAMESPACEDECL;
+	  if(option == "CPP_TEXT_ELSE")
+	    options |= OPTION_CPP_TEXT_ELSE;
+	  if(option == "CPP_MARKUP_IF0")
+	    options |= OPTION_CPP_MARKUP_IF0;
+	  if(option == "EXPRESSION")
+	    options |= OPTION_EXPRESSION;
+	  if(option == "NAMESPACE")
+	    options |= OPTION_NAMESPACE;
+	  if(option == "LINE")
+	    options |= OPTION_LINE;
+	  if(option == "MACRO_PATTERN")
+	    options |= OPTION_MACRO_PATTERN;
+	  if(option == "MACRO_LIST")
+	    options |= OPTION_MACRO_LIST;
+	  if(option == "ELSEIF")
+	    options |= OPTION_ELSEIF;
+
+	}
+
+      } else {
 
         attributes.push_back(name);
-        attributes.push_back((const char *)attribute->children->content);
+        attributes.push_back(value);
 
       }
 

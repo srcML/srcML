@@ -261,7 +261,7 @@ private:
 bool srcMLParser::BOOL;
 
 // constructor
-srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
+srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
     parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false)
 {
@@ -370,6 +370,7 @@ tokens {
 	SIF_STATEMENT;
 	STHEN;
 	SELSE;
+	SELSEIF;
 
     SWHILE_STATEMENT;
 	SDO_STATEMENT;
@@ -529,6 +530,7 @@ tokens {
     SEMPTY;  // empty statement
 
     SANNOTATION;
+    SALIGNOF;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -547,7 +549,7 @@ public:
     bool cpp_skipelse;
     int cpp_ifcount;
     bool isdestructor;
-    int parseoptions;
+    OPTION_TYPE & parseoptions;
     std::string namestack[2];
     int ifcount;
 #ifdef ENTRY_DEBUG
@@ -556,6 +558,14 @@ public:
     bool qmark;
     bool notdestructor;
     bool operatorname;
+
+    static bool BOOL;
+
+    // constructor
+    srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
+
+    // destructor
+    ~srcMLParser() {}
 
     struct cppmodeitem {
         cppmodeitem(int current_size)
@@ -568,15 +578,6 @@ public:
         bool skipelse;
     };
     std::stack<cppmodeitem> cppmode;
-
-
-    static bool BOOL;
-
-    // constructor
-    srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX, int options = 0);
-
-    // destructor
-    ~srcMLParser() {}
 
     void startUnit() {
         startElement(SUNIT);
@@ -647,6 +648,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
 
+        { inLanguage(LANGUAGE_CXX_ONLY) && inMode(MODE_USING) }? using_aliasing |
+
         // statements identified by pattern (i.e., do not start with a keyword)
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? pattern_statements |
 
@@ -672,7 +675,7 @@ catch[...] {
 keyword_statements[] { ENTRY_DEBUG } :
 
         // conditional statements
-        if_statement | else_statement | switch_statement | switch_case | switch_default |
+        if_statement | { isoption(parseoptions, OPTION_ELSEIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
         while_statement | for_statement | do_statement | foreach_statement |
@@ -1318,7 +1321,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | SIZEOF (DOTDOTDOT)*)
+        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -1591,6 +1594,36 @@ else_statement[] { ENTRY_DEBUG } :
         ELSE
 ;
 
+/*
+ else if construct
+
+ else and if are detected on their own, and as part of termination (semicolon or
+ end of a block
+*/
+elseif_statement[] { ENTRY_DEBUG } :
+        {
+            // treat as a statement with a nested statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE);
+
+            ++ifcount;
+
+            // start the else part of the if statement
+            startElement(SELSEIF);
+        }
+        ELSE 
+
+        {
+
+            // start the if statement
+            startElement(SIF_STATEMENT);
+
+            // expect a condition
+            // start THEN after condition
+            startNewMode(MODE_CONDITION | MODE_EXPECT);
+        }
+        IF
+;
+
 //  start of switch statement
 switch_statement[] { ENTRY_DEBUG } :
         {
@@ -1842,12 +1875,18 @@ namespace_block[] { ENTRY_DEBUG } :
 namespace_directive[] { ENTRY_DEBUG } :
         {
             // statement with an expected namespace name after the keywords
-            startNewMode(MODE_STATEMENT | MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+            startNewMode(MODE_STATEMENT | MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT | MODE_USING);
 
             // start the using directive
             startElement(SUSING_DIRECTIVE);
         }
         USING
+;
+
+using_aliasing[]  { ENTRY_DEBUG } :
+
+        EQUAL pattern_statements
+
 ;
 
 /* Declarations Definitions CFG */
@@ -2301,6 +2340,7 @@ terminate_post[] { ENTRY_DEBUG } :
 
                 // end down to either a block or top section, or to an if or else
                 endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE);
+
             }
         }
         else_handling
@@ -2343,7 +2383,8 @@ else_handling[] { ENTRY_DEBUG } :
                 // when an ELSE is next and already in an else, must end properly (not needed for then)
                 } else if (LA(1) == ELSE && inMode(MODE_ELSE)) {
 
-                    while (inMode(MODE_ELSE)) {
+                    // when an else but not elseif
+                    while (inMode(MODE_ELSE) && !inMode(MODE_IF)) {
 
                         // end the else
                         endMode();
@@ -2367,6 +2408,13 @@ else_handling[] { ENTRY_DEBUG } :
                     // following ELSE indicates end of outer then
                     if (inMode(MODE_THEN))
                         endMode();
+
+                    // if in elseif then end it
+                    if(inMode(MODE_IF | MODE_ELSE)) {
+                        endMode();
+                        --ifcount;
+                    }
+
                 }
             } else if (inTransparentMode(MODE_ELSE)) {
 
@@ -2465,6 +2513,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // call list in member initialization list
         { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
         sizeof_call |
+
+        // call list in member initialization list
+        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
+        alignof_call |
 
         /*
           MODE_VARIABLE_NAME
@@ -2920,7 +2972,9 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_int[type_count, endbracket ? type_count - 1 : type_count]
 
         // have a sequence of type tokens, last one is function/variable name
-        // (except for function pointer, which is handled later)
+        // (except for function pointer, which is handled later).
+        // Using also has no name so counter operation.
+        set_int[type_count, inMode(MODE_USING) ? type_count + 1: type_count]
         set_int[type_count, type_count > 1 ? type_count - 1 : 0]
 
         // special case for what looks like a destructor declaration
@@ -3938,6 +3992,20 @@ sizeof_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
+// alignof
+alignof_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+
+            startElement(SALIGNOF);
+        }
+        ALIGNOF
+        call_argument_list
+;
+
 // check if macro call
 macro_call_check[] { ENTRY_DEBUG } :
         simple_identifier (options { greedy = true; } : paren_pair)*
@@ -4812,8 +4880,8 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
             // however I believe parameter_list matches a right paren of the call.
-           (call | sizeof_call) argument |
-            
+           (call | sizeof_call | alignof_call) argument |
+
         // macro call
         { type == MACRO }? macro_call |
 

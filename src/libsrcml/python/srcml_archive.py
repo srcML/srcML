@@ -1,5 +1,5 @@
 from globals import libsrcml
-from ctypes import c_int, c_void_p, c_char_p, pointer
+from ctypes import c_int, c_void_p, c_char_p, pointer, c_ulonglong
 
 from srcml_unit import srcml_unit
 from exception import *
@@ -74,15 +74,15 @@ libsrcml.srcml_archive_set_version.argtypes = [c_void_p, c_char_p]
 
 # int srcml_archive_set_all_options   (struct srcml_archive*, int option);
 libsrcml.srcml_archive_set_all_options.restype = c_int
-libsrcml.srcml_archive_set_all_options.argtypes = [c_void_p, c_int]
+libsrcml.srcml_archive_set_all_options.argtypes = [c_void_p, c_ulonglong]
 
 # int srcml_archive_set_option    (struct srcml_archive*, int option);
 libsrcml.srcml_archive_set_option.restype = c_int
-libsrcml.srcml_archive_set_option.argtypes = [c_void_p, c_int]
+libsrcml.srcml_archive_set_option.argtypes = [c_void_p, c_ulonglong]
 
 # int srcml_archive_clear_option  (struct srcml_archive*, int option);
 libsrcml.srcml_archive_clear_option.restype = c_int
-libsrcml.srcml_archive_clear_option.argtypes = [c_void_p, c_int]
+libsrcml.srcml_archive_clear_option.argtypes = [c_void_p, c_ulonglong]
 
 # int srcml_archive_set_tabstop   (struct srcml_archive*, int tabstop);
 libsrcml.srcml_archive_set_tabstop.restype = c_int
@@ -117,7 +117,7 @@ libsrcml.srcml_archive_get_version.restype = c_char_p
 libsrcml.srcml_archive_get_version.argtypes = [c_void_p]
 
 # int         srcml_archive_get_options  (const struct srcml_archive*);
-libsrcml.srcml_archive_get_options.restype = c_int
+libsrcml.srcml_archive_get_options.restype = c_ulonglong
 libsrcml.srcml_archive_get_options.argtypes = [c_void_p]
 
 # int         srcml_archive_get_tabstop  (const struct srcml_archive*);
