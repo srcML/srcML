@@ -246,11 +246,6 @@ int main(int argc, char * argv[]) {
     }
 
     if (valid == ARCHIVE_OK) {
-      const void* buffer;
-      const char* cptr;
-      size_t size;
-      int64_t offset;
-
       while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
 
         srcml_unit * unit = srcml_create_unit(srcml_arch);
@@ -285,6 +280,12 @@ int main(int argc, char * argv[]) {
         srcml_unit_set_filename(unit, filename);
         srcml_unit_set_language(unit, ((srcml_archive_get_language(srcml_arch)) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename)));
 
+        
+        const void* buffer;
+        const char* cptr;
+        size_t size;
+        int64_t offset;
+        
         while (true) {
           int readStatus = archive_read_data_block(arch, &buffer, &size, &offset);
           cptr = (char*)buffer;
