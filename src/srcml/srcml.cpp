@@ -225,11 +225,17 @@ int main(int argc, char * argv[]) {
 
     int valid = 0;
 
+    // Regular file or archive
     if (srcml_request.positional_args[i] != "-") {
       valid = archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384); 
     }
-    else {
-      // Setting libarchive's file input to NULL forces libarchive to read stdin
+    
+    // Stdin
+    if (srcml_request.positional_args[i] == "-") {
+      if (!test_for_stdin())
+        return 1; // Stdin was requested, but no data was received
+      
+      // Setting libarchive's file input to NULL forces libarchive to read stdin  
       valid = archive_read_open_filename(arch, NULL, 16384);
     }
 
