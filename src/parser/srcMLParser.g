@@ -5902,9 +5902,36 @@ ENTRY_DEBUG } :
         eol_post[directive_token, markblockzero]
 ;
 
+block_count_check[] returns [int curly_diff]{ 
+
+    int start = mark();
+
+    ++inputState->guessing;
+
+    //int start_count = curly_count;
+    curly_diff = 0;
+
+    while(LA(1) != ENDIF) {
+
+        if(LA(1) == LCURLY) ++curly_diff;
+        if(LA(1) == RCURLY) --curly_diff;
+
+        consume();
+
+    }
+
+    curly_diff = curly_diff < 0 ? -curly_diff - 1 : 0;
+
+    --inputState->guessing;
+
+    rewind(start);
+
+
+ENTRY_DEBUG } :;
+
 // post processing for eol
 eol_post[int directive_token, bool markblockzero] {
-fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, curly_count);
+
         // Flags to control skipping of #if 0 and #else.
         // Once in these modes, stay in these modes until the matching #endif is reached
         // cpp_ifcount used to indicate which #endif matches the #if or #else
@@ -5913,6 +5940,8 @@ fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, curly_c
             case IF :
             case IFDEF :
             case IFNDEF :
+
+                fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, block_count_check());
 
                 // start a new blank mode for new zero'ed blocks
                 if (!cpp_zeromode && markblockzero) {
