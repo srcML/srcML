@@ -263,7 +263,7 @@ bool srcMLParser::BOOL;
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
-    parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false)
+    parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0)
 {
     // make sure we have the correct token set
     if (!_tokenSet_1.member(IF))
@@ -559,6 +559,7 @@ public:
     bool qmark;
     bool notdestructor;
     bool operatorname;
+    int curly_count;
 
     static bool BOOL;
 
@@ -2176,6 +2177,7 @@ lcurly[] { ENTRY_DEBUG } :
         lcurly_base
         {
 
+
             incCurly();
 
             // alter the modes set in lcurly_base
@@ -2196,6 +2198,8 @@ lcurly_base[] { ENTRY_DEBUG } :
                 setMode(MODE_CLASS);
 
             startElement(SBLOCK);
+
+            ++curly_count;
 
         }
         LCURLY
@@ -2271,6 +2275,8 @@ rcurly[] { ENTRY_DEBUG } :
 
             if(getCurly() != 0)
                 decCurly();
+
+            --curly_count;
 
         }
         RCURLY
@@ -5760,7 +5766,7 @@ preprocessor[] { ENTRY_DEBUG
         cpp_symbol_optional |
 
         IF
-            { markblockzero = false; }
+        { markblockzero = false; }
         {
             endMode();
 
@@ -5898,7 +5904,7 @@ ENTRY_DEBUG } :
 
 // post processing for eol
 eol_post[int directive_token, bool markblockzero] {
-
+fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, curly_count);
         // Flags to control skipping of #if 0 and #else.
         // Once in these modes, stay in these modes until the matching #endif is reached
         // cpp_ifcount used to indicate which #endif matches the #if or #else
