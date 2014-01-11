@@ -57,6 +57,7 @@ tokens {
     LINE_DOXYGEN_COMMENT_START;
     CHAR_START;
     MACRO_NAME;
+    COMPLEX_NUMBER;
 }
 
 {
@@ -106,6 +107,7 @@ CONSTANTS { int zero_literal = 0; _saveIndex = 0; } :
         ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' | '_' )*
         (options { greedy = true; } : '.' | '0'..'9')*
         (options { greedy = true; } : 'e' | ('+' | '-') | '0'..'9')*
+        (options { greedy = true; } : 'i' { $setType(COMPLEX_NUMBER); })*
         (options { greedy = true; } : NAME)*
 
         {

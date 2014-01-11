@@ -47,6 +47,7 @@ enum {
     PROCESSLITERAL,
     PROCESSBOOLEAN,
     PROCESSNULL,
+    PROCESSCOMPLEX,
     PROCESSINTERFACE,
     PROCESSESCAPE,
 };
@@ -72,6 +73,7 @@ srcMLTranslatorOutput::PROCESS_PTR srcMLTranslatorOutput::num2process[] = {
     &srcMLTranslatorOutput::processLiteral,
     &srcMLTranslatorOutput::processBoolean,
     &srcMLTranslatorOutput::processNull,
+    &srcMLTranslatorOutput::processComplex,
     &srcMLTranslatorOutput::processInterface,
     &srcMLTranslatorOutput::processEscape,
 };
@@ -113,6 +115,7 @@ namespace {
     ELEMENT_MAP(SLITERAL, PROCESSLITERAL)
     ELEMENT_MAP(SBOOLEAN, PROCESSBOOLEAN)
     ELEMENT_MAP(SNULL, PROCESSNULL)
+    ELEMENT_MAP(SCOMPLEX, PROCESSCOMPLEX)
     ELEMENT_MAP(SINTERFACE, PROCESSINTERFACE)
     ELEMENT_MAP(CONTROL_CHAR, PROCESSESCAPE)
 
