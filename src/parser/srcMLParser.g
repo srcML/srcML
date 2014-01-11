@@ -5715,6 +5715,7 @@ preprocessor[] { ENTRY_DEBUG
 
             setTokenPosition(tp);
         }
+
         PREPROC markend[directive_token]
         {
 
