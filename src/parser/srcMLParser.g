@@ -5762,7 +5762,7 @@ preprocessor[] { ENTRY_DEBUG
         cpp_symbol_optional |
 
         IF
-            { markblockzero = false; }
+        { markblockzero = false; }
         {
             endMode();
 
