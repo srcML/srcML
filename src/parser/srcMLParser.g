@@ -5740,7 +5740,7 @@ preprocessor[] { ENTRY_DEBUG
 
             tp.setType(SCPP_DEFINE);
         }
-        cpp_symbol_optional |
+        cpp_define_name cpp_define_value |
 
         IFNDEF
         {
@@ -6060,6 +6060,26 @@ cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG 
 // symbol in cpp
 cpp_symbol[] { ENTRY_DEBUG } :
         simple_identifier
+;
+
+cpp_define_name[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SFUNCTION_DEFINITION);
+        }
+        simple_identifier (cpp_define_parameter_list)*
+;
+
+cpp_define_parameter_list[] { ENTRY_DEBUG } :
+        parameter_list
+;
+
+cpp_define_value[] { ENTRY_DEBUG } :
+        {
+            startElement(SBLOCK);
+        }
+        (cpp_garbage)*
 ;
 
 // optional symbol cpp 
