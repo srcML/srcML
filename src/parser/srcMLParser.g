@@ -5742,7 +5742,7 @@ preprocessor[] { ENTRY_DEBUG
 
             tp.setType(SCPP_DEFINE);
         }
-        cpp_define_name cpp_define_value |
+        cpp_define_name (cpp_define_value)* |
 
         IFNDEF
         {
@@ -6081,7 +6081,7 @@ cpp_define_value[] { ENTRY_DEBUG } :
         {
             startElement(SMACRO_VALUE);
         }
-        (cpp_garbage)*
+        cpp_garbage (cpp_garbage)*
 ;
 
 // optional symbol cpp 
