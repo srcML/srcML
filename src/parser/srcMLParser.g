@@ -6064,13 +6064,13 @@ cpp_symbol[] { ENTRY_DEBUG } :
         simple_identifier
 ;
 
-cpp_define_name[] { CompleteElement element(this); unsigned int pos = mark(); ENTRY_DEBUG } :
+cpp_define_name[] { CompleteElement element(this); unsigned int pos = mark(); } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SMACRO_DEFN);
         }
-        simple_identifier (options { greedy = true; } : { pos == (mark() + 1) }? cpp_define_parameter_list)*
+        simple_identifier (options { greedy = true; } : { (pos + 1) == mark() }? cpp_define_parameter_list)*
 ;
 
 cpp_define_parameter_list[] { ENTRY_DEBUG } :
