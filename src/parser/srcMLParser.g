@@ -452,6 +452,8 @@ tokens {
 	STYPEDEF;
 	SASM;
 	SMACRO_CALL;
+	SMACRO_DEFN;
+	SMACRO_VALUE;
 	SSIZEOF_CALL;
     SEXTERN;
 	SNAMESPACE;
@@ -6066,7 +6068,7 @@ cpp_define_name[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
-            startElement(SFUNCTION_DEFINITION);
+            startElement(SMACRO_DEFN);
         }
         simple_identifier (cpp_define_parameter_list)*
 ;
@@ -6077,7 +6079,7 @@ cpp_define_parameter_list[] { ENTRY_DEBUG } :
 
 cpp_define_value[] { ENTRY_DEBUG } :
         {
-            startElement(SBLOCK);
+            startElement(SMACRO_VALUE);
         }
         (cpp_garbage)*
 ;
