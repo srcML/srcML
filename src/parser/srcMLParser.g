@@ -2209,6 +2209,7 @@ lcurly_base[] { ENTRY_DEBUG } :
 block_end[] { ENTRY_DEBUG } :
         // handling of if with then block followed by else
         // handle the block, however scope of then completion stops at if
+
         rcurly
         {
             if (inMode(MODE_ANONYMOUS)) {
@@ -5941,7 +5942,18 @@ eol_post[int directive_token, bool markblockzero] {
             case IFDEF :
             case IFNDEF :
 
-                fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, block_count_check());
+                {
+
+                    int count = block_count_check();
+
+                    while(count--) {
+                        startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK);
+                        startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK);
+
+                    }
+
+
+                }
 
                 // start a new blank mode for new zero'ed blocks
                 if (!cpp_zeromode && markblockzero) {
