@@ -5742,7 +5742,7 @@ preprocessor[] { ENTRY_DEBUG
 
             tp.setType(SCPP_DEFINE);
         }
-        cpp_define_name (cpp_define_value)* |
+        (cpp_define_name (cpp_define_value)*)* |
 
         IFNDEF
         {
