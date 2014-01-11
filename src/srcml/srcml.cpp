@@ -149,9 +149,11 @@ void setupLibArchive(archive* a) {
   #endif
 }
 
+// Consumption thread function
 void * srcml_consume(void * arg) {
   ThreadQueue<ParseRequest, 3> * queue = (ThreadQueue<ParseRequest, 3> *) arg;
-
+  srcml_archive * srcml_arch = srcml_create_archive();
+  
   return 0;
 }
 
