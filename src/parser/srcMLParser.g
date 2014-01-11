@@ -452,6 +452,8 @@ tokens {
 	STYPEDEF;
 	SASM;
 	SMACRO_CALL;
+	SMACRO_DEFN;
+	SMACRO_VALUE;
 	SSIZEOF_CALL;
     SEXTERN;
 	SNAMESPACE;
@@ -2098,7 +2100,8 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         // move suppressed ()* warning to begin
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_type_constraint)*
 
-        ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } (extends_list | implements_list) (extends_list | implements_list)*))*
+        ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } 
+            (extends_list | implements_list) (options { greedy = true; } : extends_list | implements_list)*))*
         {
             if (insuper)
                 endMode();
@@ -5739,7 +5742,7 @@ preprocessor[] { ENTRY_DEBUG
 
             tp.setType(SCPP_DEFINE);
         }
-        cpp_symbol_optional |
+        (cpp_define_name (options { greedy = true; } : cpp_define_value)*)* |
 
         IFNDEF
         {
@@ -6059,6 +6062,26 @@ cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG 
 // symbol in cpp
 cpp_symbol[] { ENTRY_DEBUG } :
         simple_identifier
+;
+
+cpp_define_name[] { CompleteElement element(this); unsigned int pos = mark(); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SMACRO_DEFN);
+        }
+        simple_identifier (options { greedy = true; } : { pos == (mark() + 1) }? cpp_define_parameter_list)*
+;
+
+cpp_define_parameter_list[] { ENTRY_DEBUG } :
+        parameter_list
+;
+
+cpp_define_value[] { ENTRY_DEBUG } :
+        {
+            startElement(SMACRO_VALUE);
+        }
+        cpp_garbage (options { greedy = true; } : cpp_garbage)*
 ;
 
 // optional symbol cpp 
