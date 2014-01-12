@@ -53,7 +53,6 @@ struct ParseRequest {
         size ^= other.size;
 
         srcml_arch = other.srcml_arch;
-
         lang = other.lang;
     }
 
@@ -62,6 +61,7 @@ struct ParseRequest {
         return filename.empty() && buffer.empty();
     }
 
+    // Fields required by thread to process a unit
     std::string filename;
     std::vector<char> buffer;
     size_t size;
@@ -69,6 +69,7 @@ struct ParseRequest {
     const char * lang;
 };
 
+// Mark the end of input for the threaded queue
 ParseRequest NullParseRequest;
 
 bool test_for_stdin() {
@@ -163,10 +164,12 @@ void * srcml_consume(void * arg) {
     ParseRequest pr;
     queue->pop(pr);
     
+    // Check if termination queue item has been found  
     if (pr.empty()) {
       break;
     }
 
+    // Build, parse, and write srcml unit
     srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
     srcml_unit_set_filename(unit, pr.filename.c_str());
     srcml_unit_set_language(unit, pr.lang);
@@ -346,7 +349,8 @@ int main(int argc, char * argv[]) {
           prq.buffer = dbuff;
           prq.srcml_arch = srcml_arch;
           prq.lang = (srcml_archive_get_language(srcml_arch) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
-          
+
+          // Hand request off to the processing queue
           queue.push(prq);
         }
       }
@@ -357,6 +361,8 @@ int main(int argc, char * argv[]) {
     }
     archive_read_finish(arch);
   }
+
+  // Mark end of input
   queue.push(NullParseRequest);
   pthread_join(writer, NULL);
 
