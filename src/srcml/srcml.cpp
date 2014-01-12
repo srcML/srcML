@@ -162,11 +162,9 @@ void * srcml_consume(void * arg) {
     queue->pop(pr);
     
     if (pr.empty()) {
-      std::cerr << "Done!\n";
       break;
     }
     
-    std::cerr << "Processing: " << pr.filename << "\n";
     srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
     srcml_unit_set_filename(unit, pr.filename.c_str());
     srcml_unit_set_language(unit, pr.lang);
@@ -346,8 +344,7 @@ int main(int argc, char * argv[]) {
           prq.buffer = dbuff;
           prq.srcml_arch = srcml_arch;
           prq.lang = (srcml_archive_get_language(srcml_arch) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
-
-          std::cerr << "Request: " << filename << "\n";
+          
           queue.push(prq);
         }
       }
