@@ -157,6 +157,22 @@ void setupLibArchive(archive* a) {
 void * srcml_consume(void * arg) {
   ThreadQueue<ParseRequest, 10> * queue = (ThreadQueue<ParseRequest, 10> *) arg;
   
+  while (true) {
+    ParseRequest pr;
+    queue->pop(pr);
+    
+    if (pr.empty()) {
+      std::cerr << "Done!\n";
+      break;
+    }
+    
+    std::cerr << "Processing: " << pr.filename << "\n";
+    srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
+    srcml_unit_set_filename(unit, pr.filename.c_str());
+    srcml_unit_set_language(unit, pr.lang);
+    srcml_parse_unit_memory(unit, &pr.buffer[0], pr.size);
+    srcml_write_unit(pr.srcml_arch, unit);
+  }
 
   return 0;
 }
@@ -305,13 +321,6 @@ int main(int argc, char * argv[]) {
             return 1; // Stdin used with no language specified.
         }
       
-
-        // This will go in the thread
-        srcml_unit * unit = srcml_create_unit(srcml_arch);
-        srcml_unit_set_filename(unit, filename.c_str());
-        srcml_unit_set_language(unit, ((srcml_archive_get_language(srcml_arch)) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str())));
-
-        
         const void* buffer;
         const char* cptr;
         size_t size;
@@ -338,11 +347,8 @@ int main(int argc, char * argv[]) {
           prq.srcml_arch = srcml_arch;
           prq.lang = (srcml_archive_get_language(srcml_arch) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
 
+          std::cerr << "Request: " << filename << "\n";
           queue.push(prq);
-
-          //Move to thread
-          srcml_parse_unit_memory(unit, cptr, size);
-          srcml_write_unit(srcml_arch, unit);
         }
       }
     }
@@ -352,6 +358,8 @@ int main(int argc, char * argv[]) {
     }
     archive_read_finish(arch);
   }
+  queue.push(NullParseRequest);
+  pthread_join(writer, NULL);
 
   srcml_close_archive(srcml_arch);
   srcml_free_archive(srcml_arch);
