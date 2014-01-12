@@ -53,6 +53,8 @@ struct ParseRequest {
         size ^= other.size;
 
         srcml_arch = other.srcml_arch;
+
+        lang = other.lang;
     }
 
     // empty ParseRequests indicate termination
@@ -164,7 +166,7 @@ void * srcml_consume(void * arg) {
     if (pr.empty()) {
       break;
     }
-    
+
     srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
     srcml_unit_set_filename(unit, pr.filename.c_str());
     srcml_unit_set_language(unit, pr.lang);
