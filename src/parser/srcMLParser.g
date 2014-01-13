@@ -6145,13 +6145,13 @@ cpp_symbol[] { ENTRY_DEBUG } :
         simple_identifier
 ;
 
-cpp_define_name[] { CompleteElement element(this); unsigned int pos = mark(); } :
+cpp_define_name[] { CompleteElement element(this); unsigned int pos = LT(1)->getColumn() + LT(1)->getText().size(); } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SMACRO_DEFN);
         }
-        simple_identifier (options { greedy = true; } : { (pos + 1) == mark() }? cpp_define_parameter_list)*
+        simple_identifier (options { greedy = true; } : { pos == LT(1)->getColumn() }? cpp_define_parameter_list)*
 ;
 
 cpp_define_parameter_list[] { ENTRY_DEBUG } :
