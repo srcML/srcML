@@ -44,6 +44,39 @@ struct Element {
               attributes(0) 
   {}
 
+  ~Element() {
+
+    if(namespaces) {
+
+      for(int i = 0; i < nb_namespaces * 2; ++i)
+	if(namespaces[i] && namespaces[i] != prefix && namespaces[i] != URI)
+	  free((void *)namespaces[i]);
+
+      free((void *)namespaces);
+    }
+
+    if(localname) free((void *)localname);
+    if(prefix) free((void *)prefix);
+    if(URI) free((void *)URI);
+
+    if(attributes) {
+
+      for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+	if(attributes[index])
+	  free((void *)attributes[index]);
+	if(attributes[index + 1])
+	  free((void *)attributes[index + 1]);
+	if(attributes[index + 2])
+	  free((void *)attributes[index + 2]);
+	free((void *)attributes[index + 3]);
+      }
+
+      free((void *)attributes);
+
+    }
+
+  }
+
   /** local name of an element*/
   const xmlChar* localname;
 
