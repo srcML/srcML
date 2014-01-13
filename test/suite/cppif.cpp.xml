@@ -64,7 +64,6 @@
 
 <!-- this test case is probably marked up wrong
 <unit>
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
 <if>if<condition>()</condition><then>
 <if>if<condition>()</condition><then> <block>{}</block></then>
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
@@ -72,10 +71,9 @@
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 <else>else <block>{}</block></else></if>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
-<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
  -->
-<!-- this test case is probably marked up wrong -->
+
 <unit>
 <if>if<condition>()</condition><then> <block>{
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
