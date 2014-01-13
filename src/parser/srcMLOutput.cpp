@@ -263,7 +263,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     // position tab setting
     { tabattribute.c_str(), isoption(OPTION_POSITION) ? stabs.str().c_str() : 0 },
 
-    { UNIT_ATTRIBUTE_OPTIONS,  isoption(OPTION_ELSEIF) ? soptions.str().c_str() : 0 },
+    { UNIT_ATTRIBUTE_OPTIONS,  (isoption(OPTION_ELSEIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.str().c_str() : 0 },
   };
 
   // output attributes
