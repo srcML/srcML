@@ -5981,9 +5981,8 @@ eol_post[int directive_token, bool markblockzero] {
 
                     }
                     while(paren_count--) {
-                        //setMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
-                        startNewMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
-                        //addElement(SBLOCK);
+                        startNewMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP);
+                        addElement(SCONDITION);
 
                     }
 
