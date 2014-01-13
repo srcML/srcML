@@ -5909,7 +5909,11 @@ if_end_count_check[] returns [std::vector<int> end_order] {
     std::vector<int> op_stack;
     ++inputState->guessing;
 
+    int save_size = 0;
+
     while(LA(1) != ENDIF && LA(1) != ELSE) {
+
+        if(LA(1) == ELIF) save_size = end_order.size();
 
         if(LA(1) == LPAREN) op_stack.push_back(LPAREN);
         if(LA(1) == RPAREN) {
@@ -5927,7 +5931,7 @@ if_end_count_check[] returns [std::vector<int> end_order] {
 
     }
 
-    if(LA(1) == ENDIF) end_order.clear();
+    if(LA(1) == ENDIF) end_order.resize(save_size);
 
     --inputState->guessing;
 
