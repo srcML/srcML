@@ -5906,6 +5906,25 @@ ENTRY_DEBUG } :
         eol_post[directive_token, markblockzero]
 ;
 
+cppendif_skip[] {
+
+    int prev = -1;
+    int endif_count = 1;
+
+    while(endif_count && LA(1) != 1 /* EOF */) {
+
+        if((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF)
+            ++endif_count;
+
+        if(LA(1) == ENDIF)
+            --endif_count;
+
+        prev = LA(1);
+        consume();
+    }
+
+}:;
+
 cppif_end_count_check[] returns [std::list<int> end_order] {
 
     int start = mark();
@@ -5918,7 +5937,7 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
     while(LA(1) != ENDIF && !(prev == PREPROC && LA(1) == ELSE) && LA(1) != 1 /* EOF */) {
 
         if((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF) {
-            while(LA(1) != ENDIF && LA(1) != 1 /* EOF */) consume();
+            cppendif_skip();
             continue;
         }
 
