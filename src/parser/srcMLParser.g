@@ -5917,7 +5917,10 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
     int prev = -1;
     while(LA(1) != ENDIF && !(prev == PREPROC && LA(1) == ELSE) && LA(1) != 1 /* EOF */) {
 
-        if((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF) cppif_end_count_check();
+        if((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF) {
+            while(LA(1) != ENDIF && LA(1) != 1 /* EOF */) consume();
+            continue;
+        }
 
         if(LA(1) == ELIF) save_size = end_order.size();
 
