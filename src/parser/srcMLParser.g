@@ -5953,6 +5953,8 @@ eol_post[int directive_token, bool markblockzero] {
 
                 {
 
+                    // should work unless also creates a dangling lcurly or lparen
+                    // in which case may need to run on everthing except else.
                     std::vector<int> end_order = if_end_count_check();
                     State::MODE_TYPE current_mode = getMode();
                     for(size_t i = 0; i < end_order.size(); ++i) {
