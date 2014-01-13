@@ -2981,6 +2981,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_int[type_count, type_count > 1 ? type_count - 1 : 0]
 
         // special case for what looks like a destructor declaration
+        // @todo need a case where == 1 then , merge it with > 1
         throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attribute_count) > 1 || ((type_count - specifier_count - attribute_count) == 1))]
 
         /*
