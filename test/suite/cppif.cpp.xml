@@ -72,7 +72,7 @@
 <else>else <block>{}</block></else></if>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
- -->
+-->
 
 <unit>
 <if>if<condition>(<expr>1</expr>)</condition><then> <block>{
@@ -86,6 +86,26 @@
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
 }<block/>
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+}</block></then></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+}<block/>
+<cpp:elif>#<cpp:directive>elif</cpp:directive></cpp:elif>
+}<block/>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+}</block></then></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+}<block/>
+<cpp:elif>#<cpp:directive>elif</cpp:directive></cpp:elif>
 }</block></then></if>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
