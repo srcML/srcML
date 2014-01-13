@@ -452,6 +452,8 @@ tokens {
 	STYPEDEF;
 	SASM;
 	SMACRO_CALL;
+	SMACRO_DEFN;
+	SMACRO_VALUE;
 	SSIZEOF_CALL;
     SEXTERN;
 	SNAMESPACE;
@@ -1030,9 +1032,10 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } : TYPENAME)* lead_type_identifier
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? specifier)*  lead_type_identifier
 
         { 
+
             decTypeCount();
             if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY))
                 return;
@@ -2859,7 +2862,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             (
                 { _tokenSet_23.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
                 set_int[token, LA(1)]
-                set_bool[foundpure, foundpure || LA(1) == CONST]
+                set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
                 (specifier | { next_token() == COLON }? SIGNAL)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
@@ -3170,7 +3173,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         // class/struct/union before a name in a type, e.g., class A f();
-        TYPENAME | class_lead_type_identifier |
+        class_lead_type_identifier |
 
         // enum use in a type
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
@@ -3777,7 +3780,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // C++
             FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
-            CONSTEXPR | THREADLOCAL |
+            CONSTEXPR | THREADLOCAL | TYPENAME |
 
             // C
             RESTRICT | 
@@ -5748,7 +5751,7 @@ preprocessor[] { ENTRY_DEBUG
 
             tp.setType(SCPP_DEFINE);
         }
-        cpp_symbol_optional |
+        (cpp_define_name (options { greedy = true; } : cpp_define_value)*)* |
 
         IFNDEF
         {
@@ -6140,6 +6143,26 @@ cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG 
 // symbol in cpp
 cpp_symbol[] { ENTRY_DEBUG } :
         simple_identifier
+;
+
+cpp_define_name[] { CompleteElement element(this); unsigned int pos = mark(); } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SMACRO_DEFN);
+        }
+        simple_identifier (options { greedy = true; } : { (pos + 1) == mark() }? cpp_define_parameter_list)*
+;
+
+cpp_define_parameter_list[] { ENTRY_DEBUG } :
+        parameter_list
+;
+
+cpp_define_value[] { ENTRY_DEBUG } :
+        {
+            startElement(SMACRO_VALUE);
+        }
+        cpp_garbage (options { greedy = true; } : cpp_garbage)*
 ;
 
 // optional symbol cpp 
