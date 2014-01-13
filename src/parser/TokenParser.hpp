@@ -64,6 +64,8 @@ public:
     // starts an element
     virtual void emptyElement(int) = 0;
 
+    virtual void addElement(int) = 0;
+
     virtual void flushSkip() = 0;
 
     virtual int SkipBufferSize() = 0;
