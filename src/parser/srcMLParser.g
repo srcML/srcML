@@ -5965,6 +5965,7 @@ eol_post[int directive_token, bool markblockzero] {
                     // in which case may need to run on everthing except else.
                     std::list<int> end_order = if_end_count_check();
                     State::MODE_TYPE current_mode = getMode();
+                    // @todo When C++11 is default, switch to ranged for or at least auto keyword.
                     for(std::list<int>::iterator pos = end_order.begin(); pos != end_order.end(); ++pos) {
 
                         if(*pos == RCURLY) {    
