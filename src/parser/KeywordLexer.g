@@ -1,7 +1,7 @@
 /*
   KeywordLexer.g
 
-  Copyright (C) 2004-2013  SDML (www.sdml.info)
+  Copyright (C) 2004-2014  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
@@ -90,6 +90,9 @@ tokens {
     SIZEOF;
     EXTERN;
 
+    // C
+    RESTRICT;
+
     // C++
     CONSTEXPR;
     NOEXCEPT;
@@ -98,10 +101,14 @@ tokens {
     DECLTYPE;
     ALIGNAS;
     TYPENAME;
+    ALIGNOF;
 
     // aggregate types
     UNION;
 	STRUCT;
+
+    // types
+    VOID;
 
     // functions
 	RETURN;
@@ -127,7 +134,6 @@ tokens {
     VOLATILE = "volatile";
 
     // Standard type keywords do not need to be identified
-    VOID = "void";
 	BOOL = "bool";
 	CHAR = "char";
     INT = "int";
@@ -184,6 +190,7 @@ tokens {
     SYNCHRONIZED;
     NATIVE;
     STRICTFP;
+    NULLLITERAL;
 
     // C# tokens
     FOREACH;
@@ -325,6 +332,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
 
         { "union"        , UNION         , LANGUAGE_CXX_ONLY | LANGUAGE_C }, 
         { "struct"       , STRUCT        , LANGUAGE_C_FAMILY }, 
+        { "void"         , VOID          , LANGUAGE_ALL }, 
 
         { "inline"       , INLINE        , LANGUAGE_C_FAMILY }, 
         { "extern"       , EXTERN        , LANGUAGE_C_FAMILY }, 
@@ -335,7 +343,8 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
         { "sizeof"       , SIZEOF        , LANGUAGE_C_FAMILY }, 
 
         { "mutable"      , MUTABLE       , LANGUAGE_CXX }, 
-        { "volatile"     , VOLATILE      , LANGUAGE_OO }, 
+        { "volatile"     , VOLATILE      , LANGUAGE_ALL }, 
+        { "restrict"     , RESTRICT      , LANGUAGE_C }, 
 
         // exception handling
         { "try"          , TRY           , LANGUAGE_OO }, 
@@ -387,6 +396,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
         { "decltype"      , DECLTYPE         , LANGUAGE_CXX_ONLY }, 
         { "alignas"       , ALIGNAS          , LANGUAGE_CXX_ONLY }, 
         { "typename"      , TYPENAME         , LANGUAGE_CXX_ONLY }, 
+        { "alignof"       , ALIGNOF          , LANGUAGE_CXX_ONLY }, 
 
         // Add alternative operators
         { "and"           , OPERATORS        , LANGUAGE_CXX_ONLY }, 
@@ -419,6 +429,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_
         { "transient"     , TRANSIENT     , LANGUAGE_JAVA }, 
 	    { "|"             , BAR           , LANGUAGE_JAVA }, 
 	    { "@"             , ATSIGN        , LANGUAGE_JAVA }, 
+	    { "null"          , NULLLITERAL   , LANGUAGE_JAVA }, 
 
 
         // add all C# specific keywords to the literals table

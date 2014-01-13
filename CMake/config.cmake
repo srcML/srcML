@@ -1,6 +1,6 @@
 # @copyright
 # 
-# Copyright (C) 2013  SDML (www.srcML.org)
+# Copyright (C) 2013-2014  SDML (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,12 +35,15 @@ set_property(GLOBAL PROPERTY SVN_ENABLED ${ENABLE_SVN_INTEGRATION})
 option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" OFF)
 set_property(GLOBAL PROPERTY SAX2_ENABLED ${LIBSRCML_SAX2_ENABLED})
 
+# Dynamic Load libraries (Unix only)
+option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and libexslt" ON)
+set_property(GLOBAL PROPERTY DYNAMIC_ENABLED ${DYNAMIC_LOAD_ENABLED})
+
 # Adding build option for srcml executable.
 option(ENABLE_NEW_SRCML_EXEC_BUILD "Build the newer version of the srcML executable." ON)
 set_property(GLOBAL PROPERTY ENABLE_NEW_SRCML_EXEC_BUILD ${ENABLE_NEW_SRCML_EXEC_BUILD})
 
 # Locating packages.
-find_program(xsltproc REQUIRED)
 find_package(LibArchive REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(LibXslt)
@@ -119,19 +122,44 @@ if(NOT ${PYTHON_VERSION_MAJOR} EQUAL "2")
 endif()
 set_property(GLOBAL PROPERTY PYTHON_INTERP_EXE ${PYTHON_EXECUTABLE})
 
-# @todo this needs place in a more appropriate location.
-set(CMAKE_CXX_FLAGS "-Wall -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized  -O3")
+
+# Adding global configuration for the load DLL macro.
+if(NOT ${DYNAMIC_LOAD_ENABLED})
+    add_definitions(-DNO_DLLOAD)
+endif()
 
 # Adding compiler configuration for GCC.
 # The default configuration is to compile in DEBUG mode. These flags can be directly
 # overridden by setting the property of a target you wish to change them for.
 if(${CMAKE_COMPILER_IS_GNUCXX})
-
+    set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized")
     # Adding global compiler definitions.
-    set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O3 -DNDEBUG")
-    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -O0 -DDEBUG --coverage -fprofile-arcs -DNO_DLLOAD")
+    set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${GCC_WARNINGS}")
+    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DDEBUG --coverage -fprofile-arcs ${GCC_WARNINGS}")
+
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    # Configuring the Clang compiler
+    set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wpadded -Wshorten-64-to-32")
+    set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${CLANG_WARNINGS}")
+    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DDEBUG -fprofile-arcs ${CLANG_WARNINGS}")
     
-    # This allows for compilation of a re-locatable execuatable on GCC I need to be sure that I
-    # can make this portable to compilers other than GCC.
-    add_definitions(-fPIC)
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+    message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
+    
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
+    
+else()
+    message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
 endif()
+
+
+# if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+#     message(STATUS "Compiler is clang.")
+# elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+#     message(STATUS "Compiler is GNU.")
+# elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+#     message(STATUS "Compiler is Intel.")
+# elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+#     message(STATUS "Compiler is MSVC.")
+# endif()

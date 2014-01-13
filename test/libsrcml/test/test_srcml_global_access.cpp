@@ -1,7 +1,7 @@
 /*
   test_srcml_global_access.cpp
 
-  Copyright (C) 2013  SDML (www.srcML.org)
+  Copyright (C) 2013-2014  SDML (www.srcML.org)
 
   The srcML Toolkit is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -31,6 +31,8 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include "dassert.hpp"
+
 extern srcml_archive global_archive;
 
 int main(int argc, char * argv[]) {
@@ -41,12 +43,12 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_set_encoding(0);
-    assert(global_archive.encoding == 0);
+    dassert(global_archive.encoding, 0);
   }
 
   {
     srcml_set_encoding("foo");
-    assert(*global_archive.encoding == "foo");
+    dassert(*global_archive.encoding, "foo");
     delete global_archive.encoding;
   }
 
@@ -56,12 +58,12 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_set_language(0);
-    assert(global_archive.language == 0);
+    dassert(global_archive.language, 0);
   }
 
   {
     srcml_set_language("foo");
-    assert(*global_archive.language == "foo");
+    dassert(*global_archive.language, "foo");
     delete global_archive.language;
   }
 
@@ -71,12 +73,12 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_set_filename(0);
-    assert(global_archive.filename == 0);
+    dassert(global_archive.filename, 0);
   }
 
   {
     srcml_set_filename("foo");
-    assert(*global_archive.filename == "foo");
+    dassert(*global_archive.filename, "foo");
     delete global_archive.filename;
   }
 
@@ -86,12 +88,12 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_set_directory(0);
-    assert(global_archive.directory == 0);
+    dassert(global_archive.directory, 0);
   }
 
   {
     srcml_set_directory("foo");
-    assert(*global_archive.directory == "foo");
+    dassert(*global_archive.directory, "foo");
     delete global_archive.directory;
   }
 
@@ -101,12 +103,12 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_set_version(0);
-    assert(global_archive.version == 0);
+    dassert(global_archive.version, 0);
   }
 
   {
     srcml_set_version("foo");
-    assert(*global_archive.version == "foo");
+    dassert(*global_archive.version, "foo");
     delete global_archive.version;
   }
 
@@ -116,13 +118,13 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_set_all_options(1 | 2 | 3);
-    assert(global_archive.options == (1 | 2 | 3));
+    dassert(global_archive.options, (1 | 2 | 3));
   }
 
   {
     srcml_set_all_options(1 | 2 | 3);
     srcml_set_all_options(1);
-    assert(global_archive.options == 1);
+    dassert(global_archive.options, 1);
   }
 
   /* 
@@ -132,19 +134,19 @@ int main(int argc, char * argv[]) {
   {
     srcml_set_all_options(0);
     srcml_set_option(1);
-    assert(global_archive.options == 1);
+    dassert(global_archive.options, 1);
   }
 
   {
     srcml_set_all_options(1 | 2);
     srcml_set_option(4);
-    assert(global_archive.options == (1 | 2 | 4));
+    dassert(global_archive.options, (1 | 2 | 4));
   }
 
   {
     srcml_set_all_options(1);
     srcml_set_option(2 | 4);
-    assert(global_archive.options == (1 | 2 | 4));
+    dassert(global_archive.options, (1 | 2 | 4));
   }
 
   /* 
@@ -154,25 +156,25 @@ int main(int argc, char * argv[]) {
   {
     srcml_set_all_options(0);
     srcml_clear_option(0);
-    assert(global_archive.options == 0);
+    dassert(global_archive.options, 0);
   }
 
   {
     srcml_set_all_options(1 | 2 | 4);
     srcml_clear_option(0);
-    assert(global_archive.options == (1 | 2 | 4));
+    dassert(global_archive.options, (1 | 2 | 4));
   }
 
   {
     srcml_set_all_options(1 | 2 | 4);
     srcml_clear_option(2);
-    assert(global_archive.options == (1 | 4));
+    dassert(global_archive.options, (1 | 4));
   }
 
   {
     srcml_set_all_options(1 | 2 | 4);
     srcml_clear_option(1 | 2);
-    assert(global_archive.options == 4);
+    dassert(global_archive.options, 4);
   }
 
   /* 
@@ -181,7 +183,7 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_set_tabstop(4);
-    assert(global_archive.tabstop == 4);
+    dassert(global_archive.tabstop, 4);
   }
 
   /* 
@@ -190,20 +192,20 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_register_file_extension("foo", "C++");
-    assert(global_archive.registered_languages.back().s == "foo");
-    assert(global_archive.registered_languages.back().n == 2);
+    dassert(global_archive.registered_languages.back().s, "foo");
+    dassert(global_archive.registered_languages.back().n, 2);
   }
 
   {
-    assert(srcml_register_file_extension("foo", "C+") == SRCML_STATUS_ERROR);
+    dassert(srcml_register_file_extension("foo", "C+"), SRCML_STATUS_ERROR);
   }
 
   {
-    assert(srcml_register_file_extension("foo", 0) == SRCML_STATUS_ERROR);
+    dassert(srcml_register_file_extension("foo", 0), SRCML_STATUS_ERROR);
   }
 
   {
-    assert(srcml_register_file_extension(0, "C++") == SRCML_STATUS_ERROR);
+    dassert(srcml_register_file_extension(0, "C++"), SRCML_STATUS_ERROR);
   }
 
   /* 
@@ -212,22 +214,22 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_register_namespace("foo", "bar");
-    assert(global_archive.prefixes.back() == "foo");
-    assert(global_archive.namespaces.back() == "bar");
+    dassert(global_archive.prefixes.back(), "foo");
+    dassert(global_archive.namespaces.back(), "bar");
   }
 
   {
     srcml_register_namespace("foo2", "bar");
-    assert(global_archive.prefixes.at(0) == "foo2");
-    assert(global_archive.namespaces.at(0) == "bar");
+    dassert(global_archive.prefixes.at(0), "foo2");
+    dassert(global_archive.namespaces.at(0), "bar");
   }
 
   {
-    assert(srcml_register_namespace(0, "bar") == SRCML_STATUS_ERROR);
+    dassert(srcml_register_namespace(0, "bar"), SRCML_STATUS_ERROR);
   }
 
   {
-    assert(srcml_register_namespace("foo", 0) == SRCML_STATUS_ERROR);
+    dassert(srcml_register_namespace("foo", 0), SRCML_STATUS_ERROR);
   }
 
   /* 
@@ -236,12 +238,12 @@ int main(int argc, char * argv[]) {
 
   {
     global_archive.encoding = 0;
-    assert(srcml_get_encoding() == 0);
+    dassert(srcml_get_encoding(), 0);
   }
 
   {
     global_archive.encoding = new std::string("foo");
-    assert(srcml_get_encoding() == std::string("foo"));
+    dassert(srcml_get_encoding(), std::string("foo"));
     delete global_archive.encoding;
     global_archive.encoding = 0;
   }
@@ -252,12 +254,12 @@ int main(int argc, char * argv[]) {
 
   {
     global_archive.language = 0;
-    assert(srcml_get_language() == 0);
+    dassert(srcml_get_language(), 0);
   }
 
   {
     global_archive.language = new std::string("foo");
-    assert(srcml_get_language() == std::string("foo"));
+    dassert(srcml_get_language(), std::string("foo"));
     delete global_archive.language;
     global_archive.language = 0;
   }
@@ -268,12 +270,12 @@ int main(int argc, char * argv[]) {
 
   {
     global_archive.filename = 0;
-    assert(srcml_get_filename() == 0);
+    dassert(srcml_get_filename(), 0);
   }
 
   {
     global_archive.filename = new std::string("foo");
-    assert(srcml_get_filename() == std::string("foo"));
+    dassert(srcml_get_filename(), std::string("foo"));
     delete global_archive.filename;
     global_archive.filename = 0;
   }
@@ -284,12 +286,12 @@ int main(int argc, char * argv[]) {
 
   {
     global_archive.directory = 0;
-    assert(srcml_get_directory() == 0);
+    dassert(srcml_get_directory(), 0);
   }
 
   {
     global_archive.directory = new std::string("foo");
-    assert(srcml_get_directory() == std::string("foo"));
+    dassert(srcml_get_directory(), std::string("foo"));
     delete global_archive.directory; 
     global_archive.directory = 0;
  }
@@ -300,12 +302,12 @@ int main(int argc, char * argv[]) {
 
   {
     global_archive.version = 0;
-    assert(srcml_get_version() == 0);
+    dassert(srcml_get_version(), 0);
   }
 
   {
     global_archive.version = new std::string("foo");
-    assert(srcml_get_version() == std::string("foo"));
+    dassert(srcml_get_version(), std::string("foo"));
     delete global_archive.version; 
     global_archive.version = 0;
  }
@@ -316,12 +318,12 @@ int main(int argc, char * argv[]) {
 
   {
     global_archive.options = 1;
-    assert(srcml_get_options() == 1);
+    dassert(srcml_get_options(), 1);
   }
 
   {
     global_archive.options = 1 | 2;
-    assert(srcml_get_options() == (1 | 2));
+    dassert(srcml_get_options(), (1 | 2));
   }
 
   /* 
@@ -330,7 +332,7 @@ int main(int argc, char * argv[]) {
 
   {
     global_archive.tabstop = 4;
-    assert(srcml_get_tabstop() == 4);
+    dassert(srcml_get_tabstop(), 4);
   }
 
   /* 
@@ -338,13 +340,13 @@ int main(int argc, char * argv[]) {
    */
 
   {
-    assert(srcml_get_namespace_size() == 1);
+    dassert(srcml_get_namespace_size(), 1);
   }
 
   {
     srcml_register_namespace("foo2", "bar2");
     srcml_register_namespace("foo3", "bar3");
-    assert(srcml_get_namespace_size() == 3);
+    dassert(srcml_get_namespace_size(), 3);
   }
 
   /* 
@@ -352,15 +354,15 @@ int main(int argc, char * argv[]) {
    */
 
   {
-    assert(srcml_get_prefix(1) == std::string("foo2"));
+    dassert(srcml_get_prefix(1), std::string("foo2"));
   }
 
   {
-    assert(srcml_get_prefix(-1) == 0);
+    dassert(srcml_get_prefix(-1), 0);
   }
 
   {
-    assert(srcml_get_prefix(3) == 0);
+    dassert(srcml_get_prefix(3), 0);
   }
 
   /* 
@@ -368,15 +370,15 @@ int main(int argc, char * argv[]) {
    */
 
   {
-    assert(srcml_get_prefix_uri("bar2") == std::string("foo2"));
+    dassert(srcml_get_prefix_uri("bar2"), std::string("foo2"));
   }
 
   {
-    assert(srcml_get_prefix_uri("bar4") == 0);
+    dassert(srcml_get_prefix_uri("bar4"), 0);
   }
 
   {
-    assert(srcml_get_prefix_uri(0) == 0);
+    dassert(srcml_get_prefix_uri(0), 0);
   }
 
   /* 
@@ -384,15 +386,15 @@ int main(int argc, char * argv[]) {
    */
 
   {
-    assert(srcml_get_namespace(1) == std::string("bar2"));
+    dassert(srcml_get_namespace(1), std::string("bar2"));
   }
 
   {
-    assert(srcml_get_namespace(-1) == 0);
+    dassert(srcml_get_namespace(-1), 0);
   }
 
   {
-    assert(srcml_get_namespace(3) == 0);
+    dassert(srcml_get_namespace(3), 0);
   }
 
   /* 
@@ -400,15 +402,15 @@ int main(int argc, char * argv[]) {
    */
 
   {
-    assert(srcml_get_namespace_prefix("foo2") == std::string("bar"));
+    dassert(srcml_get_namespace_prefix("foo2"), std::string("bar"));
   }
 
   {
-    assert(srcml_get_namespace_prefix("foo4") == 0);
+    dassert(srcml_get_namespace_prefix("foo4"), 0);
   }
 
   {
-    assert(srcml_get_namespace_prefix(0) == 0);
+    dassert(srcml_get_namespace_prefix(0), 0);
   }
 
   return 0;

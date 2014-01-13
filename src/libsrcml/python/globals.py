@@ -1,5 +1,5 @@
 import os
-from ctypes import cdll, c_int, c_char_p, POINTER
+from ctypes import cdll, c_int, c_char_p, POINTER, c_ulonglong
 from exception import *
 
 LIBSRCML_PATH=""
@@ -65,18 +65,18 @@ libsrcml.srcml_set_version.argtypes = [c_char_p]
 
 # int srcml_set_all_options   (int option);
 libsrcml.srcml_set_all_options.restype = c_int
-libsrcml.srcml_set_all_options.argtypes = [c_int]
+libsrcml.srcml_set_all_options.argtypes = [c_ulonglong]
 
 # int srcml_set_option    (int option);
 libsrcml.srcml_set_option.restype = c_int
-libsrcml.srcml_set_option.argtypes = [c_int]
+libsrcml.srcml_set_option.argtypes = [c_ulonglong]
 
 # int srcml_clear_option  (int option);
 libsrcml.srcml_clear_option.restype = c_int
-libsrcml.srcml_clear_option.argtypes = [c_int]
+libsrcml.srcml_clear_option.argtypes = [c_ulonglong]
 
 # int srcml_set_tabstop   (int tabstop);
-libsrcml.srcml_set_option.restype = c_int
+libsrcml.srcml_set_tabstop.restype = c_int
 libsrcml.srcml_set_tabstop.argtypes = [c_int]
 
 # int srcml_register_file_extension(const char* extension, const char* language);
@@ -108,7 +108,7 @@ libsrcml.srcml_get_version.restype = c_char_p
 libsrcml.srcml_get_version.argtypes = []
 
 # int         srcml_get_options  ();
-libsrcml.srcml_get_options.restype = c_int
+libsrcml.srcml_get_options.restype = c_ulonglong
 libsrcml.srcml_get_options.argtypes = []
 
 # int         srcml_get_tabstop  ();

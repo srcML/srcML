@@ -1,7 +1,7 @@
 /*
   Mode.cpp
 
-  Copyright (C) 2004-2013  SDML (www.srcML.org)
+  Copyright (C) 2004-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -60,7 +60,7 @@ const State::MODE_TYPE Mode::MODE_INTERNAL_END_PAREN  = ull(0x0000000008000000);
 const State::MODE_TYPE Mode::MODE_ACCESS_REGION       = ull(0x0000000010000000);
 const State::MODE_TYPE Mode::MODE_DO_STATEMENT        = ull(0x0000000020000000);
 const State::MODE_TYPE Mode::MODE_IGNORE_TERMINATE    = ull(0x0000000040000000);
-// const State::MODE_TYPE Mode::MODE_UNUSED           = ull(0x0000000080000000);
+const State::MODE_TYPE Mode::MODE_USING               = ull(0x0000000080000000);
 const State::MODE_TYPE Mode::MODE_EXTERN              = ull(0x0000000100000000);
 const State::MODE_TYPE Mode::MODE_TRAILING_RETURN     = ull(0x0000000200000000);
 const State::MODE_TYPE Mode::MODE_INTERNAL_END_CURLY  = ull(0x0000000400000000);

@@ -2,7 +2,7 @@
  * @file srcml_sax2_utilities.cpp
  * @copyright
  *
- * Copyright (C) 2013  SDML (www.srcML.org)
+ * Copyright (C) 2013-2014  SDML (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -151,22 +151,10 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
  * Allow for all exslt functions by dynamic load
  * of exslt library.
  */
-void dlexsltRegisterAll() {
+void dlexsltRegisterAll(void * handle) {
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
   typedef void (*exsltRegisterAll_function)();
-
-  void* handle = dlopen("libexslt.so", RTLD_LAZY);
-  if (!handle) {
-    handle = dlopen("libexslt.so.0", RTLD_LAZY);
-    if (!handle) {
-      handle = dlopen("libexslt.dylib", RTLD_LAZY);
-      if (!handle) {
-        fprintf(stderr, "Unable to open libexslt library\n");
-        return;
-      }
-    }
-  }
 
   dlerror();
   exsltRegisterAll_function exsltRegisterAll = (exsltRegisterAll_function)dlsym(handle, "exsltRegisterAll");
@@ -181,9 +169,6 @@ void dlexsltRegisterAll() {
 
 #endif
 
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-  dlclose(handle);
-#endif
 }
 
 /**
@@ -206,9 +191,6 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 
   xmlInitParser();
 
-  // allow for all exstl functions
-  dlexsltRegisterAll();
-
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
   typedef xsltStylesheetPtr (*xsltParseStylesheetFile_function) (const xmlChar*);
   typedef void (*xsltCleanupGlobals_function)();
@@ -225,6 +207,9 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
       }
     }
   }
+
+  // allow for all exstl functions
+  dlexsltRegisterAll(handle);
 
   dlerror();
   xsltParseStylesheetFile_function xsltParseStylesheetFile = (xsltParseStylesheetFile_function)dlsym(handle, "xsltParseStylesheetFile");

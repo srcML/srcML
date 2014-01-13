@@ -13,7 +13,7 @@
 <synchronized>synchronized(<expr><name>factories</name></expr>) <block>{
     <for>for (<init><decl><type><name>ExtensionFactory</name></type> <name>factory</name> <range>: <expr><name>factories</name></expr></range></decl></init>) <block>{
         <expr_stmt><expr><name>t</name> = (<name>T</name>) <call><name><name>factory</name>.<name>getElementWrapper</name></name><argument_list>(<argument><expr><name>internal</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-        <if>if <condition>(<expr><name>t</name> != <name>null</name> &amp;&amp; <name>t</name> != <name>internal</name></expr>)</condition><then> <block>{
+        <if>if <condition>(<expr><name>t</name> != null &amp;&amp; <name>t</name> != <name>internal</name></expr>)</condition><then> <block>{
             <expr_stmt><expr><call><name>setElementWrapper</name><argument_list>(<argument><expr><name>internal</name></expr></argument>,<argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
             <return>return <expr><name>t</name></expr>;</return>
         }</block></then></if>

@@ -25,4 +25,12 @@
 <expr_stmt><expr><lit:literal type="number">2.5F</lit:literal></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><lit:literal type="number">6.022137e+23f</lit:literal></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><lit:literal type="number">1e-9d</lit:literal></expr>;</expr_stmt>
+</unit>
+
 </unit>

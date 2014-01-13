@@ -1,7 +1,7 @@
 /*
   srcml_read_archive_full.c
 
-  Copyright (C) 2013  SDML (www.srcML.org)
+  Copyright (C) 2013-2014  SDML (www.srcML.org)
 
   The srcML Toolkit is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 
 #include "srcml.h"
 #include <fcntl.h>
+#include <unistd.h>
 
 int main(int argc, char* argv[]) {
     int srcml_input;
@@ -43,7 +44,7 @@ int main(int argc, char* argv[]) {
     srcml_read_open_fd(archive, srcml_input);
 
     /* add all the files to the archive */
-    while (unit = srcml_read_unit(archive)) {
+    while ((unit = srcml_read_unit(archive))) {
       
         /* can inquire about the current unit */
         language = srcml_unit_get_language(unit);

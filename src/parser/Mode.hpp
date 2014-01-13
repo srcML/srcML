@@ -1,7 +1,7 @@
 /*
   Mode.hpp
 
-  Copyright (C) 2004-2013  SDML (www.srcML.org)
+  Copyright (C) 2004-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -149,6 +149,8 @@ public:
     const static State::MODE_TYPE MODE_ANONYMOUS;
 
     const static State::MODE_TYPE MODE_END_AT_COMMA;
+
+    const static State::MODE_TYPE MODE_USING;
 
     const static State::MODE_TYPE MODE_TRAILING_RETURN;
 

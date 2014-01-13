@@ -1,7 +1,7 @@
 /*
   StreamMLParser.hpp
 
-  Copyright (C) 2002-2013  SDML (www.srcML.org)
+  Copyright (C) 2002-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -28,11 +28,13 @@
 
 #include <antlr/TokenStream.hpp>
 #include "TokenStream.hpp"
+#include <Options.hpp>
 
 #include <list>
 #include <cassert>
 
 #include "srcMLToken.hpp"
+#include "Options.hpp"
 
 template <typename Base>
 class StreamMLParser : public Base, public TokenStream {
@@ -40,7 +42,7 @@ class StreamMLParser : public Base, public TokenStream {
     // Follow example of ANTLR generated parsers
 public:
 
-    StreamMLParser(antlr::TokenStream& lexer, int language, int parsing_options = 0)
+    StreamMLParser(antlr::TokenStream& lexer, int language, OPTION_TYPE & parsing_options)
         : Base(lexer, language, parsing_options), options(parsing_options),
           inskip(false), _lexer(lexer) {
 
@@ -178,7 +180,7 @@ private:
     bool consumeSkippedToken() {
 
         // preprocessor (unless we already are in one)
-        if (!inskip && Base::LA(1) == Base::PREPROC) {
+      if (isoption(options, OPTION_CPP) && !inskip && Base::LA(1) == Base::PREPROC) {
 
             // start preprocessor handling
             inskip = true;
@@ -360,7 +362,7 @@ private:
     }
 
 private:
-    int options;
+    OPTION_TYPE & options;
     bool inskip;
     antlr::TokenStream& _lexer;
 

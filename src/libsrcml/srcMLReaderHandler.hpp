@@ -156,8 +156,8 @@ public :
    */
   void stop() {
 
-    resume();
     terminate = true;
+    resume();
 
   }
 
@@ -199,7 +199,41 @@ public :
         srcml_archive_set_version(archive, value.c_str());
       else if(attribute == "tabs")
         archive->tabstop = atoi(value.c_str());
-      else {
+      else if(name == "options") {
+
+        while(!value.empty()) {
+
+          int pos = value.find(",");
+	  std::string option = value.substr(0, pos);
+          if(pos == std::string::npos)
+            value = "";
+          else
+            value = value.substr(value.find(",") + 1);
+
+          if(option == "XMLDECL")
+            options |= OPTION_XMLDECL;
+          if(option == "NAMESPACEDECL")
+            options |= OPTION_NAMESPACEDECL;
+          if(option == "CPP_TEXT_ELSE")
+            options |= OPTION_CPP_TEXT_ELSE;
+          if(option == "CPP_MARKUP_IF0")
+            options |= OPTION_CPP_MARKUP_IF0;
+          if(option == "EXPRESSION")
+            options |= OPTION_EXPRESSION;
+          if(option == "NAMESPACE")
+            options |= OPTION_NAMESPACE;
+          if(option == "LINE")
+            options |= OPTION_LINE;
+          if(option == "MACRO_PATTERN")
+            options |= OPTION_MACRO_PATTERN;
+          if(option == "MACRO_LIST")
+            options |= OPTION_MACRO_LIST;
+          if(option == "ELSEIF")
+            options |= OPTION_ELSEIF;
+
+        }
+
+      } else {
         archive->attributes.push_back(attribute);
         archive->attributes.push_back(value);
       }
@@ -235,7 +269,7 @@ public :
       else if(ns == SRCML_EXT_POSITION_NS_URI)
         archive->options |= SRCML_OPTION_POSITION;
 
-      int index;
+      unsigned int index;
       try {
 
         for(index = 0; index < archive->prefixes.size(); ++index)
@@ -258,6 +292,7 @@ public :
 
     // pause
     pthread_mutex_lock(&mutex);
+    if(terminate) stop_parser();
     wait_root = false;
     pthread_cond_broadcast(&is_done_cond);
     pthread_cond_wait(&cond, &mutex);
@@ -321,6 +356,7 @@ public :
 
       // pause
       pthread_mutex_lock(&mutex);
+      if(terminate) stop_parser();
       pthread_cond_broadcast(&is_done_cond);
       pthread_cond_wait(&cond, &mutex);
       pthread_mutex_unlock(&mutex);
@@ -396,6 +432,7 @@ public :
 #endif
 
     pthread_mutex_lock(&mutex);
+    if(terminate) stop_parser();
     is_done = true;
     pthread_cond_broadcast(&is_done_cond);
     pthread_mutex_unlock(&mutex);
@@ -429,6 +466,7 @@ public :
 
       // pause
       pthread_mutex_lock(&mutex);
+      if(terminate) stop_parser();
       pthread_cond_broadcast(&is_done_cond);
       pthread_cond_wait(&cond, &mutex);
       pthread_mutex_unlock(&mutex);

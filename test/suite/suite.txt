@@ -86,6 +86,8 @@ LANGUAGE_CXX lambda_cpp
 LANGUAGE_CXX decltype
 LANGUAGE_CXX specifier_cpp
 LANGUAGE_CXX foreach
+LANGUAGE_CXX using_aliasing
+LANGUAGE_CXX alignof
 
 LANGUAGE_CSHARP_GEN asm
 LANGUAGE_CSHARP_GEN extern

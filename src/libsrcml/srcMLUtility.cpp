@@ -1,7 +1,7 @@
 /*
   srcMLUtility.cpp
 
-  Copyright (C) 2004-2013  SDML (www.srcML.org)
+  Copyright (C) 2004-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -676,22 +676,10 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 }
 
 // allow for all exslt functions
-static void dlexsltRegisterAll() {
+static void dlexsltRegisterAll(void * handle) {
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
   typedef void (*exsltRegisterAll_function)();
-
-  void* handle = dlopen("libexslt.so", RTLD_LAZY);
-  if (!handle) {
-    handle = dlopen("libexslt.so.0", RTLD_LAZY);
-    if (!handle) {
-      handle = dlopen("libexslt.dylib", RTLD_LAZY);
-      if (!handle) {
-        fprintf(stderr, "Unable to open libexslt library\n");
-        return;
-      }
-    }
-  }
 
   dlerror();
   exsltRegisterAll_function exsltRegisterAll = (exsltRegisterAll_function)dlsym(handle, "exsltRegisterAll");
@@ -706,9 +694,6 @@ static void dlexsltRegisterAll() {
 
 #endif
 
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-  dlclose(handle);
-#endif
 }
 
 // xslt evaluation of the nested units
@@ -716,9 +701,6 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
 
   if(ofilename) xmlMemSetup(xmlMemFree, xmlMemMalloc, xmlMemRealloc, xmlMemoryStrdup);
   xmlInitParser();
-
-  // allow for all exstl functions
-  dlexsltRegisterAll();
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
   typedef xsltStylesheetPtr (*xsltParseStylesheetFile_function) (const xmlChar*);
@@ -736,6 +718,9 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
       }
     }
   }
+
+  // allow for all exstl functions
+  dlexsltRegisterAll(handle);
 
   dlerror();
   xsltParseStylesheetFile_function xsltParseStylesheetFile = (xsltParseStylesheetFile_function)dlsym(handle, "xsltParseStylesheetFile");
@@ -857,7 +842,7 @@ static void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
       fprintf(stderr, "\n");
 
     // report error
-    char* partmsg = strdup(ep->message);
+    char* partmsg = ep->message;
     partmsg[strlen(partmsg) - 1] = '\0';
     fprintf(stderr, "%s: %s in '%s'\n", "srcml2src", partmsg, ep->file);
     exit(STATUS_INPUTFILE_PROBLEM);

@@ -1,7 +1,7 @@
 /*
   Options.hpp
 
-  Copyright (C) 2005-2013  SDML (www.srcML.org)
+  Copyright (C) 2005-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -268,5 +268,8 @@ const OPTION_TYPE OPTION_MACRO_PATTERN  = ull(1) << 44;
 
 // @src2srcml
 const OPTION_TYPE OPTION_MACRO_LIST  = ull(1) << 45;
+
+// @src2srcml
+const OPTION_TYPE OPTION_ELSEIF  = ull(1) << 46;
 
 #endif

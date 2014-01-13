@@ -1,7 +1,7 @@
 /*
   Properties.hpp
 
-  Copyright (C) 2008-2013  SDML (www.srcML.org)
+  Copyright (C) 2008-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 

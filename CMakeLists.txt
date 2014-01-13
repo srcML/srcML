@@ -2,7 +2,7 @@
 # CMakeLists.txt
 # @copyright
 # 
-# Copyright (C) 2013  SDML (www.srcML.org)
+# Copyright (C) 2013-2014  SDML (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ include (srcml)
 
 
 # Setting up source include directories.
-include_directories(src/srcml src/oldclient src/libsrcml src/parser src/translator)
+include_directories(src/srcml src/oldclient src/libsrcml src/parser src/translator src/SAX2Framework)
 
 # Setting major and minor version numbers (TODO fix this so that it is set using something
 # more correct that being input from within the build system).

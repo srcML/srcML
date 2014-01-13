@@ -1,7 +1,7 @@
 /*
   test_srcml_archive_get.cpp
 
-  Copyright (C) 2013  SDML (www.srcML.org)
+  Copyright (C) 2013-2014  SDML (www.srcML.org)
 
   The srcML Toolkit is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -30,6 +30,8 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include "dassert.hpp"
+
 int main(int argc, char * argv[]) {
 
   /* 
@@ -40,12 +42,12 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     archive->encoding = 0;
-    assert(srcml_archive_get_encoding(archive) == 0);
+    dassert(srcml_archive_get_encoding(archive), 0);
     srcml_free_archive(archive);
   }
 
   {
-    assert(srcml_archive_get_encoding(0) == 0);
+    dassert(srcml_archive_get_encoding(0), 0);
   }
 
 
@@ -53,7 +55,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     archive->encoding = new std::string("foo");
-    assert(srcml_archive_get_encoding(archive) == std::string("foo"));
+    dassert(srcml_archive_get_encoding(archive), std::string("foo"));
     srcml_free_archive(archive);
   }
 
@@ -65,7 +67,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     archive->language = 0;
-    assert(srcml_archive_get_language(archive) == 0);
+    dassert(srcml_archive_get_language(archive), 0);
     srcml_free_archive(archive);
   }
 
@@ -73,12 +75,12 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     archive->language = new std::string("foo");
-    assert(srcml_archive_get_language(archive) == std::string("foo"));
+    dassert(srcml_archive_get_language(archive), std::string("foo"));
     srcml_free_archive(archive);
   }
 
   {
-    assert(srcml_archive_get_language(0) == 0);
+    dassert(srcml_archive_get_language(0), 0);
   }
 
   /* 
@@ -89,7 +91,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     archive->filename = 0;
-    assert(srcml_archive_get_filename(archive) == 0);
+    dassert(srcml_archive_get_filename(archive), 0);
     srcml_free_archive(archive);
   }
 
@@ -97,12 +99,12 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     archive->filename = new std::string("foo");
-    assert(srcml_archive_get_filename(archive) == std::string("foo"));
+    dassert(srcml_archive_get_filename(archive), std::string("foo"));
     srcml_free_archive(archive);
   }
 
   {
-    assert(srcml_archive_get_filename(0) == 0);
+    dassert(srcml_archive_get_filename(0), 0);
   }
 
   /* 
@@ -113,7 +115,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     archive->directory = 0;
-    assert(srcml_archive_get_directory(archive) == 0);
+    dassert(srcml_archive_get_directory(archive), 0);
     srcml_free_archive(archive);
   }
 
@@ -121,12 +123,12 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     archive->directory = new std::string("foo");
-    assert(srcml_archive_get_directory(archive) == std::string("foo"));
+    dassert(srcml_archive_get_directory(archive), std::string("foo"));
     srcml_free_archive(archive);
   }
 
   {
-    assert(srcml_archive_get_directory(0) == 0);
+    dassert(srcml_archive_get_directory(0), 0);
   }
 
   /* 
@@ -137,7 +139,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     archive->version = 0;
-    assert(srcml_archive_get_version(archive) == 0);
+    dassert(srcml_archive_get_version(archive), 0);
     srcml_free_archive(archive);
   }
 
@@ -145,12 +147,12 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     archive->version = new std::string("foo");
-    assert(srcml_archive_get_version(archive) == std::string("foo"));
+    dassert(srcml_archive_get_version(archive), std::string("foo"));
     srcml_free_archive(archive);
   }
 
   {
-    assert(srcml_archive_get_version(0) == 0);
+    dassert(srcml_archive_get_version(0), 0);
   }
 
   /*
@@ -163,7 +165,7 @@ int main(int argc, char * argv[]) {
 
     archive->options = 1;
 
-    assert(srcml_archive_get_options(archive) == 1);
+    dassert(srcml_archive_get_options(archive), 1);
     srcml_free_archive(archive);
   }
 
@@ -173,12 +175,12 @@ int main(int argc, char * argv[]) {
 
     archive->options = 1 | 2;
 
-    assert(srcml_archive_get_options(archive) == (1 | 2));
+    dassert(srcml_archive_get_options(archive), (1 | 2));
     srcml_free_archive(archive);
   }
 
   {
-    assert(srcml_archive_get_options(0) == 0);
+    dassert(srcml_archive_get_options(0), 0);
   }
 
   /*
@@ -191,12 +193,12 @@ int main(int argc, char * argv[]) {
 
     archive->tabstop = 4;
 
-    assert(srcml_archive_get_tabstop(archive) == 4);
+    dassert(srcml_archive_get_tabstop(archive), 4);
     srcml_free_archive(archive);
   }
 
   {
-    assert(srcml_archive_get_tabstop(0) == 0);
+    dassert(srcml_archive_get_tabstop(0), 0);
   }
 
   return 0;

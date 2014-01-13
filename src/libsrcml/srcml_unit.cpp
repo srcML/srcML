@@ -2,7 +2,7 @@
  * @file srcml_unit.cpp
  * @copyright
  *
- * Copyright (C) 2013  SDML (www.srcML.org)
+ * Copyright (C) 2013-2014  SDML (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -513,6 +513,8 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
   
   (*src_buffer) = strdup((const char *)buffer->content);
   xmlBufferFree(buffer);
+  if(!buffer->content && !(*src_buffer)) return SRCML_STATUS_ERROR;
+
   *src_size = strlen(*src_buffer);
 
   return SRCML_STATUS_OK;

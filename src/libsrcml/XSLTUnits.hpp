@@ -1,7 +1,7 @@
 /*
   XSLTUnits.cpp
 
-  Copyright (C) 2008-2013  SDML (www.srcML.org)
+  Copyright (C) 2008-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -38,9 +38,6 @@ typedef xmlDocPtr (*xsltApplyStylesheetUser_function) (xsltStylesheetPtr,xmlDocP
                                                        xsltTransformContextPtr);
 typedef xmlDocPtr (*xsltApplyStylesheet_function) (xsltStylesheetPtr,xmlDocPtr,const char **);
 
-static xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;
-static xsltApplyStylesheet_function xsltApplyStylesheetDynamic;
-
 //typedef int (*xsltSaveResultTo_function) (xmlOutputBufferPtr, xmlDocPtr, xsltStylesheetPtr);
 //xsltSaveResultTo_function xsltSaveResultToDynamic;
 #else
@@ -61,7 +58,7 @@ public :
       result_type(0), params(params), fd(fd) {
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-    void* handle = dlopen("libxslt.so", RTLD_LAZY);
+    handle = dlopen("libxslt.so", RTLD_LAZY);
     if (!handle) {
       handle = dlopen("libxslt.so.1", RTLD_LAZY);
       if (!handle) {
@@ -94,12 +91,14 @@ public :
       return;
       }
     */
-    dlclose(handle);
 #endif
-
   }
 
-  virtual ~XSLTUnits() {}
+  virtual ~XSLTUnits() {
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+    dlclose(handle);
+#endif
+  }
 
   virtual void startOutput(void* ctx) {
 
@@ -344,6 +343,9 @@ private :
   const char** params;
   int fd;
   const xmlChar * root_prefix;
+  xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;
+  xsltApplyStylesheet_function xsltApplyStylesheetDynamic;
+  void * handle;
 };
 
 #endif

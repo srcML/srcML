@@ -13,4 +13,12 @@
 <decl_stmt><decl><type><name>sizeof</name></type> <name>signal</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>$foo</name></type> <name>$bar</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>restrict</name></type> <name>restrict</name></decl>;</decl_stmt>
+</unit>
+
 </unit>

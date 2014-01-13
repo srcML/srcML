@@ -2,7 +2,7 @@
  * @file libsrcml.cpp
  * @copyright
  *
- * Copyright (C) 2013  SDML (www.srcML.org)
+ * Copyright (C) 2013-2014  SDML (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@
 #include <string>
 #include <fstream>
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>
 #endif
 
@@ -356,7 +356,7 @@ int srcml_set_version(const char* version) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_set_all_options(int option) {
+int srcml_set_all_options(unsigned long long option) {
 
   return srcml_archive_set_all_options(&global_archive, option);
 
@@ -370,7 +370,7 @@ int srcml_set_all_options(int option) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_set_option(int option) {
+int srcml_set_option(unsigned long long option) {
 
   return srcml_archive_set_option(&global_archive, option);
 
@@ -384,7 +384,7 @@ int srcml_set_option(int option) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_clear_option(int option) {
+int srcml_clear_option(unsigned long long option) {
 
   return srcml_archive_clear_option(&global_archive, option);
 
@@ -502,7 +502,7 @@ const char* srcml_get_version() {
  *
  * @returns Get the currently set options on success and NULL on failure.
  */
-int srcml_get_options() {
+unsigned long long srcml_get_options() {
 
   return srcml_archive_get_options(&global_archive);
 
@@ -728,12 +728,16 @@ int srcml_check_encoding(const char* encoding) {
  * @returns Return 1 on success and 0 on failure.
  */ 
 int srcml_check_xslt() {
-#if defined(__GNUG__) && !defined(__MINGW32__)
-  void* handle = dlopen("libxslt.so", RTLD_LAZY);
-  if (!handle)
-    handle = dlopen("libxslt.dylib", RTLD_LAZY);
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+  void * handle = dlopen("libxslt.so", RTLD_LAZY);
+  if (!handle) {
+    handle = dlopen("libxslt.so.1", RTLD_LAZY);
+    if (!handle) {
+      handle = dlopen("libxslt.dylib", RTLD_LAZY);
+      if (!handle) return 0;
 
-  if(!handle) return 0;
+    }
+  }
 
   dlclose(handle);
   return 1;
@@ -750,12 +754,15 @@ int srcml_check_xslt() {
  * @returns Return 1 on success and 0 on failure.
  */
 int srcml_check_exslt() {
-#if defined(__GNUG__) && !defined(__MINGW32__)
-  void* handle = dlopen("libxslt.so", RTLD_LAZY);
-  if (!handle)
-    handle = dlopen("libxslt.dylib", RTLD_LAZY);
-
-  if(!handle) return 0;
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+  void* handle = dlopen("libexslt.so", RTLD_LAZY);
+  if (!handle) {
+    handle = dlopen("libexslt.so.0", RTLD_LAZY);
+    if (!handle) {
+      handle = dlopen("libexslt.dylib", RTLD_LAZY);
+      if (!handle) return 0;
+    }
+  }
 
   dlclose(handle);
   return 1;
