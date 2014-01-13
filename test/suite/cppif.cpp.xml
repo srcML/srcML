@@ -83,4 +83,14 @@
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 
+<unit>
+<if>if<condition>(
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+)
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+)</condition><then>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+<empty_stmt>;</empty_stmt></then></if>
+</unit>
+
 </unit>
