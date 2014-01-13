@@ -5903,7 +5903,7 @@ ENTRY_DEBUG } :
         eol_post[directive_token, markblockzero]
 ;
 
-block_count_check[] returns [int curly_diff]{ 
+block_count_check[] returns [int curly_diff] { 
 
     int start = mark();
 
@@ -5929,6 +5929,32 @@ block_count_check[] returns [int curly_diff]{
 
 ENTRY_DEBUG } :;
 
+paren_count_check[] returns [int paren_diff] { 
+
+    int start = mark();
+
+    ++inputState->guessing;
+
+    paren_diff = 0;
+
+    while(LA(1) != ENDIF) {
+
+        if(LA(1) == LPAREN) ++paren_diff;
+        if(LA(1) == RPAREN) --paren_diff;
+
+        consume();
+
+    }
+
+    paren_diff = paren_diff < 0 ? -paren_diff - 1 : 0;
+
+    --inputState->guessing;
+
+    rewind(start);
+
+
+ENTRY_DEBUG } :;
+
 // post processing for eol
 eol_post[int directive_token, bool markblockzero] {
 
@@ -5943,12 +5969,21 @@ eol_post[int directive_token, bool markblockzero] {
 
                 {
 
-                    int count = block_count_check();
+                    // currently this assumes that rparens will all occur before rcurly (only one or the other will occur
+                    // and not both).
+                    int curly_count = block_count_check();
+                    int paren_count = paren_count_check();
                     State::MODE_TYPE current_mode = getMode();
-                    while(count--) {
+                    while(curly_count--) {
                         setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK);
                         startNewMode(current_mode | MODE_ISSUE_EMPTY_AT_POP);
                         addElement(SBLOCK);
+
+                    }
+                    while(paren_count--) {
+                        //setMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+                        startNewMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+                        //addElement(SBLOCK);
 
                     }
 
