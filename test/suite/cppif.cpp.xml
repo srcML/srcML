@@ -93,4 +93,16 @@
 <empty_stmt>;</empty_stmt></then></if>
 </unit>
 
+<unit>
+<block>{
+<block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+}<block/>
+}<block/>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+}</block>
+}</block>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
 </unit>
