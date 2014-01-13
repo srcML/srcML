@@ -98,8 +98,8 @@
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<param><type>typename</type> <name>F</name></param>&gt;</parameter_list>
-<function><type><name>auto</name></type> <name>run</name><parameter_list>(<param><decl><type><name>F</name></type> <name>f</name></decl></param>)</parameter_list> -&gt; <type>typename <name><name>Q</name>::<name><name>Q</name><argument_list>&lt;<argument><expr>!<name><name>Q</name>::<name><name>H</name><argument_list>&lt;<argument><expr><name>Functor</name></expr></argument>&gt;</argument_list></name>::<name>V</name></name></expr></argument>, <argument><expr><name><name>Q</name><argument_list>&lt;<argument><expr><decltype>decltype<argument_list>(<argument><expr><call><name>f</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></decltype></expr></argument>&gt;</argument_list></name></expr></argument> &gt;</argument_list></name>::<name>T</name></name></type>
+<template>template <parameter_list>&lt;<param><type><specifier>typename</specifier></type> <name>F</name></param>&gt;</parameter_list>
+<function><type><name>auto</name></type> <name>run</name><parameter_list>(<param><decl><type><name>F</name></type> <name>f</name></decl></param>)</parameter_list> -&gt; <type><specifier>typename</specifier> <name><name>Q</name>::<name><name>Q</name><argument_list>&lt;<argument><expr>!<name><name>Q</name>::<name><name>H</name><argument_list>&lt;<argument><expr><name>Functor</name></expr></argument>&gt;</argument_list></name>::<name>V</name></name></expr></argument>, <argument><expr><name><name>Q</name><argument_list>&lt;<argument><expr><decltype>decltype<argument_list>(<argument><expr><call><name>f</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></decltype></expr></argument>&gt;</argument_list></name></expr></argument> &gt;</argument_list></name>::<name>T</name></name></type>
             <block>{}</block></function></template>
 </unit>
 

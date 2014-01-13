@@ -238,7 +238,7 @@ int srcMLReader::readRootUnitAttributes(std::string *& language, std::string *& 
 
 	while(!value.empty()) {
 
-	  int pos = value.find(",");
+	  size_t pos = value.find(",");
 	  std::string option = value.substr(0, pos);
 	  if(pos == std::string::npos)
 	    value = "";
