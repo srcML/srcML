@@ -6145,7 +6145,7 @@ cpp_symbol[] { ENTRY_DEBUG } :
         simple_identifier
 ;
 
-cpp_define_name[] { CompleteElement element(this); unsigned int pos = LT(1)->getColumn() + LT(1)->getText().size(); } :
+cpp_define_name[] { CompleteElement element(this); int pos = LT(1)->getColumn() + LT(1)->getText().size(); } :
         {
             startNewMode(MODE_LOCAL);
 
