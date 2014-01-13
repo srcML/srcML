@@ -149,6 +149,7 @@
 }<block/> <else>else <block>{
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 }</block></else></block></then></if>
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
 </unit>
