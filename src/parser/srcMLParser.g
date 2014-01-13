@@ -5903,54 +5903,43 @@ ENTRY_DEBUG } :
         eol_post[directive_token, markblockzero]
 ;
 
-block_count_check[] returns [int curly_diff] { 
+if_end_count_check[] returns [std::vector<int> end_order] { 
 
     int start = mark();
-
+    std::vector<int> op_stack;
     ++inputState->guessing;
-
-    curly_diff = 0;
 
     while(LA(1) != ENDIF) {
 
-        if(LA(1) == LCURLY) ++curly_diff;
-        if(LA(1) == RCURLY) --curly_diff;
+        if(LA(1) == LPAREN) op_stack.push_back(LPAREN);
+        if(LA(1) == RPAREN) {
+            if(!op_stack.empty() && op_stack.back() == LPAREN) op_stack.pop_back();
+            else end_order.push_back(RPAREN);
+        }
+
+        if(LA(1) == LCURLY) op_stack.push_back(LCURLY);
+        if(LA(1) == RCURLY) {
+            if(!op_stack.empty() && op_stack.back() == LCURLY) op_stack.pop_back();
+            else end_order.push_back(RCURLY);
+        }
 
         consume();
 
     }
 
-    curly_diff = curly_diff < 0 ? -curly_diff - 1 : 0;
-
     --inputState->guessing;
 
     rewind(start);
 
+    if(!end_order.empty()) {
 
-ENTRY_DEBUG } :;
+        int last = end_order.back();
+        end_order.pop_back();
 
-paren_count_check[] returns [int paren_diff] { 
-
-    int start = mark();
-
-    ++inputState->guessing;
-
-    paren_diff = 0;
-
-    while(LA(1) != ENDIF) {
-
-        if(LA(1) == LPAREN) ++paren_diff;
-        if(LA(1) == RPAREN) --paren_diff;
-
-        consume();
+        if(last != end_order.back())
+            end_order.pop_back();
 
     }
-
-    paren_diff = paren_diff < 0 ? -paren_diff - 1 : 0;
-
-    --inputState->guessing;
-
-    rewind(start);
 
 
 ENTRY_DEBUG } :;
@@ -5969,20 +5958,22 @@ eol_post[int directive_token, bool markblockzero] {
 
                 {
 
-                    // currently this assumes that rparens will all occur before rcurly (only one or the other will occur
-                    // and not both).
-                    int curly_count = block_count_check();
-                    int paren_count = paren_count_check();
+                    std::vector<int> end_order = if_end_count_check();
                     State::MODE_TYPE current_mode = getMode();
-                    while(curly_count--) {
-                        setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK);
-                        startNewMode(current_mode | MODE_ISSUE_EMPTY_AT_POP);
-                        addElement(SBLOCK);
+                    for(size_t i = 0; i < end_order.size(); ++i) {
 
-                    }
-                    while(paren_count--) {
-                        startNewMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP);
-                        addElement(SCONDITION);
+                        if(end_order[i] == RCURLY) {    
+                            setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK);
+                            startNewMode(current_mode | MODE_ISSUE_EMPTY_AT_POP);
+                            addElement(SBLOCK);
+
+                        }
+
+                        if(end_order[i] == RPAREN) {
+                            startNewMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP);
+                            addElement(SCONDITION);
+
+                        }
 
                     }
 
