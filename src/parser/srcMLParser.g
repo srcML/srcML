@@ -5903,10 +5903,10 @@ ENTRY_DEBUG } :
         eol_post[directive_token, markblockzero]
 ;
 
-if_end_count_check[] returns [std::vector<int> end_order] { 
+if_end_count_check[] returns [std::list<int> end_order] { 
 
     int start = mark();
-    std::vector<int> op_stack;
+    std::list<int> op_stack;
     ++inputState->guessing;
 
     int save_size = 0;
@@ -5933,6 +5933,14 @@ if_end_count_check[] returns [std::vector<int> end_order] {
 
     if(LA(1) == ENDIF) end_order.resize(save_size);
 
+/*
+    while(!op_stack.empty()) {
+
+        
+
+    }
+*/
+
     --inputState->guessing;
 
     rewind(start);
@@ -5955,18 +5963,18 @@ eol_post[int directive_token, bool markblockzero] {
 
                     // should work unless also creates a dangling lcurly or lparen
                     // in which case may need to run on everthing except else.
-                    std::vector<int> end_order = if_end_count_check();
+                    std::list<int> end_order = if_end_count_check();
                     State::MODE_TYPE current_mode = getMode();
-                    for(size_t i = 0; i < end_order.size(); ++i) {
+                    for(std::list<int>::iterator pos = end_order.begin(); pos != end_order.end(); ++pos) {
 
-                        if(end_order[i] == RCURLY) {    
+                        if(*pos == RCURLY) {    
                             setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK);
                             startNewMode(current_mode | MODE_ISSUE_EMPTY_AT_POP);
                             addElement(SBLOCK);
 
                         }
 
-                        if(end_order[i] == RPAREN) {
+                        if(*pos == RPAREN) {
                             startNewMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP);
                             addElement(SCONDITION);
 
