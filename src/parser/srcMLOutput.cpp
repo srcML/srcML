@@ -240,6 +240,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
   if(isoption(OPTION_MACRO_PATTERN))  { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "MACRO_PATTERN"; }
   if(isoption(OPTION_MACRO_LIST))     { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "MACRO_LIST"; }
   if(isoption(OPTION_ELSEIF))         { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "ELSEIF"; }
+  if(isoption(OPTION_CPPIF_CHECK))    { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "CPPIF_CHECK"; }
 
   // list of attributes
   const char* const attrs[][2] = {

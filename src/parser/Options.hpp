@@ -272,4 +272,7 @@ const OPTION_TYPE OPTION_MACRO_LIST  = ull(1) << 45;
 // @src2srcml
 const OPTION_TYPE OPTION_ELSEIF  = ull(1) << 46;
 
+// @src2srcml
+const OPTION_TYPE OPTION_CPPIF_CHECK  = ull(1) << 47;
+
 #endif
