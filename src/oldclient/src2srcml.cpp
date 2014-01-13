@@ -137,6 +137,9 @@ const int MACRO_LIST_FLAG_CODE = 256 + 15;
 const char* const ELSEIF_FLAG = "elseif";
 const int ELSEIF_FLAG_CODE = 256 + 16;
 
+const char* const CPPIF_CHECK_FLAG = "cppif-check";
+const int CPPIF_CHECK_FLAG_CODE = 256 + 17;
+
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
@@ -723,6 +726,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { MACRO_PATTERN_FLAG, no_argument, NULL, MACRO_PATTERN_FLAG_CODE },
     { MACRO_LIST_FLAG, required_argument, NULL, MACRO_LIST_FLAG_CODE },
     { ELSEIF_FLAG, no_argument, NULL, ELSEIF_FLAG_CODE },
+    { CPPIF_CHECK_FLAG, no_argument, NULL, CPPIF_CHECK_FLAG_CODE },
 #ifdef SVN
     { SVN_FLAG, required_argument, NULL, SVN_FLAG_CODE },
 #endif
@@ -796,6 +800,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case ELSEIF_FLAG_CODE:
       options |= OPTION_ELSEIF;
+      break;
+
+    case CPPIF_CHECK_FLAG_CODE:
+      options |= OPTION_CPPIF_CHECK;
       break;
 
 #ifdef SVN

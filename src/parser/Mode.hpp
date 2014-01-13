@@ -156,6 +156,8 @@ public:
 
     const static State::MODE_TYPE MODE_DECLTYPE;
 
+    const static State::MODE_TYPE MODE_ISSUE_EMPTY_AT_POP;
+
 public:
 
     Mode(TokenParser* ptp, int lang)

@@ -263,7 +263,7 @@ bool srcMLParser::BOOL;
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
-    parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false)
+    parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0)
 {
     // make sure we have the correct token set
     if (!_tokenSet_1.member(IF))
@@ -561,6 +561,7 @@ public:
     bool qmark;
     bool notdestructor;
     bool operatorname;
+    int curly_count;
 
     static bool BOOL;
 
@@ -2179,6 +2180,7 @@ lcurly[] { ENTRY_DEBUG } :
         lcurly_base
         {
 
+
             incCurly();
 
             // alter the modes set in lcurly_base
@@ -2200,6 +2202,8 @@ lcurly_base[] { ENTRY_DEBUG } :
 
             startElement(SBLOCK);
 
+            ++curly_count;
+
         }
         LCURLY
 ;
@@ -2208,6 +2212,7 @@ lcurly_base[] { ENTRY_DEBUG } :
 block_end[] { ENTRY_DEBUG } :
         // handling of if with then block followed by else
         // handle the block, however scope of then completion stops at if
+
         rcurly
         {
             if (inMode(MODE_ANONYMOUS)) {
@@ -2274,6 +2279,8 @@ rcurly[] { ENTRY_DEBUG } :
 
             if(getCurly() != 0)
                 decCurly();
+
+            --curly_count;
 
         }
         RCURLY
@@ -2974,6 +2981,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_int[type_count, type_count > 1 ? type_count - 1 : 0]
 
         // special case for what looks like a destructor declaration
+        // @todo need a case where == 1 then , merge it with > 1
         throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attribute_count) > 1 || ((type_count - specifier_count - attribute_count) == 1))]
 
         /*
@@ -5718,6 +5726,7 @@ preprocessor[] { ENTRY_DEBUG
 
             setTokenPosition(tp);
         }
+
         PREPROC markend[directive_token]
         {
 
@@ -5860,7 +5869,7 @@ catch[...] {
 // do all the cpp garbage
 cpp_garbage[] :
 
- ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | EOF)
+ ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | EOF)  /* EOF */
 
 ;
 
@@ -5898,6 +5907,81 @@ ENTRY_DEBUG } :
         eol_post[directive_token, markblockzero]
 ;
 
+cppendif_skip[] {
+
+    int prev = -1;
+    int endif_count = 1;
+
+    while(endif_count && LA(1) != 1 /* EOF */) {
+
+        if((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF)
+            ++endif_count;
+
+        if(LA(1) == ENDIF)
+            --endif_count;
+
+        prev = LA(1);
+        consume();
+    }
+
+}:;
+
+cppif_end_count_check[] returns [std::list<int> end_order] {
+
+    int start = mark();
+    std::list<int> op_stack;
+    ++inputState->guessing;
+
+    int save_size = 0;
+
+    int prev = -1;
+    while(LA(1) != ENDIF && !(prev == PREPROC && LA(1) == ELSE) && LA(1) != 1 /* EOF */) {
+
+        if((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF) {
+            cppendif_skip();
+            continue;
+        }
+
+        if(LA(1) == ELIF) save_size = end_order.size();
+
+        if(LA(1) == LPAREN) op_stack.push_back(LPAREN);
+        if(LA(1) == RPAREN) {
+            if(!op_stack.empty() && op_stack.back() == LPAREN) op_stack.pop_back();
+            else end_order.push_back(RPAREN);
+        }
+
+        if(LA(1) == LCURLY) op_stack.push_back(LCURLY);
+        if(LA(1) == RCURLY) {
+            if(!op_stack.empty() && op_stack.back() == LCURLY) op_stack.pop_back();
+            else end_order.push_back(RCURLY);
+        }
+
+        prev = LA(1);
+        consume();
+
+    }
+
+    if(LA(1) == 1 /* EOF */) {
+
+        end_order.clear();
+
+    }
+
+    if(LA(1) == ENDIF) end_order.resize(save_size);
+
+    while(!op_stack.empty() && !end_order.empty()) {
+
+        op_stack.pop_front();
+        end_order.pop_front();
+
+    }
+
+    --inputState->guessing;
+
+    rewind(start);
+
+ENTRY_DEBUG } :;
+
 // post processing for eol
 eol_post[int directive_token, bool markblockzero] {
 
@@ -5909,6 +5993,33 @@ eol_post[int directive_token, bool markblockzero] {
             case IF :
             case IFDEF :
             case IFNDEF :
+
+                // should work unless also creates a dangling lcurly or lparen
+                // in which case may need to run on everthing except else.
+                if(isoption(parseoptions, OPTION_CPPIF_CHECK)) {
+
+                    std::list<int> end_order = cppif_end_count_check();
+                    State::MODE_TYPE current_mode = getMode();
+                    // @todo When C++11 is default, switch to ranged for or at least auto keyword.
+                    for(std::list<int>::iterator pos = end_order.begin(); pos != end_order.end(); ++pos) {
+
+                        if(*pos == RCURLY) {    
+                            setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK);
+                            startNewMode(current_mode | MODE_ISSUE_EMPTY_AT_POP);
+                            addElement(SBLOCK);
+
+                        }
+
+                        if(*pos == RPAREN) {
+                            startNewMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP);
+                            addElement(SCONDITION);
+
+                        }
+
+                    }
+
+
+                }                      
 
                 // start a new blank mode for new zero'ed blocks
                 if (!cpp_zeromode && markblockzero) {
@@ -6065,7 +6176,7 @@ cpp_symbol[] { ENTRY_DEBUG } :
         simple_identifier
 ;
 
-cpp_define_name[] { CompleteElement element(this); unsigned int pos = LT(1)->getColumn() + LT(1)->getText().size(); } :
+cpp_define_name[] { CompleteElement element(this); int pos = LT(1)->getColumn() + LT(1)->getText().size(); } :
         {
             startNewMode(MODE_LOCAL);
 
