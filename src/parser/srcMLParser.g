@@ -5910,8 +5910,9 @@ if_end_count_check[] returns [std::list<int> end_order] {
     ++inputState->guessing;
 
     int save_size = 0;
-
-    while(LA(1) != ENDIF && LA(1) != ELSE) {
+    
+    int prev = -1;
+    while(LA(1) != ENDIF && !(prev == PREPROC && LA(1) == ELSE)) {
 
         if(LA(1) == ELIF) save_size = end_order.size();
 
@@ -5927,19 +5928,19 @@ if_end_count_check[] returns [std::list<int> end_order] {
             else end_order.push_back(RCURLY);
         }
 
+        prev = LA(1);
         consume();
 
     }
 
     if(LA(1) == ENDIF) end_order.resize(save_size);
 
-/*
-    while(!op_stack.empty()) {
+    while(!op_stack.empty() && !end_order.empty()) {
 
-        
+        op_stack.pop_front();
+        end_order.pop_front();
 
     }
-*/
 
     --inputState->guessing;
 
