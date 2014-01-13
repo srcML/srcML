@@ -5927,6 +5927,8 @@ if_end_count_check[] returns [std::vector<int> end_order] {
 
     }
 
+    if(LA(1) == ENDIF) end_order.clear();
+
     --inputState->guessing;
 
     rewind(start);
