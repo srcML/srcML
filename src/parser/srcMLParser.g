@@ -5868,7 +5868,7 @@ catch[...] {
 // do all the cpp garbage
 cpp_garbage[] :
 
- ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | EOF)
+ ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | EOF)  /* EOF */
 
 ;
 
@@ -5913,9 +5913,9 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
     ++inputState->guessing;
 
     int save_size = 0;
-    
+
     int prev = -1;
-    while(LA(1) != ENDIF && !(prev == PREPROC && LA(1) == ELSE) && LA(1) != EOF) {
+    while(LA(1) != ENDIF && !(prev == PREPROC && LA(1) == ELSE) && LA(1) != 1 /* EOF */) {
 
         if((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF) cppif_end_count_check();
 
@@ -5938,7 +5938,7 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
 
     }
 
-    if(LA(1) == EOF) {
+    if(LA(1) == 1 /* EOF */) {
 
         end_order.clear();
 
