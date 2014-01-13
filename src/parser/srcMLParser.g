@@ -5906,7 +5906,7 @@ ENTRY_DEBUG } :
         eol_post[directive_token, markblockzero]
 ;
 
-if_end_count_check[] returns [std::list<int> end_order] { 
+cppif_end_count_check[] returns [std::list<int> end_order] { 
 
     int start = mark();
     std::list<int> op_stack;
@@ -5967,7 +5967,7 @@ eol_post[int directive_token, bool markblockzero] {
 
                     // should work unless also creates a dangling lcurly or lparen
                     // in which case may need to run on everthing except else.
-                    std::list<int> end_order = if_end_count_check();
+                    std::list<int> end_order = cppif_end_count_check();
                     State::MODE_TYPE current_mode = getMode();
                     // @todo When C++11 is default, switch to ranged for or at least auto keyword.
                     for(std::list<int>::iterator pos = end_order.begin(); pos != end_order.end(); ++pos) {
