@@ -143,4 +143,12 @@
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 
+<unit>
+<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+}<block/> <else>else <block>{
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+}</block></else></block></then></if>
+</unit>
+
 </unit>
