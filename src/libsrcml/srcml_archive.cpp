@@ -358,7 +358,7 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2])
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure. 
  */
-int srcml_archive_set_all_options(srcml_archive* archive, int options) {
+int srcml_archive_set_all_options(srcml_archive* archive, unsigned long long options) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -377,7 +377,7 @@ int srcml_archive_set_all_options(srcml_archive* archive, int options) {
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_archive_set_option(srcml_archive* archive, int option) {
+int srcml_archive_set_option(srcml_archive* archive, unsigned long long option) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -396,7 +396,7 @@ int srcml_archive_set_option(srcml_archive* archive, int option) {
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_archive_clear_option(srcml_archive* archive, int option) {
+int srcml_archive_clear_option(srcml_archive* archive, unsigned long long option) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -547,7 +547,7 @@ const char* srcml_archive_get_version(const struct srcml_archive* archive) {
  *
  * @returns Retrieve the currently set options.
  */
-int srcml_archive_get_options(const struct srcml_archive* archive) {
+unsigned long long srcml_archive_get_options(const struct srcml_archive* archive) {
 
   return archive ? archive->options : 0;
 

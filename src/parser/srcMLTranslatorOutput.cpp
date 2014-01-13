@@ -71,6 +71,7 @@ namespace {
   ELEMENT_MAP(SLITERAL, "literal")
   ELEMENT_MAP(SBOOLEAN, "literal")
   ELEMENT_MAP(SNULL,    "literal")
+  ELEMENT_MAP(SCOMPLEX, "literal")
 
   // operators
   ELEMENT_MAP(SOPERATOR, "operator")
@@ -104,11 +105,14 @@ namespace {
   ELEMENT_MAP(STYPEDEF, "typedef")
   ELEMENT_MAP(SASM, "asm")
   ELEMENT_MAP(SMACRO_CALL, "macro")
+  ELEMENT_MAP(SMACRO_DEFN, "macro_defn")
+  ELEMENT_MAP(SMACRO_VALUE, "value")
   ELEMENT_MAP(SENUM, "enum")
 
   ELEMENT_MAP(SIF_STATEMENT, "if")
   ELEMENT_MAP(STHEN, "then")
   ELEMENT_MAP(SELSE, "else")
+  ELEMENT_MAP(SELSEIF, "elseif")
 
   ELEMENT_MAP(SWHILE_STATEMENT, "while")
   ELEMENT_MAP(SLOCK_STATEMENT, "lock")
@@ -245,6 +249,7 @@ namespace {
   // special characters
   ELEMENT_MAP(CONTROL_CHAR,   "escape")
   ELEMENT_MAP(SANNOTATION,    "annotation")
+  ELEMENT_MAP(SALIGNOF,    "alignof")
 
   // C++11
   ELEMENT_MAP(SALIGNAS,    "alignas")
@@ -293,7 +298,8 @@ namespace {
   ELEMENT_MAP(SCHAR,     SRCML_EXT_LITERAL_NS_URI_POS)
   ELEMENT_MAP(SLITERAL,  SRCML_EXT_LITERAL_NS_URI_POS)
   ELEMENT_MAP(SBOOLEAN,  SRCML_EXT_LITERAL_NS_URI_POS)
-  ELEMENT_MAP(SNULL,  SRCML_EXT_LITERAL_NS_URI_POS)
+  ELEMENT_MAP(SNULL,     SRCML_EXT_LITERAL_NS_URI_POS)
+  ELEMENT_MAP(SCOMPLEX,  SRCML_EXT_LITERAL_NS_URI_POS)
 
   // operator namespace
   ELEMENT_MAP(SOPERATOR, SRCML_EXT_OPERATOR_NS_URI_POS)
@@ -489,6 +495,19 @@ void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, con
     tabattribute.append("tabs");
   }
 
+  std::ostringstream soptions;
+  std::string SEP;
+  if(isoption(OPTION_XMLDECL))        { soptions << "XMLDECL"; }
+  if(isoption(OPTION_NAMESPACEDECL))  { if(!soptions.str().empty()) SEP = ","; soptions << SEP << "NAMESPACEDECL"; }
+  if(isoption(OPTION_CPP_TEXT_ELSE))  { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "CPP_TEXT_ELSE"; }
+  if(isoption(OPTION_CPP_MARKUP_IF0)) { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "CPP_MARKUP_IF0"; }
+  if(isoption(OPTION_EXPRESSION))     { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "EXPRESSION"; }
+  if(isoption(OPTION_NAMESPACE))      { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "NAMESPACE"; }
+  if(isoption(OPTION_LINE))           { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "LINE"; }
+  if(isoption(OPTION_MACRO_PATTERN))  { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "MACRO_PATTERN"; }
+  if(isoption(OPTION_MACRO_LIST))     { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "MACRO_LIST"; }
+  if(isoption(OPTION_ELSEIF))         { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "ELSEIF"; }
+
   // list of attributes
   const char* const attrs[][2] = {
 
@@ -506,6 +525,9 @@ void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, con
 
     // position tab setting
     { tabattribute.c_str(), isoption(OPTION_POSITION) ? stabs.str().c_str() : 0 },
+
+    { UNIT_ATTRIBUTE_OPTIONS,  isoption(OPTION_ELSEIF) ? soptions.str().c_str() : 0 },
+
   };
 
   // output attributes
@@ -697,6 +719,12 @@ void srcMLTranslatorOutput::processBoolean(const antlr::RefToken& token) {
 void srcMLTranslatorOutput::processNull(const antlr::RefToken& token) {
 
   processOptional(token, "type", "null");
+}
+
+
+void srcMLTranslatorOutput::processComplex(const antlr::RefToken& token) {
+
+  processOptional(token, "type", "complex");
 }
 
 #if DEBUG

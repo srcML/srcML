@@ -261,7 +261,7 @@ private:
 bool srcMLParser::BOOL;
 
 // constructor
-srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
+srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
     parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false)
 {
@@ -348,6 +348,7 @@ tokens {
     SLITERAL;       // literal number, constant
     SBOOLEAN;       // boolean literal, i.e., true, false
     SNULL;          // null types null, nullptr
+    SCOMPLEX;       // complex numbers
 
     // operators
     SOPERATOR;
@@ -370,6 +371,7 @@ tokens {
 	SIF_STATEMENT;
 	STHEN;
 	SELSE;
+	SELSEIF;
 
     SWHILE_STATEMENT;
 	SDO_STATEMENT;
@@ -450,6 +452,8 @@ tokens {
 	STYPEDEF;
 	SASM;
 	SMACRO_CALL;
+	SMACRO_DEFN;
+	SMACRO_VALUE;
 	SSIZEOF_CALL;
     SEXTERN;
 	SNAMESPACE;
@@ -529,6 +533,7 @@ tokens {
     SEMPTY;  // empty statement
 
     SANNOTATION;
+    SALIGNOF;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -547,7 +552,7 @@ public:
     bool cpp_skipelse;
     int cpp_ifcount;
     bool isdestructor;
-    int parseoptions;
+    OPTION_TYPE & parseoptions;
     std::string namestack[2];
     int ifcount;
 #ifdef ENTRY_DEBUG
@@ -556,6 +561,14 @@ public:
     bool qmark;
     bool notdestructor;
     bool operatorname;
+
+    static bool BOOL;
+
+    // constructor
+    srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
+
+    // destructor
+    ~srcMLParser() {}
 
     struct cppmodeitem {
         cppmodeitem(int current_size)
@@ -568,15 +581,6 @@ public:
         bool skipelse;
     };
     std::stack<cppmodeitem> cppmode;
-
-
-    static bool BOOL;
-
-    // constructor
-    srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX, int options = 0);
-
-    // destructor
-    ~srcMLParser() {}
 
     void startUnit() {
         startElement(SUNIT);
@@ -647,6 +651,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
 
+        { inLanguage(LANGUAGE_CXX_ONLY) && inMode(MODE_USING) }? using_aliasing |
+
         // statements identified by pattern (i.e., do not start with a keyword)
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? pattern_statements |
 
@@ -672,7 +678,7 @@ catch[...] {
 keyword_statements[] { ENTRY_DEBUG } :
 
         // conditional statements
-        if_statement | else_statement | switch_statement | switch_case | switch_default |
+        if_statement | { isoption(parseoptions, OPTION_ELSEIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
         while_statement | for_statement | do_statement | foreach_statement |
@@ -1025,9 +1031,10 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } : TYPENAME)* lead_type_identifier
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? specifier)*  lead_type_identifier
 
         { 
+
             decTypeCount();
             if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY))
                 return;
@@ -1318,7 +1325,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | SIZEOF (DOTDOTDOT)*)
+        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -1591,6 +1598,36 @@ else_statement[] { ENTRY_DEBUG } :
         ELSE
 ;
 
+/*
+ else if construct
+
+ else and if are detected on their own, and as part of termination (semicolon or
+ end of a block
+*/
+elseif_statement[] { ENTRY_DEBUG } :
+        {
+            // treat as a statement with a nested statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE);
+
+            ++ifcount;
+
+            // start the else part of the if statement
+            startElement(SELSEIF);
+        }
+        ELSE 
+
+        {
+
+            // start the if statement
+            startElement(SIF_STATEMENT);
+
+            // expect a condition
+            // start THEN after condition
+            startNewMode(MODE_CONDITION | MODE_EXPECT);
+        }
+        IF
+;
+
 //  start of switch statement
 switch_statement[] { ENTRY_DEBUG } :
         {
@@ -1842,12 +1879,18 @@ namespace_block[] { ENTRY_DEBUG } :
 namespace_directive[] { ENTRY_DEBUG } :
         {
             // statement with an expected namespace name after the keywords
-            startNewMode(MODE_STATEMENT | MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+            startNewMode(MODE_STATEMENT | MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT | MODE_USING);
 
             // start the using directive
             startElement(SUSING_DIRECTIVE);
         }
         USING
+;
+
+using_aliasing[]  { ENTRY_DEBUG } :
+
+        EQUAL pattern_statements
+
 ;
 
 /* Declarations Definitions CFG */
@@ -2058,16 +2101,8 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         // move suppressed ()* warning to begin
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_type_constraint)*
 
-        ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } extends_list))*
-        ({ inLanguage(LANGUAGE_JAVA_FAMILY) }?
-            {
-                if (!insuper) {
-                    insuper = true;
-                    super_list_java();
-                }
-            }
-            implements_list
-        )*
+        ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } 
+            (extends_list | implements_list) (options { greedy = true; } : extends_list | implements_list)*))*
         {
             if (insuper)
                 endMode();
@@ -2301,6 +2336,7 @@ terminate_post[] { ENTRY_DEBUG } :
 
                 // end down to either a block or top section, or to an if or else
                 endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE);
+
             }
         }
         else_handling
@@ -2343,7 +2379,8 @@ else_handling[] { ENTRY_DEBUG } :
                 // when an ELSE is next and already in an else, must end properly (not needed for then)
                 } else if (LA(1) == ELSE && inMode(MODE_ELSE)) {
 
-                    while (inMode(MODE_ELSE)) {
+                    // when an else but not elseif
+                    while (inMode(MODE_ELSE) && !inMode(MODE_IF)) {
 
                         // end the else
                         endMode();
@@ -2367,6 +2404,13 @@ else_handling[] { ENTRY_DEBUG } :
                     // following ELSE indicates end of outer then
                     if (inMode(MODE_THEN))
                         endMode();
+
+                    // if in elseif then end it
+                    if(inMode(MODE_IF | MODE_ELSE)) {
+                        endMode();
+                        --ifcount;
+                    }
+
                 }
             } else if (inTransparentMode(MODE_ELSE)) {
 
@@ -2465,6 +2509,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // call list in member initialization list
         { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
         sizeof_call |
+
+        // call list in member initialization list
+        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
+        alignof_call |
 
         /*
           MODE_VARIABLE_NAME
@@ -2807,7 +2855,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             (
                 { _tokenSet_23.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
                 set_int[token, LA(1)]
-                set_bool[foundpure, foundpure || LA(1) == CONST]
+                set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
                 (specifier | { next_token() == COLON }? SIGNAL)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
@@ -2920,7 +2968,9 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_int[type_count, endbracket ? type_count - 1 : type_count]
 
         // have a sequence of type tokens, last one is function/variable name
-        // (except for function pointer, which is handled later)
+        // (except for function pointer, which is handled later).
+        // Using also has no name so counter operation.
+        set_int[type_count, inMode(MODE_USING) ? type_count + 1: type_count]
         set_int[type_count, type_count > 1 ? type_count - 1 : 0]
 
         // special case for what looks like a destructor declaration
@@ -3116,7 +3166,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         // class/struct/union before a name in a type, e.g., class A f();
-        TYPENAME | class_lead_type_identifier |
+        class_lead_type_identifier |
 
         // enum use in a type
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
@@ -3723,7 +3773,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // C++
             FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
-            CONSTEXPR | THREADLOCAL |
+            CONSTEXPR | THREADLOCAL | TYPENAME |
 
             // C
             RESTRICT | 
@@ -3935,6 +3985,20 @@ sizeof_call[] { ENTRY_DEBUG } :
         }
         SIZEOF
         (DOTDOTDOT)*
+        call_argument_list
+;
+
+// alignof
+alignof_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+
+            startElement(SALIGNOF);
+        }
+        ALIGNOF
         call_argument_list
 ;
 
@@ -4812,8 +4876,8 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
             // however I believe parameter_list matches a right paren of the call.
-           (call | sizeof_call) argument |
-            
+           (call | sizeof_call | alignof_call) argument |
+
         // macro call
         { type == MACRO }? macro_call |
 
@@ -4884,7 +4948,7 @@ expression_part_default[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
 // rule for literals
 literals[] { ENTRY_DEBUG } :
-        string_literal | char_literal | literal | boolean | null_literal
+        string_literal | char_literal | literal | boolean | null_literal | complex_literal
 ;
 
 // Only start and end of strings are put directly through the parser.
@@ -4919,15 +4983,32 @@ null_literal[]{ LightweightElement element(this); ENTRY_DEBUG } :
         (NULLPTR | NULLLITERAL)
 ;
 
-
-// literals
-literal[] { LightweightElement element(this); ENTRY_DEBUG } :
+// complex numbers
+complex_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup literals in literal option
             if (isoption(parseoptions, OPTION_LITERAL))
-                startElement(SLITERAL);
+                startElement(SCOMPLEX);
         }
-        CONSTANTS
+        COMPLEX_NUMBER ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == CONSTANTS }? OPERATORS CONSTANTS)?
+  
+;
+
+
+// literal numbers
+literal[] { LightweightElement element(this); TokenPosition tp; ENTRY_DEBUG } :
+        {
+            // only markup literals in literal option
+            if (isoption(parseoptions, OPTION_LITERAL)) {
+
+                startElement(SLITERAL);
+
+                setTokenPosition(tp);
+
+            }
+
+        }
+        CONSTANTS ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == COMPLEX_NUMBER }? OPERATORS COMPLEX_NUMBER {  tp.setType(SCOMPLEX); })?
 ;
 
 
@@ -5662,7 +5743,7 @@ preprocessor[] { ENTRY_DEBUG
 
             tp.setType(SCPP_DEFINE);
         }
-        cpp_symbol_optional |
+        (cpp_define_name (options { greedy = true; } : cpp_define_value)*)* |
 
         IFNDEF
         {
@@ -5681,7 +5762,7 @@ preprocessor[] { ENTRY_DEBUG
         cpp_symbol_optional |
 
         IF
-            { markblockzero = false; }
+        { markblockzero = false; }
         {
             endMode();
 
@@ -5982,6 +6063,26 @@ cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG 
 // symbol in cpp
 cpp_symbol[] { ENTRY_DEBUG } :
         simple_identifier
+;
+
+cpp_define_name[] { CompleteElement element(this); unsigned int pos = mark(); } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SMACRO_DEFN);
+        }
+        simple_identifier (options { greedy = true; } : { (pos + 1) == mark() }? cpp_define_parameter_list)*
+;
+
+cpp_define_parameter_list[] { ENTRY_DEBUG } :
+        parameter_list
+;
+
+cpp_define_value[] { ENTRY_DEBUG } :
+        {
+            startElement(SMACRO_VALUE);
+        }
+        cpp_garbage (options { greedy = true; } : cpp_garbage)*
 ;
 
 // optional symbol cpp 
