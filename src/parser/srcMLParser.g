@@ -5945,10 +5945,10 @@ eol_post[int directive_token, bool markblockzero] {
                 {
 
                     int count = block_count_check();
-
+                    State::MODE_TYPE current_mode = getMode();
                     while(count--) {
-                        startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK);
-                        startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK);
+                        setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK);
+                        startNewMode(current_mode);
 
                     }
 
