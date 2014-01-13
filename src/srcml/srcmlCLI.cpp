@@ -1,5 +1,5 @@
 /*
-  srcmlCLI.hpp
+  srcmlCLI.cpp
 
   Copyright (C) 2004-2013  SDML (www.srcML.org)
 
@@ -141,28 +141,29 @@ void option_command(bool opt) {
 }
 
 void option_filename(const std::string& value) { srcml_request.filename = value; }
-void option_output(const std::string& value) {srcml_request.output = value;}
-void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value;}
-void option_encoding(const std::string& value) {srcml_request.encoding = value;}
-void option_files_from(const std::string& value) {srcml_request.files_from = value;}
-void option_language(const std::string& value) {srcml_request.language = value;}
-void option_register_ext(const std::vector<std::string>& values) {srcml_request.register_ext = values;}
-void option_tabs(const int value) {srcml_request.tabs = value;}
-void option_directory(const std::string& value) {srcml_request.directory = value;}
-void option_src_versions(const std::string& value) {srcml_request.src_versions = value;}
-void option_prefix(const std::string& value) {srcml_request.prefix = value;}
-void option_xmlns_uri(const std::string& value) {srcml_request.xmlns_uri = value;}
-void option_xmlns_prefix(const std::vector<std::string>& values) {srcml_request.xmlns_prefix = values;}
-void option_relaxng(const std::string& value) {srcml_request.relaxng = value;}
-void option_xpath(const std::string& value) {srcml_request.xpath = value;}
-void option_xpathparam(const std::vector<std::string>& values) {srcml_request.xpathparam = values;}
-void option_xslt(const std::string& value) {srcml_request.xslt = value;}
-void option_unit(const int value) {srcml_request.unit = value;}
-void positional_args(const std::vector<std::string>& value) {srcml_request.positional_args = value;}
+void option_output(const std::string& value) {srcml_request.output = value; }
+void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value; }
+void option_encoding(const std::string& value) {srcml_request.encoding = value; }
+void option_files_from(const std::string& value) {srcml_request.files_from = value; }
+void option_language(const std::string& value) {srcml_request.language = value; }
+void option_register_ext(const std::vector<std::string>& values) {srcml_request.register_ext = values; }
+void option_tabs(const int value) {srcml_request.tabs = value; }
+void option_directory(const std::string& value) {srcml_request.directory = value; srcml_request.directory_set = true; }
+void option_src_versions(const std::string& value) {srcml_request.src_versions = value; }
+void option_prefix(const std::string& value) {srcml_request.prefix = value; }
+void option_xmlns_uri(const std::string& value) {srcml_request.xmlns_uri = value; }
+void option_xmlns_prefix(const std::vector<std::string>& values) {srcml_request.xmlns_prefix = values; }
+void option_relaxng(const std::string& value) {srcml_request.relaxng = value; }
+void option_xpath(const std::string& value) {srcml_request.xpath = value; }
+void option_xpathparam(const std::vector<std::string>& values) {srcml_request.xpathparam = values; }
+void option_xslt(const std::string& value) {srcml_request.xslt = value; }
+void option_unit(const int value) {srcml_request.unit = value; }
+void positional_args(const std::vector<std::string>& value) {srcml_request.positional_args = value; }
 
 void option_help(const std::string& help_opt) {
+  srcml_request.help_set = true;
   if (help_opt == "") {
-  //MIGHT NEED A NEW HEADER AND FOOTER FOR THE GENERAL OPTION
+  // TODO: A new header and footer for the general option
     std::cout << SRCML_HEADER << "\n";
     std::cout << general << "\n";
     std::cout << SRCML_FOOTER << "\n";
@@ -196,12 +197,13 @@ void debug_cli_opts(const struct srcml_request_t srcml_request);
 
 srcml_request_t srcmlCLI::parseCLI(int argc, char* argv[]) {
   try {
+
     general.add_options()
       ("compress,z", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_COMPRESS>), "output in gzip format")
       ("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
       ("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NO_NAMESPACE_DECL>), "do not output any namespace declarations")
       ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NO_XML_DECL>), "do not output the XML declaration")
-      ("output,o", prog_opts::value<std::string>()->notifier(&option_output)->default_value("-"), "write result ouput to arg which is a FILE or URI")
+      ("output,o", prog_opts::value<std::string>()->notifier(&option_output)->default_value("-")->value_name("OUTPUT"), "write result ouput to arg which is a FILE or URI")
       ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "suppresses status messages")
       ("src-encoding,t", prog_opts::value<std::string>()->notifier(&option_src_encoding), "set the input source encoding to arg (default:  ISO-8859-1)")
       ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")    
@@ -283,41 +285,46 @@ srcml_request_t srcmlCLI::parseCLI(int argc, char* argv[]) {
       ("input-files", prog_opts::value< std::vector<std::string> >()->notifier(&positional_args), "input files")
       ;
 
-    //Group src2srcml Options
+    // Group src2srcml Options
     src2srcml.add(general).add(src2srcml_options).add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).add(prefix);
 
-    //Group srcml2src Options
+    // Group srcml2src Options
     srcml2src.add(general).add(srcml2src_options).add(src2srcml_metadata).add(query_transform).add(srcml_archive_options);
 
-    //Group all Options
+    // Group all Options
     all.add(general).add(src2srcml_options).add(srcml2src_options).
       add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).
       add(srcml2src_metadata).add(prefix).add(query_transform).add(srcml_archive_options).
       add(positional_options);
 
-    //Positional Args
+    // Positional Args
     input_file.add("input-files", -1);
 
-    //ASSIGN THE CLI ARGS TO MAP
+    // Assign the CLI args to the map
     prog_opts::variables_map cli_map;
     prog_opts::store(prog_opts::command_line_parser(argc, argv).options(all).
       positional(input_file).extra_parser(custom_parser).run(), cli_map);
     prog_opts::notify(cli_map);
 
-    //CHECK OPTION CONFLICTS
+    // Check option conflicts
     conflicting_options(cli_map, "quiet", "verbose"); 
+
+    // If no positional args (files,urls,etc.) stdin ("-") is used
+    if (srcml_request.positional_args.empty()) {
+      srcml_request.positional_args.push_back("-");
+    }
 
   }
   catch(std::exception& e) {
     std::cerr << e.what() << "\n";
     exit(1);
   }
-    //DEBUG TO SEE CLI INPUTS
+    // Debug to see CLI inputs
     //debug_cli_opts(srcml_request);
     return srcml_request;
 }
 
-// Early Debugging
+// Early debugging
 void debug_cli_opts(const struct srcml_request_t srcml_request) {
   
   std::cerr << "Commands: " << srcml_request.command << "\n";
@@ -329,7 +336,7 @@ void debug_cli_opts(const struct srcml_request_t srcml_request) {
   std::cerr << "Files From: " << srcml_request.files_from << "\n";
   std::cerr << "Language: " << srcml_request.language << "\n";
 
-  for(int i = 0; i < srcml_request.register_ext.size(); ++i) {
+  for(size_t i = 0; i < srcml_request.register_ext.size(); ++i) {
     std::cerr << "Register Ext #" << i <<": " << srcml_request.register_ext[i] << "\n";
   }
   
@@ -339,26 +346,26 @@ void debug_cli_opts(const struct srcml_request_t srcml_request) {
   std::cerr << "Prefix: " << srcml_request.prefix << "\n";
   std::cerr << "Xmlns Uri: " << srcml_request.xmlns_uri << "\n";
   
-  for(int i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
+  for(size_t i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
     std::cerr << "Xmlns Prefix #" << i << ": " << srcml_request.xmlns_prefix[i] << "\n";
   }
   
   std::cerr << "Relaxng: " << srcml_request.relaxng << "\n";
   std::cerr << "Xpath: " << srcml_request.xpath << "\n";
 
-  for(int i = 0; i < srcml_request.xpathparam.size(); ++i) {
+  for(size_t i = 0; i < srcml_request.xpathparam.size(); ++i) {
     std::cerr << "Xpathparam #" << i <<": " << srcml_request.xpathparam[i] << "\n";
   }
 
   std::cerr << "Xslt: " << srcml_request.xslt << "\n";
   std::cerr << "Unit: " << srcml_request.unit << "\n";
 
-  for(int i = 0; i < srcml_request.positional_args.size(); ++i) {
+  for(size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
     std::cerr << "Arg #" << i <<": " << srcml_request.positional_args[i] << "\n";
   }
 }
 
-// Custom Parser for xmlns: option
+// Custom parser for xmlns: option
 std::pair<std::string, std::string> custom_parser(const std::string& s) {
   if (s.find("--xmlns:") == 0) {
     return std::make_pair(std::string("xmlns:"), std::string(s.substr(s.find(":")+1)));
