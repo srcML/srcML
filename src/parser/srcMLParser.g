@@ -5909,7 +5909,6 @@ block_count_check[] returns [int curly_diff]{
 
     ++inputState->guessing;
 
-    //int start_count = curly_count;
     curly_diff = 0;
 
     while(LA(1) != ENDIF) {
