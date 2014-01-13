@@ -79,7 +79,7 @@
 <unit>
 <if>if<condition>()</condition><then> <block>{
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
-}
+}<block/>
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 }</block></then></if>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>

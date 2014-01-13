@@ -5947,7 +5947,8 @@ eol_post[int directive_token, bool markblockzero] {
                     State::MODE_TYPE current_mode = getMode();
                     while(count--) {
                         setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK);
-                        startNewMode(current_mode);
+                        startNewMode(current_mode | MODE_ISSUE_EMPTY_AT_POP);
+                        addElement(SBLOCK);
 
                     }
 
