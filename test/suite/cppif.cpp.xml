@@ -152,4 +152,15 @@
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+}</block></then> <else>else <if>if<then> <block>{
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+}</block></then> <else>else <if>if<then> <block>{
+  <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+}</block></then></if></else></if></else></if>
+</unit>
+
 </unit>
