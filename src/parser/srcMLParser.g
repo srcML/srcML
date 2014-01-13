@@ -5906,7 +5906,7 @@ ENTRY_DEBUG } :
         eol_post[directive_token, markblockzero]
 ;
 
-cppif_end_count_check[] returns [std::list<int> end_order] { 
+cppif_end_count_check[] returns [std::list<int> end_order] {
 
     int start = mark();
     std::list<int> op_stack;
@@ -5915,7 +5915,9 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
     int save_size = 0;
     
     int prev = -1;
-    while(LA(1) != ENDIF && !(prev == PREPROC && LA(1) == ELSE)) {
+    while(LA(1) != ENDIF && !(prev == PREPROC && LA(1) == ELSE) && LA(1) != EOF) {
+
+        if((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF) cppif_end_count_check();
 
         if(LA(1) == ELIF) save_size = end_order.size();
 
@@ -5933,6 +5935,12 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
 
         prev = LA(1);
         consume();
+
+    }
+
+    if(LA(1) == EOF) {
+
+        end_order.clear();
 
     }
 
