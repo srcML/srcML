@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" dir="modifier" filename="modifier_test.cpp">
   
 <unit>
-<decl_stmt><decl><type><specifier>const</specifier> <name>int</name><type:modifier>*</type:modifier></type> <name>i</name> =<init> <expr>nullptr</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>const</specifier> <name>int</name><type:modifier>*</type:modifier></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
