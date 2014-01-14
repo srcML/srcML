@@ -1035,13 +1035,12 @@ function_type[int type_count] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? specifier)*  lead_type_identifier
 
         { 
-            setTypeCount(type_count);
+
             decTypeCount();
             if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY))
                 return;
         }
-        (options { greedy = true; } : {getTypeCount() > 0}? 
-        { type_count = getTypeCount(); } type_identifier { setTypeCount(type_count); decTypeCount(); })*
+        (options { greedy = true; } : {getTypeCount() > 0}? type_identifier { decTypeCount(); })*
         {
             endMode(MODE_EAT_TYPE);
             setMode(MODE_FUNCTION_NAME);
@@ -3237,7 +3236,7 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
 ;
 
 // C++11 markup decltype 
-decltype_call[] { ENTRY_DEBUG} :
+decltype_call[] { int save_type_count = getTypeCount(); ENTRY_DEBUG } :
         {
 
             // start a mode for the macro that will end after the argument list
@@ -3248,6 +3247,7 @@ decltype_call[] { ENTRY_DEBUG} :
          
         }
         DECLTYPE complete_argument_list
+        { setTypeCount(save_type_count); }
 ;
 
 // C++ completely match without markup decltype
@@ -4559,8 +4559,9 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        lead_type_identifier { setTypeCount(type_count); if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
-        (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }? { type_count = getTypeCount(); } type_identifier { setTypeCount(type_count); decTypeCount(); })* 
+        lead_type_identifier { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+        (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
+        type_identifier { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
