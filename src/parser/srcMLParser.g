@@ -715,7 +715,7 @@ keyword_statements[] { ENTRY_DEBUG } :
   Basically we have an identifier and we don't know yet whether it starts an expression
   function definition, function declaration, or even a label.
 */
-pattern_statements[] { int secondtoken = 0; int type_count = 0;
+pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = false;
         STMT_TYPE stmt_type = NONE; CALLTYPE type = NOCALL;
 
         // detect the declaration/definition type
@@ -812,7 +812,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0;
         extern_definition |
 
         // call
-        { isoption(parseoptions, OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, secondtoken) && type == MACRO)) }?
+        { isoption(parseoptions, OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, isempty, secondtoken) && type == MACRO)) }?
         macro_call |
 
         expression_statement[type]
@@ -1271,9 +1271,10 @@ property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 // Check and see if this is a call and what type
-perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
+perform_call_check[CALLTYPE& type, bool & isempty, int secondtoken] returns [bool iscall] {
 
     iscall = true;
+    isempty = false;
 
     type = NOCALL;
 
@@ -1284,7 +1285,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
     int argumenttoken = 0;
     int postcalltoken = 0;
     try {
-        call_check(postnametoken, argumenttoken, postcalltoken);
+        call_check(postnametoken, argumenttoken, postcalltoken, isempty);
 
         // call syntax succeeded
         type = CALL;
@@ -1323,13 +1324,14 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
     ENTRY_DEBUG } :;
 
 // check if call is call
-call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_DEBUG } :
+call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
         (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
+        set_bool[isempty, LA(1) == LPAREN && next_token() == RPAREN]
         (
             { isoption(parseoptions, OPTION_CPP) }?
             // check for proper form of argument list
@@ -2441,7 +2443,7 @@ else_handling[] { ENTRY_DEBUG } :
 
 // mid-statement
 statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = NONE;
-                   CALLTYPE type = NOCALL; ENTRY_DEBUG } :
+                   CALLTYPE type = NOCALL;  bool isempty = false; ENTRY_DEBUG } :
 
         { inMode(MODE_EAT_TYPE) }?
         type_identifier
@@ -2492,7 +2494,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // start of argument for return or throw statement
         { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
-            isoption(parseoptions, OPTION_CPP) && perform_call_check(type, secondtoken) && type == MACRO }?
+            isoption(parseoptions, OPTION_CPP) && perform_call_check(type, isempty, secondtoken) && type == MACRO }?
         macro_call |
 
         { inMode(MODE_EXPRESSION | MODE_EXPECT) }?
@@ -3483,7 +3485,8 @@ complete_argument_list[] { ENTRY_DEBUG } :
 ;
 
 // Full, complete expression matched all at once (no stream).
-complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALLTYPE type = NOCALL; ENTRY_DEBUG } :
+complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALLTYPE type = NOCALL; 
+    bool isempty = false; ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false] |
         { getCurly() == 0 }? rcurly_argument |
         {
@@ -3494,13 +3497,13 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALLT
             startElement(SARGUMENT);
         }
         (options {warnWhenFollowAmbig = false; } : { count_paren > 0 }?
+
         ({ LA(1) == LPAREN }? expression { ++count_paren; } |
 
          { LA(1) == RPAREN }? expression { --count_paren; } |
 
-/*
-         { perform_call_check(type, -1) && type == CALL }? { ++count_paren; } expression |
-*/
+         { perform_call_check(type, isempty, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression |
+
          expression |
 
          comma
@@ -4757,12 +4760,13 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; bool update_type = 
             if(update_type) {
 
                 if(!inTransparentMode(MODE_VARIABLE_NAME)) {
-                    while(getTypeCount() - 1 > 0) {
+/*                    while(getTypeCount() - 1 > 0) {
                         type_identifier();
                         decTypeCount();
                     }
                     endMode(MODE_EAT_TYPE);
                     setMode(MODE_FUNCTION_NAME);
+*/
                 } else
                     update_typecount(MODE_VARIABLE_NAME | MODE_INIT);
             }
@@ -4856,7 +4860,7 @@ expression_part_plus_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 ;
 
 // the expression part
-expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
+expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; ENTRY_DEBUG } :
 
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
@@ -4884,7 +4888,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
 
         // call
         // distinguish between a call and a macro
-        { type == CALL || (perform_call_check(type, -1) && type == CALL) }?
+        { type == CALL || (perform_call_check(type, isempty, -1) && type == CALL) }?
 
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
@@ -5484,7 +5488,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             template_super_java | qmark_marked |
             template_argument_expression
-        )+
+        )+ 
 ;
 
 
