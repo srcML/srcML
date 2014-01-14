@@ -1035,13 +1035,13 @@ function_type[int type_count] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? specifier)*  lead_type_identifier
 
         { 
-
             setTypeCount(type_count);
             decTypeCount();
             if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY))
                 return;
         }
-        (options { greedy = true; } : {getTypeCount() > 0}? type_identifier { decTypeCount(); })*
+        (options { greedy = true; } : {getTypeCount() > 0}? 
+        { type_count = getTypeCount(); } type_identifier { setTypeCount(type_count); decTypeCount(); })*
         {
             endMode(MODE_EAT_TYPE);
             setMode(MODE_FUNCTION_NAME);
@@ -3483,8 +3483,7 @@ complete_argument_list[] { ENTRY_DEBUG } :
 ;
 
 // Full, complete expression matched all at once (no stream).
-// Colon matches range(?) for bits.
-complete_arguments[] { CompleteElement element(this); int count_paren = 1; ENTRY_DEBUG } :
+complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALLTYPE type = NOCALL; ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false] |
         { getCurly() == 0 }? rcurly_argument |
         {
@@ -3497,17 +3496,21 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; ENTRY
         (options {warnWhenFollowAmbig = false; } : { count_paren > 0 }?
         ({ LA(1) == LPAREN }? expression { ++count_paren; } |
 
-        { LA(1) == RPAREN }? expression { --count_paren; } |
+         { LA(1) == RPAREN }? expression { --count_paren; } |
 
-        expression |
-        comma
-        {
+/*
+         { perform_call_check(type, -1) && type == CALL }? { ++count_paren; } expression |
+*/
+         expression |
+
+         comma
+         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
 
             // start the argument
             startElement(SARGUMENT);
-        }
+         }
 
         ))*
 
