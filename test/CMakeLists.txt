@@ -20,6 +20,6 @@
 
 
 # Including the unit tests before building the tests in this file.
-subdirs(unit suite)
-
+subdirs(unit)
+# subdirs(suite)
 # Additional test suite.
