@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C#" dir="modifier" filename="modifier_cs.cs">
+<unit>
+<decl_stmt><decl><type><name>int</name><type:modifier>*</type:modifier></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name><type:modifier>*</type:modifier><type:modifier>*</type:modifier></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name><type:modifier>*</type:modifier><type:modifier>*</type:modifier><type:modifier>*</type:modifier></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>refrence</name><type:modifier>&amp;</type:modifier></type> <name>t</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<function><type><specifier>public</specifier> <name>void</name></type> <name>func</name><parameter_list>(<param><decl><type><name>int</name><type:modifier>*</type:modifier></type> <name>i</name></decl></param>, <param><decl><type><name>reference</name><type:modifier>&amp;</type:modifier></type></decl></param>)</parameter_list> <block>{ }</block></function>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name><type:modifier>&amp;&amp;</type:modifier></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>public</specifier> <name>int</name><type:modifier>?</type:modifier></type> <name>Prop</name> <block>{
+    <function_decl><name>get</name>;</function_decl>
+    <function_decl><name>set</name>;</function_decl>
+}</block></decl></decl_stmt>
+</unit>
+</unit>
