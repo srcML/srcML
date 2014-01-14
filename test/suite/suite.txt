@@ -90,6 +90,7 @@ LANGUAGE_CXX foreach
 LANGUAGE_CXX using_aliasing
 LANGUAGE_CXX alignof
 LANGUAGE_CXX modifier_cpp
+LANGUAGE_CXX function_pointer_cpp
 
 LANGUAGE_CSHARP_GEN asm
 LANGUAGE_CSHARP_GEN extern
