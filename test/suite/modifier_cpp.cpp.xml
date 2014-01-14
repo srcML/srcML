@@ -51,7 +51,27 @@
 <expr_stmt><expr><function><capture>[<argument><type:modifier>&amp;</type:modifier></argument>]</capture> <block>{}</block></function></expr>;</expr_stmt>
 </unit>
 
-<!-- Check capture of const -->
+<unit>
+<expr_stmt><expr><function><capture>[<argument><name>x</name></argument>, <argument><type:modifier>&amp;</type:modifier><name>s</name></argument>]</capture> <parameter_list>(<param><decl><type><name>delta</name> <type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument><name>x</name></argument>, <argument><type:modifier>&amp;</type:modifier><name>s</name></argument>]</capture> <parameter_list>(<param><decl><type><name>delta</name> <specifier>const</specifier><type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
+</unit>
+
+<!-- 
+
+These are the captures:
+
+[]        //no variables defined. Attempting to use any external variables in the lambda is an error.
+[x, &y]   //x is captured by value, y is captured by reference
+[&]       //any external variable is implicitly captured by reference if used
+[=]       //any external variable is implicitly captured by value if used
+[&, x]    //x is explicitly captured by value. Other variables will be captured by reference
+[=, &z]   //z is explicitly captured by reference. Other variables will be captured by value
+
+So, I do not thing that const exists.
+
 <unit>
 <expr_stmt><expr><function><capture>[<argument><type:modifier>=</type:modifier></argument>, const&amp; <name>i</name>]</capture> <block>{}</block></function></expr>;</expr_stmt>
 </unit>
@@ -73,15 +93,9 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><function><capture>[<argument><name>x</name></argument>, <argument><type:modifier>&amp;</type:modifier><name>s</name></argument>]</capture> <parameter_list>(<param><decl><type><name>delta</name> <type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><function><capture>[<argument><name>x</name></argument>, <argument><type:modifier>&amp;</type:modifier><name>s</name></argument>]</capture> <parameter_list>(<param><decl><type><name>delta</name> <specifier>const</specifier><type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><function><capture>[<argument><type:modifier>&amp;</type:modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<param><decl><type><name>delta</name> <specifier>const</specifier><type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
 </unit>
+
+ -->
 
 </unit>
