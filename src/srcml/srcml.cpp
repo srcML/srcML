@@ -239,13 +239,13 @@ int main(int argc, char * argv[]) {
   srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
 
   for (size_t i = 0; i < srcml_request.register_ext.size(); ++i) {
-    int pos = srcml_request.register_ext[i].find('=');
+    size_t pos = srcml_request.register_ext[i].find('=');
     srcml_archive_register_file_extension(srcml_arch, srcml_request.register_ext[i].substr(0,pos).c_str(),
           srcml_request.register_ext[i].substr(pos+1).c_str());
   }
 
   for (size_t i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
-    int pos = srcml_request.xmlns_prefix[i].find('=');
+    size_t pos = srcml_request.xmlns_prefix[i].find('=');
     srcml_archive_register_namespace(srcml_arch, srcml_request.xmlns_prefix[i].substr(0,pos).c_str(),
            srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
   }
