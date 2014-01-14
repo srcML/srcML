@@ -3012,7 +3012,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                  (
                     // inside of a C++ class definition
-                    inMode(MODE_ACCESS_REGION) ||
+                    inTransparentMode(MODE_ACCESS_REGION) ||
 
                     // right inside the block of a Java or C# class
                     (inPrevMode(MODE_CLASS) && (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP))) ||
