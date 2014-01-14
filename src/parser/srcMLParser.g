@@ -4757,17 +4757,10 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; bool update_type = 
                     endMode(MODE_LIST);
             }
 
+            // @todo check if needed now that decltype is all in stream.
             if(update_type) {
 
-                if(!inTransparentMode(MODE_VARIABLE_NAME)) {
-/*                    while(getTypeCount() - 1 > 0) {
-                        type_identifier();
-                        decTypeCount();
-                    }
-                    endMode(MODE_EAT_TYPE);
-                    setMode(MODE_FUNCTION_NAME);
-*/
-                } else
+                if(inTransparentMode(MODE_VARIABLE_NAME))
                     update_typecount(MODE_VARIABLE_NAME | MODE_INIT);
             }
         }
