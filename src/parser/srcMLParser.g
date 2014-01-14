@@ -1036,6 +1036,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
 
         { 
 
+            setTypeCount(type_count);
             decTypeCount();
             if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY))
                 return;
@@ -4555,7 +4556,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        lead_type_identifier { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+        lead_type_identifier { setTypeCount(type_count); if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }? { type_count = getTypeCount(); } type_identifier { setTypeCount(type_count); decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
