@@ -265,7 +265,7 @@ int main(int argc, char * argv[]) {
 
   // Main processing loop
   for (size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
-    std::string * input_file = &srcml_request.positional_args[i];
+    std::string & input_file = srcml_request.positional_args[i];
     bool stdin = false;
 
     // libArchive Setup
@@ -277,12 +277,12 @@ int main(int argc, char * argv[]) {
     int valid = 0;
 
     // Regular file or archive
-    if (input_file->compare("-") != 0) {
-      valid = archive_read_open_filename(arch, input_file->c_str(), 16384); 
+    if (input_file.compare("-") != 0) {
+      valid = archive_read_open_filename(arch, input_file.c_str(), 16384); 
     }
     
     // Stdin
-    if (input_file->compare("-") == 0) {
+    if (input_file.compare("-") == 0) {
       stdin = true;
       // Check if we are using the terminal interactively
       if(srcml_request.command & SRCML_COMMAND_INTERACTIVE) {
