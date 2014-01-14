@@ -923,7 +923,7 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
 
         // special case for function pointer names that don't have '*'
         { _tokenSet_13.member(LA(1)) }?
-        compound_name_inner[false] |
+        (compound_name_inner[false])* |
 
         // special name prefix of namespace or class
         identifier (template_argument_list)* DCOLON function_pointer_name_base |
