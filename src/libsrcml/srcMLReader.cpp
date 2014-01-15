@@ -28,7 +28,7 @@
 
 #include <sstream>
 
-void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer, bool is_root);
+void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer);
 
 /**
  * getNode
@@ -470,7 +470,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
     try {
 
       for(std::vector<xmlNodePtr>::size_type i = 0; i < save_nodes.size(); ++i)
-        output_node_srcml(*save_nodes.at(i), writer, is_single);
+        output_node_srcml(*save_nodes.at(i), writer);
 
       for(std::vector<xmlNodePtr>::size_type i = 0; i < save_nodes.size(); ++i)
         freeNode(save_nodes.at(i));
@@ -498,7 +498,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
   while(true) {
 
-    if(is_archive) output_node_srcml(*node, writer, is_single);
+    if(is_archive) output_node_srcml(*node, writer);
     else save_nodes.push_back(node);
 
     if(strcmp((const char *)node->name, "unit") == 0) {
@@ -515,7 +515,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
           } catch(...) {}
 
           save_nodes.clear();
-          if(!is_archive) output_node_srcml(*node, writer, is_single);
+          if(!is_archive) output_node_srcml(*node, writer);
           is_archive = true;
 
         }
@@ -548,7 +548,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
       try {
 
         for(std::vector<xmlNodePtr>::size_type i = 0; i < save_nodes.size(); ++i)
-          output_node_srcml(*save_nodes.at(i), writer, is_single);
+          output_node_srcml(*save_nodes.at(i), writer);
 
         for(std::vector<xmlNodePtr>::size_type i = 0; i < save_nodes.size() - 1; ++i)
           freeNode(save_nodes.at(i));
@@ -623,7 +623,7 @@ std::string * srcMLReader::readsrcML() {
  *
  * Output node as srcML.
  */
-void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer, bool is_root) {
+void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
 
   bool isemptyelement = false;
 
