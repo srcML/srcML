@@ -4716,7 +4716,7 @@ rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DE
     ;
 
 //processing on )
-rparen[bool markup = true] { bool isempty = getParen() == 0; bool update_type = false; ENTRY_DEBUG } :
+rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
         {
             if (isempty) {
 
@@ -4754,17 +4754,10 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; bool update_type = 
 
                 // end the single mode that started the list
                 // don't end more than one since they may be nested
-                update_type = inMode(MODE_DECLTYPE);
                 if (inMode(MODE_LIST))
                     endMode(MODE_LIST);
             }
 
-            // @todo check if needed now that decltype is all in stream.
-            if(update_type) {
-
-                if(inTransparentMode(MODE_VARIABLE_NAME))
-                    update_typecount(MODE_VARIABLE_NAME | MODE_INIT);
-            }
         }
 ;
 
