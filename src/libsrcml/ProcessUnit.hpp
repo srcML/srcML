@@ -27,6 +27,9 @@
 
 #include <libxml/parser.h>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 class ProcessUnit {
 public :
     
@@ -64,5 +67,7 @@ public :
     virtual OPTION_TYPE getOptions() const { return 0; }
     
 };
+
+#pragma GCC diagnostic pop
 
 #endif
