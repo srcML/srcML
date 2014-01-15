@@ -655,7 +655,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   ctxt->sax = &sax;
 
   // setup process handling
-  XPathQueryUnits process(context_element, ofilename, options, compiled_xpath, fd);
+  XPathQueryUnits process(ofilename, options, compiled_xpath, fd);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
