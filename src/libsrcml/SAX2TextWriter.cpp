@@ -35,6 +35,9 @@
 #include <SAX2Utilities.hpp>
 #include <Options.hpp>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 SAX2TextWriter::SAX2TextWriter(const char* ofilename, OPTION_TYPE& options, int unit):
     unit(unit), options(options), filename(ofilename) {
 
@@ -183,3 +186,5 @@ void SAX2TextWriter::endElementNs(void *ctx, const xmlChar *localname, const xml
         xmlStopParser(pstate->ctxt);
     }
 }
+
+#pragma GCC diagnostic pop
