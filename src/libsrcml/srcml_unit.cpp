@@ -233,7 +233,7 @@ int srcml_parse_unit_internal(srcml_unit * unit, int lang) {
   xmlBuffer * output_buffer = xmlBufferCreate();
   try {
 
-    unit->archive->translator->translate_separate(0, unit->directory ? unit->directory->c_str() : 0,
+    unit->archive->translator->translate_separate(unit->directory ? unit->directory->c_str() : 0,
                                                   unit->filename ? unit->filename->c_str() : 0,
                                                   unit->version ? unit->version->c_str() : 0, lang, output_buffer);
   } catch(...) {

@@ -33,8 +33,8 @@
 
 class ExtractUnitsDiffXMLPreserve : public ExtractUnitsXML {
 public :
-    ExtractUnitsDiffXMLPreserve(const char* to_dir, const char* filename, const char* output_encoding, const char* uri)
-        : ExtractUnitsXML(to_dir, filename, output_encoding), uri(uri) {
+  ExtractUnitsDiffXMLPreserve(/*const char* to_dir,*/ const char* filename, const char* output_encoding, const char* uri)
+      : ExtractUnitsXML(/*to_dir,*/ filename, output_encoding), uri(uri) {
     }
 
 private :

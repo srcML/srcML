@@ -28,6 +28,7 @@
 #include <SAX2ExtractUnitsSrc.hpp>
 #include <ProcessUnit.hpp>
 
+
 class CountUnits : public ProcessUnit {
 public :
   CountUnits(FILE* poutput = stdout)
@@ -39,6 +40,9 @@ public :
   {}
 
 public :
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 
   virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
@@ -70,6 +74,8 @@ public :
 
       }
   }
+
+#pragma GCC diagnostic pop
 
 private:
   FILE* output;

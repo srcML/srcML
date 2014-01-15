@@ -31,7 +31,7 @@
 #include <Language.hpp>
 #include <srcmlns.hpp>
 
-int main(int argc, char * argv[]) {
+int main() {
 
   const char* urisprefix[] = {
 
@@ -151,7 +151,7 @@ int main(int argc, char * argv[]) {
 
     translator.setInputString("a;", 2);
     xmlBufferPtr output = xmlBufferCreate();
-    translator.translate_separate(0, 0,  0, 0, Language::LANGUAGE_CXX, output);
+    translator.translate_separate(0,  0, 0, Language::LANGUAGE_CXX, output);
     assert((char *)output->content == std::string("<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>\n"));
 
     xmlBufferFree(output);

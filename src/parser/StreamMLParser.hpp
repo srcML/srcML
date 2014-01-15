@@ -333,6 +333,9 @@ private:
         pushCorrectToken(Base::LT(1));
     }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
     inline void pushCorrectToken(const antlr::RefToken& rtoken) {
 
         if (isSkipToken(Base::LA(1)))
@@ -345,6 +348,8 @@ private:
             // push the token
             pushToken();
     }
+
+#pragma GCC diagnostic pop
 
     // push the token onto the output token stream
     void pushToken() {

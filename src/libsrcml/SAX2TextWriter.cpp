@@ -55,6 +55,9 @@ xmlSAXHandler SAX2TextWriter::factory() {
     return sax;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 // start document
 void SAX2TextWriter::startDocument(void *ctx) {
 
@@ -183,3 +186,5 @@ void SAX2TextWriter::endElementNs(void *ctx, const xmlChar *localname, const xml
         xmlStopParser(pstate->ctxt);
     }
 }
+
+#pragma GCC diagnostic pop

@@ -31,7 +31,7 @@
 #include <string.h>
 #include <cassert>
 
-int main(int argc, char * argv[]) {
+int main() {
 
   /*
     pop

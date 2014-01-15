@@ -67,6 +67,9 @@ public:
         popMode();
     }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
     void endCurrentMode(const State::MODE_TYPE& m) {
 
         if (st.size() <= 1)
@@ -74,6 +77,8 @@ public:
 
         popMode();
     }
+
+#pragma GCC diagnostic pop
 
     void endLastMode() {
 

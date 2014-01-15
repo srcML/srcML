@@ -31,6 +31,9 @@ class ProcessUnit {
 public :
     
     virtual ~ProcessUnit() {}
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
     
     virtual void startDocument(void* ctx) {}
 
@@ -61,8 +64,11 @@ public :
 
     virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
 
+#pragma GCC diagnostic pop
+
     virtual OPTION_TYPE getOptions() const { return 0; }
     
 };
+
 
 #endif
