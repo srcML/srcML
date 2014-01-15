@@ -297,68 +297,68 @@ int main(int argc, char * argv[]) {
       valid = archive_read_open_filename(arch, NULL, 16384);
     }
 
-    if (valid == ARCHIVE_OK) {
-      while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
-
-        std::string entry_name = archive_entry_pathname(arch_entry);
-        std::string filename = "";
-        /* 
-          The header path for a standard file is just "data".
-          That needs to be swapped out with the actual file name from the 
-          CLI arg.
-        */
-        if (entry_name.compare("data") == 0 && !stdin)
-          filename = srcml_request.positional_args[i].c_str();
-
-        if (entry_name.compare("data") != 0 && !stdin)
-          filename = entry_name.c_str();
-
-        if (!stdin) {
-          const char * language = srcml_archive_check_extension(srcml_arch, filename.c_str());
-          if (!language) {
-            // Extension not supported
-            // Skip to next header
-            continue;  
-          }
-        }
-        else {
-          // Stdin language declared via CLI
-          if (srcml_archive_get_language(srcml_arch))
-            return 1; // Stdin used with no language specified.
-        }
-      
-        const void* buffer;
-        size_t size;
-        int64_t offset;
-        std::vector<char> data_buffer;
-        size_t data_size = 0;
-
-        while (true) {
-          if (archive_read_data_block(arch, &buffer, &size, &offset) != ARCHIVE_OK) {
-            break;
-          }
-          
-          for (size_t i = 0; i < size; ++i) {
-            data_buffer.push_back(((char*)buffer)[i]);
-          }
-
-          data_size += size;
-        }
-
-        request.filename = filename;
-        request.size = data_size;
-        request.buffer = data_buffer;
-        request.srcml_arch = srcml_arch;
-        request.lang = (srcml_archive_get_language(srcml_arch) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
-
-        // Hand request off to the processing queue
-        queue.push(request);
-      }
-    }
-    else {
+    if (valid != ARCHIVE_OK) {
       std::cerr << "Unable to open archive\n";
       return 1;
     }
+
+    while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
+
+      std::string entry_name = archive_entry_pathname(arch_entry);
+      std::string filename = "";
+      /* 
+        The header path for a standard file is just "data".
+        That needs to be swapped out with the actual file name from the 
+        CLI arg.
+      */
+      if (entry_name.compare("data") == 0 && !stdin)
+        filename = srcml_request.positional_args[i].c_str();
+
+      if (entry_name.compare("data") != 0 && !stdin)
+        filename = entry_name.c_str();
+
+      if (!stdin) {
+        const char * language = srcml_archive_check_extension(srcml_arch, filename.c_str());
+        if (!language) {
+          // Extension not supported
+          // Skip to next header
+          continue;  
+        }
+      }
+      else {
+        // Stdin language declared via CLI
+        if (srcml_archive_get_language(srcml_arch))
+          return 1; // Stdin used with no language specified.
+      }
+    
+      const void* buffer;
+      size_t size;
+      int64_t offset;
+      std::vector<char> data_buffer;
+      size_t data_size = 0;
+
+      while (true) {
+        if (archive_read_data_block(arch, &buffer, &size, &offset) != ARCHIVE_OK) {
+          break;
+        }
+        
+        for (size_t i = 0; i < size; ++i) {
+          data_buffer.push_back(((char*)buffer)[i]);
+        }
+
+        data_size += size;
+      }
+
+      request.filename = filename;
+      request.size = data_size;
+      request.buffer = data_buffer;
+      request.srcml_arch = srcml_arch;
+      request.lang = (srcml_archive_get_language(srcml_arch) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
+
+      // Hand request off to the processing queue
+      queue.push(request);
+    }
+  
     archive_read_finish(arch);
   }
 
