@@ -36,9 +36,6 @@
 #define EOL_SIZE 2
 #endif
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-
 class ExtractUnitsSrc : public ProcessUnit {
 public :
   ExtractUnitsSrc(const char* to_dir, const char* output_filename, const char* output_encoding)
@@ -68,6 +65,9 @@ private :
   xmlCharEncodingHandlerPtr handler;
 
 public :
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 
   virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                          int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
@@ -232,11 +232,11 @@ public :
     }
   }
 
+#pragma GCC diagnostic pop
+
 private :
   std::string path;
   xmlOutputBufferPtr output_buffer[2];
 };
-
-#pragma GCC diagnostic pop
 
 #endif
