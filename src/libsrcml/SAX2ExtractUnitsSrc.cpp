@@ -213,7 +213,7 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
     pstate->root.attributes[index] = attributes[index] ? (xmlChar*) srcml_strdup_sax((const char*) attributes[index], ctxt) : 0;
     pstate->root.attributes[index + 1] = attributes[index + 1] ? (xmlChar*) srcml_strdup_sax((const char*) attributes[index + 1], ctxt) : 0;
     pstate->root.attributes[index + 2] = attributes[index + 2] ? (xmlChar*) srcml_strdup_sax((const char*) attributes[index + 2], ctxt) : 0;
-    int vallength = attributes[index + 4] - attributes[index + 3];
+    long vallength = attributes[index + 4] - attributes[index + 3];
     pstate->root.attributes[index + 3] = (const xmlChar*) srcml_malloc_sax(vallength + 1, ctxt);
     memset((void *)pstate->root.attributes[index + 3], 0, vallength + 1);
     strncpy((char *) pstate->root.attributes[index + 3], (const char*) attributes[index + 3], vallength);
@@ -283,7 +283,7 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
 
       // output cached characters if we found any
       if (!pstate->firstcharacters.empty())
-        charactersUnit(ctx, BAD_CAST pstate->firstcharacters.c_str(), pstate->firstcharacters.length());
+        charactersUnit(ctx, BAD_CAST pstate->firstcharacters.c_str(), (int)pstate->firstcharacters.length());
 
       // all done
       if (pstate->stop)
@@ -321,7 +321,7 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
       return;
 
     if(isoption(*(pstate->poptions), OPTION_APPLY_ROOT))
-        charactersUnit(ctx, BAD_CAST pstate->firstcharacters.c_str(), pstate->firstcharacters.length());
+      charactersUnit(ctx, BAD_CAST pstate->firstcharacters.c_str(), (int)pstate->firstcharacters.length());
 
     // process using the normal startElementNs
     startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
@@ -365,7 +365,7 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname,
     static int count = 0;
 
     int filename_pos = find_attribute_index(nb_attributes, attributes, "filename");
-    int filename_size = attributes[filename_pos + 4] - attributes[filename_pos + 3];
+    long filename_size = attributes[filename_pos + 4] - attributes[filename_pos + 3];
     std::string filename_attribute = "";
     filename_attribute.append((const char *)attributes[filename_pos + 3], filename_size);
     fprintf(stderr, "%5d %s\n", ++count, filename_attribute.c_str());
@@ -470,7 +470,7 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
 
       // first characters
       if (!pstate->firstcharacters.empty())
-        charactersUnit(ctx, BAD_CAST pstate->firstcharacters.c_str(), pstate->firstcharacters.length());
+        charactersUnit(ctx, BAD_CAST pstate->firstcharacters.c_str(), (int)pstate->firstcharacters.length());
       pstate->firstcharacters.clear();
 
       // all done

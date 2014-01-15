@@ -136,7 +136,7 @@ public :
     pstate->stopUnit(ctx);
   }
 
-  static void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[], FILE * output, std::ostringstream * buffer, std::vector<std::string> * output_array) {
+  static void output_info(srcMLUtility& su, OPTION_TYPE options, int optioncount, int optionorder[], FILE * output, std::ostringstream * buffer, std::vector<std::string> * output_array) {
 
     // output all the namespaces
     if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {

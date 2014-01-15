@@ -49,12 +49,12 @@
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
+int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
 
   if(output_buffer == NULL) return SRCML_STATUS_ERROR;
 
   // setup parser
-  xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(input_buffer, size);
+  xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(input_buffer, (int)size);
   if(ctxt == NULL) return SRCML_STATUS_ERROR;
 
   // setup sax handler

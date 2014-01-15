@@ -54,7 +54,7 @@ public :
       if(pstate->count == 1)
         fputc('\b', output);
 
-      for (int place = pstate->count - 1; place > 0; place /= 10) {
+      for (long place = pstate->count - 1; place > 0; place /= 10) {
 
         fputc('\b', output);
       }

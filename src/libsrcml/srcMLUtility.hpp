@@ -146,9 +146,9 @@ public:
 
 class OutOfRangeUnitError : public LibXMLError {
 public:
-    OutOfRangeUnitError(int s) : LibXMLError(0), size(s) {}
+    OutOfRangeUnitError(long s) : LibXMLError(0), size(s) {}
 
-    int size;
+    long size;
 };
 
 #endif

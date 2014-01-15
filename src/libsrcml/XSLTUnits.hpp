@@ -116,7 +116,7 @@ public :
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    setPosition(pstate->count);
+    setPosition((int)pstate->count);
 
     // apply the style sheet to the document, which is the individual unit
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
@@ -285,7 +285,7 @@ public :
       xmlOutputBufferWriteString(buf, (const char*) attributes[i * 5]);
       xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
 
-      xmlOutputBufferWrite(buf, attributes[i * 5 + 4] - attributes[i * 5 + 3],
+      xmlOutputBufferWrite(buf, (int)(attributes[i * 5 + 4] - attributes[i * 5 + 3]),
                            (const char*) attributes[i * 5 + 3]);
 
       xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
