@@ -4944,7 +4944,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; ENTRY
 ;
 
 // default()
-expression_part_default[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
+expression_part_default[] { ENTRY_DEBUG } :
 
         expression_process
 
