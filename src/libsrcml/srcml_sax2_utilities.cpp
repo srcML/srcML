@@ -123,7 +123,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
   ctxt->sax = &sax;
 
   // setup process handling
-  XPathQueryUnits process(context_element, 0, options, compiled_xpath, fd);
+  XPathQueryUnits process(0, options, compiled_xpath, fd);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1, "");
