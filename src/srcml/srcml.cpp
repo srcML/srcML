@@ -53,12 +53,12 @@ struct ParseRequest {
         size ^= other.size;
 
         srcml_arch = other.srcml_arch;
-        lang = other.lang;
+        lang.swap(other.lang);
     }
 
     // empty ParseRequests indicate termination
     bool empty() const {
-        return filename.empty() && buffer.empty();
+        return filename.empty() && buffer.empty() && lang.empty();
     }
 
     // Fields required by thread to process a unit
@@ -66,7 +66,7 @@ struct ParseRequest {
     std::vector<char> buffer;
     size_t size;
     srcml_archive * srcml_arch;
-    const char * lang;
+    std::string lang;
 };
 
 // Mark the end of input for the threaded queue
@@ -172,7 +172,7 @@ void * srcml_consume(void * arg) {
     // Build, parse, and write srcml unit
     srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
     srcml_unit_set_filename(unit, pr.filename.c_str());
-    srcml_unit_set_language(unit, pr.lang);
+    srcml_unit_set_language(unit, pr.lang.c_str());
     srcml_parse_unit_memory(unit, &pr.buffer[0], pr.size);
     srcml_write_unit(pr.srcml_arch, unit);
   }
@@ -331,11 +331,10 @@ int main(int argc, char * argv[]) {
         size_t size;
         int64_t offset;
         std::vector<char> data_buffer;
+        size_t data_size = 0;
 
         while (true) {
-          int readStatus = archive_read_data_block(arch, &buffer, &size, &offset);
-          
-          if (readStatus != ARCHIVE_OK) {
+          if (archive_read_data_block(arch, &buffer, &size, &offset) != ARCHIVE_OK) {
             break;
           }
           
@@ -343,15 +342,17 @@ int main(int argc, char * argv[]) {
             data_buffer.push_back(((char*)buffer)[i]);
           }
 
-          request.filename = filename;
-          request.size = size;
-          request.buffer = data_buffer;
-          request.srcml_arch = srcml_arch;
-          request.lang = (srcml_archive_get_language(srcml_arch) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
-
-          // Hand request off to the processing queue
-          queue.push(request);
+          data_size += size;
         }
+
+        request.filename = filename;
+        request.size = data_size;
+        request.buffer = data_buffer;
+        request.srcml_arch = srcml_arch;
+        request.lang = (srcml_archive_get_language(srcml_arch) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
+
+        // Hand request off to the processing queue
+        queue.push(request);
       }
     }
     else {
