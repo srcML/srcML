@@ -318,8 +318,10 @@ int main(int argc, char * argv[]) {
       }
       else {
         // Stdin language declared via CLI
-        if (srcml_archive_get_language(srcml_arch))
+        if (!srcml_archive_get_language(srcml_arch)) {
+          std::cerr << "Using stdin requires a defined language\n";
           return 1; // Stdin used with no language specified.
+        }
       }
     
       const void* buffer;
