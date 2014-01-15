@@ -61,7 +61,6 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* src_encoding,    // text encoding of source code
                                  const char* xml_encoding,    // xml encoding of result srcML file
                                  char ** str_buf,
-                                 int * size,
                                  OPTION_TYPE & op,             // many and varied options
                                  const char* directory,       // root unit directory
                                  const char* filename,        // root unit filename
