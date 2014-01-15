@@ -264,7 +264,7 @@ private:
     }
 
     int SkipBufferSize() {
-        return skiptb.size();
+      return (int)skiptb.size();
     }
 
     // flush any skipped tokens to the output token stream

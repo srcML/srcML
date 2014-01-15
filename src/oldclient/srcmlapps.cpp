@@ -54,7 +54,7 @@ void checkargisnonempty(const char* name, const char* opt, const char* optarg, i
 const char* clean_filename(const char* in) {
 
   const char* pos = in;
-  int len = strlen(in);
+  size_t len = strlen(in);
 
   while (len > 2 && pos[0] == '.' && pos[1] == PATH_SEPARATOR) {
     pos += 2;
