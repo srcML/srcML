@@ -2367,7 +2367,7 @@ else_handling[] { ENTRY_DEBUG } :
             // record the current size of the top of the cppmode stack to detect
             // any #else or #endif in consumeSkippedTokens
             // see below
-            unsigned int cppmode_size = !cppmode.empty() ? cppmode.top().statesize.size() : 0;
+            std::deque<int>::size_type cppmode_size = !cppmode.empty() ? cppmode.top().statesize.size() : 0;
 
             // catch and finally statements are nested inside of a try, if at that level
             // so if no CATCH or FINALLY, then end now
@@ -5929,7 +5929,7 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
     std::list<int> op_stack;
     ++inputState->guessing;
 
-    int save_size = 0;
+    std::list<int>::size_type save_size = 0;
 
     int prev = -1;
     while(LA(1) != ENDIF && !(prev == PREPROC && LA(1) == ELSE) && LA(1) != 1 /* EOF */) {
@@ -6118,7 +6118,7 @@ eol_post[int directive_token, bool markblockzero] {
 cppmode_cleanup[] {
 
         bool equal = true;
-        for (unsigned int i = 0; i < cppmode.top().statesize.size(); ++i)
+        for (std::deque<int>::size_type i = 0; i < cppmode.top().statesize.size(); ++i)
             if (cppmode.top().statesize[i] != cppmode.top().statesize[0]) {
                 equal = false;
                 break;
@@ -6173,7 +6173,7 @@ cpp_symbol[] { ENTRY_DEBUG } :
         simple_identifier
 ;
 
-cpp_define_name[] { CompleteElement element(this); int pos = LT(1)->getColumn() + LT(1)->getText().size(); } :
+cpp_define_name[] { CompleteElement element(this); std::string::size_type pos = LT(1)->getColumn() + LT(1)->getText().size(); } :
         {
             startNewMode(MODE_LOCAL);
 
