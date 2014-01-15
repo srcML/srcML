@@ -30,7 +30,7 @@
 
 class ExtractUnitsXML : public ProcessUnit {
 public :
-    ExtractUnitsXML(const char* to_dir, const char* filename, const char* output_encoding)
+  ExtractUnitsXML(/*const char* to_dir,*/ const char* filename, const char* output_encoding)
         : /*to_directory(to_dir),*/ ofilename(filename), buffer(0) {
 
         handler = xmlFindCharEncodingHandler(output_encoding);
@@ -52,6 +52,9 @@ private :
 
 
 public :
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 
     // handle root unit of compound document
     void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
@@ -225,6 +228,8 @@ public :
         if (!isoption(*(pstate->poptions), OPTION_NULL))
             xmlTextWriterWriteComment(writer, ch);
     }
+
+#pragma GCC diagnostic pop
 
 private :
     //const char* filename;      // output filename

@@ -328,7 +328,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   ctxt->sax = &sax;
 
   // setup process handling
-  ExtractUnitsXML process(0 /* to_directory is stdout */, ofilename, output_encoding);
+  ExtractUnitsXML process(ofilename, output_encoding);
 
   if (isoption(options, OPTION_NULL))
     unit = -1;
@@ -366,7 +366,7 @@ void srcMLUtility::extract_diff_xml(const char* ofilename, int unit, const char*
   ctxt->sax = &sax;
 
   // setup process handling
-  ExtractUnitsDiffXML process(0 /* to_directory is stdout */, ofilename, output_encoding, version);
+  ExtractUnitsDiffXML process(ofilename, output_encoding, version);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
@@ -401,7 +401,7 @@ void srcMLUtility::extract_xml_uri(const char* ofilename, int unit, const char* 
   ctxt->sax = &sax;
 
   // setup process handling
-  ExtractUnitsDiffXMLPreserve process(0 /* to_directory is stdout */, ofilename, output_encoding, uri);
+  ExtractUnitsDiffXMLPreserve process(ofilename, output_encoding, uri);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
