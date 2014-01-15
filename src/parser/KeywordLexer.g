@@ -259,7 +259,7 @@ struct keyword { char const * const text; int token; int language; };
 
 void changetotextlexer(int typeend);
 
-KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language, OPTION_TYPE & options,
+KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
              std::vector<std::string> user_macro_list)
     : antlr::CharScanner(pinput,true), Language(language), options(options), onpreprocline(false), startline(true),
     atstring(false), rawstring(false), delimiter(""), isline(false), line_number(-1)

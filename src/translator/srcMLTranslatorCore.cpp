@@ -213,7 +213,7 @@ void srcMLTranslatorCore::translate(const char* path, const char* unit_directory
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input
-      KeywordLexer lexer(pinput, encoding, language, options, user_macro_list);
+      KeywordLexer lexer(pinput, language, options, user_macro_list);
       lexer.setSelector(&selector);
       lexer.setTabsize(tabsize);
 
@@ -266,7 +266,7 @@ void srcMLTranslatorCore::translate_separate(const char* path, const char* unit_
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input
-      KeywordLexer lexer(pinput, encoding, language, options, user_macro_list);
+      KeywordLexer lexer(pinput, language, options, user_macro_list);
       lexer.setSelector(&selector);
       lexer.setTabsize(tabsize);
 
