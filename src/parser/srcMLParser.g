@@ -3244,7 +3244,7 @@ decltype_call[] { int save_type_count = getTypeCount(); ENTRY_DEBUG } :
         {
 
             // start a mode for the macro that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_DECLTYPE);
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the macro call element
             startElement(SDECLTYPE);
