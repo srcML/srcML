@@ -176,7 +176,12 @@ const char* urisprefix[] = {
 
 const int num_prefixes = sizeof(uris) / sizeof(uris[0]);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 void libxml_error(void *ctx, const char *msg, ...) {}
+
+#pragma GCC diagnostic pop
 
 int option_error_status(int optopt);
 
@@ -340,10 +345,14 @@ void output_version(const char* name) {
 }
 
 void output_settings(const char * name)
-{}
+{
+  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
+}
 
 void output_features(const char * name)
-{}
+{
+  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
+}
 
 OPTION_TYPE options = 0;
 
