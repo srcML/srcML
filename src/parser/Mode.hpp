@@ -173,7 +173,7 @@ protected:
     //  void flushSkip() {}
 
     int size() const {
-        return statev.size();
+      return (int)statev.size();
     }
 
     srcMLState& currentState() {

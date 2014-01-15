@@ -236,7 +236,7 @@ int srcml(const char* input_filename, const char* output_filename) {
   } else {
 
     bool is_xml = false;
-    int len = strlen(input_filename);
+    size_t len = strlen(input_filename);
     if((len > 4 && input_filename[len - 1] == 'l' && input_filename[len - 2] == 'm'
         && input_filename[len - 3] == 'x' && input_filename[len - 4] == '.')
        || (global_archive.language && strcmp(global_archive.language->c_str(), "xml") == 0))
@@ -526,7 +526,7 @@ int srcml_get_tabstop() {
  */
 int srcml_get_namespace_size() {
 
-  return global_archive.namespaces.size();
+  return (int)global_archive.namespaces.size();
 
 }
 
@@ -674,7 +674,7 @@ int srcml_check_format(const char* format) {
   static const char * const regex = "(zx\\.|zg\\.|2zb\\.|rat\\.)*";
 
   // reversed copy of the path
-  int length = strlen(format);
+  size_t length = strlen(format);
 
   char * reverse = (char *)malloc((length + 1) * sizeof(char));
   if(reverse == NULL) return SRCML_STATUS_ERROR;
@@ -692,7 +692,7 @@ int srcml_check_format(const char* format) {
   errorcode = errorcode || regexec(&preg, reverse, 3, pmatch, 0);
 
   // minus 1 to remove starting .
-  int ext_len = pmatch[0].rm_eo - pmatch[0].rm_so - 1;
+  size_t ext_len = pmatch[0].rm_eo - pmatch[0].rm_so - 1;
   regfree(&preg);
   free(reverse);
   if(ext_len > 0)

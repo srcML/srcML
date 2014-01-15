@@ -742,7 +742,7 @@ int main(int argc, char* argv[]) {
   } catch (const OutOfRangeUnitError& e) {
 
     fprintf(stderr, "%s: unit %d  was selected from srcML that only contains "
-            "%d units\n", PROGRAM_NAME, poptions.unit, e.size);
+            "%d units\n", PROGRAM_NAME, poptions.unit, (int)e.size);
     exit_status = STATUS_INVALID_ARGUMENT;
 
     return exit_status;
@@ -987,7 +987,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       options |= OPTION_UNIT;
 
       // try to convert to number
-      poptions.unit = pstd::strtol(optarg, &end, 10);
+      poptions.unit = (int)pstd::strtol(optarg, &end, 10);
 
       // validate type of unit number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {

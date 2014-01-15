@@ -244,7 +244,7 @@ int srcml_parse_unit_internal(srcml_unit * unit, int lang) {
   }
 
 
-  int length = strlen((const char *)output_buffer->content);
+  size_t length = strlen((const char *)output_buffer->content);
   while(length > 0 && output_buffer->content[length - 1] == '\n')
     --length;
   if(unit->unit) delete unit->unit;
@@ -515,7 +515,7 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
   xmlBufferFree(buffer);
   if(!buffer->content && !(*src_buffer)) return SRCML_STATUS_ERROR;
 
-  *src_size = strlen(*src_buffer);
+  *src_size = (int)strlen(*src_buffer);
 
   return SRCML_STATUS_OK;
 

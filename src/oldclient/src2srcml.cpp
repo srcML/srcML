@@ -1085,7 +1085,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       options |= OPTION_POSITION;
 
       char * end;
-      poptions.tabsize = pstd::strtol(optarg, &end, 10);
+      poptions.tabsize = (int)pstd::strtol(optarg, &end, 10);
 
       // validate type of tabsize number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {
@@ -1546,7 +1546,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
   std::string filename = directory;
   if (!filename.empty() && filename[filename.size() - 1] != PATH_SEPARATOR)
     filename += PATH_SEPARATOR;
-  int basesize = filename.length();
+  std::string::size_type basesize = filename.length();
 
   // process all non-directory files
   for (int i = 0; i < n; i++) {

@@ -37,7 +37,7 @@
 class RelaxNGUnits : public UnitDOM {
 public :
 
-  RelaxNGUnits(const char* a_ofilename, int options, xmlRelaxNGValidCtxtPtr rngctx, int fd = 0)
+  RelaxNGUnits(const char* a_ofilename, OPTION_TYPE options, xmlRelaxNGValidCtxtPtr rngctx, int fd = 0)
     : UnitDOM(options), ofilename(a_ofilename), options(options), rngctx(rngctx), fd(fd), found(false), root_prefix(0) {
   }
 
@@ -108,7 +108,7 @@ public :
         }
         end_unit += "unit>";
 
-        xmlOutputBufferWrite(buf, end_unit.size(), end_unit.c_str());
+        xmlOutputBufferWrite(buf, (int)end_unit.size(), end_unit.c_str());
 
       } else 
         // output end as empty element if no children
@@ -170,7 +170,7 @@ public :
       }
       s += (char*) node.name;
 
-      xmlOutputBufferWrite(buf, s.size(), s.c_str());
+      xmlOutputBufferWrite(buf, (int)s.size(), s.c_str());
 
     }
 
@@ -198,7 +198,7 @@ public :
         std::string xmlns_string = prefix + "=\"" + ns + "\"";
 
         if(xmlns->href)
-          xmlOutputBufferWrite(buf, xmlns_string.size(), xmlns_string.c_str());
+          xmlOutputBufferWrite(buf, (int)xmlns_string.size(), xmlns_string.c_str());
 
         xmlns = xmlns->next;
       }
@@ -221,7 +221,7 @@ public :
         attribute_string += (const char *)attribute->children->content;
         attribute_string += "\"";
 
-        xmlOutputBufferWrite(buf, attribute_string.size(), attribute_string.c_str());
+        xmlOutputBufferWrite(buf, (int)attribute_string.size(), attribute_string.c_str());
         attribute = attribute->next;
       }
     }
@@ -269,7 +269,7 @@ public :
       xmlOutputBufferWriteString(buf, (const char*) attributes[i * 5]);
       xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
 
-      xmlOutputBufferWrite(buf, attributes[i * 5 + 4] - attributes[i * 5 + 3],
+      xmlOutputBufferWrite(buf, (int)(attributes[i * 5 + 4] - attributes[i * 5 + 3]),
                            (const char*) attributes[i * 5 + 3]);
 
       xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
@@ -319,7 +319,7 @@ public :
 
 private :
   const char* ofilename;
-  int options;
+  OPTION_TYPE options;
   xmlOutputBufferPtr buf;
   xmlRelaxNGValidCtxtPtr rngctx;
   int fd;

@@ -61,7 +61,7 @@ public :
 
     virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
 
-    virtual int getOptions() const { return 0; }
+    virtual OPTION_TYPE getOptions() const { return 0; }
     
 };
 

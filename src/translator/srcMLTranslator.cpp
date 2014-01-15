@@ -163,7 +163,7 @@ srcMLTranslator::~srcMLTranslator() {
   if(str_buffer) {
 
     (*str_buffer) = strdup((const char *)output_buffer->content);
-    if(size && *str_buffer) *size = strlen(*str_buffer);
+    if(size && *str_buffer) *size = (int)strlen(*str_buffer);
 
   }
 

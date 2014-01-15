@@ -834,7 +834,7 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
 
   if(archive == NULL || buffer == NULL || buffer_size <= 0) return SRCML_STATUS_ERROR;
 
-  archive->input = xmlParserInputBufferCreateMem(buffer, buffer_size, xmlParseCharEncoding(0));
+  archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, xmlParseCharEncoding(0));
   try {
 
 #ifdef SAX2

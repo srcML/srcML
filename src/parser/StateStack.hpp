@@ -126,7 +126,7 @@ public:
     // stack size
     int size() const {
 
-        return st.size();
+      return (int)st.size();
     }
 
     // stack empty

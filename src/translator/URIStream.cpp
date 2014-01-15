@@ -80,9 +80,9 @@ char* URIStream::readline() {
       // only if libxml decides for this input source it should
 
 #ifdef LIBXML2_NEW_BUFFER
-      int removed = xmlBufShrink(input->buffer, startpos >= 1 ? startpos - 1 : 0);
+      int removed = (int)xmlBufShrink(input->buffer, startpos >= 1 ? startpos - 1 : 0);
 #else
-      int removed = xmlBufferShrink(input->buffer, startpos >= 1 ? startpos - 1 : 0);
+      int removed = (int)xmlBufferShrink(input->buffer, startpos >= 1 ? startpos - 1 : 0);
 #endif
       endpos -= removed;
       startpos -= removed;

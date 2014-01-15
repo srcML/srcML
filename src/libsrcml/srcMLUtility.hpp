@@ -118,7 +118,7 @@ private:
     const char* infile;
     const char* output_encoding;
     OPTION_TYPE options;
-    int units;
+    long units;
     const char* diff_version;
     const char * buffer;
     int size;
@@ -146,9 +146,9 @@ public:
 
 class OutOfRangeUnitError : public LibXMLError {
 public:
-    OutOfRangeUnitError(int s) : LibXMLError(0), size(s) {}
+    OutOfRangeUnitError(long s) : LibXMLError(0), size(s) {}
 
-    int size;
+    long size;
 };
 
 #endif
