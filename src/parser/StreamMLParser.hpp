@@ -220,34 +220,26 @@ private:
         // macro call
 	if (Base::LA(1) == Base::MACRO_NAME) {
 
-	  if(inskip) {
+	  inskip = true;
 
-	    Base::LT(1)->setType(Base::NAME);
+	  // use preprocessor token buffers
+	  pouttb = &pretb;
+	  pskiptb = &skippretb;
 
-	  } else {
+	  // parse macro_call
+	  Base::macro_pattern_call();
 
-	    inskip = true;
+	  // flush remaining whitespace from preprocessor handling onto preprocessor buffer
+	  pretb.splice(pretb.end(), skippretb);
 
-            // use preprocessor token buffers
-            pouttb = &pretb;
-            pskiptb = &skippretb;
+	  // move back to normal buffer
+	  pskiptb = &skiptb;
+	  pouttb = &tb;
 
-            // parse macro_call
-            Base::macro_pattern_call();
-
-            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
-            pretb.splice(pretb.end(), skippretb);
-
-            // move back to normal buffer
-            pskiptb = &skiptb;
-            pouttb = &tb;
-
-            // put preprocessor buffer into skipped buffer
-            skiptb.splice(skiptb.end(), pretb);
+	  // put preprocessor buffer into skipped buffer
+	  skiptb.splice(skiptb.end(), pretb);
 
 	  inskip = false;
-
-	  }
 
 	}
 
