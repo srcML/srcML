@@ -263,6 +263,9 @@ int main(int argc, char * argv[]) {
   pthread_attr_setschedparam (&tattr, &param);
   pthread_create(&writer, &tattr, srcml_consume, &queue);
 
+  // Setup a request
+  ParseRequest request;
+
   // Main processing loop
   for (size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
     std::string & input_file = srcml_request.positional_args[i];
@@ -325,33 +328,29 @@ int main(int argc, char * argv[]) {
         }
       
         const void* buffer;
-        const char* cptr;
         size_t size;
         int64_t offset;
-        std::vector<char> dbuff;
+        std::vector<char> data_buffer;
 
         while (true) {
           int readStatus = archive_read_data_block(arch, &buffer, &size, &offset);
-          cptr = (char*)buffer;
           
           if (readStatus != ARCHIVE_OK) {
             break;
           }
           
           for (size_t i = 0; i < size; ++i) {
-            dbuff.push_back(cptr[i]);
+            data_buffer.push_back(((char*)buffer)[i]);
           }
 
-          // Setup a request
-          ParseRequest prq;
-          prq.filename = filename;
-          prq.size = size;
-          prq.buffer = dbuff;
-          prq.srcml_arch = srcml_arch;
-          prq.lang = (srcml_archive_get_language(srcml_arch) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
+          request.filename = filename;
+          request.size = size;
+          request.buffer = data_buffer;
+          request.srcml_arch = srcml_arch;
+          request.lang = (srcml_archive_get_language(srcml_arch) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
 
           // Hand request off to the processing queue
-          queue.push(prq);
+          queue.push(request);
         }
       }
     }
