@@ -108,7 +108,7 @@ srcMLUtility::~srcMLUtility() {
 }
 
 int srcMLUtility::curunits() const {
-  return units;
+  return (int)units;
 }
 
 // attribute
@@ -307,7 +307,7 @@ int srcMLUtility::unit_count(FILE* output) {
   xmlFreeParserCtxt(ctxt);
   if(infile) archiveDeleteContext(context);
 
-  return state.count;
+  return (int)state.count;
 }
 
 

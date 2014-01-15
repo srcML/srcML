@@ -152,7 +152,7 @@ public :
             // the begin/end pointers of the attribute value to a string
             xmlTextWriterStartAttribute(writer, BAD_CAST name);
             xmlTextWriterWriteRawLen(writer, attributes[index + 3],
-                                     attributes[index + 4] - attributes[index + 3]);
+                                     (int)(attributes[index + 4] - attributes[index + 3]));
             xmlTextWriterEndAttribute(writer);
         }
     }

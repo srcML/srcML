@@ -42,11 +42,11 @@ public :
 
         // find the directory
         int dir_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_DIRECTORY);
-        int dir_size = dir_index != -1 ? (const char*) attributes[dir_index + 4] - (const char*) attributes[dir_index + 3] : 0;
+        int dir_size = dir_index != -1 ? (int)((const char*) attributes[dir_index + 4] - (const char*) attributes[dir_index + 3]) : 0;
 
         // find the filename
         int filename_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_FILENAME);
-        int filename_size = filename_index != -1 ? (const char*) attributes[filename_index + 4] - (const char*) attributes[filename_index + 3] : 0;
+        int filename_size = filename_index != -1 ? (int)((const char*) attributes[filename_index + 4] - (const char*) attributes[filename_index + 3]) : 0;
 
         // whole purpose
         fprintf(stdout, "%ld\t%.*s%.*s%.*s\n", pstate->count,
