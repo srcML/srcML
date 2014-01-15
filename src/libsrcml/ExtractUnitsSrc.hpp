@@ -36,6 +36,9 @@
 #define EOL_SIZE 2
 #endif
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 class ExtractUnitsSrc : public ProcessUnit {
 public :
   ExtractUnitsSrc(const char* to_dir, const char* output_filename, const char* output_encoding)
@@ -233,5 +236,7 @@ private :
   std::string path;
   xmlOutputBufferPtr output_buffer[2];
 };
+
+#pragma GCC diagnostic pop
 
 #endif
