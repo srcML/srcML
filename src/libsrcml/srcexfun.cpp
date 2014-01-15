@@ -110,7 +110,7 @@ static void srcMacrosFunction (xmlXPathParserContextPtr ctxt, int nargs) {
   }
 
   // find out which expression is being used based on the name
-  unsigned int i;
+  std::vector<struct xpath_ext_function>::size_type i;
   for (i = 0; i < MACROS.size(); ++i)
     if (strcmp(MACROS[i].name.c_str(), (const char*) ctxt->context->function) == 0)
       break;
@@ -205,7 +205,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
                          srcPowersetFunction);
 
   // register all the xpath extension functions
-  for (unsigned int i = 0; i < MACROS.size(); ++i) {
+  for (std::vector<struct xpath_ext_function>::size_type i = 0; i < MACROS.size(); ++i) {
 
     xmlXPathRegisterFuncNS(context, BAD_CAST MACROS[i].name.c_str(),
                            BAD_CAST MACROS[i].prefix.c_str(),
@@ -255,7 +255,7 @@ void xsltsrcMLRegister () {
                                 srcPowersetFunction);
 
   // register all the xpath extension functions
-  for (unsigned int i = 0; i < MACROS.size(); ++i) {
+  for (std::vector<struct xpath_ext_function>::size_type i = 0; i < MACROS.size(); ++i) {
 
     xsltRegisterExtModuleFunction(BAD_CAST MACROS[i].name.c_str(),
                                   BAD_CAST MACROS[i].prefix.c_str(),
