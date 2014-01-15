@@ -35,7 +35,7 @@
 
 #include "dassert.hpp"
 
-int main(int argc, char * argv[]) {
+int main() {
 
   const std::string src = "a;\n";
   const std::string srcml = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
