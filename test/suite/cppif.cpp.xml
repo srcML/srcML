@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="cppif" options="CPPIF_CHECK">
+
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:elif>#<cpp:directive>elif</cpp:directive> <expr>1</expr></cpp:elif>
+<expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:elif>#<cpp:directive>elif</cpp:directive> <expr>1</expr></cpp:elif>
+<expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<expr_stmt><expr><call><name>c</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<expr_stmt><expr><call><name>c</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<if>if<condition>()</condition><then> <block>{}</block></then>
+<else>else <block>{}</block></else>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<else>else <block>{}</block></else></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<if>if<condition>()</condition><then> <block>{}</block></then>
+<else>else <block>{}</block></else>
+<cpp:error>#<cpp:directive>elseif</cpp:directive></cpp:error>
+<else>else <block>{}</block></else>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<else>else <block>{}</block></else></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<!-- this test case is probably marked up wrong
+<unit>
+<if>if<condition>()</condition><then>
+<if>if<condition>()</condition><then> <block>{}</block></then>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<else>else <block>{}</block></else></if></then>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<else>else <block>{}</block></else></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+-->
+
+<unit>
+<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+}</block></then></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+}<block/>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+}</block></then></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+}<block/>
+<cpp:elif>#<cpp:directive>elif</cpp:directive></cpp:elif>
+}<block/>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+}</block></then></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+}<block/>
+<cpp:elif>#<cpp:directive>elif</cpp:directive></cpp:elif>
+}</block></then></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+}<block/>
+<cpp:elif>#<cpp:directive>elif</cpp:directive></cpp:elif>
+}<block/>
+<cpp:elif>#<cpp:directive>elif</cpp:directive></cpp:elif>
+}</block></then></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<if>if<condition>(<expr>1
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+)<condition/></expr>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+)</condition><then>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+<empty_stmt>;</empty_stmt></then></if>
+</unit>
+
+<unit>
+<block>{
+<block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+}<block/>
+}<block/>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+}</block>
+}</block>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+}</block></then> <else>else <block>{
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+}</block></else></if>
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+}</block></then> <else>else <if>if<then> <block>{
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+}</block></then> <else>else <if>if<then> <block>{
+  <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+}</block></then></if></else></if></else></if>
+</unit>
+
+</unit>

@@ -21,6 +21,7 @@
 */
 
 #include <SAX2srcMLHandler.hpp>
+#include <SAX2Framework_utilities.hpp>
 
 #include <cstring>
 
@@ -100,28 +101,6 @@ void endDocument(void * ctx) {
 
   state->process->endDocument();
 
-  if(state->root.localname) free((void *)state->root.localname);
-  if(state->root.prefix) free((void *)state->root.prefix);
-  if(state->root.URI) free((void *)state->root.URI);
-
-  int ns_length = state->root.nb_namespaces * 2;
-
-  for (int i = 0; i < ns_length; ++i)
-    if(state->root.namespaces[i])
-      free((void *)state->root.namespaces[i]);
-  free((void *)state->root.namespaces);
-
-  for (int i = 0, index = 0; i < state->root.nb_attributes; ++i, index += 5) {
-    if(state->root.attributes[index])
-      free((void *)state->root.attributes[index]);
-    if(state->root.attributes[index + 1])
-      free((void *)state->root.attributes[index + 1]);
-    if(state->root.attributes[index + 2])
-      free((void *)state->root.attributes[index + 2]);
-    free((void *)state->root.attributes[index + 3]);
-  }
-  free((void *)state->root.attributes);
-
 #ifdef DEBUG
   fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
@@ -161,26 +140,46 @@ void startRoot(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
 
   // save all the info in case this is not a srcML archive
   state->root.localname = localname ? (xmlChar*) strdup((const char*) localname) : 0;
+  CHECK_COPY(localname, state->root.localname);
+
   state->root.prefix = prefix ? (xmlChar*) strdup((const char*) prefix) : 0;
+  CHECK_COPY(prefix, state->root.prefix);
+
   state->root.URI = URI ? (xmlChar*) strdup((const char*) URI) : 0;
+  CHECK_COPY(URI, state->root.URI);
 
   state->root.nb_namespaces = nb_namespaces;
   int ns_length = nb_namespaces * 2;
   state->root.namespaces = (const xmlChar**) malloc(ns_length * sizeof(namespaces[0]));
-  for (int i = 0; i < ns_length; ++i)
+  CHECK_COPY(namespaces, state->root.namespaces);
+  memset(state->root.namespaces, 0, ns_length);
+
+  for (int i = 0; i < ns_length; ++i) {
     state->root.namespaces[i] = namespaces[i] ? (xmlChar*) strdup((const char*) namespaces[i]) : 0;
+    CHECK_COPY(namespaces[i], state->root.namespaces[i]);
+  }
 
   state->root.nb_attributes = nb_attributes;
   state->root.nb_defaulted = nb_defaulted;
 
   int nb_length = nb_attributes * 5;
   state->root.attributes = (const xmlChar**) malloc(nb_length * sizeof(attributes[0]));
+  CHECK_COPY(attributes, state->root.attributes);
+
+  memset(state->root.attributes, 0, nb_length);
+
   for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
     state->root.attributes[index] = attributes[index] ? (xmlChar*) strdup((const char*) attributes[index]) : 0;
+    CHECK_COPY(attributes[index], state->root.attributes[index]);
     state->root.attributes[index + 1] = attributes[index + 1] ? (xmlChar*) strdup((const char*) attributes[index + 1]) : 0;
+    CHECK_COPY(attributes[index + 1], state->root.attributes[index + 1]);
     state->root.attributes[index + 2] = attributes[index + 2] ? (xmlChar*) strdup((const char*) attributes[index + 2]) : 0;
+    CHECK_COPY(attributes[index + 2], state->root.attributes[index + 2]);
+
     int vallength = attributes[index + 4] - attributes[index + 3];
     state->root.attributes[index + 3] = (const xmlChar*) malloc(vallength);
+    CHECK_COPY(attributes[index + 3], state->root.attributes[index + 3]);
+
     strncpy((char *) state->root.attributes[index + 3], (const char*) attributes[index + 3], vallength);
     state->root.attributes[index + 4] = state->root.attributes[index + 3] + vallength;
   }
@@ -222,6 +221,16 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2srcMLHandler * state = (SAX2srcMLHandler *) ctxt->_private;
+
+  int ns_length = state->root.nb_namespaces * 2;
+  for (int i = 0; i < ns_length; i += 2)
+    if(prefix && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)prefix) == 0)
+      prefix = state->root.namespaces[i];
+
+  for (int i = 1; i < ns_length; i += 2)
+    if(URI && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)URI) == 0)
+      URI = state->root.namespaces[i];
+
   state->is_archive = strcmp((const char *)localname, "unit") == 0;
 
   if(!state->is_archive) {
@@ -280,6 +289,15 @@ void startUnit(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2srcMLHandler * state = (SAX2srcMLHandler *) ctxt->_private;
 
+  int ns_length = state->root.nb_namespaces * 2;
+  for (int i = 0; i < ns_length; i += 2)
+    if(prefix && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)prefix) == 0)
+      prefix = state->root.namespaces[i];
+
+  for (int i = 1; i < ns_length; i += 2)
+    if(URI && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)URI) == 0)
+      URI = state->root.namespaces[i];
+
   state->process->startUnit(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
   ctxt->sax->startElementNs = &startElementNs;    
   ctxt->sax->characters = &charactersUnit;
@@ -318,6 +336,15 @@ void startElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefi
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2srcMLHandler * state = (SAX2srcMLHandler *) ctxt->_private;
 
+  int ns_length = state->root.nb_namespaces * 2;
+  for (int i = 0; i < ns_length; i += 2)
+    if(prefix && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)prefix) == 0)
+      prefix = state->root.namespaces[i];
+
+  for (int i = 1; i < ns_length; i += 2)
+    if(URI && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)URI) == 0)
+      URI = state->root.namespaces[i];
+
   state->process->startElementNs(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
 
 #ifdef DEBUG
@@ -355,10 +382,7 @@ void endElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix,
       state->process->startUnit(state->root.localname, state->root.prefix, state->root.URI,
                                 state->root.nb_namespaces, state->root.namespaces, state->root.nb_attributes,
                                 state->root.nb_defaulted, state->root.attributes);
-     
-      if(state->root.characters != "")
-        state->process->charactersUnit((const xmlChar *)state->root.characters.c_str(), state->root.characters.size());
-
+      
 
     } 
 

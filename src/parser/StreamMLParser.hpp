@@ -35,6 +35,7 @@
 
 #include "srcMLToken.hpp"
 #include "Options.hpp"
+#include "Mode.hpp"
 
 template <typename Base>
 class StreamMLParser : public Base, public TokenStream {
@@ -71,6 +72,8 @@ public:
 
     // ends an element
     void endElement(int id) {
+      if(Base::getMode() & Base::MODE_ISSUE_EMPTY_AT_POP)
+        pushSToken(id, false);
 
         pushEToken(id);
         Base::currentState().pop();
@@ -81,6 +84,12 @@ public:
 
         // push a empty element token
         pushToken(antlr::RefToken(EmptyTokenFactory(id)));
+    }
+
+    // starts an element that is output when mode ends
+    void addElement(int id) {
+
+        Base::currentState().push(id);
     }
 
 private:

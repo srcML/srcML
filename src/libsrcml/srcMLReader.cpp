@@ -265,6 +265,8 @@ int srcMLReader::readRootUnitAttributes(std::string *& language, std::string *& 
 	    options |= OPTION_MACRO_LIST;
 	  if(option == "ELSEIF")
 	    options |= OPTION_ELSEIF;
+	  if(option == "CPPIF_CHECK")
+	    options |= OPTION_CPPIF_CHECK;
 
 	}
 

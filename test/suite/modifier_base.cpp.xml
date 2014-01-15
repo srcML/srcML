@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" dir="modifier" filename="modifier_test.cpp">
+  
+<unit>
+<decl_stmt><decl><type><specifier>const</specifier> <name>int</name><type:modifier>*</type:modifier></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name><type:modifier>*</type:modifier><type:modifier>*</type:modifier><type:modifier>*</type:modifier><type:modifier>&amp;</type:modifier></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> (*<name>i</name>)<parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+</unit>
