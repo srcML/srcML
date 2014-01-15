@@ -218,7 +218,7 @@ private:
         }
 
         // macro call
-	if (Base::LA(1) == Base::MACRO_NAME) {
+	if (Base::LA(1) == Base::MACRO_NAME && !inskip) {
 
 	  inskip = true;
 
@@ -240,6 +240,7 @@ private:
 	  skiptb.splice(skiptb.end(), pretb);
 
 	  inskip = false;
+	  return true;
 
 	}
 
