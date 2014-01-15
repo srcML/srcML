@@ -1313,7 +1313,7 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       fprintf(stderr, "%5d %s\n", gpoptions->count, c_filename);
 
     // translate the file
-    translator.translate(path, dir,
+    translator.translate(dir,
                          foundfilename ? c_filename : 0,
                          version, reallanguage);
 
@@ -1481,7 +1481,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
         fprintf(stderr, "%5d %s\n", gpoptions->count, c_filename);
 
       // translate the file
-      translator.translate(path, dir,
+      translator.translate(dir,
                            foundfilename ? c_filename : 0,
                            version,
                            reallanguage);
