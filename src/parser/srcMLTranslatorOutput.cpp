@@ -662,7 +662,7 @@ void srcMLTranslatorOutput::processLineCommentStart(const antlr::RefToken& token
 
 void srcMLTranslatorOutput::processEndLineToken(const antlr::RefToken& token) {
 
-  int size = token->getText().size();
+  std::string::size_type size = token->getText().size();
 
   bool output = false;
   if (size > 1 || token->getText()[0] != '\n') {

@@ -42,7 +42,7 @@ public:
 
     // openelements methods
     int size() const {
-        return openelements.size();
+      return (int)openelements.size();
     }
 
     void push(int id) {

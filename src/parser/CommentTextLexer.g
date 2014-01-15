@@ -131,7 +131,7 @@ COMMENT_TEXT {
     int prevLA = 0;
     int prevprevLA = 0;
 
-    int realbegin = _begin;
+    std::string::size_type realbegin = _begin;
 
 } :
 
