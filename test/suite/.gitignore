@@ -16,6 +16,7 @@ catch_form.java.xml
 comment.c.xml
 comment.cs.xml
 comment.java.xml
+constructor.cpp.xml
 constructor_explicit.cpp.xml
 decl_pointer.c.xml
 decl_pointer.cs.xml
@@ -79,6 +80,7 @@ literal.java.xml
 macro.c.xml
 main.c.xml
 main.cs.xml
+modifier_base.c.xml
 namespace.cs.xml
 operator.cs.xml
 operator_base.c.xml

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="function_pointer" filename="function_pointer_cpp">
+
+<unit>
+<function><type><name>bool</name></type> <name><name>Blit</name>::<name>setShader</name></name><parameter_list>(<param><decl><type><name>ShaderId</name></type> <name>source</name></decl></param>, <param><decl><type><specifier>const</specifier> <name>char</name> *</type><name>profile</name></decl></param>,
+<param><function_decl><type><name>D3DShaderType</name> *</type>(<name><name>rx</name>::<name>Renderer9</name>::*<name>createShader</name></name>)<parameter_list>(<param><decl><type><specifier>const</specifier></type> <name>DWORD</name> *</decl></param>, <param><decl><type><name>size_t</name></type> <name>length</name></decl></param>)</parameter_list></function_decl></param>,
+<param><function_decl><type><name>HRESULT</name></type> (<name>WINAPI</name> <name><name>IDirect3DDevice9</name>::*<name>setShader</name></name>)<parameter_list>(<param><decl><type><name>D3DShaderType</name>*</type></decl></param>)</parameter_list></function_decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+</unit>

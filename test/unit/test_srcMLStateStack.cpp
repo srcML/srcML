@@ -23,10 +23,11 @@ public:
   virtual void flushSkip() {}
   virtual int SkipBufferSize() { return 0; }
   virtual antlr::RefToken* CurrentToken() { return 0; }
+  virtual void addElement(int) { }
   virtual ~TP() {}
 };
 
-int main(int argc, char * argv[]) {
+int main(/*int argc, char * argv[]*/) {
 
   /*
     size

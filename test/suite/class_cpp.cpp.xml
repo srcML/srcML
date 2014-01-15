@@ -29,4 +29,14 @@
 <class>class <alignas>alignas<argument_list>(<argument><expr>(<name>a</name>)</expr></argument>)</argument_list></alignas> <name>A</name> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
+<unit>
+<template>template <parameter_list>&lt;<param><type><specifier>typename</specifier></type> <name>B</name></param>&gt;</parameter_list>
+<class>class <name>A</name> <block>{<private type="default">
+
+  <template>template <parameter_list>&lt;<param><type><specifier>typename</specifier></type> <name>C</name></param>&gt;</parameter_list>
+  <constructor_decl><name>A</name><parameter_list>()</parameter_list>;</constructor_decl></template>
+
+</private>}</block>;</class></template>
+</unit>
+
 </unit>

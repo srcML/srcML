@@ -119,3 +119,18 @@ SAX2FrameworkCreateParserCtxt(xmlParserInputBufferPtr buffer_input) {
   inputPush(ctxt, input);
   return(ctxt);
 }
+
+void internal_stop_parser(xmlParserCtxtPtr ctxt) {
+
+  ctxt->sax->startDocument = 0;
+  ctxt->sax->endDocument = 0;
+  ctxt->sax->startElementNs = 0;
+  ctxt->sax->endElementNs = 0;
+  ctxt->sax->characters = 0;
+  ctxt->sax->cdataBlock = 0;
+  ctxt->sax->comment = 0;
+  ctxt->sax->ignorableWhitespace = 0;
+
+  xmlStopParser(ctxt);
+
+}
