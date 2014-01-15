@@ -160,7 +160,7 @@ void SAX2TextWriter::startElementNs(void* ctx, const xmlChar* localname, const x
         // the begin/end pointers of the attribute value to a string
         xmlTextWriterStartAttribute(pstate->writer, BAD_CAST name);
         xmlTextWriterWriteRawLen(pstate->writer, attributes[index + 3],
-                                 attributes[index + 4] - attributes[index + 3]);
+                                 (int)(attributes[index + 4] - attributes[index + 3]));
         xmlTextWriterEndAttribute(pstate->writer);
     }
 }
