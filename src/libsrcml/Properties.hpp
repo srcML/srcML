@@ -31,6 +31,9 @@
 
 #include <unistd.h>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 class Properties : public ProcessUnit {
 public :
   Properties(srcMLUtility& su, PROPERTIES_TYPE&nsv, PROPERTIES_TYPE& attrv, int optioncount, int optionorder[], FILE * output = stdout)
@@ -220,5 +223,7 @@ public :
       output_array->push_back("units=\"1\"");
   }
 };
+
+#pragma GCC diagnostic pop
 
 #endif
