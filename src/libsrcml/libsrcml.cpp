@@ -674,7 +674,7 @@ int srcml_check_format(const char* format) {
   static const char * const regex = "(zx\\.|zg\\.|2zb\\.|rat\\.)*";
 
   // reversed copy of the path
-  size_t length = strlen(format);
+  int length = (int)strlen(format);
 
   char * reverse = (char *)malloc((length + 1) * sizeof(char));
   if(reverse == NULL) return SRCML_STATUS_ERROR;
@@ -692,7 +692,7 @@ int srcml_check_format(const char* format) {
   errorcode = errorcode || regexec(&preg, reverse, 3, pmatch, 0);
 
   // minus 1 to remove starting .
-  size_t ext_len = pmatch[0].rm_eo - pmatch[0].rm_so - 1;
+  int ext_len = (int)(pmatch[0].rm_eo - pmatch[0].rm_so - 1);
   regfree(&preg);
   free(reverse);
   if(ext_len > 0)
