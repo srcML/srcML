@@ -277,11 +277,10 @@ int main(int argc, char * argv[]) {
 
     setupLibArchive(arch);
 
-    int valid = 0;
-
     // Regular file or archive
-    if (input_file.compare("-") != 0) {
-      valid = archive_read_open_filename(arch, input_file.c_str(), 16384); 
+    if (archive_read_open_filename(arch, (input_file.compare("-") != 0 ? input_file.c_str() : NULL), 16384)!= ARCHIVE_OK) {
+      std::cerr << "Unable to open archive\n";
+      return 1;
     }
     
     // Stdin
@@ -292,14 +291,6 @@ int main(int argc, char * argv[]) {
         if (!test_for_stdin())
           return 1; // Stdin was requested, but no data was received
       }
-      
-      // Setting libarchive's file input to NULL forces libarchive to read stdin  
-      valid = archive_read_open_filename(arch, NULL, 16384);
-    }
-
-    if (valid != ARCHIVE_OK) {
-      std::cerr << "Unable to open archive\n";
-      return 1;
     }
 
     while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
