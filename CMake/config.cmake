@@ -43,52 +43,62 @@ set_property(GLOBAL PROPERTY DYNAMIC_ENABLED ${DYNAMIC_LOAD_ENABLED})
 option(ENABLE_NEW_SRCML_EXEC_BUILD "Build the newer version of the srcML executable." ON)
 set_property(GLOBAL PROPERTY ENABLE_NEW_SRCML_EXEC_BUILD ${ENABLE_NEW_SRCML_EXEC_BUILD})
 
-# Locating packages.
-find_package(LibArchive REQUIRED)
-find_package(LibXml2 REQUIRED)
-find_package(LibXslt)
-find_package(Boost COMPONENTS program_options filesystem system REQUIRED)
-
-# add include directories
-include_directories(${LibArchive_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR})
-
-if(LIBXSLT_FOUND)
-    include_directories(${LIBXSLT_INCLUDE_DIR})
-endif()
-
-if(ENABLE_SVN_INTEGRATION)
-    include_directories(/usr/include/apr-1.0 /usr/include/subversion-1 /usr/local/include/subversion-1)
-endif()
-
-# Setting Properties
-set_property(GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB ${Boost_LIBRARIES})
-set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS ${LibArchive_LIBRARIES})
-set_property(GLOBAL PROPERTY LIBXML2_LIBS ${LIBXML2_LIBRARIES})
-
-if(LIBXSLT_EXSLT_LIBRARY)
-    set_property(GLOBAL PROPERTY LIBXSLT_LIBS ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY})
-else()
-    set_property(GLOBAL PROPERTY LIBXSLT_LIBS "")
-endif()
-
 # Setting some windows only properties.
 if(WIN32)
     # Adding suspected windows include directory for ANTRL
     include_directories("C:/antlr/277/include/antlr")
-    set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/"dep")
-    include_directories(${WINDOWS_DEP_PATH}/apr-1.0 ${WINDOWS_DEP_PATH}/subversion-1)
+    set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/dep)
+    include_directories(${WINDOWS_DEP_PATH}/include)
+    link_directories(${WINDOWS_DEP_PATH}/lib)
+    set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH}:${WINDOWS_DEP_PATH}/libarchive:${WINDOWS_DEP_PATH}/libarchive/include")
+    if(ENABLE_SVN_INTEGRATION)
+        message(FATAL_ERROR "SVN integration not tested on windows.")
+    endif()
+    # FIXME
+    set_property(GLOBAL PROPERTY LIBXSLT_LIBS "")
+    set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS "")
+    set_property(GLOBAL PROPERTY LIBXML2_LIBS "")
+    include_directories(C:/antlr/277/include)
 else()
     set(WINDOWS_DEP_PATH "")
+    # Locating packages.
+    find_package(LibArchive REQUIRED)
+    find_package(LibXml2 REQUIRED)
+    find_package(LibXslt)
+    find_package(Boost COMPONENTS program_options filesystem system REQUIRED)
+
+    # add include directories
+    include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
+
+    if(LIBXSLT_FOUND)
+        include_directories(${LIBXSLT_INCLUDE_DIR})
+    endif()
+
+    if(ENABLE_SVN_INTEGRATION)
+        include_directories(/usr/include/apr-1.0 /usr/include/subversion-1 /usr/local/include/subversion-1)
+    endif()
+
+    if(LIBXSLT_EXSLT_LIBRARY)
+        set_property(GLOBAL PROPERTY LIBXSLT_LIBS ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY})
+    else()
+        set_property(GLOBAL PROPERTY LIBXSLT_LIBS "")
+    endif()
+    
+    # Setting Properties
+    set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS ${LibArchive_LIBRARIES})
+    set_property(GLOBAL PROPERTY LIBXML2_LIBS ${LIBXML2_LIBRARIES})
 endif()
 set_property(GLOBAL PROPERTY WINDOWS_DEP_PATH ${WINDOWS_DEP_PATH})
 
+set_property(GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB ${Boost_LIBRARIES})
+include_directories(${Boost_INCLUDE_DIR})
 
 # Locating the antlr library.
-find_library(ANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
+find_library(ANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib C:/antlr/277/lib)
 set_property(GLOBAL PROPERTY ANTLR_LIB ${ANTLR_LIB})
 
 # Finding antlr library.
-find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin C:/antlr/277/bin ${WINDOWS_DEP_PATH}/bin)
+find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin C:/antlr/277/bin)
 set_property(GLOBAL PROPERTY ANTLR_EXE ${ANTLR_EXE})
 
 # Finding SED
@@ -99,17 +109,7 @@ set_property(GLOBAL PROPERTY SED_EXE ${SED_EXE})
 find_program(GREP_EXE grep PATHS /bin /usr/bin ${WINDOWS_DEP_PATH}/bin)
 set_property(GLOBAL PROPERTY GREP_EXE ${GREP_EXE})
 
-#  Figure out exactly what package curl is and where it is located.
-# find_package(libcurl3)
-
 find_package(PythonInterp REQUIRED)
-# Variables defiend by find_package(PythonInterp)
-# PYTHONINTERP_FOUND = Was the Python executable found.
-# PYTHON_EXECUTABLE = Path to the Python interpreter.
-# PYTHON_VERSION_STRING = Python version found e.g. 2.5.2.
-# PYTHON_VERSION_MAJOR = Python major version found e.g. 2.
-# PYTHON_VERSION_MINOR = Python minor version found e.g. 5.
-# PYTHON_VERSION_PATCH = Python patch version found e.g. 2.
 
 # Enforcing that the version of python being used must have a major version of 2.
 # and the minor version be greater than version 6 (this means version 2.7 of python 
@@ -148,19 +148,41 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
     
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
+    message(STATUS "MSVC Compiler not completely configured yet")
+    set(MSVC_WARNINGS "/W3 ")
     
+    # Actual Debug cmd line args
+    # /GS /TP /analyze- /W3 /Zc:wchar_t /I"C:/antlr/277/include/antlr" /I"C:/Users/bbart_000/Documents/GitHub/srcML/dep/include"
+    # /I"C:/antlr/277/include" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/srcml"
+    # /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/oldclient"
+    # /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/libsrcml"
+    # /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/parser"
+    # /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/translator"
+    # /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/SAX2Framework"
+    # /Zi /Gm- /Od /Ob0 /Fd"srcml_static.dir\Debug\vc120.pdb" /fp:precise
+    # /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /D "VERSION=\"1\"" /D "REVISION=\"1\""
+    # /D "CMAKE_INTDIR=\"Debug\"" /D "_MBCS" /errorReport:prompt /WX- /Zc:forScope
+    # /RTC1 /GR /Gd /Oy- /MDd /Fa"Debug/" /EHsc /nologo /Fo"srcml_static.dir\Debug\"
+    # /Fp"srcml_static.dir\Debug\srcml.pch" 
+    
+    # Actual Release cmd line arguments
+    # /GS /TP /analyze- /W3 /Zc:wchar_t /I"C:/antlr/277/include/antlr" /I"C:/Users/bbart_000/Documents/GitHub/srcML/dep/include" /I"C:/antlr/277/include" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/srcml" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/oldclient" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/libsrcml" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/parser" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/translator" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/SAX2Framework" /Gm- /O2 /Ob2 /Fd"srcml_static.dir\Release\vc120.pdb" /fp:precise /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /D "VERSION=\"1\"" /D "REVISION=\"1\"" /D "CMAKE_INTDIR=\"Release\"" /D "_MBCS" /errorReport:prompt /WX- /Zc:forScope /GR /Gd /Oy- /MD /Fa"Release/" /EHsc /nologo /Fo"srcml_static.dir\Release\" /Fp"srcml_static.dir\Release\srcml.pch" 
+    
+    # Release Default Command Line Options
+    # /GS /GL /analyze- /W3 /Gy /Zc:wchar_t /Zi /Gm- /O2 /Fd"Release\vc120.pdb"
+    # /fp:precise /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_LIB" /D "_UNICODE" /D "UNICODE"
+    # /errorReport:prompt /WX- /Zc:forScope /Gd /Oy- /Oi /MD /Fa"Release\" /EHsc
+    # /nologo /Fo"Release\" /Fp"Release\TestingCompilerFlags.pch" 
+    
+    # Debugging Command line options
+    # /GS /analyze- /W3 /Zc:wchar_t /ZI /Gm /Od /Fd"Debug\vc120.pdb" /fp:precise
+    # /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_LIB" /D "_UNICODE" /D "UNICODE"
+    # /errorReport:prompt /WX- /Zc:forScope /RTC1 /Gd /Oy- /MDd /Fa"Debug\" /EHsc 
+    # /nologo /Fo"Debug\" /Fp"Debug\TestingCompilerFlags.pch" 
+    # set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized")
+    # # Adding global compiler definitions.
+    # set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${GCC_WARNINGS}")
+    # set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DDEBUG --coverage -fprofile-arcs ${GCC_WARNINGS}")
 else()
     message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
 endif()
-
-
-# if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-#     message(STATUS "Compiler is clang.")
-# elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-#     message(STATUS "Compiler is GNU.")
-# elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-#     message(STATUS "Compiler is Intel.")
-# elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-#     message(STATUS "Compiler is MSVC.")
-# endif()
