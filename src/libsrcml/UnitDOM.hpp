@@ -128,7 +128,7 @@ public :
 
       // make sure not already in
       bool found = false;
-      for (unsigned int j = 0; j < data.size() / 2; ++j)
+      for (std::vector<const xmlChar*>::size_type j = 0; j < data.size() / 2; ++j)
         if (xmlStrEqual(data[j * 2], namespaces[i * 2]) &&
             xmlStrEqual(data[j * 2 + 1], namespaces[i * 2 + 1])) {
           found = true;
@@ -254,7 +254,7 @@ public :
     ctxt->myDoc = 0;
       
     // end the output
-    endOutput(ctx);
+     endOutput(ctx);
   }
 
 protected:
