@@ -31,7 +31,7 @@
 #include <Language.hpp>
 #include <srcmlns.hpp>
 
-int main(int argc, char * argv[]) {
+int main() {
 
   const char* urisprefix[] = {
 

@@ -27,7 +27,7 @@
 #include <cassert>
 #include <UTF8CharBuffer.hpp>
 
-int main(int argc, char * argv[]) {
+int main() {
 
   /*
 
