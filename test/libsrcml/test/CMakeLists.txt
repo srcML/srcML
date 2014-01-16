@@ -47,4 +47,17 @@ addUnitTest(test_srcml_write_unit test_srcml_write_unit.cpp)
 addUnitTest(test_srcml_xpath test_srcml_xpath.cpp ${LIBXML2_LIBRARIES})
 addUnitTest(test_srcml_xslt test_srcml_xslt.cpp ${LIBXML2_LIBRARIES})
 
-
+if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
+    copyDependentFile(copy.xsl)
+    copyDependentFile(schema.rng)
+    
+    add_dependencies(test_srcml_apply_transforms copy.xsl schema.rng)
+    add_dependencies(test_srcml_append_transform copy.xsl schema.rng)
+    add_dependencies(test_srcml_clear_transforms copy.xsl schema.rng)
+    add_dependencies(test_srcml_relaxng schema.rng)
+    add_dependencies(test_srcml_xslt copy.xsl)
+    
+    copyDependentFile(test_srcml_xpath.cpp)
+    add_dependencies(test_srcml_sax2_utilities test_srcml_xpath.cpp)
+    
+endif()
