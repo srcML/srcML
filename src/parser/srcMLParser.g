@@ -929,7 +929,7 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
         identifier (template_argument_list)* DCOLON function_pointer_name_base |
 
         // typical function pointer name
-        MULTOPS (compound_name_inner[false])*
+        multops (compound_name_inner[false])*
 
         // optional array declaration
         (variable_identifier_array_grammar_sub[flag])*
