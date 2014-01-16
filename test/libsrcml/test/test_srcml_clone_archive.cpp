@@ -52,7 +52,11 @@ int main() {
     archive->namespaces.push_back("bar");
     srcml_archive_register_file_extension(archive, "foo", "bar");
     archive->translator = (srcMLTranslator *)1;
+#ifdef SAX2
+    archive->reader = (srcMLSAX2Reader *)1;
+#else
     archive->reader = (srcMLReader *)1;
+#endif
     archive->input = (xmlParserInputBufferPtr)1;
     transform trans = {SRCML_XPATH, "//src:unit"};
     archive->transformations.push_back(trans);
