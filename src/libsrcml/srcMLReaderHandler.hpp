@@ -199,7 +199,7 @@ public :
         srcml_archive_set_version(archive, value.c_str());
       else if(attribute == "tabs")
         archive->tabstop = atoi(value.c_str());
-      else if(name == "options") {
+      else if(attribute == "options") {
 
         while(!value.empty()) {
 
@@ -211,27 +211,27 @@ public :
             value = value.substr(value.find(",") + 1);
 
           if(option == "XMLDECL")
-            options |= OPTION_XMLDECL;
+            archive->options |= OPTION_XMLDECL;
           if(option == "NAMESPACEDECL")
-            options |= OPTION_NAMESPACEDECL;
+            archive->options |= OPTION_NAMESPACEDECL;
           if(option == "CPP_TEXT_ELSE")
-            options |= OPTION_CPP_TEXT_ELSE;
+            archive->options |= OPTION_CPP_TEXT_ELSE;
           if(option == "CPP_MARKUP_IF0")
-            options |= OPTION_CPP_MARKUP_IF0;
+            archive->options |= OPTION_CPP_MARKUP_IF0;
           if(option == "EXPRESSION")
-            options |= OPTION_EXPRESSION;
+            archive->options |= OPTION_EXPRESSION;
           if(option == "NAMESPACE")
-            options |= OPTION_NAMESPACE;
+            archive->options |= OPTION_NAMESPACE;
           if(option == "LINE")
-            options |= OPTION_LINE;
+            archive->options |= OPTION_LINE;
           if(option == "MACRO_PATTERN")
-            options |= OPTION_MACRO_PATTERN;
+            archive->options |= OPTION_MACRO_PATTERN;
           if(option == "MACRO_LIST")
-            options |= OPTION_MACRO_LIST;
+            archive->options |= OPTION_MACRO_LIST;
           if(option == "ELSEIF")
-            options |= OPTION_ELSEIF;
+            archive->options |= OPTION_ELSEIF;
           if(option == "CPPIF_CHECK")
-            options |= OPTION_CPPIF_CHECK;
+            archive->options |= OPTION_CPPIF_CHECK;
 
         }
 
