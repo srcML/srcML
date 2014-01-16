@@ -6,6 +6,7 @@
 .DS_Store
 
 bin
+dep
 
 # cmake/ctest/cpack
 CMakeCache.txt
