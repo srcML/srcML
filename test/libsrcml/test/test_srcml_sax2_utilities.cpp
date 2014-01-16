@@ -41,20 +41,24 @@ int main() {
   /* 
      srcMLCreateMemoryParserCtxt
    */
-
+  using namespace std;
+  
+  cout << "Test 1" << endl;
   {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
     dassert(!ctxt, 0);
     xmlFreeParserCtxt(ctxt);
   }
-
+  
+  cout << "Test 2" << endl;
   {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, 0);
     dassert(ctxt, 0);
   }
-
+  
+  cout << "Test 3" << endl;
   {
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(0, 1);
     dassert(ctxt, 0);
@@ -63,7 +67,7 @@ int main() {
   /* 
      srcMLCreateParserCtxt
    */
-
+  cout << "Test 4" << endl;
   {
     const char * s = "test_srcml_xpath.cpp";
     xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename(s, xmlParseCharEncoding(0));
@@ -71,7 +75,8 @@ int main() {
     dassert(!ctxt, 0);
     xmlFreeParserCtxt(ctxt);
   }
-
+  
+  cout << "Test 5" << endl;
   {
     xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(0);
     dassert(ctxt, 0);
@@ -80,7 +85,8 @@ int main() {
   /* 
      srcMLParseDocument
    */
-
+  
+  cout << "Test 6" << endl;
   {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
@@ -88,7 +94,8 @@ int main() {
     xmlFreeDoc(ctxt->myDoc);
     xmlFreeParserCtxt(ctxt);
   }
-
+  
+  cout << "Test 7" << endl;
   {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
@@ -96,7 +103,8 @@ int main() {
     xmlFreeDoc(ctxt->myDoc);
     xmlFreeParserCtxt(ctxt);
   }
-
+  
+  cout << "Test 8" << endl;
   {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
