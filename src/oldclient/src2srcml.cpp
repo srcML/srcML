@@ -176,7 +176,12 @@ const char* urisprefix[] = {
 
 const int num_prefixes = sizeof(uris) / sizeof(uris[0]);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 void libxml_error(void *ctx, const char *msg, ...) {}
+
+#pragma GCC diagnostic pop
 
 int option_error_status(int optopt);
 
@@ -339,11 +344,13 @@ void output_version(const char* name) {
     printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
 }
 
-void output_settings(const char * name)
-{}
+void output_settings(const char * name) {
+  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
+}
 
-void output_features(const char * name)
-{}
+void output_features(const char * name) {
+  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
+}
 
 OPTION_TYPE options = 0;
 
@@ -1085,7 +1092,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       options |= OPTION_POSITION;
 
       char * end;
-      poptions.tabsize = pstd::strtol(optarg, &end, 10);
+      poptions.tabsize = (int)pstd::strtol(optarg, &end, 10);
 
       // validate type of tabsize number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {
@@ -1313,7 +1320,7 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       fprintf(stderr, "%5d %s\n", gpoptions->count, c_filename);
 
     // translate the file
-    translator.translate(path, dir,
+    translator.translate(dir,
                          foundfilename ? c_filename : 0,
                          version, reallanguage);
 
@@ -1481,7 +1488,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
         fprintf(stderr, "%5d %s\n", gpoptions->count, c_filename);
 
       // translate the file
-      translator.translate(path, dir,
+      translator.translate(dir,
                            foundfilename ? c_filename : 0,
                            version,
                            reallanguage);
@@ -1546,7 +1553,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
   std::string filename = directory;
   if (!filename.empty() && filename[filename.size() - 1] != PATH_SEPARATOR)
     filename += PATH_SEPARATOR;
-  int basesize = filename.length();
+  std::string::size_type basesize = filename.length();
 
   // process all non-directory files
   for (int i = 0; i < n; i++) {

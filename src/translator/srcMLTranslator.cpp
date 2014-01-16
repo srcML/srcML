@@ -61,7 +61,6 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* src_encoding,    // text encoding of source code
                                  const char* xml_encoding,    // xml encoding of result srcML file
                                  char ** str_buf,
-                                 int * size,
                                  OPTION_TYPE & op,             // many and varied options
                                  const char* directory,       // root unit directory
                                  const char* filename,        // root unit filename
@@ -136,19 +135,19 @@ void srcMLTranslator::close() {
 }
 
 // translate from input stream to output stream
-void srcMLTranslator::translate(const char* path, const char* unit_directory,
+void srcMLTranslator::translate(const char* unit_directory,
                                 const char* unit_filename, const char* unit_version,
                                 int language) {
 
-  translator->translate(path, unit_directory, unit_filename, unit_version, language);
+  translator->translate(unit_directory, unit_filename, unit_version, language);
 }
 
 // translate from input stream to output stream separate of current output stream
-void srcMLTranslator::translate_separate(const char* path, const char* unit_directory,
+void srcMLTranslator::translate_separate(const char* unit_directory,
 				const char* unit_filename, const char* unit_version,
                                            int language, xmlBuffer* output_buffer) {
   
-  translator->translate_separate(path, unit_directory, unit_filename, unit_version, language, output_buffer);
+  translator->translate_separate(unit_directory, unit_filename, unit_version, language, output_buffer);
 }
 
 void srcMLTranslator::add_unit(const char* xml) {
@@ -163,7 +162,7 @@ srcMLTranslator::~srcMLTranslator() {
   if(str_buffer) {
 
     (*str_buffer) = strdup((const char *)output_buffer->content);
-    if(size && *str_buffer) *size = strlen(*str_buffer);
+    if(size && *str_buffer) *size = (int)strlen(*str_buffer);
 
   }
 

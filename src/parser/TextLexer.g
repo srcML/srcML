@@ -162,7 +162,7 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); int zero_literal 
                 regmatch_t pmatch[3];
                 errorcode = errorcode || regexec(&preg, temp_name.c_str(), 3, pmatch, 0);
 
-                unsigned int match_length = (pmatch[0].rm_eo - pmatch[0].rm_so);
+                unsigned long long match_length = (pmatch[0].rm_eo - pmatch[0].rm_so);
 
                 bool is_regex_match = match_length == temp_name.size();
                 regfree(&preg);
@@ -241,7 +241,7 @@ EOL { int zero_literal = 0; _saveIndex = 0; } :
             newline();
             if(isoption(options, OPTION_LINE))
                 setLine(getLine() + (1 << 16));
-            if(isline && line_number > -1) setLine(line_number << 16 | (getLine() & 0xFFFF));
+            if(isline && line_number > -1) setLine((int)(line_number << 16 | (getLine() & 0xFFFF)));
             isline = false;
             line_number = -1;
         }

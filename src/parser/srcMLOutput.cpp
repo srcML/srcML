@@ -304,7 +304,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 // output text
 void srcMLOutput::processText(const std::string& str) {
 
-  xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.data(), str.size());
+  xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.data(), (int)str.size());
 }
 
 void srcMLOutput::processText(const char* s, int size) {

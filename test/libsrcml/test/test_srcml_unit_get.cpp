@@ -32,7 +32,7 @@
 
 #include "dassert.hpp"
 
-int main(int argc, char * argv[]) {
+int main() {
 
   srcml_archive * archive = srcml_create_archive();
 

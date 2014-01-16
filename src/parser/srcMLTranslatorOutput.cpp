@@ -591,11 +591,13 @@ void srcMLTranslatorOutput::processMacroList(const antlr::RefToken& token) {
 
   const char* s = token2name(token);
 
-  xmlTextWriterStartElement(xout, BAD_CAST s);
-  for(unsigned int i = 0; i < user_macro_list.size(); ++i)
+  for(std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); ++i) {
+
+    xmlTextWriterStartElement(xout, BAD_CAST s);
     xmlTextWriterWriteAttribute(xout, BAD_CAST "token", BAD_CAST user_macro_list[i].c_str());
-  
-  xmlTextWriterEndElement(xout);
+    xmlTextWriterEndElement(xout);
+
+  }
 
 }
 
@@ -662,7 +664,7 @@ void srcMLTranslatorOutput::processLineCommentStart(const antlr::RefToken& token
 
 void srcMLTranslatorOutput::processEndLineToken(const antlr::RefToken& token) {
 
-  int size = token->getText().size();
+  std::string::size_type size = token->getText().size();
 
   bool output = false;
   if (size > 1 || token->getText()[0] != '\n') {

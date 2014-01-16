@@ -55,6 +55,9 @@ xmlSAXHandler SAX2TextWriter::factory() {
     return sax;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 // start document
 void SAX2TextWriter::startDocument(void *ctx) {
 
@@ -160,7 +163,7 @@ void SAX2TextWriter::startElementNs(void* ctx, const xmlChar* localname, const x
         // the begin/end pointers of the attribute value to a string
         xmlTextWriterStartAttribute(pstate->writer, BAD_CAST name);
         xmlTextWriterWriteRawLen(pstate->writer, attributes[index + 3],
-                                 attributes[index + 4] - attributes[index + 3]);
+                                 (int)(attributes[index + 4] - attributes[index + 3]));
         xmlTextWriterEndAttribute(pstate->writer);
     }
 }
@@ -183,3 +186,5 @@ void SAX2TextWriter::endElementNs(void *ctx, const xmlChar *localname, const xml
         xmlStopParser(pstate->ctxt);
     }
 }
+
+#pragma GCC diagnostic pop

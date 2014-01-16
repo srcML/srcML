@@ -49,12 +49,12 @@
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
+int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
 
   if(output_buffer == NULL) return SRCML_STATUS_ERROR;
 
   // setup parser
-  xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(input_buffer, size);
+  xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(input_buffer, (int)size);
   if(ctxt == NULL) return SRCML_STATUS_ERROR;
 
   // setup sax handler
@@ -123,7 +123,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
   ctxt->sax = &sax;
 
   // setup process handling
-  XPathQueryUnits process(context_element, 0, options, compiled_xpath, fd);
+  XPathQueryUnits process(0, options, compiled_xpath, fd);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1, "");

@@ -1032,7 +1032,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? specifier)*  lead_type_identifier
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? lead_type_identifier)*  lead_type_identifier
 
         { 
 
@@ -2367,7 +2367,7 @@ else_handling[] { ENTRY_DEBUG } :
             // record the current size of the top of the cppmode stack to detect
             // any #else or #endif in consumeSkippedTokens
             // see below
-            unsigned int cppmode_size = !cppmode.empty() ? cppmode.top().statesize.size() : 0;
+            std::deque<int>::size_type cppmode_size = !cppmode.empty() ? cppmode.top().statesize.size() : 0;
 
             // catch and finally statements are nested inside of a try, if at that level
             // so if no CATCH or FINALLY, then end now
@@ -3244,7 +3244,7 @@ decltype_call[] { int save_type_count = getTypeCount(); ENTRY_DEBUG } :
         {
 
             // start a mode for the macro that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_DECLTYPE);
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the macro call element
             startElement(SDECLTYPE);
@@ -3609,7 +3609,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
-            SIGNAL | FINAL | OVERRIDE | VOID |
+            SIGNAL | FINAL | OVERRIDE | VOID | TYPENAME | 
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
@@ -3790,7 +3790,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // C++
             FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
-            CONSTEXPR | THREADLOCAL | TYPENAME |
+            CONSTEXPR | THREADLOCAL |
 
             // C
             RESTRICT | 
@@ -4716,7 +4716,7 @@ rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DE
     ;
 
 //processing on )
-rparen[bool markup = true] { bool isempty = getParen() == 0; bool update_type = false; ENTRY_DEBUG } :
+rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
         {
             if (isempty) {
 
@@ -4754,17 +4754,10 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; bool update_type = 
 
                 // end the single mode that started the list
                 // don't end more than one since they may be nested
-                update_type = inMode(MODE_DECLTYPE);
                 if (inMode(MODE_LIST))
                     endMode(MODE_LIST);
             }
 
-            // @todo check if needed now that decltype is all in stream.
-            if(update_type) {
-
-                if(inTransparentMode(MODE_VARIABLE_NAME))
-                    update_typecount(MODE_VARIABLE_NAME | MODE_INIT);
-            }
         }
 ;
 
@@ -4951,7 +4944,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; ENTRY
 ;
 
 // default()
-expression_part_default[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
+expression_part_default[] { ENTRY_DEBUG } :
 
         expression_process
 
@@ -5936,7 +5929,7 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
     std::list<int> op_stack;
     ++inputState->guessing;
 
-    int save_size = 0;
+    std::list<int>::size_type save_size = 0;
 
     int prev = -1;
     while(LA(1) != ENDIF && !(prev == PREPROC && LA(1) == ELSE) && LA(1) != 1 /* EOF */) {
@@ -6125,7 +6118,7 @@ eol_post[int directive_token, bool markblockzero] {
 cppmode_cleanup[] {
 
         bool equal = true;
-        for (unsigned int i = 0; i < cppmode.top().statesize.size(); ++i)
+        for (std::deque<int>::size_type i = 0; i < cppmode.top().statesize.size(); ++i)
             if (cppmode.top().statesize[i] != cppmode.top().statesize[0]) {
                 equal = false;
                 break;
@@ -6180,7 +6173,7 @@ cpp_symbol[] { ENTRY_DEBUG } :
         simple_identifier
 ;
 
-cpp_define_name[] { CompleteElement element(this); int pos = LT(1)->getColumn() + LT(1)->getText().size(); } :
+cpp_define_name[] { CompleteElement element(this); std::string::size_type pos = LT(1)->getColumn() + LT(1)->getText().size(); } :
         {
             startNewMode(MODE_LOCAL);
 

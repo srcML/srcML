@@ -136,7 +136,7 @@ int Language::getLanguageFromFilename(const char* const path, std::vector<pair> 
     return 0;
 
   // custom extensions
-  for (int i = registered_languages.size() - 1; i >= 0; --i) {
+  for (int i = (int)(registered_languages.size() - 1); i >= 0; --i) {
     if (strcmp(registered_languages[i].s.c_str(), extension) == 0)
       return registered_languages[i].n == LANGUAGE_NONE ? 0 : registered_languages[i].n;
   }

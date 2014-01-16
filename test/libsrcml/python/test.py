@@ -1,6 +1,6 @@
 import sys
 sys.path.append("../../../src/libsrcml/python")
-import libsrcml
+import srcml
 import difflib
 import os
 import ctypes
@@ -32,11 +32,11 @@ def verify_test(correct, output) :
         globals()['error_count'] += 1
 
 # test versions
-verify_test(libsrcml.SRCML_VERSION_NUMBER, libsrcml.version_number())
-verify_test(libsrcml.SRCML_VERSION_STRING, libsrcml.version_string())
+verify_test(srcml.SRCML_VERSION_NUMBER, srcml.version_number())
+verify_test(srcml.SRCML_VERSION_STRING, srcml.version_string())
 
 # test set/get archive
-archive = libsrcml.srcml_archive()
+archive = srcml.srcml_archive()
 archive.set_filename("project")
 archive.set_language("C++")
 archive.set_directory("dir")
@@ -62,11 +62,11 @@ archive.close()
 file = open("a.foo", "w")
 gen = file.write("")
 file.close()
-archive = libsrcml.srcml_archive()
+archive = srcml.srcml_archive()
 archive.register_file_extension("foo", "C++")
 archive.register_namespace("s", "http://www.sdml.info/srcML/src")
 archive.write_open_memory()
-unit = libsrcml.srcml_unit(archive)
+unit = srcml.srcml_unit(archive)
 unit.parse_filename("a.foo")
 archive.write_unit(unit)
 archive.close()
@@ -75,7 +75,7 @@ verify_test("""<s:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"
 
 # write/parse tests
 src = "a;\n"
-srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src">
 
 <unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -88,9 +88,9 @@ srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 file = open("a.cpp", "w")
 gen = file.write(src)
 file.close()
-archive = libsrcml.srcml_archive()
+archive = srcml.srcml_archive()
 archive.write_open_filename("project.xml")
-unit = libsrcml.srcml_unit(archive)
+unit = srcml.srcml_unit(archive)
 unit.parse_filename("a.cpp")
 archive.write_unit(unit)
 archive.close()
@@ -98,30 +98,30 @@ archive.close()
 file = open("project.xml", "r")
 gen = file.read()
 file.close()
-verify_test(srcml, gen)
+verify_test(asrcml, gen)
 os.remove("a.cpp")
 os.remove("project.xml")
 
 # memory
-archive = libsrcml.srcml_archive()
+archive = srcml.srcml_archive()
 archive.write_open_memory()
-unit = libsrcml.srcml_unit(archive)
+unit = srcml.srcml_unit(archive)
 unit.set_language("C++")
 unit.parse_memory(src)
 archive.write_unit(unit)
 archive.close()
 
-verify_test(srcml, archive.srcML())
+verify_test(asrcml, archive.srcML())
 
 # fd
 file = open("a.cpp", "w")
 gen = file.write(src)
 file.close()
-archive = libsrcml.srcml_archive()
+archive = srcml.srcml_archive()
 fd = os.open("project.xml", os.O_WRONLY | os.O_CREAT)
 archive.write_open_fd(fd)
 src_fd = os.open("a.cpp", os.O_RDONLY)
-unit = libsrcml.srcml_unit(archive)
+unit = srcml.srcml_unit(archive)
 unit.set_language("C++")
 unit.parse_fd(src_fd)
 archive.write_unit(unit)
@@ -132,7 +132,7 @@ os.close(fd)
 file = open("project.xml", "r")
 gen = file.read()
 file.close()
-verify_test(srcml, gen)
+verify_test(asrcml, gen)
 os.remove("a.cpp")
 os.remove("project.xml")
 
@@ -140,11 +140,11 @@ os.remove("project.xml")
 file = open("a.cpp", "w")
 gen = file.write(src)
 file.close()
-archive = libsrcml.srcml_archive()
+archive = srcml.srcml_archive()
 file = libc.fopen("project.xml", "w")
 archive.write_open_FILE(file)
 src_file = libc.fopen("a.cpp", "r")
-unit = libsrcml.srcml_unit(archive)
+unit = srcml.srcml_unit(archive)
 unit.set_language("C++")
 unit.parse_FILE(src_file)
 archive.write_unit(unit)
@@ -155,7 +155,7 @@ libc.fclose(file)
 file = open("project.xml", "r")
 gen = file.read()
 file.close()
-verify_test(srcml, gen)
+verify_test(asrcml, gen)
 os.remove("a.cpp")
 os.remove("project.xml")
 
@@ -163,9 +163,9 @@ os.remove("project.xml")
 
 # filename
 file = open("project.xml", "w")
-gen = file.write(srcml)
+gen = file.write(asrcml)
 file.close()
-archive = libsrcml.srcml_archive()
+archive = srcml.srcml_archive()
 archive.read_open_filename("project.xml")
 unit = archive.read_unit()
 unit.unparse_filename("a.cpp")
@@ -179,8 +179,8 @@ os.remove("a.cpp")
 os.remove("project.xml")
 
 # memory
-archive = libsrcml.srcml_archive()
-archive.read_open_memory(srcml)
+archive = srcml.srcml_archive()
+archive.read_open_memory(asrcml)
 unit = archive.read_unit()
 unit.unparse_memory()
 archive.close()
@@ -188,9 +188,9 @@ verify_test(src, unit.src())
 
 # fd
 file = open("project.xml", "w")
-gen = file.write(srcml)
+gen = file.write(asrcml)
 file.close()
-archive = libsrcml.srcml_archive()
+archive = srcml.srcml_archive()
 fd = os.open("project.xml", os.O_RDONLY)
 archive.read_open_fd(fd)
 unit = archive.read_unit()
@@ -209,9 +209,9 @@ os.remove("project.xml")
 
 # FILE
 file = open("project.xml", "w")
-gen = file.write(srcml)
+gen = file.write(asrcml)
 file.close()
-archive = libsrcml.srcml_archive()
+archive = srcml.srcml_archive()
 file = libc.fopen("project.xml", "r")
 archive.read_open_FILE(file)
 unit = archive.read_unit()
@@ -229,7 +229,7 @@ os.remove("a.cpp")
 os.remove("project.xml")
 
 src = "b;\n"
-srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src">
 
 <unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -242,8 +242,8 @@ srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 """
 
 # skip_unit
-archive = libsrcml.srcml_archive()
-archive.read_open_memory(srcml)
+archive = srcml.srcml_archive()
+archive.read_open_memory(asrcml)
 archive.skip_unit()
 unit = archive.read_unit()
 unit.unparse_memory()
@@ -251,15 +251,15 @@ archive.close()
 verify_test(src, unit.src())
 
 # read_unit_position
-archive = libsrcml.srcml_archive()
-archive.read_open_memory(srcml)
+archive = srcml.srcml_archive()
+archive.read_open_memory(asrcml)
 unit = archive.read_unit_position(2)
 unit.unparse_memory()
 archive.close()
 verify_test(src, unit.src())
 
 # clone
-archive = libsrcml.srcml_archive()
+archive = srcml.srcml_archive()
 archive.set_language("C++")
 clone_archive = archive.clone()
 verify_test("C++", clone_archive.get_language())
@@ -268,64 +268,64 @@ archive.close()
 # transforms
 
 # xpath
-archive = libsrcml.srcml_archive()
-archive.read_open_memory(srcml)
+archive = srcml.srcml_archive()
+archive.read_open_memory(asrcml)
 archive.append_transform_xpath("//src:unit")
-oarchive = libsrcml.srcml_archive()
+oarchive = srcml.srcml_archive()
 oarchive.write_open_memory()
 archive.apply_transforms(oarchive)
 oarchive.close()
 archive.close()
 
-verify_test(srcml, oarchive.srcML())
+verify_test(asrcml, oarchive.srcML())
 
 # xslt
-archive = libsrcml.srcml_archive()
-archive.read_open_memory(srcml)
+archive = srcml.srcml_archive()
+archive.read_open_memory(asrcml)
 archive.append_transform_xslt("copy.xsl")
-oarchive = libsrcml.srcml_archive()
+oarchive = srcml.srcml_archive()
 oarchive.write_open_memory()
 archive.apply_transforms(oarchive)
 oarchive.close()
 archive.close()
 
-verify_test(srcml, oarchive.srcML())
+verify_test(asrcml, oarchive.srcML())
 
 # relaxng
-archive = libsrcml.srcml_archive()
-archive.read_open_memory(srcml)
+archive = srcml.srcml_archive()
+archive.read_open_memory(asrcml)
 archive.append_transform_relaxng("schema.rng")
-oarchive = libsrcml.srcml_archive()
+oarchive = srcml.srcml_archive()
 oarchive.write_open_memory()
 archive.apply_transforms(oarchive)
 oarchive.close()
 archive.close()
 
-verify_test(srcml, oarchive.srcML())
+verify_test(asrcml, oarchive.srcML())
 
 #
-archive = libsrcml.srcml_archive()
-archive.read_open_memory(srcml)
+archive = srcml.srcml_archive()
+archive.read_open_memory(asrcml)
 archive.append_transform_xpath("//src:unit")
 archive.append_transform_xslt("copy.xsl")
 archive.append_transform_relaxng("schema.rng")
 archive.clear_transforms()
-oarchive = libsrcml.srcml_archive()
+oarchive = srcml.srcml_archive()
 oarchive.write_open_memory()
 archive.apply_transforms(oarchive)
 oarchive.close()
 archive.close()
 
-srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src">
 
 </unit>
 """
-verify_test(srcml, oarchive.srcML())
+verify_test(asrcml, oarchive.srcML())
 
 # unit set/get
-archive = libsrcml.srcml_archive()
-unit = libsrcml.srcml_unit(archive)
+archive = srcml.srcml_archive()
+unit = srcml.srcml_unit(archive)
 unit.set_filename("b.cpp")
 unit.set_language("C")
 unit.set_directory("directory")
@@ -337,61 +337,61 @@ verify_test("1.1", unit.get_version())
 archive.close()
 
 # exception
-archive = libsrcml.srcml_archive()
+archive = srcml.srcml_archive()
 test = ""
 try :
     archive.write_unit(unit)
     
-except libsrcml.srcMLException as e :
+except srcml.srcMLException as e :
     test = "Exception"
 archive.close()
 verify_test("Exception", test)
 
 # cleanup_globals
-libsrcml.cleanup_globals()
+srcml.cleanup_globals()
 
 # test language
-verify_test("['C', 'C++', 'C#', 'Java']", str(libsrcml.language_list()))
+verify_test("['C', 'C++', 'C#', 'Java']", str(srcml.language_list()))
 
 file = open("a.cpp", "w")
 file.write("a;\n")
 file.close()
 
-libsrcml.srcml("a.cpp", "project.xml")
+srcml.srcml("a.cpp", "project.xml")
 
 os.remove("a.cpp")
 file = open("project.xml", "r")
 xml = file.read()
 file.close()
 
-srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="project.xml"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
-verify_test(srcml, xml)
+verify_test(asrcml, xml)
 
-libsrcml.set_language("C++")
-libsrcml.set_filename("a.cpp")
-libsrcml.set_directory("directory")
-libsrcml.set_version("version")
+srcml.set_language("C++")
+srcml.set_filename("a.cpp")
+srcml.set_directory("directory")
+srcml.set_version("version")
 
-verify_test("C++", libsrcml.get_language())
-verify_test("a.cpp", libsrcml.get_filename())
-verify_test("directory", libsrcml.get_directory())
-verify_test("version", libsrcml.get_version())
+verify_test("C++", srcml.get_language())
+verify_test("a.cpp", srcml.get_filename())
+verify_test("directory", srcml.get_directory())
+verify_test("version", srcml.get_version())
 
-libsrcml.set_option(1)
-verify_test(1, libsrcml.get_options())
+srcml.set_option(1)
+verify_test(1, srcml.get_options())
 
-libsrcml.set_all_options(2)
-verify_test(2, libsrcml.get_options())
+srcml.set_all_options(2)
+verify_test(2, srcml.get_options())
 
-libsrcml.set_all_options(1 | 2)
-libsrcml.clear_option(2)
-verify_test(1, libsrcml.get_options())
+srcml.set_all_options(1 | 2)
+srcml.clear_option(2)
+verify_test(1, srcml.get_options())
 
-libsrcml.set_tabstop(4)
-verify_test(4, libsrcml.get_tabstop())
+srcml.set_tabstop(4)
+verify_test(4, srcml.get_tabstop())
 
 os.remove("project.xml")
 
@@ -399,38 +399,38 @@ file = open("a.foo", "w")
 file.write("a;\n")
 file.close()
 
-libsrcml.set_language(None)
-libsrcml.set_filename(None)
-libsrcml.set_directory(None)
-libsrcml.set_version(None)
-libsrcml.set_all_options(0)
-libsrcml.set_tabstop(8)
+srcml.set_language(None)
+srcml.set_filename(None)
+srcml.set_directory(None)
+srcml.set_version(None)
+srcml.set_all_options(0)
+srcml.set_tabstop(8)
 
-libsrcml.register_file_extension("foo", "C++")
-libsrcml.register_namespace("s", "http://www.sdml.info/srcML/src")
-libsrcml.srcml("a.foo", "project.xml")
+srcml.register_file_extension("foo", "C++")
+srcml.register_namespace("s", "http://www.sdml.info/srcML/src")
+srcml.srcml("a.foo", "project.xml")
 
 file = open("project.xml", "r")
 xml = file.read()
 file.close()
 os.remove("a.foo")
 
-srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="project.xml"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
 </s:unit>
 """
-verify_test(srcml, xml)
+verify_test(asrcml, xml)
 
-verify_test(2, libsrcml.check_language("C++"))
-verify_test("C++", libsrcml.check_extension("a.cpp"))
-verify_test(0, libsrcml.check_format("a.cpp.tar"))
-verify_test(0, libsrcml.check_encoding("UTF-8"))
-verify_test(1, libsrcml.check_xslt())
-verify_test(1, libsrcml.check_exslt())
-libsrcml.srcml("", "")
-verify_test("No language provided.", libsrcml.error_string())
+verify_test(2, srcml.check_language("C++"))
+verify_test("C++", srcml.check_extension("a.cpp"))
+verify_test(0, srcml.check_format("a.cpp.tar"))
+verify_test(0, srcml.check_encoding("UTF-8"))
+verify_test(1, srcml.check_xslt())
+verify_test(1, srcml.check_exslt())
+srcml.srcml("", "")
+verify_test("No language provided.", srcml.error_string())
 
-srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src">
 
 <unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp"/>
@@ -441,8 +441,8 @@ srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 """
 
 file = open("project.xml", "w")
-file.write(srcml)
+file.write(asrcml)
 file.close()
 
-verify_test("['a.cpp', 'b.cpp']", libsrcml.filename_list("project.xml"))
+verify_test("['a.cpp', 'b.cpp']", srcml.filename_list("project.xml"))
 os.remove("project.xml")
