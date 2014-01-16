@@ -28,6 +28,10 @@
 </unit>
 
 <unit>
+<function_decl><type><name>void</name></type> (<type:modifier>&amp;</type:modifier><name>i</name>)<parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
 <function_decl><type><name>void</name></type> (<type:modifier>*</type:modifier><type:modifier>&amp;</type:modifier><name>i</name>)<parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
