@@ -10,7 +10,7 @@
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> (*<name>i</name>)<parameter_list>()</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> (<type:modifier>*</type:modifier><name>i</name>)<parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 </unit>
