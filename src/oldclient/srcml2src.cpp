@@ -481,7 +481,9 @@ int main(int argc, char* argv[]) {
       0,
       { 0 },
       0,
-      { 0 }
+      { 0 },
+      0,
+      0
     };
 
   // process command-line arguments
@@ -513,12 +515,12 @@ int main(int argc, char* argv[]) {
   if (strcmp(filename, "-") != 0 && strcmp(poptions.ofilename, "-") != 0) {
 
     // input file
-    struct stat instat = { 0 };
+    struct stat instat = {/* 0 */};
     if (stat(filename, &instat) == -1) {
       goto done;
     }
 
-    struct stat outstat = { 0 };
+    struct stat outstat = {/* 0 */};
     if (stat(poptions.ofilename, &outstat) == -1) {
       goto done;
     }

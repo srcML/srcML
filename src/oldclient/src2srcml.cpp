@@ -140,6 +140,9 @@ const int ELSEIF_FLAG_CODE = 256 + 16;
 const char* const CPPIF_CHECK_FLAG = "cppif-check";
 const int CPPIF_CHECK_FLAG_CODE = 256 + 17;
 
+const char* const C_IS_CPP_FLAG = "c-is-cpp";
+const int C_IS_CPP_FLAG_CODE = 256 + 18;
+
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
@@ -493,7 +496,7 @@ int main(int argc, char* argv[]) {
   */
 
   // verify that only one input pipe is STDIN
-  struct stat stdiostat = { 0 };
+  struct stat stdiostat = {/* 0 */};
   if (fstat(STDIN_FILENO, &stdiostat) == -1) {
     fprintf(stderr, "%s: %s '%s'\n", PROGRAM_NAME, strerror(errno), "stdin");
     exit(STATUS_INPUTFILE_PROBLEM);
@@ -508,7 +511,7 @@ int main(int argc, char* argv[]) {
     }
 
     // may not exist due to race condition, so check again
-    struct stat instat = { 0 };
+    struct stat instat = {/* 0 */};
     if (stat(argv[i], &instat) == -1)
       continue;
     if (xmlCheckFilename(argv[i]) == 0)
@@ -525,7 +528,7 @@ int main(int argc, char* argv[]) {
   }
 
   // verify that the output filename is not the same as any of the input filenames
-  struct stat outstat = { 0 };
+  struct stat outstat = {/* 0 */};
   stat(poptions.srcml_filename, &outstat);
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
@@ -533,7 +536,7 @@ int main(int argc, char* argv[]) {
       continue;
 
     // may not exist due to race condition, so check again
-    struct stat instat = { 0 };
+    struct stat instat = {/* 0 */};
     if (stat(argv[i], &instat) == -1)
       continue;
 
@@ -734,6 +737,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { MACRO_LIST_FLAG, required_argument, NULL, MACRO_LIST_FLAG_CODE },
     { ELSEIF_FLAG, no_argument, NULL, ELSEIF_FLAG_CODE },
     { CPPIF_CHECK_FLAG, no_argument, NULL, CPPIF_CHECK_FLAG_CODE },
+    { C_IS_CPP_FLAG, no_argument, NULL, C_IS_CPP_FLAG_CODE },
 #ifdef SVN
     { SVN_FLAG, required_argument, NULL, SVN_FLAG_CODE },
 #endif
@@ -811,6 +815,14 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case CPPIF_CHECK_FLAG_CODE:
       options |= OPTION_CPPIF_CHECK;
+      break;
+
+    case C_IS_CPP_FLAG_CODE:
+
+      Language::registerUserExt("c", "C++");
+      Language::registerUserExt("h", "C++");
+      Language::registerUserExt("i", "C++");
+
       break;
 
 #ifdef SVN
@@ -1521,7 +1533,7 @@ void src2srcml_dir_top(srcMLTranslator& translator, const char* directory, proce
   options |= OPTION_ARCHIVE;
 
   // record the stat info on the output file
-  struct stat outstat = { 0 };
+  struct stat outstat = {/* 0 */};
   stat(poptions.srcml_filename, &outstat);
 
   src2srcml_dir(translator, directory, poptions, outstat);
@@ -1568,7 +1580,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
     filename.replace(basesize, std::string::npos, namelist[i]->d_name);
 
     // handle directories later after all the filenames
-    struct stat instat = { 0 };
+    struct stat instat = {/* 0 */};
     int stat_status = stat(filename.c_str(), &instat);
     if (stat_status)
       continue;

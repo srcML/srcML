@@ -40,7 +40,7 @@ static int split_diff_attribute(SAX2ExtractUnitsSrc* pstate, const char* attribu
 
 xmlSAXHandler SAX2ExtractUnitsSrc::factory() {
 
-  xmlSAXHandler sax = { 0 };
+  xmlSAXHandler sax = {/* 0 */};
 
   sax.initialized    = XML_SAX2_MAGIC;
   sax.startElementNs = &startElementNsRoot;

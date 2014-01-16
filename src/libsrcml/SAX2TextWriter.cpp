@@ -42,7 +42,7 @@ SAX2TextWriter::SAX2TextWriter(const char* ofilename, OPTION_TYPE& options, int 
 
 xmlSAXHandler SAX2TextWriter::factory() {
 
-    xmlSAXHandler sax = { 0 };
+    xmlSAXHandler sax = {/* 0 */};
 
     sax.initialized    = XML_SAX2_MAGIC;
     sax.startDocument  = &SAX2TextWriter::startDocument;
