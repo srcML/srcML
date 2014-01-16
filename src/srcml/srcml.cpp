@@ -29,6 +29,7 @@
 #include <srcml.h>
 #include <srcmlCLI.hpp>
 #include <thread_queue.hpp>
+#include <src_input_libarchive.hpp>
 
 #include <archive.h>
 #include <archive_entry.h>
