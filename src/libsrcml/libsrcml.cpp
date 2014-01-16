@@ -683,7 +683,7 @@ int srcml_check_format(const char* format) {
   reverse[length] = 0;
 
   // setup the regular expression
-  regex_t preg = { 0 };
+  regex_t preg = {/* 0 */};
   int errorcode = regcomp(&preg, regex, REG_EXTENDED);
 
   // evalue the regex
