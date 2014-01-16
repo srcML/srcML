@@ -64,7 +64,7 @@ else()
     find_package(LibArchive REQUIRED)
     find_package(LibXml2 REQUIRED)
     find_package(LibXslt)
-    find_package(Boost COMPONENTS program_options filesystem system REQUIRED)
+    find_package(Boost COMPONENTS program_options filesystem system regex REQUIRED)
 
     # add include directories
     include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
