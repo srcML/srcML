@@ -6,7 +6,6 @@
 
 #include <libxml/parser.h>
 #include <stdio.h>
-#include <pthread.h>
 #include <Options.hpp>
 #include <srcmlns.hpp>
 #include <srcml.h>
@@ -15,6 +14,11 @@
 #include <vector>
 
 #include <cstring>
+
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/condition_variable.hpp>
+#include <boost/thread/locks.hpp>
+#include <boost/thread/lock_types.hpp>
 
 /**
  * srcMLReaderHandler
@@ -29,11 +33,11 @@ class srcMLReaderHandler : public srcMLHandler {
 private :
 
   /** mutex to halt both threads on */
-  pthread_mutex_t mutex;
+  boost::mutex mutex;
   /** sax stop/start condition */
-  pthread_cond_t cond;
+  boost::condition_variable cond;
   /** calling thread stop/start condition */
-  pthread_cond_t is_done_cond;
+  //pthread_cond_t is_done_cond;
 
   /** collected root language */
   srcml_archive * archive;
@@ -75,11 +79,6 @@ public :
     archive->prefixes.clear();
     archive->namespaces.clear();
 
-
-    pthread_mutex_init(&mutex, 0);
-    pthread_cond_init(&cond, 0);
-    pthread_cond_init(&is_done_cond, 0);
-
   }
 
   /**
@@ -87,13 +86,7 @@ public :
    *
    * Destructor, deletes mutex and conditions.
    */
-  ~srcMLReaderHandler() {
-
-    pthread_mutex_destroy(&mutex);
-    pthread_cond_destroy(&cond);
-    pthread_cond_destroy(&is_done_cond);
-
-  }
+  ~srcMLReaderHandler() {}
 
   /**
    * wait
@@ -103,15 +96,11 @@ public :
    */
   void wait() {
 
-    pthread_mutex_lock(&mutex);
+    boost::unique_lock<boost::mutex> lock(mutex);
 
-    if(is_done) {
-      pthread_mutex_unlock(&mutex);
-      return;
-    }
+    if(is_done) return;
 
-    if(wait_root) pthread_cond_wait(&is_done_cond, &mutex);
-    pthread_mutex_unlock(&mutex);
+    if(wait_root) cond.wait(lock);
 
   }
  
@@ -122,9 +111,8 @@ public :
    */
   void resume() {
 
-    pthread_mutex_lock(&mutex);
-    pthread_cond_broadcast(&cond);
-    pthread_mutex_unlock(&mutex);
+    boost::unique_lock<boost::mutex> lock(mutex);
+    cond.notify_all();
 
   }
 
@@ -135,16 +123,11 @@ public :
    */
   void resume_and_wait() {
 
-    pthread_mutex_lock(&mutex);
-    pthread_cond_broadcast(&cond);
-    if(is_done) {
+    boost::unique_lock<boost::mutex> lock(mutex);
+    cond.notify_all();
+    if(is_done) return;
 
-      pthread_mutex_unlock(&mutex);
-      return;
-    }
-
-    pthread_cond_wait(&is_done_cond, &mutex);
-    pthread_mutex_unlock(&mutex);
+    cond.wait(lock);
 
   }
 
@@ -292,14 +275,15 @@ public :
 
     }
 
-    // pause
-    pthread_mutex_lock(&mutex);
-    if(terminate) stop_parser();
-    wait_root = false;
-    pthread_cond_broadcast(&is_done_cond);
-    pthread_cond_wait(&cond, &mutex);
-    pthread_mutex_unlock(&mutex);
-    read_root = true;
+    // pause 
+    {
+      boost::unique_lock<boost::mutex> lock(mutex);
+      if(terminate) stop_parser();
+      wait_root = false;
+      cond.notify_all();
+      cond.wait(lock);
+      read_root = true;
+    }
 
     if(terminate) stop_parser();
 
@@ -357,11 +341,10 @@ public :
     if(collect_unit_attributes) {
 
       // pause
-      pthread_mutex_lock(&mutex);
+      boost::unique_lock<boost::mutex> lock(mutex);
       if(terminate) stop_parser();
-      pthread_cond_broadcast(&is_done_cond);
-      pthread_cond_wait(&cond, &mutex);
-      pthread_mutex_unlock(&mutex);
+      cond.notify_all();
+      cond.wait(lock);
 
     }
 
@@ -433,11 +416,12 @@ public :
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    pthread_mutex_lock(&mutex);
-    if(terminate) stop_parser();
-    is_done = true;
-    pthread_cond_broadcast(&is_done_cond);
-    pthread_mutex_unlock(&mutex);
+    {
+      boost::unique_lock<boost::mutex> lock(mutex);
+      if(terminate) stop_parser();
+      is_done = true;
+      cond.notify_all();
+    }
 
     if(terminate) stop_parser();
 
@@ -467,11 +451,10 @@ public :
       write_endTag(localname, prefix, URI, is_empty);
 
       // pause
-      pthread_mutex_lock(&mutex);
+      boost::unique_lock<boost::mutex> lock(mutex);
       if(terminate) stop_parser();
-      pthread_cond_broadcast(&is_done_cond);
-      pthread_cond_wait(&cond, &mutex);
-      pthread_mutex_unlock(&mutex);
+      cond.notify_all();
+      cond.wait(lock);
 
     }
 
