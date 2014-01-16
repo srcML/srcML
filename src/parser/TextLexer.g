@@ -155,7 +155,7 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); int zero_literal 
                 static const char * const regex = "[A-Z][A-Z_]+";
 
                 // setup the regular expression
-                regex_t preg = { 0 };
+                regex_t preg = {/* 0 */};
                 int errorcode = regcomp(&preg, regex, REG_EXTENDED);
 
                 // evalue the regex
