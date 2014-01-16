@@ -6179,7 +6179,7 @@ cpp_define_name[] { CompleteElement element(this); std::string::size_type pos = 
 
             startElement(SMACRO_DEFN);
         }
-        simple_identifier (options { greedy = true; } : { pos == LT(1)->getColumn() }? cpp_define_parameter_list)*
+        simple_identifier (options { greedy = true; } : { pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
 ;
 
 cpp_define_parameter_list[] { ENTRY_DEBUG } :
