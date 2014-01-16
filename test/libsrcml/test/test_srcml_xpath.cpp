@@ -117,7 +117,6 @@ int main() {
     file.close();
     xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
     const char * xpaths[2] = {"//src:unit", 0 };
-    int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
     dassert(srcml_xpath(buffer_input, "src:unit", xpaths, -1, 0), SRCML_STATUS_ERROR);
     xmlFreeParserInputBuffer(buffer_input);
     unlink("input.xml");

@@ -46,7 +46,7 @@ int main() {
   cout << "Test 1" << endl;
   {
     const char * s = "<unit/>";
-    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
+    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, (int)strlen(s));
     dassert(!ctxt, 0);
     xmlFreeParserCtxt(ctxt);
   }
@@ -89,7 +89,7 @@ int main() {
   cout << "Test 6" << endl;
   {
     const char * s = "<unit/>";
-    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
+    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, (int)strlen(s));
     dassert(srcMLParseDocument(ctxt, true), SRCML_STATUS_OK);
     xmlFreeDoc(ctxt->myDoc);
     xmlFreeParserCtxt(ctxt);
@@ -98,7 +98,7 @@ int main() {
   cout << "Test 7" << endl;
   {
     const char * s = "<unit/>";
-    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
+    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, (int)strlen(s));
     dassert(srcMLParseDocument(ctxt, false), SRCML_STATUS_OK);
     xmlFreeDoc(ctxt->myDoc);
     xmlFreeParserCtxt(ctxt);
@@ -107,7 +107,7 @@ int main() {
   cout << "Test 8" << endl;
   {
     const char * s = "<unit/>";
-    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
+    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, (int)strlen(s));
     dassert(srcMLParseDocument(0, false), SRCML_STATUS_ERROR);
     xmlFreeDoc(ctxt->myDoc);
     xmlFreeParserCtxt(ctxt);
