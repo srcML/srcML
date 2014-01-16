@@ -24,14 +24,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <libxml/xmlIO.h>
-//#include <fnmatch.h>
 #include <archive.h>
 #include <archive_entry.h>
 #include <string>
 #include <libxml/nanohttp.h>
 #include <libxml/nanoftp.h>
 #include <vector>
-#include <regex.h>
 
 static const char* ARCHIVE_FILTER_EXTENSIONS[] = {".tar", ".zip", ".tgz", ".cpio", ".shar", ".gz", ".bz2", ".xz", 0};
 
