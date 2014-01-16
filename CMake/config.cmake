@@ -50,7 +50,6 @@ if(WIN32)
     set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/dep)
     include_directories(${WINDOWS_DEP_PATH}/include)
     link_directories(${WINDOWS_DEP_PATH}/lib)
-    set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH}:${WINDOWS_DEP_PATH}/libarchive:${WINDOWS_DEP_PATH}/libarchive/include")
     if(ENABLE_SVN_INTEGRATION)
         message(FATAL_ERROR "SVN integration not tested on windows.")
     endif()
@@ -141,16 +140,18 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # Configuring the Clang compiler
     set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wpadded -Wshorten-64-to-32")
     set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${CLANG_WARNINGS}")
-    #set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DDEBUG -fprofile-arcs ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DDEBUG ${CLANG_WARNINGS}")
     
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
     
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    message(STATUS "MSVC Compiler not completely configured yet")
+    # message(STATUS "MSVC Compiler not completely configured yet")
     set(MSVC_WARNINGS "/W3 ")
-    
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} /Ox")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} /Ox")
+    # message(STATUS "${CMAKE_CXX_FLAGS_RELEASE}")
+    # message(STATUS "DEBUGGING Flags${CMAKE_CXX_FLAGS_DEBUG}")
     # Actual Debug cmd line args
     # /GS /TP /analyze- /W3 /Zc:wchar_t /I"C:/antlr/277/include/antlr" /I"C:/Users/bbart_000/Documents/GitHub/srcML/dep/include"
     # /I"C:/antlr/277/include" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/srcml"
