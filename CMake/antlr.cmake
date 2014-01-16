@@ -25,17 +25,29 @@
 # Use with named arguments.
 #
 macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
-
     if("${INCLUDE_GRAMMAR}" STREQUAL "")
-	    add_custom_command(OUTPUT  ${OUTPUT_FILES}
-            COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-            COMMAND touch ${OUTPUT_FILES}
-        )
+        if(WIN32)
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                COMMAND echo nil >${OUTPUT_FILES}
+            )
+        else()
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                COMMAND echo nil >${OUTPUT_FILES}
+            )
+        endif()
     else()
-	    add_custom_command(OUTPUT  ${OUTPUT_FILES}
-            COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-            COMMAND touch ${OUTPUT_FILES}
-        )
+        if(WIN32)
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                COMMAND echo nil >${OUTPUT_FILES}
+            )
+        else()
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                COMMAND touch ${OUTPUT_FILES}
+            )
+        endif()
     endif()
-
 endmacro(RunAntlr)
