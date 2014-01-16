@@ -303,7 +303,7 @@ public :
             xmlNsPtr savens = onode->nsDef;
             if(!isoption(options, OPTION_APPLY_ROOT)) {
               onode->nsDef = savens;
-              for (int i = 0; i < UnitDOM::rootsize / 2; ++i)
+              for (std::vector<const xmlChar*>::size_type i = 0; i < UnitDOM::rootsize / 2; ++i)
                 onode->nsDef = onode->nsDef->next;
             }
             // dump the namespace-modified tree
