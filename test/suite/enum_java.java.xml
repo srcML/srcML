@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="enum">
+
+<unit>
+<enum>enum <block>{ <expr><name>a</name></expr> }</block></enum>
+</unit>
+
+<unit>
+<enum>enum <name>a</name> <block>{ <expr><name>b</name></expr> }</block></enum>
+</unit>
+
+<unit>
+<enum>enum <block>{ <expr><name>a</name></expr>, <expr><name>b</name></expr> }</block></enum>
+</unit>
+
+<unit>
+<enum>enum <name>a</name> <block>{ <expr><name>b</name></expr>, <expr><name>c</name></expr> }</block></enum>
+</unit>
+
+<unit>
+<enum>enum <block>{ <expr><name>a</name> = 0</expr> }</block></enum>
+</unit>
+
+<unit>
+<enum>enum <name>a</name> <block>{ <expr><name>b</name> = 0</expr> }</block></enum>
+</unit>
+
+<unit>
+<enum>enum <block>{ <expr><name>a</name> = 0</expr>, <expr><name>b</name></expr> }</block></enum>
+</unit>
+
+<unit>
+<enum>enum <name>a</name> <block>{ <expr><name>b</name> = 0</expr>, <expr><name>c</name></expr> }</block></enum>
+</unit>
+
+<unit>
+<enum><specifier>private</specifier> <specifier>static</specifier> enum <name>RelTypes</name> <super><implements>implements <name>RelationshipType</name></implements></super> <block>{}</block></enum>
+
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>main</name><parameter_list>(<param><decl><type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>args</name></decl></param>)</parameter_list> <block>{}</block></function></unit>
+
+</unit>
