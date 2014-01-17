@@ -819,9 +819,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case C_IS_CPP_FLAG_CODE:
 
-      Language::registerUserExt("c", "C++");
-      Language::registerUserExt("h", "C++");
-      Language::registerUserExt("i", "C++");
+      Language::c_is_cpp(true);
 
       break;
 

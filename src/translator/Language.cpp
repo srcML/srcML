@@ -25,6 +25,8 @@
 #include <algorithm>
 #include <boost/regex.hpp>
 
+bool Language::use_cpp_for_c = false;
+
 int Language::lang2intcount = 7;
 pair Language::lang2int[] = {
     { LanguageName::LANGUAGE_C, LANGUAGE_C },
@@ -126,7 +128,8 @@ int Language::getLanguageFromFilename(const char* const path) {
   // custom extensions
   for (int i = usercount - 1; i >= 0; --i) {
     if (strcmp(userext2int[i].s.c_str(), extension) == 0)
-      return userext2int[i].n == LANGUAGE_NONE ? 0 : userext2int[i].n;
+      return userext2int[i].n == LANGUAGE_NONE ? 0 : 
+	userext2int[i].n == LANGUAGE_C && use_cpp_for_c ? LANGUAGE_CXX : userext2int[i].n;
   }
 
   return 0;
@@ -144,7 +147,8 @@ int Language::getLanguageFromFilename(const char* const path, std::vector<pair> 
   // custom extensions
   for (int i = (int)(registered_languages.size() - 1); i >= 0; --i) {
     if (strcmp(registered_languages[i].s.c_str(), extension) == 0)
-      return registered_languages[i].n == LANGUAGE_NONE ? 0 : registered_languages[i].n;
+      return registered_languages[i].n == LANGUAGE_NONE ? 0 : 
+	registered_languages[i].n == LANGUAGE_C && use_cpp_for_c ? LANGUAGE_CXX : registered_languages[i].n;
   }
 
   return 0;
@@ -210,4 +214,9 @@ void Language::register_standard_file_extensions(std::vector<pair> & registered_
   Language::registerUserExt("aj",   LANGUAGE_ASPECTJ, registered_languages );
 
   Language::registerUserExt("cs",   LANGUAGE_CSHARP, registered_languages );
+}
+
+void Language::c_is_cpp(bool use_cpp) {
+
+  Language::use_cpp_for_c = use_cpp;
 }
