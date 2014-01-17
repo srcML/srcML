@@ -22,8 +22,8 @@
 
 #include "Language.hpp"
 #include "srcmlapps.hpp"
-#include <regex.h>
 #include <algorithm>
+#include <boost/regex.hpp>
 
 int Language::lang2intcount = 7;
 pair Language::lang2int[] = {
@@ -40,7 +40,8 @@ static int usercount = 0;
 
 pair Language::userext2int[47];
 
-const char * const regex = "(zx\\.|zg\\.|2zb\\.)*([^\\.]*)";
+// const char * const regex = "(zx\\.|zg\\.|2zb\\.)*([^\\.]*)";
+static const boost::regex extRegEx("(zx\\.|zg\\.|2zb\\.)*([^\\.]*)");
 
 bool Language::registerUserExt(const char* ext, int language,
                                std::vector<pair> & registered_languages) {
@@ -83,26 +84,32 @@ bool Language::registerUserExt(const char* ext, const char* language) {
 
 const char* getLanguageExtension(const char * const inpath)
 {
+  // FIXME: don't do this! you should allocate a buffer using malloc or take a buffer from
+  // the user (best option) and attempt to place the extension there.
+  // FIXME: if you go with option 2 I recommend making another function that returns
+  // the size of the file extension.
+  
   // internal string for returning constant
   static std::string extension;
-
+  
   // reversed copy of the path
   std::string path(inpath);
   std::reverse(path.begin(), path.end());
 
-  // setup the regular expression
-  regex_t preg = {/* 0 */};
-  int errorcode = regcomp(&preg, regex, REG_EXTENDED);
+  std::string::const_iterator start = path.begin();
+  std::string::const_iterator end = path.end();
+  boost::match_results<std::string::const_iterator> what;
+  boost::match_flag_type flags = boost::match_default;
 
-  // evalue the regex
-  regmatch_t pmatch[3];
-  errorcode = errorcode || regexec(&preg, path.c_str(), 3, pmatch, 0);
+  if(boost::regex_search(start, end, what, extRegEx, flags)) {
 
-  // extract the extension from the path, reversing as we go
-  extension.assign(&path[pmatch[2].rm_so], &path[pmatch[2].rm_eo]);
-  std::reverse(extension.begin(), extension.end());
+    std::string temp = what[2].str();
+    extension.assign(temp.rbegin(), temp.rend());
+    return extension.c_str();
 
-  regfree(&preg);
+  } else
+    return 0;
+
 
   // if we have a non-blank extension, return that
   return extension.empty() ? 0 : extension.c_str();

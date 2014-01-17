@@ -34,7 +34,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <regex.h>
+#include <boost/regex.hpp>
 
 #include <vector>
 #include <string>
@@ -669,42 +669,19 @@ const char * srcml_check_extension(const char* filename) {
 int srcml_check_format(const char* format) {
 
   if(format == NULL) return SRCML_STATUS_ERROR;
-
-  static const char * const regex = "(zx\\.|zg\\.|2zb\\.|rat\\.)*";
+  static const boost::regex extRegEx("\\.(xz|zg|bz2|tar).*$");
 
   // reversed copy of the path
-  int length = (int)strlen(format);
+  std::size_t length = strlen(format);
+  boost::cmatch what;
 
-  char * reverse = (char *)malloc((length + 1) * sizeof(char));
-  if(reverse == NULL) return SRCML_STATUS_ERROR;
+  if(boost::regex_search(format, format + length, what,extRegEx)) {
 
-  for(int i = 0; i < length; ++i)
-    reverse[i] = format[length - i - 1];
-  reverse[length] = 0;
-
-  // setup the regular expression
-  regex_t preg = {/* 0 */};
-  int errorcode = regcomp(&preg, regex, REG_EXTENDED);
-
-  // evalue the regex
-  regmatch_t pmatch[3];
-  errorcode = errorcode || regexec(&preg, reverse, 3, pmatch, 0);
-
-  // minus 1 to remove starting .
-  int ext_len = (int)(pmatch[0].rm_eo - pmatch[0].rm_so - 1);
-  regfree(&preg);
-  free(reverse);
-  if(ext_len > 0)
     return SRCML_STATUS_OK;
-  return SRCML_STATUS_ERROR;
 
-  //char * extension = (char *)malloc(ext_len * sizeof(char));
-  // extract the extension from the path, reversing as we go
-  //for(int i = 0; i < ext_len; ++i)
-  //extension[i] = reverse[pmatch[0].rm_eo - i - 2];
-  //extension[ext_len] = 0;
+  } else
+    return SRCML_STATUS_ERROR;
 
-  //return 1;
 }
 
 /**
