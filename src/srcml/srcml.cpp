@@ -49,11 +49,6 @@ struct ParseRequest {
         filename.swap(other.filename);
         buffer.swap(other.buffer);
 
-        //Swap Int
-        size ^= other.size;
-        other.size ^= size;
-        size ^= other.size;
-
         srcml_arch = other.srcml_arch;
         lang.swap(other.lang);
     }
@@ -66,7 +61,6 @@ struct ParseRequest {
     // Fields required by thread to process a unit
     std::string filename;
     std::vector<char> buffer;
-    size_t size;
     srcml_archive * srcml_arch;
     std::string lang;
 };
@@ -175,7 +169,7 @@ void * srcml_consume(void * arg) {
     srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
     srcml_unit_set_filename(unit, pr.filename.c_str());
     srcml_unit_set_language(unit, pr.lang.c_str());
-    srcml_parse_unit_memory(unit, &pr.buffer[0], pr.size);
+    srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
     srcml_write_unit(pr.srcml_arch, unit);
   }
 
@@ -326,29 +320,22 @@ int main(int argc, char * argv[]) {
         }
       }
     
-      const char* buffer;
-      size_t size;
-      int64_t offset;
-      size_t data_size = 0;
-
+      request.buffer.clear();
+     
       while (true) {
+        
+        const char* buffer;
+        size_t size;
+        int64_t offset;
+        
         if (archive_read_data_block(arch, (const void**) &buffer, &size, &offset) != ARCHIVE_OK) {
           break;
         }
-        
-        /*
-        for (size_t i = 0; i < size; ++i) {
-          request.buffer.push_back(((char*)buffer)[i]);
-        }
-        */
 
         request.buffer.insert(request.buffer.end(), buffer, buffer + size);
-
-        data_size += size;
       }
 
       request.filename = filename;
-      request.size = data_size;
       request.srcml_arch = srcml_arch;
       request.lang = (srcml_archive_get_language(srcml_arch) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
 
