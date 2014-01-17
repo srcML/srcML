@@ -39,6 +39,7 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <iostream>
 
 struct ParseRequest {
     ParseRequest() : buffer(0) {}
@@ -328,7 +329,6 @@ int main(int argc, char * argv[]) {
       const void* buffer;
       size_t size;
       int64_t offset;
-      std::vector<char> data_buffer;
       size_t data_size = 0;
 
       while (true) {
@@ -337,7 +337,7 @@ int main(int argc, char * argv[]) {
         }
         
         for (size_t i = 0; i < size; ++i) {
-          data_buffer.push_back(((char*)buffer)[i]);
+          request.buffer.push_back(((char*)buffer)[i]);
         }
 
         data_size += size;
@@ -345,7 +345,6 @@ int main(int argc, char * argv[]) {
 
       request.filename = filename;
       request.size = data_size;
-      request.buffer = data_buffer;
       request.srcml_arch = srcml_arch;
       request.lang = (srcml_archive_get_language(srcml_arch) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
 
