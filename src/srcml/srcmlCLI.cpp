@@ -29,6 +29,8 @@
 #include <srcmlCLI.hpp>
 #include <boost/program_options.hpp>
 
+#include <iostream>
+
 namespace prog_opts = boost::program_options;
 
 const char* SRCML_HEADER = "";
@@ -105,7 +107,7 @@ const char* SRCML2SRC_FOOTER = "Examples:\
   www.sdml.info\n\
   Report bugs to collard@uakron.edu";
 
-srcml_request_t srcml_request = { 0 };
+srcml_request_t srcml_request = { /* 0 */ };
 
 // Define Program Options
 prog_opts::options_description general("General Options");
