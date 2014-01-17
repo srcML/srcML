@@ -40,7 +40,6 @@ static int usercount = 0;
 
 pair Language::userext2int[47];
 
-// const char * const regex = "(zx\\.|zg\\.|2zb\\.)*([^\\.]*)";
 static const boost::regex extRegEx("(zx\\.|zg\\.|2zb\\.)*([^\\.]*)");
 
 bool Language::registerUserExt(const char* ext, int language,
