@@ -131,7 +131,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
   static const char * transform_filename_template = "srcml_transform_XXXXXXXX";
 
   const char * last_transform_filename = 0;
-  for(unsigned int i = 0; i < iarchive->transformations.size(); ++i) {
+  for(std::vector<transform>::size_type i = 0; i < iarchive->transformations.size(); ++i) {
 
     char * transform_filename = strdup(transform_filename_template);
     if(!transform_filename) {

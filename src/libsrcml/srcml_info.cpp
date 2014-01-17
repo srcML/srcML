@@ -48,7 +48,7 @@ const char** srcml_list(const char* srcml_filename) {
 
   try {
 
-    for(unsigned int i = 0; i < output_array.size(); ++i) {
+    for(std::vector<std::string>::size_type i = 0; i < output_array.size(); ++i) {
 
       output_carray[i] = strdup(output_array.at(i).c_str());
 	if(!output_carray[i]) {

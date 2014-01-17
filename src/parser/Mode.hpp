@@ -154,7 +154,7 @@ public:
 
     const static State::MODE_TYPE MODE_TRAILING_RETURN;
 
-    const static State::MODE_TYPE MODE_DECLTYPE;
+    const static State::MODE_TYPE MODE_ISSUE_EMPTY_AT_POP;
 
 public:
 
@@ -173,7 +173,7 @@ protected:
     //  void flushSkip() {}
 
     int size() const {
-        return statev.size();
+      return (int)statev.size();
     }
 
     srcMLState& currentState() {

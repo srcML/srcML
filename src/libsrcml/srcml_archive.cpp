@@ -162,7 +162,7 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
   try {
 
-    for(unsigned int pos = 0; pos < archive->attributes.size(); ++pos)
+    for(std::vector<std::string>::size_type pos = 0; pos < archive->attributes.size(); ++pos)
       new_archive->attributes.push_back(archive->attributes.at(pos));
 
   } catch(...) {}
@@ -173,7 +173,7 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
   // clear out those added by srcml_create_archive
   new_archive->prefixes.clear();
   new_archive->namespaces.clear();
-  for(unsigned int pos = 0; pos < archive->namespaces.size(); ++pos) {
+  for(std::vector<std::string>::size_type pos = 0; pos < archive->namespaces.size(); ++pos) {
 
     try {
 
@@ -186,7 +186,7 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
   try {
     new_archive->registered_languages.clear();
-    for(unsigned int i = 0; i < archive->registered_languages.size(); ++i)
+    for(std::vector<pair>::size_type i = 0; i < archive->registered_languages.size(); ++i)
       new_archive->registered_languages.push_back(archive->registered_languages.at(i));
 
   } catch(...) {}
@@ -459,7 +459,7 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
 
   try {
 
-    for(unsigned int i = 0; i < archive->prefixes.size(); ++i)
+    for(std::vector<std::string>::size_type i = 0; i < archive->prefixes.size(); ++i)
       if(archive->namespaces.at(i) == ns) {
 
         archive->prefixes.at(i) = prefix;
@@ -629,7 +629,6 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
                                               archive->encoding ? archive->encoding->c_str() : "UTF-8",
                                               archive->encoding ? archive->encoding->c_str() : "UTF-8",
                                               buffer,
-                                              size,
                                               archive->options,
                                               archive->directory ? archive->directory->c_str() : 0,
                                               archive->filename ? archive->filename->c_str() : 0,
@@ -834,7 +833,7 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
 
   if(archive == NULL || buffer == NULL || buffer_size <= 0) return SRCML_STATUS_ERROR;
 
-  archive->input = xmlParserInputBufferCreateMem(buffer, buffer_size, xmlParseCharEncoding(0));
+  archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, xmlParseCharEncoding(0));
   try {
 
 #ifdef SAX2

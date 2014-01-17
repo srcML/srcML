@@ -32,7 +32,7 @@
  */
 xmlSAXHandler factory() {
 
-  xmlSAXHandler sax = { 0 };
+  xmlSAXHandler sax = {/* 0 */};
 
   sax.initialized    = XML_SAX2_MAGIC;
 
@@ -49,6 +49,9 @@ xmlSAXHandler factory() {
 
   return sax;
 }
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 
 /**
  * startDocument
@@ -176,7 +179,7 @@ void startRoot(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
     state->root.attributes[index + 2] = attributes[index + 2] ? (xmlChar*) strdup((const char*) attributes[index + 2]) : 0;
     CHECK_COPY(attributes[index + 2], state->root.attributes[index + 2]);
 
-    int vallength = attributes[index + 4] - attributes[index + 3];
+    int vallength = (int)(attributes[index + 4] - attributes[index + 3]);
     state->root.attributes[index + 3] = (const xmlChar*) malloc(vallength);
     CHECK_COPY(attributes[index + 3], state->root.attributes[index + 3]);
 
@@ -238,13 +241,13 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
     state->process->startUnit(state->root.localname, state->root.prefix, state->root.URI,
                                state->root.nb_namespaces, state->root.namespaces, state->root.nb_attributes,
                                state->root.nb_defaulted, state->root.attributes);
-    state->process->charactersUnit((const xmlChar *)state->root.characters.c_str(), state->root.characters.size());
+    state->process->charactersUnit((const xmlChar *)state->root.characters.c_str(), (int)state->root.characters.size());
     state->process->startElementNs(localname, prefix, URI,
                                nb_namespaces, namespaces, nb_attributes,
                                nb_defaulted, attributes);
   } else {
 
-    state->process->charactersRoot((const xmlChar *)state->root.characters.c_str(), state->root.characters.size());
+    state->process->charactersRoot((const xmlChar *)state->root.characters.c_str(), (int)state->root.characters.size());
     state->process->startUnit(localname, prefix, URI,
                                nb_namespaces, namespaces, nb_attributes,
                                nb_defaulted, attributes);
@@ -382,7 +385,9 @@ void endElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix,
       state->process->startUnit(state->root.localname, state->root.prefix, state->root.URI,
                                 state->root.nb_namespaces, state->root.namespaces, state->root.nb_attributes,
                                 state->root.nb_defaulted, state->root.attributes);
-      
+
+      if(state->root.characters.size() != 0)
+	state->process->charactersUnit((const xmlChar *)state->root.characters.c_str(), (int)state->root.characters.size());
 
     } 
 
@@ -554,3 +559,4 @@ void cdataBlock(void * ctx, const xmlChar * value, int len) {
 
 }
 
+#pragma GCC diagnostic pop

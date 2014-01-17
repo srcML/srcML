@@ -106,7 +106,7 @@ UTF8CharBuffer::UTF8CharBuffer(xmlParserInputBufferPtr pinput, const char * enco
   if (!input)
     throw UTF8FileError();
 
-  size = pinput && pinput->buffer && xmlBufContent(pinput->buffer) ? strlen((const char *)xmlBufContent(pinput->buffer)) : 0;
+  size = pinput && pinput->buffer && xmlBufContent(pinput->buffer) ? (int)strlen((const char *)xmlBufContent(pinput->buffer)) : 0;
 
   /* If we do not have an encoding at the start, then there is no raw buffer created
      or used.  Unfortunately, we have to open the file with our encoding defined. */

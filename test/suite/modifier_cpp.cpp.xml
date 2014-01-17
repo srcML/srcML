@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" dir="modifier" filename="modifier_cpp">
+
+
+<unit>
+<decl_stmt><decl><type><name>int</name><type:modifier>*</type:modifier><type:modifier>&amp;</type:modifier></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>type</name><type:modifier>&amp;&amp;</type:modifier></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>type</name><type:modifier>&amp;</type:modifier></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name><type:modifier>*</type:modifier><type:modifier>&amp;</type:modifier><type:modifier>*</type:modifier><type:modifier>&amp;</type:modifier><type:modifier>*</type:modifier><type:modifier>&amp;</type:modifier></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<!-- @todo This is marked up wrong.  Need to figure out what correct syntax is -->
+<unit>
+<expr_stmt><expr><call><name>int</name> <argument_list>(<argument><expr>&amp;<name>i</name></expr></argument>)</argument_list></call><index>[<expr>4</expr>]</index></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name><type:modifier>&amp;</type:modifier></type><name><name>i</name> <index>[<expr>4</expr>]</index></name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> (<type:modifier>&amp;</type:modifier><name>i</name>)<parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> (<type:modifier>*</type:modifier><type:modifier>&amp;</type:modifier><name>i</name>)<parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>i</name><parameter_list>(<param><decl><type><name>int</name> <type:modifier>*</type:modifier></type></decl></param>, <param><decl><type><name>derp</name><type:modifier>&amp;</type:modifier></type></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> (<name><name>cls</name>::<type:modifier>*</type:modifier><name>i</name></name>)<parameter_list>(<param><decl><type><name>int</name> <type:modifier>*</type:modifier></type></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<typedef>typedef <function_decl><type><name>void</name></type> (<name><name>cls</name>::<type:modifier>*</type:modifier><name>i</name></name>)<parameter_list>(<param><decl><type><name>int</name> <type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <specifier>const</specifier>;</function_decl></typedef>
+</unit>
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument><type:modifier>&amp;</type:modifier></argument>]</capture><parameter_list>()</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument><type:modifier>&amp;</type:modifier></argument>]</capture> <block>{}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument><name>x</name></argument>, <argument><type:modifier>&amp;</type:modifier><name>s</name></argument>]</capture> <parameter_list>(<param><decl><type><name>delta</name> <type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument><name>x</name></argument>, <argument><type:modifier>&amp;</type:modifier><name>s</name></argument>]</capture> <parameter_list>(<param><decl><type><name>delta</name> <specifier>const</specifier><type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
+</unit>
+
+<!-- 
+
+These are the captures:
+
+[]        //no variables defined. Attempting to use any external variables in the lambda is an error.
+[x, &y]   //x is captured by value, y is captured by reference
+[&]       //any external variable is implicitly captured by reference if used
+[=]       //any external variable is implicitly captured by value if used
+[&, x]    //x is explicitly captured by value. Other variables will be captured by reference
+[=, &z]   //z is explicitly captured by reference. Other variables will be captured by value
+
+So, I do not thing that const exists.
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument><type:modifier>=</type:modifier></argument>, const&amp; <name>i</name>]</capture> <block>{}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument><type:modifier>&amp;</type:modifier></argument>, const&amp; <name>i</name>]</capture> <block>{}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument><name>x</name></argument>, <argument><type:modifier>&amp;</type:modifier><name>s</name></argument>]</capture> <block>{}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument><type:modifier>=</type:modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<param><decl><type><name>delta</name><type:modifier>&amp;</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument><type:modifier>&amp;</type:modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<param><decl><type><name>delta</name></type></decl></param>)</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><function><capture>[<argument><type:modifier>&amp;</type:modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<param><decl><type><name>delta</name> <specifier>const</specifier><type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
+</unit>
+
+ -->
+
+</unit>

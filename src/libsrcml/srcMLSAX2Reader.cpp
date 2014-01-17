@@ -70,7 +70,7 @@ srcMLSAX2Reader::srcMLSAX2Reader(const char * filename)
 
   thread_args args = { &control, &handler };
 
-  pthread_create(&thread, 0, start_routine, &args);
+  thread = new boost::thread(start_routine, &args);
   handler.wait();
 
 }
@@ -86,7 +86,7 @@ srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input)
 
   thread_args args = { &control, &handler };
 
-  pthread_create(&thread, 0, start_routine, &args);
+  thread = new boost::thread(start_routine, &args);
   handler.wait();
 
 }
@@ -99,7 +99,8 @@ srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input)
 srcMLSAX2Reader::~srcMLSAX2Reader() {
 
   handler.stop();
-  pthread_join(thread, NULL);
+  thread->join();
+  delete thread;
 
 }
 

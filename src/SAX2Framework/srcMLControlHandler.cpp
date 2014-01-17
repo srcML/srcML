@@ -26,7 +26,12 @@
 
 #include <string>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 void libxml_error(void *ctx, const char *msg, ...) {}
+
+#pragma GCC diagnostic pop
 
 void srcml_control_handler_init() {
 

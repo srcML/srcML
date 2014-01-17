@@ -263,7 +263,7 @@ bool srcMLParser::BOOL;
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
-    parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false)
+    parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0)
 {
     // make sure we have the correct token set
     if (!_tokenSet_1.member(IF))
@@ -561,6 +561,7 @@ public:
     bool qmark;
     bool notdestructor;
     bool operatorname;
+    int curly_count;
 
     static bool BOOL;
 
@@ -714,7 +715,7 @@ keyword_statements[] { ENTRY_DEBUG } :
   Basically we have an identifier and we don't know yet whether it starts an expression
   function definition, function declaration, or even a label.
 */
-pattern_statements[] { int secondtoken = 0; int type_count = 0;
+pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = false;
         STMT_TYPE stmt_type = NONE; CALLTYPE type = NOCALL;
 
         // detect the declaration/definition type
@@ -811,7 +812,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0;
         extern_definition |
 
         // call
-        { isoption(parseoptions, OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, secondtoken) && type == MACRO)) }?
+        { isoption(parseoptions, OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, isempty, secondtoken) && type == MACRO)) }?
         macro_call |
 
         expression_statement[type]
@@ -922,13 +923,13 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
 
         // special case for function pointer names that don't have '*'
         { _tokenSet_13.member(LA(1)) }?
-        compound_name_inner[false] |
+        (compound_name_inner[false])* |
 
         // special name prefix of namespace or class
         identifier (template_argument_list)* DCOLON function_pointer_name_base |
 
         // typical function pointer name
-        MULTOPS (compound_name_inner[false])*
+        multops (multops)* (compound_name_inner[false])*
 
         // optional array declaration
         (variable_identifier_array_grammar_sub[flag])*
@@ -1031,7 +1032,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? specifier)*  lead_type_identifier
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? lead_type_identifier)*  lead_type_identifier
 
         { 
 
@@ -1270,9 +1271,10 @@ property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 // Check and see if this is a call and what type
-perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
+perform_call_check[CALLTYPE& type, bool & isempty, int secondtoken] returns [bool iscall] {
 
     iscall = true;
+    isempty = false;
 
     type = NOCALL;
 
@@ -1283,7 +1285,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
     int argumenttoken = 0;
     int postcalltoken = 0;
     try {
-        call_check(postnametoken, argumenttoken, postcalltoken);
+        call_check(postnametoken, argumenttoken, postcalltoken, isempty);
 
         // call syntax succeeded
         type = CALL;
@@ -1322,13 +1324,14 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
     ENTRY_DEBUG } :;
 
 // check if call is call
-call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_DEBUG } :
+call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
         (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
+        set_bool[isempty, LA(1) == LPAREN && next_token() == RPAREN]
         (
             { isoption(parseoptions, OPTION_CPP) }?
             // check for proper form of argument list
@@ -1965,6 +1968,8 @@ class_post[] { ENTRY_DEBUG } :
 // Handle an enum class
 enum_class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SENUM]
+        
+        { setMode(MODE_ENUM); }
 
         class_preamble ENUM (class_header lcurly | lcurly)
 
@@ -2179,6 +2184,7 @@ lcurly[] { ENTRY_DEBUG } :
         lcurly_base
         {
 
+
             incCurly();
 
             // alter the modes set in lcurly_base
@@ -2200,6 +2206,8 @@ lcurly_base[] { ENTRY_DEBUG } :
 
             startElement(SBLOCK);
 
+            ++curly_count;
+
         }
         LCURLY
 ;
@@ -2208,6 +2216,7 @@ lcurly_base[] { ENTRY_DEBUG } :
 block_end[] { ENTRY_DEBUG } :
         // handling of if with then block followed by else
         // handle the block, however scope of then completion stops at if
+
         rcurly
         {
             if (inMode(MODE_ANONYMOUS)) {
@@ -2274,6 +2283,8 @@ rcurly[] { ENTRY_DEBUG } :
 
             if(getCurly() != 0)
                 decCurly();
+
+            --curly_count;
 
         }
         RCURLY
@@ -2358,7 +2369,7 @@ else_handling[] { ENTRY_DEBUG } :
             // record the current size of the top of the cppmode stack to detect
             // any #else or #endif in consumeSkippedTokens
             // see below
-            unsigned int cppmode_size = !cppmode.empty() ? cppmode.top().statesize.size() : 0;
+            std::deque<int>::size_type cppmode_size = !cppmode.empty() ? cppmode.top().statesize.size() : 0;
 
             // catch and finally statements are nested inside of a try, if at that level
             // so if no CATCH or FINALLY, then end now
@@ -2434,7 +2445,7 @@ else_handling[] { ENTRY_DEBUG } :
 
 // mid-statement
 statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = NONE;
-                   CALLTYPE type = NOCALL; ENTRY_DEBUG } :
+                   CALLTYPE type = NOCALL;  bool isempty = false; ENTRY_DEBUG } :
 
         { inMode(MODE_EAT_TYPE) }?
         type_identifier
@@ -2485,7 +2496,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // start of argument for return or throw statement
         { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
-            isoption(parseoptions, OPTION_CPP) && perform_call_check(type, secondtoken) && type == MACRO }?
+            isoption(parseoptions, OPTION_CPP) && perform_call_check(type, isempty, secondtoken) && type == MACRO }?
         macro_call |
 
         { inMode(MODE_EXPRESSION | MODE_EXPECT) }?
@@ -2974,6 +2985,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_int[type_count, type_count > 1 ? type_count - 1 : 0]
 
         // special case for what looks like a destructor declaration
+        // @todo need a case where == 1 then , merge it with > 1
         throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attribute_count) > 1 || ((type_count - specifier_count - attribute_count) == 1))]
 
         /*
@@ -3003,6 +3015,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  (
                     // inside of a C++ class definition
                     inMode(MODE_ACCESS_REGION) ||
+
+                    (inTransparentMode(MODE_ACCESS_REGION) && inMode(MODE_TEMPLATE)) ||
 
                     // right inside the block of a Java or C# class
                     (inPrevMode(MODE_CLASS) && (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP))) ||
@@ -3228,17 +3242,18 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
 ;
 
 // C++11 markup decltype 
-decltype_call[] { ENTRY_DEBUG} :
+decltype_call[] { int save_type_count = getTypeCount(); ENTRY_DEBUG } :
         {
 
             // start a mode for the macro that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_DECLTYPE);
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the macro call element
             startElement(SDECLTYPE);
          
         }
         DECLTYPE complete_argument_list
+        { setTypeCount(save_type_count); }
 ;
 
 // C++ completely match without markup decltype
@@ -3474,8 +3489,8 @@ complete_argument_list[] { ENTRY_DEBUG } :
 ;
 
 // Full, complete expression matched all at once (no stream).
-// Colon matches range(?) for bits.
-complete_arguments[] { CompleteElement element(this); int count_paren = 1; ENTRY_DEBUG } :
+complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALLTYPE type = NOCALL; 
+    bool isempty = false; ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false] |
         { getCurly() == 0 }? rcurly_argument |
         {
@@ -3486,19 +3501,23 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; ENTRY
             startElement(SARGUMENT);
         }
         (options {warnWhenFollowAmbig = false; } : { count_paren > 0 }?
+
         ({ LA(1) == LPAREN }? expression { ++count_paren; } |
 
-        { LA(1) == RPAREN }? expression { --count_paren; } |
+         { LA(1) == RPAREN }? expression { --count_paren; } |
 
-        expression |
-        comma
-        {
+         { perform_call_check(type, isempty, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression |
+
+         expression |
+
+         comma
+         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
 
             // start the argument
             startElement(SARGUMENT);
-        }
+         }
 
         ))*
 
@@ -3592,7 +3611,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
-            SIGNAL | FINAL | OVERRIDE | VOID |
+            SIGNAL | FINAL | OVERRIDE | VOID | TYPENAME | 
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
@@ -3773,7 +3792,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // C++
             FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
-            CONSTEXPR | THREADLOCAL | TYPENAME |
+            CONSTEXPR | THREADLOCAL |
 
             // C
             RESTRICT | 
@@ -4477,11 +4496,15 @@ throw_statement[] { ENTRY_DEBUG } :
 // an expression statement pre processing
 expression_statement_process[] { ENTRY_DEBUG } :
         {
+
+            bool inenumclass = (inLanguage(LANGUAGE_JAVA_FAMILY) && inTransparentMode(MODE_ENUM) && inMode(MODE_CLASS));
+
             // statement with an embedded expression
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
 
             // start the element which will end after the terminate
-            startElement(SEXPRESSION_STATEMENT);
+            if(!inenumclass)
+                startElement(SEXPRESSION_STATEMENT);
         }
 ;
 
@@ -4548,7 +4571,8 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
         lead_type_identifier { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
-        (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }? type_identifier { decTypeCount(); })* 
+        (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
+        type_identifier { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
@@ -4698,7 +4722,7 @@ rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DE
     ;
 
 //processing on )
-rparen[bool markup = true] { bool isempty = getParen() == 0; bool update_type = false; ENTRY_DEBUG } :
+rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
         {
             if (isempty) {
 
@@ -4736,23 +4760,10 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; bool update_type = 
 
                 // end the single mode that started the list
                 // don't end more than one since they may be nested
-                update_type = inMode(MODE_DECLTYPE);
                 if (inMode(MODE_LIST))
                     endMode(MODE_LIST);
             }
 
-            if(update_type) {
-
-                if(!inTransparentMode(MODE_VARIABLE_NAME)) {
-                    while(getTypeCount() - 1 > 0) {
-                        type_identifier();
-                        decTypeCount();
-                    }
-                    endMode(MODE_EAT_TYPE);
-                    setMode(MODE_FUNCTION_NAME);
-                } else
-                    update_typecount(MODE_VARIABLE_NAME | MODE_INIT);
-            }
         }
 ;
 
@@ -4843,7 +4854,7 @@ expression_part_plus_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 ;
 
 // the expression part
-expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
+expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; ENTRY_DEBUG } :
 
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
@@ -4871,7 +4882,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
 
         // call
         // distinguish between a call and a macro
-        { type == CALL || (perform_call_check(type, -1) && type == CALL) }?
+        { type == CALL || (perform_call_check(type, isempty, -1) && type == CALL) }?
 
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
@@ -4939,7 +4950,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
 ;
 
 // default()
-expression_part_default[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
+expression_part_default[] { ENTRY_DEBUG } :
 
         expression_process
 
@@ -5471,7 +5482,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             template_super_java | qmark_marked |
             template_argument_expression
-        )+
+        )+ 
 ;
 
 
@@ -5611,7 +5622,7 @@ nested_terminate[] {
 // definition of an enum
 enum_definition[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        (enum_class_definition nested_terminate)=>enum_class_definition |
+        enum_class_definition |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) }?
         {
@@ -5718,6 +5729,7 @@ preprocessor[] { ENTRY_DEBUG
 
             setTokenPosition(tp);
         }
+
         PREPROC markend[directive_token]
         {
 
@@ -5860,7 +5872,7 @@ catch[...] {
 // do all the cpp garbage
 cpp_garbage[] :
 
- ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | EOF)
+ ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | EOF)  /* EOF */
 
 ;
 
@@ -5898,6 +5910,81 @@ ENTRY_DEBUG } :
         eol_post[directive_token, markblockzero]
 ;
 
+cppendif_skip[] {
+
+    int prev = -1;
+    int endif_count = 1;
+
+    while(endif_count && LA(1) != 1 /* EOF */) {
+
+        if((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF)
+            ++endif_count;
+
+        if(LA(1) == ENDIF)
+            --endif_count;
+
+        prev = LA(1);
+        consume();
+    }
+
+}:;
+
+cppif_end_count_check[] returns [std::list<int> end_order] {
+
+    int start = mark();
+    std::list<int> op_stack;
+    ++inputState->guessing;
+
+    std::list<int>::size_type save_size = 0;
+
+    int prev = -1;
+    while(LA(1) != ENDIF && !(prev == PREPROC && LA(1) == ELSE) && LA(1) != 1 /* EOF */) {
+
+        if((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF) {
+            cppendif_skip();
+            continue;
+        }
+
+        if(LA(1) == ELIF) save_size = end_order.size();
+
+        if(LA(1) == LPAREN) op_stack.push_back(LPAREN);
+        if(LA(1) == RPAREN) {
+            if(!op_stack.empty() && op_stack.back() == LPAREN) op_stack.pop_back();
+            else end_order.push_back(RPAREN);
+        }
+
+        if(LA(1) == LCURLY) op_stack.push_back(LCURLY);
+        if(LA(1) == RCURLY) {
+            if(!op_stack.empty() && op_stack.back() == LCURLY) op_stack.pop_back();
+            else end_order.push_back(RCURLY);
+        }
+
+        prev = LA(1);
+        consume();
+
+    }
+
+    if(LA(1) == 1 /* EOF */) {
+
+        end_order.clear();
+
+    }
+
+    if(LA(1) == ENDIF) end_order.resize(save_size);
+
+    while(!op_stack.empty() && !end_order.empty()) {
+
+        op_stack.pop_front();
+        end_order.pop_front();
+
+    }
+
+    --inputState->guessing;
+
+    rewind(start);
+
+ENTRY_DEBUG } :;
+
 // post processing for eol
 eol_post[int directive_token, bool markblockzero] {
 
@@ -5909,6 +5996,33 @@ eol_post[int directive_token, bool markblockzero] {
             case IF :
             case IFDEF :
             case IFNDEF :
+
+                // should work unless also creates a dangling lcurly or lparen
+                // in which case may need to run on everthing except else.
+                if(isoption(parseoptions, OPTION_CPPIF_CHECK)) {
+
+                    std::list<int> end_order = cppif_end_count_check();
+                    State::MODE_TYPE current_mode = getMode();
+                    // @todo When C++11 is default, switch to ranged for or at least auto keyword.
+                    for(std::list<int>::iterator pos = end_order.begin(); pos != end_order.end(); ++pos) {
+
+                        if(*pos == RCURLY) {    
+                            setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK);
+                            startNewMode(current_mode | MODE_ISSUE_EMPTY_AT_POP);
+                            addElement(SBLOCK);
+
+                        }
+
+                        if(*pos == RPAREN) {
+                            startNewMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP);
+                            addElement(SCONDITION);
+
+                        }
+
+                    }
+
+
+                }                      
 
                 // start a new blank mode for new zero'ed blocks
                 if (!cpp_zeromode && markblockzero) {
@@ -6010,7 +6124,7 @@ eol_post[int directive_token, bool markblockzero] {
 cppmode_cleanup[] {
 
         bool equal = true;
-        for (unsigned int i = 0; i < cppmode.top().statesize.size(); ++i)
+        for (std::deque<int>::size_type i = 0; i < cppmode.top().statesize.size(); ++i)
             if (cppmode.top().statesize[i] != cppmode.top().statesize[0]) {
                 equal = false;
                 break;
@@ -6065,13 +6179,13 @@ cpp_symbol[] { ENTRY_DEBUG } :
         simple_identifier
 ;
 
-cpp_define_name[] { CompleteElement element(this); unsigned int pos = LT(1)->getColumn() + LT(1)->getText().size(); } :
+cpp_define_name[] { CompleteElement element(this); std::string::size_type pos = LT(1)->getColumn() + LT(1)->getText().size(); } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SMACRO_DEFN);
         }
-        simple_identifier (options { greedy = true; } : { pos == LT(1)->getColumn() }? cpp_define_parameter_list)*
+        simple_identifier (options { greedy = true; } : { pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
 ;
 
 cpp_define_parameter_list[] { ENTRY_DEBUG } :

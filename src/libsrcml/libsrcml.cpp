@@ -34,7 +34,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <regex.h>
+#include <boost/regex.hpp>
 
 #include <vector>
 #include <string>
@@ -143,7 +143,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     first = false;
     std::vector<pair> save_ext;
-    for(unsigned int i = 0; i < global_archive.registered_languages.size(); ++i)
+    for(std::vector<pair>::size_type i = 0; i < global_archive.registered_languages.size(); ++i)
       try {
         save_ext.push_back(global_archive.registered_languages.at(i));
       } catch(...) {
@@ -152,7 +152,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     Language::register_standard_file_extensions(global_archive.registered_languages);
 
-    for(unsigned int i = 0; i < save_ext.size(); ++i)
+    for(std::vector<pair>::size_type i = 0; i < save_ext.size(); ++i)
       try {
         global_archive.registered_languages.push_back(save_ext.at(i));
       } catch(...) {
@@ -162,7 +162,7 @@ int srcml(const char* input_filename, const char* output_filename) {
     std::vector<std::string> save_prefix;
     std::vector<std::string> save_ns;
     try {
-      for(unsigned int i = 0; i < global_archive.prefixes.size(); ++i) {
+      for(std::vector<std::string>::size_type i = 0; i < global_archive.prefixes.size(); ++i) {
         save_prefix.push_back(global_archive.prefixes.at(i));
         save_ns.push_back(global_archive.namespaces.at(i));
 
@@ -180,7 +180,7 @@ int srcml(const char* input_filename, const char* output_filename) {
     srcml_archive_register_namespace(&global_archive, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_URI);
     srcml_archive_register_namespace(&global_archive, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI);
 
-    for(unsigned int i = 0; i < save_prefix.size(); ++i) {
+    for(std::vector<std::string>::size_type i = 0; i < save_prefix.size(); ++i) {
       try {
         srcml_archive_register_namespace(&global_archive, save_prefix.at(i).c_str(), save_ns.at(i).c_str());
       } catch(...) {
@@ -212,8 +212,7 @@ int srcml(const char* input_filename, const char* output_filename) {
     try {
 
       translator.setInput(input_filename);
-      translator.translate(0,
-                           global_archive.directory ? global_archive.directory->c_str() : 0,
+      translator.translate(global_archive.directory ? global_archive.directory->c_str() : 0,
                            global_archive.filename ? global_archive.filename->c_str() : output_filename,
                            global_archive.version ? global_archive.version->c_str() : 0,
                            lang);
@@ -236,7 +235,7 @@ int srcml(const char* input_filename, const char* output_filename) {
   } else {
 
     bool is_xml = false;
-    int len = strlen(input_filename);
+    size_t len = strlen(input_filename);
     if((len > 4 && input_filename[len - 1] == 'l' && input_filename[len - 2] == 'm'
         && input_filename[len - 3] == 'x' && input_filename[len - 4] == '.')
        || (global_archive.language && strcmp(global_archive.language->c_str(), "xml") == 0))
@@ -526,7 +525,7 @@ int srcml_get_tabstop() {
  */
 int srcml_get_namespace_size() {
 
-  return global_archive.namespaces.size();
+  return (int)global_archive.namespaces.size();
 
 }
 
@@ -564,7 +563,7 @@ const char* srcml_get_prefix_uri(const char* namespace_uri) {
 
   try {
 
-    for(unsigned int i = 0; i < global_archive.prefixes.size(); ++i)
+    for(std::vector<std::string>::size_type i = 0; i < global_archive.prefixes.size(); ++i)
       if(global_archive.namespaces.at(i) == namespace_uri)
         return global_archive.prefixes.at(i).c_str();
 
@@ -607,7 +606,7 @@ const char* srcml_get_namespace_prefix(const char* prefix) {
 
   try {
 
-    for(unsigned int i = 0; i < global_archive.namespaces.size(); ++i)
+    for(std::vector<std::string>::size_type i = 0; i < global_archive.namespaces.size(); ++i)
       if(global_archive.prefixes.at(i) == prefix)
         return global_archive.namespaces.at(i).c_str();
 
@@ -670,42 +669,19 @@ const char * srcml_check_extension(const char* filename) {
 int srcml_check_format(const char* format) {
 
   if(format == NULL) return SRCML_STATUS_ERROR;
-
-  static const char * const regex = "(zx\\.|zg\\.|2zb\\.|rat\\.)*";
+  static const boost::regex extRegEx("\\.(xz|zg|bz2|tar).*$");
 
   // reversed copy of the path
-  int length = strlen(format);
+  std::size_t length = strlen(format);
+  boost::cmatch what;
 
-  char * reverse = (char *)malloc((length + 1) * sizeof(char));
-  if(reverse == NULL) return SRCML_STATUS_ERROR;
+  if(boost::regex_search(format, format + length, what,extRegEx)) {
 
-  for(int i = 0; i < length; ++i)
-    reverse[i] = format[length - i - 1];
-  reverse[length] = 0;
-
-  // setup the regular expression
-  regex_t preg = { 0 };
-  int errorcode = regcomp(&preg, regex, REG_EXTENDED);
-
-  // evalue the regex
-  regmatch_t pmatch[3];
-  errorcode = errorcode || regexec(&preg, reverse, 3, pmatch, 0);
-
-  // minus 1 to remove starting .
-  int ext_len = pmatch[0].rm_eo - pmatch[0].rm_so - 1;
-  regfree(&preg);
-  free(reverse);
-  if(ext_len > 0)
     return SRCML_STATUS_OK;
-  return SRCML_STATUS_ERROR;
 
-  //char * extension = (char *)malloc(ext_len * sizeof(char));
-  // extract the extension from the path, reversing as we go
-  //for(int i = 0; i < ext_len; ++i)
-  //extension[i] = reverse[pmatch[0].rm_eo - i - 2];
-  //extension[ext_len] = 0;
+  } else
+    return SRCML_STATUS_ERROR;
 
-  //return 1;
 }
 
 /**

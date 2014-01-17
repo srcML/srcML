@@ -124,11 +124,16 @@ int archiveWriteMatch_src2srcml(const char * URI) {
     return 0;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 // check if archive matches the protocol on the URI
 int archiveWriteMatch_srcml2src(const char * URI) {
 
     return 1;
 }
+
+#pragma GCC diagnostic pop
 
 // setup archive for this URI
 void* archiveWriteRootOpen(const char * URI) {
@@ -210,6 +215,9 @@ void* archiveWriteOpen(const char * URI) {
     return archive_data.wa;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 // read from the URI
 int archiveWrite(void * context, const char * buffer, int len) {
 
@@ -217,6 +225,7 @@ int archiveWrite(void * context, const char * buffer, int len) {
 
     return len;
 }
+
 
 // close the open file
 int archiveWriteClose(void * context) {
@@ -258,3 +267,5 @@ int archiveWriteRootClose(void * context) {
 
     return 1;
 }
+
+#pragma GCC diagnostic pop

@@ -108,7 +108,7 @@ srcMLUtility::~srcMLUtility() {
 }
 
 int srcMLUtility::curunits() const {
-  return units;
+  return (int)units;
 }
 
 // attribute
@@ -307,7 +307,7 @@ int srcMLUtility::unit_count(FILE* output) {
   xmlFreeParserCtxt(ctxt);
   if(infile) archiveDeleteContext(context);
 
-  return state.count;
+  return (int)state.count;
 }
 
 
@@ -328,7 +328,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   ctxt->sax = &sax;
 
   // setup process handling
-  ExtractUnitsXML process(0 /* to_directory is stdout */, ofilename, output_encoding);
+  ExtractUnitsXML process(ofilename, output_encoding);
 
   if (isoption(options, OPTION_NULL))
     unit = -1;
@@ -366,7 +366,7 @@ void srcMLUtility::extract_diff_xml(const char* ofilename, int unit, const char*
   ctxt->sax = &sax;
 
   // setup process handling
-  ExtractUnitsDiffXML process(0 /* to_directory is stdout */, ofilename, output_encoding, version);
+  ExtractUnitsDiffXML process(ofilename, output_encoding, version);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
@@ -401,7 +401,7 @@ void srcMLUtility::extract_xml_uri(const char* ofilename, int unit, const char* 
   ctxt->sax = &sax;
 
   // setup process handling
-  ExtractUnitsDiffXMLPreserve process(0 /* to_directory is stdout */, ofilename, output_encoding, uri);
+  ExtractUnitsDiffXMLPreserve process(ofilename, output_encoding, uri);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
@@ -655,7 +655,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   ctxt->sax = &sax;
 
   // setup process handling
-  XPathQueryUnits process(context_element, ofilename, options, compiled_xpath, fd);
+  XPathQueryUnits process(ofilename, options, compiled_xpath, fd);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);

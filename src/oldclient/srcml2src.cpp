@@ -131,7 +131,12 @@ const int DIFF_FLAG_CODE = 256 + 12;
 const char* const PRESERVE_FLAG_LONG = "preserve";
 const int PRESERVE_FLAG_CODE = 256 + 13;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 void libxml_error(void *ctx, const char *msg, ...) {}
+
+#pragma GCC diagnostic pop
 
 // output help message
 void output_help(const char* name) {
@@ -359,11 +364,13 @@ void output_version(const char* name) {
     printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
 }
 
-void output_settings(const char * name)
-{}
+void output_settings(const char * name) {
+  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
+}
 
-void output_features(const char * name)
-{}
+void output_features(const char * name) {
+  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
+}
 
 OPTION_TYPE options = 0;
 
@@ -474,7 +481,9 @@ int main(int argc, char* argv[]) {
       0,
       { 0 },
       0,
-      { 0 }
+      { 0 },
+      0,
+      0
     };
 
   // process command-line arguments
@@ -506,12 +515,12 @@ int main(int argc, char* argv[]) {
   if (strcmp(filename, "-") != 0 && strcmp(poptions.ofilename, "-") != 0) {
 
     // input file
-    struct stat instat = { 0 };
+    struct stat instat = {/* 0 */};
     if (stat(filename, &instat) == -1) {
       goto done;
     }
 
-    struct stat outstat = { 0 };
+    struct stat outstat = {/* 0 */};
     if (stat(poptions.ofilename, &outstat) == -1) {
       goto done;
     }
@@ -742,7 +751,7 @@ int main(int argc, char* argv[]) {
   } catch (const OutOfRangeUnitError& e) {
 
     fprintf(stderr, "%s: unit %d  was selected from srcML that only contains "
-            "%d units\n", PROGRAM_NAME, poptions.unit, e.size);
+            "%d units\n", PROGRAM_NAME, poptions.unit, (int)e.size);
     exit_status = STATUS_INVALID_ARGUMENT;
 
     return exit_status;
@@ -987,7 +996,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       options |= OPTION_UNIT;
 
       // try to convert to number
-      poptions.unit = pstd::strtol(optarg, &end, 10);
+      poptions.unit = (int)pstd::strtol(optarg, &end, 10);
 
       // validate type of unit number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {

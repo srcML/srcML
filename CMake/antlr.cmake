@@ -25,17 +25,41 @@
 # Use with named arguments.
 #
 macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
-
     if("${INCLUDE_GRAMMAR}" STREQUAL "")
-	    add_custom_command(OUTPUT  ${OUTPUT_FILES}
-            COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-            COMMAND touch ${OUTPUT_FILES}
-        )
+        if(WIN32)
+            # Handling windows relative path problem (Not sure why this is an issue but it's given me a headache).
+            # set(PROCESSED_OUTPUT_FILES "")
+            # set(PROCESSED_INPUT_FILES "")
+            # set(PROCESSED_DEPENDENCIES "")
+            # set(PROCESSED_CMAKE_CURRENT_SOURCE_DIR "")
+            # foreach(F ${OUTPUT_FILES})
+                # get_filename_component(expandedFileName 
+            # endforeach()
+            
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                COMMAND echo "Generated /wOUT Dep: ${OUTPUT_FILES}"
+                # COMMAND echo "" >> ${OUTPUT_FILES}
+            )
+            message(STATUS "1st branch")
+        else()
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                COMMAND touch ${OUTPUT_FILES}
+            )
+        endif()
     else()
-	    add_custom_command(OUTPUT  ${OUTPUT_FILES}
-            COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-            COMMAND touch ${OUTPUT_FILES}
-        )
+        if(WIN32)
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                COMMAND echo "Generated /w Dep: ${OUTPUT_FILES}"
+            )
+            message(STATUS "Stuff Happened Here!")
+        else()
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                COMMAND touch ${OUTPUT_FILES}
+            )
+        endif()
     endif()
-
 endmacro(RunAntlr)

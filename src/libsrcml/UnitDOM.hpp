@@ -30,11 +30,11 @@
 class UnitDOM : public ProcessUnit {
 public :
 
-  UnitDOM(int options) : rootsize(0), found(false), options(options), error(false) {}
+  UnitDOM(OPTION_TYPE options) : rootsize(0), found(false), options(options), error(false) {}
 
   virtual ~UnitDOM() {}
 
-  virtual int getOptions() const { return options; }
+  virtual OPTION_TYPE getOptions() const { return options; }
 
   /*
     Called exactly once at beginnning of document  Override for intended behavior.
@@ -128,7 +128,7 @@ public :
 
       // make sure not already in
       bool found = false;
-      for (unsigned int j = 0; j < data.size() / 2; ++j)
+      for (std::vector<const xmlChar*>::size_type j = 0; j < data.size() / 2; ++j)
         if (xmlStrEqual(data[j * 2], namespaces[i * 2]) &&
             xmlStrEqual(data[j * 2 + 1], namespaces[i * 2 + 1])) {
           found = true;
@@ -159,7 +159,7 @@ public :
     //xmlSAX2StartDocument(ctx);
 
     // start the unit (element) at the root using the merged namespaces
-    xmlSAX2StartElementNs(ctx, localname, prefix, URI, data.size() / 2,
+    xmlSAX2StartElementNs(ctx, localname, prefix, URI, (int)(data.size() / 2),
                           &data[0], nb_attributes, nb_defaulted, attributes);
 
   }
@@ -254,14 +254,14 @@ public :
     ctxt->myDoc = 0;
       
     // end the output
-    endOutput(ctx);
+     endOutput(ctx);
   }
 
 protected:
   std::vector<const xmlChar*> data;
-  int rootsize;
+  std::vector<const xmlChar*>::size_type rootsize;
   bool found;
-  int options;
+  OPTION_TYPE options;
   bool error;
   const xmlChar * prefix_name;
 };

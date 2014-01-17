@@ -24,14 +24,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <libxml/xmlIO.h>
-#include <fnmatch.h>
 #include <archive.h>
 #include <archive_entry.h>
 #include <string>
 #include <libxml/nanohttp.h>
 #include <libxml/nanoftp.h>
 #include <vector>
-#include <regex.h>
 
 static const char* ARCHIVE_FILTER_EXTENSIONS[] = {".tar", ".zip", ".tgz", ".cpio", ".shar", ".gz", ".bz2", ".xz", 0};
 
@@ -166,6 +164,9 @@ const char* archiveReadFilename(void* context) {
     return isArchiveRead(context) ? archive_entry_pathname(pcontext->ae) : 0;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 static int archive_read_open_http_callback(struct archive* a,
                                            void* _client_data) {
 
@@ -175,6 +176,7 @@ static int archive_read_open_http_callback(struct archive* a,
 
     return 0;
 }
+
 
 static
 #if ARCHIVE_VERSION_NUMBER >= 2008000
@@ -207,6 +209,9 @@ static int archive_read_close_http_callback(struct archive* a,
 
     return 1;
 }
+
+#pragma GCC diagnostic pop
+
 
 // setup archive for this URI
 void* archiveReadOpen(const char* URI) {
@@ -323,7 +328,7 @@ int archiveRead(void* context, char* buffer, int len) {
     if ((signed)size < 0)
         return 0;
 
-    return size;
+    return (int)size;
 }
 
 void archiveDeleteContext(void* context) {

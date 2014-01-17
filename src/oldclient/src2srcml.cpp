@@ -137,6 +137,12 @@ const int MACRO_LIST_FLAG_CODE = 256 + 15;
 const char* const ELSEIF_FLAG = "elseif";
 const int ELSEIF_FLAG_CODE = 256 + 16;
 
+const char* const CPPIF_CHECK_FLAG = "cppif-check";
+const int CPPIF_CHECK_FLAG_CODE = 256 + 17;
+
+const char* const C_IS_CPP_FLAG = "c-is-cpp";
+const int C_IS_CPP_FLAG_CODE = 256 + 18;
+
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
@@ -173,7 +179,12 @@ const char* urisprefix[] = {
 
 const int num_prefixes = sizeof(uris) / sizeof(uris[0]);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 void libxml_error(void *ctx, const char *msg, ...) {}
+
+#pragma GCC diagnostic pop
 
 int option_error_status(int optopt);
 
@@ -336,11 +347,13 @@ void output_version(const char* name) {
     printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
 }
 
-void output_settings(const char * name)
-{}
+void output_settings(const char * name) {
+  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
+}
 
-void output_features(const char * name)
-{}
+void output_features(const char * name) {
+  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
+}
 
 OPTION_TYPE options = 0;
 
@@ -483,7 +496,7 @@ int main(int argc, char* argv[]) {
   */
 
   // verify that only one input pipe is STDIN
-  struct stat stdiostat = { 0 };
+  struct stat stdiostat = {/* 0 */};
   if (fstat(STDIN_FILENO, &stdiostat) == -1) {
     fprintf(stderr, "%s: %s '%s'\n", PROGRAM_NAME, strerror(errno), "stdin");
     exit(STATUS_INPUTFILE_PROBLEM);
@@ -498,7 +511,7 @@ int main(int argc, char* argv[]) {
     }
 
     // may not exist due to race condition, so check again
-    struct stat instat = { 0 };
+    struct stat instat = {/* 0 */};
     if (stat(argv[i], &instat) == -1)
       continue;
     if (xmlCheckFilename(argv[i]) == 0)
@@ -515,7 +528,7 @@ int main(int argc, char* argv[]) {
   }
 
   // verify that the output filename is not the same as any of the input filenames
-  struct stat outstat = { 0 };
+  struct stat outstat = {/* 0 */};
   stat(poptions.srcml_filename, &outstat);
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
@@ -523,7 +536,7 @@ int main(int argc, char* argv[]) {
       continue;
 
     // may not exist due to race condition, so check again
-    struct stat instat = { 0 };
+    struct stat instat = {/* 0 */};
     if (stat(argv[i], &instat) == -1)
       continue;
 
@@ -723,6 +736,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { MACRO_PATTERN_FLAG, no_argument, NULL, MACRO_PATTERN_FLAG_CODE },
     { MACRO_LIST_FLAG, required_argument, NULL, MACRO_LIST_FLAG_CODE },
     { ELSEIF_FLAG, no_argument, NULL, ELSEIF_FLAG_CODE },
+    { CPPIF_CHECK_FLAG, no_argument, NULL, CPPIF_CHECK_FLAG_CODE },
+    { C_IS_CPP_FLAG, no_argument, NULL, C_IS_CPP_FLAG_CODE },
 #ifdef SVN
     { SVN_FLAG, required_argument, NULL, SVN_FLAG_CODE },
 #endif
@@ -796,6 +811,18 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case ELSEIF_FLAG_CODE:
       options |= OPTION_ELSEIF;
+      break;
+
+    case CPPIF_CHECK_FLAG_CODE:
+      options |= OPTION_CPPIF_CHECK;
+      break;
+
+    case C_IS_CPP_FLAG_CODE:
+
+      Language::registerUserExt("c", "C++");
+      Language::registerUserExt("h", "C++");
+      Language::registerUserExt("i", "C++");
+
       break;
 
 #ifdef SVN
@@ -1077,7 +1104,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       options |= OPTION_POSITION;
 
       char * end;
-      poptions.tabsize = pstd::strtol(optarg, &end, 10);
+      poptions.tabsize = (int)pstd::strtol(optarg, &end, 10);
 
       // validate type of tabsize number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {
@@ -1305,7 +1332,7 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       fprintf(stderr, "%5d %s\n", gpoptions->count, c_filename);
 
     // translate the file
-    translator.translate(path, dir,
+    translator.translate(dir,
                          foundfilename ? c_filename : 0,
                          version, reallanguage);
 
@@ -1473,7 +1500,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
         fprintf(stderr, "%5d %s\n", gpoptions->count, c_filename);
 
       // translate the file
-      translator.translate(path, dir,
+      translator.translate(dir,
                            foundfilename ? c_filename : 0,
                            version,
                            reallanguage);
@@ -1506,7 +1533,7 @@ void src2srcml_dir_top(srcMLTranslator& translator, const char* directory, proce
   options |= OPTION_ARCHIVE;
 
   // record the stat info on the output file
-  struct stat outstat = { 0 };
+  struct stat outstat = {/* 0 */};
   stat(poptions.srcml_filename, &outstat);
 
   src2srcml_dir(translator, directory, poptions, outstat);
@@ -1538,7 +1565,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
   std::string filename = directory;
   if (!filename.empty() && filename[filename.size() - 1] != PATH_SEPARATOR)
     filename += PATH_SEPARATOR;
-  int basesize = filename.length();
+  std::string::size_type basesize = filename.length();
 
   // process all non-directory files
   for (int i = 0; i < n; i++) {
@@ -1553,7 +1580,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
     filename.replace(basesize, std::string::npos, namelist[i]->d_name);
 
     // handle directories later after all the filenames
-    struct stat instat = { 0 };
+    struct stat instat = {/* 0 */};
     int stat_status = stat(filename.c_str(), &instat);
     if (stat_status)
       continue;

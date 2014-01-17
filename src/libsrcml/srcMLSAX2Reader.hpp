@@ -34,6 +34,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/thread/thread.hpp>
+
 /**
  * srcMLSAX2Reader
  *
@@ -51,7 +53,7 @@ private :
   srcMLReaderHandler handler;
 
   /** thread running execution */
-  pthread_t thread;
+  boost::thread * thread;
 
 public :
 

@@ -31,6 +31,9 @@
 
 #include <unistd.h>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 class Properties : public ProcessUnit {
 public :
   Properties(srcMLUtility& su, PROPERTIES_TYPE&nsv, PROPERTIES_TYPE& attrv, int optioncount, int optionorder[], FILE * output = stdout)
@@ -136,7 +139,7 @@ public :
     pstate->stopUnit(ctx);
   }
 
-  static void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[], FILE * output, std::ostringstream * buffer, std::vector<std::string> * output_array) {
+  static void output_info(srcMLUtility& su, OPTION_TYPE options, int optioncount, int optionorder[], FILE * output, std::ostringstream * buffer, std::vector<std::string> * output_array) {
 
     // output all the namespaces
     if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
@@ -220,5 +223,7 @@ public :
       output_array->push_back("units=\"1\"");
   }
 };
+
+#pragma GCC diagnostic pop
 
 #endif

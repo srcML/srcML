@@ -47,7 +47,7 @@
 class XPathQueryUnits : public UnitDOM {
 public :
 
-  XPathQueryUnits(const char* a_context_element, const char* a_ofilename, int options,
+  XPathQueryUnits(const char* a_ofilename, OPTION_TYPE options,
                   xmlXPathCompExprPtr compiled_xpath, int fd = 0)
     : UnitDOM(options), ofilename(a_ofilename), options(options),
       compiled_xpath(compiled_xpath), total(0), found(false), needroot(true), closetag(false), fd(fd) {
@@ -58,6 +58,9 @@ public :
     //if(context) xmlXPathFreeContext(context);
 
   }
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 
   virtual void startOutput(void* ctx) {
 
@@ -76,6 +79,8 @@ public :
     //    exsltRegisterAll();
 
   }
+
+#pragma GCC diagnostic push
 
   virtual bool apply(void *ctx) {
 
@@ -244,7 +249,7 @@ public :
               // output a wrapping element, just like the one read in
               // note that this has to be ended somewhere
               xmlOutputBufferWriteElementNs(wrap, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
-                                            (data.size() - rootsize) / 2, &data[rootsize],
+                                            (int)((data.size() - rootsize) / 2), &data[rootsize],
                                             0, 0, 0);
 
               // output all the current attributes from the individual unit
@@ -268,7 +273,7 @@ public :
             }
 
             // output the start of the wrapping unit
-            xmlOutputBufferWrite(buf, wrap.size(), wrap.c_str());
+            xmlOutputBufferWrite(buf, (int)wrap.size(), wrap.c_str());
 
             // append line number and close unit start tag
             const int MAXSSIZE = 50;
@@ -298,7 +303,7 @@ public :
             xmlNsPtr savens = onode->nsDef;
             if(!isoption(options, OPTION_APPLY_ROOT)) {
               onode->nsDef = savens;
-              for (int i = 0; i < UnitDOM::rootsize / 2; ++i)
+              for (std::vector<const xmlChar*>::size_type i = 0; i < UnitDOM::rootsize / 2; ++i)
                 onode->nsDef = onode->nsDef->next;
             }
             // dump the namespace-modified tree
@@ -407,21 +412,21 @@ public :
             if (p[0] == '&') {
               if (p[1] == 'l' && p[2] == 't' && p[3] == ';') {
 
-                xmlOutputBufferWrite(buf, p - pos, pos);
+                xmlOutputBufferWrite(buf, (int)(p - pos), pos);
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
                 p += 4;
                 pos = p;
 
               } else if (p[1] == 'g' && p[2] == 't' && p[3] == ';') {
 
-                xmlOutputBufferWrite(buf, p - pos, pos);
+                xmlOutputBufferWrite(buf, (int)(p - pos), pos);
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
                 p += 4;
                 pos = p;
 
               } else if (p[1] == '#' && isdigit(p[2]) && isdigit(p[3])) {
 
-                xmlOutputBufferWrite(buf, p - pos, pos);
+                xmlOutputBufferWrite(buf, (int)(p - pos), pos);
 
                 int end = 4;
                 if(p[4] == ';')
@@ -447,7 +452,7 @@ public :
               ++p;
             }
           }
-          xmlOutputBufferWrite(buf, p - pos, pos);
+          xmlOutputBufferWrite(buf, (int)(p - pos), pos);
         }
 
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
@@ -579,7 +584,7 @@ public :
         xmlOutputBufferWriteString(buf, (const char*) attributes[i * 5]);
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
 
-        xmlOutputBufferWrite(buf, attributes[i * 5 + 4] - attributes[i * 5 + 3],
+        xmlOutputBufferWrite(buf, (int)(attributes[i * 5 + 4] - attributes[i * 5 + 3]),
                              (const char*) attributes[i * 5 + 3]);
 
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
@@ -633,7 +638,7 @@ public :
 
   private :
     const char* ofilename;
-    int options;
+    OPTION_TYPE options;
   //xmlXPathContextPtr context;
     xmlXPathCompExprPtr compiled_xpath;
     double total;

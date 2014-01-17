@@ -34,7 +34,7 @@
 
 extern srcml_archive global_archive;
 
-int main(int argc, char * argv[]) {
+int main() {
 
   /* 
      srcml_check_language
