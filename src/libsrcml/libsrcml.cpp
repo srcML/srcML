@@ -670,8 +670,7 @@ const char * srcml_check_extension(const char* filename) {
 int srcml_check_format(const char* format) {
 
   if(format == NULL) return SRCML_STATUS_ERROR;
-  const boost::regex extRegEx("\\.(xz|zg|bz2|tar).*$");
-  // static const char * const regex = "(zx\\.|zg\\.|2zb\\.|rat\\.)*";
+  static const boost::regex extRegEx("\\.(xz|zg|bz2|tar).*$");
 
   // reversed copy of the path
   std::size_t length = strlen(format);
