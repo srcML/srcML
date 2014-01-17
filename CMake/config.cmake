@@ -40,7 +40,7 @@ option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and
 set_property(GLOBAL PROPERTY DYNAMIC_ENABLED ${DYNAMIC_LOAD_ENABLED})
 
 # Adding build option for srcml executable.
-option(ENABLE_NEW_SRCML_EXEC_BUILD "Build the newer version of the srcML executable." ON)
+option(ENABLE_NEW_SRCML_EXEC_BUILD "Build the newer version of the srcML executable." OFF)
 set_property(GLOBAL PROPERTY ENABLE_NEW_SRCML_EXEC_BUILD ${ENABLE_NEW_SRCML_EXEC_BUILD})
 
 # Setting some windows only properties.
@@ -140,7 +140,7 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # Configuring the Clang compiler
     set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32")
     set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${CLANG_WARNINGS}")
-    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DDEBUG ${CLANG_WARNINGS}")
+    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DNDEBUG ${CLANG_WARNINGS}")
     
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
