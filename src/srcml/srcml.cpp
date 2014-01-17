@@ -326,19 +326,23 @@ int main(int argc, char * argv[]) {
         }
       }
     
-      const void* buffer;
+      const char* buffer;
       size_t size;
       int64_t offset;
       size_t data_size = 0;
 
       while (true) {
-        if (archive_read_data_block(arch, &buffer, &size, &offset) != ARCHIVE_OK) {
+        if (archive_read_data_block(arch, (const void**) &buffer, &size, &offset) != ARCHIVE_OK) {
           break;
         }
         
+        /*
         for (size_t i = 0; i < size; ++i) {
           request.buffer.push_back(((char*)buffer)[i]);
         }
+        */
+
+        request.buffer.insert(request.buffer.end(), buffer, buffer + size);
 
         data_size += size;
       }
