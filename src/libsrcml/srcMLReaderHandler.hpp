@@ -144,6 +144,9 @@ public :
 
   }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
   /**
    * startRoot
    * @param localname tag name
@@ -186,7 +189,7 @@ public :
 
         while(!value.empty()) {
 
-          int pos = value.find(",");
+	  std::string::size_type pos = value.find(",");
 	  std::string option = value.substr(0, pos);
           if(pos == std::string::npos)
             value = "";
@@ -350,8 +353,7 @@ public :
 
     if(collect_srcml) {
 
-      write_startTag(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted,
-                     attributes);
+      write_startTag(localname, prefix, nb_namespaces, namespaces, nb_attributes, attributes);
 
     }
 
@@ -389,8 +391,7 @@ public :
 
     if(collect_srcml) {
 
-      write_startTag(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted,
-                     attributes);
+      write_startTag(localname, prefix, nb_namespaces, namespaces, nb_attributes, attributes);
 
     }
 
@@ -448,7 +449,7 @@ public :
     //if(is_empty) *unit->unit += ">";
     if(collect_srcml) {
 
-      write_endTag(localname, prefix, URI, is_empty);
+      write_endTag(localname, prefix, is_empty);
 
       // pause
       boost::unique_lock<boost::mutex> lock(mutex);
@@ -487,7 +488,7 @@ public :
 
     if(collect_srcml) {
 
-      write_endTag(localname, prefix, URI, is_empty);
+      write_endTag(localname, prefix, is_empty);
     }
 
     is_empty = false;
@@ -539,6 +540,8 @@ public :
 
   }
 
+#pragma GCC diagnostic pop
+
 private :
 
   /**
@@ -554,9 +557,9 @@ private :
    *
    * Write out the start tag to the unit string.
    */
-  void write_startTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                      int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                      const xmlChar ** attributes) {
+  void write_startTag(const xmlChar * localname, const xmlChar * prefix, int nb_namespaces,
+		      const xmlChar ** namespaces, int nb_attributes, const xmlChar ** attributes) {
+
     *unit->unit += "<";
     if(prefix) {
       *unit->unit += (const char *)prefix;
@@ -613,7 +616,7 @@ private :
    *
    * Write out the end tag to the unit string.
    */
-  void write_endTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI, bool & is_empty) {
+  void write_endTag(const xmlChar * localname, const xmlChar * prefix, bool & is_empty) {
 
     if(is_empty) {
 
