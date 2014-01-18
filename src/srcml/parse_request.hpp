@@ -48,3 +48,6 @@ struct ParseRequest {
     srcml_archive * srcml_arch;
     std::string lang;
 };
+
+// Mark the end of input for the threaded queue
+ParseRequest NullParseRequest;
