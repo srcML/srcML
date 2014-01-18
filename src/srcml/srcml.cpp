@@ -30,6 +30,7 @@
 #include <srcmlCLI.hpp>
 #include <thread_queue.hpp>
 #include <src_input_libarchive.hpp>
+#include <parse_request.hpp>
 
 #include <archive.h>
 #include <archive_entry.h>
@@ -40,30 +41,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <iostream>
-
-struct ParseRequest {
-    ParseRequest() : buffer(0) {}
-
-    void swap(ParseRequest& other) {
-
-        filename.swap(other.filename);
-        buffer.swap(other.buffer);
-
-        srcml_arch = other.srcml_arch;
-        lang.swap(other.lang);
-    }
-
-    // empty ParseRequests indicate termination
-    bool empty() const {
-        return filename.empty() && buffer.empty() && lang.empty();
-    }
-
-    // Fields required by thread to process a unit
-    std::string filename;
-    std::vector<char> buffer;
-    srcml_archive * srcml_arch;
-    std::string lang;
-};
 
 // Mark the end of input for the threaded queue
 ParseRequest NullParseRequest;
