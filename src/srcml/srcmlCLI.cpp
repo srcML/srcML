@@ -375,12 +375,10 @@ void debug_cli_opts(const struct srcml_request_t srcml_request) {
 
 // Custom parser for xmlns: option
 std::pair<std::string, std::string> custom_parser(const std::string& s) {
-  if (s.find("--xmlns:") == 0) {
+  if (s.find("--xmlns:") == 0)
     return std::make_pair(std::string("xmlns:"), std::string(s.substr(s.find(":")+1)));
-  }
-  else {
+  else
     return std::make_pair(std::string(), std::string());
-  }
 }
 
 // Set to detect option conflicts
