@@ -41,9 +41,6 @@
 #include <unistd.h>
 #include <iostream>
 
-// Mark the end of input for the threaded queue
-ParseRequest NullParseRequest;
-
 bool test_for_stdin() {
   fd_set fds;
 
