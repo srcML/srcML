@@ -27,4 +27,21 @@
 #ifndef SRC_INPUT_LIBARCHIVE_HPP
 #define SRC_INPUT_LIBARCHIVE_HPP
 
+#include <srcml.h>
+#include <archive.h>
+#include <archive_entry.h>
+
+#include <parse_request.hpp>
+#include <thread_queue.hpp>
+
+#include <string>
+#include <iostream>
+
+class src_input_libarchive {
+  public :
+    static void process(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input_file, std::string lang);
+  private :
+    static void setupLibArchive(archive* a);
+};
+
 #endif

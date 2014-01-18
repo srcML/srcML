@@ -25,3 +25,113 @@
 */
 
 #include <src_input_libarchive.hpp>
+
+void setupLibArchive(archive* a) {
+  archive * arch = a;
+  // Configure libarchive supported file formats
+  archive_read_support_format_ar(arch);
+  archive_read_support_format_cpio(arch);
+  archive_read_support_format_gnutar(arch);
+  archive_read_support_format_iso9660(arch);
+  archive_read_support_format_mtree(arch);
+  archive_read_support_format_tar(arch);
+  archive_read_support_format_xar(arch);
+  archive_read_support_format_zip(arch);
+  archive_read_support_format_raw(arch);
+
+  /*
+    Check libarchive version
+    enable version specific features/syntax
+  */
+  #if ARCHIVE_VERSION_NUMBER < 3000000
+    // V2 Only Settings
+    // Compressions
+    archive_read_support_compression_all(arch);
+  #else
+    // V3 Only Settings
+    // File Formats
+    archive_read_support_format_7zip(arch);
+    archive_read_support_format_cab(arch);
+    archive_read_support_format_lha(arch);
+    archive_read_support_format_rar(arch);
+
+    // Compressions
+    archive_read_support_filter_all(arch); 
+  #endif
+}
+
+void process(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input_file, std::string lang) {
+  bool stdin = false;
+  ParseRequest request = req;
+
+  // libArchive Setup
+  archive * arch = archive_read_new();
+  archive_entry * arch_entry = archive_entry_new();
+
+  setupLibArchive(arch);
+
+  if (archive_read_open_filename(arch, (input_file.compare("-") != 0 ? input_file.c_str() : NULL), 16384)!= ARCHIVE_OK) {
+      std::cerr << "Unable to open archive\n";
+      exit(1);
+    }
+    
+    // Stdin
+    if (input_file.compare("-") == 0) {
+      stdin = true;
+    }
+
+    while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
+
+      std::string entry_name = archive_entry_pathname(arch_entry);
+      std::string filename = "";
+      /* 
+        The header path for a standard file is just "data".
+        That needs to be swapped out with the actual file name from the 
+        CLI arg.
+      */
+      if (entry_name.compare("data") == 0 && !stdin)
+        filename = input_file.c_str();
+
+      if (entry_name.compare("data") != 0 && !stdin)
+        filename = entry_name.c_str();
+
+      if (!stdin) {
+        const char * language = srcml_archive_check_extension(srcml_arch, filename.c_str());
+        if (!language) {
+          // Extension not supported
+          // Skip to next header
+          continue;  
+        }
+      }
+      else {
+        // Stdin language declared via CLI
+        if (!srcml_archive_get_language(srcml_arch)) {
+          std::cerr << "Using stdin requires a defined language\n";
+          exit(1); // Stdin used with no language specified.
+        }
+      }
+
+      request.buffer.clear();
+
+      while (true) {
+        
+        const char* buffer;
+        size_t size;
+        int64_t offset;
+        
+        if (archive_read_data_block(arch, (const void**) &buffer, &size, &offset) != ARCHIVE_OK)
+          break;
+
+        request.buffer.insert(request.buffer.end(), buffer, buffer + size);
+      }
+
+      request.filename = filename;
+      request.srcml_arch = srcml_arch;
+      request.lang = (srcml_archive_get_language(srcml_arch) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
+
+      // Hand request off to the processing queue
+      queue.push(request);
+    }
+
+    archive_read_finish(arch);
+}

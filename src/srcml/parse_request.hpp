@@ -25,6 +25,15 @@
     queued up for libsrcml processing
 */
 
+#ifndef PARSE_REQUEST_HPP
+#define PARSE_REQUEST_HPP
+
+#include <archive.h>
+#include <srcml.h>
+
+#include <string>
+#include <vector>
+
 struct ParseRequest {
     ParseRequest() : buffer(0) {}
 
@@ -49,5 +58,4 @@ struct ParseRequest {
     std::string lang;
 };
 
-// Mark the end of input for the threaded queue
-ParseRequest NullParseRequest;
+#endif

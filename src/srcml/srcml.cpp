@@ -30,7 +30,6 @@
 #include <srcmlCLI.hpp>
 #include <thread_queue.hpp>
 #include <src_input_libarchive.hpp>
-#include <parse_request.hpp>
 
 #include <archive.h>
 #include <archive_entry.h>
@@ -91,7 +90,6 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
 }
 
 void setupLibArchive(archive* a) {
-
   archive * arch = a;
   // Configure libarchive supported file formats
   archive_read_support_format_ar(arch);
@@ -103,11 +101,12 @@ void setupLibArchive(archive* a) {
   archive_read_support_format_xar(arch);
   archive_read_support_format_zip(arch);
   archive_read_support_format_raw(arch);
-
+  
   /*
     Check libarchive version
     enable version specific features/syntax
   */
+  
   #if ARCHIVE_VERSION_NUMBER < 3000000
     // V2 Only Settings
     // Compressions
@@ -169,9 +168,7 @@ int main(int argc, char * argv[]) {
   if (srcml_request.tabs <= 0) {
     std::cerr << "Invalid Tab Stop.\n";
     return 1; //ERROR CODE TBD
-  }  
-
-  ThreadQueue<ParseRequest, 10> queue;
+  }
 
   // Check if local files/directories are present on filesystem
   if (!checkLocalFiles(srcml_request.positional_args))
@@ -217,6 +214,8 @@ int main(int argc, char * argv[]) {
 
   srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
+  ThreadQueue<ParseRequest, 10> queue;
+
   pthread_t writer;
   pthread_attr_t tattr;
   int newprio = 90;
@@ -231,89 +230,25 @@ int main(int argc, char * argv[]) {
   // Setup a request
   ParseRequest request;
 
+  // Mark the end of input for the threaded queue
+  ParseRequest NullParseRequest;
+
   // Main processing loop
   for (size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
-    std::string & input_file = srcml_request.positional_args[i];
-    bool stdin = false;
+    std::string& input_file = srcml_request.positional_args[i];
 
-    // libArchive Setup
-    archive * arch = archive_read_new();
-    archive_entry * arch_entry = archive_entry_new();
-
-    setupLibArchive(arch);
-
-    // Regular file or archive
-    if (archive_read_open_filename(arch, (input_file.compare("-") != 0 ? input_file.c_str() : NULL), 16384)!= ARCHIVE_OK) {
-      std::cerr << "Unable to open archive\n";
-      return 1;
-    }
-    
     // Stdin
     if (input_file.compare("-") == 0) {
-      stdin = true;
       // Check if we are using the terminal interactively
       if(srcml_request.command & SRCML_COMMAND_INTERACTIVE) {
         if (!test_for_stdin())
           return 1; // Stdin was requested, but no data was received
       }
     }
-
-    while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
-
-      std::string entry_name = archive_entry_pathname(arch_entry);
-      std::string filename = "";
-      /* 
-        The header path for a standard file is just "data".
-        That needs to be swapped out with the actual file name from the 
-        CLI arg.
-      */
-      if (entry_name.compare("data") == 0 && !stdin)
-        filename = srcml_request.positional_args[i].c_str();
-
-      if (entry_name.compare("data") != 0 && !stdin)
-        filename = entry_name.c_str();
-
-      if (!stdin) {
-        const char * language = srcml_archive_check_extension(srcml_arch, filename.c_str());
-        if (!language) {
-          // Extension not supported
-          // Skip to next header
-          continue;  
-        }
-      }
-      else {
-        // Stdin language declared via CLI
-        if (!srcml_archive_get_language(srcml_arch)) {
-          std::cerr << "Using stdin requires a defined language\n";
-          return 1; // Stdin used with no language specified.
-        }
-      }
     
-      request.buffer.clear();
-     
-      while (true) {
-        
-        const char* buffer;
-        size_t size;
-        int64_t offset;
-        
-        if (archive_read_data_block(arch, (const void**) &buffer, &size, &offset) != ARCHIVE_OK)
-          break;
-
-        request.buffer.insert(request.buffer.end(), buffer, buffer + size);
-      }
-
-      request.filename = filename;
-      request.srcml_arch = srcml_arch;
-      request.lang = (srcml_archive_get_language(srcml_arch) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
-
-      // Hand request off to the processing queue
-      queue.push(request);
-    }
-  
-    archive_read_finish(arch);
+    src_input_libarchive::process(queue, srcml_arch, request, input_file, srcml_request.language);   
   }
-
+  
   // Mark end of input
   queue.push(NullParseRequest);
   pthread_join(writer, NULL);
