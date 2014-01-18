@@ -137,9 +137,8 @@ void * srcml_consume(void * arg) {
     queue->pop(pr);
     
     // Check if termination queue item has been found  
-    if (pr.empty()) {
+    if (pr.empty())
       break;
-    }
 
     // Build, parse, and write srcml unit
     srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
@@ -185,28 +184,25 @@ int main(int argc, char * argv[]) {
   srcml_archive * srcml_arch = srcml_create_archive();
 
   // Set options for the archive
-  if (srcml_request.encoding != "") {
+  if (srcml_request.encoding != "")
     srcml_archive_set_encoding(srcml_arch, srcml_request.encoding.c_str());
-  }
-  if (srcml_request.filename != "") {
-    srcml_archive_set_filename(srcml_arch, srcml_request.filename.c_str());
-  }
-  if (srcml_request.directory_set) {
-    srcml_archive_set_directory(srcml_arch, srcml_request.directory.c_str());
-  }
-  if (srcml_request.src_versions != "") {
-    srcml_archive_set_version(srcml_arch, srcml_request.src_versions.c_str());
-  }
-  if (srcml_request.markup_options != 0) {
-    srcml_archive_set_all_options(srcml_arch, srcml_request.markup_options);
-  }
 
-  if (srcml_request.language != "") {
+  if (srcml_request.filename != "")
+    srcml_archive_set_filename(srcml_arch, srcml_request.filename.c_str());
+
+  if (srcml_request.directory_set)
+    srcml_archive_set_directory(srcml_arch, srcml_request.directory.c_str());
+
+  if (srcml_request.src_versions != "")
+    srcml_archive_set_version(srcml_arch, srcml_request.src_versions.c_str());
+
+  if (srcml_request.markup_options != 0)
+    srcml_archive_set_all_options(srcml_arch, srcml_request.markup_options);
+
+  if (srcml_request.language != "")
     srcml_archive_set_language(srcml_arch, srcml_request.language.c_str());  
-  }
-  else {
+  else
     srcml_archive_set_language(srcml_arch, SRCML_LANGUAGE_NONE);  
-  }
 
   srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
 
@@ -304,9 +300,8 @@ int main(int argc, char * argv[]) {
         size_t size;
         int64_t offset;
         
-        if (archive_read_data_block(arch, (const void**) &buffer, &size, &offset) != ARCHIVE_OK) {
+        if (archive_read_data_block(arch, (const void**) &buffer, &size, &offset) != ARCHIVE_OK)
           break;
-        }
 
         request.buffer.insert(request.buffer.end(), buffer, buffer + size);
       }
