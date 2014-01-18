@@ -34,7 +34,6 @@
 
 #include <archive.h>
 #include <archive_entry.h>
-//#include <curl/curl.h>
 #include <boost/filesystem.hpp>
 
 #include <pthread.h>
