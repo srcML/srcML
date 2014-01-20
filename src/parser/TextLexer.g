@@ -155,28 +155,12 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); int zero_literal 
             
                 std::string temp_name = text.substr(_begin, text.length()-_begin);
                 
-                /*
                 std::string::const_iterator start = temp_name.begin();
                 std::string::const_iterator end = temp_name.end();
                 boost::match_results<std::string::const_iterator> what;
                 bool match_res = boost::regex_search(start, end, what, macro_name_match, flags);
                 
                 bool is_regex_match = match_res && (what[0].length() == temp_name.size());
-                */
-                
-                static const char * const regex = "[A-Z][A-Z_]+";
-                // setup the regular expression
-                regex_t preg = {/* 0 */};
-                int errorcode = regcomp(&preg, regex, REG_EXTENDED);
-
-                // evalue the regex
-                regmatch_t pmatch[3];
-                errorcode = errorcode || regexec(&preg, temp_name.c_str(), 3, pmatch, 0);
-
-                unsigned long long match_length = (pmatch[0].rm_eo - pmatch[0].rm_so);
-
-                bool is_regex_match = match_length == temp_name.size();
-                regfree(&preg);
                 
                 if(is_regex_match) $setType(MACRO_NAME);
                 
