@@ -355,7 +355,7 @@ void output_features(const char * name) {
   fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
 }
 
-OPTION_TYPE options = 0;
+OPTION_TYPE options = OPTION_NO_ARCHIVE;
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
@@ -475,7 +475,7 @@ int main(int argc, char* argv[]) {
   // if more than one input filename assume nested
   // a single input filename which is an archive is detected during archive processing
   if (input_arg_count > 1)
-    options |= OPTION_ARCHIVE;
+    options &= ~OPTION_NO_ARCHIVE;
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
   /*
@@ -673,7 +673,7 @@ int main(int argc, char* argv[]) {
     if (gpoptions->count == 0)
       return STATUS_INPUTFILE_PROBLEM;
 
-    else if (isoption(options, OPTION_VERBOSE) && isoption(options, OPTION_ARCHIVE) && !isoption(options, OPTION_QUIET)) {
+    else if (isoption(options, OPTION_VERBOSE) && !isoption(options, OPTION_NO_ARCHIVE) && !isoption(options, OPTION_QUIET)) {
       fprintf(stderr, "\n"
               "Translated: %d\t"
               "Skipped: %d\t"
@@ -819,9 +819,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case C_IS_CPP_FLAG_CODE:
 
-      Language::registerUserExt("c", "C++");
-      Language::registerUserExt("h", "C++");
-      Language::registerUserExt("i", "C++");
+      Language::c_is_cpp(true);
 
       break;
 
@@ -860,7 +858,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       options |= OPTION_FILELIST;
 
       // filelist mode is default nested mode
-      options |= OPTION_ARCHIVE;
+      options &= ~OPTION_NO_ARCHIVE;
 
       poptions.src_filename = optarg;
       break;
@@ -893,7 +891,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case NESTED_FLAG_SHORT:
-      options |= OPTION_ARCHIVE;
+      options &= ~OPTION_NO_ARCHIVE;
       break;
 
     case EXPRESSION_MODE_FLAG_SHORT:
@@ -1392,8 +1390,8 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
 
         // once any source archive is input, then we have to assume nested not just locally
         if (isarchive) {
-          options |= OPTION_ARCHIVE;
-          save_options |= OPTION_ARCHIVE;
+          options &= ~OPTION_NO_ARCHIVE;
+          save_options &= ~OPTION_NO_ARCHIVE;
         }
 
         // output tracing information about the input file
@@ -1530,7 +1528,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
 void src2srcml_dir_top(srcMLTranslator& translator, const char* directory, process_options& poptions) {
 
   // by default, all dirs are treated as an archive
-  options |= OPTION_ARCHIVE;
+  options &= ~OPTION_NO_ARCHIVE;
 
   // record the stat info on the output file
   struct stat outstat = {/* 0 */};

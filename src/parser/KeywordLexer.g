@@ -22,7 +22,6 @@
 
 header "pre_include_hpp" {
     #include <cstring>
-    #include <regex.h>
     #include <boost/regex.hpp>
 }
 

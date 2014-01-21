@@ -58,12 +58,16 @@ if(WIN32)
     set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS "")
     set_property(GLOBAL PROPERTY LIBXML2_LIBS "")
     include_directories(C:/antlr/277/include)
+    set(BOOST_DIR $ENV{BOOST_ROOT})
+    include_directories(${BOOST_DIR})
+    include_directories(${BOOST_DIR}/lib)
 else()
     set(WINDOWS_DEP_PATH "")
     # Locating packages.
     find_package(LibArchive REQUIRED)
     find_package(LibXml2 REQUIRED)
     find_package(LibXslt)
+    set(Boost_NO_BOOST_CMAKE ON)
     find_package(Boost COMPONENTS program_options filesystem system thread regex REQUIRED)
 
     # add include directories
@@ -86,11 +90,11 @@ else()
     # Setting Properties
     set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS ${LibArchive_LIBRARIES})
     set_property(GLOBAL PROPERTY LIBXML2_LIBS ${LIBXML2_LIBRARIES})
+    include_directories(${Boost_INCLUDE_DIR})
 endif()
 set_property(GLOBAL PROPERTY WINDOWS_DEP_PATH ${WINDOWS_DEP_PATH})
-
 set_property(GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB ${Boost_LIBRARIES})
-include_directories(${Boost_INCLUDE_DIR})
+
 
 # Locating the antlr library.
 find_library(ANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib C:/antlr/277/lib)
@@ -133,13 +137,14 @@ endif()
 if(${CMAKE_COMPILER_IS_GNUCXX})
     set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized")
     # Adding global compiler definitions.
+    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g  --coverage -fprofile-arcs ${GCC_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${GCC_WARNINGS}")
-    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DDEBUG --coverage -fprofile-arcs ${GCC_WARNINGS}")
+    set(CMAKE_CXX_FLAGS_DEBUG "-fPIC -O3 -g -DDEBUG --coverage -fprofile-arcs ${GCC_WARNINGS}")
 
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # Configuring the Clang compiler
     set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32")
-    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DNDEBUG ${CLANG_WARNINGS}")
+    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_DEBUG "-fPIC -O0 -g -DDEBUG ${CLANG_WARNINGS}")
     
