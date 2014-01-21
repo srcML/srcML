@@ -167,7 +167,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
       (depth == 0) ? SRCML_SRC_NS_URI : 0,
 
       // main cpp namespace declaration
-      isoption(OPTION_CPP, options) && (isoption(OPTION_ARCHIVE, options) == !outer) ? SRCML_CPP_NS_URI : 0,
+      isoption(OPTION_CPP, options) && (isoption(OPTION_NO_ARCHIVE, options) == outer) ? SRCML_CPP_NS_URI : 0,
 
       // optional debugging xml namespace
       (depth == 0) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
@@ -275,7 +275,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
   }
 
   // leave space for nested unit
-  if (outer && isoption(OPTION_ARCHIVE))
+  if (outer && !isoption(OPTION_NO_ARCHIVE))
     processText("\n\n", 2);
 
   ++depth;
@@ -287,7 +287,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
     // keep track of number of open elements
     openelementcount = 0;
-    startUnit(unit_language, unit_dir, unit_filename, unit_version, !isoption(OPTION_ARCHIVE));
+    startUnit(unit_language, unit_dir, unit_filename, unit_version, isoption(OPTION_NO_ARCHIVE));
 
   } else {
 
@@ -296,7 +296,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
       srcMLTextWriterEndElement(xout);
 
     // leave a blank line before next nested unit even the last one
-    if (isoption(OPTION_ARCHIVE))
+    if (!isoption(OPTION_NO_ARCHIVE))
       processText("\n\n", 2);
   }
 }
