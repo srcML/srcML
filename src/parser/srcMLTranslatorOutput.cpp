@@ -481,7 +481,7 @@ void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, con
   ++openelementcount;
 
   // outer units have namespaces
-  if (/* outer && */ !isoption(OPTION_NAMESPACEDECL)) {
+  if (/* outer && */ isoption(OPTION_NAMESPACEDECL)) {
     outputNamespaces(xout, options, depth, outer);
   }
 

@@ -347,15 +347,7 @@ void output_version(const char* name) {
     printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
 }
 
-void output_settings(const char * name) {
-  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
-}
-
-void output_features(const char * name) {
-  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
-}
-
-OPTION_TYPE options = OPTION_NO_ARCHIVE;
+OPTION_TYPE options = OPTION_NO_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
@@ -712,8 +704,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { DIRECTORY_FLAG, required_argument, NULL, DIRECTORY_FLAG_SHORT },
     { FILENAME_FLAG, required_argument, NULL, FILENAME_FLAG_SHORT },
     { SRCVERSION_FLAG, required_argument, NULL, SRCVERSION_FLAG_SHORT },
-    { SETTINGS_FLAG, no_argument, NULL, SETTINGS_FLAG_CODE },
-    { FEATURES_FLAG, no_argument, NULL, FEATURES_FLAG_CODE },
     //    { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
     //    { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
     { FILELIST_FLAG, required_argument, NULL, FILELIST_FLAG_CODE },
@@ -724,8 +714,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { REVISION_FLAG, no_argument, NULL, REVISION_FLAG_CODE },
     { CPP_FLAG, no_argument, NULL, CPP_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
-    { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
-    { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
+    { NO_XML_DECLARATION_FLAG, no_argument, NULL, NO_XML_DECLARATION_FLAG_CODE },
+    { NO_NAMESPACE_DECLARATION_FLAG, no_argument, NULL, NO_NAMESPACE_DECLARATION_FLAG_CODE },
     { OLD_FILENAME_FLAG, no_argument, NULL, OLD_FILENAME_FLAG_CODE },
     { TABS_FLAG, required_argument, NULL, TABS_FLAG_CODE },
     { POSITION_FLAG, no_argument, &curoption, OPTION_POSITION },
@@ -1058,15 +1048,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.given_version = optarg;
       break;
 
-    case SETTINGS_FLAG_CODE :
-      output_settings(PROGRAM_NAME);
-      exit(STATUS_SUCCESS);
-      break;
-
-    case FEATURES_FLAG_CODE :
-      output_features(PROGRAM_NAME);
-      exit(STATUS_SUCCESS);
-      break;
       /*
         case INPUT_FORMAT_FLAG_CODE:
 
@@ -1091,6 +1072,16 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       */
     case OLD_FILENAME_FLAG_CODE :
       options |= OPTION_OLD_FILENAME;
+      break;
+
+    case NO_XML_DECLARATION_FLAG_CODE:
+      options |= OPTION_XML;
+      options &= ~OPTION_XMLDECL;
+      break;
+
+    case NO_NAMESPACE_DECLARATION_FLAG_CODE:
+      options |= OPTION_XML;
+      options &= ~OPTION_NAMESPACEDECL;
       break;
 
     case TABS_FLAG_CODE :
