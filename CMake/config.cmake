@@ -139,7 +139,7 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # Configuring the Clang compiler
     set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32")
-    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DNDEBUG ${CLANG_WARNINGS}")
+    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_DEBUG "-fPIC -O0 -g -DDEBUG ${CLANG_WARNINGS}")
     
