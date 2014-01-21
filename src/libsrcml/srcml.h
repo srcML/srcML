@@ -84,9 +84,9 @@ const char* srcml_version_string();
 /** Markup preprocessor elements (default for C, C++, C#) */
 #define SRCML_OPTION_CPP_NOMACRO       1<<7
 /** Do not issue an XML declaration */
-#define SRCML_OPTION_NO_XML_DECL       1<<8
+#define SRCML_OPTION_XML_DECL       1<<8
 /** Do not include any XML namespace declarations */
-#define SRCML_OPTION_NO_NAMESPACE_DECL 1<<9
+#define SRCML_OPTION_NAMESPACE_DECL 1<<9
 /** Leave as text preprocessor else parts (default: markup) */
 #define SRCML_OPTION_CPP_TEXT_ELSE     1<<10
 /** Markup preprocessor @code #if 0 @endcode sections (default: leave as text) */

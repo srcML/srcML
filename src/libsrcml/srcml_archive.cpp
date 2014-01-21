@@ -80,7 +80,7 @@ srcml_archive* srcml_create_archive()
   archive->language = 0;
   archive->directory = 0;
   archive->version = 0;
-  archive->options = 0;
+  archive->options = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL;
   archive->tabstop = 8;
   archive->translator = 0;
   archive->reader = 0;
