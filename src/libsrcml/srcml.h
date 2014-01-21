@@ -67,8 +67,8 @@ const char* srcml_version_string();
 #define SRCML_LANGUAGE_XML    "xml"
 
 /* Options */
-/** Create an archive */
-#define SRCML_OPTION_ARCHIVE           1<<0
+/** Do not create an archive */
+#define SRCML_OPTION_NO_ARCHIVE        1<<0
 /** Markups literal in special namespace */
 #define SRCML_OPTION_LITERAL           1<<1
 /** Markups modifiers in special namespace */

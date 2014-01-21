@@ -53,7 +53,6 @@ int main() {
     char * s;
     int size;
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_all_options(archive, SRCML_OPTION_ARCHIVE);
     srcml_write_open_memory(archive, &s, &size);
     srcml_unit * unit = srcml_create_unit(archive);
     unit->unit = new std::string(srcml_a);
@@ -70,7 +69,6 @@ int main() {
     char * s;
     int size;
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_all_options(archive, SRCML_OPTION_ARCHIVE);
     srcml_archive_set_language(archive, "C++");
     srcml_archive_set_filename(archive, "project");
     srcml_archive_set_directory(archive, "test");
@@ -96,7 +94,6 @@ int main() {
     char * s;
     int size;
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_all_options(archive, SRCML_OPTION_ARCHIVE);
     srcml_write_open_memory(archive, &s, &size);
     srcml_unit * unit = srcml_create_unit(archive);
     unit->unit = new std::string(srcml_a);
@@ -117,7 +114,6 @@ int main() {
     char * s;
     int size;
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_all_options(archive, SRCML_OPTION_ARCHIVE);
     srcml_archive_set_language(archive, "C++");
     srcml_archive_set_filename(archive, "project");
     srcml_archive_set_directory(archive, "test");
@@ -137,7 +133,6 @@ int main() {
 
   {
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_all_options(archive, SRCML_OPTION_ARCHIVE);
     srcml_unit * unit = srcml_create_unit(archive);
     dassert(srcml_write_unit(archive, unit), SRCML_STATUS_ERROR);
     srcml_free_unit(unit);
@@ -148,7 +143,6 @@ int main() {
     char * s;
     int size;
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_all_options(archive, SRCML_OPTION_ARCHIVE);
     srcml_archive_set_language(archive, "C++");
     srcml_archive_set_filename(archive, "project");
     srcml_archive_set_directory(archive, "test");
@@ -163,7 +157,6 @@ int main() {
 
   {
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_all_options(archive, SRCML_OPTION_ARCHIVE);
     srcml_unit * unit = srcml_create_unit(archive);
     dassert(srcml_write_unit(0, unit), SRCML_STATUS_ERROR);
     srcml_free_unit(unit);
