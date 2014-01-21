@@ -67,6 +67,7 @@ else()
     find_package(LibArchive REQUIRED)
     find_package(LibXml2 REQUIRED)
     find_package(LibXslt)
+    set(Boost_NO_BOOST_CMAKE ON)
     find_package(Boost COMPONENTS program_options filesystem system thread regex REQUIRED)
 
     # add include directories
@@ -136,13 +137,14 @@ endif()
 if(${CMAKE_COMPILER_IS_GNUCXX})
     set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized")
     # Adding global compiler definitions.
+    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g  --coverage -fprofile-arcs ${GCC_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${GCC_WARNINGS}")
-    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DDEBUG --coverage -fprofile-arcs ${GCC_WARNINGS}")
+    set(CMAKE_CXX_FLAGS_DEBUG "-fPIC -O3 -g -DDEBUG --coverage -fprofile-arcs ${GCC_WARNINGS}")
 
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # Configuring the Clang compiler
     set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32")
-    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DNDEBUG ${CLANG_WARNINGS}")
+    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_DEBUG "-fPIC -O0 -g -DDEBUG ${CLANG_WARNINGS}")
     

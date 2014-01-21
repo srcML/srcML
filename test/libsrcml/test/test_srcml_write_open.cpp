@@ -48,7 +48,7 @@ int main() {
 
   dassert(archive->type, SRCML_ARCHIVE_WRITE);
   dassert(!archive->translator, 0);
-  dassert(srcml_archive_get_options(archive), SRCML_OPTION_ARCHIVE);
+  dassert(srcml_archive_get_options(archive), 0);
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -81,7 +81,7 @@ int main() {
 
   dassert(archive->type, SRCML_ARCHIVE_WRITE);
   dassert(!archive->translator, 0);
-  dassert(srcml_archive_get_options(archive), SRCML_OPTION_ARCHIVE);
+  dassert(srcml_archive_get_options(archive), 0);
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -126,7 +126,7 @@ int main() {
 
   dassert(archive->type, SRCML_ARCHIVE_WRITE);
   dassert(!archive->translator, 0);
-  dassert(srcml_archive_get_options(archive), SRCML_OPTION_ARCHIVE);
+  dassert(srcml_archive_get_options(archive), 0);
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -161,7 +161,7 @@ int main() {
 
   dassert(archive->type, SRCML_ARCHIVE_WRITE);
   dassert(!archive->translator, 0);
-  dassert(srcml_archive_get_options(archive), SRCML_OPTION_ARCHIVE);
+  dassert(srcml_archive_get_options(archive), 0);
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);

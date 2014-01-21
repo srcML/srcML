@@ -348,44 +348,44 @@ int srcml_set_version(const char* version) {
 }
 
 /**
- * srcml_set_all_options
+ * srcml_set_options
  * @param option a srcml options
  *
  * Set the srcml options.  Clears all previously set.
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_set_all_options(unsigned long long option) {
+int srcml_set_options(unsigned long long option) {
 
-  return srcml_archive_set_all_options(&global_archive, option);
+  return srcml_archive_set_options(&global_archive, option);
 
 }
 
 /**
- * srcml_set_option
+ * srcml_enable_option
  * @param option a srcml option
  *
- * Set the srcml options.  Multiple may be set.
+ * Enable/set the srcml options.  Multiple may be enabled.
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_set_option(unsigned long long option) {
+int srcml_enable_option(unsigned long long option) {
 
-  return srcml_archive_set_option(&global_archive, option);
+  return srcml_archive_enable_option(&global_archive, option);
 
 }
 
 /**
- * srcml_clear_option
+ * srcml_disable_option
  * @param option a srcml option
  *
  * Remove an option.  May use multiple option with the same call.
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_clear_option(unsigned long long option) {
+int srcml_disable_option(unsigned long long option) {
 
-  return srcml_archive_clear_option(&global_archive, option);
+  return srcml_archive_disable_option(&global_archive, option);
 
 }
 

@@ -2,6 +2,11 @@
 #define INCLUDED_DASSERT_HPP
 
 #include <iostream>
-#define dassert(LEFT, RIGHT) if(!(LEFT == RIGHT)) { std::cerr << "'" << LEFT << "'" << "\n"; std::cerr << "'" << RIGHT << "'" << "\n"; assert(LEFT == RIGHT); }
+#include <cassert>
+#define dassert(LEFT, RIGHT) if(!(LEFT == RIGHT)) {\
+std::cerr << "'" << LEFT << "'" << "\n";\
+std::cerr << "'" << RIGHT << "'" << "\n";\
+assert(LEFT == RIGHT);\
+}
 
 #endif

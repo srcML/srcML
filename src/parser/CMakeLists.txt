@@ -65,9 +65,9 @@ set(KeywordLexerOutputFiles
 )
 
 RunAntlr("${KeywordLexerOutputFiles}"
-  KeywordLexer.g
-  OperatorLexer.cpp
-  "OperatorLexer.g\;TextLexer.g"
+    KeywordLexer.g
+    OperatorLexer.cpp
+    "OperatorLexer.g\;TextLexer.g"
 )
 
 # Running ANTLR on srcMLParser.g
@@ -78,9 +78,9 @@ set(srcMLParserOutputFiles
     srcMLParserTokenTypes.txt	
 )
 RunAntlr("${srcMLParserOutputFiles}"
-  srcMLParser.g
-  "srcMLParser.g\;KeywordLexer.cpp"
-  "OperatorLexer.g\;KeywordLexer.g\;TextLexer.g"
+    srcMLParser.g
+    "srcMLParser.g;KeywordLexer.cpp"
+    "OperatorLexer.g\;KeywordLexer.g\;TextLexer.g"
 )
 
 # Running SED/GREP macro for token extraction.
@@ -98,7 +98,7 @@ if(WIN32)
     )
 else()
     add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
+        OUTPUT srcMLParserTokenTypesMacro.hpp
         DEPENDS srcMLParserTokenTypes.hpp
         COMMAND ${GREP_EXE} '=' ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypes.hpp | ${SED_EXE} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e "s/^/\#define TOKEN_/g" > ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
     )
