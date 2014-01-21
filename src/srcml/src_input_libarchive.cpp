@@ -26,7 +26,7 @@
 
 #include <src_input_libarchive.hpp>
 
-void setupLibArchive(archive* a) {
+void src_input_libarchive::setupLibArchive(archive* a) {
   archive * arch = a;
   // Configure libarchive supported file formats
   archive_read_support_format_ar(arch);
@@ -60,7 +60,7 @@ void setupLibArchive(archive* a) {
   #endif
 }
 
-void process(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input_file, std::string lang) {
+void src_input_libarchive::process(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input_file, std::string lang) {
   bool stdin = false;
   ParseRequest request = req;
 
