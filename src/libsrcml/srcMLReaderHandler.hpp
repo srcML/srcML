@@ -18,7 +18,6 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
 #include <boost/thread/locks.hpp>
-#include <boost/thread/lock_types.hpp>
 
 /**
  * srcMLReaderHandler
