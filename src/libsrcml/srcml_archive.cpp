@@ -586,7 +586,7 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
   if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_ERROR;
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->options |= SRCML_OPTION_ARCHIVE;
+  //archive->options |= SRCML_OPTION_ARCHIVE;
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -622,7 +622,7 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
   if(archive == NULL || buffer == NULL || size == NULL) return SRCML_STATUS_ERROR;
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->options |= SRCML_OPTION_ARCHIVE;
+  //archive->options |= SRCML_OPTION_ARCHIVE;
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -668,7 +668,7 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
   }
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->options |= SRCML_OPTION_ARCHIVE;
+  //archive->options |= SRCML_OPTION_ARCHIVE;
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -720,7 +720,7 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
   }
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->options |= SRCML_OPTION_ARCHIVE;
+  //archive->options |= SRCML_OPTION_ARCHIVE;
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
