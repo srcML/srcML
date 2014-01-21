@@ -432,7 +432,7 @@ void srcMLTranslatorOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION
 
       // main cpp namespace declaration
       (isoption(OPTION_CPP, options) || isoption(OPTION_CPP_NOMACRO, options)) 
-      && (isoption(OPTION_NO_ARCHIVE, options) == outer) ? SRCML_CPP_NS_URI : 0,
+      && (isoption(OPTION_ARCHIVE, options) == !outer) ? SRCML_CPP_NS_URI : 0,
 
       // optional debugging xml namespace
       (depth == 0) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
@@ -540,7 +540,7 @@ void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, con
   }
 
   // leave space for nested unit
-  if (outer && !isoption(OPTION_NO_ARCHIVE))
+  if (outer && isoption(OPTION_ARCHIVE))
     processText("\n\n", 2);
 
   ++depth;

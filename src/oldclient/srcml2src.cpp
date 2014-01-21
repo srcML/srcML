@@ -364,7 +364,7 @@ void output_version(const char* name) {
     printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
 }
 
-OPTION_TYPE options = OPTION_NO_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+OPTION_TYPE options = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
 
 
 #ifdef __GNUG__
@@ -485,7 +485,7 @@ int main(int argc, char* argv[]) {
   const char* filename = "-";
 
   bool is_multi_input = (argc - curarg) > 1;
-  bool is_multi_op = options & (OPTION_INFO | OPTION_LONG_INFO | OPTION_LIST | OPTION_UNIT | OPTION_NAMESPACE) & ~OPTION_NO_ARCHIVE;
+  bool is_multi_op = options & (OPTION_INFO | OPTION_LONG_INFO | OPTION_LIST | OPTION_UNIT | OPTION_NAMESPACE | OPTION_ARCHIVE);
 
   do {
 
@@ -645,7 +645,7 @@ int main(int argc, char* argv[]) {
       }
 
       // process non-attribute options
-    } else if (!isoption(options, OPTION_NO_ARCHIVE)) {
+    } else if (isoption(options, OPTION_ARCHIVE)) {
 
 #ifdef __GNUG__
       // gracefully finish current file in srcML archive mode
@@ -945,7 +945,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       break;
 
     case NESTED_FLAG_SHORT:
-      options &= OPTION_NO_ARCHIVE;
+      options |= OPTION_ARCHIVE;
       break;
 
     case INFO_FLAG_SHORT:
