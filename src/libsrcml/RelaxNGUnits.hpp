@@ -66,7 +66,7 @@ public :
     if (n == 0) {
 
       // output the xml declaration, if needed
-      if (!found && !isoption(options, OPTION_XMLDECL))
+      if (!found && isoption(options, OPTION_XMLDECL))
         xmlOutputBufferWriteXMLDecl(ctxt, buf);
 
       // output the root unit start tag

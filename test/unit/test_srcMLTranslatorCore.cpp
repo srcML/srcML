@@ -76,7 +76,7 @@ int main() {
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-    OPTION_TYPE op = OPTION_NO_ARCHIVE;
+    OPTION_TYPE op = 0;
 
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, "", "", "", urisprefix, 4);
@@ -98,7 +98,7 @@ int main() {
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-    OPTION_TYPE op = OPTION_NO_ARCHIVE;
+    OPTION_TYPE op = 0;
 
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, "", "", "", urisprefix, 4);
@@ -118,7 +118,7 @@ int main() {
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-    OPTION_TYPE op = OPTION_NO_ARCHIVE;
+    OPTION_TYPE op = 0;
 
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, "", "", "", urisprefix, 4);
@@ -144,7 +144,7 @@ int main() {
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-    OPTION_TYPE op = OPTION_NO_ARCHIVE;
+    OPTION_TYPE op = 0;
 
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, 0, 0, 0, urisprefix, 4);
@@ -171,7 +171,7 @@ int main() {
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-    OPTION_TYPE op = OPTION_NO_ARCHIVE;
+    OPTION_TYPE op = 0;
 
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, 0, 0, 0, urisprefix, 4);
