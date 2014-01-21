@@ -58,6 +58,9 @@ if(WIN32)
     set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS "")
     set_property(GLOBAL PROPERTY LIBXML2_LIBS "")
     include_directories(C:/antlr/277/include)
+    set(BOOST_DIR $ENV{BOOST_ROOT})
+    include_directories(${BOOST_DIR})
+    include_directories(${BOOST_DIR}/lib)
 else()
     set(WINDOWS_DEP_PATH "")
     # Locating packages.
@@ -87,11 +90,11 @@ else()
     # Setting Properties
     set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS ${LibArchive_LIBRARIES})
     set_property(GLOBAL PROPERTY LIBXML2_LIBS ${LIBXML2_LIBRARIES})
+    include_directories(${Boost_INCLUDE_DIR})
 endif()
 set_property(GLOBAL PROPERTY WINDOWS_DEP_PATH ${WINDOWS_DEP_PATH})
-
 set_property(GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB ${Boost_LIBRARIES})
-include_directories(${Boost_INCLUDE_DIR})
+
 
 # Locating the antlr library.
 find_library(ANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib C:/antlr/277/lib)
