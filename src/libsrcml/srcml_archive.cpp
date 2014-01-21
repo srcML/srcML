@@ -350,7 +350,7 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2])
 }
 
 /**
- * srcml_archive_set_all_options
+ * srcml_archive_set_options
  * @param archive a srcml_archive
  * @param options a set of srcml options
  *
@@ -358,7 +358,7 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2])
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure. 
  */
-int srcml_archive_set_all_options(srcml_archive* archive, unsigned long long options) {
+int srcml_archive_set_options(srcml_archive* archive, unsigned long long options) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -368,16 +368,16 @@ int srcml_archive_set_all_options(srcml_archive* archive, unsigned long long opt
 }
 
 /**
- * srcml_archive_set_options
+ * srcml_archive_enable_options
  * @param archive a srcml_archive
  * @param option a srcml option
  *
- * Set a srcml option, adding to the previously active options.
+ * Enable/set a srcml option, adding to the previously active options.
  * May set multiple options with same call by |ing each.
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_archive_set_option(srcml_archive* archive, unsigned long long option) {
+int srcml_archive_enable_option(srcml_archive* archive, unsigned long long option) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -387,7 +387,7 @@ int srcml_archive_set_option(srcml_archive* archive, unsigned long long option) 
 }
 
 /**
- * srcml_archive_clear_option
+ * srcml_archive_disable_option
  * @param archive a srcml_archive
  * @param option a srcml option
  *
@@ -396,7 +396,7 @@ int srcml_archive_set_option(srcml_archive* archive, unsigned long long option) 
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_archive_clear_option(srcml_archive* archive, unsigned long long option) {
+int srcml_archive_disable_option(srcml_archive* archive, unsigned long long option) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
