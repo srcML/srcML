@@ -64,6 +64,7 @@ else()
     find_package(LibArchive REQUIRED)
     find_package(LibXml2 REQUIRED)
     find_package(LibXslt)
+    set(Boost_NO_BOOST_CMAKE ON)
     find_package(Boost COMPONENTS program_options filesystem system thread regex REQUIRED)
 
     # add include directories
