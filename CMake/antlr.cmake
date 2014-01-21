@@ -29,14 +29,10 @@ macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
         if(WIN32)
             # Handling windows relative path problem (Not sure why this is an issue but it's given me a headache).
             add_custom_command(OUTPUT  ${OUTPUT_FILES}
-                COMMAND echo "${INPUT_FILES}"
-                COMMAND echo "${OUTPUT_FILES}"
-                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" \"${INPUT_FILES}\" DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" ${INPUT_FILES}
             )
-            # set(cmdStr "${ANTLR_EXE} -o ${CMAKE_CURRENT_SOURCE_DIR} ${INPUT_FILES}")
-            # string(LENGTH  ${cmdStr} cmdLength)
-            # message(STATUS "${cmdStr}")
-            # message(STATUS "Command String Length: ${cmdLength}")
         else()
             add_custom_command(OUTPUT  ${OUTPUT_FILES}
                 COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
@@ -45,20 +41,11 @@ macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
         endif()
     else()
         if(WIN32)
-            # C:/antlr/277/bin/antlr.bat -o "C:/Users/bbart_000/Desktop/ProgrammingProjects/GitHub/srcML/src/parser" -glib "C:/Users/bbart_000/Desktop/ProgrammingProjects/GitHub/srcML/src/parser/TextLexer.g" "C:/Users/bbart_000/Desktop/ProgrammingProjects/GitHub/srcML/src/parser/OperatorLexer.g"
             add_custom_command(OUTPUT  ${OUTPUT_FILES}
-                COMMAND echo "${INPUT_FILES}"
-                COMMAND echo "${OUTPUT_FILES}"
-                COMMAND echo "${INCLUDE_GRAMMAR}"
-                COMMAND echo "${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" \"${INPUT_FILES}\""
-                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" \"${INPUT_FILES}\" DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-                COMMAND echo "Generated /w Dep: ${OUTPUT_FILES}"
+                DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES}
             )
-            # set(cmdStr "${ANTLR_EXE} -o ${CMAKE_CURRENT_SOURCE_DIR} -glib ${INCLUDE_GRAMMAR} ${INPUT_FILES}")
-            # string(LENGTH  ${cmdStr} cmdLength)
-            # message(STATUS "${cmdStr}")
-            # message(STATUS "Command String Length: ${cmdLength}")
-            #message(STATUS "Stuff Happened Here!")
         else()
             add_custom_command(OUTPUT  ${OUTPUT_FILES}
                 COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
