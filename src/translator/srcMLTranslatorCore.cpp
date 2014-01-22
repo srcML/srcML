@@ -316,7 +316,8 @@ void srcMLTranslatorCore::add_unit(const char* xml) {
   first = false;
   xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml);
 
-  out.processText("\n\n", 2);
+  if ((options & OPTION_ARCHIVE) > 0)
+    out.processText("\n\n", 2);
 
 
 }
