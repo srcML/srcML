@@ -69,8 +69,10 @@ void src_input_libarchive::process(ThreadQueue<ParseRequest, 10>& queue, srcml_a
   std::vector<std::string> input_files;
   if (is_directory(localPath)) {
     for (boost::filesystem::recursive_directory_iterator end, dir(localPath); dir != end; ++dir) {
-      if(is_regular_file(*dir))
-       input_files.push_back(dir->path().string());
+      if(is_regular_file(*dir)) {
+        if (srcml_archive_check_extension(srcml_arch, dir->path().string().c_str()))
+          input_files.push_back(dir->path().string());
+      }
     }
   }
   else {
