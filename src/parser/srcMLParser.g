@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -6188,9 +6188,38 @@ cpp_define_name[] { CompleteElement element(this); std::string::size_type pos = 
         simple_identifier (options { greedy = true; } : { pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
 ;
 
-cpp_define_parameter_list[] { ENTRY_DEBUG } :
-        parameter_list
+cpp_define_parameter_list[] { CompleteElement element(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
+        {
+            // list of parameters
+            startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+
+            // start the parameter list element
+            startElement(SPARAMETER_LIST);
+        }
+
+        // parameter list must include all possible parts since it is part of
+        // function detection
+        LPAREN ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; }
+        {
+            // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
+            if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
+                endMode();
+        } comma |
+        cpp_define_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
 ;
+
+
+cpp_define_parameter[] { int type_count = 1; ENTRY_DEBUG } :
+        {
+            // end parameter correctly
+            startNewMode(MODE_PARAMETER);
+
+            // start the parameter element
+            startElement(SPARAMETER);
+        }
+        parameter_type_count[type_count]
+;
+
 
 cpp_define_value[] { ENTRY_DEBUG } :
         {
