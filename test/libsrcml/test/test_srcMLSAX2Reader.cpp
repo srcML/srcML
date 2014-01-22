@@ -160,7 +160,7 @@ int main() {
     dassert(namespaces.size(), 2);
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
-    dassert(options, SRCML_OPTION_POSITION);
+    dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_POSITION));
     dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
@@ -179,7 +179,7 @@ int main() {
     dassert(namespaces.size(), 2);
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
-    dassert(options, SRCML_OPTION_POSITION);
+    dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_POSITION));
     dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
   }
@@ -206,7 +206,7 @@ int main() {
     dassert(namespaces.size(), 2);
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
-    dassert(options, SRCML_OPTION_POSITION);
+    dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_POSITION));
     dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
@@ -225,7 +225,7 @@ int main() {
     dassert(namespaces.size(), 2);
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
-    dassert(options, SRCML_OPTION_POSITION);
+    dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_POSITION));
     dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
   }
@@ -252,7 +252,8 @@ int main() {
     dassert(namespaces.size(), 2);
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
-    dassert(options, (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
+		      | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
     dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
@@ -271,7 +272,8 @@ int main() {
     dassert(namespaces.size(), 2);
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
-    dassert(options, (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
+		      | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
     dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
   }
@@ -298,7 +300,8 @@ int main() {
     dassert(namespaces.size(), 2);
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
-    dassert(options, (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
+		      | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
     dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
@@ -317,7 +320,8 @@ int main() {
     dassert(namespaces.size(), 2);
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
-    dassert(options, (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
+		      | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
     dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
   }
@@ -342,7 +346,7 @@ int main() {
     dassert(prefixes.at(0), "");
     dassert(namespaces.size(), 1);
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
-    dassert(options, 0);
+    dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL) );
     dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
@@ -359,7 +363,7 @@ int main() {
     dassert(prefixes.at(0), "");
     dassert(namespaces.size(), 1);
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
-    dassert(options, 0);
+    dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
     dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
   }
@@ -629,7 +633,7 @@ int main() {
     dassert(namespaces.size(), 2);
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
-    dassert(options, SRCML_OPTION_POSITION);
+    dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_POSITION));
     dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
@@ -681,7 +685,7 @@ int main() {
     dassert(namespaces.size(), 2);
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
-    dassert(options, SRCML_OPTION_POSITION);
+    dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_POSITION));
     dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
@@ -733,7 +737,8 @@ int main() {
     dassert(namespaces.size(), 2);
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
-    dassert(options, (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
+		      | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
     dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
@@ -774,7 +779,8 @@ int main() {
     dassert(namespaces.size(), 2);
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
-    dassert(options, (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
+		      | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
     dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
@@ -813,7 +819,7 @@ int main() {
     dassert(prefixes.at(0), "");
     dassert(namespaces.size(), 1);
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
-    dassert(options, 0);
+    dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
     dassert(tabstop, 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
