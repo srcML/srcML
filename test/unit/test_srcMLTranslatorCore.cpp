@@ -182,7 +182,7 @@ int main() {
     translator.add_unit(s.c_str());
     translator.close();
     std::string result = (const char *)buffer->content;
-    assert(result == decl + "\n" + s + "\n\n\n");
+    assert(result == decl + "\n" + s + "\n");
 
     xmlBufferFree(buffer);
     
