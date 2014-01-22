@@ -167,6 +167,8 @@ public :
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+    if(!is_archive) srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+
     // collect attributes
     for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
 
