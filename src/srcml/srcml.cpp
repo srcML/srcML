@@ -89,41 +89,6 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
   return true;
 }
 
-void setupLibArchive(archive* a) {
-  archive * arch = a;
-  // Configure libarchive supported file formats
-  archive_read_support_format_ar(arch);
-  archive_read_support_format_cpio(arch);
-  archive_read_support_format_gnutar(arch);
-  archive_read_support_format_iso9660(arch);
-  archive_read_support_format_mtree(arch);
-  archive_read_support_format_tar(arch);
-  archive_read_support_format_xar(arch);
-  archive_read_support_format_zip(arch);
-  archive_read_support_format_raw(arch);
-  
-  /*
-    Check libarchive version
-    enable version specific features/syntax
-  */
-  
-  #if ARCHIVE_VERSION_NUMBER < 3000000
-    // V2 Only Settings
-    // Compressions
-    archive_read_support_compression_all(arch);
-  #else
-    // V3 Only Settings
-    // File Formats
-    archive_read_support_format_7zip(arch);
-    archive_read_support_format_cab(arch);
-    archive_read_support_format_lha(arch);
-    archive_read_support_format_rar(arch);
-
-    // Compressions
-    archive_read_support_filter_all(arch); 
-  #endif
-}
-
 // Consumption thread function
 void * srcml_consume(void * arg) {
   ThreadQueue<ParseRequest, 10> * queue = (ThreadQueue<ParseRequest, 10> *) arg;
@@ -191,7 +156,7 @@ int main(int argc, char * argv[]) {
     srcml_archive_set_version(srcml_arch, srcml_request.src_versions.c_str());
 
   if (srcml_request.markup_options != 0)
-    srcml_archive_set_all_options(srcml_arch, srcml_request.markup_options);
+    srcml_archive_set_options(srcml_arch, srcml_request.markup_options);
 
   if (srcml_request.language != "")
     srcml_archive_set_language(srcml_arch, srcml_request.language.c_str());  
