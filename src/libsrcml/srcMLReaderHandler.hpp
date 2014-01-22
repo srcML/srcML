@@ -213,8 +213,8 @@ public :
             archive->options |= OPTION_MACRO_PATTERN;
           if(option == "MACRO_LIST")
             archive->options |= OPTION_MACRO_LIST;
-          if(option == "ELSEIF")
-            archive->options |= OPTION_ELSEIF;
+          if(option == "NESTIF")
+            archive->options |= OPTION_NESTIF;
           if(option == "CPPIF_CHECK")
             archive->options |= OPTION_CPPIF_CHECK;
 
