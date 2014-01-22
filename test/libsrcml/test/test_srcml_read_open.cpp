@@ -69,7 +69,7 @@ int main() {
   dassert(srcml_archive_get_filename(archive), std::string("project"));
   dassert(srcml_archive_get_directory(archive), std::string("test"));
   dassert(srcml_archive_get_version(archive), std::string("1"));
-  dassert(srcml_archive_get_options(archive), 0);
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -87,7 +87,8 @@ int main() {
   dassert(srcml_archive_get_filename(archive), std::string("project"));
   dassert(srcml_archive_get_directory(archive), std::string("test"));
   dassert(srcml_archive_get_version(archive), std::string("1"));
-  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL 
+					       | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -102,7 +103,7 @@ int main() {
   dassert(archive->type, SRCML_ARCHIVE_READ);
   dassert(!archive->reader, 0);
   dassert(archive->prefixes.at(0), "s");
-  dassert(srcml_archive_get_options(archive), 0);
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -145,7 +146,7 @@ int main() {
   dassert(srcml_archive_get_filename(archive), std::string("project"));
   dassert(srcml_archive_get_directory(archive), std::string("test"));
   dassert(srcml_archive_get_version(archive), std::string("1"));
-  dassert(srcml_archive_get_options(archive), 0);
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -163,7 +164,8 @@ int main() {
   dassert(srcml_archive_get_filename(archive), std::string("project"));
   dassert(srcml_archive_get_directory(archive), std::string("test"));
   dassert(srcml_archive_get_version(archive), std::string("1"));
-  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
+					       | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -178,7 +180,7 @@ int main() {
   dassert(archive->type, SRCML_ARCHIVE_READ);
   dassert(!archive->reader, 0);
   dassert(archive->prefixes.at(0), "s");
-  dassert(srcml_archive_get_options(archive), 0);
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -222,7 +224,7 @@ int main() {
   dassert(srcml_archive_get_filename(archive), std::string("project"));
   dassert(srcml_archive_get_directory(archive), std::string("test"));
   dassert(srcml_archive_get_version(archive), std::string("1"));
-  dassert(srcml_archive_get_options(archive), 0);
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -242,8 +244,9 @@ int main() {
   dassert(srcml_archive_get_filename(archive), std::string("project"));
   dassert(srcml_archive_get_directory(archive), std::string("test"));
   dassert(srcml_archive_get_version(archive), std::string("1"));
-  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
-
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
+					       | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+  
   srcml_close_archive(archive);
   srcml_free_archive(archive);
   fclose(file);
@@ -260,7 +263,7 @@ int main() {
   dassert(archive->type, SRCML_ARCHIVE_READ);
   dassert(!archive->reader, 0);
   dassert(archive->prefixes.at(0), "s");
-  dassert(srcml_archive_get_options(archive), 0);
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -298,7 +301,7 @@ int main() {
   dassert(srcml_archive_get_filename(archive), std::string("project"));
   dassert(srcml_archive_get_directory(archive), std::string("test"));
   dassert(srcml_archive_get_version(archive), std::string("1"));
-  dassert(srcml_archive_get_options(archive), 0);
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -318,7 +321,8 @@ int main() {
   dassert(srcml_archive_get_filename(archive), std::string("project"));
   dassert(srcml_archive_get_directory(archive), std::string("test"));
   dassert(srcml_archive_get_version(archive), std::string("1"));
-  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
+					       | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -336,7 +340,7 @@ int main() {
   dassert(archive->type, SRCML_ARCHIVE_READ);
   dassert(!archive->reader, 0);
   dassert(archive->prefixes.at(0), "s");
-  dassert(srcml_archive_get_options(archive), 0);
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);

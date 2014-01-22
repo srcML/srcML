@@ -30,27 +30,30 @@
 #include <stdio.h>
 #include <string.h>
 #include <cassert>
+#include <iostream>
 
 int main() {
 
   /*
     inLanguage()
    */ 
-
+  std::cout << "Test 1" << '\n';
   {
     Language l(Language::LANGUAGE_CXX);
     assert(!l.inLanguage(Language::LANGUAGE_C));
   }
 
+  std::cout << "Test 2" << '\n';
   {
     Language l(Language::LANGUAGE_CXX);
     assert(l.inLanguage(Language::LANGUAGE_CXX));
   }
 
+  
   /*
     getLanguage()
    */ 
-
+  std::cout << "Test 3" << '\n';
   {
     Language l(Language::LANGUAGE_CXX);
     assert(l.getLanguage() == Language::LANGUAGE_CXX);
@@ -59,13 +62,15 @@ int main() {
   /*
     getLanguage(const char *)
    */ 
+  std::cout << "Test 4" << '\n';
   {
     assert(Language::getLanguage("C++") == Language::LANGUAGE_CXX);
   }
 
   /*
     getLanguageString()
-   */ 
+   */
+  std::cout << "Test 5" << '\n';
   {
     Language l(Language::LANGUAGE_CXX);
     assert(Language::getLanguage("C++") == Language::LANGUAGE_CXX);
@@ -74,7 +79,7 @@ int main() {
   /*
     registerUserExt()
    */ 
-
+  std::cout << "Test 6" << '\n';
   {
     std::vector<pair> reg_ext;
     assert(Language::registerUserExt("cpp", "C++", reg_ext));
@@ -83,6 +88,7 @@ int main() {
     assert(reg_ext.at(0).s == "cpp");
   }
 
+  std::cout << "Test 7" << '\n';
   {
     std::vector<pair> reg_ext;
     assert(!Language::registerUserExt("cpp", "Foo", reg_ext));
@@ -92,31 +98,39 @@ int main() {
   /*
     getLanguageFromFilename
    */
-
+  std::cout << "Test 8" << '\n';
   {
     std::vector<pair> reg_ext;
     Language::registerUserExt("cpp", "C++", reg_ext);
     assert(Language::getLanguageFromFilename("a.cpp", reg_ext) == Language::LANGUAGE_CXX);
   }
-
+  
+  std::cout << "Test 9" << '\n';
   {
     std::vector<pair> reg_ext;
     Language::registerUserExt("cpp", "C++", reg_ext);
+    int lang = Language::getLanguageFromFilename("a.cpp.gz", reg_ext);
+    // std::cout << Language::LANGUAGE_CXX << '\n';
+    std::cout << "Language: " << lang << '\n';
     assert(Language::getLanguageFromFilename("a.cpp.gz", reg_ext) == Language::LANGUAGE_CXX);
   }
-
+  
+  std::cout << "Test 10" << '\n';
   {
     std::vector<pair> reg_ext;
     Language::registerUserExt("cpp", "C++", reg_ext);
     assert(Language::getLanguageFromFilename("a.cpp.bz2", reg_ext) == Language::LANGUAGE_CXX);
   }
-
+  
+  
+  std::cout << "Test 11" << '\n';
   {
     std::vector<pair> reg_ext;
     Language::registerUserExt("cpp", "C++", reg_ext);
     assert(Language::getLanguageFromFilename("a.cpp.xz", reg_ext) == Language::LANGUAGE_CXX);
   }
 
+  std::cout << "Test 12" << '\n';
   {
     std::vector<pair> reg_ext;
     Language::registerUserExt("cpp", "C++", reg_ext);
@@ -126,7 +140,7 @@ int main() {
   /*
     register_standard_file_extensions()
    */ 
-
+  std::cout << "Test 13" << '\n';
   {
     std::vector<pair> reg_ext;
     Language::register_standard_file_extensions(reg_ext);

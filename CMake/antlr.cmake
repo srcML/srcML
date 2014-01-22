@@ -25,17 +25,32 @@
 # Use with named arguments.
 #
 macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
-
     if("${INCLUDE_GRAMMAR}" STREQUAL "")
-	    add_custom_command(OUTPUT  ${OUTPUT_FILES}
-            COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-            COMMAND touch ${OUTPUT_FILES}
-        )
+        if(WIN32)
+            # Handling windows relative path problem (Not sure why this is an issue but it's given me a headache).
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" ${INPUT_FILES}
+            )
+        else()
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                COMMAND touch ${OUTPUT_FILES}
+            )
+        endif()
     else()
-	    add_custom_command(OUTPUT  ${OUTPUT_FILES}
-            COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-            COMMAND touch ${OUTPUT_FILES}
-        )
+        if(WIN32)
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES}
+            )
+        else()
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_CURRENT_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                COMMAND touch ${OUTPUT_FILES}
+            )
+        endif()
     endif()
-
 endmacro(RunAntlr)

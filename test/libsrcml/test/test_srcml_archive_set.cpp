@@ -185,14 +185,15 @@ int main() {
   */
 
   /*
-    srcml_archive_set_all_options
+    srcml_archive_set_options
    */
 
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
-    srcml_archive_set_all_options(archive, 1 | 2 | 4);
+    srcml_archive_set_options(archive, 1 | 2 | 4);
 
     dassert(archive->options, (1 | 2 | 4));
     srcml_free_archive(archive);
@@ -201,27 +202,29 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
-    srcml_archive_set_all_options(archive, 1 | 2 | 4);
-    srcml_archive_set_all_options(archive, 1);
+    srcml_archive_set_options(archive, 1 | 2 | 4);
+    srcml_archive_set_options(archive, 1);
 
     dassert(archive->options, 1);
     srcml_free_archive(archive);
   }
 
   {
-    dassert(srcml_archive_set_all_options(0, 1 | 2 | 4), SRCML_STATUS_ERROR);
+    dassert(srcml_archive_set_options(0, 1 | 2 | 4), SRCML_STATUS_ERROR);
   }
 
   /*
-    srcml_archive_set_option
+    srcml_archive_enable_option
    */
 
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
-    srcml_archive_set_option(archive, 1);
+    srcml_archive_enable_option(archive, 1);
 
     dassert(archive->options, 1);
     srcml_free_archive(archive);
@@ -230,9 +233,10 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
-    srcml_archive_set_all_options(archive, 1 | 2);
-    srcml_archive_set_option(archive, 4);
+    srcml_archive_set_options(archive, 1 | 2);
+    srcml_archive_enable_option(archive, 4);
 
     dassert(archive->options, (1 | 2 | 4));
     srcml_free_archive(archive);
@@ -241,27 +245,29 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
-    srcml_archive_set_all_options(archive, 1);
-    srcml_archive_set_option(archive, 2 | 4);
+    srcml_archive_set_options(archive, 1);
+    srcml_archive_enable_option(archive, 2 | 4);
 
     dassert(archive->options, (1 | 2 | 4));
     srcml_free_archive(archive);
   }
 
   {
-    dassert(srcml_archive_set_option(0, 1), SRCML_STATUS_ERROR);
+    dassert(srcml_archive_enable_option(0, 1), SRCML_STATUS_ERROR);
   }
 
   /*
-    srcml_archive_clear_option
+    srcml_archive_disable_option
   */
 
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
-    srcml_archive_clear_option(archive, 0);
+    srcml_archive_disable_option(archive, 0);
 
     dassert(archive->options, 0);
     srcml_free_archive(archive);
@@ -270,9 +276,10 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
-    srcml_archive_set_all_options(archive, 1 | 2 | 4);
-    srcml_archive_clear_option(archive, 0);
+    srcml_archive_set_options(archive, 1 | 2 | 4);
+    srcml_archive_disable_option(archive, 0);
 
     dassert(archive->options, (1 | 2 | 4));
     srcml_free_archive(archive);
@@ -281,9 +288,10 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
-    srcml_archive_set_all_options(archive, 1 | 2 | 4);
-    srcml_archive_clear_option(archive, 2);
+    srcml_archive_set_options(archive, 1 | 2 | 4);
+    srcml_archive_disable_option(archive, 2);
 
     dassert(archive->options, (1 | 4));
     srcml_free_archive(archive);
@@ -292,16 +300,17 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
-    srcml_archive_set_all_options(archive, 1 | 2 | 4);
-    srcml_archive_clear_option(archive, 1 | 2);
+    srcml_archive_set_options(archive, 1 | 2 | 4);
+    srcml_archive_disable_option(archive, 1 | 2);
 
     dassert(archive->options, 4);
     srcml_free_archive(archive);
   }
 
   {
-    dassert(srcml_archive_clear_option(0, 1), SRCML_STATUS_ERROR);
+    dassert(srcml_archive_disable_option(0, 1), SRCML_STATUS_ERROR);
   }
 
   /*

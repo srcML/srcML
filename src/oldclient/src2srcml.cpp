@@ -140,6 +140,9 @@ const int ELSEIF_FLAG_CODE = 256 + 16;
 const char* const CPPIF_CHECK_FLAG = "cppif-check";
 const int CPPIF_CHECK_FLAG_CODE = 256 + 17;
 
+const char* const C_IS_CPP_FLAG = "c-is-cpp";
+const int C_IS_CPP_FLAG_CODE = 256 + 18;
+
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
@@ -344,15 +347,7 @@ void output_version(const char* name) {
     printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
 }
 
-void output_settings(const char * name) {
-  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
-}
-
-void output_features(const char * name) {
-  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
-}
-
-OPTION_TYPE options = 0;
+OPTION_TYPE options = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
@@ -493,7 +488,7 @@ int main(int argc, char* argv[]) {
   */
 
   // verify that only one input pipe is STDIN
-  struct stat stdiostat = { 0 };
+  struct stat stdiostat = {/* 0 */};
   if (fstat(STDIN_FILENO, &stdiostat) == -1) {
     fprintf(stderr, "%s: %s '%s'\n", PROGRAM_NAME, strerror(errno), "stdin");
     exit(STATUS_INPUTFILE_PROBLEM);
@@ -508,7 +503,7 @@ int main(int argc, char* argv[]) {
     }
 
     // may not exist due to race condition, so check again
-    struct stat instat = { 0 };
+    struct stat instat = {/* 0 */};
     if (stat(argv[i], &instat) == -1)
       continue;
     if (xmlCheckFilename(argv[i]) == 0)
@@ -525,7 +520,7 @@ int main(int argc, char* argv[]) {
   }
 
   // verify that the output filename is not the same as any of the input filenames
-  struct stat outstat = { 0 };
+  struct stat outstat = {/* 0 */};
   stat(poptions.srcml_filename, &outstat);
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
@@ -533,7 +528,7 @@ int main(int argc, char* argv[]) {
       continue;
 
     // may not exist due to race condition, so check again
-    struct stat instat = { 0 };
+    struct stat instat = {/* 0 */};
     if (stat(argv[i], &instat) == -1)
       continue;
 
@@ -709,8 +704,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { DIRECTORY_FLAG, required_argument, NULL, DIRECTORY_FLAG_SHORT },
     { FILENAME_FLAG, required_argument, NULL, FILENAME_FLAG_SHORT },
     { SRCVERSION_FLAG, required_argument, NULL, SRCVERSION_FLAG_SHORT },
-    { SETTINGS_FLAG, no_argument, NULL, SETTINGS_FLAG_CODE },
-    { FEATURES_FLAG, no_argument, NULL, FEATURES_FLAG_CODE },
     //    { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
     //    { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
     { FILELIST_FLAG, required_argument, NULL, FILELIST_FLAG_CODE },
@@ -721,8 +714,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { REVISION_FLAG, no_argument, NULL, REVISION_FLAG_CODE },
     { CPP_FLAG, no_argument, NULL, CPP_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
-    { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
-    { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
+    { NO_XML_DECLARATION_FLAG, no_argument, NULL, NO_XML_DECLARATION_FLAG_CODE },
+    { NO_NAMESPACE_DECLARATION_FLAG, no_argument, NULL, NO_NAMESPACE_DECLARATION_FLAG_CODE },
     { OLD_FILENAME_FLAG, no_argument, NULL, OLD_FILENAME_FLAG_CODE },
     { TABS_FLAG, required_argument, NULL, TABS_FLAG_CODE },
     { POSITION_FLAG, no_argument, &curoption, OPTION_POSITION },
@@ -734,6 +727,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { MACRO_LIST_FLAG, required_argument, NULL, MACRO_LIST_FLAG_CODE },
     { ELSEIF_FLAG, no_argument, NULL, ELSEIF_FLAG_CODE },
     { CPPIF_CHECK_FLAG, no_argument, NULL, CPPIF_CHECK_FLAG_CODE },
+    { C_IS_CPP_FLAG, no_argument, NULL, C_IS_CPP_FLAG_CODE },
 #ifdef SVN
     { SVN_FLAG, required_argument, NULL, SVN_FLAG_CODE },
 #endif
@@ -811,6 +805,12 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case CPPIF_CHECK_FLAG_CODE:
       options |= OPTION_CPPIF_CHECK;
+      break;
+
+    case C_IS_CPP_FLAG_CODE:
+
+      Language::c_is_cpp(true);
+
       break;
 
 #ifdef SVN
@@ -1048,15 +1048,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.given_version = optarg;
       break;
 
-    case SETTINGS_FLAG_CODE :
-      output_settings(PROGRAM_NAME);
-      exit(STATUS_SUCCESS);
-      break;
-
-    case FEATURES_FLAG_CODE :
-      output_features(PROGRAM_NAME);
-      exit(STATUS_SUCCESS);
-      break;
       /*
         case INPUT_FORMAT_FLAG_CODE:
 
@@ -1081,6 +1072,16 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       */
     case OLD_FILENAME_FLAG_CODE :
       options |= OPTION_OLD_FILENAME;
+      break;
+
+    case NO_XML_DECLARATION_FLAG_CODE:
+      options |= OPTION_XML;
+      options &= ~OPTION_XMLDECL;
+      break;
+
+    case NO_NAMESPACE_DECLARATION_FLAG_CODE:
+      options |= OPTION_XML;
+      options &= ~OPTION_NAMESPACEDECL;
       break;
 
     case TABS_FLAG_CODE :
@@ -1521,7 +1522,7 @@ void src2srcml_dir_top(srcMLTranslator& translator, const char* directory, proce
   options |= OPTION_ARCHIVE;
 
   // record the stat info on the output file
-  struct stat outstat = { 0 };
+  struct stat outstat = {/* 0 */};
   stat(poptions.srcml_filename, &outstat);
 
   src2srcml_dir(translator, directory, poptions, outstat);
@@ -1568,7 +1569,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
     filename.replace(basesize, std::string::npos, namelist[i]->d_name);
 
     // handle directories later after all the filenames
-    struct stat instat = { 0 };
+    struct stat instat = {/* 0 */};
     int stat_status = stat(filename.c_str(), &instat);
     if (stat_status)
       continue;

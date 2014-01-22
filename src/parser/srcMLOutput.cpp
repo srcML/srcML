@@ -100,7 +100,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   }
 
   // issue the xml declaration, but only if we want to
-  if (!isoption(OPTION_XMLDECL)) xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
+  if (isoption(OPTION_XMLDECL)) xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 }
 
 srcMLOutput::~srcMLOutput() {
@@ -215,7 +215,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
   srcMLTextWriterStartElement(xout, BAD_CAST /* type2name(SUNIT) */ maintag.c_str());
 
   // outer units have namespaces
-  if (/* outer && */ !isoption(OPTION_NAMESPACEDECL)) {
+  if (/* outer && */ isoption(OPTION_NAMESPACEDECL)) {
     outputNamespaces(xout, options, depth, outer);
   }
 

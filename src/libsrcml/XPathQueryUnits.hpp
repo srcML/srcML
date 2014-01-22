@@ -199,7 +199,7 @@ public :
         if (needroot /*&& !isoption(options, OPTION_APPLY_ROOT)*/) {
 
           // xml declaration
-          if (!isoption(options, OPTION_XMLDECL))
+          if (isoption(options, OPTION_XMLDECL))
             xmlOutputBufferWriteXMLDecl(ctxt, buf);
 
           // output a root element, just like the one read in
@@ -303,7 +303,7 @@ public :
             xmlNsPtr savens = onode->nsDef;
             if(!isoption(options, OPTION_APPLY_ROOT)) {
               onode->nsDef = savens;
-              for (int i = 0; i < UnitDOM::rootsize / 2; ++i)
+              for (std::vector<const xmlChar*>::size_type i = 0; i < UnitDOM::rootsize / 2; ++i)
                 onode->nsDef = onode->nsDef->next;
             }
             // dump the namespace-modified tree

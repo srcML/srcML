@@ -138,7 +138,7 @@ public :
         result_type = res->children->type;
 
       // output the xml declaration, if needed
-      if (result_type == XML_ELEMENT_NODE && !found && !isoption(options, OPTION_XMLDECL))
+      if (result_type == XML_ELEMENT_NODE && !found && isoption(options, OPTION_XMLDECL))
         xmlOutputBufferWriteXMLDecl(ctxt, buf);
 
       // output the root unit start tag

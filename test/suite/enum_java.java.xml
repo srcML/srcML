@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="enum">
+
+<unit>
+<enum>enum <block>{ <expr><name>a</name></expr> }</block></enum>
+</unit>
+
+<unit>
+<enum>enum <name>a</name> <block>{ <expr><name>b</name></expr> }</block></enum>
+</unit>
+
+<unit>
+<enum>enum <block>{ <expr><name>a</name></expr>, <expr><name>b</name></expr> }</block></enum>
+</unit>
+
+<unit>
+<enum>enum <name>a</name> <block>{ <expr><name>b</name></expr>, <expr><name>c</name></expr> }</block></enum>
+</unit>
+
+<unit>
+<enum>enum <block>{ <expr><name>a</name> = 0</expr> }</block></enum>
+</unit>
+
+<unit>
+<enum>enum <name>a</name> <block>{ <expr><name>b</name> = 0</expr> }</block></enum>
+</unit>
+
+<unit>
+<enum>enum <block>{ <expr><name>a</name> = 0</expr>, <expr><name>b</name></expr> }</block></enum>
+</unit>
+
+<unit>
+<enum>enum <name>a</name> <block>{ <expr><name>b</name> = 0</expr>, <expr><name>c</name></expr> }</block></enum>
+</unit>
+
+<unit>
+<enum><specifier>public</specifier> enum <name>Planet</name> <block>{
+
+    <expr><call><name>MERCURY</name> <argument_list>(<argument><expr>3.303e+23</expr></argument>, <argument><expr>2.4397e6</expr></argument>)</argument_list></call></expr>,
+    <expr><call><name>VENUS</name>   <argument_list>(<argument><expr>4.869e+24</expr></argument>, <argument><expr>6.0518e6</expr></argument>)</argument_list></call></expr>,
+    <expr><call><name>EARTH</name>   <argument_list>(<argument><expr>5.976e+24</expr></argument>, <argument><expr>6.37814e6</expr></argument>)</argument_list></call></expr>,
+    <expr><call><name>MARS</name>    <argument_list>(<argument><expr>6.421e+23</expr></argument>, <argument><expr>3.3972e6</expr></argument>)</argument_list></call></expr>,
+    <expr><call><name>JUPITER</name> <argument_list>(<argument><expr>1.9e+27</expr></argument>,   <argument><expr>7.1492e7</expr></argument>)</argument_list></call></expr>,
+    <expr><call><name>SATURN</name>  <argument_list>(<argument><expr>5.688e+26</expr></argument>, <argument><expr>6.0268e7</expr></argument>)</argument_list></call></expr>,
+    <expr><call><name>URANUS</name>  <argument_list>(<argument><expr>8.686e+25</expr></argument>, <argument><expr>2.5559e7</expr></argument>)</argument_list></call></expr>,
+    <expr><call><name>NEPTUNE</name> <argument_list>(<argument><expr>1.024e+26</expr></argument>, <argument><expr>2.4746e7</expr></argument>)</argument_list></call></expr>;
+
+    <decl_stmt><decl><type><specifier>private</specifier> <specifier>final</specifier> <name>double</name></type> <name>mass</name></decl>;</decl_stmt>   <comment type="line">// in kilograms</comment>
+    <decl_stmt><decl><type><specifier>private</specifier> <specifier>final</specifier> <name>double</name></type> <name>radius</name></decl>;</decl_stmt> <comment type="line">// in meters</comment>
+    <constructor><name>Planet</name><parameter_list>(<param><decl><type><name>double</name></type> <name>mass</name></decl></param>, <param><decl><type><name>double</name></type> <name>radius</name></decl></param>)</parameter_list> <block>{
+        <expr_stmt><expr><name><name>this</name>.<name>mass</name></name> = <name>mass</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name>.<name>radius</name></name> = <name>radius</name></expr>;</expr_stmt>
+    }</block></constructor>
+
+}</block></enum>
+</unit>
+
+<unit>
+<enum><specifier>private</specifier> <specifier>static</specifier> enum <name>RelTypes</name> <super><implements>implements <name>RelationshipType</name></implements></super> <block>{}</block></enum>
+
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>main</name><parameter_list>(<param><decl><type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>args</name></decl></param>)</parameter_list> <block>{}</block></function></unit>
+
+</unit>

@@ -115,14 +115,10 @@ const char* const COMPRESSED_FLAG = "compress";
 const char COMPRESSED_FLAG_SHORT = 'z';
 
 const char* const NO_XML_DECLARATION_FLAG = "no-xml-declaration";
+const int NO_XML_DECLARATION_FLAG_CODE = 128 + 2;
 
 const char* const NO_NAMESPACE_DECLARATION_FLAG = "no-namespace-decl";
-
-const char * const SETTINGS_FLAG = "settings";
-const int SETTINGS_FLAG_CODE = 128 + 2;
-
-const char * const FEATURES_FLAG = "features";
-const int FEATURES_FLAG_CODE = 128 + 3;
+const int NO_NAMESPACE_DECLARATION_FLAG_CODE = 128 + 3;
 
 const char * const NULL_FLAG = "null";
 const int NULL_FLAG_SHORT = '0';

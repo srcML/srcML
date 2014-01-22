@@ -929,7 +929,7 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
         identifier (template_argument_list)* DCOLON function_pointer_name_base |
 
         // typical function pointer name
-        MULTOPS (compound_name_inner[false])*
+        multops (multops)* (compound_name_inner[false])*
 
         // optional array declaration
         (variable_identifier_array_grammar_sub[flag])*
@@ -1968,6 +1968,8 @@ class_post[] { ENTRY_DEBUG } :
 // Handle an enum class
 enum_class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SENUM]
+        
+        { setMode(MODE_ENUM); }
 
         class_preamble ENUM (class_header lcurly | lcurly)
 
@@ -4494,11 +4496,15 @@ throw_statement[] { ENTRY_DEBUG } :
 // an expression statement pre processing
 expression_statement_process[] { ENTRY_DEBUG } :
         {
+
+            bool inenumclass = (inLanguage(LANGUAGE_JAVA_FAMILY) && inTransparentMode(MODE_ENUM) && inMode(MODE_CLASS));
+
             // statement with an embedded expression
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
 
             // start the element which will end after the terminate
-            startElement(SEXPRESSION_STATEMENT);
+            if(!inenumclass)
+                startElement(SEXPRESSION_STATEMENT);
         }
 ;
 
@@ -5616,7 +5622,7 @@ nested_terminate[] {
 // definition of an enum
 enum_definition[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        (enum_class_definition nested_terminate)=>enum_class_definition |
+        enum_class_definition |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) }?
         {
@@ -6179,7 +6185,7 @@ cpp_define_name[] { CompleteElement element(this); std::string::size_type pos = 
 
             startElement(SMACRO_DEFN);
         }
-        simple_identifier (options { greedy = true; } : { pos == LT(1)->getColumn() }? cpp_define_parameter_list)*
+        simple_identifier (options { greedy = true; } : { pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
 ;
 
 cpp_define_parameter_list[] { ENTRY_DEBUG } :

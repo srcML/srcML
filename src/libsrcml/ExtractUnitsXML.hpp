@@ -91,7 +91,7 @@ public :
             writer = xmlNewTextWriterMemory(buffer, isoption(*(pstate->poptions), OPTION_COMPRESSED) ? 1 : 0);
 
         // start this document the same as the current document
-        if (!isoption(*(pstate->poptions), OPTION_XMLDECL))
+        if (isoption(*(pstate->poptions), OPTION_XMLDECL))
             xmlTextWriterStartDocument(writer,
                                        (const char*) ctxt->version,
                                        (const char*) (ctxt->encoding ? ctxt->encoding : ctxt->input->encoding),
@@ -105,7 +105,7 @@ public :
         collect_namespaces(nb_namespaces, namespaces, nsv);
 
         // output the merged namespaces
-        if (!isoption(*(pstate->poptions), OPTION_NAMESPACEDECL))
+        if (isoption(*(pstate->poptions), OPTION_NAMESPACEDECL))
             for (int i = 0; i < MAXPROPERTIES; ++i) {
                 if (nsv[i].first == "")
                     break;

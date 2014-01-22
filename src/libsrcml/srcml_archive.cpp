@@ -80,7 +80,7 @@ srcml_archive* srcml_create_archive()
   archive->language = 0;
   archive->directory = 0;
   archive->version = 0;
-  archive->options = 0;
+  archive->options = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL;
   archive->tabstop = 8;
   archive->translator = 0;
   archive->reader = 0;
@@ -350,7 +350,7 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2])
 }
 
 /**
- * srcml_archive_set_all_options
+ * srcml_archive_set_options
  * @param archive a srcml_archive
  * @param options a set of srcml options
  *
@@ -358,7 +358,7 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2])
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure. 
  */
-int srcml_archive_set_all_options(srcml_archive* archive, unsigned long long options) {
+int srcml_archive_set_options(srcml_archive* archive, unsigned long long options) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -368,16 +368,16 @@ int srcml_archive_set_all_options(srcml_archive* archive, unsigned long long opt
 }
 
 /**
- * srcml_archive_set_options
+ * srcml_archive_enable_options
  * @param archive a srcml_archive
  * @param option a srcml option
  *
- * Set a srcml option, adding to the previously active options.
+ * Enable/set a srcml option, adding to the previously active options.
  * May set multiple options with same call by |ing each.
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_archive_set_option(srcml_archive* archive, unsigned long long option) {
+int srcml_archive_enable_option(srcml_archive* archive, unsigned long long option) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -387,7 +387,7 @@ int srcml_archive_set_option(srcml_archive* archive, unsigned long long option) 
 }
 
 /**
- * srcml_archive_clear_option
+ * srcml_archive_disable_option
  * @param archive a srcml_archive
  * @param option a srcml option
  *
@@ -396,7 +396,7 @@ int srcml_archive_set_option(srcml_archive* archive, unsigned long long option) 
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_archive_clear_option(srcml_archive* archive, unsigned long long option) {
+int srcml_archive_disable_option(srcml_archive* archive, unsigned long long option) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -586,7 +586,6 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
   if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_ERROR;
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->options |= SRCML_OPTION_ARCHIVE;
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -622,7 +621,6 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
   if(archive == NULL || buffer == NULL || size == NULL) return SRCML_STATUS_ERROR;
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->options |= SRCML_OPTION_ARCHIVE;
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -668,7 +666,6 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
   }
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->options |= SRCML_OPTION_ARCHIVE;
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -720,7 +717,6 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
   }
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->options |= SRCML_OPTION_ARCHIVE;
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),

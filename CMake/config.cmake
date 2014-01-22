@@ -40,7 +40,7 @@ option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and
 set_property(GLOBAL PROPERTY DYNAMIC_ENABLED ${DYNAMIC_LOAD_ENABLED})
 
 # Adding build option for srcml executable.
-option(ENABLE_NEW_SRCML_EXEC_BUILD "Build the newer version of the srcML executable." ON)
+option(ENABLE_NEW_SRCML_EXEC_BUILD "Build the newer version of the srcML executable." OFF)
 set_property(GLOBAL PROPERTY ENABLE_NEW_SRCML_EXEC_BUILD ${ENABLE_NEW_SRCML_EXEC_BUILD})
 
 # Setting some windows only properties.
@@ -50,7 +50,6 @@ if(WIN32)
     set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/dep)
     include_directories(${WINDOWS_DEP_PATH}/include)
     link_directories(${WINDOWS_DEP_PATH}/lib)
-    set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH}:${WINDOWS_DEP_PATH}/libarchive:${WINDOWS_DEP_PATH}/libarchive/include")
     if(ENABLE_SVN_INTEGRATION)
         message(FATAL_ERROR "SVN integration not tested on windows.")
     endif()
@@ -59,13 +58,17 @@ if(WIN32)
     set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS "")
     set_property(GLOBAL PROPERTY LIBXML2_LIBS "")
     include_directories(C:/antlr/277/include)
+    set(BOOST_DIR $ENV{BOOST_ROOT})
+    include_directories(${BOOST_DIR})
+    include_directories(${BOOST_DIR}/lib)
 else()
     set(WINDOWS_DEP_PATH "")
     # Locating packages.
     find_package(LibArchive REQUIRED)
     find_package(LibXml2 REQUIRED)
     find_package(LibXslt)
-    find_package(Boost COMPONENTS program_options filesystem system REQUIRED)
+    set(Boost_NO_BOOST_CMAKE ON)
+    find_package(Boost COMPONENTS program_options filesystem system thread regex REQUIRED)
 
     # add include directories
     include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
@@ -87,11 +90,11 @@ else()
     # Setting Properties
     set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS ${LibArchive_LIBRARIES})
     set_property(GLOBAL PROPERTY LIBXML2_LIBS ${LIBXML2_LIBRARIES})
+    include_directories(${Boost_INCLUDE_DIR})
 endif()
 set_property(GLOBAL PROPERTY WINDOWS_DEP_PATH ${WINDOWS_DEP_PATH})
-
 set_property(GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB ${Boost_LIBRARIES})
-include_directories(${Boost_INCLUDE_DIR})
+
 
 # Locating the antlr library.
 find_library(ANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib C:/antlr/277/lib)
@@ -134,23 +137,27 @@ endif()
 if(${CMAKE_COMPILER_IS_GNUCXX})
     set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized")
     # Adding global compiler definitions.
+    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g  --coverage -fprofile-arcs ${GCC_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${GCC_WARNINGS}")
-    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DDEBUG --coverage -fprofile-arcs ${GCC_WARNINGS}")
+    set(CMAKE_CXX_FLAGS_DEBUG "-fPIC -O3 -g -DDEBUG --coverage -fprofile-arcs ${GCC_WARNINGS}")
 
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # Configuring the Clang compiler
-    set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wpadded -Wshorten-64-to-32")
+    set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32")
+    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${CLANG_WARNINGS}")
-    #set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DDEBUG -fprofile-arcs ${CLANG_WARNINGS}")
-    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DDEBUG ${CLANG_WARNINGS}")
+    set(CMAKE_CXX_FLAGS_DEBUG "-fPIC -O0 -g -DDEBUG ${CLANG_WARNINGS}")
     
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
     
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    message(STATUS "MSVC Compiler not completely configured yet")
+    # message(STATUS "MSVC Compiler not completely configured yet")
     set(MSVC_WARNINGS "/W3 ")
-    
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} /Ox")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} /Ox")
+    # message(STATUS "${CMAKE_CXX_FLAGS_RELEASE}")
+    # message(STATUS "DEBUGGING Flags${CMAKE_CXX_FLAGS_DEBUG}")
     # Actual Debug cmd line args
     # /GS /TP /analyze- /W3 /Zc:wchar_t /I"C:/antlr/277/include/antlr" /I"C:/Users/bbart_000/Documents/GitHub/srcML/dep/include"
     # /I"C:/antlr/277/include" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/srcml"

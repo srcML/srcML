@@ -60,6 +60,9 @@ public :
 
   }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
   /**
    * startDocument
    *
@@ -201,6 +204,8 @@ public :
    * Overide for desired behaviour.
    */
   virtual void cdataBlock(const xmlChar * value, int len) {}
+
+#pragma GCC diagnostic pop
 
 };
 

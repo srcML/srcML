@@ -34,7 +34,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <regex.h>
+#include <boost/regex.hpp>
 
 #include <vector>
 #include <string>
@@ -58,7 +58,8 @@ std::string srcml_error;
  * Archive is used for both read and write first call to srcml()
  * initializes other parameters.
  */
-srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0,
+srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(),
+				 SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL,
                                  8, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
                                  0, 0, 0, 0, std::vector<transform>() };
 
@@ -348,44 +349,44 @@ int srcml_set_version(const char* version) {
 }
 
 /**
- * srcml_set_all_options
+ * srcml_set_options
  * @param option a srcml options
  *
  * Set the srcml options.  Clears all previously set.
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_set_all_options(unsigned long long option) {
+int srcml_set_options(unsigned long long option) {
 
-  return srcml_archive_set_all_options(&global_archive, option);
+  return srcml_archive_set_options(&global_archive, option);
 
 }
 
 /**
- * srcml_set_option
+ * srcml_enable_option
  * @param option a srcml option
  *
- * Set the srcml options.  Multiple may be set.
+ * Enable/set the srcml options.  Multiple may be enabled.
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_set_option(unsigned long long option) {
+int srcml_enable_option(unsigned long long option) {
 
-  return srcml_archive_set_option(&global_archive, option);
+  return srcml_archive_enable_option(&global_archive, option);
 
 }
 
 /**
- * srcml_clear_option
+ * srcml_disable_option
  * @param option a srcml option
  *
  * Remove an option.  May use multiple option with the same call.
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_clear_option(unsigned long long option) {
+int srcml_disable_option(unsigned long long option) {
 
-  return srcml_archive_clear_option(&global_archive, option);
+  return srcml_archive_disable_option(&global_archive, option);
 
 }
 
@@ -669,42 +670,19 @@ const char * srcml_check_extension(const char* filename) {
 int srcml_check_format(const char* format) {
 
   if(format == NULL) return SRCML_STATUS_ERROR;
-
-  static const char * const regex = "(zx\\.|zg\\.|2zb\\.|rat\\.)*";
+  static const boost::regex extRegEx("\\.(xz|zg|bz2|tar).*$");
 
   // reversed copy of the path
-  int length = (int)strlen(format);
+  std::size_t length = strlen(format);
+  boost::cmatch what;
 
-  char * reverse = (char *)malloc((length + 1) * sizeof(char));
-  if(reverse == NULL) return SRCML_STATUS_ERROR;
+  if(boost::regex_search(format, format + length, what,extRegEx)) {
 
-  for(int i = 0; i < length; ++i)
-    reverse[i] = format[length - i - 1];
-  reverse[length] = 0;
-
-  // setup the regular expression
-  regex_t preg = { 0 };
-  int errorcode = regcomp(&preg, regex, REG_EXTENDED);
-
-  // evalue the regex
-  regmatch_t pmatch[3];
-  errorcode = errorcode || regexec(&preg, reverse, 3, pmatch, 0);
-
-  // minus 1 to remove starting .
-  int ext_len = (int)(pmatch[0].rm_eo - pmatch[0].rm_so - 1);
-  regfree(&preg);
-  free(reverse);
-  if(ext_len > 0)
     return SRCML_STATUS_OK;
-  return SRCML_STATUS_ERROR;
 
-  //char * extension = (char *)malloc(ext_len * sizeof(char));
-  // extract the extension from the path, reversing as we go
-  //for(int i = 0; i < ext_len; ++i)
-  //extension[i] = reverse[pmatch[0].rm_eo - i - 2];
-  //extension[ext_len] = 0;
+  } else
+    return SRCML_STATUS_ERROR;
 
-  //return 1;
 }
 
 /**

@@ -54,7 +54,6 @@ int main() {
     srcml_append_transform_xpath(iarchive, "//src:unit");
     srcml_archive * oarchive = srcml_clone_archive(iarchive);
     srcml_write_open_memory(oarchive, &s, &size);
-
     srcml_apply_transforms(iarchive, oarchive);
 
     srcml_close_archive(oarchive);

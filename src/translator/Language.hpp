@@ -23,7 +23,7 @@
 #ifndef LANGUAGE_HPP
 #define LANGUAGE_HPP
 
-#include <fnmatch.h>
+//#include <fnmatch.h>
 #include <cstdio>
 #include <cstring>
 #include <string>
@@ -104,6 +104,8 @@ public:
   static void register_standard_file_extensions();
   static void register_standard_file_extensions(std::vector<pair> & registered_languages);
 
+  static void c_is_cpp(bool use_cpp);
+
   ~Language() {}
 
 private:
@@ -114,6 +116,8 @@ private:
   static pair lang2int[];
 
   static pair userext2int[];
+
+  static bool use_cpp_for_c;
 };
 
 #endif

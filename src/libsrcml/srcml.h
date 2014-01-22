@@ -68,7 +68,7 @@ const char* srcml_version_string();
 
 /* Options */
 /** Create an archive */
-#define SRCML_OPTION_ARCHIVE           1<<0
+#define SRCML_OPTION_ARCHIVE        1<<0
 /** Markups literal in special namespace */
 #define SRCML_OPTION_LITERAL           1<<1
 /** Markups modifiers in special namespace */
@@ -83,10 +83,10 @@ const char* srcml_version_string();
 #define SRCML_OPTION_CPP               1<<6
 /** Markup preprocessor elements (default for C, C++, C#) */
 #define SRCML_OPTION_CPP_NOMACRO       1<<7
-/** Do not issue an XML declaration */
-#define SRCML_OPTION_NO_XML_DECL       1<<8
-/** Do not include any XML namespace declarations */
-#define SRCML_OPTION_NO_NAMESPACE_DECL 1<<9
+/** Issue an XML declaration */
+#define SRCML_OPTION_XML_DECL       1<<8
+/** Include any XML namespace declarations */
+#define SRCML_OPTION_NAMESPACE_DECL 1<<9
 /** Leave as text preprocessor else parts (default: markup) */
 #define SRCML_OPTION_CPP_TEXT_ELSE     1<<10
 /** Markup preprocessor @code #if 0 @endcode sections (default: leave as text) */
@@ -137,9 +137,9 @@ int srcml_set_language           (const char* language);
 int srcml_set_filename           (const char* filename);
 int srcml_set_directory          (const char* directory);
 int srcml_set_version            (const char* version);
-int srcml_set_all_options        (unsigned long long option);
-int srcml_set_option             (unsigned long long option);
-int srcml_clear_option           (unsigned long long option);
+int srcml_set_options            (unsigned long long option);
+int srcml_enable_option          (unsigned long long option);
+int srcml_disable_option         (unsigned long long option);
 int srcml_set_tabstop            (int tabstop);
 int srcml_register_file_extension(const char* extension, const char* language);
 int srcml_register_namespace     (const char* prefix, const char* ns);
@@ -210,9 +210,9 @@ int srcml_archive_set_filename           (struct srcml_archive*, const char* fil
 int srcml_archive_set_directory          (struct srcml_archive*, const char* directory);
 int srcml_archive_set_version            (struct srcml_archive*, const char* version);
 
-int srcml_archive_set_all_options        (struct srcml_archive*, unsigned long long option);
-int srcml_archive_set_option             (struct srcml_archive*, unsigned long long option);
-int srcml_archive_clear_option           (struct srcml_archive*, unsigned long long option);
+int srcml_archive_set_options            (struct srcml_archive*, unsigned long long option);
+int srcml_archive_enable_option          (struct srcml_archive*, unsigned long long option);
+int srcml_archive_disable_option         (struct srcml_archive*, unsigned long long option);
 int srcml_archive_set_tabstop            (struct srcml_archive*, int tabstop);
 int srcml_archive_register_file_extension(struct srcml_archive*, const char* extension, const char* language);
 int srcml_archive_register_namespace     (struct srcml_archive*, const char* prefix, const char* ns);

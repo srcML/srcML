@@ -113,67 +113,67 @@ int main() {
   }
 
   /* 
-     srcml_set_all_options
+     srcml_set_options
    */
 
   {
-    srcml_set_all_options(1 | 2 | 3);
+    srcml_set_options(1 | 2 | 3);
     dassert(global_archive.options, (1 | 2 | 3));
   }
 
   {
-    srcml_set_all_options(1 | 2 | 3);
-    srcml_set_all_options(1);
+    srcml_set_options(1 | 2 | 3);
+    srcml_set_options(1);
     dassert(global_archive.options, 1);
   }
 
   /* 
-     srcml_set_option
+     srcml_enable_option
    */
 
   {
-    srcml_set_all_options(0);
-    srcml_set_option(1);
+    srcml_set_options(0);
+    srcml_enable_option(1);
     dassert(global_archive.options, 1);
   }
 
   {
-    srcml_set_all_options(1 | 2);
-    srcml_set_option(4);
+    srcml_set_options(1 | 2);
+    srcml_enable_option(4);
     dassert(global_archive.options, (1 | 2 | 4));
   }
 
   {
-    srcml_set_all_options(1);
-    srcml_set_option(2 | 4);
+    srcml_set_options(1);
+    srcml_enable_option(2 | 4);
     dassert(global_archive.options, (1 | 2 | 4));
   }
 
   /* 
-     srcml_clear_option
+     srcml_disable_option
    */
 
   {
-    srcml_set_all_options(0);
-    srcml_clear_option(0);
+    srcml_set_options(0);
+    srcml_disable_option(0);
     dassert(global_archive.options, 0);
   }
 
   {
-    srcml_set_all_options(1 | 2 | 4);
-    srcml_clear_option(0);
+    srcml_set_options(1 | 2 | 4);
+    srcml_disable_option(0);
     dassert(global_archive.options, (1 | 2 | 4));
   }
 
   {
-    srcml_set_all_options(1 | 2 | 4);
-    srcml_clear_option(2);
+    srcml_set_options(1 | 2 | 4);
+    srcml_disable_option(2);
     dassert(global_archive.options, (1 | 4));
   }
 
   {
-    srcml_set_all_options(1 | 2 | 4);
-    srcml_clear_option(1 | 2);
+    srcml_set_options(1 | 2 | 4);
+    srcml_disable_option(1 | 2);
     dassert(global_archive.options, 4);
   }
 
