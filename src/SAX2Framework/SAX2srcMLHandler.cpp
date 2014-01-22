@@ -235,6 +235,7 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
       URI = state->root.namespaces[i];
 
   state->is_archive = strcmp((const char *)localname, "unit") == 0;
+  state->process->set_is_archive(state->is_archive);
 
   if(!state->is_archive) {
 
