@@ -60,25 +60,40 @@ void src_input_libarchive::setupLibArchive(archive* a) {
   #endif
 }
 
-void src_input_libarchive::process(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input_file, std::string lang) {
+void src_input_libarchive::process(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang) {
   bool stdin = false;
   ParseRequest request = req;
 
-  // libArchive Setup
-  archive * arch = archive_read_new();
-  archive_entry * arch_entry = archive_entry_new();
+  boost::filesystem::path localPath(input);
 
-  setupLibArchive(arch);
-
-  if (archive_read_open_filename(arch, (input_file.compare("-") != 0 ? input_file.c_str() : NULL), 16384)!= ARCHIVE_OK) {
-      std::cerr << "Unable to open archive\n";
-      exit(1);
+  std::vector<std::string> input_files;
+  if (is_directory(localPath)) {
+    for (boost::filesystem::recursive_directory_iterator end, dir(localPath); dir != end; ++dir) {
+      if(is_regular_file(*dir))
+       input_files.push_back(dir->path().string());
     }
-    
+  }
+  else {
+    input_files.push_back(input);
+  }
+
+  for (size_t i = 0; i < input_files.size(); ++i) {
+    std::string input_file = input_files[i];
+
+    // libArchive Setup
+    archive * arch = archive_read_new();
+    archive_entry * arch_entry = archive_entry_new();
+
+    setupLibArchive(arch);
+
+    if (archive_read_open_filename(arch, (input_file.compare("-") != 0 ? input_file.c_str() : NULL), 16384)!= ARCHIVE_OK) {
+        std::cerr << "Unable to open archive\n";
+        exit(1);
+      }
+      
     // Stdin
-    if (input_file.compare("-") == 0) {
+    if (input_file.compare("-") == 0)
       stdin = true;
-    }
 
     while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
 
@@ -132,6 +147,6 @@ void src_input_libarchive::process(ThreadQueue<ParseRequest, 10>& queue, srcml_a
       // Hand request off to the processing queue
       queue.push(request);
     }
-
     archive_read_finish(arch);
+  }
 }

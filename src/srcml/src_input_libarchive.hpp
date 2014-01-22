@@ -30,6 +30,7 @@
 #include <srcml.h>
 #include <archive.h>
 #include <archive_entry.h>
+#include <boost/filesystem.hpp>
 
 #include <parse_request.hpp>
 #include <thread_queue.hpp>
@@ -39,7 +40,7 @@
 
 class src_input_libarchive {
   public :
-    static void process(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input_file, std::string lang);
+    static void process(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang);
   private :
     static void setupLibArchive(archive* a);
 };
