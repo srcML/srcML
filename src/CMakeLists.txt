@@ -18,7 +18,7 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-subdirs(parser translator libsrcml oldclient)
+subdirs(srcml parser translator libsrcml oldclient)
 
 # Enabling an include for the new srcML executable only when it
 # is specified to be built.
