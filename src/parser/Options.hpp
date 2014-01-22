@@ -103,7 +103,7 @@ const OPTION_TYPE OPTION_APPLY_ROOT      = ull(1) << 12;
 const OPTION_TYPE OPTION_COMPRESSED  = ull(1) << 13;
 
 // @src2srcml
-const OPTION_TYPE OPTION_ELSEIF  = ull(1) << 14;
+const OPTION_TYPE OPTION_NESTIF  = ull(1) << 14;
 
 // end SRCML_OPTIONS
 

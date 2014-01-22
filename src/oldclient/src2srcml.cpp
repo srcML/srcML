@@ -347,7 +347,7 @@ void output_version(const char* name) {
     printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
 }
 
-OPTION_TYPE options = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+OPTION_TYPE options = OPTION_XMLDECL | OPTION_NAMESPACEDECL | OPTION_NESTIF;
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
@@ -800,7 +800,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case ELSEIF_FLAG_CODE:
-      options |= OPTION_ELSEIF;
+      options &= ~OPTION_NESTIF;
       break;
 
     case CPPIF_CHECK_FLAG_CODE:
