@@ -570,7 +570,7 @@ private :
 
     for(int i = 0, pos = 0; i < nb_namespaces; ++i, pos += 2) {
 
-      if(strcmp((const char *)namespaces[pos + 1], SRCML_CPP_NS_URI) != 0)
+      if(is_archive && strcmp((const char *)namespaces[pos + 1], SRCML_CPP_NS_URI) != 0)
         continue;
 
       *unit->unit += " xmlns";
