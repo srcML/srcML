@@ -343,8 +343,10 @@ private :
   const char** params;
   int fd;
   const xmlChar * root_prefix;
+#ifndef WIN32
   xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;
   xsltApplyStylesheet_function xsltApplyStylesheetDynamic;
+#endif
   void * handle;
 };
 

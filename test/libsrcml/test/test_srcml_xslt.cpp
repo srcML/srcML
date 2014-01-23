@@ -26,7 +26,7 @@
 #include <string.h>
 #include <cassert>
 #include <fstream>
-#include <unistd.h>
+// #include <unistd.h>
 #include <fcntl.h>
 
 #include <srcml_sax2_utilities.hpp>
