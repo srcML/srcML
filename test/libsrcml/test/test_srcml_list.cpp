@@ -26,7 +26,7 @@
 #include <string.h>
 #include <cassert>
 #include <fstream>
-#include <unistd.h>
+// #include <unistd.h>
 
 #include <srcml.h>
 #include <srcml_types.hpp>

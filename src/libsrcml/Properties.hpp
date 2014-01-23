@@ -29,7 +29,11 @@
 #include "srcmlns.hpp"
 #include <sstream>
 
+#ifndef WIN32
 #include <unistd.h>
+#else
+#include <io.h>
+#endif
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"

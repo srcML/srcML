@@ -51,5 +51,5 @@ if(${SAX2_ENABLED})
 endif()
 
 # Including extra directories.
-subdirs(src test)
+subdirs(src)
 
