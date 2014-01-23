@@ -29,6 +29,13 @@
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
 
+struct SAXError {
+
+  std::string message;
+  int error_code;
+
+};
+
 /**
  * srcMLControlHandler
  *

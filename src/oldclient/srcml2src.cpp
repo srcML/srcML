@@ -364,15 +364,7 @@ void output_version(const char* name) {
     printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
 }
 
-void output_settings(const char * name) {
-  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
-}
-
-void output_features(const char * name) {
-  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
-}
-
-OPTION_TYPE options = OPTION_NO_ARCHIVE;
+OPTION_TYPE options = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
 
 
 #ifdef __GNUG__
@@ -493,7 +485,7 @@ int main(int argc, char* argv[]) {
   const char* filename = "-";
 
   bool is_multi_input = (argc - curarg) > 1;
-  bool is_multi_op = options & (OPTION_INFO | OPTION_LONG_INFO | OPTION_LIST | OPTION_UNIT | OPTION_NAMESPACE) & ~OPTION_NO_ARCHIVE;
+  bool is_multi_op = options & (OPTION_INFO | OPTION_LONG_INFO | OPTION_LIST | OPTION_UNIT | OPTION_NAMESPACE | OPTION_ARCHIVE);
 
   do {
 
@@ -653,7 +645,7 @@ int main(int argc, char* argv[]) {
       }
 
       // process non-attribute options
-    } else if (!isoption(options, OPTION_NO_ARCHIVE)) {
+    } else if (isoption(options, OPTION_ARCHIVE)) {
 
 #ifdef __GNUG__
       // gracefully finish current file in srcML archive mode
@@ -822,10 +814,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { OMIT_FLAG, required_argument, NULL, OMIT_FLAG_SHORT },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NULL_FLAG, no_argument, NULL, NULL_FLAG_SHORT },
-    { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
-    { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
-    { SETTINGS_FLAG, no_argument, NULL, SETTINGS_FLAG_CODE },
-    { FEATURES_FLAG, no_argument, NULL, FEATURES_FLAG_CODE },
+    { NO_XML_DECLARATION_FLAG, no_argument, NULL, NO_XML_DECLARATION_FLAG_CODE },
+    { NO_NAMESPACE_DECLARATION_FLAG, no_argument, NULL, NO_NAMESPACE_DECLARATION_FLAG_CODE },
     //    { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
     //    { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
     { LIST_FLAG, no_argument, NULL, LIST_FLAG_CODE },
@@ -955,7 +945,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       break;
 
     case NESTED_FLAG_SHORT:
-      options &= OPTION_NO_ARCHIVE;
+      options |= OPTION_ARCHIVE;
       break;
 
     case INFO_FLAG_SHORT:
@@ -1012,15 +1002,6 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       break;
 
-    case SETTINGS_FLAG_CODE :
-      output_settings(PROGRAM_NAME);
-      exit(STATUS_SUCCESS);
-      break;
-
-    case FEATURES_FLAG_CODE :
-      output_features(PROGRAM_NAME);
-      exit(STATUS_SUCCESS);
-      break;
       /*
         case INPUT_FORMAT_FLAG_CODE:
 
@@ -1228,6 +1209,16 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       options |= OPTION_RELAXNG;
       poptions.transforms[poptions.transformcount++] = optarg;
+      break;
+
+    case NO_XML_DECLARATION_FLAG_CODE:
+      options |= OPTION_XML;
+      options &= ~OPTION_XMLDECL;
+      break;
+
+    case NO_NAMESPACE_DECLARATION_FLAG_CODE:
+      options |= OPTION_XML;
+      options &= ~OPTION_NAMESPACEDECL;
       break;
 
     case APPLY_ROOT_FLAG_CODE:

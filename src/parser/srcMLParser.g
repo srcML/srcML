@@ -679,7 +679,7 @@ catch[...] {
 keyword_statements[] { ENTRY_DEBUG } :
 
         // conditional statements
-        if_statement | { isoption(parseoptions, OPTION_ELSEIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
+        if_statement | { !isoption(parseoptions, OPTION_NESTIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
         while_statement | for_statement | do_statement | foreach_statement |
@@ -6188,9 +6188,38 @@ cpp_define_name[] { CompleteElement element(this); std::string::size_type pos = 
         simple_identifier (options { greedy = true; } : { pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
 ;
 
-cpp_define_parameter_list[] { ENTRY_DEBUG } :
-        parameter_list
+cpp_define_parameter_list[] { CompleteElement element(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
+        {
+            // list of parameters
+            startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+
+            // start the parameter list element
+            startElement(SPARAMETER_LIST);
+        }
+
+        // parameter list must include all possible parts since it is part of
+        // function detection
+        LPAREN ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; }
+        {
+            // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
+            if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
+                endMode();
+        } comma |
+        cpp_define_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
 ;
+
+
+cpp_define_parameter[] { int type_count = 1; ENTRY_DEBUG } :
+        {
+            // end parameter correctly
+            startNewMode(MODE_PARAMETER);
+
+            // start the parameter element
+            startElement(SPARAMETER);
+        }
+        parameter_type_count[type_count]
+;
+
 
 cpp_define_value[] { ENTRY_DEBUG } :
         {

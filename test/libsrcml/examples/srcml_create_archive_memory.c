@@ -53,11 +53,11 @@ int main(int argc, char* argv[]) {
         /* Translate to srcml and append to the archive */
         char buffer[256];
         srcml_input = open(argv[i], O_RDONLY);
-        read(srcml_input, buffer, 256);
+        int num_read = read(srcml_input, buffer, 256);
         close(srcml_input);
         srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
 
-        srcml_parse_unit_memory(unit, buffer, strlen(buffer));
+        srcml_parse_unit_memory(unit, buffer, num_read);
 
         /* Translate to srcml and append to the archive */
         srcml_write_unit(archive, unit);

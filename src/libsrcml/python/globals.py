@@ -63,17 +63,17 @@ libsrcml.srcml_set_directory.argtypes = [c_char_p]
 libsrcml.srcml_set_version.restype = c_int
 libsrcml.srcml_set_version.argtypes = [c_char_p]
 
-# int srcml_set_all_options   (int option);
-libsrcml.srcml_set_all_options.restype = c_int
-libsrcml.srcml_set_all_options.argtypes = [c_ulonglong]
+# int srcml_set_options   (int option);
+libsrcml.srcml_set_options.restype = c_int
+libsrcml.srcml_set_options.argtypes = [c_ulonglong]
 
-# int srcml_set_option    (int option);
-libsrcml.srcml_set_option.restype = c_int
-libsrcml.srcml_set_option.argtypes = [c_ulonglong]
+# int srcml_enable_option    (int option);
+libsrcml.srcml_enable_option.restype = c_int
+libsrcml.srcml_enable_option.argtypes = [c_ulonglong]
 
-# int srcml_clear_option  (int option);
-libsrcml.srcml_clear_option.restype = c_int
-libsrcml.srcml_clear_option.argtypes = [c_ulonglong]
+# int srcml_disable_option  (int option);
+libsrcml.srcml_disable_option.restype = c_int
+libsrcml.srcml_disable_option.argtypes = [c_ulonglong]
 
 # int srcml_set_tabstop   (int tabstop);
 libsrcml.srcml_set_tabstop.restype = c_int
@@ -189,14 +189,14 @@ def set_directory(directory) :
 def set_version(version) :
     check_return(libsrcml.srcml_set_version(version))
 
-def set_all_options(options) :
-    check_return(libsrcml.srcml_set_all_options(options))
+def set_options(options) :
+    check_return(libsrcml.srcml_set_options(options))
 
-def set_option(option) :
-    check_return(libsrcml.srcml_set_option(option))
+def enable_option(option) :
+    check_return(libsrcml.srcml_enable_option(option))
 
-def clear_option(option) :
-    check_return(libsrcml.srcml_clear_option(option))
+def disable_option(option) :
+    check_return(libsrcml.srcml_disable_option(option))
 
 def set_tabstop(tabstop) :
     check_return(libsrcml.srcml_set_tabstop(tabstop))

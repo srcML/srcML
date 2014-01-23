@@ -191,6 +191,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
     srcml_archive_set_options(archive, 1 | 2 | 4);
 
@@ -201,6 +202,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
     srcml_archive_set_options(archive, 1 | 2 | 4);
     srcml_archive_set_options(archive, 1);
@@ -220,6 +222,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
     srcml_archive_enable_option(archive, 1);
 
@@ -230,6 +233,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
     srcml_archive_set_options(archive, 1 | 2);
     srcml_archive_enable_option(archive, 4);
@@ -241,6 +245,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
     srcml_archive_set_options(archive, 1);
     srcml_archive_enable_option(archive, 2 | 4);
@@ -260,6 +265,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
     srcml_archive_disable_option(archive, 0);
 
@@ -270,6 +276,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
     srcml_archive_set_options(archive, 1 | 2 | 4);
     srcml_archive_disable_option(archive, 0);
@@ -281,6 +288,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
     srcml_archive_set_options(archive, 1 | 2 | 4);
     srcml_archive_disable_option(archive, 2);
@@ -292,6 +300,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    archive->options = 0;
 
     srcml_archive_set_options(archive, 1 | 2 | 4);
     srcml_archive_disable_option(archive, 1 | 2);

@@ -67,8 +67,8 @@ const char* srcml_version_string();
 #define SRCML_LANGUAGE_XML    "xml"
 
 /* Options */
-/** Do not create an archive */
-#define SRCML_OPTION_NO_ARCHIVE        1<<0
+/** Create an archive */
+#define SRCML_OPTION_ARCHIVE        1<<0
 /** Markups literal in special namespace */
 #define SRCML_OPTION_LITERAL           1<<1
 /** Markups modifiers in special namespace */
@@ -83,10 +83,10 @@ const char* srcml_version_string();
 #define SRCML_OPTION_CPP               1<<6
 /** Markup preprocessor elements (default for C, C++, C#) */
 #define SRCML_OPTION_CPP_NOMACRO       1<<7
-/** Do not issue an XML declaration */
-#define SRCML_OPTION_NO_XML_DECL       1<<8
-/** Do not include any XML namespace declarations */
-#define SRCML_OPTION_NO_NAMESPACE_DECL 1<<9
+/** Issue an XML declaration */
+#define SRCML_OPTION_XML_DECL       1<<8
+/** Include any XML namespace declarations */
+#define SRCML_OPTION_NAMESPACE_DECL 1<<9
 /** Leave as text preprocessor else parts (default: markup) */
 #define SRCML_OPTION_CPP_TEXT_ELSE     1<<10
 /** Markup preprocessor @code #if 0 @endcode sections (default: leave as text) */
@@ -95,6 +95,8 @@ const char* srcml_version_string();
 #define SRCML_OPTION_APPLY_ROOT        1<<12
 /** Compress the output file */
 #define SRCML_OPTION_COMPRESS          1<<13
+/** Nest if in else if intead of elseif tag */
+#define SRCML_OPTION_NESTIF            1<<14
 
 /* srcml status messages */
 /** Return status indicating no errors */

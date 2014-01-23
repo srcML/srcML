@@ -53,7 +53,13 @@ void * start_routine(void * arguments) {
 
   thread_args * args = (thread_args *)arguments;
 
-  args->control->parse(args->handler);
+  try { 
+    args->control->parse(args->handler);
+  } catch(SAXError error) {
+
+    if(!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END))
+      fprintf(stderr, "Error Parsing: %s", error.message.c_str());
+  }
 
   return 0;
 

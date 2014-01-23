@@ -347,15 +347,7 @@ void output_version(const char* name) {
     printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
 }
 
-void output_settings(const char * name) {
-  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
-}
-
-void output_features(const char * name) {
-  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, name);
-}
-
-OPTION_TYPE options = OPTION_NO_ARCHIVE;
+OPTION_TYPE options = OPTION_XMLDECL | OPTION_NAMESPACEDECL | OPTION_NESTIF;
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
@@ -475,7 +467,7 @@ int main(int argc, char* argv[]) {
   // if more than one input filename assume nested
   // a single input filename which is an archive is detected during archive processing
   if (input_arg_count > 1)
-    options &= ~OPTION_NO_ARCHIVE;
+    options |= OPTION_ARCHIVE;
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
   /*
@@ -673,7 +665,7 @@ int main(int argc, char* argv[]) {
     if (gpoptions->count == 0)
       return STATUS_INPUTFILE_PROBLEM;
 
-    else if (isoption(options, OPTION_VERBOSE) && !isoption(options, OPTION_NO_ARCHIVE) && !isoption(options, OPTION_QUIET)) {
+    else if (isoption(options, OPTION_VERBOSE) && isoption(options, OPTION_ARCHIVE) && !isoption(options, OPTION_QUIET)) {
       fprintf(stderr, "\n"
               "Translated: %d\t"
               "Skipped: %d\t"
@@ -712,8 +704,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { DIRECTORY_FLAG, required_argument, NULL, DIRECTORY_FLAG_SHORT },
     { FILENAME_FLAG, required_argument, NULL, FILENAME_FLAG_SHORT },
     { SRCVERSION_FLAG, required_argument, NULL, SRCVERSION_FLAG_SHORT },
-    { SETTINGS_FLAG, no_argument, NULL, SETTINGS_FLAG_CODE },
-    { FEATURES_FLAG, no_argument, NULL, FEATURES_FLAG_CODE },
     //    { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
     //    { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
     { FILELIST_FLAG, required_argument, NULL, FILELIST_FLAG_CODE },
@@ -724,8 +714,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { REVISION_FLAG, no_argument, NULL, REVISION_FLAG_CODE },
     { CPP_FLAG, no_argument, NULL, CPP_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
-    { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
-    { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
+    { NO_XML_DECLARATION_FLAG, no_argument, NULL, NO_XML_DECLARATION_FLAG_CODE },
+    { NO_NAMESPACE_DECLARATION_FLAG, no_argument, NULL, NO_NAMESPACE_DECLARATION_FLAG_CODE },
     { OLD_FILENAME_FLAG, no_argument, NULL, OLD_FILENAME_FLAG_CODE },
     { TABS_FLAG, required_argument, NULL, TABS_FLAG_CODE },
     { POSITION_FLAG, no_argument, &curoption, OPTION_POSITION },
@@ -810,7 +800,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case ELSEIF_FLAG_CODE:
-      options |= OPTION_ELSEIF;
+      options &= ~OPTION_NESTIF;
       break;
 
     case CPPIF_CHECK_FLAG_CODE:
@@ -858,7 +848,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       options |= OPTION_FILELIST;
 
       // filelist mode is default nested mode
-      options &= ~OPTION_NO_ARCHIVE;
+      options |= OPTION_ARCHIVE;
 
       poptions.src_filename = optarg;
       break;
@@ -891,7 +881,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case NESTED_FLAG_SHORT:
-      options &= ~OPTION_NO_ARCHIVE;
+      options |= OPTION_ARCHIVE;
       break;
 
     case EXPRESSION_MODE_FLAG_SHORT:
@@ -1058,15 +1048,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.given_version = optarg;
       break;
 
-    case SETTINGS_FLAG_CODE :
-      output_settings(PROGRAM_NAME);
-      exit(STATUS_SUCCESS);
-      break;
-
-    case FEATURES_FLAG_CODE :
-      output_features(PROGRAM_NAME);
-      exit(STATUS_SUCCESS);
-      break;
       /*
         case INPUT_FORMAT_FLAG_CODE:
 
@@ -1091,6 +1072,16 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       */
     case OLD_FILENAME_FLAG_CODE :
       options |= OPTION_OLD_FILENAME;
+      break;
+
+    case NO_XML_DECLARATION_FLAG_CODE:
+      options |= OPTION_XML;
+      options &= ~OPTION_XMLDECL;
+      break;
+
+    case NO_NAMESPACE_DECLARATION_FLAG_CODE:
+      options |= OPTION_XML;
+      options &= ~OPTION_NAMESPACEDECL;
       break;
 
     case TABS_FLAG_CODE :
@@ -1390,8 +1381,8 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
 
         // once any source archive is input, then we have to assume nested not just locally
         if (isarchive) {
-          options &= ~OPTION_NO_ARCHIVE;
-          save_options &= ~OPTION_NO_ARCHIVE;
+          options |= OPTION_ARCHIVE;
+          save_options |= OPTION_ARCHIVE;
         }
 
         // output tracing information about the input file
@@ -1528,7 +1519,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
 void src2srcml_dir_top(srcMLTranslator& translator, const char* directory, process_options& poptions) {
 
   // by default, all dirs are treated as an archive
-  options &= ~OPTION_NO_ARCHIVE;
+  options |= OPTION_ARCHIVE;
 
   // record the stat info on the output file
   struct stat outstat = {/* 0 */};

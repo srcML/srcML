@@ -104,9 +104,9 @@ STRING_START { int zero_literal = 0; _saveIndex = 0; } :
 
 CONSTANTS { int zero_literal = 0; _saveIndex = 0; } :
         { startline = false; }
-        ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' | '_' )*
+        ('0'..'9') (options { greedy = true; } : '0'..'9' | '_')*
         (options { greedy = true; } : '.' | '0'..'9')*
-        (options { greedy = true; } : 'e' | ('+' | '-') | '0'..'9')*
+        (options { greedy = true; } : 'e' ('+' | '-')* ('0'..'9')*)?
         (options { greedy = true; } : 'i' { $setType(COMPLEX_NUMBER); })*
         (options { greedy = true; } : NAME)*
 

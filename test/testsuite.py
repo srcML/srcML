@@ -198,7 +198,7 @@ def src2srcML(text_file, encoding, language, directory, filename, xmlns):
 
         archive.write_open_memory()
         archive.set_encoding(encoding)
-        archive.set_all_options(options)
+        archive.set_options(options)
         unit = srcml_unit(archive)
         unit.set_language(language)
         is_all =  directory.find(".all") 

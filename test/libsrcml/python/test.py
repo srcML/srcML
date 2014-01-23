@@ -27,6 +27,7 @@ def verify_test(correct, output) :
     globals()['test_count'] += 1
 
     if correct != output :
+        print str(globals()['test_count']) + "\t"
         for line in difflib.unified_diff(str(correct).split("\n"), str(output).split("\n")) :
             print line
         globals()['error_count'] += 1
@@ -46,12 +47,13 @@ verify_test("C++", archive.get_language())
 verify_test("dir", archive.get_directory())
 verify_test("1.0", archive.get_version())
 
-archive.set_option(1)
-archive.set_option(2)
+archive.set_options(0)
+archive.enable_option(1)
+archive.enable_option(2)
 verify_test(3, archive.get_options())
-archive.clear_option(2)
+archive.disable_option(2)
 verify_test(1, archive.get_options())
-archive.set_all_options(2)
+archive.set_options(2)
 verify_test(2, archive.get_options())
 
 archive.set_tabstop(4)
@@ -380,14 +382,15 @@ verify_test("a.cpp", srcml.get_filename())
 verify_test("directory", srcml.get_directory())
 verify_test("version", srcml.get_version())
 
-srcml.set_option(1)
+srcml.set_options(0)
+srcml.enable_option(1)
 verify_test(1, srcml.get_options())
 
-srcml.set_all_options(2)
+srcml.set_options(2)
 verify_test(2, srcml.get_options())
 
-srcml.set_all_options(1 | 2)
-srcml.clear_option(2)
+srcml.set_options(1 | 2)
+srcml.disable_option(2)
 verify_test(1, srcml.get_options())
 
 srcml.set_tabstop(4)
@@ -403,7 +406,7 @@ srcml.set_language(None)
 srcml.set_filename(None)
 srcml.set_directory(None)
 srcml.set_version(None)
-srcml.set_all_options(0)
+srcml.set_options(srcml.SRCML_OPTION_XML_DECL | srcml.SRCML_OPTION_NAMESPACE_DECL)
 srcml.set_tabstop(8)
 
 srcml.register_file_extension("foo", "C++")
@@ -419,6 +422,7 @@ asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="project.xml"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
 </s:unit>
 """
+
 verify_test(asrcml, xml)
 
 verify_test(2, srcml.check_language("C++"))
@@ -444,5 +448,6 @@ file = open("project.xml", "w")
 file.write(asrcml)
 file.close()
 
-verify_test("['a.cpp', 'b.cpp']", srcml.filename_list("project.xml"))
+verify_test(['a.cpp', 'b.cpp'], srcml.filename_list("project.xml"))
+
 os.remove("project.xml")

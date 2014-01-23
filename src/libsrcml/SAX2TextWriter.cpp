@@ -69,7 +69,7 @@ void SAX2TextWriter::startDocument(void *ctx) {
                                               isoption(pstate->options, OPTION_COMPRESSED) ? 1 : 0);
 
     // start this document the same as the current document
-    if (!isoption(pstate->options, OPTION_XMLDECL))
+    if (isoption(pstate->options, OPTION_XMLDECL))
         xmlTextWriterStartDocument(pstate->writer,
                                    (const char*) pstate->ctxt->version,
                                    (const char*) (pstate->ctxt->encoding ? pstate->ctxt->encoding : pstate->ctxt->input->encoding),
