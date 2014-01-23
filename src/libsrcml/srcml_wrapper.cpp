@@ -26,7 +26,7 @@ void * srcml_malloc(size_t size) {
 
   if(!ret && !size) {
 
-    fprintf(stderr, "Error allocating (%zd bytes), exiting.", size);
+    fprintf(stderr, "Error allocating (%lu bytes), exiting.", (unsigned long)size);
     exit(STATUS_ERROR);
 
   }
@@ -41,7 +41,7 @@ void * srcml_malloc_sax(size_t size, xmlParserCtxtPtr ctxt) {
 
   if(!ret && !size) {
 
-    fprintf(stderr, "Error allocating (%zd bytes), exiting.", size);
+    fprintf(stderr, "Error allocating (%lu bytes), exiting.", (unsigned long)size);
     stop_all_parsing(ctxt);
 
   }
