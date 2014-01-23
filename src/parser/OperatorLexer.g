@@ -91,8 +91,7 @@ EOL_PLACEHOLD;
 }
 
 // @todo remove statics possibly breaking point for threading.
-OPERATORS options { testLiterals = true; } { bool star = false; static int lastpos = 0; int zero_literal = 0; _saveIndex = 0;
-static int prev = 0; int start = LA(1);
+OPERATORS options { testLiterals = true; } { bool star = false; static int lastpos = 0; static int prev = 0; int start = LA(1);
 } : 
         (
             '#' {
@@ -182,5 +181,4 @@ static int prev = 0; int start = LA(1);
         '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
         )
         { startline = false; lastpos = getColumn(); prev = start; }
-        { _saveIndex = _saveIndex + zero_literal; }
 ;
