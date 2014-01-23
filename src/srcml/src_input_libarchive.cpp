@@ -89,9 +89,9 @@ void src_input_libarchive::process(ThreadQueue<ParseRequest, 10>& queue, srcml_a
     setupLibArchive(arch);
 
     if (archive_read_open_filename(arch, (input_file.compare("-") != 0 ? input_file.c_str() : NULL), 16384)!= ARCHIVE_OK) {
-        std::cerr << "Unable to open archive\n";
-        exit(1);
-      }
+      std::cerr << "Unable to open archive\n";
+      exit(1);
+    }
       
     // Stdin
     if (input_file.compare("-") == 0)
