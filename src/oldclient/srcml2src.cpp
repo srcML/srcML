@@ -425,6 +425,11 @@ void exit_cleanup() {
 
 }
 
+#if defined(__GNUC__) && !defined(__MINGW32__)
+// stat initializer                                                                                                                     
+struct stat init_stat;
+#endif
+
 int main(int argc, char* argv[]) {
 
   atexit(exit_cleanup);
@@ -509,12 +514,12 @@ int main(int argc, char* argv[]) {
   if (strcmp(filename, "-") != 0 && strcmp(poptions.ofilename, "-") != 0) {
 
     // input file
-    struct stat instat = {/* 0 */};
+    struct stat instat = init_stat;
     if (stat(filename, &instat) == -1) {
       goto done;
     }
 
-    struct stat outstat = {/* 0 */};
+    struct stat outstat = init_stat;
     if (stat(poptions.ofilename, &outstat) == -1) {
       goto done;
     }
