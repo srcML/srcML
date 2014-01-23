@@ -26,8 +26,9 @@
 #include <string.h>
 #include <cassert>
 #include <fstream>
-// #include <unistd.h>
-
+#if defined(__GNUC__) && !defined(__MINGW32__)
+#include <unistd.h>
+#endif
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
