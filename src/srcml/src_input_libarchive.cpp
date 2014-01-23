@@ -65,8 +65,8 @@ void src_input_libarchive::process(ThreadQueue<ParseRequest, 10>& queue, srcml_a
   ParseRequest request = req;
 
   boost::filesystem::path localPath(input);
-
   std::vector<std::string> input_files;
+  
   if (is_directory(localPath)) {
     for (boost::filesystem::recursive_directory_iterator end, dir(localPath); dir != end; ++dir) {
       if(is_regular_file(*dir)) {
@@ -76,7 +76,7 @@ void src_input_libarchive::process(ThreadQueue<ParseRequest, 10>& queue, srcml_a
     }
   }
   else {
-    input_files.push_back(input);
+    input_files.push_back(localPath.string());
   }
 
   for (size_t i = 0; i < input_files.size(); ++i) {
