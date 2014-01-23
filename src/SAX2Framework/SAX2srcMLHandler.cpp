@@ -25,6 +25,9 @@
 
 #include <cstring>
 
+/** Static sax handler for zero initializing in factory */
+xmlSAXHandler sax2_srcml_handler_init;
+
 /**
  * factory
  *
@@ -32,7 +35,7 @@
  */
 xmlSAXHandler factory() {
 
-  xmlSAXHandler sax = {/* 0 */};
+  xmlSAXHandler sax = sax2_srcml_handler_init;
 
   sax.initialized    = XML_SAX2_MAGIC;
 
