@@ -71,14 +71,14 @@ public :
     }
 
     dlerror();
-    xsltApplyStylesheetUserDynamic = (xsltApplyStylesheetUser_function)dlsym(handle, "xsltApplyStylesheetUser");
+    *(void **)(&xsltApplyStylesheetUserDynamic) = dlsym(handle, "xsltApplyStylesheetUser");
     char* error;
     if ((error = dlerror()) != NULL) {
       dlclose(handle);
       return;
     }
     dlerror();
-    xsltApplyStylesheetDynamic = (xsltApplyStylesheet_function)dlsym(handle, "xsltApplyStylesheet");
+    *(void **)(&xsltApplyStylesheetDynamic) = dlsym(handle, "xsltApplyStylesheet");
     if ((error = dlerror()) != NULL) {
       dlclose(handle);
       return;
