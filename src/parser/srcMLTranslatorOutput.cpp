@@ -256,7 +256,7 @@ namespace {
 
   //
   ELEMENT_MAP(SEMPTY,         "empty_stmt")
-};
+}
 
 enum { SRCML_SRC_NS_URI_POS,
        SRCML_CPP_NS_URI_POS,
@@ -264,7 +264,7 @@ enum { SRCML_SRC_NS_URI_POS,
        SRCML_EXT_LITERAL_NS_URI_POS,
        SRCML_EXT_OPERATOR_NS_URI_POS,
        SRCML_EXT_MODIFIER_NS_URI_POS,
-       SRCML_EXT_POSITION_NS_URI_POS,
+       SRCML_EXT_POSITION_NS_URI_POS
 };
 
 #undef ELEMENT_MAP_CALL_NAME
@@ -306,7 +306,7 @@ namespace {
 
   // modifier namespace
   ELEMENT_MAP(SMODIFIER, SRCML_EXT_MODIFIER_NS_URI_POS)
-};
+}
 
 // check if encoding is supported
 bool srcMLTranslatorOutput::checkEncoding(const char* encoding) {
