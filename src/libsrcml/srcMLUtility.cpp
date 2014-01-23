@@ -682,7 +682,8 @@ static void dlexsltRegisterAll(void * handle) {
   typedef void (*exsltRegisterAll_function)();
 
   dlerror();
-  exsltRegisterAll_function exsltRegisterAll = (exsltRegisterAll_function)dlsym(handle, "exsltRegisterAll");
+  exsltRegisterAll_function exsltRegisterAll;
+  *(void **)(&exsltRegisterAll) = dlsym(handle, "exsltRegisterAll");
   char* error;
   if ((error = dlerror()) != NULL) {
     dlclose(handle);
@@ -723,7 +724,8 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   dlexsltRegisterAll(handle);
 
   dlerror();
-  xsltParseStylesheetFile_function xsltParseStylesheetFile = (xsltParseStylesheetFile_function)dlsym(handle, "xsltParseStylesheetFile");
+  xsltParseStylesheetFile_function xsltParseStylesheetFile;
+  *(void **)(&xsltParseStylesheetFile) = dlsym(handle, "xsltParseStylesheetFile");
   char* error;
   if ((error = dlerror()) != NULL) {
     dlclose(handle);
@@ -731,14 +733,16 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   }
 
   dlerror();
-  xsltCleanupGlobals_function xsltCleanupGlobals = (xsltCleanupGlobals_function)dlsym(handle, "xsltCleanupGlobals");
+  xsltCleanupGlobals_function xsltCleanupGlobals;
+  *(void **)(&xsltCleanupGlobals) = dlsym(handle, "xsltCleanupGlobals");
   if ((error = dlerror()) != NULL) {
     dlclose(handle);
     return;
   }
 
   dlerror();
-  xsltFreeStylesheet_function xsltFreeStylesheet = (xsltFreeStylesheet_function)dlsym(handle, "xsltFreeStylesheet");
+  xsltFreeStylesheet_function xsltFreeStylesheet;
+  *(void **)(&xsltFreeStylesheet) = dlsym(handle, "xsltFreeStylesheet");
   if ((error = dlerror()) != NULL) {
     dlclose(handle);
     return;
