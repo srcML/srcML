@@ -24,10 +24,16 @@
 #include <srcml_sax2_utilities.hpp>
 
 #include <stdio.h>
-#include <unistd.h>
+
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifndef WIN32
+#include <unistd.h>
+#else
+#include <io.h>
+
+#endif
 
 /** 
  * srcml_append_transform_xpath
@@ -146,9 +152,13 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     int transform_fd = mkstemp(transform_filename);
 #else
     mktemp(transform_filename);
-    int transform_fd = open(transform_filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+    int transform_fd = open(transform_filename, O_WRONLY | O_CREAT | O_TRUNC
+#ifndef LIBSRCML_COMPILER_IS_MSVC
+        , S_IRUSR | S_IWUSR
 #endif
-
+    );
+#endif
+    
     xmlParserInputBufferPtr pinput = 0;
     if(i == 0) pinput = iarchive->input;
     else pinput = xmlParserInputBufferCreateFilename(last_transform_filename, xmlParseCharEncoding(0));

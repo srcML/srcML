@@ -32,7 +32,7 @@
 #include "srcMLUtility.hpp"
 #include "Options.hpp"
 #include "srcmlns.hpp"
-#include <getopt.h>
+// #include <getopt.h>
 
 #include "archive.h"
 #include "libxml_archive_read.hpp"
@@ -40,6 +40,7 @@
 #include "srcexfun.hpp"
 #include "URIStream.hpp"
 #include <srcml_wrapper.hpp>
+#include <archive.h>
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>
@@ -357,11 +358,12 @@ void output_version(const char* name) {
   if(handle) dlclose(handle);
   handle = 0;
 #endif
-
-  if(archive_version_number(), ARCHIVE_VERSION_NUMBER)
+#ifndef LIBSRCML_COMPILER_IS_MSVC
+  if(archive_version_number() == ARCHIVE_VERSION_NUMBER)
     printf("libarchive %d\n", ARCHIVE_VERSION_NUMBER);
   else
     printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
+#endif
 }
 
 void output_settings(const char * name) {

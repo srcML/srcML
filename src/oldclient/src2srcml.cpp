@@ -38,10 +38,10 @@
 #include "srcMLTranslator.hpp"
 #include "srcMLOutput.hpp"
 #include "URIStream.hpp"
-#include <getopt.h>
-#include <dirent.h>
+// #include <getopt.h>
+//#include <dirent.h>
 #include <algorithm>
-#include <archive.h>
+
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
 
@@ -340,11 +340,12 @@ void output_version(const char* name) {
     printf("libxml %d, ", LIBXML_VERSION);
   else
     printf("libxml %s (Compiled %d), ", xmlParserVersion, LIBXML_VERSION);
-
+#ifndef LIBSRCML_COMPILER_IS_MSVC
   if(archive_version_number() == ARCHIVE_VERSION_NUMBER)
     printf("libarchive %d\n", ARCHIVE_VERSION_NUMBER);
   else
     printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
+#endif
 }
 
 void output_settings(const char * name) {
