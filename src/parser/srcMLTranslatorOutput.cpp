@@ -88,6 +88,7 @@ namespace {
   ELEMENT_MAP(SBLOCK, "block")
   ELEMENT_MAP(SINDEX, "index")
   ELEMENT_MAP(SDECLTYPE, "decltype")
+  ELEMENT_MAP(STYPENAME, "typename")
 
   ELEMENT_MAP(SEXPRESSION_STATEMENT, "expr_stmt")
   ELEMENT_MAP(SEXPRESSION, "expr")
