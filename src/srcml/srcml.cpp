@@ -165,11 +165,13 @@ int main(int argc, char * argv[]) {
 
   srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
 
-  if (srcml_request.positional_args.size() == 1 && !(srcml_request.markup_options & SRCML_OPTION_ARCHIVE))
+  if (srcml_request.positional_args.size() == 1 && !(srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) {
     if(srcml_request.positional_args[0] == "-" || srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[0].c_str()))
-    srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
-  else
+      srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+  }
+  else {
     srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+  }
 
   for (size_t i = 0; i < srcml_request.register_ext.size(); ++i) {
     size_t pos = srcml_request.register_ext[i].find('=');
