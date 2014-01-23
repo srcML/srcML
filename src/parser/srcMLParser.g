@@ -6179,13 +6179,17 @@ cpp_symbol[] { ENTRY_DEBUG } :
         simple_identifier
 ;
 
-cpp_define_name[] { CompleteElement element(this); std::string::size_type pos = LT(1)->getColumn() + LT(1)->getText().size(); } :
+cpp_define_name[] { CompleteElement element(this);
+    int line_pos = LT(1)->getLine();
+    std::string::size_type pos = LT(1)->getColumn() + LT(1)->getText().size();
+} :
+
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SMACRO_DEFN);
         }
-        simple_identifier (options { greedy = true; } : { pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
+        simple_identifier (options { greedy = true; } : { line_pos == LT(1)->getLine() && pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
 ;
 
 cpp_define_parameter_list[] { CompleteElement element(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
