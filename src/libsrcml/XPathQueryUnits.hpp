@@ -44,6 +44,10 @@
 
 #define dlsymvar(type, name) type name;  *(void **)(&name) = dlsym(handle, #name)
 
+#ifdef WIN32
+#define snprintf _snprintf
+#endif
+
 class XPathQueryUnits : public UnitDOM {
 public :
 
