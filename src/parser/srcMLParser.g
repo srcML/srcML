@@ -465,6 +465,7 @@ tokens {
     SLAMBDA_CAPTURE;
     SNOEXCEPT;
 	SSIGNAL_ACCESS;
+    STYPENAME;
 
     // cpp directive internal elements
 	SCPP_DIRECTIVE;
@@ -1032,7 +1033,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? lead_type_identifier)*  lead_type_identifier
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))*  lead_type_identifier
 
         { 
 
@@ -3180,7 +3181,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         // class/struct/union before a name in a type, e.g., class A f();
-        class_lead_type_identifier |
+        class_lead_type_identifier | typename_keyword | 
 
         // enum use in a type
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
@@ -3611,7 +3612,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
-            SIGNAL | FINAL | OVERRIDE | VOID | TYPENAME | 
+            SIGNAL | FINAL | OVERRIDE | VOID |
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
@@ -3626,6 +3627,13 @@ simple_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         (
         NAME | VOID
         )
+;
+
+typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(STYPENAME);
+        }
+        TYPENAME
 ;
 
 // Markup names
