@@ -49,7 +49,7 @@ enum {
     PROCESSNULL,
     PROCESSCOMPLEX,
     PROCESSINTERFACE,
-    PROCESSESCAPE,
+    PROCESSESCAPE
 };
 
 srcMLTranslatorOutput::PROCESS_PTR srcMLTranslatorOutput::num2process[] = {
@@ -75,7 +75,7 @@ srcMLTranslatorOutput::PROCESS_PTR srcMLTranslatorOutput::num2process[] = {
     &srcMLTranslatorOutput::processNull,
     &srcMLTranslatorOutput::processComplex,
     &srcMLTranslatorOutput::processInterface,
-    &srcMLTranslatorOutput::processEscape,
+    &srcMLTranslatorOutput::processEscape
 };
 
 #define ELEMENT_MAP_CALL_NAME element_process
@@ -260,7 +260,7 @@ namespace {
     ELEMENT_MAP(SEQUALS, PROCESSTOKEN)
     ELEMENT_MAP(SBY, PROCESSTOKEN)
     ELEMENT_MAP(SINTO, PROCESSTOKEN)
-};
+}
 
 #undef ELEMENT_MAP_CALL_NAME
 #undef ELEMENT_MAP_FIRST_TYPE
