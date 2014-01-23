@@ -465,6 +465,7 @@ tokens {
     SLAMBDA_CAPTURE;
     SNOEXCEPT;
 	SSIGNAL_ACCESS;
+    STYPENAME;
 
     // cpp directive internal elements
 	SCPP_DIRECTIVE;
@@ -679,7 +680,7 @@ catch[...] {
 keyword_statements[] { ENTRY_DEBUG } :
 
         // conditional statements
-        if_statement | { isoption(parseoptions, OPTION_ELSEIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
+        if_statement | { !isoption(parseoptions, OPTION_NESTIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
         while_statement | for_statement | do_statement | foreach_statement |
@@ -1032,7 +1033,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? lead_type_identifier)*  lead_type_identifier
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))*  lead_type_identifier
 
         { 
 
@@ -1302,6 +1303,8 @@ perform_call_check[CALLTYPE& type, bool & isempty, int secondtoken] returns [boo
             || postcalltoken == STATIC || postcalltoken == CONST))
 
             type = MACRO;
+        if(inLanguage(LANGUAGE_CSHARP) && (postcalltoken == LAMBDA || postcalltoken == EQUAL))
+            type = NOCALL;
 
     } catch (...) {
 
@@ -3180,7 +3183,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         // class/struct/union before a name in a type, e.g., class A f();
-        class_lead_type_identifier |
+        class_lead_type_identifier | typename_keyword | 
 
         // enum use in a type
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
@@ -3611,7 +3614,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
-            SIGNAL | FINAL | OVERRIDE | VOID | TYPENAME | 
+            SIGNAL | FINAL | OVERRIDE | VOID |
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
@@ -3626,6 +3629,13 @@ simple_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         (
         NAME | VOID
         )
+;
+
+typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(STYPENAME);
+        }
+        TYPENAME
 ;
 
 // Markup names
@@ -6179,18 +6189,51 @@ cpp_symbol[] { ENTRY_DEBUG } :
         simple_identifier
 ;
 
-cpp_define_name[] { CompleteElement element(this); std::string::size_type pos = LT(1)->getColumn() + LT(1)->getText().size(); } :
+cpp_define_name[] { CompleteElement element(this);
+    int line_pos = LT(1)->getLine();
+    std::string::size_type pos = LT(1)->getColumn() + LT(1)->getText().size();
+} :
+
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SMACRO_DEFN);
         }
-        simple_identifier (options { greedy = true; } : { pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
+        simple_identifier (options { greedy = true; } : { line_pos == LT(1)->getLine() && pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
 ;
 
-cpp_define_parameter_list[] { ENTRY_DEBUG } :
-        parameter_list
+cpp_define_parameter_list[] { CompleteElement element(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
+        {
+            // list of parameters
+            startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+
+            // start the parameter list element
+            startElement(SPARAMETER_LIST);
+        }
+
+        // parameter list must include all possible parts since it is part of
+        // function detection
+        LPAREN ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; }
+        {
+            // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
+            if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
+                endMode();
+        } comma |
+        cpp_define_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
 ;
+
+
+cpp_define_parameter[] { int type_count = 1; ENTRY_DEBUG } :
+        {
+            // end parameter correctly
+            startNewMode(MODE_PARAMETER);
+
+            // start the parameter element
+            startElement(SPARAMETER);
+        }
+        parameter_type_count[type_count]
+;
+
 
 cpp_define_value[] { ENTRY_DEBUG } :
         {

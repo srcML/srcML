@@ -254,7 +254,8 @@ void srcMLTranslatorCore::translate_separate(const char* unit_directory,
 
   // save old output
   //int depth = out.getDepth();
-  out.setDepth(1);
+  if(isoption(options, OPTION_ARCHIVE))
+    out.setDepth(1);
   xmlTextWriter * save_writer = out.getWriter();
 
   xmlTextWriter * writer = xmlNewTextWriterMemory(output_buffer, isoption(options, OPTION_COMPRESSED));
@@ -316,7 +317,8 @@ void srcMLTranslatorCore::add_unit(const char* xml) {
   first = false;
   xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml);
 
-  out.processText("\n\n", 2);
+  if ((options & OPTION_ARCHIVE) > 0)
+    out.processText("\n\n", 2);
 
 
 }

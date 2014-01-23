@@ -171,7 +171,7 @@ int main() {
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-    OPTION_TYPE op = 0;
+    OPTION_TYPE op = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
 
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, 0, 0, 0, urisprefix, 4);
@@ -182,7 +182,7 @@ int main() {
     translator.add_unit(s.c_str());
     translator.close();
     std::string result = (const char *)buffer->content;
-    assert(result == decl + "\n" + s + "\n\n\n");
+    assert(result == decl + "\n" + s + "\n");
 
     xmlBufferFree(buffer);
     
@@ -194,7 +194,7 @@ int main() {
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-    OPTION_TYPE op = 0;
+    OPTION_TYPE op = OPTION_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
 
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, 0, 0, 0, urisprefix, 4);

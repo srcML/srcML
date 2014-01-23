@@ -69,7 +69,7 @@ std::string delimiter;
 
 }
 
-STRING_START { int zero_literal = 0; _saveIndex = 0; } :
+STRING_START :
         { startline = false; }
         (
             // double quoted string
@@ -99,14 +99,13 @@ STRING_START { int zero_literal = 0; _saveIndex = 0; } :
             '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
         )
         { atstring = false; rawstring = false; delimiter = ""; }
-        { _saveIndex = _saveIndex + zero_literal; }
 ;
 
-CONSTANTS { int zero_literal = 0; _saveIndex = 0; } :
+CONSTANTS :
         { startline = false; }
-        ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' | '_' )*
+        ('0'..'9') (options { greedy = true; } : '0'..'9' | '_')*
         (options { greedy = true; } : '.' | '0'..'9')*
-        (options { greedy = true; } : 'e' | ('+' | '-') | '0'..'9')*
+        (options { greedy = true; } : 'e' ('+' | '-')* ('0'..'9')*)?
         (options { greedy = true; } : 'i' { $setType(COMPLEX_NUMBER); })*
         (options { greedy = true; } : NAME)*
 
@@ -115,16 +114,14 @@ CONSTANTS { int zero_literal = 0; _saveIndex = 0; } :
                 line_number = atoi(text.substr(_begin, text.length()-_begin).c_str()); 
             }
         }
-        { _saveIndex = _saveIndex + zero_literal; }
 ;
 
-DSIGN { int zero_literal = 0; _saveIndex = 0; } :
+DSIGN :
         '$' { $setType(OPERATOR); }
         ({ inLanguage(LANGUAGE_JAVA) }? { $setType(NAME); } NAME)?
-        { _saveIndex = _saveIndex + zero_literal; }
 ;
 
-NAME options { testLiterals = true; } { char lastchar = LA(1); int zero_literal = 0; _saveIndex = 0; } :
+NAME options { testLiterals = true; } { char lastchar = LA(1); } :
         { startline = false; }
         ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')
         (
@@ -160,18 +157,19 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); int zero_literal 
                 boost::match_results<std::string::const_iterator> what;
                 bool match_res = boost::regex_search(start, end, what, macro_name_match, flags);
                 
-                bool is_regex_match = match_res && (what[0].length() == temp_name.size());
+                bool is_regex_match = match_res && 
+                    (what[0].length() == (boost::match_results<std::string::const_iterator>::difference_type)temp_name.size());
                 
                 if(is_regex_match) $setType(MACRO_NAME);
                 
             }
 
         }
-        { _saveIndex = _saveIndex + zero_literal; }
+
 ;
 
 // Single-line comments (no EOL)
-LINECOMMENT_START  { int zero_literal = 0; _saveIndex = 0; }
+LINECOMMENT_START
     :   '/' ('/' { 
 
                 if(inLanguage(LANGUAGE_CXX) && (LA(1) == '/' || LA(1) == '!'))
@@ -204,11 +202,10 @@ LINECOMMENT_START  { int zero_literal = 0; _saveIndex = 0; }
             { $setType(OPERATORS); }
         )
 
-        { _saveIndex = _saveIndex + zero_literal; }
 ;
 
 // whitespace (except for newline)
-WS { int zero_literal = 0; _saveIndex = 0; } :
+WS :
         (
             // single space
             ' '  |
@@ -217,11 +214,10 @@ WS { int zero_literal = 0; _saveIndex = 0; } :
             '\t'
         )+
 
-        { _saveIndex = _saveIndex + zero_literal; }
     ;
 
 // end of line
-EOL { int zero_literal = 0; _saveIndex = 0; } :
+EOL :
         '\n'
         { 
             // onpreprocline is turned on when on a preprocessor line
@@ -241,7 +237,6 @@ EOL { int zero_literal = 0; _saveIndex = 0; } :
             isline = false;
             line_number = -1;
         }
-        { _saveIndex = _saveIndex + zero_literal; }
 ;
 /*
 EOL_BACKSLASH :
@@ -252,12 +247,11 @@ EOL_BACKSLASH :
   Encode the control character in the text, so that is can be
   issued in an escape character.
 */
-CONTROL_CHAR { int zero_literal = 0; _saveIndex = 0; } :
+CONTROL_CHAR :
         { startline = true; }
         (
         '\000'..'\010' |
         '\013'..'\014' |
         '\016'..'\037'
         )
-        { _saveIndex = _saveIndex + zero_literal; }
 ;

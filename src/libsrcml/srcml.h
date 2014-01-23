@@ -95,6 +95,8 @@ const char* srcml_version_string();
 #define SRCML_OPTION_APPLY_ROOT        1<<12
 /** Compress the output file */
 #define SRCML_OPTION_COMPRESS          1<<13
+/** Nest if in else if intead of elseif tag */
+#define SRCML_OPTION_NESTIF            1<<14
 
 /* srcml status messages */
 /** Return status indicating no errors */

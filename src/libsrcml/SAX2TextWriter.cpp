@@ -40,9 +40,12 @@ SAX2TextWriter::SAX2TextWriter(const char* ofilename, OPTION_TYPE& options, int 
 
 }
 
+/* static initializes everything to 0 */
+xmlSAXHandler sax2_text_writer_sax_init_value;
+
 xmlSAXHandler SAX2TextWriter::factory() {
 
-    xmlSAXHandler sax = {/* 0 */};
+    xmlSAXHandler sax = sax2_text_writer_sax_init_value;
 
     sax.initialized    = XML_SAX2_MAGIC;
     sax.startDocument  = &SAX2TextWriter::startDocument;

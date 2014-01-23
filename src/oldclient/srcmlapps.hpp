@@ -109,7 +109,7 @@ namespace LanguageName {
     const char* const LANGUAGE_ASPECTJ = "AspectJ";
     const char* const LANGUAGE_CSHARP = "C#";
 
-};
+}
 
 const char* const COMPRESSED_FLAG = "compress";
 const char COMPRESSED_FLAG_SHORT = 'z';
@@ -145,7 +145,7 @@ enum RETURN_STATUS {
     */
     STATUS_INVALID_OPTION_COMBINATION = 7,
     STATUS_TERMINATED = 8,
-    STATUS_INVALID_ARGUMENT = 9,
+    STATUS_INVALID_ARGUMENT = 9
 };
 
 

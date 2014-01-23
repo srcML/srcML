@@ -33,13 +33,14 @@
 #include "Options.hpp"
 #include "srcmlns.hpp"
 #include <getopt.h>
-
+#include <unistd.h>
 #include "archive.h"
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
 #include "srcexfun.hpp"
 #include "URIStream.hpp"
 #include <srcml_wrapper.hpp>
+// #include <archive.h>
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>
@@ -357,11 +358,12 @@ void output_version(const char* name) {
   if(handle) dlclose(handle);
   handle = 0;
 #endif
-
-  if(archive_version_number(), ARCHIVE_VERSION_NUMBER)
+#ifndef LIBSRCML_COMPILER_IS_MSVC
+  if(archive_version_number() == ARCHIVE_VERSION_NUMBER)
     printf("libarchive %d\n", ARCHIVE_VERSION_NUMBER);
   else
     printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
+#endif
 }
 
 OPTION_TYPE options = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
@@ -422,6 +424,11 @@ void exit_cleanup() {
   xmlCleanupParser();
 
 }
+
+#if defined(__GNUC__) && !defined(__MINGW32__)
+// stat initializer                                                                                                                     
+struct stat init_stat;
+#endif
 
 int main(int argc, char* argv[]) {
 
@@ -507,12 +514,12 @@ int main(int argc, char* argv[]) {
   if (strcmp(filename, "-") != 0 && strcmp(poptions.ofilename, "-") != 0) {
 
     // input file
-    struct stat instat = {/* 0 */};
+    struct stat instat = init_stat;
     if (stat(filename, &instat) == -1) {
       goto done;
     }
 
-    struct stat outstat = {/* 0 */};
+    struct stat outstat = init_stat;
     if (stat(poptions.ofilename, &outstat) == -1) {
       goto done;
     }

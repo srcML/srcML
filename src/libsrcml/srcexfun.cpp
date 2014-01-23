@@ -234,7 +234,8 @@ void xsltsrcMLRegister () {
   }
 
   dlerror();
-  xsltRegisterExtModuleFunction_function xsltRegisterExtModuleFunction = (xsltRegisterExtModuleFunction_function)dlsym(handle, "xsltRegisterExtModuleFunction");
+  xsltRegisterExtModuleFunction_function xsltRegisterExtModuleFunction;
+  *(void **)(&xsltRegisterExtModuleFunction) = dlsym(handle, "xsltRegisterExtModuleFunction");
   char* error;
   if ((error = dlerror()) != NULL) {
     dlclose(handle);

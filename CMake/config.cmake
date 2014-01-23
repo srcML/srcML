@@ -32,7 +32,7 @@ option(ENABLE_SVN_INTEGRATION "Build with SVN integration." OFF)
 set_property(GLOBAL PROPERTY SVN_ENABLED ${ENABLE_SVN_INTEGRATION})
 
 # Adding SAX to configuration.
-option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" OFF)
+option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" ON)
 set_property(GLOBAL PROPERTY SAX2_ENABLED ${LIBSRCML_SAX2_ENABLED})
 
 # Dynamic Load libraries (Unix only)
@@ -137,14 +137,14 @@ endif()
 if(${CMAKE_COMPILER_IS_GNUCXX})
     set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized")
     # Adding global compiler definitions.
-    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g  --coverage -fprofile-arcs ${GCC_WARNINGS}")
+    set(CMAKE_CXX_FLAGS "-fPIC -O3 ${GCC_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${GCC_WARNINGS}")
     set(CMAKE_CXX_FLAGS_DEBUG "-fPIC -O3 -g -DDEBUG --coverage -fprofile-arcs ${GCC_WARNINGS}")
 
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # Configuring the Clang compiler
     set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32")
-    set(CMAKE_CXX_FLAGS "-fPIC -O3 -g ${CLANG_WARNINGS}")
+    set(CMAKE_CXX_FLAGS "-fPIC -O3 ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_DEBUG "-fPIC -O0 -g -DDEBUG ${CLANG_WARNINGS}")
     
@@ -152,6 +152,7 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
     
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    add_definitions(/DLIBSRCML_COMPILER_IS_MSVC)
     # message(STATUS "MSVC Compiler not completely configured yet")
     set(MSVC_WARNINGS "/W3 ")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} /Ox")
