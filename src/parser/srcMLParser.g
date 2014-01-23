@@ -1303,6 +1303,8 @@ perform_call_check[CALLTYPE& type, bool & isempty, int secondtoken] returns [boo
             || postcalltoken == STATIC || postcalltoken == CONST))
 
             type = MACRO;
+        if(postcalltoken == LAMBDA || postcalltoken == EQUAL)
+            type = NOCALL;
 
     } catch (...) {
 
