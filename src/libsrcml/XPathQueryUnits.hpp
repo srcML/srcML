@@ -203,7 +203,7 @@ public :
         if (needroot /*&& !isoption(options, OPTION_APPLY_ROOT)*/) {
 
           // xml declaration
-          if (!isoption(options, OPTION_XMLDECL))
+          if (isoption(options, OPTION_XMLDECL))
             xmlOutputBufferWriteXMLDecl(ctxt, buf);
 
           // output a root element, just like the one read in

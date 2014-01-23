@@ -72,17 +72,17 @@ libsrcml.srcml_archive_set_directory.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_archive_set_version.restype = c_int
 libsrcml.srcml_archive_set_version.argtypes = [c_void_p, c_char_p]
 
-# int srcml_archive_set_all_options   (struct srcml_archive*, int option);
-libsrcml.srcml_archive_set_all_options.restype = c_int
-libsrcml.srcml_archive_set_all_options.argtypes = [c_void_p, c_ulonglong]
+# int srcml_archive_set_options   (struct srcml_archive*, int option);
+libsrcml.srcml_archive_set_options.restype = c_int
+libsrcml.srcml_archive_set_options.argtypes = [c_void_p, c_ulonglong]
 
-# int srcml_archive_set_option    (struct srcml_archive*, int option);
-libsrcml.srcml_archive_set_option.restype = c_int
-libsrcml.srcml_archive_set_option.argtypes = [c_void_p, c_ulonglong]
+# int srcml_archive_enable_option    (struct srcml_archive*, int option);
+libsrcml.srcml_archive_enable_option.restype = c_int
+libsrcml.srcml_archive_enable_option.argtypes = [c_void_p, c_ulonglong]
 
-# int srcml_archive_clear_option  (struct srcml_archive*, int option);
-libsrcml.srcml_archive_clear_option.restype = c_int
-libsrcml.srcml_archive_clear_option.argtypes = [c_void_p, c_ulonglong]
+# int srcml_archive_disable_option  (struct srcml_archive*, int option);
+libsrcml.srcml_archive_disable_option.restype = c_int
+libsrcml.srcml_archive_disable_option.argtypes = [c_void_p, c_ulonglong]
 
 # int srcml_archive_set_tabstop   (struct srcml_archive*, int tabstop);
 libsrcml.srcml_archive_set_tabstop.restype = c_int
@@ -216,14 +216,14 @@ class srcml_archive :
     def set_version(self, version) :
         check_return(libsrcml.srcml_archive_set_version(self.archive, version))
 
-    def set_all_options(self, options) :
-        check_return(libsrcml.srcml_archive_set_all_options(self.archive, options))
+    def set_options(self, options) :
+        check_return(libsrcml.srcml_archive_set_options(self.archive, options))
 
-    def set_option(self, option) :
-        check_return(libsrcml.srcml_archive_set_option(self.archive, option))
+    def enable_option(self, option) :
+        check_return(libsrcml.srcml_archive_enable_option(self.archive, option))
 
-    def clear_option(self, option) :
-        check_return(libsrcml.srcml_archive_clear_option(self.archive, option))
+    def disable_option(self, option) :
+        check_return(libsrcml.srcml_archive_disable_option(self.archive, option))
 
     def set_tabstop(self, tabstop) :
         check_return(libsrcml.srcml_archive_set_tabstop(self.archive, tabstop))

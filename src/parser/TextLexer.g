@@ -104,9 +104,9 @@ STRING_START { int zero_literal = 0; _saveIndex = 0; } :
 
 CONSTANTS { int zero_literal = 0; _saveIndex = 0; } :
         { startline = false; }
-        ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' | '_' )*
+        ('0'..'9') (options { greedy = true; } : '0'..'9' | '_')*
         (options { greedy = true; } : '.' | '0'..'9')*
-        (options { greedy = true; } : 'e' | ('+' | '-') | '0'..'9')*
+        (options { greedy = true; } : 'e' ('+' | '-')* ('0'..'9')*)?
         (options { greedy = true; } : 'i' { $setType(COMPLEX_NUMBER); })*
         (options { greedy = true; } : NAME)*
 
@@ -160,7 +160,8 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); int zero_literal 
                 boost::match_results<std::string::const_iterator> what;
                 bool match_res = boost::regex_search(start, end, what, macro_name_match, flags);
                 
-                bool is_regex_match = match_res && (what[0].length() == temp_name.size());
+                bool is_regex_match = match_res && 
+                    (what[0].length() == (boost::match_results<std::string::const_iterator>::difference_type)temp_name.size());
                 
                 if(is_regex_match) $setType(MACRO_NAME);
                 

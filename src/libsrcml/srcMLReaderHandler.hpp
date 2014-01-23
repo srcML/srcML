@@ -167,6 +167,8 @@ public :
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+    if(!is_archive) srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+
     // collect attributes
     for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
 
@@ -213,8 +215,8 @@ public :
             archive->options |= OPTION_MACRO_PATTERN;
           if(option == "MACRO_LIST")
             archive->options |= OPTION_MACRO_LIST;
-          if(option == "ELSEIF")
-            archive->options |= OPTION_ELSEIF;
+          if(option == "NESTIF")
+            archive->options |= OPTION_NESTIF;
           if(option == "CPPIF_CHECK")
             archive->options |= OPTION_CPPIF_CHECK;
 
@@ -568,7 +570,7 @@ private :
 
     for(int i = 0, pos = 0; i < nb_namespaces; ++i, pos += 2) {
 
-      if(strcmp((const char *)namespaces[pos + 1], SRCML_CPP_NS_URI) != 0)
+      if(is_archive && strcmp((const char *)namespaces[pos + 1], SRCML_CPP_NS_URI) != 0)
         continue;
 
       *unit->unit += " xmlns";

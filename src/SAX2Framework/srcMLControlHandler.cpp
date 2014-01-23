@@ -209,8 +209,13 @@ void srcMLControlHandler::parse(srcMLHandler * handler) {
   int status = xmlParseDocument(ctxt);
   ctxt->sax = save_sax;
 
-  if(status != 0)
-    throw std::string("Error parsing document");
+  if(status != 0) {
+
+    xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
+
+    SAXError error = { std::string((const char *)ep->message), ep->code };
+    throw error;
+  }
   ctxt->sax = save_sax;
 
 }

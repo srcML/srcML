@@ -263,8 +263,8 @@ int srcMLReader::readRootUnitAttributes(std::string *& language, std::string *& 
 	    options |= OPTION_MACRO_PATTERN;
 	  if(option == "MACRO_LIST")
 	    options |= OPTION_MACRO_LIST;
-	  if(option == "ELSEIF")
-	    options |= OPTION_ELSEIF;
+	  if(option == "NESTIF")
+	    options |= OPTION_NESTIF;
 	  if(option == "CPPIF_CHECK")
 	    options |= OPTION_CPPIF_CHECK;
 

@@ -187,7 +187,6 @@ void startRoot(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
     state->root.attributes[index + 4] = state->root.attributes[index + 3] + vallength;
   }
 
-  state->process->startRoot(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
   // handle nested units
   ctxt->sax->startElementNs = &startElementNsFirst;
 
@@ -235,6 +234,11 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
       URI = state->root.namespaces[i];
 
   state->is_archive = strcmp((const char *)localname, "unit") == 0;
+  state->process->set_is_archive(state->is_archive);
+
+  state->process->startRoot(state->root.localname, state->root.prefix, state->root.URI,
+			    state->root.nb_namespaces, state->root.namespaces, state->root.nb_attributes,
+			    state->root.nb_defaulted, state->root.attributes);
 
   if(!state->is_archive) {
 
@@ -381,6 +385,13 @@ void endElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix,
   if(strcmp((const char *)localname, "unit") == 0) {
 
     if(ctxt->sax->startElementNs == &startElementNsFirst) {
+
+      state->is_archive = false;
+      state->process->set_is_archive(state->is_archive);
+
+      state->process->startRoot(state->root.localname, state->root.prefix, state->root.URI,
+				state->root.nb_namespaces, state->root.namespaces, state->root.nb_attributes,
+				state->root.nb_defaulted, state->root.attributes);
 
       state->process->startUnit(state->root.localname, state->root.prefix, state->root.URI,
                                 state->root.nb_namespaces, state->root.namespaces, state->root.nb_attributes,
