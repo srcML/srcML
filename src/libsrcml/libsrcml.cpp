@@ -34,7 +34,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <boost/regex.hpp>
+//#include <boost/regex.hpp>
 
 #include <vector>
 #include <string>
@@ -670,6 +670,7 @@ const char * srcml_check_extension(const char* filename) {
 int srcml_check_format(const char* format) {
 
   if(format == NULL) return SRCML_STATUS_ERROR;
+  /*
   static const boost::regex extRegEx("\\.(xz|zg|bz2|tar).*$");
 
   // reversed copy of the path
@@ -682,6 +683,7 @@ int srcml_check_format(const char* format) {
 
   } else
     return SRCML_STATUS_ERROR;
+  */
 
 }
 
