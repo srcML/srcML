@@ -137,7 +137,6 @@ void src_input_libarchive::makeRequest(ThreadQueue<ParseRequest, 10>& queue, src
 void src_input_libarchive::process(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang) {
 
   boost::filesystem::path localPath(input);
-  std::vector<std::string> input_files;
   
   if (is_directory(localPath)) {
     for (boost::filesystem::recursive_directory_iterator end, dir(localPath); dir != end; ++dir) {
