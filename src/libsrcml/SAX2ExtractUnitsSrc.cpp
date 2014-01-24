@@ -38,9 +38,12 @@ static bool setupDiff(SAX2ExtractUnitsSrc* pstate,
 // split the attribute according to the revision of the diff
 static int split_diff_attribute(SAX2ExtractUnitsSrc* pstate, const char* attribute_name, int& nb_attributes, const xmlChar** attributes);
 
+/* static initializes everything to 0 */
+xmlSAXHandler sax2_extract_units_src_sax_init_value;
+
 xmlSAXHandler SAX2ExtractUnitsSrc::factory() {
 
-  xmlSAXHandler sax = {/* 0 */};
+  xmlSAXHandler sax = sax2_extract_units_src_sax_init_value;
 
   sax.initialized    = XML_SAX2_MAGIC;
   sax.startElementNs = &startElementNsRoot;

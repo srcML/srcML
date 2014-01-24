@@ -90,7 +90,8 @@ ALLOPERATORS;
 EOL_PLACEHOLD;
 }
 
-OPERATORS options { testLiterals = true; } { bool star = false; static int lastpos = 0; int zero_literal = 0; _saveIndex = 0;
+// @todo remove statics possibly breaking point for threading.
+OPERATORS options { testLiterals = true; } { bool star = false; static int lastpos = 0; static int prev = 0; int start = LA(1);
 } : 
         (
             '#' {
@@ -142,7 +143,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; static int lastp
        '`' |
        '!' ('=')? |
        ':' (':')? |
-       '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1)) }? '>' { $setText("=&gt;"); $setType(LAMBDA); } |) |
+       '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')') }? '>' { $setText("=&gt;"); $setType(LAMBDA); } |) |
 
        '&' { $setText("&amp;"); }
             (options { greedy = true; } : '&' { $setText("&amp;&amp;"); star = true; } | '=' { $setText("&amp;="); } )?
@@ -179,6 +180,5 @@ OPERATORS options { testLiterals = true; } { bool star = false; static int lastp
 
         '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
         )
-        { startline = false; lastpos = getColumn(); }
-        { _saveIndex = _saveIndex + zero_literal; }
+        { startline = false; lastpos = getColumn(); prev = start; }
 ;

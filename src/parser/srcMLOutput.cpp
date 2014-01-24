@@ -40,7 +40,7 @@ enum { SRCML_SRC_NS_URI_POS,
        SRCML_EXT_LITERAL_NS_URI_POS,
        SRCML_EXT_OPERATOR_NS_URI_POS,
        SRCML_EXT_MODIFIER_NS_URI_POS,
-       SRCML_EXT_POSITION_NS_URI_POS,
+       SRCML_EXT_POSITION_NS_URI_POS
 };
 
 // check if encoding is supported
@@ -228,6 +228,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     tabattribute.append(":tabs");
   }
 
+  /*
   std::ostringstream soptions;
   std::string SEP;
   //if(isoption(OPTION_XMLDECL))        { soptions << "XMLDECL"; }
@@ -241,6 +242,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
   if(isoption(OPTION_MACRO_LIST))     { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "MACRO_LIST"; }
   if(isoption(OPTION_NESTIF))         { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "NESTIF"; }
   if(isoption(OPTION_CPPIF_CHECK))    { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "CPPIF_CHECK"; }
+  */
 
   // list of attributes
   const char* const attrs[][2] = {
@@ -263,7 +265,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     // position tab setting
     { tabattribute.c_str(), isoption(OPTION_POSITION) ? stabs.str().c_str() : 0 },
 
-    { UNIT_ATTRIBUTE_OPTIONS,  (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.str().c_str() : 0 },
+    //{ UNIT_ATTRIBUTE_OPTIONS,  (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.str().c_str() : 0 },
   };
 
   // output attributes

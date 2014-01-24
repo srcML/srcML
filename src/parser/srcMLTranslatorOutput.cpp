@@ -88,6 +88,7 @@ namespace {
   ELEMENT_MAP(SBLOCK, "block")
   ELEMENT_MAP(SINDEX, "index")
   ELEMENT_MAP(SDECLTYPE, "decltype")
+  ELEMENT_MAP(STYPENAME, "typename")
 
   ELEMENT_MAP(SEXPRESSION_STATEMENT, "expr_stmt")
   ELEMENT_MAP(SEXPRESSION, "expr")
@@ -256,7 +257,7 @@ namespace {
 
   //
   ELEMENT_MAP(SEMPTY,         "empty_stmt")
-};
+}
 
 enum { SRCML_SRC_NS_URI_POS,
        SRCML_CPP_NS_URI_POS,
@@ -264,7 +265,7 @@ enum { SRCML_SRC_NS_URI_POS,
        SRCML_EXT_LITERAL_NS_URI_POS,
        SRCML_EXT_OPERATOR_NS_URI_POS,
        SRCML_EXT_MODIFIER_NS_URI_POS,
-       SRCML_EXT_POSITION_NS_URI_POS,
+       SRCML_EXT_POSITION_NS_URI_POS
 };
 
 #undef ELEMENT_MAP_CALL_NAME
@@ -306,7 +307,7 @@ namespace {
 
   // modifier namespace
   ELEMENT_MAP(SMODIFIER, SRCML_EXT_MODIFIER_NS_URI_POS)
-};
+}
 
 // check if encoding is supported
 bool srcMLTranslatorOutput::checkEncoding(const char* encoding) {
@@ -495,6 +496,7 @@ void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, con
     tabattribute.append("tabs");
   }
 
+  /*
   std::ostringstream soptions;
   std::string SEP;
   //if(isoption(OPTION_XMLDECL))        { soptions << "XMLDECL"; }
@@ -508,6 +510,7 @@ void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, con
   if(isoption(OPTION_MACRO_LIST))     { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "MACRO_LIST"; }
   if(isoption(OPTION_NESTIF))         { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "NESTIF"; }
   if(isoption(OPTION_CPPIF_CHECK))    { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "CPPIF_CHECK"; }
+  */
 
   // list of attributes
   const char* const attrs[][2] = {
@@ -527,7 +530,7 @@ void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, con
     // position tab setting
     { tabattribute.c_str(), isoption(OPTION_POSITION) ? stabs.str().c_str() : 0 },
 
-    { UNIT_ATTRIBUTE_OPTIONS,  (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.str().c_str() : 0 },
+    //{ UNIT_ATTRIBUTE_OPTIONS,  (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.str().c_str() : 0 },
 
   };
 
