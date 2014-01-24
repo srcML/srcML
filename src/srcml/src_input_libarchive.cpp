@@ -60,8 +60,81 @@ void src_input_libarchive::setupLibArchive(archive* a) {
   #endif
 }
 
-void src_input_libarchive::process(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang) {
+void src_input_libarchive::makeRequest(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input_file, std::string lang) {
   ParseRequest request = req;
+
+  // libArchive Setup
+  archive * arch = archive_read_new();
+  archive_entry * arch_entry = archive_entry_new();
+
+  setupLibArchive(arch);
+
+  if (archive_read_open_filename(arch, (input_file.compare("-") != 0 ? input_file.c_str() : NULL), 16384)!= ARCHIVE_OK) {
+    std::cerr << "Unable to open archive\n";
+    exit(1);
+  }
+    
+  // Stdin
+  bool stdin = false;
+  if (input_file.compare("-") == 0)
+    stdin = true;
+
+  while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
+
+    std::string entry_name = archive_entry_pathname(arch_entry);
+    std::string filename = "";
+    /* 
+      The header path for a standard file is just "data".
+      That needs to be swapped out with the actual file name from the 
+      CLI arg.
+    */
+    if (entry_name.compare("data") == 0 && !stdin)
+      filename = input_file.c_str();
+
+    if (entry_name.compare("data") != 0 && !stdin)
+      filename = entry_name.c_str();
+
+    if (!stdin) {
+      const char * language = srcml_archive_check_extension(srcml_arch, filename.c_str());
+      if (!language) {
+        // Extension not supported
+        // Skip to next header
+        continue;  
+      }
+    }
+    else {
+      // Stdin language declared via CLI
+      if (!srcml_archive_get_language(srcml_arch)) {
+        std::cerr << "Using stdin requires a defined language\n";
+        exit(1); // Stdin used with no language specified.
+      }
+    }
+
+    request.buffer.clear();
+
+    while (true) {
+      
+      const char* buffer;
+      size_t size;
+      int64_t offset;
+      
+      if (archive_read_data_block(arch, (const void**) &buffer, &size, &offset) != ARCHIVE_OK)
+        break;
+
+      request.buffer.insert(request.buffer.end(), buffer, buffer + size);
+    }
+
+    request.filename = filename;
+    request.srcml_arch = srcml_arch;
+    request.lang = (srcml_archive_get_language(srcml_arch) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
+
+    // Hand request off to the processing queue
+    queue.push(request);
+  }
+  archive_read_finish(arch);
+}
+
+void src_input_libarchive::process(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang) {
 
   boost::filesystem::path localPath(input);
   std::vector<std::string> input_files;
@@ -70,85 +143,11 @@ void src_input_libarchive::process(ThreadQueue<ParseRequest, 10>& queue, srcml_a
     for (boost::filesystem::recursive_directory_iterator end, dir(localPath); dir != end; ++dir) {
       if(is_regular_file(*dir)) {
         if (srcml_archive_check_extension(srcml_arch, dir->path().string().c_str()))
-          input_files.push_back(dir->path().string());
+          makeRequest(queue, srcml_arch, req, dir->path().string(), lang);
       }
     }
   }
   else {
-    input_files.push_back(localPath.string());
-  }
-
-  for (size_t i = 0; i < input_files.size(); ++i) {
-    std::string input_file = input_files[i];
-
-    // libArchive Setup
-    archive * arch = archive_read_new();
-    archive_entry * arch_entry = archive_entry_new();
-
-    setupLibArchive(arch);
-
-    if (archive_read_open_filename(arch, (input_file.compare("-") != 0 ? input_file.c_str() : NULL), 16384)!= ARCHIVE_OK) {
-      std::cerr << "Unable to open archive\n";
-      exit(1);
-    }
-      
-    // Stdin
-    bool stdin = false;
-    if (input_file.compare("-") == 0)
-      stdin = true;
-
-    while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
-
-      std::string entry_name = archive_entry_pathname(arch_entry);
-      std::string filename = "";
-      /* 
-        The header path for a standard file is just "data".
-        That needs to be swapped out with the actual file name from the 
-        CLI arg.
-      */
-      if (entry_name.compare("data") == 0 && !stdin)
-        filename = input_file.c_str();
-
-      if (entry_name.compare("data") != 0 && !stdin)
-        filename = entry_name.c_str();
-
-      if (!stdin) {
-        const char * language = srcml_archive_check_extension(srcml_arch, filename.c_str());
-        if (!language) {
-          // Extension not supported
-          // Skip to next header
-          continue;  
-        }
-      }
-      else {
-        // Stdin language declared via CLI
-        if (!srcml_archive_get_language(srcml_arch)) {
-          std::cerr << "Using stdin requires a defined language\n";
-          exit(1); // Stdin used with no language specified.
-        }
-      }
-
-      request.buffer.clear();
-
-      while (true) {
-        
-        const char* buffer;
-        size_t size;
-        int64_t offset;
-        
-        if (archive_read_data_block(arch, (const void**) &buffer, &size, &offset) != ARCHIVE_OK)
-          break;
-
-        request.buffer.insert(request.buffer.end(), buffer, buffer + size);
-      }
-
-      request.filename = filename;
-      request.srcml_arch = srcml_arch;
-      request.lang = (srcml_archive_get_language(srcml_arch) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
-
-      // Hand request off to the processing queue
-      queue.push(request);
-    }
-    archive_read_finish(arch);
+    makeRequest(queue, srcml_arch, req, localPath.string(), lang);
   }
 }
