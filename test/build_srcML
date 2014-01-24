@@ -5,11 +5,9 @@
 ./sshall.py --build 'bash -c "cd /srcML/dist; make clean; make"'
 ./sshall.py --build 'bash -c "chown -R srcml:srcml /srcML"'
 
-scp fedora18build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora18
 scp fedora19build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora19
 scp fedora20build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora20
 
-scp fedora18build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora18-64
 scp fedora19build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora19-64
 scp fedora20build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora20-64
 

@@ -333,7 +333,7 @@ void output_help(const char* name) {
 // output version message
 void output_version(const char* name) {
 
-  printf("%s Version %s\n%s\n", name, VERSION,COPYRIGHT);
+  printf("%s Version %s\n%s\n", name, "src2srcml Version Trunk 19106 Fri Jan 24 10:55:0 2014 -0500",COPYRIGHT);
 
   printf("Using: ");
   if(atoi(xmlParserVersion) == LIBXML_VERSION)

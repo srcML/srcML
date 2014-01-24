@@ -2,11 +2,9 @@
 
 ./sshall.py --test 'bash -c "cd /srcML; git pull; cd ..; chown -R srcml:srcml /srcML"'
 
-scp ~/Dropbox/srcML/Unix/Fedora18/srcML.tar.gz fedora18test:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora19/srcML.tar.gz fedora19test:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora20/srcML.tar.gz fedora20test:/srcML
 
-scp ~/Dropbox/srcML/Unix/Fedora18-64/srcML.tar.gz fedora18test64:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora19-64/srcML.tar.gz fedora19test64:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora20-64/srcML.tar.gz fedora20test64:/srcML
 
