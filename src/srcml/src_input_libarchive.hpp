@@ -43,6 +43,7 @@ class src_input_libarchive {
     static void process(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang);
   private :
     static void setupLibArchive(archive* a);
+    static void makeRequest(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang);
 };
 
 #endif
