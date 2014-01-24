@@ -61,7 +61,6 @@ void src_input_libarchive::setupLibArchive(archive* a) {
 }
 
 void src_input_libarchive::process(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang) {
-  bool stdin = false;
   ParseRequest request = req;
 
   boost::filesystem::path localPath(input);
@@ -94,6 +93,7 @@ void src_input_libarchive::process(ThreadQueue<ParseRequest, 10>& queue, srcml_a
     }
       
     // Stdin
+    bool stdin = false;
     if (input_file.compare("-") == 0)
       stdin = true;
 
