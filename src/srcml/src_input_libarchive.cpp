@@ -124,8 +124,7 @@ void src_input_libarchive::makeRequest(ThreadQueue<ParseRequest, 10>& queue, src
 
     request.filename = filename;
     request.srcml_arch = srcml_arch;
-    //request.lang = (srcml_archive_get_language(srcml_arch) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
-    request.lang = "xml";
+    request.lang = (srcml_archive_get_language(srcml_arch) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
     // Hand request off to the processing queue
     queue.push(request);
   }
