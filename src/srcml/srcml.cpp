@@ -101,12 +101,30 @@ void * srcml_consume(void * arg) {
     if (pr.empty())
       break;
 
-    // Build, parse, and write srcml unit
-    srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
-    srcml_unit_set_filename(unit, pr.filename.c_str());
-    srcml_unit_set_language(unit, pr.lang.c_str());
-    srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
-    srcml_write_unit(pr.srcml_arch, unit);
+    if (pr.lang.compare("xml") != 0) {
+      // Build, parse, and write srcml unit
+      srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
+      srcml_unit_set_filename(unit, pr.filename.c_str());
+      srcml_unit_set_language(unit, pr.lang.c_str());
+      srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
+      srcml_write_unit(pr.srcml_arch, unit);
+    }
+    else {
+      // Stuff to read srcml back to src
+      srcml_archive* arch = srcml_create_archive();
+      srcml_read_open_filename(arch, pr.filename.c_str());
+      srcml_unit* unit;
+      while (true) {
+        unit = srcml_read_unit(arch);
+        if (unit == 0)
+          break;
+        srcml_unparse_unit_filename(unit, srcml_unit_get_filename(unit));
+        srcml_free_unit(unit);
+      }
+
+      srcml_close_archive(arch);
+      srcml_free_archive(arch);
+    }
   }
 
   return 0;
@@ -166,7 +184,8 @@ int main(int argc, char * argv[]) {
   srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
 
   if (srcml_request.positional_args.size() == 1 && !(srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) {
-    if(srcml_request.positional_args[0] == "-" || srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[0].c_str()))
+    boost::filesystem::path inFile (srcml_request.positional_args[0]);
+    if(srcml_request.positional_args[0] == "-" || srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[0].c_str()) || inFile.extension().string() == ".xml")
       std::cerr << "ARCHIVE OFF\n";
       srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
   }
@@ -220,7 +239,6 @@ int main(int argc, char * argv[]) {
           return 1; // Stdin was requested, but no data was received
       }
     }
-    
     src_input_libarchive::process(queue, srcml_arch, request, input_file, srcml_request.language);   
   }
   

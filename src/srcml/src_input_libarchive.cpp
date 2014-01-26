@@ -80,7 +80,6 @@ void src_input_libarchive::makeRequest(ThreadQueue<ParseRequest, 10>& queue, src
     stdin = true;
 
   while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
-
     std::string entry_name = archive_entry_pathname(arch_entry);
     std::string filename = "";
     /* 
@@ -95,7 +94,7 @@ void src_input_libarchive::makeRequest(ThreadQueue<ParseRequest, 10>& queue, src
       filename = entry_name.c_str();
 
     if (!stdin) {
-      const char * language = srcml_archive_check_extension(srcml_arch, filename.c_str());
+      const char * language = (lang.compare("xml") == 0) ?  lang.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str());
       if (!language) {
         // Extension not supported
         // Skip to next header
@@ -111,7 +110,6 @@ void src_input_libarchive::makeRequest(ThreadQueue<ParseRequest, 10>& queue, src
     }
 
     request.buffer.clear();
-
     while (true) {
       
       const char* buffer;
@@ -126,8 +124,8 @@ void src_input_libarchive::makeRequest(ThreadQueue<ParseRequest, 10>& queue, src
 
     request.filename = filename;
     request.srcml_arch = srcml_arch;
-    request.lang = (srcml_archive_get_language(srcml_arch) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
-
+    //request.lang = (srcml_archive_get_language(srcml_arch) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
+    request.lang = "xml";
     // Hand request off to the processing queue
     queue.push(request);
   }
@@ -137,16 +135,15 @@ void src_input_libarchive::makeRequest(ThreadQueue<ParseRequest, 10>& queue, src
 void src_input_libarchive::process(ThreadQueue<ParseRequest, 10>& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang) {
 
   boost::filesystem::path localPath(input);
-  
   if (is_directory(localPath)) {
     for (boost::filesystem::recursive_directory_iterator end, dir(localPath); dir != end; ++dir) {
       if(is_regular_file(*dir)) {
-        if (srcml_archive_check_extension(srcml_arch, dir->path().string().c_str()))
-          makeRequest(queue, srcml_arch, req, dir->path().string(), lang);
+        if (srcml_archive_check_extension(srcml_arch, dir->path().string().c_str()) || dir->path().extension().string() == ".xml")
+          makeRequest(queue, srcml_arch, req, dir->path().string(), (dir->path().extension().string().compare(".xml") == 0) ? "xml" : lang);
       }
     }
   }
   else {
-    makeRequest(queue, srcml_arch, req, localPath.string(), lang);
+    makeRequest(queue, srcml_arch, req, localPath.string(), (localPath.extension().string().compare(".xml") == 0) ? "xml" : lang);
   }
 }
