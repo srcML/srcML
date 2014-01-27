@@ -146,7 +146,6 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
 
         {
 
-/*
             if(isoption(options, OPTION_MACRO_PATTERN)) {
                 static const boost::regex macro_name_match("[A-Z][A-Z_]+");
                 static const boost::match_flag_type flags = boost::match_default;
@@ -164,7 +163,6 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
                 if(is_regex_match) $setType(MACRO_NAME);
                 
             }
-*/
 
         }
 
