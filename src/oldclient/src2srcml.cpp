@@ -668,7 +668,7 @@ int main(int argc, char* argv[]) {
     }
 
     if (gpoptions->count == 0)
-      return STATUS_INPUTFILE_PROBLEM;
+      exit(STATUS_INPUTFILE_PROBLEM);
 
     else if (isoption(options, OPTION_VERBOSE) && isoption(options, OPTION_ARCHIVE) && !isoption(options, OPTION_QUIET)) {
       fprintf(stderr, "\n"
@@ -1475,7 +1475,8 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
         ++(gpoptions->skipped);
 
         // close the file that we don't have a language for (normally handled by the translator)
-        archiveReadClose(context);
+	if(!(isoption(options, OPTION_INTERACTIVE) && unit_filename == "-"))
+	  archiveReadClose(context);
 
         continue;
       }
