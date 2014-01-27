@@ -136,6 +136,12 @@ int main(int argc, char * argv[]) {
   // Help function was used. srcmlCLI displays, so srcml has no work to do.
   if (srcml_request.help_set)
     return 0;
+  
+  if (srcml_request.command & SRCML_COMMAND_VERSION) {
+    std::cerr <<  "srcML Version Number " << srcml_version_number() << "\n";
+    std::cerr <<  "srcML Version String " << srcml_version_string() << "\n";
+    return 0;
+  }
 
   // Ensure all global flags are valid
   if (srcml_request.encoding != "" && srcml_check_encoding(srcml_request.encoding.c_str()) == 0) {
