@@ -1,0 +1,29 @@
+scp root@fedora19build:/srcML/bin/libsrcml.so .
+scp libsrcml.so root@fedora19test:/srcML/bin/
+
+scp root@fedora20build:/srcML/bin/libsrcml.so .
+scp libsrcml.so root@fedora20test:/srcML/bin/
+
+scp root@fedora19build64:/srcML/bin/libsrcml.so .
+scp libsrcml.so root@fedora19test64:/srcML/bin/
+
+scp root@fedora20build64:/srcML/bin/libsrcml.so .
+scp libsrcml.so root@fedora20test64:/srcML/bin/
+
+scp root@suse13build:/srcML/bin/libsrcml.so .
+scp libsrcml.so root@suse13test:/srcML/bin/
+
+scp root@suse13build64:/srcML/bin/libsrcml.so .
+scp libsrcml.so root@suse13test64:/srcML/bin/
+
+scp root@ubuntu10build:/srcML/bin/libsrcml.so .
+scp libsrcml.so root@ubuntu10test:/srcML/bin/
+
+scp root@ubuntu12build:/srcML/bin/libsrcml.so .
+scp libsrcml.so root@ubuntu12test:/srcML/bin/
+
+scp root@ubuntu10build64:/srcML/bin/libsrcml.so .
+scp libsrcml.so root@ubuntu10test64:/srcML/bin/
+
+scp root@ubuntu12build64:/srcML/bin/libsrcml.so .
+scp libsrcml.so root@ubuntu12test64:/srcML/bin/
