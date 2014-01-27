@@ -565,7 +565,7 @@ int main(int argc, char* argv[]) {
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
   // automatic interactive use from stdin (not on redirect or pipe)
-  if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
+  if (!isoption(options, OPTION_FILELIST) && (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0)) {
 
     if (isatty(STDIN_FILENO))
       options |= OPTION_INTERACTIVE;
