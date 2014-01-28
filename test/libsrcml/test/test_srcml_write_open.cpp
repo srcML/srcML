@@ -56,6 +56,9 @@ int main() {
   srcml_free_archive(archive);
 
   // check file either does not exist or empty
+  std::ifstream result_file("project.xml");
+  assert(!result_file);
+  
 
   }
 
