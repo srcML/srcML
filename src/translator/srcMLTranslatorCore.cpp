@@ -318,6 +318,9 @@ void srcMLTranslatorCore::add_unit(const char* xml) {
 
   if(first) {
 
+    // Open for write;
+    out.initWriter();
+
     out.outputXMLDecl();
 
     // root unit for compound srcML documents

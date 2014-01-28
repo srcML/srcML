@@ -54,6 +54,7 @@ public:
                 std::string * string_uri = 0
         );
 
+  void initWriter();
   xmlTextWriter * getWriter();
   void setWriter(xmlTextWriter *);
   int getDepth();
@@ -106,6 +107,8 @@ public:
     int tabsize;
 
     int depth;
+    xmlBuffer* output_buffer;
+    xmlTextWriterPtr writer;  
 
     // output line attribute content
     std::string lineAttribute;
