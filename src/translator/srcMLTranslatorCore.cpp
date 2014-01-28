@@ -237,19 +237,19 @@ void srcMLTranslatorCore::translate(const char* unit_directory,
 
 // translate from input stream to output stream separate of current output stream
 void srcMLTranslatorCore::translate_separate(const char* unit_directory,
-				const char* unit_filename, const char* unit_version,
-					     int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer) {
+					     const char* unit_filename, const char* unit_version,
+					     int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer,
+					     OPTION_TYPE translation_options) {
 
-  OPTION_TYPE op = options;
-  srcMLTranslatorOutput sep_out(0, 0, getLanguageString(), xml_encoding, op, uri, tabsize, output_buffer, 0, suri);
+  srcMLTranslatorOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, uri, tabsize, output_buffer, 0, suri);
   sep_out.initWriter();
 
   // save old output
-  if(isoption(op, OPTION_ARCHIVE))
+  if(isoption(translation_options, OPTION_ARCHIVE))
     sep_out.setDepth(1);
   //xmlTextWriter * save_writer = sep_out.getWriter();
 
-  //xmlTextWriter * writer = xmlNewTextWriterMemory(output_buffer, isoption(op, OPTION_COMPRESSED));
+  //xmlTextWriter * writer = xmlNewTextWriterMemory(output_buffer, isoption(translation_options, OPTION_COMPRESSED));
   //sep_out.setWriter(writer);
 
   try {
@@ -260,7 +260,7 @@ void srcMLTranslatorCore::translate_separate(const char* unit_directory,
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input
-      KeywordLexer lexer(parser_input, language, op, user_macro_list);
+      KeywordLexer lexer(parser_input, language, translation_options, user_macro_list);
       lexer.setSelector(&selector);
       lexer.setTabsize(tabsize);
 
@@ -274,7 +274,7 @@ void srcMLTranslatorCore::translate_separate(const char* unit_directory,
       selector.select(&lexer);
 
       // base stream parser srcML connected to lexical analyzer
-      StreamMLParser<srcMLParser> parser(selector, language, op);
+      StreamMLParser<srcMLParser> parser(selector, language, translation_options);
 
       // connect local parser to attribute for output
       sep_out.setTokenStream(parser);
