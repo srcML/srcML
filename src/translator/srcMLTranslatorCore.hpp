@@ -75,7 +75,7 @@ public:
     srcMLTranslatorCore(int language,
                         const char* src_encoding,
                         const char* xml_encoding,
-                        xmlTextWriterPtr writer,
+                        xmlOutputBuffer * output_buf,
                         OPTION_TYPE& options,
                         const char* directory,
                         const char* filename,

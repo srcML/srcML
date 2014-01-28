@@ -51,7 +51,7 @@ public:
                           const char* uri[],
                           int tabsize,
                           xmlBuffer* output_buffer = 0,
-                          xmlTextWriterPtr writer = 0,
+                          xmlOutputBuffer * output_buf = 0,
                           std::string * suri = 0
         );
 
