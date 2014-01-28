@@ -75,7 +75,7 @@ public:
     srcMLTranslatorCore(int language,
                         const char* src_encoding,
                         const char* xml_encoding,
-                        xmlTextWriterPtr writer,
+                        xmlOutputBuffer * output_buf,
                         OPTION_TYPE& options,
                         const char* directory,
                         const char* filename,
@@ -89,7 +89,6 @@ public:
 
     void* setInput(const char* path);
     void* setInput(xmlParserInputBufferPtr input);
-    void* setInputString(const char* source, int size);
 
     void close();
 
@@ -101,7 +100,8 @@ public:
 
   void translate_separate(const char* unit_directory,
                           const char* unit_filename, const char* unit_version,
-                          int language, xmlBuffer* output_buffer);
+                          int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer,
+			  OPTION_TYPE translation_options);
 
   void add_unit(const char* xml);
 
@@ -115,9 +115,12 @@ private:
     const char* root_filename;
     const char* root_version;
     const char* encoding;
+    const char* xml_encoding;
     OPTION_TYPE& options;
     srcMLTranslatorOutput out;
     int tabsize;
+    const char** uri;
+    std::string * suri;
     std::vector<std::string> user_macro_list;
 };
 

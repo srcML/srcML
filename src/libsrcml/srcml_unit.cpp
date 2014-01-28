@@ -228,14 +228,15 @@ const char* srcml_unit_get_xml(const struct srcml_unit* unit) {
  * 
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_parse_unit_internal(srcml_unit * unit, int lang) {
+int srcml_parse_unit_internal(srcml_unit * unit, int lang, xmlParserInputBufferPtr input, OPTION_TYPE translation_options) {
 
   xmlBuffer * output_buffer = xmlBufferCreate();
   try {
 
     unit->archive->translator->translate_separate(unit->directory ? unit->directory->c_str() : 0,
                                                   unit->filename ? unit->filename->c_str() : 0,
-                                                  unit->version ? unit->version->c_str() : 0, lang, output_buffer);
+                                                  unit->version ? unit->version->c_str() : 0, lang, input, output_buffer,
+						  translation_options);
   } catch(...) {
 
     xmlBufferFree(output_buffer);
@@ -278,27 +279,16 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
   int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
 
-  OPTION_TYPE save_options = unit->archive->options;
+  OPTION_TYPE translation_options = unit->archive->options;
 
   if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
-    unit->archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+    translation_options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
   else if (lang == Language::LANGUAGE_CSHARP)
-    unit->archive->options |= SRCML_OPTION_CPP_NOMACRO;
+    translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
-  try {
-
-    unit->archive->translator->setInput(src_filename);
-
-  } catch(...) {
-
-    unit->archive->options = save_options;
-    return SRCML_STATUS_ERROR;
-
-  }
-
-  int status = srcml_parse_unit_internal(unit, lang);
-
-  unit->archive->options = save_options;
+  xmlParserInputBufferPtr input = xmlParserInputBufferCreateFilename(src_filename,
+				      unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
+  int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
 
   return status;
 
@@ -321,27 +311,16 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
-  OPTION_TYPE save_options = unit->archive->options;
+  OPTION_TYPE translation_options = unit->archive->options;
 
   if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
-    unit->archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+    translation_options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
   else if (lang == Language::LANGUAGE_CSHARP)
-    unit->archive->options |= SRCML_OPTION_CPP_NOMACRO;
+    translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
-  try {
+  xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(src_buffer, (int)buffer_size, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
-    unit->archive->translator->setInputString(src_buffer, (int)buffer_size);
-
-  } catch(...) {
-
-    unit->archive->options = save_options;
-    return SRCML_STATUS_ERROR;
-
-  }
-
-  int status = srcml_parse_unit_internal(unit, lang);
-
-  unit->archive->options = save_options;
+  int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
 
   return status;
 
@@ -363,34 +342,20 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
-  OPTION_TYPE save_options = unit->archive->options;
+  OPTION_TYPE translation_options = unit->archive->options;
 
   if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
-    unit->archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+    translation_options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
   else if (lang == Language::LANGUAGE_CSHARP)
-    unit->archive->options |= SRCML_OPTION_CPP_NOMACRO;
+    translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
   xmlParserInputBufferPtr input = xmlParserInputBufferCreateFile(src_file, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
-  try {
-
-    unit->archive->translator->setInput(input);
-
-  } catch(...) {
-
-    xmlFreeParserInputBuffer(input);
-    unit->archive->options = save_options;
-    return SRCML_STATUS_ERROR;
-
-  }
-
-  int status = srcml_parse_unit_internal(unit, lang);
+  int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
   input->context = 0;
   input->readcallback = 0;
   input->closecallback = 0;
   xmlFreeParserInputBuffer(input);
-
-  unit->archive->options = save_options;
 
   return status;
 
@@ -412,34 +377,20 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
-  OPTION_TYPE save_options = unit->archive->options;
+  OPTION_TYPE translation_options = unit->archive->options;
 
   if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
-    unit->archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+    translation_options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
   else if (lang == Language::LANGUAGE_CSHARP)
-    unit->archive->options |= SRCML_OPTION_CPP_NOMACRO;
+    translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
   xmlParserInputBufferPtr input = xmlParserInputBufferCreateFd(src_fd, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
-  try {
-
-    unit->archive->translator->setInput(input);
-
-  } catch(...) {
-
-    xmlFreeParserInputBuffer(input);
-    unit->archive->options = save_options;
-    return SRCML_STATUS_ERROR;
-
-  }
-
-  int status = srcml_parse_unit_internal(unit, lang);
+  int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
   input->context = 0;
   input->readcallback = 0;
   input->closecallback = 0;
   xmlFreeParserInputBuffer(input);
-
-  unit->archive->options = save_options;
 
   return status;
 

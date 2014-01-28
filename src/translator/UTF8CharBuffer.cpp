@@ -53,47 +53,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
 }
 
 // Create a character buffer
-UTF8CharBuffer::UTF8CharBuffer(const char* source, int asize, const char * encoding)
-  : antlr::CharBuffer(std::cin), pos(0), size(asize)/*, eof(false)*/, lastcr(false), free(true)
-{
-  const char * enc = encoding;
-
-  /* Use a libxml2 parser input buffer to support URIs.
-     If an encoding is specified, then use it.  Otherwise, assume none, and
-     try to figure it out later.
-  */
-  if (!(input = xmlParserInputBufferCreateMem(source, size, enc ? xmlParseCharEncoding(enc) : XML_CHAR_ENCODING_NONE)))
-    throw UTF8FileError();
-
-  /* If we do not have an encoding at the start, then there is no raw buffer created
-     or used.  Unfortunately, we have to open the file with our encoding defined. */
-  if(encoding && input->encoder) {
-    pos = 0;
-#ifdef LIBXML2_NEW_BUFFER
-//    if(input->raw)
-//      xmlBufferFree(input->raw);
-    input->raw = input->buffer;
-    input->rawconsumed = 0;
-    xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(XML_CHAR_ENCODING_8859_1);
-    input->buffer = temp_parser->buffer;
-    temp_parser->buffer = 0;
-    xmlFreeParserInputBuffer(temp_parser);
-    size = growBuffer();
-#else
-    if(input->raw)
-      xmlBufferFree(input->raw);
-    input->raw = input->buffer;
-    input->rawconsumed = 0;
-    input->buffer = xmlBufferCreate();
-    size = growBuffer();
-#endif
-  }
-
-  init(encoding);
-
-}
-
-// Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(xmlParserInputBufferPtr pinput, const char * encoding)
   : antlr::CharBuffer(std::cin), pos(0), size(0)/*, eof(false)*/, lastcr(false), input(pinput), free(false)
 {

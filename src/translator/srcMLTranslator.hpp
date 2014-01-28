@@ -88,7 +88,7 @@ public:
     srcMLTranslator(int language,
                     const char* src_encoding,
                     const char* xml_encoding,
-                    xmlTextWriterPtr writer,
+                    xmlOutputBuffer * output_buf,
                     OPTION_TYPE& options,
                     const char* directory,
                     const char* filename,
@@ -102,7 +102,6 @@ public:
 
     void* setInput(const char* path);
     void* setInput(xmlParserInputBufferPtr input);
-    void* setInputString(const char* source, int size);
 
     void close();
 
@@ -113,7 +112,8 @@ public:
                    int language = 0);
   void translate_separate(const char* unit_directory,
                           const char* unit_filename, const char* unit_version,
-                          int language, xmlBuffer* output_buffer);
+                          int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer,
+			  OPTION_TYPE translation_options);
 
   void add_unit(const char* xml);
 
