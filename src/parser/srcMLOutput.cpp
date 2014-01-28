@@ -62,8 +62,26 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 )
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
     unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), num2sprefix(string_uri)
-    , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0)
+  , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), output_buffer(output_buffer), writer(writer)
 {
+
+  // setup attributes names for line/column position if used
+  if (isoption(OPTION_POSITION)) {
+
+    lineAttribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
+    lineAttribute += ":line";
+
+    line2Attribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
+    line2Attribute += ":line2";
+
+    columnAttribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
+    columnAttribute += ":column";
+  }
+
+}
+
+void srcMLOutput::initWriter() {
+
   // open the output text writer stream
   // "-" filename is standard output
   if (output_buffer == 0 && writer == 0) {
@@ -84,19 +102,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
         fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
         exit(2);
     }
-  }
-
-  // setup attributes names for line/column position if used
-  if (isoption(OPTION_POSITION)) {
-
-    lineAttribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
-    lineAttribute += ":line";
-
-    line2Attribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
-    line2Attribute += ":line2";
-
-    columnAttribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
-    columnAttribute += ":column";
   }
 
 }
