@@ -101,7 +101,7 @@ public:
 
   void translate_separate(const char* unit_directory,
                           const char* unit_filename, const char* unit_version,
-                          int language, xmlBuffer* output_buffer);
+                          int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer);
 
   void add_unit(const char* xml);
 

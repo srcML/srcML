@@ -259,7 +259,7 @@ void srcMLTranslatorCore::translate(const char* unit_directory,
 // translate from input stream to output stream separate of current output stream
 void srcMLTranslatorCore::translate_separate(const char* unit_directory,
 				const char* unit_filename, const char* unit_version,
-                                           int language, xmlBuffer* output_buffer) {
+					     int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer) {
 
   // save old output
   //int depth = out.getDepth();
@@ -272,11 +272,13 @@ void srcMLTranslatorCore::translate_separate(const char* unit_directory,
 
   try {
 
+      UTF8CharBuffer * parser_input = new UTF8CharBuffer(input, encoding);
+
       // master lexer with multiple streams
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input
-      KeywordLexer lexer(pinput, language, options, user_macro_list);
+      KeywordLexer lexer(parser_input, language, options, user_macro_list);
       lexer.setSelector(&selector);
       lexer.setTabsize(tabsize);
 

@@ -228,14 +228,14 @@ const char* srcml_unit_get_xml(const struct srcml_unit* unit) {
  * 
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_parse_unit_internal(srcml_unit * unit, int lang) {
+int srcml_parse_unit_internal(srcml_unit * unit, int lang, xmlParserInputBufferPtr input) {
 
   xmlBuffer * output_buffer = xmlBufferCreate();
   try {
 
     unit->archive->translator->translate_separate(unit->directory ? unit->directory->c_str() : 0,
                                                   unit->filename ? unit->filename->c_str() : 0,
-                                                  unit->version ? unit->version->c_str() : 0, lang, output_buffer);
+                                                  unit->version ? unit->version->c_str() : 0, lang, input, output_buffer);
   } catch(...) {
 
     xmlBufferFree(output_buffer);
@@ -285,18 +285,9 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
   else if (lang == Language::LANGUAGE_CSHARP)
     unit->archive->options |= SRCML_OPTION_CPP_NOMACRO;
 
-  try {
-
-    unit->archive->translator->setInput(src_filename);
-
-  } catch(...) {
-
-    unit->archive->options = save_options;
-    return SRCML_STATUS_ERROR;
-
-  }
-
-  int status = srcml_parse_unit_internal(unit, lang);
+  xmlParserInputBufferPtr input = xmlParserInputBufferCreateFilename(src_filename,
+				      unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
+  int status = srcml_parse_unit_internal(unit, lang, input);
 
   unit->archive->options = save_options;
 
@@ -328,18 +319,9 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
   else if (lang == Language::LANGUAGE_CSHARP)
     unit->archive->options |= SRCML_OPTION_CPP_NOMACRO;
 
-  try {
+  xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(src_buffer, (int)buffer_size, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
-    unit->archive->translator->setInputString(src_buffer, (int)buffer_size);
-
-  } catch(...) {
-
-    unit->archive->options = save_options;
-    return SRCML_STATUS_ERROR;
-
-  }
-
-  int status = srcml_parse_unit_internal(unit, lang);
+  int status = srcml_parse_unit_internal(unit, lang, input);
 
   unit->archive->options = save_options;
 
@@ -372,19 +354,7 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
   xmlParserInputBufferPtr input = xmlParserInputBufferCreateFile(src_file, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
-  try {
-
-    unit->archive->translator->setInput(input);
-
-  } catch(...) {
-
-    xmlFreeParserInputBuffer(input);
-    unit->archive->options = save_options;
-    return SRCML_STATUS_ERROR;
-
-  }
-
-  int status = srcml_parse_unit_internal(unit, lang);
+  int status = srcml_parse_unit_internal(unit, lang, input);
   input->context = 0;
   input->readcallback = 0;
   input->closecallback = 0;
@@ -421,19 +391,7 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
   xmlParserInputBufferPtr input = xmlParserInputBufferCreateFd(src_fd, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
-  try {
-
-    unit->archive->translator->setInput(input);
-
-  } catch(...) {
-
-    xmlFreeParserInputBuffer(input);
-    unit->archive->options = save_options;
-    return SRCML_STATUS_ERROR;
-
-  }
-
-  int status = srcml_parse_unit_internal(unit, lang);
+  int status = srcml_parse_unit_internal(unit, lang, input);
   input->context = 0;
   input->readcallback = 0;
   input->closecallback = 0;
