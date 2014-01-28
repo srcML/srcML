@@ -469,10 +469,14 @@ void srcMLTranslatorOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION
     }
 }
 
-void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
+void srcMLTranslatorOutput::outputXMLDecl() {
 
   // issue the xml declaration, but only if we want to
   if(depth == 0 && isoption(OPTION_XMLDECL)) xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
+
+}
+
+void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
 
   const char * prefix = convert_num2prefix(0);
   std::string maintag = prefix ? prefix : "";
