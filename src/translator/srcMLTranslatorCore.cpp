@@ -93,7 +93,7 @@ srcMLTranslatorCore::srcMLTranslatorCore(int language,                // program
 srcMLTranslatorCore::srcMLTranslatorCore(int language,                // programming language of source code
 				 const char* src_encoding,    // text encoding of source code
                                  const char* xml_encoding,    // xml encoding of result srcML file
-                                 xmlTextWriterPtr writer,
+                                 xmlOutputBuffer * output_buf,
 				 OPTION_TYPE& op,             // many and varied options
 				 const char* directory,       // root unit directory
 				 const char* filename,        // root unit filename
@@ -105,7 +105,7 @@ srcMLTranslatorCore::srcMLTranslatorCore(int language,                // program
   : Language(language), pinput(0), first(true),
     root_directory(directory), root_filename(filename), root_version(version),
     encoding(src_encoding), options(op),
-    out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, 0, writer, suri), tabsize(tabsize) {
+    out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, 0, output_buf, suri), tabsize(tabsize) {
 
 }
 
@@ -202,6 +202,8 @@ void srcMLTranslatorCore::translate(const char* unit_directory,
 				int language) {
 
   if(first) {
+
+    out.initWriter();
 
     out.outputXMLDecl();
 

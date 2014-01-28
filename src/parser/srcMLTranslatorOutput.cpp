@@ -325,10 +325,10 @@ srcMLTranslatorOutput::srcMLTranslatorOutput(TokenStream* ints,
 			 const char* curi[],
 			 int ts,
                          xmlBuffer* output_buffer,
-                         xmlTextWriterPtr writer,
+                         xmlOutputBuffer * output_buf,
                          std::string * suri
 			 )
-  : srcMLOutput(ints, filename, language, xml_enc, op, curi, ts, output_buffer, writer, suri)
+  : srcMLOutput(ints, filename, language, xml_enc, op, curi, ts, output_buffer, output_buf, suri)
 {
   if (isoption(OPTION_POSITION) && isoption(OPTION_LINE))
       num2process[2] = &srcMLTranslatorOutput::processTextPositionLine;

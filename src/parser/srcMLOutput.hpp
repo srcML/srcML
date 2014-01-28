@@ -50,7 +50,7 @@ public:
                 const char* uri[],
                 int tabsize,
                 xmlBuffer* output_buffer = 0,
-                xmlTextWriterPtr writer = 0,
+                xmlOutputBuffer * output_buf = 0,
                 std::string * string_uri = 0
         );
 
@@ -108,7 +108,7 @@ public:
 
     int depth;
     xmlBuffer* output_buffer;
-    xmlTextWriterPtr writer;  
+    xmlOutputBuffer * output_buf;  
 
     // output line attribute content
     std::string lineAttribute;
