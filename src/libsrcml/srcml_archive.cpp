@@ -657,14 +657,6 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
   if(output_buffer == NULL) return SRCML_STATUS_ERROR;
 
-  /*xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-  if(writer == NULL) {
-
-    xmlOutputBufferClose(output_buffer);
-    return SRCML_STATUS_ERROR;
-
-  }
-  */
   archive->type = SRCML_ARCHIVE_WRITE;
   try {
 
@@ -682,7 +674,6 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
   } catch(...) { 
 
     xmlOutputBufferClose(output_buffer);
-    //xmlFreeTextWriter(writer);
     return SRCML_STATUS_ERROR;
 
   }
@@ -708,15 +699,6 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
   if(output_buffer == NULL) return SRCML_STATUS_ERROR;
 
-  /*
-  xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-  if(writer == NULL) {
-
-    xmlOutputBufferClose(output_buffer);
-    return SRCML_STATUS_ERROR;
-
-  }
-  */
   archive->type = SRCML_ARCHIVE_WRITE;
   try {
 
@@ -734,7 +716,6 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
   } catch(...) { 
 
     xmlOutputBufferClose(output_buffer);
-    //xmlFreeTextWriter(writer);
     return SRCML_STATUS_ERROR;
 
   }
