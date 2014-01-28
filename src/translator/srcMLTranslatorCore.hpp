@@ -114,9 +114,12 @@ private:
     const char* root_filename;
     const char* root_version;
     const char* encoding;
+    const char* xml_encoding;
     OPTION_TYPE& options;
     srcMLTranslatorOutput out;
     int tabsize;
+    const char** uri;
+    std::string * suri;
     std::vector<std::string> user_macro_list;
 };
 
