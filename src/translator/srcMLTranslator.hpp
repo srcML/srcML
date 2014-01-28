@@ -102,7 +102,6 @@ public:
 
     void* setInput(const char* path);
     void* setInput(xmlParserInputBufferPtr input);
-    void* setInputString(const char* source, int size);
 
     void close();
 
