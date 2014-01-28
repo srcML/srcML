@@ -62,6 +62,8 @@ public:
     // same srcml file can be generated from multiple input token streams
     void setTokenStream(TokenStream& ints);
 
+    void outputXMLDecl();
+
     // start a unit element with the passed metadata
     void startUnit(const char* unit_language,
                    const char* unit_directory, const char* unit_filename, const char* unit_version, bool outer);
@@ -81,6 +83,7 @@ private:
     inline const char* token2name(const antlr::RefToken& token) const;
 
     void outputToken(const antlr::RefToken& token);
+
 
     void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer);
 
