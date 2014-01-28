@@ -99,8 +99,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     columnAttribute += ":column";
   }
 
-  // issue the xml declaration, but only if we want to
-  if (isoption(OPTION_XMLDECL)) xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 }
 
 srcMLOutput::~srcMLOutput() {
@@ -204,6 +202,9 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 }
 
 void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
+
+  // issue the xml declaration, but only if we want to
+  if(depth == 0 && isoption(OPTION_XMLDECL)) xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 
   const char * prefix = convert_num2prefix(0);
   std::string maintag = prefix ? prefix : "";
