@@ -94,7 +94,7 @@ int main() {
   srcml_free_archive(archive);
   free(s);
 
-  dassert(strlen(s), 0);
+  dassert(s, 0);
   }
 
   {
