@@ -57,34 +57,13 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 const char* curi[],
 			 int ts,
                          xmlBuffer* output_buffer,
-                         xmlTextWriterPtr writer,
+                         xmlOutputBuffer * output_buf,
                          std::string * string_uri
 			 )
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
     unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), num2sprefix(string_uri)
-    , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0)
+  , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), output_buffer(output_buffer), output_buf(output_buf)
 {
-  // open the output text writer stream
-  // "-" filename is standard output
-  if (output_buffer == 0 && writer == 0) {
-    xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
-    if (!xout) {
-        fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
-        exit(2);
-    }
-  } else if (writer == 0) {
-   xout = xmlNewTextWriterMemory(output_buffer, isoption(OPTION_COMPRESSED));
-    if (!xout) {
-        fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
-        exit(2);
-    }
-  } else {
-    xout = writer;
-    if (!xout) {
-        fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
-        exit(2);
-    }
-  }
 
   // setup attributes names for line/column position if used
   if (isoption(OPTION_POSITION)) {
@@ -97,6 +76,32 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 
     columnAttribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
     columnAttribute += ":column";
+  }
+
+}
+
+void srcMLOutput::initWriter() {
+
+  // open the output text writer stream
+  // "-" filename is standard output
+  if (output_buffer == 0 && output_buf == 0) {
+    xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
+    if (!xout) {
+        fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
+        exit(2);
+    }
+  } else if (output_buf == 0) {
+   xout = xmlNewTextWriterMemory(output_buffer, isoption(OPTION_COMPRESSED));
+    if (!xout) {
+        fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
+        exit(2);
+    }
+  } else {
+    xout = xmlNewTextWriter(output_buf);
+    if (!xout) {
+        fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
+        exit(2);
+    }
   }
 
 }
