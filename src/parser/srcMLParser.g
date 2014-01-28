@@ -258,8 +258,6 @@ private:
 };
 #endif
 
-bool srcMLParser::BOOL;
-
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
@@ -564,8 +562,6 @@ public:
     bool notdestructor;
     bool operatorname;
     int curly_count;
-
-    static bool BOOL;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -1240,8 +1236,8 @@ noexcept_list[] { ENTRY_DEBUG } :
 ;
 
 // match a thow list completely
-complete_throw_list[] { ENTRY_DEBUG } :
-        THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java | COMMA)*
+complete_throw_list[] { bool is_compound = false; ENTRY_DEBUG } :
+        THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java[is_compound] | COMMA)*
 ;
 
 // match noexcept list completely
@@ -3698,7 +3694,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
 ;
 
 // C++ compound name handling
-compound_name_cpp[bool& iscompound = BOOL] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
         (dcolon { iscompound = true; })*
         (DESTOP set_bool[isdestructor] { iscompound = true; })*
@@ -3722,7 +3718,7 @@ catch[antlr::RecognitionException] {
 }
 
 // compound name for C#
-compound_name_csharp[bool& iscompound = BOOL] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+compound_name_csharp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
         (dcolon { iscompound = true; })*
         (DESTOP set_bool[isdestructor] { iscompound = true; })*
@@ -3744,7 +3740,7 @@ catch[antlr::RecognitionException] {
 }
 
 // compound name for C
-compound_name_c[bool& iscompound = BOOL] { ENTRY_DEBUG } :
+compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
         identifier
         ( options { greedy = true; } :
@@ -3754,7 +3750,7 @@ compound_name_c[bool& iscompound = BOOL] { ENTRY_DEBUG } :
 ;
 
 // compound name for Java
-compound_name_java[bool& iscompound = BOOL] { ENTRY_DEBUG } :
+compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
 
         template_argument_list |
         simple_name_optional_template
@@ -5106,11 +5102,11 @@ implements_list[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // super list
-super_list[] { ENTRY_DEBUG } :
+super_list[] { bool is_compound = false; ENTRY_DEBUG } :
         (options { greedy = true; } :
             (derive_access)*
 
-            compound_name_java
+            compound_name_java[is_compound]
         |
             COMMA
         )*
@@ -5519,25 +5515,25 @@ template_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // template extends
-template_extends_java[] { CompleteElement element(this); ENTRY_DEBUG } :
+template_extends_java[] { CompleteElement element(this); bool is_compound = false; ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SEXTENDS);
         }
         EXTENDS
-        compound_name_java
+        compound_name_java[is_compound]
 ;
 
 // template super 
-template_super_java[] { CompleteElement element(this); ENTRY_DEBUG } :
+template_super_java[] { CompleteElement element(this); bool is_compound = false; ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SDERIVATION_LIST);
         }
         SUPER
-        compound_name_java
+        compound_name_java[is_compound]
 ;
 
 // beginning of template parameter list

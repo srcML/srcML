@@ -44,14 +44,6 @@ int main() {
 
   }
 
-  {
-
-    UTF8CharBuffer utf8("abc", 3, "UTF-8");
-    assert(utf8.getChar() == 'a');
-    assert(utf8.getChar() == 'b');
-    assert(utf8.getChar() == 'c');
-
-  }
 
   {
 
@@ -72,13 +64,6 @@ int main() {
   {
 
     UTF8CharBuffer utf8("test_UTF8CharBuffer.cpp", "UTF-8");
-    assert(utf8.getContext() != 0);
-
-  }
-
-  {
-
-    UTF8CharBuffer utf8("abc", 3, "UTF-8");
     assert(utf8.getContext() != 0);
 
   }
