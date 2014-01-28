@@ -4452,7 +4452,7 @@ delegate_anonymous[] { ENTRY_DEBUG } :
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ANONYMOUS);
 
             // start of the catch statement
-            startElement(SFUNCTION_DEFINITION);
+            startElement(SFUNCTION_LAMBDA);
         }
         delegate_marked
         (options { greedy = true; } : parameter_list)*
