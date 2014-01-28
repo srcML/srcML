@@ -404,6 +404,7 @@ tokens {
     // functions
     SFUNCTION_DEFINITION;
 	SFUNCTION_DECLARATION;
+    SFUNCTION_LAMBDA;
 	SFUNCTION_SPECIFIER;
 	SRETURN_STATEMENT;
 	SPARAMETER_LIST;
@@ -1119,7 +1120,7 @@ lambda_expression_cpp[] { ENTRY_DEBUG } :
 
             startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
 
-            startElement(SFUNCTION_DEFINITION);
+            startElement(SFUNCTION_LAMBDA);
 
         }
 

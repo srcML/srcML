@@ -137,6 +137,7 @@ namespace {
   // functions
   ELEMENT_MAP(SFUNCTION_DEFINITION,  "function")
   ELEMENT_MAP(SFUNCTION_DECLARATION, "function_decl")
+  ELEMENT_MAP(SFUNCTION_LAMBDA,      "lambda")
   ELEMENT_MAP(SFUNCTION_SPECIFIER,   "specifier")
   ELEMENT_MAP(SRETURN_STATEMENT,     "return")
   ELEMENT_MAP(SFUNCTION_CALL,        "call")
