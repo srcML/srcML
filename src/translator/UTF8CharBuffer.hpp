@@ -44,7 +44,6 @@ public:
     // Create a character buffer
     UTF8CharBuffer();
     UTF8CharBuffer(const char* ifilename, const char* encoding);
-    UTF8CharBuffer(const char* source, int asize, const char * encoding);
     UTF8CharBuffer(xmlParserInputBufferPtr pinput, const char * encoding);
 
     // Get the next character from the stream
