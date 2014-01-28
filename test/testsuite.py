@@ -197,7 +197,6 @@ def src2srcML(text_file, encoding, language, directory, filename, xmlns):
         archive = srcml_archive()
 
         archive.write_open_memory()
-        archive.set_encoding(encoding)
         archive.set_options(options)
         unit = srcml_unit(archive)
         unit.set_language(language)
