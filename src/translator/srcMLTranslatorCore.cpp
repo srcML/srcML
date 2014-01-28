@@ -190,8 +190,8 @@ void* srcMLTranslatorCore::setInputString(const char* source, int size) {
 void srcMLTranslatorCore::close() {
 
   // if have not translated anything and nested output root unit
-  if (first && ((options & OPTION_ARCHIVE) > 0))
-    out.startUnit(0, root_directory, root_filename, root_version, true);
+  //if (first && ((options & OPTION_ARCHIVE) > 0))
+  //out.startUnit(0, root_directory, root_filename, root_version, true);
 
   out.close();
 }
@@ -201,9 +201,16 @@ void srcMLTranslatorCore::translate(const char* unit_directory,
 				const char* unit_filename, const char* unit_version,
 				int language) {
 
-  // root unit for compound srcML documents
-  if (first && ((options & OPTION_ARCHIVE) > 0))
-    out.startUnit(0, root_directory, root_filename, root_version, true);
+  if(first) {
+
+    out.outputXMLDecl();
+
+    // root unit for compound srcML documents
+    if((options & OPTION_ARCHIVE) > 0)
+      out.startUnit(0, root_directory, root_filename, root_version, true);
+
+
+  }
 
   first = false;
 
@@ -309,10 +316,16 @@ void srcMLTranslatorCore::translate_separate(const char* unit_directory,
 
 void srcMLTranslatorCore::add_unit(const char* xml) {
 
+  if(first) {
 
-  // root unit for compound srcML documents
-  if (first && ((options & OPTION_ARCHIVE) > 0))
-    out.startUnit(0, root_directory, root_filename, root_version, true);
+    out.outputXMLDecl();
+
+    // root unit for compound srcML documents
+    if((options & OPTION_ARCHIVE) > 0)
+      out.startUnit(0, root_directory, root_filename, root_version, true);
+
+
+  }
 
   first = false;
   xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml);
