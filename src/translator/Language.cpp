@@ -84,16 +84,9 @@ bool Language::registerUserExt(const char* ext, const char* language) {
   return registerUserExt(ext, nlanguage);
 }
 
-const char* getLanguageExtension(const char * const inpath)
+const char* getLanguageExtension(const char * const inpath, std::string & extension)
 {
-  // FIXME: don't do this! you should allocate a buffer using malloc or take a buffer from
-  // the user (best option) and attempt to place the extension there.
-  // FIXME: if you go with option 2 I recommend making another function that returns
-  // the size of the file extension.
-  
-  // internal string for returning constant
-  static std::string extension;
-  
+
   // reversed copy of the path
   std::string path(inpath);
   std::reverse(path.begin(), path.end());
@@ -118,7 +111,8 @@ const char* getLanguageExtension(const char * const inpath)
 int Language::getLanguageFromFilename(const char* const path) {
 
   // extract the (pure) extension
-  const char* extension = getLanguageExtension(path);
+  std::string ext;
+  const char* extension = getLanguageExtension(path, ext);
 
   if (!extension)
     return 0;
@@ -137,7 +131,8 @@ int Language::getLanguageFromFilename(const char* const path) {
 int Language::getLanguageFromFilename(const char* const path, std::vector<pair> & registered_languages) {
 
   // extract the (pure) extension
-  const char* extension = getLanguageExtension(path);
+  std::string ext;
+  const char* extension = getLanguageExtension(path, ext);
 
   if (!extension)
     return 0;

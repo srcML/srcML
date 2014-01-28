@@ -91,7 +91,7 @@ EOL_PLACEHOLD;
 }
 
 // @todo remove statics possibly breaking point for threading.
-OPERATORS options { testLiterals = true; } { bool star = false; static int lastpos = 0; static int prev = 0; int start = LA(1);
+OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1);
 } : 
         (
             '#' {

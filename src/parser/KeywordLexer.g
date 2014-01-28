@@ -253,6 +253,8 @@ bool rawstring;
 std::string delimiter;
 bool isline;
 long line_number;
+int lastpos;
+int prev;
 
 // map from text of literal to token number, adjusted to language
 struct keyword { char const * const text; int token; int language; };
@@ -262,7 +264,7 @@ void changetotextlexer(int typeend);
 KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
              std::vector<std::string> user_macro_list)
     : antlr::CharScanner(pinput,true), Language(language), options(options), onpreprocline(false), startline(true),
-    atstring(false), rawstring(false), delimiter(""), isline(false), line_number(-1)
+    atstring(false), rawstring(false), delimiter(""), isline(false), line_number(-1), lastpos(0), prev(0)
 {
     if(isoption(options, OPTION_LINE))
        setLine(getLine() + (1 << 16));
