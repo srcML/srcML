@@ -54,11 +54,10 @@ int main() {
 
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-    xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
     OPTION_TYPE op = 0;
 
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
-                                 writer, op, "", "", "", urisprefix, 4);
+                                 output_buffer, op, "", "", "", urisprefix, 4);
 
     translator.close();
     xmlBufferFree(buffer);
@@ -75,11 +74,10 @@ int main() {
 
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-    xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
     OPTION_TYPE op = 0;
 
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
-                                 writer, op, "", "", "", urisprefix, 4);
+                                 output_buffer, op, "", "", "", urisprefix, 4);
 
 
     translator.close();
@@ -97,11 +95,10 @@ int main() {
 
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-    xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
     OPTION_TYPE op = 0;
 
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
-                                 writer, op, "", "", "", urisprefix, 4);
+                                 output_buffer, op, "", "", "", urisprefix, 4);
 
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("a;", 2, xmlParseCharEncoding(0));
     try {
@@ -117,11 +114,10 @@ int main() {
 
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-    xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
     OPTION_TYPE op = 0;
 
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
-                                 writer, op, "", "", "", urisprefix, 4);
+                                 output_buffer, op, "", "", "", urisprefix, 4);
 
     try {
       translator.setInput((xmlParserInputBufferPtr)NULL);
@@ -143,11 +139,10 @@ int main() {
 
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-    xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
     OPTION_TYPE op = 0;
 
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
-                                 writer, op, 0, 0, 0, urisprefix, 4);
+                                 output_buffer, op, 0, 0, 0, urisprefix, 4);
 
     translator.setInputString("a;", 2);
     xmlBufferPtr output = xmlBufferCreate();
@@ -170,11 +165,10 @@ int main() {
 
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-    xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
     OPTION_TYPE op = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
 
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
-                                 writer, op, 0, 0, 0, urisprefix, 4);
+                                 output_buffer, op, 0, 0, 0, urisprefix, 4);
 
     std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
     std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
@@ -193,11 +187,10 @@ int main() {
 
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-    xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
     OPTION_TYPE op = OPTION_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
 
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
-                                 writer, op, 0, 0, 0, urisprefix, 4);
+                                 output_buffer, op, 0, 0, 0, urisprefix, 4);
 
     std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
     std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
