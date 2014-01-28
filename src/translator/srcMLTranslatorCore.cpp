@@ -240,15 +240,16 @@ void srcMLTranslatorCore::translate_separate(const char* unit_directory,
 				const char* unit_filename, const char* unit_version,
 					     int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer) {
 
-  srcMLTranslatorOutput sep_out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, output_buffer, 0, suri);
+  OPTION_TYPE op = options;
+  srcMLTranslatorOutput sep_out(0, 0, getLanguageString(), xml_encoding, op, uri, tabsize, output_buffer, 0, suri);
   sep_out.initWriter();
 
   // save old output
-  if(isoption(options, OPTION_ARCHIVE))
+  if(isoption(op, OPTION_ARCHIVE))
     sep_out.setDepth(1);
   //xmlTextWriter * save_writer = sep_out.getWriter();
 
-  //xmlTextWriter * writer = xmlNewTextWriterMemory(output_buffer, isoption(options, OPTION_COMPRESSED));
+  //xmlTextWriter * writer = xmlNewTextWriterMemory(output_buffer, isoption(op, OPTION_COMPRESSED));
   //sep_out.setWriter(writer);
 
   try {
@@ -259,7 +260,7 @@ void srcMLTranslatorCore::translate_separate(const char* unit_directory,
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input
-      KeywordLexer lexer(parser_input, language, options, user_macro_list);
+      KeywordLexer lexer(parser_input, language, op, user_macro_list);
       lexer.setSelector(&selector);
       lexer.setTabsize(tabsize);
 
@@ -273,7 +274,7 @@ void srcMLTranslatorCore::translate_separate(const char* unit_directory,
       selector.select(&lexer);
 
       // base stream parser srcML connected to lexical analyzer
-      StreamMLParser<srcMLParser> parser(selector, language, options);
+      StreamMLParser<srcMLParser> parser(selector, language, op);
 
       // connect local parser to attribute for output
       sep_out.setTokenStream(parser);
@@ -298,6 +299,7 @@ void srcMLTranslatorCore::translate_separate(const char* unit_directory,
 
   //sep_out.setWriter(save_writer);
   sep_out.setDepth(0);
+  
 }
 
 void srcMLTranslatorCore::add_unit(const char* xml) {
