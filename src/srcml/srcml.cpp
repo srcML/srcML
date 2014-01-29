@@ -42,19 +42,17 @@
 #include <iostream>
 
 bool test_for_stdin() {
+
+  // Init file descriptor with stdin
   fd_set fds;
+  FD_ZERO(&fds);
+  FD_SET(STDIN_FILENO, &fds);
 
   /* 
    Need a timeout so the application doesn't
     hang waiting for input that never comes
   */
   struct timeval timeout;
-
-  // Init file descriptor with stdin
-  FD_ZERO(&fds);
-  FD_SET(STDIN_FILENO, &fds);
-
-  // Set timeout
   timeout.tv_sec = 5;
   timeout.tv_usec = 0;
 
@@ -94,7 +92,7 @@ boost::mutex mtx;
 
 // Consumption thread function
 void * srcml_consume(void * arg) {
-  ThreadQueue<ParseRequest, 10> * queue = (ThreadQueue<ParseRequest, 10> *) arg;
+  ParseQueue * queue = (ParseQueue *) arg;
   
   while (true) {
     ParseRequest pr;
@@ -219,7 +217,7 @@ int main(int argc, char * argv[]) {
 
   srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
-  ThreadQueue<ParseRequest, 10> queue;
+  ParseQueue queue;
 
   const int NUM_THREADS = 4;
   pthread_t writer[NUM_THREADS];
