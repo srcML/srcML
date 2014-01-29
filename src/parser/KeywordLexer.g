@@ -127,6 +127,9 @@ tokens {
 
 	INLINE;
 
+    // macro
+    MACRO_TYPE_NAME;
+
     // specifiers that are not needed for parsing
     /*
     REGISTER = "register";
@@ -270,8 +273,12 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
        setLine(getLine() + (1 << 16));
     setTokenObjectFactory(srcMLToken::factory);
 
-    for (std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); ++i)
+    // @todo check for exception
+    for (std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); i += 2)
+        if(user_macro_list.at(i + 1) == "src:macro")
             literals[user_macro_list.at(i).c_str()] = MACRO_NAME;
+        else if(user_macro_list.at(i + 1) == "src:name")
+            literals[user_macro_list.at(i).c_str()] = MACRO_TYPE_NAME;
 
     keyword keyword_map[] = {
         // common keywords
