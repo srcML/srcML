@@ -44,6 +44,7 @@ option(ENABLE_NEW_SRCML_EXEC_BUILD "Build the newer version of the srcML executa
 set_property(GLOBAL PROPERTY ENABLE_NEW_SRCML_EXEC_BUILD ${ENABLE_NEW_SRCML_EXEC_BUILD})
 
 # Setting some windows only properties.
+# @todo this breaks mingw32 build.
 if(WIN32)
     # Adding suspected windows include directory for ANTRL
     include_directories("C:/antlr/277/include/antlr")
