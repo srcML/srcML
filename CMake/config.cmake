@@ -32,7 +32,7 @@ option(ENABLE_SVN_INTEGRATION "Build with SVN integration." OFF)
 set_property(GLOBAL PROPERTY SVN_ENABLED ${ENABLE_SVN_INTEGRATION})
 
 # Adding SAX to configuration.
-option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" OFF)
+option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" ON)
 set_property(GLOBAL PROPERTY SAX2_ENABLED ${LIBSRCML_SAX2_ENABLED})
 
 # Dynamic Load libraries (Unix only)
@@ -44,6 +44,7 @@ option(ENABLE_NEW_SRCML_EXEC_BUILD "Build the newer version of the srcML executa
 set_property(GLOBAL PROPERTY ENABLE_NEW_SRCML_EXEC_BUILD ${ENABLE_NEW_SRCML_EXEC_BUILD})
 
 # Setting some windows only properties.
+# @todo this breaks mingw32 build.
 if(WIN32)
     # Adding suspected windows include directory for ANTRL
     include_directories("C:/antlr/277/include/antlr")

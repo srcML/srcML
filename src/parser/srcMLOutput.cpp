@@ -57,34 +57,13 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 const char* curi[],
 			 int ts,
                          xmlBuffer* output_buffer,
-                         xmlTextWriterPtr writer,
+                         xmlOutputBuffer * output_buf,
                          std::string * string_uri
 			 )
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
     unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), num2sprefix(string_uri)
-    , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0)
+  , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), output_buffer(output_buffer), output_buf(output_buf)
 {
-  // open the output text writer stream
-  // "-" filename is standard output
-  if (output_buffer == 0 && writer == 0) {
-    xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
-    if (!xout) {
-        fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
-        exit(2);
-    }
-  } else if (writer == 0) {
-   xout = xmlNewTextWriterMemory(output_buffer, isoption(OPTION_COMPRESSED));
-    if (!xout) {
-        fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
-        exit(2);
-    }
-  } else {
-    xout = writer;
-    if (!xout) {
-        fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
-        exit(2);
-    }
-  }
 
   // setup attributes names for line/column position if used
   if (isoption(OPTION_POSITION)) {
@@ -99,8 +78,32 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     columnAttribute += ":column";
   }
 
-  // issue the xml declaration, but only if we want to
-  if (isoption(OPTION_XMLDECL)) xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
+}
+
+void srcMLOutput::initWriter() {
+
+  // open the output text writer stream
+  // "-" filename is standard output
+  if (output_buffer == 0 && output_buf == 0) {
+    xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
+    if (!xout) {
+        fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
+        exit(2);
+    }
+  } else if (output_buf == 0) {
+   xout = xmlNewTextWriterMemory(output_buffer, isoption(OPTION_COMPRESSED));
+    if (!xout) {
+        fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
+        exit(2);
+    }
+  } else {
+    xout = xmlNewTextWriter(output_buf);
+    if (!xout) {
+        fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
+        exit(2);
+    }
+  }
+
 }
 
 srcMLOutput::~srcMLOutput() {
@@ -228,7 +231,6 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     tabattribute.append(":tabs");
   }
 
-  /*
   std::ostringstream soptions;
   std::string SEP;
   //if(isoption(OPTION_XMLDECL))        { soptions << "XMLDECL"; }
@@ -242,7 +244,6 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
   if(isoption(OPTION_MACRO_LIST))     { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "MACRO_LIST"; }
   if(isoption(OPTION_NESTIF))         { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "NESTIF"; }
   if(isoption(OPTION_CPPIF_CHECK))    { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "CPPIF_CHECK"; }
-  */
 
   // list of attributes
   const char* const attrs[][2] = {
@@ -265,7 +266,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     // position tab setting
     { tabattribute.c_str(), isoption(OPTION_POSITION) ? stabs.str().c_str() : 0 },
 
-    //{ UNIT_ATTRIBUTE_OPTIONS,  (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.str().c_str() : 0 },
+    { UNIT_ATTRIBUTE_OPTIONS,  (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.str().c_str() : 0 },
   };
 
   // output attributes

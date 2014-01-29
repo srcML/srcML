@@ -91,7 +91,7 @@ EOL_PLACEHOLD;
 }
 
 // @todo remove statics possibly breaking point for threading.
-OPERATORS options { testLiterals = true; } { bool star = false; static int lastpos = 0; static int prev = 0; int start = LA(1);
+OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1);
 } : 
         (
             '#' {
@@ -143,7 +143,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; static int lastp
        '`' |
        '!' ('=')? |
        ':' (':')? |
-       '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')') }? '>' { $setText("=&gt;"); $setType(LAMBDA); } |) |
+       '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>' { $setText("=&gt;"); $setType(LAMBDA); } |) |
 
        '&' { $setText("&amp;"); }
             (options { greedy = true; } : '&' { $setText("&amp;&amp;"); star = true; } | '=' { $setText("&amp;="); } )?

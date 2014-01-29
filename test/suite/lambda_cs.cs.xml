@@ -2,43 +2,43 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="lambda" filename="lambda_cs">
 
 <unit>
-<expr_stmt><expr><name>w</name> =&gt; <name><name>w</name>.<name>Length</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><name>w</name> =&gt; <name><name>w</name>.<name>Length</name></name></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>shortestWordLength</name> =<init> <expr><call><name><name>words</name>.<name>Min</name></name><argument_list>(<argument><expr><name>w</name> =&gt; <name><name>w</name>.<name>Length</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>shortestWordLength</name> =<init> <expr><call><name><name>words</name>.<name>Min</name></name><argument_list>(<argument><expr><lambda><name>w</name> =&gt; <name><name>w</name>.<name>Length</name></name></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>() =&gt; <name><name>w</name>.<name>Length</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><parameter_list>()</parameter_list> =&gt; <name><name>w</name>.<name>Length</name></name></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>(<name>string</name> <name>w</name>) =&gt; <name><name>w</name>.<name>Length</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><parameter_list>(<param><decl><type><name>string</name></type> <name>w</name></decl></param>)</parameter_list> =&gt; <name><name>w</name>.<name>Length</name></name></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>shortestWordLength</name> =<init> <expr><call><name><name>words</name>.<name>Min</name></name><argument_list>(<argument><expr>(<name>string</name> <name>w</name>) =&gt; <name><name>w</name>.<name>Length</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>shortestWordLength</name> =<init> <expr><call><name><name>words</name>.<name>Min</name></name><argument_list>(<argument><expr><lambda><parameter_list>(<param><decl><type><name>string</name></type> <name>w</name></decl></param>)</parameter_list> =&gt; <name><name>w</name>.<name>Length</name></name></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>var</name></type> <name>shortDigits</name> =<init> <expr><call><name><name>digits</name>.<name>Where</name></name><argument_list>(<argument><expr>(<name>digit</name>, <name>index</name>) =&gt; <name><name>digit</name>.<name>Length</name></name> &lt; <name>index</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>var</name></type> <name>shortDigits</name> =<init> <expr><call><name><name>digits</name>.<name>Where</name></name><argument_list>(<argument><expr><lambda><parameter_list>(<param><decl><name>digit</name></decl></param>, <param><decl><name>index</name></decl></param>)</parameter_list> =&gt; <name><name>digit</name>.<name>Length</name></name> &lt; <name>index</name></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>var</name></type> <name>shortDigits</name> =<init> <expr><call><name><name>digits</name>.<name>Where</name></name><argument_list>(<argument><expr>(<name>string</name> <name>digit</name>, <name>int</name> <name>index</name>) =&gt; <name><name>digit</name>.<name>Length</name></name> &lt; <name>index</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>var</name></type> <name>shortDigits</name> =<init> <expr><call><name><name>digits</name>.<name>Where</name></name><argument_list>(<argument><expr><lambda><parameter_list>(<param><decl><type><name>string</name></type> <name>digit</name></decl></param>, <param><decl><type><name>int</name></type> <name>index</name></decl></param>)</parameter_list> =&gt; <name><name>digit</name>.<name>Length</name></name> &lt; <name>index</name></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>(<name>input</name> <name>parameters</name>) =&gt; <block>{<expr_stmt><expr><name>statement</name></expr>;</expr_stmt>}</block></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><parameter_list>(<param><decl><type><name>input</name></type> <name>parameters</name></decl></param>)</parameter_list> =&gt; <block>{<expr_stmt><expr><name>statement</name></expr>;</expr_stmt>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>TestDelegate</name></type> <name>myDel</name> =<init> <expr><name>n</name> =&gt; <block>{ <decl_stmt><decl><type><name>string</name></type> <name>s</name> =<init> <expr><name>n</name> + " " + "World"</expr></init></decl>;</decl_stmt> <expr_stmt><expr><call><name><name>Console</name>.<name>WriteLine</name></name><argument_list>(<argument><expr><name>s</name></expr></argument>)</argument_list></call></expr>;</expr_stmt> }</block></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>TestDelegate</name></type> <name>myDel</name> =<init> <expr><lambda><name>n</name> =&gt; <block>{ <decl_stmt><decl><type><name>string</name></type> <name>s</name> =<init> <expr><name>n</name> + " " + "World"</expr></init></decl>;</decl_stmt> <expr_stmt><expr><call><name><name>Console</name>.<name>WriteLine</name></name><argument_list>(<argument><expr><name>s</name></expr></argument>)</argument_list></call></expr>;</expr_stmt> }</block></lambda></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>async</name> (<name>t1</name>,<name>t2</name>)=&gt;await <name>t1</name> + await <name>t2</name></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><specifier>async</specifier> <parameter_list>(<param><decl><name>t1</name></decl></param>,<param><decl><name>t2</name></decl></param>)</parameter_list>=&gt;await <name>t1</name> + await <name>t2</name></lambda></expr>;</expr_stmt>
 </unit>
 
 </unit>

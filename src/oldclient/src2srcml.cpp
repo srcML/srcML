@@ -333,7 +333,7 @@ void output_help(const char* name) {
 // output version message
 void output_version(const char* name) {
 
-  printf("%s Version %s\n%s\n", name, "src2srcml Version Trunk 19106 Fri Jan 24 10:55:0 2014 -0500",COPYRIGHT);
+  printf("%s Version %s\n%s\n", name, VERSION, COPYRIGHT);
 
   printf("Using: ");
   if(atoi(xmlParserVersion) == LIBXML_VERSION)
@@ -565,7 +565,7 @@ int main(int argc, char* argv[]) {
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
   // automatic interactive use from stdin (not on redirect or pipe)
-  if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
+  if (!isoption(options, OPTION_FILELIST) && (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0)) {
 
     if (isatty(STDIN_FILENO))
       options |= OPTION_INTERACTIVE;
@@ -668,7 +668,7 @@ int main(int argc, char* argv[]) {
     }
 
     if (gpoptions->count == 0)
-      return STATUS_INPUTFILE_PROBLEM;
+      exit(STATUS_INPUTFILE_PROBLEM);
 
     else if (isoption(options, OPTION_VERBOSE) && isoption(options, OPTION_ARCHIVE) && !isoption(options, OPTION_QUIET)) {
       fprintf(stderr, "\n"
@@ -1475,7 +1475,8 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
         ++(gpoptions->skipped);
 
         // close the file that we don't have a language for (normally handled by the translator)
-        archiveReadClose(context);
+	if(!(isoption(options, OPTION_INTERACTIVE) && unit_filename == "-"))
+	  archiveReadClose(context);
 
         continue;
       }
@@ -1776,7 +1777,24 @@ void read_macro_list(srcMLTranslator& translator, const char * filename) {
       if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
         continue;
 
+      char * split_pos = index(line, ',');
+      if(split_pos)
+	(*split_pos) = '\0';
+
       user_macro_list.push_back(line);
+
+      if(split_pos) {
+
+	line = split_pos + 1;
+	line += strspn(line, " \t\f");
+	user_macro_list.push_back(line);
+
+      } else {
+
+	user_macro_list.push_back("src:macro");
+
+      }
+
     }
 
   } catch (URIStreamFileError) {

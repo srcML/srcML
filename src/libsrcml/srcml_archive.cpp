@@ -368,7 +368,7 @@ int srcml_archive_set_options(srcml_archive* archive, unsigned long long options
 }
 
 /**
- * srcml_archive_enable_options
+ * srcml_archive_enable_option
  * @param archive a srcml_archive
  * @param option a srcml option
  *
@@ -657,20 +657,12 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
   if(output_buffer == NULL) return SRCML_STATUS_ERROR;
 
-  xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-  if(writer == NULL) {
-
-    xmlOutputBufferClose(output_buffer);
-    return SRCML_STATUS_ERROR;
-
-  }
-
   archive->type = SRCML_ARCHIVE_WRITE;
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
                                               0, archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                              writer,
+                                              output_buffer,
                                               archive->options,
                                               archive->directory ? archive->directory->c_str() : 0,
                                               archive->filename ? archive->filename->c_str() : 0,
@@ -682,7 +674,6 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
   } catch(...) { 
 
     xmlOutputBufferClose(output_buffer);
-    xmlFreeTextWriter(writer);
     return SRCML_STATUS_ERROR;
 
   }
@@ -708,20 +699,12 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
   if(output_buffer == NULL) return SRCML_STATUS_ERROR;
 
-  xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-  if(writer == NULL) {
-
-    xmlOutputBufferClose(output_buffer);
-    return SRCML_STATUS_ERROR;
-
-  }
-
   archive->type = SRCML_ARCHIVE_WRITE;
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
                                               0, archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                              writer,
+                                              output_buffer,
                                               archive->options,
                                               archive->directory ? archive->directory->c_str() : 0,
                                               archive->filename ? archive->filename->c_str() : 0,
@@ -733,7 +716,6 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
   } catch(...) { 
 
     xmlOutputBufferClose(output_buffer);
-    xmlFreeTextWriter(writer);
     return SRCML_STATUS_ERROR;
 
   }
