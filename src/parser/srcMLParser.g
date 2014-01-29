@@ -402,6 +402,7 @@ tokens {
     // functions
     SFUNCTION_DEFINITION;
 	SFUNCTION_DECLARATION;
+    SFUNCTION_LAMBDA;
 	SFUNCTION_SPECIFIER;
 	SRETURN_STATEMENT;
 	SPARAMETER_LIST;
@@ -1098,6 +1099,90 @@ overloaded_operator[] { SingleElement element(this); ENTRY_DEBUG } :
         )
 ;
 
+// handle a C# lambda expression
+lambda_expression_csharp[] { ENTRY_DEBUG } :
+		{
+
+            startElement(SFUNCTION_LAMBDA);
+
+        }
+
+        (specifier)* (variable_identifier | lambda_parameter_list_csharp) lambda_marked
+        {
+            if(LA(1) == LCURLY) startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
+        }
+
+;
+
+// do a parameter list
+lambda_parameter_list_csharp[] { CompleteElement element(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
+        {
+            // list of parameters
+            startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+
+            // start the parameter list element
+            startElement(SPARAMETER_LIST);
+        }
+        // parameter list must include all possible parts since it is part of
+        // function detection
+        LPAREN ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; }
+        {
+            // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
+            if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
+                endMode();
+        } comma |
+        lambda_complete_parameter_csharp { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
+;
+
+// complete parameter
+lambda_complete_parameter_csharp[] { ENTRY_DEBUG } :
+        lambda_parameter_csharp
+        // suppress ()* warning
+        (options { greedy = true; } : parameter_declaration_initialization (options { greedy = true; } : {LA(1) != RPAREN }? expression)*)*
+;
+
+// a parameter
+lambda_parameter_csharp[] { int type_count = 0; ENTRY_DEBUG } :
+        {
+            // end parameter correctly
+            startNewMode(MODE_PARAMETER);
+
+            // start the parameter element
+            startElement(SPARAMETER);
+        }
+        (
+
+            {
+                // start the declaration element
+                    startElement(SDECLARATION);
+
+            }
+            set_int[type_count, type_identifier_count_check()]
+            set_int[type_count, type_count > 0 ? type_count - 1 : type_count]
+            lambda_parameter_type_count_csharp[type_count]
+           {
+                // expect a name initialization
+                setMode(MODE_VARIABLE_NAME | MODE_INIT);
+            }
+            ( options { greedy = true; } : variable_declaration_nameinit)*
+        )
+;
+
+// count types in parameter
+lambda_parameter_type_count_csharp[int & type_count] { if(type_count < 1) return; CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // local mode so start element will end correctly
+            startNewMode(MODE_LOCAL);
+
+            // start of type
+            startElement(STYPE);
+        }
+        eat_type[type_count]
+
+        // sometimes there is no parameter name.  if so, we need to eat it
+        ( options { greedy = true; } : multops | tripledotop | LBRACKET RBRACKET)*
+;
+
 // handle a C++11 lambda expression
 lambda_expression_cpp[] { ENTRY_DEBUG } :
 		{
@@ -1115,7 +1200,7 @@ lambda_expression_cpp[] { ENTRY_DEBUG } :
 
             startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
 
-            startElement(SFUNCTION_DEFINITION);
+            startElement(SFUNCTION_LAMBDA);
 
         }
 
@@ -1173,6 +1258,13 @@ lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG
     inputState->guessing--;
     rewind(start);
 } :;
+
+// completely match a C# lambda expression
+lambda_expression_full_csharp[] { ENTRY_DEBUG } :
+
+        (ASYNC)* (variable_identifier | paren_pair) LAMBDA
+
+;
 
 // completely match a C++ lambda expression
 lambda_expression_full_cpp[] { ENTRY_DEBUG } :
@@ -4447,7 +4539,7 @@ delegate_anonymous[] { ENTRY_DEBUG } :
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ANONYMOUS);
 
             // start of the catch statement
-            startElement(SFUNCTION_DEFINITION);
+            startElement(SFUNCTION_LAMBDA);
         }
         delegate_marked
         (options { greedy = true; } : parameter_list)*
@@ -4466,7 +4558,11 @@ delegate_marked[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 // lambda character
-lambda_marked[] { ENTRY_DEBUG } :
+lambda_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR))
+                startElement(SOPERATOR);
+        }
         LAMBDA
 ;
 
@@ -4876,6 +4972,10 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; ENTRY
         { next_token() == LCURLY }?
         lambda_anonymous |
 
+        { inLanguage(LANGUAGE_CSHARP) }?
+        (lambda_expression_full_csharp) => lambda_expression_csharp |
+
+        { inLanguage(LANGUAGE_CXX_ONLY) }?
         (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_cpp |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?

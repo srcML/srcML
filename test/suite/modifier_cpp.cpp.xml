@@ -48,19 +48,19 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><function><capture>[<argument><type:modifier>&amp;</type:modifier></argument>]</capture><parameter_list>()</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><type:modifier>&amp;</type:modifier></argument>]</capture><parameter_list>()</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><function><capture>[<argument><type:modifier>&amp;</type:modifier></argument>]</capture> <block>{}</block></function></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><type:modifier>&amp;</type:modifier></argument>]</capture> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><function><capture>[<argument><name>x</name></argument>, <argument><type:modifier>&amp;</type:modifier><name>s</name></argument>]</capture> <parameter_list>(<param><decl><type><name>delta</name> <type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><name>x</name></argument>, <argument><type:modifier>&amp;</type:modifier><name>s</name></argument>]</capture> <parameter_list>(<param><decl><type><name>delta</name> <type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><function><capture>[<argument><name>x</name></argument>, <argument><type:modifier>&amp;</type:modifier><name>s</name></argument>]</capture> <parameter_list>(<param><decl><type><name>delta</name> <specifier>const</specifier><type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><name>x</name></argument>, <argument><type:modifier>&amp;</type:modifier><name>s</name></argument>]</capture> <parameter_list>(<param><decl><type><name>delta</name> <specifier>const</specifier><type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <!-- 
@@ -77,27 +77,27 @@ These are the captures:
 So, I do not thing that const exists.
 
 <unit>
-<expr_stmt><expr><function><capture>[<argument><type:modifier>=</type:modifier></argument>, const&amp; <name>i</name>]</capture> <block>{}</block></function></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><type:modifier>=</type:modifier></argument>, const&amp; <name>i</name>]</capture> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><function><capture>[<argument><type:modifier>&amp;</type:modifier></argument>, const&amp; <name>i</name>]</capture> <block>{}</block></function></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><type:modifier>&amp;</type:modifier></argument>, const&amp; <name>i</name>]</capture> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><function><capture>[<argument><name>x</name></argument>, <argument><type:modifier>&amp;</type:modifier><name>s</name></argument>]</capture> <block>{}</block></function></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><name>x</name></argument>, <argument><type:modifier>&amp;</type:modifier><name>s</name></argument>]</capture> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><function><capture>[<argument><type:modifier>=</type:modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<param><decl><type><name>delta</name><type:modifier>&amp;</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><type:modifier>=</type:modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<param><decl><type><name>delta</name><type:modifier>&amp;</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><function><capture>[<argument><type:modifier>&amp;</type:modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<param><decl><type><name>delta</name></type></decl></param>)</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><type:modifier>&amp;</type:modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<param><decl><type><name>delta</name></type></decl></param>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><function><capture>[<argument><type:modifier>&amp;</type:modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<param><decl><type><name>delta</name> <specifier>const</specifier><type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></function></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><type:modifier>&amp;</type:modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<param><decl><type><name>delta</name> <specifier>const</specifier><type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
  -->
