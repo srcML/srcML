@@ -1107,7 +1107,7 @@ lambda_expression_csharp[] { ENTRY_DEBUG } :
 
         }
 
-        (variable_identifier | parameter_list) LAMBDA
+        (ASYNC)* (variable_identifier | parameter_list) lambda_marked
         {
             if(LA(1) == LCURLY) startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
         }
@@ -1193,7 +1193,7 @@ lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG
 // completely match a C# lambda expression
 lambda_expression_full_csharp[] { ENTRY_DEBUG } :
 
-        (variable_identifier | paren_pair) LAMBDA
+        (ASYNC)* (variable_identifier | paren_pair) LAMBDA
 
 ;
 
@@ -4489,7 +4489,11 @@ delegate_marked[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 // lambda character
-lambda_marked[] { ENTRY_DEBUG } :
+lambda_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR))
+                startElement(SOPERATOR);
+        }
         LAMBDA
 ;
 
