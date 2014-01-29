@@ -217,15 +217,7 @@ int main(int argc, char * argv[]) {
   ThreadQueue<ParseRequest, 10> queue;
 
   pthread_t writer;
-  pthread_attr_t tattr;
-  int newprio = 90;
-  sched_param param;
-
-  pthread_attr_init(&tattr);
-  pthread_attr_getschedparam (&tattr, &param);
-  param.sched_priority = newprio;
-  pthread_attr_setschedparam (&tattr, &param);
-  pthread_create(&writer, &tattr, srcml_consume, &queue);
+  pthread_create(&writer, 0, srcml_consume, &queue);
 
   // Setup a request
   ParseRequest request;
