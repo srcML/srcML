@@ -1103,13 +1103,14 @@ overloaded_operator[] { SingleElement element(this); ENTRY_DEBUG } :
 lambda_expression_csharp[] { ENTRY_DEBUG } :
 		{
 
- //           startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
-
             startElement(SFUNCTION_LAMBDA);
 
         }
 
         (variable_identifier | parameter_list) LAMBDA
+        {
+            if(LA(1) == LCURLY) startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
+        }
 
 ;
 
