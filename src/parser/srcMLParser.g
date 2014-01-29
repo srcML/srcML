@@ -4209,37 +4209,24 @@ catch[antlr::RecognitionException] {
             emptyElement(SERROR_PARSE);
 }
 
-// handle macro list/pattern name by itself
-macro_pattern_name[]  { SingleElement element(this); ENTRY_DEBUG } :
-        {
-
-            startElement(SNAME);
-
-        }
-        MACRO_NAME
-;
-
 // do a macro call.
-macro_pattern_call[] { CompleteElement element(this); ENTRY_DEBUG } :
+macro_pattern_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
 
             // start the macro call element
             startElement(SMACRO_CALL);
-        }
-        macro_type_name
-        macro_call_argument_list
-;
 
-// handle macro list/pattern name by itself
-macro_type_name[]  { SingleElement element(this); ENTRY_DEBUG } :
-        {
-
+            startNewMode(MODE_LOCAL);
             startElement(SNAME);
 
         }
+
         MACRO_TYPE_NAME
+        { endMode(); }
+        macro_call_argument_list
+
 ;
 
 // do a macro call.
@@ -4250,8 +4237,14 @@ macro_type_name_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
 
             // start the macro call element
             startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
         }
-        macro_type_name
+
+        MACRO_TYPE_NAME
+        { endMode(); }
         macro_call_argument_list
 
 ;
