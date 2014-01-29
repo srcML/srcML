@@ -22,7 +22,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>var</name></type> <name>shortDigits</name> =<init> <expr><call><name><name>digits</name>.<name>Where</name></name><argument_list>(<argument><expr>(<name>digit</name>, <name>index</name>) =&gt; <name><name>digit</name>.<name>Length</name></name> &lt; <name>index</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>var</name></type> <name>shortDigits</name> =<init> <expr><call><name><name>digits</name>.<name>Where</name></name><argument_list>(<argument><expr><lambda><parameter_list>(<name>digit</name>, <name>index</name>)</parameter_list> =&gt; <name><name>digit</name>.<name>Length</name></name> &lt; <name>index</name></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -30,7 +30,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr>(<name>input</name> <name>parameters</name>) =&gt; <block>{<expr_stmt><expr><name>statement</name></expr>;</expr_stmt>}</block></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><parameter_list>(<param><decl><type><name>input</name></type> <name>parameters</name></decl></param>)</parameter_list> =&gt; <block>{<expr_stmt><expr><name>statement</name></expr>;</expr_stmt>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
