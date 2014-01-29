@@ -34,7 +34,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>TestDelegate</name></type> <name>myDel</name> =<init> <expr><name>n</name> =&gt; <block>{ <decl_stmt><decl><type><name>string</name></type> <name>s</name> =<init> <expr><name>n</name> + " " + "World"</expr></init></decl>;</decl_stmt> <expr_stmt><expr><call><name><name>Console</name>.<name>WriteLine</name></name><argument_list>(<argument><expr><name>s</name></expr></argument>)</argument_list></call></expr>;</expr_stmt> }</block></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>TestDelegate</name></type> <name>myDel</name> =<init> <expr><lambda><name>n</name> =&gt; <block>{ <decl_stmt><decl><type><name>string</name></type> <name>s</name> =<init> <expr><name>n</name> + " " + "World"</expr></init></decl>;</decl_stmt> <expr_stmt><expr><call><name><name>Console</name>.<name>WriteLine</name></name><argument_list>(<argument><expr><name>s</name></expr></argument>)</argument_list></call></expr>;</expr_stmt> }</block></lambda></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
