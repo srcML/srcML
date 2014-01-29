@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -3757,6 +3757,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
             setTokenPosition(tp);
         }
         (
+
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         compound_name_java[iscompound] |
 
@@ -3767,7 +3768,8 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         compound_name_c[iscompound] |
 
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
-        compound_name_cpp[iscompound]
+        compound_name_cpp[iscompound] |
+        macro_type_name_call 
         )
 
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
@@ -4236,6 +4238,66 @@ macro_pattern_call_inner[] { CompleteElement element(this); bool first = true; E
             startElement(SMACRO_CALL);
         }
         macro_pattern_name
+        (options { greedy = true; } : { first }?
+        {
+            // start a mode for the macro argument list
+            startNewMode(MODE_LIST | MODE_TOP);
+
+            // start the argument list
+            startElement(SARGUMENT_LIST);
+        }
+        LPAREN
+        macro_call_contents
+        {
+            // end anything started inside of the macro argument list
+            endDownToMode(MODE_LIST | MODE_TOP);
+        }
+        RPAREN
+        {
+            // end the macro argument list
+            endMode(MODE_LIST | MODE_TOP);
+        } 
+        set_bool[first, false] )*
+;
+exception
+catch[antlr::RecognitionException] {
+
+        // no end found to macro
+        if (isoption(parseoptions, OPTION_DEBUG))
+            emptyElement(SERROR_PARSE);
+}
+
+// handle macro list/pattern name by itself
+macro_type_name[]  { SingleElement element(this); ENTRY_DEBUG } :
+        {
+
+            startElement(SNAME);
+
+        }
+        MACRO_TYPE_NAME
+;
+
+// do a macro call.
+macro_type_name_call[] { ENTRY_DEBUG } :
+
+        macro_type_name_call_inner
+/*        {
+            if (inMode(MODE_THEN) && LA(1) == ELSE)
+                endMode(MODE_THEN);
+        }
+*/
+;
+
+// inner part of call
+macro_type_name_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
+        {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
+
+            // start the macro call element
+            startElement(SMACRO_CALL);
+        }
+        macro_type_name
         (options { greedy = true; } : { first }?
         {
             // start a mode for the macro argument list
