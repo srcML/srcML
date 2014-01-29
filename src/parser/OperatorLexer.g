@@ -143,7 +143,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
        '`' |
        '!' ('=')? |
        ':' (':')? |
-       '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')') }? '>' { $setText("=&gt;"); $setType(LAMBDA); } |) |
+       '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>' { $setText("=&gt;"); $setType(LAMBDA); } |) |
 
        '&' { $setText("&amp;"); }
             (options { greedy = true; } : '&' { $setText("&amp;&amp;"); star = true; } | '=' { $setText("&amp;="); } )?
