@@ -1774,7 +1774,7 @@ switch_case[] { ENTRY_DEBUG } :
             // expect an expression ended by a colon
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_DETECT_COLON);
         }
-        CASE
+        (CASE | MACRO_CASE)
 ;
 
 // default treated as a statement
@@ -4244,6 +4244,27 @@ macro_type_name_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         }
 
         MACRO_TYPE_NAME
+        { endMode(); }
+        macro_call_argument_list
+
+;
+
+
+// do a macro call.
+macro_case_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
+        {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
+
+            // start the macro call element
+            startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
+        }
+
+        MACRO_CASE
         { endMode(); }
         macro_call_argument_list
 
