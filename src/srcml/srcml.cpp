@@ -139,24 +139,27 @@ int main(int argc, char * argv[]) {
   // Help function was used. srcmlCLI displays, so srcml has no work to do.
   if (srcml_request.help_set)
     return 0;
-  
+
+  // version
   if (srcml_request.command & SRCML_COMMAND_VERSION) {
-    std::cerr <<  "srcML Version Number " << srcml_version_number() << "\n";
-    std::cerr <<  "srcML Version String " << srcml_version_string() << "\n";
+    std::cerr <<  "srcml Version Number " << srcml_version_number() << "\n";
+    std::cerr <<  "srcml Version String " << srcml_version_string() << "\n";
     return 0;
   }
 
-  // Ensure all global flags are valid
+  // check encoding
   if (srcml_request.encoding != "" && srcml_check_encoding(srcml_request.encoding.c_str()) == 0) {
     std::cerr << "Invalid Encoding.\n";
     return 1; //ERROR CODE TBD
   }
 
+  // check language
   if (srcml_request.language != "" && srcml_check_language(srcml_request.language.c_str()) == 0) {
     std::cerr << "Invalid Language.\n";
     return 1; //ERROR CODE TBD
   }
 
+  // check tabstop
   if (srcml_request.tabs <= 0) {
     std::cerr << "Invalid Tab Stop.\n";
     return 1; //ERROR CODE TBD
@@ -192,6 +195,7 @@ int main(int argc, char * argv[]) {
 
   srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
 
+  // archive or not
   if (srcml_request.positional_args.size() == 1 && !(srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) {
     boost::filesystem::path inFile (srcml_request.positional_args[0]);
     if(srcml_request.positional_args[0] == "-" || srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[0].c_str()) || inFile.extension().string() == ".xml")
@@ -203,22 +207,25 @@ int main(int argc, char * argv[]) {
     srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
   }
 
+  // register file extension
   for (size_t i = 0; i < srcml_request.register_ext.size(); ++i) {
     size_t pos = srcml_request.register_ext[i].find('=');
     srcml_archive_register_file_extension(srcml_arch, srcml_request.register_ext[i].substr(0,pos).c_str(),
           srcml_request.register_ext[i].substr(pos+1).c_str());
   }
 
+  // register xml namespaces
   for (size_t i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
     size_t pos = srcml_request.xmlns_prefix[i].find('=');
     srcml_archive_register_namespace(srcml_arch, srcml_request.xmlns_prefix[i].substr(0,pos).c_str(),
            srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
   }
 
+  // create the output file
   srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
+  // setup the parsequeue and consuming threads
   ParseQueue queue;
-
   const int NUM_THREADS = 4;
   pthread_t writer[NUM_THREADS];
   for (int i = 0; i < NUM_THREADS; ++i)
@@ -230,7 +237,7 @@ int main(int argc, char * argv[]) {
   // Mark the end of input for the threaded queue
   ParseRequest NullParseRequest;
 
-  // Main processing loop
+  // process the command line inputs
   for (size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
     std::string& input_file = srcml_request.positional_args[i];
 
@@ -242,15 +249,18 @@ int main(int argc, char * argv[]) {
           return 1; // Stdin was requested, but no data was received
       }
     }
+
+    // process libarchive input
     src_input_libarchive::process(queue, srcml_arch, request, input_file, srcml_request.language);   
   }
   
-  // Mark end of input
+  // end the queue and the threads
   for (int i = 0; i < NUM_THREADS; ++i)
       queue.push(NullParseRequest);
   for (int i = 0; i < NUM_THREADS; ++i)
       pthread_join(writer[i], NULL);
 
+  // close the created srcML archive
   srcml_close_archive(srcml_arch);
   srcml_free_archive(srcml_arch);
 
