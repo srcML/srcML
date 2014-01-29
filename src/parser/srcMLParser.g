@@ -1107,7 +1107,7 @@ lambda_expression_csharp[] { ENTRY_DEBUG } :
 
         }
 
-        (ASYNC)* (variable_identifier | lambda_parameter_list_csharp) lambda_marked
+        (specifier)* (variable_identifier | lambda_parameter_list_csharp) lambda_marked
         {
             if(LA(1) == LCURLY) startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
         }
