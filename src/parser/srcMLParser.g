@@ -4220,18 +4220,7 @@ macro_pattern_name[]  { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 // do a macro call.
-macro_pattern_call[] { ENTRY_DEBUG } :
-
-        macro_pattern_call_inner
-/*        {
-            if (inMode(MODE_THEN) && LA(1) == ELSE)
-                endMode(MODE_THEN);
-        }
-*/
-;
-
-// inner part of call
-macro_pattern_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
+macro_pattern_call[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
@@ -4239,35 +4228,9 @@ macro_pattern_call_inner[] { CompleteElement element(this); bool first = true; E
             // start the macro call element
             startElement(SMACRO_CALL);
         }
-        macro_pattern_name
-        (options { greedy = true; } : { first }?
-        {
-            // start a mode for the macro argument list
-            startNewMode(MODE_LIST | MODE_TOP);
-
-            // start the argument list
-            startElement(SARGUMENT_LIST);
-        }
-        LPAREN
-        macro_call_contents
-        {
-            // end anything started inside of the macro argument list
-            endDownToMode(MODE_LIST | MODE_TOP);
-        }
-        RPAREN
-        {
-            // end the macro argument list
-            endMode(MODE_LIST | MODE_TOP);
-        } 
-        set_bool[first, false] )*
+        macro_type_name
+        macro_call_argument_list
 ;
-exception
-catch[antlr::RecognitionException] {
-
-        // no end found to macro
-        if (isoption(parseoptions, OPTION_DEBUG))
-            emptyElement(SERROR_PARSE);
-}
 
 // handle macro list/pattern name by itself
 macro_type_name[]  { SingleElement element(this); ENTRY_DEBUG } :
@@ -4280,18 +4243,7 @@ macro_type_name[]  { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 // do a macro call.
-macro_type_name_call[] { ENTRY_DEBUG } :
-
-        macro_type_name_call_inner
-/*        {
-            if (inMode(MODE_THEN) && LA(1) == ELSE)
-                endMode(MODE_THEN);
-        }
-*/
-;
-
-// inner part of call
-macro_type_name_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
+macro_type_name_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
@@ -4300,6 +4252,12 @@ macro_type_name_call_inner[] { CompleteElement element(this); bool first = true;
             startElement(SMACRO_CALL);
         }
         macro_type_name
+        macro_call_argument_list
+
+;
+
+// handle the actual macro call
+macro_call_argument_list[] { bool first = true; ENTRY_DEBUG } :
         (options { greedy = true; } : { first }?
         {
             // start a mode for the macro argument list
@@ -4318,8 +4276,7 @@ macro_type_name_call_inner[] { CompleteElement element(this); bool first = true;
         {
             // end the macro argument list
             endMode(MODE_LIST | MODE_TOP);
-        } 
-        set_bool[first, false] )*
+        } set_bool[first, false] )*
 ;
 exception
 catch[antlr::RecognitionException] {
