@@ -1099,6 +1099,20 @@ overloaded_operator[] { SingleElement element(this); ENTRY_DEBUG } :
         )
 ;
 
+// handle a C# lambda expression
+lambda_expression_csharp[] { ENTRY_DEBUG } :
+		{
+
+            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+
+            startElement(SFUNCTION_LAMBDA);
+
+        }
+
+        (variable_identifier | parameter_list)
+
+;
+
 // handle a C++11 lambda expression
 lambda_expression_cpp[] { ENTRY_DEBUG } :
 		{
@@ -1174,6 +1188,13 @@ lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG
     inputState->guessing--;
     rewind(start);
 } :;
+
+// completely match a C# lambda expression
+lambda_expression_full_csharp[] { ENTRY_DEBUG } :
+
+        (variable_identifier | paren_pair) LAMBDA
+
+;
 
 // completely match a C++ lambda expression
 lambda_expression_full_cpp[] { ENTRY_DEBUG } :
@@ -4877,6 +4898,10 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; ENTRY
         { next_token() == LCURLY }?
         lambda_anonymous |
 
+        { inLanguage(LANGUAGE_CSHARP) }?
+        (lambda_expression_full_csharp) => lambda_expression_full_csharp |
+
+        { inLanguage(LANGUAGE_CXX_ONLY) }?
         (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_cpp |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
