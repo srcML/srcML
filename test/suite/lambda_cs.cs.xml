@@ -38,7 +38,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>async</name> (<name>t1</name>,<name>t2</name>)=&gt;await <name>t1</name> + await <name>t2</name></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><name>async</name> <parameter_list>(<name>t1</name>,<name>t2</name>)</parameter_list>=&gt;await <name>t1</name> + await <name>t2</name></lambda></expr>;</expr_stmt>
 </unit>
 
 </unit>
