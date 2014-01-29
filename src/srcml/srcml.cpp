@@ -216,8 +216,10 @@ int main(int argc, char * argv[]) {
 
   ThreadQueue<ParseRequest, 10> queue;
 
-  pthread_t writer;
-  pthread_create(&writer, 0, srcml_consume, &queue);
+  const int NUM_THREADS = 1;
+  pthread_t writer[NUM_THREADS];
+  for (int i = 0; i < NUM_THREADS; ++i)
+      pthread_create(&writer[i], 0, srcml_consume, &queue);
 
   // Setup a request
   ParseRequest request;
@@ -241,8 +243,10 @@ int main(int argc, char * argv[]) {
   }
   
   // Mark end of input
-  queue.push(NullParseRequest);
-  pthread_join(writer, NULL);
+  for (int i = 0; i < NUM_THREADS; ++i)
+      queue.push(NullParseRequest);
+  for (int i = 0; i < NUM_THREADS; ++i)
+      pthread_join(writer[i], NULL);
 
   srcml_close_archive(srcml_arch);
   srcml_free_archive(srcml_arch);
