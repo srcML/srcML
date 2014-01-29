@@ -405,10 +405,8 @@ void exit_cleanup() {
 
 }
 
-#if defined(__GNUC__) && !defined(__MINGW32__)
 // stat initializer
 struct stat init_stat;
-#endif
 
 int main(int argc, char* argv[]) {
 
