@@ -34,6 +34,7 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <boost/filesystem.hpp>
+#include <boost/thread.hpp>
 
 #include <pthread.h>
 #include <stdio.h>
@@ -89,6 +90,8 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
   return true;
 }
 
+boost::mutex mtx;
+
 // Consumption thread function
 void * srcml_consume(void * arg) {
   ThreadQueue<ParseRequest, 10> * queue = (ThreadQueue<ParseRequest, 10> *) arg;
@@ -107,7 +110,9 @@ void * srcml_consume(void * arg) {
       srcml_unit_set_filename(unit, pr.filename.c_str());
       srcml_unit_set_language(unit, pr.lang.c_str());
       srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
+      mtx.lock();
       srcml_write_unit(pr.srcml_arch, unit);
+      mtx.unlock();
     }
     else {
       // Stuff to read srcml back to src
@@ -216,7 +221,7 @@ int main(int argc, char * argv[]) {
 
   ThreadQueue<ParseRequest, 10> queue;
 
-  const int NUM_THREADS = 1;
+  const int NUM_THREADS = 4;
   pthread_t writer[NUM_THREADS];
   for (int i = 0; i < NUM_THREADS; ++i)
       pthread_create(&writer[i], 0, srcml_consume, &queue);
