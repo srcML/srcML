@@ -4899,7 +4899,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; ENTRY
         lambda_anonymous |
 
         { inLanguage(LANGUAGE_CSHARP) }?
-        (lambda_expression_full_csharp) => lambda_expression_full_csharp |
+        (lambda_expression_full_csharp) => lambda_expression_csharp |
 
         { inLanguage(LANGUAGE_CXX_ONLY) }?
         (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_cpp |
