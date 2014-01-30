@@ -75,9 +75,7 @@ void src_input_libarchive::makeRequest(ParseQueue& queue, srcml_archive* srcml_a
   }
     
   // Stdin
-  bool stdin = false;
-  if (input_file.compare("-") == 0)
-    stdin = true;
+  bool stdin = input_file.compare("-") == 0;
 
   while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
     std::string entry_name = archive_entry_pathname(arch_entry);
