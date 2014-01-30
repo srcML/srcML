@@ -32,6 +32,10 @@
 
 #include <cstring>
 #include <sstream>
+#ifdef LIBSRCML_COMPILER_IS_MSVC
+#include <io.h>
+#define snprintf _snprintf
+#endif
 
 #define ELEMENT_MAP_CALL_NAME element_name
 #define ELEMENT_MAP_FIRST_TYPE int
