@@ -3802,6 +3802,7 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
+            (TEMPLATE)*
             (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
             (options { greedy = true; } : { look_past_three(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
         )*
