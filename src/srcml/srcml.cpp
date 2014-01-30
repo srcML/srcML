@@ -206,11 +206,9 @@ int main(int argc, char * argv[]) {
   if (srcml_request.positional_args.size() == 1 && !(srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) {
     boost::filesystem::path inFile (srcml_request.positional_args[0]);
     if(srcml_request.positional_args[0] == "-" || srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[0].c_str()) || inFile.extension().string() == ".xml")
-      //std::cerr << "ARCHIVE OFF\n";
       srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
   }
   else {
-    //std::cerr << "ARCHIVE ON\n";
     srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
   }
 
