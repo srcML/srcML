@@ -4223,7 +4223,7 @@ macro_pattern_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
 
         }
 
-        MACRO_TYPE_NAME
+        MACRO_NAME
         { endMode(); }
         macro_call_argument_list
 
