@@ -255,7 +255,7 @@ int main(int argc, char * argv[]) {
     }
 
     // process libarchive input
-    src_input_libarchive::process(queue, srcml_arch, request, input_file, srcml_request.language);   
+    src_input_libarchive(queue, srcml_arch, request, input_file, srcml_request.language);   
   }
   
   // end the queue and the threads

@@ -26,7 +26,7 @@
 
 #include <src_input_libarchive.hpp>
 
-void src_input_libarchive::setupLibArchive(archive* a) {
+void setupLibArchive(archive* a) {
   archive * arch = a;
   // Configure libarchive supported file formats
   archive_read_support_format_ar(arch);
@@ -60,7 +60,7 @@ void src_input_libarchive::setupLibArchive(archive* a) {
   #endif
 }
 
-void src_input_libarchive::makeRequest(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input_file, std::string lang) {
+void makeRequest(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input_file, std::string lang) {
   ParseRequest request = req;
 
   // libArchive Setup
@@ -129,7 +129,7 @@ void src_input_libarchive::makeRequest(ParseQueue& queue, srcml_archive* srcml_a
   archive_read_finish(arch);
 }
 
-void src_input_libarchive::process(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang) {
+void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang) {
 
   boost::filesystem::path localPath(input);
   if (is_directory(localPath)) {

@@ -40,12 +40,6 @@
 
 typedef ThreadQueue<ParseRequest, 10> ParseQueue;
 
-class src_input_libarchive {
-  public :
-    static void process(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang);
-  private :
-    static void setupLibArchive(archive* a);
-    static void makeRequest(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang);
-};
+void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang);
 
 #endif
