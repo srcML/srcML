@@ -41,6 +41,7 @@
 #include <unistd.h>
 #include <iostream>
 
+// TODO: Separate declaration from definition, and move definition to bottom of file
 bool test_for_stdin() {
 
   // Init file descriptor with stdin
@@ -70,6 +71,7 @@ bool test_for_stdin() {
   return true;
 }
 
+// TODO: Separate declaration from definition, and move definition to bottom of file
 bool checkLocalFiles(std::vector<std::string>& pos_args) {
   for (size_t i = 0; i < pos_args.size(); ++i) {
     if (pos_args[i] == "/dev/stdin")
@@ -91,6 +93,7 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
 boost::mutex mtx;
 
 // Consumption thread function
+// TODO: Move to separate file
 void * srcml_consume(void * arg) {
   ParseQueue * queue = (ParseQueue *) arg;
   
@@ -134,9 +137,11 @@ void * srcml_consume(void * arg) {
 }
 
 int main(int argc, char * argv[]) {
+
+  // parse the command line
   srcml_request_t srcml_request = srcmlCLI::parseCLI(argc, argv);
 
-  // Help function was used. srcmlCLI displays, so srcml has no work to do.
+  // help option was selected, already displayed so no more to do
   if (srcml_request.help_set)
     return 0;
 
@@ -149,19 +154,19 @@ int main(int argc, char * argv[]) {
 
   // check encoding
   if (srcml_request.encoding != "" && srcml_check_encoding(srcml_request.encoding.c_str()) == 0) {
-    std::cerr << "Invalid Encoding.\n";
+    std::cerr << argv[0] << ": invalid encoding.\n";
     return 1; //ERROR CODE TBD
   }
 
   // check language
   if (srcml_request.language != "" && srcml_check_language(srcml_request.language.c_str()) == 0) {
-    std::cerr << "Invalid Language.\n";
+    std::cerr << argv[0] << ": invalid language.\n";
     return 1; //ERROR CODE TBD
   }
 
   // check tabstop
   if (srcml_request.tabs <= 0) {
-    std::cerr << "Invalid Tab Stop.\n";
+    std::cerr << argv[0] << ": invalid tab stop.\n";
     return 1; //ERROR CODE TBD
   }
 
@@ -169,19 +174,21 @@ int main(int argc, char * argv[]) {
   if (!checkLocalFiles(srcml_request.positional_args))
     return 1;
   
-  // libsrcML Full API Setup
-  srcml_archive * srcml_arch = srcml_create_archive();
+  // create the output archive
+  srcml_archive* srcml_arch = srcml_create_archive();
 
-  // Set options for the archive
+  // set options for the output archive
   if (srcml_request.encoding != "")
     srcml_archive_set_encoding(srcml_arch, srcml_request.encoding.c_str());
 
+  // TODO: filename may be set to "". filename_set needed
   if (srcml_request.filename != "")
     srcml_archive_set_filename(srcml_arch, srcml_request.filename.c_str());
 
   if (srcml_request.directory_set)
     srcml_archive_set_directory(srcml_arch, srcml_request.directory.c_str());
 
+  // TODO: src_versions may be set to "". src_versions_set needed
   if (srcml_request.src_versions != "")
     srcml_archive_set_version(srcml_arch, srcml_request.src_versions.c_str());
 
@@ -207,7 +214,7 @@ int main(int argc, char * argv[]) {
     srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
   }
 
-  // register file extension
+  // register file extensions
   for (size_t i = 0; i < srcml_request.register_ext.size(); ++i) {
     size_t pos = srcml_request.register_ext[i].find('=');
     srcml_archive_register_file_extension(srcml_arch, srcml_request.register_ext[i].substr(0,pos).c_str(),
@@ -234,9 +241,6 @@ int main(int argc, char * argv[]) {
   // Setup a request
   ParseRequest request;
 
-  // Mark the end of input for the threaded queue
-  ParseRequest NullParseRequest;
-
   // process the command line inputs
   for (size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
     std::string& input_file = srcml_request.positional_args[i];
@@ -255,6 +259,7 @@ int main(int argc, char * argv[]) {
   }
   
   // end the queue and the threads
+  ParseRequest NullParseRequest;
   for (int i = 0; i < NUM_THREADS; ++i)
       queue.push(NullParseRequest);
   for (int i = 0; i < NUM_THREADS; ++i)
