@@ -192,8 +192,9 @@ int main(int argc, char * argv[]) {
   if (srcml_request.src_versions != "")
     srcml_archive_set_version(srcml_arch, srcml_request.src_versions.c_str());
 
-  if (srcml_request.markup_options != 0)
-    srcml_archive_set_options(srcml_arch, srcml_request.markup_options);
+  if (srcml_request.markup_options != 0) {
+    srcml_archive_enable_option(srcml_arch, srcml_archive_get_options(srcml_arch) | srcml_request.markup_options);
+  }
 
   if (srcml_request.language != "")
     srcml_archive_set_language(srcml_arch, srcml_request.language.c_str());  
