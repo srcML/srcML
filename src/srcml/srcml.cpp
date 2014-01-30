@@ -46,6 +46,14 @@ struct ParseRequest {
 
         filename.swap(other.filename);
         buffer.swap(other.buffer);
+
+        //Swap Int
+        size ^= other.size;
+        other.size ^= size;
+        size ^= other.size;
+
+        srcml_arch = other.srcml_arch;
+        lang = other.lang;
     }
 
     // empty ParseRequests indicate termination
@@ -53,10 +61,15 @@ struct ParseRequest {
         return filename.empty() && buffer.empty();
     }
 
+    // Fields required by thread to process a unit
     std::string filename;
     std::vector<char> buffer;
+    size_t size;
+    srcml_archive * srcml_arch;
+    const char * lang;
 };
 
+// Mark the end of input for the threaded queue
 ParseRequest NullParseRequest;
 
 bool test_for_stdin() {
@@ -72,7 +85,7 @@ bool test_for_stdin() {
   FD_ZERO(&fds);
   FD_SET(STDIN_FILENO, &fds);
 
-  // Set timeout to 0 (don't wait for input)
+  // Set timeout
   timeout.tv_sec = 5;
   timeout.tv_usec = 0;
 
@@ -141,6 +154,30 @@ void setupLibArchive(archive* a) {
     // Compressions
     archive_read_support_filter_all(arch); 
   #endif
+}
+
+// Consumption thread function
+void * srcml_consume(void * arg) {
+  ThreadQueue<ParseRequest, 10> * queue = (ThreadQueue<ParseRequest, 10> *) arg;
+  
+  while (true) {
+    ParseRequest pr;
+    queue->pop(pr);
+    
+    // Check if termination queue item has been found  
+    if (pr.empty()) {
+      break;
+    }
+
+    // Build, parse, and write srcml unit
+    srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
+    srcml_unit_set_filename(unit, pr.filename.c_str());
+    srcml_unit_set_language(unit, pr.lang);
+    srcml_parse_unit_memory(unit, &pr.buffer[0], pr.size);
+    srcml_write_unit(pr.srcml_arch, unit);
+  }
+
+  return 0;
 }
 
 int main(int argc, char * argv[]) {
@@ -215,8 +252,22 @@ int main(int argc, char * argv[]) {
 
   srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
+  pthread_t writer;
+  pthread_attr_t tattr;
+  int newprio = 90;
+  sched_param param;
+
+  pthread_attr_init(&tattr);
+  pthread_attr_getschedparam (&tattr, &param);
+  param.sched_priority = newprio;
+  pthread_attr_setschedparam (&tattr, &param);
+  pthread_create(&writer, &tattr, srcml_consume, &queue);
+
+  // Main processing loop
   for (size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
-    
+    std::string * input_file = &srcml_request.positional_args[i];
+    bool stdin = false;
+
     // libArchive Setup
     archive * arch = archive_read_new();
     archive_entry * arch_entry = archive_entry_new();
@@ -226,44 +277,41 @@ int main(int argc, char * argv[]) {
     int valid = 0;
 
     // Regular file or archive
-    if (srcml_request.positional_args[i] != "-") {
-      valid = archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384); 
+    if (input_file->compare("-") != 0) {
+      valid = archive_read_open_filename(arch, input_file->c_str(), 16384); 
     }
     
     // Stdin
-    if (srcml_request.positional_args[i] == "-") {
-      if (!test_for_stdin())
-        return 1; // Stdin was requested, but no data was received
+    if (input_file->compare("-") == 0) {
+      stdin = true;
+      // Check if we are using the terminal interactively
+      if(srcml_request.command & SRCML_COMMAND_INTERACTIVE) {
+        if (!test_for_stdin())
+          return 1; // Stdin was requested, but no data was received
+      }
       
       // Setting libarchive's file input to NULL forces libarchive to read stdin  
       valid = archive_read_open_filename(arch, NULL, 16384);
     }
 
     if (valid == ARCHIVE_OK) {
-      const void* buffer;
-      const char* cptr;
-      size_t size;
-      int64_t offset;
-
       while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
 
-        srcml_unit * unit = srcml_create_unit(srcml_arch);
         std::string entry_name = archive_entry_pathname(arch_entry);
-        const char * filename = NULL; // Assume Stdin for simplicity
-        
+        std::string filename = "";
         /* 
           The header path for a standard file is just "data".
           That needs to be swapped out with the actual file name from the 
           CLI arg.
         */
-        if (entry_name.compare("data") == 0 && srcml_request.positional_args[i] != "-")
+        if (entry_name.compare("data") == 0 && !stdin)
           filename = srcml_request.positional_args[i].c_str();
 
-        if (entry_name.compare("data") != 0 && srcml_request.positional_args[i] != "-")
+        if (entry_name.compare("data") != 0 && !stdin)
           filename = entry_name.c_str();
 
-        if (filename) {
-          const char * language = srcml_archive_check_extension(srcml_arch, filename);
+        if (!stdin) {
+          const char * language = srcml_archive_check_extension(srcml_arch, filename.c_str());
           if (!language) {
             // Extension not supported
             // Skip to next header
@@ -271,11 +319,16 @@ int main(int argc, char * argv[]) {
           }
         }
         else {
-          // Stdin - needs to check if CLI lang has been declared otherwise error...
+          // Stdin language declared via CLI
+          if (srcml_archive_get_language(srcml_arch))
+            return 1; // Stdin used with no language specified.
         }
-
-        srcml_unit_set_filename(unit, filename);
-        srcml_unit_set_language(unit, ((srcml_archive_get_language(srcml_arch)) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename)));
+      
+        const void* buffer;
+        const char* cptr;
+        size_t size;
+        int64_t offset;
+        std::vector<char> dbuff;
 
         while (true) {
           int readStatus = archive_read_data_block(arch, &buffer, &size, &offset);
@@ -285,8 +338,20 @@ int main(int argc, char * argv[]) {
             break;
           }
           
-          srcml_parse_unit_memory(unit, cptr, size);
-          srcml_write_unit(srcml_arch, unit);
+          for (size_t i = 0; i < size; ++i) {
+            dbuff.push_back(cptr[i]);
+          }
+
+          // Setup a request
+          ParseRequest prq;
+          prq.filename = filename;
+          prq.size = size;
+          prq.buffer = dbuff;
+          prq.srcml_arch = srcml_arch;
+          prq.lang = (srcml_archive_get_language(srcml_arch) ? srcml_request.language.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
+
+          // Hand request off to the processing queue
+          queue.push(prq);
         }
       }
     }
@@ -296,6 +361,10 @@ int main(int argc, char * argv[]) {
     }
     archive_read_finish(arch);
   }
+
+  // Mark end of input
+  queue.push(NullParseRequest);
+  pthread_join(writer, NULL);
 
   srcml_close_archive(srcml_arch);
   srcml_free_archive(srcml_arch);

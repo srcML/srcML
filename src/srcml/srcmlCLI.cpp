@@ -314,6 +314,12 @@ srcml_request_t srcmlCLI::parseCLI(int argc, char* argv[]) {
       srcml_request.positional_args.push_back("-");
     }
 
+    #if defined(__GNUG__) && !defined(__MINGW32__)
+      // automatic interactive use from stdin (not on redirect or pipe)
+      if (isatty(STDIN_FILENO))
+        option_command<SRCML_COMMAND_INTERACTIVE>(true);
+    #endif
+
   }
   catch(std::exception& e) {
     std::cerr << e.what() << "\n";
