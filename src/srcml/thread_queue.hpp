@@ -16,7 +16,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <pthread.h>
+#include <boost/thread.hpp>
 
 #ifndef THREAD_QUEUE_H
 #define THREAD_QUEUE_H
@@ -25,40 +25,41 @@ template <typename Type, int Capacity>
 class ThreadQueue {
 public:
     ThreadQueue() :
-        used(0), back_index(0), front_index(0),
-        mutex(    (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER),
-        cond_full( (pthread_cond_t)PTHREAD_COND_INITIALIZER),
-        cond_empty((pthread_cond_t)PTHREAD_COND_INITIALIZER)
-        {}
+        used(0), back_index(0), front_index(0) {}
 
     void push(Type& value) {
-        pthread_mutex_lock(&mutex);
-        while (used == Capacity)
-            pthread_cond_wait(&cond_full, &mutex);
-        buffer[back_index].swap(value);
-        ++back_index;
-        back_index %= Capacity;
-        ++used;
-        pthread_mutex_unlock(&mutex);
-        pthread_cond_signal(&cond_empty);
+        {
+            boost::unique_lock<boost::mutex> lock(mutexb);
+            while (used == Capacity)
+                cond_fullb.wait(lock);
+
+            buffer[back_index].swap(value);
+            ++back_index;
+            back_index %= Capacity;
+            ++used;
+        }
+        cond_emptyb.notify_all();
     }
 
     void pop(Type& place) {
-        pthread_mutex_lock(&mutex);
-        while (used == 0)
-            pthread_cond_wait(&cond_empty, &mutex);
-        place.swap(buffer[front_index]);
-        ++front_index;
-        front_index %= Capacity;
-        --used;
-        pthread_mutex_unlock(&mutex);
-        pthread_cond_signal(&cond_full);
+        {
+            boost::unique_lock<boost::mutex> lock(mutexb);
+            while (used == 0)
+                cond_emptyb.wait(lock);
+            place.swap(buffer[front_index]);
+            ++front_index;
+            front_index %= Capacity;
+            --used;
+        }
+        cond_fullb.notify_all();
     }
 
     int size() {
-        pthread_mutex_lock(&mutex);
-        int tsize = used;
-        pthread_mutex_unlock(&mutex);
+        int tsize;
+        {
+            boost::unique_lock<boost::mutex> lock(mutexb);
+            tsize = used;
+        }
         return tsize;
     }
 
@@ -69,9 +70,9 @@ private:
     int used;
     int back_index;
     int front_index;
-    pthread_mutex_t mutex;
-    pthread_cond_t cond_full;
-    pthread_cond_t cond_empty;
+    boost::mutex mutexb;
+    boost::condition_variable cond_fullb;
+    boost::condition_variable cond_emptyb;
 };
 
 #endif
