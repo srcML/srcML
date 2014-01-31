@@ -229,6 +229,12 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
   // so we have an element inside of the unit
   pstate->rootonly = false;
 
+  if(strcmp((const char*) localname, "macro-list") == 0) {
+    startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
+    ctxt->sax->endElementNs = &endElementNsUnit;
+    return;
+  }
+
   // see if this is really a nested unit.  If not, then we have an individual
   // unit (not a srcML archive) and need to process the cached root
   pstate->isarchive = strcmp((const char*) localname, "unit") == 0 && strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0;
@@ -400,6 +406,10 @@ void SAX2ExtractUnitsSrc::endElementNsUnit(void *ctx, const xmlChar *localname, 
     return;
 
   pstate->pprocess->endElementNs(ctx, localname, prefix, URI);
+
+  if(strcmp((const char*) localname, "macro-list") == 0)
+    ctxt->sax->endElementNs = &endElementNsSkip;
+
 }
 
 // end unit element and current file/buffer (started by startElementNs
