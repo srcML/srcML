@@ -27,6 +27,9 @@
 
 #include <ProcessUnit.hpp>
 
+#include <string>
+#include <vector>
+
 class UnitDOM : public ProcessUnit {
 public :
 
@@ -169,11 +172,42 @@ public :
                               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                               const xmlChar** attributes) {
 
+    if(strcmp((const char *)localname, "macro-list") == 0) {
+
+      std::string token;
+      std::string type;
+
+      for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+	std::string attribute = (const char *)attributes[index];
+	std::string value = "";
+	value.append((const char *)attributes[index + 3], attributes[index + 4] - attributes[index + 3]);
+       
+
+	if(attribute == "token")
+	  token = value;
+	else if(attribute == "type")
+	  type = value;
+
+      }
+
+      if(token != "" && type != "") {
+
+	macro_list.push_back(token);
+	macro_list.push_back(type);
+
+      }
+
+      return;
+    }
+
     xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
   }
 
   // build end element nodes in unit tree
   virtual void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+
+    if(strcmp((const char *)localname, "macro-list") == 0)
+      return;
 
     xmlSAX2EndElementNs(ctx, localname, prefix, URI);
   }
@@ -264,6 +298,7 @@ protected:
   OPTION_TYPE options;
   bool error;
   const xmlChar * prefix_name;
+  std::vector<std::string> macro_list;
 };
 
 #endif
