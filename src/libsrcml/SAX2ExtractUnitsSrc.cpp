@@ -28,7 +28,6 @@
 #include <ProcessUnit.hpp>
 #include <ExtractUnitsSrc.hpp>
 #include <srcexfun.hpp>
-#include <srcml_wrapper.hpp>
 
 static bool diff_filename = true;
 static bool setupDiff(SAX2ExtractUnitsSrc* pstate,
@@ -166,22 +165,6 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
   // need to record that we actually found something besides the root element
   pstate->rootonly = true;
 
-  // save all the info in case this is not a srcML archive
-  pstate->root.localname = localname ? (xmlChar*) srcml_strdup_sax((const char*) localname, ctxt) : 0;
-  pstate->root.prefix = prefix ? (xmlChar*) srcml_strdup_sax((const char*) prefix, ctxt) : 0;
-  pstate->root.URI = URI ? (xmlChar*) srcml_strdup_sax((const char*) URI, ctxt) : 0;
-
-  pstate->root.nb_namespaces = nb_namespaces;
-  int ns_length = nb_namespaces * 2;
-  pstate->root.namespaces = (const xmlChar**) srcml_malloc_sax(ns_length * sizeof(namespaces[0]), ctxt);
-  for (int i = 0; i < ns_length; ++i)
-    if(prefix && namespaces[i] && strcmp((const char *)prefix, (const char *)namespaces[i]) == 0)
-      pstate->root.namespaces[i] = pstate->root.prefix;
-    else if(URI && namespaces[i] && strcmp((const char *)URI, (const char *)namespaces[i]) == 0)
-      pstate->root.namespaces[i] = pstate->root.URI;
-    else
-      pstate->root.namespaces[i] = namespaces[i] ? (xmlChar*) srcml_strdup_sax((const char*) namespaces[i], ctxt) : 0;
-
   // TODO:  Do we still need this?
 #if 0
   // see if we have an undetected srcDiff
@@ -206,22 +189,6 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
 
   }
 #endif
-
-  pstate->root.nb_attributes = nb_attributes;
-  pstate->root.nb_defaulted = nb_defaulted;
-
-  int nb_length = nb_attributes * 5;
-  pstate->root.attributes = (const xmlChar**) srcml_malloc_sax(nb_length * sizeof(attributes[0]), ctxt);
-  for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
-    pstate->root.attributes[index] = attributes[index] ? (xmlChar*) srcml_strdup_sax((const char*) attributes[index], ctxt) : 0;
-    pstate->root.attributes[index + 1] = attributes[index + 1] ? (xmlChar*) srcml_strdup_sax((const char*) attributes[index + 1], ctxt) : 0;
-    pstate->root.attributes[index + 2] = attributes[index + 2] ? (xmlChar*) srcml_strdup_sax((const char*) attributes[index + 2], ctxt) : 0;
-    long vallength = attributes[index + 4] - attributes[index + 3];
-    pstate->root.attributes[index + 3] = (const xmlChar*) srcml_malloc_sax(vallength + 1, ctxt);
-    memset((void *)pstate->root.attributes[index + 3], 0, vallength + 1);
-    strncpy((char *) pstate->root.attributes[index + 3], (const char*) attributes[index + 3], vallength);
-    pstate->root.attributes[index + 4] = pstate->root.attributes[index + 3] + vallength;
-  }
 
   setRootAttributes(pstate->root.attributes, pstate->root.nb_attributes);
 
