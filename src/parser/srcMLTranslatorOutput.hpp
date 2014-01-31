@@ -55,7 +55,6 @@ public:
                           std::string * suri = 0
         );
 
-    void setMacroList(std::vector<std::string> list);
 
     static bool checkEncoding(const char* encoding);
 
@@ -86,10 +85,6 @@ private:
 
 
     void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer);
-
-    void outputMacroList();
-
-    std::vector<std::string> user_macro_list;
 
     // List of element names
     static const char* const ElementNames[];

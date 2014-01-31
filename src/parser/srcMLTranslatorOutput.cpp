@@ -337,11 +337,6 @@ srcMLTranslatorOutput::srcMLTranslatorOutput(TokenStream* ints,
 srcMLTranslatorOutput::~srcMLTranslatorOutput() {
 }
 
-void srcMLTranslatorOutput::setMacroList(std::vector<std::string> list) {
-  user_macro_list = list;
-}
-
-
 void srcMLTranslatorOutput::setTokenStream(TokenStream& ints) {
 
   input = &ints;
@@ -593,21 +588,6 @@ void srcMLTranslatorOutput::processToken(const antlr::RefToken& token) {
     xmlTextWriterEndElement(xout);
     --openelementcount;
   }
-}
-
-void srcMLTranslatorOutput::outputMacroList() {
-
-  if(!isoption(OPTION_MACRO_LIST)) return;
-
-  for(std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); i += 2) {
-
-    xmlTextWriterStartElement(xout, BAD_CAST "macro-list");
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "token", BAD_CAST user_macro_list[i].c_str());
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST user_macro_list[i + 1].c_str());
-    xmlTextWriterEndElement(xout);
-
-  }
-
 }
 
 void srcMLTranslatorOutput::processJavadocCommentStart(const antlr::RefToken& token) {
