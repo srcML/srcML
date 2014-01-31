@@ -277,11 +277,35 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     xmlTextWriterWriteAttribute(xout, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
   }
 
+  if(outer) outputMacroList();
+
   // leave space for nested unit
-  if (outer && isoption(OPTION_ARCHIVE))
+  if (outer && isoption(OPTION_ARCHIVE)) {
+
     processText("\n\n", 2);
 
+  }
+
   ++depth;
+}
+
+void srcMLOutput::setMacroList(std::vector<std::string> list) {
+  user_macro_list = list;
+}
+
+void srcMLOutput::outputMacroList() {
+
+  if(!isoption(OPTION_MACRO_LIST)) return;
+
+  for(std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); i += 2) {
+
+    xmlTextWriterStartElement(xout, BAD_CAST "macro-list");
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "token", BAD_CAST user_macro_list[i].c_str());
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST user_macro_list[i + 1].c_str());
+    xmlTextWriterEndElement(xout);
+
+  }
+
 }
 
 void srcMLOutput::processUnit(const antlr::RefToken& token) {

@@ -332,7 +332,6 @@ options {
 tokens {
     // entire source file
     SUNIT;
-    SMACRO_LIST;
 
     // First token used for boundary
     START_ELEMENT_TOKEN;
@@ -586,12 +585,6 @@ public:
         emptyElement(SUNIT);
     }
 
-    void macroList() {
-
-        emptyElement(SMACRO_LIST);
-        
-    }
-
     // sets to the current token in the output token stream
     void setTokenPosition(TokenPosition& tp) {
         tp.token = CurrentToken();
@@ -804,7 +797,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         sole_destop |
 
         // labels to goto
-        { secondtoken == COLON }?
+        { secondtoken == COLON || LA(1) == MACRO_LABEL }?
         label_statement |
 
         // extern block as opposed to enum as part of declaration
@@ -1774,7 +1767,7 @@ switch_case[] { ENTRY_DEBUG } :
             // expect an expression ended by a colon
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_DETECT_COLON);
         }
-        CASE
+        (CASE | MACRO_CASE)
 ;
 
 // default treated as a statement
@@ -3904,7 +3897,9 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
             { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP | TRANSIENT) |
 
-            CONST
+            CONST |
+
+            MACRO_SPECIFIER
         )
 ;
 
@@ -4209,97 +4204,109 @@ catch[antlr::RecognitionException] {
             emptyElement(SERROR_PARSE);
 }
 
-// handle macro list/pattern name by itself
-macro_pattern_name[]  { SingleElement element(this); ENTRY_DEBUG } :
+// do a macro call.
+macro_pattern_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
 
+            // start the macro call element
+            startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
             startElement(SNAME);
 
         }
+
         MACRO_NAME
+        { endMode(); }
+        macro_call_argument_list
+
 ;
 
 // do a macro call.
-macro_pattern_call[] { ENTRY_DEBUG } :
-
-        macro_pattern_call_inner
-/*        {
-            if (inMode(MODE_THEN) && LA(1) == ELSE)
-                endMode(MODE_THEN);
-        }
-*/
-;
-
-// inner part of call
-macro_pattern_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
+macro_type_name_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
 
             // start the macro call element
             startElement(SMACRO_CALL);
-        }
-        macro_pattern_name
-        (options { greedy = true; } : { first }?
-        {
-            // start a mode for the macro argument list
-            startNewMode(MODE_LIST | MODE_TOP);
 
-            // start the argument list
-            startElement(SARGUMENT_LIST);
-        }
-        LPAREN
-        macro_call_contents
-        {
-            // end anything started inside of the macro argument list
-            endDownToMode(MODE_LIST | MODE_TOP);
-        }
-        RPAREN
-        {
-            // end the macro argument list
-            endMode(MODE_LIST | MODE_TOP);
-        } 
-        set_bool[first, false] )*
-;
-exception
-catch[antlr::RecognitionException] {
-
-        // no end found to macro
-        if (isoption(parseoptions, OPTION_DEBUG))
-            emptyElement(SERROR_PARSE);
-}
-
-// handle macro list/pattern name by itself
-macro_type_name[]  { SingleElement element(this); ENTRY_DEBUG } :
-        {
-
+            startNewMode(MODE_LOCAL);
             startElement(SNAME);
 
         }
+
         MACRO_TYPE_NAME
+        { endMode(); }
+        macro_call_argument_list
+
 ;
+
 
 // do a macro call.
-macro_type_name_call[] { ENTRY_DEBUG } :
-
-        macro_type_name_call_inner
-/*        {
-            if (inMode(MODE_THEN) && LA(1) == ELSE)
-                endMode(MODE_THEN);
-        }
-*/
-;
-
-// inner part of call
-macro_type_name_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
+macro_case_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
 
             // start the macro call element
             startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
         }
-        macro_type_name
+
+        MACRO_CASE
+        { endMode(); }
+        macro_call_argument_list
+
+;
+
+// do a macro call.
+macro_label_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
+        {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
+
+            // start the macro call element
+            startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
+        }
+
+        MACRO_LABEL
+        { endMode(); }
+        macro_call_argument_list
+
+;
+
+// do a macro call.
+macro_specifier_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
+        {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
+
+            // start the macro call element
+            startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
+        }
+
+        MACRO_SPECIFIER
+        { endMode(); }
+        macro_call_argument_list
+
+;
+
+// handle the actual macro call
+macro_call_argument_list[] { bool first = true; ENTRY_DEBUG } :
         (options { greedy = true; } : { first }?
         {
             // start a mode for the macro argument list
@@ -4318,8 +4325,7 @@ macro_type_name_call_inner[] { CompleteElement element(this); bool first = true;
         {
             // end the macro argument list
             endMode(MODE_LIST | MODE_TOP);
-        } 
-        set_bool[first, false] )*
+        } set_bool[first, false] )*
 ;
 exception
 catch[antlr::RecognitionException] {
@@ -5733,7 +5739,7 @@ label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the label element
             startElement(SLABEL_STATEMENT);
         }
-        identifier COLON
+        (identifier | macro_label_call) COLON
 ;
 
 // typedef
