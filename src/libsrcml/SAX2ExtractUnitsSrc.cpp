@@ -165,6 +165,9 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
   // need to record that we actually found something besides the root element
   pstate->rootonly = true;
 
+  pstate->root = Element(ctxt, localname, prefix, URI, nb_namespaces, namespaces,
+			 nb_attributes, nb_defaulted, attributes);
+
   // TODO:  Do we still need this?
 #if 0
   // see if we have an undetected srcDiff
