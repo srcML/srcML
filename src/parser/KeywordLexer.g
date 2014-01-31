@@ -130,6 +130,7 @@ tokens {
     // macro
     MACRO_TYPE_NAME;
     MACRO_CASE;
+    MACRO_LABEL;
 
     // specifiers that are not needed for parsing
     /*
@@ -282,6 +283,8 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
             literals[user_macro_list.at(i).c_str()] = MACRO_TYPE_NAME;
         else if(user_macro_list.at(i + 1) == "src:case")
             literals[user_macro_list.at(i).c_str()] = MACRO_CASE;
+        else if(user_macro_list.at(i + 1) == "src:label")
+            literals[user_macro_list.at(i).c_str()] = MACRO_LABEL;
 
     keyword keyword_map[] = {
         // common keywords
