@@ -131,6 +131,7 @@ tokens {
     MACRO_TYPE_NAME;
     MACRO_CASE;
     MACRO_LABEL;
+    MACRO_SPECIFIER;
 
     // specifiers that are not needed for parsing
     /*
@@ -287,6 +288,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         ADD_MACRO_LITERAL(MACRO_TYPE_NAME, "src:name")
         ADD_MACRO_LITERAL(MACRO_CASE, "src:case")
         ADD_MACRO_LITERAL(MACRO_LABEL, "src:label")
+        ADD_MACRO_LITERAL(MACRO_SPECIFIER, "src:specifier")
     }
 
 #undef ADD_MACRO_LITERAL

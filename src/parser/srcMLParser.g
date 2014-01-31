@@ -3904,7 +3904,9 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
             { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP | TRANSIENT) |
 
-            CONST
+            CONST |
+
+            MACRO_SPECIFIER
         )
 ;
 
@@ -4285,6 +4287,26 @@ macro_label_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         }
 
         MACRO_LABEL
+        { endMode(); }
+        macro_call_argument_list
+
+;
+
+// do a macro call.
+macro_specifier_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
+        {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
+
+            // start the macro call element
+            startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
+        }
+
+        MACRO_SPECIFIER
         { endMode(); }
         macro_call_argument_list
 
