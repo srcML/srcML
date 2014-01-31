@@ -150,7 +150,7 @@ public :
         // note that this has to be ended somewhere
         xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
                                       pstate->root.nb_namespaces, pstate->root.namespaces,
-                                      pstate->isarchive || pstate->macro_list.size() != 0 ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
+                                      pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
 
 	for(std::vector<std::string>::size_type i = 0; i < pstate->macro_list.size(); ++i) {
@@ -236,7 +236,7 @@ public :
       }
       end_unit += "unit>\n";
 
-      xmlOutputBufferWriteString(buf, found ? end_unit.c_str() : "/>\n");
+      xmlOutputBufferWriteString(buf, found || pstate->macro_list.size() ? end_unit.c_str() : "/>\n");
 
     } else if (result_type == XML_ELEMENT_NODE && found && !pstate->isarchive) {
       xmlOutputBufferWriteString(buf, "\n");
