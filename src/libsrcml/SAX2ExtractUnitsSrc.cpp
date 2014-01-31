@@ -230,7 +230,7 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
   pstate->rootonly = false;
 
   if(strcmp((const char*) localname, "macro-list") == 0) {
-    startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
+    pstate->macro_list.push_back(Element(ctxt, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes));
     ctxt->sax->endElementNs = &endElementNsUnit;
     return;
   }
@@ -401,14 +401,18 @@ void SAX2ExtractUnitsSrc::endElementNsUnit(void *ctx, const xmlChar *localname, 
     return;
   }
 
+  if(strcmp((const char*) localname, "macro-list") == 0) {
+
+    pstate->macro_list.push_back(Element(ctxt, localname, prefix, URI));
+    ctxt->sax->endElementNs = &endElementNsSkip;
+
+  }
+
   // diff extraction
   if (isoption(*(pstate->poptions), OPTION_DIFF) && pstate->st.back() != DIFF_COMMON && pstate->st.back() != pstate->status)
     return;
 
   pstate->pprocess->endElementNs(ctx, localname, prefix, URI);
-
-  if(strcmp((const char*) localname, "macro-list") == 0)
-    ctxt->sax->endElementNs = &endElementNsSkip;
 
 }
 

@@ -41,6 +41,18 @@ struct Element {
   {}
 
   Element(xmlParserCtxtPtr ctxt, const xmlChar* localname,
+	  const xmlChar* prefix, const xmlChar* URI)
+    : localname(0), prefix(0), URI(0)
+  {
+
+    // save all the info in case this is not a srcML archive
+    this->localname = localname ? (xmlChar*) srcml_strdup_sax((const char*) localname, ctxt) : 0;
+    this->prefix = prefix ? (xmlChar*) srcml_strdup_sax((const char*) prefix, ctxt) : 0;
+    this->URI = URI ? (xmlChar*) srcml_strdup_sax((const char*) URI, ctxt) : 0;
+
+  }
+
+  Element(xmlParserCtxtPtr ctxt, const xmlChar* localname,
 	  const xmlChar* prefix, const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
 	  int nb_attributes, int nb_defaulted, const xmlChar** attributes)
     : localname(0), prefix(0), URI(0),
@@ -192,6 +204,7 @@ public:
     int unit;
     long count;
     Element root;
+    std::vector<Element> macro_list;
     std::string firstcharacters;
     bool isarchive;
     bool rootonly;
