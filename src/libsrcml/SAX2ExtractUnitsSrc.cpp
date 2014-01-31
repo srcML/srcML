@@ -256,12 +256,14 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
       pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces,
                                   pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
       for(std::vector<Element>::size_type i = 0; i < pstate->macro_list.size(); ++i) {
+
 	pstate->pprocess->startElementNs(ctx, pstate->macro_list.at(i).localname, pstate->macro_list.at(i).prefix,
 					 pstate->macro_list.at(i).URI, pstate->macro_list.at(i).nb_namespaces,
 					 pstate->macro_list.at(i).namespaces, pstate->macro_list.at(i).nb_attributes,
 					 pstate->macro_list.at(i).nb_defaulted, pstate->root.attributes);
 	pstate->pprocess->endElementNs(ctx, pstate->macro_list.at(i).localname, pstate->macro_list.at(i).prefix,
 				       pstate->macro_list.at(i).URI);
+
       }
 
       // all done

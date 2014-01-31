@@ -99,12 +99,12 @@ struct Element {
   Element(const Element & element) {
 
     // save all the info in case this is not a srcML archive
-    this->localname = localname ? (xmlChar*) strdup((const char*) element.localname) : 0;
-    this->prefix = prefix ? (xmlChar*) strdup((const char*) element.prefix) : 0;
-    this->URI = URI ? (xmlChar*) strdup((const char*) element.URI) : 0;
+    this->localname = element.localname ? (xmlChar*) strdup((const char*) element.localname) : 0;
+    this->prefix = element.prefix ? (xmlChar*) strdup((const char*) element.prefix) : 0;
+    this->URI = element.URI ? (xmlChar*) strdup((const char*) element.URI) : 0;
 
     this->nb_namespaces = element.nb_namespaces;
-    int ns_length = nb_namespaces * 2;
+    int ns_length = element.nb_namespaces * 2;
     this->namespaces = (const xmlChar**) malloc(ns_length * sizeof(element.namespaces[0]));
     for (int i = 0; i < ns_length; ++i)
       if(element.prefix && element.namespaces[i] && strcmp((const char *)element.prefix, (const char *)element.namespaces[i]) == 0)
