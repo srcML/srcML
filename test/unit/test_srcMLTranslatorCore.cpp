@@ -147,7 +147,7 @@ int main() {
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("a;", 2, (xmlCharEncoding)0);
 
     xmlBufferPtr output = xmlBufferCreate();
-    translator.translate_separate(0,  0, 0, Language::LANGUAGE_CXX, input, output);
+    translator.translate_separate(0,  0, 0, Language::LANGUAGE_CXX, input, output, op);
     assert((char *)output->content == std::string("<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>\n"));
 
     xmlBufferFree(output);
