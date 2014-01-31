@@ -138,15 +138,15 @@ int main() {
    */
 
   {
-    dassert(srcml_check_encoding("UTF-8"), SRCML_STATUS_OK);
+    assert(srcml_check_encoding("UTF-8"));
   }
 
   {
-    dassert(srcml_check_encoding("foo"), SRCML_STATUS_ERROR);
+    assert(!srcml_check_encoding("foo"));
   }
 
   {
-    dassert(srcml_check_encoding(0), SRCML_STATUS_ERROR);
+    assert(!srcml_check_encoding(0));
   }
 
   return 0;

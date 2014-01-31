@@ -695,7 +695,7 @@ int srcml_check_format(const char* format) {
  */
 int srcml_check_encoding(const char* encoding) {
 
-  return xmlParseCharEncoding(encoding);
+  return xmlParseCharEncoding(encoding) > 0;
 
 }
 
