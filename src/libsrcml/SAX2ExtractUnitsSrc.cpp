@@ -255,6 +255,14 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
 
       pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces,
                                   pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
+      for(std::vector<Element>::size_type i = 0; i < pstate->macro_list.size(); ++i) {
+	pstate->pprocess->startElementNs(ctx, pstate->macro_list.at(i).localname, pstate->macro_list.at(i).prefix,
+					 pstate->macro_list.at(i).URI, pstate->macro_list.at(i).nb_namespaces,
+					 pstate->macro_list.at(i).namespaces, pstate->macro_list.at(i).nb_attributes,
+					 pstate->macro_list.at(i).nb_defaulted, pstate->root.attributes);
+	pstate->pprocess->endElementNs(ctx, pstate->macro_list.at(i).localname, pstate->macro_list.at(i).prefix,
+				       pstate->macro_list.at(i).URI);
+      }
 
       // all done
       if (pstate->stop)
@@ -403,8 +411,8 @@ void SAX2ExtractUnitsSrc::endElementNsUnit(void *ctx, const xmlChar *localname, 
 
   if(strcmp((const char*) localname, "macro-list") == 0) {
 
-    pstate->macro_list.push_back(Element(ctxt, localname, prefix, URI));
     ctxt->sax->endElementNs = &endElementNsSkip;
+    return;
 
   }
 
