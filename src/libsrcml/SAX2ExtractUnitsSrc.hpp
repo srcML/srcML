@@ -30,6 +30,7 @@
 #include <ProcessUnit.hpp>
 #include <srcml_wrapper.hpp>
 
+#include <algorithm>
 #include <vector>
 
 struct Element {
@@ -77,7 +78,26 @@ struct Element {
       memset((void *)this->attributes[index + 3], 0, vallength + 1);
       strncpy((char *) this->attributes[index + 3], (const char*) attributes[index + 3], vallength);
       this->attributes[index + 4] = this->attributes[index + 3] + vallength;
+    }
+
   }
+
+  Element(const Element & element) {}
+
+  Element & operator=(Element element) {
+    this->swap(element);
+  }
+
+  void swap(Element & element) {
+
+    std::swap(this->localname, element.localname);
+    std::swap(this->prefix, element.prefix);
+    std::swap(this->URI, element.URI);
+    std::swap(this->nb_namespaces, element.nb_namespaces);
+    std::swap(this->namespaces, element.namespaces);
+    std::swap(this->nb_attributes, element.nb_attributes);
+    std::swap(this->nb_defaulted, element.nb_defaulted);
+    std::swap(this->attributes, element.attributes);    
 
   }
 
