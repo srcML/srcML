@@ -27,7 +27,7 @@
   Replaces the src2srcml and srcml2src of the original srcML toolkit.
 */
 #include <srcml.h>
-#include <srcmlCLI.hpp>
+#include <srcml_cli.hpp>
 #include <thread_queue.hpp>
 #include <src_input_libarchive.hpp>
 
@@ -139,7 +139,7 @@ void * srcml_consume(void * arg) {
 int main(int argc, char * argv[]) {
 
   // parse the command line
-  srcml_request_t srcml_request = srcmlCLI::parseCLI(argc, argv);
+  srcml_request_t srcml_request = srcml_cli::parseCLI(argc, argv);
 
   // help option was selected, already displayed so no more to do
   if (srcml_request.help_set)
