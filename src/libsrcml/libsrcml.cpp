@@ -691,11 +691,11 @@ int srcml_check_format(const char* format) {
  * @param encoding an encoding
  *
  * Check if the particular encoding is supported, both for input and output.
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure
+ * @returns Return if encoding is supported.
  */
 int srcml_check_encoding(const char* encoding) {
 
-  return xmlParseCharEncoding(encoding) > 0 ? SRCML_STATUS_OK : SRCML_STATUS_ERROR;
+  return xmlParseCharEncoding(encoding);
 
 }
 
