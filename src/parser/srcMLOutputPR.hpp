@@ -30,7 +30,6 @@ enum {
     PROCESSTOKEN,
     PROCESSUNIT,
     PROCESSTEXT,
-    PROCESSMACROLIST,
     PROCESSBLOCKCOMMENTSTART,
     PROCESSJAVADOCCOMMENTSTART,
     PROCESSDOXYGENCOMMENTSTART,
@@ -56,7 +55,6 @@ srcMLTranslatorOutput::PROCESS_PTR srcMLTranslatorOutput::num2process[] = {
     &srcMLTranslatorOutput::processToken,
     &srcMLTranslatorOutput::processUnit,
     &srcMLTranslatorOutput::processText,
-    &srcMLTranslatorOutput::processMacroList,
     &srcMLTranslatorOutput::processBlockCommentStart,
     &srcMLTranslatorOutput::processJavadocCommentStart,
     &srcMLTranslatorOutput::processDoxygenCommentStart,
@@ -94,7 +92,6 @@ namespace {
     ELEMENT_MAP_DEFAULT(return PROCESSTEXT;)
 
     ELEMENT_MAP(SUNIT, PROCESSUNIT)
-    ELEMENT_MAP(SMACRO_LIST, PROCESSMACROLIST)
     ELEMENT_MAP(START_ELEMENT_TOKEN, PROCESSTEXT)
     ELEMENT_MAP(COMMENT_START, PROCESSBLOCKCOMMENTSTART)
     ELEMENT_MAP(COMMENT_END, PROCESSENDBLOCKTOKEN)

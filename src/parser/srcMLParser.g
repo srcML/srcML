@@ -332,7 +332,6 @@ options {
 tokens {
     // entire source file
     SUNIT;
-    SMACRO_LIST;
 
     // First token used for boundary
     START_ELEMENT_TOKEN;
@@ -584,12 +583,6 @@ public:
     void startUnit() {
         startElement(SUNIT);
         emptyElement(SUNIT);
-    }
-
-    void macroList() {
-
-        emptyElement(SMACRO_LIST);
-        
     }
 
     // sets to the current token in the output token stream

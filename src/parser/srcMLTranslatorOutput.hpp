@@ -87,6 +87,8 @@ private:
 
     void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer);
 
+    void outputMacroList();
+
     std::vector<std::string> user_macro_list;
 
     // List of element names
@@ -101,7 +103,6 @@ public:
     // token handlers
     void processAccess(const antlr::RefToken& token);
     void processToken(const antlr::RefToken& token);
-    void processMacroList(const antlr::RefToken& token);
     void processBlockCommentStart(const antlr::RefToken& token);
     void processJavadocCommentStart(const antlr::RefToken& token);
     void processDoxygenCommentStart(const antlr::RefToken& token);
