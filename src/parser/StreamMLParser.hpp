@@ -51,7 +51,6 @@ public:
         pskiptb = &skiptb;
 
         Base::startUnit();
-	Base::macroList();
     }
 
     ~StreamMLParser() {}

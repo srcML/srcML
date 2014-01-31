@@ -115,6 +115,7 @@ public:
     std::string line2Attribute;
     std::string columnAttribute;
     char out[21];
+    std::vector<std::string> user_macro_list;
 
     int consume_next();
 
@@ -123,6 +124,9 @@ public:
     void processUnit(const antlr::RefToken& token);
 
     void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer);
+
+    void setMacroList(std::vector<std::string> list);
+    void outputMacroList();
 
     bool isoption(const OPTION_TYPE& options) const;
     static bool isoption(const OPTION_TYPE& flag, const OPTION_TYPE& options);

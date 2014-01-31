@@ -368,7 +368,7 @@ int srcml_archive_set_options(srcml_archive* archive, unsigned long long options
 }
 
 /**
- * srcml_archive_enable_options
+ * srcml_archive_enable_option
  * @param archive a srcml_archive
  * @param option a srcml option
  *

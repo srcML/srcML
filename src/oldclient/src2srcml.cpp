@@ -405,10 +405,8 @@ void exit_cleanup() {
 
 }
 
-#if defined(__GNUC__) && !defined(__MINGW32__)
 // stat initializer
 struct stat init_stat;
-#endif
 
 int main(int argc, char* argv[]) {
 
@@ -1777,7 +1775,24 @@ void read_macro_list(srcMLTranslator& translator, const char * filename) {
       if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
         continue;
 
+      char * split_pos = index(line, ',');
+      if(split_pos)
+	(*split_pos) = '\0';
+
       user_macro_list.push_back(line);
+
+      if(split_pos) {
+
+	line = split_pos + 1;
+	line += strspn(line, " \t\f");
+	user_macro_list.push_back(line);
+
+      } else {
+
+	user_macro_list.push_back("src:macro");
+
+      }
+
     }
 
   } catch (URIStreamFileError) {

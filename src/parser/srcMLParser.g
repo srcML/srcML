@@ -258,8 +258,6 @@ private:
 };
 #endif
 
-bool srcMLParser::BOOL;
-
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
@@ -334,7 +332,6 @@ options {
 tokens {
     // entire source file
     SUNIT;
-    SMACRO_LIST;
 
     // First token used for boundary
     START_ELEMENT_TOKEN;
@@ -404,6 +401,7 @@ tokens {
     // functions
     SFUNCTION_DEFINITION;
 	SFUNCTION_DECLARATION;
+    SFUNCTION_LAMBDA;
 	SFUNCTION_SPECIFIER;
 	SRETURN_STATEMENT;
 	SPARAMETER_LIST;
@@ -564,8 +562,6 @@ public:
     bool operatorname;
     int curly_count;
 
-    static bool BOOL;
-
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
 
@@ -587,10 +583,6 @@ public:
     void startUnit() {
         startElement(SUNIT);
         emptyElement(SUNIT);
-    }
-
-    void macroList() {
-        startElement(SMACRO_LIST);
     }
 
     // sets to the current token in the output token stream
@@ -805,7 +797,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         sole_destop |
 
         // labels to goto
-        { secondtoken == COLON }?
+        { secondtoken == COLON || LA(1) == MACRO_LABEL }?
         label_statement |
 
         // extern block as opposed to enum as part of declaration
@@ -1102,6 +1094,90 @@ overloaded_operator[] { SingleElement element(this); ENTRY_DEBUG } :
         )
 ;
 
+// handle a C# lambda expression
+lambda_expression_csharp[] { ENTRY_DEBUG } :
+		{
+
+            startElement(SFUNCTION_LAMBDA);
+
+        }
+
+        (options { greedy = true; } : specifier)* (variable_identifier | lambda_parameter_list_csharp) lambda_marked
+        {
+            if(LA(1) == LCURLY) startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
+        }
+
+;
+
+// do a parameter list
+lambda_parameter_list_csharp[] { CompleteElement element(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
+        {
+            // list of parameters
+            startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+
+            // start the parameter list element
+            startElement(SPARAMETER_LIST);
+        }
+        // parameter list must include all possible parts since it is part of
+        // function detection
+        LPAREN ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; }
+        {
+            // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
+            if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
+                endMode();
+        } comma |
+        lambda_complete_parameter_csharp { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
+;
+
+// complete parameter
+lambda_complete_parameter_csharp[] { ENTRY_DEBUG } :
+        lambda_parameter_csharp
+        // suppress ()* warning
+        (options { greedy = true; } : parameter_declaration_initialization (options { greedy = true; } : {LA(1) != RPAREN }? expression)*)*
+;
+
+// a parameter
+lambda_parameter_csharp[] { int type_count = 0; ENTRY_DEBUG } :
+        {
+            // end parameter correctly
+            startNewMode(MODE_PARAMETER);
+
+            // start the parameter element
+            startElement(SPARAMETER);
+        }
+        (
+
+            {
+                // start the declaration element
+                    startElement(SDECLARATION);
+
+            }
+            set_int[type_count, type_identifier_count_check()]
+            set_int[type_count, type_count > 0 ? type_count - 1 : type_count]
+            lambda_parameter_type_count_csharp[type_count]
+           {
+                // expect a name initialization
+                setMode(MODE_VARIABLE_NAME | MODE_INIT);
+            }
+            ( options { greedy = true; } : variable_declaration_nameinit)*
+        )
+;
+
+// count types in parameter
+lambda_parameter_type_count_csharp[int & type_count] { if(type_count < 1) return; CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // local mode so start element will end correctly
+            startNewMode(MODE_LOCAL);
+
+            // start of type
+            startElement(STYPE);
+        }
+        eat_type[type_count]
+
+        // sometimes there is no parameter name.  if so, we need to eat it
+        ( options { greedy = true; } : multops | tripledotop | LBRACKET RBRACKET)*
+;
+
 // handle a C++11 lambda expression
 lambda_expression_cpp[] { ENTRY_DEBUG } :
 		{
@@ -1119,7 +1195,7 @@ lambda_expression_cpp[] { ENTRY_DEBUG } :
 
             startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
 
-            startElement(SFUNCTION_DEFINITION);
+            startElement(SFUNCTION_LAMBDA);
 
         }
 
@@ -1177,6 +1253,13 @@ lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG
     inputState->guessing--;
     rewind(start);
 } :;
+
+// completely match a C# lambda expression
+lambda_expression_full_csharp[] { ENTRY_DEBUG } :
+
+        (options { greedy = true; } : ASYNC)* (variable_identifier | paren_pair) LAMBDA
+
+;
 
 // completely match a C++ lambda expression
 lambda_expression_full_cpp[] { ENTRY_DEBUG } :
@@ -1239,8 +1322,8 @@ noexcept_list[] { ENTRY_DEBUG } :
 ;
 
 // match a thow list completely
-complete_throw_list[] { ENTRY_DEBUG } :
-        THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java | COMMA)*
+complete_throw_list[] { bool is_compound = false; ENTRY_DEBUG } :
+        THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java[is_compound] | COMMA)*
 ;
 
 // match noexcept list completely
@@ -1684,7 +1767,7 @@ switch_case[] { ENTRY_DEBUG } :
             // expect an expression ended by a colon
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_DETECT_COLON);
         }
-        CASE
+        (CASE | MACRO_CASE)
 ;
 
 // default treated as a statement
@@ -3669,6 +3752,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
             setTokenPosition(tp);
         }
         (
+
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         compound_name_java[iscompound] |
 
@@ -3679,7 +3763,8 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         compound_name_c[iscompound] |
 
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
-        compound_name_cpp[iscompound]
+        compound_name_cpp[iscompound] |
+        macro_type_name_call 
         )
 
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
@@ -3697,7 +3782,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
 ;
 
 // C++ compound name handling
-compound_name_cpp[bool& iscompound = BOOL] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
         (dcolon { iscompound = true; })*
         (DESTOP set_bool[isdestructor] { iscompound = true; })*
@@ -3721,7 +3806,7 @@ catch[antlr::RecognitionException] {
 }
 
 // compound name for C#
-compound_name_csharp[bool& iscompound = BOOL] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+compound_name_csharp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
         (dcolon { iscompound = true; })*
         (DESTOP set_bool[isdestructor] { iscompound = true; })*
@@ -3743,7 +3828,7 @@ catch[antlr::RecognitionException] {
 }
 
 // compound name for C
-compound_name_c[bool& iscompound = BOOL] { ENTRY_DEBUG } :
+compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
         identifier
         ( options { greedy = true; } :
@@ -3753,7 +3838,7 @@ compound_name_c[bool& iscompound = BOOL] { ENTRY_DEBUG } :
 ;
 
 // compound name for Java
-compound_name_java[bool& iscompound = BOOL] { ENTRY_DEBUG } :
+compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
 
         template_argument_list |
         simple_name_optional_template
@@ -3812,7 +3897,9 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
             { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP | TRANSIENT) |
 
-            CONST
+            CONST |
+
+            MACRO_SPECIFIER
         )
 ;
 
@@ -4117,37 +4204,109 @@ catch[antlr::RecognitionException] {
             emptyElement(SERROR_PARSE);
 }
 
-// handle macro list/pattern name by itself
-macro_pattern_name[]  { SingleElement element(this); ENTRY_DEBUG } :
-        {
-
-            startElement(SNAME);
-
-        }
-        MACRO_NAME
-;
-
 // do a macro call.
-macro_pattern_call[] { ENTRY_DEBUG } :
-
-        macro_pattern_call_inner
-/*        {
-            if (inMode(MODE_THEN) && LA(1) == ELSE)
-                endMode(MODE_THEN);
-        }
-*/
-;
-
-// inner part of call
-macro_pattern_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
+macro_pattern_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
 
             // start the macro call element
             startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
         }
-        macro_pattern_name
+
+        MACRO_NAME
+        { endMode(); }
+        macro_call_argument_list
+
+;
+
+// do a macro call.
+macro_type_name_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
+        {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
+
+            // start the macro call element
+            startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
+        }
+
+        MACRO_TYPE_NAME
+        { endMode(); }
+        macro_call_argument_list
+
+;
+
+
+// do a macro call.
+macro_case_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
+        {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
+
+            // start the macro call element
+            startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
+        }
+
+        MACRO_CASE
+        { endMode(); }
+        macro_call_argument_list
+
+;
+
+// do a macro call.
+macro_label_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
+        {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
+
+            // start the macro call element
+            startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
+        }
+
+        MACRO_LABEL
+        { endMode(); }
+        macro_call_argument_list
+
+;
+
+// do a macro call.
+macro_specifier_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
+        {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
+
+            // start the macro call element
+            startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
+        }
+
+        MACRO_SPECIFIER
+        { endMode(); }
+        macro_call_argument_list
+
+;
+
+// handle the actual macro call
+macro_call_argument_list[] { bool first = true; ENTRY_DEBUG } :
         (options { greedy = true; } : { first }?
         {
             // start a mode for the macro argument list
@@ -4166,8 +4325,7 @@ macro_pattern_call_inner[] { CompleteElement element(this); bool first = true; E
         {
             // end the macro argument list
             endMode(MODE_LIST | MODE_TOP);
-        } 
-        set_bool[first, false] )*
+        } set_bool[first, false] )*
 ;
 exception
 catch[antlr::RecognitionException] {
@@ -4451,7 +4609,7 @@ delegate_anonymous[] { ENTRY_DEBUG } :
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ANONYMOUS);
 
             // start of the catch statement
-            startElement(SFUNCTION_DEFINITION);
+            startElement(SFUNCTION_LAMBDA);
         }
         delegate_marked
         (options { greedy = true; } : parameter_list)*
@@ -4470,7 +4628,11 @@ delegate_marked[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 // lambda character
-lambda_marked[] { ENTRY_DEBUG } :
+lambda_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR))
+                startElement(SOPERATOR);
+        }
         LAMBDA
 ;
 
@@ -4880,6 +5042,10 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; ENTRY
         { next_token() == LCURLY }?
         lambda_anonymous |
 
+        { inLanguage(LANGUAGE_CSHARP) }?
+        (lambda_expression_full_csharp) => lambda_expression_csharp |
+
+        { inLanguage(LANGUAGE_CXX_ONLY) }?
         (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_cpp |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
@@ -5105,11 +5271,11 @@ implements_list[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // super list
-super_list[] { ENTRY_DEBUG } :
+super_list[] { bool is_compound = false; ENTRY_DEBUG } :
         (options { greedy = true; } :
             (derive_access)*
 
-            compound_name_java
+            compound_name_java[is_compound]
         |
             COMMA
         )*
@@ -5518,25 +5684,25 @@ template_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // template extends
-template_extends_java[] { CompleteElement element(this); ENTRY_DEBUG } :
+template_extends_java[] { CompleteElement element(this); bool is_compound = false; ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SEXTENDS);
         }
         EXTENDS
-        compound_name_java
+        compound_name_java[is_compound]
 ;
 
 // template super 
-template_super_java[] { CompleteElement element(this); ENTRY_DEBUG } :
+template_super_java[] { CompleteElement element(this); bool is_compound = false; ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SDERIVATION_LIST);
         }
         SUPER
-        compound_name_java
+        compound_name_java[is_compound]
 ;
 
 // beginning of template parameter list
@@ -5573,7 +5739,7 @@ label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the label element
             startElement(SLABEL_STATEMENT);
         }
-        identifier COLON
+        (identifier | macro_label_call) COLON
 ;
 
 // typedef

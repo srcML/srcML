@@ -127,6 +127,12 @@ tokens {
 
 	INLINE;
 
+    // macro
+    MACRO_TYPE_NAME;
+    MACRO_CASE;
+    MACRO_LABEL;
+    MACRO_SPECIFIER;
+
     // specifiers that are not needed for parsing
     /*
     REGISTER = "register";
@@ -253,6 +259,8 @@ bool rawstring;
 std::string delimiter;
 bool isline;
 long line_number;
+int lastpos;
+int prev;
 
 // map from text of literal to token number, adjusted to language
 struct keyword { char const * const text; int token; int language; };
@@ -262,14 +270,28 @@ void changetotextlexer(int typeend);
 KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
              std::vector<std::string> user_macro_list)
     : antlr::CharScanner(pinput,true), Language(language), options(options), onpreprocline(false), startline(true),
-    atstring(false), rawstring(false), delimiter(""), isline(false), line_number(-1)
+    atstring(false), rawstring(false), delimiter(""), isline(false), line_number(-1), lastpos(0), prev(0)
 {
     if(isoption(options, OPTION_LINE))
        setLine(getLine() + (1 << 16));
     setTokenObjectFactory(srcMLToken::factory);
 
-    for (std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); ++i)
-            literals[user_macro_list.at(i).c_str()] = MACRO_NAME;
+#define ADD_MACRO_LITERAL(token, type) \
+    if(user_macro_list.at(i + 1) == type) { \
+        literals[user_macro_list.at(i).c_str()] = token; \
+        continue; \
+    }
+
+    // @todo check for exception
+    for (std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); i += 2) {
+        ADD_MACRO_LITERAL(MACRO_NAME, "src:macro")
+        ADD_MACRO_LITERAL(MACRO_TYPE_NAME, "src:name")
+        ADD_MACRO_LITERAL(MACRO_CASE, "src:case")
+        ADD_MACRO_LITERAL(MACRO_LABEL, "src:label")
+        ADD_MACRO_LITERAL(MACRO_SPECIFIER, "src:specifier")
+    }
+
+#undef ADD_MACRO_LITERAL
 
     keyword keyword_map[] = {
         // common keywords

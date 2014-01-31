@@ -59,9 +59,6 @@ namespace {
   ELEMENT_MAP(DOXYGEN_COMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
   ELEMENT_MAP(LINE_DOXYGEN_COMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
 
-  // user defined macro list tag
-  ELEMENT_MAP(SMACRO_LIST, "macro-list")
-
   // No op
   ELEMENT_MAP(SNOP, "")
 
@@ -137,6 +134,7 @@ namespace {
   // functions
   ELEMENT_MAP(SFUNCTION_DEFINITION,  "function")
   ELEMENT_MAP(SFUNCTION_DECLARATION, "function_decl")
+  ELEMENT_MAP(SFUNCTION_LAMBDA,      "lambda")
   ELEMENT_MAP(SFUNCTION_SPECIFIER,   "specifier")
   ELEMENT_MAP(SRETURN_STATEMENT,     "return")
   ELEMENT_MAP(SFUNCTION_CALL,        "call")
@@ -338,11 +336,6 @@ srcMLTranslatorOutput::srcMLTranslatorOutput(TokenStream* ints,
 
 srcMLTranslatorOutput::~srcMLTranslatorOutput() {
 }
-
-void srcMLTranslatorOutput::setMacroList(std::vector<std::string> list) {
-  user_macro_list = list;
-}
-
 
 void srcMLTranslatorOutput::setTokenStream(TokenStream& ints) {
 
@@ -548,8 +541,12 @@ void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, con
   }
 
   // leave space for nested unit
-  if (outer && isoption(OPTION_ARCHIVE))
+  if (outer && isoption(OPTION_ARCHIVE)) {
+
+    outputMacroList();
     processText("\n\n", 2);
+
+  }
 
   ++depth;
 }
@@ -591,22 +588,6 @@ void srcMLTranslatorOutput::processToken(const antlr::RefToken& token) {
     xmlTextWriterEndElement(xout);
     --openelementcount;
   }
-}
-
-void srcMLTranslatorOutput::processMacroList(const antlr::RefToken& token) {
-
-  if(!isoption(OPTION_MACRO_LIST)) return;
-
-  const char* s = token2name(token);
-
-  for(std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); ++i) {
-
-    xmlTextWriterStartElement(xout, BAD_CAST s);
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "token", BAD_CAST user_macro_list[i].c_str());
-    xmlTextWriterEndElement(xout);
-
-  }
-
 }
 
 void srcMLTranslatorOutput::processJavadocCommentStart(const antlr::RefToken& token) {
