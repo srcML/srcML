@@ -277,10 +277,11 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     xmlTextWriterWriteAttribute(xout, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
   }
 
+  if(outer) outputMacroList();
+
   // leave space for nested unit
   if (outer && isoption(OPTION_ARCHIVE)) {
 
-    outputMacroList();
     processText("\n\n", 2);
 
   }
