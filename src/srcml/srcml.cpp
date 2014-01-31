@@ -147,8 +147,9 @@ int main(int argc, char * argv[]) {
 
   // version
   if (srcml_request.command & SRCML_COMMAND_VERSION) {
-    std::cerr <<  "srcml Version Number " << srcml_version_number() << "\n";
-    std::cerr <<  "srcml Version String " << srcml_version_string() << "\n";
+    std::cout <<  srcml_version_string() << "\n";
+    std::cout << "srcml Version Number " << srcml_version_number() << "\n";
+    std::cout << "libarchive Version " << ARCHIVE_VERSION_NUMBER << "\n";
     return 0;
   }
 
