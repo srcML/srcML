@@ -260,7 +260,7 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
 	pstate->pprocess->startElementNs(ctx, pstate->macro_list.at(i).localname, pstate->macro_list.at(i).prefix,
 					 pstate->macro_list.at(i).URI, pstate->macro_list.at(i).nb_namespaces,
 					 pstate->macro_list.at(i).namespaces, pstate->macro_list.at(i).nb_attributes,
-					 pstate->macro_list.at(i).nb_defaulted, pstate->root.attributes);
+					 pstate->macro_list.at(i).nb_defaulted, pstate->macro_list.at(i).attributes);
 	pstate->pprocess->endElementNs(ctx, pstate->macro_list.at(i).localname, pstate->macro_list.at(i).prefix,
 				       pstate->macro_list.at(i).URI);
 
