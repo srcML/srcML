@@ -27,8 +27,11 @@
 #ifndef SRCML_CLI_HPP
 #define SRCML_CLI_HPP
 
+#include <srcml.h>
 #include <string>
 #include <vector>
+#include <iostream>
+#include <boost/program_options.hpp>
 
 /* These are internal to srcml */
 #define SRCML_COMMAND_LONGINFO          1<<0

@@ -24,12 +24,7 @@
   srcml_cli handles parsing for CLI options for srcml
 */
 
-#include <srcml.h>
-
 #include <srcml_cli.hpp>
-#include <boost/program_options.hpp>
-
-#include <iostream>
 
 namespace prog_opts = boost::program_options;
 
