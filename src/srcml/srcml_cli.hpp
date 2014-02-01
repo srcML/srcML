@@ -76,6 +76,8 @@ struct srcml_request_t {
   std::vector<std::string> positional_args;
   bool help_set;
   bool directory_set;
+  bool filename_set;
+  bool src_versions_set;
 };
 
 class srcml_cli {

@@ -142,7 +142,7 @@ void option_command(bool opt) {
     srcml_request.command |= command;
 }
 
-void option_filename(const std::string& value) { srcml_request.filename = value; }
+void option_filename(const std::string& value) { srcml_request.filename = value; srcml_request.filename_set = true; }
 void option_output(const std::string& value) {srcml_request.output = value; }
 void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value; }
 void option_encoding(const std::string& value) {srcml_request.encoding = value; }
@@ -151,7 +151,7 @@ void option_language(const std::string& value) {srcml_request.language = value; 
 void option_register_ext(const std::vector<std::string>& values) {srcml_request.register_ext = values; }
 void option_tabs(const int value) {srcml_request.tabs = value; }
 void option_directory(const std::string& value) {srcml_request.directory = value; srcml_request.directory_set = true; }
-void option_src_versions(const std::string& value) {srcml_request.src_versions = value; }
+void option_src_versions(const std::string& value) {srcml_request.src_versions = value; srcml_request.src_versions_set = true; }
 void option_prefix(const std::string& value) {srcml_request.prefix = value; }
 void option_xmlns_uri(const std::string& value) {srcml_request.xmlns_uri = value; }
 void option_xmlns_prefix(const std::vector<std::string>& values) {srcml_request.xmlns_prefix = values; }

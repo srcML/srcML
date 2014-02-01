@@ -26,7 +26,7 @@
 
   Replaces the src2srcml and srcml2src of the original srcML toolkit.
 */
-  
+
 #include <srcml.h>
 #include <srcml_cli.hpp>
 #include <thread_queue.hpp>
@@ -92,15 +92,13 @@ int main(int argc, char * argv[]) {
   if (srcml_request.encoding != "")
     srcml_archive_set_encoding(srcml_arch, srcml_request.encoding.c_str());
 
-  // TODO: filename may be set to "". filename_set needed
-  if (srcml_request.filename != "")
+  if (srcml_request.filename_set)
     srcml_archive_set_filename(srcml_arch, srcml_request.filename.c_str());
 
   if (srcml_request.directory_set)
     srcml_archive_set_directory(srcml_arch, srcml_request.directory.c_str());
 
-  // TODO: src_versions may be set to "". src_versions_set needed
-  if (srcml_request.src_versions != "")
+  if (srcml_request.src_versions_set)
     srcml_archive_set_version(srcml_arch, srcml_request.src_versions.c_str());
 
   if (srcml_request.markup_options != 0) {
