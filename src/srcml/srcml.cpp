@@ -245,15 +245,26 @@ void display_long_info(std::vector<std::string>& pos_args) {
       int numUnits = 0;
       srcml_archive* srcml_arch = srcml_create_archive();
       srcml_read_open_filename(srcml_arch, pos_args[i].c_str());
+     
       while (true) {
         srcml_unit* unit = srcml_read_unit(srcml_arch);
-        
+
         if (unit == 0)
           break;
 
         ++numUnits;
-        std::cout << "Language: " << srcml_unit_get_language(unit) << "\n";
-        std::cout << "Filename: " << srcml_unit_get_filename(unit) << "\n";
+        std::string xml = srcml_unit_get_xml(unit);
+        std::string unitHead = xml.substr(1,xml.find(">")-1);
+        unitHead = unitHead.substr(unitHead.find(" ")+1);
+
+        while (true) {
+          size_t pos = unitHead.find(" ");
+          if (pos == std::string::npos)
+            break;
+
+          std::cout << unitHead.substr(0, pos) << "\n";
+          unitHead = unitHead.substr(pos+1);
+        }
       }
       std::cout << "Unit Count: " << numUnits << "\n";
     }
