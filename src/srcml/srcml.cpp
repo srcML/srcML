@@ -238,10 +238,13 @@ void display_long_info(std::vector<std::string>& pos_args) {
   for (size_t i = 0; i < pos_args.size(); ++i) {
     boost::filesystem::path localFile (pos_args[i]);
     
+    // skip any directories
     if (is_directory(localFile))
       continue;
 
+    // check for an xml file
     if (localFile.extension().string() == ".xml") {
+      std::string filename = "";
       int numUnits = 0;
       srcml_archive* srcml_arch = srcml_create_archive();
       srcml_read_open_filename(srcml_arch, pos_args[i].c_str());
@@ -265,8 +268,15 @@ void display_long_info(std::vector<std::string>& pos_args) {
           std::cout << unitHead.substr(0, pos) << "\n";
           unitHead = unitHead.substr(pos+1);
         }
+        filename = srcml_unit_get_filename(unit);
+        srcml_free_unit(unit);
       }
+
+      if (numUnits <= 1)
+        std::cout << "filename=\"" << filename << "\"\n";
+      
       std::cout << "units=\"" << numUnits << "\"\n";
+      srcml_free_archive(srcml_arch);
     }
   }
 }
