@@ -192,6 +192,7 @@ std::pair<std::string, std::string> custom_parser(const std::string& s);
 // Debug
 void debug_cli_opts(const struct srcml_request_t srcml_request);
 
+// Interpretation of CLI options
 srcml_request_t parseCLI(int argc, char* argv[]) {
   try {
 
