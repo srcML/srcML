@@ -21,7 +21,8 @@
 */
 
 /*
-  src_input_libarchive handles local files, stdin, and archival input to srcml
+  src_input_libarchive assigns local files, stdin, and archival input to the 
+    srcml parsing queue
 */
 
 #ifndef SRC_INPUT_LIBARCHIVE_HPP
