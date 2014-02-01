@@ -21,13 +21,16 @@
 */
 
 /*
-  src_input_libarchive handles local files, stdin, and archival input to srcml
+  src_input_libarchive assigns local files, stdin, and archival input to the 
+    srcml parsing queue
 */
 
 #include <src_input_libarchive.hpp>
 
+// Set the options for libarchive to process input files
 void setupLibArchive(archive* a) {
   archive * arch = a;
+  
   // Configure libarchive supported file formats
   archive_read_support_format_ar(arch);
   archive_read_support_format_cpio(arch);
@@ -60,6 +63,7 @@ void setupLibArchive(archive* a) {
   #endif
 }
 
+// Convert input to a ParseRequest and assign request to the processing queue
 void makeRequest(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input_file, std::string lang) {
   ParseRequest request = req;
 
@@ -123,14 +127,17 @@ void makeRequest(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req
     request.filename = filename;
     request.srcml_arch = srcml_arch;
     request.lang = ((srcml_archive_get_language(srcml_arch) || lang.compare("xml") == 0) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
+    
     // Hand request off to the processing queue
     queue.push(request);
   }
   archive_read_finish(arch);
 }
 
+// Public function used for adding tasks to the parse queue
 void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang) {
 
+  // Preprocessing if input is a directory
   boost::filesystem::path localPath(input);
   if (is_directory(localPath)) {
     for (boost::filesystem::recursive_directory_iterator end, dir(localPath); dir != end; ++dir) {
