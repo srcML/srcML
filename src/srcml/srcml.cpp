@@ -254,12 +254,6 @@ void display_long_info(std::vector<std::string>& pos_args) {
         ++numUnits;
         std::cout << "Language: " << srcml_unit_get_language(unit) << "\n";
         std::cout << "Filename: " << srcml_unit_get_filename(unit) << "\n";
-        
-        if (srcml_unit_get_directory(unit))
-          std::cout << "Directory: " << srcml_unit_get_directory(unit) << "\n";
-
-        if (srcml_unit_get_version(unit))
-          std::cout << "Version: " << srcml_unit_get_version(unit) << "\n";
       }
       std::cout << "Unit Count: " << numUnits << "\n";
     }
