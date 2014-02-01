@@ -36,9 +36,7 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <boost/filesystem.hpp>
-#include <boost/thread.hpp>
 
-#include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <iostream>
