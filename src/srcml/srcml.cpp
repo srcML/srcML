@@ -239,6 +239,8 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
   return true;
 }
 
+// TODO: Need to show encoding
+// TODO: Need to not show language for archive
 void display_info(std::vector<std::string>& pos_args, int info) {
   for (size_t i = 0; i < pos_args.size(); ++i) {
     boost::filesystem::path localFile (pos_args[i]);
@@ -273,7 +275,7 @@ void display_info(std::vector<std::string>& pos_args, int info) {
           std::cout << unitHead.substr(0, pos) << "\n";
           unitHead = unitHead.substr(pos+1);
         }
-        
+
         filename = srcml_unit_get_filename(unit);
         srcml_free_unit(unit);
       }
