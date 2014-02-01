@@ -41,6 +41,7 @@
 #include <unistd.h>
 #include <iostream>
 
+// helper functions
 bool checkLocalFiles(std::vector<std::string>& pos_args);
 bool test_for_stdin();
 
@@ -144,19 +145,19 @@ int main(int argc, char * argv[]) {
   for (int i = 0; i < NUM_THREADS; ++i)
       pthread_create(&writer[i], 0, srcml_consume, &queue);
 
-  // Setup a request
+  // setup a request
   ParseRequest request;
 
   // process the command line inputs
   for (size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
     std::string& input_file = srcml_request.positional_args[i];
 
-    // Stdin
+    // stdin
     if (input_file.compare("-") == 0) {
-      // Check if we are using the terminal interactively
+      // check if we are using the terminal interactively
       if(srcml_request.command & SRCML_COMMAND_INTERACTIVE) {
         if (!test_for_stdin())
-          return 1; // Stdin was requested, but no data was received
+          return 1; // stdin was requested, but no data was received
       }
     }
 
@@ -178,22 +179,23 @@ int main(int argc, char * argv[]) {
   return 0;
 }
 
+// check stdin for data
 bool test_for_stdin() {
 
-  // Init file descriptor with stdin
+  // init file descriptor with stdin
   fd_set fds;
   FD_ZERO(&fds);
   FD_SET(STDIN_FILENO, &fds);
 
   /* 
    Need a timeout so the application doesn't
-    hang waiting for input that never comes
+    hang waiting for input that never comes 
   */
   struct timeval timeout;
   timeout.tv_sec = 5;
   timeout.tv_usec = 0;
 
-  // Use select to see if stdin has data
+  // use select to see if stdin has data
   int selectRetVal = select(sizeof(fds)*8, &fds, NULL, NULL, &timeout);
 
   if (selectRetVal == -1) {
@@ -207,6 +209,7 @@ bool test_for_stdin() {
   return true;
 }
 
+// check for the presence of local files only
 bool checkLocalFiles(std::vector<std::string>& pos_args) {
   for (size_t i = 0; i < pos_args.size(); ++i) {
     if (pos_args[i] == "/dev/stdin")
