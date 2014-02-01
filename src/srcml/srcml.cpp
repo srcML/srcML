@@ -44,7 +44,7 @@
 // helper functions
 bool checkLocalFiles(std::vector<std::string>& pos_args);
 bool test_for_stdin();
-void display_long_info(std::vector<std::string>& pos_args);
+void display_info(std::vector<std::string>& pos_args, int info);
 
 int main(int argc, char * argv[]) {
 
@@ -86,8 +86,13 @@ int main(int argc, char * argv[]) {
     return 1;
 
   if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
-    display_long_info(srcml_request.positional_args);
+    display_info(srcml_request.positional_args, SRCML_COMMAND_LONGINFO);
     return 0;
+  }
+
+  if (srcml_request.command & SRCML_COMMAND_INFO) {
+    display_info(srcml_request.positional_args, SRCML_COMMAND_INFO);
+    return 0; 
   }
   
   // create the output archive
@@ -234,7 +239,7 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
   return true;
 }
 
-void display_long_info(std::vector<std::string>& pos_args) {
+void display_info(std::vector<std::string>& pos_args, int info) {
   for (size_t i = 0; i < pos_args.size(); ++i) {
     boost::filesystem::path localFile (pos_args[i]);
     
@@ -268,6 +273,7 @@ void display_long_info(std::vector<std::string>& pos_args) {
           std::cout << unitHead.substr(0, pos) << "\n";
           unitHead = unitHead.substr(pos+1);
         }
+        
         filename = srcml_unit_get_filename(unit);
         srcml_free_unit(unit);
       }
@@ -275,7 +281,9 @@ void display_long_info(std::vector<std::string>& pos_args) {
       if (numUnits <= 1)
         std::cout << "filename=\"" << filename << "\"\n";
       
-      std::cout << "units=\"" << numUnits << "\"\n";
+      if (info == SRCML_COMMAND_LONGINFO)
+        std::cout << "units=\"" << numUnits << "\"\n";
+
       srcml_free_archive(srcml_arch);
     }
   }
