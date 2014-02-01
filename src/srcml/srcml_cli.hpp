@@ -80,9 +80,6 @@ struct srcml_request_t {
   bool src_versions_set;
 };
 
-class srcml_cli {
-  public :
-    static srcml_request_t parseCLI (int argc, char* argv[]);
-};
+srcml_request_t parseCLI (int argc, char* argv[]);
 
 #endif

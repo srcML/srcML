@@ -49,7 +49,7 @@ bool test_for_stdin();
 int main(int argc, char * argv[]) {
 
   // parse the command line
-  srcml_request_t srcml_request = srcml_cli::parseCLI(argc, argv);
+  srcml_request_t srcml_request = parseCLI(argc, argv);
 
   // help option was selected, already displayed so no more to do
   if (srcml_request.help_set)
