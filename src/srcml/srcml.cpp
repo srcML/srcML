@@ -257,7 +257,7 @@ void display_long_info(std::vector<std::string>& pos_args) {
         std::string unitHead = xml.substr(1,xml.find(">")-1);
         unitHead = unitHead.substr(unitHead.find(" ")+1);
 
-        while (true) {
+        while (true && numUnits <= 1) {
           size_t pos = unitHead.find(" ");
           if (pos == std::string::npos)
             break;
@@ -266,7 +266,7 @@ void display_long_info(std::vector<std::string>& pos_args) {
           unitHead = unitHead.substr(pos+1);
         }
       }
-      std::cout << "Unit Count: " << numUnits << "\n";
+      std::cout << "units=\"" << numUnits << "\"\n";
     }
   }
 }
