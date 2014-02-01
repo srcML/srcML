@@ -1,5 +1,5 @@
 /*
-  srcmlCLI.cpp
+  srcml_cli.cpp
 
   Copyright (C) 2004-2013  SDML (www.srcML.org)
 
@@ -21,7 +21,7 @@
 */
 
 /*
-  srcmlCLI handles parsing for CLI options for srcml
+  srcml_cli handles parsing for CLI options for srcml
 */
 
 #include <srcml.h>
