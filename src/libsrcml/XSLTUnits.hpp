@@ -151,8 +151,17 @@ public :
         xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
                                       pstate->root.nb_namespaces, pstate->root.namespaces,
                                       pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
 
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
+	for(std::vector<std::string>::size_type i = 0; i < pstate->macro_list.size(); ++i) {
+	  xmlOutputBufferWriteElementNs(buf, pstate->macro_list.at(i).localname, pstate->macro_list.at(i).prefix, pstate->macro_list.at(i).URI,
+					pstate->macro_list.at(i).nb_namespaces, pstate->macro_list.at(i).namespaces,
+					pstate->macro_list.at(i).nb_attributes, pstate->macro_list.at(i).nb_defaulted, pstate->macro_list.at(i).attributes);
+	}
+        if(pstate->macro_list.size()) xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
+
+
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
         root_prefix = pstate->root.prefix;
       }
       found = true;
@@ -227,7 +236,7 @@ public :
       }
       end_unit += "unit>\n";
 
-      xmlOutputBufferWriteString(buf, found ? end_unit.c_str() : "/>\n");
+      xmlOutputBufferWriteString(buf, found || pstate->macro_list.size() ? end_unit.c_str() : "/>\n");
 
     } else if (result_type == XML_ELEMENT_NODE && found && !pstate->isarchive) {
       xmlOutputBufferWriteString(buf, "\n");

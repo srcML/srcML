@@ -226,14 +226,14 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     if(URI && pstate->root.namespaces[i] && strcmp((const char *)pstate->root.namespaces[i], (const char *)URI) == 0)
       URI = pstate->root.namespaces[i];
 
-  // so we have an element inside of the unit
-  pstate->rootonly = false;
-
   if(strcmp((const char*) localname, "macro-list") == 0) {
     pstate->macro_list.push_back(Element(ctxt, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes));
     ctxt->sax->endElementNs = &endElementNsUnit;
     return;
   }
+
+  // so we have an element inside of the unit
+  pstate->rootonly = false;
 
   // see if this is really a nested unit.  If not, then we have an individual
   // unit (not a srcML archive) and need to process the cached root
@@ -308,6 +308,18 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     // all done
     if (pstate->stop)
       return;
+
+    
+    for(std::vector<Element>::size_type i = 0; i < pstate->macro_list.size(); ++i) {
+
+      pstate->pprocess->startElementNs(ctx, pstate->macro_list.at(i).localname, pstate->macro_list.at(i).prefix,
+				       pstate->macro_list.at(i).URI, pstate->macro_list.at(i).nb_namespaces,
+				       pstate->macro_list.at(i).namespaces, pstate->macro_list.at(i).nb_attributes,
+				       pstate->macro_list.at(i).nb_defaulted, pstate->macro_list.at(i).attributes);
+      pstate->pprocess->endElementNs(ctx, pstate->macro_list.at(i).localname, pstate->macro_list.at(i).prefix,
+				     pstate->macro_list.at(i).URI);
+      
+    }
 
     if(isoption(*(pstate->poptions), OPTION_APPLY_ROOT))
       charactersUnit(ctx, BAD_CAST pstate->firstcharacters.c_str(), (int)pstate->firstcharacters.length());
@@ -464,6 +476,17 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
       // all done
       if (pstate->stop)
         return;
+
+      for(std::vector<Element>::size_type i = 0; i < pstate->macro_list.size(); ++i) {
+
+	pstate->pprocess->startElementNs(ctx, pstate->macro_list.at(i).localname, pstate->macro_list.at(i).prefix,
+					 pstate->macro_list.at(i).URI, pstate->macro_list.at(i).nb_namespaces,
+					 pstate->macro_list.at(i).namespaces, pstate->macro_list.at(i).nb_attributes,
+					 pstate->macro_list.at(i).nb_defaulted, pstate->macro_list.at(i).attributes);
+	pstate->pprocess->endElementNs(ctx, pstate->macro_list.at(i).localname, pstate->macro_list.at(i).prefix,
+	pstate->macro_list.at(i).URI);
+
+      }
 
       // first characters
       if (!pstate->firstcharacters.empty())
