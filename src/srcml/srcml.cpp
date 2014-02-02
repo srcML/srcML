@@ -247,6 +247,7 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
   return true;
 }
 
+// display all files in srcml archive
 void list_unit_files(std::vector<std::string>& pos_args) {
   for (size_t i = 0; i < pos_args.size(); ++i) {
     boost::filesystem::path localFile (pos_args[i]);
