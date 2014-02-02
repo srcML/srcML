@@ -45,6 +45,7 @@
 bool checkLocalFiles(std::vector<std::string>& pos_args);
 bool test_for_stdin();
 void display_info(std::vector<std::string>& pos_args, int info);
+void list_unit_files(std::vector<std::string>& pos_args);
 
 int main(int argc, char * argv[]) {
 
@@ -85,14 +86,21 @@ int main(int argc, char * argv[]) {
   if (!checkLocalFiles(srcml_request.positional_args))
     return 1;
 
+  // long info
   if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
     display_info(srcml_request.positional_args, SRCML_COMMAND_LONGINFO);
     return 0;
   }
 
+  // info
   if (srcml_request.command & SRCML_COMMAND_INFO) {
     display_info(srcml_request.positional_args, SRCML_COMMAND_INFO);
     return 0; 
+  }
+
+  if (srcml_request.command & SRCML_COMMAND_LIST) {
+    list_unit_files(srcml_request.positional_args);
+    return 0;
   }
   
   // create the output archive
@@ -237,6 +245,31 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
     }
   }
   return true;
+}
+
+void list_unit_files(std::vector<std::string>& pos_args) {
+  for (size_t i = 0; i < pos_args.size(); ++i) {
+    boost::filesystem::path localFile (pos_args[i]);
+    
+    // skip any directories
+    if (is_directory(localFile))
+      continue;
+
+    int numUnits = 0;
+    srcml_archive* srcml_arch = srcml_create_archive();
+    srcml_read_open_filename(srcml_arch, pos_args[i].c_str());
+   
+    while (true) {
+      srcml_unit* unit = srcml_read_unit(srcml_arch);
+
+      if (unit == 0)
+        break;
+
+      ++numUnits;
+      std::cout << numUnits << "\t" << srcml_unit_get_filename(unit) << "\n";
+
+    }
+  }
 }
 
 // TODO: Need to show encoding
