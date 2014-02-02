@@ -181,8 +181,16 @@ int main(int argc, char * argv[]) {
       }
     }
 
-    // process libarchive input
-    src_input_libarchive(queue, srcml_arch, request, input_file, srcml_request.language);   
+    // get prefix
+    size_t prefixPos = input_file.find("//");
+    std::string prefix = "";
+
+    if (prefixPos != std::string::npos)
+      prefix = input_file.substr(0, prefixPos + 2);
+
+    // check prefix and call handler
+    if (prefix.compare("file://") == 0)
+      src_input_libarchive(queue, srcml_arch, request, input_file.substr(prefixPos+2), srcml_request.language);
   }
   
   // end the queue and the threads
@@ -242,6 +250,7 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
           std::cerr << "File " << pos_args[i] << " not found.\n";
           return false;
         }
+        pos_args[i] = pos_args[i].insert(0,"file://");
       }
     }
   }
