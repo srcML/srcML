@@ -26,6 +26,11 @@
 */
 
 #include <srcml_consume.hpp>
+#include <srcml.h>
+#include <thread_queue.hpp>
+#include <parse_request.hpp>
+#include <src_input_libarchive.hpp>
+#include <boost/thread.hpp>
 
 boost::mutex mtx;
 

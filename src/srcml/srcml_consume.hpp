@@ -28,12 +28,6 @@
 #ifndef SRCML_CONSUME_HPP
 #define SRCML_CONSUME_HPP
 
-#include <srcml.h>
-#include <thread_queue.hpp>
-#include <parse_request.hpp>
-#include <src_input_libarchive.hpp>
-#include <boost/thread.hpp>
-
 void * srcml_consume(void * arg);
 
 #endif

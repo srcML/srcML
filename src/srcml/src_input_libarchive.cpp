@@ -26,6 +26,11 @@
 */
 
 #include <src_input_libarchive.hpp>
+#include <iostream>
+#include <archive.h>
+#include <archive_entry.h>
+#include <boost/filesystem.hpp>
+
 
 // Set the options for libarchive to process input files
 void setupLibArchive(archive* a) {

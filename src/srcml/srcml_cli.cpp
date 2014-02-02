@@ -25,6 +25,7 @@
 */
 
 #include <srcml_cli.hpp>
+#include <boost/program_options.hpp>
 
 namespace prog_opts = boost::program_options;
 

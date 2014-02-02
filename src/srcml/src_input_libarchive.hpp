@@ -29,15 +29,10 @@
 #define SRC_INPUT_LIBARCHIVE_HPP
 
 #include <srcml.h>
-#include <archive.h>
-#include <archive_entry.h>
-#include <boost/filesystem.hpp>
-
 #include <parse_request.hpp>
 #include <thread_queue.hpp>
-
 #include <string>
-#include <iostream>
+
 
 typedef ThreadQueue<ParseRequest, 10> ParseQueue;
 
