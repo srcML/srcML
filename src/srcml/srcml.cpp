@@ -86,18 +86,19 @@ int main(int argc, char * argv[]) {
   if (!checkLocalFiles(srcml_request.positional_args))
     return 1;
 
-  // long info
+  // show srcml long info
   if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
     display_info(srcml_request.positional_args, SRCML_COMMAND_LONGINFO);
     return 0;
   }
 
-  // info
+  // show srcml info
   if (srcml_request.command & SRCML_COMMAND_INFO) {
     display_info(srcml_request.positional_args, SRCML_COMMAND_INFO);
     return 0; 
   }
 
+  // list filenames in srcml archive
   if (srcml_request.command & SRCML_COMMAND_LIST) {
     list_unit_files(srcml_request.positional_args);
     return 0;
