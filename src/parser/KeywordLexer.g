@@ -386,6 +386,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         // Qt
         { "signals"      , SIGNAL        , LANGUAGE_CXX_ONLY }, 
+        { "foreach"      , FOREACH       , LANGUAGE_CXX_ONLY }, 
         { "forever"      , FOREVER       , LANGUAGE_CXX_ONLY }, 
 
         // add all C++ specific keywords to the literals table

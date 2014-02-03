@@ -679,7 +679,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         if_statement | { !isoption(parseoptions, OPTION_NESTIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
-        while_statement | for_statement | do_statement | foreach_statement | forever_statement | 
+        while_statement | for_statement | do_statement | foreach_statement | forever_statement |
 
         // jump statements
         return_statement | break_statement | continue_statement | goto_statement |
@@ -1553,7 +1553,7 @@ for_statement[] { ENTRY_DEBUG } :
         }
 ;
 
-// start of foreach statement (C#)
+// start of foreach statement (C#/Qt)
 foreach_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement after the for group
@@ -1565,7 +1565,10 @@ foreach_statement[] { ENTRY_DEBUG } :
         FOREACH
         {
             // statement with nested statement after the for group
-            startNewMode(MODE_EXPECT | MODE_FOR_GROUP);
+            if(inLanguage(LANGUAGE_JAVA))
+                startNewMode(MODE_EXPECT | MODE_FOR_GROUP);
+            else
+                startNewMode(MODE_EXPECT | MODE_FOR_GROUP | MODE_END_AT_COMMA);
         }
 ;
 
@@ -2784,8 +2787,18 @@ comma[] { ENTRY_DEBUG } :
             // comma in a variable initialization end init of current variable
             if (inMode(MODE_IN_INIT))
                 endMode(MODE_IN_INIT);
+
         }
         comma_marked
+        {
+            if(inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA)) {
+
+                startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
+                startNoSkipElement(SDECLARATION_RANGE);
+
+            }
+        }
+
 ;
 
 // marking comma operator

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="foreach" filename="qt_foreach">
+
+<unit>
+<foreach>foreach (<init><expr><name>i</name></expr>,<range> <expr><name>b</name></expr></range></init>)
+<empty_stmt>;</empty_stmt></foreach>
+</unit>
+
+<unit>
+<foreach>foreach (<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)
+<empty_stmt>;</empty_stmt></foreach>
+</unit>
+
+<unit>
+<foreach>foreach(<init><decl><type><name>int</name></type> <name>element</name>,<range> <expr><call><name><name>fibarray</name>.<name>array</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)<empty_stmt>;</empty_stmt></foreach>
+</unit>
+
+<unit>
+<foreach>foreach (<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt></foreach>
+</unit>
+
+<unit>
+<foreach>foreach (<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)
+<block>{
+}</block></foreach>
+</unit>
+
+<unit>
+<foreach>foreach (<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)
+<block>{
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+}</block></foreach>
+</unit>
+
+</unit>
