@@ -164,6 +164,7 @@ LANGUAGE_JAVA specifier_java
 LANGUAGE_JAVA foreach
 LANGUAGE_JAVA enum_java
 LANGUAGE_JAVA import_java
+LANGUAGE_JAVA assert_java
 
 LANGUAGE_OO catch_form
 LANGUAGE_OO try
