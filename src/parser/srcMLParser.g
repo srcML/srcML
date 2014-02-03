@@ -501,6 +501,7 @@ tokens {
     SEXTENDS;
     SIMPORT;
     SPACKAGE;
+    SASSERT;
     SINTERFACE;
     SSYNCHRONIZED_STATEMENT;
 
@@ -693,7 +694,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         typedef_statement |
 
         // Java - keyword only detected for Java
-        import_statement | package_statement |
+        import_statement | package_statement | assert_statement | 
 
         // C# - keyword only detected for C#
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
@@ -1808,6 +1809,18 @@ package_statement[] { ENTRY_DEBUG } :
             startElement(SPACKAGE);
         }
         PACKAGE
+;
+
+// package statement
+assert_statement[] { ENTRY_DEBUG } :
+        {
+            // statement with a possible expression
+            startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT);
+
+            // start the return statement
+            startElement(SASSERT);
+        }
+        ASSERT
 ;
 
 // return statement
