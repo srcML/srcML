@@ -452,6 +452,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 	    { "|"             , BAR           , LANGUAGE_JAVA }, 
 	    { "@"             , ATSIGN        , LANGUAGE_JAVA }, 
 	    { "null"          , NULLLITERAL   , LANGUAGE_JAVA }, 
+	    { "instanceof"    , OPERATORS     , LANGUAGE_JAVA }, 
 
 
         // add all C# specific keywords to the literals table
