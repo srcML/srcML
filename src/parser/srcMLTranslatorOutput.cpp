@@ -164,7 +164,7 @@ namespace {
 
   // Qt
   ELEMENT_MAP(SSIGNAL_ACCESS,           "signals")
-  ELEMENT_MAP(SFOREVER,           "forever")
+  ELEMENT_MAP(SFOREVER_STATEMENT,       "forever")
 
   ELEMENT_MAP(SMEMBER_INITIALIZATION_LIST, "member_list")
   ELEMENT_MAP(SCONSTRUCTOR_DEFINITION, "constructor")
@@ -227,7 +227,7 @@ namespace {
   ELEMENT_MAP(SIMPLEMENTS,             "implements")
   ELEMENT_MAP(SIMPORT,                 "import")
   ELEMENT_MAP(SPACKAGE,                "package")
-  ELEMENT_MAP(SASSERT,                 "assert")
+  ELEMENT_MAP(SASSERT_STATEMENT,       "assert")
   ELEMENT_MAP(SSYNCHRONIZED_STATEMENT, "synchronized")
   ELEMENT_MAP(SINTERFACE,              "class")
 

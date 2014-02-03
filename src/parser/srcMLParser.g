@@ -466,7 +466,7 @@ tokens {
 
     // Qt
 	SSIGNAL_ACCESS;
-    SFOREVER;
+    SFOREVER_STATEMENT;
 
     // cpp directive internal elements
 	SCPP_DIRECTIVE;
@@ -504,7 +504,7 @@ tokens {
     SEXTENDS;
     SIMPORT;
     SPACKAGE;
-    SASSERT;
+    SASSERT_STATEMENT;
     SINTERFACE;
     SSYNCHRONIZED_STATEMENT;
 
@@ -679,7 +679,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         if_statement | { !isoption(parseoptions, OPTION_NESTIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
-        while_statement | for_statement | do_statement | foreach_statement |
+        while_statement | for_statement | do_statement | foreach_statement | forever_statement | 
 
         // jump statements
         return_statement | break_statement | continue_statement | goto_statement |
@@ -1492,6 +1492,21 @@ while_statement[] { ENTRY_DEBUG } :
         WHILE
 ;
 
+// Qt forever statement
+forever_statement[] { ENTRY_DEBUG } :
+        {
+            // statement with nested statement (after condition)
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            // start the while element
+            startElement(SFOREVER_STATEMENT);
+
+            // expect a condition to follow the keyword
+            //startNewMode(MODE_CONDITION | MODE_EXPECT);
+        }
+        FOREVER
+;
+
 // do while statement
 do_statement[] { ENTRY_DEBUG } :
         {
@@ -1821,7 +1836,7 @@ assert_statement[] { ENTRY_DEBUG } :
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
 
             // start the return statement
-            startElement(SASSERT);
+            startElement(SASSERT_STATEMENT);
         }
         ASSERT
 ;
