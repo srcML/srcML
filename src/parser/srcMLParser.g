@@ -797,8 +797,10 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         sole_destop |
 
         // labels to goto
-        { secondtoken == COLON/* || LA(1) == MACRO_LABEL*/ }?
+        { secondtoken == COLON }?
         label_statement |
+
+        macro_label_statement |
 
         // extern block as opposed to enum as part of declaration
         { stmt_type == NONE }?
@@ -5739,7 +5741,19 @@ label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the label element
             startElement(SLABEL_STATEMENT);
         }
-        (identifier/* | macro_label_call*/) COLON
+        identifier COLON
+;
+
+// a label
+macro_label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT);
+
+            // start the label element
+            startElement(SLABEL_STATEMENT);
+        }
+        macro_label_call COLON
 ;
 
 // typedef
