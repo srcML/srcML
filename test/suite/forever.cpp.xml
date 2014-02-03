@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="forever" filename="forever">
+
+<unit>
+<forever>forever <expr_stmt><expr><name>b</name></expr>;</expr_stmt></forever>
+</unit>
+
+<unit>
+<forever>forever <empty_stmt>;</empty_stmt></forever>
+</unit>
+
+<unit>
+<forever>forever <expr_stmt><expr>2</expr>;</expr_stmt></forever>
+</unit>
+
+<unit>
+<forever>forever <expr_stmt><expr><name>c</name></expr>;</expr_stmt></forever>
+</unit>
+
+<unit>
+<forever>forever <block>{ <expr_stmt><expr><name>b</name> = <name>c</name></expr>;</expr_stmt> }</block></forever>
+</unit>
+
+<unit>
+<forever>forever <expr_stmt><expr><name>a</name></expr>, <expr><name>b</name></expr>;</expr_stmt></forever>
+</unit>
+
+<unit>
+<forever>forever <block>{}</block></forever>
+</unit>
+
+<unit>
+<forever>forever  
+  <forever>forever 
+    <empty_stmt>;</empty_stmt></forever></forever>
+</unit>
+
+</unit>
