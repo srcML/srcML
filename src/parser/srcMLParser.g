@@ -462,8 +462,11 @@ tokens {
     SDECLTYPE;
     SLAMBDA_CAPTURE;
     SNOEXCEPT;
-	SSIGNAL_ACCESS;
     STYPENAME;
+
+    // Qt
+	SSIGNAL_ACCESS;
+    SFOREVER;
 
     // cpp directive internal elements
 	SCPP_DIRECTIVE;

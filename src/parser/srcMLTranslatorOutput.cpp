@@ -161,7 +161,10 @@ namespace {
   ELEMENT_MAP(SPRIVATE_ACCESS,          "private")
   ELEMENT_MAP(SPRIVATE_ACCESS_DEFAULT,  "private")
   ELEMENT_MAP(SPROTECTED_ACCESS,        "protected")
+
+  // Qt
   ELEMENT_MAP(SSIGNAL_ACCESS,           "signals")
+  ELEMENT_MAP(SFOREVER,           "forever")
 
   ELEMENT_MAP(SMEMBER_INITIALIZATION_LIST, "member_list")
   ELEMENT_MAP(SCONSTRUCTOR_DEFINITION, "constructor")
