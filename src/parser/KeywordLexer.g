@@ -362,7 +362,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         { "asm"          , ASM           , LANGUAGE_C_FAMILY }, 
 
-        { "goto"         , GOTO          , LANGUAGE_C_FAMILY }, 
+        { "goto"         , GOTO          , LANGUAGE_ALL }, 
         { "sizeof"       , SIZEOF        , LANGUAGE_C_FAMILY }, 
 
         { "mutable"      , MUTABLE       , LANGUAGE_CXX }, 
