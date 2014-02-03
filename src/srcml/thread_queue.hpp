@@ -30,6 +30,7 @@ class ThreadQueue {
 public:
     ThreadQueue() : qsize(0), back(0), front(0) {}
 
+    /* puts an element in the back of the queue by swapping with parameter */
     void push(Type& value) {
         {
             boost::unique_lock<boost::mutex> lock(mutex);
@@ -43,13 +44,14 @@ public:
         cond_empty.notify_all();
     }
 
-    void pop(Type& place) {
+    /* removes the front element from the queue by swapping with parameter */
+    void pop(Type& value) {
         {
             boost::unique_lock<boost::mutex> lock(mutex);
             while (qsize == 0)
                 cond_empty.wait(lock);
 
-            place.swap(buffer[front]);
+            value.swap(buffer[front]);
             ++front %= Capacity;
             --qsize;
         }
@@ -57,12 +59,7 @@ public:
     }
 
     int size() {
-        int size;
-        {
-            boost::unique_lock<boost::mutex> lock(mutex);
-            size = qsize;
-        }
-        return size;
+        return qsize;
     }
 
     ~ThreadQueue() {}
