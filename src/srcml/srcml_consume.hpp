@@ -1,7 +1,7 @@
 /*
   srcml_consume.hpp
 
-  Copyright (C) 2004-2013  SDML (www.srcML.org)
+  Copyright (C) 2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -28,6 +28,8 @@
 #ifndef SRCML_CONSUME_HPP
 #define SRCML_CONSUME_HPP
 
-void * srcml_consume(void * arg);
+#include <src_input_libarchive.hpp>
+
+void* srcml_consume(ParseQueue* queue);
 
 #endif

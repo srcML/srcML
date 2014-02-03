@@ -36,6 +36,7 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <boost/filesystem.hpp>
+#include <boost/thread.hpp>
 
 #include <stdio.h>
 #include <unistd.h>
@@ -161,9 +162,9 @@ int main(int argc, char * argv[]) {
   // setup the parsequeue and consuming threads
   ParseQueue queue;
   const int NUM_THREADS = 4;
-  pthread_t writer[NUM_THREADS];
+  boost::thread_group writers;
   for (int i = 0; i < NUM_THREADS; ++i)
-      pthread_create(&writer[i], 0, srcml_consume, &queue);
+      writers.create_thread( boost::bind(srcml_consume, &queue) );
 
   // setup a request
   ParseRequest request;
@@ -193,12 +194,13 @@ int main(int argc, char * argv[]) {
       src_input_libarchive(queue, srcml_arch, request, input_file.substr(prefixPos+2), srcml_request.language);
   }
   
-  // end the queue and the threads
+  // end the queue
   ParseRequest NullParseRequest;
   for (int i = 0; i < NUM_THREADS; ++i)
       queue.push(NullParseRequest);
-  for (int i = 0; i < NUM_THREADS; ++i)
-      pthread_join(writer[i], NULL);
+
+  // end the threads
+  writers.join_all();
 
   // close the created srcML archive
   srcml_close_archive(srcml_arch);

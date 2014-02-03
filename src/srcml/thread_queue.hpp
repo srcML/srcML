@@ -41,7 +41,7 @@ public:
             ++back %= Capacity;
             ++qsize;
         }
-        cond_empty.notify_all();
+        cond_empty.notify_one();
     }
 
     /* removes the front element from the queue by swapping with parameter */
@@ -55,7 +55,7 @@ public:
             ++front %= Capacity;
             --qsize;
         }
-        cond_full.notify_all();
+        cond_full.notify_one();
     }
 
     int size() {
