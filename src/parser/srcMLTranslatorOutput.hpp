@@ -55,7 +55,6 @@ public:
                           std::string * suri = 0
         );
 
-    void setMacroList(std::vector<std::string> list);
 
     static bool checkEncoding(const char* encoding);
 
@@ -87,8 +86,6 @@ private:
 
     void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer);
 
-    std::vector<std::string> user_macro_list;
-
     // List of element names
     static const char* const ElementNames[];
     static int ElementPrefix[];
@@ -101,7 +98,6 @@ public:
     // token handlers
     void processAccess(const antlr::RefToken& token);
     void processToken(const antlr::RefToken& token);
-    void processMacroList(const antlr::RefToken& token);
     void processBlockCommentStart(const antlr::RefToken& token);
     void processJavadocCommentStart(const antlr::RefToken& token);
     void processDoxygenCommentStart(const antlr::RefToken& token);

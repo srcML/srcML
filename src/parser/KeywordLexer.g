@@ -129,6 +129,9 @@ tokens {
 
     // macro
     MACRO_TYPE_NAME;
+    MACRO_CASE;
+    MACRO_LABEL;
+    MACRO_SPECIFIER;
 
     // specifiers that are not needed for parsing
     /*
@@ -157,11 +160,13 @@ tokens {
 	PUBLIC;
 	PRIVATE;
 	PROTECTED;
-	SIGNAL;
+    SIGNAL;
     VIRTUAL;
 	FRIEND;
 	OPERATOR;
     EXPLICIT;
+
+    FOREVER;
 
     // namespaces
 	NAMESPACE;
@@ -194,6 +199,7 @@ tokens {
     NATIVE;
     STRICTFP;
     NULLLITERAL;
+    ASSERT;
 
     // C# tokens
     FOREACH;
@@ -273,12 +279,22 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
        setLine(getLine() + (1 << 16));
     setTokenObjectFactory(srcMLToken::factory);
 
+#define ADD_MACRO_LITERAL(token, type) \
+    if(user_macro_list.at(i + 1) == type) { \
+        literals[user_macro_list.at(i).c_str()] = token; \
+        continue; \
+    }
+
     // @todo check for exception
-    for (std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); i += 2)
-        if(user_macro_list.at(i + 1) == "src:macro")
-            literals[user_macro_list.at(i).c_str()] = MACRO_NAME;
-        else if(user_macro_list.at(i + 1) == "src:name")
-            literals[user_macro_list.at(i).c_str()] = MACRO_TYPE_NAME;
+    for (std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); i += 2) {
+        ADD_MACRO_LITERAL(MACRO_NAME, "src:macro")
+        ADD_MACRO_LITERAL(MACRO_TYPE_NAME, "src:name")
+        ADD_MACRO_LITERAL(MACRO_CASE, "src:case")
+        ADD_MACRO_LITERAL(MACRO_LABEL, "src:label")
+        ADD_MACRO_LITERAL(MACRO_SPECIFIER, "src:specifier")
+    }
+
+#undef ADD_MACRO_LITERAL
 
     keyword keyword_map[] = {
         // common keywords
@@ -348,7 +364,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         { "asm"          , ASM           , LANGUAGE_C_FAMILY }, 
 
-        { "goto"         , GOTO          , LANGUAGE_C_FAMILY }, 
+        { "goto"         , GOTO          , LANGUAGE_ALL }, 
         { "sizeof"       , SIZEOF        , LANGUAGE_C_FAMILY }, 
 
         { "mutable"      , MUTABLE       , LANGUAGE_CXX }, 
@@ -365,9 +381,13 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "public"       , PUBLIC        , LANGUAGE_OO }, 
         { "private"      , PRIVATE       , LANGUAGE_OO }, 
         { "protected"    , PROTECTED     , LANGUAGE_OO }, 
-        { "signals"      , SIGNAL        , LANGUAGE_CXX_ONLY }, 
 
         { "new"          , NEW           , LANGUAGE_OO }, 
+
+        // Qt
+        { "signals"      , SIGNAL        , LANGUAGE_CXX_ONLY }, 
+        { "foreach"      , FOREACH       , LANGUAGE_CXX_ONLY }, 
+        { "forever"      , FOREVER       , LANGUAGE_CXX_ONLY }, 
 
         // add all C++ specific keywords to the literals table
         // class
@@ -439,6 +459,8 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 	    { "|"             , BAR           , LANGUAGE_JAVA }, 
 	    { "@"             , ATSIGN        , LANGUAGE_JAVA }, 
 	    { "null"          , NULLLITERAL   , LANGUAGE_JAVA }, 
+	    { "instanceof"    , OPERATORS     , LANGUAGE_JAVA }, 
+	    { "assert"        , ASSERT        , LANGUAGE_JAVA }, 
 
 
         // add all C# specific keywords to the literals table

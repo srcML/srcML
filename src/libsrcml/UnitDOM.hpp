@@ -27,6 +27,9 @@
 
 #include <ProcessUnit.hpp>
 
+#include <string>
+#include <vector>
+
 class UnitDOM : public ProcessUnit {
 public :
 
@@ -169,12 +172,18 @@ public :
                               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                               const xmlChar** attributes) {
 
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+    if(pstate->isarchive && strcmp((const char *)localname, "macro-list") == 0) return;
     xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
   }
 
   // build end element nodes in unit tree
   virtual void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+    if(pstate->isarchive && strcmp((const char *)localname, "macro-list") == 0) return;
     xmlSAX2EndElementNs(ctx, localname, prefix, URI);
   }
 

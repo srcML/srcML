@@ -332,7 +332,6 @@ options {
 tokens {
     // entire source file
     SUNIT;
-    SMACRO_LIST;
 
     // First token used for boundary
     START_ELEMENT_TOKEN;
@@ -463,8 +462,11 @@ tokens {
     SDECLTYPE;
     SLAMBDA_CAPTURE;
     SNOEXCEPT;
-	SSIGNAL_ACCESS;
     STYPENAME;
+
+    // Qt
+	SSIGNAL_ACCESS;
+    SFOREVER_STATEMENT;
 
     // cpp directive internal elements
 	SCPP_DIRECTIVE;
@@ -502,6 +504,7 @@ tokens {
     SEXTENDS;
     SIMPORT;
     SPACKAGE;
+    SASSERT_STATEMENT;
     SINTERFACE;
     SSYNCHRONIZED_STATEMENT;
 
@@ -584,12 +587,6 @@ public:
     void startUnit() {
         startElement(SUNIT);
         emptyElement(SUNIT);
-    }
-
-    void macroList() {
-
-        emptyElement(SMACRO_LIST);
-        
     }
 
     // sets to the current token in the output token stream
@@ -682,7 +679,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         if_statement | { !isoption(parseoptions, OPTION_NESTIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
-        while_statement | for_statement | do_statement | foreach_statement |
+        while_statement | for_statement | do_statement | foreach_statement | forever_statement |
 
         // jump statements
         return_statement | break_statement | continue_statement | goto_statement |
@@ -700,7 +697,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         typedef_statement |
 
         // Java - keyword only detected for Java
-        import_statement | package_statement |
+        import_statement | package_statement | assert_statement | 
 
         // C# - keyword only detected for C#
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
@@ -806,6 +803,8 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         // labels to goto
         { secondtoken == COLON }?
         label_statement |
+
+        macro_label_statement |
 
         // extern block as opposed to enum as part of declaration
         { stmt_type == NONE }?
@@ -1493,6 +1492,21 @@ while_statement[] { ENTRY_DEBUG } :
         WHILE
 ;
 
+// Qt forever statement
+forever_statement[] { ENTRY_DEBUG } :
+        {
+            // statement with nested statement (after condition)
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            // start the while element
+            startElement(SFOREVER_STATEMENT);
+
+            // expect a condition to follow the keyword
+            //startNewMode(MODE_CONDITION | MODE_EXPECT);
+        }
+        FOREVER
+;
+
 // do while statement
 do_statement[] { ENTRY_DEBUG } :
         {
@@ -1539,7 +1553,7 @@ for_statement[] { ENTRY_DEBUG } :
         }
 ;
 
-// start of foreach statement (C#)
+// start of foreach statement (C#/Qt)
 foreach_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement after the for group
@@ -1551,7 +1565,10 @@ foreach_statement[] { ENTRY_DEBUG } :
         FOREACH
         {
             // statement with nested statement after the for group
-            startNewMode(MODE_EXPECT | MODE_FOR_GROUP);
+            if(inLanguage(LANGUAGE_JAVA))
+                startNewMode(MODE_EXPECT | MODE_FOR_GROUP);
+            else
+                startNewMode(MODE_EXPECT | MODE_FOR_GROUP | MODE_END_AT_COMMA);
         }
 ;
 
@@ -1774,7 +1791,7 @@ switch_case[] { ENTRY_DEBUG } :
             // expect an expression ended by a colon
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_DETECT_COLON);
         }
-        CASE
+        (CASE | MACRO_CASE)
 ;
 
 // default treated as a statement
@@ -1813,6 +1830,18 @@ package_statement[] { ENTRY_DEBUG } :
             startElement(SPACKAGE);
         }
         PACKAGE
+;
+
+// package statement
+assert_statement[] { ENTRY_DEBUG } :
+        {
+            // statement with a possible expression
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the return statement
+            startElement(SASSERT_STATEMENT);
+        }
+        ASSERT
 ;
 
 // return statement
@@ -2758,8 +2787,18 @@ comma[] { ENTRY_DEBUG } :
             // comma in a variable initialization end init of current variable
             if (inMode(MODE_IN_INIT))
                 endMode(MODE_IN_INIT);
+
         }
         comma_marked
+        {
+            if(inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA)) {
+
+                startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
+                startNoSkipElement(SDECLARATION_RANGE);
+
+            }
+        }
+
 ;
 
 // marking comma operator
@@ -3905,7 +3944,9 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
             { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP | TRANSIENT) |
 
-            CONST
+            CONST |
+
+            MACRO_SPECIFIER
         )
 ;
 
@@ -4219,97 +4260,109 @@ catch[antlr::RecognitionException] {
             emptyElement(SERROR_PARSE);
 }
 
-// handle macro list/pattern name by itself
-macro_pattern_name[]  { SingleElement element(this); ENTRY_DEBUG } :
+// do a macro call.
+macro_pattern_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
 
+            // start the macro call element
+            startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
             startElement(SNAME);
 
         }
+
         MACRO_NAME
+        { endMode(); }
+        macro_call_argument_list
+
 ;
 
 // do a macro call.
-macro_pattern_call[] { ENTRY_DEBUG } :
-
-        macro_pattern_call_inner
-/*        {
-            if (inMode(MODE_THEN) && LA(1) == ELSE)
-                endMode(MODE_THEN);
-        }
-*/
-;
-
-// inner part of call
-macro_pattern_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
+macro_type_name_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
 
             // start the macro call element
             startElement(SMACRO_CALL);
-        }
-        macro_pattern_name
-        (options { greedy = true; } : { first }?
-        {
-            // start a mode for the macro argument list
-            startNewMode(MODE_LIST | MODE_TOP);
 
-            // start the argument list
-            startElement(SARGUMENT_LIST);
-        }
-        LPAREN
-        macro_call_contents
-        {
-            // end anything started inside of the macro argument list
-            endDownToMode(MODE_LIST | MODE_TOP);
-        }
-        RPAREN
-        {
-            // end the macro argument list
-            endMode(MODE_LIST | MODE_TOP);
-        } 
-        set_bool[first, false] )*
-;
-exception
-catch[antlr::RecognitionException] {
-
-        // no end found to macro
-        if (isoption(parseoptions, OPTION_DEBUG))
-            emptyElement(SERROR_PARSE);
-}
-
-// handle macro list/pattern name by itself
-macro_type_name[]  { SingleElement element(this); ENTRY_DEBUG } :
-        {
-
+            startNewMode(MODE_LOCAL);
             startElement(SNAME);
 
         }
+
         MACRO_TYPE_NAME
+        { endMode(); }
+        macro_call_argument_list
+
 ;
+
 
 // do a macro call.
-macro_type_name_call[] { ENTRY_DEBUG } :
-
-        macro_type_name_call_inner
-/*        {
-            if (inMode(MODE_THEN) && LA(1) == ELSE)
-                endMode(MODE_THEN);
-        }
-*/
-;
-
-// inner part of call
-macro_type_name_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
+macro_case_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
 
             // start the macro call element
             startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
         }
-        macro_type_name
+
+        MACRO_CASE
+        { endMode(); }
+        macro_call_argument_list
+
+;
+
+// do a macro call.
+macro_label_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
+        {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
+
+            // start the macro call element
+            startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
+        }
+
+        MACRO_LABEL
+        { endMode(); }
+        macro_call_argument_list
+
+;
+
+// do a macro call.
+macro_specifier_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
+        {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
+
+            // start the macro call element
+            startElement(SMACRO_CALL);
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
+        }
+
+        MACRO_SPECIFIER
+        { endMode(); }
+        macro_call_argument_list
+
+;
+
+// handle the actual macro call
+macro_call_argument_list[] { bool first = true; ENTRY_DEBUG } :
         (options { greedy = true; } : { first }?
         {
             // start a mode for the macro argument list
@@ -4328,8 +4381,7 @@ macro_type_name_call_inner[] { CompleteElement element(this); bool first = true;
         {
             // end the macro argument list
             endMode(MODE_LIST | MODE_TOP);
-        } 
-        set_bool[first, false] )*
+        } set_bool[first, false] )*
 ;
 exception
 catch[antlr::RecognitionException] {
@@ -5744,6 +5796,18 @@ label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
             startElement(SLABEL_STATEMENT);
         }
         identifier COLON
+;
+
+// a label
+macro_label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT);
+
+            // start the label element
+            startElement(SLABEL_STATEMENT);
+        }
+        macro_label_call COLON
 ;
 
 // typedef

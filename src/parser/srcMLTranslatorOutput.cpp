@@ -59,9 +59,6 @@ namespace {
   ELEMENT_MAP(DOXYGEN_COMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
   ELEMENT_MAP(LINE_DOXYGEN_COMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
 
-  // user defined macro list tag
-  ELEMENT_MAP(SMACRO_LIST, "macro-list")
-
   // No op
   ELEMENT_MAP(SNOP, "")
 
@@ -164,7 +161,10 @@ namespace {
   ELEMENT_MAP(SPRIVATE_ACCESS,          "private")
   ELEMENT_MAP(SPRIVATE_ACCESS_DEFAULT,  "private")
   ELEMENT_MAP(SPROTECTED_ACCESS,        "protected")
+
+  // Qt
   ELEMENT_MAP(SSIGNAL_ACCESS,           "signals")
+  ELEMENT_MAP(SFOREVER_STATEMENT,       "forever")
 
   ELEMENT_MAP(SMEMBER_INITIALIZATION_LIST, "member_list")
   ELEMENT_MAP(SCONSTRUCTOR_DEFINITION, "constructor")
@@ -223,12 +223,13 @@ namespace {
   ELEMENT_MAP(SERROR_MODE,    "mode")
 
   // Java elements
-  ELEMENT_MAP(SEXTENDS,       "extends")
-  ELEMENT_MAP(SIMPLEMENTS,    "implements")
-  ELEMENT_MAP(SIMPORT,        "import")
-  ELEMENT_MAP(SPACKAGE,       "package")
+  ELEMENT_MAP(SEXTENDS,                "extends")
+  ELEMENT_MAP(SIMPLEMENTS,             "implements")
+  ELEMENT_MAP(SIMPORT,                 "import")
+  ELEMENT_MAP(SPACKAGE,                "package")
+  ELEMENT_MAP(SASSERT_STATEMENT,       "assert")
   ELEMENT_MAP(SSYNCHRONIZED_STATEMENT, "synchronized")
-  ELEMENT_MAP(SINTERFACE,     "class")
+  ELEMENT_MAP(SINTERFACE,              "class")
 
   // special characters
   ELEMENT_MAP(SATTRIBUTE,   "attribute")
@@ -339,11 +340,6 @@ srcMLTranslatorOutput::srcMLTranslatorOutput(TokenStream* ints,
 
 srcMLTranslatorOutput::~srcMLTranslatorOutput() {
 }
-
-void srcMLTranslatorOutput::setMacroList(std::vector<std::string> list) {
-  user_macro_list = list;
-}
-
 
 void srcMLTranslatorOutput::setTokenStream(TokenStream& ints) {
 
@@ -549,8 +545,12 @@ void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, con
   }
 
   // leave space for nested unit
-  if (outer && isoption(OPTION_ARCHIVE))
+  if (outer && isoption(OPTION_ARCHIVE)) {
+
+    outputMacroList();
     processText("\n\n", 2);
+
+  }
 
   ++depth;
 }
@@ -592,23 +592,6 @@ void srcMLTranslatorOutput::processToken(const antlr::RefToken& token) {
     xmlTextWriterEndElement(xout);
     --openelementcount;
   }
-}
-
-void srcMLTranslatorOutput::processMacroList(const antlr::RefToken& token) {
-
-  if(!isoption(OPTION_MACRO_LIST)) return;
-
-  const char* s = token2name(token);
-
-  for(std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); i += 2) {
-
-    xmlTextWriterStartElement(xout, BAD_CAST s);
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "token", BAD_CAST user_macro_list[i].c_str());
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST user_macro_list[i + 1].c_str());
-    xmlTextWriterEndElement(xout);
-
-  }
-
 }
 
 void srcMLTranslatorOutput::processJavadocCommentStart(const antlr::RefToken& token) {
