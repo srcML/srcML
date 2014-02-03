@@ -3731,6 +3731,30 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
        )
 ;
 
+// name including template argument list
+simple_name_optional_template_optional_specifier[] { CompleteElement element(this); TokenPosition tp; bool is_nop = true; ENTRY_DEBUG } :
+        {
+            // local mode that is automatically ended by leaving this function
+            startNewMode(MODE_LOCAL);
+
+            // start outer name
+            startElement(SCNAME);
+
+            // record the name token so we can replace it if necessary
+            setTokenPosition(tp);
+        }
+        push_namestack (template_specifier { is_nop = false; })* identifier
+            ({ inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) }?
+            template_argument_list { is_nop = false; })*
+
+            {
+                // set the token to NOP since we did not find a template argument list
+                if(is_nop)
+                    tp.setType(SNOP);
+            }
+
+;
+
 // an identifier
 identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
@@ -3841,7 +3865,8 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
-            (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
+//            (template_specifier { iscompound = true; })*
+            (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main)
             (options { greedy = true; } : { look_past_three(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
         )*
 
@@ -3947,6 +3972,15 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             MACRO_SPECIFIER
         )
+;
+
+// match a single word specifier
+template_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        TEMPLATE
+
 ;
 
 // C++11 specifier
@@ -5550,7 +5584,7 @@ template_declaration[] { ENTRY_DEBUG } :
             // start the template
             startElement(STEMPLATE);
         }
-        (template_specifier)* TEMPLATE
+        (template_extern_specifier)* TEMPLATE
         {
             if(LA(1) == CLASS)
                 startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
@@ -5560,7 +5594,7 @@ template_declaration[] { ENTRY_DEBUG } :
 ;
 
 // template specifiers
-template_specifier{ SingleElement element(this); ENTRY_DEBUG } :
+template_extern_specifier{ SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }

@@ -125,4 +125,12 @@
 <template>template <parameter_list>&lt;<param><type><template>template <parameter_list>&lt;<param><type><name>class</name></type> =<init> <name>float</name></init></param>&gt;</parameter_list></template> <name>class</name></type> <name>T</name></param>&gt;</parameter_list> <class_decl>class <name>A</name>;</class_decl></template>
 </unit>
 
+<unit>
+<expr_stmt><expr><call><name><name>a</name>.<name><specifier>template</specifier> <name>f</name><argument_list>&lt;<argument><expr><name>double</name></expr></argument>&gt;</argument_list></name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>ImplTypeIterator</name></type> <name>it</name> =<init> <expr><call><name><name>m_impl</name>.<name><specifier>template</specifier> <name>find</name><argument_list>&lt;<argument><expr><name>ValueType</name></expr></argument>, <argument><expr><name>Translator</name></expr></argument>&gt;</argument_list></name></name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
 </unit>
