@@ -1,19 +1,23 @@
 /*
-  c-pthread-queue - c implementation of a bounded buffer queue using posix threads
-  Copyright (C) 2008  Matthew Dickinson
+  srcml.cpp
 
-  This program is free software: you can redistribute it and/or modify
+  Copyright (C) 2013  SDML (www.srcML.org)
+
+  This file is part of the srcML Toolkit.
+
+  The srcML Toolkit is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
+  the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  The srcML Toolkit is distributed in the hope that it will be useful,
+n  but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
 
   You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  along with the srcML Toolkit; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include <boost/thread.hpp>
@@ -24,55 +28,53 @@
 template <typename Type, int Capacity>
 class ThreadQueue {
 public:
-    ThreadQueue() :
-        used(0), back_index(0), front_index(0) {}
+    ThreadQueue() : qsize(0), back(0), front(0) {}
 
     void push(Type& value) {
         {
-            boost::unique_lock<boost::mutex> lock(mutexb);
-            while (used == Capacity)
-                cond_fullb.wait(lock);
+            boost::unique_lock<boost::mutex> lock(mutex);
+            while (qsize == Capacity)
+                cond_full.wait(lock);
 
-            buffer[back_index].swap(value);
-            ++back_index;
-            back_index %= Capacity;
-            ++used;
+            buffer[back].swap(value);
+            ++back %= Capacity;
+            ++qsize;
         }
-        cond_emptyb.notify_all();
+        cond_empty.notify_all();
     }
 
     void pop(Type& place) {
         {
-            boost::unique_lock<boost::mutex> lock(mutexb);
-            while (used == 0)
-                cond_emptyb.wait(lock);
-            place.swap(buffer[front_index]);
-            ++front_index;
-            front_index %= Capacity;
-            --used;
+            boost::unique_lock<boost::mutex> lock(mutex);
+            while (qsize == 0)
+                cond_empty.wait(lock);
+
+            place.swap(buffer[front]);
+            ++front %= Capacity;
+            --qsize;
         }
-        cond_fullb.notify_all();
+        cond_full.notify_all();
     }
 
     int size() {
-        int tsize;
+        int size;
         {
-            boost::unique_lock<boost::mutex> lock(mutexb);
-            tsize = used;
+            boost::unique_lock<boost::mutex> lock(mutex);
+            size = qsize;
         }
-        return tsize;
+        return size;
     }
 
     ~ThreadQueue() {}
 
 private:
     Type buffer[Capacity];
-    int used;
-    int back_index;
-    int front_index;
-    boost::mutex mutexb;
-    boost::condition_variable cond_fullb;
-    boost::condition_variable cond_emptyb;
+    int qsize;
+    int back;
+    int front;
+    boost::mutex mutex;
+    boost::condition_variable cond_full;
+    boost::condition_variable cond_empty;
 };
 
 #endif
