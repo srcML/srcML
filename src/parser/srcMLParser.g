@@ -3802,7 +3802,7 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
-            (TEMPLATE)*
+            (template_specifier { iscompound = true; })*
             (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
             (options { greedy = true; } : { look_past_three(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
         )*
@@ -3907,6 +3907,15 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             CONST
         )
+;
+
+// match a single word specifier
+template_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        TEMPLATE
+
 ;
 
 // C++11 specifier
@@ -5499,7 +5508,7 @@ template_declaration[] { ENTRY_DEBUG } :
             // start the template
             startElement(STEMPLATE);
         }
-        (template_specifier)* TEMPLATE
+        (template_extern_specifier)* TEMPLATE
         {
             if(LA(1) == CLASS)
                 startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
@@ -5509,7 +5518,7 @@ template_declaration[] { ENTRY_DEBUG } :
 ;
 
 // template specifiers
-template_specifier{ SingleElement element(this); ENTRY_DEBUG } :
+template_extern_specifier{ SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
