@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -3708,7 +3708,7 @@ variable_identifier[] { ENTRY_DEBUG } :
 ;
 
 // name including template argument list
-simple_name_optional_template[] { CompleteElement element(this); TokenPosition tp; ENTRY_DEBUG } :
+simple_name_optional_template[] { CompleteElement element(this); TokenPosition tp; bool is_nop = true; ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -3719,14 +3719,17 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
             // record the name token so we can replace it if necessary
             setTokenPosition(tp);
         }
-        push_namestack identifier (
+        push_namestack (template_specifier { is_nop = false; })* identifier 
+
+        (
             { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) }?
             (template_argument_list)=>
                 template_argument_list |
 
             {
-               // set the token to NOP since we did not find a template argument list
-               tp.setType(SNOP);
+              // set the token to NOP since we did not find a template argument list
+              if(is_nop)
+                tp.setType(SNOP);
             }
        )
 ;
@@ -3841,7 +3844,7 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
-            (template_specifier { iscompound = true; })*
+//            (template_specifier)*
             (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
             (options { greedy = true; } : { look_past_three(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
         )*
