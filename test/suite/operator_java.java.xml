@@ -33,5 +33,9 @@
 <expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>&gt;&gt;=</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>instanceof</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
 </unit>
  
