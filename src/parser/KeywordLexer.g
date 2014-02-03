@@ -160,13 +160,12 @@ tokens {
 	PUBLIC;
 	PRIVATE;
 	PROTECTED;
+    SIGNAL;
     VIRTUAL;
 	FRIEND;
 	OPERATOR;
     EXPLICIT;
 
-    // Qt
-    SIGNAL;
     FOREVER;
 
     // namespaces

@@ -2,7 +2,7 @@
 
 import sys
 
-token_sets = ['_tokenSet_1_data_', '_tokenSet_14_data_', '_tokenSet_24_data_']
+token_sets = ['_tokenSet_1_data_', '_tokenSet_13_data_', '_tokenSet_23_data_']
 token_sets_data = [
 
 set(['DO', 'RETURN', 'DEFAULT', 'UNSAFE', 'WHILE', 'EXTERN', 'CASE', 'SWITCH', 'CATCH', 'IMPORT', 'ASM', 'TYPEDEF', 'CHECKED', 'GOTO', 'FOR', 'PACKAGE', 'LOCK', 'NAMESPACE', 'YIELD', 'ELSE', 'TRY', 'FINALLY', 'FOREACH', 'FIXED', 'IF', 'UNCHECKED', 'BREAK', 'CONTINUE', 'TEMPLATE', 'USING', 'THROW', 'ASSERT', 'MACRO_CASE', 'FOREVER']),
