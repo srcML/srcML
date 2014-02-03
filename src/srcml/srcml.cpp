@@ -78,7 +78,7 @@ int main(int argc, char * argv[]) {
 
   // check tabstop
   if (srcml_request.tabs <= 0) {
-    std::cerr << argv[0] << ": invalid tab stop.\n";
+    std::cerr << argv[0] << ": " << srcml_request.tabs << " is invalid tab stop. Tab stops must be 1 or higher.\n";
     return 1; //ERROR CODE TBD
   }
 
@@ -86,13 +86,13 @@ int main(int argc, char * argv[]) {
   if (!checkLocalFiles(srcml_request.positional_args))
     return 1;
 
-  // show srcml long info
+  // srcml long info
   if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
     display_info(srcml_request.positional_args, SRCML_COMMAND_LONGINFO);
     return 0;
   }
 
-  // show srcml info
+  // srcml info
   if (srcml_request.command & SRCML_COMMAND_INFO) {
     display_info(srcml_request.positional_args, SRCML_COMMAND_INFO);
     return 0; 
