@@ -1815,7 +1815,7 @@ package_statement[] { ENTRY_DEBUG } :
 assert_statement[] { ENTRY_DEBUG } :
         {
             // statement with a possible expression
-            startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT);
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
 
             // start the return statement
             startElement(SASSERT);
