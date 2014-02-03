@@ -22,7 +22,6 @@ LANGUAGE_ALL_GEN return
 LANGUAGE_ALL_GEN function_decl 
 LANGUAGE_ALL_GEN ifblock 
 
-LANGUAGE_CXX_FAMILY throw
 LANGUAGE_CXX_FAMILY constructor_explicit 
 LANGUAGE_CXX_FAMILY destructor_virtual
 LANGUAGE_CXX_FAMILY function_const
@@ -56,7 +55,6 @@ LANGUAGE_CXX template
 LANGUAGE_CXX typedef_template
 LANGUAGE_CXX constructor
 LANGUAGE_CXX destructor
-LANGUAGE_CXX throw_base
 LANGUAGE_CXX function_throw
 LANGUAGE_CXX class
 LANGUAGE_CXX function_operator
@@ -97,9 +95,7 @@ LANGUAGE_CSHARP_GEN extern
 LANGUAGE_CSHARP_GEN main
 LANGUAGE_CSHARP_GEN decl_pointer
 LANGUAGE_CSHARP_GEN goto
-LANGUAGE_CSHARP_GEN throw
 LANGUAGE_CSHARP_GEN namespace
-LANGUAGE_CSHARP_GEN throw_base
 LANGUAGE_CSHARP_GEN try
 LANGUAGE_CSHARP_GEN operator
 LANGUAGE_CSHARP_GEN expression_pointer
@@ -171,3 +167,5 @@ LANGUAGE_JAVA enum_java
 LANGUAGE_OO catch_form
 LANGUAGE_OO try
 LANGUAGE_OO specifier_oo
+LANGUAGE_OO throw_base
+LANGUAGE_OO throw
