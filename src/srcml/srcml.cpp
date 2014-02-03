@@ -195,9 +195,7 @@ int main(int argc, char * argv[]) {
   }
   
   // end the queue
-  ParseRequest NullParseRequest;
-  for (int i = 0; i < NUM_THREADS; ++i)
-      queue.push(NullParseRequest);
+  queue.done();
 
   // end the threads
   writers.join_all();

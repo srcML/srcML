@@ -28,7 +28,7 @@ n  but WITHOUT ANY WARRANTY; without even the implied warranty of
 template <typename Type, int Capacity>
 class ThreadQueue {
 public:
-    ThreadQueue() : qsize(0), back(0), front(0) {}
+    ThreadQueue() : qsize(0), back(0), front(0), empty(false) {}
 
     /* puts an element in the back of the queue by swapping with parameter */
     void push(Type& value) {
@@ -48,14 +48,22 @@ public:
     void pop(Type& value) {
         {
             boost::unique_lock<boost::mutex> lock(mutex);
-            while (qsize == 0)
+            while (qsize == 0 && !empty)
                 cond_empty.wait(lock);
-
-            value.swap(buffer[front]);
-            ++front %= Capacity;
-            --qsize;
+            
+            if (qsize == 0 && empty)
+                value.swap(empty_request);
+            else {
+                value.swap(buffer[front]);
+                ++front %= Capacity;
+                --qsize;
+            }
         }
         cond_full.notify_one();
+    }
+
+    void done() {
+        empty = true;
     }
 
     int size() {
@@ -69,6 +77,8 @@ private:
     int qsize;
     int back;
     int front;
+    Type empty_request;
+    bool empty;
     boost::mutex mutex;
     boost::condition_variable cond_full;
     boost::condition_variable cond_empty;

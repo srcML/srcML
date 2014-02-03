@@ -37,8 +37,6 @@ boost::mutex mtx;
 // Public consumption thread function
 void * srcml_consume(ParseQueue* queue) {
 
-    fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-
   while (true) {
     ParseRequest pr;
     queue->pop(pr);
