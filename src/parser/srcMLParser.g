@@ -2791,8 +2791,12 @@ comma[] { ENTRY_DEBUG } :
         }
         comma_marked
         {
-            if(inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
-                startElement(SDECLARATION_RANGE);
+            if(inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA)) {
+
+                startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
+                startNoSkipElement(SDECLARATION_RANGE);
+
+            }
         }
 
 ;
