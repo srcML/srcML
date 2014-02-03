@@ -33,10 +33,9 @@ private :
 
   /** mutex to halt both threads on */
   boost::mutex mutex;
+
   /** sax stop/start condition */
   boost::condition_variable cond;
-  /** calling thread stop/start condition */
-  //pthread_cond_t is_done_cond;
 
   /** collected root language */
   srcml_archive * archive;
@@ -161,7 +160,7 @@ public :
    */
   virtual void startRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                          int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                         const xmlChar ** attributes) {
+                         const xmlChar ** attributes, std::vector<srcMLElement> * meta_tags) {
 
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
