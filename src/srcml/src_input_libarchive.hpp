@@ -36,6 +36,6 @@
 
 typedef ThreadQueue<ParseRequest, 10> ParseQueue;
 
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input, std::string lang);
+void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req, const std::string& input, const std::string& lang);
 
 #endif
