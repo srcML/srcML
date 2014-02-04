@@ -125,7 +125,7 @@ public:
 
     void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer);
 
-    void setMacroList(std::vector<std::string> list);
+    void setMacroList(std::vector<std::string> & list);
     void outputMacroList();
 
     bool isoption(const OPTION_TYPE& options) const;
