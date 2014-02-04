@@ -289,6 +289,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
     for (std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); i += 2) {
         ADD_MACRO_LITERAL(MACRO_NAME, "src:macro")
         ADD_MACRO_LITERAL(MACRO_TYPE_NAME, "src:name")
+        ADD_MACRO_LITERAL(MACRO_TYPE_NAME, "src:type")
         ADD_MACRO_LITERAL(MACRO_CASE, "src:case")
         ADD_MACRO_LITERAL(MACRO_LABEL, "src:label")
         ADD_MACRO_LITERAL(MACRO_SPECIFIER, "src:specifier")
