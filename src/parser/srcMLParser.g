@@ -6444,7 +6444,7 @@ cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG 
 
 // symbol in cpp
 cpp_symbol[] { ENTRY_DEBUG } :
-        simple_identifier
+        cpp_identifier
 ;
 
 cpp_define_name[] { CompleteElement element(this);
@@ -6457,8 +6457,19 @@ cpp_define_name[] { CompleteElement element(this);
 
             startElement(SMACRO_DEFN);
         }
-        simple_identifier (options { greedy = true; } : { line_pos == LT(1)->getLine() && pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
+        cpp_identifier (options { greedy = true; } : { line_pos == LT(1)->getLine() && pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
 ;
+
+// most basic name
+cpp_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+        (
+        NAME | VOID | MACRO_NAME | MACRO_TYPE_NAME | MACRO_CASE | MACRO_LABEL | MACRO_SPECIFIER
+        )
+    ;
+
 
 cpp_define_parameter_list[] { CompleteElement element(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
         {
