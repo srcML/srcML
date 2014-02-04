@@ -61,6 +61,9 @@ private :
   /** indicate if we need to wait on the root */
   bool wait_root;
 
+  /** save meta tags to use when non-archive write unit */
+  std::vector<srcMLElement> * meta_tags;
+
 public :
 
   /** Give access to membeers for srcMLSAX2Reader class */
@@ -278,10 +281,13 @@ public :
 
     }
 
+    this->meta_tags = meta_tags;
+
     // collect meta_data from tags
     for(std::vector<srcMLElement>::size_type i = 0; i < meta_tags->size(); ++i) {
 
       try {
+
 	srcMLElement & element = meta_tags->at(i);
 
 	std::string token;
@@ -388,6 +394,27 @@ public :
 
       write_startTag(localname, prefix, nb_namespaces, namespaces, nb_attributes, attributes);
 
+      if(!is_archive) {
+
+	if(meta_tags->size()) *unit->unit += ">";
+	is_empty = false;
+
+	for(std::vector<srcMLElement>::size_type i = 0; i < meta_tags->size(); ++i) {
+
+
+	  try {
+
+	    srcMLElement & element = meta_tags->at(i);
+	    write_startTag(element.localname, element.prefix, element.nb_namespaces, element.namespaces,
+			   element.nb_attributes, element.attributes);
+	    write_endTag(element.localname, element.prefix, true);
+
+	  } catch(...) { /** @todo handle */ continue; }
+	  
+	}
+
+      }
+ 
     }
 
     if(terminate) stop_parser();
@@ -649,7 +676,7 @@ private :
    *
    * Write out the end tag to the unit string.
    */
-  void write_endTag(const xmlChar * localname, const xmlChar * prefix, bool & is_empty) {
+  void write_endTag(const xmlChar * localname, const xmlChar * prefix, bool is_empty) {
 
     if(is_empty) {
 
