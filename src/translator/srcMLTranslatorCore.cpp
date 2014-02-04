@@ -243,6 +243,7 @@ void srcMLTranslatorCore::translate_separate(const char* unit_directory,
 
   srcMLTranslatorOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, uri, tabsize, output_buffer, 0, suri);
   sep_out.initWriter();
+  sep_out.setMacroList(user_macro_list);
 
   // save old output
   if(isoption(translation_options, OPTION_ARCHIVE))
