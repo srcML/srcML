@@ -382,6 +382,7 @@ struct process_options
 
   
   const char * user_macro_list_filename;
+  std::vector<std::string> user_macro_list;
 
 };
 
@@ -391,7 +392,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
 void src2srcml_dir_top(srcMLTranslator& translator, const char* dname, process_options& poptions);
 void src2srcml_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, const struct stat& outstat);
 void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions);
-void read_macro_list(srcMLTranslator& translator, const char * filename);
+void read_macro_list(srcMLTranslator& translator, process_options & poptions);
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
@@ -449,6 +450,7 @@ int main(int argc, char* argv[]) {
       SVN_INVALID_REVNUM,
 #endif
       0,
+      std::vector<std::string>()
     };
 
   gpoptions = &poptions;
@@ -611,7 +613,7 @@ int main(int argc, char* argv[]) {
                                poptions.tabsize);
 
     if(isoption(options, OPTION_MACRO_LIST))
-       read_macro_list(translator, poptions.user_macro_list_filename);
+       read_macro_list(translator, poptions);
 
     // translate input filenames from list in file
     if (isoption(options, OPTION_FILELIST)) {
@@ -1755,14 +1757,12 @@ void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions) 
   }
 }
 
-void read_macro_list(srcMLTranslator& translator, const char * filename) {
-
-  std::vector<std::string> user_macro_list;
+void read_macro_list(srcMLTranslator& translator, process_options & poptions) {
 
   try {
 
     // get all macro names in line separated file
-    URIStream uriinput(filename);
+    URIStream uriinput(poptions.user_macro_list_filename);
     char* line;
 
     while ((line = uriinput.readline())) {
@@ -1779,28 +1779,28 @@ void read_macro_list(srcMLTranslator& translator, const char * filename) {
       if(split_pos)
 	(*split_pos) = '\0';
 
-      user_macro_list.push_back(line);
+      poptions.user_macro_list.push_back(line);
 
       if(split_pos) {
 
 	line = split_pos + 1;
 	line += strspn(line, " \t\f");
-	user_macro_list.push_back(line);
+	poptions.user_macro_list.push_back(line);
 
       } else {
 
-	user_macro_list.push_back("src:macro");
+	poptions.user_macro_list.push_back("src:macro");
 
       }
 
     }
 
   } catch (URIStreamFileError) {
-    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, filename);
+    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, poptions.user_macro_list_filename);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
 
 
-  translator.setMacroList(user_macro_list);
+  translator.setMacroList(poptions.user_macro_list);
 
 }
