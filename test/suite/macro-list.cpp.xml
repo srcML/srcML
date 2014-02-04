@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="macro-list" filename="macro-list"><macro-list token="MACRO" type="src:macro"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="macro-list" filename="macro-list"><macro-list token="MACRO" type="src:macro"/><macro-list token="NAME" type="src:name"/>
+
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive> <macro_defn><name>MACRO</name><parameter_list>()</parameter_list></macro_defn></cpp:define>
+</unit>
 
 <unit>
 <macro><name>MACRO</name><argument_list>()</argument_list></macro><empty_stmt>;</empty_stmt>
 </unit>
+
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive> <macro_defn><name>NAME</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></macro_defn> <value>name</value></cpp:define>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><macro><name>NAME</name><argument_list>(<argument>A</argument>)</argument_list></macro></type> <name>name</name></decl></decl_stmt>
+</unit
 
 </unit>
