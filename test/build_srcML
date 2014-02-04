@@ -11,8 +11,8 @@ scp fedora20build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora20
 scp fedora19build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora19-64
 scp fedora20build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora20-64
 
-scp suse13build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/OpenSUSE13.1
-scp suse13build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/OpenSUSE13.1-64
+scp suse13build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/openSUSE13.1
+scp suse13build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/openSUSE13.1-64
 
 scp ubuntu10build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu10.04
 scp ubuntu12build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04
