@@ -174,7 +174,7 @@ public :
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
-    if(pstate->isarchive && strcmp((const char *)localname, "macro-list") == 0) return;
+    if(pstate->isarchive && !isoption(options, OPTION_APPLY_ROOT) && strcmp((const char *)localname, "macro-list") == 0) return;
     xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
   }
 
@@ -183,7 +183,7 @@ public :
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
-    if(pstate->isarchive && strcmp((const char *)localname, "macro-list") == 0) return;
+    if(pstate->isarchive && !isoption(options, OPTION_APPLY_ROOT) && strcmp((const char *)localname, "macro-list") == 0) return;
     xmlSAX2EndElementNs(ctx, localname, prefix, URI);
   }
 
