@@ -288,9 +288,9 @@ public :
 	std::string type;
 	for(int i = 0, pos = 0; i < element.nb_attributes; ++i, pos += 5) {
 
-	  std::string attribute = (const char *)attributes[pos];
+	  std::string attribute = (const char *)element.attributes[pos];
 	  std::string value = "";
-	  value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
+	  value.append((const char *)element.attributes[pos + 3], element.attributes[pos + 4] - element.attributes[pos + 3]);
 
 	  if(attribute == "token")
 	    token = value;
