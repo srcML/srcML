@@ -192,6 +192,7 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
   } catch(...) {}
 
   try {
+
     new_archive->user_macro_list.clear();
     for(std::vector<std::string>::size_type i = 0; i < archive->user_macro_list.size(); ++i)
       new_archive->user_macro_list.push_back(archive->user_macro_list.at(i));
@@ -773,7 +774,8 @@ void srcml_read_internal(srcml_archive * archive) {
                                                        archive->attributes, archive->prefixes,
                                                        archive->namespaces,
                                                        archive->options,
-                                                       archive->tabstop);
+                                                       archive->tabstop,
+						       archive->user_macro_list);
   if(!done) {
 
     archive->language = language;
