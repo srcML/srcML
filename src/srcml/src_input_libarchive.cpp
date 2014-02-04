@@ -70,7 +70,7 @@ void setupLibArchive(archive* a) {
 
 // Convert input to a ParseRequest and assign request to the processing queue
 void makeRequest(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req, std::string input_file, std::string lang) {
-  ParseRequest request = req;
+  ParseRequest& request = req;
 
   // libArchive Setup
   archive * arch = archive_read_new();
