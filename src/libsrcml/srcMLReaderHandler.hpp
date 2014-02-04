@@ -396,8 +396,12 @@ public :
 
       if(!is_archive) {
 
-	if(meta_tags->size()) *unit->unit += ">";
-	is_empty = false;
+	if(meta_tags->size()) {
+
+	  *unit->unit += ">";
+	  is_empty = false;
+
+	}
 
 	for(std::vector<srcMLElement>::size_type i = 0; i < meta_tags->size(); ++i) {
 
