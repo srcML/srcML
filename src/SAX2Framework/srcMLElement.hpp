@@ -26,6 +26,7 @@
 
 #include <libxml/parser.h>
 
+#include <string.h>
 #include <string>
 
 /**
