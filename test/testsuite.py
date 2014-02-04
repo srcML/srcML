@@ -106,7 +106,6 @@ def extract_all(src, encoding):
 
         archive = srcml_archive()
         archive.read_open_memory(src)
-        #archive.set_encoding(encoding)
 
         unit = archive.read_unit()
         while unit != None :
@@ -120,7 +119,7 @@ def extract_all(src, encoding):
         all.append(0)
         src_all.append(0)
 
-	return all, src_all
+	return all, src_all, archive
 
 def name2filestr(src_filename):
 	file = open(src_filename).read()
@@ -185,19 +184,14 @@ def src2srcML_executable(text_file, encoding, language, directory, filename, pre
         return safe_communicate(command, text_file)
 
 # find differences of two files
-def src2srcML(text_file, encoding, language, directory, filename, xmlns):
-
-        options = xmlns
-        if language != "Java" :
-                options |= SRCML_OPTION_CPP
+def src2srcML(text_file, encoding, language, directory, filename, read_archive):
 
         if filename == "" :
                 filename = None;
 
-        archive = srcml_archive()
+        archive = read_archive.clone()
 
         archive.write_open_memory()
-        archive.set_options(options)
         unit = srcml_unit(archive)
         unit.set_language(language)
         is_all =  directory.find(".all") 
@@ -471,7 +465,7 @@ try:
                                 if use_exec :
                                         all = string.split(extract_all_executable(filexml), '\0')
                                 else :
-                                        all, src_all = extract_all(filexml, encoding)
+                                        all, src_all, read_archive = extract_all(filexml, encoding)
 
                                 number = len(all) - 1
                                 if use_exec :
@@ -481,8 +475,6 @@ try:
 					xmlns = defaultxmlns(getfullxmlns_executable(filexml))
                                         while len(xmlns) == 0 :
 						xmlns = defaultxmlns(getfullxmlns_executable(filexml))
-                                else :
-                                        xmlns = getfullxmlns(filexml)
 
 				line_count = 0
 				while count == 0 or count < number:
@@ -522,7 +514,7 @@ try:
                                                 if use_exec :
                                                         unitsrcmlraw = src2srcML_executable(unittext, encoding, language, directory, getfilename(unitxml), xmlns)
                                                 else :
-                                                        unitsrcmlraw = src2srcML(unittext, encoding, language, directory, filename, xmlns)
+                                                        unitsrcmlraw = src2srcML(unittext, encoding, language, directory, filename, read_archive)
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw
