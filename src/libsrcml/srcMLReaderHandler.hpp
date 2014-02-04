@@ -278,6 +278,39 @@ public :
 
     }
 
+    // collect meta_data from tags
+    for(std::vector<srcMLElement>::size_type i = 0; i < meta_tags->size(); ++i) {
+
+      try {
+	srcMLElement & element = meta_tags->at(i);
+
+	std::string token;
+	std::string type;
+	for(int i = 0, pos = 0; i < element.nb_attributes; ++i, pos += 5) {
+
+	  std::string attribute = (const char *)attributes[pos];
+	  std::string value = "";
+	  value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
+
+	  if(attribute == "token")
+	    token = value;
+	  else if(attribute == "type")
+	    type = value;
+
+	}
+
+	if(token != "" && type != "") {
+
+	  archive->user_macro_list.push_back(token);
+	  archive->user_macro_list.push_back(type);
+	
+	}	
+
+      } catch(...) { /* @todo actually quit */continue; }
+
+
+    }
+
     // pause 
     {
       boost::unique_lock<boost::mutex> lock(mutex);

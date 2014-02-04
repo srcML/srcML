@@ -599,6 +599,8 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
                                               archive->tabstop,
                                               &archive->prefixes.front());
 
+    archive->translator->setMacroList(archive->user_macro_list);
+
   } catch(...) { return SRCML_STATUS_ERROR; }
 
   return SRCML_STATUS_OK;
@@ -633,6 +635,8 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
                                               archive->version ? archive->version->c_str() : 0,
                                               &archive->prefixes.front(),
                                               archive->tabstop);
+
+    archive->translator->setMacroList(archive->user_macro_list);
 
   } catch(...) { return SRCML_STATUS_ERROR; }
 
@@ -670,6 +674,8 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
                                               0,
                                               archive->tabstop,
                                               &archive->prefixes.front());
+
+    archive->translator->setMacroList(archive->user_macro_list);
 
   } catch(...) { 
 
@@ -712,6 +718,8 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
                                               0,
                                               archive->tabstop,
                                               &archive->prefixes.front());
+
+    archive->translator->setMacroList(archive->user_macro_list);
 
   } catch(...) { 
 

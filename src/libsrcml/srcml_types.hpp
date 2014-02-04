@@ -92,11 +92,15 @@ struct srcml_archive {
 
   /** an array of XML namespace prefixes */
   std::vector<std::string> prefixes;
+
   /** namespaces an array of XML namespaces */
   std::vector<std::string> namespaces;
 
   /** an array of registered extension language pairs */
   std::vector<pair> registered_languages;
+
+  /** an array of user defined macros and their types */
+  std::vector<std::string> user_macro_list;
 
   /** a srcMLTranslator for writing and parsing */
   srcMLTranslator * translator;
