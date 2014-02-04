@@ -3970,7 +3970,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             CONST |
 
-            MACRO_SPECIFIER
+            macro_specifier_call
         )
 ;
 
