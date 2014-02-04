@@ -3744,14 +3744,14 @@ simple_name_optional_template_optional_specifier[] { CompleteElement element(thi
             setTokenPosition(tp);
         }
         push_namestack (template_specifier { is_nop = false; })* identifier
-            (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        template_argument_list { is_nop = false; }) *
-
-            {
-                // set the token to NOP since we did not find a template argument list
-                if(is_nop)
-                    tp.setType(SNOP);
-            }
+    (
+        (template_argument_list)=> template_argument_list | 
+        {
+            // set the token to NOP since we did not find a template argument list
+            if(is_nop)
+                tp.setType(SNOP);
+        }
+    )
 
 ;
 
