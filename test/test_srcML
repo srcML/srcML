@@ -8,8 +8,8 @@ scp ~/Dropbox/srcML/Unix/Fedora20/srcML.tar.gz fedora20test:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora19-64/srcML.tar.gz fedora19test64:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora20-64/srcML.tar.gz fedora20test64:/srcML
 
-scp ~/Dropbox/srcML/Unix/OpenSUSE13.1/srcML.tar.gz suse13test:/srcML
-scp  ~/Dropbox/srcML/Unix/OpenSUSE13.1-64/srcML.tar.gz suse13test64:/srcML
+scp ~/Dropbox/srcML/Unix/openSUSE13.1/srcML.tar.gz suse13test:/srcML
+scp  ~/Dropbox/srcML/Unix/openSUSE13.1-64/srcML.tar.gz suse13test64:/srcML
 
 scp ~/Dropbox/srcML/Unix/Ubuntu10.04/srcML.tar.gz ubuntu10test:/srcML
 scp ~/Dropbox/srcML/Unix/Ubuntu12.04/srcML.tar.gz ubuntu12test:/srcML
