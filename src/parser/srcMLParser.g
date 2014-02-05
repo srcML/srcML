@@ -462,8 +462,11 @@ tokens {
     SDECLTYPE;
     SLAMBDA_CAPTURE;
     SNOEXCEPT;
-	SSIGNAL_ACCESS;
     STYPENAME;
+
+    // Qt
+	SSIGNAL_ACCESS;
+    SFOREVER_STATEMENT;
 
     // cpp directive internal elements
 	SCPP_DIRECTIVE;
@@ -501,6 +504,7 @@ tokens {
     SEXTENDS;
     SIMPORT;
     SPACKAGE;
+    SASSERT_STATEMENT;
     SINTERFACE;
     SSYNCHRONIZED_STATEMENT;
 
@@ -675,7 +679,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         if_statement | { !isoption(parseoptions, OPTION_NESTIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
-        while_statement | for_statement | do_statement | foreach_statement |
+        while_statement | for_statement | do_statement | foreach_statement | forever_statement |
 
         // jump statements
         return_statement | break_statement | continue_statement | goto_statement |
@@ -693,7 +697,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         typedef_statement |
 
         // Java - keyword only detected for Java
-        import_statement | package_statement |
+        import_statement | package_statement | assert_statement | 
 
         // C# - keyword only detected for C#
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
@@ -797,8 +801,10 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         sole_destop |
 
         // labels to goto
-        { secondtoken == COLON || LA(1) == MACRO_LABEL }?
+        { secondtoken == COLON }?
         label_statement |
+
+        macro_label_statement |
 
         // extern block as opposed to enum as part of declaration
         { stmt_type == NONE }?
@@ -1486,6 +1492,21 @@ while_statement[] { ENTRY_DEBUG } :
         WHILE
 ;
 
+// Qt forever statement
+forever_statement[] { ENTRY_DEBUG } :
+        {
+            // statement with nested statement (after condition)
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            // start the while element
+            startElement(SFOREVER_STATEMENT);
+
+            // expect a condition to follow the keyword
+            //startNewMode(MODE_CONDITION | MODE_EXPECT);
+        }
+        FOREVER
+;
+
 // do while statement
 do_statement[] { ENTRY_DEBUG } :
         {
@@ -1532,7 +1553,7 @@ for_statement[] { ENTRY_DEBUG } :
         }
 ;
 
-// start of foreach statement (C#)
+// start of foreach statement (C#/Qt)
 foreach_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement after the for group
@@ -1544,7 +1565,10 @@ foreach_statement[] { ENTRY_DEBUG } :
         FOREACH
         {
             // statement with nested statement after the for group
-            startNewMode(MODE_EXPECT | MODE_FOR_GROUP);
+            if(inLanguage(LANGUAGE_JAVA))
+                startNewMode(MODE_EXPECT | MODE_FOR_GROUP);
+            else
+                startNewMode(MODE_EXPECT | MODE_FOR_GROUP | MODE_END_AT_COMMA);
         }
 ;
 
@@ -1806,6 +1830,18 @@ package_statement[] { ENTRY_DEBUG } :
             startElement(SPACKAGE);
         }
         PACKAGE
+;
+
+// package statement
+assert_statement[] { ENTRY_DEBUG } :
+        {
+            // statement with a possible expression
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the return statement
+            startElement(SASSERT_STATEMENT);
+        }
+        ASSERT
 ;
 
 // return statement
@@ -2751,8 +2787,18 @@ comma[] { ENTRY_DEBUG } :
             // comma in a variable initialization end init of current variable
             if (inMode(MODE_IN_INIT))
                 endMode(MODE_IN_INIT);
+
         }
         comma_marked
+        {
+            if(inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA)) {
+
+                startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
+                startNoSkipElement(SDECLARATION_RANGE);
+
+            }
+        }
+
 ;
 
 // marking comma operator
@@ -3685,6 +3731,30 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
        )
 ;
 
+// name including template argument list
+simple_name_optional_template_optional_specifier[] { CompleteElement element(this); TokenPosition tp; bool is_nop = true; ENTRY_DEBUG } :
+        {
+            // local mode that is automatically ended by leaving this function
+            startNewMode(MODE_LOCAL);
+
+            // start outer name
+            startElement(SCNAME);
+
+            // record the name token so we can replace it if necessary
+            setTokenPosition(tp);
+        }
+        push_namestack (template_specifier { is_nop = false; })* identifier
+    (
+        (template_argument_list)=> template_argument_list | 
+        {
+            // set the token to NOP since we did not find a template argument list
+            if(is_nop)
+                tp.setType(SNOP);
+        }
+    )
+
+;
+
 // an identifier
 identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
@@ -3795,7 +3865,8 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
-            (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
+//            (template_specifier { iscompound = true; })*
+            (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main)
             (options { greedy = true; } : { look_past_three(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
         )*
 
@@ -3901,6 +3972,15 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             MACRO_SPECIFIER
         )
+;
+
+// match a single word specifier
+template_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        TEMPLATE
+
 ;
 
 // C++11 specifier
@@ -5504,7 +5584,7 @@ template_declaration[] { ENTRY_DEBUG } :
             // start the template
             startElement(STEMPLATE);
         }
-        (template_specifier)* TEMPLATE
+        (template_extern_specifier)* TEMPLATE
         {
             if(LA(1) == CLASS)
                 startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
@@ -5514,7 +5594,7 @@ template_declaration[] { ENTRY_DEBUG } :
 ;
 
 // template specifiers
-template_specifier{ SingleElement element(this); ENTRY_DEBUG } :
+template_extern_specifier{ SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
@@ -5739,7 +5819,19 @@ label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the label element
             startElement(SLABEL_STATEMENT);
         }
-        (identifier | macro_label_call) COLON
+        identifier COLON
+;
+
+// a label
+macro_label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT);
+
+            // start the label element
+            startElement(SLABEL_STATEMENT);
+        }
+        macro_label_call COLON
 ;
 
 // typedef

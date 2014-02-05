@@ -33,10 +33,9 @@ private :
 
   /** mutex to halt both threads on */
   boost::mutex mutex;
+
   /** sax stop/start condition */
   boost::condition_variable cond;
-  /** calling thread stop/start condition */
-  //pthread_cond_t is_done_cond;
 
   /** collected root language */
   srcml_archive * archive;
@@ -61,6 +60,9 @@ private :
 
   /** indicate if we need to wait on the root */
   bool wait_root;
+
+  /** save meta tags to use when non-archive write unit */
+  std::vector<srcMLElement> * meta_tags;
 
 public :
 
@@ -161,7 +163,7 @@ public :
    */
   virtual void startRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                          int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                         const xmlChar ** attributes) {
+                         const xmlChar ** attributes, std::vector<srcMLElement> * meta_tags) {
 
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -279,6 +281,42 @@ public :
 
     }
 
+    this->meta_tags = meta_tags;
+
+    // collect meta_data from tags
+    for(std::vector<srcMLElement>::size_type i = 0; i < meta_tags->size(); ++i) {
+
+      try {
+
+	srcMLElement & element = meta_tags->at(i);
+
+	std::string token;
+	std::string type;
+	for(int i = 0, pos = 0; i < element.nb_attributes; ++i, pos += 5) {
+
+	  std::string attribute = (const char *)element.attributes[pos];
+	  std::string value = "";
+	  value.append((const char *)element.attributes[pos + 3], element.attributes[pos + 4] - element.attributes[pos + 3]);
+
+	  if(attribute == "token")
+	    token = value;
+	  else if(attribute == "type")
+	    type = value;
+
+	}
+
+	if(token != "" && type != "") {
+
+	  archive->user_macro_list.push_back(token);
+	  archive->user_macro_list.push_back(type);
+	
+	}	
+
+      } catch(...) { /* @todo actually quit */continue; }
+
+
+    }
+
     // pause 
     {
       boost::unique_lock<boost::mutex> lock(mutex);
@@ -356,6 +394,31 @@ public :
 
       write_startTag(localname, prefix, nb_namespaces, namespaces, nb_attributes, attributes);
 
+      if(!is_archive) {
+
+	if(meta_tags->size()) {
+
+	  *unit->unit += ">";
+	  is_empty = false;
+
+	}
+
+	for(std::vector<srcMLElement>::size_type i = 0; i < meta_tags->size(); ++i) {
+
+
+	  try {
+
+	    srcMLElement & element = meta_tags->at(i);
+	    write_startTag(element.localname, element.prefix, element.nb_namespaces, element.namespaces,
+			   element.nb_attributes, element.attributes);
+	    write_endTag(element.localname, element.prefix, true);
+
+	  } catch(...) { /** @todo handle */ continue; }
+	  
+	}
+
+      }
+ 
     }
 
     if(terminate) stop_parser();
@@ -617,7 +680,7 @@ private :
    *
    * Write out the end tag to the unit string.
    */
-  void write_endTag(const xmlChar * localname, const xmlChar * prefix, bool & is_empty) {
+  void write_endTag(const xmlChar * localname, const xmlChar * prefix, bool is_empty) {
 
     if(is_empty) {
 

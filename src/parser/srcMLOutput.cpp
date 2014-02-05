@@ -289,7 +289,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
   ++depth;
 }
 
-void srcMLOutput::setMacroList(std::vector<std::string> list) {
+void srcMLOutput::setMacroList(std::vector<std::string> & list) {
   user_macro_list = list;
 }
 

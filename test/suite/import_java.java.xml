@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="import" filename="import_java">
+
+<unit>
+<import>import <name>a</name>;</import>
+</unit>
+
+<unit>
+<import>import <name><name>graphics</name>.<name>Rectangle</name></name>;</import>
+</unit>
+
+<unit>
+<import>import <name>graphics</name>.*;</import>
+</unit>
+
+</unit>

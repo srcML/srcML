@@ -213,6 +213,8 @@ void srcMLControlHandler::parse(srcMLHandler * handler) {
 
     xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
 
+    size_t str_length = strlen(ep->message);
+    ep->message[str_length - 1] = '\0';
     SAXError error = { std::string((const char *)ep->message), ep->code };
     throw error;
   }

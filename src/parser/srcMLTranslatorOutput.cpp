@@ -161,7 +161,10 @@ namespace {
   ELEMENT_MAP(SPRIVATE_ACCESS,          "private")
   ELEMENT_MAP(SPRIVATE_ACCESS_DEFAULT,  "private")
   ELEMENT_MAP(SPROTECTED_ACCESS,        "protected")
+
+  // Qt
   ELEMENT_MAP(SSIGNAL_ACCESS,           "signals")
+  ELEMENT_MAP(SFOREVER_STATEMENT,       "forever")
 
   ELEMENT_MAP(SMEMBER_INITIALIZATION_LIST, "member_list")
   ELEMENT_MAP(SCONSTRUCTOR_DEFINITION, "constructor")
@@ -220,12 +223,13 @@ namespace {
   ELEMENT_MAP(SERROR_MODE,    "mode")
 
   // Java elements
-  ELEMENT_MAP(SEXTENDS,       "extends")
-  ELEMENT_MAP(SIMPLEMENTS,    "implements")
-  ELEMENT_MAP(SIMPORT,        "import")
-  ELEMENT_MAP(SPACKAGE,       "package")
+  ELEMENT_MAP(SEXTENDS,                "extends")
+  ELEMENT_MAP(SIMPLEMENTS,             "implements")
+  ELEMENT_MAP(SIMPORT,                 "import")
+  ELEMENT_MAP(SPACKAGE,                "package")
+  ELEMENT_MAP(SASSERT_STATEMENT,       "assert")
   ELEMENT_MAP(SSYNCHRONIZED_STATEMENT, "synchronized")
-  ELEMENT_MAP(SINTERFACE,     "class")
+  ELEMENT_MAP(SINTERFACE,              "class")
 
   // special characters
   ELEMENT_MAP(SATTRIBUTE,   "attribute")

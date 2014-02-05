@@ -114,7 +114,9 @@ switch.cs.xml
 switch.java.xml
 throw.cpp.xml
 throw.cs.xml
+throw.java.xml
 throw_base.cs.xml
+throw_base.java.xml
 try.cs.xml
 try.java.xml
 typedef.c.xml

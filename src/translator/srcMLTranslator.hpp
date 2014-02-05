@@ -98,7 +98,7 @@ public:
                     std::string * suri = 0
         );
 
-    void setMacroList(std::vector<std::string> list);
+    void setMacroList(std::vector<std::string> & list);
 
     void* setInput(const char* path);
     void* setInput(xmlParserInputBufferPtr input);

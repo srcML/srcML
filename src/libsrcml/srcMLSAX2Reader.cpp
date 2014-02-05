@@ -133,7 +133,8 @@ int srcMLSAX2Reader::readRootUnitAttributes(std::string *& language, std::string
                                         std::vector<std::string> & prefixes,
                                         std::vector<std::string> & namespaces,
                                         OPTION_TYPE & options,
-                                        int & tabstop) {
+					int & tabstop,
+					std::vector<std::string> & user_macro_list) {
 
   if(handler.read_root) return 0;
 
@@ -146,6 +147,7 @@ int srcMLSAX2Reader::readRootUnitAttributes(std::string *& language, std::string
   namespaces = handler.archive->namespaces;
   options = handler.archive->options;
   tabstop = handler.archive->tabstop;
+  user_macro_list = handler.archive->user_macro_list;
 
   return 1;
 }
