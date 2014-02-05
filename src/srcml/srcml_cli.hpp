@@ -75,6 +75,7 @@ struct srcml_request_t {
   std::vector<std::string> xpathparam;
   std::string xslt;
   int unit;
+  int max_threads;
   std::vector<std::string> positional_args;
   bool help_set;
   bool directory_set;
