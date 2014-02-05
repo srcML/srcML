@@ -33,8 +33,7 @@
 
 
 // Set the options for libarchive to process input files
-void setupLibArchive(archive* a) {
-  archive * arch = a;
+void setupLibArchive(archive* arch) {
   
   // Configure libarchive supported file formats
   archive_read_support_format_ar(arch);
