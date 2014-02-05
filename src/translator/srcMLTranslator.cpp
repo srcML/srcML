@@ -106,7 +106,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
   translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buf, op, directory, filename, version, uri, tabsize, suri);
 }
 
-void srcMLTranslator::setMacroList(std::vector<std::string> list) {
+void srcMLTranslator::setMacroList(std::vector<std::string> & list) {
   translator->setMacroList(list);
 }
 

@@ -71,7 +71,8 @@ public :
                              std::vector<std::string> & prefixes,
                              std::vector<std::string> & namespaces,
                              OPTION_TYPE & options,
-                             int & tabstop);
+                             int & tabstop,
+			     std::vector<std::string> & user_macro_list);
 
 
   /* finds next unit tag if not current unit and sets attributes.  Consumes unit.

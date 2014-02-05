@@ -11,8 +11,8 @@ scp fedora20build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora20
 scp fedora19build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora19-64
 scp fedora20build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora20-64
 
-scp suse13build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/OpenSUSE13.1
-scp suse13build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/OpenSUSE13.1-64
+scp suse13build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/openSUSE13.1
+scp suse13build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/openSUSE13.1-64
 
 scp ubuntu10build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu10.04
 scp ubuntu12build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04
@@ -24,17 +24,15 @@ scp ubuntu12build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04-6
 ./sshall.py --fedora --build --20 'bash -c "chown -R srcml:srcml /srcML"'
 scp fedora20build:/srcML/dist/srcML*.zip ~/Dropbox/srcML/Windows
 
-cd ~/Dropbox/srcML/Windows; unzip -ouq srcML-Win.zip
-cd
+bash -c "cd ~/Dropbox/srcML/Windows; unzip -ouq srcML-Win.zip;"
 
-cd srcML; git pull
-cd
+bash -c "cd ~/srcML; git pull"
 
-cd srcML/dist; make clean; make;
+bash -c "cd ~/srcML/dist; make clean; make;"
 
-man srcML/src2srcml.1.gz | man2html > srcML/src2srcml.html
-man srcML/srcml2src.1.gz | man2html > srcML/srcml2src.html
+bash -c "man ~/srcML/dist/srcML/src2srcml.1.gz | man2html > ~/srcML/dist/srcML/src2srcml.html"
+bash -c "man ~/srcML/dist/srcML/srcml2src.1.gz | man2html > ~/srcML/dist/srcML/srcml2src.html"
 
-tar czf srcML.tar.gz srcML
-cp *.tar.gz ~/Dropbox/srcML/Unix/OSX
-cd
+bash -c "tar czf ~/srcML.tar.gz ~/srcML"
+bash -c "cp ~/srcML/dist/*.tar.gz ~/Dropbox/srcML/Unix/OSX"
+

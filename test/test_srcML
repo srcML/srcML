@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ./sshall.py --test 'bash -c "cd /srcML; git pull; cd ..; chown -R srcml:srcml /srcML"'
+ssh root@osx 'bash -c "cd /srcML; git pull; cd ..; chown -R srcml:staff /srcML"'
 
 scp ~/Dropbox/srcML/Unix/Fedora19/srcML.tar.gz fedora19test:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora20/srcML.tar.gz fedora20test:/srcML
@@ -8,8 +9,8 @@ scp ~/Dropbox/srcML/Unix/Fedora20/srcML.tar.gz fedora20test:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora19-64/srcML.tar.gz fedora19test64:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora20-64/srcML.tar.gz fedora20test64:/srcML
 
-scp ~/Dropbox/srcML/Unix/OpenSUSE13.1/srcML.tar.gz suse13test:/srcML
-scp  ~/Dropbox/srcML/Unix/OpenSUSE13.1-64/srcML.tar.gz suse13test64:/srcML
+scp ~/Dropbox/srcML/Unix/openSUSE13.1/srcML.tar.gz suse13test:/srcML
+scp  ~/Dropbox/srcML/Unix/openSUSE13.1-64/srcML.tar.gz suse13test64:/srcML
 
 scp ~/Dropbox/srcML/Unix/Ubuntu10.04/srcML.tar.gz ubuntu10test:/srcML
 scp ~/Dropbox/srcML/Unix/Ubuntu12.04/srcML.tar.gz ubuntu12test:/srcML
@@ -17,7 +18,7 @@ scp ~/Dropbox/srcML/Unix/Ubuntu12.04/srcML.tar.gz ubuntu12test:/srcML
 scp ~/Dropbox/srcML/Unix/Ubuntu10.04-64/srcML.tar.gz ubuntu10test64:/srcML
 scp ~/Dropbox/srcML/Unix/Ubuntu12.04-64/srcML.tar.gz ubuntu12test64:/srcML
 
-cp ~/Dropbox/srcML/Unix/OSX/srcML.tar.gz ~/srcML
+scp ~/Dropbox/srcML/Unix/OSX/srcML.tar.gz osx:/srcML
 
 ./sshall.py --test 'bash -c "cd /srcML; tar xvf srcML.tar.gz; mkdir -p bin; cp srcML/* bin/"'
 ./sshall.py --test 'bash -c "cd /srcML/test/; rm -f srcMLTestReport*; make clean; cd suite; make; cd ..; ./testsuite.py \-\-exec"'
@@ -25,18 +26,10 @@ cp ~/Dropbox/srcML/Unix/OSX/srcML.tar.gz ~/srcML
 #./sshall.py --test 'bash -c "rm -rf /srcML/bin; mkdir /srcML/bin; cp /srcML/srcML/libsrcml.so /srcML/bin"'
 #./sshall.py --test 'bash -c "export SRC2SRCML=\"/srcML/srcML/src2srcml\"; export SRCML2SRC=\"/srcML/srcML/srcml2src\"; cd /srcML/test/; rm -f srcMLTestReport*; make clean; make; ./testsuite"'
 
-cd srcML
-git pull
-tar xvf srcML.tar.gz
-export SRC2SRCML="../srcML/src2srcml"
-export SRCML2SRC="../srcML/srcml2src"
-#rm -rf bin; mkdir bin; cp srcML/libsrcml.dylib bin
+ssh root@osx 'bash -c "cd /srcML; tar xvf srcML.tar.gz; mkdir -p bin; cp srcML/* bin/"'
 
-cd test/
-rm -f srcMLTestReport*
-#make clean; make
-cd suite; make; cd ..
-./testsuite.py --exec
+ssh root@osx 'bash -c "cd /srcML/test/; rm -f srcMLTestReport*; make clean; cd suite; make; cd ..; ./testsuite.py --exec"'
+
 
 ~/sshall.py --test 'bash -c "grep -a \"Errors:\" /srcML/test/srcMLTestReport*"'
-grep -a "Errors:" srcMLTestReport*
+ssh root@osx 'bash -c "grep -a "Errors:" /srcML/test/srcMLTestReport*"'

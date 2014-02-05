@@ -24,86 +24,12 @@
 #define INCLUDED_SAX2SRCMLHANDLER_HPP
 
 #include <srcMLHandler.hpp>
+#include <srcMLElement.hpp>
 
 #include <libxml/parser.h>
 
 #include <string>
-
-/**
- * Element
- *
- * Data structure to hold an element
- * mainly root element
- */
-struct Element {
-
-  /** Default constructor to Zero out Element */
-  Element() : localname(0), prefix(0), URI(0),
-              nb_namespaces(0), namespaces(0),
-              nb_attributes(0), nb_defaulted(0),
-              attributes(0) 
-  {}
-
-  ~Element() {
-
-    if(namespaces) {
-
-      for(int i = 0; i < nb_namespaces * 2; ++i)
-	if(namespaces[i] && namespaces[i] != prefix && namespaces[i] != URI)
-	  free((void *)namespaces[i]);
-
-      free((void *)namespaces);
-    }
-
-    if(localname) free((void *)localname);
-    if(prefix) free((void *)prefix);
-    if(URI) free((void *)URI);
-
-    if(attributes) {
-
-      for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
-	if(attributes[index])
-	  free((void *)attributes[index]);
-	if(attributes[index + 1])
-	  free((void *)attributes[index + 1]);
-	if(attributes[index + 2])
-	  free((void *)attributes[index + 2]);
-	free((void *)attributes[index + 3]);
-      }
-
-      free((void *)attributes);
-
-    }
-
-  }
-
-  /** local name of an element*/
-  const xmlChar* localname;
-
-  /** prefix of an element*/
-  const xmlChar* prefix;
-
-  /** URI of an element*/
-  const xmlChar* URI;
-
-  /** number of namespaces on an element*/
-  int nb_namespaces;
-
-  /** namespaces on an element*/
-  const xmlChar** namespaces;
-
-  /** number of attributes on an element*/
-  int nb_attributes;
-
-  /** number of defaulted on an element*/
-  int nb_defaulted;
-
-  /** attributes of an element*/
-  const xmlChar** attributes;
-
-  std::string characters;
-
-};
+#include <vector>
 
 /**
  * SAX2srcMLHandler
@@ -117,7 +43,10 @@ struct SAX2srcMLHandler {
   srcMLHandler * process;
 
   /** temporary storage for root unit */
-  Element root;
+  srcMLElement root;
+
+  /** temporary storage for meta data */
+  std::vector<srcMLElement> meta_tags;
 
   /** used to detect root unit */
   bool is_archive;

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="assert" filename="assert_java">
+
+
+<unit>
+<assert>assert <expr><name>a</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr>(<name>a</name>)</expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr>1</expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr>1.</expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr>10.</expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr>1.2</expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr>10.20</expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>a</name> + <name>b</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr>*<name>a</name> = <name>b</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>a</name> - <name>b</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>a</name> &lt; <name>b</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>a</name> &gt; <name>b</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>a</name> + <call><name>f</name><argument_list>()</argument_list></call></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>a</name> ? <name>b</name> : <name>c</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>a</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>b</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name><name>a</name><index>[<expr>1 + 1 - 1 * 1 &amp; 1 % 1 ! 1 ~ 1 &lt; 1 &gt; 1 &lt;= 1 &gt;= 1 == 1 != 1 / 1 | 1 || 1 &amp;&amp; 1 ? 1 : 1</expr>]</index></name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr>1 + 1 - 1 * 1 &amp; 1 % 1 ! 1 ~ 1 &lt; 1 &gt; 1 &lt;= 1 &gt;= 1 == 1 != 1 / 1 | 1 || 1 &amp;&amp; 1 ? 1 : 1</expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>, <argument><expr><name>d</name></expr></argument>)</argument_list></call></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>c</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>d</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name><name>a</name><index>[<expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>, <argument><expr><name>d</name></expr></argument>)</argument_list></call></expr>]</index></name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>, <argument><expr><name>d</name></expr></argument>)</argument_list></call></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>c</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>d</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>tmp</name> &amp;= <name>f</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>tmp</name> *= <name>f</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name><name>base</name>.<name>a</name></name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name><name>this</name>.<name>a</name></name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>num</name> = <name>value</name></expr>;</assert>
+</unit>
+
+<unit>
+<assert>assert <expr><name>L</name> + <name>U</name> + <name>u</name> + <name>R</name>
+  + <name>u8</name> + <name>LR</name> + <name>UR</name> + <name>uR</name> + <name>u8R</name>
+  + <name>LRFoo</name> + <name>URFoo</name> + <name>uRFoo</name> + <name>u8RFoo</name> + <name>RFoo</name></expr>;</assert>
+</unit>
+
+
+<unit>
+<assert>assert;</assert>
+</unit>
+
+</unit>

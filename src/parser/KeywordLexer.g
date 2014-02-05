@@ -160,11 +160,13 @@ tokens {
 	PUBLIC;
 	PRIVATE;
 	PROTECTED;
-	SIGNAL;
+    SIGNAL;
     VIRTUAL;
 	FRIEND;
 	OPERATOR;
     EXPLICIT;
+
+    FOREVER;
 
     // namespaces
 	NAMESPACE;
@@ -197,6 +199,7 @@ tokens {
     NATIVE;
     STRICTFP;
     NULLLITERAL;
+    ASSERT;
 
     // C# tokens
     FOREACH;
@@ -361,7 +364,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         { "asm"          , ASM           , LANGUAGE_C_FAMILY }, 
 
-        { "goto"         , GOTO          , LANGUAGE_C_FAMILY }, 
+        { "goto"         , GOTO          , LANGUAGE_ALL }, 
         { "sizeof"       , SIZEOF        , LANGUAGE_C_FAMILY }, 
 
         { "mutable"      , MUTABLE       , LANGUAGE_CXX }, 
@@ -378,9 +381,13 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "public"       , PUBLIC        , LANGUAGE_OO }, 
         { "private"      , PRIVATE       , LANGUAGE_OO }, 
         { "protected"    , PROTECTED     , LANGUAGE_OO }, 
-        { "signals"      , SIGNAL        , LANGUAGE_CXX_ONLY }, 
 
         { "new"          , NEW           , LANGUAGE_OO }, 
+
+        // Qt
+        { "signals"      , SIGNAL        , LANGUAGE_CXX_ONLY }, 
+        { "foreach"      , FOREACH       , LANGUAGE_CXX_ONLY }, 
+        { "forever"      , FOREVER       , LANGUAGE_CXX_ONLY }, 
 
         // add all C++ specific keywords to the literals table
         // class
@@ -452,6 +459,8 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 	    { "|"             , BAR           , LANGUAGE_JAVA }, 
 	    { "@"             , ATSIGN        , LANGUAGE_JAVA }, 
 	    { "null"          , NULLLITERAL   , LANGUAGE_JAVA }, 
+	    { "instanceof"    , OPERATORS     , LANGUAGE_JAVA }, 
+	    { "assert"        , ASSERT        , LANGUAGE_JAVA }, 
 
 
         // add all C# specific keywords to the literals table

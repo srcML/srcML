@@ -191,6 +191,14 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
   } catch(...) {}
 
+  try {
+
+    new_archive->user_macro_list.clear();
+    for(std::vector<std::string>::size_type i = 0; i < archive->user_macro_list.size(); ++i)
+      new_archive->user_macro_list.push_back(archive->user_macro_list.at(i));
+
+  } catch(...) {}
+
   return new_archive;
 
 }
@@ -586,6 +594,9 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
   if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_ERROR;
 
   archive->type = SRCML_ARCHIVE_WRITE;
+
+  if(archive->user_macro_list.size()) archive->options |= OPTION_MACRO_LIST;
+
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -598,6 +609,7 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
                                               0, 
                                               archive->tabstop,
                                               &archive->prefixes.front());
+    archive->translator->setMacroList(archive->user_macro_list);
 
   } catch(...) { return SRCML_STATUS_ERROR; }
 
@@ -621,6 +633,9 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
   if(archive == NULL || buffer == NULL || size == NULL) return SRCML_STATUS_ERROR;
 
   archive->type = SRCML_ARCHIVE_WRITE;
+
+  if(archive->user_macro_list.size()) archive->options |= OPTION_MACRO_LIST;
+
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -633,6 +648,8 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
                                               archive->version ? archive->version->c_str() : 0,
                                               &archive->prefixes.front(),
                                               archive->tabstop);
+
+    archive->translator->setMacroList(archive->user_macro_list);
 
   } catch(...) { return SRCML_STATUS_ERROR; }
 
@@ -658,6 +675,9 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
   if(output_buffer == NULL) return SRCML_STATUS_ERROR;
 
   archive->type = SRCML_ARCHIVE_WRITE;
+
+  if(archive->user_macro_list.size()) archive->options |= OPTION_MACRO_LIST;
+
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -670,6 +690,8 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
                                               0,
                                               archive->tabstop,
                                               &archive->prefixes.front());
+
+    archive->translator->setMacroList(archive->user_macro_list);
 
   } catch(...) { 
 
@@ -700,6 +722,9 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
   if(output_buffer == NULL) return SRCML_STATUS_ERROR;
 
   archive->type = SRCML_ARCHIVE_WRITE;
+
+  if(archive->user_macro_list.size()) archive->options |= OPTION_MACRO_LIST;
+
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -712,6 +737,8 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
                                               0,
                                               archive->tabstop,
                                               &archive->prefixes.front());
+
+    archive->translator->setMacroList(archive->user_macro_list);
 
   } catch(...) { 
 
@@ -747,7 +774,8 @@ void srcml_read_internal(srcml_archive * archive) {
                                                        archive->attributes, archive->prefixes,
                                                        archive->namespaces,
                                                        archive->options,
-                                                       archive->tabstop);
+                                                       archive->tabstop,
+						       archive->user_macro_list);
   if(!done) {
 
     archive->language = language;
