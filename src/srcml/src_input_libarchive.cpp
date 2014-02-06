@@ -85,18 +85,14 @@ void makeRequest(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req
   bool stdin = input_file.compare("-") == 0;
 
   while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
-    std::string entry_name = archive_entry_pathname(arch_entry);
-    std::string filename = "";
+    std::string filename = archive_entry_pathname(arch_entry);
     /* 
       The header path for a standard file is just "data".
       That needs to be swapped out with the actual file name from the 
       CLI arg.
     */
-    if (entry_name.compare("data") == 0 && !stdin)
-      filename = input_file.c_str();
-
-    if (entry_name.compare("data") != 0 && !stdin)
-      filename = entry_name.c_str();
+    if (filename.compare("data") == 0 && !stdin)
+      filename = input_file;
 
     if (!stdin) {
       const char * language = (lang.compare("xml") == 0) ?  lang.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str());
