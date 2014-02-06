@@ -161,7 +161,7 @@ int main(int argc, char * argv[]) {
 
   // setup the parsequeue and consuming threads
   ParseQueue queue;
-  const int NUM_THREADS = 4;
+  const int NUM_THREADS = srcml_request.max_threads;
   boost::thread_group writers;
   for (int i = 0; i < NUM_THREADS; ++i)
       writers.create_thread( boost::bind(srcml_consume, &queue) );

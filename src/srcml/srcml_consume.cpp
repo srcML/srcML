@@ -77,5 +77,4 @@ void * srcml_consume(ParseQueue* queue) {
       srcml_free_archive(arch);
     }
   }
-  return 0;
 }
