@@ -24,7 +24,7 @@
 #include "srcmlapps.hpp"
 #include <algorithm>
 #include <boost/regex.hpp>
-#include <regex.h>
+//#include <regex.h>
 
 bool Language::use_cpp_for_c = false;
 

@@ -30,7 +30,7 @@
 #include <time.h>
 #include <algorithm>
 
-#ifdef __MINGW32__
+#if defined(__MINGW32__) || defined(LIBSRCML_COMPILER_IS_MSVC)
 #include <io.h>
 #endif
 
@@ -141,7 +141,13 @@ void* archiveWriteRootOpen(const char * URI) {
     // save the root URI
     archive_data.root_filename = URI;
 
-    archive_data.isstdout = archive_data.root_filename == "-" && isatty(STDOUT_FILENO);
+    archive_data.isstdout = archive_data.root_filename == "-" && isatty(
+    #ifdef LIBSRCML_COMPILER_IS_MSVC
+        _fileno(stdout)
+    #else
+        STDOUT_FILENO
+    #endif
+    );
 
     return 0;
 }
