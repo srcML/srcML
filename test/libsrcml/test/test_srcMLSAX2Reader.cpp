@@ -437,6 +437,7 @@ int main() {
 
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
@@ -457,6 +458,7 @@ int main() {
 
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
@@ -477,6 +479,7 @@ int main() {
 
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
     dassert(reader.readRootUnitAttributes(language, filename, directory,
