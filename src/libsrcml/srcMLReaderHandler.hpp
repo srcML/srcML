@@ -77,6 +77,8 @@ public :
   srcMLReaderHandler() : unit(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), terminate(false), is_empty(false), wait_root(true) {
 
     archive = srcml_create_archive();
+    archive->prefixes.clear();
+    archive->namespaces.clear();
 
   }
 
