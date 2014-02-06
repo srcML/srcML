@@ -378,14 +378,12 @@ int srcMLTranslatorOutput::consume_next() {
   return token->getType();
 }
 
-const char* srcMLTranslatorOutput::token2name(const antlr::RefToken& token) const {
+const char* srcMLTranslatorOutput::token2name(const antlr::RefToken& token) {
 
   return type2name(token->getType());
 }
 
-const char* srcMLTranslatorOutput::type2name(int token_type) const {
-
-  std::string name;
+const char* srcMLTranslatorOutput::type2name(int token_type) {
 
   const char* tagname = ElementNames[token_type];
 
@@ -396,10 +394,10 @@ const char* srcMLTranslatorOutput::type2name(int token_type) const {
   // non-default namespace name
   const char* prefix = convert_num2prefix((int)ElementPrefix[token_type]);
   if (prefix[0] != '\0') {
-     name = prefix;
-     name += ':';
-     name += tagname;
-     return name.c_str();
+     prefix_name = prefix;
+     prefix_name += ':';
+     prefix_name += tagname;
+     return prefix_name.c_str();
   } else
       return tagname;
 }
