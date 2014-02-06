@@ -77,10 +77,9 @@ private:
 
     int consume_next();
 
-    std::string prefix_name;
-    inline const char* type2name(int token_type);
+    inline std::string type2name(int token_type) const;
 
-    inline const char* token2name(const antlr::RefToken& token);
+    inline std::string token2name(const antlr::RefToken& token) const;
 
     void outputToken(const antlr::RefToken& token);
 
