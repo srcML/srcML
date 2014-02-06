@@ -84,7 +84,6 @@ private:
 
     void outputToken(const antlr::RefToken& token);
 
-
     void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer);
 
     // List of element names

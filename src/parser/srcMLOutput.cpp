@@ -33,6 +33,10 @@
 
 #include <cstring>
 #include <sstream>
+#ifdef LIBSRCML_COMPILER_IS_MSVC
+#include <io.h>
+#define snprintf _snprintf
+#endif
 
 enum { SRCML_SRC_NS_URI_POS,
        SRCML_CPP_NS_URI_POS,

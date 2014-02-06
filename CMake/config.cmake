@@ -55,13 +55,13 @@ if(WIN32)
         message(FATAL_ERROR "SVN integration not tested on windows.")
     endif()
     # FIXME
-    set_property(GLOBAL PROPERTY LIBXSLT_LIBS "")
-    set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS "")
-    set_property(GLOBAL PROPERTY LIBXML2_LIBS "")
+    set_property(GLOBAL PROPERTY LIBXSLT_LIBS libxslt.lib libexslt.lib)
+    set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS archive.lib)
+    set_property(GLOBAL PROPERTY LIBXML2_LIBS libxml2.lib iconv.lib)
     include_directories(C:/antlr/277/include)
     set(BOOST_DIR $ENV{BOOST_ROOT})
     include_directories(${BOOST_DIR})
-    include_directories(${BOOST_DIR}/lib)
+    link_directories(${BOOST_DIR}/stage/lib)
 else()
     set(WINDOWS_DEP_PATH "")
     # Locating packages.
@@ -97,9 +97,8 @@ endif()
 set_property(GLOBAL PROPERTY WINDOWS_DEP_PATH ${WINDOWS_DEP_PATH})
 set_property(GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB ${Boost_LIBRARIES})
 
-
 # Locating the antlr library.
-find_library(ANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib C:/antlr/277/lib)
+find_library(ANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
 set_property(GLOBAL PROPERTY ANTLR_LIB ${ANTLR_LIB})
 
 # Finding antlr library.
@@ -157,7 +156,7 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     add_definitions(/DLIBSRCML_COMPILER_IS_MSVC)
     # message(STATUS "MSVC Compiler not completely configured yet")
     set(MSVC_WARNINGS "/W3 ")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} /Ox")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} /Ox /MDd")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} /Ox")
     # message(STATUS "${CMAKE_CXX_FLAGS_RELEASE}")
     # message(STATUS "DEBUGGING Flags${CMAKE_CXX_FLAGS_DEBUG}")
