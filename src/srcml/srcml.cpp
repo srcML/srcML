@@ -308,6 +308,7 @@ void display_info(std::vector<std::string>& pos_args, int info) {
 
         ++numUnits;
         std::string xml = srcml_unit_get_xml(unit);
+        // TODO: What is going on here? You should not have to parse the XML yourself at all.
         std::string unitHead = xml.substr(1,xml.find(">")-1);
         unitHead = unitHead.substr(unitHead.find(" ")+1);
 
