@@ -95,7 +95,12 @@ else()
     include_directories(${Boost_INCLUDE_DIR})
 endif()
 set_property(GLOBAL PROPERTY WINDOWS_DEP_PATH ${WINDOWS_DEP_PATH})
+
+if(NOT WIN32 AND NOT APPLE)
+set_property(GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB ${Boost_LIBRARIES};rt)
+else()
 set_property(GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB ${Boost_LIBRARIES})
+endif()
 
 # Locating the antlr library.
 find_library(ANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
