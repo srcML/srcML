@@ -64,6 +64,7 @@ public:
 
     void done() {
         empty = true;
+        cond_empty.notify_all();
     }
 
     int size() {
