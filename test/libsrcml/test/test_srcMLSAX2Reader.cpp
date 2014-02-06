@@ -146,7 +146,9 @@ int main() {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
+    std::vector<std::string> user_macro_list;
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+				  prefixes, namespaces, options, tabstop, user_macro_list);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
@@ -165,7 +167,8 @@ int main() {
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
-    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+				  prefixes, namespaces, options, tabstop, user_macro_list);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
@@ -192,7 +195,9 @@ int main() {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
+    std::vector<std::string> user_macro_list;
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+				  prefixes, namespaces, options, tabstop, user_macro_list);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
@@ -211,7 +216,8 @@ int main() {
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
-    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+				  prefixes, namespaces, options, tabstop, user_macro_list);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
@@ -238,7 +244,9 @@ int main() {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
+    std::vector<std::string> user_macro_list;
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+				  prefixes, namespaces, options, tabstop, user_macro_list);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
@@ -258,7 +266,8 @@ int main() {
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
-    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+				  prefixes, namespaces, options, tabstop, user_macro_list);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
@@ -286,7 +295,9 @@ int main() {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
+    std::vector<std::string> user_macro_list;
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+				  prefixes, namespaces, options, tabstop, user_macro_list);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
@@ -306,7 +317,8 @@ int main() {
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
-    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+				  prefixes, namespaces, options, tabstop, user_macro_list);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
@@ -334,7 +346,9 @@ int main() {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
+    std::vector<std::string> user_macro_list;
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, 
+				  prefixes, namespaces, options, tabstop, user_macro_list);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
@@ -351,7 +365,8 @@ int main() {
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
-    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, 
+				  prefixes, namespaces, options, tabstop, user_macro_list);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
@@ -376,14 +391,17 @@ int main() {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
+    std::vector<std::string> user_macro_list;
 
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
-    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
-    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
   }
 
   {
@@ -394,14 +412,17 @@ int main() {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
+    std::vector<std::string> user_macro_list;
 
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
-    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
-    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
   }
 
   {
@@ -412,11 +433,16 @@ int main() {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
+    std::vector<std::string> user_macro_list;
 
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
-    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
-    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    reader.readUnitAttributes(language, filename, directory, version);
+    delete language, delete filename, delete directory, delete version;
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
   }
 
   {
@@ -427,11 +453,16 @@ int main() {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
+    std::vector<std::string> user_macro_list;
 
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
-    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
-    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    reader.readUnitAttributes(language, filename, directory, version);
+    delete language, delete filename, delete directory, delete version;
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
   }
 
   {
@@ -442,11 +473,16 @@ int main() {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
+    std::vector<std::string> user_macro_list;
 
     reader.readUnitAttributes(language, filename, directory, version);
     delete language, delete filename, delete directory, delete version;
-    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
-    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    reader.readUnitAttributes(language, filename, directory, version);
+    delete language, delete filename, delete directory, delete version;
+    dassert(reader.readRootUnitAttributes(language, filename, directory,
+					  version, attributes, prefixes, namespaces, options, tabstop, user_macro_list), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
   }
 
   /*
@@ -619,7 +655,9 @@ int main() {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
+    std::vector<std::string> user_macro_list;
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+				  prefixes, namespaces, options, tabstop, user_macro_list);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
@@ -658,7 +696,8 @@ int main() {
     delete unit;
     unit = reader.readsrcML();
     dassert(unit, 0);
-    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
     dassert(reader.readsrcML(), 0);
   }
@@ -671,7 +710,9 @@ int main() {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
+    std::vector<std::string> user_macro_list;
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, 
+				  prefixes, namespaces, options, tabstop, user_macro_list);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
@@ -710,7 +751,8 @@ int main() {
     delete unit;
     unit = reader.readsrcML();
     dassert(unit, 0);
-    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, 
+					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
     dassert(reader.readsrcML(), 0);
   }
@@ -723,7 +765,9 @@ int main() {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
+    std::vector<std::string> user_macro_list;
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, 
+				  prefixes, namespaces, options, tabstop, user_macro_list);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
@@ -752,7 +796,8 @@ int main() {
     std::string * unit = reader.readsrcML();
     dassert(*unit, srcml_single_a);
     delete unit;
-    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
+					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
     dassert(reader.readsrcML(), 0);
   }
@@ -765,7 +810,9 @@ int main() {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
+    std::vector<std::string> user_macro_list;
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, 
+				  prefixes, namespaces, options, tabstop, user_macro_list);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
@@ -794,7 +841,8 @@ int main() {
     std::string * unit = reader.readsrcML();
     dassert(*unit, srcml_empty_single_as_unit);
     delete unit;
-    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, 
+					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
     dassert(reader.readsrcML(), 0);
   }
@@ -807,7 +855,9 @@ int main() {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop);
+    std::vector<std::string> user_macro_list;
+    reader.readRootUnitAttributes(language, filename, directory, version, attributes, 
+				  prefixes, namespaces, options, tabstop, user_macro_list);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
@@ -836,7 +886,8 @@ int main() {
     unit = reader.readsrcML();
     dassert(*unit, srcml_empty_nested_b);
     delete unit;
-    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, prefixes, namespaces, options, tabstop), 0);
+    dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, 
+					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
     dassert(reader.readsrcML(), 0);
   }
