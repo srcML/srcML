@@ -156,6 +156,7 @@ void option_xpath(const std::string& value) {srcml_request.xpath = value; }
 void option_xpathparam(const std::vector<std::string>& values) {srcml_request.xpathparam = values; }
 void option_xslt(const std::string& value) {srcml_request.xslt = value; }
 void option_unit(const int value) {srcml_request.unit = value; }
+void option_max_threads(const int value) {srcml_request.max_threads = value; }
 void positional_args(const std::vector<std::string>& value) {srcml_request.positional_args = value; }
 
 void option_help(const std::string& help_opt) {
@@ -205,6 +206,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
       ("output,o", prog_opts::value<std::string>()->notifier(&option_output)->default_value("-"), "write result ouput to arg which is a FILE or URI")
       ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "suppresses status messages")
       ("src-encoding,t", prog_opts::value<std::string>()->notifier(&option_src_encoding), "set the input source encoding to arg (default:  ISO-8859-1)")
+      ("max-threads", prog_opts::value<int>()->notifier(&option_max_threads)->default_value(1), "set the maximum number of threads srcml can spawn")
       ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")    
       ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "display version number and exit")
       ;
