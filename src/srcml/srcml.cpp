@@ -135,7 +135,7 @@ int main(int argc, char * argv[]) {
   // archive or not
   if (srcml_request.positional_args.size() == 1 && !(srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) {
     boost::filesystem::path inFile (srcml_request.positional_args[0]);
-    if(srcml_request.positional_args[0] == "-" || srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[0].c_str()) || inFile.extension().string() == ".xml")
+    if(srcml_request.positional_args[0] == "-" || srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[0].c_str()) || inFile.extension().compare(".xml") == 0)
       srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
   }
   else {
@@ -294,7 +294,7 @@ void display_info(std::vector<std::string>& pos_args, int info) {
       continue;
 
     // check for an xml file
-    if (localFile.extension().string() == ".xml") {
+    if (localFile.extension().compare(".xml") == 0) {
       std::string filename = "";
       int numUnits = 0;
       srcml_archive* srcml_arch = srcml_create_archive();
