@@ -38,10 +38,10 @@ for arg in sys.argv[1:] :
         background = "true"
         argv.remove(arg)
 
-    elif arg.find("--") != -1 :
+    elif arg.find("--") == 0 :
         options.append(str(arg.lstrip("-")).lower())
         argv.remove(arg)
-    elif arg.find("--") == -1 :
+    else :
         break;
 
 matches = machines[:]
