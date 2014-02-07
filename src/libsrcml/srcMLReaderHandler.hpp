@@ -15,9 +15,11 @@
 
 #include <cstring>
 
+#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
 #include <boost/thread/locks.hpp>
+#pragma GCC diagnostic warning "-Wshorten-64-to-32"
 
 /**
  * srcMLReaderHandler

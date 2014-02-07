@@ -117,11 +117,14 @@
   the input if in C++ mode.  They are matched as NAME in C mode.
 */
 
-header {
+header "pre_include_hpp" {
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 }
 
 // Included in the generated srcMLParser.hpp file after antlr includes
 header "post_include_hpp" {
+
+#pragma GCC diagnostic warning "-Wunused-parameter"
 
 #include <string>
 #include <deque>
