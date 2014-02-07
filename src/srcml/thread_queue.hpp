@@ -20,7 +20,11 @@ n  but WITHOUT ANY WARRANTY; without even the implied warranty of
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <boost/thread.hpp>
+#pragma GCC diagnostic warning "-Wunused-parameter"
+#pragma GCC diagnostic warning "-Wshorten-64-to-32"
 
 #ifndef THREAD_QUEUE_H
 #define THREAD_QUEUE_H
