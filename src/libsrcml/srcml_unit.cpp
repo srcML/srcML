@@ -279,7 +279,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
   int file_lang = Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
   int lang = unit->language ? srcml_check_language(unit->language->c_str()) :
-    (file_lang != Language::LANGUAGE_NONE ? file_lang : srcml_check_language("C++"));
+    (file_lang != Language::LANGUAGE_NONE && file_lang != 0 ? file_lang : srcml_check_language("C++"));
 
 
 

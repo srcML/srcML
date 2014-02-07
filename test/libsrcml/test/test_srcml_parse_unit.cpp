@@ -42,9 +42,14 @@ int main() {
   const std::string src = "a;\n";
   const std::string srcml = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
   const std::string srcml_full = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
-  std::ofstream src_file("project.c");
-  src_file << src;
-  src_file.close();
+
+  std::ofstream src_file_c("project.c");
+  src_file_c << src;
+  src_file_c.close();
+
+  std::ofstream src_file_foo("project.foo");
+  src_file_foo << src;
+  src_file_foo.close();
 
   /*
     srcml_parse_unit_filename
@@ -57,6 +62,22 @@ int main() {
     srcml_unit * unit = srcml_create_unit(archive);
     srcml_parse_unit_filename(unit, "project.c");
     dassert(*unit->unit, srcml);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_write_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_filename(unit, "project");
+    srcml_unit_set_directory(unit, "test");
+    srcml_unit_set_version(unit , "1");
+    srcml_parse_unit_filename(unit, "project.foo");
+    dassert(*unit->unit, srcml_full);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);
@@ -361,6 +382,7 @@ int main() {
   }
 
   unlink("project.c");
+  unlink("project.foo");
   unlink("project.xml");
 
   srcml_cleanup_globals();
