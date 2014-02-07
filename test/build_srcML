@@ -1,5 +1,7 @@
 #!/bin/bash
 
+./sshall.py --build "bash -c \"date --set \\\"$(date)\\\"\""
+
 ./sshall.py --build 'bash -c "cd /srcML; git checkout master; git pull"'
 
 ./sshall.py --build 'bash -c "cd /srcML/dist; make clean; make"'
