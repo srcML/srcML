@@ -45,7 +45,7 @@
 // helper functions
 bool checkLocalFiles(std::vector<std::string>& pos_args);
 bool test_for_stdin();
-void display_info(std::vector<std::string>& pos_args, int info);
+void display_info(std::vector<std::string>& pos_args);
 void list_unit_files(std::vector<std::string>& pos_args);
 
 int main(int argc, char * argv[]) {
@@ -89,13 +89,13 @@ int main(int argc, char * argv[]) {
 
   // srcml long info
   if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
-    display_info(srcml_request.positional_args, SRCML_COMMAND_LONGINFO);
+    display_info(srcml_request.positional_args);
     return 0;
   }
 
   // srcml info
   if (srcml_request.command & SRCML_COMMAND_INFO) {
-    display_info(srcml_request.positional_args, SRCML_COMMAND_INFO);
+    display_info(srcml_request.positional_args);
     return 0; 
   }
 
@@ -260,7 +260,15 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
 // display all files in srcml archive
 void list_unit_files(std::vector<std::string>& pos_args) {
   for (size_t i = 0; i < pos_args.size(); ++i) {
-    boost::filesystem::path localFile (pos_args[i]);
+    
+    std::string inputName;
+    size_t prefixPos = pos_args[i].find("//");
+    
+    if (prefixPos != std::string::npos)
+      inputName = pos_args[i].substr(prefixPos+2);
+
+    
+    boost::filesystem::path localFile (inputName);
     
     // skip any directories
     if (is_directory(localFile))
@@ -268,7 +276,7 @@ void list_unit_files(std::vector<std::string>& pos_args) {
 
     int numUnits = 0;
     srcml_archive* srcml_arch = srcml_create_archive();
-    srcml_read_open_filename(srcml_arch, pos_args[i].c_str());
+    srcml_read_open_filename(srcml_arch, inputName.c_str());
    
     while (true) {
       srcml_unit* unit = srcml_read_unit(srcml_arch);
@@ -285,20 +293,27 @@ void list_unit_files(std::vector<std::string>& pos_args) {
 
 // TODO: Need to show encoding
 // TODO: Need to not show language for archive
-void display_info(std::vector<std::string>& pos_args, int info) {
+void display_info(std::vector<std::string>& pos_args) {
   for (size_t i = 0; i < pos_args.size(); ++i) {
-    boost::filesystem::path localFile (pos_args[i]);
     
+    std::string inputName;
+    size_t prefixPos = pos_args[i].find("//");
+    
+    if (prefixPos != std::string::npos)
+      inputName = pos_args[i].substr(prefixPos+2);
+
+    std::cerr << inputName;
+    boost::filesystem::path localFile (inputName);
+
     // skip any directories
     if (is_directory(localFile))
       continue;
 
     // check for an xml file
     if (localFile.extension().string() == ".xml") {
-      std::string filename = "";
       int numUnits = 0;
       srcml_archive* srcml_arch = srcml_create_archive();
-      srcml_read_open_filename(srcml_arch, pos_args[i].c_str());
+      srcml_read_open_filename(srcml_arch, localFile.c_str());
      
       while (true) {
         srcml_unit* unit = srcml_read_unit(srcml_arch);
@@ -307,29 +322,28 @@ void display_info(std::vector<std::string>& pos_args, int info) {
           break;
 
         ++numUnits;
-        std::string xml = srcml_unit_get_xml(unit);
-        std::string unitHead = xml.substr(1,xml.find(">")-1);
-        unitHead = unitHead.substr(unitHead.find(" ")+1);
 
-        while (true && numUnits <= 1) {
-          size_t pos = unitHead.find(" ");
-          if (pos == std::string::npos)
-            break;
-
-          std::cout << unitHead.substr(0, pos) << "\n";
-          unitHead = unitHead.substr(pos+1);
+        /* Query options of srcml unit */
+        if (srcml_unit_get_language(unit)) {
+          std::cout << "Language: " << srcml_unit_get_language(unit) << "\n";          
+        }
+        
+        if (srcml_unit_get_filename(unit)) {
+          std::cout << "Filename: " << srcml_unit_get_filename(unit) << "\n";
         }
 
-        filename = srcml_unit_get_filename(unit);
+        if (srcml_unit_get_directory(unit)) {
+          std::cout << "Directory: " << srcml_unit_get_directory(unit) << "\n";
+        }
+        
+        if (srcml_unit_get_version(unit)) {
+          std::cout << "Version: " << srcml_unit_get_version(unit) << "\n";
+        }
+
         srcml_free_unit(unit);
       }
 
-      if (numUnits <= 1)
-        std::cout << "filename=\"" << filename << "\"\n";
-      
-      if (info == SRCML_COMMAND_LONGINFO)
-        std::cout << "units=\"" << numUnits << "\"\n";
-
+      std::cout << "Number of Units: " << numUnits << "\n";
       srcml_free_archive(srcml_arch);
     }
   }
