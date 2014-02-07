@@ -41,6 +41,7 @@
 <function_decl><type><name>auto</name></type> <name>fpif</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list>-&gt;<function_decl><type><name>int</name></type> (*)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl>;</function_decl>
 </unit>
 
+<unit>
 <function_decl><type><name>int</name></type> <name>match</name><parameter_list>(<param><decl><type><name>Flags</name></type> <name>flags</name> =<init> <expr><call><name>Flags</name><argument_list>( <argument><expr><name>MatchStartsWith</name> | <name>MatchWrap</name></expr></argument> )</argument_list></call></expr></init></decl></param> )</parameter_list>;</function_decl>
 </unit>
 
