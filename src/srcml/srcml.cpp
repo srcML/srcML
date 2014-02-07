@@ -29,7 +29,6 @@
 
 #include <srcml.h>
 #include <srcml_cli.hpp>
-#include <thread_queue.hpp>
 #include <srcml_consume.hpp>
 #include <src_input_libarchive.hpp>
 
