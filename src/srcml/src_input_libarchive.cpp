@@ -33,8 +33,7 @@
 
 
 // Set the options for libarchive to process input files
-void setupLibArchive(archive* a) {
-  archive * arch = a;
+void setupLibArchive(archive* arch) {
   
   // Configure libarchive supported file formats
   archive_read_support_format_ar(arch);
@@ -145,15 +144,15 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, ParseReq
 
   // input is a single file
   if (!is_directory(localPath)) {
-    makeRequest(queue, srcml_arch, req, localPath.string(), (localPath.extension().string().compare(".xml") == 0) ? "xml" : lang);
+    makeRequest(queue, srcml_arch, req, localPath.string(), (localPath.extension().compare(".xml") == 0) ? "xml" : lang);
     return;
   }
 
   // input is a directory
   for (boost::filesystem::recursive_directory_iterator end, dir(localPath); dir != end; ++dir) {
     if(is_regular_file(*dir)) {
-      if (srcml_archive_check_extension(srcml_arch, dir->path().string().c_str()) || dir->path().extension().string() == ".xml")
-        makeRequest(queue, srcml_arch, req, dir->path().string(), (dir->path().extension().string().compare(".xml") == 0) ? "xml" : lang);
+        if (srcml_archive_check_extension(srcml_arch, dir->path().string().c_str()) || dir->path().extension().compare(".xml") == 0)
+        makeRequest(queue, srcml_arch, req, dir->path().string(), (dir->path().extension().compare(".xml") == 0) ? "xml" : lang);
     }
   }
 }
