@@ -1,5 +1,7 @@
 #!/bin/bash
 
+./sshall.py --test "bash -c \"date --set \\\"$(date)\\\"\""
+
 ./sshall.py --test 'bash -c "cd /srcML; git pull; cd ..; chown -R srcml:srcml /srcML"'
 ssh root@osx 'bash -c "cd /srcML; git pull; cd ..; chown -R srcml:staff /srcML"'
 

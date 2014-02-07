@@ -62,6 +62,7 @@ function_pointer.struct.cpp.xml
 function_throw.struct.cpp.xml
 goto.c.xml
 goto.cs.xml
+goto.java.xml
 if.c.xml
 if.cs.xml
 if.java.xml

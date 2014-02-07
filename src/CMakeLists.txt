@@ -18,8 +18,15 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+<<<<<<< HEAD
 subdirs(srcml parser translator libsrcml oldclient)
+=======
+subdirs(parser translator libsrcml)
+>>>>>>> master
 
+if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    subdirs(oldclient)
+endif()
 # Enabling an include for the new srcML executable only when it
 # is specified to be built.
 get_property(ENABLE_NEW_SRCML_EXEC_BUILD GLOBAL PROPERTY ENABLE_NEW_SRCML_EXEC_BUILD)
@@ -54,15 +61,15 @@ macro(buildLib LIB_NAME LIB_TYPE)
 
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml)
 
-if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
-    if(DYNAMIC_LOAD_ENABLED)
-            target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} dl)
+    if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
+        if(DYNAMIC_LOAD_ENABLED)
+                target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} dl)
+        else()
+                target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} dl)
+        endif()
     else()
-            target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} dl)
+        target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB})
     endif()
-else()
-    target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} regex ${BOOST_PROGRAM_OPTIONS_LIB})
-endif()
 endmacro()
 
 # Building static and dynamic libraries for srcML.

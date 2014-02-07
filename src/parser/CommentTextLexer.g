@@ -24,9 +24,11 @@
 
 header "pre_include_hpp" {
    #include <cstring>
+   #pragma GCC diagnostic ignored "-Wunused-parameter"
 }
 
 header {
+   #pragma GCC diagnostic warning "-Wunused-parameter"
    #include <iostream>
    #include "antlr/TokenStreamSelector.hpp"
    #include "Options.hpp"

@@ -117,11 +117,14 @@
   the input if in C++ mode.  They are matched as NAME in C mode.
 */
 
-header {
+header "pre_include_hpp" {
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 }
 
 // Included in the generated srcMLParser.hpp file after antlr includes
 header "post_include_hpp" {
+
+#pragma GCC diagnostic warning "-Wunused-parameter"
 
 #include <string>
 #include <deque>
@@ -3224,9 +3227,9 @@ set_bool[bool& variable, bool value = true] { variable = value; } :;
 
 trace[const char*s ] { std::cerr << s << std::endl; } :;
 
-/*
+
 trace_int[int s] { std::cerr << "HERE " << s << std::endl; } :;
-traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
+/*traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 marker[] { CompleteElement element(this); startNewMode(MODE_LOCAL); startElement(SMARKER); } :;
 */
 
@@ -3650,6 +3653,35 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALLT
             // start the argument
             startElement(SARGUMENT);
          }
+
+        ))*
+
+;
+
+// Full, complete expression matched all at once (no stream).
+// May be better version of complete_expression
+complete_default_parameter[] { CompleteElement element(this); int count_paren = 0; CALLTYPE type = NOCALL; 
+    bool isempty = false; ENTRY_DEBUG } : 
+       { getParen() == 0 }? rparen[false] |
+        { getCurly() == 0 }? rcurly_argument |
+        {
+            // argument with nested expression
+            startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
+        }
+        (options {warnWhenFollowAmbig = false; } : { LA(1) != RPAREN || count_paren > 0 }?
+
+        ({ LA(1) == LPAREN }? expression set_int[count_paren, count_paren + 1] |
+
+        { LA(1) == RPAREN && inputState->guessing }? rparen set_int[count_paren, count_paren - 1] |
+
+        { LA(1) == RPAREN && !inputState->guessing}? expression set_int[count_paren, count_paren - 1] |
+
+        { perform_call_check(type, isempty, -1) && type == CALL }? 
+        set_int[count_paren, isempty ? count_paren : count_paren + 1] expression |
+
+         expression |
+
+         comma
 
         ))*
 
@@ -4406,6 +4438,55 @@ macro_call_argument_list[] { bool first = true; ENTRY_DEBUG } :
             // end the macro argument list
             endMode(MODE_LIST | MODE_TOP);
         } set_bool[first, false] )*
+;
+exception
+catch[antlr::RecognitionException] {
+
+        // no end found to macro
+        if (isoption(parseoptions, OPTION_DEBUG))
+            emptyElement(SERROR_PARSE);
+}
+
+// handle macro list/pattern name by itself
+macro_type_name[]  { SingleElement element(this); ENTRY_DEBUG } :
+        {
+
+            startElement(SNAME);
+
+        }
+        MACRO_TYPE_NAME
+;
+
+// inner part of call
+macro_type_name_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
+        {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
+
+            // start the macro call element
+            startElement(SMACRO_CALL);
+        }
+        macro_type_name
+        (options { greedy = true; } : { first }?
+        {
+            // start a mode for the macro argument list
+            startNewMode(MODE_LIST | MODE_TOP);
+
+            // start the argument list
+            startElement(SARGUMENT_LIST);
+        }
+        LPAREN
+        macro_call_contents
+        {
+            // end anything started inside of the macro argument list
+            endDownToMode(MODE_LIST | MODE_TOP);
+        }
+        RPAREN
+        {
+            // end the macro argument list
+            endMode(MODE_LIST | MODE_TOP);
+        } 
+        set_bool[first, false] )*
 ;
 exception
 catch[antlr::RecognitionException] {
@@ -5446,7 +5527,7 @@ kr_parameter_terminate[] { ENTRY_DEBUG } :
 complete_parameter[] { ENTRY_DEBUG } :
         parameter
         // suppress ()* warning
-        (options { greedy = true; } : parameter_declaration_initialization (options { greedy = true; } : {LA(1) != RPAREN }? expression)*)*
+        (options { greedy = true; } : parameter_declaration_initialization complete_default_parameter)*
 ;
 
 // an argument

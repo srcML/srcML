@@ -58,7 +58,7 @@ int main() {
    */
 
   {
-    char * s;
+    char * s = 0;
     int size;
     srcml_archive * archive = srcml_create_archive();
     srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
@@ -75,7 +75,7 @@ int main() {
   }
 
   {
-    char * s;
+    char * s = 0;
     int size;
     srcml_archive * archive = srcml_create_archive();
     srcml_write_open_memory(archive, &s, &size);
@@ -91,7 +91,7 @@ int main() {
   }
 
   {
-    char * s;
+    char * s = 0;
     int size;
     srcml_archive * archive = srcml_create_archive();
     srcml_archive_set_language(archive, "C++");
@@ -116,7 +116,7 @@ int main() {
   }
 
   {
-    char * s;
+    char * s = 0;
     int size;
     srcml_archive * archive = srcml_create_archive();
     srcml_write_open_memory(archive, &s, &size);
@@ -136,7 +136,7 @@ int main() {
   }
 
   {
-    char * s;
+    char * s = 0;
     int size;
     srcml_archive * archive = srcml_create_archive();
     srcml_archive_set_language(archive, "C++");
@@ -158,7 +158,7 @@ int main() {
   }
 
   {
-    char * s;
+    char * s = 0;
     int size;
     srcml_archive * archive = srcml_create_archive();
     srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
@@ -175,7 +175,7 @@ int main() {
   }
 
   {
-    char * s;
+    char * s = 0;
     int size;
     srcml_archive * archive = srcml_create_archive();
     srcml_archive_set_language(archive, "C++");
@@ -204,7 +204,7 @@ int main() {
   }
 
   {
-    char * s;
+    char * s = 0;
     int size;
     srcml_archive * archive = srcml_create_archive();
     srcml_archive_set_language(archive, "C++");

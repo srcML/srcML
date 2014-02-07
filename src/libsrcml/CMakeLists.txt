@@ -23,7 +23,7 @@ if(${SAX2_ENABLED})
     add_definitions(-DSAX2)
 endif()
 
-file(GLOB LIBSRCML_HEADERS *.hpp)
+file(GLOB LIBSRCML_HEADERS *.h *.hpp)
 file(GLOB LIBSRCML_SOURCE *.cpp)
 if(NOT ${SAX2_ENABLED})
     list(REMOVE_ITEM LIBSRCML_HEADERS
