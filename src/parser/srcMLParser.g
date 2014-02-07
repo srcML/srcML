@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -3224,9 +3224,9 @@ set_bool[bool& variable, bool value = true] { variable = value; } :;
 
 trace[const char*s ] { std::cerr << s << std::endl; } :;
 
-/*
+
 trace_int[int s] { std::cerr << "HERE " << s << std::endl; } :;
-traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
+/*traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 marker[] { CompleteElement element(this); startNewMode(MODE_LOCAL); startElement(SMARKER); } :;
 */
 
@@ -3667,11 +3667,12 @@ complete_default_parameter[] { CompleteElement element(this); int count_paren = 
         }
         (options {warnWhenFollowAmbig = false; } : { LA(1) != RPAREN || count_paren > 0 }?
 
-        ({ LA(1) == LPAREN }? expression { ++count_paren; } |
+        ({ LA(1) == LPAREN }? expression set_int[count_paren, count_paren + 1] |
 
-         { LA(1) == RPAREN }? expression { --count_paren; } |
+         { LA(1) == RPAREN }? expression set_int[count_paren, count_paren - 1] |
 
-         { perform_call_check(type, isempty, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression |
+        { perform_call_check(type, isempty, -1) && type == CALL }? 
+        set_int[count_paren, isempty ? count_paren : count_paren + 1] expression |
 
          expression |
 
