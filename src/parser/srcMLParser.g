@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -3663,13 +3663,15 @@ complete_default_parameter[] { CompleteElement element(this); int count_paren = 
         { getCurly() == 0 }? rcurly_argument |
         {
             // argument with nested expression
-            startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
+            startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
         }
         (options {warnWhenFollowAmbig = false; } : { LA(1) != RPAREN || count_paren > 0 }?
 
         ({ LA(1) == LPAREN }? expression set_int[count_paren, count_paren + 1] |
 
-         { LA(1) == RPAREN }? expression set_int[count_paren, count_paren - 1] |
+        { LA(1) == RPAREN && inputState->guessing }? rparen set_int[count_paren, count_paren - 1] |
+
+        { LA(1) == RPAREN && !inputState->guessing}? expression set_int[count_paren, count_paren - 1] |
 
         { perform_call_check(type, isempty, -1) && type == CALL }? 
         set_int[count_paren, isempty ? count_paren : count_paren + 1] expression |
