@@ -53,8 +53,12 @@ for option in options :
         if machine not in matches :
             continue
 
-        if machine.lower().find(option) == -1 :
-            matches.remove(machine)
+        if option[0] == '~' :           
+            if machine.lower().find(option[1:]) != -1 :
+                matches.remove(machine)
+        else :
+            if machine.lower().find(option) == -1 :
+                matches.remove(machine)
 
 args = ""
 
