@@ -3655,6 +3655,34 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALLT
 
 ;
 
+// Full, complete expression matched all at once (no stream).
+// May be better version of complete_expression
+complete_default_parameter[] { CompleteElement element(this); int count_paren = 0; CALLTYPE type = NOCALL; 
+    bool isempty = false; bool first = true; ENTRY_DEBUG } :
+        { getParen() == 0 }? rparen[false] |
+        { getCurly() == 0 }? rcurly_argument |
+        {
+            // argument with nested expression
+            startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
+        }
+        (options {warnWhenFollowAmbig = false; } : { first || count_paren > 0 }?
+
+        ({ LA(1) == LPAREN }? expression { ++count_paren; } |
+
+         { LA(1) == RPAREN }? expression { --count_paren; } |
+
+         { perform_call_check(type, isempty, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression |
+
+         expression |
+
+         comma
+
+        )
+    { first = false;}
+    )*
+
+;
+
 // match a complete expression no stream
 complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
@@ -5495,7 +5523,7 @@ kr_parameter_terminate[] { ENTRY_DEBUG } :
 complete_parameter[] { ENTRY_DEBUG } :
         parameter
         // suppress ()* warning
-        (options { greedy = true; } : parameter_declaration_initialization (options { greedy = true; } : {LA(1) != RPAREN }? expression)*)*
+        (options { greedy = true; } : parameter_declaration_initialization complete_default_parameter)*
 ;
 
 // an argument
