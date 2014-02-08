@@ -38,10 +38,10 @@ for arg in sys.argv[1:] :
         background = "true"
         argv.remove(arg)
 
-    elif arg.find("--") != -1 :
+    elif arg.find("--") == 0 :
         options.append(str(arg.lstrip("-")).lower())
         argv.remove(arg)
-    elif arg.find("--") == -1 :
+    else :
         break;
 
 matches = machines[:]
@@ -53,8 +53,12 @@ for option in options :
         if machine not in matches :
             continue
 
-        if machine.lower().find(option) == -1 :
-            matches.remove(machine)
+        if option[0] == '~' :           
+            if machine.lower().find(option[1:]) != -1 :
+                matches.remove(machine)
+        else :
+            if machine.lower().find(option) == -1 :
+                matches.remove(machine)
 
 args = "'"
 

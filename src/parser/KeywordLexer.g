@@ -23,9 +23,11 @@
 header "pre_include_hpp" {
     #include <cstring>
     #include <boost/regex.hpp>
+    #pragma GCC diagnostic ignored "-Wunused-parameter"
 }
 
 header {
+    #pragma GCC diagnostic warning "-Wunused-parameter"
    #include <string>
    #include "Language.hpp"
    #include "UTF8CharBuffer.hpp"
