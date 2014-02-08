@@ -273,8 +273,11 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
     if (!_tokenSet_13.member(INCLUDE))
         fprintf(stderr, "src2srcml:  Incorrect token set B\n");
 
-    if (!_tokenSet_23.member(CLASS))
+    if (!_tokenSet_22.member(CLASS))
         fprintf(stderr, "src2srcml:  Incorrect token set C\n");
+
+    if (!_tokenSet_26.member(EXTERN))
+        fprintf(stderr, "src2srcml:  Incorrect token set D\n");
 
     // root, single mode
     if (isoption(parseoptions, OPTION_EXPRESSION))
@@ -1568,7 +1571,7 @@ foreach_statement[] { ENTRY_DEBUG } :
         FOREACH
         {
             // statement with nested statement after the for group
-            if(inLanguage(LANGUAGE_JAVA))
+            if(inLanguage(LANGUAGE_CSHARP))
                 startNewMode(MODE_EXPECT | MODE_FOR_GROUP);
             else
                 startNewMode(MODE_EXPECT | MODE_FOR_GROUP | MODE_END_AT_COMMA);
@@ -2926,7 +2929,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     rewind(start);
 
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
-       && _tokenSet_27.member(LA(1)) && (!inLanguage(LANGUAGE_CXX_ONLY) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
+       && _tokenSet_26.member(LA(1)) && (!inLanguage(LANGUAGE_CXX_ONLY) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && save_la == TERMINATE)
         type = VARIABLE;
 
@@ -2999,7 +3002,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
-                { _tokenSet_23.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
+                { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
                 (specifier | { next_token() == COLON }? SIGNAL)
@@ -3296,7 +3299,7 @@ eat_type[int & count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
 pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         // specifiers that occur in a type
-		{ _tokenSet_23.member(LA(1)) }?
+		{ _tokenSet_22.member(LA(1)) }?
         specifier |
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
@@ -4956,13 +4959,6 @@ variable_declaration_initialization[] { ENTRY_DEBUG } :
         } |
         {
             // start a new mode that will end after the argument list
-            startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
-
-            // start the initialization element
-            startElement(SDECLARATION_INITIALIZATION);
-        } IN |
-        {
-            // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST);
         }
         call_argument_list
@@ -4977,7 +4973,8 @@ variable_declaration_range[] { ENTRY_DEBUG } :
             // start the initialization element
             startElement(SDECLARATION_RANGE);
         }
-        COLON
+
+        (COLON | IN) 
 ;
 
 // parameter variable initialization
