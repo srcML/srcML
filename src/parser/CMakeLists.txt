@@ -88,7 +88,7 @@ get_property(SED_EXE GLOBAL PROPERTY SED_EXE)
 get_property(GREP_EXE GLOBAL PROPERTY GREP_EXE)
 
 # @todo this breaks mingw32 build.
-if(WIN32)
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     get_property(WINDOWS_DEP_PATH GLOBAL PROPERTY WINDOWS_DEP_PATH)
     add_custom_command(
         OUTPUT srcMLParserTokenTypesMacro.hpp
