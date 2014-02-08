@@ -2693,7 +2693,8 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         variable_declaration_initialization |
 
         // start of argument for return or throw statement
-        { inMode(MODE_INIT | MODE_EXPECT) && (inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_JAVA)) }?
+        { inMode(MODE_INIT | MODE_EXPECT) && ((LA(1) == COLON && (inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_JAVA)))
+                || (LA(1) == IN && inLanguage(LANGUAGE_CSHARP))) }?
         variable_declaration_range |
 
         // in an argument list expecting an argument
