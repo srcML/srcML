@@ -35,6 +35,6 @@ bash -c "cd ~/srcML/dist; make clean; make;"
 bash -c "man ~/srcML/dist/srcML/src2srcml.1.gz | man2html > ~/srcML/dist/srcML/src2srcml.html"
 bash -c "man ~/srcML/dist/srcML/srcml2src.1.gz | man2html > ~/srcML/dist/srcML/srcml2src.html"
 
-bash -c "tar czf ~/srcML.tar.gz ~/srcML"
+bash -c "tar czf ~/srcML/dist/srcML.tar.gz -C ~/srcML/dist/ srcML"
 bash -c "cp ~/srcML/dist/*.tar.gz ~/Dropbox/srcML/Unix/OSX"
 
