@@ -6285,7 +6285,6 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
     std::list<int>::size_type save_size = 0;
 
     int prev = -1;
-    int terminate_count = 0;
     while(LA(1) != ENDIF && !(prev == PREPROC && LA(1) == ELSE) && LA(1) != 1 /* EOF */) {
 
         if((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF) {
@@ -6307,10 +6306,7 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
             else end_order.push_back(RCURLY);
         }
 
-        if(LA(1) == TERMINATE && inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT)) {
-            if(terminate_count) end_order.push_back(TERMINATE);
-            else ++terminate_count;
-        }
+        if(LA(1) == TERMINATE && inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT)) end_order.push_back(TERMINATE);
 
         prev = LA(1);
         consume();
@@ -6376,8 +6372,8 @@ eol_post[int directive_token, bool markblockzero] {
                         }
 
                         if(*pos == TERMINATE) {
-                            startNewMode(MODE_LIST | MODE_EXPRESSION | MODE_STATEMENT | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP);
-                                addElement(SEXPRESSION_STATEMENT);
+                            startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP);
+                            addElement(SEXPRESSION_STATEMENT);
 
                         }
 
