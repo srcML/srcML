@@ -162,7 +162,7 @@ int main(int argc, char * argv[]) {
   ParseQueue queue(srcml_request.max_threads);
 
   // process the command line inputs
-  BOOST_FOREACH(std::string& input_file, srcml_request.positional_args) {
+  BOOST_FOREACH(const std::string& input_file, srcml_request.positional_args) {
 
     // if stdin, then there has to be data
     if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !test_for_stdin())
