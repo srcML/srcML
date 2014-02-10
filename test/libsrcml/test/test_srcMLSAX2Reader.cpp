@@ -36,6 +36,8 @@
 #include <srcmlns.hpp>
 #include "dassert.hpp"
 
+#include <boost/optional.hpp>
+
 int main() {
 
   const std::string srcml_a = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"a.cpp\" version=\"1\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
@@ -134,13 +136,14 @@ int main() {
 
   }
 
+
   /*
     readRootUnitAttributes
   */
 
   {
     srcMLSAX2Reader reader("project.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     std::vector<std::string> attributes;
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
@@ -164,8 +167,8 @@ int main() {
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
     dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_POSITION));
     dassert(tabstop, 4);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>(), attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes,
 				  prefixes, namespaces, options, tabstop, user_macro_list);
@@ -184,12 +187,11 @@ int main() {
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
     dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_POSITION));
     dassert(tabstop, 4);
-    delete language, delete filename, delete directory, delete version;
   }
 
   {
     srcMLSAX2Reader reader("project_ns.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     std::vector<std::string> attributes;
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
@@ -213,8 +215,8 @@ int main() {
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
     dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_POSITION));
     dassert(tabstop, 4);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>(), attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes,
 				  prefixes, namespaces, options, tabstop, user_macro_list);
@@ -233,12 +235,11 @@ int main() {
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
     dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_POSITION));
     dassert(tabstop, 4);
-    delete language, delete filename, delete directory, delete version;
   }
 
   {
     srcMLSAX2Reader reader("project_single.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     std::vector<std::string> attributes;
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
@@ -263,8 +264,8 @@ int main() {
     dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
 		      | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
     dassert(tabstop, 4);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>(), attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes,
 				  prefixes, namespaces, options, tabstop, user_macro_list);
@@ -284,12 +285,11 @@ int main() {
     dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
 		      | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
     dassert(tabstop, 4);
-    delete language, delete filename, delete directory, delete version;
   }
 
   {
     srcMLSAX2Reader reader("project_empty_single.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     std::vector<std::string> attributes;
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
@@ -314,8 +314,8 @@ int main() {
     dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
 		      | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
     dassert(tabstop, 4);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>(), attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes,
 				  prefixes, namespaces, options, tabstop, user_macro_list);
@@ -335,12 +335,11 @@ int main() {
     dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
 		      | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
     dassert(tabstop, 4);
-    delete language, delete filename, delete directory, delete version;
   }
 
   {
     srcMLSAX2Reader reader("project_empty_nested.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     std::vector<std::string> attributes;
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
@@ -362,8 +361,9 @@ int main() {
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
     dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL) );
     dassert(tabstop, 4);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
+
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(), 
+      version = boost::optional<std::string>(), attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
     reader.readRootUnitAttributes(language, filename, directory, version, attributes, 
 				  prefixes, namespaces, options, tabstop, user_macro_list);
@@ -380,12 +380,11 @@ int main() {
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
     dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
     dassert(tabstop, 4);
-    delete language, delete filename, delete directory, delete version;
   }
 
   {
     srcMLSAX2Reader reader("project.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     std::vector<std::string> attributes;
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
@@ -394,10 +393,9 @@ int main() {
     std::vector<std::string> user_macro_list;
 
     reader.readUnitAttributes(language, filename, directory, version);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
     reader.readUnitAttributes(language, filename, directory, version);
-    delete language, delete filename, delete directory, delete version;
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
 					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
@@ -406,7 +404,7 @@ int main() {
 
   {
     srcMLSAX2Reader reader("project_ns.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     std::vector<std::string> attributes;
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
@@ -415,10 +413,9 @@ int main() {
     std::vector<std::string> user_macro_list;
 
     reader.readUnitAttributes(language, filename, directory, version);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
     reader.readUnitAttributes(language, filename, directory, version);
-    delete language, delete filename, delete directory, delete version;
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
 					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
@@ -427,7 +424,7 @@ int main() {
 
   {
     srcMLSAX2Reader reader("project_single.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     std::vector<std::string> attributes;
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
@@ -436,10 +433,9 @@ int main() {
     std::vector<std::string> user_macro_list;
 
     reader.readUnitAttributes(language, filename, directory, version);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
     reader.readUnitAttributes(language, filename, directory, version);
-    delete language, delete filename, delete directory, delete version;
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
 					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
@@ -448,7 +444,7 @@ int main() {
 
   {
     srcMLSAX2Reader reader("project_empty_single.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     std::vector<std::string> attributes;
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
@@ -457,10 +453,9 @@ int main() {
     std::vector<std::string> user_macro_list;
 
     reader.readUnitAttributes(language, filename, directory, version);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
     reader.readUnitAttributes(language, filename, directory, version);
-    delete language, delete filename, delete directory, delete version;
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
 					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
@@ -469,7 +464,7 @@ int main() {
 
   {
     srcMLSAX2Reader reader("project_empty_nested.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     std::vector<std::string> attributes;
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
@@ -478,10 +473,9 @@ int main() {
     std::vector<std::string> user_macro_list;
 
     reader.readUnitAttributes(language, filename, directory, version);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
     reader.readUnitAttributes(language, filename, directory, version);
-    delete language, delete filename, delete directory, delete version;
     dassert(reader.readRootUnitAttributes(language, filename, directory,
 					  version, attributes, prefixes, namespaces, options, tabstop, user_macro_list), 0);
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
@@ -494,86 +488,81 @@ int main() {
 
   {
     srcMLSAX2Reader reader("project.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     reader.readUnitAttributes(language, filename, directory, version);
     dassert(*language, "C++");
     dassert(*filename, "a.cpp");
     dassert(*directory, "test");
     dassert(*version, "1");
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
     reader.readUnitAttributes(language, filename, directory, version);
     dassert(*language, "C++");
     dassert(*filename, "b.cpp");
     dassert(directory, 0);
     dassert(version, 0);
-    delete language, delete filename, delete directory, delete version;
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
   }
 
   {
     srcMLSAX2Reader reader("project_ns.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     reader.readUnitAttributes(language, filename, directory, version);
     dassert(*language, "C++");
     dassert(*filename, "a.cpp");
     dassert(directory, 0);
     dassert(version, 0);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
     reader.readUnitAttributes(language, filename, directory, version);
     dassert(*language, "C++");
     dassert(*filename, "b.cpp");
     dassert(directory, 0);
     dassert(version, 0);
-    delete language, delete filename, delete directory, delete version;
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
   }
 
   {
     srcMLSAX2Reader reader("project_single.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     reader.readUnitAttributes(language, filename, directory, version);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
     dassert(*version, "1");
-    delete language, delete filename, delete directory, delete version;
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
   }
 
   {
     srcMLSAX2Reader reader("project_empty_single.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     reader.readUnitAttributes(language, filename, directory, version);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
     dassert(*version, "1");
-    delete language, delete filename, delete directory, delete version;
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
   }
 
   {
     srcMLSAX2Reader reader("project_empty_nested.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     reader.readUnitAttributes(language, filename, directory, version);
     dassert(*language, "C++");
     dassert(*filename, "a.cpp");
     dassert(directory, 0);
     dassert(version, 0);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
     reader.readUnitAttributes(language, filename, directory, version);
     dassert(*language, "C++");
     dassert(*filename, "b.cpp");
     dassert(directory, 0);
     dassert(version, 0);
-    delete language, delete filename, delete directory, delete version;
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
   }
@@ -584,12 +573,10 @@ int main() {
 
   {
     srcMLSAX2Reader reader("project.xml");
-    std::string * unit = reader.readsrcML();
+    boost::optional<std::string> unit = reader.readsrcML();
     dassert(*unit, srcml_a);
-    delete unit;
     unit = reader.readsrcML();
     dassert(*unit, srcml_b);
-    delete unit;
     unit = reader.readsrcML();
     dassert(unit, 0);
     unit = reader.readsrcML();
@@ -598,12 +585,10 @@ int main() {
 
   {
     srcMLSAX2Reader reader("project_ns.xml");
-    std::string * unit = reader.readsrcML();
+    boost::optional<std::string> unit = reader.readsrcML();
     dassert(*unit, srcml_ns_a);
-    delete unit;
     unit = reader.readsrcML();
     dassert(*unit, srcml_ns_b);
-    delete unit;
     unit = reader.readsrcML();
     dassert(unit, 0);
     unit = reader.readsrcML();
@@ -612,9 +597,8 @@ int main() {
 
   {
     srcMLSAX2Reader reader("project_single.xml");
-    std::string * unit = reader.readsrcML();
+    boost::optional<std::string> unit = reader.readsrcML();
     dassert(*unit, srcml_single_a);
-    delete unit;
     unit = reader.readsrcML();
     dassert(unit, 0);
     unit = reader.readsrcML();
@@ -623,9 +607,8 @@ int main() {
 
   {
     srcMLSAX2Reader reader("project_empty_single.xml");
-    std::string * unit = reader.readsrcML();
+    boost::optional<std::string> unit = reader.readsrcML();
     dassert(*unit, srcml_empty_single_as_unit);
-    delete unit;
     unit = reader.readsrcML();
     dassert(unit, 0);
     unit = reader.readsrcML();
@@ -634,12 +617,10 @@ int main() {
 
   {
     srcMLSAX2Reader reader("project_empty_nested.xml");
-    std::string * unit = reader.readsrcML();
+    boost::optional<std::string> unit = reader.readsrcML();
     dassert(*unit, srcml_empty_nested_a);
-    delete unit;
     unit = reader.readsrcML();
     dassert(*unit, srcml_empty_nested_b);
-    delete unit;
     unit = reader.readsrcML();
     dassert(unit, 0);
     unit = reader.readsrcML();
@@ -652,7 +633,7 @@ int main() {
 
   {
     srcMLSAX2Reader reader("project.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     std::vector<std::string> attributes;
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
@@ -676,27 +657,24 @@ int main() {
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
     dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_POSITION));
     dassert(tabstop, 4);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
     reader.readUnitAttributes(language, filename, directory, version);
     dassert(*language, "C++");
     dassert(*filename, "a.cpp");
     dassert(*directory, "test");
     dassert(*version, "1");
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
-    std::string * unit = reader.readsrcML();
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
+    boost::optional<std::string> unit = reader.readsrcML();
     dassert(*unit, srcml_a);
-    delete unit;
     reader.readUnitAttributes(language, filename, directory, version);
     dassert(*language, "C++");
     dassert(*filename, "b.cpp");
     dassert(directory, 0);
     dassert(version, 0);
-    delete language, delete filename, delete directory, delete version;
     unit = reader.readsrcML();
     dassert(*unit, srcml_b);
-    delete unit;
     unit = reader.readsrcML();
     dassert(unit, 0);
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
@@ -707,7 +685,7 @@ int main() {
 
   {
     srcMLSAX2Reader reader("project_ns.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     std::vector<std::string> attributes;
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
@@ -731,27 +709,24 @@ int main() {
     dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
     dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_POSITION));
     dassert(tabstop, 4);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
     reader.readUnitAttributes(language, filename, directory, version);
     dassert(*language, "C++");
     dassert(*filename, "a.cpp");
     dassert(directory, 0);
     dassert(version, 0);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
-    std::string * unit = reader.readsrcML();
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
+    boost::optional<std::string> unit = reader.readsrcML();
     dassert(*unit, srcml_ns_a);
-    delete unit;
     reader.readUnitAttributes(language, filename, directory, version);
     dassert(*language, "C++");
     dassert(*filename, "b.cpp");
     dassert(directory, 0);
     dassert(version, 0);
-    delete language, delete filename, delete directory, delete version;
     unit = reader.readsrcML();
     dassert(*unit, srcml_ns_b);
-    delete unit;
     unit = reader.readsrcML();
     dassert(unit, 0);
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, 
@@ -762,7 +737,7 @@ int main() {
 
   {
     srcMLSAX2Reader reader("project_single.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     std::vector<std::string> attributes;
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
@@ -787,18 +762,17 @@ int main() {
     dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
 		      | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
     dassert(tabstop, 4);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
     reader.readUnitAttributes(language, filename, directory, version);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
     dassert(*version, "1");
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
-    std::string * unit = reader.readsrcML();
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
+    boost::optional<std::string> unit = reader.readsrcML();
     dassert(*unit, srcml_single_a);
-    delete unit;
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes,
 					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
@@ -807,7 +781,7 @@ int main() {
 
   {
     srcMLSAX2Reader reader("project_empty_single.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     std::vector<std::string> attributes;
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
@@ -832,18 +806,17 @@ int main() {
     dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
 		      | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
     dassert(tabstop, 4);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
     reader.readUnitAttributes(language, filename, directory, version);
     dassert(*language, "C++");
     dassert(*filename, "project");
     dassert(*directory, "test");
     dassert(*version, "1");
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
-    std::string * unit = reader.readsrcML();
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
+    boost::optional<std::string> unit = reader.readsrcML();
     dassert(*unit, srcml_empty_single_as_unit);
-    delete unit;
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, 
 					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
@@ -852,7 +825,7 @@ int main() {
 
   {
     srcMLSAX2Reader reader("project_empty_nested.xml");
-    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    boost::optional<std::string> language, filename, directory, version;
     std::vector<std::string> attributes;
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
@@ -874,27 +847,24 @@ int main() {
     dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
     dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
     dassert(tabstop, 4);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
     reader.readUnitAttributes(language, filename, directory, version);
     dassert(*language, "C++");
     dassert(*filename, "a.cpp");
     dassert(directory, 0);
     dassert(version, 0);
-    delete language, delete filename, delete directory, delete version;
-    language = 0, filename = 0, directory = 0, version = 0;
-    std::string * unit = reader.readsrcML();
+    language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+      version = boost::optional<std::string>();
+    boost::optional<std::string> unit = reader.readsrcML();
     dassert(*unit, srcml_empty_nested_a);
-    delete unit;
     unit = reader.readsrcML();
     dassert(*unit, srcml_empty_nested_b);
-    delete unit;
     dassert(reader.readRootUnitAttributes(language, filename, directory, version, attributes, 
 					  prefixes, namespaces, options, tabstop, user_macro_list), 0);
     dassert(reader.readUnitAttributes(language, filename, directory, version), 0);
     dassert(reader.readsrcML(), 0);
   }
-
 
   unlink("project.xml");
   unlink("project_single.xml");
