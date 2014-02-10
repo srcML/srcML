@@ -188,8 +188,8 @@ int main(int argc, char * argv[]) {
       src_input_libarchive(queue, srcml_arch, request, input_file.substr(prefixPos+2), srcml_request.language);
   }
   
-  // end the parsing queue
-  queue.done();
+  // wait for the parsing queue to finish
+  queue.wait();
 
   // close the created srcML archive
   srcml_close_archive(srcml_arch);
