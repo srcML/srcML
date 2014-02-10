@@ -361,7 +361,7 @@ public :
 #endif
 
     unit = srcml_create_unit(archive);
-    unit->unit = boost::optional<std::string>();
+    unit->unit = "";
 
     is_empty = true;
 
