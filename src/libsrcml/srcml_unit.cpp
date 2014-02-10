@@ -44,7 +44,7 @@ int srcml_unit_set_language(srcml_unit* unit, const char* language) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
 
-  unit->language = language;
+  unit->language = language ? std::string(language) : boost::optional<std::string>();
 
   return SRCML_STATUS_OK;
 
@@ -65,7 +65,7 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
 
-  unit->filename = filename;
+  unit->filename = filename ? std::string(filename) : boost::optional<std::string>();
 
   return SRCML_STATUS_OK;
 
@@ -87,7 +87,7 @@ int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
   if(unit == NULL) return SRCML_STATUS_ERROR;
 
 
-  unit->directory = directory;
+  unit->directory = directory ? std::string(directory) : boost::optional<std::string>();
 
   return SRCML_STATUS_OK;
 
@@ -108,7 +108,7 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
 
-  unit->version = version;
+  unit->version = version ? std::string(version) : boost::optional<std::string>();
 
   return SRCML_STATUS_OK;
 

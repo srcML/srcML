@@ -202,7 +202,7 @@ int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
-  archive->encoding = encoding;
+  archive->encoding = encoding ? std::string(encoding) : boost::optional<std::string>();
 
   return SRCML_STATUS_OK;
 
@@ -222,7 +222,7 @@ int srcml_archive_set_language(srcml_archive* archive, const char* language) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
-  archive->language = language;
+  archive->language = language ? std::string(language) : boost::optional<std::string>();
 
   return SRCML_STATUS_OK;
 
@@ -242,7 +242,7 @@ int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
-  archive->filename = filename;
+  archive->filename = filename ? std::string(filename) : boost::optional<std::string>();
 
   return SRCML_STATUS_OK;
 
@@ -262,7 +262,7 @@ int srcml_archive_set_directory (srcml_archive* archive, const char* directory) 
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
-  archive->directory = directory;
+  archive->directory = directory ? std::string(directory) : boost::optional<std::string>();
 
   return SRCML_STATUS_OK;
 
@@ -282,7 +282,7 @@ int srcml_archive_set_version(srcml_archive* archive, const char* version) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
-  archive->version = version;
+  archive->version = version ? std::string(version) : boost::optional<std::string>();
 
   return SRCML_STATUS_OK;
 
