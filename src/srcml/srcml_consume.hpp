@@ -28,8 +28,11 @@
 #ifndef SRCML_CONSUME_HPP
 #define SRCML_CONSUME_HPP
 
-#include <src_input_libarchive.hpp>
+#include <thread_queue.hpp>
+#include <parse_request.hpp>
 
-void srcml_consume(ParseQueue* queue);
+typedef ThreadQueue<ParseRequest, 10> ParseQueue_Type;
+
+void srcml_consume(ParseQueue_Type* queue);
 
 #endif

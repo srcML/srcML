@@ -158,12 +158,8 @@ int main(int argc, char * argv[]) {
   // create the output file
   srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
-  // setup the parsequeue and consuming threads
+  // setup the parsequeue
   ParseQueue queue(srcml_request.max_threads);
-  const int NUM_THREADS = srcml_request.max_threads;
-  boost::thread_group writers;
-  for (int i = 0; i < NUM_THREADS; ++i)
-      writers.create_thread( boost::bind(srcml_consume, &queue) );
 
   // setup a request
   ParseRequest request;
@@ -193,11 +189,8 @@ int main(int argc, char * argv[]) {
       src_input_libarchive(queue, srcml_arch, request, input_file.substr(prefixPos+2), srcml_request.language);
   }
   
-  // end the queue
+  // end the parsing queue
   queue.done();
-
-  // end the threads
-  writers.join_all();
 
   // close the created srcML archive
   srcml_close_archive(srcml_arch);
