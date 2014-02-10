@@ -76,12 +76,6 @@ srcml_archive* srcml_create_archive()
   } catch(...) { return 0; }
 
   archive->type = SRCML_ARCHIVE_INVALID;
-  archive->filename = 0;
-  archive->encoding = 0;
-  archive->xml_encoding = 0;
-  archive->language = 0;
-  archive->directory = 0;
-  archive->version = 0;
   archive->options = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL;
   archive->tabstop = 8;
   archive->translator = 0;
@@ -140,12 +134,12 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
   try {
 
-    new_archive->filename = archive->filename;
+    /*    new_archive->filename = archive->filename;
     new_archive->encoding = archive->encoding;
     new_archive->language = archive->language;
     new_archive->directory = archive->directory;
     new_archive->version = archive->version;
-
+    */
   } catch(...) { return 0; }
 
   try {
@@ -758,7 +752,7 @@ void srcml_read_internal(srcml_archive * archive) {
 
   archive->type = SRCML_ARCHIVE_READ;
 
-  std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+  boost::optional<std::string> language, filename, directory, version;
   bool done = !archive->reader->readRootUnitAttributes(language, filename, directory, version,
                                                        archive->attributes, archive->prefixes,
                                                        archive->namespaces,
@@ -972,9 +966,9 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
 
   if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
-  std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+  boost::optional<std::string> language, filename, directory, version;
   archive->reader->readUnitAttributes(language, filename, directory, version);
-  std::string * read_unit = archive->reader->readsrcML();
+  boost::optional<std::string> read_unit = archive->reader->readsrcML();
 
   srcml_unit * unit = 0;
   if(read_unit) {

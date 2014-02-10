@@ -127,8 +127,8 @@ srcMLSAX2Reader::~srcMLSAX2Reader() {
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcMLSAX2Reader::readRootUnitAttributes(std::string *& language, std::string *& filename,
-                                        std::string *& directory, std::string *& version,
+int srcMLSAX2Reader::readRootUnitAttributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
+                                        boost::optional<std::string> & directory, boost::optional<std::string> & version,
                                         std::vector<std::string> & attributes,
                                         std::vector<std::string> & prefixes,
                                         std::vector<std::string> & namespaces,
@@ -163,8 +163,8 @@ int srcMLSAX2Reader::readRootUnitAttributes(std::string *& language, std::string
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcMLSAX2Reader::readUnitAttributes(std::string *& language, std::string *& filename,
-                                    std::string *& directory, std::string *& version) {
+int srcMLSAX2Reader::readUnitAttributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
+                                    boost::optional<std::string> & directory, boost::optional<std::string> & version) {
 
   if(handler.is_done) return 0;
 
@@ -192,7 +192,7 @@ int srcMLSAX2Reader::readUnitAttributes(std::string *& language, std::string *& 
  *
  * @returns string on success and finished return a 0.
  */
-std::string * srcMLSAX2Reader::readsrcML() {
+boost::optional<std::string>  srcMLSAX2Reader::readsrcML() {
 
   if(handler.is_done) return 0;
   handler.collect_srcml = true;
@@ -201,9 +201,9 @@ std::string * srcMLSAX2Reader::readsrcML() {
 
   if(handler.is_done) return 0;
 
-  std::string * unit = 0;
+  boost::optional<std::string>  unit = 0;
   try {
-    if(handler.unit->unit) unit = new std::string(*handler.unit->unit);
+    if(handler.unit->unit) unit = *handler.unit->unit;
   } catch(...) {}
 
   return unit;

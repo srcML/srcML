@@ -35,6 +35,7 @@
 #include <vector>
 
 #include <boost/thread/thread.hpp>
+#include <boost/optional.hpp>
 
 /**
  * srcMLSAX2Reader
@@ -65,8 +66,8 @@ public :
   ~srcMLSAX2Reader();
 
   // read attribute and namespace information from root unit.  Does not advance read.
-  int readRootUnitAttributes(std::string *& language, std::string *& filename,
-                             std::string *& directory, std::string *& version,
+  int readRootUnitAttributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
+                             boost::optional<std::string> & directory, boost::optional<std::string> & version,
                              std::vector<std::string> & attributes,
                              std::vector<std::string> & prefixes,
                              std::vector<std::string> & namespaces,
@@ -78,11 +79,11 @@ public :
   /* finds next unit tag if not current unit and sets attributes.  Consumes unit.
      Unit is still avaible for readsrcML or read.  But not readUnitAttributes.
    */
-  int readUnitAttributes(std::string *& language, std::string *& filename,
-                         std::string *& directory, std::string *& version);
+  int readUnitAttributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
+                         boost::optional<std::string> & directory, boost::optional<std::string> & version);
 
   // reads the next unit and returns it srcML
-  std::string * readsrcML();
+  boost::optional<std::string>  readsrcML();
 
 };
 

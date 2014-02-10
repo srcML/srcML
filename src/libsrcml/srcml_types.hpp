@@ -26,7 +26,7 @@
 #include <Language.hpp>
 #include <srcMLTranslator.hpp>
 
-#include <boost/Optional.hpp>
+#include <boost/optional.hpp>
 
 #include <string>
 #include <vector>
