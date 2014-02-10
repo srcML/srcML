@@ -64,10 +64,6 @@ public:
         writers.join_all();
     }
 
-    int size() {
-        return queue.size();
-    }
-
 private:
     Queue_Type queue;
     boost::thread_group writers;

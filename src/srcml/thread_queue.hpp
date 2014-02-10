@@ -67,12 +67,11 @@ public:
     }
 
     void done() {
-        empty = true;
+        {
+            boost::unique_lock<boost::mutex> lock(mutex);
+            empty = true;
+        }
         cond_empty.notify_all();
-    }
-
-    int size() {
-        return qsize;
     }
 
     ~ThreadQueue() {}
