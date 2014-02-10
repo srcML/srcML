@@ -1,7 +1,7 @@
 /*
-  src_input_libarchive.hpp
+  parse_queue.hpp
 
-  Copyright (C) 2004-2014  SDML (www.srcML.org)
+  Copyright (C) 2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -21,19 +21,16 @@
 */
 
 /*
-  src_input_libarchive assigns local files, stdin, and archival input to the 
-    srcml parsing queue
 */
 
-#ifndef SRC_INPUT_LIBARCHIVE_HPP
-#define SRC_INPUT_LIBARCHIVE_HPP
+#ifndef PARSE_QUEUE_HPP
+#define PARSE_QUEUE_HPP
 
 #include <srcml.h>
 #include <parse_request.hpp>
 #include <thread_queue.hpp>
 #include <string>
-#include <parse_queue.hpp>
 
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req, const std::string& input, const std::string& lang);
+typedef ThreadQueue<ParseRequest, 10> ParseQueue;
 
 #endif
