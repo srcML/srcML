@@ -29,11 +29,10 @@
 #define SRC_INPUT_LIBARCHIVE_HPP
 
 #include <srcml.h>
-#include <parse_request.hpp>
 #include <thread_queue.hpp>
 #include <string>
 #include <parse_queue.hpp>
 
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req, const std::string& input, const std::string& lang);
+void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const std::string& lang);
 
 #endif

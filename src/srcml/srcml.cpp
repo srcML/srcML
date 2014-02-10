@@ -157,11 +157,8 @@ int main(int argc, char * argv[]) {
   // create the output file
   srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
-  // setup the parsequeue
+  // setup the parsing queue
   ParseQueue queue(srcml_request.max_threads);
-
-  // setup a request
-  ParseRequest request;
 
   // process the command line inputs
   for (size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
@@ -170,22 +167,21 @@ int main(int argc, char * argv[]) {
     // stdin
     if (input_file.compare("-") == 0) {
       // check if we are using the terminal interactively
-      if(srcml_request.command & SRCML_COMMAND_INTERACTIVE) {
+      if (srcml_request.command & SRCML_COMMAND_INTERACTIVE) {
         if (!test_for_stdin())
           return 1; // stdin was requested, but no data was received
       }
     }
 
     // get prefix
-    size_t prefixPos = input_file.find("//");
     std::string prefix = "";
-
+    size_t prefixPos = input_file.find("//");
     if (prefixPos != std::string::npos)
       prefix = input_file.substr(0, prefixPos + 2);
 
     // check prefix and call handler
     if (prefix.compare("file://") == 0)
-      src_input_libarchive(queue, srcml_arch, request, input_file.substr(prefixPos+2), srcml_request.language);
+      src_input_libarchive(queue, srcml_arch, input_file.substr(prefixPos+2), srcml_request.language);
   }
   
   // wait for the parsing queue to finish

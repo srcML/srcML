@@ -134,7 +134,9 @@ void makeRequest(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req
 }
 
 // Public function used for adding tasks to the parse queue
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req, const std::string& input, const std::string& lang) {
+void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const std::string& lang) {
+
+  ParseRequest req;
 
   boost::filesystem::path localPath(input);
 
