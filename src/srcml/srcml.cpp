@@ -164,24 +164,24 @@ int main(int argc, char * argv[]) {
   for (size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
     std::string& input_file = srcml_request.positional_args[i];
 
-    // stdin
-    if (input_file.compare("-") == 0) {
-      // check if we are using the terminal interactively
-      if (srcml_request.command & SRCML_COMMAND_INTERACTIVE) {
-        if (!test_for_stdin())
+    // if stdin, then there has to be data
+    if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !test_for_stdin())
           return 1; // stdin was requested, but no data was received
-      }
+
+    // split the URI
+    // TODO: Extract function split_uri(input_file, protocol, resource)
+    std::string protocol = "";
+    std::string resource = input_file;
+    const char* sep = "://";
+    size_t prefixPos = input_file.find(sep);
+    if (prefixPos != std::string::npos) {
+      protocol = input_file.substr(0, prefixPos);
+      resource = input_file.substr(prefixPos + strlen(sep));
     }
 
-    // get prefix
-    std::string prefix = "";
-    size_t prefixPos = input_file.find("//");
-    if (prefixPos != std::string::npos)
-      prefix = input_file.substr(0, prefixPos + 2);
-
     // check prefix and call handler
-    if (prefix.compare("file://") == 0)
-      src_input_libarchive(queue, srcml_arch, input_file.substr(prefixPos+2), srcml_request.language);
+    if (protocol == "file")
+      src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
   }
   
   // wait for the parsing queue to finish
