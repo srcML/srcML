@@ -30,6 +30,6 @@
 
 #include <src_input_libarchive.hpp>
 
-void* srcml_consume(ParseQueue* queue);
+void srcml_consume(ParseQueue* queue);
 
 #endif
