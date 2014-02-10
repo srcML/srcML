@@ -26,6 +26,10 @@ def verify_test(correct, output) :
 
     globals()['test_count'] += 1
 
+    if sys.platform == "win32" :
+        correct = correct.replace("\r", "")
+        output  = output.replace("\r", "")
+
     if correct != output :
         print str(globals()['test_count']) + "\t"
         for line in difflib.unified_diff(str(correct).split("\n"), str(output).split("\n")) :
