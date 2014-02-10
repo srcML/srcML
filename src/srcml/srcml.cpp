@@ -35,6 +35,7 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <boost/filesystem.hpp>
+#include <boost/foreach.hpp>
 
 #include <stdio.h>
 #include <unistd.h>
@@ -161,8 +162,7 @@ int main(int argc, char * argv[]) {
   ParseQueue queue(srcml_request.max_threads);
 
   // process the command line inputs
-  for (size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
-    std::string& input_file = srcml_request.positional_args[i];
+  BOOST_FOREACH(std::string& input_file, srcml_request.positional_args) {
 
     // if stdin, then there has to be data
     if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !test_for_stdin())
