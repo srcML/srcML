@@ -35,14 +35,17 @@
 #include <vector>
 
 struct ParseRequest {
-    ParseRequest() : buffer(0) {}
+    ParseRequest() : buffer(0), srcml_arch(0) {}
 
     void swap(ParseRequest& other) {
 
         filename.swap(other.filename);
         buffer.swap(other.buffer);
 
+        srcml_archive* temp = srcml_arch;
         srcml_arch = other.srcml_arch;
+        other.srcml_arch = temp;
+
         lang.swap(other.lang);
     }
 
