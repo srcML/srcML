@@ -49,7 +49,6 @@ int main() {
   {
     srcml_set_encoding("foo");
     dassert(*global_archive.encoding, "foo");
-    delete global_archive.encoding;
   }
 
   /* 
@@ -64,7 +63,6 @@ int main() {
   {
     srcml_set_language("foo");
     dassert(*global_archive.language, "foo");
-    delete global_archive.language;
   }
 
   /* 
@@ -79,7 +77,6 @@ int main() {
   {
     srcml_set_filename("foo");
     dassert(*global_archive.filename, "foo");
-    delete global_archive.filename;
   }
 
   /* 
@@ -94,7 +91,6 @@ int main() {
   {
     srcml_set_directory("foo");
     dassert(*global_archive.directory, "foo");
-    delete global_archive.directory;
   }
 
   /* 
@@ -109,7 +105,6 @@ int main() {
   {
     srcml_set_version("foo");
     dassert(*global_archive.version, "foo");
-    delete global_archive.version;
   }
 
   /* 
@@ -237,15 +232,14 @@ int main() {
    */
 
   {
-    global_archive.encoding = 0;
+    global_archive.encoding = boost::optional<std::string>();
     dassert(srcml_get_encoding(), 0);
   }
 
   {
-    global_archive.encoding = new std::string("foo");
+    global_archive.encoding = "foo";
     dassert(srcml_get_encoding(), std::string("foo"));
-    delete global_archive.encoding;
-    global_archive.encoding = 0;
+    global_archive.encoding = boost::optional<std::string>();
   }
 
   /* 
@@ -253,15 +247,14 @@ int main() {
    */
 
   {
-    global_archive.language = 0;
+    global_archive.language = boost::optional<std::string>();
     dassert(srcml_get_language(), 0);
   }
 
   {
-    global_archive.language = new std::string("foo");
+    global_archive.language = "foo";
     dassert(srcml_get_language(), std::string("foo"));
-    delete global_archive.language;
-    global_archive.language = 0;
+    global_archive.language = boost::optional<std::string>();
   }
 
   /* 
@@ -269,15 +262,14 @@ int main() {
    */
 
   {
-    global_archive.filename = 0;
+    global_archive.filename = boost::optional<std::string>();
     dassert(srcml_get_filename(), 0);
   }
 
   {
-    global_archive.filename = new std::string("foo");
+    global_archive.filename = "foo";
     dassert(srcml_get_filename(), std::string("foo"));
-    delete global_archive.filename;
-    global_archive.filename = 0;
+    global_archive.filename = boost::optional<std::string>();
   }
 
   /* 
@@ -285,15 +277,14 @@ int main() {
    */
 
   {
-    global_archive.directory = 0;
+    global_archive.directory = boost::optional<std::string>();
     dassert(srcml_get_directory(), 0);
   }
 
   {
-    global_archive.directory = new std::string("foo");
+    global_archive.directory = "foo";
     dassert(srcml_get_directory(), std::string("foo"));
-    delete global_archive.directory; 
-    global_archive.directory = 0;
+    global_archive.directory = boost::optional<std::string>();
  }
 
   /* 
@@ -301,15 +292,14 @@ int main() {
    */
 
   {
-    global_archive.version = 0;
+    global_archive.version = boost::optional<std::string>();
     dassert(srcml_get_version(), 0);
   }
 
   {
-    global_archive.version = new std::string("foo");
+    global_archive.version = "foo";
     dassert(srcml_get_version(), std::string("foo"));
-    delete global_archive.version; 
-    global_archive.version = 0;
+    global_archive.version = boost::optional<std::string>();
  }
 
   /* 
