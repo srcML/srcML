@@ -31,6 +31,29 @@
 #include <thread_queue.hpp>
 #include <string>
 
-typedef ThreadQueue<ParseRequest, 10> ParseQueue;
+class ParseQueue {
+public:
+
+    /* puts an element in the back of the queue by swapping with parameter */
+    void push(ParseRequest& value) {
+        queue.push(value);
+    }
+
+    /* removes the front element from the queue by swapping with parameter */
+    void pop(ParseRequest& value) {
+        queue.pop(value);
+    }
+
+    void done() {
+        queue.done();
+    }
+
+    int size() {
+        return queue.size();
+    }
+
+private:
+    ThreadQueue<ParseRequest, 10> queue;
+};
 
 #endif
