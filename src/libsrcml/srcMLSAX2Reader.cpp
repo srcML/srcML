@@ -138,10 +138,10 @@ int srcMLSAX2Reader::readRootUnitAttributes(boost::optional<std::string> & langu
 
   if(handler.read_root) return 0;
 
-  if(handler.archive->language) language = new std::string(*handler.archive->language);
-  if(handler.archive->filename) filename = new std::string(*handler.archive->filename);
-  if(handler.archive->directory) directory = new std::string(*handler.archive->directory);
-  if(handler.archive->version) version = new std::string(*handler.archive->version);
+  language = handler.archive->language;
+  filename = handler.archive->filename;
+  directory = handler.archive->directory;
+  version = handler.archive->version;
   attributes = handler.archive->attributes;
   prefixes = handler.archive->prefixes;
   namespaces = handler.archive->namespaces;
@@ -174,10 +174,10 @@ int srcMLSAX2Reader::readUnitAttributes(boost::optional<std::string> & language,
 
   if(handler.is_done) return 0;
 
-  if(handler.unit->language) language = new std::string(*handler.unit->language);
-  if(handler.unit->filename) filename = new std::string(*handler.unit->filename);
-  if(handler.unit->directory) directory = new std::string(*handler.unit->directory);
-  if(handler.unit->version) version = new std::string(*handler.unit->version);
+  language = handler.unit->language;
+  filename = handler.unit->filename;
+  directory = handler.unit->directory;
+  version = handler.unit->version;
 
   return 1;
 
@@ -203,7 +203,7 @@ boost::optional<std::string>  srcMLSAX2Reader::readsrcML() {
 
   boost::optional<std::string>  unit = 0;
   try {
-    if(handler.unit->unit) unit = *handler.unit->unit;
+    if(handler.unit->unit) unit = handler.unit->unit;
   } catch(...) {}
 
   return unit;

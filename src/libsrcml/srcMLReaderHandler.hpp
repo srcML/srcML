@@ -19,6 +19,7 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
 #include <boost/thread/locks.hpp>
+#include <boost/optional.hpp>
 #pragma GCC diagnostic warning "-Wshorten-64-to-32"
 
 /**
@@ -360,7 +361,7 @@ public :
 #endif
 
     unit = srcml_create_unit(archive);
-    unit->unit = new std::string();
+    unit->unit = boost::optional<std::string>();
 
     is_empty = true;
 

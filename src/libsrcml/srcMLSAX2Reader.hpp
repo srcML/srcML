@@ -83,7 +83,7 @@ public :
                          boost::optional<std::string> & directory, boost::optional<std::string> & version);
 
   // reads the next unit and returns it srcML
-  boost::optional<std::string>  readsrcML();
+  boost::optional<std::string> readsrcML();
 
 };
 

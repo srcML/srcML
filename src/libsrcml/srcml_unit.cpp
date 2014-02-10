@@ -243,7 +243,6 @@ int srcml_parse_unit_internal(srcml_unit * unit, int lang, xmlParserInputBufferP
   size_t length = strlen((const char *)output_buffer->content);
   while(length > 0 && output_buffer->content[length - 1] == '\n')
     --length;
-  if(unit->unit) delete unit->unit;
 
   int status = SRCML_STATUS_OK;
 
@@ -570,12 +569,6 @@ LIBSRCML_DECL
 int srcml_free_unit(srcml_unit* unit) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
-
-  if(unit->language) delete unit->language, unit->language = 0;
-  if(unit->filename) delete unit->filename, unit->filename = 0;
-  if(unit->directory) delete unit->directory, unit->directory = 0;
-  if(unit->version) delete unit->version, unit->version = 0;
-  if(unit->unit) delete unit->unit, unit->unit = 0;
 
   delete unit;
 
