@@ -159,7 +159,7 @@ int main(int argc, char * argv[]) {
   srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
   // setup the parsequeue and consuming threads
-  ParseQueue queue;
+  ParseQueue queue(srcml_request.max_threads);
   const int NUM_THREADS = srcml_request.max_threads;
   boost::thread_group writers;
   for (int i = 0; i < NUM_THREADS; ++i)

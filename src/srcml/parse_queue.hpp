@@ -33,6 +33,7 @@
 
 class ParseQueue {
 public:
+    ParseQueue(int max_threads) : max_threads(max_threads) {}
 
     /* puts an element in the back of the queue by swapping with parameter */
     void push(ParseRequest& value) {
@@ -54,6 +55,7 @@ public:
 
 private:
     ThreadQueue<ParseRequest, 10> queue;
+    int max_threads;
 };
 
 #endif
