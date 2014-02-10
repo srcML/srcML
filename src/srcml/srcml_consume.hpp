@@ -31,8 +31,8 @@
 #include <thread_queue.hpp>
 #include <parse_request.hpp>
 
-typedef ThreadQueue<ParseRequest, 10> ParseQueue_Type;
+class ParseQueue;
 
-void srcml_consume(ParseQueue_Type* queue);
+void srcml_consume(ParseQueue* queue);
 
 #endif

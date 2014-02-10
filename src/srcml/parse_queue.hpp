@@ -26,19 +26,21 @@
 #ifndef PARSE_QUEUE_HPP
 #define PARSE_QUEUE_HPP
 
-#include <srcml.h>
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <boost/thread.hpp>
 #pragma GCC diagnostic warning "-Wshorten-64-to-32"
 #include <parse_request.hpp>
 #include <thread_queue.hpp>
-#include <srcml_consume.hpp>
 #include <string>
 
-typedef ThreadQueue<ParseRequest, 10> ParseQueue_Type;
+class ParseQueue;
+
+void srcml_consume(ParseQueue*);
 
 class ParseQueue {
 public:
+    typedef ThreadQueue<ParseRequest, 10> Queue_Type;
+
     ParseQueue(int max_threads) : max_threads(max_threads) {}
 
     /* puts an element in the back of the queue by swapping with parameter */
@@ -47,7 +49,7 @@ public:
         // create threads as requests are pushed
         // no more then max threads however
         if (writers.size() < max_threads)
-            writers.create_thread( boost::bind(srcml_consume, &queue) );
+            writers.create_thread( boost::bind(srcml_consume, this) );
 
         queue.push(value);
     }
@@ -67,7 +69,7 @@ public:
     }
 
 private:
-    ThreadQueue<ParseRequest, 10> queue;
+    Queue_Type queue;
     boost::thread_group writers;
     size_t max_threads;
 };

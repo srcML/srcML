@@ -31,11 +31,12 @@
 #include <parse_request.hpp>
 #include <src_input_libarchive.hpp>
 #include <boost/thread.hpp>
+#include <parse_queue.hpp>
 
 boost::mutex mtx;
 
 // Public consumption thread function
-void srcml_consume(ParseQueue_Type* queue) {
+void srcml_consume(ParseQueue* queue) {
 
   while (true) {
     ParseRequest pr;
