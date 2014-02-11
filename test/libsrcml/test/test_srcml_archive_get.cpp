@@ -32,6 +32,8 @@
 
 #include "dassert.hpp"
 
+#include <boost/optional.hpp>
+
 int main() {
 
   /* 
@@ -41,7 +43,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    archive->encoding = 0;
+    archive->encoding = boost::optional<std::string>();
     dassert(srcml_archive_get_encoding(archive), 0);
     srcml_free_archive(archive);
   }
@@ -54,7 +56,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    archive->encoding = new std::string("foo");
+    archive->encoding = "foo";
     dassert(srcml_archive_get_encoding(archive), std::string("foo"));
     srcml_free_archive(archive);
   }
@@ -66,7 +68,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    archive->language = 0;
+    archive->language = boost::optional<std::string>();
     dassert(srcml_archive_get_language(archive), 0);
     srcml_free_archive(archive);
   }
@@ -74,7 +76,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    archive->language = new std::string("foo");
+    archive->language = "foo";
     dassert(srcml_archive_get_language(archive), std::string("foo"));
     srcml_free_archive(archive);
   }
@@ -90,7 +92,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    archive->filename = 0;
+    archive->filename = boost::optional<std::string>();
     dassert(srcml_archive_get_filename(archive), 0);
     srcml_free_archive(archive);
   }
@@ -98,7 +100,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    archive->filename = new std::string("foo");
+    archive->filename = "foo";
     dassert(srcml_archive_get_filename(archive), std::string("foo"));
     srcml_free_archive(archive);
   }
@@ -114,7 +116,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    archive->directory = 0;
+    archive->directory = boost::optional<std::string>();
     dassert(srcml_archive_get_directory(archive), 0);
     srcml_free_archive(archive);
   }
@@ -122,7 +124,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    archive->directory = new std::string("foo");
+    archive->directory = "foo";
     dassert(srcml_archive_get_directory(archive), std::string("foo"));
     srcml_free_archive(archive);
   }
@@ -138,7 +140,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    archive->version = 0;
+    archive->version = boost::optional<std::string>();
     dassert(srcml_archive_get_version(archive), 0);
     srcml_free_archive(archive);
   }
@@ -146,7 +148,7 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    archive->version = new std::string("foo");
+    archive->version = "foo";
     dassert(srcml_archive_get_version(archive), std::string("foo"));
     srcml_free_archive(archive);
   }

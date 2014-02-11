@@ -39,16 +39,13 @@
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
  * on failure.
  */
+LIBSRCML_DECL
 int srcml_unit_set_language(srcml_unit* unit, const char* language) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
 
-  if(unit->language) delete unit->language;
-  try {
+  unit->language = language ? std::string(language) : boost::optional<std::string>();
 
-    unit->language = language ? new std::string(language) : 0;
-
-  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -63,16 +60,13 @@ int srcml_unit_set_language(srcml_unit* unit, const char* language) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
  * on failure.
  */
+LIBSRCML_DECL
 int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
 
-  if(unit->filename) delete unit->filename;
-  try {
+  unit->filename = filename ? std::string(filename) : boost::optional<std::string>();
 
-    unit->filename = filename ? new std::string(filename) : 0;
-
-  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -87,16 +81,14 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
  * on failure.
  */
+LIBSRCML_DECL
 int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
 
-  if(unit->directory) delete unit->directory;
-  try {
 
-    unit->directory = directory ? new std::string(directory) : 0;
+  unit->directory = directory ? std::string(directory) : boost::optional<std::string>();
 
-  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -111,16 +103,13 @@ int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
  * on failure.
  */
+LIBSRCML_DECL
 int srcml_unit_set_version(srcml_unit* unit, const char* version) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
 
-  if(unit->version) delete unit->version;
-  try {
+  unit->version = version ? std::string(version) : boost::optional<std::string>();
 
-    unit->version = version ? new std::string(version) : 0;
-
-  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -139,6 +128,7 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
  *
  * @returns langauge on success and NULL on failure.
  */
+LIBSRCML_DECL
 const char* srcml_unit_get_language(const struct srcml_unit* unit) {
 
   if(unit == NULL) return 0;
@@ -155,6 +145,7 @@ const char* srcml_unit_get_language(const struct srcml_unit* unit) {
  *
  * @returns filename attribute on success and NULL on failure.
  */
+LIBSRCML_DECL
 const char* srcml_unit_get_filename(const struct srcml_unit* unit) {
 
   if(unit == NULL) return 0;
@@ -171,6 +162,7 @@ const char* srcml_unit_get_filename(const struct srcml_unit* unit) {
  *
  * @returns directory attribute on successand NULL on failure.
  */
+LIBSRCML_DECL
 const char* srcml_unit_get_directory(const struct srcml_unit* unit) {
 
   if(unit == NULL) return 0;
@@ -187,6 +179,7 @@ const char* srcml_unit_get_directory(const struct srcml_unit* unit) {
  *
  * @returns version on success and NULL on failure.
  */
+LIBSRCML_DECL
 const char* srcml_unit_get_version(const struct srcml_unit* unit) {
 
   if(unit == NULL) return 0;
@@ -203,6 +196,7 @@ const char* srcml_unit_get_version(const struct srcml_unit* unit) {
  *
  * @returns the unit srcML on success and NULL on failure.
  */
+LIBSRCML_DECL
 const char* srcml_unit_get_xml(const struct srcml_unit* unit) {
 
   if(unit == NULL) return 0;
@@ -228,6 +222,7 @@ const char* srcml_unit_get_xml(const struct srcml_unit* unit) {
  * 
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
+LIBSRCML_DECL
 int srcml_parse_unit_internal(srcml_unit * unit, int lang, xmlParserInputBufferPtr input, OPTION_TYPE translation_options) {
 
   xmlBuffer * output_buffer = xmlBufferCreate();
@@ -248,14 +243,10 @@ int srcml_parse_unit_internal(srcml_unit * unit, int lang, xmlParserInputBufferP
   size_t length = strlen((const char *)output_buffer->content);
   while(length > 0 && output_buffer->content[length - 1] == '\n')
     --length;
-  if(unit->unit) delete unit->unit;
 
   int status = SRCML_STATUS_OK;
-  try {
 
-    unit->unit = new std::string((const char *)output_buffer->content, length);
-
-  } catch(...) { status = SRCML_STATUS_ERROR; }
+  unit->unit = std::string((const char *)output_buffer->content, length);
 
   xmlBufferFree(output_buffer);
 
@@ -273,6 +264,7 @@ int srcml_parse_unit_internal(srcml_unit * unit, int lang, xmlParserInputBufferP
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
+LIBSRCML_DECL
 int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
   if(unit == NULL || src_filename == NULL || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
@@ -294,6 +286,8 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 				      unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
   int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
 
+  xmlFreeParserInputBuffer(input);
+
   return status;
 
 }
@@ -309,6 +303,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
+LIBSRCML_DECL
 int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
 
   if(unit == NULL || src_buffer == NULL || buffer_size <= 0 || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
@@ -325,6 +320,7 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
   xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(src_buffer, (int)buffer_size, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
   int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
+  xmlFreeParserInputBuffer(input);
 
   return status;
 
@@ -340,6 +336,7 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
+LIBSRCML_DECL
 int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
   if(unit == NULL || src_file == NULL || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
@@ -375,6 +372,7 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
+LIBSRCML_DECL
 int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
   if(unit == NULL || src_fd < 0 || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
@@ -416,6 +414,7 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
+LIBSRCML_DECL
 int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
   if(unit == NULL || src_filename == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
@@ -442,6 +441,7 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
+LIBSRCML_DECL
 int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_size) {
 
   if(unit == NULL || src_buffer == NULL || src_size == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
@@ -486,6 +486,7 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
+LIBSRCML_DECL
 int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 
   if(unit == NULL || srcml_file == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
@@ -511,6 +512,7 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
+LIBSRCML_DECL
 int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
   if(unit == NULL || srcml_fd < 0 || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
@@ -540,6 +542,7 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
  *
  * @returns unit on success and on failure returns NULL
  */
+LIBSRCML_DECL
 srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
   if(archive == NULL) return 0;
@@ -565,15 +568,10 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
+LIBSRCML_DECL
 int srcml_free_unit(srcml_unit* unit) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
-
-  if(unit->language) delete unit->language, unit->language = 0;
-  if(unit->filename) delete unit->filename, unit->filename = 0;
-  if(unit->directory) delete unit->directory, unit->directory = 0;
-  if(unit->version) delete unit->version, unit->version = 0;
-  if(unit->unit) delete unit->unit, unit->unit = 0;
 
   delete unit;
 

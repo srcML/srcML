@@ -456,8 +456,6 @@ tokens {
 	STYPEDEF;
 	SASM;
 	SMACRO_CALL;
-	SMACRO_DEFN;
-	SMACRO_VALUE;
 	SSIZEOF_CALL;
     SEXTERN;
 	SNAMESPACE;
@@ -478,6 +476,8 @@ tokens {
 	SCPP_DIRECTIVE;
     SCPP_FILENAME;
     SCPP_NUMBER;
+	SCPP_MACRO_DEFN;
+	SCPP_MACRO_VALUE;
 
     // cpp directives
 	SCPP_ERROR;
@@ -6534,7 +6534,7 @@ cpp_define_name[] { CompleteElement element(this);
         {
             startNewMode(MODE_LOCAL);
 
-            startElement(SMACRO_DEFN);
+            startElement(SCPP_MACRO_DEFN);
         }
         cpp_identifier (options { greedy = true; } : { line_pos == LT(1)->getLine() && pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
 ;
@@ -6585,7 +6585,7 @@ cpp_define_parameter[] { int type_count = 1; ENTRY_DEBUG } :
 
 cpp_define_value[] { ENTRY_DEBUG } :
         {
-            startElement(SMACRO_VALUE);
+            startElement(SCPP_MACRO_VALUE);
         }
         cpp_garbage (options { greedy = true; } : cpp_garbage)*
 ;

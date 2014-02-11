@@ -107,8 +107,6 @@ namespace {
   ELEMENT_MAP(STYPEDEF, "typedef")
   ELEMENT_MAP(SASM, "asm")
   ELEMENT_MAP(SMACRO_CALL, "macro")
-  ELEMENT_MAP(SMACRO_DEFN, "macro_defn")
-  ELEMENT_MAP(SMACRO_VALUE, "value")
   ELEMENT_MAP(SENUM, "enum")
 
   ELEMENT_MAP(SIF_STATEMENT, "if")
@@ -221,6 +219,8 @@ namespace {
   ELEMENT_MAP(SCPP_ERROR,     "error")
   ELEMENT_MAP(SCPP_REGION,    "region")
   ELEMENT_MAP(SCPP_ENDREGION, "endregion")
+  ELEMENT_MAP(SCPP_MACRO_DEFN, "macro")
+  ELEMENT_MAP(SCPP_MACRO_VALUE, "value")
 
   ELEMENT_MAP(SMARKER,        "marker")
   ELEMENT_MAP(SERROR_PARSE,   "parse")
