@@ -31,10 +31,13 @@
 #include <archive_entry.h>
 #include <boost/filesystem.hpp>
 
+// Convert input to a ParseRequest and assign request to the processing queue
+void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const std::string& lang) {
 
-// Set the options for libarchive to process input files
-void setupLibArchive(archive* arch) {
-  
+  // libArchive Setup
+  archive* arch = archive_read_new();
+  archive_entry* arch_entry = archive_entry_new();
+
   // Configure libarchive supported file formats
   archive_read_support_format_ar(arch);
   archive_read_support_format_cpio(arch);
@@ -46,10 +49,7 @@ void setupLibArchive(archive* arch) {
   archive_read_support_format_zip(arch);
   archive_read_support_format_raw(arch);
 
-  /*
-    Check libarchive version
-    enable version specific features/syntax
-  */
+  /* Check libarchive version enable version specific features/syntax */
   #if ARCHIVE_VERSION_NUMBER < 3000000
     // V2 Only Settings
     // Compressions
@@ -65,23 +65,14 @@ void setupLibArchive(archive* arch) {
     // Compressions
     archive_read_support_filter_all(arch); 
   #endif
-}
 
-// Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const std::string& lang) {
+  bool stdin = input_file == "-";
 
-  // libArchive Setup
-  archive * arch = archive_read_new();
-  archive_entry * arch_entry = archive_entry_new();
-  setupLibArchive(arch);
-
-  if (archive_read_open_filename(arch, (input_file.compare("-") != 0 ? input_file.c_str() : NULL), 16384)!= ARCHIVE_OK) {
+  // open the archive
+  if (archive_read_open_filename(arch, (!stdin ? input_file.c_str() : 0), 16384)!= ARCHIVE_OK) {
     std::cerr << "Unable to open archive\n";
     exit(1);
   }
-    
-  // Stdin
-  bool stdin = input_file.compare("-") == 0;
 
   while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
     std::string filename = archive_entry_pathname(arch_entry);
@@ -90,7 +81,7 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
       That needs to be swapped out with the actual file name from the 
       CLI arg.
     */
-    if (filename.compare("data") == 0 && !stdin)
+    if (!stdin && filename == "data")
       filename = input_file;
 
     if (!stdin) {

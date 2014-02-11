@@ -171,7 +171,7 @@ int main(int argc, char * argv[]) {
 
     // split the URI
     // TODO: Extract function split_uri(input_file, protocol, resource)
-    std::string protocol = "";
+    std::string protocol;
     std::string resource = input_file;
     const char* sep = "://";
     size_t prefixPos = input_file.find(sep);
