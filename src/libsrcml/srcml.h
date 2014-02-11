@@ -285,7 +285,6 @@ const char*        srcml_archive_get_encoding (const struct srcml_archive*);
 LIBSRCML_DECL
 const char*        srcml_archive_get_language (const struct srcml_archive*);
 LIBSRCML_DECL
-LIBSRCML_DECL
 const char*        srcml_archive_get_filename (const struct srcml_archive*);
 LIBSRCML_DECL
 const char*        srcml_archive_get_directory(const struct srcml_archive*);
