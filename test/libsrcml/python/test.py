@@ -426,7 +426,7 @@ verify_test(asrcml, xml)
 
 verify_test(2, srcml.check_language("C++"))
 verify_test("C++", srcml.check_extension("a.cpp"))
-verify_test(0, srcml.check_format("a.cpp.tar"))
+verify_test(1, srcml.check_format("a.cpp.tar"))
 verify_test(1, srcml.check_encoding("UTF-8"))
 verify_test(1, srcml.check_xslt())
 verify_test(1, srcml.check_exslt())

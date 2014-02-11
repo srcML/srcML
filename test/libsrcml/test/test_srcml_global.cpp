@@ -106,31 +106,31 @@ int main() {
    */
 
   {
-    dassert(srcml_check_format("a.tar"), SRCML_STATUS_OK);
+    dassert(srcml_check_format("a.tar"), 1);
   }
 
   {
-    dassert(srcml_check_format("a.tar.bz2"), SRCML_STATUS_OK);
+    dassert(srcml_check_format("a.tar.bz2"), 1);
   }
 
   {
-    dassert(srcml_check_format("a.tar.gz"), SRCML_STATUS_OK);
+    dassert(srcml_check_format("a.tar.gz"), 1);
   }
 
   {
-    dassert(srcml_check_format("a.tar.xz"), SRCML_STATUS_OK);
+    dassert(srcml_check_format("a.tar.xz"), 1);
   }
 
   {
-    dassert(srcml_check_format("a.xz"), SRCML_STATUS_OK);
+    dassert(srcml_check_format("a.xz"), 1);
   }
 
   {
-    dassert(srcml_check_format("a.foo"), SRCML_STATUS_ERROR);
+    dassert(srcml_check_format("a.foo"), 0);
   }
 
   {
-    dassert(srcml_check_format(0), SRCML_STATUS_ERROR);
+    dassert(srcml_check_format(0), 0);
   }
 
   /* 

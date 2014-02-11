@@ -695,12 +695,12 @@ const char * srcml_check_extension(const char* filename) {
  *
  * Check if the format is currently supported
  * Full filename can be provided, and extension will be extracted 
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return if format is supported.
  */
 LIBSRCML_DECL
 int srcml_check_format(const char* format) {
 
-  if(format == NULL) return SRCML_STATUS_ERROR;
+  if(format == NULL) return 0;
 
   static const boost::regex extRegEx("\\.(xz|zg|bz2|tar).*$");
 
@@ -710,10 +710,10 @@ int srcml_check_format(const char* format) {
 
   if(boost::regex_search(format, format + length, what,extRegEx)) {
 
-    return SRCML_STATUS_OK;
+    return 1;
 
   } else
-    return SRCML_STATUS_ERROR;
+    return 0;
 
 }
 
