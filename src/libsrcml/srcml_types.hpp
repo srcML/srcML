@@ -26,6 +26,8 @@
 #include <Language.hpp>
 #include <srcMLTranslator.hpp>
 
+#include <boost/optional.hpp>
+
 #include <string>
 #include <vector>
 
@@ -70,17 +72,17 @@ struct srcml_archive {
   SRCML_ARCHIVE_TYPE type;
 
   /** an attribute for a name of a file */
-  std::string * filename;
+  boost::optional<std::string> filename;
   /** an attribute for an encoding */
-  std::string * encoding;
+  boost::optional<std::string> encoding;
   /** an attribute for an ecoding */
-  std::string * xml_encoding;
+  boost::optional<std::string> xml_encoding;
   /** an attribute for a language */
-  std::string * language;
+  boost::optional<std::string> language;
   /** an attribute for a directory path */
-  std::string * directory;
+  boost::optional<std::string> directory;
   /** an attribute for a version string */
-  std::string * version;
+  boost::optional<std::string> version;
   /** an array of name-value attribute pairs */
   std::vector<std::string>  attributes;
 
@@ -131,16 +133,16 @@ struct srcml_unit {
   srcml_archive* archive;
 
   /** an attribute for a language */
-  std::string * language;
+  boost::optional<std::string> language;
   /** an attribute name for a file */
-  std::string * filename;
+  boost::optional<std::string> filename;
   /** an attribute for a directory path */
-  std::string * directory;
+  boost::optional<std::string> directory;
   /** an attribute for a version string */
-  std::string * version;
+  boost::optional<std::string> version;
 
   /** a buffer to store srcml from read and after parsing */
-  std::string * unit;
+  boost::optional<std::string> unit;
 };
 
 #endif

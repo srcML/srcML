@@ -14,9 +14,18 @@ if sys.platform == "darwin" :
 elif sys.platform == "linux2" :
     LIBC_PATH = "libc.so.6"
 else :
-    LIBC_PATH = "libc.dll"
+    LIBC_PATH = "msvcrt.dll"
 
 libc = ctypes.cdll.LoadLibrary(LIBC_PATH)
+
+
+if sys.platform == "win32" or sys.platform == "cygwin" :
+    os.open = libc._open
+    os.close = libc._close
+    os.O_WRONLY = 1
+    os.O_CREAT = 256
+    os.O_RDONLY = 0
+
 libc.fopen.restype = ctypes.c_void_p 
 libc.fopen.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
 libc.fclose.restype = ctypes.c_int
@@ -25,6 +34,10 @@ libc.fclose.argtypes = [ctypes.c_void_p]
 def verify_test(correct, output) :
 
     globals()['test_count'] += 1
+
+    if sys.platform == "win32" or sys.platform == "cygwin" :
+        correct = str(correct).replace("\r", "")
+        output  = str(output).replace("\r", "")
 
     if correct != output :
         print str(globals()['test_count']) + "\t"
@@ -273,7 +286,7 @@ archive.close()
 archive = srcml.srcml_archive()
 archive.read_open_memory(asrcml)
 archive.append_transform_xpath("//src:unit")
-oarchive = srcml.srcml_archive()
+oarchive = archive.clone()
 oarchive.write_open_memory()
 archive.apply_transforms(oarchive)
 oarchive.close()
@@ -285,7 +298,7 @@ verify_test(asrcml, oarchive.srcML())
 archive = srcml.srcml_archive()
 archive.read_open_memory(asrcml)
 archive.append_transform_xslt("copy.xsl")
-oarchive = srcml.srcml_archive()
+oarchive = archive.clone()
 oarchive.write_open_memory()
 archive.apply_transforms(oarchive)
 oarchive.close()
@@ -297,7 +310,7 @@ verify_test(asrcml, oarchive.srcML())
 archive = srcml.srcml_archive()
 archive.read_open_memory(asrcml)
 archive.append_transform_relaxng("schema.rng")
-oarchive = srcml.srcml_archive()
+oarchive = archive.clone()
 oarchive.write_open_memory()
 archive.apply_transforms(oarchive)
 oarchive.close()
@@ -305,25 +318,20 @@ archive.close()
 
 verify_test(asrcml, oarchive.srcML())
 
-#
+# clear transforms
 archive = srcml.srcml_archive()
 archive.read_open_memory(asrcml)
 archive.append_transform_xpath("//src:unit")
 archive.append_transform_xslt("copy.xsl")
 archive.append_transform_relaxng("schema.rng")
 archive.clear_transforms()
-oarchive = srcml.srcml_archive()
+oarchive = archive.clone()
 oarchive.write_open_memory()
 archive.apply_transforms(oarchive)
 oarchive.close()
 archive.close()
 
-asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src">
-
-</unit>
-"""
-verify_test(asrcml, oarchive.srcML())
+verify_test(None, oarchive.srcML())
 
 # unit set/get
 archive = srcml.srcml_archive()
@@ -427,8 +435,8 @@ verify_test(asrcml, xml)
 
 verify_test(2, srcml.check_language("C++"))
 verify_test("C++", srcml.check_extension("a.cpp"))
-verify_test(0, srcml.check_format("a.cpp.tar"))
-verify_test(0, srcml.check_encoding("UTF-8"))
+verify_test(1, srcml.check_format("a.cpp.tar"))
+verify_test(1, srcml.check_encoding("UTF-8"))
 verify_test(1, srcml.check_xslt())
 verify_test(1, srcml.check_exslt())
 srcml.srcml("", "")
