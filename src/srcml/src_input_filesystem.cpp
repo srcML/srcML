@@ -24,9 +24,16 @@
   src_input_filesystem assigns directories to parse request
 */
 
+#include <src_input_libarchive.hpp>
 #include <src_input_filesystem.hpp>
 #include <boost/filesystem.hpp>
-
- void src_input_filesystem(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const std::string& lang) {
-
- }
+  
+void src_input_filesystem(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const std::string& lang) {
+	boost::filesystem::path localPath(input);
+	for (boost::filesystem::recursive_directory_iterator end, dir(localPath); dir != end; ++dir) {
+		if (is_regular_file(*dir)) {
+			if (srcml_archive_check_extension(srcml_arch, dir->path().string().c_str()))
+				src_input_libarchive(queue, srcml_arch, dir->path().string(), lang);
+		}
+	}
+}
