@@ -57,7 +57,7 @@ public:
             
             if (qsize == 0 && empty) {
                 Type t;
-                value.swap(empty_request);
+                value.swap(t);
             } else {
                 value.swap(buffer[front]);
                 ++front %= Capacity;
@@ -86,7 +86,6 @@ private:
     int qsize;
     int back;
     int front;
-    Type empty_request;
     bool empty;
     boost::mutex mutex;
     boost::condition_variable cond_full;
