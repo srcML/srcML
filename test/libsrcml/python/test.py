@@ -277,7 +277,7 @@ archive.close()
 archive = srcml.srcml_archive()
 archive.read_open_memory(asrcml)
 archive.append_transform_xpath("//src:unit")
-oarchive = srcml.srcml_archive()
+oarchive = archive.clone()
 oarchive.write_open_memory()
 archive.apply_transforms(oarchive)
 oarchive.close()
@@ -289,7 +289,7 @@ verify_test(asrcml, oarchive.srcML())
 archive = srcml.srcml_archive()
 archive.read_open_memory(asrcml)
 archive.append_transform_xslt("copy.xsl")
-oarchive = srcml.srcml_archive()
+oarchive = archive.clone()
 oarchive.write_open_memory()
 archive.apply_transforms(oarchive)
 oarchive.close()
@@ -301,7 +301,7 @@ verify_test(asrcml, oarchive.srcML())
 archive = srcml.srcml_archive()
 archive.read_open_memory(asrcml)
 archive.append_transform_relaxng("schema.rng")
-oarchive = srcml.srcml_archive()
+oarchive = archive.clone()
 oarchive.write_open_memory()
 archive.apply_transforms(oarchive)
 oarchive.close()
@@ -309,25 +309,20 @@ archive.close()
 
 verify_test(asrcml, oarchive.srcML())
 
-#
+# clear transforms
 archive = srcml.srcml_archive()
 archive.read_open_memory(asrcml)
 archive.append_transform_xpath("//src:unit")
 archive.append_transform_xslt("copy.xsl")
 archive.append_transform_relaxng("schema.rng")
 archive.clear_transforms()
-oarchive = srcml.srcml_archive()
+oarchive = archive.clone()
 oarchive.write_open_memory()
 archive.apply_transforms(oarchive)
 oarchive.close()
 archive.close()
 
-asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src">
-
-</unit>
-"""
-verify_test(asrcml, oarchive.srcML())
+verify_test("", oarchive.srcML())
 
 # unit set/get
 archive = srcml.srcml_archive()
