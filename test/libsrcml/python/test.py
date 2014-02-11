@@ -14,7 +14,7 @@ if sys.platform == "darwin" :
 elif sys.platform == "linux2" :
     LIBC_PATH = "libc.so.6"
 else :
-    LIBC_PATH = "libc.dll"
+    LIBC_PATH = "msvcrt.dll"
 
 libc = ctypes.cdll.LoadLibrary(LIBC_PATH)
 libc.fopen.restype = ctypes.c_void_p 
