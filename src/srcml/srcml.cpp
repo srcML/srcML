@@ -180,15 +180,11 @@ int main(int argc, char * argv[]) {
       resource = input_file.substr(prefixPos + strlen(sep));
     }
 
-    // check prefix and call handler
-    if (protocol == "file") {
-      boost::filesystem::path localPath(resource);
-      if (is_directory(localPath)) {
+    // call handler based on prefix
+    if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
         src_input_filesystem(queue, srcml_arch, resource, srcml_request.language);
-      }
-      else {
+    } else if (protocol == "file") {
         src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
-      }
     }
   }
   
