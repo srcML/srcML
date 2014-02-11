@@ -24,7 +24,7 @@ if sys.platform == "win32" or sys.platform == "cygwin" :
     os.close = libc._close
     os.O_WRONLY = 1
     os.O_CREAT = 256
-    os.O_RDONLY = 256
+    os.O_RDONLY = 0
 
 libc.fopen.restype = ctypes.c_void_p 
 libc.fopen.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
