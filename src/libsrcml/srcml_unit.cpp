@@ -44,12 +44,8 @@ int srcml_unit_set_language(srcml_unit* unit, const char* language) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
 
-  if(unit->language) delete unit->language;
-  try {
+  unit->language = language ? std::string(language) : boost::optional<std::string>();
 
-    unit->language = language ? new std::string(language) : 0;
-
-  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -69,12 +65,8 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
 
-  if(unit->filename) delete unit->filename;
-  try {
+  unit->filename = filename ? std::string(filename) : boost::optional<std::string>();
 
-    unit->filename = filename ? new std::string(filename) : 0;
-
-  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -94,12 +86,9 @@ int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
 
-  if(unit->directory) delete unit->directory;
-  try {
 
-    unit->directory = directory ? new std::string(directory) : 0;
+  unit->directory = directory ? std::string(directory) : boost::optional<std::string>();
 
-  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -119,12 +108,8 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
 
-  if(unit->version) delete unit->version;
-  try {
+  unit->version = version ? std::string(version) : boost::optional<std::string>();
 
-    unit->version = version ? new std::string(version) : 0;
-
-  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -258,14 +243,10 @@ int srcml_parse_unit_internal(srcml_unit * unit, int lang, xmlParserInputBufferP
   size_t length = strlen((const char *)output_buffer->content);
   while(length > 0 && output_buffer->content[length - 1] == '\n')
     --length;
-  if(unit->unit) delete unit->unit;
 
   int status = SRCML_STATUS_OK;
-  try {
 
-    unit->unit = new std::string((const char *)output_buffer->content, length);
-
-  } catch(...) { status = SRCML_STATUS_ERROR; }
+  unit->unit = std::string((const char *)output_buffer->content, length);
 
   xmlBufferFree(output_buffer);
 
@@ -588,12 +569,6 @@ LIBSRCML_DECL
 int srcml_free_unit(srcml_unit* unit) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
-
-  if(unit->language) delete unit->language, unit->language = 0;
-  if(unit->filename) delete unit->filename, unit->filename = 0;
-  if(unit->directory) delete unit->directory, unit->directory = 0;
-  if(unit->version) delete unit->version, unit->version = 0;
-  if(unit->unit) delete unit->unit, unit->unit = 0;
 
   delete unit;
 

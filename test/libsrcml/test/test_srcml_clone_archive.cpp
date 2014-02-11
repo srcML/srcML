@@ -38,11 +38,11 @@ int main() {
 
     srcml_archive * archive = srcml_create_archive();
     archive->type = SRCML_ARCHIVE_READ;
-    archive->filename = new std::string ("f");
-    archive->encoding = new std::string ("e");
-    archive->language = new std::string ("l");
-    archive->directory = new std::string ("d");
-    archive->version = new std::string ("v");
+    archive->filename = "f";
+    archive->encoding = "e";
+    archive->language = "l";
+    archive->directory = "d";
+    archive->version = "v";
     archive->attributes.push_back("a");
     archive->attributes.push_back("a");
     archive->options = 1 | 2;

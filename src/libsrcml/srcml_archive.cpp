@@ -76,12 +76,6 @@ srcml_archive* srcml_create_archive()
   } catch(...) { return 0; }
 
   archive->type = SRCML_ARCHIVE_INVALID;
-  archive->filename = 0;
-  archive->encoding = 0;
-  archive->xml_encoding = 0;
-  archive->language = 0;
-  archive->directory = 0;
-  archive->version = 0;
   archive->options = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL;
   archive->tabstop = 8;
   archive->translator = 0;
@@ -117,12 +111,6 @@ void srcml_free_archive(srcml_archive * archive) {
 
   if(archive == NULL) return;
 
-  if(archive->filename) delete archive->filename, archive->filename = 0;
-  if(archive->encoding) delete archive->encoding, archive->encoding = 0;
-  if(archive->language) delete archive->language, archive->language = 0;
-  if(archive->directory) delete archive->directory, archive->directory = 0;
-  if(archive->version) delete archive->version, archive->version = 0;
-
   delete archive;
 }
 
@@ -144,25 +132,11 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
   if(!new_archive) return 0;
 
-  try {
-
-    new_archive->filename = archive->filename ? new std::string(*archive->filename) : 0;
-    new_archive->encoding = archive->encoding ? new std::string(*archive->encoding): 0;
-    new_archive->language = archive->language ? new std::string(*archive->language) : 0;
-    new_archive->directory = archive->directory ? new std::string(*archive->directory) : 0;
-    new_archive->version = archive->version ? new std::string(*archive->version) : 0;
-
-  } catch(...) {
-
-    // deallocate any allocated before error.
-    // if error version can not have been allocated.
-    if(archive->filename) delete archive->filename;
-    if(archive->encoding) delete archive->encoding;
-    if(archive->language) delete archive->language;
-    if(archive->directory) delete archive->directory;
-    return 0;
-
-  }
+  new_archive->filename = archive->filename;
+  new_archive->encoding = archive->encoding;
+  new_archive->language = archive->language;
+  new_archive->directory = archive->directory;
+  new_archive->version = archive->version;
 
   try {
 
@@ -224,12 +198,8 @@ int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
-  if(archive->encoding) delete archive->encoding;
-  try {
+  archive->encoding = encoding ? std::string(encoding) : boost::optional<std::string>();
 
-    archive->encoding = encoding ? new std::string(encoding) : 0;
-
-  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -248,12 +218,8 @@ int srcml_archive_set_language(srcml_archive* archive, const char* language) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
-  if(archive->language) delete archive->language;
-  try {
+  archive->language = language ? std::string(language) : boost::optional<std::string>();
 
-    archive->language = language ? new std::string(language) : 0;
-
-  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -272,12 +238,8 @@ int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
-  if(archive->filename) delete archive->filename;
-  try {
+  archive->filename = filename ? std::string(filename) : boost::optional<std::string>();
 
-    archive->filename = filename ? new std::string(filename) : 0;
-
-  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -296,12 +258,8 @@ int srcml_archive_set_directory (srcml_archive* archive, const char* directory) 
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
-  if(archive->directory) delete archive->directory;
-  try {
+  archive->directory = directory ? std::string(directory) : boost::optional<std::string>();
 
-    archive->directory = directory ? new std::string(directory) : 0;
-
-  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -320,12 +278,8 @@ int srcml_archive_set_version(srcml_archive* archive, const char* version) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
-  if(archive->version) delete archive->version;
-  try {
+  archive->version = version ? std::string(version) : boost::optional<std::string>();
 
-    archive->version = version ? new std::string(version) : 0;
-
-  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -794,7 +748,7 @@ void srcml_read_internal(srcml_archive * archive) {
 
   archive->type = SRCML_ARCHIVE_READ;
 
-  std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+  boost::optional<std::string> language, filename, directory, version;
   bool done = !archive->reader->readRootUnitAttributes(language, filename, directory, version,
                                                        archive->attributes, archive->prefixes,
                                                        archive->namespaces,
@@ -1008,9 +962,9 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
 
   if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
-  std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+  boost::optional<std::string> language, filename, directory, version;
   archive->reader->readUnitAttributes(language, filename, directory, version);
-  std::string * read_unit = archive->reader->readsrcML();
+  boost::optional<std::string> read_unit = archive->reader->readsrcML();
 
   srcml_unit * unit = 0;
   if(read_unit) {

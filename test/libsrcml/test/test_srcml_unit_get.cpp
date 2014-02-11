@@ -43,7 +43,7 @@ int main() {
   {
 
     srcml_unit * unit = srcml_create_unit(archive);
-    unit->language = 0;
+    unit->language = boost::optional<std::string>();
     dassert(srcml_unit_get_language(unit), 0);
     srcml_free_unit(unit);
   }
@@ -51,7 +51,7 @@ int main() {
   {
 
     srcml_unit * unit = srcml_create_unit(archive);
-    unit->language = new std::string("foo");
+    unit->language = "foo";
     dassert(srcml_unit_get_language(unit), std::string("foo"));
     srcml_free_unit(unit);
   }
@@ -67,7 +67,7 @@ int main() {
   {
 
     srcml_unit * unit = srcml_create_unit(archive);
-    unit->filename = 0;
+    unit->filename = boost::optional<std::string>();
     dassert(srcml_unit_get_filename(unit), 0);
     srcml_free_unit(unit);
   }
@@ -75,7 +75,7 @@ int main() {
   {
 
     srcml_unit * unit = srcml_create_unit(archive);
-    unit->filename = new std::string("foo");
+    unit->filename = "foo";
     dassert(srcml_unit_get_filename(unit), std::string("foo"));
     srcml_free_unit(unit);
   }
@@ -91,7 +91,7 @@ int main() {
   {
 
     srcml_unit * unit = srcml_create_unit(archive);
-    unit->directory = 0;
+    unit->directory = boost::optional<std::string>();
     dassert(srcml_unit_get_directory(unit), 0);
     srcml_free_unit(unit);
   }
@@ -99,7 +99,7 @@ int main() {
   {
 
     srcml_unit * unit = srcml_create_unit(archive);
-    unit->directory = new std::string("foo");
+    unit->directory = "foo";
     dassert(srcml_unit_get_directory(unit), std::string("foo"));
     srcml_free_unit(unit);
   }
@@ -115,7 +115,7 @@ int main() {
   {
 
     srcml_unit * unit = srcml_create_unit(archive);
-    unit->version = 0;
+    unit->version = boost::optional<std::string>();
     dassert(srcml_unit_get_version(unit), 0);
     srcml_free_unit(unit);
   }
@@ -123,7 +123,7 @@ int main() {
   {
 
     srcml_unit * unit = srcml_create_unit(archive);
-    unit->version = new std::string("foo");
+    unit->version = "foo";
     dassert(srcml_unit_get_version(unit), std::string("foo"));
     srcml_free_unit(unit);
   }
@@ -139,7 +139,7 @@ int main() {
   {
 
     srcml_unit * unit = srcml_create_unit(archive);
-    unit->unit = 0;
+    unit->unit = boost::optional<std::string>();
     dassert(srcml_unit_get_xml(unit), 0);
     srcml_free_unit(unit);
   }
@@ -147,7 +147,7 @@ int main() {
   {
 
     srcml_unit * unit = srcml_create_unit(archive);
-    unit->unit = new std::string("<unit/>");
+    unit->unit = "<unit/>";
     dassert(srcml_unit_get_xml(unit), std::string("<unit/>"));
     srcml_free_unit(unit);
   }
