@@ -75,6 +75,10 @@ public :
       buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
     else
       buf = xmlOutputBufferCreateFd(fd, NULL);
+
+#ifdef LIBSRCML_COMPILER_IS_MSVC
+    buf->writecallback = (xmlOutputWriteCallback)write;
+#endif
     // TODO:  Detect error
 
       //xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
