@@ -32,11 +32,13 @@
 #include <src_input_libarchive.hpp>
 #include <boost/thread.hpp>
 #include <parse_queue.hpp>
+#include <write_request.hpp>
+#include <write_queue.hpp>
 
 boost::mutex mtx;
 
 // Public consumption thread function
-void srcml_consume(ParseQueue* queue) {
+void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
 
   while (true) {
     ParseRequest pr;
@@ -46,18 +48,17 @@ void srcml_consume(ParseQueue* queue) {
     if (pr.empty())
       break;
 
-    // Standard source processing (src2srcml)
-    if (pr.lang.compare("xml") != 0) {
-      // Build, parse, and write srcml unit
-      srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
-      srcml_unit_set_filename(unit, pr.filename.c_str());
-      srcml_unit_set_language(unit, pr.lang.c_str());
-      srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
-      
-      mtx.lock();
-      srcml_write_unit(pr.srcml_arch, unit);
-      mtx.unlock();
-    }
+    // build and parse
+    srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
+    srcml_unit_set_filename(unit, pr.filename.c_str());
+    srcml_unit_set_language(unit, pr.lang.c_str());
+    srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
+
+    // write unit
+    WriteRequest wr;
+    wr.srcml_arch = pr.srcml_arch;
+    wr.unit = unit;
+    wqueue->push(wr);
   }
 }
 

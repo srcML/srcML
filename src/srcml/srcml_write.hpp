@@ -1,5 +1,5 @@
 /*
-  srcml_consume.hpp
+  srcml_write.hpp
 
   Copyright (C) 2014  SDML (www.srcML.org)
 
@@ -21,16 +21,17 @@
 */
 
 /*
-  srcml_consume calls appropriate libsrcml functions for processing srcml
+  srcml_write calls appropriate libsrcml functions for processing srcml
     or source file data respectively 
 */
 
-#ifndef SRCML_CONSUME_HPP
-#define SRCML_CONSUME_HPP
+#ifndef SRCML_WRITE_HPP
+#define SRCML_WRITE_HPP
 
-class ParseQueue;
+#include <thread_oqueue.hpp>
+
 class WriteQueue;
 
-void srcml_consume(ParseQueue*, WriteQueue*);
+void srcml_write(WriteQueue* queue);
 
 #endif

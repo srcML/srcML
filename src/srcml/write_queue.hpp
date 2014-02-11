@@ -1,5 +1,5 @@
 /*
-  parse_queue.hpp
+  write_queue.hpp
 
   Copyright (C) 2014  SDML (www.srcML.org)
 
@@ -23,52 +23,49 @@
 /*
 */
 
-#ifndef PARSE_QUEUE_HPP
-#define PARSE_QUEUE_HPP
+#ifndef WRITE_QUEUE_HPP
+#define WRITE_QUEUE_HPP
 
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <boost/thread.hpp>
 #pragma GCC diagnostic warning "-Wshorten-64-to-32"
-#include <parse_request.hpp>
-#include <thread_queue.hpp>
+#include <write_request.hpp>
+#include <thread_oqueue.hpp>
 #include <string>
-#include <write_queue.hpp>
+#include <srcml.h>
 
-class ParseQueue;
+class WriteQueue;
 
-void srcml_consume(ParseQueue*, WriteQueue*);
+void srcml_write(WriteQueue*);
 
-class ParseQueue {
+class WriteQueue {
 public:
-    typedef ThreadQueue<ParseRequest, 10> Queue_Type;
+    typedef ThreadOQueue<WriteRequest, 10> Queue_Type;
 
-    ParseQueue(int max_threads) : max_threads(max_threads) {}
+    WriteQueue() : max_threads(1) {}
 
     /* puts an element in the back of the queue by swapping with parameter */
-    void push(ParseRequest& value) {
+    void push(WriteRequest& value) {
 
         // create threads as requests are pushed
         // no more then max threads however
         if (writers.size() < max_threads)
-            writers.create_thread( boost::bind(srcml_consume, this, &wqueue) );
+            writers.create_thread( boost::bind(srcml_write, this) );
 
         queue.push(value);
     }
 
     /* removes the front element from the queue by swapping with parameter */
-    void pop(ParseRequest& value) {
+    void pop(WriteRequest& value) {
         queue.pop(value);
     }
 
     void wait() {
         queue.done();
         writers.join_all();
-
-        wqueue.wait();
     }
 
 private:
-    WriteQueue wqueue;
     Queue_Type queue;
     boost::thread_group writers;
     size_t max_threads;
