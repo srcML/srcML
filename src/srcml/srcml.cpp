@@ -33,6 +33,9 @@
 #include <write_queue.hpp>
 #include <src_input_libarchive.hpp>
 #include <src_input_filesystem.hpp>
+#include <srcml_display_info.hpp>
+#include <srcml_list_unit_files.hpp>
+#include <src_prefix.hpp>
 
 #include <archive.h>
 #include <archive_entry.h>
@@ -46,8 +49,6 @@
 // helper functions
 bool checkLocalFiles(std::vector<std::string>& pos_args);
 bool test_for_stdin();
-void display_info(std::vector<std::string>& pos_args);
-void list_unit_files(std::vector<std::string>& pos_args);
 
 int main(int argc, char * argv[]) {
 
@@ -90,19 +91,19 @@ int main(int argc, char * argv[]) {
 
   // srcml long info
   if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
-    display_info(srcml_request.positional_args);
+    //display_info(srcml_request.positional_args);
     return 0;
   }
 
   // srcml info
   if (srcml_request.command & SRCML_COMMAND_INFO) {
-    display_info(srcml_request.positional_args);
+    //display_info(srcml_request.positional_args);
     return 0; 
   }
 
   // list filenames in srcml archive
   if (srcml_request.command & SRCML_COMMAND_LIST) {
-    list_unit_files(srcml_request.positional_args);
+    //list_unit_files(srcml_request.positional_args);
     return 0;
   }
   
@@ -173,13 +174,8 @@ int main(int argc, char * argv[]) {
     // split the URI
     // TODO: Extract function split_uri(input_file, protocol, resource)
     std::string protocol;
-    std::string resource = input_file;
-    const char* sep = "://";
-    size_t prefixPos = input_file.find(sep);
-    if (prefixPos != std::string::npos) {
-      protocol = input_file.substr(0, prefixPos);
-      resource = input_file.substr(prefixPos + strlen(sep));
-    }
+    std::string resource;
+    src_prefix_split_uri(input_file, protocol, resource);
 
     // call handler based on prefix
     if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
@@ -247,95 +243,4 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
     }
   }
   return true;
-}
-
-// display all files in srcml archive
-void list_unit_files(std::vector<std::string>& pos_args) {
-  for (size_t i = 0; i < pos_args.size(); ++i) {
-    std::string& input_file = pos_args[i];
-
-    // split the URI
-    // TODO: Extract function split_uri(input_file, protocol, resource)
-    std::string protocol = "";
-    std::string resource = input_file;
-    const char* sep = "://";
-    size_t prefixPos = input_file.find(sep);
-    if (prefixPos != std::string::npos) {
-      protocol = input_file.substr(0, prefixPos);
-      resource = input_file.substr(prefixPos + strlen(sep));
-    }
-/*
-    // skip any directories
-    boost::filesystem::path localFile (input_file);
-    if (is_directory(localFile))
-      continue;
-*/
-    srcml_archive* srcml_arch = srcml_create_archive();
-    srcml_read_open_filename(srcml_arch, input_file.c_str());
-   
-    int numUnits = 0;
-    while (true) {
-      srcml_unit* unit = srcml_read_unit(srcml_arch);
-      if (unit == 0)
-        break;
-
-      ++numUnits;
-      std::cout << numUnits << "\t" << srcml_unit_get_filename(unit) << "\n";
-    }
-  }
-}
-
-// TODO: Need to show encoding
-// TODO: Need to not show language for archive
-void display_info(std::vector<std::string>& pos_args) {
-  for (size_t i = 0; i < pos_args.size(); ++i) {
-    
-    std::string inputName;
-    size_t prefixPos = pos_args[i].find("//");
-    
-    if (prefixPos != std::string::npos)
-      inputName = pos_args[i].substr(prefixPos+2);
-
-    std::cerr << inputName;
-    boost::filesystem::path localFile (inputName);
-
-    // skip any directories
-    if (is_directory(localFile))
-      continue;
-
-    // check for an xml file
-    if (localFile.extension().compare(".xml") == 0) {
-      int numUnits = 0;
-      srcml_archive* srcml_arch = srcml_create_archive();
-      srcml_read_open_filename(srcml_arch, localFile.c_str());
-     
-      while (true) {
-        srcml_unit* unit = srcml_read_unit(srcml_arch);
-        if (unit == 0)
-          break;
-
-        ++numUnits;
-
-        /* Query options of srcml unit */
-        const char* language = srcml_unit_get_language(unit);
-        if (language)
-          std::cout << "Language: " << language << "\n";          
-        
-        if (srcml_unit_get_filename(unit))
-          std::cout << "Filename: " << srcml_unit_get_filename(unit) << "\n";
-
-        if (srcml_unit_get_directory(unit))
-          std::cout << "Directory: " << srcml_unit_get_directory(unit) << "\n";
-        
-        if (srcml_unit_get_version(unit))
-          std::cout << "Version: " << srcml_unit_get_version(unit) << "\n";
-
-        srcml_free_unit(unit);
-      }
-
-      std::cout << "units=" << numUnits << "\n";
-
-      srcml_free_archive(srcml_arch);
-    }
-  }
 }

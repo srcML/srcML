@@ -33,7 +33,7 @@ void src_prefix_add_uri(std::string& input_file, const std::string& protocol) {
 }
 
 void src_prefix_split_uri(const std::string& input_file, std::string& protocol, std::string& resource){
-  // TODO: Extract function split_uri(input_file, protocol, resource)
+  // Extract function split_uri(input_file, protocol, resource)
   size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
 
   if (prefixPos == std::string::npos) {
