@@ -17,6 +17,15 @@ else :
     LIBC_PATH = "msvcrt.dll"
 
 libc = ctypes.cdll.LoadLibrary(LIBC_PATH)
+
+
+if sys.platform == "win32" or sys.platform == "cygwin" :
+    os.open = lib._open
+    os.close = lib._close
+    os.O_WRONLY = 1
+    os.O_CREAT = 256
+    os.O_RDONLY = 256
+
 libc.fopen.restype = ctypes.c_void_p 
 libc.fopen.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
 libc.fclose.restype = ctypes.c_int
