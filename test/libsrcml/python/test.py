@@ -27,8 +27,8 @@ def verify_test(correct, output) :
     globals()['test_count'] += 1
 
     if sys.platform == "win32" or sys.platform == "cygwin" :
-        correct = correct.replace("\r", "")
-        output  = output.replace("\r", "")
+        correct = str(correct).replace("\r", "")
+        output  = str(output).replace("\r", "")
 
     if correct != output :
         print str(globals()['test_count']) + "\t"
