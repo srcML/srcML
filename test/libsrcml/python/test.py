@@ -20,8 +20,8 @@ libc = ctypes.cdll.LoadLibrary(LIBC_PATH)
 
 
 if sys.platform == "win32" or sys.platform == "cygwin" :
-    os.open = lib._open
-    os.close = lib._close
+    os.open = libc._open
+    os.close = libc._close
     os.O_WRONLY = 1
     os.O_CREAT = 256
     os.O_RDONLY = 256
