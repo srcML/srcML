@@ -68,7 +68,7 @@ void setupLibArchive(archive* arch) {
 }
 
 // Convert input to a ParseRequest and assign request to the processing queue
-void makeRequest(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& request, const std::string& input_file, const std::string& lang) {
+void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const std::string& lang) {
 
   // libArchive Setup
   archive * arch = archive_read_new();
@@ -109,7 +109,8 @@ void makeRequest(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req
         exit(1); // Stdin used with no language specified.
       }
     }
-
+    
+    ParseRequest request;
     request.buffer.clear();
     while (true) {
       
@@ -131,26 +132,4 @@ void makeRequest(ParseQueue& queue, srcml_archive* srcml_arch, ParseRequest& req
     queue.push(request);
   }
   archive_read_finish(arch);
-}
-
-// Public function used for adding tasks to the parse queue
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const std::string& lang) {
-
-  ParseRequest req;
-
-  boost::filesystem::path localPath(input);
-
-  // input is a single file
-  if (!is_directory(localPath)) {
-    makeRequest(queue, srcml_arch, req, localPath.string(), (localPath.extension().compare(".xml") == 0) ? "xml" : lang);
-    return;
-  }
-
-  // input is a directory
-  for (boost::filesystem::recursive_directory_iterator end, dir(localPath); dir != end; ++dir) {
-    if(is_regular_file(*dir)) {
-        if (srcml_archive_check_extension(srcml_arch, dir->path().string().c_str()) || dir->path().extension().compare(".xml") == 0)
-        makeRequest(queue, srcml_arch, req, dir->path().string(), (dir->path().extension().compare(".xml") == 0) ? "xml" : lang);
-    }
-  }
 }

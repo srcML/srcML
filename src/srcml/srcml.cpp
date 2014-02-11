@@ -31,6 +31,7 @@
 #include <srcml_cli.hpp>
 #include <srcml_consume.hpp>
 #include <src_input_libarchive.hpp>
+#include <src_input_filesystem.hpp>
 
 #include <archive.h>
 #include <archive_entry.h>
@@ -180,8 +181,15 @@ int main(int argc, char * argv[]) {
     }
 
     // check prefix and call handler
-    if (protocol == "file")
-      src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
+    if (protocol == "file") {
+      boost::filesystem::path localPath(resource);
+      if (is_directory(localPath)) {
+        src_input_filesystem(queue, srcml_arch, resource, srcml_request.language);
+      }
+      else {
+        src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
+      }
+    }
   }
   
   // wait for the parsing queue to finish
