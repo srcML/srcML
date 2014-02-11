@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="macro-list" filename="macro-list"><macro-list token="MACRO" type="src:macro"/><macro-list token="NAME" type="src:name"/><macro-list token="TYPE" type="src:type"/><macro-list token="CASE" type="src:case"/><macro-list token="LABEL" type="src:label"/><macro-list token="SPECIFIER" type="src:specifier"/>
 
 <unit>
-<cpp:define>#<cpp:directive>define</cpp:directive> <macro_defn><name>MACRO</name><parameter_list>()</parameter_list></macro_defn></cpp:define>
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>MACRO</name><parameter_list>()</parameter_list></cpp:macro></cpp:define>
 </unit>
 
 <unit>
@@ -10,7 +10,7 @@
 </unit>
 
 <unit>
-<cpp:define>#<cpp:directive>define</cpp:directive> <macro_defn><name>NAME</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></macro_defn> <value>name</value></cpp:define>
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>NAME</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></cpp:macro> <cpp:value>name</cpp:value></cpp:define>
 </unit>
 
 <unit>
@@ -18,7 +18,7 @@
 </unit>
 
 <unit>
-<cpp:define>#<cpp:directive>define</cpp:directive> <macro_defn><name>TYPE</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></macro_defn> <value>type</value></cpp:define>
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>TYPE</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></cpp:macro> <cpp:value>type</cpp:value></cpp:define>
 </unit>
 
 <unit>
@@ -26,7 +26,7 @@
 </unit>
 
 <unit>
-<cpp:define>#<cpp:directive>define</cpp:directive> <macro_defn><name>CASE</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></macro_defn> <value>case A</value></cpp:define>
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>CASE</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></cpp:macro> <cpp:value>case A</cpp:value></cpp:define>
 </unit>
 
 <unit>
@@ -38,7 +38,7 @@
 </unit>
 
 <unit>
-<cpp:define>#<cpp:directive>define</cpp:directive> <macro_defn><name>LABEL</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></macro_defn> <value>A</value></cpp:define>
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>LABEL</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></cpp:macro> <cpp:value>A</cpp:value></cpp:define>
 </unit>
 
 <unit>
@@ -50,7 +50,7 @@
 </unit>
 
 <unit>
-<cpp:define>#<cpp:directive>define</cpp:directive> <macro_defn><name>SPECIFIER</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></macro_defn> <value>name</value></cpp:define>
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>SPECIFIER</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></cpp:macro> <cpp:value>name</cpp:value></cpp:define>
 </unit>
 
 <unit>
