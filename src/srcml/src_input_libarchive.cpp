@@ -73,7 +73,6 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
   // libArchive Setup
   archive * arch = archive_read_new();
   archive_entry * arch_entry = archive_entry_new();
-
   setupLibArchive(arch);
 
   if (archive_read_open_filename(arch, (input_file.compare("-") != 0 ? input_file.c_str() : NULL), 16384)!= ARCHIVE_OK) {

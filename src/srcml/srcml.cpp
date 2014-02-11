@@ -156,13 +156,13 @@ int main(int argc, char * argv[]) {
            srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
   }
 
-  // create the output file
+  // create the srcML output file
   srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
   // setup the parsing queue
   ParseQueue queue(srcml_request.max_threads);
 
-  // process the command line inputs
+  // process command line inputs
   BOOST_FOREACH(const std::string& input_file, srcml_request.positional_args) {
 
     // if stdin, then there has to be data
@@ -251,33 +251,35 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
 // display all files in srcml archive
 void list_unit_files(std::vector<std::string>& pos_args) {
   for (size_t i = 0; i < pos_args.size(); ++i) {
-    
-    std::string inputName;
-    size_t prefixPos = pos_args[i].find("//");
-    
-    if (prefixPos != std::string::npos)
-      inputName = pos_args[i].substr(prefixPos+2);
+    std::string& input_file = pos_args[i];
 
-    
-    boost::filesystem::path localFile (inputName);
-    
+    // split the URI
+    // TODO: Extract function split_uri(input_file, protocol, resource)
+    std::string protocol = "";
+    std::string resource = input_file;
+    const char* sep = "://";
+    size_t prefixPos = input_file.find(sep);
+    if (prefixPos != std::string::npos) {
+      protocol = input_file.substr(0, prefixPos);
+      resource = input_file.substr(prefixPos + strlen(sep));
+    }
+/*
     // skip any directories
+    boost::filesystem::path localFile (input_file);
     if (is_directory(localFile))
       continue;
-
-    int numUnits = 0;
+*/
     srcml_archive* srcml_arch = srcml_create_archive();
-    srcml_read_open_filename(srcml_arch, inputName.c_str());
+    srcml_read_open_filename(srcml_arch, input_file.c_str());
    
+    int numUnits = 0;
     while (true) {
       srcml_unit* unit = srcml_read_unit(srcml_arch);
-
       if (unit == 0)
         break;
 
       ++numUnits;
       std::cout << numUnits << "\t" << srcml_unit_get_filename(unit) << "\n";
-
     }
   }
 }
@@ -308,33 +310,30 @@ void display_info(std::vector<std::string>& pos_args) {
      
       while (true) {
         srcml_unit* unit = srcml_read_unit(srcml_arch);
-
         if (unit == 0)
           break;
 
         ++numUnits;
 
         /* Query options of srcml unit */
-        if (srcml_unit_get_language(unit)) {
-          std::cout << "Language: " << srcml_unit_get_language(unit) << "\n";          
-        }
+        const char* language = srcml_unit_get_language(unit);
+        if (language)
+          std::cout << "Language: " << language << "\n";          
         
-        if (srcml_unit_get_filename(unit)) {
+        if (srcml_unit_get_filename(unit))
           std::cout << "Filename: " << srcml_unit_get_filename(unit) << "\n";
-        }
 
-        if (srcml_unit_get_directory(unit)) {
+        if (srcml_unit_get_directory(unit))
           std::cout << "Directory: " << srcml_unit_get_directory(unit) << "\n";
-        }
         
-        if (srcml_unit_get_version(unit)) {
+        if (srcml_unit_get_version(unit))
           std::cout << "Version: " << srcml_unit_get_version(unit) << "\n";
-        }
 
         srcml_free_unit(unit);
       }
 
-      std::cout << "Number of Units: " << numUnits << "\n";
+      std::cout << "units=" << numUnits << "\n";
+
       srcml_free_archive(srcml_arch);
     }
   }
