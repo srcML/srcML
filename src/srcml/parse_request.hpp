@@ -35,7 +35,7 @@
 #include <vector>
 
 struct ParseRequest {
-    ParseRequest() : buffer(0), srcml_arch(0) {}
+    ParseRequest() : buffer(0), srcml_arch(0), position(0) {}
 
     void swap(ParseRequest& other) {
 
@@ -59,6 +59,7 @@ struct ParseRequest {
     std::vector<char> buffer;
     srcml_archive * srcml_arch;
     std::string lang;
+    int position;
 };
 
 #endif

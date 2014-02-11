@@ -31,7 +31,7 @@
 #include <srcml.h>
 
 struct WriteRequest {
-    WriteRequest() : srcml_arch(0), unit(0) {}
+    WriteRequest() : srcml_arch(0), unit(0), position(0) {}
 
     void swap(WriteRequest& other) {
 
@@ -52,6 +52,8 @@ struct WriteRequest {
     // Fields required by thread to process a unit
     srcml_archive* srcml_arch;
     srcml_unit* unit;
+
+    int position;
 };
 
 #endif
