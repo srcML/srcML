@@ -45,7 +45,7 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
     queue->pop(pr);
     
     // Check if termination queue item has been found  
-    if (pr.empty())
+    if (pr.position == 0)
       break;
 
     // build and parse
@@ -58,6 +58,7 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
     WriteRequest wr;
     wr.srcml_arch = pr.srcml_arch;
     wr.unit = unit;
+    wr.position = pr.position;
     wqueue->push(wr);
   }
 }

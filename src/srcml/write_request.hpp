@@ -42,6 +42,10 @@ struct WriteRequest {
         srcml_unit* utemp = unit;
         unit = other.unit;
         other.unit = utemp;
+
+        int pos = position;
+        position = other.position;
+        other.position = pos;
     }
 
     // empty WriteRequests indicate termination

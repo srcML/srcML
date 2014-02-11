@@ -41,7 +41,7 @@ void srcml_write(WriteQueue* queue) {
     queue->pop(pr);
 
     // Check if termination queue item has been found  
-    if (pr.empty())
+    if (!pr.position)
       break;
 
     srcml_write_unit(pr.srcml_arch, pr.unit);

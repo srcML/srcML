@@ -47,6 +47,10 @@ struct ParseRequest {
         other.srcml_arch = temp;
 
         lang.swap(other.lang);
+
+        int pos = position;
+        position = other.position;
+        other.position = pos;
     }
 
     // empty ParseRequests indicate termination
