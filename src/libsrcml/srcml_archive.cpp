@@ -132,15 +132,11 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
   if(!new_archive) return 0;
 
-  try {
-
-    /*    new_archive->filename = archive->filename;
-    new_archive->encoding = archive->encoding;
-    new_archive->language = archive->language;
-    new_archive->directory = archive->directory;
-    new_archive->version = archive->version;
-    */
-  } catch(...) { return 0; }
+  new_archive->filename = archive->filename;
+  new_archive->encoding = archive->encoding;
+  new_archive->language = archive->language;
+  new_archive->directory = archive->directory;
+  new_archive->version = archive->version;
 
   try {
 
