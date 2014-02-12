@@ -172,7 +172,6 @@ int main(int argc, char * argv[]) {
           return 1; // stdin was requested, but no data was received
 
     // split the URI
-    // TODO: Extract function split_uri(input_file, protocol, resource)
     std::string protocol;
     std::string resource;
     src_prefix_split_uri(input_file, protocol, resource);
