@@ -30,7 +30,6 @@
 #include <srcml.h>
 #include <srcml_cli.hpp>
 #include <parse_queue.hpp>
-#include <write_queue.hpp>
 #include <src_input_libarchive.hpp>
 #include <src_input_filesystem.hpp>
 

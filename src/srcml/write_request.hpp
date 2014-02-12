@@ -29,6 +29,7 @@
 #define WRITE_REQUEST_HPP
 
 #include <srcml.h>
+#include <string>
 
 struct WriteRequest {
     WriteRequest() : srcml_arch(0), unit(0), position(0) {}
@@ -46,6 +47,8 @@ struct WriteRequest {
         int pos = position;
         position = other.position;
         other.position = pos;
+
+        filename.swap(other.filename);
     }
 
     // empty WriteRequests indicate termination
@@ -58,6 +61,9 @@ struct WriteRequest {
     srcml_unit* unit;
 
     int position;
+    std::string filename;
 };
+
+bool operator<(const WriteRequest& n1, const WriteRequest& n2);
 
 #endif

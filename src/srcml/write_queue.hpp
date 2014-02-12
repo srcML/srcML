@@ -40,7 +40,7 @@ void srcml_write(WriteQueue*);
 
 class WriteQueue {
 public:
-    typedef ThreadOQueue<WriteRequest, 10> Queue_Type;
+    typedef ThreadOQueue/*<10>*/ Queue_Type;
 
     WriteQueue() : max_threads(1) {}
 
