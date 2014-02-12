@@ -582,13 +582,17 @@ void srcMLTranslatorOutput::processAccess(const antlr::RefToken& token) {
 
 void srcMLTranslatorOutput::processToken(const antlr::RefToken& token) {
 
-  std::string s = token2name(token);
+  const char* localname = ElementNames[token->getType()];
+  const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
 
-  if (s[0] == 0)
+  if (localname[0] == 0)
     return;
 
   if (isstart(token) || isempty(token)) {
-    xmlTextWriterStartElement(xout, BAD_CAST s.c_str());
+     if (prefix[0] == 0)
+         xmlTextWriterStartElement(xout, BAD_CAST localname);
+     else
+         xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
     ++openelementcount;
   }
 
