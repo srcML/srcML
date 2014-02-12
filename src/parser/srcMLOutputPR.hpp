@@ -51,29 +51,29 @@ enum {
     PROCESSESCAPE
 };
 
-srcMLTranslatorOutput::PROCESS_PTR srcMLTranslatorOutput::num2process[] = {
-    &srcMLTranslatorOutput::processToken,
-    &srcMLTranslatorOutput::processUnit,
-    &srcMLTranslatorOutput::processText,
-    &srcMLTranslatorOutput::processBlockCommentStart,
-    &srcMLTranslatorOutput::processJavadocCommentStart,
-    &srcMLTranslatorOutput::processDoxygenCommentStart,
-    &srcMLTranslatorOutput::processLineDoxygenCommentStart,
-    &srcMLTranslatorOutput::processEndBlockToken,
-    &srcMLTranslatorOutput::processLineCommentStart,
-    &srcMLTranslatorOutput::processEndLineToken,
+srcMLOutput::PROCESS_PTR srcMLOutput::num2process[] = {
+    &srcMLOutput::processToken,
+    &srcMLOutput::processUnit,
+    &srcMLOutput::processText,
+    &srcMLOutput::processBlockCommentStart,
+    &srcMLOutput::processJavadocCommentStart,
+    &srcMLOutput::processDoxygenCommentStart,
+    &srcMLOutput::processLineDoxygenCommentStart,
+    &srcMLOutput::processEndBlockToken,
+    &srcMLOutput::processLineCommentStart,
+    &srcMLOutput::processEndLineToken,
 #if DEBUG
-    &srcMLTranslatorOutput::processMarker,
+    &srcMLOutput::processMarker,
 #endif
-    &srcMLTranslatorOutput::processAccess,
-    &srcMLTranslatorOutput::processString,
-    &srcMLTranslatorOutput::processChar,
-    &srcMLTranslatorOutput::processLiteral,
-    &srcMLTranslatorOutput::processBoolean,
-    &srcMLTranslatorOutput::processNull,
-    &srcMLTranslatorOutput::processComplex,
-    &srcMLTranslatorOutput::processInterface,
-    &srcMLTranslatorOutput::processEscape
+    &srcMLOutput::processAccess,
+    &srcMLOutput::processString,
+    &srcMLOutput::processChar,
+    &srcMLOutput::processLiteral,
+    &srcMLOutput::processBoolean,
+    &srcMLOutput::processNull,
+    &srcMLOutput::processComplex,
+    &srcMLOutput::processInterface,
+    &srcMLOutput::processEscape
 };
 
 #define ELEMENT_MAP_CALL_NAME element_process
@@ -270,7 +270,7 @@ namespace {
 #undef ELEMENT_MAP_CALL
 #undef ELEMENT_MAP
 
-char srcMLTranslatorOutput::process_table[] = {
+char srcMLOutput::process_table[] = {
 
     // fill the array with the prefixes
 #define BOOST_PP_LOCAL_MACRO(n)   element_process<n>(),
