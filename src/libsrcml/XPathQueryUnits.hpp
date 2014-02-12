@@ -77,6 +77,10 @@ public :
       buf = xmlOutputBufferCreateFd(fd, NULL);
     // TODO:  Detect error
 
+#ifdef LIBSRCML_COMPILER_IS_MSVC
+    buf->writecallback = (xmlOutputWriteCallback)write;
+#endif
+
       //xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
 
     // allow for all exslt functions
