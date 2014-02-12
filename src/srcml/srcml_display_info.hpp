@@ -28,7 +28,9 @@
 #define SRCML_DISPLAY_INFO_HPP
 
 #include <string>
+#include <vector>
 
+void srcml_display_info(const std::vector<std::string>& posArgs);
 void srcml_display_info(const std::string& srcmlInput);
 
 #endif

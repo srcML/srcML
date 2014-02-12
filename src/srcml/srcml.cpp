@@ -91,13 +91,13 @@ int main(int argc, char * argv[]) {
 
   // srcml long info
   if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
-    //display_info(srcml_request.positional_args);
+    srcml_display_info(srcml_request.positional_args);
     return 0;
   }
 
   // srcml info
   if (srcml_request.command & SRCML_COMMAND_INFO) {
-    //display_info(srcml_request.positional_args);
+    srcml_display_info(srcml_request.positional_args);
     return 0; 
   }
 
