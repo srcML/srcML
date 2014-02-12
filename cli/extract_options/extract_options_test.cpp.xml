@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="src/srcml2src.cpp"><comment type="block">/*
   srcml2src.cpp
 
-  Copyright (C) 2004-2011  SDML (www.sdml.info)
+  Copyright (C) 2004-2011  SDML (www.srcML.org)
 
   This file is part of the srcML translator.
 

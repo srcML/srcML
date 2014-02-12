@@ -235,19 +235,21 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     tabattribute.append(":tabs");
   }
 
-  std::ostringstream soptions;
+  std::string soptions;
   std::string SEP;
-  //if(isoption(OPTION_XMLDECL))        { soptions << "XMLDECL"; }
-  //if(isoption(OPTION_NAMESPACEDECL))  { if(!soptions.str().empty()) SEP = ","; soptions << SEP << "NAMESPACEDECL"; }
-  if(isoption(OPTION_CPP_TEXT_ELSE))  { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "CPP_TEXT_ELSE"; }
-  if(isoption(OPTION_CPP_MARKUP_IF0)) { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "CPP_MARKUP_IF0"; }
-  if(isoption(OPTION_EXPRESSION))     { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "EXPRESSION"; }
-  if(isoption(OPTION_NAMESPACE))      { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "NAMESPACE"; }
-  if(isoption(OPTION_LINE))           { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "LINE"; }
-  if(isoption(OPTION_MACRO_PATTERN))  { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "MACRO_PATTERN"; }
-  if(isoption(OPTION_MACRO_LIST))     { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "MACRO_LIST"; }
-  if(isoption(OPTION_NESTIF))         { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "NESTIF"; }
-  if(isoption(OPTION_CPPIF_CHECK))    { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "CPPIF_CHECK"; }
+  //if(isoption(OPTION_XMLDECL))        { soptions = "XMLDECL"; }
+  //if(isoption(OPTION_NAMESPACEDECL))  { if(soptions != "") SEP = ","; soptions += SEP + "NAMESPACEDECL"; }
+  if(isoption(OPTION_CPP_TEXT_ELSE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_TEXT_ELSE"; }
+  if(isoption(OPTION_CPP_MARKUP_IF0)) { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_MARKUP_IF0"; }
+  if(isoption(OPTION_EXPRESSION))     { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "EXPRESSION"; }
+  if(isoption(OPTION_NAMESPACE))      { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NAMESPACE"; }
+  if(isoption(OPTION_LINE))           { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "LINE"; }
+  if(isoption(OPTION_MACRO_PATTERN))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "MACRO_PATTERN"; }
+  if(isoption(OPTION_MACRO_LIST))     { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "MACRO_LIST"; }
+  if(isoption(OPTION_NESTIF))         { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NESTIF"; }
+  if(isoption(OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
+
+  std::string stab = stabs.str();
 
   // list of attributes
   const char* const attrs[][2] = {
@@ -268,9 +270,10 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     { UNIT_ATTRIBUTE_VERSION, version },
 
     // position tab setting
-    { tabattribute.c_str(), isoption(OPTION_POSITION) ? stabs.str().c_str() : 0 },
+    { tabattribute.c_str(), isoption(OPTION_POSITION) ? stab.c_str() : 0 },
 
-    { UNIT_ATTRIBUTE_OPTIONS,  (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.str().c_str() : 0 },
+    { UNIT_ATTRIBUTE_OPTIONS,  (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.c_str() : 0 },
+
   };
 
   // output attributes

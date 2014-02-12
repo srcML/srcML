@@ -1,7 +1,7 @@
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -120,7 +120,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -239,7 +239,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -358,7 +358,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -416,7 +416,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -482,7 +482,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -548,7 +548,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -614,7 +614,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -660,7 +660,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -779,7 +779,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -898,7 +898,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -1017,7 +1017,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -1075,7 +1075,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -1141,7 +1141,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -1207,7 +1207,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -1273,7 +1273,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -1319,7 +1319,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -1438,7 +1438,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -1557,7 +1557,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -1676,7 +1676,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -1734,7 +1734,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -1800,7 +1800,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -1866,7 +1866,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -1932,7 +1932,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -1978,7 +1978,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -2097,7 +2097,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -2216,7 +2216,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -2335,7 +2335,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -2393,7 +2393,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -2459,7 +2459,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -2525,7 +2525,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -2591,7 +2591,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -2637,7 +2637,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -2756,7 +2756,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -2875,7 +2875,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -2994,7 +2994,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -3052,7 +3052,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -3118,7 +3118,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -3184,7 +3184,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -3250,7 +3250,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -3296,7 +3296,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -3415,7 +3415,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -3534,7 +3534,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -3653,7 +3653,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -3711,7 +3711,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -3777,7 +3777,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -3843,7 +3843,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -3909,7 +3909,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -3955,7 +3955,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -4074,7 +4074,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -4193,7 +4193,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -4312,7 +4312,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -4370,7 +4370,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -4436,7 +4436,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -4502,7 +4502,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -4568,7 +4568,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -4614,7 +4614,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -4733,7 +4733,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -4852,7 +4852,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -4971,7 +4971,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -5029,7 +5029,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -5095,7 +5095,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -5161,7 +5161,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -5227,7 +5227,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -5273,7 +5273,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -5392,7 +5392,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -5511,7 +5511,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -5630,7 +5630,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -5688,7 +5688,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -5754,7 +5754,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -5820,7 +5820,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -5886,7 +5886,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -5932,7 +5932,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -6051,7 +6051,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -6170,7 +6170,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -6289,7 +6289,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -6347,7 +6347,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -6413,7 +6413,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -6479,7 +6479,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -6545,7 +6545,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -6591,7 +6591,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -6710,7 +6710,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -6829,7 +6829,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -6948,7 +6948,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -7006,7 +7006,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -7072,7 +7072,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -7138,7 +7138,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -7204,7 +7204,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -7250,7 +7250,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -7369,7 +7369,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -7488,7 +7488,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -7607,7 +7607,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -7665,7 +7665,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -7731,7 +7731,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -7797,7 +7797,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -7863,7 +7863,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -7909,7 +7909,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -8028,7 +8028,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -8147,7 +8147,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -8266,7 +8266,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -8324,7 +8324,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -8390,7 +8390,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -8456,7 +8456,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -8522,7 +8522,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -8568,7 +8568,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -8687,7 +8687,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -8806,7 +8806,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -8925,7 +8925,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -8983,7 +8983,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -9049,7 +9049,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -9115,7 +9115,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -9181,7 +9181,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -9227,7 +9227,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -9346,7 +9346,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -9465,7 +9465,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -9584,7 +9584,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -9642,7 +9642,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -9708,7 +9708,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -9774,7 +9774,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -9840,7 +9840,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -9886,7 +9886,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -10005,7 +10005,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -10124,7 +10124,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -10243,7 +10243,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -10301,7 +10301,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -10367,7 +10367,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -10433,7 +10433,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -10499,7 +10499,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -10545,7 +10545,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -10664,7 +10664,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -10783,7 +10783,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -10902,7 +10902,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -10960,7 +10960,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -11026,7 +11026,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -11092,7 +11092,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -11158,7 +11158,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -11204,7 +11204,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -11323,7 +11323,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -11442,7 +11442,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -11561,7 +11561,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -11619,7 +11619,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -11685,7 +11685,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -11751,7 +11751,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -11817,7 +11817,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -11863,7 +11863,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -11982,7 +11982,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -12101,7 +12101,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -12220,7 +12220,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -12278,7 +12278,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -12344,7 +12344,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -12410,7 +12410,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -12476,7 +12476,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -12522,7 +12522,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -12641,7 +12641,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -12760,7 +12760,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -12879,7 +12879,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -12937,7 +12937,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -13003,7 +13003,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -13069,7 +13069,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -13135,7 +13135,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -13181,7 +13181,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -13300,7 +13300,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -13419,7 +13419,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -13538,7 +13538,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -13596,7 +13596,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -13662,7 +13662,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -13728,7 +13728,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -13794,7 +13794,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -13840,7 +13840,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -13959,7 +13959,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -14078,7 +14078,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -14197,7 +14197,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -14255,7 +14255,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -14321,7 +14321,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -14387,7 +14387,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -14453,7 +14453,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -14499,7 +14499,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -14618,7 +14618,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -14737,7 +14737,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -14856,7 +14856,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -14914,7 +14914,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -14980,7 +14980,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -15046,7 +15046,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -15112,7 +15112,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -15158,7 +15158,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -15277,7 +15277,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -15396,7 +15396,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -15515,7 +15515,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -15573,7 +15573,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -15639,7 +15639,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -15705,7 +15705,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -15771,7 +15771,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -15817,7 +15817,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -15936,7 +15936,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -16055,7 +16055,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -16174,7 +16174,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -16232,7 +16232,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -16298,7 +16298,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -16364,7 +16364,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -16430,7 +16430,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -16476,7 +16476,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -16595,7 +16595,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -16714,7 +16714,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -16833,7 +16833,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -16891,7 +16891,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -16957,7 +16957,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -17023,7 +17023,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -17089,7 +17089,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -17135,7 +17135,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -17254,7 +17254,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -17373,7 +17373,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -17492,7 +17492,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -17550,7 +17550,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -17616,7 +17616,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -17682,7 +17682,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -17748,7 +17748,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -17794,7 +17794,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -17913,7 +17913,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -18032,7 +18032,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -18151,7 +18151,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -18209,7 +18209,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -18275,7 +18275,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -18341,7 +18341,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -18407,7 +18407,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -18453,7 +18453,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -18572,7 +18572,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -18691,7 +18691,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -18810,7 +18810,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -18868,7 +18868,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -18934,7 +18934,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -19000,7 +19000,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -19066,7 +19066,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -19112,7 +19112,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -19231,7 +19231,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -19350,7 +19350,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -19469,7 +19469,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -19527,7 +19527,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -19593,7 +19593,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -19659,7 +19659,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -19725,7 +19725,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -19771,7 +19771,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -19890,7 +19890,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -20009,7 +20009,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -20128,7 +20128,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -20186,7 +20186,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -20252,7 +20252,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -20318,7 +20318,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -20384,7 +20384,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -20430,7 +20430,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -20549,7 +20549,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -20668,7 +20668,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -20787,7 +20787,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -20845,7 +20845,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -20911,7 +20911,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -20977,7 +20977,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -21043,7 +21043,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -21089,7 +21089,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -21208,7 +21208,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -21327,7 +21327,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -21446,7 +21446,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -21504,7 +21504,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -21570,7 +21570,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -21636,7 +21636,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -21702,7 +21702,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -21748,7 +21748,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -21867,7 +21867,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -21986,7 +21986,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -22105,7 +22105,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -22163,7 +22163,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -22229,7 +22229,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -22295,7 +22295,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -22361,7 +22361,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -22407,7 +22407,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -22526,7 +22526,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -22645,7 +22645,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -22764,7 +22764,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -22822,7 +22822,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -22888,7 +22888,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -22954,7 +22954,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -23020,7 +23020,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -23066,7 +23066,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -23185,7 +23185,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -23304,7 +23304,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -23423,7 +23423,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -23481,7 +23481,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -23547,7 +23547,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -23613,7 +23613,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -23679,7 +23679,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -23725,7 +23725,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -23844,7 +23844,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -23963,7 +23963,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -24082,7 +24082,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -24140,7 +24140,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -24206,7 +24206,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -24272,7 +24272,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -24338,7 +24338,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -24384,7 +24384,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -24503,7 +24503,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -24622,7 +24622,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -24741,7 +24741,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -24799,7 +24799,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -24865,7 +24865,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -24931,7 +24931,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -24997,7 +24997,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -25043,7 +25043,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -25162,7 +25162,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -25281,7 +25281,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -25400,7 +25400,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -25458,7 +25458,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -25524,7 +25524,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -25590,7 +25590,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -25656,7 +25656,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -25702,7 +25702,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -25821,7 +25821,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -25940,7 +25940,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -26059,7 +26059,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -26117,7 +26117,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -26183,7 +26183,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -26249,7 +26249,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -26315,7 +26315,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -26361,7 +26361,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -26480,7 +26480,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -26599,7 +26599,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -26718,7 +26718,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -26776,7 +26776,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -26842,7 +26842,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -26908,7 +26908,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -26974,7 +26974,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -27020,7 +27020,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -27139,7 +27139,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -27258,7 +27258,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -27377,7 +27377,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -27435,7 +27435,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -27501,7 +27501,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -27567,7 +27567,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -27633,7 +27633,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -27679,7 +27679,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -27798,7 +27798,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -27917,7 +27917,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -28036,7 +28036,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -28094,7 +28094,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -28160,7 +28160,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -28226,7 +28226,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -28292,7 +28292,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -28338,7 +28338,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -28457,7 +28457,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -28576,7 +28576,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -28695,7 +28695,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -28753,7 +28753,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -28819,7 +28819,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -28885,7 +28885,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -28951,7 +28951,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -28997,7 +28997,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -29116,7 +29116,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -29235,7 +29235,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -29354,7 +29354,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -29412,7 +29412,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -29478,7 +29478,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -29544,7 +29544,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -29610,7 +29610,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -29656,7 +29656,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -29775,7 +29775,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -29894,7 +29894,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -30013,7 +30013,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -30071,7 +30071,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -30137,7 +30137,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -30203,7 +30203,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -30269,7 +30269,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -30315,7 +30315,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -30434,7 +30434,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -30553,7 +30553,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -30672,7 +30672,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -30730,7 +30730,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -30796,7 +30796,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -30862,7 +30862,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -30928,7 +30928,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -30974,7 +30974,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -31093,7 +31093,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -31212,7 +31212,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -31331,7 +31331,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -31389,7 +31389,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -31455,7 +31455,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -31521,7 +31521,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -31587,7 +31587,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -31633,7 +31633,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -31752,7 +31752,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -31871,7 +31871,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -31990,7 +31990,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -32048,7 +32048,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -32114,7 +32114,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -32180,7 +32180,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -32246,7 +32246,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -32292,7 +32292,7 @@ namespace srcMLComponent
 /*
     srcMLComponentDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -32411,7 +32411,7 @@ namespace srcMLComponent
 ﻿/*
     srcMLComponentFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -32530,7 +32530,7 @@ namespace srcMLComponent
 /*
     srcMLComponentURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -32649,7 +32649,7 @@ namespace srcMLComponent
 /*
     srcMLComponentsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -32707,7 +32707,7 @@ namespace srcMLComponent
 /*
     srcMLConfigDirectory.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -32773,7 +32773,7 @@ namespace srcMLComponent
 /*
     srcMLConfigFile.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -32839,7 +32839,7 @@ namespace srcMLComponent
 /*
     srcMLConfigURL.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
@@ -32905,7 +32905,7 @@ namespace srcMLComponent
 /*
     srcMLConfigsrcML.cs
 
-    Copyright (C) 2013  SDML (www.sdml.info)
+    Copyright (C) 2013  SDML (www.srcML.org)
  
     This file is part of srcMLComponent Collection.
 
