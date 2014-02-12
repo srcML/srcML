@@ -29,7 +29,7 @@
 #include "KeywordLexer.hpp"
 #include "srcMLParser.hpp"
 #include "StreamMLParser.hpp"
-#include "srcMLTranslatorOutput.hpp"
+#include "srcMLOutput.hpp"
 #include "srcmlapps.hpp"
 #include "srcmlns.hpp"
 
@@ -241,7 +241,7 @@ void srcMLTranslatorCore::translate_separate(const char* unit_directory,
 					     int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer,
 					     OPTION_TYPE translation_options) {
 
-  srcMLTranslatorOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, uri, tabsize, output_buffer, 0, suri);
+  srcMLOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, uri, tabsize, output_buffer, 0, suri);
   sep_out.initWriter();
   sep_out.setMacroList(user_macro_list);
 
