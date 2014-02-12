@@ -28,7 +28,9 @@
 #define SRCML_LIST_UNIT_FILES_HPP
 
 #include <string>
+#include <vector>
 
+void srcml_list_unit_files(const std::vector<std::string>& pos_args);
 void srcml_list_unit_files(const std::string& srcml_input);
 
 #endif

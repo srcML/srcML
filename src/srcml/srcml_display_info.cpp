@@ -24,16 +24,31 @@
   srcml_display_info.cpp display info about a given srcml input file.
 */
 
+#include <srcml_display_info.hpp>
+#include <src_prefix.hpp>
 #include <srcml.h>
 #include <iostream>
+#include <boost/filesystem.hpp>
+#include <boost/foreach.hpp>
 
 // TODO: Need to show encoding
 // TODO: Need to not show language for archive
-void srcml_display_info(const std::string& srcmlInput) {
+void srcml_display_info(const std::vector<std::string>& pos_args) {
+  BOOST_FOREACH(const std::string& input_file, pos_args) {
+    std::string resource;
+    std::string protocol;
+    src_prefix_split_uri(input_file, protocol, resource);
+    boost::filesystem::path file (resource);
+    if(file.extension().compare(".xml") == 0)
+      srcml_display_info(resource);
+  }
+}
+
+void srcml_display_info(const std::string& srcml_input) {
 
   int numUnits = 0;
   srcml_archive* srcml_arch = srcml_create_archive();
-  srcml_read_open_filename(srcml_arch, srcmlInput.c_str());
+  srcml_read_open_filename(srcml_arch, srcml_input.c_str());
  
   while (true) {
     srcml_unit* unit = srcml_read_unit(srcml_arch);

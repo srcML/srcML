@@ -27,23 +27,28 @@
 
 #include <srcml_write.hpp>
 #include <srcml.h>
-#include <thread_queue.hpp>
-#include <parse_request.hpp>
-#include <src_input_libarchive.hpp>
-#include <thread_oqueue.hpp>
+#include <write_queue.hpp>
+#include <iostream>
 
 // Public consumption thread function
 void srcml_write(WriteQueue* queue) {
 
+  WriteRequest pr;
   while (true) {
 
-    WriteRequest pr;
+    // write request in the queue
     queue->pop(pr);
 
-    // Check if termination queue item has been found  
-    if (pr.empty())
+    // check if done
+    if (!pr.position)
       break;
 
+    // write the unit
     srcml_write_unit(pr.srcml_arch, pr.unit);
+
+//    std::cerr << std::setw(5) << pr.position << " " << pr.filename << '\n';
+
+    // free the unit
+    srcml_free_unit(pr.unit);
   }
 }

@@ -27,44 +27,60 @@ n  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #ifndef THREAD_OQUEUE_H
 #define THREAD_OQUEUE_H
 
-#include <queue>
+#include <vector>
+#include <algorithm>
+#include <write_request.hpp>
 
-template <typename Type, int Capacity>
+const int Capacity = 10;
+
 class ThreadOQueue {
 public:
-    ThreadOQueue() : qsize(0), back(0), front(0), empty(false) {}
+    ThreadOQueue() : empty(false), curpos(1) {
+
+        queue.reserve(Capacity);
+    }
 
     /* puts an element in the back of the queue by swapping with parameter */
-    void push(Type& value) {
+    void push(WriteRequest& value) {
         {
             boost::unique_lock<boost::mutex> lock(mutex);
-            while (qsize == Capacity)
+            while (queue.size() == (Capacity - 1) || value.position != curpos)
                 cond_full.wait(lock);
 
-            buffer[back].swap(value);
-            ++back %= Capacity;
-            ++qsize;
+            /* Need to avoid a copy of the write request */
+
+            // get a temporary element with the same position as the one to be inserted into the queue
+            WriteRequest t;
+            t.position = value.position;
+            queue.push_back(t);
+
+            // swap the value to be inserted with the temporary
+            queue.back().swap(value);
+
+            // push the new value into the heap properly
+            std::push_heap(queue.begin(), queue.end());
         }
         cond_empty.notify_one();
     }
 
     /* removes the front element from the queue by swapping with parameter */
-    void pop(Type& value) {
+    void pop(WriteRequest& value) {
         {
             boost::unique_lock<boost::mutex> lock(mutex);
-            while (qsize == 0 && !empty)
+            while (!empty && (queue.empty() || (queue.front().position != curpos && queue.front().position != 0)))
                 cond_empty.wait(lock);
-            
-            if (qsize == 0 && empty) {
-                Type t;
-                value.swap(empty_request);
+
+            if (queue.size() == 0 && empty) {
+                WriteRequest t;
+                value.swap(t);
             } else {
-                value.swap(buffer[front]);
-                ++front %= Capacity;
-                --qsize;
+                value.swap(queue.front());
+                std::pop_heap(queue.begin(), queue.end());
+                queue.pop_back();
             }
+            ++curpos;
         }
-        cond_full.notify_one();
+        cond_full.notify_all();
     }
 
     void done() {
@@ -72,25 +88,23 @@ public:
             boost::unique_lock<boost::mutex> lock(mutex);
             empty = true;
         }
-        cond_empty.notify_one();
+        cond_empty.notify_all();
+        cond_full.notify_all();
     }
 
-    int size() {
-        return qsize;
+    size_t size() {
+        return queue.size();
     }
 
     ~ThreadOQueue() {}
 
 private:
-    Type buffer[Capacity];
-    int qsize;
-    int back;
-    int front;
-    Type empty_request;
+    std::vector<WriteRequest> queue;
     bool empty;
     boost::mutex mutex;
     boost::condition_variable cond_full;
     boost::condition_variable cond_empty;
+    int curpos;
 };
 
 #endif

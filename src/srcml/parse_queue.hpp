@@ -42,7 +42,7 @@ class ParseQueue {
 public:
     typedef ThreadQueue<ParseRequest, 10> Queue_Type;
 
-    ParseQueue(int max_threads) : max_threads(max_threads) {}
+    ParseQueue(int max_threads) : max_threads(max_threads), counter(0) {}
 
     /* puts an element in the back of the queue by swapping with parameter */
     void push(ParseRequest& value) {
@@ -52,6 +52,8 @@ public:
         if (writers.size() < max_threads)
             writers.create_thread( boost::bind(srcml_consume, this, &wqueue) );
 
+        ++counter;
+        value.position = counter;
         queue.push(value);
     }
 
@@ -72,6 +74,7 @@ private:
     Queue_Type queue;
     boost::thread_group writers;
     size_t max_threads;
+    int counter;
 };
 
 #endif
