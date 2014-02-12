@@ -226,7 +226,7 @@ public :
         strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0*/) {
 
       // convert from the escaped to the unescaped value
-      char value = strtod((const char*) attributes[3], NULL);
+      char value = (int)strtol((const char*) attributes[3], NULL, 0);
 
       characters(ctx, BAD_CAST &value, 1);
     }
