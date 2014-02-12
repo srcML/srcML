@@ -518,6 +518,8 @@ void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, con
   if(isoption(OPTION_NESTIF))         { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NESTIF"; }
   if(isoption(OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
 
+  std::string stab = stabs.str();
+
   // list of attributes
   const char* const attrs[][2] = {
 
@@ -534,7 +536,7 @@ void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, con
     { UNIT_ATTRIBUTE_VERSION, version },
 
     // position tab setting
-    { tabattribute.c_str(), isoption(OPTION_POSITION) ? stabs.str().c_str() : 0 },
+    { tabattribute.c_str(), isoption(OPTION_POSITION) ? stab.c_str() : 0 },
 
     { UNIT_ATTRIBUTE_OPTIONS,  (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.c_str() : 0 },
 
