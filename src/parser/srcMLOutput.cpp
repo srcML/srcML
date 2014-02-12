@@ -249,6 +249,8 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
   if(isoption(OPTION_NESTIF))         { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "NESTIF"; }
   if(isoption(OPTION_CPPIF_CHECK))    { if(SEP.empty() && !soptions.str().empty()) SEP = ","; soptions << SEP << "CPPIF_CHECK"; }
 
+  const char * soption = strdup(soptions.str().c_str());
+
   // list of attributes
   const char* const attrs[][2] = {
 
@@ -270,7 +272,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     // position tab setting
     { tabattribute.c_str(), isoption(OPTION_POSITION) ? stabs.str().c_str() : 0 },
 
-    { UNIT_ATTRIBUTE_OPTIONS,  (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.str().c_str() : 0 },
+    { UNIT_ATTRIBUTE_OPTIONS,  (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soption : 0 },
   };
 
   // output attributes
@@ -289,6 +291,8 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     processText("\n\n", 2);
 
   }
+
+  free((void *)soption);
 
   ++depth;
 }
