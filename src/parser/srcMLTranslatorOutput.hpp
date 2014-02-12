@@ -77,10 +77,6 @@ private:
 
     int consume_next();
 
-    inline std::string type2name(int token_type) const;
-
-    inline std::string token2name(const antlr::RefToken& token) const;
-
     void outputToken(const antlr::RefToken& token);
 
     void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer);
