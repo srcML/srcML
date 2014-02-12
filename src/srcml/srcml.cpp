@@ -103,7 +103,7 @@ int main(int argc, char * argv[]) {
 
   // list filenames in srcml archive
   if (srcml_request.command & SRCML_COMMAND_LIST) {
-    //list_unit_files(srcml_request.positional_args);
+    srcml_list_unit_files(srcml_request.positional_args);
     return 0;
   }
   

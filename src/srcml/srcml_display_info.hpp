@@ -30,7 +30,7 @@
 #include <string>
 #include <vector>
 
-void srcml_display_info(const std::vector<std::string>& posArgs);
-void srcml_display_info(const std::string& srcmlInput);
+void srcml_display_info(const std::vector<std::string>& pos_args);
+void srcml_display_info(const std::string& srcml_input);
 
 #endif
