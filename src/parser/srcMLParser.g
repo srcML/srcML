@@ -2388,10 +2388,6 @@ block_end[] { ENTRY_DEBUG } :
             if (inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
 
-            // @todo  Need a test case that makes this necessary
-            // end of block may lead to adjustment of cpp modes
-            cppmode_adjust();
-
         }
 ;
 
@@ -6481,27 +6477,6 @@ cppmode_cleanup[] {
             cppmode.pop();
 
         ENTRY_DEBUG 
-} :;
-
-// ended modes that may lead to needed updates
-cppmode_adjust[] {
-
-    if (!isoption(parseoptions, OPTION_CPP_TEXT_ELSE) &&
-        !cppmode.empty() &&
-        cppmode.top().isclosed &&
-        size() < cppmode.top().statesize.back())
-
-        if (size() == cppmode.top().statesize[cppmode.top().statesize.size() - 1 - 1]) {
-
-            // end if part of cppmode
-            while (size() > cppmode.top().statesize.front())
-                endMode();
-
-            // done with this cppmode
-            cppmode.pop();
-       }
-
-    ENTRY_DEBUG 
 } :;
 
 // line continuation character
