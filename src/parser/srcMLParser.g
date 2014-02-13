@@ -6507,8 +6507,10 @@ cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG 
 // an expression
 cpp_expression[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
-        expression_process
-        expression_part_plus_linq[type]
+        { !inputState->guessing }?
+        (expression_process
+            expression_part_plus_linq[type]
+        ) | cpp_garbage
 
 ;
 exception
