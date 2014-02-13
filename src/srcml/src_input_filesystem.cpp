@@ -27,24 +27,26 @@
 #include <src_input_libarchive.hpp>
 #include <src_input_filesystem.hpp>
 #include <boost/filesystem.hpp>
-#include <queue>
+#include <list>
 #include <vector>
   
 void src_input_filesystem(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const std::string& lang) {
 	boost::filesystem::path localPath(input);
-  std::queue<boost::filesystem::path> dirs;
-  dirs.push(localPath);
+  std::list<boost::filesystem::path> dirs;
+  dirs.push_front(localPath);
 
   while (!dirs.empty()) {
     std::vector<boost::filesystem::path> files;
     copy(boost::filesystem::directory_iterator(dirs.front()), boost::filesystem::directory_iterator(), back_inserter(files));
     sort(files.begin(), files.end());
-    dirs.pop();
+    dirs.pop_front();
+    
+    std::list<boost::filesystem::path>::iterator dir_iter=dirs.begin();
 
     for (std::vector<boost::filesystem::path>::const_iterator it (files.begin()); it != files.end(); ++it) {
-      
       if (is_directory(boost::filesystem::path(*it))) {
-        dirs.push(*it);
+        dirs.insert(dir_iter,*it);
+        std::list<boost::filesystem::path>::iterator iter;        
         continue;
       }
 
