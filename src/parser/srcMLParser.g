@@ -6511,13 +6511,13 @@ cpp_condition_with_catching[] { ENTRY_DEBUG
     
 
 }:
-        complete_expression
-        { inputState->guessing = saved_guessing; }
+        expression
+        { inputState->guessing = save_guessing; }
 ;
 exception
 catch[...] {
-        consume();
-        inputState->guessing = save_guessing;
+consume();
+inputState->guessing = save_guessing;
 }
 
 
