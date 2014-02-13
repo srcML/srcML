@@ -133,7 +133,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -6216,8 +6216,16 @@ catch[...] {
 cpp_garbage[] :
 
  ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | EOF)  /* EOF */
-
 ;
+
+cpp_check_end[] returns[bool is_end = false] {
+
+ if(LA(1) == EOL || LA(1) == LINECOMMENT_START || LA(1) == COMMENT_START || LA(1) == JAVADOC_COMMENT_START || LA(1) == DOXYGEN_COMMENT_START || LA(1) == LINE_DOXYGEN_COMMENT_START || LA(1) == EOF)  /* EOF */
+     return true;
+
+ return false;
+
+}:;
 
 // skip to eol
 eol_skip[int directive_token, bool markblockzero] {
@@ -6493,8 +6501,25 @@ cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG 
 
         set_bool[markblockzero, LA(1) == CONSTANTS && LT(1)->getText() == "0"]
 
-        complete_expression
+        ({ !cpp_check_end() }? cpp_condition_with_catching)*
 ;
+
+cpp_condition_with_catching[] { ENTRY_DEBUG
+
+    int save_guessing = inputState->guessing;
+    inputState->guessing = 0;
+    
+
+}:
+        complete_expression
+        { inputState->guessing = saved_guessing; }
+;
+exception
+catch[...] {
+        consume();
+        inputState->guessing = save_guessing;
+}
+
 
 // symbol in cpp
 cpp_symbol[] { ENTRY_DEBUG } :
