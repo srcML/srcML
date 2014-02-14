@@ -91,6 +91,22 @@ int main() {
   }
 
   {
+    srcml_set_language(SRCML_LANGUAGE_C);
+    srcml("a.cpp", "project.c.xml");
+    std::string res_srcml;
+    std::ifstream project("project.c.xml");
+    char c = 0;
+    while(project.get(c)) {
+      res_srcml += c;
+    } 
+
+    dassert(res_srcml, srcml_c);
+
+    srcml_set_language(SRCML_LANGUAGE_NONE);
+
+  }
+
+  {
 
     srcml_set_filename("file");
     srcml_set_directory("dir");
