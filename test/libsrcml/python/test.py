@@ -78,6 +78,12 @@ verify_test("cpp", archive.get_prefix_uri("http://www.sdml.info/srcML/cpp"))
 verify_test("http://www.sdml.info/srcML/cpp", archive.get_namespace(1))
 verify_test("http://www.sdml.info/srcML/cpp", archive.get_namespace_prefix("cpp"))
 
+archive.register_macro("MACRO", "src:macro")
+verify_test(1, archive.get_macro_list_size());
+verify_test("MACRO", archive.get_macro_token(0))
+verify_test("src:macro", archive.get_macro_token_type("MACRO"))
+verify_test("src:macro", archive.get_macro_type(0))
+
 archive.close()
 
 file = open("a.foo", "w")
