@@ -203,5 +203,167 @@ int main() {
     dassert(srcml_archive_get_tabstop(0), 0);
   }
 
+  /* 
+     srcml_get_namespace_size
+   */
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_namespace_size(archive), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    srcml_archive_register_namespace(archive, "foo1", "bar1");
+    srcml_archive_register_namespace(archive, "foo2", "bar2");
+    dassert(srcml_archive_get_namespace_size(archive), 3);
+
+    srcml_free_archive(archive);
+
+  }
+
+  /* 
+     srcml_archive_get_prefix
+   */
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_prefix(archive, 1), std::string("foo2"));
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_prefix(archive, -1), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_prefix(archive, 3), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
+  /* 
+     srcml_archive_get_prefix_uri
+   */
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_prefix_uri(archive, "bar2"), std::string("foo2"));
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_prefix_uri(archive, "bar4"), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_prefix_uri(archive, 0), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
+  /* 
+     srcml_archive_get_namespace
+   */
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_namespace(1), std::string("bar2"));
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_namespace(archive, -1), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_namespace(archive, 3), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
+  /* 
+     srcml_archive_get_namespace_prefix
+   */
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_namespace_prefix(archive, "foo2"), std::string("bar"));
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_namespace_prefix(archive, "foo4"), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_namespace_prefix(archive, 0), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
   return 0;
 }
