@@ -122,6 +122,13 @@ int main() {
 
   }
 
+  unlink("a.cpp");
+  unlink("project.xml");
+  unlink("project_full.xml");
+  unlink("project.cpp.xml");
+  unlink("inta.cpp");
+  unlink("project_full.cpp.xml");
+
   /* 
      srcml_check_language
    */
