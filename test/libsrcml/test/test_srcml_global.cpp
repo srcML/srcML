@@ -25,6 +25,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <cassert>
+#include <string>
+#include <fstream>
 
 #include <srcml.h>
 #include <srcml_types.hpp>
@@ -34,7 +36,39 @@
 
 extern srcml_archive global_archive;
 
+
+std::string src = "int a;\n";
+
+std::string asrcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+  "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"project.cpp.xml\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>\n"
+  "</unit>\n";
+
 int main() {
+
+  std::ofstream src_file("a.cpp");
+  src_file << src;
+  src_file.close();
+
+  std::ofstream asrcml_file("project.xml");
+  asrcml_file << asrcml;
+  asrcml_file.close();
+
+  /*
+    srcml
+   */
+
+  {
+    srcml("a.cpp", "project.cpp.xml");
+    std::string res_srcml;
+    std::ifstream project("project.cpp.xml");
+    char c = 0;
+    while(project.get(c)) {
+      res_srcml += c;
+    } 
+
+    dassert(res_srcml, asrcml);
+
+  }
 
   /* 
      srcml_check_language
