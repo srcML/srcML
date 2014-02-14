@@ -174,7 +174,6 @@ int main(int argc, char * argv[]) {
     std::string protocol;
     std::string resource;
     src_prefix_split_uri(input_file, protocol, resource);
-
     // call handler based on prefix
     if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
         src_input_filesystem(queue, srcml_arch, resource, srcml_request.language);

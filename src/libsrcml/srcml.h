@@ -308,6 +308,18 @@ __LIBSRCML_DECL int srcml_append_transform_xslt(struct srcml_archive*, const cha
 __LIBSRCML_DECL int srcml_append_transform_relaxng(struct srcml_archive*, const char* relaxng_filename);
 __LIBSRCML_DECL int srcml_apply_transforms(struct srcml_archive* iarchive, struct srcml_archive* oarchive);
 
+int srcml_set_xml_handler_start_unit(struct srcml_archive*);
+int srcml_set_xml_handler_start_element(struct srcml_archive*);
+int srcml_set_xml_handler_characters(struct srcml_archive*);
+int srcml_set_xml_handler_cdata(struct srcml_archive*);
+int srcml_set_xml_handler_comment(struct srcml_archive*);
+int srcml_set_xml_handler_end_element(struct srcml_archive*);
+int srcml_set_xml_handler_end_unit(struct srcml_archive*);
+
+int srcml_xml_handler_parse_archive(struct srcml_archive*);
+int srcml_xml_handler_release(struct srcml_archive*);
+int srcml_xml_handler_stop(struct srcml_archive*);
+
 #ifdef __cplusplus
 }
 #endif
