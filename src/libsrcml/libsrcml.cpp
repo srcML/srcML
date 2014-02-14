@@ -75,7 +75,7 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
  * Cleanup and free globals allocated at the global level
  * usually by libxml2.
  */
-__LIBSRCML_DECL void srcml_cleanup_globals() {
+void srcml_cleanup_globals() {
 
   xmlCleanupCharEncodingHandlers();
   xmlCleanupGlobals();
@@ -95,7 +95,7 @@ __LIBSRCML_DECL void srcml_cleanup_globals() {
  *
  * @returns Return version of libsrcml as string.
  */
-__LIBSRCML_DECL const char * srcml_version_string() {
+const char * srcml_version_string() {
 
   return SRCML_VERSION_STRING;
 
@@ -106,7 +106,7 @@ __LIBSRCML_DECL const char * srcml_version_string() {
  * 
  * @returns Return version of libsrcml as number.
  */
-__LIBSRCML_DECL int srcml_version_number() {
+int srcml_version_number() {
 
   return SRCML_VERSION_NUMBER;
 
@@ -130,7 +130,7 @@ __LIBSRCML_DECL int srcml_version_number() {
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml(const char* input_filename, const char* output_filename) {
+int srcml(const char* input_filename, const char* output_filename) {
 
   if(!input_filename || !output_filename) {
 
@@ -289,7 +289,7 @@ __LIBSRCML_DECL int srcml(const char* input_filename, const char* output_filenam
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_set_encoding(const char* encoding) {
+int srcml_set_encoding(const char* encoding) {
 
   return srcml_archive_set_encoding(&global_archive, encoding);
 
@@ -303,7 +303,7 @@ __LIBSRCML_DECL int srcml_set_encoding(const char* encoding) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_set_language(const char* language) {
+int srcml_set_language(const char* language) {
 
   return srcml_archive_set_language(&global_archive, language);
 
@@ -317,7 +317,7 @@ __LIBSRCML_DECL int srcml_set_language(const char* language) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_set_filename(const char* filename) {
+int srcml_set_filename(const char* filename) {
 
   return srcml_archive_set_filename(&global_archive, filename);
 
@@ -331,7 +331,7 @@ __LIBSRCML_DECL int srcml_set_filename(const char* filename) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_set_directory(const char* directory) {
+int srcml_set_directory(const char* directory) {
 
   return srcml_archive_set_directory(&global_archive, directory);
 
@@ -345,7 +345,7 @@ __LIBSRCML_DECL int srcml_set_directory(const char* directory) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_set_version(const char* version) {
+int srcml_set_version(const char* version) {
 
   return srcml_archive_set_version(&global_archive, version);
 
@@ -359,7 +359,7 @@ __LIBSRCML_DECL int srcml_set_version(const char* version) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_set_options(unsigned long long option) {
+int srcml_set_options(unsigned long long option) {
 
   return srcml_archive_set_options(&global_archive, option);
 
@@ -373,7 +373,7 @@ __LIBSRCML_DECL int srcml_set_options(unsigned long long option) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_enable_option(unsigned long long option) {
+int srcml_enable_option(unsigned long long option) {
 
   return srcml_archive_enable_option(&global_archive, option);
 
@@ -387,7 +387,7 @@ __LIBSRCML_DECL int srcml_enable_option(unsigned long long option) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_disable_option(unsigned long long option) {
+int srcml_disable_option(unsigned long long option) {
 
   return srcml_archive_disable_option(&global_archive, option);
 
@@ -401,7 +401,7 @@ __LIBSRCML_DECL int srcml_disable_option(unsigned long long option) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_set_tabstop(int tabstop) {
+int srcml_set_tabstop(int tabstop) {
 
   return srcml_archive_set_tabstop(&global_archive, tabstop);
 
@@ -416,7 +416,7 @@ __LIBSRCML_DECL int srcml_set_tabstop(int tabstop) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_register_file_extension(const char* extension, const char* language) {
+int srcml_register_file_extension(const char* extension, const char* language) {
 
   return srcml_archive_register_file_extension(&global_archive, extension, language);
 
@@ -431,7 +431,7 @@ __LIBSRCML_DECL int srcml_register_file_extension(const char* extension, const c
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_register_namespace(const char* prefix, const char* ns) {
+int srcml_register_namespace(const char* prefix, const char* ns) {
 
   return srcml_archive_register_namespace(&global_archive, prefix, ns);
 
@@ -447,7 +447,7 @@ __LIBSRCML_DECL int srcml_register_namespace(const char* prefix, const char* ns)
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_register_macro(const char* prefix, const char* ns) {
+int srcml_register_macro(const char* prefix, const char* ns) {
 
   return srcml_archive_register_macro(&global_archive, prefix, ns);
 
@@ -464,7 +464,7 @@ __LIBSRCML_DECL int srcml_register_macro(const char* prefix, const char* ns) {
  *
  * @returns Get the output encoding on success and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_get_encoding() {
+const char* srcml_get_encoding() {
 
   return srcml_archive_get_encoding(&global_archive);
 
@@ -475,7 +475,7 @@ __LIBSRCML_DECL const char* srcml_get_encoding() {
  *
  * @returns Get the language on success and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_get_language() {
+const char* srcml_get_language() {
 
   return srcml_archive_get_language(&global_archive);
 
@@ -487,7 +487,7 @@ __LIBSRCML_DECL const char* srcml_get_language() {
  * @returns Get the filename attribute for the root unit on success
  * and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_get_filename() {
+const char* srcml_get_filename() {
 
   return srcml_archive_get_filename(&global_archive);
 
@@ -499,7 +499,7 @@ __LIBSRCML_DECL const char* srcml_get_filename() {
  * @returns Get the directory attribute for the root unit on success
  * and NULL on failure
  */
-__LIBSRCML_DECL const char* srcml_get_directory() {
+const char* srcml_get_directory() {
 
   return srcml_archive_get_directory(&global_archive);
 
@@ -510,7 +510,7 @@ __LIBSRCML_DECL const char* srcml_get_directory() {
  *
  * @returns Get the version attribute on success and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_get_version() {
+const char* srcml_get_version() {
 
   return srcml_archive_get_version(&global_archive);
 
@@ -521,7 +521,7 @@ __LIBSRCML_DECL const char* srcml_get_version() {
  *
  * @returns Get the currently set options on success and NULL on failure.
  */
-__LIBSRCML_DECL unsigned long long srcml_get_options() {
+unsigned long long srcml_get_options() {
 
   return srcml_archive_get_options(&global_archive);
 
@@ -532,7 +532,7 @@ __LIBSRCML_DECL unsigned long long srcml_get_options() {
  *
  * @returns Get the tabstop size on success and NULL On failure.
  */
-__LIBSRCML_DECL int srcml_get_tabstop() {
+int srcml_get_tabstop() {
 
   return srcml_archive_get_tabstop(&global_archive);
 
@@ -543,7 +543,7 @@ __LIBSRCML_DECL int srcml_get_tabstop() {
  *
  * @returns Get the number of currently defined namespaces.
  */
-__LIBSRCML_DECL int srcml_get_namespace_size() {
+int srcml_get_namespace_size() {
 
   return srcml_archive_get_namespace_size(&global_archive);
 
@@ -556,7 +556,7 @@ __LIBSRCML_DECL int srcml_get_namespace_size() {
  * @returns Get prefix for the given position on success
  * and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_get_prefix(int pos) {
+const char* srcml_get_prefix(int pos) {
 
   return srcml_archive_get_prefix(&global_archive, pos);
 
@@ -569,7 +569,7 @@ __LIBSRCML_DECL const char* srcml_get_prefix(int pos) {
  * @returns Get the registered prefix for the given namespace
  * on success and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_get_prefix_uri(const char* namespace_uri) {
+const char* srcml_get_prefix_uri(const char* namespace_uri) {
 
   return srcml_archive_get_prefix_uri(&global_archive, namespace_uri);
 
@@ -582,7 +582,7 @@ __LIBSRCML_DECL const char* srcml_get_prefix_uri(const char* namespace_uri) {
  * @returns Get the namespace at the given pos on succcess
  * and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_get_namespace(int pos) {
+const char* srcml_get_namespace(int pos) {
 
   return srcml_archive_get_namespace(&global_archive, pos);
 
@@ -595,7 +595,7 @@ __LIBSRCML_DECL const char* srcml_get_namespace(int pos) {
  * @returns Get the first namespace for the given prefix on success
  * and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_get_namespace_prefix(const char* prefix) {
+const char* srcml_get_namespace_prefix(const char* prefix) {
 
   return srcml_archive_get_namespace_prefix(&global_archive, prefix);
 
@@ -606,7 +606,7 @@ __LIBSRCML_DECL const char* srcml_get_namespace_prefix(const char* prefix) {
  *
  * @returns Get the number of currently defined macros.
  */
-__LIBSRCML_DECL int srcml_get_macro_list_size() {
+int srcml_get_macro_list_size() {
 
   return srcml_archive_get_macro_list_size(&global_archive);
 
@@ -619,7 +619,7 @@ __LIBSRCML_DECL int srcml_get_macro_list_size() {
  * @returns Get token for the given position on success
  * and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_get_macro_token(int pos) {
+const char* srcml_get_macro_token(int pos) {
 
   return srcml_archive_get_macro_token(&global_archive, pos);
 
@@ -632,7 +632,7 @@ __LIBSRCML_DECL const char* srcml_get_macro_token(int pos) {
  * @returns Get the registered type for the given token
  * on success and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_get_macro_token_type(const char* token) {
+const char* srcml_get_macro_token_type(const char* token) {
 
   return srcml_archive_get_macro_token_type(&global_archive, token
 );
@@ -646,7 +646,7 @@ __LIBSRCML_DECL const char* srcml_get_macro_token_type(const char* token) {
  * @returns Get the type at the given pos on succcess
  * and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_get_macro_type(int pos) {
+const char* srcml_get_macro_type(int pos) {
 
   return srcml_archive_get_macro_type(&global_archive, pos);
 
@@ -666,7 +666,7 @@ __LIBSRCML_DECL const char* srcml_get_macro_type(int pos) {
  * @returns Return the numeric representation for that language if supported.
  * Not supported returns 0.
  */
-__LIBSRCML_DECL int srcml_check_language(const char* language) { return language == 0 ? 0 : Language::getLanguage(language); }
+int srcml_check_language(const char* language) { return language == 0 ? 0 : Language::getLanguage(language); }
 
 /**
  * srcml_language_list
@@ -675,7 +675,7 @@ __LIBSRCML_DECL int srcml_check_language(const char* language) { return language
  *
  * @returns NULL-terminated array of supported source-code languages 
 */
-__LIBSRCML_DECL const char** srcml_language_list() {
+const char** srcml_language_list() {
   static const char* langs[] = { "C", "C++", "C#", "Java", 0 };
   return langs;
 }
@@ -688,7 +688,7 @@ __LIBSRCML_DECL const char** srcml_language_list() {
  * Full filename can be provided, and extension will be extracted.
  * @returns Returns language on success and NULL on failure. 
  */
-__LIBSRCML_DECL const char * srcml_check_extension(const char* filename) {
+const char * srcml_check_extension(const char* filename) {
 
   return srcml_archive_check_extension(&global_archive, filename);
 
@@ -702,7 +702,7 @@ __LIBSRCML_DECL const char * srcml_check_extension(const char* filename) {
  * Full filename can be provided, and extension will be extracted 
  * @returns Return if format is supported.
  */
-__LIBSRCML_DECL int srcml_check_format(const char* format) {
+int srcml_check_format(const char* format) {
 
   if(format == NULL) return 0;
 
@@ -728,7 +728,7 @@ __LIBSRCML_DECL int srcml_check_format(const char* format) {
  * Check if the particular encoding is supported, both for input and output.
  * @returns Return if encoding is supported.
  */
-__LIBSRCML_DECL int srcml_check_encoding(const char* encoding) {
+int srcml_check_encoding(const char* encoding) {
 
   return xmlParseCharEncoding(encoding) > 0;
 
@@ -740,7 +740,7 @@ __LIBSRCML_DECL int srcml_check_encoding(const char* encoding) {
  * Check whether xslt is available.
  * @returns Return 1 on success and 0 on failure.
  */ 
-__LIBSRCML_DECL int srcml_check_xslt() {
+int srcml_check_xslt() {
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
   void * handle = dlopen("libxslt.so", RTLD_LAZY);
   if (!handle) {
@@ -766,7 +766,7 @@ __LIBSRCML_DECL int srcml_check_xslt() {
  * Check whether exslt is available.
  * @returns Return 1 on success and 0 on failure.
  */
-__LIBSRCML_DECL int srcml_check_exslt() {
+int srcml_check_exslt() {
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
   void* handle = dlopen("libexslt.so", RTLD_LAZY);
   if (!handle) {
@@ -795,4 +795,4 @@ __LIBSRCML_DECL int srcml_check_exslt() {
  * 
  * @returns Return a string describing last recorded error.
  */
-__LIBSRCML_DECL const char* srcml_error_string() { return srcml_error.c_str(); }
+const char* srcml_error_string() { return srcml_error.c_str(); }

@@ -30,7 +30,7 @@
  *
  * @returns Return NULL terminated array on success and 0 on failure.
  */
-__LIBSRCML_DECL const char** srcml_list(const char* srcml_filename) {
+const char** srcml_list(const char* srcml_filename) {
 
   if(srcml_filename == NULL) return 0;
 

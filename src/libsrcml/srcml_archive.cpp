@@ -39,7 +39,7 @@
  *
  * @returns the language for extension or if 0 if no language.
  */
-__LIBSRCML_DECL const char * srcml_archive_check_extension(srcml_archive * archive, const char* filename) {
+const char * srcml_archive_check_extension(srcml_archive * archive, const char* filename) {
 
   if(archive == NULL || filename == NULL) return 0;
 
@@ -63,7 +63,7 @@ __LIBSRCML_DECL const char * srcml_archive_check_extension(srcml_archive * archi
  *
  * @returns the created archive.
  */
-__LIBSRCML_DECL srcml_archive* srcml_create_archive()
+srcml_archive* srcml_create_archive()
 
 {
   srcml_archive * archive;
@@ -104,7 +104,7 @@ __LIBSRCML_DECL srcml_archive* srcml_create_archive()
  * allocated by srcml_create_archive(). 
  * archive must be reallocated/re-created to use again.
  */
-__LIBSRCML_DECL void srcml_free_archive(srcml_archive * archive) {
+void srcml_free_archive(srcml_archive * archive) {
 
   if(archive == NULL) return;
 
@@ -120,7 +120,7 @@ __LIBSRCML_DECL void srcml_free_archive(srcml_archive * archive) {
  *
  * @return the cloned archive
  */
-__LIBSRCML_DECL srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
+srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
   if(archive == NULL) return 0;
 
@@ -189,7 +189,7 @@ __LIBSRCML_DECL srcml_archive* srcml_clone_archive(const struct srcml_archive* a
  *
  * @returns SRCML_STATUS_OK on success andd SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
+int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -208,7 +208,7 @@ __LIBSRCML_DECL int srcml_archive_set_encoding(srcml_archive* archive, const cha
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_archive_set_language(srcml_archive* archive, const char* language) {
+int srcml_archive_set_language(srcml_archive* archive, const char* language) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -227,7 +227,7 @@ __LIBSRCML_DECL int srcml_archive_set_language(srcml_archive* archive, const cha
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
+int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -246,7 +246,7 @@ __LIBSRCML_DECL int srcml_archive_set_filename(srcml_archive* archive, const cha
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_archive_set_directory (srcml_archive* archive, const char* directory) {
+int srcml_archive_set_directory (srcml_archive* archive, const char* directory) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -265,7 +265,7 @@ __LIBSRCML_DECL int srcml_archive_set_directory (srcml_archive* archive, const c
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_archive_set_version(srcml_archive* archive, const char* version) {
+int srcml_archive_set_version(srcml_archive* archive, const char* version) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -284,7 +284,7 @@ __LIBSRCML_DECL int srcml_archive_set_version(srcml_archive* archive, const char
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2]) {
+int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2]) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -317,7 +317,7 @@ __LIBSRCML_DECL int srcml_archive_set_attributes(srcml_archive* archive, const c
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure. 
  */
-__LIBSRCML_DECL int srcml_archive_set_options(srcml_archive* archive, unsigned long long options) {
+int srcml_archive_set_options(srcml_archive* archive, unsigned long long options) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -336,7 +336,7 @@ __LIBSRCML_DECL int srcml_archive_set_options(srcml_archive* archive, unsigned l
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_archive_enable_option(srcml_archive* archive, unsigned long long option) {
+int srcml_archive_enable_option(srcml_archive* archive, unsigned long long option) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -355,7 +355,7 @@ __LIBSRCML_DECL int srcml_archive_enable_option(srcml_archive* archive, unsigned
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_archive_disable_option(srcml_archive* archive, unsigned long long option) {
+int srcml_archive_disable_option(srcml_archive* archive, unsigned long long option) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -373,7 +373,7 @@ __LIBSRCML_DECL int srcml_archive_disable_option(srcml_archive* archive, unsigne
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_archive_set_tabstop(srcml_archive* archive, int tabstop) {
+int srcml_archive_set_tabstop(srcml_archive* archive, int tabstop) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -392,7 +392,7 @@ __LIBSRCML_DECL int srcml_archive_set_tabstop(srcml_archive* archive, int tabsto
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_archive_register_file_extension(srcml_archive* archive, const char* extension, const char* language) {
+int srcml_archive_register_file_extension(srcml_archive* archive, const char* extension, const char* language) {
 
   if(archive == NULL || extension == 0 || language == 0)
     return SRCML_STATUS_ERROR;
@@ -412,7 +412,7 @@ __LIBSRCML_DECL int srcml_archive_register_file_extension(srcml_archive* archive
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix, const char* ns) {
+int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix, const char* ns) {
 
   if(archive == NULL || prefix == 0 || ns == 0) return SRCML_STATUS_ERROR;
 
@@ -445,7 +445,7 @@ __LIBSRCML_DECL int srcml_archive_register_namespace(srcml_archive* archive, con
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_archive_register_macro(srcml_archive* archive, const char* token, const char* type) {
+int srcml_archive_register_macro(srcml_archive* archive, const char* token, const char* type) {
 
   if(archive == NULL || token == 0 || type == 0) return SRCML_STATUS_ERROR;
 
@@ -480,7 +480,7 @@ __LIBSRCML_DECL int srcml_archive_register_macro(srcml_archive* archive, const c
  *
  * @returns Retrieve the currently set encoding or NULL.
  */
-__LIBSRCML_DECL const char* srcml_archive_get_encoding(const struct srcml_archive* archive) {
+const char* srcml_archive_get_encoding(const struct srcml_archive* archive) {
 
   return archive && archive->encoding ? archive->encoding->c_str() : 0;
 
@@ -492,7 +492,7 @@ __LIBSRCML_DECL const char* srcml_archive_get_encoding(const struct srcml_archiv
  *
  * @returns Retrieve the currently set language or NULL.
  */
-__LIBSRCML_DECL const char* srcml_archive_get_language(const struct srcml_archive* archive) {
+const char* srcml_archive_get_language(const struct srcml_archive* archive) {
 
   return archive && archive->language ? archive->language->c_str() : 0;
 
@@ -504,7 +504,7 @@ __LIBSRCML_DECL const char* srcml_archive_get_language(const struct srcml_archiv
  *
  * @returns Retrieve the currently set root filename attribute or NULL.
  */
-__LIBSRCML_DECL const char* srcml_archive_get_filename(const struct srcml_archive* archive) {
+const char* srcml_archive_get_filename(const struct srcml_archive* archive) {
 
   return archive && archive->filename ? archive->filename->c_str() : 0;
 
@@ -516,7 +516,7 @@ __LIBSRCML_DECL const char* srcml_archive_get_filename(const struct srcml_archiv
  *
  * @returns Retrieve the currently set root directory attribute or NULL.
  */
-__LIBSRCML_DECL const char* srcml_archive_get_directory(const struct srcml_archive* archive) {
+const char* srcml_archive_get_directory(const struct srcml_archive* archive) {
 
   return archive && archive->directory ? archive->directory->c_str() : 0;
 
@@ -528,7 +528,7 @@ __LIBSRCML_DECL const char* srcml_archive_get_directory(const struct srcml_archi
  *
  * @returns Retrieve the currently set root version attribute or NULL.
  */
-__LIBSRCML_DECL const char* srcml_archive_get_version(const struct srcml_archive* archive) {
+const char* srcml_archive_get_version(const struct srcml_archive* archive) {
 
   return archive && archive->version ? archive->version->c_str() : 0;
 
@@ -540,7 +540,7 @@ __LIBSRCML_DECL const char* srcml_archive_get_version(const struct srcml_archive
  *
  * @returns Retrieve the currently set options.
  */
-__LIBSRCML_DECL unsigned long long srcml_archive_get_options(const struct srcml_archive* archive) {
+unsigned long long srcml_archive_get_options(const struct srcml_archive* archive) {
 
   return archive ? archive->options : 0;
 
@@ -552,7 +552,7 @@ __LIBSRCML_DECL unsigned long long srcml_archive_get_options(const struct srcml_
  *
  * @returns Retrieve the currently set tabstop size.
  */
-__LIBSRCML_DECL int srcml_archive_get_tabstop(const struct srcml_archive* archive) {
+int srcml_archive_get_tabstop(const struct srcml_archive* archive) {
 
   return archive ? archive->tabstop : 0;
 
@@ -563,7 +563,7 @@ __LIBSRCML_DECL int srcml_archive_get_tabstop(const struct srcml_archive* archiv
  *
  * @returns Get the number of currently defined namespaces or -1 if archive is NULL
  */
-__LIBSRCML_DECL int srcml_archive_get_namespace_size(const struct srcml_archive* archive) {
+int srcml_archive_get_namespace_size(const struct srcml_archive* archive) {
 
   return archive ? (int)archive->namespaces.size() : -1;
 
@@ -576,7 +576,7 @@ __LIBSRCML_DECL int srcml_archive_get_namespace_size(const struct srcml_archive*
  * @returns Get prefix for the given position on success
  * and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_archive_get_prefix(const struct srcml_archive* archive, int pos) {
+const char* srcml_archive_get_prefix(const struct srcml_archive* archive, int pos) {
 
   if(archive == NULL) return 0;
 
@@ -599,7 +599,7 @@ __LIBSRCML_DECL const char* srcml_archive_get_prefix(const struct srcml_archive*
  * @returns Get the registered prefix for the given namespace
  * on success and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_archive_get_prefix_uri(const struct srcml_archive* archive, const char* namespace_uri) {
+const char* srcml_archive_get_prefix_uri(const struct srcml_archive* archive, const char* namespace_uri) {
 
   if(archive == NULL || namespace_uri == NULL) return 0;
 
@@ -621,7 +621,7 @@ __LIBSRCML_DECL const char* srcml_archive_get_prefix_uri(const struct srcml_arch
  * @returns Get the namespace at the given pos on succcess
  * and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_archive_get_namespace(const struct srcml_archive* archive, int pos) {
+const char* srcml_archive_get_namespace(const struct srcml_archive* archive, int pos) {
 
   if(archive == NULL) return 0;
 
@@ -644,7 +644,7 @@ __LIBSRCML_DECL const char* srcml_archive_get_namespace(const struct srcml_archi
  * @returns Get the first namespace for the given prefix on success
  * and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archive, const char* prefix) {
+const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archive, const char* prefix) {
 
   if(archive == NULL || prefix == NULL) return 0;
 
@@ -665,7 +665,7 @@ __LIBSRCML_DECL const char* srcml_archive_get_namespace_prefix(const struct srcm
  *
  * @returns Get the number of currently defined macros or -1 if archive is NULL
  */
-__LIBSRCML_DECL int srcml_archive_get_macro_list_size(const struct srcml_archive* archive) {
+int srcml_archive_get_macro_list_size(const struct srcml_archive* archive) {
 
   return archive ? (int)(archive->user_macro_list.size() / 2) : -1;
 
@@ -678,7 +678,7 @@ __LIBSRCML_DECL int srcml_archive_get_macro_list_size(const struct srcml_archive
  * @returns Get token for the given position on success
  * and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_archive_get_macro_token(const struct srcml_archive* archive, int pos) {
+const char* srcml_archive_get_macro_token(const struct srcml_archive* archive, int pos) {
 
   if(archive == NULL) return 0;
 
@@ -701,7 +701,7 @@ __LIBSRCML_DECL const char* srcml_archive_get_macro_token(const struct srcml_arc
  * @returns Get the registered type for the given token
  * on success and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_archive_get_macro_token_type(const struct srcml_archive* archive, const char* token) {
+const char* srcml_archive_get_macro_token_type(const struct srcml_archive* archive, const char* token) {
 
   if(archive == NULL || token == NULL) return 0;
 
@@ -724,7 +724,7 @@ __LIBSRCML_DECL const char* srcml_archive_get_macro_token_type(const struct srcm
  * @returns Get the type at the given pos on succcess
  * and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, int pos) {
+const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, int pos) {
 
   if(archive == NULL) return 0;
 
@@ -756,7 +756,7 @@ __LIBSRCML_DECL const char* srcml_archive_get_macro_type(const struct srcml_arch
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename) {
+int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
   if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_ERROR;
 
@@ -795,7 +795,7 @@ __LIBSRCML_DECL int srcml_write_open_filename(srcml_archive* archive, const char
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure. 
  */
-__LIBSRCML_DECL int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
+int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
 
   if(archive == NULL || buffer == NULL || size == NULL) return SRCML_STATUS_ERROR;
 
@@ -834,7 +834,7 @@ __LIBSRCML_DECL int srcml_write_open_memory(srcml_archive* archive, char** buffe
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
+int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
   if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_ERROR;
 
@@ -881,7 +881,7 @@ __LIBSRCML_DECL int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_fi
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
+int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
 
   if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_ERROR;
 
@@ -932,7 +932,7 @@ __LIBSRCML_DECL int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
  * Reads and sets the open type as well as gathers the attributes
  * and sets the options from the opened srcML Archive.
  */
-__LIBSRCML_DECL void srcml_read_internal(srcml_archive * archive) {
+void srcml_read_internal(srcml_archive * archive) {
 
   archive->type = SRCML_ARCHIVE_READ;
 
@@ -964,7 +964,7 @@ __LIBSRCML_DECL void srcml_read_internal(srcml_archive * archive) {
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename) {
+int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
   if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_ERROR;
 
@@ -1002,7 +1002,7 @@ __LIBSRCML_DECL int srcml_read_open_filename(srcml_archive* archive, const char*
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t buffer_size) {
+int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t buffer_size) {
 
   if(archive == NULL || buffer == NULL || buffer_size <= 0) return SRCML_STATUS_ERROR;
 
@@ -1039,7 +1039,7 @@ __LIBSRCML_DECL int srcml_read_open_memory(srcml_archive* archive, const char* b
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
+int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
   if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_ERROR;
 
@@ -1076,7 +1076,7 @@ __LIBSRCML_DECL int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_fil
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
+int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
 
   if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_ERROR;
 
@@ -1118,7 +1118,7 @@ __LIBSRCML_DECL int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-__LIBSRCML_DECL int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
+int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
 
   if(archive == NULL || unit == NULL || unit->unit == NULL) return SRCML_STATUS_ERROR;
 
@@ -1138,7 +1138,7 @@ __LIBSRCML_DECL int srcml_write_unit(srcml_archive* archive, const struct srcml_
  * @returns Return the read srcml_unit on success.
  * On failure returns NULL.
  */
-__LIBSRCML_DECL srcml_unit* srcml_read_unit(srcml_archive* archive) {
+srcml_unit* srcml_read_unit(srcml_archive* archive) {
 
   if(archive == NULL) return 0;
 
@@ -1169,7 +1169,7 @@ __LIBSRCML_DECL srcml_unit* srcml_read_unit(srcml_archive* archive) {
  *
  *  @returns Returns 0 if no unit to skip, 1 otherwise
  */
-__LIBSRCML_DECL int srcml_skip_unit(srcml_archive* archive) {
+int srcml_skip_unit(srcml_archive* archive) {
 
   if(archive == NULL) return 0;
 
@@ -1194,7 +1194,7 @@ __LIBSRCML_DECL int srcml_skip_unit(srcml_archive* archive) {
  *
  * @returns Returns 0 if pos unit does not exist and the read unit otherwise.
  */
-__LIBSRCML_DECL srcml_unit* srcml_read_unit_position(srcml_archive* archive, int pos) {
+srcml_unit* srcml_read_unit_position(srcml_archive* archive, int pos) {
 
   if(archive == NULL || pos <= 0) return 0;
 
@@ -1223,7 +1223,7 @@ __LIBSRCML_DECL srcml_unit* srcml_read_unit_position(srcml_archive* archive, int
  * or srcml_write_open_*.
  * Archive can be reopened.
  */
-__LIBSRCML_DECL void srcml_close_archive(srcml_archive * archive) {
+void srcml_close_archive(srcml_archive * archive) {
 
   if(archive == NULL) return;
 
