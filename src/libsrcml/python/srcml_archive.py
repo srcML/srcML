@@ -313,6 +313,18 @@ class srcml_archive :
     def get_namespace_prefix(self, prefix) :
         return libsrcml.srcml_archive_get_namespace_prefix(self.archive, prefix)
 
+    def get_macro_list_size(self) :
+        return libsrcml.srcml_archive_get_macro_list_size(self.archive)
+
+    def get_macro_token(self, pos) :
+        return libsrcml.srcml_archive_get_macro_token(self.archive, pos)
+
+    def get_macro_token_type(self, token) :
+        return libsrcml.srcml_archive_get_macro_token_type(self.archive, token)
+
+    def get_macro_type(self, pos) :
+        return libsrcml.srcml_archive_get_macro_type(self.archive, pos)
+
     def check_extension(self, filename) :
         return libsrcml.srcml_archive_check_extension(self.archive, filename)
 

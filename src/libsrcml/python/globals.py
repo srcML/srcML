@@ -135,6 +135,22 @@ libsrcml.srcml_get_namespace.argtypes = [c_int]
 libsrcml.srcml_get_namespace_prefix.restype = c_char_p
 libsrcml.srcml_get_namespace_prefix.argtypes = [c_char_p]
 
+# int         srcml_get_macro_list_size();
+libsrcml.srcml_get_macro_list_size.restype = c_int
+libsrcml.srcml_get_macro_list_size.argtypes = []
+
+# const char* srcml_get_macro_token(int pos);
+libsrcml.srcml_get_macro_token.restype = c_char_p
+libsrcml.srcml_get_macro_token.argtypes = [c_int]
+
+# const char* srcml_get_macro_token_type(const char* token);
+libsrcml.srcml_get_macro_token_type.restype = c_char_p
+libsrcml.srcml_get_macro_token_type.argtypes = [c_char_p]
+
+# const char* srcml_get_macro_type(int pos);
+libsrcml.srcml_get_macro_type.restype = c_char_p
+libsrcml.srcml_get_macro_type.argtypes = [c_int]
+
 # int srcml_check_language(const char* language);
 libsrcml.srcml_check_language.restype = c_int
 libsrcml.srcml_check_language.argtypes = [c_char_p]
@@ -207,6 +223,9 @@ def register_file_extension(extension, language) :
 def register_namespace(prefix, ns) :
     check_return(libsrcml.srcml_register_namespace(prefix, ns))
 
+def register_macro(token, type) :
+    check_return(libsrcml.srcml_register_macro(token, type))
+
 def get_encoding() :
     return libsrcml.srcml_get_encoding()
 
@@ -227,6 +246,33 @@ def get_options() :
 
 def get_tabstop() :
     return libsrcml.srcml_get_tabstop()
+
+def get_namespace_size() :
+    return libsrcml.srcml_get_namespace_size()
+
+def get_prefix(pos) :
+    return libsrcml.srcml_get_prefix(pos)
+
+def get_prefix_uri(ns) :
+    return libsrcml.srcml_get_prefix_uri(ns)
+
+def get_namespace(pos) :
+    return libsrcml.srcml_get_namespace(pos)
+
+def get_namespace_prefix(prefix) :
+    return libsrcml.srcml_get_namespace_prefix(prefix)
+
+def get_macro_list_size() :
+    return libsrcml.srcml_get_macro_list_size()
+
+def get_macro_token(pos) :
+    return libsrcml.srcml_get_macro_token(pos)
+
+def get_macro_token_type(token) :
+    return libsrcml.srcml_get_macro_token_type(token)
+
+def get_macro_type(pos) :
+    return libsrcml.srcml_get_macro_type(pos)
 
 def check_language(language) :
     return libsrcml.srcml_check_language(language)
