@@ -660,6 +660,86 @@ __LIBSRCML_DECL const char* srcml_archive_get_namespace_prefix(const struct srcm
 
 }
 
+/**
+ * srcml_archive_get_macro_list_size
+ *
+ * @returns Get the number of currently defined namespaces or -1 if archive is NULL
+ */
+__LIBSRCML_DECL int srcml_archive_get_macro_list_size(const struct srcml_archive* archive) {
+
+  return archive ? (int)(archive->user_macro_list.size() / 2) : -1;
+
+}
+
+/**
+ * srcml_archive_get_macro_token
+ * @param pos macro position
+ *
+ * @returns Get token for the given position on success
+ * and NULL on failure.
+ */
+__LIBSRCML_DECL const char* srcml_archive_get_macro_token(const struct srcml_archive* archive, int pos) {
+
+  if(archive == NULL) return 0;
+
+  try {
+
+    return archive->user_macro_list.at(pos * 2).c_str();
+
+  } catch(...) {
+
+    return 0;
+
+  }
+
+}
+
+/**
+ * srcml_archive_get_macro_token_type
+ * @param token a macro token
+ *
+ * @returns Get the registered type for the given token
+ * on success and NULL on failure.
+ */
+__LIBSRCML_DECL const char* srcml_archive_get_macro_token_type(const struct srcml_archive* archive, const char* token) {
+
+  if(archive == NULL || token == NULL) return 0;
+
+  try {
+
+    std::vector<std::string>::size_type user_macro_list_size = archive->user_macro_list.size() / 2;
+    for(std::vector<std::string>::size_type i = 0;  user_macro_list_size; ++i)
+      if(archive->user_macro_list.at(i * 2) == token)
+        return archive->user_macro_list.at(i * 2 + 1).c_str();
+
+  } catch(...) {}
+
+  return 0;
+}
+
+/**
+ * srcml_archive_get_type
+ * @param pos position in macro list
+ *
+ * @returns Get the type at the given pos on succcess
+ * and NULL on failure.
+ */
+__LIBSRCML_DECL const char* srcml_archive_get_type(const struct srcml_archive* archive, int pos) {
+
+  if(archive == NULL) return 0;
+
+  try {
+
+    return archive->user_macro_list.at(pos * 2 + 1).c_str();
+
+  } catch (...) {
+
+    return 0;
+
+  }
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                       Archive write open functions                         *
