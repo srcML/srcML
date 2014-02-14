@@ -211,7 +211,7 @@ int main() {
 
     srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_namespace_size(archive), 0);
+    dassert(srcml_archive_get_namespace_size(archive), 7);
 
     srcml_free_archive(archive);
 
@@ -223,7 +223,7 @@ int main() {
 
     srcml_archive_register_namespace(archive, "foo1", "bar1");
     srcml_archive_register_namespace(archive, "foo2", "bar2");
-    dassert(srcml_archive_get_namespace_size(archive), 3);
+    dassert(srcml_archive_get_namespace_size(archive), 9);
 
     srcml_free_archive(archive);
 
@@ -237,7 +237,7 @@ int main() {
 
     srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_prefix(archive, 1), std::string("foo2"));
+    dassert(srcml_archive_get_prefix(archive, 1), std::string("cpp"));
 
     srcml_free_archive(archive);
 
@@ -257,7 +257,7 @@ int main() {
 
     srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_prefix(archive, 3), 0);
+    dassert(srcml_archive_get_prefix(archive, 7), 0);
 
     srcml_free_archive(archive);
 
@@ -266,12 +266,11 @@ int main() {
   /* 
      srcml_archive_get_prefix_uri
    */
-
   {
 
     srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_prefix_uri(archive, "bar2"), std::string("foo2"));
+    dassert(srcml_archive_get_prefix_uri(archive, "http://www.sdml.info/srcML/cpp"), std::string("cpp"));
 
     srcml_free_archive(archive);
 
@@ -281,7 +280,7 @@ int main() {
 
     srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_prefix_uri(archive, "bar4"), 0);
+    dassert(srcml_archive_get_prefix_uri(archive, "bar3"), 0);
 
     srcml_free_archive(archive);
 
@@ -305,7 +304,7 @@ int main() {
 
     srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_namespace(1), std::string("bar2"));
+    dassert(srcml_archive_get_namespace(archive, 1), std::string("http://www.sdml.info/srcML/cpp"));
 
     srcml_free_archive(archive);
 
@@ -325,7 +324,7 @@ int main() {
 
     srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_namespace(archive, 3), 0);
+    dassert(srcml_archive_get_namespace(archive, 7), 0);
 
     srcml_free_archive(archive);
 
@@ -339,7 +338,7 @@ int main() {
 
     srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_namespace_prefix(archive, "foo2"), std::string("bar"));
+    dassert(srcml_archive_get_namespace_prefix(archive, "cpp"), std::string("http://www.sdml.info/srcML/cpp"));
 
     srcml_free_archive(archive);
 
