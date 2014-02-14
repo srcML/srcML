@@ -68,6 +68,8 @@ int main() {
     dassert(archive->prefixes.at(6), SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
     dassert(archive->namespaces.at(6), SRCML_EXT_POSITION_NS_URI);
 
+    dassert(archive->user_macro_list.size(), 0);
+
     dassert(archive->translator, 0);
     dassert(archive->reader, 0);
     dassert(archive->input, 0);
