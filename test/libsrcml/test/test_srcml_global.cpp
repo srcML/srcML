@@ -40,7 +40,11 @@ extern srcml_archive global_archive;
 std::string src = "int a;\n";
 
 std::string asrcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-  "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"project.cpp.xml\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>\n"
+  "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>\n"
+  "</unit>\n";
+
+std::string srcml_c = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+  "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" filename=\"a.cpp\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>\n"
   "</unit>\n";
 
 std::string srcml_full = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
@@ -56,6 +60,14 @@ int main() {
   std::ofstream asrcml_file("project.xml");
   asrcml_file << asrcml;
   asrcml_file.close();
+
+  std::ofstream srcml_c_file("project_c.xml");
+  asrcml_file << srcml_c;
+  asrcml_file.close();
+
+  std::ofstream srcml_xml_file("project");
+  srcml_xml_file << asrcml;
+  srcml_xml_file.close();
 
   std::ofstream srcml_full_file("project_full.xml");
   srcml_full_file << srcml_full;
@@ -124,6 +136,8 @@ int main() {
 
   unlink("a.cpp");
   unlink("project.xml");
+  unlink("project_c.xml");
+  unlink("project");
   unlink("project_full.xml");
   unlink("project.cpp.xml");
   unlink("inta.cpp");
