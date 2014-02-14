@@ -62,8 +62,8 @@ int main() {
   asrcml_file.close();
 
   std::ofstream srcml_c_file("project_c.xml");
-  asrcml_file << srcml_c;
-  asrcml_file.close();
+  srcml_c_file << srcml_c;
+  srcml_c_file.close();
 
   std::ofstream srcml_xml_file("project");
   srcml_xml_file << asrcml;
@@ -126,28 +126,28 @@ int main() {
 
   {
     srcml("project.xml", "inta.cpp");
-    std::string res_srcml;
+    std::string res_src;
     std::ifstream project("inta.cpp");
     char c = 0;
     while(project.get(c)) {
-      res_srcml += c;
+      res_src += c;
     } 
 
-    dassert(res_srcml, src);
+    dassert(res_src, src);
 
   }
 
   {
     srcml_set_language(SRCML_LANGUAGE_XML);
     srcml("project", "inta.cpp");
-    std::string res_srcml;
+    std::string res_src;
     std::ifstream project("inta.cpp");
     char c = 0;
     while(project.get(c)) {
-      res_srcml += c;
+      res_src += c;
     } 
 
-    dassert(res_srcml, src);
+    dassert(res_src, src);
 
     srcml_set_language(SRCML_LANGUAGE_NONE);
 
@@ -155,27 +155,27 @@ int main() {
 
   {
     srcml("project_c.xml", "inta.cpp");
-    std::string res_srcml;
+    std::string res_src;
     std::ifstream project("inta.cpp");
     char c = 0;
     while(project.get(c)) {
-      res_srcml += c;
+      res_src += c;
     } 
 
-    dassert(res_srcml, src);
+    dassert(res_src, src);
 
   }
 
   {
     srcml("project_full.xml", "inta.cpp");
-    std::string res_srcml;
+    std::string res_src;
     std::ifstream project("inta.cpp");
     char c = 0;
     while(project.get(c)) {
-      res_srcml += c;
+      res_src += c;
     } 
 
-    dassert(res_srcml, src);
+    dassert(res_src, src);
 
   }
 
