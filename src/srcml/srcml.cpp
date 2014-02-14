@@ -48,6 +48,7 @@
 // helper functions
 bool checkLocalFiles(std::vector<std::string>& pos_args);
 bool test_for_stdin();
+void libarchive2srcml(std::string filename);
 
 int main(int argc, char * argv[]) {
 
@@ -166,6 +167,9 @@ int main(int argc, char * argv[]) {
   // process command line inputs
   BOOST_FOREACH(const std::string& input_file, srcml_request.positional_args) {
 
+//    libarchive2srcml(input_file);
+//    continue;
+
     // if stdin, then there has to be data
     if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !test_for_stdin())
           return 1; // stdin was requested, but no data was received
@@ -240,4 +244,60 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
     }
   }
   return true;
+}
+
+#include <fcntl.h>
+#include <archive.h>
+#include <archive_entry.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <boost/thread.hpp>
+
+void read_from_pipe (int file) {
+
+    // Parse srcml back to source (srcml2src)                                                                      
+    srcml_archive* arch = srcml_create_archive();
+    srcml_read_open_fd(arch, file);
+    srcml_unit* unit;
+
+    while (true) {
+        unit = srcml_read_unit(arch);
+
+        if (unit == 0)
+            break;
+
+        srcml_unparse_unit_filename(unit, srcml_unit_get_filename(unit));
+        srcml_free_unit(unit);
+    }
+
+    srcml_close_archive(arch);
+    srcml_free_archive(arch);
+}
+     
+void libarchive2srcml(std::string filename) {
+
+    archive* arch = archive_read_new();
+    archive_entry* arch_entry = archive_entry_new();
+    archive_read_support_format_raw(arch);
+    archive_read_support_compression_all(arch);
+
+
+    filename = filename.substr(7);
+
+    archive_read_open_filename(arch, filename.c_str(), 16384);
+    archive_read_next_header(arch, &arch_entry);
+
+    int datapipe[2];
+    pipe(datapipe);
+
+    boost::thread_group reader;
+    reader.create_thread( boost::bind(read_from_pipe, datapipe[0]) );
+
+    archive_read_data_into_fd(arch, datapipe[1]);
+    
+    close(datapipe[1]);
+
+    archive_read_finish(arch);
+
+    reader.join_all();
 }
