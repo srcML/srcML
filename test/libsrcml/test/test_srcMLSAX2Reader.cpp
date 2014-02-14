@@ -28,7 +28,11 @@
 #include <string.h>
 #include <cassert>
 #include <fstream>
+#if defined(__GNUC__) && !defined(__MINGW32__)
 #include <unistd.h>
+#else
+#include <io.h>
+#endif
 #include <fcntl.h>
 
 #include <srcml.h>

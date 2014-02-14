@@ -1,7 +1,7 @@
 /*
-  srcmlCLI.cpp
+  srcml_cli.cpp
 
-  Copyright (C) 2004-2013  SDML (www.srcML.org)
+  Copyright (C) 2013-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -21,12 +21,10 @@
 */
 
 /*
-  srcmlCLI handles parsing for CLI options for srcml
+  srcml_cli handles parsing for CLI options for srcml
 */
 
-#include <srcml.h>
-
-#include <srcmlCLI.hpp>
+#include <srcml_cli.hpp>
 #include <boost/program_options.hpp>
 
 namespace prog_opts = boost::program_options;
@@ -105,7 +103,7 @@ const char* SRCML2SRC_FOOTER = "Examples:\
   www.sdml.info\n\
   Report bugs to collard@uakron.edu";
 
-srcml_request_t srcml_request = { 0 };
+srcml_request_t srcml_request = { /* 0 */ };
 
 // Define Program Options
 prog_opts::options_description general("General Options");
@@ -140,7 +138,7 @@ void option_command(bool opt) {
     srcml_request.command |= command;
 }
 
-void option_filename(const std::string& value) { srcml_request.filename = value; }
+void option_filename(const std::string& value) { srcml_request.filename = value; srcml_request.filename_set = true; }
 void option_output(const std::string& value) {srcml_request.output = value; }
 void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value; }
 void option_encoding(const std::string& value) {srcml_request.encoding = value; }
@@ -149,7 +147,7 @@ void option_language(const std::string& value) {srcml_request.language = value; 
 void option_register_ext(const std::vector<std::string>& values) {srcml_request.register_ext = values; }
 void option_tabs(const int value) {srcml_request.tabs = value; }
 void option_directory(const std::string& value) {srcml_request.directory = value; srcml_request.directory_set = true; }
-void option_src_versions(const std::string& value) {srcml_request.src_versions = value; }
+void option_src_versions(const std::string& value) {srcml_request.src_versions = value; srcml_request.src_versions_set = true; }
 void option_prefix(const std::string& value) {srcml_request.prefix = value; }
 void option_xmlns_uri(const std::string& value) {srcml_request.xmlns_uri = value; }
 void option_xmlns_prefix(const std::vector<std::string>& values) {srcml_request.xmlns_prefix = values; }
@@ -158,6 +156,7 @@ void option_xpath(const std::string& value) {srcml_request.xpath = value; }
 void option_xpathparam(const std::vector<std::string>& values) {srcml_request.xpathparam = values; }
 void option_xslt(const std::string& value) {srcml_request.xslt = value; }
 void option_unit(const int value) {srcml_request.unit = value; }
+void option_max_threads(const int value) {srcml_request.max_threads = value; }
 void positional_args(const std::vector<std::string>& value) {srcml_request.positional_args = value; }
 
 void option_help(const std::string& help_opt) {
@@ -195,17 +194,19 @@ std::pair<std::string, std::string> custom_parser(const std::string& s);
 // Debug
 void debug_cli_opts(const struct srcml_request_t srcml_request);
 
-srcml_request_t srcmlCLI::parseCLI(int argc, char* argv[]) {
+// Interpretation of CLI options
+srcml_request_t parseCLI(int argc, char* argv[]) {
   try {
 
     general.add_options()
       ("compress,z", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_COMPRESS>), "output in gzip format")
       ("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
-      ("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NO_NAMESPACE_DECL>), "do not output any namespace declarations")
-      ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NO_XML_DECL>), "do not output the XML declaration")
-      ("output,o", prog_opts::value<std::string>()->notifier(&option_output)->default_value("-")->value_name("OUTPUT"), "write result ouput to arg which is a FILE or URI")
+      ("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NAMESPACE_DECL>), "do not output any namespace declarations")
+      ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_XML_DECL>), "do not output the XML declaration")
+      ("output,o", prog_opts::value<std::string>()->notifier(&option_output)->default_value("-"), "write result ouput to arg which is a FILE or URI")
       ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "suppresses status messages")
       ("src-encoding,t", prog_opts::value<std::string>()->notifier(&option_src_encoding), "set the input source encoding to arg (default:  ISO-8859-1)")
+      ("max-threads", prog_opts::value<int>()->notifier(&option_max_threads)->default_value(4), "set the maximum number of threads srcml can spawn")
       ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")    
       ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "display version number and exit")
       ;
@@ -373,12 +374,10 @@ void debug_cli_opts(const struct srcml_request_t srcml_request) {
 
 // Custom parser for xmlns: option
 std::pair<std::string, std::string> custom_parser(const std::string& s) {
-  if (s.find("--xmlns:") == 0) {
+  if (s.find("--xmlns:") == 0)
     return std::make_pair(std::string("xmlns:"), std::string(s.substr(s.find(":")+1)));
-  }
-  else {
+  else
     return std::make_pair(std::string(), std::string());
-  }
 }
 
 // Set to detect option conflicts

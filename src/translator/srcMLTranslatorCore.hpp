@@ -28,7 +28,7 @@
 #define SRCMLTRANSLATORCORE_HPP
 
 #include "Language.hpp"
-#include "srcMLTranslatorOutput.hpp"
+#include "srcMLOutput.hpp"
 
 #include <string>
 
@@ -117,7 +117,7 @@ private:
     const char* encoding;
     const char* xml_encoding;
     OPTION_TYPE& options;
-    srcMLTranslatorOutput out;
+    srcMLOutput out;
     int tabsize;
     const char** uri;
     std::string * suri;

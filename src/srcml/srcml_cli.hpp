@@ -1,7 +1,7 @@
 /*
-  srcmlCLI.hpp
+  srcml_cli.hpp
 
-  Copyright (C) 2004-2013  SDML (www.srcML.org)
+  Copyright (C) 2013-2014  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -21,14 +21,16 @@
 */
 
 /*
-  srcmlCLI handles parsing for CLI options for srcml
+  srcml_cli handles parsing for CLI options for srcml
 */
 
-#ifndef SRCMLCLI_HPP
-#define SRCMLCLI_HPP
+#ifndef SRCML_CLI_HPP
+#define SRCML_CLI_HPP
 
+#include <srcml.h>
 #include <string>
 #include <vector>
+#include <iostream>
 
 /* These are internal to srcml */
 #define SRCML_COMMAND_LONGINFO          1<<0
@@ -73,14 +75,14 @@ struct srcml_request_t {
   std::vector<std::string> xpathparam;
   std::string xslt;
   int unit;
+  int max_threads;
   std::vector<std::string> positional_args;
   bool help_set;
   bool directory_set;
+  bool filename_set;
+  bool src_versions_set;
 };
 
-class srcmlCLI {
-  public :
-    static srcml_request_t parseCLI (int argc, char* argv[]);
-};
+srcml_request_t parseCLI (int argc, char* argv[]);
 
 #endif

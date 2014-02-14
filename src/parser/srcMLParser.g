@@ -1,7 +1,7 @@
 /*
   srcMLParser.g
 
-  Copyright (C) 2004-2014  SDML (www.sdml.info)
+  Copyright (C) 2004-2014  SDML (www.srcML.org)
 
   This file is part of the srcML translator.
 
@@ -133,7 +133,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -2387,10 +2387,6 @@ block_end[] { ENTRY_DEBUG } :
             // then we needed to markup the (abbreviated) variable declaration
             if (inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
-
-            // @todo  Need a test case that makes this necessary
-            // end of block may lead to adjustment of cpp modes
-            cppmode_adjust();
 
         }
 ;
@@ -6220,8 +6216,16 @@ catch[...] {
 cpp_garbage[] :
 
  ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | EOF)  /* EOF */
-
 ;
+
+cpp_check_end[] returns[bool is_end = false] {
+
+ if(LA(1) == EOL || LA(1) == LINECOMMENT_START || LA(1) == COMMENT_START || LA(1) == JAVADOC_COMMENT_START || LA(1) == DOXYGEN_COMMENT_START || LA(1) == LINE_DOXYGEN_COMMENT_START || LA(1) == EOF)  /* EOF */
+     return true;
+
+ return false;
+
+}:;
 
 // skip to eol
 eol_skip[int directive_token, bool markblockzero] {
@@ -6483,27 +6487,6 @@ cppmode_cleanup[] {
         ENTRY_DEBUG 
 } :;
 
-// ended modes that may lead to needed updates
-cppmode_adjust[] {
-
-    if (!isoption(parseoptions, OPTION_CPP_TEXT_ELSE) &&
-        !cppmode.empty() &&
-        cppmode.top().isclosed &&
-        size() < cppmode.top().statesize.back())
-
-        if (size() == cppmode.top().statesize[cppmode.top().statesize.size() - 1 - 1]) {
-
-            // end if part of cppmode
-            while (size() > cppmode.top().statesize.front())
-                endMode();
-
-            // done with this cppmode
-            cppmode.pop();
-       }
-
-    ENTRY_DEBUG 
-} :;
-
 // line continuation character
 line_continuation[] { ENTRY_DEBUG } :
         {
@@ -6518,7 +6501,47 @@ cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG 
 
         set_bool[markblockzero, LA(1) == CONSTANTS && LT(1)->getText() == "0"]
 
-        complete_expression
+        cpp_complete_expression
+;
+
+// an expression
+cpp_expression[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
+
+        { !inputState->guessing }?
+        (expression_process
+            expression_part_plus_linq[type]
+        ) | cpp_garbage
+
+;
+exception
+catch[...] {
+
+        consume();
+
+}
+
+// match a complete expression no stream
+cpp_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
+        }
+        (options { greedy = true; } :
+
+        // commas as in a list
+        { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
+        comma |
+
+        // right parentheses, unless we are in a pair of parentheses in an expression
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
+
+        // argument mode (as part of call)
+        { inMode(MODE_ARGUMENT) }? argument |
+
+        // expression with right parentheses if a previous match is in one
+        { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? cpp_expression |
+
+        COLON)*
 ;
 
 // symbol in cpp

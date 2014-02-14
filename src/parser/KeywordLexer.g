@@ -1,7 +1,7 @@
 /*
   KeywordLexer.g
 
-  Copyright (C) 2004-2014  SDML (www.sdml.info)
+  Copyright (C) 2004-2014  SDML (www.srcML.org)
 
   This file is part of the srcML translator.
 
