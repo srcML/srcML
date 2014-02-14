@@ -274,6 +274,9 @@ class srcml_archive :
     def register_namespace(self, prefix, ns) :
         check_return(libsrcml.srcml_archive_register_namespace(self.archive, prefix, ns))
 
+    def register_macro(self, token, type) :
+        check_return(libsrcml.srcml_archive_register_macro(self.archive, token, type))
+
     def get_encoding(self) :
         return libsrcml.srcml_archive_get_encoding(self.archive)
 
@@ -294,6 +297,21 @@ class srcml_archive :
 
     def get_tabstop(self) :
         return libsrcml.srcml_archive_get_tabstop(self.archive)
+
+    def get_namespace_size(self) :
+        return libsrcml.srcml_archive_get_namespace_size(self.archive)
+
+    def get_prefix(self, pos) :
+        return libsrcml.srcml_archive_get_prefix(self.archive, pos)
+
+    def get_prefix_uri(self, ns) :
+        return libsrcml.srcml_archive_get_prefix_uri(self.archive, ns)
+
+    def get_namespace(self, pos) :
+        return libsrcml.srcml_archive_get_namespace(self.archive, pos)
+
+    def get_namespace_prefix(self, prefix) :
+        return libsrcml.srcml_archive_get_namespace_prefix(self.archive, prefix)
 
     def check_extension(self, filename) :
         return libsrcml.srcml_archive_check_extension(self.archive, filename)
