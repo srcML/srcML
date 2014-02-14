@@ -526,7 +526,7 @@ __LIBSRCML_DECL int srcml_get_tabstop() {
  */
 __LIBSRCML_DECL int srcml_get_namespace_size() {
 
-  return (int)global_archive.namespaces.size();
+  return srcml_archive_get_namespace_size(&global_archive);
 
 }
 
@@ -539,15 +539,7 @@ __LIBSRCML_DECL int srcml_get_namespace_size() {
  */
 __LIBSRCML_DECL const char* srcml_get_prefix(int pos) {
 
-  try {
-
-    return global_archive.prefixes.at(pos).c_str();
-
-  } catch(...) {
-
-    return 0;
-
-  }
+  return srcml_archive_get_prefix(&global_archive, pos);
 
 }
 
@@ -560,17 +552,8 @@ __LIBSRCML_DECL const char* srcml_get_prefix(int pos) {
  */
 __LIBSRCML_DECL const char* srcml_get_prefix_uri(const char* namespace_uri) {
 
-  if(namespace_uri == NULL) return 0;
+  return srcml_archive_get_prefix_uri(&global_archive, namespace_uri);
 
-  try {
-
-    for(std::vector<std::string>::size_type i = 0; i < global_archive.prefixes.size(); ++i)
-      if(global_archive.namespaces.at(i) == namespace_uri)
-        return global_archive.prefixes.at(i).c_str();
-
-  } catch(...) {}
-
-  return 0;
 }
 
 /**
@@ -582,15 +565,7 @@ __LIBSRCML_DECL const char* srcml_get_prefix_uri(const char* namespace_uri) {
  */
 __LIBSRCML_DECL const char* srcml_get_namespace(int pos) {
 
-  try {
-
-    return global_archive.namespaces.at(pos).c_str();
-
-  } catch (...) {
-
-    return 0;
-
-  }
+  return srcml_archive_get_namespace(&global_archive, pos);
 
 }
 
@@ -603,17 +578,7 @@ __LIBSRCML_DECL const char* srcml_get_namespace(int pos) {
  */
 __LIBSRCML_DECL const char* srcml_get_namespace_prefix(const char* prefix) {
 
-  if(prefix == NULL) return 0;
-
-  try {
-
-    for(std::vector<std::string>::size_type i = 0; i < global_archive.namespaces.size(); ++i)
-      if(global_archive.prefixes.at(i) == prefix)
-        return global_archive.namespaces.at(i).c_str();
-
-  } catch(...) {}
-
-  return 0;
+  return srcml_archive_get_namespace_prefix(&global_archive, prefix);
 
 }
 

@@ -524,6 +524,108 @@ __LIBSRCML_DECL int srcml_archive_get_tabstop(const struct srcml_archive* archiv
 
 }
 
+/**
+ * srcml_archive_get_namespace_size
+ *
+ * @returns Get the number of currently defined namespaces or -1 if archive is NULL
+ */
+__LIBSRCML_DECL int srcml_archive_get_namespace_size(const struct srcml_archive* archive) {
+
+  return archive ? (int)archive->namespaces.size() : -1;
+
+}
+
+/**
+ * srcml_archive_get_prefix
+ * @param pos namespace position
+ *
+ * @returns Get prefix for the given position on success
+ * and NULL on failure.
+ */
+__LIBSRCML_DECL const char* srcml_archive_get_prefix(const struct srcml_archive* archive, int pos) {
+
+  if(archive == NULL) return 0;
+
+  try {
+
+    return archive->prefixes.at(pos).c_str();
+
+  } catch(...) {
+
+    return 0;
+
+  }
+
+}
+
+/**
+ * srcml_archive_get_prefix_uri
+ * @param namespace_uri an XML namespace
+ *
+ * @returns Get the registered prefix for the given namespace
+ * on success and NULL on failure.
+ */
+__LIBSRCML_DECL const char* srcml_archive_get_prefix_uri(const struct srcml_archive* archive, const char* namespace_uri) {
+
+  if(archive == NULL || namespace_uri == NULL) return 0;
+
+  try {
+
+    for(std::vector<std::string>::size_type i = 0; i < archive->prefixes.size(); ++i)
+      if(archive->namespaces.at(i) == namespace_uri)
+        return archive->prefixes.at(i).c_str();
+
+  } catch(...) {}
+
+  return 0;
+}
+
+/**
+ * srcml_archive_get_namespace
+ * @param pos position in namespaces
+ *
+ * @returns Get the namespace at the given pos on succcess
+ * and NULL on failure.
+ */
+__LIBSRCML_DECL const char* srcml_archive_get_namespace(const struct srcml_archive* archive, int pos) {
+
+  if(archive == NULL) return 0;
+
+  try {
+
+    return archive->namespaces.at(pos).c_str();
+
+  } catch (...) {
+
+    return 0;
+
+  }
+
+}
+
+/**
+ * srcml_archive_get_namespace_prefix
+ * @param prefix an XML prefix
+ *
+ * @returns Get the first namespace for the given prefix on success
+ * and NULL on failure.
+ */
+__LIBSRCML_DECL const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archive, const char* prefix) {
+
+  if(archive == NULL || prefix == NULL) return 0;
+
+  try {
+
+    for(std::vector<std::string>::size_type i = 0; i < archive->namespaces.size(); ++i)
+      if(archive->prefixes.at(i) == prefix)
+        return archive->namespaces.at(i).c_str();
+
+  } catch(...) {}
+
+  return 0;
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                       Archive write open functions                         *
