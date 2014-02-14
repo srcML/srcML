@@ -78,15 +78,17 @@ file = open("a.foo", "w")
 gen = file.write("")
 file.close()
 archive = srcml.srcml_archive()
+archive.disable_option(srcml.SRCML_OPTION_ARCHIVE)
 archive.register_file_extension("foo", "C++")
 archive.register_namespace("s", "http://www.sdml.info/srcML/src")
+archive.register_macro("MACRO", "src:macro")
 archive.write_open_memory()
 unit = srcml.srcml_unit(archive)
 unit.parse_filename("a.foo")
 archive.write_unit(unit)
 archive.close()
 os.remove("a.foo")
-verify_test("""<s:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>""", unit.get_xml())
+verify_test("""<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><macro-list token="MACRO" type="src:macro"/></s:unit>""", unit.get_xml())
 
 # write/parse tests
 src = "a;\n"
@@ -375,7 +377,7 @@ xml = file.read()
 file.close()
 
 asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="project.xml"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
 verify_test(asrcml, xml)
@@ -427,7 +429,7 @@ file.close()
 os.remove("a.foo")
 
 asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="project.xml"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
+<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.foo"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
 </s:unit>
 """
 
