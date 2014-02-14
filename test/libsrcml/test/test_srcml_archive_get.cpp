@@ -463,7 +463,7 @@ int main() {
     srcml_archive_register_macro(archive, "foo1", "bar1");
     srcml_archive_register_macro(archive, "foo2", "bar2");
 
-    dassert(srcml_archive_get_token_type(archive, "foo2"), std::string("bar2"));
+    dassert(srcml_archive_get_macro_token_type(archive, "foo2"), std::string("bar2"));
 
     srcml_free_archive(archive);
 
