@@ -152,6 +152,7 @@ __LIBSRCML_DECL int srcml_disable_option         (unsigned long long option);
 __LIBSRCML_DECL int srcml_set_tabstop            (int tabstop);
 __LIBSRCML_DECL int srcml_register_file_extension(const char* extension, const char* language);
 __LIBSRCML_DECL int srcml_register_namespace     (const char* prefix, const char* ns);
+__LIBSRCML_DECL int srcml_add_macro              (const char* token, const char* type);
 
 __LIBSRCML_DECL const char*        srcml_get_encoding ();
 __LIBSRCML_DECL const char*        srcml_get_language ();
@@ -165,6 +166,10 @@ __LIBSRCML_DECL const char*        srcml_get_prefix(int pos);
 __LIBSRCML_DECL const char*        srcml_get_prefix_uri(const char* namespace_uri);
 __LIBSRCML_DECL const char*        srcml_get_namespace(int pos);
 __LIBSRCML_DECL const char*        srcml_get_namespace_prefix(const char* prefix);
+__LIBSRCML_DECL int                srcml_get_macro_list_size();
+__LIBSRCML_DECL const char*        srcml_get_macro_token(int pos);
+__LIBSRCML_DECL const char*        srcml_get_macro_token_type(const char* namespace_uri);
+__LIBSRCML_DECL const char*        srcml_get_macro_type(int pos);
 
 /* source-code language is supported */
 __LIBSRCML_DECL int srcml_check_language(const char* language);
@@ -225,15 +230,20 @@ __LIBSRCML_DECL int srcml_archive_disable_option         (struct srcml_archive*,
 __LIBSRCML_DECL int srcml_archive_set_tabstop            (struct srcml_archive*, int tabstop);
 __LIBSRCML_DECL int srcml_archive_register_file_extension(struct srcml_archive*, const char* extension, const char* language);
 __LIBSRCML_DECL int srcml_archive_register_namespace     (struct srcml_archive*, const char* prefix, const char* ns);
+__LIBSRCML_DECL int srcml_archive_add_macro              (struct srcml_archive*, const char* token, const char* type);
 
 /* query options for srcml archive */
-__LIBSRCML_DECL const char*        srcml_archive_get_encoding (const struct srcml_archive*);
-__LIBSRCML_DECL const char*        srcml_archive_get_language (const struct srcml_archive*);
-__LIBSRCML_DECL const char*        srcml_archive_get_filename (const struct srcml_archive*);
-__LIBSRCML_DECL const char*        srcml_archive_get_directory(const struct srcml_archive*);
-__LIBSRCML_DECL const char*        srcml_archive_get_version  (const struct srcml_archive*);
-__LIBSRCML_DECL unsigned long long srcml_archive_get_options  (const struct srcml_archive*);
-__LIBSRCML_DECL int                srcml_archive_get_tabstop  (const struct srcml_archive*);
+__LIBSRCML_DECL const char*        srcml_archive_get_encoding        (const struct srcml_archive*);
+__LIBSRCML_DECL const char*        srcml_archive_get_language        (const struct srcml_archive*);
+__LIBSRCML_DECL const char*        srcml_archive_get_filename        (const struct srcml_archive*);
+__LIBSRCML_DECL const char*        srcml_archive_get_directory       (const struct srcml_archive*);
+__LIBSRCML_DECL const char*        srcml_archive_get_version         (const struct srcml_archive*);
+__LIBSRCML_DECL unsigned long long srcml_archive_get_options         (const struct srcml_archive*);
+__LIBSRCML_DECL int                srcml_archive_get_tabstop         (const struct srcml_archive*);
+__LIBSRCML_DECL int                srcml_archive_get_macro_list_size (const struct srcml_archive*);
+__LIBSRCML_DECL const char*        srcml_archive_get_macro_token     (const struct srcml_archive*, int pos);
+__LIBSRCML_DECL const char*        srcml_archive_get_macro_token_type(const struct srcml_archive*, const char* namespace_uri);
+__LIBSRCML_DECL const char*        srcml_archive_get_macro_type      (const struct srcml_archive*, int pos);
 
 /* create a new srcml unit
    client is responsible for freeing it using srcml_free_unit() */
@@ -308,17 +318,18 @@ __LIBSRCML_DECL int srcml_append_transform_xslt(struct srcml_archive*, const cha
 __LIBSRCML_DECL int srcml_append_transform_relaxng(struct srcml_archive*, const char* relaxng_filename);
 __LIBSRCML_DECL int srcml_apply_transforms(struct srcml_archive* iarchive, struct srcml_archive* oarchive);
 
-int srcml_set_xml_handler_start_unit(struct srcml_archive*);
-int srcml_set_xml_handler_start_element(struct srcml_archive*);
-int srcml_set_xml_handler_characters(struct srcml_archive*);
-int srcml_set_xml_handler_cdata(struct srcml_archive*);
-int srcml_set_xml_handler_comment(struct srcml_archive*);
-int srcml_set_xml_handler_end_element(struct srcml_archive*);
-int srcml_set_xml_handler_end_unit(struct srcml_archive*);
+/* Augment read to use user defined xml handlers */
+__LIBSRCML_DECL int srcml_set_xml_handler_start_unit(struct srcml_archive*);
+__LIBSRCML_DECL int srcml_set_xml_handler_start_element(struct srcml_archive*);
+__LIBSRCML_DECL int srcml_set_xml_handler_characters(struct srcml_archive*);
+__LIBSRCML_DECL int srcml_set_xml_handler_cdata(struct srcml_archive*);
+__LIBSRCML_DECL int srcml_set_xml_handler_comment(struct srcml_archive*);
+__LIBSRCML_DECL int srcml_set_xml_handler_end_element(struct srcml_archive*);
+__LIBSRCML_DECL int srcml_set_xml_handler_end_unit(struct srcml_archive*);
 
-int srcml_xml_handler_parse_archive(struct srcml_archive*);
-int srcml_xml_handler_release(struct srcml_archive*);
-int srcml_xml_handler_stop(struct srcml_archive*);
+__LIBSRCML_DECL int srcml_xml_handler_parse_archive(struct srcml_archive*);
+__LIBSRCML_DECL int srcml_xml_handler_release(struct srcml_archive*);
+__LIBSRCML_DECL int srcml_xml_handler_stop(struct srcml_archive*);
 
 #ifdef __cplusplus
 }
