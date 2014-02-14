@@ -227,6 +227,33 @@ int main() {
     dassert(srcml_register_namespace("foo", 0), SRCML_STATUS_ERROR);
   }
 
+  /*
+    srcml_register_macro
+  */
+
+  {
+    srcml_register_macro("foo", "bar");
+
+    dassert(global_archive.user_macro_list.at(global_archive.user_macro_list.size() - 2), "foo");
+    dassert(global_archive.user_macro_list.back(), "bar");
+  }
+
+  {
+    srcml_register_macro("foo", "");
+    srcml_register_macro("foo", "bar");
+
+    dassert(global_archive.user_macro_list.at(0), "foo");
+    dassert(global_archive.user_macro_list.at(1) , "bar");
+  }
+
+  {
+    dassert(srcml_register_macro(0, "bar"), SRCML_STATUS_ERROR);
+  }
+
+  {
+    dassert(srcml_register_macro("foo", 0), SRCML_STATUS_ERROR);
+  }
+
   /* 
      srcml_get_encoding
    */
