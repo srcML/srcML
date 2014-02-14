@@ -260,7 +260,7 @@ __LIBSRCML_DECL int srcml(const char* input_filename, const char* output_filenam
     in.seekg(0,std::ios::end);
     std::streampos length = in.tellg();
     in.seekg(0,std::ios::beg);
-    if(length == 0) return SRCML_STATUS_ERROR;
+    if(length == std::streampos(0)) return SRCML_STATUS_ERROR;
 
     std::vector<char> buffer(length);
     in.read(&buffer[0], length);
