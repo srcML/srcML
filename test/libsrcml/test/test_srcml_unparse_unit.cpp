@@ -472,6 +472,9 @@ int main() {
 
   unlink("project.c");
   unlink("project.xml");
+  unlink("project_macro.cpp");
+  unlink("project_macro.xml");
+  unlink("project_macro_single.xml");
 
   srcml_cleanup_globals();
 
