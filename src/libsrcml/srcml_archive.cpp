@@ -718,13 +718,13 @@ __LIBSRCML_DECL const char* srcml_archive_get_macro_token_type(const struct srcm
 }
 
 /**
- * srcml_archive_get_type
+ * srcml_archive_get_macro_type
  * @param pos position in macro list
  *
  * @returns Get the type at the given pos on succcess
  * and NULL on failure.
  */
-__LIBSRCML_DECL const char* srcml_archive_get_type(const struct srcml_archive* archive, int pos) {
+__LIBSRCML_DECL const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, int pos) {
 
   if(archive == NULL) return 0;
 

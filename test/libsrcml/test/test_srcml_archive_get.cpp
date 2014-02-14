@@ -384,5 +384,154 @@ int main() {
     dassert(srcml_archive_get_namespace_prefix(0, "cpp"), 0);
   }
 
+  /* 
+     srcml_get_macro_list_size
+   */
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_macro_list_size(archive), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    srcml_archive_register_macro(archive, "foo1", "bar1");
+    srcml_archive_register_macro(archive, "foo2", "bar2");
+    dassert(srcml_archive_get_macro_list_size(archive), 2);
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+    dassert(srcml_archive_get_macro_list_size(0), -1);
+  }
+
+  /* 
+     srcml_archive_get_macro_token
+   */
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_archive_register_macro(archive, "foo1", "bar1");
+    srcml_archive_register_macro(archive, "foo2", "bar2");
+
+    dassert(srcml_archive_get_macro_token(archive, 1), std::string("foo2"));
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_macro_token(archive, -1), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_macro_token(archive, 7), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+    dassert(srcml_archive_get_macro_token(0, 0), 0);
+  }
+
+  /* 
+     srcml_archive_get_macro_token_type
+   */
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_archive_register_macro(archive, "foo1", "bar1");
+    srcml_archive_register_macro(archive, "foo2", "bar2");
+
+    dassert(srcml_archive_get_token_type(archive, "foo2"), std::string("bar2"));
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_macro_token_type(archive, "foo3"), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_macro_token_type(archive, 0), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+    dassert(srcml_archive_get_macro_token_type(0, "foo2"), 0);
+  }
+
+  /* 
+     srcml_archive_get_macro_type
+   */
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_archive_register_macro(archive, "foo1", "bar1");
+    srcml_archive_register_macro(archive, "foo2", "bar2");
+
+    dassert(srcml_archive_get_macro_type(archive, 1), std::string("bar2"));
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_macro_type(archive, -1), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_get_macro_type(archive, 7), 0);
+
+    srcml_free_archive(archive);
+
+  }
+
+  {
+    dassert(srcml_archive_get_macro_type(0, 0), 0);
+  }
+
   return 0;
 }
