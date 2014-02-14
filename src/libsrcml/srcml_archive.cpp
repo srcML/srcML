@@ -663,7 +663,7 @@ __LIBSRCML_DECL const char* srcml_archive_get_namespace_prefix(const struct srcm
 /**
  * srcml_archive_get_macro_list_size
  *
- * @returns Get the number of currently defined namespaces or -1 if archive is NULL
+ * @returns Get the number of currently defined macros or -1 if archive is NULL
  */
 __LIBSRCML_DECL int srcml_archive_get_macro_list_size(const struct srcml_archive* archive) {
 

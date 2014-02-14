@@ -434,6 +434,22 @@ __LIBSRCML_DECL int srcml_register_namespace(const char* prefix, const char* ns)
 
 }
 
+/**
+ * srcml_archive_register_macro
+ * @param archive a srcml_archive
+ * @param token name of macro
+ * @param type macro type
+ *
+ * Register a macro (token) to be processed as a special type
+ *
+ * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ */
+__LIBSRCML_DECL int srcml_register_macro(const char* prefix, const char* ns) {
+
+  return srcml_archive_register_macro(&global_archive, prefix, ns);
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                           Global get functions                             *
@@ -579,6 +595,57 @@ __LIBSRCML_DECL const char* srcml_get_namespace(int pos) {
 __LIBSRCML_DECL const char* srcml_get_namespace_prefix(const char* prefix) {
 
   return srcml_archive_get_namespace_prefix(&global_archive, prefix);
+
+}
+
+/**
+ * srcml_archive_get_macro_list_size
+ *
+ * @returns Get the number of currently defined macros.
+ */
+__LIBSRCML_DECL int srcml_get_macro_list_size() {
+
+  return srcml_archive_get_macro_list_size(&global_archive);
+
+}
+
+/**
+ * srcml_archive_get_macro_token
+ * @param pos macro position
+ *
+ * @returns Get token for the given position on success
+ * and NULL on failure.
+ */
+__LIBSRCML_DECL const char* srcml_get_macro_token(int pos) {
+
+  return srcml_archive_get_macro_token(&global_archive, pos);
+
+}
+
+/**
+ * srcml_archive_get_macro_token_type
+ * @param token a macro token
+ *
+ * @returns Get the registered type for the given token
+ * on success and NULL on failure.
+ */
+__LIBSRCML_DECL const char* srcml_get_macro_token_type(const char* token) {
+
+  return srcml_archive_get_macro_token_type(&global_archive, token
+);
+
+}
+
+/**
+ * srcml_archive_get_macro_type
+ * @param pos position in macro list
+ *
+ * @returns Get the type at the given pos on succcess
+ * and NULL on failure.
+ */
+__LIBSRCML_DECL const char* srcml_get_macro_type(int pos) {
+
+  return srcml_archive_get_macro_type(&global_archive, pos);
 
 }
 
