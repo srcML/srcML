@@ -43,6 +43,10 @@ std::string asrcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\
   "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"project.cpp.xml\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>\n"
   "</unit>\n";
 
+std::string srcml_full = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+  "<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"dir\" filename=\"file\" version=\"1\"><s:decl_stmt><s:decl><s:type><s:name>int</s:name></s:type> <s:name>a</s:name></s:decl>;</s:decl_stmt>\n"
+  "</s:unit>\n";
+
 int main() {
 
   std::ofstream src_file("a.cpp");
@@ -52,6 +56,10 @@ int main() {
   std::ofstream asrcml_file("project.xml");
   asrcml_file << asrcml;
   asrcml_file.close();
+
+  std::ofstream srcml_full_file("project_full.xml");
+  srcml_full_file << srcml_full;
+  srcml_full_file.close();
 
   /*
     srcml
@@ -71,7 +79,38 @@ int main() {
   }
 
   {
+
+    srcml_set_filename("file");
+    srcml_set_directory("dir");
+    srcml_set_version("1");
+    srcml_register_namespace("s", "http://www.sdml.info/srcML/src");
+    srcml("a.cpp", "project_full.cpp.xml");
+    std::string res_srcml;
+    std::ifstream project("project_full.cpp.xml");
+    char c = 0;
+    while(project.get(c)) {
+      res_srcml += c;
+    } 
+
+    dassert(res_srcml, srcml_full);
+
+  }
+
+  {
     srcml("project.xml", "inta.cpp");
+    std::string res_srcml;
+    std::ifstream project("inta.cpp");
+    char c = 0;
+    while(project.get(c)) {
+      res_srcml += c;
+    } 
+
+    dassert(res_srcml, src);
+
+  }
+
+  {
+    srcml("project_full.xml", "inta.cpp");
     std::string res_srcml;
     std::ifstream project("inta.cpp");
     char c = 0;
