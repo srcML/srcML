@@ -70,6 +70,19 @@ int main() {
 
   }
 
+  {
+    srcml("project.xml", "inta.cpp");
+    std::string res_srcml;
+    std::ifstream project("inta.cpp");
+    char c = 0;
+    while(project.get(c)) {
+      res_srcml += c;
+    } 
+
+    dassert(res_srcml, src);
+
+  }
+
   /* 
      srcml_check_language
    */
