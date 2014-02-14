@@ -243,6 +243,18 @@ def get_namespace() :
 def get_namespace_prefix() :
     return libsrcml.srcml_get_namespace_prefix()
 
+def get_macro_list_size() :
+    return libsrcml.srcml_get_macro_list_size()
+
+def get_macro_token() :
+    return libsrcml.srcml_get_macro_token()
+
+def get_macro_token_type() :
+    return libsrcml.srcml_get_macro_token_type()
+
+def get_macro_type() :
+    return libsrcml.srcml_get_macro_type()
+
 def check_language(language) :
     return libsrcml.srcml_check_language(language)
 
