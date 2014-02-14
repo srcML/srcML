@@ -141,7 +141,7 @@ libsrcml.srcml_get_macro_list_size.argtypes = []
 
 # const char* srcml_get_macro_token(int pos);
 libsrcml.srcml_get_macro_token.restype = c_char_p
-libsrcml.srcml_get_marco_token.argtypes = [c_int]
+libsrcml.srcml_get_macro_token.argtypes = [c_int]
 
 # const char* srcml_get_macro_token_type(const char* namespace_uri);
 libsrcml.srcml_get_macro_token_type.restype = c_char_p
