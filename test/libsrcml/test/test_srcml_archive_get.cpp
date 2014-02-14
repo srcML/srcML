@@ -229,6 +229,10 @@ int main() {
 
   }
 
+  {
+    dassert(srcml_archive_get_namespace_size(0), -1);
+  }
+
   /* 
      srcml_archive_get_prefix
    */
@@ -263,6 +267,10 @@ int main() {
 
   }
 
+  {
+    dassert(srcml_archive_get_prefix(0, 0), 0);
+  }
+
   /* 
      srcml_archive_get_prefix_uri
    */
@@ -294,6 +302,10 @@ int main() {
 
     srcml_free_archive(archive);
 
+  }
+
+  {
+    dassert(srcml_archive_get_prefix_uri(0, "http://www.sdml.info/srcML/cpp"), 0);
   }
 
   /* 
@@ -330,6 +342,10 @@ int main() {
 
   }
 
+  {
+    dassert(srcml_archive_get_namespace(0, 0), 0);
+  }
+
   /* 
      srcml_archive_get_namespace_prefix
    */
@@ -348,7 +364,7 @@ int main() {
 
     srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_namespace_prefix(archive, "foo4"), 0);
+    dassert(srcml_archive_get_namespace_prefix(archive, "foo3"), 0);
 
     srcml_free_archive(archive);
 
@@ -362,6 +378,10 @@ int main() {
 
     srcml_free_archive(archive);
 
+  }
+
+  {
+    dassert(srcml_archive_get_namespace_prefix(0, "cpp"), 0);
   }
 
   return 0;
