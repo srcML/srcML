@@ -148,6 +148,22 @@ libsrcml.srcml_archive_get_namespace.argtypes = [c_void_p, c_int]
 libsrcml.srcml_archive_get_namespace_prefix.restype = c_char_p
 libsrcml.srcml_archive_get_namespace_prefix.argtypes = [c_void_p, c_char_p]
 
+# int         srcml_archive_get_macro_list_size(const struct srcml_archive* archive);
+libsrcml.srcml_archive_get_macro_list_size.restype = c_int
+libsrcml.srcml_archive_get_macro_list_size.argtypes = [c_void_p]
+
+# const char* srcml_archive_get_macro_token(const struct srcml_archive* archive, int pos);
+libsrcml.srcml_archive_get_macro_token.restype = c_char_p
+libsrcml.srcml_archive_get_macro_token.argtypes = [c_void_p, c_int]
+
+# const char* srcml_archive_get_macro_token_type(const struct srcml_archive* archive, const char* namespace_uri);
+libsrcml.srcml_archive_get_macro_token_type.restype = c_char_p
+libsrcml.srcml_archive_get_macro_token_type.argtypes = [c_void_p, c_char_p]
+
+# const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, int pos);
+libsrcml.srcml_archive_get_macro_type.restype = c_char_p
+libsrcml.srcml_archive_get_macro_type.argtypes = [c_void_p, c_int]
+
 # const char* srcml_archive_check_extension(struct srcml_archive* archive, const char* filename);
 libsrcml.srcml_archive_check_extension.restype = c_char_p
 libsrcml.srcml_archive_check_extension.argtypes = [c_void_p, c_char_p]
