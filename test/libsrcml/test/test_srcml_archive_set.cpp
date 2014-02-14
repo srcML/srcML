@@ -427,5 +427,56 @@ int main() {
     dassert(srcml_archive_register_namespace(0, "foo", "bar"), SRCML_STATUS_ERROR);
   }
 
+  /*
+    srcml_archive_register_macro
+  */
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    srcml_archive_register_macro(archive, "foo", "bar");
+
+    dassert(archive->user_macro_list.at(archive->user_macro_list.size() - 2), "foo");
+    dassert(archive->user_macro_list.back(), "bar");
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    srcml_archive_register_macro(archive, "foo", "");
+    srcml_archive_register_macro(archive, "foo", "bar");
+
+    dassert(archive->user_macro_list.at(0), "foo");
+    dassert(archive->user_macro_list.at(1) , "bar");
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_register_macro(archive, 0, "bar"), SRCML_STATUS_ERROR);
+    srcml_free_archive(archive);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    dassert(srcml_archive_register_macro(archive, "foo", 0), SRCML_STATUS_ERROR);
+    srcml_free_archive(archive);
+
+  }
+
+  {
+    dassert(srcml_archive_register_macro(0, "foo", "bar"), SRCML_STATUS_ERROR);
+  }
+
   return 0;
 }
