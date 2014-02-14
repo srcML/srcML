@@ -72,6 +72,12 @@ verify_test(2, archive.get_options())
 archive.set_tabstop(4)
 verify_test(4, archive.get_tabstop())
 
+verify_test(7, archive.get_namespace_size());
+verify_test("cpp", archive.get_prefix(1))
+verify_test("cpp", archive.get_prefix_uri("http://www.sdml.info/srcML/cpp"))
+verify_test("http://www.sdml.info/srcML/cpp", archive.get_namespace(1))
+verify_test("http://www.sdml.info/srcML/cpp", archive.get_namespace_prefix("cpp"))
+
 archive.close()
 
 file = open("a.foo", "w")
