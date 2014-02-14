@@ -135,6 +135,22 @@ libsrcml.srcml_get_namespace.argtypes = [c_int]
 libsrcml.srcml_get_namespace_prefix.restype = c_char_p
 libsrcml.srcml_get_namespace_prefix.argtypes = [c_char_p]
 
+# int         srcml_get_macro_list_size();
+libsrcml.srcml_get_macro_list_size.restype = c_int
+libsrcml.srcml_get_macro_list_size.argtypes = []
+
+# const char* srcml_get_macro_token(int pos);
+libsrcml.srcml_get_macro_token.restype = c_char_p
+libsrcml.srcml_get_marco_token.argtypes = [c_int]
+
+# const char* srcml_get_macro_token_type(const char* namespace_uri);
+libsrcml.srcml_get_macro_token_type.restype = c_char_p
+libsrcml.srcml_get_macro_token_type.argtypes = [c_char_p]
+
+# const char* srcml_get_macro_type(int pos);
+libsrcml.srcml_get_macro_type.restype = c_char_p
+libsrcml.srcml_get_macro_type.argtypes = [c_int]
+
 # int srcml_check_language(const char* language);
 libsrcml.srcml_check_language.restype = c_int
 libsrcml.srcml_check_language.argtypes = [c_char_p]
