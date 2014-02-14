@@ -228,6 +228,21 @@ def get_options() :
 def get_tabstop() :
     return libsrcml.srcml_get_tabstop()
 
+def get_namespace_size() :
+    return libsrcml.srcml_get_namespace_size()
+
+def get_prefix() :
+    return libsrcml.srcml_get_prefix()
+
+def get_prefix_uri() :
+    return libsrcml.srcml_get_prefix_uri()
+
+def get_namespace() :
+    return libsrcml.srcml_get_namespace()
+
+def get_namespace_prefix() :
+    return libsrcml.srcml_get_namespace_prefix()
+
 def check_language(language) :
     return libsrcml.srcml_check_language(language)
 
