@@ -96,6 +96,10 @@ libsrcml.srcml_archive_register_file_extension.argtypes = [c_void_p, c_char_p, c
 libsrcml.srcml_archive_register_namespace.restype = c_int
 libsrcml.srcml_archive_register_namespace.argtypes = [c_void_p, c_char_p, c_char_p]
 
+# int srcml_archive_register_macro(struct srcml_archive*, const char* token, const char* type);
+libsrcml.srcml_archive_register_macro.restype = c_int
+libsrcml.srcml_archive_register_macro.argtypes = [c_void_p, c_char_p, c_char_p]
+
 # const char* srcml_archive_get_encoding (const struct srcml_archive*);
 libsrcml.srcml_archive_get_encoding.restype = c_char_p
 libsrcml.srcml_archive_get_encoding.argtypes = [c_void_p]
@@ -123,6 +127,26 @@ libsrcml.srcml_archive_get_options.argtypes = [c_void_p]
 # int         srcml_archive_get_tabstop  (const struct srcml_archive*);
 libsrcml.srcml_archive_get_tabstop.restype = c_int
 libsrcml.srcml_archive_get_tabstop.argtypes = [c_void_p]
+
+# int         srcml_archive_get_namespace_size(const struct srcml_archive* archive);
+libsrcml.srcml_archive_get_namespace_size.restype = c_int
+libsrcml.srcml_archive_get_namespace_size.argtypes = [c_void_p]
+
+# const char* srcml_archive_get_prefix(const struct srcml_archive* archive, int pos);
+libsrcml.srcml_archive_get_prefix.restype = c_char_p
+libsrcml.srcml_archive_get_prefix.argtypes = [c_void_p, c_int]
+
+# const char* srcml_archive_get_prefix_uri(const struct srcml_archive* archive, const char* namespace_uri);
+libsrcml.srcml_archive_get_prefix_uri.restype = c_char_p
+libsrcml.srcml_archive_get_prefix_uri.argtypes = [c_void_p, c_char_p]
+
+# const char* srcml_archive_get_namespace(const struct srcml_archive* archive, int pos);
+libsrcml.srcml_archive_get_namespace.restype = c_char_p
+libsrcml.srcml_archive_get_namespace.argtypes = [c_void_p, c_int]
+
+# const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archive, const char* prefix);
+libsrcml.srcml_archive_get_namespace_prefix.restype = c_char_p
+libsrcml.srcml_archive_get_namespace_prefix.argtypes = [c_void_p, c_char_p]
 
 # const char* srcml_archive_check_extension(struct srcml_archive* archive, const char* filename);
 libsrcml.srcml_archive_check_extension.restype = c_char_p
