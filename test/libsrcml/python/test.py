@@ -431,6 +431,18 @@ srcml.set_version(None)
 srcml.set_options(srcml.SRCML_OPTION_XML_DECL | srcml.SRCML_OPTION_NAMESPACE_DECL)
 srcml.set_tabstop(8)
 
+verify_test(7, srcml.get_namespace_size());
+verify_test("cpp", srcml.get_prefix(1))
+verify_test("cpp", srcml.get_prefix_uri("http://www.sdml.info/srcML/cpp"))
+verify_test("http://www.sdml.info/srcML/cpp", srcml.get_namespace(1))
+verify_test("http://www.sdml.info/srcML/cpp", srcml.get_namespace_prefix("cpp"))
+
+srcml.register_macro("MACRO", "src:macro")
+verify_test(1, srcml.get_macro_list_size());
+verify_test("MACRO", srcml.get_macro_token(0))
+verify_test("src:macro", srcml.get_macro_token_type("MACRO"))
+verify_test("src:macro", srcml.get_macro_type(0))
+
 srcml.register_file_extension("foo", "C++")
 srcml.register_namespace("s", "http://www.sdml.info/srcML/src")
 srcml.srcml("a.foo", "project.xml")

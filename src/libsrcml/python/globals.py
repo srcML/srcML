@@ -143,7 +143,7 @@ libsrcml.srcml_get_macro_list_size.argtypes = []
 libsrcml.srcml_get_macro_token.restype = c_char_p
 libsrcml.srcml_get_macro_token.argtypes = [c_int]
 
-# const char* srcml_get_macro_token_type(const char* namespace_uri);
+# const char* srcml_get_macro_token_type(const char* token);
 libsrcml.srcml_get_macro_token_type.restype = c_char_p
 libsrcml.srcml_get_macro_token_type.argtypes = [c_char_p]
 
@@ -223,6 +223,9 @@ def register_file_extension(extension, language) :
 def register_namespace(prefix, ns) :
     check_return(libsrcml.srcml_register_namespace(prefix, ns))
 
+def register_macro(token, type) :
+    check_return(libsrcml.srcml_register_macro(token, type))
+
 def get_encoding() :
     return libsrcml.srcml_get_encoding()
 
@@ -247,29 +250,29 @@ def get_tabstop() :
 def get_namespace_size() :
     return libsrcml.srcml_get_namespace_size()
 
-def get_prefix() :
-    return libsrcml.srcml_get_prefix()
+def get_prefix(pos) :
+    return libsrcml.srcml_get_prefix(pos)
 
-def get_prefix_uri() :
-    return libsrcml.srcml_get_prefix_uri()
+def get_prefix_uri(ns) :
+    return libsrcml.srcml_get_prefix_uri(ns)
 
-def get_namespace() :
-    return libsrcml.srcml_get_namespace()
+def get_namespace(pos) :
+    return libsrcml.srcml_get_namespace(pos)
 
-def get_namespace_prefix() :
-    return libsrcml.srcml_get_namespace_prefix()
+def get_namespace_prefix(prefix) :
+    return libsrcml.srcml_get_namespace_prefix(prefix)
 
 def get_macro_list_size() :
     return libsrcml.srcml_get_macro_list_size()
 
-def get_macro_token() :
-    return libsrcml.srcml_get_macro_token()
+def get_macro_token(pos) :
+    return libsrcml.srcml_get_macro_token(pos)
 
-def get_macro_token_type() :
-    return libsrcml.srcml_get_macro_token_type()
+def get_macro_token_type(token) :
+    return libsrcml.srcml_get_macro_token_type(token)
 
-def get_macro_type() :
-    return libsrcml.srcml_get_macro_type()
+def get_macro_type(pos) :
+    return libsrcml.srcml_get_macro_type(pos)
 
 def check_language(language) :
     return libsrcml.srcml_check_language(language)
