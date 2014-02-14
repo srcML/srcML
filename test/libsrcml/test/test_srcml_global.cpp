@@ -179,15 +179,9 @@ int main() {
 
   }
 
-  unlink("a.cpp");
-  unlink("project.xml");
-  unlink("project_c.xml");
-  unlink("project");
-  unlink("project_full.xml");
-  unlink("project.cpp.xml");
-  unlink("project.c.xml");
-  unlink("inta.cpp");
-  unlink("project_full.cpp.xml");
+  {
+    dassert(srcml("foo.c", "foo.xml"), SRCML_STATUS_ERROR);
+  }
 
   /* 
      srcml_check_language
@@ -301,6 +295,16 @@ int main() {
   {
     assert(!srcml_check_encoding(0));
   }
+
+  unlink("a.cpp");
+  unlink("project.xml");
+  unlink("project_c.xml");
+  unlink("project");
+  unlink("project_full.xml");
+  unlink("project.cpp.xml");
+  unlink("project.c.xml");
+  unlink("inta.cpp");
+  unlink("project_full.cpp.xml");
 
   return 0;
 
