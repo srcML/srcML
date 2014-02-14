@@ -245,6 +245,45 @@ int main() {
   {
 
   srcml_archive * archive = srcml_create_archive();
+  srcml_read_open_memory(archive, srcml_macro.c_str(), srcml_macro.size());
+
+  dassert(archive->type, SRCML_ARCHIVE_READ);
+  dassert(!archive->reader, 0);
+  dassert(archive->user_macro_list.size(), 4);
+  dassert(archive->user_macro_list.at(0), "MACRO1");
+  dassert(archive->user_macro_list.at(1), "src:macro");
+  dassert(archive->user_macro_list.at(2), "MACRO2");
+  dassert(archive->user_macro_list.at(3), "src:macro");
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+
+  }
+
+  {
+
+  srcml_archive * archive = srcml_create_archive();
+  srcml_read_open_memory(archive, srcml_macro_single.c_str(), srcml_macro_single.size());
+
+  dassert(archive->type, SRCML_ARCHIVE_READ);
+  dassert(!archive->reader, 0);
+  dassert(archive->user_macro_list.size(), 4);
+  dassert(archive->user_macro_list.at(0), "MACRO1");
+  dassert(archive->user_macro_list.at(1), "src:macro");
+  dassert(archive->user_macro_list.at(2), "MACRO2");
+  dassert(archive->user_macro_list.at(3), "src:macro");
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
+					       | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+
+  }
+
+  {
+
+  srcml_archive * archive = srcml_create_archive();
   dassert(srcml_read_open_memory(archive, 0, 1), SRCML_STATUS_ERROR);
 
   srcml_free_archive(archive);
@@ -319,6 +358,51 @@ int main() {
   dassert(!archive->reader, 0);
   dassert(archive->prefixes.at(0), "s");
   dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+  fclose(file);
+
+  }
+
+  {
+
+  FILE * file = fopen("project_macro.xml", "r");
+
+  srcml_archive * archive = srcml_create_archive();
+  srcml_read_open_FILE(archive, file);
+
+  dassert(archive->type, SRCML_ARCHIVE_READ);
+  dassert(!archive->reader, 0);
+  dassert(archive->user_macro_list.size(), 4);
+  dassert(archive->user_macro_list.at(0), "MACRO1");
+  dassert(archive->user_macro_list.at(1), "src:macro");
+  dassert(archive->user_macro_list.at(2), "MACRO2");
+  dassert(archive->user_macro_list.at(3), "src:macro");
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+  fclose(file);
+
+  }
+
+  {
+
+  FILE * file = fopen("project_macro_single.xml", "r");
+
+  srcml_archive * archive = srcml_create_archive();
+  srcml_read_open_FILE(archive, file);
+
+  dassert(archive->type, SRCML_ARCHIVE_READ);
+  dassert(!archive->reader, 0);
+  dassert(archive->user_macro_list.size(), 4);
+  dassert(archive->user_macro_list.at(0), "MACRO1");
+  dassert(archive->user_macro_list.at(1), "src:macro");
+  dassert(archive->user_macro_list.at(2), "MACRO2");
+  dassert(archive->user_macro_list.at(3), "src:macro");
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
+					       | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -405,6 +489,51 @@ int main() {
 
   {
 
+  int fd = open("project_macro.xml", O_RDONLY);
+
+  srcml_archive * archive = srcml_create_archive();
+  srcml_read_open_fd(archive, fd);
+
+  dassert(archive->type, SRCML_ARCHIVE_READ);
+  dassert(!archive->reader, 0);
+  dassert(archive->user_macro_list.size(), 4);
+  dassert(archive->user_macro_list.at(0), "MACRO1");
+  dassert(archive->user_macro_list.at(1), "src:macro");
+  dassert(archive->user_macro_list.at(2), "MACRO2");
+  dassert(archive->user_macro_list.at(3), "src:macro");
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+  close(fd);
+
+  }
+
+  {
+
+  int fd = open("project_macro_single.xml", O_RDONLY);
+
+  srcml_archive * archive = srcml_create_archive();
+  srcml_read_open_fd(archive, fd);
+
+  dassert(archive->type, SRCML_ARCHIVE_READ);
+  dassert(!archive->reader, 0);
+  dassert(archive->user_macro_list.size(), 4);
+  dassert(archive->user_macro_list.at(0), "MACRO1");
+  dassert(archive->user_macro_list.at(1), "src:macro");
+  dassert(archive->user_macro_list.at(2), "MACRO2");
+  dassert(archive->user_macro_list.at(3), "src:macro");
+  dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
+					       | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+  close(fd);
+
+  }
+
+  {
+
   srcml_archive * archive = srcml_create_archive();
   dassert(srcml_read_open_fd(archive, -1), SRCML_STATUS_ERROR);
 
@@ -421,6 +550,8 @@ int main() {
   unlink("project.xml");
   unlink("project_single.xml");
   unlink("project_ns.xml");
+  unlink("project_macro.xml");
+  unlink("project_macro_single.xml");
 
   srcml_cleanup_globals();
 
