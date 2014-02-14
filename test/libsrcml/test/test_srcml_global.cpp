@@ -138,6 +138,35 @@ int main() {
   }
 
   {
+    srcml_set_language(SRCML_LANGUAGE_XML);
+    srcml("project", "inta.cpp");
+    std::string res_srcml;
+    std::ifstream project("inta.cpp");
+    char c = 0;
+    while(project.get(c)) {
+      res_srcml += c;
+    } 
+
+    dassert(res_srcml, src);
+
+    srcml_set_language(SRCML_LANGUAGE_NONE);
+
+  }
+
+  {
+    srcml("project_c.xml", "inta.cpp");
+    std::string res_srcml;
+    std::ifstream project("inta.cpp");
+    char c = 0;
+    while(project.get(c)) {
+      res_srcml += c;
+    } 
+
+    dassert(res_srcml, src);
+
+  }
+
+  {
     srcml("project_full.xml", "inta.cpp");
     std::string res_srcml;
     std::ifstream project("inta.cpp");
