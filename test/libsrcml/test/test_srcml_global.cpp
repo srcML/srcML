@@ -185,6 +185,7 @@ int main() {
   unlink("project");
   unlink("project_full.xml");
   unlink("project.cpp.xml");
+  unlink("project.c.xml");
   unlink("inta.cpp");
   unlink("project_full.cpp.xml");
 
