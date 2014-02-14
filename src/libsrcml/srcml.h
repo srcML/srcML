@@ -152,7 +152,7 @@ __LIBSRCML_DECL int srcml_disable_option         (unsigned long long option);
 __LIBSRCML_DECL int srcml_set_tabstop            (int tabstop);
 __LIBSRCML_DECL int srcml_register_file_extension(const char* extension, const char* language);
 __LIBSRCML_DECL int srcml_register_namespace     (const char* prefix, const char* ns);
-__LIBSRCML_DECL int srcml_add_macro              (const char* token, const char* type);
+__LIBSRCML_DECL int srcml_register_macro         (const char* token, const char* type);
 
 __LIBSRCML_DECL const char*        srcml_get_encoding ();
 __LIBSRCML_DECL const char*        srcml_get_language ();
@@ -230,7 +230,7 @@ __LIBSRCML_DECL int srcml_archive_disable_option         (struct srcml_archive*,
 __LIBSRCML_DECL int srcml_archive_set_tabstop            (struct srcml_archive*, int tabstop);
 __LIBSRCML_DECL int srcml_archive_register_file_extension(struct srcml_archive*, const char* extension, const char* language);
 __LIBSRCML_DECL int srcml_archive_register_namespace     (struct srcml_archive*, const char* prefix, const char* ns);
-__LIBSRCML_DECL int srcml_archive_add_macro              (struct srcml_archive*, const char* token, const char* type);
+__LIBSRCML_DECL int srcml_archive_register_macro         (struct srcml_archive*, const char* token, const char* type);
 
 /* query options for srcml archive */
 __LIBSRCML_DECL const char*        srcml_archive_get_encoding        (const struct srcml_archive*);
