@@ -32,6 +32,7 @@
 #include <parse_queue.hpp>
 #include <src_input_libarchive.hpp>
 #include <src_input_filesystem.hpp>
+#include <src_input_stdin.hpp>
 #include <srcml_display_info.hpp>
 #include <srcml_list_unit_files.hpp>
 #include <src_prefix.hpp>
@@ -41,13 +42,10 @@
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 
-#include <stdio.h>
-#include <unistd.h>
 #include <iostream>
 
 // helper functions
 bool checkLocalFiles(std::vector<std::string>& pos_args);
-bool test_for_stdin();
 
 // code testing (temporary)
 void libarchive2srcml(std::string filename);
@@ -178,7 +176,7 @@ int main(int argc, char * argv[]) {
 //      continue;
 
     // if stdin, then there has to be data
-    if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !test_for_stdin()) {
+    if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
       return 1; // stdin was requested, but no data was received
     }
 
@@ -204,36 +202,6 @@ int main(int argc, char * argv[]) {
   srcml_free_archive(srcml_arch);
 
   return 0;
-}
-
-// check stdin for data
-bool test_for_stdin() {
-
-  // init file descriptor with stdin
-  fd_set fds;
-  FD_ZERO(&fds);
-  FD_SET(STDIN_FILENO, &fds);
-
-  /* 
-   Need a timeout so the application doesn't
-    hang waiting for input that never comes 
-  */
-  struct timeval timeout;
-  timeout.tv_sec = 5;
-  timeout.tv_usec = 0;
-
-  // use select to see if stdin has data
-  int selectRetVal = select(sizeof(fds)*8, &fds, NULL, NULL, &timeout);
-
-  if (selectRetVal == -1) {
-    std::cerr << "SELECT FAILED!\n";
-    return false;
-  }
-  if (selectRetVal == 0) {
-    std::cerr << "NO DATA TO FETCH!\n";
-    return false;
-  }
-  return true;
 }
 
 // check for the presence of local files only
