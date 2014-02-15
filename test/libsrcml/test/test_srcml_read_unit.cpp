@@ -58,7 +58,12 @@ int main() {
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
     srcml_unit * unit = srcml_read_unit(archive);
+    dassert(unit->unit, 0);
+    char * s;
+    int length;
+    srcml_unparse_unit_memory(unit, &s, &length);
     dassert(*unit->unit, srcml_a);
+    free(s);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);
@@ -74,7 +79,11 @@ int main() {
     dassert(srcml_unit_get_filename(unit), std::string("project"));
     dassert(srcml_unit_get_directory(unit), std::string("test"));
     dassert(srcml_unit_get_version(unit), std::string("1"));
+    char * s;
+    int length;
+    srcml_unparse_unit_memory(unit, &s, &length);
     dassert(*unit->unit, srcml_b);
+    free(s);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);
@@ -90,7 +99,11 @@ int main() {
     dassert(srcml_unit_get_filename(unit), std::string("project"));
     dassert(srcml_unit_get_directory(unit), std::string("test"));
     dassert(srcml_unit_get_version(unit), std::string("1"));
+    char * s;
+    int length;
+    srcml_unparse_unit_memory(unit, &s, &length);
     dassert(*unit->unit, srcml_b_single);
+    free(s);
 
     srcml_free_unit(unit);
     srcml_close_archive(archive);
@@ -178,7 +191,11 @@ int main() {
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
     srcml_unit * unit = srcml_read_unit_position(archive, 1);
+    char * s;
+    int length;
+    srcml_unparse_unit_memory(unit, &s, &length);
     dassert(*unit->unit, srcml_a);
+    free(s);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);
@@ -194,7 +211,11 @@ int main() {
     dassert(srcml_unit_get_filename(unit), std::string("project"));
     dassert(srcml_unit_get_directory(unit), std::string("test"));
     dassert(srcml_unit_get_version(unit), std::string("1"));
+    char * s;
+    int length;
+    srcml_unparse_unit_memory(unit, &s, &length);
     dassert(*unit->unit, srcml_b);
+    free(s);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);
@@ -210,7 +231,11 @@ int main() {
     dassert(srcml_unit_get_filename(unit), std::string("project"));
     dassert(srcml_unit_get_directory(unit), std::string("test"));
     dassert(srcml_unit_get_version(unit), std::string("1"));
+    char * s;
+    int length;
+    srcml_unparse_unit_memory(unit, &s, &length);
     dassert(*unit->unit, srcml_b_single);
+    free(s);
 
     srcml_free_unit(unit);
     srcml_close_archive(archive);
@@ -282,10 +307,16 @@ int main() {
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_two.c_str(), srcml_two.size());
     srcml_unit * unit = srcml_read_unit_position(archive, 1);
+    char * s;
+    int length;
+    srcml_unparse_unit_memory(unit, &s, &length);
     dassert(*unit->unit, srcml_a);
+    free(s);
     srcml_free_unit(unit);
     unit = srcml_read_unit_position(archive, 1);
+    srcml_unparse_unit_memory(unit, &s, &length);
     dassert(*unit->unit, srcml_b_two);
+    free(s);
     srcml_free_unit(unit);
     dassert(srcml_read_unit_position(archive, 1), 0);
 
@@ -298,7 +329,11 @@ int main() {
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_memory(archive, srcml_two.c_str(), srcml_two.size());
     srcml_unit * unit = srcml_read_unit_position(archive, 2);
+    char * s;
+    int length;
+    srcml_unparse_unit_memory(unit, &s, &length);
     dassert(*unit->unit, srcml_b_two);
+    free(s);
     srcml_free_unit(unit);
     dassert(srcml_read_unit_position(archive, 1), 0);
 
