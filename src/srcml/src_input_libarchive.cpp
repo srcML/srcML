@@ -98,6 +98,7 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         std::cerr << "Using stdin requires a defined language\n";
         exit(1); // Stdin used with no language specified.
       }
+      filename = "-";
     }
     
     ParseRequest request;
