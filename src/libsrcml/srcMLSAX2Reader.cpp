@@ -185,13 +185,14 @@ int srcMLSAX2Reader::readUnitAttributes(boost::optional<std::string> & language,
 
 /**
  * readsrcML
+ * @param unit location in which to read srcML unit.
  * 
  * Read the next unit from a srcML Archive
- * and return it as a std::string.
+ * and return in the passed string parameter.
  *
- * @returns string on success and finished return a 0.
+ * @returns 1 on success and 0 if done
  */
-boost::optional<std::string>  srcMLSAX2Reader::readsrcML() {
+int srcMLSAX2Reader::readsrcML(boost::optional<std::string> & unit) {
 
   if(handler.is_done) return 0;
   handler.collect_srcml = true;
@@ -199,9 +200,7 @@ boost::optional<std::string>  srcMLSAX2Reader::readsrcML() {
   handler.collect_srcml = false;
   if(handler.is_done) return 0;
 
-  boost::optional<std::string> unit;
   if(handler.unit->unit) unit = handler.unit->unit;
 
-  return unit;
-
+  return 1;
 }

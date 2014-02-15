@@ -193,7 +193,7 @@ const char* srcml_unit_get_xml(const struct srcml_unit* unit) {
 
   if(unit == NULL) return 0;
   boost::optional<std::string> read_unit;
-  if(!unit->unit) read_unit = unit->archive->reader->readsrcML();
+  if(!unit->unit) unit->archive->reader->readsrcML(read_unit);
 
   return unit->unit ? unit->unit->c_str() : (read_unit ? read_unit->c_str() : 0);
 
@@ -408,7 +408,7 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
   if(unit == NULL || src_filename == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
   if(!unit->unit)
-    unit->unit = unit->archive->reader->readsrcML();
+    unit->archive->reader->readsrcML(unit->unit);
 
   // Must read unit before unparse
   if(!unit->unit) return SRCML_STATUS_ERROR;
@@ -437,7 +437,7 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
   if(unit == NULL || src_buffer == NULL || src_size == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
   if(!unit->unit)
-    unit->unit = unit->archive->reader->readsrcML();
+    unit->archive->reader->readsrcML(unit->unit);
 
   // Must read unit before unparse
   if(!unit->unit) return SRCML_STATUS_ERROR;
@@ -484,7 +484,7 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
   if(unit == NULL || srcml_file == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
   if(!unit->unit)
-    unit->unit = unit->archive->reader->readsrcML();
+    unit->archive->reader->readsrcML(unit->unit);
 
   // Must read unit before unparse
   if(!unit->unit) return SRCML_STATUS_ERROR;
@@ -512,7 +512,7 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
   if(unit == NULL || srcml_fd < 0 || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
   if(!unit->unit)
-    unit->unit = unit->archive->reader->readsrcML();
+    unit->archive->reader->readsrcML(unit->unit);
 
   // Must read unit before unparse
   if(!unit->unit) return SRCML_STATUS_ERROR;

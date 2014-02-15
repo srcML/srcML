@@ -1104,7 +1104,7 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
 
   boost::optional<std::string> read_unit;
   if(!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
-    read_unit = unit->archive->reader->readsrcML();
+    unit->archive->reader->readsrcML(read_unit);
 
   if(!unit->unit && !read_unit) return SRCML_STATUS_ERROR;
 
