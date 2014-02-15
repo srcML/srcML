@@ -1120,10 +1120,16 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
  */
 int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
 
-  if(archive == NULL || unit == NULL || unit->unit == NULL) return SRCML_STATUS_ERROR;
+  if(archive == NULL || unit == NULL) return SRCML_STATUS_ERROR;
+
+  boost::optional<std::string> read_unit;
+  if(!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+    read_unit = unit->archive->reader->readsrcML();
+
+  if(!unit->unit && !read_unit) return SRCML_STATUS_ERROR;
 
   if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
-  archive->translator->add_unit(unit->unit->c_str());
+  archive->translator->add_unit(read_unit ? read_unit->c_str() : unit->unit->c_str());
 
   return SRCML_STATUS_OK;
 }
@@ -1144,20 +1150,14 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
 
   if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
-  boost::optional<std::string> language, filename, directory, version;
-  archive->reader->readUnitAttributes(language, filename, directory, version);
-  boost::optional<std::string> read_unit = archive->reader->readsrcML();
+  srcml_unit * unit = srcml_create_unit(archive);
+  int not_done = archive->reader->readUnitAttributes(unit->language, unit->filename, unit->directory, unit->version);
 
-  srcml_unit * unit = 0;
-  if(read_unit) {
-    unit = srcml_create_unit(archive);
-    unit->unit = read_unit;
-    unit->language = language;
-    unit->filename = filename;
-    unit->directory = directory;
-    unit->version = version;
+  if(!not_done) {
+    srcml_free_unit(unit);
+    unit = 0;
   }
-
+  
   return unit;
 }
 

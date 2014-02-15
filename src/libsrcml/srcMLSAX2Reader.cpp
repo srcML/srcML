@@ -187,8 +187,7 @@ int srcMLSAX2Reader::readUnitAttributes(boost::optional<std::string> & language,
  * readsrcML
  * 
  * Read the next unit from a srcML Archive
- * and return it as a std::string. Uses
- * readsrcML(xmlTextWriterPtr writer).
+ * and return it as a std::string.
  *
  * @returns string on success and finished return a 0.
  */
@@ -198,13 +197,10 @@ boost::optional<std::string>  srcMLSAX2Reader::readsrcML() {
   handler.collect_srcml = true;
   handler.resume_and_wait();
   handler.collect_srcml = false;
-
   if(handler.is_done) return 0;
 
-  boost::optional<std::string>  unit = 0;
-  try {
-    if(handler.unit->unit) unit = handler.unit->unit;
-  } catch(...) {}
+  boost::optional<std::string> unit;
+  if(handler.unit->unit) unit = handler.unit->unit;
 
   return unit;
 
