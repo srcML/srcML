@@ -109,9 +109,9 @@ def extract_all(src, encoding):
 
         unit = archive.read_unit()
         while unit != None :
-                all.append(unit.get_xml())
                 unit.unparse_memory()
                 src_all.append(unit.src())
+                all.append(unit.get_xml())
 		unit = archive.read_unit()
 
         archive.close()

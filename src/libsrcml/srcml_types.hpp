@@ -31,7 +31,6 @@
 #include <string>
 #include <vector>
 
-class srcMLReader;
 class srcMLSAX2Reader;
 
 /**
@@ -108,11 +107,8 @@ struct srcml_archive {
   srcMLTranslator * translator;
 
   /** a srcMLReader for reading */
-#ifdef SAX2
   srcMLSAX2Reader * reader;
-#else
-  srcMLReader * reader;
-#endif
+
   /** xmlParserInputBuffer for reading */
   xmlParserInputBufferPtr input;
   /** close the input buffer? */

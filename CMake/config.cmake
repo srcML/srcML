@@ -31,10 +31,6 @@
 option(ENABLE_SVN_INTEGRATION "Build with SVN integration." OFF)
 set_property(GLOBAL PROPERTY SVN_ENABLED ${ENABLE_SVN_INTEGRATION})
 
-# Adding SAX to configuration.
-option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" ON)
-set_property(GLOBAL PROPERTY SAX2_ENABLED ${LIBSRCML_SAX2_ENABLED})
-
 # Dynamic Load libraries (Unix only)
 option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and libexslt" ON)
 set_property(GLOBAL PROPERTY DYNAMIC_ENABLED ${DYNAMIC_LOAD_ENABLED})

@@ -21,11 +21,7 @@
 
 #include <srcml.h>
 #include <srcml_types.hpp>
-#ifdef SAX2
 #include <srcMLSAX2Reader.hpp>
-#else
-#include <srcMLReader.hpp>
-#endif
 
 #include <srcmlns.hpp>
 
@@ -971,11 +967,7 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
   archive->input = xmlParserInputBufferCreateFilename(srcml_filename, xmlParseCharEncoding(0));
   try {
 
-#ifdef SAX2
     archive->reader = new srcMLSAX2Reader(srcml_filename);
-#else
-    archive->reader = new srcMLReader(srcml_filename);
-#endif
 
   } catch(...) {
 
@@ -1009,11 +1001,7 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
   archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, xmlParseCharEncoding(0));
   try {
 
-#ifdef SAX2
     archive->reader = new srcMLSAX2Reader(archive->input);
-#else
-    archive->reader = new srcMLReader(archive->input);
-#endif
 
   } catch(...) {
 
@@ -1046,11 +1034,7 @@ int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
   archive->input = xmlParserInputBufferCreateFile(srcml_file, xmlParseCharEncoding(0));
   try {
 
-#ifdef SAX2
     archive->reader = new srcMLSAX2Reader(archive->input);
-#else
-    archive->reader = new srcMLReader(archive->input);
-#endif
 
   } catch(...) {
 
@@ -1083,11 +1067,7 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
   archive->input = xmlParserInputBufferCreateFd(srcml_fd, xmlParseCharEncoding(0));
   try {
 
-#ifdef SAX2
     archive->reader = new srcMLSAX2Reader(archive->input);
-#else
-    archive->reader = new srcMLReader(archive->input);
-#endif
 
   } catch(...) {
 
