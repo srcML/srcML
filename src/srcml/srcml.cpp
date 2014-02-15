@@ -178,8 +178,9 @@ int main(int argc, char * argv[]) {
 //      continue;
 
     // if stdin, then there has to be data
-    if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !test_for_stdin())
-          return 1; // stdin was requested, but no data was received
+    if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !test_for_stdin()) {
+      return 1; // stdin was requested, but no data was received
+    }
 
     // split the URI
     std::string protocol;
@@ -187,9 +188,11 @@ int main(int argc, char * argv[]) {
     src_prefix_split_uri(input_file, protocol, resource);
     // call handler based on prefix
     if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
-        src_input_filesystem(queue, srcml_arch, resource, srcml_request.language);
+      src_input_filesystem(queue, srcml_arch, resource, srcml_request.language);
     } else if (protocol == "file") {
-        src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
+      src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
+    } else if (protocol == "stdin") {
+      src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
     }
   }
   
@@ -239,15 +242,18 @@ bool checkLocalFiles(std::vector<std::string>& pos_args) {
     if (pos_args[i] == "/dev/stdin")
       pos_args[i] = "-";
     
-    if (pos_args[i] != "-") {
-      if (pos_args[i].find("http:") == std::string::npos){
-        boost::filesystem::path localFile (pos_args[i]);
-        if (!exists(localFile)) {
-          std::cerr << "File " << pos_args[i] << " not found.\n";
-          return false;
-        }
-        pos_args[i] = pos_args[i].insert(0,"file://");
+    if (pos_args[i] == "-") {
+      pos_args[i] = pos_args[i].insert(0,"stdin://");
+      return true;
+    }
+    
+    if (pos_args[i].find("http:") == std::string::npos){
+      boost::filesystem::path localFile (pos_args[i]);
+      if (!exists(localFile)) {
+        std::cerr << "File " << pos_args[i] << " not found.\n";
+        return false;
       }
+      pos_args[i] = pos_args[i].insert(0,"file://");
     }
   }
   return true;
