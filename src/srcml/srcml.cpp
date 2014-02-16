@@ -36,6 +36,7 @@
 #include <srcml_display_info.hpp>
 #include <srcml_list_unit_files.hpp>
 #include <src_prefix.hpp>
+#include <src_input_validator.hpp>
 
 #include <archive.h>
 #include <archive_entry.h>
@@ -43,9 +44,6 @@
 #include <boost/foreach.hpp>
 
 #include <iostream>
-
-// helper functions
-bool checkLocalFiles(std::vector<std::string>& pos_args);
 
 // code testing (temporary)
 void libarchive2srcml(std::string filename);
@@ -86,10 +84,6 @@ int main(int argc, char * argv[]) {
     std::cerr << argv[0] << ": " << srcml_request.tabs << " is invalid tab stop. Tab stops must be 1 or higher.\n";
     return 1; //ERROR CODE TBD
   }
-
-  // Check if local files/directories are present on filesystem
-  if (!checkLocalFiles(srcml_request.positional_args))
-    return 1;
 
   // srcml long info
   if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
@@ -175,22 +169,31 @@ int main(int argc, char * argv[]) {
 //   libarchive2srcml(input_file);
 //      continue;
 
-    // if stdin, then there has to be data
-    if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
-      return 1; // stdin was requested, but no data was received
-    }
+    std::string input = input_file;
+    if (src_validate(input)) {
+      // if stdin, then there has to be data
+      if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
+        return 1; // stdin was requested, but no data was received
+      }
 
-    // split the URI
-    std::string protocol;
-    std::string resource;
-    src_prefix_split_uri(input_file, protocol, resource);
-    // call handler based on prefix
-    if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
-      src_input_filesystem(queue, srcml_arch, resource, srcml_request.language);
-    } else if (protocol == "file") {
-      src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
-    } else if (protocol == "stdin") {
-      src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
+      // split the URI
+      std::string protocol;
+      std::string resource;
+      src_prefix_split_uri(input, protocol, resource);
+
+      // call handler based on prefix
+      if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
+        src_input_filesystem(queue, srcml_arch, resource, srcml_request.language);
+      } else if (protocol == "file") {
+        src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
+      } else if (protocol == "stdin") {
+        src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
+      }
+    }
+    else {
+      // SETUP AN ERROR PARSE REQUEST FOR TRACING
+      // This is temporary
+      std::cerr << input_file << " is not accessible.\n";
     }
   }
   
@@ -202,29 +205,6 @@ int main(int argc, char * argv[]) {
   srcml_free_archive(srcml_arch);
 
   return 0;
-}
-
-// check for the presence of local files only
-bool checkLocalFiles(std::vector<std::string>& pos_args) {
-  for (size_t i = 0; i < pos_args.size(); ++i) {
-    if (pos_args[i] == "/dev/stdin")
-      pos_args[i] = "-";
-    
-    if (pos_args[i] == "-") {
-      pos_args[i] = pos_args[i].insert(0,"stdin://");
-      return true;
-    }
-    
-    if (pos_args[i].find("http:") == std::string::npos){
-      boost::filesystem::path localFile (pos_args[i]);
-      if (!exists(localFile)) {
-        std::cerr << "File " << pos_args[i] << " not found.\n";
-        return false;
-      }
-      pos_args[i] = pos_args[i].insert(0,"file://");
-    }
-  }
-  return true;
 }
 
 // code testing (temporary)

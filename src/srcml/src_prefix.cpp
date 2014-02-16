@@ -25,11 +25,16 @@
 */
 
 #include <src_prefix.hpp>
+#include <iostream>
 
 const char* PROTOCOL_SEPARATOR = "://";
 
 void src_prefix_add_uri(std::string& input_file, const std::string& protocol) {
-  input_file = input_file.insert(0, protocol);
+  size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
+  
+  // Only add a prefix if the input doesn't have one already (IE. http://)
+  if (prefixPos == std::string::npos)
+    input_file = input_file.insert(0, protocol);
 }
 
 void src_prefix_split_uri(const std::string& input_file, std::string& protocol, std::string& resource){
