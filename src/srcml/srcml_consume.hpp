@@ -21,8 +21,7 @@
 */
 
 /*
-  srcml_consume calls appropriate libsrcml functions for processing srcml
-    or source file data respectively 
+  srcml_consume calls appropriate libsrcml functions for processing source file data
 */
 
 #ifndef SRCML_CONSUME_HPP
