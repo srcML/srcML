@@ -36,7 +36,7 @@ option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and
 set_property(GLOBAL PROPERTY DYNAMIC_ENABLED ${DYNAMIC_LOAD_ENABLED})
 
 # Adding build option for srcml executable.
-option(ENABLE_NEW_SRCML_EXEC_BUILD "Build the newer version of the srcML executable." OFF)
+option(ENABLE_NEW_SRCML_EXEC_BUILD "Build the newer version of the srcML executable." ON)
 set_property(GLOBAL PROPERTY ENABLE_NEW_SRCML_EXEC_BUILD ${ENABLE_NEW_SRCML_EXEC_BUILD})
 
 # Setting some windows only properties.
