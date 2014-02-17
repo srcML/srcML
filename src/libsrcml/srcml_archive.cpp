@@ -1095,6 +1095,8 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
  * @param unit a srcml_unit to output
  *
  * Append the srcml_unit unit to the srcml_archive archive.
+ * If copying from a read and only the attributes have been read
+ * read in the xml and output.
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
@@ -1119,7 +1121,8 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
  * @param archive a srcml archive open for reading 
  * 
  * Read the next unit from the archive.
- * unit contains read attributes.
+ * unit contains read attribute.  xml is set to read only if needed
+ * in a subsequent call.
  *
  * @returns Return the read srcml_unit on success.
  * On failure returns NULL.

@@ -186,6 +186,8 @@ const char* srcml_unit_get_version(const struct srcml_unit* unit) {
  * @param unit a srcml unit
  * 
  * Get the parsed or collected srcml from an archive.
+ * If only the attributes were collected from a read,
+ * then read in the xml and return that value.
  *
  * @returns the unit srcML on success and NULL on failure.
  */
@@ -400,7 +402,8 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
  * @param src_filename name of a file to output contents of unit as source
  * 
  * Convert the srcML in unit into source code and place it into the file
- * src_filename.
+ * src_filename.  If the srcML was not read in, but the attributes were
+ * read in the xml and unparse that value.
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
@@ -428,7 +431,8 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
  * @param src_buffer an output buffer address
  * 
  * Convert the srcML in unit into source code and place it into the address
- * pointed to by src_buffer.  src_buffer is allocated in the function and
+ * pointed to by src_buffer.  If the srcML was not read in, but the attributes were
+ * read in the xml and unparse that value.  src_buffer is allocated in the function and
  * needs to be freed after finished using.
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
@@ -476,7 +480,8 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
  * @param srcml_file FILE opened for writing
  * 
  * Convert the srcML in unit into source code and place it into the FILE
- * srcml_file.
+ * srcml_file.  If the srcML was not read in, but the attributes were
+ * read in the xml and unparse that value.
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
@@ -504,7 +509,8 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
  * @param srcml_fd file descriptor opened for writing
  * 
  * Convert the srcML in unit into source code and place it into the file
- * descriptor srcml_fd.
+ * descriptor srcml_fd.  If the srcML was not read in, but the attributes were
+ * read in the xml and unparse that value.
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
