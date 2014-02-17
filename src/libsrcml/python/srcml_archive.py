@@ -96,6 +96,10 @@ libsrcml.srcml_archive_register_file_extension.argtypes = [c_void_p, c_char_p, c
 libsrcml.srcml_archive_register_namespace.restype = c_int
 libsrcml.srcml_archive_register_namespace.argtypes = [c_void_p, c_char_p, c_char_p]
 
+# int srcml_archive_register_macro(struct srcml_archive*, const char* token, const char* type);
+libsrcml.srcml_archive_register_macro.restype = c_int
+libsrcml.srcml_archive_register_macro.argtypes = [c_void_p, c_char_p, c_char_p]
+
 # const char* srcml_archive_get_encoding (const struct srcml_archive*);
 libsrcml.srcml_archive_get_encoding.restype = c_char_p
 libsrcml.srcml_archive_get_encoding.argtypes = [c_void_p]
@@ -123,6 +127,42 @@ libsrcml.srcml_archive_get_options.argtypes = [c_void_p]
 # int         srcml_archive_get_tabstop  (const struct srcml_archive*);
 libsrcml.srcml_archive_get_tabstop.restype = c_int
 libsrcml.srcml_archive_get_tabstop.argtypes = [c_void_p]
+
+# int         srcml_archive_get_namespace_size(const struct srcml_archive* archive);
+libsrcml.srcml_archive_get_namespace_size.restype = c_int
+libsrcml.srcml_archive_get_namespace_size.argtypes = [c_void_p]
+
+# const char* srcml_archive_get_prefix(const struct srcml_archive* archive, int pos);
+libsrcml.srcml_archive_get_prefix.restype = c_char_p
+libsrcml.srcml_archive_get_prefix.argtypes = [c_void_p, c_int]
+
+# const char* srcml_archive_get_prefix_uri(const struct srcml_archive* archive, const char* namespace_uri);
+libsrcml.srcml_archive_get_prefix_uri.restype = c_char_p
+libsrcml.srcml_archive_get_prefix_uri.argtypes = [c_void_p, c_char_p]
+
+# const char* srcml_archive_get_namespace(const struct srcml_archive* archive, int pos);
+libsrcml.srcml_archive_get_namespace.restype = c_char_p
+libsrcml.srcml_archive_get_namespace.argtypes = [c_void_p, c_int]
+
+# const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archive, const char* prefix);
+libsrcml.srcml_archive_get_namespace_prefix.restype = c_char_p
+libsrcml.srcml_archive_get_namespace_prefix.argtypes = [c_void_p, c_char_p]
+
+# int         srcml_archive_get_macro_list_size(const struct srcml_archive* archive);
+libsrcml.srcml_archive_get_macro_list_size.restype = c_int
+libsrcml.srcml_archive_get_macro_list_size.argtypes = [c_void_p]
+
+# const char* srcml_archive_get_macro_token(const struct srcml_archive* archive, int pos);
+libsrcml.srcml_archive_get_macro_token.restype = c_char_p
+libsrcml.srcml_archive_get_macro_token.argtypes = [c_void_p, c_int]
+
+# const char* srcml_archive_get_macro_token_type(const struct srcml_archive* archive, const char* namespace_uri);
+libsrcml.srcml_archive_get_macro_token_type.restype = c_char_p
+libsrcml.srcml_archive_get_macro_token_type.argtypes = [c_void_p, c_char_p]
+
+# const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, int pos);
+libsrcml.srcml_archive_get_macro_type.restype = c_char_p
+libsrcml.srcml_archive_get_macro_type.argtypes = [c_void_p, c_int]
 
 # const char* srcml_archive_check_extension(struct srcml_archive* archive, const char* filename);
 libsrcml.srcml_archive_check_extension.restype = c_char_p
@@ -234,6 +274,9 @@ class srcml_archive :
     def register_namespace(self, prefix, ns) :
         check_return(libsrcml.srcml_archive_register_namespace(self.archive, prefix, ns))
 
+    def register_macro(self, token, type) :
+        check_return(libsrcml.srcml_archive_register_macro(self.archive, token, type))
+
     def get_encoding(self) :
         return libsrcml.srcml_archive_get_encoding(self.archive)
 
@@ -254,6 +297,33 @@ class srcml_archive :
 
     def get_tabstop(self) :
         return libsrcml.srcml_archive_get_tabstop(self.archive)
+
+    def get_namespace_size(self) :
+        return libsrcml.srcml_archive_get_namespace_size(self.archive)
+
+    def get_prefix(self, pos) :
+        return libsrcml.srcml_archive_get_prefix(self.archive, pos)
+
+    def get_prefix_uri(self, ns) :
+        return libsrcml.srcml_archive_get_prefix_uri(self.archive, ns)
+
+    def get_namespace(self, pos) :
+        return libsrcml.srcml_archive_get_namespace(self.archive, pos)
+
+    def get_namespace_prefix(self, prefix) :
+        return libsrcml.srcml_archive_get_namespace_prefix(self.archive, prefix)
+
+    def get_macro_list_size(self) :
+        return libsrcml.srcml_archive_get_macro_list_size(self.archive)
+
+    def get_macro_token(self, pos) :
+        return libsrcml.srcml_archive_get_macro_token(self.archive, pos)
+
+    def get_macro_token_type(self, token) :
+        return libsrcml.srcml_archive_get_macro_token_type(self.archive, token)
+
+    def get_macro_type(self, pos) :
+        return libsrcml.srcml_archive_get_macro_type(self.archive, pos)
 
     def check_extension(self, filename) :
         return libsrcml.srcml_archive_check_extension(self.archive, filename)

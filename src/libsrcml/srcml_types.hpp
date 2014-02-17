@@ -31,7 +31,6 @@
 #include <string>
 #include <vector>
 
-class srcMLReader;
 class srcMLSAX2Reader;
 
 /**
@@ -108,11 +107,8 @@ struct srcml_archive {
   srcMLTranslator * translator;
 
   /** a srcMLReader for reading */
-#ifdef SAX2
   srcMLSAX2Reader * reader;
-#else
-  srcMLReader * reader;
-#endif
+
   /** xmlParserInputBuffer for reading */
   xmlParserInputBufferPtr input;
   /** close the input buffer? */
@@ -141,6 +137,8 @@ struct srcml_unit {
   /** an attribute for a version string */
   boost::optional<std::string> version;
 
+  /** store if attributes have been read */
+  bool read_header;
   /** a buffer to store srcml from read and after parsing */
   boost::optional<std::string> unit;
 };

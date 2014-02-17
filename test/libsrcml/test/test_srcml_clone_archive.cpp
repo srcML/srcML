@@ -50,13 +50,11 @@ int main() {
     archive->prefixes.at(1) = "c";
     archive->prefixes.push_back("foo");
     archive->namespaces.push_back("bar");
+    archive->user_macro_list.push_back("foo");
+    archive->user_macro_list.push_back("bar");
     srcml_archive_register_file_extension(archive, "foo", "bar");
     archive->translator = (srcMLTranslator *)1;
-#ifdef SAX2
     archive->reader = (srcMLSAX2Reader *)1;
-#else
-    archive->reader = (srcMLReader *)1;
-#endif
     archive->input = (xmlParserInputBufferPtr)1;
     transform trans = {SRCML_XPATH, "//src:unit"};
     archive->transformations.push_back(trans);
@@ -97,6 +95,10 @@ int main() {
     dassert(new_archive->namespaces.at(6), SRCML_EXT_POSITION_NS_URI);
     dassert(new_archive->prefixes.at(7), "foo");
     dassert(new_archive->namespaces.at(7), "bar");
+
+    dassert(new_archive->user_macro_list.size(), 2);
+    dassert(new_archive->user_macro_list.at(0), "foo");
+    dassert(new_archive->user_macro_list.at(1), "bar");
 
     dassert(new_archive->translator, 0);
     dassert(new_archive->reader, 0);

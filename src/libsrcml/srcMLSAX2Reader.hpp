@@ -50,6 +50,8 @@ private :
 
   /** control for sax parsing */
   srcMLControlHandler control;
+  /** boolean for marking if read root */
+  bool read_root;
   /** handler with hooks for sax parsing */
   srcMLReaderHandler handler;
 
@@ -82,8 +84,8 @@ public :
   int readUnitAttributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
                          boost::optional<std::string> & directory, boost::optional<std::string> & version);
 
-  // reads the next unit and returns it srcML
-  boost::optional<std::string> readsrcML();
+  // reads the next unit and returns it in parameter as srcML
+  int readsrcML(boost::optional<std::string> & unit);
 
 };
 

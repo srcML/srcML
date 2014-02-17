@@ -22,6 +22,7 @@
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcml_sax2_utilities.hpp>
+#include <srcMLSAX2Reader.hpp>
 
 /******************************************************************************
  *                                                                            *
@@ -39,7 +40,6 @@
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
  * on failure.
  */
-LIBSRCML_DECL
 int srcml_unit_set_language(srcml_unit* unit, const char* language) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
@@ -60,7 +60,6 @@ int srcml_unit_set_language(srcml_unit* unit, const char* language) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
  * on failure.
  */
-LIBSRCML_DECL
 int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
@@ -81,7 +80,6 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
  * on failure.
  */
-LIBSRCML_DECL
 int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
@@ -103,7 +101,6 @@ int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
  * on failure.
  */
-LIBSRCML_DECL
 int srcml_unit_set_version(srcml_unit* unit, const char* version) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
@@ -128,7 +125,6 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
  *
  * @returns langauge on success and NULL on failure.
  */
-LIBSRCML_DECL
 const char* srcml_unit_get_language(const struct srcml_unit* unit) {
 
   if(unit == NULL) return 0;
@@ -145,7 +141,6 @@ const char* srcml_unit_get_language(const struct srcml_unit* unit) {
  *
  * @returns filename attribute on success and NULL on failure.
  */
-LIBSRCML_DECL
 const char* srcml_unit_get_filename(const struct srcml_unit* unit) {
 
   if(unit == NULL) return 0;
@@ -162,7 +157,6 @@ const char* srcml_unit_get_filename(const struct srcml_unit* unit) {
  *
  * @returns directory attribute on successand NULL on failure.
  */
-LIBSRCML_DECL
 const char* srcml_unit_get_directory(const struct srcml_unit* unit) {
 
   if(unit == NULL) return 0;
@@ -179,7 +173,6 @@ const char* srcml_unit_get_directory(const struct srcml_unit* unit) {
  *
  * @returns version on success and NULL on failure.
  */
-LIBSRCML_DECL
 const char* srcml_unit_get_version(const struct srcml_unit* unit) {
 
   if(unit == NULL) return 0;
@@ -193,13 +186,17 @@ const char* srcml_unit_get_version(const struct srcml_unit* unit) {
  * @param unit a srcml unit
  * 
  * Get the parsed or collected srcml from an archive.
+ * If only the attributes were collected from a read,
+ * then read in the xml and return that value.
  *
  * @returns the unit srcML on success and NULL on failure.
  */
-LIBSRCML_DECL
-const char* srcml_unit_get_xml(const struct srcml_unit* unit) {
+const char* srcml_unit_get_xml(struct srcml_unit* unit) {
 
-  if(unit == NULL) return 0;
+  if(unit == NULL || (!unit->unit && !unit->read_header)) return 0;
+
+  if(!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+    unit->archive->reader->readsrcML(unit->unit);
 
   return unit->unit ? unit->unit->c_str() : 0;
 
@@ -222,7 +219,6 @@ const char* srcml_unit_get_xml(const struct srcml_unit* unit) {
  * 
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-LIBSRCML_DECL
 int srcml_parse_unit_internal(srcml_unit * unit, int lang, xmlParserInputBufferPtr input, OPTION_TYPE translation_options) {
 
   xmlBuffer * output_buffer = xmlBufferCreate();
@@ -264,7 +260,6 @@ int srcml_parse_unit_internal(srcml_unit * unit, int lang, xmlParserInputBufferP
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-LIBSRCML_DECL
 int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
   if(unit == NULL || src_filename == NULL || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
@@ -303,7 +298,6 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-LIBSRCML_DECL
 int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
 
   if(unit == NULL || src_buffer == NULL || buffer_size <= 0 || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
@@ -336,7 +330,6 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-LIBSRCML_DECL
 int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
   if(unit == NULL || src_file == NULL || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
@@ -372,7 +365,6 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-LIBSRCML_DECL
 int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
   if(unit == NULL || src_fd < 0 || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
@@ -410,14 +402,17 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
  * @param src_filename name of a file to output contents of unit as source
  * 
  * Convert the srcML in unit into source code and place it into the file
- * src_filename.
+ * src_filename.  If the srcML was not read in, but the attributes were
+ * read in the xml and unparse that value.
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-LIBSRCML_DECL
 int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
-  if(unit == NULL || src_filename == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
+  if(unit == NULL || src_filename == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) || (!unit->unit && !unit->read_header)) return SRCML_STATUS_ERROR;
+
+  if(!unit->unit)
+    unit->archive->reader->readsrcML(unit->unit);
 
   // Must read unit before unparse
   if(!unit->unit) return SRCML_STATUS_ERROR;
@@ -436,15 +431,18 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
  * @param src_buffer an output buffer address
  * 
  * Convert the srcML in unit into source code and place it into the address
- * pointed to by src_buffer.  src_buffer is allocated in the function and
+ * pointed to by src_buffer.  If the srcML was not read in, but the attributes were
+ * read in the xml and unparse that value.  src_buffer is allocated in the function and
  * needs to be freed after finished using.
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-LIBSRCML_DECL
 int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_size) {
 
-  if(unit == NULL || src_buffer == NULL || src_size == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
+  if(unit == NULL || src_buffer == NULL || src_size == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) || (!unit->unit && !unit->read_header)) return SRCML_STATUS_ERROR;
+
+  if(!unit->unit)
+    unit->archive->reader->readsrcML(unit->unit);
 
   // Must read unit before unparse
   if(!unit->unit) return SRCML_STATUS_ERROR;
@@ -482,14 +480,17 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
  * @param srcml_file FILE opened for writing
  * 
  * Convert the srcML in unit into source code and place it into the FILE
- * srcml_file.
+ * srcml_file.  If the srcML was not read in, but the attributes were
+ * read in the xml and unparse that value.
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-LIBSRCML_DECL
 int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 
-  if(unit == NULL || srcml_file == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
+  if(unit == NULL || srcml_file == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) || (!unit->unit && !unit->read_header)) return SRCML_STATUS_ERROR;
+
+  if(!unit->unit)
+    unit->archive->reader->readsrcML(unit->unit);
 
   // Must read unit before unparse
   if(!unit->unit) return SRCML_STATUS_ERROR;
@@ -508,14 +509,17 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
  * @param srcml_fd file descriptor opened for writing
  * 
  * Convert the srcML in unit into source code and place it into the file
- * descriptor srcml_fd.
+ * descriptor srcml_fd.  If the srcML was not read in, but the attributes were
+ * read in the xml and unparse that value.
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-LIBSRCML_DECL
 int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
-  if(unit == NULL || srcml_fd < 0 || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
+  if(unit == NULL || srcml_fd < 0 || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) || (!unit->unit && !unit->read_header)) return SRCML_STATUS_ERROR;
+
+  if(!unit->unit)
+    unit->archive->reader->readsrcML(unit->unit);
 
   // Must read unit before unparse
   if(!unit->unit) return SRCML_STATUS_ERROR;
@@ -542,7 +546,6 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
  *
  * @returns unit on success and on failure returns NULL
  */
-LIBSRCML_DECL
 srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
   if(archive == NULL) return 0;
@@ -553,8 +556,8 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
     unit = new srcml_unit;
 
   } catch(...) { return 0; }
-  memset(unit, 0, sizeof(srcml_unit));
   unit->archive = archive;
+  unit->read_header = false;
 
   return unit;
 
@@ -568,7 +571,6 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-LIBSRCML_DECL
 int srcml_free_unit(srcml_unit* unit) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;

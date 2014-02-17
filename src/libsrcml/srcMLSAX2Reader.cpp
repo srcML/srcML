@@ -72,7 +72,7 @@ void * start_routine(void * arguments) {
  * Construct a srcMLSAX2Reader using a filename
  */
 srcMLSAX2Reader::srcMLSAX2Reader(const char * filename) 
-  : control(filename) {
+  : control(filename), read_root(false) {
 
   thread_args args = { &control, &handler };
 
@@ -88,7 +88,7 @@ srcMLSAX2Reader::srcMLSAX2Reader(const char * filename)
  * Construct a srcMLSAX2Reader using a parser input buffer
  */
 srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input) 
-  : control(input) {
+  : control(input), read_root(false) {
 
   thread_args args = { &control, &handler };
 
@@ -136,18 +136,20 @@ int srcMLSAX2Reader::readRootUnitAttributes(boost::optional<std::string> & langu
 					int & tabstop,
 					std::vector<std::string> & user_macro_list) {
 
-  if(handler.read_root) return 0;
+  if(read_root || handler.read_root) return 0;
 
-  language = handler.archive->language;
-  filename = handler.archive->filename;
-  directory = handler.archive->directory;
-  version = handler.archive->version;
-  attributes = handler.archive->attributes;
-  prefixes = handler.archive->prefixes;
-  namespaces = handler.archive->namespaces;
+  language.swap(handler.archive->language);
+  filename.swap(handler.archive->filename);
+  directory.swap(handler.archive->directory);
+  version.swap(handler.archive->version);
+  attributes.swap(handler.archive->attributes);
+  prefixes.swap(handler.archive->prefixes);
+  namespaces.swap(handler.archive->namespaces);
   options = handler.archive->options;
   tabstop = handler.archive->tabstop;
-  user_macro_list = handler.archive->user_macro_list;
+  user_macro_list.swap(handler.archive->user_macro_list);
+
+  read_root = true;
 
   return 1;
 }
@@ -174,10 +176,10 @@ int srcMLSAX2Reader::readUnitAttributes(boost::optional<std::string> & language,
 
   if(handler.is_done) return 0;
 
-  language = handler.unit->language;
-  filename = handler.unit->filename;
-  directory = handler.unit->directory;
-  version = handler.unit->version;
+  language.swap(handler.unit->language);
+  filename.swap(handler.unit->filename);
+  directory.swap(handler.unit->directory);
+  version.swap(handler.unit->version);
 
   return 1;
 
@@ -185,27 +187,24 @@ int srcMLSAX2Reader::readUnitAttributes(boost::optional<std::string> & language,
 
 /**
  * readsrcML
+ * @param unit location in which to read srcML unit.
  * 
  * Read the next unit from a srcML Archive
- * and return it as a std::string. Uses
- * readsrcML(xmlTextWriterPtr writer).
+ * and return in the passed string parameter.
  *
- * @returns string on success and finished return a 0.
+ * @returns 1 on success and 0 if done
  */
-boost::optional<std::string>  srcMLSAX2Reader::readsrcML() {
+int srcMLSAX2Reader::readsrcML(boost::optional<std::string> & unit) {
+
+  if(unit) unit = boost::optional<std::string>();
 
   if(handler.is_done) return 0;
   handler.collect_srcml = true;
   handler.resume_and_wait();
   handler.collect_srcml = false;
-
   if(handler.is_done) return 0;
 
-  boost::optional<std::string>  unit = 0;
-  try {
-    if(handler.unit->unit) unit = handler.unit->unit;
-  } catch(...) {}
+  unit.swap(handler.unit->unit);
 
-  return unit;
-
+  return unit ? 1 : 0;
 }

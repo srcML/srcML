@@ -45,7 +45,6 @@
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-LIBSRCML_DECL
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
 
   if(archive == NULL || xpath_string == 0) return SRCML_STATUS_ERROR;
@@ -68,7 +67,6 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-LIBSRCML_DECL
 int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filename) {
 
   if(archive == NULL || xslt_filename == 0) return SRCML_STATUS_ERROR;
@@ -91,7 +89,6 @@ int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filenam
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-LIBSRCML_DECL
 int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_filename) {
 
   if(archive == NULL || relaxng_filename == 0) return SRCML_STATUS_ERROR;
@@ -112,7 +109,6 @@ int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_f
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure. 
  */
-LIBSRCML_DECL
 int srcml_clear_transforms(srcml_archive * archive) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
@@ -134,7 +130,6 @@ int srcml_clear_transforms(srcml_archive * archive) {
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-LIBSRCML_DECL
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
   if(iarchive == NULL || oarchive == NULL) return SRCML_STATUS_ERROR;

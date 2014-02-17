@@ -42,8 +42,11 @@
 int main() {
 
   const std::string src = "a;\n";
+  const std::string src_macro = "MACRO1;\nMACRO2;\n";
   const std::string srcml = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
   const std::string srcml_full = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
+
+  const std::string srcml_macro = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><macro-list token=\"MACRO1\" type=\"src:macro\"/><macro-list token=\"MACRO2\" type=\"src:macro\"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>\n<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>\n</unit>";
 
   std::ofstream src_file_c("project.c");
   src_file_c << src;
@@ -52,6 +55,10 @@ int main() {
   std::ofstream src_file_foo("project.foo");
   src_file_foo << src;
   src_file_foo.close();
+
+  std::ofstream src_file_macro("project_macro.cpp");
+  src_file_macro << src_macro;
+  src_file_macro.close();
 
   /*
     srcml_parse_unit_filename
@@ -106,8 +113,28 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+    srcml_archive_register_macro(archive, "MACRO1", "src:macro");
+    srcml_archive_register_macro(archive, "MACRO2", "src:macro");
     srcml_write_open_filename(archive, "project.xml");
     srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_language(unit, "C++");
+    srcml_unit_set_filename(unit, "project");
+    srcml_unit_set_directory(unit, "test");
+    srcml_unit_set_version(unit , "1");
+    srcml_parse_unit_filename(unit, "project_macro.cpp");
+    dassert(*unit->unit, srcml_macro);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_write_open_filename(archive, "project.xml");
+   srcml_unit * unit = srcml_create_unit(archive);
     dassert(srcml_parse_unit_filename(unit, "project.cpp"), SRCML_STATUS_ERROR);
    
     srcml_free_unit(unit);
@@ -192,6 +219,26 @@ int main() {
     srcml_unit_set_version(unit , "1");
     srcml_parse_unit_memory(unit, src.c_str(), src.size());
     dassert(*unit->unit, srcml_full);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+    srcml_archive_register_macro(archive, "MACRO1", "src:macro");
+    srcml_archive_register_macro(archive, "MACRO2", "src:macro");
+    srcml_write_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_language(unit, "C++");
+    srcml_unit_set_filename(unit, "project");
+    srcml_unit_set_directory(unit, "test");
+    srcml_unit_set_version(unit , "1");
+    srcml_parse_unit_memory(unit, src_macro.c_str(), src_macro.size());
+    dassert(*unit->unit, srcml_macro);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);
@@ -305,6 +352,28 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+    srcml_archive_register_macro(archive, "MACRO1", "src:macro");
+    srcml_archive_register_macro(archive, "MACRO2", "src:macro");
+    srcml_write_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_language(unit, "C++");
+    srcml_unit_set_filename(unit, "project");
+    srcml_unit_set_directory(unit, "test");
+    srcml_unit_set_version(unit , "1");
+    FILE * file = fopen("project_macro.cpp", "r");
+    srcml_parse_unit_FILE(unit, file);
+    dassert(*unit->unit, srcml_macro);
+    fclose(file);
+
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
     srcml_unit * unit = srcml_create_unit(archive);
     srcml_unit_set_language(unit, "C");
     FILE * file = fopen("project.c", "r");
@@ -390,6 +459,28 @@ int main() {
     int fd = open("project.c", O_RDONLY);
     srcml_parse_unit_fd(unit, fd);
     dassert(*unit->unit, srcml_full);
+    close(fd);
+
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+    srcml_archive_register_macro(archive, "MACRO1", "src:macro");
+    srcml_archive_register_macro(archive, "MACRO2", "src:macro");
+    srcml_write_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_language(unit, "C++");
+    srcml_unit_set_filename(unit, "project");
+    srcml_unit_set_directory(unit, "test");
+    srcml_unit_set_version(unit , "1");
+    int fd = open("project_macro.cpp", O_RDONLY);
+    srcml_parse_unit_fd(unit, fd);
+    dassert(*unit->unit, srcml_macro);
     close(fd);
 
     srcml_free_unit(unit);

@@ -72,21 +72,35 @@ verify_test(2, archive.get_options())
 archive.set_tabstop(4)
 verify_test(4, archive.get_tabstop())
 
+verify_test(7, archive.get_namespace_size());
+verify_test("cpp", archive.get_prefix(1))
+verify_test("cpp", archive.get_prefix_uri("http://www.sdml.info/srcML/cpp"))
+verify_test("http://www.sdml.info/srcML/cpp", archive.get_namespace(1))
+verify_test("http://www.sdml.info/srcML/cpp", archive.get_namespace_prefix("cpp"))
+
+archive.register_macro("MACRO", "src:macro")
+verify_test(1, archive.get_macro_list_size());
+verify_test("MACRO", archive.get_macro_token(0))
+verify_test("src:macro", archive.get_macro_token_type("MACRO"))
+verify_test("src:macro", archive.get_macro_type(0))
+
 archive.close()
 
 file = open("a.foo", "w")
 gen = file.write("")
 file.close()
 archive = srcml.srcml_archive()
+archive.disable_option(srcml.SRCML_OPTION_ARCHIVE)
 archive.register_file_extension("foo", "C++")
 archive.register_namespace("s", "http://www.sdml.info/srcML/src")
+archive.register_macro("MACRO", "src:macro")
 archive.write_open_memory()
 unit = srcml.srcml_unit(archive)
 unit.parse_filename("a.foo")
 archive.write_unit(unit)
 archive.close()
 os.remove("a.foo")
-verify_test("""<s:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>""", unit.get_xml())
+verify_test("""<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><macro-list token="MACRO" type="src:macro"/></s:unit>""", unit.get_xml())
 
 # write/parse tests
 src = "a;\n"
@@ -375,7 +389,7 @@ xml = file.read()
 file.close()
 
 asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="project.xml"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
 verify_test(asrcml, xml)
@@ -417,6 +431,18 @@ srcml.set_version(None)
 srcml.set_options(srcml.SRCML_OPTION_XML_DECL | srcml.SRCML_OPTION_NAMESPACE_DECL)
 srcml.set_tabstop(8)
 
+verify_test(7, srcml.get_namespace_size());
+verify_test("cpp", srcml.get_prefix(1))
+verify_test("cpp", srcml.get_prefix_uri("http://www.sdml.info/srcML/cpp"))
+verify_test("http://www.sdml.info/srcML/cpp", srcml.get_namespace(1))
+verify_test("http://www.sdml.info/srcML/cpp", srcml.get_namespace_prefix("cpp"))
+
+srcml.register_macro("MACRO", "src:macro")
+verify_test(1, srcml.get_macro_list_size());
+verify_test("MACRO", srcml.get_macro_token(0))
+verify_test("src:macro", srcml.get_macro_token_type("MACRO"))
+verify_test("src:macro", srcml.get_macro_type(0))
+
 srcml.register_file_extension("foo", "C++")
 srcml.register_namespace("s", "http://www.sdml.info/srcML/src")
 srcml.srcml("a.foo", "project.xml")
@@ -427,7 +453,7 @@ file.close()
 os.remove("a.foo")
 
 asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="project.xml"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
+<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.foo"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
 </s:unit>
 """
 
