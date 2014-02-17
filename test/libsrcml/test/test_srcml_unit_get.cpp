@@ -153,6 +153,22 @@ int main() {
   }
 
   {
+    const char * s = "<unit/>";
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, s, strlen(s));
+    srcml_unit * unit = srcml_read_unit_header(archive);
+    dassert(srcml_unit_get_xml(unit), std::string("<unit/>"));
+    srcml_free_unit(unit);
+  }
+
+  {
+    srcml_unit * unit = srcml_create_unit(archive);
+    dassert(srcml_unit_get_xml(unit), 0);
+    srcml_free_unit(unit);
+  }
+
+  {
     dassert(srcml_unit_get_xml(0), 0);
   }
 
