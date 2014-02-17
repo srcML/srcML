@@ -50,6 +50,8 @@ private :
 
   /** control for sax parsing */
   srcMLControlHandler control;
+  /** boolean for marking if read root */
+  bool read_root;
   /** handler with hooks for sax parsing */
   srcMLReaderHandler handler;
 
