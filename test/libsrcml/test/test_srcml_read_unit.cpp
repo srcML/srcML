@@ -359,6 +359,69 @@ int main() {
     srcml_free_archive(archive);
   }
 
+  /*
+    srcml_read_unit_header
+   */
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
+    srcml_unit * unit = srcml_read_unit_header(archive);
+    dassert(srcml_unit_get_language(unit), std::string("C"));
+    dassert(srcml_unit_get_filename(unit), std::string("project.c"));
+    dassert(srcml_unit_get_directory(unit), 0);
+    dassert(srcml_unit_get_version(unit), 0);
+    dassert(unit->unit, 0);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml_full.c_str(), srcml_full.size());
+    srcml_unit * unit = srcml_read_unit_header(archive);
+    dassert(srcml_unit_get_language(unit), std::string("C++"));
+    dassert(srcml_unit_get_filename(unit), std::string("project"));
+    dassert(srcml_unit_get_directory(unit), std::string("test"));
+    dassert(srcml_unit_get_version(unit), std::string("1"));
+    dassert(unit->unit, 0);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml_single.c_str(), srcml_single.size());
+    srcml_unit * unit = srcml_read_unit_header(archive);
+    dassert(srcml_unit_get_language(unit), std::string("C++"));
+    dassert(srcml_unit_get_filename(unit), std::string("project"));
+    dassert(srcml_unit_get_directory(unit), std::string("test"));
+    dassert(srcml_unit_get_version(unit), std::string("1"));
+    dassert(unit->unit, 0);
+
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    dassert(srcml_read_unit_header(archive), 0);
+    srcml_free_archive(archive);
+  }
+
+  {
+    dassert(srcml_read_unit_header(0), 0);
+  }
+
   srcml_cleanup_globals();
 
   return 0;
