@@ -126,6 +126,24 @@ int main() {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_read_unit_header(archive);
+    srcml_unparse_unit_filename(unit, "project.c");
+    std::ifstream src_file("project.c");
+    std::string aunit;
+    std::string temp;
+    src_file >> aunit;
+    aunit += "\n";
+    dassert(aunit, src);
+
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_filename(archive, "project.xml");
     srcml_unit * unit = srcml_create_unit(archive);
     dassert(srcml_unparse_unit_filename(unit, "project.c"), SRCML_STATUS_ERROR);
    
@@ -201,6 +219,21 @@ int main() {
     srcml_unit * unit = srcml_read_unit(archive);
     srcml_unparse_unit_memory(unit, &s, &size);
     dassert(s, src_macro);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+    free(s);
+  }
+
+  {
+    char * s;
+    int size;
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_read_unit_header(archive);
+    srcml_unparse_unit_memory(unit, &s, &size);
+    dassert(s, src);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);
@@ -329,6 +362,26 @@ int main() {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_read_unit_header(archive);
+    FILE * file = fopen("project.c", "w");
+    srcml_unparse_unit_FILE(unit, file);
+    fclose(file);
+    std::ifstream src_file("project.c");
+    std::string aunit;
+    std::string temp;
+    src_file >> aunit;
+    aunit += "\n";
+    dassert(aunit, src);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_filename(archive, "project.xml");
     srcml_unit * unit = srcml_create_unit(archive);
     FILE * file = fopen("project.c", "w");
     dassert(srcml_unparse_unit_FILE(unit, file), SRCML_STATUS_ERROR);
@@ -434,6 +487,27 @@ int main() {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_read_unit_header(archive);
+    int fd = open("project.c", O_WRONLY);
+    srcml_unparse_unit_fd(unit, fd);
+    close(fd);
+    std::ifstream src_file("project.c");
+    std::string aunit;
+    std::string temp;
+    src_file >> aunit;
+    aunit += "\n";
+    dassert(aunit, src);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_filename(archive, "project.xml");
     srcml_unit * unit = srcml_create_unit(archive);
     int fd = open("project.c", O_WRONLY);
     dassert(srcml_unparse_unit_fd(unit, fd), SRCML_STATUS_ERROR);
