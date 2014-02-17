@@ -27,6 +27,8 @@
 #ifndef SRCML_XML_CONSUME_HPP
 #define SRCML_XMLCONSUME_HPP
 
+class ParseQueue;
+
 void xml_consume(ParseQueue* queue);
 
 #endif

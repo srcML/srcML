@@ -24,6 +24,7 @@
   srcml_xml_consume calls appropriate libsrcml functions for processing srcml file data
 */
 
+#include <parse_queue.hpp>
 
 // Convert srcml back to src on disk
 void xml_consume(ParseQueue* queue) {
