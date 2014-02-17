@@ -194,6 +194,8 @@ int srcMLSAX2Reader::readUnitAttributes(boost::optional<std::string> & language,
  */
 int srcMLSAX2Reader::readsrcML(boost::optional<std::string> & unit) {
 
+  if(unit) unit = boost::optional<std::string>();
+
   if(handler.is_done) return 0;
   handler.collect_srcml = true;
   handler.resume_and_wait();
@@ -202,5 +204,5 @@ int srcMLSAX2Reader::readsrcML(boost::optional<std::string> & unit) {
 
   if(handler.unit->unit) unit = handler.unit->unit;
 
-  return 1;
+  return unit ? 1 : 0;
 }
