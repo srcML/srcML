@@ -1100,7 +1100,7 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
  */
 int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
 
-  if(archive == NULL || unit == NULL) return SRCML_STATUS_ERROR;
+  if(archive == NULL || unit == NULL || (!unit->unit && !unit->read_header)) return SRCML_STATUS_ERROR; 
 
   boost::optional<std::string> read_unit;
   if(!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
@@ -1112,6 +1112,35 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
   archive->translator->add_unit(read_unit ? read_unit->c_str() : unit->unit->c_str());
 
   return SRCML_STATUS_OK;
+}
+
+/**
+ * srcml_read_unit_header
+ * @param archive a srcml archive open for reading 
+ * 
+ * Read the next unit from the archive.
+ * unit contains read attributes.
+ *
+ * @returns Return the read srcml_unit on success.
+ * On failure returns NULL.
+ */
+srcml_unit* srcml_read_unit_header(srcml_archive* archive) {
+
+  if(archive == NULL) return 0;
+
+  if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
+
+  srcml_unit * unit = srcml_create_unit(archive);
+  int not_done = archive->reader->readUnitAttributes(unit->language, unit->filename, unit->directory, unit->version);
+
+  if(!not_done) {
+    srcml_free_unit(unit);
+    return 0;
+  }
+
+  unit->read_header = true;
+  
+  return unit;
 }
 
 /**
@@ -1132,8 +1161,9 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
 
   srcml_unit * unit = srcml_create_unit(archive);
   int not_done = archive->reader->readUnitAttributes(unit->language, unit->filename, unit->directory, unit->version);
+  archive->reader->readsrcML(unit->unit);
 
-  if(!not_done) {
+  if(!not_done || !unit->unit) {
     srcml_free_unit(unit);
     unit = 0;
   }

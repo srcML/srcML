@@ -288,6 +288,7 @@ __LIBSRCML_DECL int srcml_read_open_fd      (struct srcml_archive*, int srcml_fd
 
 /* Read the next unit from the archive
    Return 0 if there are no more unit */
+__LIBSRCML_DECL struct srcml_unit* srcml_read_unit_header(struct srcml_archive*);
 __LIBSRCML_DECL struct srcml_unit* srcml_read_unit(struct srcml_archive*);
 
 /* Read over the next unit from the archive
