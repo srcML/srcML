@@ -189,13 +189,14 @@ const char* srcml_unit_get_version(const struct srcml_unit* unit) {
  *
  * @returns the unit srcML on success and NULL on failure.
  */
-const char* srcml_unit_get_xml(const struct srcml_unit* unit) {
+const char* srcml_unit_get_xml(struct srcml_unit* unit) {
 
   if(unit == NULL || (!unit->unit && !unit->read_header)) return 0;
-  boost::optional<std::string> read_unit;
-  if(!unit->unit) unit->archive->reader->readsrcML(read_unit);
 
-  return unit->unit ? unit->unit->c_str() : (read_unit ? read_unit->c_str() : 0);
+  if(!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+    unit->archive->reader->readsrcML(unit->unit);
+
+  return unit->unit ? unit->unit->c_str() : 0;
 
 }
 
