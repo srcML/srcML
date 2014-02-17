@@ -251,6 +251,26 @@ ist token=\"MACRO1\" type=\"src:macro\"/><macro-list token=\"MACRO2\" type=\"src
   }
 
   {
+    char * s = 0;
+    int size;
+    srcml_archive * archive = srcml_create_archive();
+    srcml_write_open_memory(archive, &s, &size);
+    srcml_archive * iarchive = srcml_create_archive();
+    srcml_read_open_memory(iarchive, srcml_a_archive.c_str(), srcml_a_archive.size());
+    srcml_unit * unit = srcml_read_unit_header(iarchive);
+    dassert(unit->unit, 0)
+    srcml_write_unit(archive, unit);
+    srcml_free_unit(unit);
+    srcml_close_archive(iarchive);
+    srcml_free_archive(iarchive);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+
+    dassert(s, srcml_a_archive);
+    free(s);
+  }
+
+  {
     srcml_archive * archive = srcml_create_archive();
     srcml_unit * unit = srcml_create_unit(archive);
     dassert(srcml_write_unit(archive, unit), SRCML_STATUS_ERROR);
