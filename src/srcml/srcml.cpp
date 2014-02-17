@@ -169,6 +169,7 @@ int main(int argc, char * argv[]) {
 //   libarchive2srcml(input_file);
 //      continue;
 
+    // TODO: Why are we copying the string? Why not use the variable "input" directly?
     std::string input = input_file;
     if (src_validate(input)) {
       // if stdin, then there has to be data

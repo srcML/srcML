@@ -28,6 +28,8 @@
 #include <src_prefix.hpp>
 #include <boost/filesystem.hpp>
 
+// TODO: This should be const std::string&. You should not change the string in validation
+// A src_validate should NOT change the string. Construct a new one and return it
 bool src_validate(std::string& input) {
   if (input.compare("/dev/stdin") == 0 || input.compare("-") == 0) {
     input = "-";
