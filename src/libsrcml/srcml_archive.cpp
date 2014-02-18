@@ -177,11 +177,30 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
  ******************************************************************************/
 
 /**
+ * srcml_archive_set_src_encoding
+ * @param archive a srcml_archive
+ * @param encoding an encoding
+ *
+ * Set the default source encoding of the srcML Archive.
+ *
+ * @returns SRCML_STATUS_OK on success andd SRCML_STATUS_ERROR on failure.
+ */
+int srcml_archive_set_src_encoding(srcml_archive* archive, const char* src_encoding) {
+
+  if(archive == NULL) return SRCML_STATUS_ERROR;
+
+  archive->src_encoding = src_encoding ? std::string(src_encoding) : boost::optional<std::string>();
+
+  return SRCML_STATUS_OK;
+
+}
+
+/**
  * srcml_archive_set_encoding
  * @param archive a srcml_archive
  * @param encoding an encoding
  *
- * Set the encoding of the srcML Archive.
+ * Set the xml encoding of the srcML Archive.
  *
  * @returns SRCML_STATUS_OK on success andd SRCML_STATUS_ERROR on failure.
  */
@@ -471,10 +490,22 @@ int srcml_archive_register_macro(srcml_archive* archive, const char* token, cons
  ******************************************************************************/
 
 /**
+ * srcml_archive_get_src_encoding
+ * @param archive a srcml_archive
+ *
+ * @returns Retrieve the currently default source encoding or NULL.
+ */
+const char* srcml_archive_get_src_encoding(const struct srcml_archive* archive) {
+
+  return archive && archive->src_encoding ? archive->src_encoding->c_str() : 0;
+
+}
+
+/**
  * srcml_archive_get_encoding
  * @param archive a srcml_archive
  *
- * @returns Retrieve the currently set encoding or NULL.
+ * @returns Retrieve the currently set xml encoding or NULL.
  */
 const char* srcml_archive_get_encoding(const struct srcml_archive* archive) {
 
