@@ -256,19 +256,10 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     }
 
-    std::ifstream in(input_filename);
-    in.seekg(0,std::ios::end);
-    std::streampos length = in.tellg();
-    in.seekg(0,std::ios::beg);
-    if(length == std::streampos(0)) return SRCML_STATUS_ERROR;
-
-    std::vector<char> buffer(length);
-    in.read(&buffer[0], length);
-
     OPTION_TYPE & options = global_archive.options;
 
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(output_filename, xmlFindCharEncodingHandler(global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1"), global_archive.options & SRCML_OPTION_COMPRESS);
-    srcml_extract_text(&buffer[0], buffer.size(), output_buffer, options, 0);
+    srcml_extract_text_filename(input_filename, output_filename, global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1",
+		       options);
 
   }
 

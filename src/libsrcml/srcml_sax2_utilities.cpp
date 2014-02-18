@@ -83,6 +83,44 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
     throw OutOfRangeUnitError(state.count);
 
   return status;
+
+}
+
+// extract a given unit
+int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, OPTION_TYPE options, int unit) {
+
+  // setup parser
+  xmlParserInputBufferPtr input = xmlParserInputBufferCreateFilename(ifilename, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+  xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input);
+  if(ctxt == NULL) return SRCML_STATUS_ERROR;
+
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  xmlSAXHandlerPtr sax_save = ctxt->sax;
+  ctxt->sax = &sax;
+
+  // setup process handling
+  ExtractUnitsSrc process(0, ofilename, 0);
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, unit, "");
+  ctxt->_private = &state;
+
+  // process the document
+  int status = srcMLParseDocument(ctxt, true);
+
+  // local variable, do not want xmlFreeParserCtxt to free
+  ctxt->sax = sax_save;
+
+  // all done with parsing
+  xmlFreeParserCtxt(ctxt);
+
+  // make sure we did not end early
+  if (state.unit && state.count < state.unit)
+    throw OutOfRangeUnitError(state.count);
+
+  return status;
+
 }
 
 /**
@@ -143,6 +181,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
   xmlXPathFreeCompExpr(compiled_xpath);
 
   return status;
+
 }
 
 /**
@@ -280,6 +319,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 #endif
 
   return status;
+
 }
 
 /**
@@ -326,6 +366,7 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int 
   xmlRelaxNGFreeParserCtxt(relaxng);
 
   return status;
+
 }
 
 
@@ -354,6 +395,7 @@ int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
   }
 
   return SRCML_STATUS_OK;
+
 }
 
 /**
@@ -370,6 +412,7 @@ xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int size) {
   xmlParserCtxtPtr ctxt = xmlCreateMemoryParserCtxt(buffer, size);
 
   return ctxt;
+
 }
 
 #ifdef LIBXML2_NEW_BUFFER 
@@ -427,8 +470,8 @@ xmlBufResetInput(xmlBuffer * buf, xmlParserInputPtr input) {
   input->cur = input->buf->buffer->content;
   input->end = &input->buf->buffer->content[input->buf->buffer->use];
   return 0;
-}
 
+}
 #endif
 
 /**
@@ -468,4 +511,5 @@ srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input) {
 
   inputPush(ctxt, input);
   return(ctxt);
+
 }
