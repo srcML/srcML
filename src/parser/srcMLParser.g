@@ -6549,7 +6549,23 @@ cpp_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 // symbol in cpp
 cpp_symbol[] { ENTRY_DEBUG } :
-        simple_identifier
+        simple_identifier | 
+
+        {
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
+        }
+
+        cpp_garbage
+
+        {
+
+        endMode();
+
+        }
+
 ;
 
 cpp_define_name[] { CompleteElement element(this);
@@ -6562,7 +6578,7 @@ cpp_define_name[] { CompleteElement element(this);
 
             startElement(SCPP_MACRO_DEFN);
         }
-        simple_identifier (options { greedy = true; } : { line_pos == LT(1)->getLine() && pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
+        cpp_symbol (options { greedy = true; } : { line_pos == LT(1)->getLine() && pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
 ;
 
 cpp_define_parameter_list[] { CompleteElement element(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
