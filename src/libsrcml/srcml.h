@@ -39,7 +39,7 @@
 extern "C" {
 #endif
 
-#ifdef WIN32
+#if defined(WIN32) && !defined(__MINGW32__)
 #define __LIBSRCML_DECL __declspec(dllexport)
 #else
 #define __LIBSRCML_DECL
