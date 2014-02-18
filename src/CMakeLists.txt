@@ -51,7 +51,11 @@ macro(buildLib LIB_NAME LIB_TYPE)
     add_library(${LIB_NAME} ${LIB_TYPE} $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:libsrcml> oldclient/srcmlapps.cpp
      ${SAX2FRAMEWORK_SOURCE} ${SAX2FRAMEWORK_HEADERS})
 
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME libsrcml)
+else()
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml)
+endif()
 
     if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
         if(DYNAMIC_LOAD_ENABLED)
