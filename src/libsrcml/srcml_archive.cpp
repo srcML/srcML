@@ -928,7 +928,7 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
  * Reads and sets the open type as well as gathers the attributes
  * and sets the options from the opened srcML Archive.
  */
-void srcml_read_internal(srcml_archive * archive) {
+static void srcml_read_internal(srcml_archive * archive) {
 
   archive->type = SRCML_ARCHIVE_READ;
 

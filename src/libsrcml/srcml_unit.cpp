@@ -219,7 +219,7 @@ const char* srcml_unit_get_xml(struct srcml_unit* unit) {
  * 
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_parse_unit_internal(srcml_unit * unit, int lang, xmlParserInputBufferPtr input, OPTION_TYPE translation_options) {
+static int srcml_parse_unit_internal(srcml_unit * unit, int lang, xmlParserInputBufferPtr input, OPTION_TYPE translation_options) {
 
   xmlBuffer * output_buffer = xmlBufferCreate();
   try {
