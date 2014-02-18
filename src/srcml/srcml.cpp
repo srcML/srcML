@@ -48,6 +48,7 @@
 // code testing (temporary)
 void libarchive2srcml(std::string filename);
 void file2srcml(std::string filename);
+void file2srcml_count(std::string filename);
 void direct2srcml(std::string filename);
 
 int main(int argc, char * argv[]) {
@@ -164,11 +165,13 @@ int main(int argc, char * argv[]) {
   BOOST_FOREACH(const std::string& input_file, srcml_request.positional_args) {
 
 // code testing (temporary)
-//   direct2srcml(input_file);
-//   file2srcml(input_file);
-//   libarchive2srcml(input_file);
-//      continue;
-
+/*
+   direct2srcml(input_file);
+   file2srcml(input_file);
+   file2srcml_count(input_file);
+   libarchive2srcml(input_file);
+   continue;
+*/
     // TODO: Why are we copying the string? Why not use the variable "input" directly?
     std::string input = input_file;
     if (src_validate(input)) {
@@ -282,6 +285,75 @@ void file2srcml(std::string filename) {
         srcml_unparse_unit_filename(unit, srcml_unit_get_filename(unit));
         srcml_free_unit(unit);
     }
+
+    srcml_close_archive(arch);
+    srcml_free_archive(arch);
+}
+
+void file2srcml_header(std::string filename) {
+
+    // Parse srcml back to source (srcml2src)
+    srcml_archive* arch = srcml_create_archive();
+    srcml_read_open_filename(arch, filename.c_str());
+    srcml_unit* unit;
+
+    while (true) {
+        unit = srcml_read_unit_header(arch);
+        if (unit == 0)
+            break;
+
+        srcml_unparse_unit_filename(unit, srcml_unit_get_filename(unit));
+        srcml_free_unit(unit);
+    }
+
+    srcml_close_archive(arch);
+    srcml_free_archive(arch);
+}
+
+void file2srcml_count(std::string filename) {
+
+//    filename = filename.substr(8);
+
+
+    // Parse srcml back to source (srcml2src)
+    srcml_archive* arch = srcml_create_archive();
+    srcml_read_open_filename(arch, filename.c_str());
+
+    int counter = 0;
+    while (true) {
+        srcml_unit* unit = srcml_read_unit_header(arch);
+        if (unit == 0)
+            break;
+
+        ++counter;
+
+        srcml_free_unit(unit);
+    }
+
+    fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, counter);
+
+    srcml_close_archive(arch);
+    srcml_free_archive(arch);
+}
+
+void file2srcml_count_skip(std::string filename) {
+
+    // Parse srcml back to source (srcml2src)
+    srcml_archive* arch = srcml_create_archive();
+    srcml_read_open_filename(arch, filename.c_str());
+
+    int counter = 0;
+    while (true) {
+        srcml_unit* unit = srcml_read_unit_header(arch);
+        if (unit == 0)
+            break;
+
+        ++counter;
+
+        srcml_free_unit(unit);
+    }
+
+    fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, counter);
 
     srcml_close_archive(arch);
     srcml_free_archive(arch);
