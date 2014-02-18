@@ -54,6 +54,8 @@ private :
   bool collect_unit_attributes;
   /** collect srcML as parse*/
   bool collect_srcml;
+  /** bool collect src */
+  bool collect_src;
 
   /** terminate */
   bool terminate;
@@ -77,7 +79,7 @@ public :
    *
    * Constructor.  Sets up mutex, conditions and state.
    */
-  srcMLReaderHandler() : unit(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), terminate(false), is_empty(false), wait_root(true) {
+  srcMLReaderHandler() : unit(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), collect_src(false), terminate(false), is_empty(false), wait_root(true) {
 
     archive = srcml_create_archive();
     archive->prefixes.clear();
@@ -453,7 +455,7 @@ public :
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    if(is_empty) *unit->unit += ">";
+    if(is_empty && collect_srcml) *unit->unit += ">";
     is_empty = true;
 
     if(collect_srcml) {
@@ -517,6 +519,10 @@ public :
     if(collect_srcml) {
 
       write_endTag(localname, prefix, is_empty);
+
+    }
+
+    if(collect_srcml || collect_src) {
 
       // pause
       boost::unique_lock<boost::mutex> lock(mutex);
@@ -583,7 +589,7 @@ public :
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
-    if(is_empty) *unit->unit += ">";
+    if(is_empty && collect_srcml) *unit->unit += ">";
     is_empty = false;
 
     for(int i = 0; i < len; ++i) {
