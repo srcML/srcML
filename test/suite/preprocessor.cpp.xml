@@ -172,4 +172,13 @@
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif> <comment type="block">/* */</comment>
 </unit>
 
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>restrict</name></expr></cpp:if>
+</unit>
+
+<unit>
+<function_decl><type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>restrict</name></expr></cpp:if>
+</unit>
+
 </unit>
