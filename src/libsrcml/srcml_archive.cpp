@@ -1147,6 +1147,37 @@ srcml_unit* srcml_read_unit_header(srcml_archive* archive) {
 }
 
 /**
+ * srcml_read_unit_xml
+ * @param archive a srcml archive open for reading 
+ * 
+ * Read the next unit from the archive.
+ * unit contains the complete srcml only.
+ *
+ * @returns Return the read srcml_unit on success.
+ * On failure returns NULL.
+ */
+srcml_unit* srcml_read_unit_xml(srcml_archive* archive) {
+
+  if(archive == NULL) return 0;
+
+  if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
+
+  srcml_unit * unit = srcml_create_unit(archive);
+  int not_done = 0;
+  if(!unit->read_header)
+    not_done = archive->reader->readUnitAttributes(unit->language, unit->filename, unit->directory, unit->version);
+  archive->reader->readsrcML(unit->unit);
+
+  if(!not_done || !unit->unit) {
+    srcml_free_unit(unit);
+    unit = 0;
+  }
+  
+  return unit;
+}
+
+
+/**
  * srcml_read_unit
  * @param archive a srcml archive open for reading 
  * 
@@ -1163,7 +1194,9 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
   if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
   srcml_unit * unit = srcml_create_unit(archive);
-  int not_done = archive->reader->readUnitAttributes(unit->language, unit->filename, unit->directory, unit->version);
+  int not_done = 0;
+  if(!unit->read_header)
+    not_done = archive->reader->readUnitAttributes(unit->language, unit->filename, unit->directory, unit->version);
   archive->reader->readsrcML(unit->unit);
 
   if(!not_done || !unit->unit) {
