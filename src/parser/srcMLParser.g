@@ -6516,7 +6516,10 @@ cpp_expression[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 exception
 catch[...] {
 
+        startNewMode(MODE_LOCAL);
+        startElement(SNAME);
         consume();
+        endMode();
 
 }
 
