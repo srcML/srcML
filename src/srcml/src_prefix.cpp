@@ -29,12 +29,27 @@
 
 const char* PROTOCOL_SEPARATOR = "://";
 
-void src_prefix_add_uri(std::string& input_file, const std::string& protocol) {
+std::string src_prefix_add_uri(const std::string& input_file) {
   size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
-  
+  std::string uri = "";
+
   // Only add a prefix if the input doesn't have one already (IE. http://)
-  if (prefixPos == std::string::npos)
-    input_file = input_file.insert(0, protocol);
+  if (prefixPos == std::string::npos) {  
+
+    if (input_file.compare("/dev/stdin") == 0 || input_file.compare("-") == 0) {
+      uri = "-";
+      uri.insert(0, "stdin://");
+      return uri;
+    }
+      
+    // Check for local file
+    if (input_file.find("http:") == std::string::npos) {
+      uri = input_file;
+      uri.insert(0, "file://");
+      return uri;
+    }
+  }
+  return uri;
 }
 
 void src_prefix_split_uri(const std::string& input_file, std::string& protocol, std::string& resource){

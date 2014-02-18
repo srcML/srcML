@@ -29,6 +29,6 @@
 
 #include <string>
 
-bool src_validate(std::string& input);
+bool src_validate(const std::string& input);
 
 #endif

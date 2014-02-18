@@ -172,18 +172,18 @@ int main(int argc, char * argv[]) {
    libarchive2srcml(input_file);
    continue;
 */
-    // TODO: Why are we copying the string? Why not use the variable "input" directly?
-    std::string input = input_file;
-    if (src_validate(input)) {
+    if (src_validate(input_file)) {
       // if stdin, then there has to be data
       if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
         return 1; // stdin was requested, but no data was received
       }
 
+      std::string uri = src_prefix_add_uri(input_file);
+
       // split the URI
       std::string protocol;
       std::string resource;
-      src_prefix_split_uri(input, protocol, resource);
+      src_prefix_split_uri(uri, protocol, resource);
 
       // call handler based on prefix
       if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {

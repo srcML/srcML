@@ -29,8 +29,7 @@
 
 #include <string>
 
-void src_prefix_add_uri(std::string& input_file, const std::string& protocol);
-
+std::string src_prefix_add_uri(const std::string& input_file);
 void src_prefix_split_uri(const std::string& input_file, std::string& protocol, std::string& resource);
 
 #endif

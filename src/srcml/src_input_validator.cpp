@@ -28,25 +28,15 @@
 #include <src_prefix.hpp>
 #include <boost/filesystem.hpp>
 
-// TODO: This should be const std::string&. You should not change the string in validation
-// A src_validate should NOT change the string. Construct a new one and return it
-bool src_validate(std::string& input) {
-  if (input.compare("/dev/stdin") == 0 || input.compare("-") == 0) {
-    input = "-";
-    src_prefix_add_uri(input, "stdin://");
+bool src_validate(const std::string& input) {
+  if (input.compare("/dev/stdin") == 0 || input.compare("-") == 0)
     return true;
-  }
     
   // Check for local file
   if (input.find("http:") == std::string::npos){
     boost::filesystem::path localFile (input);
-    
-    // File is unavailable
     if (!exists(localFile))
       return false;
-
-    src_prefix_add_uri(input, "file://");
   }
-
   return true;
 }
