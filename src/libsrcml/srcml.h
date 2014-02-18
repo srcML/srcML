@@ -141,6 +141,7 @@ __LIBSRCML_DECL int srcml(const char* input_filename, const char* output_filenam
 /*
   Global settings.  Can be used with convenience function srcml()
 */
+__LIBSRCML_DECL int srcml_set_src_encoding           (const char* encoding);
 __LIBSRCML_DECL int srcml_set_encoding           (const char* encoding);
 __LIBSRCML_DECL int srcml_set_language           (const char* language);
 __LIBSRCML_DECL int srcml_set_filename           (const char* filename);
@@ -154,6 +155,7 @@ __LIBSRCML_DECL int srcml_register_file_extension(const char* extension, const c
 __LIBSRCML_DECL int srcml_register_namespace     (const char* prefix, const char* ns);
 __LIBSRCML_DECL int srcml_register_macro         (const char* token, const char* type);
 
+__LIBSRCML_DECL const char*        srcml_get_src_encoding ();
 __LIBSRCML_DECL const char*        srcml_get_encoding ();
 __LIBSRCML_DECL const char*        srcml_get_language ();
 __LIBSRCML_DECL const char*        srcml_get_filename ();
@@ -219,6 +221,7 @@ __LIBSRCML_DECL int srcml_write_open_fd      (struct srcml_archive*, int srcml_f
 
 /* setup options for srcml archive */
 __LIBSRCML_DECL int srcml_archive_set_encoding           (struct srcml_archive*, const char* encoding);
+__LIBSRCML_DECL int srcml_archive_set_src_encoding       (struct srcml_archive*, const char* encoding);
 __LIBSRCML_DECL int srcml_archive_set_language           (struct srcml_archive*, const char* language);
 __LIBSRCML_DECL int srcml_archive_set_filename           (struct srcml_archive*, const char* filename);
 __LIBSRCML_DECL int srcml_archive_set_directory          (struct srcml_archive*, const char* directory);
@@ -234,6 +237,7 @@ __LIBSRCML_DECL int srcml_archive_register_macro         (struct srcml_archive*,
 
 /* query options for srcml archive */
 __LIBSRCML_DECL const char*        srcml_archive_get_encoding        (const struct srcml_archive*);
+__LIBSRCML_DECL const char*        srcml_archive_get_src_encoding    (const struct srcml_archive*);
 __LIBSRCML_DECL const char*        srcml_archive_get_language        (const struct srcml_archive*);
 __LIBSRCML_DECL const char*        srcml_archive_get_filename        (const struct srcml_archive*);
 __LIBSRCML_DECL const char*        srcml_archive_get_directory       (const struct srcml_archive*);
@@ -255,6 +259,7 @@ __LIBSRCML_DECL const char*        srcml_archive_get_macro_type      (const stru
 __LIBSRCML_DECL struct srcml_unit* srcml_create_unit(struct srcml_archive* archive);
 
 /* Setup options for srcml unit */
+__LIBSRCML_DECL int srcml_unit_set_encoding (struct srcml_unit*, const char* language);
 __LIBSRCML_DECL int srcml_unit_set_language (struct srcml_unit*, const char* language);
 __LIBSRCML_DECL int srcml_unit_set_filename (struct srcml_unit*, const char* filename);
 __LIBSRCML_DECL int srcml_unit_set_directory(struct srcml_unit*, const char* directory);
@@ -302,6 +307,7 @@ __LIBSRCML_DECL int srcml_skip_unit(struct srcml_archive*);
 __LIBSRCML_DECL struct srcml_unit* srcml_read_unit_position(struct srcml_archive*, int pos);
 
 /* Query options of srcml unit */
+__LIBSRCML_DECL const char* srcml_unit_get_encoding (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_language (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_filename (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_directory(const struct srcml_unit*);

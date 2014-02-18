@@ -273,10 +273,24 @@ int srcml(const char* input_filename, const char* output_filename) {
  ******************************************************************************/
 
 /**
+ * srcml_set_src_encoding
+ * @param encoding an output encoding
+ *
+ * Set the source encoding.
+ *
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ */
+int srcml_set_src_encoding(const char* encoding) {
+
+  return srcml_archive_set_src_encoding(&global_archive, encoding);
+
+}
+
+/**
  * srcml_set_encoding
  * @param encoding an output encoding
  *
- * Set the output encoding.
+ * Set the xml encoding.
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
@@ -451,9 +465,20 @@ int srcml_register_macro(const char* prefix, const char* ns) {
  ******************************************************************************/
 
 /**
+ * srcml_get_src_encoding
+ *
+ * @returns Get the src encoding on success and NULL on failure.
+ */
+const char* srcml_get_src_encoding() {
+
+  return srcml_archive_get_src_encoding(&global_archive);
+
+}
+
+/**
  * srcml_get_encoding
  *
- * @returns Get the output encoding on success and NULL on failure.
+ * @returns Get the xml encoding on success and NULL on failure.
  */
 const char* srcml_get_encoding() {
 
