@@ -105,6 +105,12 @@ def extract_all(src, encoding):
         src_all = []
 
         archive = srcml_archive()
+	if src.find("problem") != -1 :
+		archive.set_encoding("ISO-8859-1")
+
+	if src.find("unicode") != -1 :
+		archive.set_src_encoding("UTF-8")
+
         archive.read_open_memory(src)
 
         unit = archive.read_unit()
@@ -190,12 +196,18 @@ def src2srcML(text_file, encoding, language, directory, filename, read_archive):
                 filename = None;
 
         archive = read_archive.clone()
+	if directory.find("problem") != -1 :
+		archive.set_encoding("ISO-8859-1")
 
         archive.write_open_memory()
+
         unit = srcml_unit(archive)
         unit.set_language(language)
+        if directory.find("unicode") != -1 :
+                unit.set_encoding("UTF-8")
         is_all =  directory.find(".all") 
         is_unicode = directory.find("unicode")
+
         if is_all != -1 or is_unicode != -1:
                 unit.set_filename(filename)
                 unit.set_directory(directory)
