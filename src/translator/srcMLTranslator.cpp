@@ -140,9 +140,11 @@ void srcMLTranslator::translate(const char* unit_directory,
 void srcMLTranslator::translate_separate(const char* unit_directory,
 					 const char* unit_filename, const char* unit_version,
 					 int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer,
+					 const char * src_encoding,
 					 OPTION_TYPE translation_options) {
   
-  translator->translate_separate(unit_directory, unit_filename, unit_version, language, input, output_buffer, translation_options);
+  translator->translate_separate(unit_directory, unit_filename, unit_version, language, input, output_buffer,
+				 src_encoding, translation_options);
 }
 
 void srcMLTranslator::add_unit(const char* xml) {

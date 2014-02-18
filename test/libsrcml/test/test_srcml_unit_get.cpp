@@ -37,6 +37,30 @@ int main() {
   srcml_archive * archive = srcml_create_archive();
 
   /* 
+     srcml_unit_get_encoding
+   */
+
+  {
+
+    srcml_unit * unit = srcml_create_unit(archive);
+    unit->encoding = boost::optional<std::string>();
+    dassert(srcml_unit_get_encoding(unit), 0);
+    srcml_free_unit(unit);
+  }
+
+  {
+
+    srcml_unit * unit = srcml_create_unit(archive);
+    unit->encoding = "foo";
+    dassert(srcml_unit_get_encoding(unit), std::string("foo"));
+    srcml_free_unit(unit);
+  }
+
+  {
+    dassert(srcml_unit_get_encoding(0), 0);
+  }
+
+  /* 
      srcml_unit_get_language
    */
 

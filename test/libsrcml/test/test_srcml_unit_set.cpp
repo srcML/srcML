@@ -37,6 +37,30 @@ int main() {
   srcml_archive * archive = srcml_create_archive();
 
   /* 
+     srcml_unit_set_encoding
+   */
+
+  {
+
+    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_encoding(unit, 0);
+    dassert(unit->encoding, 0);
+    srcml_free_unit(unit);
+  }
+
+  {
+
+    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_encoding(unit, "foo");
+    dassert(*unit->encoding, "foo");
+    srcml_free_unit(unit);
+  }
+
+  {
+    dassert(srcml_unit_set_encoding(0, "foo"), SRCML_STATUS_ERROR);
+  }
+
+  /* 
      srcml_unit_set_language
    */
 
