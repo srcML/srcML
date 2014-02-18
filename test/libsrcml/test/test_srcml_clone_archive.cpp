@@ -64,7 +64,7 @@ int main() {
     dassert(new_archive->type, SRCML_ARCHIVE_INVALID);
     dassert(*new_archive->filename, "f");
     dassert(*new_archive->encoding, "e");
-    dassert(new_archive->xml_encoding, 0);
+    dassert(new_archive->src_encoding, 0);
     dassert(*new_archive->language, "l");
     dassert(*new_archive->directory, "d");
     dassert(*new_archive->version, "v");
