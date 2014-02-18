@@ -46,6 +46,9 @@ private :
   /** collected unit language */
   srcml_unit * unit;
 
+  /** output buffer for direct src write */
+  xmlOutputBufferPtr output_buffer;
+
   /** has reached end of parsing*/
   bool is_done;
   /** has passed root*/
@@ -79,7 +82,7 @@ public :
    *
    * Constructor.  Sets up mutex, conditions and state.
    */
-  srcMLReaderHandler() : unit(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), collect_src(false), terminate(false), is_empty(false), wait_root(true) {
+  srcMLReaderHandler() : unit(0), output_buffer(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), collect_src(false), terminate(false), is_empty(false), wait_root(true) {
 
     archive = srcml_create_archive();
     archive->prefixes.clear();
@@ -592,17 +595,36 @@ public :
     if(is_empty && collect_srcml) *unit->unit += ">";
     is_empty = false;
 
-    for(int i = 0; i < len; ++i) {
-      char character = (char)ch[i];
+    if(collect_src) {
 
-      if(character == '&')
-        (*unit->unit) += "&amp;";
-      else if(character == '<')
-        (*unit->unit) += "&lt;";
-      else if(character == '>')
-        (*unit->unit) += "&gt;";
-      else
-        (*unit->unit) += character;
+      for(int i = 0; i < len; ++i) {
+	char character = (char)ch[i];
+
+	if(character == '&')
+	  xmlOutputBufferWrite(output_buffer, 5, "&amp;");
+	else if(character == '<')
+	  xmlOutputBufferWrite(output_buffer, 4, "&lt;");
+	else if(character == '>')
+	  xmlOutputBufferWrite(output_buffer, 4, "&gt;");
+	else
+	  xmlOutputBufferWrite(output_buffer, 1, &character);
+      }
+
+    } else {
+
+      for(int i = 0; i < len; ++i) {
+	char character = (char)ch[i];
+
+	if(character == '&')
+	  (*unit->unit) += "&amp;";
+	else if(character == '<')
+	  (*unit->unit) += "&lt;";
+	else if(character == '>')
+	  (*unit->unit) += "&gt;";
+	else
+	  (*unit->unit) += character;
+      }
+
     }
 
     if(terminate) stop_parser();
