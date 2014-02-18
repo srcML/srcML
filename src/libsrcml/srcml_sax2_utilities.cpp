@@ -86,13 +86,32 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
 
 }
 
-// extract a given unit
+/**
+ * srcml_extract_text_filename
+ * @param ifilename name of srcML file to extract text
+ * @param ofilename name of output file to put source
+ * @param encoding output encoding
+ * @param options srcml options
+ * @param unit unit number to extract
+ *
+ * 
+ * Extract a given unit from supplied srcML directly to file.
+ *
+ * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, OPTION_TYPE options, int unit) {
 
   // setup parser
   xmlParserInputBufferPtr input = xmlParserInputBufferCreateFilename(ifilename, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+  if(!input) return SRCML_STATUS_ERROR;
+
   xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input);
-  if(ctxt == NULL) return SRCML_STATUS_ERROR;
+  if(ctxt == NULL) {
+
+    xmlFreeParserInputBuffer(input);
+    return SRCML_STATUS_ERROR;
+
+  }
 
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
