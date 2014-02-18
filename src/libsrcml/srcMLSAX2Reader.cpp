@@ -219,9 +219,7 @@ int srcMLSAX2Reader::readsrcML(boost::optional<std::string> & unit) {
  *
  * @returns 1 on success and 0 if done
  */
-int srcMLSAX2Reader::readsrc(boost::optional<std::string> & unit) {
-
-  if(unit) unit = boost::optional<std::string>();
+int srcMLSAX2Reader::readsrc(xmlOutputBufferPtr output_buffer) {
 
   if(handler.is_done) return 0;
   control.enable_startElementNs(false);
@@ -235,7 +233,7 @@ int srcMLSAX2Reader::readsrc(boost::optional<std::string> & unit) {
   control.enable_cdataBlock(true);
   if(handler.is_done) return 0;
 
-  unit.swap(handler.unit->unit);
+  int ret = xmlOutputBufferWrite(output_buffer, (int)handler.unit->unit->size(), handler.unit->unit->c_str());
 
-  return unit ? 1 : 0;
+  return ret;
 }

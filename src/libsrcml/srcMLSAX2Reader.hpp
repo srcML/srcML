@@ -88,7 +88,7 @@ public :
   int readsrcML(boost::optional<std::string> & unit);
 
   // reads the next unit and returns it in parameter as src
-  int readsrc(boost::optional<std::string> & unit);
+  int readsrc(xmlOutputBufferPtr output_buffer);
 
 };
 

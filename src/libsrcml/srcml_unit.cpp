@@ -411,14 +411,17 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
   if(unit == NULL || src_filename == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) || (!unit->unit && !unit->read_header)) return SRCML_STATUS_ERROR;
 
-  if(!unit->unit)
-    unit->archive->reader->readsrcML(unit->unit);
-
-  // Must read unit before unparse
-  if(!unit->unit) return SRCML_STATUS_ERROR;
-
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(src_filename, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8"), unit->archive->options & SRCML_OPTION_COMPRESS);
   if(output_buffer == NULL) return SRCML_STATUS_ERROR;
+
+  if(!unit->unit) {
+
+    unit->archive->reader->readsrc(output_buffer);
+    xmlOutputBufferClose(output_buffer);
+    return SRCML_STATUS_OK;
+
+  }
+
   int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_buffer, unit->archive->options);
 
   return status;
