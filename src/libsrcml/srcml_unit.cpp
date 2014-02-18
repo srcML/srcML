@@ -31,6 +31,26 @@
  ******************************************************************************/
 
 /**
+ * srcml_unit_set_encoding
+ * @param unit a srcml unit
+ * @param encoding an encoding
+ * 
+ * Set the encoding for the srcml unit.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
+ * on failure.
+ */
+int srcml_unit_set_encoding(srcml_unit* unit, const char* encoding) {
+
+  if(unit == NULL) return SRCML_STATUS_ERROR;
+
+  unit->encoding = encoding ? std::string(encoding) : boost::optional<std::string>();
+
+  return SRCML_STATUS_OK;
+
+}
+
+/**
  * srcml_unit_set_language
  * @param unit a srcml unit
  * @param language a language
@@ -118,12 +138,28 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
  ******************************************************************************/
 
 /**
+ * srcml_unit_get_encoding
+ * @param unit a srcml unit
+ * 
+ * Get the encoding for the srcml unit
+ *
+ * @returns encoding on success and NULL on failure.
+ */
+const char* srcml_unit_get_encoding(const struct srcml_unit* unit) {
+
+  if(unit == NULL) return 0;
+
+  return unit->encoding ? unit->encoding->c_str() : 0;
+
+}
+
+/**
  * srcml_unit_get_language
  * @param unit a srcml unit
  * 
  * Get the language for the srcml unit
  *
- * @returns langauge on success and NULL on failure.
+ * @returns language on success and NULL on failure.
  */
 const char* srcml_unit_get_language(const struct srcml_unit* unit) {
 
