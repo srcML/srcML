@@ -199,7 +199,7 @@ int srcml(const char* input_filename, const char* output_filename) {
     options |= lang == Language::LANGUAGE_JAVA ? 0 : SRCML_OPTION_CPP;
 
     srcMLTranslator translator(lang,
-                               global_archive.src_encoding ? global_archive.src_encoding->c_str() : "ISO8859-1",
+                               global_archive.src_encoding ? global_archive.src_encoding->c_str() : "ISO-8859-1",
                                global_archive.encoding ? global_archive.encoding->c_str() : "UTF-8",
                                output_filename,
                                options,
