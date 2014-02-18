@@ -826,7 +826,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       {
 
-        char * pos = index(optarg, '@');
+        char * pos = strchr(optarg, '@');
 
         if(!pos)
           poptions.src_filename = optarg;
@@ -1775,7 +1775,7 @@ void read_macro_list(srcMLTranslator& translator, process_options & poptions) {
       if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
         continue;
 
-      char * split_pos = index(line, ',');
+      char * split_pos = strchr(line, ',');
       if(split_pos)
 	(*split_pos) = '\0';
 
