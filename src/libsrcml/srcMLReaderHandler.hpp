@@ -597,18 +597,7 @@ public :
 
     if(collect_src) {
 
-      for(int i = 0; i < len; ++i) {
-	char character = (char)ch[i];
-
-	if(character == '&')
-	  xmlOutputBufferWrite(output_buffer, 5, "&amp;");
-	else if(character == '<')
-	  xmlOutputBufferWrite(output_buffer, 4, "&lt;");
-	else if(character == '>')
-	  xmlOutputBufferWrite(output_buffer, 4, "&gt;");
-	else
-	  xmlOutputBufferWrite(output_buffer, 1, &character);
-      }
+      xmlOutputBufferWrite(output_buffer, len, (const char *)ch);
 
     } else {
 
