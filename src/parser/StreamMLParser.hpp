@@ -198,7 +198,11 @@ private:
             pskiptb = &skippretb;
 
             // parse preprocessor statement stopping at EOL
-            Base::preprocessor();
+	    try {
+
+	      Base::preprocessor();
+
+	    } catch(...) {}
 
             // flush remaining whitespace from preprocessor handling onto preprocessor buffer
             pretb.splice(pretb.end(), skippretb);

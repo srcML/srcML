@@ -185,6 +185,7 @@ int srcMLSAX2Reader::readUnitAttributes(boost::optional<std::string> & language,
 
 }
 
+
 /**
  * readsrcML
  * @param unit location in which to read srcML unit.
@@ -207,4 +208,32 @@ int srcMLSAX2Reader::readsrcML(boost::optional<std::string> & unit) {
   unit.swap(handler.unit->unit);
 
   return unit ? 1 : 0;
+}
+
+/**
+ * readsrc
+ * @param unit location in which to read src unit.
+ * 
+ * Read the next unit from a srcML Archive
+ * and return in the passed string parameter.
+ *
+ * @returns 1 on success and 0 if done
+ */
+int srcMLSAX2Reader::readsrc(xmlOutputBufferPtr output_buffer) {
+
+  if(handler.is_done) return 0;
+  control.enable_startElementNs(false);
+  control.enable_comment(false);
+  control.enable_cdataBlock(false);
+  handler.output_buffer = output_buffer;
+  handler.collect_src = true;
+  handler.resume_and_wait();
+  handler.collect_src = false;
+  handler.output_buffer = 0;
+  control.enable_startElementNs(true);
+  control.enable_comment(true);
+  control.enable_cdataBlock(true);
+  if(handler.is_done) return 0;
+
+  return 1;
 }

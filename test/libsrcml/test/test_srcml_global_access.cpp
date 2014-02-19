@@ -38,6 +38,20 @@ extern srcml_archive global_archive;
 int main() {
 
   /* 
+     srcml_set_src_encoding
+   */
+
+  {
+    srcml_set_src_encoding(0);
+    dassert(global_archive.src_encoding, 0);
+  }
+
+  {
+    srcml_set_src_encoding("foo");
+    dassert(*global_archive.src_encoding, "foo");
+  }
+
+  /* 
      srcml_set_encoding
    */
 
@@ -252,6 +266,21 @@ int main() {
 
   {
     dassert(srcml_register_macro("foo", 0), SRCML_STATUS_ERROR);
+  }
+
+  /* 
+     srcml_get_src_encoding
+   */
+
+  {
+    global_archive.src_encoding = boost::optional<std::string>();
+    dassert(srcml_get_src_encoding(), 0);
+  }
+
+  {
+    global_archive.src_encoding = "foo";
+    dassert(srcml_get_src_encoding(), std::string("foo"));
+    global_archive.src_encoding = boost::optional<std::string>();
   }
 
   /* 

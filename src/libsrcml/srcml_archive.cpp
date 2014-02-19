@@ -177,11 +177,30 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
  ******************************************************************************/
 
 /**
+ * srcml_archive_set_src_encoding
+ * @param archive a srcml_archive
+ * @param encoding an encoding
+ *
+ * Set the default source encoding of the srcML Archive.
+ *
+ * @returns SRCML_STATUS_OK on success andd SRCML_STATUS_ERROR on failure.
+ */
+int srcml_archive_set_src_encoding(srcml_archive* archive, const char* src_encoding) {
+
+  if(archive == NULL) return SRCML_STATUS_ERROR;
+
+  archive->src_encoding = src_encoding ? std::string(src_encoding) : boost::optional<std::string>();
+
+  return SRCML_STATUS_OK;
+
+}
+
+/**
  * srcml_archive_set_encoding
  * @param archive a srcml_archive
  * @param encoding an encoding
  *
- * Set the encoding of the srcML Archive.
+ * Set the xml encoding of the srcML Archive.
  *
  * @returns SRCML_STATUS_OK on success andd SRCML_STATUS_ERROR on failure.
  */
@@ -471,10 +490,22 @@ int srcml_archive_register_macro(srcml_archive* archive, const char* token, cons
  ******************************************************************************/
 
 /**
+ * srcml_archive_get_src_encoding
+ * @param archive a srcml_archive
+ *
+ * @returns Retrieve the currently default source encoding or NULL.
+ */
+const char* srcml_archive_get_src_encoding(const struct srcml_archive* archive) {
+
+  return archive && archive->src_encoding ? archive->src_encoding->c_str() : 0;
+
+}
+
+/**
  * srcml_archive_get_encoding
  * @param archive a srcml_archive
  *
- * @returns Retrieve the currently set encoding or NULL.
+ * @returns Retrieve the currently set xml encoding or NULL.
  */
 const char* srcml_archive_get_encoding(const struct srcml_archive* archive) {
 
@@ -763,7 +794,8 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                              0, archive->encoding ? archive->encoding->c_str() : "UTF-8",
+					      archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
+					      archive->encoding ? archive->encoding->c_str() : "UTF-8",
                                               srcml_filename,
                                               archive->options,
                                               archive->directory ? archive->directory->c_str() : 0,
@@ -801,8 +833,8 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
 
   try {
 
-    archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                              archive->encoding ? archive->encoding->c_str() : "UTF-8",
+    archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0), 
+					      archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
                                               archive->encoding ? archive->encoding->c_str() : "UTF-8",
                                               buffer,
                                               archive->options,
@@ -844,7 +876,8 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                              0, archive->encoding ? archive->encoding->c_str() : "UTF-8",
+					      archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
+					      archive->encoding ? archive->encoding->c_str() : "UTF-8",
                                               output_buffer,
                                               archive->options,
                                               archive->directory ? archive->directory->c_str() : 0,
@@ -891,7 +924,8 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                              0, archive->encoding ? archive->encoding->c_str() : "UTF-8",
+					      archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
+					      archive->encoding ? archive->encoding->c_str() : "UTF-8",
                                               output_buffer,
                                               archive->options,
                                               archive->directory ? archive->directory->c_str() : 0,
@@ -928,7 +962,7 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
  * Reads and sets the open type as well as gathers the attributes
  * and sets the options from the opened srcML Archive.
  */
-void srcml_read_internal(srcml_archive * archive) {
+static void srcml_read_internal(srcml_archive * archive) {
 
   archive->type = SRCML_ARCHIVE_READ;
 
@@ -1147,6 +1181,37 @@ srcml_unit* srcml_read_unit_header(srcml_archive* archive) {
 }
 
 /**
+ * srcml_read_unit_xml
+ * @param archive a srcml archive open for reading 
+ * 
+ * Read the next unit from the archive.
+ * unit contains the complete srcml only.
+ *
+ * @returns Return the read srcml_unit on success.
+ * On failure returns NULL.
+ */
+srcml_unit* srcml_read_unit_xml(srcml_archive* archive) {
+
+  if(archive == NULL) return 0;
+
+  if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
+
+  srcml_unit * unit = srcml_create_unit(archive);
+  int not_done = 0;
+  if(!unit->read_header)
+    not_done = archive->reader->readUnitAttributes(unit->language, unit->filename, unit->directory, unit->version);
+  archive->reader->readsrcML(unit->unit);
+
+  if(!not_done || !unit->unit) {
+    srcml_free_unit(unit);
+    unit = 0;
+  }
+  
+  return unit;
+}
+
+
+/**
  * srcml_read_unit
  * @param archive a srcml archive open for reading 
  * 
@@ -1163,7 +1228,9 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
   if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
   srcml_unit * unit = srcml_create_unit(archive);
-  int not_done = archive->reader->readUnitAttributes(unit->language, unit->filename, unit->directory, unit->version);
+  int not_done = 0;
+  if(!unit->read_header)
+    not_done = archive->reader->readUnitAttributes(unit->language, unit->filename, unit->directory, unit->version);
   archive->reader->readsrcML(unit->unit);
 
   if(!not_done || !unit->unit) {

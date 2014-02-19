@@ -72,10 +72,10 @@ struct srcml_archive {
 
   /** an attribute for a name of a file */
   boost::optional<std::string> filename;
-  /** an attribute for an encoding */
+  /** an attribute for the xml encoding */
   boost::optional<std::string> encoding;
-  /** an attribute for an ecoding */
-  boost::optional<std::string> xml_encoding;
+  /** source encoding */
+  boost::optional<std::string> src_encoding;
   /** an attribute for a language */
   boost::optional<std::string> language;
   /** an attribute for a directory path */
@@ -128,6 +128,8 @@ struct srcml_unit {
   /** the archive the unit is created from */
   srcml_archive* archive;
 
+  /** source encoding */
+  boost::optional<std::string> encoding;
   /** an attribute for a language */
   boost::optional<std::string> language;
   /** an attribute name for a file */

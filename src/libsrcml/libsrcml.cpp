@@ -199,7 +199,7 @@ int srcml(const char* input_filename, const char* output_filename) {
     options |= lang == Language::LANGUAGE_JAVA ? 0 : SRCML_OPTION_CPP;
 
     srcMLTranslator translator(lang,
-                               global_archive.encoding ? global_archive.encoding->c_str() : "UTF-8",
+                               global_archive.src_encoding ? global_archive.src_encoding->c_str() : "ISO-8859-1",
                                global_archive.encoding ? global_archive.encoding->c_str() : "UTF-8",
                                output_filename,
                                options,
@@ -256,19 +256,10 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     }
 
-    std::ifstream in(input_filename);
-    in.seekg(0,std::ios::end);
-    std::streampos length = in.tellg();
-    in.seekg(0,std::ios::beg);
-    if(length == std::streampos(0)) return SRCML_STATUS_ERROR;
-
-    std::vector<char> buffer(length);
-    in.read(&buffer[0], length);
-
     OPTION_TYPE & options = global_archive.options;
 
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(output_filename, xmlFindCharEncodingHandler(global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1"), global_archive.options & SRCML_OPTION_COMPRESS);
-    srcml_extract_text(&buffer[0], buffer.size(), output_buffer, options, 0);
+    srcml_extract_text_filename(input_filename, output_filename, global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1",
+		       options);
 
   }
 
@@ -282,10 +273,24 @@ int srcml(const char* input_filename, const char* output_filename) {
  ******************************************************************************/
 
 /**
+ * srcml_set_src_encoding
+ * @param encoding an output encoding
+ *
+ * Set the source encoding.
+ *
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ */
+int srcml_set_src_encoding(const char* encoding) {
+
+  return srcml_archive_set_src_encoding(&global_archive, encoding);
+
+}
+
+/**
  * srcml_set_encoding
  * @param encoding an output encoding
  *
- * Set the output encoding.
+ * Set the xml encoding.
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
  */
@@ -460,9 +465,20 @@ int srcml_register_macro(const char* prefix, const char* ns) {
  ******************************************************************************/
 
 /**
+ * srcml_get_src_encoding
+ *
+ * @returns Get the src encoding on success and NULL on failure.
+ */
+const char* srcml_get_src_encoding() {
+
+  return srcml_archive_get_src_encoding(&global_archive);
+
+}
+
+/**
  * srcml_get_encoding
  *
- * @returns Get the output encoding on success and NULL on failure.
+ * @returns Get the xml encoding on success and NULL on failure.
  */
 const char* srcml_get_encoding() {
 

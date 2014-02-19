@@ -18,17 +18,10 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-subdirs(parser translator libsrcml)
+subdirs(parser translator libsrcml srcml)
 
 if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     subdirs(oldclient)
-endif()
-# Enabling an include for the new srcML executable only when it
-# is specified to be built.
-get_property(ENABLE_NEW_SRCML_EXEC_BUILD GLOBAL PROPERTY ENABLE_NEW_SRCML_EXEC_BUILD)
-
-if(${ENABLE_NEW_SRCML_EXEC_BUILD})
-    subdirs(srcml)
 endif()
 
 file(GLOB SAX2FRAMEWORK_HEADERS SAX2Framework/*.hpp)
@@ -51,7 +44,11 @@ macro(buildLib LIB_NAME LIB_TYPE)
     add_library(${LIB_NAME} ${LIB_TYPE} $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:libsrcml> oldclient/srcmlapps.cpp
      ${SAX2FRAMEWORK_SOURCE} ${SAX2FRAMEWORK_HEADERS})
 
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME libsrcml)
+else()
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml)
+endif()
 
     if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
         if(DYNAMIC_LOAD_ENABLED)

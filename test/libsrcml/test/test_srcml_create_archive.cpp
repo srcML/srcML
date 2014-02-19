@@ -40,7 +40,7 @@ int main() {
     dassert(archive->type, SRCML_ARCHIVE_INVALID);
     dassert(archive->filename, 0);
     dassert(archive->encoding, 0);
-    dassert(archive->xml_encoding, 0);
+    dassert(archive->src_encoding, 0);
     dassert(archive->language, 0);
     dassert(archive->directory, 0);
     dassert(archive->version, 0);

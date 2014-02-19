@@ -42,6 +42,10 @@ libsrcml.srcml_create_unit.argtypes = [c_void_p]
 libsrcml.srcml_free_unit.restype = None
 libsrcml.srcml_free_unit.argtypes = [c_void_p]
 
+# int srcml_unit_set_encoding (struct srcml_unit*, const char* encoding);
+libsrcml.srcml_unit_set_encoding.restype = c_int
+libsrcml.srcml_unit_set_encoding.argtypes = [c_void_p, c_char_p]
+
 # int srcml_unit_set_language (struct srcml_unit*, const char* language);
 libsrcml.srcml_unit_set_language.restype = c_int
 libsrcml.srcml_unit_set_language.argtypes = [c_void_p, c_char_p]
@@ -57,6 +61,10 @@ libsrcml.srcml_unit_set_directory.argtypes = [c_void_p, c_char_p]
 # int srcml_unit_set_version  (struct srcml_unit*, const char* version);
 libsrcml.srcml_unit_set_version.restype = c_int
 libsrcml.srcml_unit_set_version.argtypes = [c_void_p, c_char_p]
+
+# const char* srcml_unit_get_encoding (const struct srcml_unit*);
+libsrcml.srcml_unit_get_encoding.restype = c_char_p
+libsrcml.srcml_unit_get_encoding.argtypes = [c_void_p]
 
 # const char* srcml_unit_get_language (const struct srcml_unit*);
 libsrcml.srcml_unit_get_language.restype = c_char_p
@@ -112,6 +120,9 @@ class srcml_unit :
     def unparse_fd(self, src_fd) :
         check_return(libsrcml.srcml_unparse_unit_fd(self.unit, src_fd))
 
+    def set_encoding(self, encoding) :
+        check_return(libsrcml.srcml_unit_set_encoding(self.unit, encoding))
+
     def set_language(self, language) :
         check_return(libsrcml.srcml_unit_set_language(self.unit, language))
 
@@ -123,6 +134,9 @@ class srcml_unit :
 
     def set_version(self, version) :
         check_return(libsrcml.srcml_unit_set_version(self.unit, version))
+
+    def get_encoding(self) :
+        return libsrcml.srcml_unit_get_encoding(self.unit)
 
     def get_language(self) :
         return libsrcml.srcml_unit_get_language(self.unit)

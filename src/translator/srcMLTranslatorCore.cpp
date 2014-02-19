@@ -239,6 +239,7 @@ void srcMLTranslatorCore::translate(const char* unit_directory,
 void srcMLTranslatorCore::translate_separate(const char* unit_directory,
 					     const char* unit_filename, const char* unit_version,
 					     int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer,
+					     const char * src_encoding,
 					     OPTION_TYPE translation_options) {
 
   srcMLOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, uri, tabsize, output_buffer, 0, suri);
@@ -255,7 +256,7 @@ void srcMLTranslatorCore::translate_separate(const char* unit_directory,
 
   try {
 
-      UTF8CharBuffer * parser_input = new UTF8CharBuffer(input, encoding);
+      UTF8CharBuffer * parser_input = new UTF8CharBuffer(input, src_encoding ? src_encoding : encoding);
 
       // master lexer with multiple streams
       antlr::TokenStreamSelector selector;

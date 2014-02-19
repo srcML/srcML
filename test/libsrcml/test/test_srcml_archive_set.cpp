@@ -35,6 +35,30 @@
 int main() {
 
   /* 
+     srcml_archive_set_src_encoding
+   */
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_archive_set_src_encoding(archive, 0);
+    dassert(archive->src_encoding, 0);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_archive_set_src_encoding(archive, "foo");
+    dassert(*archive->src_encoding, "foo");
+    srcml_free_archive(archive);
+  }
+
+  {
+    dassert(srcml_archive_set_src_encoding(0, "foo"), SRCML_STATUS_ERROR);
+  }
+
+  /* 
      srcml_archive_set_encoding
    */
 
