@@ -29,6 +29,7 @@
 #include "project.hpp"
 #include "srcmlns.hpp"
 #include "srcmlapps.hpp"
+#include "srcml.h"
 #include <boost/preprocessor/iteration/local.hpp>
 
 #include "srcMLOutputPR.hpp"
@@ -593,7 +594,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     const char* const attrs[][2] = {
 
         // version attribute
-        { UNIT_ATTRIBUTE_REVISION, isoption(OPTION_REVISION) ? srcml_version() : 0 },
+        { UNIT_ATTRIBUTE_REVISION, isoption(OPTION_REVISION) ? srcml_version_string() : 0 },
 
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },
