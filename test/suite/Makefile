@@ -62,61 +62,61 @@ echobase :
 echogen :
 	@echo ${GEN_BASE}
 
-XSLT=../../bin/srcml2src --apply-root
+XSLT=xsltproc
 
 # merge separate srcML units into one
 XSLT_MERGEUNIT_XSL=xsl/mergeunit.xsl
-XSLT_MERGEUNIT=${XSLT} --xslt ${XSLT_MERGEUNIT_XSL}
+XSLT_MERGEUNIT=${XSLT} ${XSLT_MERGEUNIT_XSL}
 XSLT_MERGEUNIT_PROBLEM_XSL=xsl/mergeunitproblem.xsl
-XSLT_MERGEUNIT_PROBLEM=${XSLT} --xslt ${XSLT_MERGEUNIT_PROBLEM_XSL}
+XSLT_MERGEUNIT_PROBLEM=${XSLT} ${XSLT_MERGEUNIT_PROBLEM_XSL}
 
 # generate nested conditionals
 XSLT_NESTCOND_XSL=xsl/nestcond.xsl
-XSLT_NESTCOND=${XSLT} --xslt ${XSLT_NESTCOND_XSL}
+XSLT_NESTCOND=${XSLT} ${XSLT_NESTCOND_XSL}
 
 # if to while conversion
 XSLT_IF2WHILE_XSL=xsl/if2while.xsl
-XSLT_IF2WHILE=${XSLT} --xslt ${XSLT_IF2WHILE_XSL}
+XSLT_IF2WHILE=${XSLT} ${XSLT_IF2WHILE_XSL}
 
 # definition to declaration conversion
 XSLT_DEFN2DECL_XSL=xsl/defn2decl.xsl
-XSLT_DEFN2DECL=${XSLT} --xslt ${XSLT_DEFN2DECL_XSL}
+XSLT_DEFN2DECL=${XSLT} ${XSLT_DEFN2DECL_XSL}
 
 # wrap in a block
-XSLT_BLOCKUNIT=${XSLT} --xslt xsl/insertblock.xsl
+XSLT_BLOCKUNIT=${XSLT} xsl/insertblock.xsl
 
-XSLT_BLOCKUNIT_PROBLEM=${XSLT} --xslt xsl/insertblockproblem.xsl
+XSLT_BLOCKUNIT_PROBLEM=${XSLT} xsl/insertblockproblem.xsl
 
-XSLT_STRUCTUNIT=${XSLT} --xslt xsl/insertstruct.xsl
+XSLT_STRUCTUNIT=${XSLT} xsl/insertstruct.xsl
 
-XSLT_BLOCKUNIT_JAVA=${XSLT} --xslt xsl/insertblock.java.xsl
-XSLT_BLOCKUNIT_PROBLEM_JAVA=${XSLT} --xslt xsl/insertblockproblem.java.xsl
+XSLT_BLOCKUNIT_JAVA=${XSLT} xsl/insertblock.java.xsl
+XSLT_BLOCKUNIT_PROBLEM_JAVA=${XSLT} xsl/insertblockproblem.java.xsl
 
-XSLT_ADDEXPLICIT=${XSLT} --xslt xsl/addexplicit.xsl
+XSLT_ADDEXPLICIT=${XSLT} xsl/addexplicit.xsl
 
-XSLT_ADDVIRTUAL=${XSLT} --xslt xsl/addvirtual.xsl
+XSLT_ADDVIRTUAL=${XSLT} xsl/addvirtual.xsl
 
-XSLT_ADDCONST=${XSLT} --xslt xsl/addconst.xsl
+XSLT_ADDCONST=${XSLT} xsl/addconst.xsl
 
-XSLT_IDENTITY=${XSLT} --xslt xsl/identity.xsl
+XSLT_IDENTITY=${XSLT} xsl/identity.xsl
 
-XSLT_INSERTEXPR=${XSLT} --param expr_filename="../expression.cpp.xml" --xslt xsl/insertexpr.xsl
+XSLT_INSERTEXPR=${XSLT} --param expr_filename "../expression.cpp.xml" xsl/insertexpr.xsl
 XSLT_INSERTEXPR_XSL= expression.cpp.xml xsl/insertexpr.xsl
 
-XSLT_INSERTDECL=${XSLT} --param decl_filename="../decl_simple.cpp.xml" --xslt xsl/insertparam.xsl
+XSLT_INSERTDECL=${XSLT} --param decl_filename "../decl_simple.cpp.xml" xsl/insertparam.xsl
 XSLT_INSERTDECL_XSL= decl_simple.cpp.xml xsl/insertdecl.xsl
 
 XSLT_STRUCT2UNION_XSL=xsl/struct2union.xsl
-XSLT_STRUCT2UNION=${XSLT} --xslt ${XSLT_STRUCT2UNION_XSL}
+XSLT_STRUCT2UNION=${XSLT} ${XSLT_STRUCT2UNION_XSL}
 
 XSLT_CLASS2STRUCT_XSL=xsl/class2struct.xsl
-XSLT_CLASS2STRUCT=${XSLT} --xslt ${XSLT_CLASS2STRUCT_XSL}
+XSLT_CLASS2STRUCT=${XSLT} ${XSLT_CLASS2STRUCT_XSL}
 
 XSLT_CLASS2INTERFACE_XSL=xsl/class2interface.xsl
-XSLT_CLASS2INTERFACE=${XSLT} --xslt ${XSLT_CLASS2INTERFACE_XSL}
+XSLT_CLASS2INTERFACE=${XSLT} ${XSLT_CLASS2INTERFACE_XSL}
 
 XSLT_IF2IFBLOCK_XSL=xsl/if2ifblock.xsl
-XSLT_IF2IFBLOCK=${XSLT} --xslt ${XSLT_IF2IFBLOCK_XSL}
+XSLT_IF2IFBLOCK=${XSLT} ${XSLT_IF2IFBLOCK_XSL}
 
 ##
 # Comments and preprocessor statements are handled out of the normal grammar rules
@@ -124,24 +124,24 @@ XSLT_IF2IFBLOCK=${XSLT} --xslt ${XSLT_IF2IFBLOCK_XSL}
 # generated from the non-comment and preprocessor cases.
 
 # insert comments
-XSLT_INSERTCOMMENT=${XSLT} --xslt xsl/insertcomments.xsl
+XSLT_INSERTCOMMENT=${XSLT} xsl/insertcomments.xsl
 
-XSLT_INSERTCOMMENT_PROBLEM=${XSLT} --xslt xsl/insertcommentsproblem.xsl
+XSLT_INSERTCOMMENT_PROBLEM=${XSLT} xsl/insertcommentsproblem.xsl
 
 # insert preprocessor
-XSLT_INSERTPREPROC=${XSLT} --xslt xsl/insertpreproc.xsl
+XSLT_INSERTPREPROC=${XSLT} xsl/insertpreproc.xsl
 
-XSLT_INSERTPREPROC_PROBLEM=${XSLT} --xslt xsl/insertpreprocproblem.xsl
+XSLT_INSERTPREPROC_PROBLEM=${XSLT} xsl/insertpreprocproblem.xsl
 
 # nest if
-XSLT_INSERTIFTHENELSE=${XSLT} --xslt xsl/nestif.xsl
-XSLT_INSERTIFTHENELSE_JAVA=${XSLT} --xslt xsl/nestif.java.xsl
-XSLT_INSERTIFTHENELSE_PROBLEM=${XSLT} --xslt xsl/nestifproblem.xsl
-XSLT_INSERTIFTHENELSE_PROBLEM_JAVA=${XSLT} --xslt xsl/nestifproblem.java.xsl
+XSLT_INSERTIFTHENELSE=${XSLT} xsl/nestif.xsl
+XSLT_INSERTIFTHENELSE_JAVA=${XSLT} xsl/nestif.java.xsl
+XSLT_INSERTIFTHENELSE_PROBLEM=${XSLT} xsl/nestifproblem.xsl
+XSLT_INSERTIFTHENELSE_PROBLEM_JAVA=${XSLT} xsl/nestifproblem.java.xsl
 
 # insert form feed
-XSLT_INSERTFORMFEED=${XSLT} --xslt xsl/insertformfeed.xsl
-XSLT_INSERTFORMFEED_PROBLEM=${XSLT} --xslt xsl/insertformfeedproblem.xsl
+XSLT_INSERTFORMFEED=${XSLT} xsl/insertformfeed.xsl
+XSLT_INSERTFORMFEED_PROBLEM=${XSLT} xsl/insertformfeedproblem.xsl
 
 ##
 # Test cases for one language are generated from test cases for another language.
@@ -154,36 +154,36 @@ XSLT_REMOVECPP_PROBLEM_XSL=xsl/removecppproblem.xsl
 XSLT_REMOVECPP_LITERAL_XSL=xsl/removecppliteral.xsl
 XSLT_REMOVECPP_OPERATOR_XSL=xsl/removecppoperator.xsl
 
-XSLT_SETLANGUAGE=${XSLT} --xslt ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE=${XSLT} ${XSLT_SETLANGUAGE_XSL}
 
-XSLT_SETLANGUAGE_C=${XSLT} --param language="C" --xslt ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_C=${XSLT} --stringparam language "C" ${XSLT_SETLANGUAGE_XSL}
 
-XSLT_SETLANGUAGE_CS=${XSLT} --param language="C\#" --xslt ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_CS=${XSLT} --stringparam language "C\#" ${XSLT_SETLANGUAGE_XSL}
 
-XSLT_SETLANGUAGE_CXX=${XSLT} --param language="CXX" --xslt ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_CXX=${XSLT} --stringparam language "CXX" ${XSLT_SETLANGUAGE_XSL}
 
-XSLT_SETLANGUAGE_CXX_11=${XSLT} --param language="C++11" --xslt ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_CXX_11=${XSLT} --stringparam language "C++11" ${XSLT_SETLANGUAGE_XSL}
 
-XSLT_SETLANGUAGE_JAVA=${XSLT} --param language="Java" --xslt ${XSLT_SETLANGUAGE_XSL}
-XSLT_SETLANGUAGE_ASPECTJ=${XSLT} --param language="AspectJ" --xslt ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_ASPECTJ=${XSLT} --stringparam language "AspectJ" ${XSLT_SETLANGUAGE_XSL}
 
-XSLT_SETLANGUAGE_PROBLEM=${XSLT} --xslt ${XSLT_SETLANGUAGE_PROBLEM_XSL}
+XSLT_SETLANGUAGE_PROBLEM=${XSLT} ${XSLT_SETLANGUAGE_PROBLEM_XSL}
 
-XSLT_SETLANGUAGE_PROBLEM_C=${XSLT} --param language="C" --xslt ${XSLT_SETLANGUAGE_PROBLEM_XSL}
+XSLT_SETLANGUAGE_PROBLEM_C=${XSLT} --stringparam language "C" ${XSLT_SETLANGUAGE_PROBLEM_XSL}
 
-XSLT_SETLANGUAGE_PROBLEM_CS=${XSLT} --param language="C\#" --xslt ${XSLT_SETLANGUAGE_PROBLEM_XSL}
+XSLT_SETLANGUAGE_PROBLEM_CS=${XSLT} --stringparam language "C\#" ${XSLT_SETLANGUAGE_PROBLEM_XSL}
 
-XSLT_SETLANGUAGE_PROBLEM_CXX=${XSLT} --param language="CXX" --xslt ${XSLT_SETLANGUAGE_PROBLEM_XSL}
+XSLT_SETLANGUAGE_PROBLEM_CXX=${XSLT} --stringparam language "CXX" ${XSLT_SETLANGUAGE_PROBLEM_XSL}
 
-XSLT_SETLANGUAGE_PROBLEM_CXX_11=${XSLT} --param language="C++11" --xslt ${XSLT_SETLANGUAGE_PROBLEM_XSL}
+XSLT_SETLANGUAGE_PROBLEM_CXX_11=${XSLT} --stringparam language "C++11" ${XSLT_SETLANGUAGE_PROBLEM_XSL}
 
-XSLT_SETLANGUAGE_PROBLEM_JAVA=${XSLT} --param language="Java" --xslt ${XSLT_SETLANGUAGE_PROBLEM_XSL}
-XSLT_SETLANGUAGE_PROBLEM_ASPECTJ=${XSLT} --param language="AspectJ" --xslt ${XSLT_SETLANGUAGE_PROBLEM_XSL}
+XSLT_SETLANGUAGE_PROBLEM_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_PROBLEM_XSL}
+XSLT_SETLANGUAGE_PROBLEM_ASPECTJ=${XSLT} --stringparam language "AspectJ" ${XSLT_SETLANGUAGE_PROBLEM_XSL}
 
-XSLT_REMOVECPP=${XSLT} --xslt ${XSLT_REMOVECPP_XSL}
-XSLT_REMOVECPP_PROBLEM=${XSLT} --xslt ${XSLT_REMOVECPP_PROBLEM_XSL}
-XSLT_REMOVECPP_LITERAL=${XSLT} --xslt ${XSLT_REMOVECPP_LITERAL_XSL}
-XSLT_REMOVECPP_OPERATOR=${XSLT} --xslt ${XSLT_REMOVECPP_OPERATOR_XSL}
+XSLT_REMOVECPP=${XSLT} ${XSLT_REMOVECPP_XSL}
+XSLT_REMOVECPP_PROBLEM=${XSLT} ${XSLT_REMOVECPP_PROBLEM_XSL}
+XSLT_REMOVECPP_LITERAL=${XSLT} ${XSLT_REMOVECPP_LITERAL_XSL}
+XSLT_REMOVECPP_OPERATOR=${XSLT} ${XSLT_REMOVECPP_OPERATOR_XSL}
 
 SEP_BASE=$(BASE_COMMON) $(BASE_C_FAMILY) $(BASE_CXX) $(BASE_OO)
 
