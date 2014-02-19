@@ -6098,7 +6098,7 @@ preprocessor[] { ENTRY_DEBUG
 
             tp.setType(SCPP_DEFINE);
         }
-        (cpp_define_name (options { greedy = true; } : cpp_define_value)*)* |
+        (options { greedy = true; } : cpp_define_name (options { greedy = true; } : cpp_define_value)*)* |
 
         IFNDEF
         {
@@ -6549,7 +6549,9 @@ cpp_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 // symbol in cpp
 cpp_symbol[] { ENTRY_DEBUG } :
-        simple_identifier | 
+        (options { generateAmbigWarnings = false; } :
+            
+            simple_identifier | 
 
         {
 
@@ -6565,6 +6567,7 @@ cpp_symbol[] { ENTRY_DEBUG } :
         endMode();
 
         }
+    )
 
 ;
 
