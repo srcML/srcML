@@ -23,7 +23,7 @@
 #include <srcml.h>
 
 #include <ExtractUnitsSrc.hpp>
-#include <Properties.hpp>
+#include <sstream>
 #include <XPathQueryUnits.hpp>
 #include <XSLTUnits.hpp>
 #include <RelaxNGUnits.hpp>
