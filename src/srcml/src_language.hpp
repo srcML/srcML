@@ -23,3 +23,8 @@
 /*
   src_language.hpp functions for determining the language of a given input file
 */
+
+#include <string>
+#include <srcml.h>
+
+std::string src_language(const std::string& inputFile);
