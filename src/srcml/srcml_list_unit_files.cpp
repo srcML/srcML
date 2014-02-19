@@ -56,4 +56,7 @@ void srcml_list_unit_files(const std::string& srcml_input) {
 
         srcml_free_unit(unit);
     }
+
+    srcml_close_archive(srcml_arch);
+    srcml_free_archive(srcml_arch);
 }
