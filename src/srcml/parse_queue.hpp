@@ -40,7 +40,7 @@ void srcml_consume(ParseQueue*, WriteQueue*);
 
 class ParseQueue {
 public:
-    typedef ThreadQueue<ParseRequest, 10> Queue_Type;
+    typedef ThreadQueue<ParseRequest, 40> Queue_Type;
 
     ParseQueue(int max_threads) : max_threads(max_threads), counter(0) {}
 

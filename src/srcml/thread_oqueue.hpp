@@ -31,7 +31,7 @@ n  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #include <algorithm>
 #include <write_request.hpp>
 
-const int Capacity = 10;
+const int Capacity = 100;
 
 class ThreadOQueue {
 public:
