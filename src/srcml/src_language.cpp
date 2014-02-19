@@ -23,3 +23,28 @@
 /*
   src_language.cpp functions for determining the language of a given input file
 */
+
+#include <src_language.hpp>
+#include <boost/filesystem.hpp>
+
+std::string src_language(const std::string& inputFile) {
+    boost::filesystem::path localPath(inputFile);
+    std::string language = "";
+
+    // HACK FIX TO GET IT WORKING
+    // better things will be done here
+    srcml_archive* srcml_arch = srcml_create_archive();
+   
+    if (is_directory(localPath))
+        language = "dir";
+
+    if (is_regular_file(localPath)) {
+        if (localPath.extension().string().compare(".xml") == 0) {
+            language = "xml";
+        }
+        else {
+            language = srcml_archive_check_extension(srcml_arch, inputFile.c_str());
+        }
+    }
+    return language;
+}
