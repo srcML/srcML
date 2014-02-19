@@ -20,10 +20,6 @@
 
 subdirs(parser translator libsrcml srcml)
 
-if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    subdirs(oldclient)
-endif()
-
 file(GLOB SAX2FRAMEWORK_HEADERS SAX2Framework/*.hpp)
 file(GLOB SAX2FRAMEWORK_SOURCE SAX2Framework/*.cpp)
 
