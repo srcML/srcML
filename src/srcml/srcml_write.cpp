@@ -22,7 +22,7 @@
 
 /*
   srcml_write calls appropriate libsrcml functions for processing srcml
-    or source file data respectively 
+  or source file data respectively
 */
 
 #include <srcml_write.hpp>
@@ -33,22 +33,22 @@
 // Public consumption thread function
 void srcml_write(WriteQueue* queue) {
 
-  WriteRequest pr;
-  while (true) {
+    WriteRequest pr;
+    while (true) {
 
-    // write request in the queue
-    queue->pop(pr);
+        // write request in the queue
+        queue->pop(pr);
 
-    // check if done
-    if (!pr.position)
-      break;
+        // check if done
+        if (!pr.position)
+            break;
 
-    // write the unit
-    srcml_write_unit(pr.srcml_arch, pr.unit);
+        // write the unit
+        srcml_write_unit(pr.srcml_arch, pr.unit);
 
-//    std::cerr << std::setw(5) << pr.position << " " << pr.filename << '\n';
+        //    std::cerr << std::setw(5) << pr.position << " " << pr.filename << '\n';
 
-    // free the unit
-    srcml_free_unit(pr.unit);
-  }
+        // free the unit
+        srcml_free_unit(pr.unit);
+    }
 }

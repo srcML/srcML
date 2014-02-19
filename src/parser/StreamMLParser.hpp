@@ -71,8 +71,8 @@ public:
 
     // ends an element
     void endElement(int id) {
-      if(Base::getMode() & Base::MODE_ISSUE_EMPTY_AT_POP)
-        pushSToken(id, false);
+        if(Base::getMode() & Base::MODE_ISSUE_EMPTY_AT_POP)
+            pushSToken(id, false);
 
         pushEToken(id);
         Base::currentState().pop();
@@ -117,8 +117,8 @@ private:
             // a line comment)
         case Base::LINECOMMENT_START:
         case Base::JAVADOC_COMMENT_START:
-	case Base::DOXYGEN_COMMENT_START:
-	case Base::LINE_DOXYGEN_COMMENT_START:
+        case Base::DOXYGEN_COMMENT_START:
+        case Base::LINE_DOXYGEN_COMMENT_START:
         case Base::EOL:
 
             return !inskip;
@@ -188,7 +188,7 @@ private:
     bool consumeSkippedToken() {
 
         // preprocessor (unless we already are in one)
-      if (isoption(options, OPTION_CPP) && !inskip && Base::LA(1) == Base::PREPROC) {
+        if (isoption(options, OPTION_CPP) && !inskip && Base::LA(1) == Base::PREPROC) {
 
             // start preprocessor handling
             inskip = true;
@@ -198,11 +198,11 @@ private:
             pskiptb = &skippretb;
 
             // parse preprocessor statement stopping at EOL
-	    try {
+            try {
 
-	      Base::preprocessor();
+                Base::preprocessor();
 
-	    } catch(...) {}
+            } catch(...) {}
 
             // flush remaining whitespace from preprocessor handling onto preprocessor buffer
             pretb.splice(pretb.end(), skippretb);
@@ -221,33 +221,33 @@ private:
         }
 
         // macro call
-	if (Base::LA(1) == Base::MACRO_NAME && !inskip) {
+        if (Base::LA(1) == Base::MACRO_NAME && !inskip) {
 
-	  inskip = true;
+            inskip = true;
 
-	  // use preprocessor token buffers
-	  pouttb = &pretb;
-	  pskiptb = &skippretb;
+            // use preprocessor token buffers
+            pouttb = &pretb;
+            pskiptb = &skippretb;
 
-	  // parse macro_call
-	  Base::macro_pattern_call();
+            // parse macro_call
+            Base::macro_pattern_call();
 
-	  // flush remaining whitespace from preprocessor handling onto preprocessor buffer
-	  pretb.splice(pretb.end(), skippretb);
+            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
+            pretb.splice(pretb.end(), skippretb);
 
-	  // move back to normal buffer
-	  pskiptb = &skiptb;
-	  pouttb = &tb;
+            // move back to normal buffer
+            pskiptb = &skiptb;
+            pouttb = &tb;
 
-	  // put preprocessor buffer into skipped buffer
-	  skiptb.splice(skiptb.end(), pretb);
+            // put preprocessor buffer into skipped buffer
+            skiptb.splice(skiptb.end(), pretb);
 
-	  inskip = false;
-	  return true;
+            inskip = false;
+            return true;
 
-	}
+        }
 
-	if (isSkipToken(Base::LA(1))) {
+        if (isSkipToken(Base::LA(1))) {
             // skipped tokens are put on a special buffer
             pushSkipToken();
 
@@ -267,7 +267,7 @@ private:
     }
 
     int SkipBufferSize() {
-      return (int)skiptb.size();
+        return (int)skiptb.size();
     }
 
     // flush any skipped tokens to the output token stream

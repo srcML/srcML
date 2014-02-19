@@ -30,7 +30,7 @@
 
 class ExtractUnitsXML : public ProcessUnit {
 public :
-  ExtractUnitsXML(/*const char* to_dir,*/ const char* filename, const char* output_encoding)
+    ExtractUnitsXML(/*const char* to_dir,*/ const char* filename, const char* output_encoding)
         : /*to_directory(to_dir),*/ ofilename(filename), buffer(0) {
 
         handler = xmlFindCharEncodingHandler(output_encoding);

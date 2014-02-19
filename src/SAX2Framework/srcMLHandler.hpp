@@ -39,184 +39,184 @@ class srcMLHandler {
 
 private :
 
-  xmlParserCtxtPtr ctxt;
+    xmlParserCtxtPtr ctxt;
 
 protected:
-  bool is_archive;
+    bool is_archive;
 
 public :
 
-  void init(xmlParserCtxtPtr ctxt) {
+    void init(xmlParserCtxtPtr ctxt) {
 
-    this->ctxt = ctxt;
+        this->ctxt = ctxt;
 
-  }
+    }
 
-  void stop_parser() {
+    void stop_parser() {
 
-    ctxt->sax->startDocument = 0;
-    ctxt->sax->endDocument = 0;
-    ctxt->sax->startElementNs = 0;
-    ctxt->sax->endElementNs = 0;
-    ctxt->sax->characters = 0;
-    ctxt->sax->cdataBlock = 0;
-    ctxt->sax->comment = 0;
-    ctxt->sax->ignorableWhitespace = 0;
+        ctxt->sax->startDocument = 0;
+        ctxt->sax->endDocument = 0;
+        ctxt->sax->startElementNs = 0;
+        ctxt->sax->endElementNs = 0;
+        ctxt->sax->characters = 0;
+        ctxt->sax->cdataBlock = 0;
+        ctxt->sax->comment = 0;
+        ctxt->sax->ignorableWhitespace = 0;
 
-    xmlStopParser(ctxt);
+        xmlStopParser(ctxt);
 
-  }
+    }
 
-  void set_is_archive(bool is_archive) {
+    void set_is_archive(bool is_archive) {
 
-    this->is_archive = is_archive;
+        this->is_archive = is_archive;
 
-  }
+    }
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-  /**
-   * startDocument
-   *
-   * SAX handler function for start of document.
-   * Overide for desired behaviour.
-   */
-  virtual void startDocument() {}
+    /**
+     * startDocument
+     *
+     * SAX handler function for start of document.
+     * Overide for desired behaviour.
+     */
+    virtual void startDocument() {}
 
-  /**
-   * endDocument
-   *
-   * SAX handler function for end of document.
-   * Overide for desired behaviour.
-   */
-  virtual void endDocument() {}
+    /**
+     * endDocument
+     *
+     * SAX handler function for end of document.
+     * Overide for desired behaviour.
+     */
+    virtual void endDocument() {}
 
-  /**
-   * startRoot
-   * @param localname the name of the element tag
-   * @param prefix the tag prefix
-   * @param URI the namespace of tag
-   * @param nb_namespaces number of namespaces definitions
-   * @param namespaces the defined namespaces
-   * @param nb_attributes the number of attributes on the tag
-   * @param nb_defaulted the number of defaulted attributes
-   * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
-   *
-   * SAX handler function for start of the root element.
-   * Overide for desired behaviour.
-   */
-  virtual void startRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                         int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                         const xmlChar ** attributes, std::vector<srcMLElement> * meta_tags) {}
+    /**
+     * startRoot
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param nb_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param nb_attributes the number of attributes on the tag
+     * @param nb_defaulted the number of defaulted attributes
+     * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
+     *
+     * SAX handler function for start of the root element.
+     * Overide for desired behaviour.
+     */
+    virtual void startRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
+                           int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
+                           const xmlChar ** attributes, std::vector<srcMLElement> * meta_tags) {}
 
-  /**
-   * startUnit
-   * @param localname the name of the element tag
-   * @param prefix the tag prefix
-   * @param URI the namespace of tag
-   * @param nb_namespaces number of namespaces definitions
-   * @param namespaces the defined namespaces
-   * @param nb_attributes the number of attributes on the tag
-   * @param nb_defaulted the number of defaulted attributes
-   * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
-   *
-   * SAX handler function for start of an unit.
-   * Overide for desired behaviour.
-   */
-  virtual void startUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                         int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                         const xmlChar ** attributes) {}
+    /**
+     * startUnit
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param nb_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param nb_attributes the number of attributes on the tag
+     * @param nb_defaulted the number of defaulted attributes
+     * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
+     *
+     * SAX handler function for start of an unit.
+     * Overide for desired behaviour.
+     */
+    virtual void startUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
+                           int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
+                           const xmlChar ** attributes) {}
 
-  /**
-   * startElementNs
-   * @param localname the name of the element tag
-   * @param prefix the tag prefix
-   * @param URI the namespace of tag
-   * @param nb_namespaces number of namespaces definitions
-   * @param namespaces the defined namespaces
-   * @param nb_attributes the number of attributes on the tag
-   * @param nb_defaulted the number of defaulted attributes
-   * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
-   *
-   * SAX handler function for start of an element.
-   * Overide for desired behaviour.
-   */
-  virtual void startElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                              int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                              const xmlChar ** attributes) {}
+    /**
+     * startElementNs
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param nb_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param nb_attributes the number of attributes on the tag
+     * @param nb_defaulted the number of defaulted attributes
+     * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
+     *
+     * SAX handler function for start of an element.
+     * Overide for desired behaviour.
+     */
+    virtual void startElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
+                                int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
+                                const xmlChar ** attributes) {}
 
-  /**
-   * endRoot
-   * @param localname the name of the element tag
-   * @param prefix the tag prefix
-   * @param URI the namespace of tag
-   *
-   * SAX handler function for end of the root element.
-   * Overide for desired behaviour.
-   */
-  virtual void endRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {}
+    /**
+     * endRoot
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     *
+     * SAX handler function for end of the root element.
+     * Overide for desired behaviour.
+     */
+    virtual void endRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {}
 
-  /**
-   * endUnit
-   * @param localname the name of the element tag
-   * @param prefix the tag prefix
-   * @param URI the namespace of tag
-   *
-   * SAX handler function for end of an unit.
-   * Overide for desired behaviour.
-   */
-  virtual void endUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {}
+    /**
+     * endUnit
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     *
+     * SAX handler function for end of an unit.
+     * Overide for desired behaviour.
+     */
+    virtual void endUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {}
 
-  /**
-   * endElementNs
-   * @param localname the name of the element tag
-   * @param prefix the tag prefix
-   * @param URI the namespace of tag
-   *
-   * SAX handler function for end of an element.
-   * Overide for desired behaviour.
-   */
-  virtual void endElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {}
+    /**
+     * endElementNs
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     *
+     * SAX handler function for end of an element.
+     * Overide for desired behaviour.
+     */
+    virtual void endElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {}
 
-  /**
-   * charactersRoot
-   * @param ch the characers
-   * @param len number of characters
-   *
-   * SAX handler function for character handling at the root level.
-   * Overide for desired behaviour.
-   */
-  virtual void charactersRoot(const xmlChar * ch, int len) {}
+    /**
+     * charactersRoot
+     * @param ch the characers
+     * @param len number of characters
+     *
+     * SAX handler function for character handling at the root level.
+     * Overide for desired behaviour.
+     */
+    virtual void charactersRoot(const xmlChar * ch, int len) {}
 
-  /**
-   * charactersUnit
-   * @param ch the characers
-   * @param len number of characters
-   *
-   * SAX handler function for character handling within a unit.
-   * Overide for desired behaviour.
-   */
-  virtual void charactersUnit(const xmlChar * ch, int len) {}
+    /**
+     * charactersUnit
+     * @param ch the characers
+     * @param len number of characters
+     *
+     * SAX handler function for character handling within a unit.
+     * Overide for desired behaviour.
+     */
+    virtual void charactersUnit(const xmlChar * ch, int len) {}
 
-  /**
-   * comment
-   * @param value the comment content
-   *
-   * A comment has been parsed.
-   * Overide for desired behaviour.
-   */
-  virtual void comment(const xmlChar * value) {}
+    /**
+     * comment
+     * @param value the comment content
+     *
+     * A comment has been parsed.
+     * Overide for desired behaviour.
+     */
+    virtual void comment(const xmlChar * value) {}
 
-  /**
-   * cdataBlock
-   * @param value the pcdata content
-   * @param len the block length
-   *
-   * Called when a pcdata block has been parsed.
-   * Overide for desired behaviour.
-   */
-  virtual void cdataBlock(const xmlChar * value, int len) {}
+    /**
+     * cdataBlock
+     * @param value the pcdata content
+     * @param len the block length
+     *
+     * Called when a pcdata block has been parsed.
+     * Overide for desired behaviour.
+     */
+    virtual void cdataBlock(const xmlChar * value, int len) {}
 
 #pragma GCC diagnostic pop
 

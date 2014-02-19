@@ -32,30 +32,30 @@
 #include <src_prefix.hpp>
 
 void srcml_list_unit_files(const std::vector<std::string>& pos_args) {
-   BOOST_FOREACH(const std::string& input_file, pos_args) {
-    std::string resource;
-    std::string protocol;
-    src_prefix_split_uri(input_file, protocol, resource);
-    boost::filesystem::path file (resource);
-    if(file.extension().compare(".xml") == 0)
-      srcml_list_unit_files(resource);
-  }
+    BOOST_FOREACH(const std::string& input_file, pos_args) {
+        std::string resource;
+        std::string protocol;
+        src_prefix_split_uri(input_file, protocol, resource);
+        boost::filesystem::path file (resource);
+        if(file.extension().compare(".xml") == 0)
+            srcml_list_unit_files(resource);
+    }
 }
 
 // display all files in srcml archive
 void srcml_list_unit_files(const std::string& srcml_input) {
 
-  srcml_archive* srcml_arch = srcml_create_archive();
-  srcml_read_open_filename(srcml_arch, srcml_input.c_str());
- 
-  int numUnits = 0;
-  while (true) {
-    srcml_unit* unit = srcml_read_unit(srcml_arch);
-    if (unit == 0)
-      break;
+    srcml_archive* srcml_arch = srcml_create_archive();
+    srcml_read_open_filename(srcml_arch, srcml_input.c_str());
 
-    ++numUnits;
-    std::cout << numUnits << "\t" << srcml_unit_get_filename(unit) << "\n";
-    srcml_free_unit(unit);
-  }
+    int numUnits = 0;
+    while (true) {
+        srcml_unit* unit = srcml_read_unit(srcml_arch);
+        if (unit == 0)
+            break;
+
+        ++numUnits;
+        std::cout << numUnits << "\t" << srcml_unit_get_filename(unit) << "\n";
+        srcml_free_unit(unit);
+    }
 }

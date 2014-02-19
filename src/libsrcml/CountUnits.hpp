@@ -31,55 +31,55 @@
 
 class CountUnits : public ProcessUnit {
 public :
-  CountUnits(FILE* poutput = stdout)
-    : output(poutput), output_array(0)
-  {}
+    CountUnits(FILE* poutput = stdout)
+        : output(poutput), output_array(0)
+    {}
 
-  CountUnits(std::vector<std::string> * output_array)
-    : output(0), output_array(output_array)
-  {}
+    CountUnits(std::vector<std::string> * output_array)
+        : output(0), output_array(output_array)
+    {}
 
 public :
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-  virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+    virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    // check if file to output to
-    if(!output && !output_array) return;
+        // check if file to output to
+        if(!output && !output_array) return;
 
-    // back up over the previous display
-    // yes, this is a hack, but it works
-    if(output) {
-      if(pstate->count == 1)
-        fputc('\b', output);
+        // back up over the previous display
+        // yes, this is a hack, but it works
+        if(output) {
+            if(pstate->count == 1)
+                fputc('\b', output);
 
-      for (long place = pstate->count - 1; place > 0; place /= 10) {
+            for (long place = pstate->count - 1; place > 0; place /= 10) {
 
-        fputc('\b', output);
-      }
+                fputc('\b', output);
+            }
 
-      fprintf(output, "%ld", pstate->count);
-      fflush(output);
+            fprintf(output, "%ld", pstate->count);
+            fflush(output);
 
-    } else {
+        } else {
 
-      std::ostringstream ostream;
-      ostream << "units=\"" << pstate->count << "\"";
-      output_array->back() = ostream.str();
+            std::ostringstream ostream;
+            ostream << "units=\"" << pstate->count << "\"";
+            output_array->back() = ostream.str();
 
-      }
-  }
+        }
+    }
 
 #pragma GCC diagnostic pop
 
 private:
-  FILE* output;
-  std::vector<std::string> * output_array;
+    FILE* output;
+    std::vector<std::string> * output_array;
 };
 
 #endif

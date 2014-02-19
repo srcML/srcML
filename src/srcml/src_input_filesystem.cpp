@@ -29,31 +29,31 @@
 #include <boost/filesystem.hpp>
 #include <list>
 #include <vector>
-  
+
 void src_input_filesystem(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const std::string& lang) {
-	boost::filesystem::path localPath(input);
-  std::list<boost::filesystem::path> dirs;
-  dirs.push_front(localPath);
+    boost::filesystem::path localPath(input);
+    std::list<boost::filesystem::path> dirs;
+    dirs.push_front(localPath);
 
-  while (!dirs.empty()) {
-    std::vector<boost::filesystem::path> files;
-    copy(boost::filesystem::directory_iterator(dirs.front()), boost::filesystem::directory_iterator(), back_inserter(files));
-    sort(files.begin(), files.end());
-    dirs.pop_front();
-    
-    std::list<boost::filesystem::path>::iterator dir_iter=dirs.begin();
+    while (!dirs.empty()) {
+        std::vector<boost::filesystem::path> files;
+        copy(boost::filesystem::directory_iterator(dirs.front()), boost::filesystem::directory_iterator(), back_inserter(files));
+        sort(files.begin(), files.end());
+        dirs.pop_front();
 
-    for (std::vector<boost::filesystem::path>::const_iterator it (files.begin()); it != files.end(); ++it) {
-      if (is_directory(boost::filesystem::path(*it))) {
-        dirs.insert(dir_iter,*it);
-        std::list<boost::filesystem::path>::iterator iter;        
-        continue;
-      }
+        std::list<boost::filesystem::path>::iterator dir_iter=dirs.begin();
 
-      if (is_regular_file(*it)) {
-       if (srcml_archive_check_extension(srcml_arch, it->string().c_str()))
-          src_input_libarchive(queue, srcml_arch, it->string(), lang);
-      }
+        for (std::vector<boost::filesystem::path>::const_iterator it (files.begin()); it != files.end(); ++it) {
+            if (is_directory(boost::filesystem::path(*it))) {
+                dirs.insert(dir_iter,*it);
+                std::list<boost::filesystem::path>::iterator iter;
+                continue;
+            }
+
+            if (is_regular_file(*it)) {
+                if (srcml_archive_check_extension(srcml_arch, it->string().c_str()))
+                    src_input_libarchive(queue, srcml_arch, it->string(), lang);
+            }
+        }
     }
-  }
 }

@@ -31,8 +31,8 @@
 
 struct SAXError {
 
-  std::string message;
-  int error_code;
+    std::string message;
+    int error_code;
 
 };
 
@@ -46,108 +46,108 @@ class srcMLControlHandler {
 
 private :
 
-  // xmlParserCtxt
-  xmlParserCtxtPtr ctxt;
+    // xmlParserCtxt
+    xmlParserCtxtPtr ctxt;
 
-  // xmlSAXHandler
-  xmlSAXHandler sax;
+    // xmlSAXHandler
+    xmlSAXHandler sax;
 
-  // Process to execute call backs
-  SAX2srcMLHandler sax2_handler;
+    // Process to execute call backs
+    SAX2srcMLHandler sax2_handler;
 
-  bool pop_input;
+    bool pop_input;
 
 public :
 
-  /**
-   * srcMLControlHandler
-   * @param filename name of a file
-   *
-   * Constructor
-   */
-  srcMLControlHandler(const char * filename);
-  srcMLControlHandler(xmlParserInputBufferPtr input);
+    /**
+     * srcMLControlHandler
+     * @param filename name of a file
+     *
+     * Constructor
+     */
+    srcMLControlHandler(const char * filename);
+    srcMLControlHandler(xmlParserInputBufferPtr input);
 
-  /**
-   * getSAX
-   *
-   * Return the used sax handler.
-   */
-  const xmlSAXHandler & getSAX() const;
+    /**
+     * getSAX
+     *
+     * Return the used sax handler.
+     */
+    const xmlSAXHandler & getSAX() const;
 
-  /**
-   * ~srcMLControlHandler
-   *
-   * Destructor
-   */
-  ~srcMLControlHandler();
+    /**
+     * ~srcMLControlHandler
+     *
+     * Destructor
+     */
+    ~srcMLControlHandler();
 
 
-  /**
-   * enable_startDocument
-   * @param enable bool indicate enable or disable SAX parsing.
-   *
-   * Enables or disables startDocument parsing.
-   */
-  void enable_startDocument(bool enable);
+    /**
+     * enable_startDocument
+     * @param enable bool indicate enable or disable SAX parsing.
+     *
+     * Enables or disables startDocument parsing.
+     */
+    void enable_startDocument(bool enable);
 
-  /**
-   * enable_endDocument
-   * @param enable bool indicate enable or disable SAX parsing.
-   *
-   * Enables or disables endDocument parsing.
-   */
-  void enable_endDocument(bool enable);
+    /**
+     * enable_endDocument
+     * @param enable bool indicate enable or disable SAX parsing.
+     *
+     * Enables or disables endDocument parsing.
+     */
+    void enable_endDocument(bool enable);
 
-  /**
-   * enable_startElementNs
-   * @param enable bool indicate enable or disable SAX parsing.
-   *
-   * Enables or disables startElementNs parsing.
-   */
-  void enable_startElementNs(bool enable);
+    /**
+     * enable_startElementNs
+     * @param enable bool indicate enable or disable SAX parsing.
+     *
+     * Enables or disables startElementNs parsing.
+     */
+    void enable_startElementNs(bool enable);
 
-  /**
-   * enable_endElementNs
-   * @param enable bool indicate enable or disable SAX parsing.
-   *
-   * Enables or disables endElementNs parsing.
-   */
-  void enable_endElementNs(bool enable);
+    /**
+     * enable_endElementNs
+     * @param enable bool indicate enable or disable SAX parsing.
+     *
+     * Enables or disables endElementNs parsing.
+     */
+    void enable_endElementNs(bool enable);
 
-  /**
-   * enable_characters
-   * @param enable bool indicate enable or disable SAX parsing.
-   *
-   * Enables or disables characters parsing.
-   */
-  void enable_characters(bool enable);
+    /**
+     * enable_characters
+     * @param enable bool indicate enable or disable SAX parsing.
+     *
+     * Enables or disables characters parsing.
+     */
+    void enable_characters(bool enable);
 
-  /**
-   * enable_comment
-   * @param enable bool indicate enable or disable SAX parsing.
-   *
-   * Enables or disables comment parsing.
-   */
-  void enable_comment(bool enable);
+    /**
+     * enable_comment
+     * @param enable bool indicate enable or disable SAX parsing.
+     *
+     * Enables or disables comment parsing.
+     */
+    void enable_comment(bool enable);
 
-  /**
-   * enable_cdataBlock
-   * @param enable bool indicate enable or disable SAX parsing.
-   *
-   * Enables or disables cdataBlock parsing.
-   */
-  void enable_cdataBlock(bool enable);
+    /**
+     * enable_cdataBlock
+     * @param enable bool indicate enable or disable SAX parsing.
+     *
+     * Enables or disables cdataBlock parsing.
+     */
+    void enable_cdataBlock(bool enable);
 
-  /**
-   * parse
-   * @param handler srcMLHandler with hooks for sax parsing
-   *
-   * Parse the xml document with the supplied hooks.
-   */
-  void parse(srcMLHandler * handler);
+    /**
+     * parse
+     * @param handler srcMLHandler with hooks for sax parsing
+     *
+     * Parse the xml document with the supplied hooks.
+     */
+    void parse(srcMLHandler * handler);
 
-  void stop_parser();
+    void stop_parser();
 };
 
 #endif

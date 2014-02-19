@@ -39,17 +39,17 @@
  */
 struct SAX2srcMLHandler {
 
-  /** hooks for processing */
-  srcMLHandler * process;
+    /** hooks for processing */
+    srcMLHandler * process;
 
-  /** temporary storage for root unit */
-  srcMLElement root;
+    /** temporary storage for root unit */
+    srcMLElement root;
 
-  /** temporary storage for meta data */
-  std::vector<srcMLElement> meta_tags;
+    /** temporary storage for meta data */
+    std::vector<srcMLElement> meta_tags;
 
-  /** used to detect root unit */
-  bool is_archive;
+    /** used to detect root unit */
+    bool is_archive;
 };
 
 /**
@@ -94,8 +94,8 @@ void endDocument(void * ctx);
  * Caches root info and immediately calls supplied handlers function.
  */
 void startRoot(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                           int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                           const xmlChar ** attributes);
+               int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
+               const xmlChar ** attributes);
 
 
 /**
@@ -114,8 +114,8 @@ void startRoot(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
  * Detects archive and acts accordingly.
  */
 void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                           int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                           const xmlChar ** attributes);
+                         int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
+                         const xmlChar ** attributes);
 /**
  * startUnit
  * @param ctx an xmlParserCtxtPtr
@@ -132,8 +132,8 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
  * Immediately calls supplied handlers function.
  */
 void startUnit(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                           int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                           const xmlChar ** attributes);
+               int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
+               const xmlChar ** attributes);
 
 /**
  * startElementNs
@@ -151,8 +151,8 @@ void startUnit(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
  * Immediately calls supplied handlers function.
  */
 void startElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                           int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                           const xmlChar ** attributes);
+                    int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
+                    const xmlChar ** attributes);
 
 /**
  * endElementNs

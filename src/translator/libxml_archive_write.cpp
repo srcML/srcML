@@ -58,18 +58,18 @@ archive_write_t archive_data = { 0, 0, "", "", "", false, 0 };
 
 /* A table that maps compressions to functions. */
 static struct { const char *compression; int (*setter)(struct archive *); } compressions[] =
-{
+    {
 #if ARCHIVE_VERSION_NUMBER <= 3000200
-    { "gz",  archive_write_set_compression_gzip },
-    { "bz2", archive_write_set_compression_bzip2 },
-    { "tgz", archive_write_set_compression_gzip },
+        { "gz",  archive_write_set_compression_gzip },
+        { "bz2", archive_write_set_compression_bzip2 },
+        { "tgz", archive_write_set_compression_gzip },
 #else
-    { "gz",  archive_write_add_filter_gzip },
-    { "bz2", archive_write_add_filter_bzip2 },
-    { "tgz", archive_write_add_filter_gzip },
+        { "gz",  archive_write_add_filter_gzip },
+        { "bz2", archive_write_add_filter_bzip2 },
+        { "tgz", archive_write_add_filter_gzip },
 #endif
-    { 0,0 }
-};
+        { 0,0 }
+    };
 
 int archive_write_set_compression_by_name(struct archive *wa, const char *compression)
 {
@@ -83,15 +83,15 @@ int archive_write_set_compression_by_name(struct archive *wa, const char *compre
 
 /* A table that maps formats to functions. */
 static struct { const char *format; int (*setter)(struct archive *); } formats[] =
-{
-    { "cpio", archive_write_set_format_cpio },
-    { "tar",  archive_write_set_format_pax_restricted },
-    { "tgz",  archive_write_set_format_pax_restricted },
+    {
+        { "cpio", archive_write_set_format_cpio },
+        { "tar",  archive_write_set_format_pax_restricted },
+        { "tgz",  archive_write_set_format_pax_restricted },
 #if ARCHIVE_VERSION_NUMBER >= 2008000
-    { "zip",  archive_write_set_format_zip },
+        { "zip",  archive_write_set_format_zip },
 #endif
-    { 0,0 }
-};
+        { 0,0 }
+    };
 
 int archive_write_set_format_by_name(struct archive *wa, const char *format)
 {
@@ -142,12 +142,12 @@ void* archiveWriteRootOpen(const char * URI) {
     archive_data.root_filename = URI;
 
     archive_data.isstdout = archive_data.root_filename == "-" && isatty(
-    #ifdef LIBSRCML_COMPILER_IS_MSVC
-        _fileno(stdout)
-    #else
-        STDOUT_FILENO
-    #endif
-    );
+#ifdef LIBSRCML_COMPILER_IS_MSVC
+                                                                        _fileno(stdout)
+#else
+                                                                        STDOUT_FILENO
+#endif
+                                                                        );
 
     return 0;
 }

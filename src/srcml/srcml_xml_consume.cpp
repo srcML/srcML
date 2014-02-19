@@ -28,30 +28,30 @@
 
 // Convert srcml back to src on disk
 void xml_consume(ParseQueue* queue) {
-  while (true) {
-    ParseRequest pr;
-    queue->pop(pr);
-    
-    // Check if termination queue item has been found  
-    if (pr.empty())
-      break;
-
-    // Parse srcml back to source (srcml2src)
-    srcml_archive* arch = srcml_create_archive();
-    srcml_read_open_filename(arch, pr.filename.c_str());
-    srcml_unit* unit;
-
     while (true) {
-      unit = srcml_read_unit(arch);
-      
-      if (unit == 0)
-        break;
-      
-      srcml_unparse_unit_filename(unit, srcml_unit_get_filename(unit));
-      srcml_free_unit(unit);
-    }
+        ParseRequest pr;
+        queue->pop(pr);
 
-    srcml_close_archive(arch);
-    srcml_free_archive(arch);
-  }
+        // Check if termination queue item has been found
+        if (pr.empty())
+            break;
+
+        // Parse srcml back to source (srcml2src)
+        srcml_archive* arch = srcml_create_archive();
+        srcml_read_open_filename(arch, pr.filename.c_str());
+        srcml_unit* unit;
+
+        while (true) {
+            unit = srcml_read_unit(arch);
+
+            if (unit == 0)
+                break;
+
+            srcml_unparse_unit_filename(unit, srcml_unit_get_filename(unit));
+            srcml_free_unit(unit);
+        }
+
+        srcml_close_archive(arch);
+        srcml_free_archive(arch);
+    }
 }

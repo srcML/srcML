@@ -112,14 +112,14 @@ int archiveReadMatchExtension(const char* URI) {
         return 0;
 
     for(const char** pos = ARCHIVE_FILTER_EXTENSIONS;*pos != 0; ++pos )
-    {
-        /*      char pattern[10] = { 0 } ;
-                strcpy(pattern, "*.");
-                strcat(pattern, *pos);
-        */
-        if(int match = strcmp(URI + strlen(URI) - strlen(*pos), *pos) == 0)
-            return match;
-    }
+        {
+            /*      char pattern[10] = { 0 } ;
+                    strcpy(pattern, "*.");
+                    strcat(pattern, *pos);
+            */
+            if(int match = strcmp(URI + strlen(URI) - strlen(*pos), *pos) == 0)
+                return match;
+        }
 
     return 0;
 }
@@ -310,7 +310,7 @@ int archiveReadClose(void* context) {
 #if ARCHIVE_VERSION_NUMBER <= 3000200
         archive_read_finish(pcontext->a);
 #else
-        archive_read_free(pcontext->a);
+    archive_read_free(pcontext->a);
 #endif
 
     return 0;

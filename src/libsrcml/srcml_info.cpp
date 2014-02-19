@@ -32,42 +32,42 @@
  */
 const char** srcml_list(const char* srcml_filename) {
 
-  if(srcml_filename == NULL) return 0;
+    if(srcml_filename == NULL) return 0;
 
-  srcml_archive * archive = srcml_create_archive();
-  if(srcml_read_open_filename(archive, srcml_filename) == SRCML_STATUS_ERROR) return 0;
-  std::vector<std::string> output_array;
+    srcml_archive * archive = srcml_create_archive();
+    if(srcml_read_open_filename(archive, srcml_filename) == SRCML_STATUS_ERROR) return 0;
+    std::vector<std::string> output_array;
 
-  srcml_unit * unit;
-  while((unit = srcml_read_unit(archive))) {
-    output_array.push_back(srcml_unit_get_filename(unit));
-    srcml_free_unit(unit);
-  }
-  const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
-  if(!output_carray) return 0;
-
-  try {
-
-    for(std::vector<std::string>::size_type i = 0; i < output_array.size(); ++i) {
-
-      output_carray[i] = strdup(output_array.at(i).c_str());
-	if(!output_carray[i]) {
-
-	  for(unsigned int j = 0; j < i; ++j)
-	    free((void *)output_carray[j]);
-	  return 0;
-
-	}
-
+    srcml_unit * unit;
+    while((unit = srcml_read_unit(archive))) {
+        output_array.push_back(srcml_unit_get_filename(unit));
+        srcml_free_unit(unit);
     }
+    const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
+    if(!output_carray) return 0;
 
-  } catch(...) {}
-  output_carray[output_array.size()] = 0;
+    try {
 
-  srcml_close_archive(archive);
-  srcml_free_archive(archive);
+        for(std::vector<std::string>::size_type i = 0; i < output_array.size(); ++i) {
 
-  return output_carray;
+            output_carray[i] = strdup(output_array.at(i).c_str());
+            if(!output_carray[i]) {
+
+                for(unsigned int j = 0; j < i; ++j)
+                    free((void *)output_carray[j]);
+                return 0;
+
+            }
+
+        }
+
+    } catch(...) {}
+    output_carray[output_array.size()] = 0;
+
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+
+    return output_carray;
 
 }
 

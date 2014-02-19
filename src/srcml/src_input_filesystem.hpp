@@ -33,5 +33,5 @@
 #include <parse_queue.hpp>
 
 void src_input_filesystem(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const std::string& lang);
-  
+
 #endif

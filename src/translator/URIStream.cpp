@@ -24,110 +24,110 @@
 #include <cstring>
 
 URIStream::URIStream(const char* uriname)
-  : startpos(0), endpos(-1)/*, first(true)*/, eof(false), done(false)
+    : startpos(0), endpos(-1)/*, first(true)*/, eof(false), done(false)
 {
-  if (!(input = xmlParserInputBufferCreateFilename(uriname, XML_CHAR_ENCODING_NONE)))
-    throw URIStreamFileError();
+    if (!(input = xmlParserInputBufferCreateFilename(uriname, XML_CHAR_ENCODING_NONE)))
+        throw URIStreamFileError();
 
-  // get some data into the buffer
-  int size = xmlParserInputBufferGrow(input, 4096);
+    // get some data into the buffer
+    int size = xmlParserInputBufferGrow(input, 4096);
 
-  // found problem or eof
-  if (size == -1 || size == 0)
-    done = true;
+    // found problem or eof
+    if (size == -1 || size == 0)
+        done = true;
 }
 
 
 std::string URIStream::readlines() {
 
-  std::string s;
-  char* line = 0;
-  while ((line = readline())) {
-    s.append(line);
-    s.append(" ");
-  }
+    std::string s;
+    char* line = 0;
+    while ((line = readline())) {
+        s.append(line);
+        s.append(" ");
+    }
 
-  return s;
+    return s;
 }
 
 char* URIStream::readline() {
 
-  if (done)
-    return 0;
+    if (done)
+        return 0;
 
-  endpos = startpos;
+    endpos = startpos;
 
-  // find a line in the buffer
+    // find a line in the buffer
 #ifdef LIBXML2_NEW_BUFFER
-  while (xmlBufContent(input->buffer)[endpos] != '\n') {
+    while (xmlBufContent(input->buffer)[endpos] != '\n') {
 #else
-  while (input->buffer->content[endpos] != '\n') {
+        while (input->buffer->content[endpos] != '\n') {
 #endif
-    ++endpos;
+            ++endpos;
 
-    // need to refill the buffer
+            // need to refill the buffer
 #ifdef LIBXML2_NEW_BUFFER
-    if (endpos >= xmlBufUse(input->buffer)) {
+            if (endpos >= xmlBufUse(input->buffer)) {
 #else
-    if (endpos >= input->buffer->use) {
+                if (endpos >= input->buffer->use) {
 #endif
-      // need to refill, but previous fill found eof
-      if (eof)
-	break;
+                    // need to refill, but previous fill found eof
+                    if (eof)
+                        break;
 
-      // shrink the part of the buffer that we are not using yet
-      // this is a large buffer, so this will not happen very often, and
-      // only if libxml decides for this input source it should
+                    // shrink the part of the buffer that we are not using yet
+                    // this is a large buffer, so this will not happen very often, and
+                    // only if libxml decides for this input source it should
 
 #ifdef LIBXML2_NEW_BUFFER
-      int removed = (int)xmlBufShrink(input->buffer, startpos >= 1 ? startpos - 1 : 0);
+                    int removed = (int)xmlBufShrink(input->buffer, startpos >= 1 ? startpos - 1 : 0);
 #else
-      int removed = (int)xmlBufferShrink(input->buffer, startpos >= 1 ? startpos - 1 : 0);
+                    int removed = (int)xmlBufferShrink(input->buffer, startpos >= 1 ? startpos - 1 : 0);
 #endif
-      endpos -= removed;
-      startpos -= removed;
+                    endpos -= removed;
+                    startpos -= removed;
 
-      // refill the buffer
-      // put an appropriate value for the length, but note that libxml
-      // basically uses 4 or a min value (which is currently around 4096)
-      int size = xmlParserInputBufferGrow(input, 4096);
+                    // refill the buffer
+                    // put an appropriate value for the length, but note that libxml
+                    // basically uses 4 or a min value (which is currently around 4096)
+                    int size = xmlParserInputBufferGrow(input, 4096);
 
-      // found problem or eof
-      if (size == -1 || size == 0)
-	eof = true;
-    }
-  }
+                    // found problem or eof
+                    if (size == -1 || size == 0)
+                        eof = true;
+                }
+            }
 
-  // special case
+            // special case
 #ifdef LIBXML2_NEW_BUFFER
-  if (startpos >= xmlBufUse(input->buffer))
+            if (startpos >= xmlBufUse(input->buffer))
 #else
-  if (startpos >= input->buffer->use)
+                if (startpos >= input->buffer->use)
 #endif
-    return 0;
+                    return 0;
 
-  // replace the linefeed, and the optional carriage return before it, with a null to turn it into single string
+            // replace the linefeed, and the optional carriage return before it, with a null to turn it into single string
 #ifdef LIBXML2_NEW_BUFFER
-  if ((endpos >= 1) && (xmlBufContent(input->buffer)[endpos - 1] == '\r'))
-    xmlBufContent(input->buffer)[endpos - 1] = '\0';
-  xmlBufContent(input->buffer)[endpos] = '\0';
-  // current line starts at the startpos
-  char* line = (char*) xmlBufContent(input->buffer) + startpos;
+            if ((endpos >= 1) && (xmlBufContent(input->buffer)[endpos - 1] == '\r'))
+                xmlBufContent(input->buffer)[endpos - 1] = '\0';
+            xmlBufContent(input->buffer)[endpos] = '\0';
+            // current line starts at the startpos
+            char* line = (char*) xmlBufContent(input->buffer) + startpos;
 #else
-  if ((endpos >= 1) && (input->buffer->content[endpos - 1] == '\r'))
-    input->buffer->content[endpos - 1] = '\0';
-  input->buffer->content[endpos] = '\0';
-  // current line starts at the startpos
-  char* line = (char*) input->buffer->content + startpos;
+            if ((endpos >= 1) && (input->buffer->content[endpos - 1] == '\r'))
+                input->buffer->content[endpos - 1] = '\0';
+            input->buffer->content[endpos] = '\0';
+            // current line starts at the startpos
+            char* line = (char*) input->buffer->content + startpos;
 #endif
 
-  // skip past for the next line
-  startpos = endpos + 1;
+            // skip past for the next line
+            startpos = endpos + 1;
 
-  return line;
-}
+            return line;
+        }
 
-URIStream::~URIStream() {
+        URIStream::~URIStream() {
 
-    xmlFreeParserInputBuffer(input);
-}
+            xmlFreeParserInputBuffer(input);
+        }

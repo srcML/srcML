@@ -11,7 +11,7 @@
   (at your option) any later version.
 
   The srcML Toolkit is distributed in the hope that it will be useful,
-n  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  n  but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
 
@@ -54,7 +54,7 @@ public:
             boost::unique_lock<boost::mutex> lock(mutex);
             while (qsize == 0 && !empty)
                 cond_empty.wait(lock);
-            
+
             if (qsize == 0 && empty)
                 value.swap(empty_request);
             else {

@@ -21,7 +21,7 @@
 */
 
 /*
-*/
+ */
 
 #ifndef WRITE_QUEUE_HPP
 #define WRITE_QUEUE_HPP

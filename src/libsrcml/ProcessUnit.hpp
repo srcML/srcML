@@ -29,12 +29,12 @@
 
 class ProcessUnit {
 public :
-    
+
     virtual ~ProcessUnit() {}
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-    
+
     virtual void startDocument(void* ctx) {}
 
     virtual void endDocument(void* ctx) {}
@@ -67,7 +67,7 @@ public :
 #pragma GCC diagnostic pop
 
     virtual OPTION_TYPE getOptions() const { return 0; }
-    
+
 };
 
 

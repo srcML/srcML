@@ -37,26 +37,26 @@
 // Public consumption thread function
 void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
 
-  while (true) {
-    ParseRequest pr;
-    queue->pop(pr);
-    
-    // Check if termination queue item has been found  
-    if (pr.position == 0)
-      break;
+    while (true) {
+        ParseRequest pr;
+        queue->pop(pr);
 
-    // build and parse
-    srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
-    srcml_unit_set_filename(unit, pr.filename.c_str());
-    srcml_unit_set_language(unit, pr.lang.c_str());
-    srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
+        // Check if termination queue item has been found
+        if (pr.position == 0)
+            break;
 
-    // write unit
-    WriteRequest wr;
-    wr.srcml_arch = pr.srcml_arch;
-    wr.unit = unit;
-    wr.position = pr.position;
-    wr.filename = pr.filename;
-    wqueue->push(wr);
-  }
+        // build and parse
+        srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
+        srcml_unit_set_filename(unit, pr.filename.c_str());
+        srcml_unit_set_language(unit, pr.lang.c_str());
+        srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
+
+        // write unit
+        WriteRequest wr;
+        wr.srcml_arch = pr.srcml_arch;
+        wr.unit = unit;
+        wr.position = pr.position;
+        wr.filename = pr.filename;
+        wqueue->push(wr);
+    }
 }

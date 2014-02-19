@@ -22,7 +22,7 @@
 
 /*
   srcml_write calls appropriate libsrcml functions for processing srcml
-    or source file data respectively 
+  or source file data respectively
 */
 
 #ifndef SRCML_WRITE_HPP
