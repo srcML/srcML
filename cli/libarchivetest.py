@@ -98,11 +98,11 @@ def srcml2srcversion():
 
 src2srcml = os.environ.get('SRC2SRCML')
 if src2srcml == '' or src2srcml == None:
-	src2srcml = '../../bin/src2srcml'
+	src2srcml = '../bin/srcml'
 	
 srcml2src = os.environ.get('SRCML2SRC')
 if srcml2src == '' or srcml2src == None:
-	srcml2src = '../../bin/srcml2src'
+	srcml2src = '../bin/srcml'
 
 default_src2srcml_encoding = 'UTF-8'
 default_srcml2src_encoding = 'UTF-8'
