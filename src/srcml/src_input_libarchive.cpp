@@ -31,13 +31,7 @@
 #include <archive_entry.h>
 #include <boost/filesystem.hpp>
 
-// Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const std::string& lang) {
-
-  // libArchive Setup
-  archive* arch = archive_read_new();
-  archive_entry* arch_entry = archive_entry_new();
-
+void setup_libarchive(archive* arch) {
   // Configure libarchive supported file formats
   archive_read_support_format_ar(arch);
   archive_read_support_format_cpio(arch);
@@ -65,6 +59,16 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
     // Compressions
     archive_read_support_filter_all(arch); 
   #endif
+}
+
+// Convert input to a ParseRequest and assign request to the processing queue
+void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const std::string& lang) {
+
+  // libArchive Setup
+  archive* arch = archive_read_new();
+  archive_entry* arch_entry = archive_entry_new();
+
+  setup_libarchive(arch);
 
   bool stdin = input_file == "-";
 
