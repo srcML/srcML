@@ -21,7 +21,7 @@
 */
 
 /*
-*/
+ */
 
 #ifndef PARSE_QUEUE_HPP
 #define PARSE_QUEUE_HPP

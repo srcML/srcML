@@ -30,94 +30,94 @@
 #include <vector>
 
 struct pair {
-  std::string s;
-  int n;
+    std::string s;
+    int n;
 };
 
 class Language {
 
 public:
 
-  enum Languages {
-    LANGUAGE_C = 1,
-    LANGUAGE_CXX = 2,
-    LANGUAGE_CXX_11 = 4,
-    LANGUAGE_JAVA = 8,
-    LANGUAGE_ASPECTJ = 16,
-    LANGUAGE_CSHARP = 32,
-    LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CXX_11 | LANGUAGE_CSHARP,
-    LANGUAGE_CXX_ONLY = LANGUAGE_CXX | LANGUAGE_CXX_11,
-    LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY,
-    LANGUAGE_JAVA_FAMILY = LANGUAGE_JAVA | LANGUAGE_ASPECTJ,
-    LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY,
-    LANGUAGE_NONE = 64,
-    LANGUAGE_ALL = ~0
-  };
+    enum Languages {
+        LANGUAGE_C = 1,
+        LANGUAGE_CXX = 2,
+        LANGUAGE_CXX_11 = 4,
+        LANGUAGE_JAVA = 8,
+        LANGUAGE_ASPECTJ = 16,
+        LANGUAGE_CSHARP = 32,
+        LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CXX_11 | LANGUAGE_CSHARP,
+        LANGUAGE_CXX_ONLY = LANGUAGE_CXX | LANGUAGE_CXX_11,
+        LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY,
+        LANGUAGE_JAVA_FAMILY = LANGUAGE_JAVA | LANGUAGE_ASPECTJ,
+        LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY,
+        LANGUAGE_NONE = 64,
+        LANGUAGE_ALL = ~0
+    };
 
-  Language(int lang)
-    : language(lang) {
+    Language(int lang)
+        : language(lang) {
 
-  }
+    }
 
-  static bool filledLang();
+    static bool filledLang();
 
-  // gets the current language
-  inline bool inLanguage(int l) const {
-    return (l & language) > 0;
-  }
+    // gets the current language
+    inline bool inLanguage(int l) const {
+        return (l & language) > 0;
+    }
 
-  // gets the current language
-  inline int getLanguage() const {
-    return language;
-  }
+    // gets the current language
+    inline int getLanguage() const {
+        return language;
+    }
 
-  // gets the current language
-  static int getLanguage(const char* const s) {
+    // gets the current language
+    static int getLanguage(const char* const s) {
 
-    for(int i = 0; i < lang2intcount; ++i)
-      if (lang2int[i].s == s)
-        return lang2int[i].n;
+        for(int i = 0; i < lang2intcount; ++i)
+            if (lang2int[i].s == s)
+                return lang2int[i].n;
 
-    return 0;
-  }
+        return 0;
+    }
 
-  // gets the current language
-  const char* getLanguageString() const {
+    // gets the current language
+    const char* getLanguageString() const {
 
-    for(int i = 0; i < lang2intcount; ++i)
-      if (lang2int[i].n == language)
-        return lang2int[i].s.c_str();
+        for(int i = 0; i < lang2intcount; ++i)
+            if (lang2int[i].n == language)
+                return lang2int[i].s.c_str();
 
-    return "";
-  }
+        return "";
+    }
 
-  static bool registerUserExt(const char* ext, int language);
-  static bool registerUserExt(const char* ext, const char* language);
-  static bool registerUserExt(const char* ext, int language, std::vector<pair> & registered_languages);  
-  static bool registerUserExt(const char* ext, const char* language, std::vector<pair> & registered_languages);
+    static bool registerUserExt(const char* ext, int language);
+    static bool registerUserExt(const char* ext, const char* language);
+    static bool registerUserExt(const char* ext, int language, std::vector<pair> & registered_languages);
+    static bool registerUserExt(const char* ext, const char* language, std::vector<pair> & registered_languages);
 
-  // gets the current language based on the extenstion
-  static int getLanguageFromFilename(const char* const path);
-  static int getLanguageFromFilename(const char* const path, std::vector<pair> & registered_languages);
+    // gets the current language based on the extenstion
+    static int getLanguageFromFilename(const char* const path);
+    static int getLanguageFromFilename(const char* const path, std::vector<pair> & registered_languages);
 
-  // register the standard language file extensions
-  static void register_standard_file_extensions();
-  static void register_standard_file_extensions(std::vector<pair> & registered_languages);
+    // register the standard language file extensions
+    static void register_standard_file_extensions();
+    static void register_standard_file_extensions(std::vector<pair> & registered_languages);
 
-  static void c_is_cpp(bool use_cpp);
+    static void c_is_cpp(bool use_cpp);
 
-  ~Language() {}
+    ~Language() {}
 
 private:
 
-  const int language;
+    const int language;
 
-  static int lang2intcount;
-  static pair lang2int[];
+    static int lang2intcount;
+    static pair lang2int[];
 
-  static pair userext2int[];
+    static pair userext2int[];
 
-  static bool use_cpp_for_c;
+    static bool use_cpp_for_c;
 };
 
 #endif

@@ -34,7 +34,7 @@
 class ExtractUnitsDiffXML : public ExtractUnitsXML {
 public :
     ExtractUnitsDiffXML(/*const char* to_dir,*/ const char* filename, const char* output_encoding, const char* version)
-      : ExtractUnitsXML(/*to_dir,*/ filename, output_encoding)/*, version(version)*/ {
+        : ExtractUnitsXML(/*to_dir,*/ filename, output_encoding)/*, version(version)*/ {
 
         status = strcmp(version, "1") == 0 ? DIFF_OLD : DIFF_NEW;
         st.push(DIFF_COMMON);
@@ -134,9 +134,9 @@ public :
     void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
         if ((strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0 && (
-                 strcmp((const char*) localname, "insert") == 0
-                 || strcmp((const char*) localname, "delete") == 0
-                 || strcmp((const char*) localname, "common") == 0))) {
+                                                                                strcmp((const char*) localname, "insert") == 0
+                                                                                || strcmp((const char*) localname, "delete") == 0
+                                                                                || strcmp((const char*) localname, "common") == 0))) {
 
             st.pop();
             return;

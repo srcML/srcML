@@ -38,11 +38,11 @@ public:
 
     State(const MODE_TYPE& mode = 0, const MODE_TYPE& transmode = 0, const MODE_TYPE& prevmode = 0)
         : flags(mode), flags_prev(prevmode), flags_all(transmode | mode)
-        {}
+    {}
 
     // openelements methods
     int size() const {
-      return (int)openelements.size();
+        return (int)openelements.size();
     }
 
     void push(int id) {

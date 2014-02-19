@@ -29,14 +29,14 @@
 #include <boost/filesystem.hpp>
 
 bool src_validate(const std::string& input) {
-  if (input.compare("/dev/stdin") == 0 || input.compare("-") == 0)
+    if (input.compare("/dev/stdin") == 0 || input.compare("-") == 0)
+        return true;
+
+    // Check for local file
+    if (input.find("http:") == std::string::npos){
+        boost::filesystem::path localFile (input);
+        if (!exists(localFile))
+            return false;
+    }
     return true;
-    
-  // Check for local file
-  if (input.find("http:") == std::string::npos){
-    boost::filesystem::path localFile (input);
-    if (!exists(localFile))
-      return false;
-  }
-  return true;
 }

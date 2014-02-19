@@ -37,7 +37,7 @@ public:
     // token parser constructor
     StateStack(TokenParser* ptp)
         : parser(ptp), st()
-        {}
+    {}
 
     const Base& currentState() const {
         if (st.empty())
@@ -131,7 +131,7 @@ public:
     // stack size
     int size() const {
 
-      return (int)st.size();
+        return (int)st.size();
     }
 
     // stack empty

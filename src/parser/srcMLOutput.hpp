@@ -52,13 +52,13 @@ public:
                 xmlBuffer* output_buffer = 0,
                 xmlOutputBuffer * output_buf = 0,
                 std::string * string_uri = 0
-        );
+                );
 
-  void initWriter();
-  xmlTextWriter * getWriter();
-  void setWriter(xmlTextWriter *);
-  int getDepth();
-  void setDepth(int thedepth);
+    void initWriter();
+    xmlTextWriter * getWriter();
+    void setWriter(xmlTextWriter *);
+    int getDepth();
+    void setDepth(int thedepth);
 
     static bool checkEncoding(const char* encoding);
 
@@ -116,7 +116,7 @@ public:
 
     int depth;
     xmlBuffer* output_buffer;
-    xmlOutputBuffer * output_buf;  
+    xmlOutputBuffer * output_buf;
 
     // output line attribute content
     std::string lineAttribute;

@@ -53,162 +53,162 @@ void direct2srcml(std::string filename);
 
 int main(int argc, char * argv[]) {
 
-  // parse the command line
-  srcml_request_t srcml_request = parseCLI(argc, argv);
+    // parse the command line
+    srcml_request_t srcml_request = parseCLI(argc, argv);
 
-  // help option was selected, already displayed so no more to do
-  if (srcml_request.help_set)
-    return 0;
+    // help option was selected, already displayed so no more to do
+    if (srcml_request.help_set)
+        return 0;
 
-  // version
-  if (srcml_request.command & SRCML_COMMAND_VERSION) {
-    std::cout <<  srcml_version_string() << "\n";
-    std::cout << "srcml Version Number " << srcml_version_number() << "\n";
-    std::cout << "libarchive Version " << ARCHIVE_VERSION_NUMBER << "\n";
-    return 0;
-  }
+    // version
+    if (srcml_request.command & SRCML_COMMAND_VERSION) {
+        std::cout <<  srcml_version_string() << "\n";
+        std::cout << "srcml Version Number " << srcml_version_number() << "\n";
+        std::cout << "libarchive Version " << ARCHIVE_VERSION_NUMBER << "\n";
+        return 0;
+    }
 
-  // check encoding
-  if (srcml_request.encoding != "" && srcml_check_encoding(srcml_request.encoding.c_str()) == 0) {
-    std::cerr << argv[0] << ": invalid encoding.\n";
-    return 1; //ERROR CODE TBD
-  }
+    // check encoding
+    if (srcml_request.encoding != "" && srcml_check_encoding(srcml_request.encoding.c_str()) == 0) {
+        std::cerr << argv[0] << ": invalid encoding.\n";
+        return 1; //ERROR CODE TBD
+    }
 
-  // check language
-  if (srcml_request.language != "" && srcml_check_language(srcml_request.language.c_str()) == 0) {
-    std::cerr << argv[0] << ": invalid language.\n";
-    return 1; //ERROR CODE TBD
-  }
+    // check language
+    if (srcml_request.language != "" && srcml_check_language(srcml_request.language.c_str()) == 0) {
+        std::cerr << argv[0] << ": invalid language.\n";
+        return 1; //ERROR CODE TBD
+    }
 
-  // check tabstop
-  if (srcml_request.tabs <= 0) {
-    std::cerr << argv[0] << ": " << srcml_request.tabs << " is invalid tab stop. Tab stops must be 1 or higher.\n";
-    return 1; //ERROR CODE TBD
-  }
+    // check tabstop
+    if (srcml_request.tabs <= 0) {
+        std::cerr << argv[0] << ": " << srcml_request.tabs << " is invalid tab stop. Tab stops must be 1 or higher.\n";
+        return 1; //ERROR CODE TBD
+    }
 
-  // srcml long info
-  if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
-    srcml_display_info(srcml_request.positional_args);
-    return 0;
-  }
+    // srcml long info
+    if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
+        srcml_display_info(srcml_request.positional_args);
+        return 0;
+    }
 
-  // srcml info
-  if (srcml_request.command & SRCML_COMMAND_INFO) {
-    srcml_display_info(srcml_request.positional_args);
-    return 0; 
-  }
+    // srcml info
+    if (srcml_request.command & SRCML_COMMAND_INFO) {
+        srcml_display_info(srcml_request.positional_args);
+        return 0;
+    }
 
-  // list filenames in srcml archive
-  if (srcml_request.command & SRCML_COMMAND_LIST) {
-    srcml_list_unit_files(srcml_request.positional_args);
-    return 0;
-  }
-  
-  // create the output archive
-  srcml_archive* srcml_arch = srcml_create_archive();
+    // list filenames in srcml archive
+    if (srcml_request.command & SRCML_COMMAND_LIST) {
+        srcml_list_unit_files(srcml_request.positional_args);
+        return 0;
+    }
 
-  // set options for the output archive
-  if (srcml_request.encoding != "")
-    srcml_archive_set_encoding(srcml_arch, srcml_request.encoding.c_str());
+    // create the output archive
+    srcml_archive* srcml_arch = srcml_create_archive();
 
-  if (srcml_request.filename_set)
-    srcml_archive_set_filename(srcml_arch, srcml_request.filename.c_str());
+    // set options for the output archive
+    if (srcml_request.encoding != "")
+        srcml_archive_set_encoding(srcml_arch, srcml_request.encoding.c_str());
 
-  if (srcml_request.directory_set)
-    srcml_archive_set_directory(srcml_arch, srcml_request.directory.c_str());
+    if (srcml_request.filename_set)
+        srcml_archive_set_filename(srcml_arch, srcml_request.filename.c_str());
 
-  if (srcml_request.src_versions_set)
-    srcml_archive_set_version(srcml_arch, srcml_request.src_versions.c_str());
+    if (srcml_request.directory_set)
+        srcml_archive_set_directory(srcml_arch, srcml_request.directory.c_str());
 
-  if (srcml_request.markup_options != 0) {
-    srcml_archive_enable_option(srcml_arch, srcml_archive_get_options(srcml_arch) | srcml_request.markup_options);
-  }
+    if (srcml_request.src_versions_set)
+        srcml_archive_set_version(srcml_arch, srcml_request.src_versions.c_str());
 
-  if (srcml_request.language != "")
-    srcml_archive_set_language(srcml_arch, srcml_request.language.c_str());  
-  else
-    srcml_archive_set_language(srcml_arch, SRCML_LANGUAGE_NONE);  
+    if (srcml_request.markup_options != 0) {
+        srcml_archive_enable_option(srcml_arch, srcml_archive_get_options(srcml_arch) | srcml_request.markup_options);
+    }
 
-  srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
+    if (srcml_request.language != "")
+        srcml_archive_set_language(srcml_arch, srcml_request.language.c_str());
+    else
+        srcml_archive_set_language(srcml_arch, SRCML_LANGUAGE_NONE);
 
-  // archive or not
-  if (srcml_request.positional_args.size() == 1 && !(srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) {
-    boost::filesystem::path inFile (srcml_request.positional_args[0]);
-    if(srcml_request.positional_args[0] == "-" || srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[0].c_str()) || inFile.extension().compare(".xml") == 0)
-      srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
-  }
-  else {
-    srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
-  }
+    srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
 
-  // register file extensions
-  for (size_t i = 0; i < srcml_request.register_ext.size(); ++i) {
-    size_t pos = srcml_request.register_ext[i].find('=');
-    srcml_archive_register_file_extension(srcml_arch, srcml_request.register_ext[i].substr(0,pos).c_str(),
-          srcml_request.register_ext[i].substr(pos+1).c_str());
-  }
-
-  // register xml namespaces
-  for (size_t i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
-    size_t pos = srcml_request.xmlns_prefix[i].find('=');
-    srcml_archive_register_namespace(srcml_arch, srcml_request.xmlns_prefix[i].substr(0,pos).c_str(),
-           srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
-  }
-
-  // create the srcML output file
-  srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
-
-  // setup the parsing queue
-  ParseQueue queue(srcml_request.max_threads);
-
-  // process command line inputs
-  BOOST_FOREACH(const std::string& input_file, srcml_request.positional_args) {
-
-// code testing (temporary)
-/*
-   direct2srcml(input_file);
-   file2srcml(input_file);
-   file2srcml_count(input_file);
-   libarchive2srcml(input_file);
-   continue;
-*/
-    if (src_validate(input_file)) {
-      // if stdin, then there has to be data
-      if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
-        return 1; // stdin was requested, but no data was received
-      }
-
-      std::string uri = src_prefix_add_uri(input_file);
-
-      // split the URI
-      std::string protocol;
-      std::string resource;
-      src_prefix_split_uri(uri, protocol, resource);
-
-      // call handler based on prefix
-      if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
-        src_input_filesystem(queue, srcml_arch, resource, srcml_request.language);
-      } else if (protocol == "file") {
-        src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
-      } else if (protocol == "stdin") {
-        src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
-      }
+    // archive or not
+    if (srcml_request.positional_args.size() == 1 && !(srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) {
+        boost::filesystem::path inFile (srcml_request.positional_args[0]);
+        if(srcml_request.positional_args[0] == "-" || srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[0].c_str()) || inFile.extension().compare(".xml") == 0)
+            srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
     }
     else {
-      // SETUP AN ERROR PARSE REQUEST FOR TRACING
-      // This is temporary
-      std::cerr << input_file << " is not accessible.\n";
+        srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
     }
-  }
-  
-  // wait for the parsing queue to finish
-  queue.wait();
 
-  // close the created srcML archive
-  srcml_close_archive(srcml_arch);
-  srcml_free_archive(srcml_arch);
+    // register file extensions
+    for (size_t i = 0; i < srcml_request.register_ext.size(); ++i) {
+        size_t pos = srcml_request.register_ext[i].find('=');
+        srcml_archive_register_file_extension(srcml_arch, srcml_request.register_ext[i].substr(0,pos).c_str(),
+                                              srcml_request.register_ext[i].substr(pos+1).c_str());
+    }
 
-  return 0;
+    // register xml namespaces
+    for (size_t i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
+        size_t pos = srcml_request.xmlns_prefix[i].find('=');
+        srcml_archive_register_namespace(srcml_arch, srcml_request.xmlns_prefix[i].substr(0,pos).c_str(),
+                                         srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
+    }
+
+    // create the srcML output file
+    srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
+
+    // setup the parsing queue
+    ParseQueue queue(srcml_request.max_threads);
+
+    // process command line inputs
+    BOOST_FOREACH(const std::string& input_file, srcml_request.positional_args) {
+
+        // code testing (temporary)
+        /*
+          direct2srcml(input_file);
+          file2srcml(input_file);
+          file2srcml_count(input_file);
+          libarchive2srcml(input_file);
+          continue;
+        */
+        if (src_validate(input_file)) {
+            // if stdin, then there has to be data
+            if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
+                return 1; // stdin was requested, but no data was received
+            }
+
+            std::string uri = src_prefix_add_uri(input_file);
+
+            // split the URI
+            std::string protocol;
+            std::string resource;
+            src_prefix_split_uri(uri, protocol, resource);
+
+            // call handler based on prefix
+            if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
+                src_input_filesystem(queue, srcml_arch, resource, srcml_request.language);
+            } else if (protocol == "file") {
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
+            } else if (protocol == "stdin") {
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
+            }
+        }
+        else {
+            // SETUP AN ERROR PARSE REQUEST FOR TRACING
+            // This is temporary
+            std::cerr << input_file << " is not accessible.\n";
+        }
+    }
+
+    // wait for the parsing queue to finish
+    queue.wait();
+
+    // close the created srcML archive
+    srcml_close_archive(srcml_arch);
+    srcml_free_archive(srcml_arch);
+
+    return 0;
 }
 
 // code testing (temporary)
@@ -240,7 +240,7 @@ void read_from_pipe (int file) {
     srcml_close_archive(arch);
     srcml_free_archive(arch);
 }
-     
+
 void libarchive2srcml(std::string filename) {
 
     archive* arch = archive_read_new();
@@ -261,7 +261,7 @@ void libarchive2srcml(std::string filename) {
     reader.create_thread( boost::bind(read_from_pipe, datapipe[0]) );
 
     archive_read_data_into_fd(arch, datapipe[1]);
-    
+
     close(datapipe[1]);
 
     archive_read_finish(arch);
@@ -312,7 +312,7 @@ void file2srcml_header(std::string filename) {
 
 void file2srcml_count(std::string filename) {
 
-//    filename = filename.substr(8);
+    //    filename = filename.substr(8);
 
 
     // Parse srcml back to source (srcml2src)

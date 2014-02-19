@@ -30,37 +30,37 @@
 const char* PROTOCOL_SEPARATOR = "://";
 
 std::string src_prefix_add_uri(const std::string& input_file) {
-  size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
-  std::string uri = "";
+    size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
+    std::string uri = "";
 
-  // Only add a prefix if the input doesn't have one already (IE. http://)
-  if (prefixPos == std::string::npos) {  
+    // Only add a prefix if the input doesn't have one already (IE. http://)
+    if (prefixPos == std::string::npos) {
 
-    if (input_file.compare("/dev/stdin") == 0 || input_file.compare("-") == 0) {
-      uri = "-";
-      uri.insert(0, "stdin://");
-      return uri;
+        if (input_file.compare("/dev/stdin") == 0 || input_file.compare("-") == 0) {
+            uri = "-";
+            uri.insert(0, "stdin://");
+            return uri;
+        }
+
+        // Check for local file
+        if (input_file.find("http:") == std::string::npos) {
+            uri = input_file;
+            uri.insert(0, "file://");
+            return uri;
+        }
     }
-      
-    // Check for local file
-    if (input_file.find("http:") == std::string::npos) {
-      uri = input_file;
-      uri.insert(0, "file://");
-      return uri;
-    }
-  }
-  return uri;
+    return uri;
 }
 
 void src_prefix_split_uri(const std::string& input_file, std::string& protocol, std::string& resource){
-  // Extract function split_uri(input_file, protocol, resource)
-  size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
+    // Extract function split_uri(input_file, protocol, resource)
+    size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
 
-  if (prefixPos == std::string::npos) {
-    protocol = "";
-    resource = "";
-    return;
-  }
-  protocol = input_file.substr(0, prefixPos);
-  resource = input_file.substr(prefixPos + strlen(PROTOCOL_SEPARATOR));
+    if (prefixPos == std::string::npos) {
+        protocol = "";
+        resource = "";
+        return;
+    }
+    protocol = input_file.substr(0, prefixPos);
+    resource = input_file.substr(prefixPos + strlen(PROTOCOL_SEPARATOR));
 }

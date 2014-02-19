@@ -1,10 +1,10 @@
 /*
-    srcml_wrapper.hpp
+  srcml_wrapper.hpp
 
-    srcML wrapper functions.
+  srcML wrapper functions.
 
-    Michael J. Decker
-    mjd52@zips.uakron.edu
+  Michael J. Decker
+  mjd52@zips.uakron.edu
 */
 
 #include <sys/types.h>

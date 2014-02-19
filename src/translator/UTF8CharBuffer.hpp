@@ -55,7 +55,7 @@ public:
     ~UTF8CharBuffer();
 
 private:
- 
+
     void init(const char * encoding);
 
     int growBuffer();

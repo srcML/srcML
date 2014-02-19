@@ -34,47 +34,47 @@
 // TODO: Need to show encoding
 // TODO: Need to not show language for archive
 void srcml_display_info(const std::vector<std::string>& pos_args) {
-  BOOST_FOREACH(const std::string& input_file, pos_args) {
-    std::string resource;
-    std::string protocol;
-    src_prefix_split_uri(input_file, protocol, resource);
-    boost::filesystem::path file (resource);
-    if(file.extension().compare(".xml") == 0)
-      srcml_display_info(resource);
-  }
+    BOOST_FOREACH(const std::string& input_file, pos_args) {
+        std::string resource;
+        std::string protocol;
+        src_prefix_split_uri(input_file, protocol, resource);
+        boost::filesystem::path file (resource);
+        if(file.extension().compare(".xml") == 0)
+            srcml_display_info(resource);
+    }
 }
 
 void srcml_display_info(const std::string& srcml_input) {
 
-  int numUnits = 0;
-  srcml_archive* srcml_arch = srcml_create_archive();
-  srcml_read_open_filename(srcml_arch, srcml_input.c_str());
- 
-  while (true) {
-    srcml_unit* unit = srcml_read_unit(srcml_arch);
-    if (unit == 0)
-      break;
+    int numUnits = 0;
+    srcml_archive* srcml_arch = srcml_create_archive();
+    srcml_read_open_filename(srcml_arch, srcml_input.c_str());
 
-    ++numUnits;
+    while (true) {
+        srcml_unit* unit = srcml_read_unit(srcml_arch);
+        if (unit == 0)
+            break;
 
-    /* Query options of srcml unit */
-    const char* language = srcml_unit_get_language(unit);
-    if (language)
-      std::cout << "Language: " << language << "\n";          
-    
-    if (srcml_unit_get_filename(unit))
-      std::cout << "Filename: " << srcml_unit_get_filename(unit) << "\n";
+        ++numUnits;
 
-    if (srcml_unit_get_directory(unit))
-      std::cout << "Directory: " << srcml_unit_get_directory(unit) << "\n";
-    
-    if (srcml_unit_get_version(unit))
-      std::cout << "Version: " << srcml_unit_get_version(unit) << "\n";
+        /* Query options of srcml unit */
+        const char* language = srcml_unit_get_language(unit);
+        if (language)
+            std::cout << "Language: " << language << "\n";
 
-    srcml_free_unit(unit);
-  }
+        if (srcml_unit_get_filename(unit))
+            std::cout << "Filename: " << srcml_unit_get_filename(unit) << "\n";
 
-  std::cout << "units=" << numUnits << "\n";
+        if (srcml_unit_get_directory(unit))
+            std::cout << "Directory: " << srcml_unit_get_directory(unit) << "\n";
 
-  srcml_free_archive(srcml_arch);
+        if (srcml_unit_get_version(unit))
+            std::cout << "Version: " << srcml_unit_get_version(unit) << "\n";
+
+        srcml_free_unit(unit);
+    }
+
+    std::cout << "units=" << numUnits << "\n";
+
+    srcml_free_archive(srcml_arch);
 }

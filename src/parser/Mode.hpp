@@ -160,7 +160,7 @@ public:
 
     Mode(TokenParser* ptp, int lang)
         : Language(lang), statev(ptp)
-        {}
+    {}
 
     ~Mode() {}
 
@@ -173,7 +173,7 @@ protected:
     //  void flushSkip() {}
 
     int size() const {
-      return (int)statev.size();
+        return (int)statev.size();
     }
 
     srcMLState& currentState() {
@@ -262,8 +262,8 @@ protected:
     }
 
     State::MODE_TYPE getMode() {
-    
-      return statev.getMode();
+
+        return statev.getMode();
     }
 
     void clearMode(const State::MODE_TYPE& m) {

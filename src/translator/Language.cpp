@@ -48,168 +48,168 @@ static const boost::regex extRegEx("(zx\\.|zg\\.|2zb\\.)*([^\\.]*)");
 bool Language::registerUserExt(const char* ext, int language,
                                std::vector<pair> & registered_languages) {
 
-  pair apair = { ext, language };
-  registered_languages.push_back(apair);
+    pair apair = { ext, language };
+    registered_languages.push_back(apair);
 
-  return true;
+    return true;
 }
 
 bool Language::registerUserExt(const char* ext, int language) {
 
-  userext2int[usercount].s = ext;
-  userext2int[usercount].n = language;
-  ++usercount;
+    userext2int[usercount].s = ext;
+    userext2int[usercount].n = language;
+    ++usercount;
 
-  return true;
+    return true;
 }
 
 bool Language::registerUserExt(const char* ext, const char* language,
                                std::vector<pair> & registered_languages) {
 
-  int nlanguage = Language::getLanguage(language);
-  if (!nlanguage)
-    return false;
+    int nlanguage = Language::getLanguage(language);
+    if (!nlanguage)
+        return false;
 
-  registerUserExt(ext, nlanguage, registered_languages);
+    registerUserExt(ext, nlanguage, registered_languages);
 
-  return true;
+    return true;
 }
 
 bool Language::registerUserExt(const char* ext, const char* language) {
 
-  int nlanguage = Language::getLanguage(language);
-  if (!nlanguage)
-    return false;
+    int nlanguage = Language::getLanguage(language);
+    if (!nlanguage)
+        return false;
 
-  return registerUserExt(ext, nlanguage);
+    return registerUserExt(ext, nlanguage);
 }
 
 const char* getLanguageExtension(const char * const inpath, std::string & extension)
 {
 
-  // reversed copy of the path
-  std::string path(inpath);
-  std::reverse(path.begin(), path.end());
+    // reversed copy of the path
+    std::string path(inpath);
+    std::reverse(path.begin(), path.end());
 
-  std::string::const_iterator start = path.begin();
-  std::string::const_iterator end = path.end();
-  boost::match_results<std::string::const_iterator> what;
-  boost::match_flag_type flags = boost::match_default;
+    std::string::const_iterator start = path.begin();
+    std::string::const_iterator end = path.end();
+    boost::match_results<std::string::const_iterator> what;
+    boost::match_flag_type flags = boost::match_default;
 
-  if(boost::regex_search(start, end, what, extRegEx, flags)) {
+    if(boost::regex_search(start, end, what, extRegEx, flags)) {
 
-    std::string temp = what[2].str();
-    extension.assign(temp.rbegin(), temp.rend());
-    return extension.c_str();
+        std::string temp = what[2].str();
+        extension.assign(temp.rbegin(), temp.rend());
+        return extension.c_str();
 
-  } else
-    return 0;
+    } else
+        return 0;
 
 }
 
 // gets the current language based on the extenstion
 int Language::getLanguageFromFilename(const char* const path) {
 
-  // extract the (pure) extension
-  std::string ext;
-  const char* extension = getLanguageExtension(path, ext);
+    // extract the (pure) extension
+    std::string ext;
+    const char* extension = getLanguageExtension(path, ext);
 
-  if (!extension)
+    if (!extension)
+        return 0;
+
+    // custom extensions
+    for (int i = usercount - 1; i >= 0; --i) {
+        if (strcmp(userext2int[i].s.c_str(), extension) == 0)
+            return userext2int[i].n == LANGUAGE_NONE ? 0 :
+                userext2int[i].n == LANGUAGE_C && use_cpp_for_c ? LANGUAGE_CXX : userext2int[i].n;
+    }
+
     return 0;
-
-  // custom extensions
-  for (int i = usercount - 1; i >= 0; --i) {
-    if (strcmp(userext2int[i].s.c_str(), extension) == 0)
-      return userext2int[i].n == LANGUAGE_NONE ? 0 : 
-	userext2int[i].n == LANGUAGE_C && use_cpp_for_c ? LANGUAGE_CXX : userext2int[i].n;
-  }
-
-  return 0;
 }
 
 // gets the current language based on the extenstion
 int Language::getLanguageFromFilename(const char* const path, std::vector<pair> & registered_languages) {
 
-  // extract the (pure) extension
-  std::string ext;
-  const char* extension = getLanguageExtension(path, ext);
+    // extract the (pure) extension
+    std::string ext;
+    const char* extension = getLanguageExtension(path, ext);
 
-  if (!extension)
+    if (!extension)
+        return 0;
+
+    // custom extensions
+    for (int i = (int)(registered_languages.size() - 1); i >= 0; --i) {
+        if (strcmp(registered_languages[i].s.c_str(), extension) == 0)
+            return registered_languages[i].n == LANGUAGE_NONE ? 0 :
+                registered_languages[i].n == LANGUAGE_C && use_cpp_for_c ? LANGUAGE_CXX : registered_languages[i].n;
+    }
+
     return 0;
-
-  // custom extensions
-  for (int i = (int)(registered_languages.size() - 1); i >= 0; --i) {
-    if (strcmp(registered_languages[i].s.c_str(), extension) == 0)
-      return registered_languages[i].n == LANGUAGE_NONE ? 0 : 
-	registered_languages[i].n == LANGUAGE_C && use_cpp_for_c ? LANGUAGE_CXX : registered_languages[i].n;
-  }
-
-  return 0;
 }
 
 void Language::register_standard_file_extensions()
 {
-  Language::registerUserExt("c",    LANGUAGE_C );
-  Language::registerUserExt("h",    LANGUAGE_C );
-  Language::registerUserExt("i",    LANGUAGE_C );
+    Language::registerUserExt("c",    LANGUAGE_C );
+    Language::registerUserExt("h",    LANGUAGE_C );
+    Language::registerUserExt("i",    LANGUAGE_C );
 
-  //Language::registerUserExt("cs",    LANGUAGE_CS );
-  //Language::registerUserExt("hs",    LANGUAGE_CS );
+    //Language::registerUserExt("cs",    LANGUAGE_CS );
+    //Language::registerUserExt("hs",    LANGUAGE_CS );
 
-  Language::registerUserExt("cpp",  LANGUAGE_CXX );
-  Language::registerUserExt("CPP",  LANGUAGE_CXX );
-  Language::registerUserExt("cp",   LANGUAGE_CXX );
-  Language::registerUserExt("hpp",  LANGUAGE_CXX );
-  Language::registerUserExt("cxx",  LANGUAGE_CXX );
-  Language::registerUserExt("hxx",  LANGUAGE_CXX );
-  Language::registerUserExt("cc",   LANGUAGE_CXX );
-  Language::registerUserExt("hh",   LANGUAGE_CXX );
-  Language::registerUserExt("c++",  LANGUAGE_CXX );
-  Language::registerUserExt("h++",  LANGUAGE_CXX );
-  Language::registerUserExt("C",    LANGUAGE_CXX );
-  Language::registerUserExt("H",    LANGUAGE_CXX );
-  Language::registerUserExt("tcc",  LANGUAGE_CXX );
-  Language::registerUserExt("ii",   LANGUAGE_CXX );
+    Language::registerUserExt("cpp",  LANGUAGE_CXX );
+    Language::registerUserExt("CPP",  LANGUAGE_CXX );
+    Language::registerUserExt("cp",   LANGUAGE_CXX );
+    Language::registerUserExt("hpp",  LANGUAGE_CXX );
+    Language::registerUserExt("cxx",  LANGUAGE_CXX );
+    Language::registerUserExt("hxx",  LANGUAGE_CXX );
+    Language::registerUserExt("cc",   LANGUAGE_CXX );
+    Language::registerUserExt("hh",   LANGUAGE_CXX );
+    Language::registerUserExt("c++",  LANGUAGE_CXX );
+    Language::registerUserExt("h++",  LANGUAGE_CXX );
+    Language::registerUserExt("C",    LANGUAGE_CXX );
+    Language::registerUserExt("H",    LANGUAGE_CXX );
+    Language::registerUserExt("tcc",  LANGUAGE_CXX );
+    Language::registerUserExt("ii",   LANGUAGE_CXX );
 
-  Language::registerUserExt("java", LANGUAGE_JAVA );
+    Language::registerUserExt("java", LANGUAGE_JAVA );
 
-  Language::registerUserExt("aj",   LANGUAGE_ASPECTJ );
+    Language::registerUserExt("aj",   LANGUAGE_ASPECTJ );
 
-  Language::registerUserExt("cs",   LANGUAGE_CSHARP );
+    Language::registerUserExt("cs",   LANGUAGE_CSHARP );
 }
 
 void Language::register_standard_file_extensions(std::vector<pair> & registered_languages)
 {
-  Language::registerUserExt("c",    LANGUAGE_C, registered_languages );
-  Language::registerUserExt("h",    LANGUAGE_C, registered_languages );
-  Language::registerUserExt("i",    LANGUAGE_C, registered_languages );
+    Language::registerUserExt("c",    LANGUAGE_C, registered_languages );
+    Language::registerUserExt("h",    LANGUAGE_C, registered_languages );
+    Language::registerUserExt("i",    LANGUAGE_C, registered_languages );
 
-  //Language::registerUserExt("cs",    LANGUAGE_CS, registered_languages );
-  //Language::registerUserExt("hs",    LANGUAGE_CS, registered_languages );
+    //Language::registerUserExt("cs",    LANGUAGE_CS, registered_languages );
+    //Language::registerUserExt("hs",    LANGUAGE_CS, registered_languages );
 
-  Language::registerUserExt("cpp",  LANGUAGE_CXX, registered_languages );
-  Language::registerUserExt("CPP",  LANGUAGE_CXX, registered_languages );
-  Language::registerUserExt("cp",   LANGUAGE_CXX, registered_languages );
-  Language::registerUserExt("hpp",  LANGUAGE_CXX, registered_languages );
-  Language::registerUserExt("cxx",  LANGUAGE_CXX, registered_languages );
-  Language::registerUserExt("hxx",  LANGUAGE_CXX, registered_languages );
-  Language::registerUserExt("cc",   LANGUAGE_CXX, registered_languages );
-  Language::registerUserExt("hh",   LANGUAGE_CXX, registered_languages );
-  Language::registerUserExt("c++",  LANGUAGE_CXX, registered_languages );
-  Language::registerUserExt("h++",  LANGUAGE_CXX, registered_languages );
-  Language::registerUserExt("C",    LANGUAGE_CXX, registered_languages );
-  Language::registerUserExt("H",    LANGUAGE_CXX, registered_languages );
-  Language::registerUserExt("tcc",  LANGUAGE_CXX, registered_languages );
-  Language::registerUserExt("ii",   LANGUAGE_CXX, registered_languages );
+    Language::registerUserExt("cpp",  LANGUAGE_CXX, registered_languages );
+    Language::registerUserExt("CPP",  LANGUAGE_CXX, registered_languages );
+    Language::registerUserExt("cp",   LANGUAGE_CXX, registered_languages );
+    Language::registerUserExt("hpp",  LANGUAGE_CXX, registered_languages );
+    Language::registerUserExt("cxx",  LANGUAGE_CXX, registered_languages );
+    Language::registerUserExt("hxx",  LANGUAGE_CXX, registered_languages );
+    Language::registerUserExt("cc",   LANGUAGE_CXX, registered_languages );
+    Language::registerUserExt("hh",   LANGUAGE_CXX, registered_languages );
+    Language::registerUserExt("c++",  LANGUAGE_CXX, registered_languages );
+    Language::registerUserExt("h++",  LANGUAGE_CXX, registered_languages );
+    Language::registerUserExt("C",    LANGUAGE_CXX, registered_languages );
+    Language::registerUserExt("H",    LANGUAGE_CXX, registered_languages );
+    Language::registerUserExt("tcc",  LANGUAGE_CXX, registered_languages );
+    Language::registerUserExt("ii",   LANGUAGE_CXX, registered_languages );
 
-  Language::registerUserExt("java", LANGUAGE_JAVA, registered_languages );
+    Language::registerUserExt("java", LANGUAGE_JAVA, registered_languages );
 
-  Language::registerUserExt("aj",   LANGUAGE_ASPECTJ, registered_languages );
+    Language::registerUserExt("aj",   LANGUAGE_ASPECTJ, registered_languages );
 
-  Language::registerUserExt("cs",   LANGUAGE_CSHARP, registered_languages );
+    Language::registerUserExt("cs",   LANGUAGE_CSHARP, registered_languages );
 }
 
 void Language::c_is_cpp(bool use_cpp) {
 
-  Language::use_cpp_for_c = use_cpp;
+    Language::use_cpp_for_c = use_cpp;
 }

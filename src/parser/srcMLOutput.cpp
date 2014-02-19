@@ -53,7 +53,7 @@ enum { SRCML_SRC_NS_URI_POS,
 #define ELEMENT_MAP_FIRST_TYPE int
 #define ELEMENT_MAP_SECOND_TYPE const char*
 #define ELEMENT_MAP_DEFAULT(s) template <ELEMENT_MAP_FIRST_TYPE n> inline ELEMENT_MAP_SECOND_TYPE \
-  ELEMENT_MAP_CALL_NAME() { s }
+    ELEMENT_MAP_CALL_NAME() { s }
 
 #define ELEMENT_MAP_CALL(t) ELEMENT_MAP_CALL_NAME <srcMLParserTokenTypes::t>()
 #define ELEMENT_MAP(t, s) template <> inline ELEMENT_MAP_SECOND_TYPE ELEMENT_MAP_CALL(t) { return s; }
@@ -61,220 +61,220 @@ enum { SRCML_SRC_NS_URI_POS,
 // map the token types to specific strings
 namespace {
 
-  // base member
-  ELEMENT_MAP_DEFAULT(return "";)
+    // base member
+    ELEMENT_MAP_DEFAULT(return "";)
 
-  // map tokens to strings
-  // order matters if referring to previous definition
-  ELEMENT_MAP(SUNIT, "unit")
-  ELEMENT_MAP(COMMENT_START, "comment")
-  ELEMENT_MAP(COMMENT_END, ELEMENT_MAP_CALL(COMMENT_START))
-  ELEMENT_MAP(LINECOMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
-  ELEMENT_MAP(LINECOMMENT_END, ELEMENT_MAP_CALL(COMMENT_START))
-  ELEMENT_MAP(JAVADOC_COMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
-  ELEMENT_MAP(DOXYGEN_COMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
-  ELEMENT_MAP(LINE_DOXYGEN_COMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
+    // map tokens to strings
+    // order matters if referring to previous definition
+    ELEMENT_MAP(SUNIT, "unit")
+    ELEMENT_MAP(COMMENT_START, "comment")
+    ELEMENT_MAP(COMMENT_END, ELEMENT_MAP_CALL(COMMENT_START))
+    ELEMENT_MAP(LINECOMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
+    ELEMENT_MAP(LINECOMMENT_END, ELEMENT_MAP_CALL(COMMENT_START))
+    ELEMENT_MAP(JAVADOC_COMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
+    ELEMENT_MAP(DOXYGEN_COMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
+    ELEMENT_MAP(LINE_DOXYGEN_COMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
 
-  // No op
-  ELEMENT_MAP(SNOP, "")
+    // No op
+    ELEMENT_MAP(SNOP, "")
 
-  // literal values
-  ELEMENT_MAP(SSTRING,  "literal")
-  ELEMENT_MAP(SCHAR,    "literal")
-  ELEMENT_MAP(SLITERAL, "literal")
-  ELEMENT_MAP(SBOOLEAN, "literal")
-  ELEMENT_MAP(SNULL,    "literal")
-  ELEMENT_MAP(SCOMPLEX, "literal")
+    // literal values
+    ELEMENT_MAP(SSTRING,  "literal")
+    ELEMENT_MAP(SCHAR,    "literal")
+    ELEMENT_MAP(SLITERAL, "literal")
+    ELEMENT_MAP(SBOOLEAN, "literal")
+    ELEMENT_MAP(SNULL,    "literal")
+    ELEMENT_MAP(SCOMPLEX, "literal")
 
-  // operators
-  ELEMENT_MAP(SOPERATOR, "operator")
+    // operators
+    ELEMENT_MAP(SOPERATOR, "operator")
 
-  // type modifier
-  ELEMENT_MAP(SMODIFIER, "modifier")
+    // type modifier
+    ELEMENT_MAP(SMODIFIER, "modifier")
 
-  // sub-statement elements
-  ELEMENT_MAP(SNAME, "name")
-  ELEMENT_MAP(SONAME, "")
-  ELEMENT_MAP(SCNAME, "name")
-  ELEMENT_MAP(STYPE, "type")
-  ELEMENT_MAP(SCONDITION, "condition")
-  ELEMENT_MAP(SBLOCK, "block")
-  ELEMENT_MAP(SINDEX, "index")
-  ELEMENT_MAP(SDECLTYPE, "decltype")
-  ELEMENT_MAP(STYPENAME, "typename")
+    // sub-statement elements
+    ELEMENT_MAP(SNAME, "name")
+    ELEMENT_MAP(SONAME, "")
+    ELEMENT_MAP(SCNAME, "name")
+    ELEMENT_MAP(STYPE, "type")
+    ELEMENT_MAP(SCONDITION, "condition")
+    ELEMENT_MAP(SBLOCK, "block")
+    ELEMENT_MAP(SINDEX, "index")
+    ELEMENT_MAP(SDECLTYPE, "decltype")
+    ELEMENT_MAP(STYPENAME, "typename")
 
-  ELEMENT_MAP(SEXPRESSION_STATEMENT, "expr_stmt")
-  ELEMENT_MAP(SEXPRESSION, "expr")
+    ELEMENT_MAP(SEXPRESSION_STATEMENT, "expr_stmt")
+    ELEMENT_MAP(SEXPRESSION, "expr")
 
-  ELEMENT_MAP(SDECLARATION_STATEMENT, "decl_stmt")
-  ELEMENT_MAP(SDECLARATION, "decl")
-  ELEMENT_MAP(SDECLARATION_INITIALIZATION, "init")
-  ELEMENT_MAP(SDECLARATION_RANGE, "range")
+    ELEMENT_MAP(SDECLARATION_STATEMENT, "decl_stmt")
+    ELEMENT_MAP(SDECLARATION, "decl")
+    ELEMENT_MAP(SDECLARATION_INITIALIZATION, "init")
+    ELEMENT_MAP(SDECLARATION_RANGE, "range")
 
-  ELEMENT_MAP(SBREAK_STATEMENT, "break")
-  ELEMENT_MAP(SCONTINUE_STATEMENT, "continue")
-  ELEMENT_MAP(SGOTO_STATEMENT, "goto")
-  ELEMENT_MAP(SLABEL_STATEMENT, "label")
+    ELEMENT_MAP(SBREAK_STATEMENT, "break")
+    ELEMENT_MAP(SCONTINUE_STATEMENT, "continue")
+    ELEMENT_MAP(SGOTO_STATEMENT, "goto")
+    ELEMENT_MAP(SLABEL_STATEMENT, "label")
 
-  ELEMENT_MAP(STYPEDEF, "typedef")
-  ELEMENT_MAP(SASM, "asm")
-  ELEMENT_MAP(SMACRO_CALL, "macro")
-  ELEMENT_MAP(SENUM, "enum")
+    ELEMENT_MAP(STYPEDEF, "typedef")
+    ELEMENT_MAP(SASM, "asm")
+    ELEMENT_MAP(SMACRO_CALL, "macro")
+    ELEMENT_MAP(SENUM, "enum")
 
-  ELEMENT_MAP(SIF_STATEMENT, "if")
-  ELEMENT_MAP(STHEN, "then")
-  ELEMENT_MAP(SELSE, "else")
-  ELEMENT_MAP(SELSEIF, "elseif")
+    ELEMENT_MAP(SIF_STATEMENT, "if")
+    ELEMENT_MAP(STHEN, "then")
+    ELEMENT_MAP(SELSE, "else")
+    ELEMENT_MAP(SELSEIF, "elseif")
 
-  ELEMENT_MAP(SWHILE_STATEMENT, "while")
-  ELEMENT_MAP(SLOCK_STATEMENT, "lock")
-  ELEMENT_MAP(SFIXED_STATEMENT, "fixed")
-  ELEMENT_MAP(SCHECKED_STATEMENT, "checked")
-  ELEMENT_MAP(SUNCHECKED_STATEMENT, "unchecked")
-  ELEMENT_MAP(SUNSAFE_STATEMENT, "unsafe")
-  ELEMENT_MAP(SDO_STATEMENT, "do")
+    ELEMENT_MAP(SWHILE_STATEMENT, "while")
+    ELEMENT_MAP(SLOCK_STATEMENT, "lock")
+    ELEMENT_MAP(SFIXED_STATEMENT, "fixed")
+    ELEMENT_MAP(SCHECKED_STATEMENT, "checked")
+    ELEMENT_MAP(SUNCHECKED_STATEMENT, "unchecked")
+    ELEMENT_MAP(SUNSAFE_STATEMENT, "unsafe")
+    ELEMENT_MAP(SDO_STATEMENT, "do")
 
-  ELEMENT_MAP(SSWITCH, "switch")
-  ELEMENT_MAP(SCASE, "case")
-  ELEMENT_MAP(SDEFAULT, "default")
+    ELEMENT_MAP(SSWITCH, "switch")
+    ELEMENT_MAP(SCASE, "case")
+    ELEMENT_MAP(SDEFAULT, "default")
 
-  ELEMENT_MAP(SFOR_STATEMENT, "for")
-  ELEMENT_MAP(SFOREACH_STATEMENT, "foreach")
-  ELEMENT_MAP(SFOR_GROUP, /*"group"*/"")
-  ELEMENT_MAP(SFOR_INITIALIZATION, "init")
-  ELEMENT_MAP(SFOR_CONDITION, ELEMENT_MAP_CALL(SCONDITION))
-  ELEMENT_MAP(SFOR_INCREMENT, "incr")
+    ELEMENT_MAP(SFOR_STATEMENT, "for")
+    ELEMENT_MAP(SFOREACH_STATEMENT, "foreach")
+    ELEMENT_MAP(SFOR_GROUP, /*"group"*/"")
+    ELEMENT_MAP(SFOR_INITIALIZATION, "init")
+    ELEMENT_MAP(SFOR_CONDITION, ELEMENT_MAP_CALL(SCONDITION))
+    ELEMENT_MAP(SFOR_INCREMENT, "incr")
 
-  // functions
-  ELEMENT_MAP(SFUNCTION_DEFINITION,  "function")
-  ELEMENT_MAP(SFUNCTION_DECLARATION, "function_decl")
-  ELEMENT_MAP(SFUNCTION_LAMBDA,      "lambda")
-  ELEMENT_MAP(SFUNCTION_SPECIFIER,   "specifier")
-  ELEMENT_MAP(SRETURN_STATEMENT,     "return")
-  ELEMENT_MAP(SFUNCTION_CALL,        "call")
-  ELEMENT_MAP(SSIZEOF_CALL,          "sizeof")
-  ELEMENT_MAP(SPARAMETER_LIST,       "parameter_list")
-  ELEMENT_MAP(SPARAMETER,            "param")
-  ELEMENT_MAP(SKRPARAMETER_LIST,     "krparameter_list")
-  ELEMENT_MAP(SKRPARAMETER,          "krparam")
-  ELEMENT_MAP(SARGUMENT_LIST,        "argument_list")
-  ELEMENT_MAP(SARGUMENT,             "argument")
-  ELEMENT_MAP(SLAMBDA_CAPTURE,  "capture")
+    // functions
+    ELEMENT_MAP(SFUNCTION_DEFINITION,  "function")
+    ELEMENT_MAP(SFUNCTION_DECLARATION, "function_decl")
+    ELEMENT_MAP(SFUNCTION_LAMBDA,      "lambda")
+    ELEMENT_MAP(SFUNCTION_SPECIFIER,   "specifier")
+    ELEMENT_MAP(SRETURN_STATEMENT,     "return")
+    ELEMENT_MAP(SFUNCTION_CALL,        "call")
+    ELEMENT_MAP(SSIZEOF_CALL,          "sizeof")
+    ELEMENT_MAP(SPARAMETER_LIST,       "parameter_list")
+    ELEMENT_MAP(SPARAMETER,            "param")
+    ELEMENT_MAP(SKRPARAMETER_LIST,     "krparameter_list")
+    ELEMENT_MAP(SKRPARAMETER,          "krparam")
+    ELEMENT_MAP(SARGUMENT_LIST,        "argument_list")
+    ELEMENT_MAP(SARGUMENT,             "argument")
+    ELEMENT_MAP(SLAMBDA_CAPTURE,  "capture")
 
-  // struct, union
-  ELEMENT_MAP(SSTRUCT, "struct")
-  ELEMENT_MAP(SSTRUCT_DECLARATION,   "struct_decl")
-  ELEMENT_MAP(SUNION, "union")
-  ELEMENT_MAP(SUNION_DECLARATION,    "union_decl")
+    // struct, union
+    ELEMENT_MAP(SSTRUCT, "struct")
+    ELEMENT_MAP(SSTRUCT_DECLARATION,   "struct_decl")
+    ELEMENT_MAP(SUNION, "union")
+    ELEMENT_MAP(SUNION_DECLARATION,    "union_decl")
 
-  // class
-  ELEMENT_MAP(SCLASS,                   "class")
-  ELEMENT_MAP(SCLASS_DECLARATION,       "class_decl")
-  ELEMENT_MAP(SPUBLIC_ACCESS,           "public")
-  ELEMENT_MAP(SPUBLIC_ACCESS_DEFAULT,   "public")
-  ELEMENT_MAP(SPRIVATE_ACCESS,          "private")
-  ELEMENT_MAP(SPRIVATE_ACCESS_DEFAULT,  "private")
-  ELEMENT_MAP(SPROTECTED_ACCESS,        "protected")
+    // class
+    ELEMENT_MAP(SCLASS,                   "class")
+    ELEMENT_MAP(SCLASS_DECLARATION,       "class_decl")
+    ELEMENT_MAP(SPUBLIC_ACCESS,           "public")
+    ELEMENT_MAP(SPUBLIC_ACCESS_DEFAULT,   "public")
+    ELEMENT_MAP(SPRIVATE_ACCESS,          "private")
+    ELEMENT_MAP(SPRIVATE_ACCESS_DEFAULT,  "private")
+    ELEMENT_MAP(SPROTECTED_ACCESS,        "protected")
 
-  // Qt
-  ELEMENT_MAP(SSIGNAL_ACCESS,           "signals")
-  ELEMENT_MAP(SFOREVER_STATEMENT,       "forever")
+    // Qt
+    ELEMENT_MAP(SSIGNAL_ACCESS,           "signals")
+    ELEMENT_MAP(SFOREVER_STATEMENT,       "forever")
 
-  ELEMENT_MAP(SMEMBER_INITIALIZATION_LIST, "member_list")
-  ELEMENT_MAP(SCONSTRUCTOR_DEFINITION, "constructor")
-  ELEMENT_MAP(SCONSTRUCTOR_DECLARATION, "constructor_decl")
-  ELEMENT_MAP(SDESTRUCTOR_DEFINITION,   "destructor")
-  ELEMENT_MAP(SDESTRUCTOR_DECLARATION, "destructor_decl")
-  ELEMENT_MAP(SDERIVATION_LIST,         "super")
-  ELEMENT_MAP(SFRIEND,                  "friend")
-  ELEMENT_MAP(SCLASS_SPECIFIER,         "specifier")
+    ELEMENT_MAP(SMEMBER_INITIALIZATION_LIST, "member_list")
+    ELEMENT_MAP(SCONSTRUCTOR_DEFINITION, "constructor")
+    ELEMENT_MAP(SCONSTRUCTOR_DECLARATION, "constructor_decl")
+    ELEMENT_MAP(SDESTRUCTOR_DEFINITION,   "destructor")
+    ELEMENT_MAP(SDESTRUCTOR_DECLARATION, "destructor_decl")
+    ELEMENT_MAP(SDERIVATION_LIST,         "super")
+    ELEMENT_MAP(SFRIEND,                  "friend")
+    ELEMENT_MAP(SCLASS_SPECIFIER,         "specifier")
 
-  // extern definition
-  ELEMENT_MAP(SEXTERN, "extern")
+    // extern definition
+    ELEMENT_MAP(SEXTERN, "extern")
 
-  // namespaces
-  ELEMENT_MAP(SNAMESPACE, "namespace")
-  ELEMENT_MAP(SUSING_DIRECTIVE, "using")
+    // namespaces
+    ELEMENT_MAP(SNAMESPACE, "namespace")
+    ELEMENT_MAP(SUSING_DIRECTIVE, "using")
 
-  // exception handling
-  ELEMENT_MAP(STRY_BLOCK,       "try")
-  ELEMENT_MAP(SCATCH_BLOCK,     "catch")
-  ELEMENT_MAP(SFINALLY_BLOCK,   "finally")
-  ELEMENT_MAP(STHROW_STATEMENT, "throw")
-  ELEMENT_MAP(STHROW_SPECIFIER, "throw")
-  ELEMENT_MAP(STHROW_SPECIFIER_JAVA, "throws")
-  ELEMENT_MAP(SNOEXCEPT, "noexcept")
+    // exception handling
+    ELEMENT_MAP(STRY_BLOCK,       "try")
+    ELEMENT_MAP(SCATCH_BLOCK,     "catch")
+    ELEMENT_MAP(SFINALLY_BLOCK,   "finally")
+    ELEMENT_MAP(STHROW_STATEMENT, "throw")
+    ELEMENT_MAP(STHROW_SPECIFIER, "throw")
+    ELEMENT_MAP(STHROW_SPECIFIER_JAVA, "throws")
+    ELEMENT_MAP(SNOEXCEPT, "noexcept")
 
-  // template
-  ELEMENT_MAP(STEMPLATE, "template")
-  ELEMENT_MAP(STEMPLATE_ARGUMENT,       ELEMENT_MAP_CALL(SARGUMENT))
-  ELEMENT_MAP(STEMPLATE_ARGUMENT_LIST,  ELEMENT_MAP_CALL(SARGUMENT_LIST))
-  ELEMENT_MAP(STEMPLATE_PARAMETER,      ELEMENT_MAP_CALL(SPARAMETER))
-  ELEMENT_MAP(STEMPLATE_PARAMETER_LIST, ELEMENT_MAP_CALL(SPARAMETER_LIST))
+    // template
+    ELEMENT_MAP(STEMPLATE, "template")
+    ELEMENT_MAP(STEMPLATE_ARGUMENT,       ELEMENT_MAP_CALL(SARGUMENT))
+    ELEMENT_MAP(STEMPLATE_ARGUMENT_LIST,  ELEMENT_MAP_CALL(SARGUMENT_LIST))
+    ELEMENT_MAP(STEMPLATE_PARAMETER,      ELEMENT_MAP_CALL(SPARAMETER))
+    ELEMENT_MAP(STEMPLATE_PARAMETER_LIST, ELEMENT_MAP_CALL(SPARAMETER_LIST))
 
-  // cpp
-  ELEMENT_MAP(SCPP_DIRECTIVE, "directive")
-  ELEMENT_MAP(SCPP_FILENAME,  "file")
-  ELEMENT_MAP(SCPP_NUMBER,  "number")
-  ELEMENT_MAP(SCPP_INCLUDE,   "include")
-  ELEMENT_MAP(SCPP_DEFINE,    "define")
-  ELEMENT_MAP(SCPP_UNDEF,     "undef")
-  ELEMENT_MAP(SCPP_LINE,      "line")
-  ELEMENT_MAP(SCPP_IF,        "if")
-  ELEMENT_MAP(SCPP_IFDEF,     "ifdef")
-  ELEMENT_MAP(SCPP_IFNDEF,    "ifndef")
-  ELEMENT_MAP(SCPP_ELSE,      "else")
-  ELEMENT_MAP(SCPP_ELIF,      "elif")
-  ELEMENT_MAP(SCPP_ENDIF,     "endif")
-  ELEMENT_MAP(SCPP_THEN,      "then")
-  ELEMENT_MAP(SCPP_PRAGMA,    "pragma")
-  ELEMENT_MAP(SCPP_ERROR,     "error")
-  ELEMENT_MAP(SCPP_REGION,    "region")
-  ELEMENT_MAP(SCPP_ENDREGION, "endregion")
-  ELEMENT_MAP(SCPP_MACRO_DEFN, "macro")
-  ELEMENT_MAP(SCPP_MACRO_VALUE, "value")
+    // cpp
+    ELEMENT_MAP(SCPP_DIRECTIVE, "directive")
+    ELEMENT_MAP(SCPP_FILENAME,  "file")
+    ELEMENT_MAP(SCPP_NUMBER,  "number")
+    ELEMENT_MAP(SCPP_INCLUDE,   "include")
+    ELEMENT_MAP(SCPP_DEFINE,    "define")
+    ELEMENT_MAP(SCPP_UNDEF,     "undef")
+    ELEMENT_MAP(SCPP_LINE,      "line")
+    ELEMENT_MAP(SCPP_IF,        "if")
+    ELEMENT_MAP(SCPP_IFDEF,     "ifdef")
+    ELEMENT_MAP(SCPP_IFNDEF,    "ifndef")
+    ELEMENT_MAP(SCPP_ELSE,      "else")
+    ELEMENT_MAP(SCPP_ELIF,      "elif")
+    ELEMENT_MAP(SCPP_ENDIF,     "endif")
+    ELEMENT_MAP(SCPP_THEN,      "then")
+    ELEMENT_MAP(SCPP_PRAGMA,    "pragma")
+    ELEMENT_MAP(SCPP_ERROR,     "error")
+    ELEMENT_MAP(SCPP_REGION,    "region")
+    ELEMENT_MAP(SCPP_ENDREGION, "endregion")
+    ELEMENT_MAP(SCPP_MACRO_DEFN, "macro")
+    ELEMENT_MAP(SCPP_MACRO_VALUE, "value")
 
-  ELEMENT_MAP(SMARKER,        "marker")
-  ELEMENT_MAP(SERROR_PARSE,   "parse")
-  ELEMENT_MAP(SERROR_MODE,    "mode")
+    ELEMENT_MAP(SMARKER,        "marker")
+    ELEMENT_MAP(SERROR_PARSE,   "parse")
+    ELEMENT_MAP(SERROR_MODE,    "mode")
 
-  // Java elements
-  ELEMENT_MAP(SEXTENDS,                "extends")
-  ELEMENT_MAP(SIMPLEMENTS,             "implements")
-  ELEMENT_MAP(SIMPORT,                 "import")
-  ELEMENT_MAP(SPACKAGE,                "package")
-  ELEMENT_MAP(SASSERT_STATEMENT,       "assert")
-  ELEMENT_MAP(SSYNCHRONIZED_STATEMENT, "synchronized")
-  ELEMENT_MAP(SINTERFACE,              "class")
+    // Java elements
+    ELEMENT_MAP(SEXTENDS,                "extends")
+    ELEMENT_MAP(SIMPLEMENTS,             "implements")
+    ELEMENT_MAP(SIMPORT,                 "import")
+    ELEMENT_MAP(SPACKAGE,                "package")
+    ELEMENT_MAP(SASSERT_STATEMENT,       "assert")
+    ELEMENT_MAP(SSYNCHRONIZED_STATEMENT, "synchronized")
+    ELEMENT_MAP(SINTERFACE,              "class")
 
-  // special characters
-  ELEMENT_MAP(SATTRIBUTE,   "attribute")
-  ELEMENT_MAP(STARGET,      "target")
+    // special characters
+    ELEMENT_MAP(SATTRIBUTE,   "attribute")
+    ELEMENT_MAP(STARGET,      "target")
 
-  ELEMENT_MAP(SLINQ,   "linq")
-  ELEMENT_MAP(SFROM, "from")
-  ELEMENT_MAP(SSELECT,   "select")
-  ELEMENT_MAP(SWHERE,   "where")
-  ELEMENT_MAP(SLET,   "let")
-  ELEMENT_MAP(SORDERBY,   "orderby")
-  ELEMENT_MAP(SGROUP,   "group")
-  ELEMENT_MAP(SJOIN,   "join")
-  ELEMENT_MAP(SIN,   "in")
-  ELEMENT_MAP(SON,   "on")
-  ELEMENT_MAP(SEQUALS,   "equals")
-  ELEMENT_MAP(SBY,   "by")
-  ELEMENT_MAP(SINTO,   "into")
+    ELEMENT_MAP(SLINQ,   "linq")
+    ELEMENT_MAP(SFROM, "from")
+    ELEMENT_MAP(SSELECT,   "select")
+    ELEMENT_MAP(SWHERE,   "where")
+    ELEMENT_MAP(SLET,   "let")
+    ELEMENT_MAP(SORDERBY,   "orderby")
+    ELEMENT_MAP(SGROUP,   "group")
+    ELEMENT_MAP(SJOIN,   "join")
+    ELEMENT_MAP(SIN,   "in")
+    ELEMENT_MAP(SON,   "on")
+    ELEMENT_MAP(SEQUALS,   "equals")
+    ELEMENT_MAP(SBY,   "by")
+    ELEMENT_MAP(SINTO,   "into")
 
-  // special characters
-  ELEMENT_MAP(CONTROL_CHAR,   "escape")
-  ELEMENT_MAP(SANNOTATION,    "annotation")
-  ELEMENT_MAP(SALIGNOF,    "alignof")
+    // special characters
+    ELEMENT_MAP(CONTROL_CHAR,   "escape")
+    ELEMENT_MAP(SANNOTATION,    "annotation")
+    ELEMENT_MAP(SALIGNOF,    "alignof")
 
-  // C++11
-  ELEMENT_MAP(SALIGNAS,    "alignas")
+    // C++11
+    ELEMENT_MAP(SALIGNAS,    "alignas")
 
-  //
-  ELEMENT_MAP(SEMPTY,         "empty_stmt")
+    //
+    ELEMENT_MAP(SEMPTY,         "empty_stmt")
 }
 
 #undef ELEMENT_MAP_CALL_NAME
@@ -285,221 +285,221 @@ namespace {
 #define ELEMENT_MAP_FIRST_TYPE int
 #define ELEMENT_MAP_SECOND_TYPE int
 #define ELEMENT_MAP_DEFAULT(s) template <ELEMENT_MAP_FIRST_TYPE n> inline ELEMENT_MAP_SECOND_TYPE \
-  ELEMENT_MAP_CALL_NAME() { s }
+    ELEMENT_MAP_CALL_NAME() { s }
 
 #define ELEMENT_MAP_CALL(t) ELEMENT_MAP_CALL_NAME <srcMLParserTokenTypes::t>()
 #define ELEMENT_MAP(t, s) template <> inline ELEMENT_MAP_SECOND_TYPE ELEMENT_MAP_CALL(t) { return s; }
 
 namespace {
 
-  // default is the srcML namespace
-  ELEMENT_MAP_DEFAULT(return SRCML_SRC_NS_URI_POS;)
+    // default is the srcML namespace
+    ELEMENT_MAP_DEFAULT(return SRCML_SRC_NS_URI_POS;)
 
-  // cpp namespace
-  #define BOOST_PP_LOCAL_MACRO(n) template<> inline int element_prefix<n + TOKEN_SCPP_DIRECTIVE>() { return SRCML_CPP_NS_URI_POS; }
-  //  #define BOOST_PP_LOCAL_MACRO(n) ELEMENT_MAP(n, SRCML_CPP_NS_URI_POS),
-  #define BOOST_PP_LOCAL_LIMITS (0, TOKEN_SCPP_ENDIF - TOKEN_SCPP_DIRECTIVE)
-  #include BOOST_PP_LOCAL_ITERATE()
-  #undef BOOST_PP_LOCAL_MACRO
-  #undef BOOST_PP_LOCAL_LIMITS
+    // cpp namespace
+#define BOOST_PP_LOCAL_MACRO(n) template<> inline int element_prefix<n + TOKEN_SCPP_DIRECTIVE>() { return SRCML_CPP_NS_URI_POS; }
+    //  #define BOOST_PP_LOCAL_MACRO(n) ELEMENT_MAP(n, SRCML_CPP_NS_URI_POS),
+#define BOOST_PP_LOCAL_LIMITS (0, TOKEN_SCPP_ENDIF - TOKEN_SCPP_DIRECTIVE)
+#include BOOST_PP_LOCAL_ITERATE()
+#undef BOOST_PP_LOCAL_MACRO
+#undef BOOST_PP_LOCAL_LIMITS
 
-  // literal namespace
-  ELEMENT_MAP(SSTRING,   SRCML_EXT_LITERAL_NS_URI_POS)
-  ELEMENT_MAP(SCHAR,     SRCML_EXT_LITERAL_NS_URI_POS)
-  ELEMENT_MAP(SLITERAL,  SRCML_EXT_LITERAL_NS_URI_POS)
-  ELEMENT_MAP(SBOOLEAN,  SRCML_EXT_LITERAL_NS_URI_POS)
-  ELEMENT_MAP(SNULL,     SRCML_EXT_LITERAL_NS_URI_POS)
-  ELEMENT_MAP(SCOMPLEX,  SRCML_EXT_LITERAL_NS_URI_POS)
+    // literal namespace
+    ELEMENT_MAP(SSTRING,   SRCML_EXT_LITERAL_NS_URI_POS)
+    ELEMENT_MAP(SCHAR,     SRCML_EXT_LITERAL_NS_URI_POS)
+    ELEMENT_MAP(SLITERAL,  SRCML_EXT_LITERAL_NS_URI_POS)
+    ELEMENT_MAP(SBOOLEAN,  SRCML_EXT_LITERAL_NS_URI_POS)
+    ELEMENT_MAP(SNULL,     SRCML_EXT_LITERAL_NS_URI_POS)
+    ELEMENT_MAP(SCOMPLEX,  SRCML_EXT_LITERAL_NS_URI_POS)
 
-  // operator namespace
-  ELEMENT_MAP(SOPERATOR, SRCML_EXT_OPERATOR_NS_URI_POS)
+    // operator namespace
+    ELEMENT_MAP(SOPERATOR, SRCML_EXT_OPERATOR_NS_URI_POS)
 
-  // modifier namespace
-  ELEMENT_MAP(SMODIFIER, SRCML_EXT_MODIFIER_NS_URI_POS)
+    // modifier namespace
+    ELEMENT_MAP(SMODIFIER, SRCML_EXT_MODIFIER_NS_URI_POS)
 }
 
 // check if encoding is supported
 bool srcMLOutput::checkEncoding(const char* encoding) {
 
-  return xmlFindCharEncodingHandler(encoding) != 0;
+    return xmlFindCharEncodingHandler(encoding) != 0;
 }
 
 srcMLOutput::srcMLOutput(TokenStream* ints,
-			 const char* filename,
-			 const char* language,
-			 const char* xml_enc,
-			 OPTION_TYPE& op,
-			 const char* curi[],
-			 int ts,
+                         const char* filename,
+                         const char* language,
+                         const char* xml_enc,
+                         OPTION_TYPE& op,
+                         const char* curi[],
+                         int ts,
                          xmlBuffer* output_buffer,
                          xmlOutputBuffer * output_buf,
                          std::string * string_uri
-			 )
-  : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
-    unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), num2sprefix(string_uri)
-  , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), output_buffer(output_buffer), output_buf(output_buf)
+                         )
+    : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
+      unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), num2sprefix(string_uri)
+    , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), output_buffer(output_buffer), output_buf(output_buf)
 {
 
-  // setup attributes names for line/column position if used
-  if (isoption(OPTION_POSITION)) {
+    // setup attributes names for line/column position if used
+    if (isoption(OPTION_POSITION)) {
 
-    lineAttribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
-    lineAttribute += ":line";
+        lineAttribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
+        lineAttribute += ":line";
 
-    line2Attribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
-    line2Attribute += ":line2";
+        line2Attribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
+        line2Attribute += ":line2";
 
-    columnAttribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
-    columnAttribute += ":column";
-  }
+        columnAttribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
+        columnAttribute += ":column";
+    }
 
 }
 
 void srcMLOutput::initWriter() {
 
-  // open the output text writer stream
-  // "-" filename is standard output
-  if (output_buffer == 0 && output_buf == 0) {
-    xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
-    if (!xout) {
-        fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
-        exit(2);
+    // open the output text writer stream
+    // "-" filename is standard output
+    if (output_buffer == 0 && output_buf == 0) {
+        xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
+        if (!xout) {
+            fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
+            exit(2);
+        }
+    } else if (output_buf == 0) {
+        xout = xmlNewTextWriterMemory(output_buffer, isoption(OPTION_COMPRESSED));
+        if (!xout) {
+            fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
+            exit(2);
+        }
+    } else {
+        xout = xmlNewTextWriter(output_buf);
+        if (!xout) {
+            fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
+            exit(2);
+        }
     }
-  } else if (output_buf == 0) {
-   xout = xmlNewTextWriterMemory(output_buffer, isoption(OPTION_COMPRESSED));
-    if (!xout) {
-        fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
-        exit(2);
-    }
-  } else {
-    xout = xmlNewTextWriter(output_buf);
-    if (!xout) {
-        fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
-        exit(2);
-    }
-  }
 
 }
 
 srcMLOutput::~srcMLOutput() {
 
-  close();
+    close();
 }
 
 void srcMLOutput::close() {
 
-  if (xout) {
-    xmlTextWriterEndDocument(xout);
-    xmlFreeTextWriter(xout);
-    xout = 0;
-  }
+    if (xout) {
+        xmlTextWriterEndDocument(xout);
+        xmlFreeTextWriter(xout);
+        xout = 0;
+    }
 }
 
 bool srcMLOutput::isoption(const OPTION_TYPE& flag) const {
-  return (flag & options) > 0;
+    return (flag & options) > 0;
 }
 
 bool srcMLOutput::isoption(const OPTION_TYPE& flag, const OPTION_TYPE& options) {
-  return (flag & options) > 0;
+    return (flag & options) > 0;
 }
 
 void srcMLOutput::srcMLTextWriterStartElement(xmlTextWriter* xout, const xmlChar* s) {
 
-  xmlTextWriterStartElement(xout, s);
-  ++openelementcount;
+    xmlTextWriterStartElement(xout, s);
+    ++openelementcount;
 }
 
 void srcMLOutput::srcMLTextWriterEndElement(xmlTextWriter* xout) {
 
-  xmlTextWriterEndElement(xout);
-  --openelementcount;
+    xmlTextWriterEndElement(xout);
+    --openelementcount;
 }
 
 const char * srcMLOutput::lineAttributeValue(const antlr::RefToken& token) {
 
-  snprintf(out, 20, "%d", token->getLine());
+    snprintf(out, 20, "%d", token->getLine());
 
-  return out;
+    return out;
 }
 
 const char * srcMLOutput::columnAttributeValue(const antlr::RefToken& token) {
 
-  snprintf(out, 20, "%d", token->getColumn());
+    snprintf(out, 20, "%d", token->getColumn());
 
-  return out;
+    return out;
 }
 
 const char * srcMLOutput::lineAttributeValue(int aline) {
 
-  snprintf(out, 20, "%d", aline);
+    snprintf(out, 20, "%d", aline);
 
-  return out;
+    return out;
 }
 
 void srcMLOutput::setTokenStream(TokenStream& ints) {
 
-  input = &ints;
+    input = &ints;
 }
 
 void srcMLOutput::consume(const char* language, const char* directory, const char* filename, const char* version) {
 
-  // store attributes so that first occurrence of unit element will be correct
-  unit_dir = directory;
-  unit_filename = filename;
-  unit_version = version;
-  unit_language = language;
+    // store attributes so that first occurrence of unit element will be correct
+    unit_dir = directory;
+    unit_filename = filename;
+    unit_version = version;
+    unit_language = language;
 
-  // consume all input until EOF
-  while (consume_next() != antlr::Token::EOF_TYPE) {
+    // consume all input until EOF
+    while (consume_next() != antlr::Token::EOF_TYPE) {
 
-    // in interactive mode flush after each token is discovered
-    if (isoption(OPTION_INTERACTIVE)) {
-      xmlTextWriterFlush(xout);
+        // in interactive mode flush after each token is discovered
+        if (isoption(OPTION_INTERACTIVE)) {
+            xmlTextWriterFlush(xout);
 
-      if(isoption(OPTION_TERMINATE)) break;
- 
-   }
+            if(isoption(OPTION_TERMINATE)) break;
 
-  }
+        }
+
+    }
 }
 
 
 int srcMLOutput::consume_next() {
 
-  const antlr::RefToken& token = input->nextToken();
+    const antlr::RefToken& token = input->nextToken();
 
-  outputToken(token);
+    outputToken(token);
 
-  return token->getType();
+    return token->getType();
 }
 
 void srcMLOutput::processEscape(const antlr::RefToken& token) {
 
-  const char* localname = ElementNames[token->getType()];
-  const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
+    const char* localname = ElementNames[token->getType()];
+    const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
 
-  if (prefix[0] == 0)
-     xmlTextWriterStartElement(xout, BAD_CAST localname);
-  else
-     xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
+    if (prefix[0] == 0)
+        xmlTextWriterStartElement(xout, BAD_CAST localname);
+    else
+        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
 
-  ++openelementcount;
+    ++openelementcount;
 
-  int n = token->getText()[0];
+    int n = token->getText()[0];
 
-  char out[20 + 2 + 1];
-  snprintf(out, 22, "0x%x", n);
+    char out[20 + 2 + 1];
+    snprintf(out, 22, "0x%x", n);
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST out);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST out);
 
-  xmlTextWriterEndElement(xout);
-  --openelementcount;
+    xmlTextWriterEndElement(xout);
+    --openelementcount;
 }
 
 void srcMLOutput::outputXMLDecl() {
 
-  // issue the xml declaration, but only if we want to
-  if(depth == 0 && isoption(OPTION_XMLDECL)) xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
+    // issue the xml declaration, but only if we want to
+    if(depth == 0 && isoption(OPTION_XMLDECL)) xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 
 }
 
@@ -508,522 +508,522 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
     // figure out which namespaces are needed
     char const * const ns[] = {
 
-      // main srcML namespace declaration always used
-      (depth == 0) ? SRCML_SRC_NS_URI : 0,
+        // main srcML namespace declaration always used
+        (depth == 0) ? SRCML_SRC_NS_URI : 0,
 
-      // main cpp namespace declaration
-      isoption(OPTION_CPP, options) && (isoption(OPTION_ARCHIVE, options) == !outer) ? SRCML_CPP_NS_URI : 0,
+        // main cpp namespace declaration
+        isoption(OPTION_CPP, options) && (isoption(OPTION_ARCHIVE, options) == !outer) ? SRCML_CPP_NS_URI : 0,
 
-      // optional debugging xml namespace
-      (depth == 0) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
+        // optional debugging xml namespace
+        (depth == 0) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
 
-      // optional literal xml namespace
-      (depth == 0) && isoption(OPTION_LITERAL, options)  ? SRCML_EXT_LITERAL_NS_URI : 0,
+        // optional literal xml namespace
+        (depth == 0) && isoption(OPTION_LITERAL, options)  ? SRCML_EXT_LITERAL_NS_URI : 0,
 
-      // optional operator xml namespace
-      (depth == 0) && isoption(OPTION_OPERATOR, options) ? SRCML_EXT_OPERATOR_NS_URI : 0,
+        // optional operator xml namespace
+        (depth == 0) && isoption(OPTION_OPERATOR, options) ? SRCML_EXT_OPERATOR_NS_URI : 0,
 
-      // optional modifier xml namespace
-      (depth == 0) && isoption(OPTION_MODIFIER, options) ? SRCML_EXT_MODIFIER_NS_URI : 0,
+        // optional modifier xml namespace
+        (depth == 0) && isoption(OPTION_MODIFIER, options) ? SRCML_EXT_MODIFIER_NS_URI : 0,
 
-      // optional position xml namespace
-      (depth == 0) && isoption(OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
+        // optional position xml namespace
+        (depth == 0) && isoption(OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
 
-      // optional diff xml namespace
-      (depth == 0) && isoption(OPTION_DIFF, options)     ? SRCML_DIFF_NS_URI : 0,
+        // optional diff xml namespace
+        (depth == 0) && isoption(OPTION_DIFF, options)     ? SRCML_DIFF_NS_URI : 0,
     };
 
     // output the namespaces
     for (unsigned int i = 0; i < sizeof(ns) / sizeof(ns[0]); ++i) {
-      if (!ns[i])
-	continue;
+        if (!ns[i])
+            continue;
 
-      std::string prefix = "xmlns";
-      if (convert_num2prefix(i)[0] != '\0') {
-	prefix += ':';
-	prefix += convert_num2prefix(i);
-      }
+        std::string prefix = "xmlns";
+        if (convert_num2prefix(i)[0] != '\0') {
+            prefix += ':';
+            prefix += convert_num2prefix(i);
+        }
 
-      xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
+        xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
     }
 }
 
 void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
 
-  const char * prefix = convert_num2prefix(0);
-  std::string maintag = prefix ? prefix : "";
-  if (!maintag.empty())
-    maintag += ":";
-  maintag += "unit";
+    const char * prefix = convert_num2prefix(0);
+    std::string maintag = prefix ? prefix : "";
+    if (!maintag.empty())
+        maintag += ":";
+    maintag += "unit";
 
-  // start of main tag
-  srcMLTextWriterStartElement(xout, BAD_CAST /* type2name(SUNIT) */ maintag.c_str());
+    // start of main tag
+    srcMLTextWriterStartElement(xout, BAD_CAST /* type2name(SUNIT) */ maintag.c_str());
 
-  // outer units have namespaces
-  if (/* outer && */ isoption(OPTION_NAMESPACEDECL)) {
-    outputNamespaces(xout, options, depth, outer);
-  }
+    // outer units have namespaces
+    if (/* outer && */ isoption(OPTION_NAMESPACEDECL)) {
+        outputNamespaces(xout, options, depth, outer);
+    }
 
-  // setting up for tabs, even if not used
-  std::ostringstream stabs;
-  std::string tabattribute;
-  if (isoption(OPTION_POSITION)) {
-    stabs << tabsize;
-    tabattribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
-    tabattribute.append(":tabs");
-  }
+    // setting up for tabs, even if not used
+    std::ostringstream stabs;
+    std::string tabattribute;
+    if (isoption(OPTION_POSITION)) {
+        stabs << tabsize;
+        tabattribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
+        tabattribute.append(":tabs");
+    }
 
-  std::string soptions;
-  std::string SEP;
-  //if(isoption(OPTION_XMLDECL))        { soptions = "XMLDECL"; }
-  //if(isoption(OPTION_NAMESPACEDECL))  { if(soptions != "") SEP = ","; soptions += SEP + "NAMESPACEDECL"; }
-  if(isoption(OPTION_CPP_TEXT_ELSE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_TEXT_ELSE"; }
-  if(isoption(OPTION_CPP_MARKUP_IF0)) { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_MARKUP_IF0"; }
-  if(isoption(OPTION_EXPRESSION))     { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "EXPRESSION"; }
-  if(isoption(OPTION_NAMESPACE))      { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NAMESPACE"; }
-  if(isoption(OPTION_LINE))           { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "LINE"; }
-  if(isoption(OPTION_MACRO_PATTERN))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "MACRO_PATTERN"; }
-  if(isoption(OPTION_MACRO_LIST))     { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "MACRO_LIST"; }
-  if(isoption(OPTION_NESTIF))         { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NESTIF"; }
-  if(isoption(OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
+    std::string soptions;
+    std::string SEP;
+    //if(isoption(OPTION_XMLDECL))        { soptions = "XMLDECL"; }
+    //if(isoption(OPTION_NAMESPACEDECL))  { if(soptions != "") SEP = ","; soptions += SEP + "NAMESPACEDECL"; }
+    if(isoption(OPTION_CPP_TEXT_ELSE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_TEXT_ELSE"; }
+    if(isoption(OPTION_CPP_MARKUP_IF0)) { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_MARKUP_IF0"; }
+    if(isoption(OPTION_EXPRESSION))     { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "EXPRESSION"; }
+    if(isoption(OPTION_NAMESPACE))      { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NAMESPACE"; }
+    if(isoption(OPTION_LINE))           { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "LINE"; }
+    if(isoption(OPTION_MACRO_PATTERN))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "MACRO_PATTERN"; }
+    if(isoption(OPTION_MACRO_LIST))     { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "MACRO_LIST"; }
+    if(isoption(OPTION_NESTIF))         { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NESTIF"; }
+    if(isoption(OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
 
-  std::string stab = stabs.str();
+    std::string stab = stabs.str();
 
-  // list of attributes
-  const char* const attrs[][2] = {
+    // list of attributes
+    const char* const attrs[][2] = {
 
-    // version attribute
-    { UNIT_ATTRIBUTE_REVISION, isoption(OPTION_REVISION) ? srcml_version() : 0 },
+        // version attribute
+        { UNIT_ATTRIBUTE_REVISION, isoption(OPTION_REVISION) ? srcml_version() : 0 },
 
-    // language attribute
-    { UNIT_ATTRIBUTE_LANGUAGE, language },
+        // language attribute
+        { UNIT_ATTRIBUTE_LANGUAGE, language },
 
-    // directory attribute
-    { UNIT_ATTRIBUTE_DIRECTORY, dir },
+        // directory attribute
+        { UNIT_ATTRIBUTE_DIRECTORY, dir },
 
-    // filename attribute
-    { UNIT_ATTRIBUTE_FILENAME, filename },
+        // filename attribute
+        { UNIT_ATTRIBUTE_FILENAME, filename },
 
-    // version attribute
-    { UNIT_ATTRIBUTE_VERSION, version },
+        // version attribute
+        { UNIT_ATTRIBUTE_VERSION, version },
 
-    // position tab setting
-    { tabattribute.c_str(), isoption(OPTION_POSITION) ? stab.c_str() : 0 },
+        // position tab setting
+        { tabattribute.c_str(), isoption(OPTION_POSITION) ? stab.c_str() : 0 },
 
-    { UNIT_ATTRIBUTE_OPTIONS,  (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.c_str() : 0 },
+        { UNIT_ATTRIBUTE_OPTIONS,  (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.c_str() : 0 },
 
-  };
+    };
 
-  // output attributes
-  for (unsigned int i = 0; i < sizeof(attrs) / sizeof(attrs[0]); ++i) {
-    if (!attrs[i][1])
-      continue;
+    // output attributes
+    for (unsigned int i = 0; i < sizeof(attrs) / sizeof(attrs[0]); ++i) {
+        if (!attrs[i][1])
+            continue;
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
-  }
+        xmlTextWriterWriteAttribute(xout, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
+    }
 
-  if(outer) outputMacroList();
+    if(outer) outputMacroList();
 
-  // leave space for nested unit
-  if (outer && isoption(OPTION_ARCHIVE)) {
+    // leave space for nested unit
+    if (outer && isoption(OPTION_ARCHIVE)) {
 
-    processText("\n\n", 2);
+        processText("\n\n", 2);
 
-  }
+    }
 
-  ++depth;
+    ++depth;
 }
 
 void srcMLOutput::setMacroList(std::vector<std::string> & list) {
-  user_macro_list = list;
+    user_macro_list = list;
 }
 
 void srcMLOutput::outputMacroList() {
 
-  if(!isoption(OPTION_MACRO_LIST)) return;
+    if(!isoption(OPTION_MACRO_LIST)) return;
 
-  for(std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); i += 2) {
+    for(std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); i += 2) {
 
-    xmlTextWriterStartElement(xout, BAD_CAST "macro-list");
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "token", BAD_CAST user_macro_list[i].c_str());
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST user_macro_list[i + 1].c_str());
-    xmlTextWriterEndElement(xout);
+        xmlTextWriterStartElement(xout, BAD_CAST "macro-list");
+        xmlTextWriterWriteAttribute(xout, BAD_CAST "token", BAD_CAST user_macro_list[i].c_str());
+        xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST user_macro_list[i + 1].c_str());
+        xmlTextWriterEndElement(xout);
 
-  }
+    }
 
 }
 
 void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
-  if (isstart(token)) {
+    if (isstart(token)) {
 
-    // keep track of number of open elements
-    openelementcount = 0;
-    startUnit(unit_language, unit_dir, unit_filename, unit_version, !isoption(OPTION_ARCHIVE));
+        // keep track of number of open elements
+        openelementcount = 0;
+        startUnit(unit_language, unit_dir, unit_filename, unit_version, !isoption(OPTION_ARCHIVE));
 
-  } else {
+    } else {
 
-    // end anything still open, including the unit
-    while (openelementcount > 0)
-      srcMLTextWriterEndElement(xout);
+        // end anything still open, including the unit
+        while (openelementcount > 0)
+            srcMLTextWriterEndElement(xout);
 
-    // leave a blank line before next nested unit even the last one
-    if (isoption(OPTION_ARCHIVE))
-      processText("\n\n", 2);
-  }
+        // leave a blank line before next nested unit even the last one
+        if (isoption(OPTION_ARCHIVE))
+            processText("\n\n", 2);
+    }
 }
 
 // output text
 void srcMLOutput::processText(const std::string& str) {
 
-  xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.data(), (int)str.size());
+    xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.data(), (int)str.size());
 }
 
 void srcMLOutput::processText(const char* s, int size) {
 
-  xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) s, size);
+    xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) s, size);
 }
 
 void srcMLOutput::processText(const antlr::RefToken& token) {
 
-  processText(token->getText());
+    processText(token->getText());
 }
 
 void srcMLOutput::processTextPosition(const antlr::RefToken& token) {
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token));
+    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token));
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
+    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
 
-  processText(token->getText());
+    processText(token->getText());
 }
 
 void srcMLOutput::processTextPositionLine(const antlr::RefToken& token) {
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token->getLine() & 0xFFFF));
-  xmlTextWriterWriteAttribute(xout, BAD_CAST line2Attribute.c_str(), BAD_CAST lineAttributeValue(token->getLine() >> 16));
+    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token->getLine() & 0xFFFF));
+    xmlTextWriterWriteAttribute(xout, BAD_CAST line2Attribute.c_str(), BAD_CAST lineAttributeValue(token->getLine() >> 16));
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
+    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
 
-  processText(token->getText());
+    processText(token->getText());
 }
 
 void srcMLOutput::processAccess(const antlr::RefToken& token) {
-  static const char* type_default = "default";
+    static const char* type_default = "default";
 
-  const char* localname = ElementNames[token->getType()];
-  const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
+    const char* localname = ElementNames[token->getType()];
+    const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
 
-  if (!isstart(token)) {
-    processToken(token);
-    return;
-  }
+    if (!isstart(token)) {
+        processToken(token);
+        return;
+    }
 
-  // start the element
-  if (prefix[0] == 0)
-     xmlTextWriterStartElement(xout, BAD_CAST localname);
-  else
-     xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
+    // start the element
+    if (prefix[0] == 0)
+        xmlTextWriterStartElement(xout, BAD_CAST localname);
+    else
+        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
 
-  ++openelementcount;
+    ++openelementcount;
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST type_default);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST type_default);
 
-  // end the element right away if empty
-  if (isempty(token)) {
-    xmlTextWriterEndElement(xout);
-    --openelementcount;
-  }
+    // end the element right away if empty
+    if (isempty(token)) {
+        xmlTextWriterEndElement(xout);
+        --openelementcount;
+    }
 }
 
 void srcMLOutput::processToken(const antlr::RefToken& token) {
 
-  const char* localname = ElementNames[token->getType()];
-  const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
+    const char* localname = ElementNames[token->getType()];
+    const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
 
-  if (localname[0] == 0)
-    return;
+    if (localname[0] == 0)
+        return;
 
-  if (isstart(token) || isempty(token)) {
-     if (prefix[0] == 0)
-         xmlTextWriterStartElement(xout, BAD_CAST localname);
-     else
-         xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
-    ++openelementcount;
-  }
+    if (isstart(token) || isempty(token)) {
+        if (prefix[0] == 0)
+            xmlTextWriterStartElement(xout, BAD_CAST localname);
+        else
+            xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
+        ++openelementcount;
+    }
 
-  if (!isstart(token) || isempty(token)) {
-    xmlTextWriterEndElement(xout);
-    --openelementcount;
-  }
+    if (!isstart(token) || isempty(token)) {
+        xmlTextWriterEndElement(xout);
+        --openelementcount;
+    }
 }
 
 void srcMLOutput::processJavadocCommentStart(const antlr::RefToken& token) {
-  static const char* BLOCK_COMMENT_ATTR = "block";
-  static const char* JAVADOC_COMMENT_ATTR = "javadoc";
+    static const char* BLOCK_COMMENT_ATTR = "block";
+    static const char* JAVADOC_COMMENT_ATTR = "javadoc";
 
-  const char* localname = ElementNames[token->getType()];
-  const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
+    const char* localname = ElementNames[token->getType()];
+    const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
 
-  if (prefix[0] == 0)
-     xmlTextWriterStartElement(xout, BAD_CAST localname);
-  else
-     xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
+    if (prefix[0] == 0)
+        xmlTextWriterStartElement(xout, BAD_CAST localname);
+    else
+        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
 
-  ++openelementcount;
+    ++openelementcount;
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "format", BAD_CAST JAVADOC_COMMENT_ATTR);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "format", BAD_CAST JAVADOC_COMMENT_ATTR);
 
-  ((*this).*num2process[2])(token);
+    ((*this).*num2process[2])(token);
 }
 
 void srcMLOutput::processDoxygenCommentStart(const antlr::RefToken& token) {
-  static const char* BLOCK_COMMENT_ATTR = "block";
-  static const char* DOXYGEN_COMMENT_ATTR = "doxygen";
+    static const char* BLOCK_COMMENT_ATTR = "block";
+    static const char* DOXYGEN_COMMENT_ATTR = "doxygen";
 
-  const char* localname = ElementNames[token->getType()];
-  const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
+    const char* localname = ElementNames[token->getType()];
+    const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
 
-  if (prefix[0] == 0)
-     xmlTextWriterStartElement(xout, BAD_CAST localname);
-  else
-     xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
+    if (prefix[0] == 0)
+        xmlTextWriterStartElement(xout, BAD_CAST localname);
+    else
+        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
 
-  ++openelementcount;
+    ++openelementcount;
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "format", BAD_CAST DOXYGEN_COMMENT_ATTR);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "format", BAD_CAST DOXYGEN_COMMENT_ATTR);
 
-  ((*this).*num2process[2])(token);
+    ((*this).*num2process[2])(token);
 }
 
 void srcMLOutput::processLineDoxygenCommentStart(const antlr::RefToken& token) {
-  static const char* LINE_COMMENT_ATTR = "line";
-  static const char* DOXYGEN_COMMENT_ATTR = "doxygen";
+    static const char* LINE_COMMENT_ATTR = "line";
+    static const char* DOXYGEN_COMMENT_ATTR = "doxygen";
 
-  const char* localname = ElementNames[token->getType()];
-  const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
+    const char* localname = ElementNames[token->getType()];
+    const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
 
-  if (prefix[0] == 0)
-     xmlTextWriterStartElement(xout, BAD_CAST localname);
-  else
-     xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
+    if (prefix[0] == 0)
+        xmlTextWriterStartElement(xout, BAD_CAST localname);
+    else
+        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
 
-  ++openelementcount;
+    ++openelementcount;
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST LINE_COMMENT_ATTR);
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "format", BAD_CAST DOXYGEN_COMMENT_ATTR);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST LINE_COMMENT_ATTR);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "format", BAD_CAST DOXYGEN_COMMENT_ATTR);
 
-  ((*this).*num2process[2])(token);
+    ((*this).*num2process[2])(token);
 }
 
 void srcMLOutput::processBlockCommentStart(const antlr::RefToken& token) {
-  static const char* BLOCK_COMMENT_ATTR = "block";
+    static const char* BLOCK_COMMENT_ATTR = "block";
 
-  const char* localname = ElementNames[token->getType()];
-  const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
+    const char* localname = ElementNames[token->getType()];
+    const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
 
-  if (prefix[0] == 0)
-     xmlTextWriterStartElement(xout, BAD_CAST localname);
-  else
-     xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
+    if (prefix[0] == 0)
+        xmlTextWriterStartElement(xout, BAD_CAST localname);
+    else
+        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
 
-  ++openelementcount;
+    ++openelementcount;
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
 
-  ((*this).*num2process[2])(token);
+    ((*this).*num2process[2])(token);
 }
 
 void srcMLOutput::processLineCommentStart(const antlr::RefToken& token) {
-  static const char* const LINE_COMMENT_ATTR = "line";
+    static const char* const LINE_COMMENT_ATTR = "line";
 
-  const char* localname = ElementNames[token->getType()];
-  const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
+    const char* localname = ElementNames[token->getType()];
+    const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
 
-  if (prefix[0] == 0)
-     xmlTextWriterStartElement(xout, BAD_CAST localname);
-  else
-     xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
+    if (prefix[0] == 0)
+        xmlTextWriterStartElement(xout, BAD_CAST localname);
+    else
+        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
 
-  ++openelementcount;
+    ++openelementcount;
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST LINE_COMMENT_ATTR);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST LINE_COMMENT_ATTR);
 
-  ((*this).*num2process[2])(token);
+    ((*this).*num2process[2])(token);
 }
 
 void srcMLOutput::processEndLineToken(const antlr::RefToken& token) {
 
-  std::string::size_type size = token->getText().size();
+    std::string::size_type size = token->getText().size();
 
-  bool output = false;
-  if (size > 1 || token->getText()[0] != '\n') {
-    processText(token);
-    output = true;
-  }
+    bool output = false;
+    if (size > 1 || token->getText()[0] != '\n') {
+        processText(token);
+        output = true;
+    }
 
 
-  xmlTextWriterEndElement(xout);
-  --openelementcount;
+    xmlTextWriterEndElement(xout);
+    --openelementcount;
 
-  if (size == 1 && !output)
-    processText(token);
+    if (size == 1 && !output)
+        processText(token);
 }
 
 void srcMLOutput::processEndBlockToken(const antlr::RefToken& token) {
 
-  processText(token);
+    processText(token);
 
-  xmlTextWriterEndElement(xout);
-  --openelementcount;
+    xmlTextWriterEndElement(xout);
+    --openelementcount;
 }
 
 void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr_name, const char* attr_value) {
 
-  const char* localname = ElementNames[token->getType()];
-  const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
+    const char* localname = ElementNames[token->getType()];
+    const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
 
-  if (isstart(token)) {
-      if (prefix[0] == 0)
-        xmlTextWriterStartElement(xout, BAD_CAST localname);
-      else
-        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
+    if (isstart(token)) {
+        if (prefix[0] == 0)
+            xmlTextWriterStartElement(xout, BAD_CAST localname);
+        else
+            xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
 
-      ++openelementcount;
-      xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name, BAD_CAST attr_value);
-  } else {
-      xmlTextWriterEndElement(xout);
-      --openelementcount;
-  }
+        ++openelementcount;
+        xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name, BAD_CAST attr_value);
+    } else {
+        xmlTextWriterEndElement(xout);
+        --openelementcount;
+    }
 }
 
 void srcMLOutput::processString(const antlr::RefToken& token) {
 
-  processOptional(token, "type", "string");
+    processOptional(token, "type", "string");
 }
 
 void srcMLOutput::processChar(const antlr::RefToken& token) {
 
-  processOptional(token, "type", "char");
+    processOptional(token, "type", "char");
 }
 
 void srcMLOutput::processLiteral(const antlr::RefToken& token) {
 
-  processOptional(token, "type", "number");
+    processOptional(token, "type", "number");
 }
 
 void srcMLOutput::processBoolean(const antlr::RefToken& token) {
 
-  processOptional(token, "type", "boolean");
+    processOptional(token, "type", "boolean");
 }
 
 void srcMLOutput::processNull(const antlr::RefToken& token) {
 
-  processOptional(token, "type", "null");
+    processOptional(token, "type", "null");
 }
 
 
 
 void srcMLOutput::processComplex(const antlr::RefToken& token) {
 
-  processOptional(token, "type", "complex");
+    processOptional(token, "type", "complex");
 }
 
 #if DEBUG
 void srcMLOutput::processMarker(const antlr::RefToken& token) {
 
-  const char* localname = ElementNames[token->getType()];
-  const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
+    const char* localname = ElementNames[token->getType()];
+    const char* prefix = convert_num2prefix((int)ElementPrefix[token->getType()]);
 
-  if (localname[0] == 0)
-    return;
+    if (localname[0] == 0)
+        return;
 
-  if (prefix[0] == 0)
-     xmlTextWriterStartElement(xout, BAD_CAST localname);
-  else
-     xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
+    if (prefix[0] == 0)
+        xmlTextWriterStartElement(xout, BAD_CAST localname);
+    else
+        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
 
-  ++openelementcount;
+    ++openelementcount;
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "location", BAD_CAST token->getText().c_str());
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "location", BAD_CAST token->getText().c_str());
 
-  xmlTextWriterEndElement(xout);
-  --openelementcount;
+    xmlTextWriterEndElement(xout);
+    --openelementcount;
 }
 #endif
 
 void srcMLOutput::processInterface(const antlr::RefToken& token) {
 
-  processOptional(token, "type", "interface");
+    processOptional(token, "type", "interface");
 }
 
 inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 
-  // use the array of pointers to methods to call the correct output routine
-  ((*this).*(num2process[(int)process_table[token->getType()]]))(token);
+    // use the array of pointers to methods to call the correct output routine
+    ((*this).*(num2process[(int)process_table[token->getType()]]))(token);
 }
 
 // element names array
 const char* const srcMLOutput::ElementNames[] = {
 
-  // fill the array in order of token numbers
-  #define BOOST_PP_LOCAL_MACRO(n)   element_name<n>(),
-  #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
-  #include BOOST_PP_LOCAL_ITERATE()
-  #undef BOOST_PP_LOCAL_MACRO
-  #undef BOOST_PP_LOCAL_LIMITS
+    // fill the array in order of token numbers
+#define BOOST_PP_LOCAL_MACRO(n)   element_name<n>(),
+#define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
+#include BOOST_PP_LOCAL_ITERATE()
+#undef BOOST_PP_LOCAL_MACRO
+#undef BOOST_PP_LOCAL_LIMITS
 
-  // fill the array in order of token numbers
-  #define BOOST_PP_LOCAL_MACRO(n)   element_name<256 + 1 + n>(),
-  #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 256)
-  #include BOOST_PP_LOCAL_ITERATE()
-  #undef BOOST_PP_LOCAL_MACRO
-  #undef BOOST_PP_LOCAL_LIMITS
+    // fill the array in order of token numbers
+#define BOOST_PP_LOCAL_MACRO(n)   element_name<256 + 1 + n>(),
+#define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 256)
+#include BOOST_PP_LOCAL_ITERATE()
+#undef BOOST_PP_LOCAL_MACRO
+#undef BOOST_PP_LOCAL_LIMITS
 };
 
 // element prefix number
 int srcMLOutput::ElementPrefix[] = {
 
-  // fill the array with the prefixes
-  #define BOOST_PP_LOCAL_MACRO(n)   element_prefix<n>(),
-  #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
-  #include BOOST_PP_LOCAL_ITERATE()
-  #undef BOOST_PP_LOCAL_MACRO
-  #undef BOOST_PP_LOCAL_LIMITS
+    // fill the array with the prefixes
+#define BOOST_PP_LOCAL_MACRO(n)   element_prefix<n>(),
+#define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
+#include BOOST_PP_LOCAL_ITERATE()
+#undef BOOST_PP_LOCAL_MACRO
+#undef BOOST_PP_LOCAL_LIMITS
 
-  // fill the array in order of token numbers
-  #define BOOST_PP_LOCAL_MACRO(n)   element_prefix<256 + 1 + n>(),
-  #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 256)
-  #include BOOST_PP_LOCAL_ITERATE()
-  #undef BOOST_PP_LOCAL_MACRO
-  #undef BOOST_PP_LOCAL_LIMITS
+    // fill the array in order of token numbers
+#define BOOST_PP_LOCAL_MACRO(n)   element_prefix<256 + 1 + n>(),
+#define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 256)
+#include BOOST_PP_LOCAL_ITERATE()
+#undef BOOST_PP_LOCAL_MACRO
+#undef BOOST_PP_LOCAL_LIMITS
 };
 
 xmlTextWriter * srcMLOutput::getWriter() {
 
-  return xout;
+    return xout;
 }
 
 void srcMLOutput::setWriter(xmlTextWriter * writer) {
 
-  xout = writer;
+    xout = writer;
 }
 
 int srcMLOutput::getDepth() {
 
-  return depth;
+    return depth;
 }
 
 void srcMLOutput::setDepth(int thedepth) {
 
-  depth = thedepth;
+    depth = thedepth;
 }
 
 const char * srcMLOutput::convert_num2prefix(unsigned int i) const {
 
-  if(num2sprefix) return num2sprefix[i].c_str();
-  else return num2prefix[i];
+    if(num2sprefix) return num2sprefix[i].c_str();
+    else return num2prefix[i];
 
 }

@@ -56,7 +56,7 @@ public:
                     const char* uri[],
                     int tabsize,
                     std::string * suri = 0
-        );
+                    );
 
     // constructor
     srcMLTranslator(int language,
@@ -69,7 +69,7 @@ public:
                     const char* version,
                     std::string * uri,
                     int tabsize
-        );
+                    );
 
     // constructor
     srcMLTranslator(int language,
@@ -82,7 +82,7 @@ public:
                     const char* version,
                     const char* uri[],
                     int tabsize
-        );
+                    );
 
     // constructor
     srcMLTranslator(int language,
@@ -96,7 +96,7 @@ public:
                     const char* uri[],
                     int tabsize,
                     std::string * suri = 0
-        );
+                    );
 
     void setMacroList(std::vector<std::string> & list);
 
@@ -110,13 +110,13 @@ public:
                    const char* unit_filename = 0,
                    const char* unit_version = 0,
                    int language = 0);
-  void translate_separate(const char* unit_directory,
-                          const char* unit_filename, const char* unit_version,
-                          int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer,
-			  const char * src_encoding,
-			  OPTION_TYPE translation_options);
+    void translate_separate(const char* unit_directory,
+                            const char* unit_filename, const char* unit_version,
+                            int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer,
+                            const char * src_encoding,
+                            OPTION_TYPE translation_options);
 
-  void add_unit(const char* xml);
+    void add_unit(const char* xml);
 
     // destructor
     ~srcMLTranslator();

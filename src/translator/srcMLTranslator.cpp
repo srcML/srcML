@@ -30,13 +30,13 @@
 // constructor
 srcMLTranslator::srcMLTranslator(int language, const char* srcml_filename, OPTION_TYPE& op) : output_buffer(0), str_buffer(0), size(0) {
 
-  translator = new srcMLTranslatorCore(language, srcml_filename, op);
+    translator = new srcMLTranslatorCore(language, srcml_filename, op);
 }
 
 // constructor
 srcMLTranslator::srcMLTranslator(int language, xmlBuffer* output_buffer, OPTION_TYPE& op) : output_buffer(0), str_buffer(0), size(0) {
 
-  translator = new srcMLTranslatorCore(language, output_buffer, op);
+    translator = new srcMLTranslatorCore(language, output_buffer, op);
 }
 
 // constructor
@@ -53,7 +53,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  std::string * suri
                                  ) : output_buffer(0), str_buffer(0), size(0) {
 
-  translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, srcml_filename, op, directory, filename, version, uri, tabsize, suri);
+    translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, srcml_filename, op, directory, filename, version, uri, tabsize, suri);
 }
 
 // constructor
@@ -69,8 +69,8 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  int tabsize                  // size of tabs
                                  ) : str_buffer(str_buf), size(0) {
 
-  output_buffer = xmlBufferCreate();
-  translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buffer, op, directory, filename, version, 0, tabsize, uri);
+    output_buffer = xmlBufferCreate();
+    translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buffer, op, directory, filename, version, 0, tabsize, uri);
 }
 
 // constructor
@@ -86,7 +86,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  int tabsize                  // size of tabs
                                  ) : output_buffer(0), str_buffer(0), size(0) {
 
-  translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buffer, op, directory, filename, version, uri, tabsize);
+    translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buffer, op, directory, filename, version, uri, tabsize);
 }
 
 // constructor
@@ -103,29 +103,29 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  std::string * suri
                                  ) : output_buffer(0), str_buffer(0), size(0) {
 
-  translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buf, op, directory, filename, version, uri, tabsize, suri);
+    translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buf, op, directory, filename, version, uri, tabsize, suri);
 }
 
 void srcMLTranslator::setMacroList(std::vector<std::string> & list) {
-  translator->setMacroList(list);
+    translator->setMacroList(list);
 }
 
 // translate from input stream to output stream
 void* srcMLTranslator::setInput(const char* path) {
 
-  return translator->setInput(path);
+    return translator->setInput(path);
 }
 
 // translate from input stream to output stream
 void* srcMLTranslator::setInput(xmlParserInputBufferPtr input) {
 
-  return translator->setInput(input);
+    return translator->setInput(input);
 }
 
 // close the output
 void srcMLTranslator::close() {
 
-  translator->close();
+    translator->close();
 }
 
 // translate from input stream to output stream
@@ -133,39 +133,39 @@ void srcMLTranslator::translate(const char* unit_directory,
                                 const char* unit_filename, const char* unit_version,
                                 int language) {
 
-  translator->translate(unit_directory, unit_filename, unit_version, language);
+    translator->translate(unit_directory, unit_filename, unit_version, language);
 }
 
 // translate from input stream to output stream separate of current output stream
 void srcMLTranslator::translate_separate(const char* unit_directory,
-					 const char* unit_filename, const char* unit_version,
-					 int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer,
-					 const char * src_encoding,
-					 OPTION_TYPE translation_options) {
-  
-  translator->translate_separate(unit_directory, unit_filename, unit_version, language, input, output_buffer,
-				 src_encoding, translation_options);
+                                         const char* unit_filename, const char* unit_version,
+                                         int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer,
+                                         const char * src_encoding,
+                                         OPTION_TYPE translation_options) {
+
+    translator->translate_separate(unit_directory, unit_filename, unit_version, language, input, output_buffer,
+                                   src_encoding, translation_options);
 }
 
 void srcMLTranslator::add_unit(const char* xml) {
 
-  translator->add_unit(xml);
+    translator->add_unit(xml);
 }
 
 // destructor
 srcMLTranslator::~srcMLTranslator() {
 
-  delete translator;
+    delete translator;
 
-  if(str_buffer && output_buffer->use) {
+    if(str_buffer && output_buffer->use) {
 
-    (*str_buffer) = strdup((const char *)output_buffer->content);
-    if(size && *str_buffer) *size = (int)output_buffer->use;
+        (*str_buffer) = strdup((const char *)output_buffer->content);
+        if(size && *str_buffer) *size = (int)output_buffer->use;
 
-  }
+    }
 
 
-  if(output_buffer)
-    xmlBufferFree(output_buffer);
+    if(output_buffer)
+        xmlBufferFree(output_buffer);
 }
 

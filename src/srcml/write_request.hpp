@@ -22,7 +22,7 @@
 
 /*
   writeRequest contains a collection of information and raw data to be
-    queued up for libsrcml processing
+  queued up for libsrcml processing
 */
 
 #ifndef WRITE_REQUEST_HPP

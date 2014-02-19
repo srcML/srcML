@@ -48,47 +48,47 @@ class srcMLSAX2Reader {
 
 private :
 
-  /** control for sax parsing */
-  srcMLControlHandler control;
-  /** boolean for marking if read root */
-  bool read_root;
-  /** handler with hooks for sax parsing */
-  srcMLReaderHandler handler;
+    /** control for sax parsing */
+    srcMLControlHandler control;
+    /** boolean for marking if read root */
+    bool read_root;
+    /** handler with hooks for sax parsing */
+    srcMLReaderHandler handler;
 
-  /** thread running execution */
-  boost::thread * thread;
+    /** thread running execution */
+    boost::thread * thread;
 
 public :
 
-  // constructors
-  srcMLSAX2Reader(const char * filename);
-  srcMLSAX2Reader(xmlParserInputBufferPtr input);
+    // constructors
+    srcMLSAX2Reader(const char * filename);
+    srcMLSAX2Reader(xmlParserInputBufferPtr input);
 
-  // destructors
-  ~srcMLSAX2Reader();
+    // destructors
+    ~srcMLSAX2Reader();
 
-  // read attribute and namespace information from root unit.  Does not advance read.
-  int readRootUnitAttributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
-                             boost::optional<std::string> & directory, boost::optional<std::string> & version,
-                             std::vector<std::string> & attributes,
-                             std::vector<std::string> & prefixes,
-                             std::vector<std::string> & namespaces,
-                             OPTION_TYPE & options,
-                             int & tabstop,
-			     std::vector<std::string> & user_macro_list);
+    // read attribute and namespace information from root unit.  Does not advance read.
+    int readRootUnitAttributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
+                               boost::optional<std::string> & directory, boost::optional<std::string> & version,
+                               std::vector<std::string> & attributes,
+                               std::vector<std::string> & prefixes,
+                               std::vector<std::string> & namespaces,
+                               OPTION_TYPE & options,
+                               int & tabstop,
+                               std::vector<std::string> & user_macro_list);
 
 
-  /* finds next unit tag if not current unit and sets attributes.  Consumes unit.
-     Unit is still avaible for readsrcML or read.  But not readUnitAttributes.
-   */
-  int readUnitAttributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
-                         boost::optional<std::string> & directory, boost::optional<std::string> & version);
+    /* finds next unit tag if not current unit and sets attributes.  Consumes unit.
+       Unit is still avaible for readsrcML or read.  But not readUnitAttributes.
+    */
+    int readUnitAttributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
+                           boost::optional<std::string> & directory, boost::optional<std::string> & version);
 
-  // reads the next unit and returns it in parameter as srcML
-  int readsrcML(boost::optional<std::string> & unit);
+    // reads the next unit and returns it in parameter as srcML
+    int readsrcML(boost::optional<std::string> & unit);
 
-  // reads the next unit and returns it in parameter as src
-  int readsrc(xmlOutputBufferPtr output_buffer);
+    // reads the next unit and returns it in parameter as src
+    int readsrc(xmlOutputBufferPtr output_buffer);
 
 };
 

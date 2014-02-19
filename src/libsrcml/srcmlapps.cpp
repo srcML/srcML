@@ -32,45 +32,45 @@
 
 void checkargisoption(const char* name, const char* opt, const char* optarg, int optind, int lastoptind) {
 
-      // check for missing argument confused by an argument that looks like an option
-      if (optind == (lastoptind + 2) && argisoption(optarg)) {
-	fprintf(stderr, "%s: Argument '%s' to option '%s' appears to be another option.\n"
-		"If this is correct, use the direct form '%s=%s\n",
-		name, optarg, opt, opt, optarg);
-	exit(1);
-      }
+    // check for missing argument confused by an argument that looks like an option
+    if (optind == (lastoptind + 2) && argisoption(optarg)) {
+        fprintf(stderr, "%s: Argument '%s' to option '%s' appears to be another option.\n"
+                "If this is correct, use the direct form '%s=%s\n",
+                name, optarg, opt, opt, optarg);
+        exit(1);
+    }
 }
 
 void checkargisnonempty(const char* name, const char* opt, const char* optarg, int optind, int lastoptind) {
 
-      // check for missing argument confused by an argument that looks like an option
-  if (optind == (lastoptind + 1) && strcmp(optarg, "") == 0) {
-    fprintf(stderr, "%s: Empty argument to option '%s'.\n",
-	    name, opt);
-    exit(1);
-  }
+    // check for missing argument confused by an argument that looks like an option
+    if (optind == (lastoptind + 1) && strcmp(optarg, "") == 0) {
+        fprintf(stderr, "%s: Empty argument to option '%s'.\n",
+                name, opt);
+        exit(1);
+    }
 }
 
 const char* clean_filename(const char* in) {
 
-  const char* pos = in;
-  size_t len = strlen(in);
+    const char* pos = in;
+    size_t len = strlen(in);
 
-  while (len > 2 && pos[0] == '.' && pos[1] == PATH_SEPARATOR) {
-    pos += 2;
-    len -= 2;
-  }
+    while (len > 2 && pos[0] == '.' && pos[1] == PATH_SEPARATOR) {
+        pos += 2;
+        len -= 2;
+    }
 
-  while (len > 3 && pos[0] == '.' && pos[1] == '.' && pos[2] == PATH_SEPARATOR) {
-    pos += 3;
-    len -= 3;
-  }
+    while (len > 3 && pos[0] == '.' && pos[1] == '.' && pos[2] == PATH_SEPARATOR) {
+        pos += 3;
+        len -= 3;
+    }
 
-  return pos;
+    return pos;
 }
 
 const char * srcml_version() {
 
-  return REVISION;
+    return REVISION;
 
 }
