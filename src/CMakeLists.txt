@@ -37,7 +37,7 @@ get_property(LIBARCHIVE_LIBS  GLOBAL PROPERTY LIBARCHIVE_LIBS)
 # 
 macro(buildLib LIB_NAME LIB_TYPE)
 
-    add_library(${LIB_NAME} ${LIB_TYPE} $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:libsrcml> oldclient/srcmlapps.cpp
+    add_library(${LIB_NAME} ${LIB_TYPE} $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:libsrcml>
      ${SAX2FRAMEWORK_SOURCE} ${SAX2FRAMEWORK_HEADERS})
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
