@@ -23,7 +23,7 @@
 #include <srcMLSAX2Reader.hpp>
 #include <srcml.h>
 
-#include <ExtractUnitsSrc.hpp>
+#include <SAX2ExtractUnitsSrc.hpp>
 #include <sstream>
 #include <XPathQueryUnits.hpp>
 #include <XSLTUnits.hpp>
@@ -81,44 +81,14 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
  */
 int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, OPTION_TYPE options, int unit) {
 
-    // setup parser
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateFilename(ifilename, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
-    if(!input) return SRCML_STATUS_ERROR;
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(ofilename, xmlFindCharEncodingHandler(encoding), options & SRCML_OPTION_COMPRESS);
 
-    xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input);
-    if(ctxt == NULL) {
+    srcMLSAX2Reader reader(ifilename);
+    reader.readsrc(output_buffer);
 
-        xmlFreeParserInputBuffer(input);
-        return SRCML_STATUS_ERROR;
+    xmlOutputBufferClose(output_buffer);
 
-    }
-
-    // setup sax handler
-    xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
-    xmlSAXHandlerPtr sax_save = ctxt->sax;
-    ctxt->sax = &sax;
-
-    // setup process handling
-    ExtractUnitsSrc process(0, ofilename, 0);
-
-    // setup sax handling state
-    SAX2ExtractUnitsSrc state(&process, &options, unit, "");
-    ctxt->_private = &state;
-
-    // process the document
-    int status = srcMLParseDocument(ctxt, true);
-
-    // local variable, do not want xmlFreeParserCtxt to free
-    ctxt->sax = sax_save;
-
-    // all done with parsing
-    xmlFreeParserCtxt(ctxt);
-
-    // make sure we did not end early
-    if (state.unit && state.count < state.unit)
-        throw OutOfRangeUnitError(state.count);
-
-    return status;
+    return SRCML_STATUS_OK;
 
 }
 
