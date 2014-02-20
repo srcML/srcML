@@ -69,6 +69,9 @@ private :
     /** indicate if we need to wait on the root */
     bool wait_root;
 
+    /** skip internal unit elements */
+    bool skip;
+
     /** save meta tags to use when non-archive write unit */
     std::vector<srcMLElement> * meta_tags;
 
@@ -82,7 +85,9 @@ public :
      *
      * Constructor.  Sets up mutex, conditions and state.
      */
-    srcMLReaderHandler() : unit(0), output_buffer(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), collect_src(false), terminate(false), is_empty(false), wait_root(true) {
+  srcMLReaderHandler() : unit(0), output_buffer(0), is_done(false), read_root(false),
+			 collect_unit_attributes(false), collect_srcml(false), collect_src(false),
+			 terminate(false), is_empty(false), wait_root(true), skip(false) {
 
         archive = srcml_create_archive();
         archive->prefixes.clear();
