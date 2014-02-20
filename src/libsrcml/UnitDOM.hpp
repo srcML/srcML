@@ -170,6 +170,13 @@ public :
         xmlSAX2Characters(ctxt, ch, len);
     }
 
+    // characters in unit tree
+    virtual void charactersRoot(const xmlChar* ch, int len) {
+
+      if(isoption(options, OPTION_APPLY_ROOT))
+        xmlSAX2Characters(ctxt, ch, len);
+    }
+
     // CDATA block in unit tree
     virtual void cdatablock(const xmlChar* ch, int len) {
 
