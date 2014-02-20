@@ -93,7 +93,7 @@ public :
     virtual bool apply(void *ctx) {
 
         xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+        SAX2srcMLHandler* pstate = (SAX2srcMLHandler*) ctxt->_private;
 
         xmlXPathContextPtr context = xmlXPathNewContext(ctxt->myDoc);
         // TODO:  Detect error
@@ -182,8 +182,6 @@ public :
 #endif
 #endif
 
-        isarchive = pstate->isarchive;
-
         // evaluate the xpath
         xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
         if (result_nodes == 0) {
@@ -214,11 +212,12 @@ public :
                 // note that this has to be ended somewhere
                 xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
                                               pstate->root.nb_namespaces, pstate->root.namespaces,
-                                              pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->isarchive ? pstate->root.attributes : 0);
+                                              pstate->is_archive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->is_archive ? pstate->root.attributes : 0);
 
                 closetag = true;
 
-                if(pstate->macro_list.size()) {
+		/*
+		  if(pstate->macro_list.size()) {
 
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
                     for(std::vector<std::string>::size_type i = 0; i < pstate->macro_list.size(); ++i) {
@@ -231,7 +230,7 @@ public :
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
                 }
-
+		*/
             }
             needroot = false;
 
@@ -239,9 +238,9 @@ public :
             result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
             if (isoption(options, OPTION_APPLY_ROOT) && result_size == 0) {
 
-                if(pstate->macro_list.size())
+	      /*              if(pstate->macro_list.size())
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
-                else
+		    else*/
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
             }
@@ -253,9 +252,9 @@ public :
             // why not do this when it is started?  May not have any results, and
             // need an empty element
             if (closetag) {
-                if(pstate->macro_list.size())
+	      /*               if(pstate->macro_list.size())
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
-                else
+		    else*/
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
 
                 closetag = false;
@@ -330,7 +329,7 @@ public :
                 */
 
                 // input was an archive, xpath result is a unit
-                if (onode->type == XML_ELEMENT_NODE && pstate->isarchive && !outputunit) {
+                if (onode->type == XML_ELEMENT_NODE && pstate->is_archive && !outputunit) {
 
                     // create a new list of namespaces
                     // skip over the namespaces on the root
@@ -349,7 +348,7 @@ public :
                     // space between internal units
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
-                } else if (onode->type == XML_ELEMENT_NODE && !pstate->isarchive && !outputunit) {
+                } else if (onode->type == XML_ELEMENT_NODE && !pstate->is_archive && !outputunit) {
 
                     // input was not an archive, xpath result is a unit
 
@@ -514,7 +513,7 @@ public :
 
         //    fprintf(stderr, "%s %d\n", __FUNCTION__, nodetype);
         xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+        SAX2srcMLHandler * pstate = (SAX2srcMLHandler*) ctxt->_private;
 
         // finalize results
         switch (nodetype) {
@@ -531,7 +530,7 @@ public :
 
                 // root unit end tag
                 if (!isoption(options, OPTION_APPLY_ROOT))
-                    xmlOutputBufferWriteString(buf, found || pstate->macro_list.size() ? full_unit.c_str() : "/>\n");
+		  xmlOutputBufferWriteString(buf, found /*|| pstate->macro_list.size()*/ ? full_unit.c_str() : "/>\n");
                 else if(found)
                     xmlOutputBufferWriteString(buf, full_unit.c_str());
                 else

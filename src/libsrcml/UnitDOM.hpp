@@ -33,9 +33,7 @@
 class UnitDOM : public srcMLHandler {
 public :
 
-    UnitDOM(OPTION_TYPE options) : rootsize(0), found(false), options(options), error(false) {
-      ctxt = get_control_handler().getCtxt();
-    }
+    UnitDOM(OPTION_TYPE options) : rootsize(0), found(false), options(options), error(false) {}
 
     virtual ~UnitDOM() {}
 
@@ -61,7 +59,7 @@ public :
 
     // start creating the document and setup output for the units
     virtual void startDocument() {
-
+      ctxt = get_control_handler().getCtxt();
         // apparently endDocument() can be called without startDocument() for an
         // empty element
         found = true;
@@ -253,7 +251,8 @@ public :
 
         // end the output
         endOutput(ctxt);
-    }
+
+}
 
 protected:
     std::vector<const xmlChar*> data;
