@@ -225,12 +225,9 @@ public :
         return true;
     }
     virtual void endOutput() {
-        void * ctx = NULL;
-        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
         // root unit end tag
-        if (result_type == XML_ELEMENT_NODE && found && pstate->isarchive && !isoption(options, OPTION_APPLY_ROOT)) {
+        if (result_type == XML_ELEMENT_NODE && found && is_archive && !isoption(options, OPTION_APPLY_ROOT)) {
 
             std::string end_unit = "</";
             if(root_prefix) {
@@ -240,9 +237,9 @@ public :
             }
             end_unit += "unit>\n";
 
-            xmlOutputBufferWriteString(buf, found || pstate->macro_list.size() ? end_unit.c_str() : "/>\n");
+            xmlOutputBufferWriteString(buf, found || meta_tags->size() ? end_unit.c_str() : "/>\n");
 
-        } else if (result_type == XML_ELEMENT_NODE && found && !pstate->isarchive) {
+        } else if (result_type == XML_ELEMENT_NODE && found && !is_archive) {
             xmlOutputBufferWriteString(buf, "\n");
         }else if (result_type == XML_ELEMENT_NODE && found && isoption(options, OPTION_APPLY_ROOT)) {
             xmlOutputBufferWriteString(buf, "\n");
