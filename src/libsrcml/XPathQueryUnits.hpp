@@ -51,40 +51,25 @@
 class XPathQueryUnits : public UnitDOM {
 public :
 
-    XPathQueryUnits(const char* a_ofilename, OPTION_TYPE options,
-                    xmlXPathCompExprPtr compiled_xpath, int fd = 0)
-        : UnitDOM(options), ofilename(a_ofilename), options(options),
+    XPathQueryUnits(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath, int fd = 0)
+        : UnitDOM(options), options(options),
           compiled_xpath(compiled_xpath), total(0), found(false), needroot(true), closetag(false), fd(fd) {
     }
 
-    virtual ~XPathQueryUnits() {
-
-        //if(context) xmlXPathFreeContext(context);
-
-    }
+    virtual ~XPathQueryUnits() {}
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
     virtual void startOutput() {
 
-        //    fprintf(stderr, "%s\n", __FUNCTION__);
+      buf = xmlOutputBufferCreateFd(fd, NULL);
 
-        // setup output
-        if(ofilename)
-            buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
-        else
-            buf = xmlOutputBufferCreateFd(fd, NULL);
         // TODO:  Detect error
 
 #ifdef LIBSRCML_COMPILER_IS_MSVC
         buf->writecallback = (xmlOutputWriteCallback)write;
 #endif
-
-        //xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-
-        // allow for all exslt functions
-        //    exsltRegisterAll();
 
     }
 
