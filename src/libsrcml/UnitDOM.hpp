@@ -59,7 +59,8 @@ public :
 
     // start creating the document and setup output for the units
     virtual void startDocument() {
-      ctxt = get_control_handler().getCtxt();
+
+        ctxt = get_control_handler().getCtxt();
 
         // apparently endDocument() can be called without startDocument() for an
         // empty element
@@ -76,6 +77,9 @@ public :
     virtual void startRoot(const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 			   int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 			   const xmlChar** attributes, std::vector<srcMLElement> * meta_tags) {
+
+        SAX2srcMLHandler* handler = (SAX2srcMLHandler*)get_control_handler().getCtxt()->_private;
+        root = &handler->root;
 
         // record namespaces in an extensible list so we can add the per unit
         for (int i = 0; i < nb_namespaces; ++i) {
@@ -235,6 +239,7 @@ protected:
     OPTION_TYPE options;
     bool error;
     xmlParserCtxtPtr ctxt;
+    srcMLElement * root;
 };
 
 #endif

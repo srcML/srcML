@@ -92,9 +92,6 @@ public :
 
     virtual bool apply(void *ctx) {
 
-        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-        SAX2srcMLHandler* pstate = (SAX2srcMLHandler*) ctxt->_private;
-
         xmlXPathContextPtr context = xmlXPathNewContext(ctxt->myDoc);
         // TODO:  Detect error
 
@@ -210,9 +207,9 @@ public :
 
                 // output a root element, just like the one read in
                 // note that this has to be ended somewhere
-                xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
-                                              pstate->root.nb_namespaces, pstate->root.namespaces,
-                                              pstate->is_archive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->is_archive ? pstate->root.attributes : 0);
+                xmlOutputBufferWriteElementNs(buf, root->localname, root->prefix, root->URI,
+                                              root->nb_namespaces, root->namespaces,
+                                              is_archive ? root->nb_attributes : 0, root->nb_defaulted, is_archive ? root->attributes : 0);
 
                 closetag = true;
 
@@ -281,7 +278,7 @@ public :
 
                         // output a wrapping element, just like the one read in
                         // note that this has to be ended somewhere
-                        xmlOutputBufferWriteElementNs(wrap, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
+                        xmlOutputBufferWriteElementNs(wrap, root->localname, root->prefix, root->URI,
                                                       (int)((data.size() - rootsize) / 2), &data[rootsize],
                                                       0, 0, 0);
 
@@ -329,7 +326,7 @@ public :
                 */
 
                 // input was an archive, xpath result is a unit
-                if (onode->type == XML_ELEMENT_NODE && pstate->is_archive && !outputunit) {
+                if (onode->type == XML_ELEMENT_NODE && is_archive && !outputunit) {
 
                     // create a new list of namespaces
                     // skip over the namespaces on the root
@@ -348,7 +345,7 @@ public :
                     // space between internal units
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
-                } else if (onode->type == XML_ELEMENT_NODE && !pstate->is_archive && !outputunit) {
+                } else if (onode->type == XML_ELEMENT_NODE && !is_archive && !outputunit) {
 
                     // input was not an archive, xpath result is a unit
 
@@ -522,8 +519,8 @@ public :
             {
 
                 std::string full_unit = "</";
-                if(pstate->root.prefix) {
-                    full_unit += (const char *)pstate->root.prefix;
+                if(root->prefix) {
+                    full_unit += (const char *)root->prefix;
                     full_unit += ":";
                 }
                 full_unit += "unit>\n";
@@ -593,7 +590,7 @@ public :
         for (int i = 0; i < nb_namespaces; ++i) {
 
             // don't put cpp namespace on the root for a non-archive
-            if (!isarchive && strcmp((const char*) namespaces[2 * i + 1], SRCML_CPP_NS_URI) == 0)
+            if (!is_archive && strcmp((const char*) namespaces[2 * i + 1], SRCML_CPP_NS_URI) == 0)
                 continue;
 
             xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xmlns"));
@@ -639,7 +636,7 @@ public :
         for (int i = 0; i < nb_namespaces; ++i) {
 
             // only put cpp namespace on the non-root unit for a non-archive
-            if (!isarchive && strcmp((const char*) namespaces[2 * i + 1], SRCML_CPP_NS_URI) != 0)
+            if (!is_archive && strcmp((const char*) namespaces[2 * i + 1], SRCML_CPP_NS_URI) != 0)
                 continue;
 
             s.append(LITERALPLUSSIZE(" xmlns"));
@@ -681,7 +678,6 @@ private :
     xmlOutputBufferPtr buf;
     bool needroot;
     bool closetag;
-    bool isarchive;
     int fd;
     //const char * src_prefix;
 };
