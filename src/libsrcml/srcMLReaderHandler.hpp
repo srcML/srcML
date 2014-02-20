@@ -405,6 +405,11 @@ public :
 
 	if(skip) {
 
+	  get_control_handler().enable_startElementNs(false);
+	  get_control_handler().enable_characters(false);
+	  get_control_handler().enable_comment(false);
+	  get_control_handler().enable_cdataBlock(false);
+
 	}
 
         if(collect_srcml) {
@@ -526,6 +531,16 @@ public :
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
+
+	if(skip) {
+
+	  get_control_handler().enable_startElementNs(true);
+	  get_control_handler().enable_characters(true);
+	  get_control_handler().enable_comment(true);
+	  get_control_handler().enable_cdataBlock(true);
+
+	}
+
 
         //if(is_empty) *unit->unit += ">";
         if(collect_srcml) {
