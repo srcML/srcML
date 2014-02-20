@@ -493,9 +493,6 @@ public :
 
     virtual void endOutput() {
 
-        //    fprintf(stderr, "%s %d\n", __FUNCTION__, nodetype);
-        SAX2srcMLHandler * pstate = (SAX2srcMLHandler*) ctxt->_private;
-
         // finalize results
         switch (nodetype) {
         case XPATH_NODESET:
@@ -651,9 +648,8 @@ public :
     }
 
 private :
-    const char* ofilename;
+
     OPTION_TYPE options;
-    //xmlXPathContextPtr context;
     xmlXPathCompExprPtr compiled_xpath;
     double total;
     bool result_bool;
@@ -663,7 +659,7 @@ private :
     bool needroot;
     bool closetag;
     int fd;
-    //const char * src_prefix;
+
 };
 
 #endif

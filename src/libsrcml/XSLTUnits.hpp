@@ -101,7 +101,7 @@ public :
     }
 
     virtual void startOutput() {
-        void * ctx;
+        void * ctx = NULL;
         // setup output
         if(ofilename)
             buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
@@ -116,7 +116,7 @@ public :
     }
 
     virtual bool apply() {
-        void * ctx;
+        void * ctx = NULL;
         xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
         SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
@@ -225,7 +225,7 @@ public :
         return true;
     }
     virtual void endOutput() {
-        void * ctx;
+        void * ctx = NULL;
         xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
         SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 

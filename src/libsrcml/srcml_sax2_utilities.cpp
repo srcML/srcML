@@ -123,7 +123,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
     }
 
     // setup process handling
-    XPathQueryUnits process(0, options, compiled_xpath, fd);
+    XPathQueryUnits process(options, compiled_xpath, fd);
     srcMLControlHandler control(input_buffer);
 
     control.parse(&process);
