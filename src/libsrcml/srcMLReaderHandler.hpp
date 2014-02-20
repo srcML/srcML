@@ -472,6 +472,15 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+	if(collect_src && localname[0] == 'e' && localname[1] == 's'
+	   && strcmp((const char *)localname, "escape") == 0) {
+
+	  static char f = '\f';
+	  charactersUnit((xmlChar *)&f, 1);
+	  
+
+	} 
+
         if(is_empty && collect_srcml) *unit->unit += ">";
         is_empty = true;
 
