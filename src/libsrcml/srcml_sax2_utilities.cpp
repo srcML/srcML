@@ -135,8 +135,8 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
     XPathQueryUnits process(0, options, compiled_xpath, fd);
 
     // setup sax handling state
-    SAX2ExtractUnitsSrc state(&process, &options, -1, "");
-    ctxt->_private = &state;
+    //SAX2ExtractUnitsSrc state(&process, &options, -1, "");
+    //ctxt->_private = &state;
 
     // process the document
     int status = srcMLParseDocument(ctxt, false);
@@ -266,8 +266,8 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     XSLTUnits process(context_element, 0, options, stylesheet, params, fd);
 
     // setup sax handling state
-    SAX2ExtractUnitsSrc state(&process, &options, -1, "");
-    ctxt->_private = &state;
+    //SAX2ExtractUnitsSrc state(&process, &options, -1, "");
+    //ctxt->_private = &state;
 
     xsltsrcMLRegister();
 
@@ -321,8 +321,8 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int 
     RelaxNGUnits process(0, options, rngctx, fd);
 
     // setup sax handling state
-    SAX2ExtractUnitsSrc state(&process, &options, -1, "");
-    ctxt->_private = &state;
+    //SAX2ExtractUnitsSrc state(&process, &options, -1, "");
+    //ctxt->_private = &state;
 
     int status = srcMLParseDocument(ctxt, false);
 
