@@ -60,6 +60,7 @@ public :
     // start creating the document and setup output for the units
     virtual void startDocument() {
       ctxt = get_control_handler().getCtxt();
+
         // apparently endDocument() can be called without startDocument() for an
         // empty element
         found = true;
@@ -99,26 +100,6 @@ public :
     virtual void startUnit(const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                            int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                            const xmlChar** attributes) {
-
-        /*
-
-          Passing the prefix was causing an error when set.
-          Hack change localname to have prefix and set prefix to null
-          Using std::string it some cases seems to cause incorrect access of memory
-          since it does not seem to duplicate the localname.
-          Dynamically allocate for now.
-
-        */
-        /*
-          std::string full_name = "";
-          if(prefix) {
-          full_name = (const char *)prefix;
-          full_name += ":";
-          }
-          full_name += (const char *)localname;
-
-          prefix_name = (const xmlChar *)strdup(full_name.c_str());
-        */
 
         // remove per-unit namespaces
         data.resize(rootsize);
@@ -169,14 +150,12 @@ public :
                                 int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                                 const xmlChar** attributes) {
 
-        if(is_archive && !isoption(options, OPTION_APPLY_ROOT) && strcmp((const char *)localname, "macro-list") == 0) return;
         xmlSAX2StartElementNs(ctxt, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
     }
 
     // build end element nodes in unit tree
     virtual void endElementNs(const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-        if(is_archive && !isoption(options, OPTION_APPLY_ROOT) && strcmp((const char *)localname, "macro-list") == 0) return;
         xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
     }
 
@@ -217,8 +196,6 @@ public :
             xmlUnlinkNode(ctxt->myDoc->children);
             xmlFreeNodeList(aroot);
             ctxt->myDoc->children = 0;
-            //free((void *)prefix_name);
-            //prefix_name = 0;
 
         }
 
@@ -240,9 +217,6 @@ public :
             xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
             onode->name = NULL;
 
-            //free((void *)prefix_name);
-            //      prefix_name = 0;
-
         }
 
         // free up the document that has this particular unit
@@ -260,7 +234,6 @@ protected:
     bool found;
     OPTION_TYPE options;
     bool error;
-    const xmlChar * prefix_name;
     xmlParserCtxtPtr ctxt;
 };
 
