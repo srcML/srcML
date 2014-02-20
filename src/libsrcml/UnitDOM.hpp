@@ -213,12 +213,37 @@ public :
 
     }
 
+    // end the construction of the unit tree, apply processing, and delete
+    virtual void endRoot(const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+
+        if(isoption(options, OPTION_APPLY_ROOT)) {
+
+  	    // finish building the unit tree
+	    xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
+
+	    // End the document and free it if applied to unit individually
+            xmlSAX2EndDocument(ctxt);
+
+            // apply the necessary processing
+            if ((error = !apply()))
+                stop_parser();
+
+            // free up the document that has this particular unit
+            xmlNodePtr aroot = ctxt->myDoc->children;
+            xmlUnlinkNode(ctxt->myDoc->children);
+            xmlFreeNodeList(aroot);
+            ctxt->myDoc->children = 0;
+
+        }
+
+    }
+
     virtual void endDocument() {
 
         // endDocument can be called, even if startDocument was not for empty input
         if (!found || error)
             return;
-
+	/*
         // end the entire input document and run apply if applied to root.
         if (isoption(options, OPTION_APPLY_ROOT)) {
             xmlSAX2EndDocument(ctxt);
@@ -229,7 +254,7 @@ public :
             xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
             onode->name = NULL;
 
-        }
+	    }*/
 
         // free up the document that has this particular unit
         xmlFreeDoc(ctxt->myDoc);
