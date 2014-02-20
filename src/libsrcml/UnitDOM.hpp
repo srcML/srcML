@@ -80,6 +80,7 @@ public :
 
         SAX2srcMLHandler* handler = (SAX2srcMLHandler*)get_control_handler().getCtxt()->_private;
         root = &handler->root;
+	this->meta_tags = meta_tags;
 
         // record namespaces in an extensible list so we can add the per unit
         for (int i = 0; i < nb_namespaces; ++i) {
@@ -233,6 +234,7 @@ public :
 }
 
 protected:
+
     std::vector<const xmlChar*> data;
     std::vector<const xmlChar*>::size_type rootsize;
     bool found;
@@ -240,6 +242,8 @@ protected:
     bool error;
     xmlParserCtxtPtr ctxt;
     srcMLElement * root;
+    std::vector<srcMLElement> * meta_tags;
+
 };
 
 #endif

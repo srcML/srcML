@@ -44,7 +44,7 @@ public :
     virtual ~RelaxNGUnits() {}
 
     virtual void startOutput() {
-        void * ctx = NULL;
+
         // setup output
         if(ofilename)
             buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
