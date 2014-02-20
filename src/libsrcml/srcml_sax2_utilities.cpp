@@ -57,6 +57,8 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
 
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(input_buffer, (int)size, xmlParseCharEncoding(0));
 
+    if(input == NULL) return SRCML_STATUS_ERROR;
+
     srcMLSAX2Reader reader(input);
     reader.readsrc(output_buffer);
 
