@@ -286,36 +286,21 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int fd, OPTION_TYPE options) {
 
     if(input_buffer == NULL || xslts == NULL || xslts[0] == NULL || fd < 0) return SRCML_STATUS_ERROR;
-    xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input_buffer);
-    if (ctxt == NULL) return SRCML_STATUS_ERROR;
-
-    // setup sax handler
-    xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
-    xmlSAXHandlerPtr sax_save = ctxt->sax;
-    ctxt->sax = &sax;
 
     xmlRelaxNGParserCtxtPtr relaxng = xmlRelaxNGNewParserCtxt(xslts[0]);
     xmlRelaxNGPtr rng = xmlRelaxNGParse(relaxng);
     xmlRelaxNGValidCtxtPtr rngctx = xmlRelaxNGNewValidCtxt(rng);
+
     RelaxNGUnits process(0, options, rngctx, fd);
+    srcMLControlHandler control(input_buffer);
 
-    // setup sax handling state
-    //SAX2ExtractUnitsSrc state(&process, &options, -1, "");
-    //ctxt->_private = &state;
+    control.parse(&process);
 
-    int status = srcMLParseDocument(ctxt, false);
-
-    ctxt->sax = sax_save;
-
-    xmlParserInputPtr input = inputPop(ctxt);
-    input->buf = NULL;
-    xmlFreeInputStream(input);
-    xmlFreeParserCtxt(ctxt);
     xmlRelaxNGFreeValidCtxt(rngctx);
     xmlRelaxNGFree(rng);
     xmlRelaxNGFreeParserCtxt(relaxng);
 
-    return status;
+    return 0;//status;
 
 }
 
