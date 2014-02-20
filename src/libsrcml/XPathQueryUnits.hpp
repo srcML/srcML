@@ -198,21 +198,20 @@ public :
 
                 closetag = true;
 
-		/*
-		  if(pstate->macro_list.size()) {
+		if(meta_tags->size()) {
 
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
-                    for(std::vector<std::string>::size_type i = 0; i < pstate->macro_list.size(); ++i) {
-                        xmlOutputBufferWriteElementNs(buf, pstate->macro_list.at(i).localname, pstate->macro_list.at(i).prefix, pstate->macro_list.at(i).URI,
-                                                      pstate->macro_list.at(i).nb_namespaces, pstate->macro_list.at(i).namespaces,
-                                                      pstate->macro_list.at(i).nb_attributes, pstate->macro_list.at(i).nb_defaulted, pstate->macro_list.at(i).attributes);
+		  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
+		  for(std::vector<std::string>::size_type i = 0; i < meta_tags->size(); ++i) {
+  		      xmlOutputBufferWriteElementNs(buf, meta_tags->at(i).localname, meta_tags->at(i).prefix, meta_tags->at(i).URI,
+						    meta_tags->at(i).nb_namespaces, meta_tags->at(i).namespaces,
+						    meta_tags->at(i).nb_attributes, meta_tags->at(i).nb_defaulted, meta_tags->at(i).attributes);
 
-                    }
+		  }
 
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
+		  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
                 }
-		*/
+
             }
             needroot = false;
 
@@ -220,10 +219,10 @@ public :
             result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
             if (isoption(options, OPTION_APPLY_ROOT) && result_size == 0) {
 
-	      /*              if(pstate->macro_list.size())
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
-		    else*/
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
+	      if(meta_tags->size())
+		  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
+	      else
+		  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
             }
 
@@ -234,10 +233,10 @@ public :
             // why not do this when it is started?  May not have any results, and
             // need an empty element
             if (closetag) {
-	      /*               if(pstate->macro_list.size())
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
-		    else*/
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
+	      if(meta_tags->size())
+		  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+	      else
+		  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
 
                 closetag = false;
             }
@@ -508,7 +507,7 @@ public :
 
                 // root unit end tag
                 if (!isoption(options, OPTION_APPLY_ROOT))
-		  xmlOutputBufferWriteString(buf, found /*|| pstate->macro_list.size()*/ ? full_unit.c_str() : "/>\n");
+		  xmlOutputBufferWriteString(buf, found || meta_tags->size() ? full_unit.c_str() : "/>\n");
                 else if(found)
                     xmlOutputBufferWriteString(buf, full_unit.c_str());
                 else
