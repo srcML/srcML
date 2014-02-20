@@ -31,6 +31,15 @@ class srcMLHandler;
 #include <string>
 #include <vector>
 
+enum srcMLMode {
+
+  ROOT,
+  UNIT,
+  END_UNIT,
+  END_ROOT
+
+};
+
 /**
  * SAX2srcMLHandler
  *
@@ -50,6 +59,9 @@ struct SAX2srcMLHandler {
 
     /** used to detect root unit */
     bool is_archive;
+
+    /** the current parsing mode */
+    srcMLMode mode;
 };
 
 /**

@@ -102,7 +102,7 @@ void endDocument(void * ctx) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2srcMLHandler * state = (SAX2srcMLHandler *) ctxt->_private;
 
-    if(ctxt->sax->startElementNs)
+    if(state->mode != END_ROOT)
         state->process->endRoot(state->root.localname, state->root.prefix, state->root.URI);
 
     state->process->endDocument();
@@ -142,6 +142,8 @@ void startRoot(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
     SAX2srcMLHandler * state = (SAX2srcMLHandler *) ctxt->_private;
 
     state->root = srcMLElement(ctxt, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
+
+    state->mode = ROOT;
 
     // handle nested units
     ctxt->sax->startElementNs = &startElementNsFirst;
@@ -206,6 +208,7 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
 
     if(!state->is_archive) {
 
+        state->mode = UNIT;
         state->process->startUnit(state->root.localname, state->root.prefix, state->root.URI,
                                   state->root.nb_namespaces, state->root.namespaces, state->root.nb_attributes,
                                   state->root.nb_defaulted, state->root.attributes);
@@ -216,6 +219,7 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
     } else {
 
         state->process->charactersRoot((const xmlChar *)state->root.characters.c_str(), (int)state->root.characters.size());
+	state->mode = UNIT;
         state->process->startUnit(localname, prefix, URI,
                                   nb_namespaces, namespaces, nb_attributes,
                                   nb_defaulted, attributes);
@@ -268,6 +272,8 @@ void startUnit(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
     for (int i = 1; i < ns_length; i += 2)
         if(URI && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)URI) == 0)
             URI = state->root.namespaces[i];
+
+    state->mode = UNIT;
 
     state->process->startUnit(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
 
@@ -356,7 +362,7 @@ void endElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix,
 
     if(strcmp((const char *)localname, "unit") == 0) {
 
-        if(ctxt->sax->startElementNs == &startElementNsFirst) {
+        if(state->mode == ROOT) {
 
             state->is_archive = false;
             state->process->set_is_archive(state->is_archive);
@@ -376,11 +382,12 @@ void endElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix,
 
         if(ctxt->sax->startElementNs == &startUnit) {
 
+	    state->mode = END_ROOT;
             state->process->endRoot(localname, prefix, URI);
-            ctxt->sax->startElementNs = 0;
 
         } else {
 
+	    state->mode = END_UNIT;
             state->process->endUnit(localname, prefix, URI);
             if(ctxt->sax->startElementNs) ctxt->sax->startElementNs = &startUnit;
             if(ctxt->sax->characters) ctxt->sax->characters = &charactersRoot;
