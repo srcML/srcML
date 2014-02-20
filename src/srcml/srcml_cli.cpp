@@ -138,7 +138,7 @@ void option_command(bool opt) {
         srcml_request.command |= command;
 }
 
-void option_filename(const std::string& value) { srcml_request.filename = value; srcml_request.filename_set = true; }
+void option_filename(const std::string& value) { srcml_request.filename = value; }
 void option_output(const std::string& value) {srcml_request.output = value; }
 void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value; }
 void option_encoding(const std::string& value) {srcml_request.encoding = value; }

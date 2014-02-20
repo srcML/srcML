@@ -30,6 +30,7 @@
 #include <srcml.h>
 #include <string>
 #include <vector>
+#include <boost/optional.hpp>
 #include <iostream>
 
 // Internal srcml command options
@@ -62,7 +63,7 @@ struct srcml_request_t {
 
     // attributes
     std::string language;
-    std::string filename;
+    boost::optional<std::string> filename;
     std::string directory;
     std::string encoding;
     std::string src_versions;
@@ -87,7 +88,6 @@ struct srcml_request_t {
     int max_threads;
     bool help_set;
     bool directory_set;
-    bool filename_set;
     bool src_versions_set;
 };
 

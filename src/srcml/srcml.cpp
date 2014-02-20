@@ -97,8 +97,8 @@ int main(int argc, char * argv[]) {
         if (srcml_request.encoding != "")
             srcml_archive_set_encoding(srcml_arch, srcml_request.encoding.c_str());
 
-        if (srcml_request.filename_set)
-            srcml_archive_set_filename(srcml_arch, srcml_request.filename.c_str());
+        if (srcml_request.filename)
+            srcml_archive_set_filename(srcml_arch, srcml_request.filename->c_str());
 
         if (srcml_request.directory_set)
             srcml_archive_set_directory(srcml_arch, srcml_request.directory.c_str());
