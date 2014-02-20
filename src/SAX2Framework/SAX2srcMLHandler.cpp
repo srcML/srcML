@@ -46,6 +46,7 @@ xmlSAXHandler factory() {
     sax.endElementNs = &endElementNs;
 
     sax.characters = &charactersFirst;
+    sax.ignorableWhitespace = &charactersFirst;
 
     sax.comment = &comment;
     sax.cdataBlock = &cdataBlock;
@@ -228,7 +229,12 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
     }
 
     if(ctxt->sax->startElementNs) ctxt->sax->startElementNs = &startElementNs;
-    if(ctxt->sax->characters) ctxt->sax->characters = &charactersUnit;
+    if(ctxt->sax->characters) {
+
+      ctxt->sax->characters = &charactersUnit;
+      ctxt->sax->ignorableWhitespace = &charactersUnit;
+
+    }
 
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -278,7 +284,12 @@ void startUnit(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
     state->process->startUnit(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
 
     if(ctxt->sax->startElementNs) ctxt->sax->startElementNs = &startElementNs;
-    if(ctxt->sax->characters) ctxt->sax->characters = &charactersUnit;
+    if(ctxt->sax->characters) {
+
+	ctxt->sax->characters = &charactersUnit;
+	ctxt->sax->ignorableWhitespace = &charactersUnit;
+
+    }
 
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -324,6 +335,7 @@ void startElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefi
             URI = state->root.namespaces[i];
 
     state->process->startElementNs(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
+
 
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -390,14 +402,17 @@ void endElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix,
 	    state->mode = END_UNIT;
             state->process->endUnit(localname, prefix, URI);
             if(ctxt->sax->startElementNs) ctxt->sax->startElementNs = &startUnit;
-            if(ctxt->sax->characters) ctxt->sax->characters = &charactersRoot;
+            if(ctxt->sax->characters) {
 
+	      ctxt->sax->characters = &charactersRoot;
+	      ctxt->sax->ignorableWhitespace = &charactersRoot;
+
+	    }
         }
 
     } else {
 
         state->process->endElementNs(localname, prefix, URI);
-
     }
 
 #ifdef DEBUG
