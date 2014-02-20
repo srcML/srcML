@@ -32,7 +32,7 @@
 #include <vector>
 #include <iostream>
 
-/* These are internal to srcml */
+// Internal srcml command options
 #define SRCML_COMMAND_LONGINFO          1<<0
 #define SRCML_COMMAND_INFO              1<<1
 #define SRCML_COMMAND_INFO_FILENAME     1<<2
@@ -54,35 +54,44 @@
 #define SRCML_COMMAND_INFO_SRC_VERSION  1<<18
 #define SRCML_COMMAND_TO_DIRECTORY      1<<19
 
+// request for srcml client processing
 struct srcml_request_t {
+    std::vector<std::string> positional_args;
     int command;
     int markup_options;
+
+    // attributes
+    std::string language;
     std::string filename;
+    std::string directory;
+    std::string encoding;
+    std::string src_versions;
+
     std::string output;
     std::string src_encoding;
-    std::string encoding;
+
     std::string files_from;
-    std::string language;
     std::vector<std::string> register_ext;
     int tabs;
-    std::string directory;
-    std::string src_versions;
     std::string prefix;
     std::string xmlns_uri;
     std::vector<std::string> xmlns_prefix;
-    std::string relaxng;
+
+    // srcml transformation
     std::string xpath;
     std::vector<std::string> xpathparam;
     std::string xslt;
+    std::string relaxng;
+
     int unit;
     int max_threads;
-    std::vector<std::string> positional_args;
     bool help_set;
     bool directory_set;
     bool filename_set;
     bool src_versions_set;
 };
 
-srcml_request_t parseCLI (int argc, char* argv[]);
+// parse the CLI options into a srcml client request
+srcml_request_t parseCLI(int argc, char* argv[]);
 
 #endif
