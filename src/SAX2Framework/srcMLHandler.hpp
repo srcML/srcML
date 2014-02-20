@@ -52,7 +52,13 @@ public :
 
     void set_control_handler(srcMLControlHandler * control_handler) {
 
-      this->control_handler = control_handler;
+        this->control_handler = control_handler;
+
+    }
+
+    srcMLControlHandler & get_control_handler() {
+ 
+        return *control_handler;
 
     }
 
