@@ -27,6 +27,7 @@
 #include <srcml_list_unit_files.hpp>
 #include <srcml.h>
 #include <iostream>
+#include <iomanip>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <src_prefix.hpp>
@@ -52,7 +53,8 @@ void srcml_list_unit_files(const std::string& srcml_input) {
     while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
 
         ++numUnits;
-        std::cout << numUnits << "\t" << srcml_unit_get_filename(unit) << "\n";
+
+        std::cout << std::setw(5) << numUnits << ' ' << srcml_unit_get_filename(unit) << '\n';
 
         srcml_free_unit(unit);
     }
