@@ -41,8 +41,6 @@ class srcMLHandler {
 
 private :
 
-    xmlParserCtxtPtr ctxt;
-
     srcMLControlHandler * control_handler;
 
 protected:
@@ -61,25 +59,18 @@ public :
         return *control_handler;
 
     }
-
-    void init(xmlParserCtxtPtr ctxt) {
-
-        this->ctxt = ctxt;
-
-    }
-
     void stop_parser() {
 
-        ctxt->sax->startDocument = 0;
-        ctxt->sax->endDocument = 0;
-        ctxt->sax->startElementNs = 0;
-        ctxt->sax->endElementNs = 0;
-        ctxt->sax->characters = 0;
-        ctxt->sax->cdataBlock = 0;
-        ctxt->sax->comment = 0;
-        ctxt->sax->ignorableWhitespace = 0;
+        control_handler->getSAX().startDocument = 0;
+        control_handler->getSAX().endDocument = 0;
+        control_handler->getSAX().startElementNs = 0;
+        control_handler->getSAX().endElementNs = 0;
+        control_handler->getSAX().characters = 0;
+        control_handler->getSAX().cdataBlock = 0;
+        control_handler->getSAX().comment = 0;
+        control_handler->getSAX().ignorableWhitespace = 0;
 
-        xmlStopParser(ctxt);
+	xmlStopParser(control_handler->getCtxt());
 
     }
 

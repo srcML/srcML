@@ -96,11 +96,23 @@ srcMLControlHandler::~srcMLControlHandler() {
  *
  * Return the used sax handler.
  */
-const xmlSAXHandler & srcMLControlHandler::getSAX() const {
+xmlSAXHandler & srcMLControlHandler::getSAX() {
 
     return sax;
 
 }
+
+/**
+ * getCtxt
+ *
+ * Return the used parser context.
+ */
+xmlParserCtxtPtr srcMLControlHandler::getCtxt() {
+
+  return ctxt;
+
+}
+
 
 /**
  * enable_startDocument
