@@ -171,11 +171,11 @@ int srcMLSAX2Reader::readUnitAttributes(boost::optional<std::string> & language,
                                         boost::optional<std::string> & directory, boost::optional<std::string> & version) {
 
     if(handler.is_done) return 0;
-
+    handler.skip = true;
     handler.collect_unit_attributes = true;
     handler.resume_and_wait();
     handler.collect_unit_attributes = false;
-
+    handler.skip = false;
     if(handler.is_done) return 0;
 
     language.swap(handler.unit->language);
