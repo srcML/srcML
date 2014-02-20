@@ -23,7 +23,7 @@
 #ifndef INCLUDED_SRCMLCONTROLHANDLER_HPP
 #define INCLUDED_SRCMLCONTROLHANDLER_HPP
 
-#include <srcMLHandler.hpp>
+class srcMLHandler;
 #include <SAX2srcMLHandler.hpp>
 
 #include <libxml/parser.h>

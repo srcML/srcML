@@ -53,9 +53,11 @@
  */
 int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
 
-    if(output_buffer == NULL) return SRCML_STATUS_ERROR;
+    if(input_buffer == NULL || size == 0 || output_buffer == NULL) return SRCML_STATUS_ERROR;
 
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(input_buffer, (int)size, xmlParseCharEncoding(0));
+
+    if(input == NULL) return SRCML_STATUS_ERROR;
 
     srcMLSAX2Reader reader(input);
     reader.readsrc(output_buffer);

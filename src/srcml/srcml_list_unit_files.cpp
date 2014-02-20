@@ -49,13 +49,11 @@ void srcml_list_unit_files(const std::string& srcml_input) {
     srcml_read_open_filename(srcml_arch, srcml_input.c_str());
 
     int numUnits = 0;
-    while (true) {
-        srcml_unit* unit = srcml_read_unit(srcml_arch);
-        if (unit == 0)
-            break;
+    while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
 
         ++numUnits;
         std::cout << numUnits << "\t" << srcml_unit_get_filename(unit) << "\n";
+
         srcml_free_unit(unit);
     }
 }

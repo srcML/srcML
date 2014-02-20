@@ -21,6 +21,7 @@
 */
 
 #include <srcMLControlHandler.hpp>
+#include <srcMLHandler.hpp>
 
 #include <SAX2Framework_utilities.hpp>
 
@@ -200,6 +201,7 @@ void srcMLControlHandler::enable_cdataBlock(bool enable) {
  */
 void srcMLControlHandler::parse(srcMLHandler * handler) {
 
+    handler->set_control_handler(this);
     sax2_handler.process = handler;
 
     xmlSAXHandlerPtr save_sax = ctxt->sax;

@@ -58,7 +58,7 @@ void src_prefix_split_uri(const std::string& input_file, std::string& protocol, 
 
     if (prefixPos == std::string::npos) {
         protocol = "";
-        resource = "";
+        resource = input_file;
         return;
     }
     protocol = input_file.substr(0, prefixPos);

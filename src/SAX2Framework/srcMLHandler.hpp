@@ -25,6 +25,8 @@
 #define INCLUDED_SRCMLHANDLER_HPP
 
 #include <srcMLElement.hpp>
+#include <srcMLControlHandler.hpp>
+//class srcMLControlHandler;
 
 #include <libxml/parser.h>
 
@@ -41,10 +43,24 @@ private :
 
     xmlParserCtxtPtr ctxt;
 
+    srcMLControlHandler * control_handler;
+
 protected:
     bool is_archive;
 
 public :
+
+    void set_control_handler(srcMLControlHandler * control_handler) {
+
+        this->control_handler = control_handler;
+
+    }
+
+    srcMLControlHandler & get_control_handler() {
+ 
+        return *control_handler;
+
+    }
 
     void init(xmlParserCtxtPtr ctxt) {
 
