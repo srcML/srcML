@@ -61,19 +61,22 @@ struct srcml_request_t {
     int command;
     int markup_options;
 
-    // attributes
+    // unit attributes
     std::string language;
     boost::optional<std::string> filename;
     std::string directory;
     std::string encoding;
     std::string src_versions;
 
-    std::string output;
     std::string src_encoding;
+
+    std::string output;
 
     std::string files_from;
     std::vector<std::string> register_ext;
     int tabs;
+
+    // xml namespaces
     std::string prefix;
     std::string xmlns_uri;
     std::vector<std::string> xmlns_prefix;
