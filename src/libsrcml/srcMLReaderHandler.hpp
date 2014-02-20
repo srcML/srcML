@@ -475,8 +475,9 @@ public :
 	if(collect_src && localname[0] == 'e' && localname[1] == 's'
 	   && strcmp((const char *)localname, "escape") == 0) {
 
-	  static char f = '\f';
-	  charactersUnit((xmlChar *)&f, 1);
+	  char value = (int)strtol((const char*) attributes[3], NULL, 0);
+
+	  charactersUnit((xmlChar *)&value, 1);
 	  
 
 	} 
