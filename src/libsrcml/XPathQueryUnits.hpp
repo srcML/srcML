@@ -66,7 +66,7 @@ public :
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-    virtual void startOutput(void* ctx) {
+    virtual void startOutput() {
 
         //    fprintf(stderr, "%s\n", __FUNCTION__);
 
@@ -90,7 +90,7 @@ public :
 
 #pragma GCC diagnostic push
 
-    virtual bool apply(void *ctx) {
+    virtual bool apply() {
 
         xmlXPathContextPtr context = xmlXPathNewContext(ctxt->myDoc);
         // TODO:  Detect error
@@ -506,10 +506,9 @@ public :
         return true;
     }
 
-    virtual void endOutput(void *ctx) {
+    virtual void endOutput() {
 
         //    fprintf(stderr, "%s %d\n", __FUNCTION__, nodetype);
-        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
         SAX2srcMLHandler * pstate = (SAX2srcMLHandler*) ctxt->_private;
 
         // finalize results

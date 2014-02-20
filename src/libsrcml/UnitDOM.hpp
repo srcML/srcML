@@ -42,7 +42,7 @@ public :
     /*
       Called exactly once at beginnning of document  Override for intended behavior.
     */
-    virtual void startOutput(void* ctxt) = 0;
+    virtual void startOutput() = 0;
 
     /*
       Called exactly once for each unit.  For an archive, not called on the root unit
@@ -50,12 +50,12 @@ public :
       Formed unit combines namespaces from root and individual unit.  Full DOM of
       individual unit is provided.  Cleanup of DOM unit is automatic.
     */
-    virtual bool apply(void* ctxt) = 0;
+    virtual bool apply() = 0;
 
     /*
       Called exactly once at end of document.  Override for intended behavior.
     */
-    virtual void endOutput(void* ctxt) = 0;
+    virtual void endOutput() = 0;
 
     // start creating the document and setup output for the units
     virtual void startDocument() {
@@ -67,7 +67,7 @@ public :
         found = true;
 
         // setup output
-        startOutput(ctxt);
+        startOutput();
 
         xmlSAX2StartDocument(ctxt);
 
@@ -192,7 +192,7 @@ public :
             xmlSAX2EndDocument(ctxt);
 
             // apply the necessary processing
-            if ((error = !apply(ctxt)))
+            if ((error = !apply()))
                 stop_parser();
 
             // free up the document that has this particular unit
@@ -215,7 +215,7 @@ public :
         if (isoption(options, OPTION_APPLY_ROOT)) {
             xmlSAX2EndDocument(ctxt);
 
-            if ((error = !apply(ctxt)))
+            if ((error = !apply()))
 	      stop_parser();
 
             xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
@@ -228,7 +228,7 @@ public :
         ctxt->myDoc = 0;
 
         // end the output
-        endOutput(ctxt);
+        endOutput();
 
 }
 
