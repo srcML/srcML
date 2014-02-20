@@ -37,19 +37,15 @@
 class RelaxNGUnits : public UnitDOM {
 public :
 
-    RelaxNGUnits(const char* a_ofilename, OPTION_TYPE options, xmlRelaxNGValidCtxtPtr rngctx, int fd = 0)
-        : UnitDOM(options), ofilename(a_ofilename), options(options), rngctx(rngctx), fd(fd), found(false), root_prefix(0) {
+    RelaxNGUnits(OPTION_TYPE options, xmlRelaxNGValidCtxtPtr rngctx, int fd = 0)
+        : UnitDOM(options), options(options), rngctx(rngctx), fd(fd), found(false), root_prefix(0) {
     }
 
     virtual ~RelaxNGUnits() {}
 
     virtual void startOutput() {
 
-        // setup output
-        if(ofilename)
-            buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
-        else
-            buf = xmlOutputBufferCreateFd(fd, NULL);
+        buf = xmlOutputBufferCreateFd(fd, NULL);
         // TODO:  Detect error
 
 #ifdef LIBSRCML_COMPILER_IS_MSVC
@@ -325,13 +321,14 @@ public :
     }
 
 private :
-    const char* ofilename;
+
     OPTION_TYPE options;
     xmlOutputBufferPtr buf;
     xmlRelaxNGValidCtxtPtr rngctx;
     int fd;
     bool found;
     const xmlChar * root_prefix;
+
 };
 
 #endif

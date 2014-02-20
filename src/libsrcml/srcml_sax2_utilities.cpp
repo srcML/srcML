@@ -291,7 +291,7 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int 
     xmlRelaxNGPtr rng = xmlRelaxNGParse(relaxng);
     xmlRelaxNGValidCtxtPtr rngctx = xmlRelaxNGNewValidCtxt(rng);
 
-    RelaxNGUnits process(0, options, rngctx, fd);
+    RelaxNGUnits process(options, rngctx, fd);
     srcMLControlHandler control(input_buffer);
 
     control.parse(&process);
