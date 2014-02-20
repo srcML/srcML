@@ -75,8 +75,8 @@ public :
 
     // collect namespaces from root unit.  Start to build the tree if OPTION_APPLY_ROOT
     virtual void startRoot(const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                               const xmlChar** attributes) {
+			   int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+			   const xmlChar** attributes, std::vector<srcMLElement> * meta_tags) {
 
         // record namespaces in an extensible list so we can add the per unit
         for (int i = 0; i < nb_namespaces; ++i) {

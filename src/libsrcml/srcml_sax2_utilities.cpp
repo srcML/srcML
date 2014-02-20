@@ -122,36 +122,13 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
         return SRCML_STATUS_ERROR;
     }
 
-    // setup parser
-    xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input_buffer);
-    if (ctxt == NULL) return SRCML_STATUS_ERROR;
-
-    // setup sax handler
-    xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
-    xmlSAXHandlerPtr sax_save = ctxt->sax;
-    ctxt->sax = &sax;
-
     // setup process handling
     XPathQueryUnits process(0, options, compiled_xpath, fd);
-
-    // setup sax handling state
-    //SAX2ExtractUnitsSrc state(&process, &options, -1, "");
-    //ctxt->_private = &state;
-
-    // process the document
-    int status = srcMLParseDocument(ctxt, false);
-
-    // local variable, do not want xmlFreeParserCtxt to free
-    ctxt->sax = sax_save;
-
-    // all done with parsing
-    xmlParserInputPtr input = inputPop(ctxt);
-    input->buf = NULL;
-    xmlFreeInputStream(input);
-    xmlFreeParserCtxt(ctxt);
+    srcMLControlHandler control(input_buffer);
+    control.parse(&process);
     xmlXPathFreeCompExpr(compiled_xpath);
 
-    return status;
+    return 0;//status;
 
 }
 
