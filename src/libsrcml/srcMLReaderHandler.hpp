@@ -403,6 +403,10 @@ public :
 
         }
 
+	if(skip) {
+
+	}
+
         if(collect_srcml) {
 
             write_startTag(localname, prefix, nb_namespaces, namespaces, nb_attributes, attributes);
