@@ -394,8 +394,11 @@ void endElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix,
 
         }
 
-    } else
+    } else {
+
         state->process->endElementNs(localname, prefix, URI);
+
+    }
 
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
