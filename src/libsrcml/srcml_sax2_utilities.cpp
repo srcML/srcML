@@ -242,7 +242,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     ctxt->sax = &sax;
 
     // setup process handling
-    XSLTUnits process(context_element, 0, options, stylesheet, params, fd);
+    XSLTUnits process(context_element, options, stylesheet, params, fd);
 
     // setup sax handling state
     //SAX2ExtractUnitsSrc state(&process, &options, -1, "");

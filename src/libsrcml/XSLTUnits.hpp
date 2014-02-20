@@ -51,9 +51,9 @@ typedef xmlDocPtr (*xsltApplyStylesheet_function) (xsltStylesheetPtr,xmlDocPtr,c
 class XSLTUnits : public UnitDOM {
 public :
 
-    XSLTUnits(const char* a_context_element, const char* a_ofilename, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
+    XSLTUnits(const char* a_context_element, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
               const char** params, int fd = 0)
-        : UnitDOM(options), ofilename(a_ofilename), options(options),
+        : UnitDOM(options), options(options),
           stylesheet(stylesheet), found(false),
           result_type(0), params(params), fd(fd) {
 
@@ -103,10 +103,7 @@ public :
     virtual void startOutput() {
 
         // setup output
-        if(ofilename)
-            buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
-        else
-            buf = xmlOutputBufferCreateFd(fd, NULL);
+        buf = xmlOutputBufferCreateFd(fd, NULL);
         // TODO:  Detect error
 
 #ifdef LIBSRCML_COMPILER_IS_MSVC
@@ -344,7 +341,7 @@ public :
     }
 
 private :
-    const char* ofilename;
+
     OPTION_TYPE & options;
     xsltStylesheetPtr stylesheet;
     bool found;
@@ -358,6 +355,7 @@ private :
     xsltApplyStylesheet_function xsltApplyStylesheetDynamic;
 #endif
     void * handle;
+
 };
 
 #endif
