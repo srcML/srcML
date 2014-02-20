@@ -206,9 +206,10 @@ public :
 						    meta_tags->at(i).nb_namespaces, meta_tags->at(i).namespaces,
 						    meta_tags->at(i).nb_attributes, meta_tags->at(i).nb_defaulted, meta_tags->at(i).attributes);
 
+		      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
+
 		  }
 
-		  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
                 }
 
