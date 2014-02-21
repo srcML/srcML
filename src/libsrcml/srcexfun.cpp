@@ -81,6 +81,16 @@ static void srcContextFunction (xmlXPathParserContextPtr ctxt, int nargs) {
     valuePush(ctxt, xmlXPathNewFloat(Position));
 }
 
+// index of attribute in attributes
+int find_attribute_index(int nb_attributes, const xmlChar** attributes, const char* attribute) {
+
+    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
+        if (strcmp((const char*) attributes[index], attribute) == 0)
+            return index;
+
+    return -1;
+}
+
 static void srcRootFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
     if (nargs != 1) {
