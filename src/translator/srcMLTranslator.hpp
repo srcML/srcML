@@ -66,7 +66,7 @@ public:
     srcMLTranslator(int language,
                         const char* src_encoding,
                         const char* xml_encoding,
-                        xmlBuffer* output_buffer,
+                        xmlBuffer* output_buf,
                         OPTION_TYPE& options,
                         const char* directory,
                         const char* filename,
