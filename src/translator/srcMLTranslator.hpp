@@ -38,13 +38,6 @@ class UTF8CharBuffer;
 class srcMLTranslator : public Language {
 public:
 
-    // constructor
-    srcMLTranslator(int language, const char* srcml_filename, OPTION_TYPE& op);
-
-    // constructor
-    srcMLTranslator(int language, xmlBuffer* output_buffer, OPTION_TYPE& op);
-
-    // constructor
     srcMLTranslator(int language,
                         const char* src_encoding,
                         const char* xml_encoding,
@@ -53,7 +46,6 @@ public:
                         const char* directory,
                         const char* filename,
                         const char* version,
-                        const char* uri[],
                         int tabsize,
                         std::string * suri = 0
                         );
@@ -67,7 +59,7 @@ public:
                     const char* directory,
                     const char* filename,
                     const char* version,
-                    std::string * uri,
+		    std::string * suri,
                     int tabsize
                     );
     // constructor
@@ -79,7 +71,6 @@ public:
                         const char* directory,
                         const char* filename,
                         const char* version,
-                        const char* uri[],
                         int tabsize,
                         std::string * suri = 0
                         );
@@ -93,7 +84,6 @@ public:
                         const char* directory,
                         const char* filename,
                         const char* version,
-                        const char* uri[],
                         int tabsize,
                         std::string * suri = 0
                         );
