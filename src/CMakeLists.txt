@@ -28,7 +28,6 @@ get_property(LIBXML2_LIBS GLOBAL PROPERTY LIBXML2_LIBS)
 get_property(LIBXSLT_LIBS GLOBAL PROPERTY LIBXSLT_LIBS)
 get_property(BOOST_PROGRAM_OPTIONS_LIB GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB)
 get_property(ANTLR_LIB GLOBAL PROPERTY ANTLR_LIB)
-get_property(LIBARCHIVE_LIBS  GLOBAL PROPERTY LIBARCHIVE_LIBS)
 
 # buildLib
 #  Used to help with the creation of the srcML library.
@@ -48,12 +47,12 @@ endif()
 
     if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
         if(DYNAMIC_LOAD_ENABLED)
-                target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} dl)
+                target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${ANTLR_LIB} ${BOOST_PROGRAM_OPTIONS_LIB} dl)
         else()
-                target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} dl)
+                target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${BOOST_PROGRAM_OPTIONS_LIB} dl)
         endif()
     else()
-        target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB})
+        target_link_libraries(${LIB_NAME} ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${BOOST_PROGRAM_OPTIONS_LIB})
     endif()
 endmacro()
 
