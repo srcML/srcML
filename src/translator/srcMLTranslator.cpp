@@ -103,7 +103,8 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op), output_buffer(0),
-      out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, 0, output_buf, uri), tabsize(tabsize), uri(uri) {}
+      out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, 0, output_buf, uri), tabsize(tabsize), uri(uri),
+      str_buffer(0), size(0) {}
 
 void srcMLTranslator::setMacroList(std::vector<std::string> & list) {
     user_macro_list = list;
