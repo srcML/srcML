@@ -42,6 +42,7 @@ void setup_libarchive(archive* arch) {
     archive_read_support_format_xar(arch);
     archive_read_support_format_zip(arch);
     archive_read_support_format_raw(arch);
+    archive_read_support_format_empty(arch);
 
     /* Check libarchive version enable version specific features/syntax */
 #if ARCHIVE_VERSION_NUMBER < 3000000
