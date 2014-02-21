@@ -23,7 +23,6 @@
 #include <srcMLSAX2Reader.hpp>
 #include <srcml.h>
 
-#include <SAX2ExtractUnitsSrc.hpp>
 #include <sstream>
 #include <XPathQueryUnits.hpp>
 #include <XSLTUnits.hpp>
