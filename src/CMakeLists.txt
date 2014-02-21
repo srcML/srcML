@@ -43,7 +43,7 @@ macro(buildLib LIB_NAME LIB_TYPE)
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME libsrcml)
 else()
-    set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml)
+    set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/export_list")
 endif()
 
     if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
