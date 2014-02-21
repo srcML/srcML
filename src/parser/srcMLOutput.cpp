@@ -28,7 +28,6 @@
 #include "srcMLToken.hpp"
 #include "project.hpp"
 #include "srcmlns.hpp"
-#include "srcmlapps.hpp"
 #include "srcml.h"
 #include <boost/preprocessor/iteration/local.hpp>
 

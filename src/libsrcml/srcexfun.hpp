@@ -24,8 +24,11 @@
 #define INCLUDED_SRCEXFUN_HPP
 
 #include <libxml/xpath.h>
-#include <SAX2Utilities.hpp>
+
+#include <string>
 #include <vector>
+
+typedef std::pair<std::string, std::string> PROPERTIES_TYPE[32];
 
 void setPosition(int n);
 

@@ -96,11 +96,23 @@ srcMLControlHandler::~srcMLControlHandler() {
  *
  * Return the used sax handler.
  */
-const xmlSAXHandler & srcMLControlHandler::getSAX() const {
+xmlSAXHandler & srcMLControlHandler::getSAX() {
 
     return sax;
 
 }
+
+/**
+ * getCtxt
+ *
+ * Return the used parser context.
+ */
+xmlParserCtxtPtr srcMLControlHandler::getCtxt() {
+
+  return ctxt;
+
+}
+
 
 /**
  * enable_startDocument
@@ -162,8 +174,17 @@ void srcMLControlHandler::enable_endElementNs(bool enable) {
  */
 void srcMLControlHandler::enable_characters(bool enable) {
 
-    if(enable) sax.characters = charactersFirst;
-    else sax.characters = 0;
+  if(enable) {
+
+    sax.characters = charactersFirst;
+    sax.ignorableWhitespace = charactersFirst;
+
+  } else {
+
+    sax.characters = 0;
+    sax.ignorableWhitespace = 0;
+
+  }
 
 }
 

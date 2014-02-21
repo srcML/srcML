@@ -51,49 +51,31 @@
 class XPathQueryUnits : public UnitDOM {
 public :
 
-    XPathQueryUnits(const char* a_ofilename, OPTION_TYPE options,
-                    xmlXPathCompExprPtr compiled_xpath, int fd = 0)
-        : UnitDOM(options), ofilename(a_ofilename), options(options),
+    XPathQueryUnits(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath, int fd = 0)
+        : UnitDOM(options), options(options),
           compiled_xpath(compiled_xpath), total(0), found(false), needroot(true), closetag(false), fd(fd) {
     }
 
-    virtual ~XPathQueryUnits() {
-
-        //if(context) xmlXPathFreeContext(context);
-
-    }
+    virtual ~XPathQueryUnits() {}
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-    virtual void startOutput(void* ctx) {
+    virtual void startOutput() {
 
-        //    fprintf(stderr, "%s\n", __FUNCTION__);
+      buf = xmlOutputBufferCreateFd(fd, NULL);
 
-        // setup output
-        if(ofilename)
-            buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
-        else
-            buf = xmlOutputBufferCreateFd(fd, NULL);
         // TODO:  Detect error
 
 #ifdef LIBSRCML_COMPILER_IS_MSVC
         buf->writecallback = (xmlOutputWriteCallback)write;
 #endif
 
-        //xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-
-        // allow for all exslt functions
-        //    exsltRegisterAll();
-
     }
 
 #pragma GCC diagnostic push
 
-    virtual bool apply(void *ctx) {
-
-        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+    virtual bool apply() {
 
         xmlXPathContextPtr context = xmlXPathNewContext(ctxt->myDoc);
         // TODO:  Detect error
@@ -182,8 +164,6 @@ public :
 #endif
 #endif
 
-        isarchive = pstate->isarchive;
-
         // evaluate the xpath
         xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
         if (result_nodes == 0) {
@@ -212,23 +192,24 @@ public :
 
                 // output a root element, just like the one read in
                 // note that this has to be ended somewhere
-                xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
-                                              pstate->root.nb_namespaces, pstate->root.namespaces,
-                                              pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->isarchive ? pstate->root.attributes : 0);
+                xmlOutputBufferWriteElementNs(buf, root->localname, root->prefix, root->URI,
+                                              root->nb_namespaces, root->namespaces,
+                                              is_archive ? root->nb_attributes : 0, root->nb_defaulted, is_archive ? root->attributes : 0);
 
                 closetag = true;
 
-                if(pstate->macro_list.size()) {
+		if(meta_tags->size()) {
 
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
-                    for(std::vector<std::string>::size_type i = 0; i < pstate->macro_list.size(); ++i) {
-                        xmlOutputBufferWriteElementNs(buf, pstate->macro_list.at(i).localname, pstate->macro_list.at(i).prefix, pstate->macro_list.at(i).URI,
-                                                      pstate->macro_list.at(i).nb_namespaces, pstate->macro_list.at(i).namespaces,
-                                                      pstate->macro_list.at(i).nb_attributes, pstate->macro_list.at(i).nb_defaulted, pstate->macro_list.at(i).attributes);
+		  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
+		  for(std::vector<std::string>::size_type i = 0; i < meta_tags->size(); ++i) {
+  		      xmlOutputBufferWriteElementNs(buf, meta_tags->at(i).localname, meta_tags->at(i).prefix, meta_tags->at(i).URI,
+						    meta_tags->at(i).nb_namespaces, meta_tags->at(i).namespaces,
+						    meta_tags->at(i).nb_attributes, meta_tags->at(i).nb_defaulted, meta_tags->at(i).attributes);
 
-                    }
+		      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
+		  }
+
 
                 }
 
@@ -239,10 +220,10 @@ public :
             result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
             if (isoption(options, OPTION_APPLY_ROOT) && result_size == 0) {
 
-                if(pstate->macro_list.size())
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
-                else
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
+	      if(meta_tags->size())
+		  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
+	      else
+		  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
             }
 
@@ -253,10 +234,10 @@ public :
             // why not do this when it is started?  May not have any results, and
             // need an empty element
             if (closetag) {
-                if(pstate->macro_list.size())
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
-                else
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
+	      if(meta_tags->size())
+		  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+	      else
+		  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
 
                 closetag = false;
             }
@@ -282,7 +263,7 @@ public :
 
                         // output a wrapping element, just like the one read in
                         // note that this has to be ended somewhere
-                        xmlOutputBufferWriteElementNs(wrap, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
+                        xmlOutputBufferWriteElementNs(wrap, root->localname, root->prefix, root->URI,
                                                       (int)((data.size() - rootsize) / 2), &data[rootsize],
                                                       0, 0, 0);
 
@@ -330,7 +311,7 @@ public :
                 */
 
                 // input was an archive, xpath result is a unit
-                if (onode->type == XML_ELEMENT_NODE && pstate->isarchive && !outputunit) {
+                if (onode->type == XML_ELEMENT_NODE && is_archive && !outputunit) {
 
                     // create a new list of namespaces
                     // skip over the namespaces on the root
@@ -349,7 +330,7 @@ public :
                     // space between internal units
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
-                } else if (onode->type == XML_ELEMENT_NODE && !pstate->isarchive && !outputunit) {
+                } else if (onode->type == XML_ELEMENT_NODE && !is_archive && !outputunit) {
 
                     // input was not an archive, xpath result is a unit
 
@@ -510,11 +491,7 @@ public :
         return true;
     }
 
-    virtual void endOutput(void *ctx) {
-
-        //    fprintf(stderr, "%s %d\n", __FUNCTION__, nodetype);
-        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+    virtual void endOutput() {
 
         // finalize results
         switch (nodetype) {
@@ -523,15 +500,15 @@ public :
             {
 
                 std::string full_unit = "</";
-                if(pstate->root.prefix) {
-                    full_unit += (const char *)pstate->root.prefix;
+                if(root->prefix) {
+                    full_unit += (const char *)root->prefix;
                     full_unit += ":";
                 }
                 full_unit += "unit>\n";
 
                 // root unit end tag
                 if (!isoption(options, OPTION_APPLY_ROOT))
-                    xmlOutputBufferWriteString(buf, found || pstate->macro_list.size() ? full_unit.c_str() : "/>\n");
+		  xmlOutputBufferWriteString(buf, found || meta_tags->size() ? full_unit.c_str() : "/>\n");
                 else if(found)
                     xmlOutputBufferWriteString(buf, full_unit.c_str());
                 else
@@ -594,7 +571,7 @@ public :
         for (int i = 0; i < nb_namespaces; ++i) {
 
             // don't put cpp namespace on the root for a non-archive
-            if (!isarchive && strcmp((const char*) namespaces[2 * i + 1], SRCML_CPP_NS_URI) == 0)
+            if (!is_archive && strcmp((const char*) namespaces[2 * i + 1], SRCML_CPP_NS_URI) == 0)
                 continue;
 
             xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xmlns"));
@@ -640,7 +617,7 @@ public :
         for (int i = 0; i < nb_namespaces; ++i) {
 
             // only put cpp namespace on the non-root unit for a non-archive
-            if (!isarchive && strcmp((const char*) namespaces[2 * i + 1], SRCML_CPP_NS_URI) != 0)
+            if (!is_archive && strcmp((const char*) namespaces[2 * i + 1], SRCML_CPP_NS_URI) != 0)
                 continue;
 
             s.append(LITERALPLUSSIZE(" xmlns"));
@@ -671,9 +648,8 @@ public :
     }
 
 private :
-    const char* ofilename;
+
     OPTION_TYPE options;
-    //xmlXPathContextPtr context;
     xmlXPathCompExprPtr compiled_xpath;
     double total;
     bool result_bool;
@@ -682,9 +658,8 @@ private :
     xmlOutputBufferPtr buf;
     bool needroot;
     bool closetag;
-    bool isarchive;
     int fd;
-    //const char * src_prefix;
+
 };
 
 #endif

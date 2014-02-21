@@ -58,7 +58,7 @@ void * start_routine(void * arguments) {
     } catch(SAXError error) {
 
         if(!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END))
-            fprintf(stderr, "Error Parsing: %s", error.message.c_str());
+            fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
 
 	// might have to release a lock here or set is_done;
     }

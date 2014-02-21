@@ -73,7 +73,14 @@ public :
      *
      * Return the used sax handler.
      */
-    const xmlSAXHandler & getSAX() const;
+    xmlSAXHandler & getSAX();
+
+    /**
+     * getCtxt
+     *
+     * Return the used parser context.
+     */
+    xmlParserCtxtPtr getCtxt();
 
     /**
      * ~srcMLControlHandler

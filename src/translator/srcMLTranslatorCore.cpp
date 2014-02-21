@@ -30,8 +30,11 @@
 #include "srcMLParser.hpp"
 #include "StreamMLParser.hpp"
 #include "srcMLOutput.hpp"
-#include "srcmlapps.hpp"
 #include "srcmlns.hpp"
+
+const char* const DEFAULT_TEXT_ENCODING = "ISO-8859-1";
+
+const char* const DEFAULT_XML_ENCODING = "UTF-8";
 
 // constructor
 srcMLTranslatorCore::srcMLTranslatorCore(int language, const char* srcml_filename, OPTION_TYPE& op)
