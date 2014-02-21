@@ -150,14 +150,6 @@ int main(int argc, char * argv[]) {
         // process command line inputs
         BOOST_FOREACH(const std::string& input_file, srcml_request.positional_args) {
 
-            // code testing (temporary)
-            /*
-              direct2srcml(input_file);
-              file2srcml(input_file);
-              file2srcml_count(input_file);
-              libarchive2srcml(input_file);
-              continue;
-            */
             if (src_validate(input_file)) {
                 // if stdin, then there has to be data
                 if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
@@ -209,19 +201,71 @@ int main(int argc, char * argv[]) {
         srcml_list_unit_files(srcml_request.positional_args);
 
     // srcml->src
-    } else {
+    } else if (srcml_request.positional_args.size() == 1 && srcml_request.output == "-") {
 
         srcml_archive* arch = srcml_create_archive();
         srcml_read_open_filename(arch, srcml_request.positional_args[0].c_str());
 
         srcml_unit* unit = srcml_read_unit(arch);
 
-        srcml_unparse_unit_filename(unit, srcml_request.output.c_str());
-
-        srcml_free_unit(unit);
+        srcml_unparse_unit_fd(unit, STDOUT_FILENO);
 
         srcml_close_archive(arch);
         srcml_free_archive(arch);
+
+    // srcml->src
+    } else if (srcml_request.positional_args.size() == 1) {
+
+        // TODO: What if this is a simple, single file? or to stdout?
+        archive* ar = archive_write_new();
+
+        // setup compression and format
+        // TODO: Needs to be generalized from output file extension
+        archive_write_set_compression_gzip(ar);
+        archive_write_set_format_pax_restricted(ar);
+
+        archive_write_open_filename(ar, srcml_request.output.c_str());
+
+        srcml_archive* arch = srcml_create_archive();
+        srcml_read_open_filename(arch, srcml_request.positional_args[0].c_str());
+
+        while (srcml_unit* unit = srcml_read_unit(arch)) {
+
+            // unparse the unit into its own buffer
+            char* buffer;
+            int buffer_size;
+            srcml_unparse_unit_memory(unit, &buffer, &buffer_size);
+
+            // setup the entry header
+            archive_entry* entry = archive_entry_new();
+            archive_entry_set_pathname(entry, srcml_unit_get_filename(unit));
+            archive_entry_set_size(entry, buffer_size);
+            archive_entry_set_filetype(entry, AE_IFREG);
+            archive_entry_set_perm(entry, 0644);
+
+            time_t now = time(NULL);
+            archive_entry_set_atime(entry, now, 0);
+            archive_entry_set_ctime(entry, now, 0);
+            archive_entry_set_mtime(entry, now, 0);
+            archive_write_header(ar, entry);
+
+            // write the data to the entry
+            archive_write_data(ar, buffer, buffer_size);
+
+            // done with the archive entry
+            archive_entry_free(entry);
+
+            // done with the srcML unit
+            srcml_free_unit(unit);
+        }
+
+        srcml_close_archive(arch);
+        srcml_free_archive(arch);
+
+        archive_write_close(ar);
+        archive_write_finish(ar);
+
+    } else {
     }
 
     return 0;
@@ -288,22 +332,6 @@ void libarchive2srcml(std::string filename) {
 void file2srcml(std::string filename) {
 
     // Parse srcml back to source (srcml2src)
-    srcml_archive* arch = srcml_create_archive();
-    srcml_read_open_filename(arch, filename.substr(7).c_str());
-    srcml_unit* unit;
-
-    while (true) {
-        unit = srcml_read_unit(arch);
-
-        if (unit == 0)
-            break;
-
-        srcml_unparse_unit_filename(unit, srcml_unit_get_filename(unit));
-        srcml_free_unit(unit);
-    }
-
-    srcml_close_archive(arch);
-    srcml_free_archive(arch);
 }
 
 void file2srcml_header(std::string filename) {
