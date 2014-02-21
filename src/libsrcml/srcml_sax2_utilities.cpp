@@ -232,43 +232,24 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     if (!stylesheet)
         return SRCML_STATUS_ERROR;
 
-    // setup parser
-    xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input_buffer);
-    if (ctxt == NULL) return SRCML_STATUS_ERROR;
 
-    // setup sax handler
-    xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
-    xmlSAXHandlerPtr sax_save = ctxt->sax;
-    ctxt->sax = &sax;
-
-    // setup process handling
-    XSLTUnits process(context_element, options, stylesheet, params, fd);
-
-    // setup sax handling state
-    //SAX2ExtractUnitsSrc state(&process, &options, -1, "");
-    //ctxt->_private = &state;
 
     xsltsrcMLRegister();
 
-    // process the document
-    int status = srcMLParseDocument(ctxt, false);
+    // setup process handling
+    XSLTUnits process(context_element, options, stylesheet, params, fd);
+    srcMLControlHandler control(input_buffer);
 
-    // local variable, do not want xmlFreeParserCtxt to free
-    ctxt->sax = sax_save;
+    control.parse(&process);
 
     xsltFreeStylesheet(stylesheet);
     xsltCleanupGlobals();
-    // all done with parsing
-    xmlParserInputPtr input = inputPop(ctxt);
-    input->buf = NULL;
-    xmlFreeInputStream(input);
-    xmlFreeParserCtxt(ctxt);
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
     dlclose(handle);
 #endif
 
-    return status;
+    return 0;//status;
 
 }
 
