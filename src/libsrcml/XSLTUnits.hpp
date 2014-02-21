@@ -114,7 +114,7 @@ public :
 
     virtual bool apply() {
 
-      //setPosition((int)pstate->count);
+        setPosition((int)unit_count);
 
         // apply the style sheet to the document, which is the individual unit
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)

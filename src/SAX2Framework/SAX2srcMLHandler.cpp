@@ -209,6 +209,8 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
 
     if(!state->is_archive) {
 
+        state->process->increment_unit_count();
+
         state->mode = UNIT;
         state->process->startUnit(state->root.localname, state->root.prefix, state->root.URI,
                                   state->root.nb_namespaces, state->root.namespaces, state->root.nb_attributes,
@@ -220,6 +222,9 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
     } else {
 
         state->process->charactersRoot((const xmlChar *)state->root.characters.c_str(), (int)state->root.characters.size());
+
+	state->process->increment_unit_count();
+
 	state->mode = UNIT;
         state->process->startUnit(localname, prefix, URI,
                                   nb_namespaces, namespaces, nb_attributes,
@@ -278,6 +283,8 @@ void startUnit(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
     for (int i = 1; i < ns_length; i += 2)
         if(URI && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)URI) == 0)
             URI = state->root.namespaces[i];
+
+    state->process->increment_unit_count();
 
     state->mode = UNIT;
 
