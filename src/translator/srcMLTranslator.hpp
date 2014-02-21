@@ -46,8 +46,8 @@ public:
                         const char* directory,
                         const char* filename,
                         const char* version,
-                        int tabsize,
-                        std::string * suri = 0
+  		        std::string * uri,
+                        int tabsize
                         );
 
     // constructor
@@ -59,7 +59,7 @@ public:
                     const char* directory,
                     const char* filename,
                     const char* version,
-		    std::string * suri,
+		    std::string * uri,
                     int tabsize
                     );
     // constructor
@@ -71,8 +71,8 @@ public:
                         const char* directory,
                         const char* filename,
                         const char* version,
-                        int tabsize,
-                        std::string * suri = 0
+		        std::string * uri,
+                        int tabsize
                         );
 
     // constructor
@@ -84,8 +84,8 @@ public:
                         const char* directory,
                         const char* filename,
                         const char* version,
-                        int tabsize,
-                        std::string * suri = 0
+  		        std::string * uri,
+                        int tabsize
                         );
 
     void setMacroList(std::vector<std::string> & list);
@@ -125,8 +125,7 @@ private:
     xmlBuffer * output_buffer;
     srcMLOutput out;
     int tabsize;
-    const char** uri;
-    std::string * suri;
+    std::string * uri;
     std::vector<std::string> user_macro_list;
 
     char ** str_buffer;

@@ -801,8 +801,8 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
                                                   archive->directory ? archive->directory->c_str() : 0,
                                                   archive->filename ? archive->filename->c_str() : 0,
                                                   archive->version ? archive->version->c_str() : 0,
-                                                  archive->tabstop,
-                                                  &archive->prefixes.front());
+                                                  &archive->prefixes.front(),
+                                                  archive->tabstop);
         archive->translator->setMacroList(archive->user_macro_list);
 
     } catch(...) { return SRCML_STATUS_ERROR; }
@@ -882,8 +882,8 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
                                                   archive->directory ? archive->directory->c_str() : 0,
                                                   archive->filename ? archive->filename->c_str() : 0,
                                                   archive->version ? archive->version->c_str() : 0,
-                                                  archive->tabstop,
-                                                  &archive->prefixes.front());
+                                                  &archive->prefixes.front(),
+                                                  archive->tabstop);
 
         archive->translator->setMacroList(archive->user_macro_list);
 
@@ -929,8 +929,8 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
                                                   archive->directory ? archive->directory->c_str() : 0,
                                                   archive->filename ? archive->filename->c_str() : 0,
                                                   archive->version ? archive->version->c_str() : 0,
-                                                  archive->tabstop,
-                                                  &archive->prefixes.front());
+                                                  &archive->prefixes.front(),
+                                                  archive->tabstop);
 
         archive->translator->setMacroList(archive->user_macro_list);
 

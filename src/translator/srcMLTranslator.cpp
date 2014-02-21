@@ -44,13 +44,13 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                          const char* directory,       // root unit directory
                                          const char* filename,        // root unit filename
                                          const char* version,         // root unit version
-                                         int tabsize,                  // size of tabs
-                                         std::string * suri
+                                         std::string * uri,           // uri prefixes
+                                         int tabsize                  // size of tabs
                                          )
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(0), options(op),
-      out(0, srcml_filename, getLanguageString(), xml_encoding, options, 0, tabsize, 0, 0, suri), tabsize(tabsize), uri(0), suri(suri) {
+      out(0, srcml_filename, getLanguageString(), xml_encoding, options, 0, tabsize, 0, 0, uri), tabsize(tabsize), uri(uri) {
 
 }
 
@@ -68,8 +68,8 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  )
   :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
      encoding(src_encoding), xml_encoding(0), options(op), output_buffer(xmlBufferCreate()),
-     out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, output_buffer, 0, uri), tabsize(tabsize), uri(0),
-     suri(uri), str_buffer(str_buf), size(0) {
+     out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, output_buffer, 0, uri), tabsize(tabsize),
+     uri(uri), str_buffer(str_buf), size(0) {
 
 }
 
@@ -82,13 +82,13 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                          const char* directory,       // root unit directory
                                          const char* filename,        // root unit filename
                                          const char* version,         // root unit version
-                                         int tabsize,                  // size of tabs
-                                         std::string * suri
+                                         std::string * uri,           // uri prefixes
+                                         int tabsize                  // size of tabs
                                          )
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op),
-      out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, output_buffer, 0, suri), tabsize(tabsize), uri(0), suri(suri) {
+      out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, output_buffer, 0, uri), tabsize(tabsize), uri(uri) {
 
 }
 
@@ -101,13 +101,13 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                          const char* directory,       // root unit directory
                                          const char* filename,        // root unit filename
                                          const char* version,         // root unit version
-                                         int tabsize,                  // size of tabs
-                                         std::string * suri
+                                         std::string * uri,           // uri prefixes
+                                         int tabsize                  // size of tabs
                                          )
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op),
-      out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, 0, output_buf, suri), tabsize(tabsize), uri(0), suri(suri) {
+      out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, 0, output_buf, uri), tabsize(tabsize), uri(uri) {
 
 }
 
@@ -242,7 +242,7 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
                                              const char * src_encoding,
                                              OPTION_TYPE translation_options) {
 
-    srcMLOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, 0, tabsize, output_buffer, 0, suri);
+    srcMLOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, 0, tabsize, output_buffer, 0, uri);
     sep_out.initWriter();
     sep_out.setMacroList(user_macro_list);
 
