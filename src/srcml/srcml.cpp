@@ -193,30 +193,38 @@ int main(int argc, char * argv[]) {
         // close the created srcML archive
         srcml_close_archive(srcml_arch);
         srcml_free_archive(srcml_arch);
-
-        return 0;
     }
-    else {
-        // srcml long info
-        if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
-            srcml_display_info(srcml_request.positional_args);
-            return 0;
-        }
-
-        // srcml info
-        if (srcml_request.command & SRCML_COMMAND_INFO) {
-            srcml_display_info(srcml_request.positional_args);
-            return 0;
-        }
-
-        // list filenames in srcml archive
-        if (srcml_request.command & SRCML_COMMAND_LIST) {
-            srcml_list_unit_files(srcml_request.positional_args);
-            return 0;
-        }
-
-        return 0;
+    // srcml long info
+    else if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
+        srcml_display_info(srcml_request.positional_args);
     }
+
+    // srcml info
+    else if (srcml_request.command & SRCML_COMMAND_INFO) {
+        srcml_display_info(srcml_request.positional_args);
+    }
+
+    // list filenames in srcml archive
+    else if (srcml_request.command & SRCML_COMMAND_LIST) {
+        srcml_list_unit_files(srcml_request.positional_args);
+
+    // srcml->src
+    } else {
+
+        srcml_archive* arch = srcml_create_archive();
+        srcml_read_open_filename(arch, srcml_request.positional_args[0].c_str());
+
+        srcml_unit* unit = srcml_read_unit(arch);
+
+        srcml_unparse_unit_filename(unit, srcml_request.output.c_str());
+
+        srcml_free_unit(unit);
+
+        srcml_close_archive(arch);
+        srcml_free_archive(arch);
+    }
+
+    return 0;
 }
 
 // code testing (temporary)
