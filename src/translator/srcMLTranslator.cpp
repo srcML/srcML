@@ -102,7 +102,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                          )
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
-      encoding(src_encoding), xml_encoding(xml_encoding), options(op),
+      encoding(src_encoding), xml_encoding(xml_encoding), options(op), output_buffer(0),
       out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, 0, output_buf, uri), tabsize(tabsize), uri(uri) {}
 
 void srcMLTranslator::setMacroList(std::vector<std::string> & list) {
@@ -312,7 +312,7 @@ void srcMLTranslator::add_unit(const char* xml) {
 
 // destructor
 srcMLTranslator::~srcMLTranslator() {
-
+  
   if(str_buffer && output_buffer->use) {
 
     (*str_buffer) = strdup((const char *)output_buffer->content);
@@ -320,8 +320,7 @@ srcMLTranslator::~srcMLTranslator() {
 
   }
 
-
   if(output_buffer)
     xmlBufferFree(output_buffer);
-
+  
 }
