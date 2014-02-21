@@ -241,7 +241,6 @@ void srcMLControlHandler::parse(srcMLHandler * handler) {
         SAXError error = { std::string((const char *)ep->message), ep->code };
         throw error;
     }
-    ctxt->sax = save_sax;
 
 }
 
