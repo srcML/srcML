@@ -128,6 +128,9 @@ public :
             data.push_back(namespaces[i * 2 + 1]);
         }
 
+	/*
+
+	  This should not be needed since start root should always be called.
         // if applying to entire archive, then just build this node
         if (isoption(options, OPTION_APPLY_ROOT)) {
 
@@ -140,6 +143,7 @@ public :
 
             return;
         }
+	*/
 
         // start the document for this unit
         //xmlSAX2StartDocument(ctxt);
