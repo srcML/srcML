@@ -49,10 +49,9 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                          )
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
-      encoding(src_encoding), xml_encoding(0), options(op),
-      out(0, srcml_filename, getLanguageString(), xml_encoding, options, 0, tabsize, 0, 0, uri), tabsize(tabsize), uri(uri) {
-
-}
+      encoding(src_encoding), xml_encoding(0), options(op), output_buffer(0),
+      out(0, srcml_filename, getLanguageString(), xml_encoding, options, 0, tabsize, 0, 0, uri), tabsize(tabsize), uri(uri),
+      str_buffer(0), size(0) {}
 
 // constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
@@ -85,8 +84,9 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                          )
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
-      encoding(src_encoding), xml_encoding(xml_encoding), options(op),
-      out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, output_buffer, 0, uri), tabsize(tabsize), uri(uri) {}
+      encoding(src_encoding), xml_encoding(xml_encoding), options(op), output_buffer(0),
+      out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, output_buffer, 0, uri), tabsize(tabsize), uri(uri),
+      str_buffer(0), size(0) {}
 
 // constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
