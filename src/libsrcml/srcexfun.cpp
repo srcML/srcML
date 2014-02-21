@@ -46,8 +46,6 @@
 #include <libxslt/extensions.h>
 #endif
 
-#include <URIStream.hpp>
-
 static int Position;
 static PROPERTIES_TYPE* oldpattributes;
 static const xmlChar** pattributes;
