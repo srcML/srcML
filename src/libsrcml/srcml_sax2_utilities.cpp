@@ -125,7 +125,16 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
     XPathQueryUnits process(options, compiled_xpath, fd);
     srcMLControlHandler control(input_buffer);
 
-    control.parse(&process);
+    try {
+
+      control.parse(&process);
+
+    } catch(SAXError error) {
+
+      if(!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END))
+	fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
+
+    }
 
     xmlXPathFreeCompExpr(compiled_xpath);
 
@@ -239,7 +248,16 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     XSLTUnits process(context_element, options, stylesheet, params, fd);
     srcMLControlHandler control(input_buffer);
 
-    control.parse(&process);
+    try {
+
+      control.parse(&process);
+
+    } catch(SAXError error) {
+
+      if(!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END))
+	fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
+
+    }
 
     xsltFreeStylesheet(stylesheet);
     xsltCleanupGlobals();
@@ -274,7 +292,16 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int 
     RelaxNGUnits process(options, rngctx, fd);
     srcMLControlHandler control(input_buffer);
 
-    control.parse(&process);
+    try {
+
+      control.parse(&process);
+
+    } catch(SAXError error) {
+
+      if(!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END))
+	fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
+
+    }
 
     xmlRelaxNGFreeValidCtxt(rngctx);
     xmlRelaxNGFree(rng);
