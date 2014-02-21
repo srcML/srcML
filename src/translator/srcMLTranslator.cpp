@@ -69,9 +69,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
   :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
      encoding(src_encoding), xml_encoding(0), options(op), output_buffer(xmlBufferCreate()),
      out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, output_buffer, 0, uri), tabsize(tabsize),
-     uri(uri), str_buffer(str_buf), size(0) {
-
-}
+     uri(uri), str_buffer(str_buf), size(0) {}
 
 // constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
@@ -88,9 +86,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op),
-      out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, output_buffer, 0, uri), tabsize(tabsize), uri(uri) {
-
-}
+      out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, output_buffer, 0, uri), tabsize(tabsize), uri(uri) {}
 
 // constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
@@ -107,9 +103,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op),
-      out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, 0, output_buf, uri), tabsize(tabsize), uri(uri) {
-
-}
+      out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, 0, output_buf, uri), tabsize(tabsize), uri(uri) {}
 
 void srcMLTranslator::setMacroList(std::vector<std::string> & list) {
     user_macro_list = list;
@@ -167,10 +161,6 @@ void* srcMLTranslator::setInput(const char* path) {
 
 // close the output
 void srcMLTranslator::close() {
-
-    // if have not translated anything and nested output root unit
-    //if (first && ((options & OPTION_ARCHIVE) > 0))
-    //out.startUnit(0, root_directory, root_filename, root_version, true);
 
     out.close();
 }
@@ -249,10 +239,6 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
     // save old output
     if(isoption(translation_options, OPTION_ARCHIVE))
         sep_out.setDepth(1);
-    //xmlTextWriter * save_writer = sep_out.getWriter();
-
-    //xmlTextWriter * writer = xmlNewTextWriterMemory(output_buffer, isoption(translation_options, OPTION_COMPRESSED));
-    //sep_out.setWriter(writer);
 
     try {
 
@@ -295,11 +281,6 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
         fprintf(stderr, "ERROR\n");
     }
 
-    //xmlTextWriterEndDocument(writer);
-    //xmlFreeTextWriter(writer);
-    //writer = 0;
-
-    //sep_out.setWriter(save_writer);
     sep_out.setDepth(0);
 
 }
