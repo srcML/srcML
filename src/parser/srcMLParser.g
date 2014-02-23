@@ -2851,6 +2851,17 @@ condition[] { ENTRY_DEBUG } :
             setMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
         }
         LPAREN
+
+        {
+            int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; 
+            pattern_check(stmt_type, secondtoken, type_count);
+            if(stmt_type == VARIABLE) {
+                startNewMode(MODE_INTERNAL_END_PAREN);
+                for_initialization_variable_declaration(type_count);
+            }
+
+        }
+
 ;
 
 // perform an arbitrary look ahead looking for a pattern

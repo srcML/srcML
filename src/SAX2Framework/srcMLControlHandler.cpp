@@ -21,6 +21,7 @@
 */
 
 #include <srcMLControlHandler.hpp>
+#include <srcMLHandler.hpp>
 
 #include <SAX2Framework_utilities.hpp>
 
@@ -95,11 +96,23 @@ srcMLControlHandler::~srcMLControlHandler() {
  *
  * Return the used sax handler.
  */
-const xmlSAXHandler & srcMLControlHandler::getSAX() const {
+xmlSAXHandler & srcMLControlHandler::getSAX() {
 
     return sax;
 
 }
+
+/**
+ * getCtxt
+ *
+ * Return the used parser context.
+ */
+xmlParserCtxtPtr srcMLControlHandler::getCtxt() {
+
+  return ctxt;
+
+}
+
 
 /**
  * enable_startDocument
@@ -161,8 +174,17 @@ void srcMLControlHandler::enable_endElementNs(bool enable) {
  */
 void srcMLControlHandler::enable_characters(bool enable) {
 
-    if(enable) sax.characters = charactersFirst;
-    else sax.characters = 0;
+  if(enable) {
+
+    sax.characters = charactersFirst;
+    sax.ignorableWhitespace = charactersFirst;
+
+  } else {
+
+    sax.characters = 0;
+    sax.ignorableWhitespace = 0;
+
+  }
 
 }
 
@@ -200,6 +222,7 @@ void srcMLControlHandler::enable_cdataBlock(bool enable) {
  */
 void srcMLControlHandler::parse(srcMLHandler * handler) {
 
+    handler->set_control_handler(this);
     sax2_handler.process = handler;
 
     xmlSAXHandlerPtr save_sax = ctxt->sax;
@@ -218,7 +241,6 @@ void srcMLControlHandler::parse(srcMLHandler * handler) {
         SAXError error = { std::string((const char *)ep->message), ep->code };
         throw error;
     }
-    ctxt->sax = save_sax;
 
 }
 

@@ -46,8 +46,6 @@
 #include <libxslt/extensions.h>
 #endif
 
-#include <URIStream.hpp>
-
 static int Position;
 static PROPERTIES_TYPE* oldpattributes;
 static const xmlChar** pattributes;
@@ -79,6 +77,16 @@ static void srcContextFunction (xmlXPathParserContextPtr ctxt, int nargs) {
     fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
     valuePush(ctxt, xmlXPathNewFloat(Position));
+}
+
+// index of attribute in attributes
+int find_attribute_index(int nb_attributes, const xmlChar** attributes, const char* attribute) {
+
+    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
+        if (strcmp((const char*) attributes[index], attribute) == 0)
+            return index;
+
+    return -1;
 }
 
 static void srcRootFunction (xmlXPathParserContextPtr ctxt, int nargs) {

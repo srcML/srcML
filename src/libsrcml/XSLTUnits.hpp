@@ -51,9 +51,9 @@ typedef xmlDocPtr (*xsltApplyStylesheet_function) (xsltStylesheetPtr,xmlDocPtr,c
 class XSLTUnits : public UnitDOM {
 public :
 
-    XSLTUnits(const char* a_context_element, const char* a_ofilename, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
+    XSLTUnits(const char* a_context_element, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
               const char** params, int fd = 0)
-        : UnitDOM(options), ofilename(a_ofilename), options(options),
+        : UnitDOM(options), options(options),
           stylesheet(stylesheet), found(false),
           result_type(0), params(params), fd(fd) {
 
@@ -100,13 +100,10 @@ public :
 #endif
     }
 
-    virtual void startOutput(void* ctx) {
+    virtual void startOutput() {
 
         // setup output
-        if(ofilename)
-            buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
-        else
-            buf = xmlOutputBufferCreateFd(fd, NULL);
+        buf = xmlOutputBufferCreateFd(fd, NULL);
         // TODO:  Detect error
 
 #ifdef LIBSRCML_COMPILER_IS_MSVC
@@ -115,12 +112,9 @@ public :
 
     }
 
-    virtual bool apply(void* ctx) {
+    virtual bool apply() {
 
-        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
-
-        setPosition((int)pstate->count);
+        setPosition((int)unit_count);
 
         // apply the style sheet to the document, which is the individual unit
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
@@ -148,32 +142,34 @@ public :
             // output the root unit start tag
             // this is only if in per-unit mode and this is the first result found
             // have to do so here because it may be empty
-            if (result_type == XML_ELEMENT_NODE && pstate->isarchive && !found && !isoption(options, OPTION_APPLY_ROOT)) {
+            if (result_type == XML_ELEMENT_NODE && is_archive && !found && !isoption(options, OPTION_APPLY_ROOT)) {
 
                 // output a root element, just like the one read in
                 // note that this has to be ended somewhere
-                xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
-                                              pstate->root.nb_namespaces, pstate->root.namespaces,
-                                              pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
+                xmlOutputBufferWriteElementNs(buf, root->localname, root->prefix, root->URI,
+                                              root->nb_namespaces, root->namespaces,
+                                              is_archive ? root->nb_attributes : 0, root->nb_defaulted, root->attributes);
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
 
-                for(std::vector<std::string>::size_type i = 0; i < pstate->macro_list.size(); ++i) {
-                    xmlOutputBufferWriteElementNs(buf, pstate->macro_list.at(i).localname, pstate->macro_list.at(i).prefix, pstate->macro_list.at(i).URI,
-                                                  pstate->macro_list.at(i).nb_namespaces, pstate->macro_list.at(i).namespaces,
-                                                  pstate->macro_list.at(i).nb_attributes, pstate->macro_list.at(i).nb_defaulted, pstate->macro_list.at(i).attributes);
+                for(std::vector<std::string>::size_type i = 0; i < meta_tags->size(); ++i) {
+
+                    xmlOutputBufferWriteElementNs(buf, meta_tags->at(i).localname, meta_tags->at(i).prefix, meta_tags->at(i).URI,
+                                                  meta_tags->at(i).nb_namespaces, meta_tags->at(i).namespaces,
+                                                  meta_tags->at(i).nb_attributes, meta_tags->at(i).nb_defaulted, meta_tags->at(i).attributes);
+		    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
+
                 }
-                if(pstate->macro_list.size()) xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
 
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
-                root_prefix = pstate->root.prefix;
+                root_prefix = root->prefix;
             }
             found = true;
 
             // save the result, but temporarily hide the namespaces since we only want them on the root element
             xmlNodePtr resroot = xmlDocGetRootElement(res);
             xmlNsPtr savens = resroot ? resroot->nsDef : 0;
-            bool turnoff_namespaces = savens && pstate->isarchive && !isoption(options, OPTION_APPLY_ROOT);
+            bool turnoff_namespaces = savens && is_archive && !isoption(options, OPTION_APPLY_ROOT);
             if (turnoff_namespaces) {
                 xmlNsPtr cur = savens;
                 xmlNsPtr ret = NULL;
@@ -214,7 +210,7 @@ public :
             }
 
             // put some space between this unit and the next one if compound
-            if (result_type == XML_ELEMENT_NODE && pstate->isarchive && !isoption(options, OPTION_APPLY_ROOT))
+            if (result_type == XML_ELEMENT_NODE && is_archive && !isoption(options, OPTION_APPLY_ROOT))
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
             // finished with the result of the transformation
@@ -223,14 +219,13 @@ public :
         }
 
         return true;
-    }
-    virtual void endOutput(void *ctx) {
 
-        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+    }
+
+    virtual void endOutput() {
 
         // root unit end tag
-        if (result_type == XML_ELEMENT_NODE && found && pstate->isarchive && !isoption(options, OPTION_APPLY_ROOT)) {
+        if (result_type == XML_ELEMENT_NODE && found && is_archive && !isoption(options, OPTION_APPLY_ROOT)) {
 
             std::string end_unit = "</";
             if(root_prefix) {
@@ -240,9 +235,9 @@ public :
             }
             end_unit += "unit>\n";
 
-            xmlOutputBufferWriteString(buf, found || pstate->macro_list.size() ? end_unit.c_str() : "/>\n");
+            xmlOutputBufferWriteString(buf, found || meta_tags->size() ? end_unit.c_str() : "/>\n");
 
-        } else if (result_type == XML_ELEMENT_NODE && found && !pstate->isarchive) {
+        } else if (result_type == XML_ELEMENT_NODE && found && !is_archive) {
             xmlOutputBufferWriteString(buf, "\n");
         }else if (result_type == XML_ELEMENT_NODE && found && isoption(options, OPTION_APPLY_ROOT)) {
             xmlOutputBufferWriteString(buf, "\n");
@@ -347,7 +342,7 @@ public :
     }
 
 private :
-    const char* ofilename;
+
     OPTION_TYPE & options;
     xsltStylesheetPtr stylesheet;
     bool found;
@@ -361,6 +356,7 @@ private :
     xsltApplyStylesheet_function xsltApplyStylesheetDynamic;
 #endif
     void * handle;
+
 };
 
 #endif

@@ -58,7 +58,9 @@ void * start_routine(void * arguments) {
     } catch(SAXError error) {
 
         if(!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END))
-            fprintf(stderr, "Error Parsing: %s", error.message.c_str());
+            fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
+
+	// might have to release a lock here or set is_done;
     }
 
     return 0;
@@ -169,11 +171,11 @@ int srcMLSAX2Reader::readUnitAttributes(boost::optional<std::string> & language,
                                         boost::optional<std::string> & directory, boost::optional<std::string> & version) {
 
     if(handler.is_done) return 0;
-
+    handler.skip = true;
     handler.collect_unit_attributes = true;
     handler.resume_and_wait();
     handler.collect_unit_attributes = false;
-
+    handler.skip = false;
     if(handler.is_done) return 0;
 
     language.swap(handler.unit->language);
@@ -222,7 +224,6 @@ int srcMLSAX2Reader::readsrcML(boost::optional<std::string> & unit) {
 int srcMLSAX2Reader::readsrc(xmlOutputBufferPtr output_buffer) {
 
     if(handler.is_done) return 0;
-    control.enable_startElementNs(false);
     control.enable_comment(false);
     control.enable_cdataBlock(false);
     handler.output_buffer = output_buffer;
@@ -230,7 +231,6 @@ int srcMLSAX2Reader::readsrc(xmlOutputBufferPtr output_buffer) {
     handler.resume_and_wait();
     handler.collect_src = false;
     handler.output_buffer = 0;
-    control.enable_startElementNs(true);
     control.enable_comment(true);
     control.enable_cdataBlock(true);
     if(handler.is_done) return 0;

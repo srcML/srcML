@@ -25,6 +25,8 @@
 #define INCLUDED_SRCMLHANDLER_HPP
 
 #include <srcMLElement.hpp>
+#include <srcMLControlHandler.hpp>
+//class srcMLControlHandler;
 
 #include <libxml/parser.h>
 
@@ -39,34 +41,83 @@ class srcMLHandler {
 
 private :
 
-    xmlParserCtxtPtr ctxt;
+    srcMLControlHandler * control_handler;
 
 protected:
     bool is_archive;
+    int unit_count;
 
 public :
+  
+    /**
+     * srcMLHandler
+     *
+     * Default constructor default values to everything
+     */
+    srcMLHandler() : control_handler(0), is_archive(false), unit_count(0) {}
 
-    void init(xmlParserCtxtPtr ctxt) {
+    /**
+     * set_control_handler
+     * @param control_handler pointer to control class 
+     *
+     * Used by srcMLControlHandler to provide access to self
+     * for such things as disabeling sax parsing.
+     */
+    void set_control_handler(srcMLControlHandler * control_handler) {
 
-        this->ctxt = ctxt;
+        this->control_handler = control_handler;
 
     }
 
+    /**
+     * increment_unit_count
+     *
+     * Internally used to increment the count in SAX2srcMLHandler.
+     */
+    void increment_unit_count() {
+
+        ++unit_count;
+
+    }
+
+    /**
+     * get_control_handler
+     *
+     * Get the control handler. 
+     */
+    srcMLControlHandler & get_control_handler() {
+ 
+        return *control_handler;
+
+    }
+
+    /**
+     * stop_parser
+     *
+     * Stop the srcML parser.
+     */
     void stop_parser() {
 
-        ctxt->sax->startDocument = 0;
-        ctxt->sax->endDocument = 0;
-        ctxt->sax->startElementNs = 0;
-        ctxt->sax->endElementNs = 0;
-        ctxt->sax->characters = 0;
-        ctxt->sax->cdataBlock = 0;
-        ctxt->sax->comment = 0;
-        ctxt->sax->ignorableWhitespace = 0;
+        control_handler->getSAX().startDocument = 0;
+        control_handler->getSAX().endDocument = 0;
+        control_handler->getSAX().startElementNs = 0;
+        control_handler->getSAX().endElementNs = 0;
+        control_handler->getSAX().characters = 0;
+        control_handler->getSAX().cdataBlock = 0;
+        control_handler->getSAX().comment = 0;
+        control_handler->getSAX().ignorableWhitespace = 0;
 
-        xmlStopParser(ctxt);
+	xmlStopParser(control_handler->getCtxt());
 
     }
 
+    /**
+     * set_is_archive
+     * @param is_archive is the srcML document an archive
+     *
+     * Used by SAX2srcMLHandler when determined
+     * if an archive.  Sets if srcML document is an archive.
+     */
     void set_is_archive(bool is_archive) {
 
         this->is_archive = is_archive;

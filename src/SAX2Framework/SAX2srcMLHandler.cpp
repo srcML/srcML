@@ -21,6 +21,7 @@
 */
 
 #include <SAX2srcMLHandler.hpp>
+#include <srcMLHandler.hpp>
 
 #include <cstring>
 
@@ -45,6 +46,7 @@ xmlSAXHandler factory() {
     sax.endElementNs = &endElementNs;
 
     sax.characters = &charactersFirst;
+    sax.ignorableWhitespace = &charactersFirst;
 
     sax.comment = &comment;
     sax.cdataBlock = &cdataBlock;
@@ -73,7 +75,7 @@ void startDocument(void * ctx) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2srcMLHandler * state = (SAX2srcMLHandler *) ctxt->_private;
 
-    state->process->init(ctxt);
+    //    state->process->init(ctxt);
     state->process->startDocument();
 
 #ifdef DEBUG
@@ -101,7 +103,7 @@ void endDocument(void * ctx) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2srcMLHandler * state = (SAX2srcMLHandler *) ctxt->_private;
 
-    if(ctxt->sax->startElementNs)
+    if(state->mode != END_ROOT)
         state->process->endRoot(state->root.localname, state->root.prefix, state->root.URI);
 
     state->process->endDocument();
@@ -141,6 +143,8 @@ void startRoot(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
     SAX2srcMLHandler * state = (SAX2srcMLHandler *) ctxt->_private;
 
     state->root = srcMLElement(ctxt, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
+
+    state->mode = ROOT;
 
     // handle nested units
     ctxt->sax->startElementNs = &startElementNsFirst;
@@ -205,6 +209,9 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
 
     if(!state->is_archive) {
 
+        state->process->increment_unit_count();
+
+        state->mode = UNIT;
         state->process->startUnit(state->root.localname, state->root.prefix, state->root.URI,
                                   state->root.nb_namespaces, state->root.namespaces, state->root.nb_attributes,
                                   state->root.nb_defaulted, state->root.attributes);
@@ -215,6 +222,10 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
     } else {
 
         state->process->charactersRoot((const xmlChar *)state->root.characters.c_str(), (int)state->root.characters.size());
+
+	state->process->increment_unit_count();
+
+	state->mode = UNIT;
         state->process->startUnit(localname, prefix, URI,
                                   nb_namespaces, namespaces, nb_attributes,
                                   nb_defaulted, attributes);
@@ -222,8 +233,13 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
 
     }
 
-    ctxt->sax->startElementNs = &startElementNs;
-    ctxt->sax->characters = &charactersUnit;
+    if(ctxt->sax->startElementNs) ctxt->sax->startElementNs = &startElementNs;
+    if(ctxt->sax->characters) {
+
+      ctxt->sax->characters = &charactersUnit;
+      ctxt->sax->ignorableWhitespace = &charactersUnit;
+
+    }
 
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -268,9 +284,19 @@ void startUnit(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
         if(URI && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)URI) == 0)
             URI = state->root.namespaces[i];
 
+    state->process->increment_unit_count();
+
+    state->mode = UNIT;
+
     state->process->startUnit(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
-    ctxt->sax->startElementNs = &startElementNs;
-    ctxt->sax->characters = &charactersUnit;
+
+    if(ctxt->sax->startElementNs) ctxt->sax->startElementNs = &startElementNs;
+    if(ctxt->sax->characters) {
+
+	ctxt->sax->characters = &charactersUnit;
+	ctxt->sax->ignorableWhitespace = &charactersUnit;
+
+    }
 
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -317,6 +343,7 @@ void startElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefi
 
     state->process->startElementNs(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
 
+
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
@@ -354,7 +381,7 @@ void endElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix,
 
     if(strcmp((const char *)localname, "unit") == 0) {
 
-        if(ctxt->sax->startElementNs == &startElementNsFirst) {
+        if(state->mode == ROOT) {
 
             state->is_archive = false;
             state->process->set_is_archive(state->is_archive);
@@ -374,19 +401,26 @@ void endElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix,
 
         if(ctxt->sax->startElementNs == &startUnit) {
 
+	    state->mode = END_ROOT;
             state->process->endRoot(localname, prefix, URI);
-            ctxt->sax->startElementNs = 0;
 
         } else {
 
+	    state->mode = END_UNIT;
             state->process->endUnit(localname, prefix, URI);
-            ctxt->sax->startElementNs = &startUnit;
-            ctxt->sax->characters = &charactersRoot;
+            if(ctxt->sax->startElementNs) ctxt->sax->startElementNs = &startUnit;
+            if(ctxt->sax->characters) {
 
+	      ctxt->sax->characters = &charactersRoot;
+	      ctxt->sax->ignorableWhitespace = &charactersRoot;
+
+	    }
         }
 
-    } else
+    } else {
+
         state->process->endElementNs(localname, prefix, URI);
+    }
 
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);

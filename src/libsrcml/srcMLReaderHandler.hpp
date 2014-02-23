@@ -69,6 +69,9 @@ private :
     /** indicate if we need to wait on the root */
     bool wait_root;
 
+    /** skip internal unit elements */
+    bool skip;
+
     /** save meta tags to use when non-archive write unit */
     std::vector<srcMLElement> * meta_tags;
 
@@ -82,7 +85,9 @@ public :
      *
      * Constructor.  Sets up mutex, conditions and state.
      */
-    srcMLReaderHandler() : unit(0), output_buffer(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), collect_src(false), terminate(false), is_empty(false), wait_root(true) {
+  srcMLReaderHandler() : unit(0), output_buffer(0), is_done(false), read_root(false),
+			 collect_unit_attributes(false), collect_srcml(false), collect_src(false),
+			 terminate(false), is_empty(false), wait_root(true), skip(false) {
 
         archive = srcml_create_archive();
         archive->prefixes.clear();
@@ -398,6 +403,15 @@ public :
 
         }
 
+	if(skip) {
+
+	  get_control_handler().enable_startElementNs(false);
+	  get_control_handler().enable_characters(false);
+	  get_control_handler().enable_comment(false);
+	  get_control_handler().enable_cdataBlock(false);
+
+	}
+
         if(collect_srcml) {
 
             write_startTag(localname, prefix, nb_namespaces, namespaces, nb_attributes, attributes);
@@ -458,6 +472,16 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+	if(collect_src && localname[0] == 'e' && localname[1] == 's'
+	   && strcmp((const char *)localname, "escape") == 0) {
+
+	  char value = (int)strtol((const char*) attributes[3], NULL, 0);
+
+	  charactersUnit((xmlChar *)&value, 1);
+	  
+
+	} 
+
         if(is_empty && collect_srcml) *unit->unit += ">";
         is_empty = true;
 
@@ -517,6 +541,16 @@ public :
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
+
+	if(skip) {
+
+	  get_control_handler().enable_startElementNs(true);
+	  get_control_handler().enable_characters(true);
+	  get_control_handler().enable_comment(true);
+	  get_control_handler().enable_cdataBlock(true);
+
+	}
+
 
         //if(is_empty) *unit->unit += ">";
         if(collect_srcml) {

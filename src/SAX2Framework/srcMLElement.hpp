@@ -70,8 +70,17 @@ struct srcMLElement {
         memset(this->namespaces, 0, ns_length);
 
         for (int i = 0; i < ns_length; ++i) {
+
+	  if(prefix && namespaces[i] && strcmp((const char *)prefix, (const char *)namespaces[i]) == 0)
+	    this->namespaces[i] = this->prefix;
+	  else if(URI && namespaces[i] && strcmp((const char *)URI, (const char *)namespaces[i]) == 0)
+	    this->namespaces[i] = this->URI;
+	  else {
+
             this->namespaces[i] = namespaces[i] ? (xmlChar*) strdup((const char*) namespaces[i]) : 0;
             CHECK_COPY(namespaces[i], this->namespaces[i]);
+	  }
+
         }
 
         this->nb_attributes = nb_attributes;
