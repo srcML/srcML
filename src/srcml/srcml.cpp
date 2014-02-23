@@ -101,17 +101,15 @@ int main(int argc, char * argv[]) {
             srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
 
         // register file extensions
-        for (size_t i = 0; i < srcml_request.register_ext.size(); ++i) {
-            size_t pos = srcml_request.register_ext[i].find('=');
-            srcml_archive_register_file_extension(srcml_arch, srcml_request.register_ext[i].substr(0,pos).c_str(),
-                                                  srcml_request.register_ext[i].substr(pos+1).c_str());
+        BOOST_FOREACH(const std::string& ext, srcml_request.register_ext) {
+            size_t pos = ext.find('=');
+            srcml_archive_register_file_extension(srcml_arch, ext.substr(0, pos).c_str(), ext.substr(pos+1).c_str());
         }
 
         // register xml namespaces
-        for (size_t i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
-            size_t pos = srcml_request.xmlns_prefix[i].find('=');
-            srcml_archive_register_namespace(srcml_arch, srcml_request.xmlns_prefix[i].substr(0,pos).c_str(),
-                                             srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
+        BOOST_FOREACH(const std::string& ns, srcml_request.xmlns_prefix) {
+            size_t pos = ns.find('=');
+            srcml_archive_register_namespace(srcml_arch, ns.substr(0,pos).c_str(), ns.substr(pos+1).c_str());
         }
 
         // create the srcML output file
