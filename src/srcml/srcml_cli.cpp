@@ -164,7 +164,7 @@ void option_register_ext(const std::vector<std::string>& values) {srcml_request.
 
 void option_tabs(const int value) {
     // check tabstop
-    if (srcml_request.tabs <= 0) {
+    if (value < 1) {
         std::cerr << "srcmlCLI: " << value << " is an invalid tab stop. Tab stops must be 1 or higher.\n";
         exit(1); //ERROR CODE TBD
     }
