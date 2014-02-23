@@ -65,13 +65,13 @@ int main(int argc, char * argv[]) {
         return 0;
     }
 
-    // SRC2SRCML MODE
+    // src->srcml
     if (srcml_request.positional_args.size() > 1 || src_language(srcml_request.positional_args[0]).compare("xml") != 0) {
 
-        // create the output archive
+        // create the output srcml archive
         srcml_archive* srcml_arch = srcml_create_archive();
 
-        // set options for the output archive
+        // set options for the output srcml archive
         if (srcml_request.encoding != "")
             srcml_archive_set_encoding(srcml_arch, srcml_request.encoding.c_str());
 
@@ -84,39 +84,32 @@ int main(int argc, char * argv[]) {
         if (srcml_request.src_versions_set)
             srcml_archive_set_version(srcml_arch, srcml_request.src_versions.c_str());
 
-        if (srcml_request.markup_options != 0) {
+        if (srcml_request.markup_options != 0)
             srcml_archive_enable_option(srcml_arch, srcml_archive_get_options(srcml_arch) | srcml_request.markup_options);
-        }
 
-        if (srcml_request.language != "")
+        if (srcml_request.language != "") 
             srcml_archive_set_language(srcml_arch, srcml_request.language.c_str());
-        else
+        else 
             srcml_archive_set_language(srcml_arch, SRCML_LANGUAGE_NONE);
 
         srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
 
         // archive or not
-        if (srcml_request.positional_args.size() == 1 && !(srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) {
-            boost::filesystem::path inFile (srcml_request.positional_args[0]);
-            if(srcml_request.positional_args[0] == "-" || srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[0].c_str()) || inFile.extension().compare(".xml") == 0)
-                srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
-        }
-        else {
+        if (srcml_request.positional_args.size() == 1 && !(srcml_request.markup_options & SRCML_OPTION_ARCHIVE))
+            srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+        else
             srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
-        }
 
         // register file extensions
-        for (size_t i = 0; i < srcml_request.register_ext.size(); ++i) {
-            size_t pos = srcml_request.register_ext[i].find('=');
-            srcml_archive_register_file_extension(srcml_arch, srcml_request.register_ext[i].substr(0,pos).c_str(),
-                                                  srcml_request.register_ext[i].substr(pos+1).c_str());
+        BOOST_FOREACH(const std::string& ext, srcml_request.register_ext) {
+            size_t pos = ext.find('=');
+            srcml_archive_register_file_extension(srcml_arch, ext.substr(0, pos).c_str(), ext.substr(pos+1).c_str());
         }
 
         // register xml namespaces
-        for (size_t i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
-            size_t pos = srcml_request.xmlns_prefix[i].find('=');
-            srcml_archive_register_namespace(srcml_arch, srcml_request.xmlns_prefix[i].substr(0,pos).c_str(),
-                                             srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
+        BOOST_FOREACH(const std::string& ns, srcml_request.xmlns_prefix) {
+            size_t pos = ns.find('=');
+            srcml_archive_register_namespace(srcml_arch, ns.substr(0,pos).c_str(), ns.substr(pos+1).c_str());
         }
 
         // create the srcML output file
@@ -168,17 +161,15 @@ int main(int argc, char * argv[]) {
     else if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
         srcml_display_info(srcml_request.positional_args);
     }
-
     // srcml info
     else if (srcml_request.command & SRCML_COMMAND_INFO) {
         srcml_display_info(srcml_request.positional_args);
     }
-
     // list filenames in srcml archive
     else if (srcml_request.command & SRCML_COMMAND_LIST) {
         srcml_list_unit_files(srcml_request.positional_args);
 
-    // srcml->src
+    // srcml->src single file to stdout
     } else if (srcml_request.positional_args.size() == 1 && srcml_request.output == "-") {
 
         srcml_archive* arch = srcml_create_archive();
@@ -191,7 +182,7 @@ int main(int argc, char * argv[]) {
         srcml_close_archive(arch);
         srcml_free_archive(arch);
 
-    // srcml->src
+    // srcml->src single file (non stdout)
     } else if (srcml_request.positional_args.size() == 1) {
 
         // TODO: What if this is a simple, single file? or to stdout?
