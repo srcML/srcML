@@ -68,24 +68,6 @@ int main(int argc, char * argv[]) {
     // SRC2SRCML MODE
     if (srcml_request.positional_args.size() > 1 || src_language(srcml_request.positional_args[0]).compare("xml") != 0) {
 
-        // check encoding
-        if (srcml_request.encoding != "" && srcml_check_encoding(srcml_request.encoding.c_str()) == 0) {
-            std::cerr << argv[0] << ": invalid encoding.\n";
-            return 1; //ERROR CODE TBD
-        }
-
-        // check language
-        if (srcml_request.language != "" && srcml_check_language(srcml_request.language.c_str()) == 0) {
-            std::cerr << argv[0] << ": invalid language.\n";
-            return 1; //ERROR CODE TBD
-        }
-
-        // check tabstop
-        if (srcml_request.tabs <= 0) {
-            std::cerr << argv[0] << ": " << srcml_request.tabs << " is invalid tab stop. Tab stops must be 1 or higher.\n";
-            return 1; //ERROR CODE TBD
-        }
-
         // create the output archive
         srcml_archive* srcml_arch = srcml_create_archive();
 

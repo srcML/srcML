@@ -141,11 +141,35 @@ void option_command(bool opt) {
 void option_filename(const std::string& value) { srcml_request.filename = value; }
 void option_output(const std::string& value) {srcml_request.output = value; }
 void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value; }
-void option_encoding(const std::string& value) {srcml_request.encoding = value; }
+
+void option_encoding(const std::string& value) {
+    if (srcml_request.encoding != "" && srcml_check_encoding(srcml_request.encoding.c_str()) == 0) {
+        std::cerr << "srcmlCLI: invalid encoding.\n";
+        exit(1); //ERROR CODE TBD
+    }
+    srcml_request.encoding = value;
+}
+
 void option_files_from(const std::string& value) {srcml_request.files_from = value; }
-void option_language(const std::string& value) {srcml_request.language = value; }
+
+void option_language(const std::string& value) {
+    // check language
+    if (srcml_request.language != "" && srcml_check_language(srcml_request.language.c_str()) == 0) {
+        std::cerr << "srcmlCLI: invalid language.\n";
+        exit(1); //ERROR CODE TBD
+    }
+    srcml_request.language = value; 
+}
 void option_register_ext(const std::vector<std::string>& values) {srcml_request.register_ext = values; }
-void option_tabs(const int value) {srcml_request.tabs = value; }
+
+void option_tabs(const int value) {
+    // check tabstop
+    if (srcml_request.tabs <= 0) {
+        std::cerr << "srcmlCLI: " << value << " is an invalid tab stop. Tab stops must be 1 or higher.\n";
+        exit(1); //ERROR CODE TBD
+    }
+    srcml_request.tabs = value;
+}
 void option_directory(const std::string& value) {srcml_request.directory = value; srcml_request.directory_set = true; }
 void option_src_versions(const std::string& value) {srcml_request.src_versions = value; srcml_request.src_versions_set = true; }
 void option_prefix(const std::string& value) {srcml_request.prefix = value; }
