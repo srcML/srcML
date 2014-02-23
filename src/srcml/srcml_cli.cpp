@@ -182,6 +182,7 @@ void option_help(const std::string& help_opt) {
                   << help_opt << "' in the --help-module option\n";
         exit(1);
     }
+    exit(0);
 }
 
 /* Function used to check that 'opt1' and 'opt2' are not specified

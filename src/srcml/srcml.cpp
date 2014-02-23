@@ -57,10 +57,6 @@ int main(int argc, char * argv[]) {
     // parse the command line
     srcml_request_t srcml_request = parseCLI(argc, argv);
 
-    // help option was selected, already displayed so no more to do
-    if (srcml_request.help_set)
-        return 0;
-
     // version
     if (srcml_request.command & SRCML_COMMAND_VERSION) {
         std::cout <<  srcml_version_string() << "\n";
