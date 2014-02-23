@@ -161,17 +161,15 @@ int main(int argc, char * argv[]) {
     else if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
         srcml_display_info(srcml_request.positional_args);
     }
-
     // srcml info
     else if (srcml_request.command & SRCML_COMMAND_INFO) {
         srcml_display_info(srcml_request.positional_args);
     }
-
     // list filenames in srcml archive
     else if (srcml_request.command & SRCML_COMMAND_LIST) {
         srcml_list_unit_files(srcml_request.positional_args);
 
-    // srcml->src
+    // srcml->src single file to stdout
     } else if (srcml_request.positional_args.size() == 1 && srcml_request.output == "-") {
 
         srcml_archive* arch = srcml_create_archive();
@@ -184,7 +182,7 @@ int main(int argc, char * argv[]) {
         srcml_close_archive(arch);
         srcml_free_archive(arch);
 
-    // srcml->src
+    // srcml->src single file (non stdout)
     } else if (srcml_request.positional_args.size() == 1) {
 
         // TODO: What if this is a simple, single file? or to stdout?
