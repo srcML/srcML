@@ -88,8 +88,6 @@ public:
     const char * columnAttributeValue(const antlr::RefToken& token);
     const char * lineAttributeValue(int aline);
 
-    virtual const char * convert_num2prefix(unsigned int i) const;
-
     // destructor
     ~srcMLOutput();
 
