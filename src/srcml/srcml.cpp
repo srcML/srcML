@@ -57,8 +57,8 @@ int main(int argc, char * argv[]) {
 
     // src->srcml
     if ((srcml_request.unit == 0) &&
-        (srcml_request.positional_args.size() > 1) &&
-        (src_language(srcml_request.positional_args[0]).compare("xml") != 0)) {
+        ((srcml_request.positional_args.size() > 1) ||
+         (src_language(srcml_request.positional_args[0]).compare("xml") != 0))) {
 
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_create_archive();
