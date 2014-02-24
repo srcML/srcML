@@ -35,4 +35,4 @@ if(NOT ${SAX2_ENABLED})
 endif()
 
 add_library(libsrcml OBJECT ${LIBSRCML_HEADERS} ${LIBSRCML_SOURCE})
-
+add_dependencies(libsrcml parser translator)
