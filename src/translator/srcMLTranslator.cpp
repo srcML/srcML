@@ -49,8 +49,8 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                          )
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
-      encoding(src_encoding), xml_encoding(0), options(op), output_buffer(0),
-      out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri, tabsize, 0, 0), tabsize(tabsize), uri(uri),
+      encoding(src_encoding), xml_encoding(0), options(op), buffer(0),
+      out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri, tabsize, 0), tabsize(tabsize), uri(uri),
       str_buffer(0), size(0) {}
 
 // constructor
@@ -67,15 +67,22 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  int tabsize                  // size of tabs
                                  )
   :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
-     encoding(src_encoding), xml_encoding(0), options(op), output_buffer(xmlBufferCreate()),
-     out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, output_buffer, 0), tabsize(tabsize),
-     uri(uri), str_buffer(str_buf), size(size) {}
+     encoding(src_encoding), xml_encoding(0), options(op), buffer(0),
+     out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, 0), tabsize(tabsize),
+     uri(uri), str_buffer(str_buf), size(size) {
+
+    buffer = xmlBufferCreate();
+    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
+    out.setOutputBuffer(obuffer);
+
+
+}
 
 // constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
                                          const char* src_encoding,    // text encoding of source code
                                          const char* xml_encoding,    // xml encoding of result srcML file
-                                         xmlBuffer* output_buf,
+                                         xmlOutputBuffer * output_buffer,
                                          OPTION_TYPE& op,             // many and varied options
                                          const char* directory,       // root unit directory
                                          const char* filename,        // root unit filename
@@ -85,26 +92,8 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                          )
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
-      encoding(src_encoding), xml_encoding(xml_encoding), options(op), output_buffer(0),
-      out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, output_buf, 0), tabsize(tabsize), uri(uri),
-      str_buffer(0), size(0) {}
-
-// constructor
-srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
-                                         const char* src_encoding,    // text encoding of source code
-                                         const char* xml_encoding,    // xml encoding of result srcML file
-                                         xmlOutputBuffer * output_buf,
-                                         OPTION_TYPE& op,             // many and varied options
-                                         const char* directory,       // root unit directory
-                                         const char* filename,        // root unit filename
-                                         const char* version,         // root unit version
-                                         std::string * uri,           // uri prefixes
-                                         int tabsize                  // size of tabs
-                                         )
-    : Language(language), pinput(0), first(true),
-      root_directory(directory), root_filename(filename), root_version(version),
-      encoding(src_encoding), xml_encoding(xml_encoding), options(op), output_buffer(0),
-      out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, 0, output_buf), tabsize(tabsize), uri(uri),
+      encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
+      out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, output_buffer), tabsize(tabsize), uri(uri),
       str_buffer(0), size(0) {}
 
 void srcMLTranslator::setMacroList(std::vector<std::string> & list) {
@@ -234,7 +223,8 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
                                              const char * src_encoding,
                                              OPTION_TYPE translation_options) {
 
-    srcMLOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, uri, tabsize, output_buffer, 0);
+    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler(xml_encoding));
+    srcMLOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, uri, tabsize, obuffer);
     sep_out.initWriter();
     sep_out.setMacroList(user_macro_list);
 
@@ -315,14 +305,14 @@ void srcMLTranslator::add_unit(const char* xml) {
 // destructor
 srcMLTranslator::~srcMLTranslator() {
   
-  if(str_buffer && output_buffer->use) {
+  if(str_buffer && buffer->use) {
 
-    (*str_buffer) = strdup((const char *)output_buffer->content);
-    if(size && *str_buffer) *size = (int)output_buffer->use;
+    (*str_buffer) = strdup((const char *)buffer->content);
+    if(size && *str_buffer) *size = (int)buffer->use;
 
   }
 
-  if(output_buffer)
-    xmlBufferFree(output_buffer);
+  if(buffer)
+    xmlBufferFree(buffer);
   
 }
