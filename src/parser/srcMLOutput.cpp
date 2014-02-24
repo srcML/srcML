@@ -609,7 +609,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
         // position tab setting
         { tabattribute.c_str(), isoption(OPTION_POSITION) ? stab.c_str() : 0 },
 
-        { UNIT_ATTRIBUTE_OPTIONS,  (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.c_str() : 0 },
+        { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.c_str() : 0 },
 
     };
 

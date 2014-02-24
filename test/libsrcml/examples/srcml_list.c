@@ -28,12 +28,23 @@
 #include "srcml.h"
 
 int main(int argc, char* argv[]) {
-    const char** p;
 
-    p = srcml_list("project.xml");
+    struct srcml_archive * archive;
+    struct srcml_unit * unit;
 
-    for(; *p; ++p)
-      puts(*p);
+    archive = srcml_create_archive();
+    srcml_read_open_filename(archive, "project.xml");
+
+    while((unit = srcml_read_unit_header(archive))) {
+
+	puts(srcml_unit_get_filename(unit));
+	srcml_free_unit(unit);
+
+    }
+
+
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
 
     return 0;
 }
