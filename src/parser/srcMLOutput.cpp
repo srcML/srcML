@@ -993,6 +993,12 @@ int srcMLOutput::ElementPrefix[] = {
 #undef BOOST_PP_LOCAL_LIMITS
 };
 
+void srcMLOutput::setOutputBuffer(xmlOutputBufferPtr output_buffer) {
+
+    this->output_buffer = output_buffer;
+
+}
+
 xmlTextWriter * srcMLOutput::getWriter() {
 
     return xout;

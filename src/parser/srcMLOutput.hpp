@@ -52,6 +52,7 @@ public:
                 xmlOutputBuffer * output_buffer = 0
                 );
 
+    void setOutputBuffer(xmlOutputBufferPtr output_buffer);
     void initWriter();
     xmlTextWriter * getWriter();
     void setDepth(int thedepth);

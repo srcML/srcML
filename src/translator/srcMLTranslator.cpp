@@ -67,9 +67,16 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  int tabsize                  // size of tabs
                                  )
   :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
-     encoding(src_encoding), xml_encoding(0), options(op), buffer(xmlBufferCreate()),
-     out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding))), tabsize(tabsize),
-     uri(uri), str_buffer(str_buf), size(size) {}
+     encoding(src_encoding), xml_encoding(0), options(op), buffer(0),
+     out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, 0), tabsize(tabsize),
+     uri(uri), str_buffer(str_buf), size(size) {
+
+    buffer = xmlBufferCreate();
+    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
+    out.setOutputBuffer(obuffer);
+
+
+}
 
 // constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
