@@ -66,7 +66,7 @@ int main(int argc, char * argv[]) {
     }
 
     // src->srcml
-    if (srcml_request.positional_args.size() > 1 || src_language(srcml_request.positional_args[0]).compare("xml") != 0) {
+    if (srcml_request.unit == 0 && (srcml_request.positional_args.size() > 1 || src_language(srcml_request.positional_args[0]).compare("xml") != 0)) {
 
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_create_archive();
@@ -169,7 +169,53 @@ int main(int argc, char * argv[]) {
     else if (srcml_request.command & SRCML_COMMAND_LIST) {
         srcml_list_unit_files(srcml_request.positional_args);
 
-    // srcml->src single file to stdout
+    // srcml->src extract individual unit in XML
+    } else if ((srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.positional_args.size() == 1) {
+
+        srcml_archive* arch = srcml_create_archive();
+        srcml_read_open_filename(arch, srcml_request.positional_args[0].c_str());
+
+        srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
+
+        // TODO: We would have to use extend the API, or we will be creating/closing files
+        srcml_archive* oarch = srcml_create_archive();
+        srcml_write_open_filename(oarch, srcml_request.output.c_str());
+
+//        srcml_write_unit_filename(oarch, unit);
+
+        srcml_close_archive(oarch);
+        srcml_free_archive(oarch);
+
+        srcml_close_archive(arch);
+        srcml_free_archive(arch);
+
+    // srcml->src extract individual unit to stdout
+    } else if (srcml_request.unit != 0 && srcml_request.positional_args.size() == 1 && srcml_request.output == "-") {
+
+        srcml_archive* arch = srcml_create_archive();
+        srcml_read_open_filename(arch, srcml_request.positional_args[0].c_str());
+
+        srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
+
+        srcml_unparse_unit_fd(unit, STDOUT_FILENO);
+
+        srcml_close_archive(arch);
+        srcml_free_archive(arch);
+
+    // srcml->src extract individual unit to file
+    } else if (srcml_request.unit != 0 && srcml_request.positional_args.size() == 1) {
+
+        srcml_archive* arch = srcml_create_archive();
+        srcml_read_open_filename(arch, srcml_request.positional_args[0].c_str());
+
+        srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
+
+        srcml_unparse_unit_filename(unit, srcml_request.output.c_str());
+
+        srcml_close_archive(arch);
+        srcml_free_archive(arch);
+
+    // srcml->src srcML file extracted to stdout
     } else if (srcml_request.positional_args.size() == 1 && srcml_request.output == "-") {
 
         srcml_archive* arch = srcml_create_archive();
@@ -182,7 +228,7 @@ int main(int argc, char * argv[]) {
         srcml_close_archive(arch);
         srcml_free_archive(arch);
 
-    // srcml->src single file (non stdout)
+    // srcml->src srcML file to libarchive file
     } else if (srcml_request.positional_args.size() == 1) {
 
         // TODO: What if this is a simple, single file? or to stdout?
