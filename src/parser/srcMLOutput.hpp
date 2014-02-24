@@ -55,8 +55,6 @@ public:
 
     void initWriter();
     xmlTextWriter * getWriter();
-    void setWriter(xmlTextWriter *);
-    int getDepth();
     void setDepth(int thedepth);
 
     static bool checkEncoding(const char* encoding);
