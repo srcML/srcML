@@ -49,8 +49,7 @@ public:
                 OPTION_TYPE& option,
                 std::string * uri,
                 int tabsize,
-                xmlBuffer* output_buffer = 0,
-                xmlOutputBuffer * output_buf = 0
+                xmlOutputBuffer * output_buffer = 0
                 );
 
     void initWriter();
@@ -109,8 +108,7 @@ public:
     int tabsize;
 
     int depth;
-    xmlBuffer* output_buffer;
-    xmlOutputBuffer * output_buf;
+    xmlOutputBuffer * output_buffer;
 
     // output line attribute content
     std::string lineAttribute;
