@@ -468,20 +468,4 @@ verify_test(1, srcml.check_exslt())
 srcml.srcml("", "")
 verify_test("No language provided.", srcml.error_string())
 
-asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src">
-
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp"/>
-
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="b.cpp"/>
-
-</unit>
-"""
-
-file = open("project.xml", "w")
-file.write(asrcml)
-file.close()
-
-verify_test(['a.cpp', 'b.cpp'], srcml.filename_list("project.xml"))
-
 os.remove("project.xml")

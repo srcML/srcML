@@ -47,17 +47,14 @@ public:
                 const char* language,
                 const char* encoding,
                 OPTION_TYPE& option,
-                const char* uri[],
+                std::string * uri,
                 int tabsize,
                 xmlBuffer* output_buffer = 0,
-                xmlOutputBuffer * output_buf = 0,
-                std::string * string_uri = 0
+                xmlOutputBuffer * output_buf = 0
                 );
 
     void initWriter();
     xmlTextWriter * getWriter();
-    void setWriter(xmlTextWriter *);
-    int getDepth();
     void setDepth(int thedepth);
 
     static bool checkEncoding(const char* encoding);
@@ -89,8 +86,6 @@ public:
     const char * columnAttributeValue(const antlr::RefToken& token);
     const char * lineAttributeValue(int aline);
 
-    virtual const char * convert_num2prefix(unsigned int i) const;
-
     // destructor
     ~srcMLOutput();
 
@@ -106,8 +101,7 @@ public:
     const char* unit_version;
     OPTION_TYPE& options;
     const char* xml_encoding;
-    const char** num2prefix;
-    std::string * num2sprefix;
+    std::string * num2prefix;
     int openelementcount;
 
     int curline;

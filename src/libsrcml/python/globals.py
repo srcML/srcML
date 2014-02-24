@@ -183,10 +183,6 @@ libsrcml.srcml_check_exslt.argtypes = []
 libsrcml.srcml_error_string.restype = c_char_p
 libsrcml.srcml_error_string.argtypes = []
 
-# const char** srcml_list(const char* srcml_filename);
-libsrcml.srcml_list.restype = POINTER(c_char_p)
-libsrcml.srcml_list.argtypes = [c_char_p]
-
 def srcml(input_filename, output_filename) :
     libsrcml.srcml(input_filename, output_filename)
 
@@ -308,14 +304,3 @@ def check_exslt() :
 def error_string() :
     return libsrcml.srcml_error_string()
 
-def filename_list(srcml_filename) :
-    file_list = libsrcml.srcml_list(srcml_filename)
-
-    i = 0
-    ret = []
-
-    while file_list[i] != None :
-        ret.append(file_list[i])
-        i = i + 1
-
-    return ret
