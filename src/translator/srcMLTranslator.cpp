@@ -68,7 +68,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  )
   :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
      encoding(src_encoding), xml_encoding(0), options(op), buffer(xmlBufferCreate()),
-     out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, buffer, 0), tabsize(tabsize),
+     out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, 0, xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding))), tabsize(tabsize),
      uri(uri), str_buffer(str_buf), size(size) {}
 
 // constructor
