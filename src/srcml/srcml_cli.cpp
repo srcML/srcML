@@ -180,6 +180,7 @@ void option_xpath(const std::string& value) {srcml_request.xpath = value; }
 void option_xpathparam(const std::vector<std::string>& values) {srcml_request.xpathparam = values; }
 void option_xslt(const std::string& value) {srcml_request.xslt = value; }
 void option_unit(const int value) {srcml_request.unit = value; }
+void option_to_dir(const std::string& value) {srcml_request.output = value; srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY; }
 void option_max_threads(const int value) {srcml_request.max_threads = value; }
 void positional_args(const std::vector<std::string>& value) {srcml_request.positional_args = value; }
 
@@ -303,7 +304,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         srcml_archive_options.add_options()
-            ("to-dir", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TO_DIRECTORY>), "extract all files from srcML and create them in the filesystem")
+            ("to-dir", prog_opts::value<std::string>()->notifier(&option_to_dir), "extract all files from srcML and create them in the filesystem")
             ("unit,U", prog_opts::value<int>()->notifier(&option_unit), "extract individual unit number arg from srcML")
             ;
 
