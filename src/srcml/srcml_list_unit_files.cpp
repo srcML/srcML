@@ -27,18 +27,17 @@
 #include <srcml_list_unit_files.hpp>
 #include <srcml.h>
 #include <iostream>
+#include <iomanip>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <src_prefix.hpp>
 
 void srcml_list_unit_files(const std::vector<std::string>& pos_args) {
     BOOST_FOREACH(const std::string& input_file, pos_args) {
-        std::string resource;
-        std::string protocol;
-        src_prefix_split_uri(input_file, protocol, resource);
-        boost::filesystem::path file (resource);
+
+        boost::filesystem::path file(src_prefix_resource(input_file));
         if(file.extension().compare(".xml") == 0)
-            srcml_list_unit_files(resource);
+            srcml_list_unit_files(file.string());
     }
 }
 
@@ -52,8 +51,12 @@ void srcml_list_unit_files(const std::string& srcml_input) {
     while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
 
         ++numUnits;
-        std::cout << numUnits << "\t" << srcml_unit_get_filename(unit) << "\n";
+
+        std::cout << std::setw(5) << numUnits << ' ' << srcml_unit_get_filename(unit) << '\n';
 
         srcml_free_unit(unit);
     }
+
+    srcml_close_archive(srcml_arch);
+    srcml_free_archive(srcml_arch);
 }

@@ -1253,7 +1253,7 @@ int srcml_skip_unit(srcml_archive* archive) {
 
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
-    srcml_unit * unit = srcml_read_unit(archive);
+    srcml_unit * unit = srcml_read_unit_header(archive);
     if(unit == 0) return 0;
 
     srcml_free_unit(unit);

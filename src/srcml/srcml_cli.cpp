@@ -138,14 +138,38 @@ void option_command(bool opt) {
         srcml_request.command |= command;
 }
 
-void option_filename(const std::string& value) { srcml_request.filename = value; srcml_request.filename_set = true; }
+void option_filename(const std::string& value) { srcml_request.filename = value; }
 void option_output(const std::string& value) {srcml_request.output = value; }
 void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value; }
-void option_encoding(const std::string& value) {srcml_request.encoding = value; }
+
+void option_encoding(const std::string& value) {
+    if (value != "" && srcml_check_encoding(value.c_str()) == 0) {
+        std::cerr << "srcmlCLI: invalid encoding.\n";
+        exit(1); //ERROR CODE TBD
+    }
+    srcml_request.encoding = value;
+}
+
 void option_files_from(const std::string& value) {srcml_request.files_from = value; }
-void option_language(const std::string& value) {srcml_request.language = value; }
+
+void option_language(const std::string& value) {
+    // check language
+    if (value != "" && srcml_check_language(value.c_str()) == 0) {
+        std::cerr << "srcmlCLI: invalid language.\n";
+        exit(1); //ERROR CODE TBD
+    }
+    srcml_request.language = value; 
+}
 void option_register_ext(const std::vector<std::string>& values) {srcml_request.register_ext = values; }
-void option_tabs(const int value) {srcml_request.tabs = value; }
+
+void option_tabs(const int value) {
+    // check tabstop
+    if (value < 1) {
+        std::cerr << "srcmlCLI: " << value << " is an invalid tab stop. Tab stops must be 1 or higher.\n";
+        exit(1); //ERROR CODE TBD
+    }
+    srcml_request.tabs = value;
+}
 void option_directory(const std::string& value) {srcml_request.directory = value; srcml_request.directory_set = true; }
 void option_src_versions(const std::string& value) {srcml_request.src_versions = value; srcml_request.src_versions_set = true; }
 void option_prefix(const std::string& value) {srcml_request.prefix = value; }
@@ -156,6 +180,7 @@ void option_xpath(const std::string& value) {srcml_request.xpath = value; }
 void option_xpathparam(const std::vector<std::string>& values) {srcml_request.xpathparam = values; }
 void option_xslt(const std::string& value) {srcml_request.xslt = value; }
 void option_unit(const int value) {srcml_request.unit = value; }
+void option_to_dir(const std::string& value) {srcml_request.output = value; srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY; }
 void option_max_threads(const int value) {srcml_request.max_threads = value; }
 void positional_args(const std::vector<std::string>& value) {srcml_request.positional_args = value; }
 
@@ -182,6 +207,7 @@ void option_help(const std::string& help_opt) {
                   << help_opt << "' in the --help-module option\n";
         exit(1);
     }
+    exit(0);
 }
 
 /* Function used to check that 'opt1' and 'opt2' are not specified
@@ -278,7 +304,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         srcml_archive_options.add_options()
-            ("to-dir", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TO_DIRECTORY>), "extract all files from srcML and create them in the filesystem")
+            ("to-dir", prog_opts::value<std::string>()->notifier(&option_to_dir), "extract all files from srcML and create them in the filesystem")
             ("unit,U", prog_opts::value<int>()->notifier(&option_unit), "extract individual unit number arg from srcML")
             ;
 

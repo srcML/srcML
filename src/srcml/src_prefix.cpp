@@ -64,3 +64,23 @@ void src_prefix_split_uri(const std::string& input_file, std::string& protocol, 
     protocol = input_file.substr(0, prefixPos);
     resource = input_file.substr(prefixPos + strlen(PROTOCOL_SEPARATOR));
 }
+
+std::string src_prefix_resource(const std::string& input_file) {
+
+    size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
+
+    if (prefixPos == std::string::npos)
+        return input_file;
+
+    return input_file.substr(prefixPos + strlen(PROTOCOL_SEPARATOR));
+}
+
+std::string src_prefix_protocol(const std::string& input_file) {
+
+    size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
+
+    if (prefixPos == std::string::npos)
+        return "";
+
+    return input_file.substr(0, prefixPos);
+}

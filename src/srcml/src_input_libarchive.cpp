@@ -42,6 +42,7 @@ void setup_libarchive(archive* arch) {
     archive_read_support_format_xar(arch);
     archive_read_support_format_zip(arch);
     archive_read_support_format_raw(arch);
+    archive_read_support_format_empty(arch);
 
     /* Check libarchive version enable version specific features/syntax */
 #if ARCHIVE_VERSION_NUMBER < 3000000
@@ -78,7 +79,9 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         exit(1);
     }
 
+    bool empty = true;
     while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
+        empty = false;
         std::string filename = archive_entry_pathname(arch_entry);
         /*
           The header path for a standard file is just "data".
@@ -126,5 +129,16 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         // Hand request off to the processing queue
         queue.push(request);
     }
+
+    // If the input is empty
+    if (empty) {
+      ParseRequest request;
+      request.buffer.clear();
+      request.filename = input_file;
+      request.srcml_arch = srcml_arch;
+      request.lang = ((srcml_archive_get_language(srcml_arch) || lang.compare("xml") == 0) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, input_file.c_str()));
+      queue.push(request);
+    }
+
     archive_read_finish(arch);
 }
