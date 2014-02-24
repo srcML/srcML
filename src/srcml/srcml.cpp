@@ -18,13 +18,9 @@
   You should have received a copy of the GNU General Public License
   along with the srcML Toolkit; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
 
-/*
-  The srcml program to transform to/from the srcML format, plus provides a variety of
-  querying and transformation features.
-
-  Replaces the src2srcml and srcml2src of the original srcML toolkit.
+  The srcml client provides transformation to/from the srcML format,
+  plus a variety of querying and transformation features.
 */
 
 #include <srcml.h>
@@ -45,12 +41,6 @@
 #include <boost/foreach.hpp>
 
 #include <iostream>
-
-// code testing (temporary)
-void libarchive2srcml(std::string filename);
-void file2srcml(std::string filename);
-void file2srcml_count(std::string filename);
-void direct2srcml(std::string filename);
 
 int main(int argc, char * argv[]) {
 
@@ -367,59 +357,4 @@ void file2srcml_header(std::string filename) {
 
     srcml_close_archive(arch);
     srcml_free_archive(arch);
-}
-
-void file2srcml_count(std::string filename) {
-
-    //    filename = filename.substr(8);
-
-
-    // Parse srcml back to source (srcml2src)
-    srcml_archive* arch = srcml_create_archive();
-    srcml_read_open_filename(arch, filename.c_str());
-
-    int counter = 0;
-    while (true) {
-        srcml_unit* unit = srcml_read_unit_header(arch);
-        if (unit == 0)
-            break;
-
-        ++counter;
-
-        srcml_free_unit(unit);
-    }
-
-    fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, counter);
-
-    srcml_close_archive(arch);
-    srcml_free_archive(arch);
-}
-
-void file2srcml_count_skip(std::string filename) {
-
-    // Parse srcml back to source (srcml2src)
-    srcml_archive* arch = srcml_create_archive();
-    srcml_read_open_filename(arch, filename.c_str());
-
-    int counter = 0;
-    while (true) {
-        srcml_unit* unit = srcml_read_unit_header(arch);
-        if (unit == 0)
-            break;
-
-        ++counter;
-
-        srcml_free_unit(unit);
-    }
-
-    fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, counter);
-
-    srcml_close_archive(arch);
-    srcml_free_archive(arch);
-}
-
-void direct2srcml(std::string filename) {
-
-    // Parse srcml back to source (srcml2src)
-    srcml(filename.substr(7).c_str(), "foobar.cpp");
 }
