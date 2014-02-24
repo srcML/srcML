@@ -56,7 +56,9 @@ int main(int argc, char * argv[]) {
     }
 
     // src->srcml
-    if (srcml_request.unit == 0 && (srcml_request.positional_args.size() > 1 || src_language(srcml_request.positional_args[0]).compare("xml") != 0)) {
+    if ((srcml_request.unit == 0) &&
+        (srcml_request.positional_args.size() > 1) &&
+        (src_language(srcml_request.positional_args[0]).compare("xml") != 0)) {
 
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_create_archive();
@@ -158,6 +160,43 @@ int main(int argc, char * argv[]) {
     // list filenames in srcml archive
     else if (srcml_request.command & SRCML_COMMAND_LIST) {
         srcml_list_unit_files(srcml_request.positional_args);
+
+    // srcml->src srcML file to filesystem
+    } else if ((srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) && srcml_request.positional_args.size() == 1) {
+
+        srcml_archive* arch = srcml_create_archive();
+        srcml_read_open_filename(arch, srcml_request.positional_args[0].c_str());
+
+        // construct the relative directory
+        boost::filesystem::path prefix;
+        if (srcml_request.output != "." && srcml_request.output != "./") {
+            prefix = srcml_request.output;
+            prefix += "/";
+        }
+
+        boost::filesystem::path out;
+        int count = 0;
+        while (srcml_unit* unit = srcml_read_unit_header(arch)) {
+
+            // construct the relative directory
+            out = prefix;
+            out += srcml_unit_get_filename(unit);
+
+            // create the path
+            boost::filesystem::create_directories(out.parent_path());
+
+            // unparse directory to filename
+            srcml_unparse_unit_filename(unit, out.c_str());
+
+            // trace
+            ++count;
+            std::cerr << std::setw(5) << count << ' ' << out.c_str() << '\n';
+            
+            srcml_free_unit(unit);
+        }
+
+        srcml_close_archive(arch);
+        srcml_free_archive(arch);
 
     // srcml->src extract individual unit in XML
     } else if ((srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.positional_args.size() == 1) {
@@ -271,6 +310,7 @@ int main(int argc, char * argv[]) {
         archive_write_finish(ar);
 
     } else {
+        std::cerr << "Option not implemented" << '\n';
     }
 
     return 0;
