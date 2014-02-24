@@ -328,14 +328,13 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          const char* language,
                          const char* xml_enc,
                          OPTION_TYPE& op,
-                         const char* curi[],
+                         std::string * uri,
                          int ts,
                          xmlBuffer* output_buffer,
-                         xmlOutputBuffer * output_buf,
-                         std::string * string_uri
+                         xmlOutputBuffer * output_buf
                          )
     : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
-      unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), num2sprefix(string_uri)
+      unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(uri)
     , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), output_buffer(output_buffer), output_buf(output_buf)
 {
 
@@ -1022,7 +1021,6 @@ void srcMLOutput::setDepth(int thedepth) {
 
 const char * srcMLOutput::convert_num2prefix(unsigned int i) const {
 
-    if(num2sprefix) return num2sprefix[i].c_str();
-    else return num2prefix[i];
+    return num2prefix[i].c_str();
 
 }
