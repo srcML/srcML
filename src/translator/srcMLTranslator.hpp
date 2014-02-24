@@ -68,7 +68,7 @@ public:
     srcMLTranslator(int language,
                         const char* src_encoding,
                         const char* xml_encoding,
-                        xmlOutputBuffer * output_buf,
+                        xmlOutputBuffer * output_buffer,
                         OPTION_TYPE& options,
                         const char* directory,
                         const char* filename,
@@ -111,7 +111,7 @@ private:
     const char* encoding;
     const char* xml_encoding;
     OPTION_TYPE& options;
-    xmlBuffer * output_buffer;
+    xmlBuffer * buffer;
     srcMLOutput out;
     int tabsize;
     std::string * uri;
