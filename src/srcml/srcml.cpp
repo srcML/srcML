@@ -168,22 +168,20 @@ int main(int argc, char * argv[]) {
         srcml_read_open_filename(arch, srcml_request.positional_args[0].c_str());
 
         // construct the relative directory
-        boost::filesystem::path prefix;
-        if (srcml_request.output != "." && srcml_request.output != "./") {
+        std::string prefix;
+        if (srcml_request.output != "." && srcml_request.output != "./")
             prefix = srcml_request.output;
-            prefix += "/";
-        }
-
-        boost::filesystem::path out;
+ 
         int count = 0;
         while (srcml_unit* unit = srcml_read_unit_header(arch)) {
 
             // construct the relative directory
-            out = prefix;
-            out += srcml_unit_get_filename(unit);
+            boost::filesystem::path out(prefix);
+            out /= srcml_unit_get_filename(unit);
 
             // create the path
-            boost::filesystem::create_directories(out.parent_path());
+            if (!is_directory(out.parent_path()))
+                boost::filesystem::create_directories(out.parent_path());
 
             // unparse directory to filename
             srcml_unparse_unit_filename(unit, out.c_str());
