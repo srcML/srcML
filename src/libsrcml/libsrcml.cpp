@@ -206,9 +206,9 @@ int srcml(const char* input_filename, const char* output_filename) {
                                    0,
                                    0,
                                    0,
-                                   0,
-                                   global_archive.tabstop,
-                                   &global_archive.prefixes.front());
+                                   &global_archive.prefixes.front(),
+                                   global_archive.tabstop);
+
         int error = 0;
         try {
 

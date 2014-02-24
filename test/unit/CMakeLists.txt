@@ -30,6 +30,6 @@ if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
 endif()
 addUnitTest(test_srcMLState test_srcMLState.cpp)
 addUnitTest(test_srcMLStateStack test_srcMLStateStack.cpp)
-addUnitTest(test_srcMLTranslatorCore test_srcMLTranslatorCore.cpp ${LIBXML2_LIBRARIES})
+addUnitTest(test_srcMLTranslator test_srcMLTranslator.cpp ${LIBXML2_LIBRARIES})
 
 
