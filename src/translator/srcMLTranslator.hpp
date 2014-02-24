@@ -63,18 +63,6 @@ public:
 		    std::string * uri,
                     int tabsize
                     );
-    // constructor
-    srcMLTranslator(int language,
-                        const char* src_encoding,
-                        const char* xml_encoding,
-                        xmlBuffer* output_buf,
-                        OPTION_TYPE& options,
-                        const char* directory,
-                        const char* filename,
-                        const char* version,
-		        std::string * uri,
-                        int tabsize
-                        );
 
     // constructor
     srcMLTranslator(int language,
