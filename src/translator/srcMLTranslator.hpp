@@ -55,6 +55,7 @@ public:
                     const char* src_encoding,
                     const char* xml_encoding,
                     char** str_buf,
+		    int * size, 
                     OPTION_TYPE& options,
                     const char* directory,
                     const char* filename,

@@ -58,6 +58,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* src_encoding,    // text encoding of source code
                                  const char* xml_encoding,    // xml encoding of result srcML file
                                  char ** str_buf,
+				 int * size, 
                                  OPTION_TYPE & op,             // many and varied options
                                  const char* directory,       // root unit directory
                                  const char* filename,        // root unit filename
@@ -68,7 +69,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
   :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
      encoding(src_encoding), xml_encoding(0), options(op), output_buffer(xmlBufferCreate()),
      out(0, 0, getLanguageString(), xml_encoding, options, 0, tabsize, output_buffer, 0, uri), tabsize(tabsize),
-     uri(uri), str_buffer(str_buf), size(0) {}
+     uri(uri), str_buffer(str_buf), size(size) {}
 
 // constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
