@@ -78,9 +78,7 @@ public:
                         );
 
     void setMacroList(std::vector<std::string> & list);
-
-    void* setInput(const char* path);
-    void* setInput(xmlParserInputBufferPtr input);
+    void setInput(const char* path);
 
     void close();
 
@@ -92,7 +90,7 @@ public:
 
     void translate_separate(const char* unit_directory,
                             const char* unit_filename, const char* unit_version,
-                            int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer,
+                            int language, UTF8CharBuffer * parser_input, xmlBuffer* output_buffer,
                             const char * src_encoding,
                             OPTION_TYPE translation_options);
 

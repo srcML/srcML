@@ -30,40 +30,41 @@
 #define INCLUDE_UTF8CHARBUFFER_HPP
 
 #include <antlr/CharBuffer.hpp>
-#include <libxml/parser.h>
 #include <cstring>
 
+#include <libxml/parser.h>
+
 class UTF8FileError {};
+
 
 class UTF8CharBuffer : public antlr::CharBuffer {
 public:
 
     // size of the original character buffer
-    static const unsigned int SRCBUFSIZE = 512;
+    static const size_t SRCBUFSIZE = 512;
 
     // Create a character buffer
     UTF8CharBuffer();
-    UTF8CharBuffer(const char* ifilename, const char* encoding);
-    UTF8CharBuffer(xmlParserInputBufferPtr pinput, const char * encoding);
+    UTF8CharBuffer(const char* ifilename, const char * encoding);
+    UTF8CharBuffer(const char* c_buffer, size_t size);
+    UTF8CharBuffer(FILE * file, const char * encoding);
+    UTF8CharBuffer(int fd, const char * encoding);
 
     // Get the next character from the stream
     int getChar();
-
-    // libxml context
-    void* getContext() const;
 
     ~UTF8CharBuffer();
 
 private:
 
     void init(const char * encoding);
-
     int growBuffer();
+
+    FILE * input;
     int pos;
     int size;
-    //bool eof;
     bool lastcr;
-    xmlParserInputBufferPtr input;
-    bool free;
+    char * input_buffer;
+    char buffer[SRCBUFSIZE];
 };
 #endif

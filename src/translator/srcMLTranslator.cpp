@@ -37,16 +37,16 @@ const char* const DEFAULT_XML_ENCODING = "UTF-8";
 
 /// constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
-                                         const char* src_encoding,    // text encoding of source code
-                                         const char* xml_encoding,    // xml encoding of result srcML file
-                                         const char* srcml_filename,  // filename of result srcML file
-                                         OPTION_TYPE& op,             // many and varied options
-                                         const char* directory,       // root unit directory
-                                         const char* filename,        // root unit filename
-                                         const char* version,         // root unit version
-                                         std::string * uri,           // uri prefixes
-                                         int tabsize                  // size of tabs
-                                         )
+                                 const char* src_encoding,    // text encoding of source code
+                                 const char* xml_encoding,    // xml encoding of result srcML file
+                                 const char* srcml_filename,  // filename of result srcML file
+                                 OPTION_TYPE& op,             // many and varied options
+                                 const char* directory,       // root unit directory
+                                 const char* filename,        // root unit filename
+                                 const char* version,         // root unit version
+                                 std::string * uri,           // uri prefixes
+                                 int tabsize                  // size of tabs
+    )
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(0), options(op), buffer(0),
@@ -58,18 +58,18 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* src_encoding,    // text encoding of source code
                                  const char* xml_encoding,    // xml encoding of result srcML file
                                  char ** str_buf,
-				 int * size, 
+                                 int * size,
                                  OPTION_TYPE & op,             // many and varied options
                                  const char* directory,       // root unit directory
                                  const char* filename,        // root unit filename
                                  const char* version,         // root unit version
                                  std::string * uri,           // uri prefixes
                                  int tabsize                  // size of tabs
-                                 )
-  :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
-     encoding(src_encoding), xml_encoding(0), options(op), buffer(0),
-     out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, 0), tabsize(tabsize),
-     uri(uri), str_buffer(str_buf), size(size) {
+    )
+    :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
+       encoding(src_encoding), xml_encoding(0), options(op), buffer(0),
+       out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, 0), tabsize(tabsize),
+       uri(uri), str_buffer(str_buf), size(size) {
 
     buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
@@ -80,16 +80,16 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 
 // constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
-                                         const char* src_encoding,    // text encoding of source code
-                                         const char* xml_encoding,    // xml encoding of result srcML file
-                                         xmlOutputBuffer * output_buffer,
-                                         OPTION_TYPE& op,             // many and varied options
-                                         const char* directory,       // root unit directory
-                                         const char* filename,        // root unit filename
-                                         const char* version,         // root unit version
-                                         std::string * uri,           // uri prefixes
-                                         int tabsize                  // size of tabs
-                                         )
+                                 const char* src_encoding,    // text encoding of source code
+                                 const char* xml_encoding,    // xml encoding of result srcML file
+                                 xmlOutputBuffer * output_buffer,
+                                 OPTION_TYPE& op,             // many and varied options
+                                 const char* directory,       // root unit directory
+                                 const char* filename,        // root unit filename
+                                 const char* version,         // root unit version
+                                 std::string * uri,           // uri prefixes
+                                 int tabsize                  // size of tabs
+    )
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
@@ -102,30 +102,7 @@ void srcMLTranslator::setMacroList(std::vector<std::string> & list) {
 }
 
 // translate from input stream to output stream
-void* srcMLTranslator::setInput(xmlParserInputBufferPtr input) {
-
-    try {
-        pinput = new UTF8CharBuffer(input, encoding);
-
-        // return the libxml context of the file
-        if (pinput)
-            return pinput->getContext();
-
-    } catch (const std::exception& e) {
-        fprintf(stderr, "SRCML Exception: %s\n", e.what());
-    }
-    catch (UTF8FileError) {
-        throw FileError();
-    }
-    catch (...) {
-        fprintf(stderr, "ERROR\n");
-    }
-
-    return 0;
-}
-
-// translate from input stream to output stream
-void* srcMLTranslator::setInput(const char* path) {
+void srcMLTranslator::setInput(const char* path) {
 
     try {
 
@@ -134,9 +111,6 @@ void* srcMLTranslator::setInput(const char* path) {
         else
             pinput = new UTF8CharBuffer(path, encoding);
 
-        // return the libxml context of the file
-        if (pinput) return pinput->getContext();
-
     } catch (const std::exception& e) {
         fprintf(stderr, "SRCML Exception: %s\n", e.what());
     }
@@ -147,9 +121,7 @@ void* srcMLTranslator::setInput(const char* path) {
         fprintf(stderr, "ERROR\n");
     }
 
-    return 0;
 }
-
 // close the output
 void srcMLTranslator::close() {
 
@@ -158,8 +130,8 @@ void srcMLTranslator::close() {
 
 // translate from input stream to output stream
 void srcMLTranslator::translate(const char* unit_directory,
-                                    const char* unit_filename, const char* unit_version,
-                                    int language) {
+                                const char* unit_filename, const char* unit_version,
+                                int language) {
 
     if(first) {
 
@@ -218,10 +190,10 @@ void srcMLTranslator::translate(const char* unit_directory,
 
 // translate from input stream to output stream separate of current output stream
 void srcMLTranslator::translate_separate(const char* unit_directory,
-                                             const char* unit_filename, const char* unit_version,
-                                             int language, xmlParserInputBufferPtr input, xmlBuffer* output_buffer,
-                                             const char * src_encoding,
-                                             OPTION_TYPE translation_options) {
+                                         const char* unit_filename, const char* unit_version,
+                                         int language, UTF8CharBuffer * parser_input, xmlBuffer* output_buffer,
+                                         const char * src_encoding,
+                                         OPTION_TYPE translation_options) {
 
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler(xml_encoding));
     srcMLOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, uri, tabsize, obuffer);
@@ -233,8 +205,6 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
         sep_out.setDepth(1);
 
     try {
-
-        UTF8CharBuffer * parser_input = new UTF8CharBuffer(input, src_encoding ? src_encoding : encoding);
 
         // master lexer with multiple streams
         antlr::TokenStreamSelector selector;
@@ -304,15 +274,15 @@ void srcMLTranslator::add_unit(const char* xml) {
 
 // destructor
 srcMLTranslator::~srcMLTranslator() {
-  
-  if(str_buffer && buffer->use) {
 
-    (*str_buffer) = strdup((const char *)buffer->content);
-    if(size && *str_buffer) *size = (int)buffer->use;
+    if(str_buffer && buffer->use) {
 
-  }
+        (*str_buffer) = strdup((const char *)buffer->content);
+        if(size && *str_buffer) *size = (int)buffer->use;
 
-  if(buffer)
-    xmlBufferFree(buffer);
-  
+    }
+
+    if(buffer)
+        xmlBufferFree(buffer);
+
 }
