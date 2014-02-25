@@ -42,6 +42,9 @@
 
 #include <iostream>
 
+// read from the input file descriptor, write compressed to the output file
+void write_compressed(int inputfd, const char* output_fname);
+
 int main(int argc, char * argv[]) {
 
     // parse the command line
@@ -111,8 +114,18 @@ int main(int argc, char * argv[]) {
             srcml_archive_register_namespace(srcml_arch, ns.substr(0,pos).c_str(), ns.substr(pos+1).c_str());
         }
 
-        // create the srcML output file
-        srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
+        // create the srcML output file. if compressed, must go through libarchive thread
+        int datapipe[2];
+        boost::thread_group reader;
+        int length = srcml_request.output.size();
+        bool iscompressed = srcml_request.output.substr(length - 3) == ".gz";
+        if (!iscompressed) {
+            srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
+        } else {
+            pipe(datapipe);
+            reader.create_thread( boost::bind(write_compressed, datapipe[0], srcml_request.output.c_str()) );
+            srcml_write_open_fd(srcml_arch, datapipe[1]);
+        }
 
         // setup the parsing queue
         ParseQueue queue(srcml_request.max_threads);
@@ -144,6 +157,9 @@ int main(int argc, char * argv[]) {
 
         // wait for the parsing queue to finish
         queue.wait();
+
+        // if threads were used, then wait for them
+        reader.join_all();
 
         // close the created srcML archive
         srcml_close_archive(srcml_arch);
@@ -314,85 +330,42 @@ int main(int argc, char * argv[]) {
     return 0;
 }
 
-// code testing (temporary)
+// read from the input file descriptor, write compressed to the output file
+void write_compressed(int inputfd, const char* output_fname) {
 
-#include <fcntl.h>
-#include <archive.h>
-#include <archive_entry.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <boost/thread.hpp>
+    struct archive* oarch = archive_write_new();
+    archive_write_set_compression_gzip(oarch);
 
-void read_from_pipe (int file) {
+    int status = archive_write_open_filename(oarch, output_fname);
 
-    // Parse srcml back to source (srcml2src)
-    srcml_archive* arch = srcml_create_archive();
-    srcml_read_open_fd(arch, file);
-    srcml_unit* unit;
+    struct archive_entry* oentry = archive_entry_new();
+//    archive_write_header(oarch, oentry);
 
-    while (true) {
-        unit = srcml_read_unit(arch);
+    fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
-        if (unit == 0)
+    std::vector<char> vbuffer(1024);
+    const char* buffer = vbuffer.data();
+    ssize_t buffer_size = vbuffer.size();
+
+    fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+
+    ssize_t s = read(inputfd, vbuffer.data(), vbuffer.size());
+
+    fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+
+/*
+    while (ssize_t s = read(inputfd, &buffer, buffer_size)) {
+        fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+
+        write(STDOUT_FILENO, buffer, s);
+        ssize_t status = archive_write_data(oarch, buffer, (size_t)s);
+        if (status == -1) {
+            std::cerr << "Output write error" << '\n';
             break;
-
-        srcml_unparse_unit_filename(unit, srcml_unit_get_filename(unit));
-        srcml_free_unit(unit);
+        }
     }
-
-    srcml_close_archive(arch);
-    srcml_free_archive(arch);
-}
-
-void libarchive2srcml(std::string filename) {
-
-    archive* arch = archive_read_new();
-    archive_entry* arch_entry = archive_entry_new();
-    archive_read_support_format_raw(arch);
-    archive_read_support_compression_all(arch);
-
-
-    filename = filename.substr(7);
-
-    archive_read_open_filename(arch, filename.c_str(), 16384);
-    archive_read_next_header(arch, &arch_entry);
-
-    int datapipe[2];
-    pipe(datapipe);
-
-    boost::thread_group reader;
-    reader.create_thread( boost::bind(read_from_pipe, datapipe[0]) );
-
-    archive_read_data_into_fd(arch, datapipe[1]);
-
-    close(datapipe[1]);
-
-    archive_read_finish(arch);
-
-    reader.join_all();
-}
-
-void file2srcml(std::string filename) {
-
-    // Parse srcml back to source (srcml2src)
-}
-
-void file2srcml_header(std::string filename) {
-
-    // Parse srcml back to source (srcml2src)
-    srcml_archive* arch = srcml_create_archive();
-    srcml_read_open_filename(arch, filename.c_str());
-    srcml_unit* unit;
-
-    while (true) {
-        unit = srcml_read_unit_header(arch);
-        if (unit == 0)
-            break;
-
-        srcml_unparse_unit_filename(unit, srcml_unit_get_filename(unit));
-        srcml_free_unit(unit);
-    }
-
-    srcml_close_archive(arch);
-    srcml_free_archive(arch);
+*/
+    close(inputfd);
+    archive_write_close(oarch);
+    archive_write_finish(oarch);
 }
