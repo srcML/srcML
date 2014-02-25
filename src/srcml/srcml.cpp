@@ -113,32 +113,25 @@ int main(int argc, char * argv[]) {
         // process command line inputs
         BOOST_FOREACH(const std::string& input_file, srcml_request.positional_args) {
 
-            if (src_validate(input_file)) {
-                // if stdin, then there has to be data
-                if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
-                    return 1; // stdin was requested, but no data was received
-                }
-
-                std::string uri = src_prefix_add_uri(input_file);
-
-                // split the URI
-                std::string protocol;
-                std::string resource;
-                src_prefix_split_uri(uri, protocol, resource);
-
-                // call handler based on prefix
-                if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
-                    src_input_filesystem(queue, srcml_arch, resource, srcml_request.language);
-                } else if (protocol == "file") {
-                    src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
-                } else if (protocol == "stdin") {
-                    src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
-                }
+            // if stdin, then there has to be data
+            if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
+                return 1; // stdin was requested, but no data was received
             }
-            else {
-                // SETUP AN ERROR PARSE REQUEST FOR TRACING
-                // This is temporary
-                std::cerr << input_file << " is not accessible.\n";
+
+            std::string uri = src_prefix_add_uri(input_file);
+
+            // split the URI
+            std::string protocol;
+            std::string resource;
+            src_prefix_split_uri(uri, protocol, resource);
+
+            // call handler based on prefix
+            if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
+                src_input_filesystem(queue, srcml_arch, resource, srcml_request.language);
+            } else if (protocol == "file") {
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
+            } else if (protocol == "stdin") {
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
             }
         }
 
