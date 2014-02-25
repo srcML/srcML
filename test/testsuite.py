@@ -205,6 +205,7 @@ def src2srcML(text_file, encoding, language, directory, filename, read_archive):
         unit.set_language(language)
         if directory.find("unicode") != -1 :
                 unit.set_encoding("UTF-8")
+
         is_all =  directory.find(".all") 
         is_unicode = directory.find("unicode")
 
