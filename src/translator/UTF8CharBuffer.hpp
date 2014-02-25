@@ -65,8 +65,9 @@ private:
     bool lastcr;
     bool need_close;
     char * input_buffer;
-    char * iconv_buffer;
     iconv_t cd;
     char buffer[SRCBUFSIZE];
+    char iconv_buffer[4 * SRCBUFSIZE];
+
 };
 #endif

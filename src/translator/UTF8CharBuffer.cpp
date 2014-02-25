@@ -24,11 +24,11 @@
 #include "UTF8CharBuffer.hpp"
 
 UTF8CharBuffer::UTF8CharBuffer()
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(false) {}
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(false), cd(0) {}
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(true) {
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(true), cd(0) {
 
     if(!ifilename) throw UTF8FileError();
 
@@ -38,37 +38,39 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
 
     input_buffer = (char *)buffer;
 
-    cd = iconv_open("UTF-8", encoding);
-
+    if(encoding)
+	cd = iconv_open("UTF-8", encoding);
+	
 }
 
 
 UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t size, const char * encoding) 
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)size), lastcr(false), need_close(false) {
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)size), lastcr(false), need_close(false), cd(0) {
 
     if(!c_buffer) throw UTF8FileError();
 
     input_buffer = (char *)c_buffer;
 
-    cd = iconv_open("UTF-8", encoding);
+    if(encoding)
+	cd = iconv_open("UTF-8", encoding);
 
 }    
 
 UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(false) {
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(false), cd(0) {
 
     if(!file) throw UTF8FileError();
 
     input = file;
     input_buffer = (char *)buffer;
 
-    cd = iconv_open("UTF-8", encoding);
+    if(encoding)
+	cd = iconv_open("UTF-8", encoding);
 
-    cd = iconv_open("UTF-8", encoding);
 }
 
 UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(true) {
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(true), cd(0) {
 
     if(fd < 0) throw UTF8FileError();
 
@@ -78,7 +80,8 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
 
     input_buffer = (char *)buffer;
 
-    cd = iconv_open("UTF-8", encoding);
+    if(encoding)
+	cd = iconv_open("UTF-8", encoding);
 
 }
 
@@ -86,7 +89,19 @@ int UTF8CharBuffer::growBuffer() {
 
     if(!input) return -1;
 
-    return fread(input_buffer, 1, SRCBUFSIZE, input);
+    size_t num_read = fread(input_buffer, 1, SRCBUFSIZE, input);
+
+    if(num_read <= 0) return (int)num_read;
+
+    size_t num_in_convert = num_read;
+    size_t num_out_convert = 4 * num_read;
+
+    char * iconv_buf = (char *)iconv_buffer;
+
+    size_t num_convert = num_read;
+    if(cd) num_convert = iconv(cd, &input_buffer, &num_in_convert, (char **)&iconv_buf, &num_out_convert);
+
+    return (int)num_convert;
 }
 
 /*
@@ -113,7 +128,7 @@ int UTF8CharBuffer::getChar() {
     }
 
     // individual 8-bit character to return
-    int c = (int) input_buffer[pos++];
+    int c = (int) iconv_buffer[pos++];
 
     // sequence "\r\n" where the '\r'
     // has already been converted to a '\n' so we need to skip over this '\n'
@@ -136,7 +151,7 @@ int UTF8CharBuffer::getChar() {
         }
 
         // certain to have a character
-        c = (int)input_buffer[pos++];
+        c = (int)iconv_buffer[pos++];
     }
 
     // convert carriage returns to a line feed
@@ -152,5 +167,5 @@ UTF8CharBuffer::~UTF8CharBuffer() {
 
     if(need_close) fclose(input);
 
-    iconv_close(cd);
+    if(cd) iconv_close(cd);
 }
