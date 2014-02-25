@@ -32,8 +32,6 @@
 #include <antlr/CharBuffer.hpp>
 #include <cstring>
 
-#include <libxml/parser.h>
-
 class UTF8FileError {};
 
 
