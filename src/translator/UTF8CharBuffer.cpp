@@ -38,15 +38,20 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
 
     input_buffer = (char *)buffer;
 
+    cd = iconv_open("UTF-8", encoding);
+
 }
 
 
-UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t size) 
+UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t size, const char * encoding) 
     : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)size), lastcr(false), need_close(false) {
 
     if(!c_buffer) throw UTF8FileError();
 
     input_buffer = (char *)c_buffer;
+
+    cd = iconv_open("UTF-8", encoding);
+
 }    
 
 UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
@@ -57,6 +62,9 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
     input = file;
     input_buffer = (char *)buffer;
 
+    cd = iconv_open("UTF-8", encoding);
+
+    cd = iconv_open("UTF-8", encoding);
 }
 
 UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
@@ -70,7 +78,10 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
 
     input_buffer = (char *)buffer;
 
+    cd = iconv_open("UTF-8", encoding);
+
 }
+
 int UTF8CharBuffer::growBuffer() {
 
     if(!input) return -1;
@@ -140,4 +151,6 @@ int UTF8CharBuffer::getChar() {
 UTF8CharBuffer::~UTF8CharBuffer() {
 
     if(need_close) fclose(input);
+
+    iconv_close(cd);
 }

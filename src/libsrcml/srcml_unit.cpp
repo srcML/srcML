@@ -357,7 +357,7 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
     UTF8CharBuffer * input = 0;
     try {
 
-	input = new UTF8CharBuffer(src_buffer, buffer_size);
+	input = new UTF8CharBuffer(src_buffer, buffer_size, unit->archive->encoding ? unit->archive->encoding->c_str() : 0);
 
     } catch(...) { return SRCML_STATUS_ERROR; }
     

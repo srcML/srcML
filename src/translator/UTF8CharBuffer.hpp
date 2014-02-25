@@ -32,6 +32,8 @@
 #include <antlr/CharBuffer.hpp>
 #include <cstring>
 
+#include <iconv.h>
+
 class UTF8FileError {};
 
 
@@ -44,7 +46,7 @@ public:
     // Create a character buffer
     UTF8CharBuffer();
     UTF8CharBuffer(const char* ifilename, const char * encoding);
-    UTF8CharBuffer(const char* c_buffer, size_t size);
+    UTF8CharBuffer(const char* c_buffer, size_t size, const char * encoding);
     UTF8CharBuffer(FILE * file, const char * encoding);
     UTF8CharBuffer(int fd, const char * encoding);
 
@@ -63,6 +65,8 @@ private:
     bool lastcr;
     bool need_close;
     char * input_buffer;
+    char * iconv_buffer;
+    iconv_t cd;
     char buffer[SRCBUFSIZE];
 };
 #endif
