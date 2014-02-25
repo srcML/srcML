@@ -60,11 +60,6 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
     input_buffer = (char *)buffer;
 
 }
-
-void UTF8CharBuffer::init(const char * encoding) {}
-
-
-
 int UTF8CharBuffer::growBuffer() {
 
     if(!input) return -1;

@@ -55,7 +55,6 @@ public:
 
 private:
 
-    void init(const char * encoding);
     int growBuffer();
 
     FILE * input;
