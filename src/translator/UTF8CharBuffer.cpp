@@ -36,10 +36,15 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
 
     if(!input) throw UTF8FileError();
 
-    input_buffer = (char *)buffer;
+    raw_buffer = (char *)buffer;
 
-    if(encoding && strcmp("UTF-8", encoding) != 0)
+    if(encoding && strcmp("UTF-8", encoding) != 0) {
+
 	cd = iconv_open("UTF-8", encoding);
+	input_buffer = iconv_buffer;
+
+    } else
+	input_buffer = raw_buffer;
 	
 }
 
@@ -49,10 +54,15 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t size, const char * 
 
     if(!c_buffer) throw UTF8FileError();
 
-    input_buffer = (char *)c_buffer;
+    raw_buffer = (char *)c_buffer;
 
-    if(encoding && strcmp("UTF-8", encoding) != 0)
+    if(encoding && strcmp("UTF-8", encoding) != 0) {
+
 	cd = iconv_open("UTF-8", encoding);
+	input_buffer = iconv_buffer;
+
+    } else
+	input_buffer = raw_buffer;
 
 }    
 
@@ -62,10 +72,15 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
     if(!file) throw UTF8FileError();
 
     input = file;
-    input_buffer = (char *)buffer;
+    raw_buffer = (char *)buffer;
 
-    if(encoding && strcmp("UTF-8", encoding) != 0)
+    if(encoding && strcmp("UTF-8", encoding) != 0) {
+
 	cd = iconv_open("UTF-8", encoding);
+	input_buffer = iconv_buffer;
+
+    } else
+	input_buffer = raw_buffer;
 
 }
 
@@ -78,10 +93,15 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
 
     if(!input) throw UTF8FileError();
 
-    input_buffer = (char *)buffer;
+    raw_buffer = (char *)buffer;
 
-    if(encoding && strcmp("UTF-8", encoding) != 0)
+    if(encoding && strcmp("UTF-8", encoding) != 0) {
+
 	cd = iconv_open("UTF-8", encoding);
+	input_buffer = iconv_buffer;
+
+    } else
+	input_buffer = raw_buffer;
 
 }
 
@@ -89,17 +109,15 @@ int UTF8CharBuffer::growBuffer() {
 
     if(!input) return -1;
 
-    size_t num_read = fread(input_buffer, 1, SRCBUFSIZE, input);
+    size_t num_read = fread(raw_buffer, 1, SRCBUFSIZE, input);
 
     if(num_read <= 0) return (int)num_read;
 
     size_t num_in_convert = num_read;
     size_t num_out_convert = 4 * num_read;
 
-    char * iconv_buf = (char *)iconv_buffer;
-
     size_t num_convert = num_read;
-    if(cd) num_convert = iconv(cd, &input_buffer, &num_in_convert, (char **)&iconv_buf, &num_out_convert);
+    if(cd) num_convert = iconv(cd, &raw_buffer, &num_in_convert, (char **)&input_buffer, &num_out_convert);
 
     return (int)num_convert;
 }
@@ -128,7 +146,7 @@ int UTF8CharBuffer::getChar() {
     }
 
     // individual 8-bit character to return
-    int c = (int) iconv_buffer[pos++];
+    int c = (int) input_buffer[pos++];
 
     // sequence "\r\n" where the '\r'
     // has already been converted to a '\n' so we need to skip over this '\n'
@@ -151,7 +169,7 @@ int UTF8CharBuffer::getChar() {
         }
 
         // certain to have a character
-        c = (int)iconv_buffer[pos++];
+        c = (int)input_buffer[pos++];
     }
 
     // convert carriage returns to a line feed

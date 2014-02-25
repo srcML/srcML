@@ -64,6 +64,7 @@ private:
     int size;
     bool lastcr;
     bool need_close;
+    char * raw_buffer;
     char * input_buffer;
     iconv_t cd;
     char buffer[SRCBUFSIZE];
