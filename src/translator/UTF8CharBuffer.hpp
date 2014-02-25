@@ -36,11 +36,12 @@
 
 class UTF8FileError {};
 
+
 class UTF8CharBuffer : public antlr::CharBuffer {
 public:
 
     // size of the original character buffer
-    static const unsigned int SRCBUFSIZE = 512;
+    static const size_t SRCBUFSIZE = 512;
 
     // Create a character buffer
     UTF8CharBuffer();
@@ -58,9 +59,11 @@ private:
     void init(const char * encoding);
     int growBuffer();
 
-    const char * buffer;
+    FILE * input;
     int pos;
     int size;
     bool lastcr;
+    char * input_buffer;
+    char buffer[SRCBUFSIZE];
 };
 #endif

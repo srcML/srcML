@@ -24,19 +24,29 @@
 #include "UTF8CharBuffer.hpp"
 
 UTF8CharBuffer::UTF8CharBuffer()
-    : antlr::CharBuffer(std::cin), pos(0), size(0), lastcr(false) {}
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false) {}
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
-    : antlr::CharBuffer(std::cin), pos(0), size(0), lastcr(false)
-{}
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false)
+{
 
-UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t size) 
-    : antlr::CharBuffer(std::cin), buffer(c_buffer), pos(0), size((int)size), lastcr(false) {}    
+    input = fopen(ifilename, "r");
+    input_buffer = (char *)buffer;
+
+}
+
+
+UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t size) 
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)size), lastcr(false) {
+
+    input_buffer = (char *)c_buffer;
+}    
+
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(xmlParserInputBufferPtr pinput, const char * encoding)
-    : antlr::CharBuffer(std::cin), pos(0), size(0), lastcr(false)
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false)
 {}
 
 void UTF8CharBuffer::init(const char * encoding) {}
@@ -45,7 +55,9 @@ void UTF8CharBuffer::init(const char * encoding) {}
 
 int UTF8CharBuffer::growBuffer() {
 
-    return -1;
+    if(!input) return -1;
+
+    return fread(input_buffer, 1, SRCBUFSIZE, input);
 }
 
 /*
@@ -72,7 +84,7 @@ int UTF8CharBuffer::getChar() {
     }
 
     // individual 8-bit character to return
-    int c = (int) buffer[pos++];
+    int c = (int) input_buffer[pos++];
 
     // sequence "\r\n" where the '\r'
     // has already been converted to a '\n' so we need to skip over this '\n'
@@ -95,7 +107,7 @@ int UTF8CharBuffer::getChar() {
         }
 
         // certain to have a character
-        c = (int)buffer[pos++];
+        c = (int)input_buffer[pos++];
     }
 
     // convert carriage returns to a line feed
