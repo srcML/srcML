@@ -316,7 +316,14 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
     else if (lang == Language::LANGUAGE_CSHARP)
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
-    UTF8CharBuffer * input = new UTF8CharBuffer(src_filename, unit->archive->encoding ? unit->archive->encoding->c_str() : 0);
+    UTF8CharBuffer * input = 0;
+    try {
+
+	input = new UTF8CharBuffer(src_filename, unit->archive->encoding ? unit->archive->encoding->c_str() : 0);
+
+    } catch(...) { return SRCML_STATUS_ERROR; }
+
+
     int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
 
     return status;
