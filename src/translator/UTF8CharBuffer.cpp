@@ -27,7 +27,7 @@ UTF8CharBuffer::UTF8CharBuffer()
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false) {}
 
 // Create a character buffer
-UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
+UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false)
 {
 
@@ -43,11 +43,23 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t size)
     input_buffer = (char *)c_buffer;
 }    
 
-
-// Create a character buffer
-UTF8CharBuffer::UTF8CharBuffer(xmlParserInputBufferPtr pinput, const char * encoding)
+UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false)
-{}
+{
+
+    input = file;
+    input_buffer = (char *)buffer;
+
+}
+
+UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false)
+{
+
+    input = fdopen(fd, "r");
+    input_buffer = (char *)buffer;
+
+}
 
 void UTF8CharBuffer::init(const char * encoding) {}
 

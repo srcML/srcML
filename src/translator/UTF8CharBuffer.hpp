@@ -45,9 +45,10 @@ public:
 
     // Create a character buffer
     UTF8CharBuffer();
-    UTF8CharBuffer(const char* ifilename, const char* encoding);
+    UTF8CharBuffer(const char* ifilename, const char * encoding);
     UTF8CharBuffer(const char* c_buffer, size_t size);
-    UTF8CharBuffer(xmlParserInputBufferPtr pinput, const char * encoding);
+    UTF8CharBuffer(FILE * file, const char * encoding);
+    UTF8CharBuffer(int fd, const char * encoding);
 
     // Get the next character from the stream
     int getChar();

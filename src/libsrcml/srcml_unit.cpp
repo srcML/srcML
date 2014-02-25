@@ -378,13 +378,9 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
     else if (lang == Language::LANGUAGE_CSHARP)
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateFile(src_file, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
+    UTF8CharBuffer * input = new UTF8CharBuffer(src_file, unit->archive->encoding ? unit->archive->encoding->c_str() : 0);
 
-    int status;// = srcml_parse_unit_internal(unit, lang, input, translation_options);
-    input->context = 0;
-    input->readcallback = 0;
-    input->closecallback = 0;
-    xmlFreeParserInputBuffer(input);
+    int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
 
     return status;
 
@@ -413,13 +409,9 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
     else if (lang == Language::LANGUAGE_CSHARP)
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateFd(src_fd, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
+    UTF8CharBuffer * input = new UTF8CharBuffer(src_fd, unit->archive->encoding ? unit->archive->encoding->c_str() : 0);
 
-    int status;// = srcml_parse_unit_internal(unit, lang, input, translation_options);
-    input->context = 0;
-    input->readcallback = 0;
-    input->closecallback = 0;
-    xmlFreeParserInputBuffer(input);
+    int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
 
     return status;
 
