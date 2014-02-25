@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <srcMLTranslator.hpp>
+#include <UTF8CharBuffer.hpp>
 #include <Language.hpp>
 #include <srcmlns.hpp>
 
@@ -100,11 +101,9 @@ int main() {
     srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  output_buffer, op, "", "", "", urisprefix, 4);
 
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("a;", 2, xmlParseCharEncoding(0));
-    try {
-      translator.setInput(input);
+        try {
+      translator.setInput("test_srcMLTranslator.cpp");
     } catch(...) { assert(false); }
-    xmlFreeParserInputBuffer(input);
     translator.close();
     xmlBufferFree(buffer);
     
@@ -120,7 +119,7 @@ int main() {
                                  output_buffer, op, "", "", "", urisprefix, 4);
 
     try {
-      translator.setInput((xmlParserInputBufferPtr)NULL);
+      translator.setInput(NULL);
       assert(false);
     } catch(...) {}
 
@@ -144,7 +143,7 @@ int main() {
     srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  output_buffer, op, 0, 0, 0, urisprefix, 4);
 
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("a;", 2, (xmlCharEncoding)0);
+    UTF8CharBuffer * input = new UTF8CharBuffer("a;", 2);
 
     xmlBufferPtr output = xmlBufferCreate();
     translator.translate_separate(0,  0, 0, Language::LANGUAGE_CXX, input, output, 0, op);
