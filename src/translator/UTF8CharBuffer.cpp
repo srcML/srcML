@@ -57,7 +57,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t size, const char * 
     raw_buffer = (char *)c_buffer;
 
     if(encoding && strcmp("UTF-8", encoding) != 0) {
-
+	fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, encoding);
 	cd = iconv_open("UTF-8", encoding);
 	input_buffer = (unsigned char *)iconv_buffer;
 
