@@ -354,8 +354,13 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
     else if (lang == Language::LANGUAGE_CSHARP)
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
-    UTF8CharBuffer * input = new UTF8CharBuffer(src_buffer, buffer_size);
+    UTF8CharBuffer * input = 0;
+    try {
 
+	input = new UTF8CharBuffer(src_buffer, buffer_size);
+
+    } catch(...) { return SRCML_STATUS_ERROR; }
+    
     int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
 
     return status;
@@ -385,7 +390,13 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
     else if (lang == Language::LANGUAGE_CSHARP)
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
-    UTF8CharBuffer * input = new UTF8CharBuffer(src_file, unit->archive->encoding ? unit->archive->encoding->c_str() : 0);
+    UTF8CharBuffer * input = 0;
+    try {
+
+	input = new UTF8CharBuffer(src_file, unit->archive->encoding ? unit->archive->encoding->c_str() : 0);
+
+    } catch(...) { return SRCML_STATUS_ERROR; }
+
 
     int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
 
@@ -416,7 +427,12 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
     else if (lang == Language::LANGUAGE_CSHARP)
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
-    UTF8CharBuffer * input = new UTF8CharBuffer(src_fd, unit->archive->encoding ? unit->archive->encoding->c_str() : 0);
+    UTF8CharBuffer * input = 0;
+    try {
+
+	input = new UTF8CharBuffer(src_fd, unit->archive->encoding ? unit->archive->encoding->c_str() : 0);
+
+    } catch(...) { return SRCML_STATUS_ERROR; }
 
     int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
 
