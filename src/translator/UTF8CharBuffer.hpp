@@ -61,6 +61,7 @@ private:
     int pos;
     int size;
     bool lastcr;
+    bool need_close;
     char * input_buffer;
     char buffer[SRCBUFSIZE];
 };

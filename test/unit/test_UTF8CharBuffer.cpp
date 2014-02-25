@@ -24,6 +24,8 @@
  */
 #include <stdio.h>
 #include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <cassert>
 #include <UTF8CharBuffer.hpp>
 
@@ -47,36 +49,35 @@ int main() {
 
   {
 
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("abc", 3, xmlParseCharEncoding("UTF-8"));
-    UTF8CharBuffer utf8(input, "UTF-8");
+    UTF8CharBuffer utf8("abc", 3);
     assert(utf8.getChar() == 'a');
     assert(utf8.getChar() == 'b');
     assert(utf8.getChar() == 'c');
-    xmlFreeParserInputBuffer(input);
+
   }
 
-  /*
-
-    getContext()
-
-   */
 
   {
 
-    UTF8CharBuffer utf8("test_UTF8CharBuffer.cpp", "UTF-8");
-    assert(utf8.getContext() != 0);
+    FILE * file = fopen("test_UTF8CharBuffer.cpp", "r");
+    UTF8CharBuffer utf8(file, "UTF-8");
+    assert(utf8.getChar() == '/');
+    assert(utf8.getChar() == '*');
+    assert(utf8.getChar() == '*');
+    fclose(file);
 
   }
 
   {
 
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("abc", 3, xmlParseCharEncoding("UTF-8"));
-    UTF8CharBuffer utf8(input, "UTF-8");
-    assert(utf8.getContext() != 0);
-    xmlFreeParserInputBuffer(input);
+    int fd = open("test_UTF8CharBuffer.cpp", O_RDONLY);
+    UTF8CharBuffer utf8(fd, "UTF-8");
+    assert(utf8.getChar() == '/');
+    assert(utf8.getChar() == '*');
+    assert(utf8.getChar() == '*');
+    close(fd);
 
   }
-
 
   return 0;
 }

@@ -24,12 +24,11 @@
 #include "UTF8CharBuffer.hpp"
 
 UTF8CharBuffer::UTF8CharBuffer()
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false) {}
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(false) {}
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false)
-{
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(true) {
 
     input = fopen(ifilename, "r");
     input_buffer = (char *)buffer;
@@ -38,14 +37,13 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
 
 
 UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t size) 
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)size), lastcr(false) {
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)size), lastcr(false), need_close(false) {
 
     input_buffer = (char *)c_buffer;
 }    
 
 UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false)
-{
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(false) {
 
     input = file;
     input_buffer = (char *)buffer;
@@ -53,8 +51,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
 }
 
 UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false)
-{
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(true) {
 
     input = fdopen(fd, "r");
     input_buffer = (char *)buffer;
@@ -126,4 +123,7 @@ int UTF8CharBuffer::getChar() {
     return c;
 }
 
-UTF8CharBuffer::~UTF8CharBuffer() {}
+UTF8CharBuffer::~UTF8CharBuffer() {
+
+    if(need_close) fclose(input);
+}
