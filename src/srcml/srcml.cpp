@@ -115,16 +115,21 @@ int main(int argc, char * argv[]) {
         }
 
         // create the srcML output file. if compressed, must go through libarchive thread
+        srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
+
+/*
         int datapipe[2];
         boost::thread_group reader;
+*/
         int length = srcml_request.output.size();
         bool iscompressed = srcml_request.output.substr(length - 3) == ".gz";
-        if (!iscompressed) {
-            srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
-        } else {
+        if (iscompressed) {
+            srcml_archive_enable_option(srcml_arch, SRCML_OPTION_COMPRESS);
+/*
             pipe(datapipe);
             reader.create_thread( boost::bind(write_compressed, datapipe[0], srcml_request.output.c_str()) );
             srcml_write_open_fd(srcml_arch, datapipe[1]);
+*/
         }
 
         // setup the parsing queue
@@ -159,7 +164,7 @@ int main(int argc, char * argv[]) {
         queue.wait();
 
         // if threads were used, then wait for them
-        reader.join_all();
+//        reader.join_all();
 
         // close the created srcML archive
         srcml_close_archive(srcml_arch);
@@ -333,25 +338,22 @@ int main(int argc, char * argv[]) {
 // read from the input file descriptor, write compressed to the output file
 void write_compressed(int inputfd, const char* output_fname) {
 
-    struct archive* oarch = archive_write_new();
+    struct archive* oarch = archive_write_disk_new();
     archive_write_set_compression_gzip(oarch);
 
-    int status = archive_write_open_filename(oarch, output_fname);
-
     struct archive_entry* oentry = archive_entry_new();
-//    archive_write_header(oarch, oentry);
-
-    fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+    archive_entry_set_pathname(oentry, output_fname);
+    archive_entry_set_filetype(oentry, AE_IFREG);
+    archive_entry_set_perm(oentry, 0644);
+    archive_write_header(oarch, oentry);
 
     std::vector<char> vbuffer(1024);
     const char* buffer = vbuffer.data();
     ssize_t buffer_size = vbuffer.size();
 
-    fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-
     ssize_t s = read(inputfd, vbuffer.data(), vbuffer.size());
 
-    fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+   int status = archive_write_data(oarch, buffer, (size_t)s);
 
 /*
     while (ssize_t s = read(inputfd, &buffer, buffer_size)) {
