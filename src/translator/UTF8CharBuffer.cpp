@@ -38,7 +38,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
 
     input_buffer = (char *)buffer;
 
-    if(encoding)
+    if(encoding && strcmp("UTF-8", encoding) != 0)
 	cd = iconv_open("UTF-8", encoding);
 	
 }
@@ -51,7 +51,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t size, const char * 
 
     input_buffer = (char *)c_buffer;
 
-    if(encoding)
+    if(encoding && strcmp("UTF-8", encoding) != 0)
 	cd = iconv_open("UTF-8", encoding);
 
 }    
@@ -64,7 +64,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
     input = file;
     input_buffer = (char *)buffer;
 
-    if(encoding)
+    if(encoding && strcmp("UTF-8", encoding) != 0)
 	cd = iconv_open("UTF-8", encoding);
 
 }
@@ -80,7 +80,7 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
 
     input_buffer = (char *)buffer;
 
-    if(encoding)
+    if(encoding && strcmp("UTF-8", encoding) != 0)
 	cd = iconv_open("UTF-8", encoding);
 
 }
