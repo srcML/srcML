@@ -64,21 +64,28 @@ int main(int argc, char * argv[]) {
         srcml_archive* srcml_arch = srcml_create_archive();
 
         // set options for the output srcml archive
+        // TODO: replace "" with boost::optional. NOTE: "" is not a valid encoding and should
+        // be caught by srcml_cli.*
         if (srcml_request.encoding != "")
             srcml_archive_set_encoding(srcml_arch, srcml_request.encoding.c_str());
 
         if (srcml_request.filename)
             srcml_archive_set_filename(srcml_arch, srcml_request.filename->c_str());
 
+        // TODO: replace use of _set with boost::optional
         if (srcml_request.directory_set)
             srcml_archive_set_directory(srcml_arch, srcml_request.directory.c_str());
 
+        // TODO: replace use of _set with boost::optional
         if (srcml_request.src_versions_set)
             srcml_archive_set_version(srcml_arch, srcml_request.src_versions.c_str());
 
+        // TODO: replace with boost::optional
         if (srcml_request.markup_options != 0)
             srcml_archive_enable_option(srcml_arch, srcml_archive_get_options(srcml_arch) | srcml_request.markup_options);
 
+        // TODO: replace "" with boost::optional. NOTE: "" is not a valid language and should
+        // be caught by srcml_cli.*
         if (srcml_request.language != "") 
             srcml_archive_set_language(srcml_arch, srcml_request.language.c_str());
         else 
