@@ -24,6 +24,8 @@
 #include <srcml_sax2_utilities.hpp>
 #include <srcMLSAX2Reader.hpp>
 
+#include <UTF8CharBuffer.hpp>
+
 /******************************************************************************
  *                                                                            *
  *                           Set up functions                                 *
@@ -255,7 +257,7 @@ const char* srcml_unit_get_xml(struct srcml_unit* unit) {
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-static int srcml_parse_unit_internal(srcml_unit * unit, int lang, xmlParserInputBufferPtr input, OPTION_TYPE translation_options) {
+static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer * input, OPTION_TYPE translation_options) {
 
     xmlBuffer * output_buffer = xmlBufferCreate();
     try {
@@ -316,7 +318,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateFilename(src_filename,
                                                                        unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
-    int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
+    int status;// = srcml_parse_unit_internal(unit, lang, input, translation_options);
 
     xmlFreeParserInputBuffer(input);
 
@@ -348,10 +350,12 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
     else if (lang == Language::LANGUAGE_CSHARP)
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(src_buffer, (int)buffer_size, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
+    //xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(src_buffer, (int)buffer_size, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
+
+    UTF8CharBuffer * input = new UTF8CharBuffer(src_buffer, buffer_size);
 
     int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
-    xmlFreeParserInputBuffer(input);
+    //xmlFreeParserInputBuffer(input);
 
     return status;
 
@@ -382,7 +386,7 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateFile(src_file, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
-    int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
+    int status;// = srcml_parse_unit_internal(unit, lang, input, translation_options);
     input->context = 0;
     input->readcallback = 0;
     input->closecallback = 0;
@@ -417,7 +421,7 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateFd(src_fd, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
-    int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
+    int status;// = srcml_parse_unit_internal(unit, lang, input, translation_options);
     input->context = 0;
     input->readcallback = 0;
     input->closecallback = 0;
