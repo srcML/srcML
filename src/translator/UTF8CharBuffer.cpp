@@ -31,11 +31,11 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(true) {
 
     if(!ifilename) throw UTF8FileError();
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     input = fopen(ifilename, "r");
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     if(!input) throw UTF8FileError();
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     input_buffer = (char *)buffer;
 
 }

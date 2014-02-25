@@ -101,7 +101,7 @@ int main() {
     srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  output_buffer, op, "", "", "", urisprefix, 4);
 
-        try {
+    try {
       translator.setInput("test_srcMLTranslator.cpp");
     } catch(...) { assert(false); }
     translator.close();
