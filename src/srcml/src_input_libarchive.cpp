@@ -63,7 +63,7 @@ void setup_libarchive(archive* arch) {
 }
 
 // Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const std::string& lang) {
+void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const std::string& lang, bool isfstdin, FILE* fstdin) {
 
     // libArchive Setup
     archive* arch = archive_read_new();
@@ -74,7 +74,10 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
     bool stdin = input_file == "-";
 
     // open the archive
-    if (archive_read_open_filename(arch, (!stdin ? input_file.c_str() : 0), 16384)!= ARCHIVE_OK) {
+    if (!isfstdin && archive_read_open_filename(arch, (!stdin ? input_file.c_str() : 0), 16384)!= ARCHIVE_OK) {
+        std::cerr << "Unable to open archive\n";
+        exit(1);
+    } else if (isfstdin && archive_read_open_FILE(arch, fstdin)!= ARCHIVE_OK) {
         std::cerr << "Unable to open archive\n";
         exit(1);
     }

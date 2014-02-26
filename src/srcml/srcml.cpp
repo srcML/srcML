@@ -23,6 +23,8 @@
   plus a variety of querying and transformation features.
 */
 
+#include <stdio.h>
+#include <fcntl.h>
 #include <srcml.h>
 #include <srcml_cli.hpp>
 #include <parse_queue.hpp>
@@ -55,8 +57,36 @@ int main(int argc, char * argv[]) {
         return 0;
     }
 
+    // find the first input that is not stdin
+    // TODO: Determine in CLI input
+    boost::optional<std::string> nonstdin;
+    for (int i = 0; i < (int)srcml_request.positional_args.size(); ++i) {
+        if (srcml_request.positional_args[i] != "-") {
+            nonstdin = srcml_request.positional_args[i];
+            break;
+        }
+    }
+
+    // determine whether the input is xml(srcml) or not
+    bool isxml = false;
+    FILE* fstdin;
+    char c = 0;
+    bool isfstdin = false;
+    if (nonstdin) {
+        int firstinfd = open(nonstdin->c_str(), O_RDONLY);
+        read(firstinfd, &c, 1);
+        close(firstinfd);
+    } else {
+        // Note: If stdin only, then have to read from this file*
+        isfstdin = true;
+        fstdin = fdopen(STDIN_FILENO, "r");
+        c = fgetc(fstdin);
+        ungetc(c, fstdin);
+    }
+    isxml = c == '<';
+
     // src->srcml
-    if ((srcml_request.unit == 0) &&
+    if (!isxml && (srcml_request.unit == 0) &&
         ((srcml_request.positional_args.size() > 1) ||
          (src_language(srcml_request.positional_args[0]).compare("xml") != 0))) {
 
@@ -115,7 +145,7 @@ int main(int argc, char * argv[]) {
         srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
         // gzip compression available from libsrcml
-        if (srcml_request.output.substr(srcml_request.output.size() - 3) == ".gz")
+        if (srcml_request.output.size() > 3 && srcml_request.output.substr(srcml_request.output.size() - 3) == ".gz")
             srcml_archive_enable_option(srcml_arch, SRCML_OPTION_COMPRESS);
 
         // setup the parsing queue
@@ -125,7 +155,7 @@ int main(int argc, char * argv[]) {
         BOOST_FOREACH(const std::string& input_file, srcml_request.positional_args) {
 
             // if stdin, then there has to be data
-            if ((input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
+            if (!isfstdin && (input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
                 return 1; // stdin was requested, but no data was received
             }
 
@@ -137,7 +167,9 @@ int main(int argc, char * argv[]) {
             src_prefix_split_uri(uri, protocol, resource);
 
             // call handler based on prefix
-            if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
+            if (isfstdin) {
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.language, true, fstdin);
+            } else if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
                 src_input_filesystem(queue, srcml_arch, resource, srcml_request.language);
             } else if (protocol == "file") {
                 src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
@@ -154,19 +186,19 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(srcml_arch);
     }
     // srcml long info
-    else if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
+    else if (isxml && srcml_request.command & SRCML_COMMAND_LONGINFO) {
         srcml_display_info(srcml_request.positional_args);
     }
     // srcml info
-    else if (srcml_request.command & SRCML_COMMAND_INFO) {
+    else if (isxml && srcml_request.command & SRCML_COMMAND_INFO) {
         srcml_display_info(srcml_request.positional_args);
     }
     // list filenames in srcml archive
-    else if (srcml_request.command & SRCML_COMMAND_LIST) {
+    else if (isxml && srcml_request.command & SRCML_COMMAND_LIST) {
         srcml_list_unit_files(srcml_request.positional_args);
 
     // srcml->src srcML file to filesystem
-    } else if ((srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) && srcml_request.positional_args.size() == 1) {
+    } else if (isxml && (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) && srcml_request.positional_args.size() == 1) {
 
         srcml_archive* arch = srcml_create_archive();
         srcml_read_open_filename(arch, srcml_request.positional_args[0].c_str());
@@ -201,7 +233,7 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(arch);
 
     // srcml->src extract individual unit in XML
-    } else if ((srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.positional_args.size() == 1) {
+    } else if (isxml && (srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.positional_args.size() == 1) {
 
         srcml_archive* arch = srcml_create_archive();
         srcml_read_open_filename(arch, srcml_request.positional_args[0].c_str());
@@ -221,10 +253,12 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(arch);
 
     // srcml->src extract individual unit to stdout
-    } else if (srcml_request.unit != 0 && srcml_request.positional_args.size() == 1 && srcml_request.output == "-") {
+    } else if (isxml && srcml_request.unit != 0 && srcml_request.positional_args.size() == 1 && srcml_request.output == "-") {
 
         srcml_archive* arch = srcml_create_archive();
-        srcml_read_open_filename(arch, srcml_request.positional_args[0].c_str());
+
+        // we opened this already when checking for XML status
+        srcml_read_open_FILE(arch, fstdin);
 
         srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
 
@@ -234,7 +268,7 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(arch);
 
     // srcml->src extract individual unit to file
-    } else if (srcml_request.unit != 0 && srcml_request.positional_args.size() == 1) {
+    } else if (isxml && srcml_request.unit != 0 && srcml_request.positional_args.size() == 1) {
 
         srcml_archive* arch = srcml_create_archive();
         srcml_read_open_filename(arch, srcml_request.positional_args[0].c_str());
@@ -247,10 +281,10 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(arch);
 
     // srcml->src srcML file extracted to stdout
-    } else if (srcml_request.positional_args.size() == 1 && srcml_request.output == "-") {
+    } else if (isxml && srcml_request.positional_args.size() == 1 && srcml_request.output == "-") {
 
         srcml_archive* arch = srcml_create_archive();
-        srcml_read_open_filename(arch, srcml_request.positional_args[0].c_str());
+        srcml_read_open_FILE(arch, fstdin);
 
         srcml_unit* unit = srcml_read_unit(arch);
 
@@ -260,7 +294,7 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(arch);
 
     // srcml->src srcML file to libarchive file
-    } else if (srcml_request.positional_args.size() == 1) {
+    } else if (isxml && srcml_request.positional_args.size() == 1) {
 
         // TODO: What if this is a simple, single file? or to stdout?
         archive* ar = archive_write_new();
