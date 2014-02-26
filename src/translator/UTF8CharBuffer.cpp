@@ -94,6 +94,8 @@ int UTF8CharBuffer::growBuffer() {
 
     if(!input && !total_size) return 0;
 
+    if(!input && !cd) input_buffer += size;
+
     size_t num_read = (size_t)total_size > SRCBUFSIZE ? SRCBUFSIZE : (size_t)total_size;
     if(input) num_read = fread(raw_buffer, 1, SRCBUFSIZE, input);
 
@@ -110,6 +112,7 @@ int UTF8CharBuffer::growBuffer() {
     if(!input) {
 
 	raw_buffer += num_read;
+
 	total_size -= num_read;
 
     }
