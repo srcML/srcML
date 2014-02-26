@@ -42,9 +42,6 @@
 
 #include <iostream>
 
-// read from the input file descriptor, write compressed to the output file
-void write_compressed(int inputfd, const char* output_fname);
-
 int main(int argc, char * argv[]) {
 
     // parse the command line
@@ -117,20 +114,9 @@ int main(int argc, char * argv[]) {
         // create the srcML output file. if compressed, must go through libarchive thread
         srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
-/*
-        int datapipe[2];
-        boost::thread_group reader;
-*/
-        int length = srcml_request.output.size();
-        bool iscompressed = srcml_request.output.substr(length - 3) == ".gz";
-        if (iscompressed) {
+        // gzip compression available from libsrcml
+        if (srcml_request.output.substr(srcml_request.output.size() - 3) == ".gz")
             srcml_archive_enable_option(srcml_arch, SRCML_OPTION_COMPRESS);
-/*
-            pipe(datapipe);
-            reader.create_thread( boost::bind(write_compressed, datapipe[0], srcml_request.output.c_str()) );
-            srcml_write_open_fd(srcml_arch, datapipe[1]);
-*/
-        }
 
         // setup the parsing queue
         ParseQueue queue(srcml_request.max_threads);
@@ -162,9 +148,6 @@ int main(int argc, char * argv[]) {
 
         // wait for the parsing queue to finish
         queue.wait();
-
-        // if threads were used, then wait for them
-//        reader.join_all();
 
         // close the created srcML archive
         srcml_close_archive(srcml_arch);
@@ -229,7 +212,7 @@ int main(int argc, char * argv[]) {
         srcml_archive* oarch = srcml_create_archive();
         srcml_write_open_filename(oarch, srcml_request.output.c_str());
 
-//        srcml_write_unit_filename(oarch, unit);
+        srcml_write_unit(oarch, unit);
 
         srcml_close_archive(oarch);
         srcml_free_archive(oarch);
@@ -333,41 +316,4 @@ int main(int argc, char * argv[]) {
     }
 
     return 0;
-}
-
-// read from the input file descriptor, write compressed to the output file
-void write_compressed(int inputfd, const char* output_fname) {
-
-    struct archive* oarch = archive_write_disk_new();
-    archive_write_set_compression_gzip(oarch);
-
-    struct archive_entry* oentry = archive_entry_new();
-    archive_entry_set_pathname(oentry, output_fname);
-    archive_entry_set_filetype(oentry, AE_IFREG);
-    archive_entry_set_perm(oentry, 0644);
-    archive_write_header(oarch, oentry);
-
-    std::vector<char> vbuffer(1024);
-    const char* buffer = vbuffer.data();
-    ssize_t buffer_size = vbuffer.size();
-
-    ssize_t s = read(inputfd, vbuffer.data(), vbuffer.size());
-
-   int status = archive_write_data(oarch, buffer, (size_t)s);
-
-/*
-    while (ssize_t s = read(inputfd, &buffer, buffer_size)) {
-        fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-
-        write(STDOUT_FILENO, buffer, s);
-        ssize_t status = archive_write_data(oarch, buffer, (size_t)s);
-        if (status == -1) {
-            std::cerr << "Output write error" << '\n';
-            break;
-        }
-    }
-*/
-    close(inputfd);
-    archive_write_close(oarch);
-    archive_write_finish(oarch);
 }
