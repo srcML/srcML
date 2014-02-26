@@ -49,7 +49,7 @@ int main() {
 
   {
 
-    UTF8CharBuffer utf8("abc", 3);
+    UTF8CharBuffer utf8("abc", 3, "UTF-8");
     assert(utf8.getChar() == 'a');
     assert(utf8.getChar() == 'b');
     assert(utf8.getChar() == 'c');
