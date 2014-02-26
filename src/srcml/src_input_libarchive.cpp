@@ -71,7 +71,7 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
 
     setup_libarchive(arch);
 
-    bool stdin = input_file == "-";
+    bool stdin = input_file == "-" && archive_compression(arch) != ARCHIVE_COMPRESSION_NONE;
 
     // open the archive
     if (!isfstdin && archive_read_open_filename(arch, (!stdin ? input_file.c_str() : 0), 16384)!= ARCHIVE_OK) {
