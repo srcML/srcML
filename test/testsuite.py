@@ -107,6 +107,7 @@ def extract_all(src, encoding):
         archive = srcml_archive()
 	if src.find("problem") != -1 :
 		archive.set_encoding("ISO-8859-1")
+		archive.set_src_encoding("UTF-8")
 
 	if src.find("unicode") != -1 :
 		archive.set_src_encoding("UTF-8")
@@ -198,6 +199,7 @@ def src2srcML(text_file, encoding, language, directory, filename, read_archive):
         archive = read_archive.clone()
 	if directory.find("problem") != -1 :
 		archive.set_encoding("ISO-8859-1")
+		archive.set_src_encoding("UTF-8")
 
         archive.write_open_memory()
 
