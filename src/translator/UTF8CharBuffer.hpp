@@ -57,6 +57,7 @@ public:
 private:
 
     int growBuffer();
+    void processEncoding(const char * encoding);
 
     FILE * input;
     int pos;

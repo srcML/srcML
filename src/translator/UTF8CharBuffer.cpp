@@ -35,13 +35,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
 
     raw_buffer = (char *)buffer;
 
-    input_buffer = (unsigned char *)raw_buffer;
-    if(encoding && strcmp("UTF-8", encoding) != 0) {
-
-	cd = iconv_open("UTF-8", encoding);
-	input_buffer = (unsigned char *)iconv_buffer;
-
-    }
+    processEncoding(encoding);
 	
 }
 
@@ -53,13 +47,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t size, const char * 
 
     raw_buffer = (char *)c_buffer;
 
-    input_buffer = (unsigned char *)raw_buffer;
-    if(encoding && strcmp("UTF-8", encoding) != 0) {
-
-	cd = iconv_open("UTF-8", encoding);
-	input_buffer = (unsigned char *)iconv_buffer;
-
-    }
+    processEncoding(encoding);
 
 }    
 
@@ -71,13 +59,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
     input = file;
     raw_buffer = (char *)buffer;
 
-    input_buffer = (unsigned char *)raw_buffer;
-    if(encoding && strcmp("UTF-8", encoding) != 0) {
-
-	cd = iconv_open("UTF-8", encoding);
-	input_buffer = (unsigned char *)iconv_buffer;
-
-    }
+    processEncoding(encoding);
 
 }
 
@@ -91,6 +73,12 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
     if(!input) throw UTF8FileError();
 
     raw_buffer = (char *)buffer;
+
+    processEncoding(encoding);
+
+}
+
+void UTF8CharBuffer::processEncoding(const char * encoding) {
 
     input_buffer = (unsigned char *)raw_buffer;
     if(encoding && strcmp("UTF-8", encoding) != 0) {
