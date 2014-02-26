@@ -99,8 +99,9 @@ size_t UTF8CharBuffer::convertEncodings(size_t num_to_convert) {
     // iconv incements buffers need temporary since static and get refilled
     unsigned char * input_buf = input_buffer;
     char * raw = raw_buffer;
-    return iconv(cd, &raw, &num_in_convert, (char **)&input_buf, &num_out_convert);
+    iconv(cd, &raw, &num_in_convert, (char **)&input_buf, &num_out_convert);
 
+    return (4 * num_to_convert) - num_out_convert;
 
 }
 
@@ -117,7 +118,8 @@ int UTF8CharBuffer::growBuffer() {
 
     if(num_read <= 0) return (int)num_read;
 
-    if(cd) convertEncodings(num_read);
+    size_t num_converted = num_read;
+    if(cd) num_converted = convertEncodings(num_read);
 
     // if from c string update starting position for raw memory
     if(!input) {
@@ -128,7 +130,7 @@ int UTF8CharBuffer::growBuffer() {
 
     }
 
-    return (int)num_read;
+    return (int)num_converted;
 }
 
 /*
