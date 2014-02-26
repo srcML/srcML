@@ -144,6 +144,54 @@ int main() {
 
   }
 
+  {
+
+    UTF8CharBuffer utf8("long.cpp", "UTF-8");
+    for(int i = 0; i < 4096; ++i)
+	assert(utf8.getChar() == 'a');
+
+    assert(utf8.getChar() == -1);
+    
+
+  }
+
+  {
+
+    std::vector<char> s(4096, 'a');
+
+    UTF8CharBuffer utf8(&s.front(), 4096, "UTF-8");
+    for(int i = 0; i < 4096; ++i)
+	assert(utf8.getChar() == 'a');
+
+    assert(utf8.getChar() == -1);
+    
+
+  }
+
+  {
+
+    UTF8CharBuffer utf8("long.cpp", "ISO-8859-1");
+    for(int i = 0; i < 4096; ++i)
+	assert(utf8.getChar() == 'a');
+
+    assert(utf8.getChar() == -1);
+    
+
+  }
+
+  {
+
+    std::vector<char> s(4096, 'a');
+
+    UTF8CharBuffer utf8(&s.front(), 4096, "ISO-8859-1");
+    for(int i = 0; i < 4096; ++i)
+	assert(utf8.getChar() == 'a');
+
+    assert(utf8.getChar() == -1);
+    
+
+  }
+
   unlink("a.cpp");
   unlink("iso.cpp");
   unlink("long.cpp");
