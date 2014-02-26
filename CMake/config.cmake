@@ -1,6 +1,7 @@
-# @copyright
-# 
-# Copyright (C) 2013-2014  SDML (www.srcML.org)
+##
+# @file config.cmake
+#
+# @copyright Copyright (C) 2013-2014  SDML (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +19,7 @@
 
 
 # 
-# It is epxected that the windows dependency directoy will contain a folder
+# It is expected that the windows dependency directoy will contain a folder
 # named dep which will contain all of the dependencies. For windows.
 # 
 # The layout of the folder will be as follows.
