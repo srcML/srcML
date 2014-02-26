@@ -27,12 +27,18 @@
  */
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+#include <fstream>
 #include <srcMLTranslator.hpp>
 #include <UTF8CharBuffer.hpp>
 #include <Language.hpp>
 #include <srcmlns.hpp>
 
 int main() {
+
+  std::ofstream file("a.cpp");
+  file << "a;";
+  file.close();
 
   std::string urisprefix[] = {
 
@@ -102,7 +108,7 @@ int main() {
                                  output_buffer, op, "", "", "", urisprefix, 4);
 
     try {
-      translator.setInput("test_srcMLTranslator.cpp");
+      translator.setInput("a.cpp");
     } catch(...) { assert(false); }
     translator.close();
     xmlBufferFree(buffer);
@@ -203,6 +209,8 @@ int main() {
     xmlBufferFree(buffer);
     
   }
+
+  unlink("a.cpp");
 
   return 0;
 }
