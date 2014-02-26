@@ -36,6 +36,18 @@ int main() {
     file << "abc";
     file.close();
 
+    file.open("iso.cpp");
+    file << "/** ";
+    file << (char)254;
+    file << (char)255;
+    file << " */";
+    file.close();
+
+    file.open("long.cpp");
+    for(int i = 0; i < 4096; ++i)
+	file << 'a';
+    file.close();
+
   /*
 
     getChar()
@@ -86,15 +98,55 @@ int main() {
 
 
   {
+      unsigned char s[9];
 
-    UTF8CharBuffer utf8("abc", 3, "ISO-8859-1");
-    assert(utf8.getChar() == 'a');
-    assert(utf8.getChar() == 'b');
-    assert(utf8.getChar() == 'c');
+      s[0] = '/';
+      s[1] = '*';
+      s[2] = '*';
+      s[3] = ' ';
+      s[4] = 254;
+      s[5] = 255;
+      s[6] = ' ';
+      s[7] = '*';
+      s[8] = '/';
+
+    UTF8CharBuffer utf8((const char *)s, 9, "ISO-8859-1");
+    assert(utf8.getChar() == '/');
+    assert(utf8.getChar() == '*');
+    assert(utf8.getChar() == '*');
+    assert(utf8.getChar() == ' ');
+    assert(utf8.getChar() == 195);
+    assert(utf8.getChar() == 190);
+    assert(utf8.getChar() == 195);
+    assert(utf8.getChar() == 191);
+    assert(utf8.getChar() == ' ');
+    assert(utf8.getChar() == '*');
+    assert(utf8.getChar() == '/');
+    
+
+  }
+
+  {
+
+    UTF8CharBuffer utf8("iso.cpp", "ISO-8859-1");
+    assert(utf8.getChar() == '/');
+    assert(utf8.getChar() == '*');
+    assert(utf8.getChar() == '*');
+    assert(utf8.getChar() == ' ');
+    assert(utf8.getChar() == 195);
+    assert(utf8.getChar() == 190);
+    assert(utf8.getChar() == 195);
+    assert(utf8.getChar() == 191);
+    assert(utf8.getChar() == ' ');
+    assert(utf8.getChar() == '*');
+    assert(utf8.getChar() == '/');
+    
 
   }
 
   unlink("a.cpp");
+  unlink("iso.cpp");
+  unlink("long.cpp");
 
   return 0;
 }
