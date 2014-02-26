@@ -1,4 +1,4 @@
-/*
+/*!
  * @file KeywordLexer.g
  *
  * @copyright Copyright (C) 2004-2014  SDML (www.srcML.org)

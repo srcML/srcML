@@ -1,4 +1,4 @@
-/*
+/*!
  * @file CommentTextLexer.g
  *
  * @copyright Copyright (C) 2008-2011  SDML (www.srcML.org)

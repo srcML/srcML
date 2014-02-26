@@ -1,4 +1,4 @@
-/*
+/*!
  * @file srcMLParser.g
  * 
  * @copyright Copyright (C) 2004-2014  SDML (www.srcML.org)
@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
+/*!
  * Comments:
  *
  * This is an ANTLR grammar file for the main part of the srcML translator.

@@ -1,4 +1,4 @@
-/*
+/*!
  * @file TextLexer.g
  *
  * @copyright Copyright (C) 2002-2010  SDML (www.srcML.org)
