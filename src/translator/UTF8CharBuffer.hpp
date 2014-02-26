@@ -32,6 +32,7 @@
 #include <antlr/CharBuffer.hpp>
 #include <cstring>
 
+#include <stdio.h>
 #include <iconv.h>
 
 class UTF8FileError {};
