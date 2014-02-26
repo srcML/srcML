@@ -27,9 +27,14 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <cassert>
+#include <fstream>
 #include <UTF8CharBuffer.hpp>
 
 int main() {
+
+    std::ofstream file("a.cpp");
+    file << "abc";
+    file.close();
 
   /*
 
@@ -39,10 +44,10 @@ int main() {
 
   {
 
-    UTF8CharBuffer utf8("test_UTF8CharBuffer.cpp", "UTF-8");
-    assert(utf8.getChar() == '/');
-    assert(utf8.getChar() == '*');
-    assert(utf8.getChar() == '*');
+    UTF8CharBuffer utf8("a.cpp", "UTF-8");
+    assert(utf8.getChar() == 'a');
+    assert(utf8.getChar() == 'b');
+    assert(utf8.getChar() == 'c');
 
   }
 
@@ -59,25 +64,37 @@ int main() {
 
   {
 
-    FILE * file = fopen("test_UTF8CharBuffer.cpp", "r");
+    FILE * file = fopen("a.cpp", "r");
     UTF8CharBuffer utf8(file, "UTF-8");
-    assert(utf8.getChar() == '/');
-    assert(utf8.getChar() == '*');
-    assert(utf8.getChar() == '*');
+    assert(utf8.getChar() == 'a');
+    assert(utf8.getChar() == 'b');
+    assert(utf8.getChar() == 'c');
     fclose(file);
 
   }
 
   {
 
-    int fd = open("test_UTF8CharBuffer.cpp", O_RDONLY);
+    int fd = open("a.cpp", O_RDONLY);
     UTF8CharBuffer utf8(fd, "UTF-8");
-    assert(utf8.getChar() == '/');
-    assert(utf8.getChar() == '*');
-    assert(utf8.getChar() == '*');
+    assert(utf8.getChar() == 'a');
+    assert(utf8.getChar() == 'b');
+    assert(utf8.getChar() == 'c');
     close(fd);
 
   }
+
+
+  {
+
+    UTF8CharBuffer utf8("abc", 3, "ISO-8859-1");
+    //assert(utf8.getChar() == 'a');
+    //assert(utf8.getChar() == 'b');
+    //assert(utf8.getChar() == 'c');
+
+  }
+
+  unlink("a.cpp");
 
   return 0;
 }
