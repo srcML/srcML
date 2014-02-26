@@ -2,7 +2,7 @@
 /*
   srcMLHandler.hpp
 
-  Copyright (C) 2004-2013  SDML (www.srcML.org)
+  @copyright Copyright (C) 2004-2013  SDML (www.srcML.org)
 
   This file is part of the srcML SAX2 Framework.
 

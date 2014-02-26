@@ -1,7 +1,7 @@
 /*
   UnitDOM.cpp
 
-  Copyright (C) 2011  SDML (www.srcML.org)
+  @copyright Copyright (C) 2011  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 

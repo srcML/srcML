@@ -1,7 +1,7 @@
 /*
   srcMLState.hpp
 
-  Copyright (C) 2003-2010  SDML (www.srcML.org)
+  @copyright Copyright (C) 2003-2010  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
