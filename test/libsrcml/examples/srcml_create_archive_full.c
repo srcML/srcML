@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 
     /* change prefix of standard namespace */
     srcml_archive_register_namespace(archive, "s", "http://www.sdml.info/srcML/src");
-    
+
     /* default prefix is now for cpp namespace */
     srcml_archive_register_namespace(archive, "", "http://www.sdml.info/srcML/cpp");
 
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
     srcml_archive_register_namespace(archive, "doc", "http://www.sdml.info/srcML/doc");
 
     /*
-      Open and write to the archive 
+      Open and write to the archive
     */
 
     /* open a srcML archive for output */

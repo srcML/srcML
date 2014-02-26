@@ -34,35 +34,35 @@
 
 int main() {
 
-  /* 
-     srcml_check_extension
-   */
+    /*
+      srcml_check_extension
+    */
 
-  srcml_archive * archive = srcml_create_archive();
-  srcml_archive_register_file_extension(archive, "cpp", "C++");
+    srcml_archive * archive = srcml_create_archive();
+    srcml_archive_register_file_extension(archive, "cpp", "C++");
 
-  {
-    dassert(srcml_archive_check_extension(archive, "a.cpp"), std::string("C++"));
-  }
+    {
+        dassert(srcml_archive_check_extension(archive, "a.cpp"), std::string("C++"));
+    }
 
-  {
-    dassert(srcml_archive_check_extension(archive, "a.cpp.gz"), std::string("C++"));
-  }
+    {
+        dassert(srcml_archive_check_extension(archive, "a.cpp.gz"), std::string("C++"));
+    }
 
-  {
-    dassert(srcml_archive_check_extension(archive, "a.foo"), 0);
-  }
+    {
+        dassert(srcml_archive_check_extension(archive, "a.foo"), 0);
+    }
 
-  {
-    dassert(srcml_archive_check_extension(archive, 0), 0);
-  }
+    {
+        dassert(srcml_archive_check_extension(archive, 0), 0);
+    }
 
-  {
-    dassert(srcml_archive_check_extension(0, "a.cpp"), 0);
-  }
+    {
+        dassert(srcml_archive_check_extension(0, "a.cpp"), 0);
+    }
 
-  srcml_free_archive(archive);
+    srcml_free_archive(archive);
 
-  return 0;
+    return 0;
 
 }

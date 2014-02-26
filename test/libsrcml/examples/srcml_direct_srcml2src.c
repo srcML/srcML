@@ -26,7 +26,7 @@
 
   * This creates a single-unit srcML file, i.e., a non-archive srcML
   * The srcML attribute filename will be the name of the file passed as the first
-    parameter.
+  parameter.
 */
 
 #include "srcml.h"

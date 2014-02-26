@@ -34,27 +34,27 @@
 
 int main() {
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    srcml_unit * unit = srcml_create_unit(archive);
-   
-    dassert(unit->archive, archive);
-    dassert(unit->language, 0);
-    dassert(unit->filename, 0);
-    dassert(unit->directory, 0);
-    dassert(unit->version, 0);
-    dassert(unit->unit, 0);
+        srcml_archive * archive = srcml_create_archive();
+        srcml_unit * unit = srcml_create_unit(archive);
 
-    srcml_free_unit(unit);
-    srcml_free_archive(archive);
-  }
+        dassert(unit->archive, archive);
+        dassert(unit->language, 0);
+        dassert(unit->filename, 0);
+        dassert(unit->directory, 0);
+        dassert(unit->version, 0);
+        dassert(unit->unit, 0);
 
-  {
+        srcml_free_unit(unit);
+        srcml_free_archive(archive);
+    }
 
-    dassert(srcml_create_unit(0), 0);
-   
-  }
+    {
 
-  return 0;
+        dassert(srcml_create_unit(0), 0);
+
+    }
+
+    return 0;
 }

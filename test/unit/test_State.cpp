@@ -24,7 +24,7 @@
 
   Unit tests for Options.
 
- */
+*/
 
 #include <State.hpp>
 #include <stdio.h>
@@ -33,100 +33,100 @@
 
 int main() {
 
-  /*
-    pop
-   */ 
+    /*
+      pop
+    */
 
-  {
-    State s(1);
-    try{
-      s.pop();
-      assert(false);
-    } catch(...) {}
-  }
+    {
+        State s(1);
+        try{
+            s.pop();
+            assert(false);
+        } catch(...) {}
+    }
 
-  /*
-    inMode
-   */ 
+    /*
+      inMode
+    */
 
-  {
-    State s(1, 2, 4);
-    assert(s.inMode(1));
-  }
+    {
+        State s(1, 2, 4);
+        assert(s.inMode(1));
+    }
 
-  {
-    State s(1, 2, 4);
-    assert(!s.inMode(2));
-  }
+    {
+        State s(1, 2, 4);
+        assert(!s.inMode(2));
+    }
 
-  /*
-    inPrevMode
-   */ 
+    /*
+      inPrevMode
+    */
 
-  {
-    State s(1, 2, 4);
-    assert(s.inPrevMode(4));
-  }
+    {
+        State s(1, 2, 4);
+        assert(s.inPrevMode(4));
+    }
 
-  {
-    State s(1, 2, 4);
-    assert(!s.inPrevMode(1));
-  }
+    {
+        State s(1, 2, 4);
+        assert(!s.inPrevMode(1));
+    }
 
-  /*
-    inTransparentMode
-   */ 
+    /*
+      inTransparentMode
+    */
 
-  {
-    State s(1, 2, 4);
-    assert(s.inTransparentMode(3));
-  }
+    {
+        State s(1, 2, 4);
+        assert(s.inTransparentMode(3));
+    }
 
-  {
-    State s(1, 2, 4);
-    assert(!s.inTransparentMode(4));
-  }
+    {
+        State s(1, 2, 4);
+        assert(!s.inTransparentMode(4));
+    }
 
-  /*
-    getMode
-   */ 
+    /*
+      getMode
+    */
 
-  {
-    State s(1);
-    assert(s.getMode() == 1);
-  }
+    {
+        State s(1);
+        assert(s.getMode() == 1);
+    }
 
-  /*
-    getTransparentMode
-   */ 
+    /*
+      getTransparentMode
+    */
 
-  {
-    State s(1, 2);
-    assert(s.getTransparentMode() == 3);
-  }
+    {
+        State s(1, 2);
+        assert(s.getTransparentMode() == 3);
+    }
 
-  /*
-    setMode
-   */ 
+    /*
+      setMode
+    */
 
-  {
-    State s(1, 2);
-    s.setMode(4);
-    assert(s.getMode() == 5);
-    assert(s.getTransparentMode() == 7);
-  }
+    {
+        State s(1, 2);
+        s.setMode(4);
+        assert(s.getMode() == 5);
+        assert(s.getTransparentMode() == 7);
+    }
 
-  /*
-    setMode
-   */ 
+    /*
+      setMode
+    */
 
-  {
-    State s(1 | 4, 2 | 8);
-    s.clearMode(4);
-    s.clearMode(8);
-    assert(s.getMode() == 1);
-    assert(s.getTransparentMode() == 3);
-  }
+    {
+        State s(1 | 4, 2 | 8);
+        s.clearMode(4);
+        s.clearMode(8);
+        assert(s.getMode() == 1);
+        assert(s.getTransparentMode() == 3);
+    }
 
-  return 0;
+    return 0;
 }

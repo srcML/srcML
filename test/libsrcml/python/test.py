@@ -26,7 +26,7 @@ if sys.platform == "win32" or sys.platform == "cygwin" :
     os.O_CREAT = 256
     os.O_RDONLY = 0
 
-libc.fopen.restype = ctypes.c_void_p 
+libc.fopen.restype = ctypes.c_void_p
 libc.fopen.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
 libc.fclose.restype = ctypes.c_int
 libc.fclose.argtypes = [ctypes.c_void_p]
@@ -365,7 +365,7 @@ archive = srcml.srcml_archive()
 test = ""
 try :
     archive.write_unit(unit)
-    
+
 except srcml.srcMLException as e :
     test = "Exception"
 archive.close()

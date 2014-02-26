@@ -24,7 +24,7 @@
 
   Unit tests for srcMLState.
 
- */
+*/
 
 #include <srcMLState.hpp>
 #include <stdio.h>
@@ -33,78 +33,78 @@
 
 int main() {
 
-  /*
-    getParen
-   */ 
+    /*
+      getParen
+    */
 
-  {
-    srcMLState s;
-    assert(s.getParen() == 0);
-  }
+    {
+        srcMLState s;
+        assert(s.getParen() == 0);
+    }
 
-  /*
-    incParen
-   */ 
+    /*
+      incParen
+    */
 
-  {
-    srcMLState s;
-    s.incParen();
-    assert(s.getParen() == 1);
-  }
+    {
+        srcMLState s;
+        s.incParen();
+        assert(s.getParen() == 1);
+    }
 
-  /*
-    decParen
-   */ 
+    /*
+      decParen
+    */
 
-  {
-    srcMLState s;
-    s.incParen();
-    s.incParen();
-    s.decParen();
-    assert(s.getParen() == 1);
-  }
+    {
+        srcMLState s;
+        s.incParen();
+        s.incParen();
+        s.decParen();
+        assert(s.getParen() == 1);
+    }
 
-  /*
-    getTypeCount
-   */ 
+    /*
+      getTypeCount
+    */
 
-  {
-    srcMLState s;
-    assert(s.getTypeCount() == 0);
-  }
+    {
+        srcMLState s;
+        assert(s.getTypeCount() == 0);
+    }
 
-  /*
-    incTypeCount
-   */ 
+    /*
+      incTypeCount
+    */
 
-  {
-    srcMLState s;
-    s.incTypeCount();
-    assert(s.getTypeCount() == 1);
-  }
+    {
+        srcMLState s;
+        s.incTypeCount();
+        assert(s.getTypeCount() == 1);
+    }
 
-  /*
-    decTypeCount
-   */ 
+    /*
+      decTypeCount
+    */
 
-  {
-    srcMLState s;
-    s.incTypeCount();
-    s.incTypeCount();
-    s.decTypeCount();
-    assert(s.getTypeCount() == 1);
-  }
+    {
+        srcMLState s;
+        s.incTypeCount();
+        s.incTypeCount();
+        s.decTypeCount();
+        assert(s.getTypeCount() == 1);
+    }
 
 
-  /*
-    setTypeCount
-   */ 
+    /*
+      setTypeCount
+    */
 
-  {
-    srcMLState s;
-    s.setTypeCount(4);
-    assert(s.getTypeCount() == 4);
-  }
+    {
+        srcMLState s;
+        s.setTypeCount(4);
+        assert(s.getTypeCount() == 4);
+    }
 
-  return 0;
+    return 0;
 }

@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
     for (i = 1; i < argc; ++i) {
 
         unit = srcml_create_unit(archive);
-        
+
         /* Translate to srcml and append to the archive */
         char buffer[256];
         srcml_input = open(argv[i], O_RDONLY);

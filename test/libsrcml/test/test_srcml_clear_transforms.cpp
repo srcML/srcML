@@ -35,66 +35,66 @@
 
 int main() {
 
-  /* 
-     srcml_clear_transforms
-   */
+    /*
+      srcml_clear_transforms
+    */
 
-  {
-    srcml_archive * archive = srcml_create_archive();
-    archive->type = SRCML_ARCHIVE_RW;
-    dassert(archive->transformations.size(), 0);
-    dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
-    dassert(archive->transformations.size(), 0);
-    srcml_free_archive(archive);  
-  }
+    {
+        srcml_archive * archive = srcml_create_archive();
+        archive->type = SRCML_ARCHIVE_RW;
+        dassert(archive->transformations.size(), 0);
+        dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
+        dassert(archive->transformations.size(), 0);
+        srcml_free_archive(archive);
+    }
 
-  {
-    srcml_archive * archive = srcml_create_archive();
-    archive->type = SRCML_ARCHIVE_RW;
-    srcml_append_transform_xpath(archive, "//src:unit");
-    dassert(!archive->transformations.size(), 0);
-    dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
-    dassert(archive->transformations.size(), 0);
-    srcml_free_archive(archive);  
-  }
+    {
+        srcml_archive * archive = srcml_create_archive();
+        archive->type = SRCML_ARCHIVE_RW;
+        srcml_append_transform_xpath(archive, "//src:unit");
+        dassert(!archive->transformations.size(), 0);
+        dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
+        dassert(archive->transformations.size(), 0);
+        srcml_free_archive(archive);
+    }
 
 
-  {
-    srcml_archive * archive = srcml_create_archive();
-    archive->type = SRCML_ARCHIVE_RW;
-    srcml_append_transform_xslt(archive, "copy.xsl");
-    dassert(!archive->transformations.size(), 0);
-    dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
-    dassert(archive->transformations.size(), 0);
-    srcml_free_archive(archive);  
-  }
+    {
+        srcml_archive * archive = srcml_create_archive();
+        archive->type = SRCML_ARCHIVE_RW;
+        srcml_append_transform_xslt(archive, "copy.xsl");
+        dassert(!archive->transformations.size(), 0);
+        dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
+        dassert(archive->transformations.size(), 0);
+        srcml_free_archive(archive);
+    }
 
-  {
-    srcml_archive * archive = srcml_create_archive();
-    archive->type = SRCML_ARCHIVE_RW;
-    srcml_append_transform_relaxng(archive, "schema.rng");
-    dassert(!archive->transformations.size(), 0);
-    dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
-    dassert(archive->transformations.size(), 0);
-    srcml_free_archive(archive);  
-  }
+    {
+        srcml_archive * archive = srcml_create_archive();
+        archive->type = SRCML_ARCHIVE_RW;
+        srcml_append_transform_relaxng(archive, "schema.rng");
+        dassert(!archive->transformations.size(), 0);
+        dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
+        dassert(archive->transformations.size(), 0);
+        srcml_free_archive(archive);
+    }
 
-  {
-    srcml_archive * archive = srcml_create_archive();
-    archive->type = SRCML_ARCHIVE_RW;
-    srcml_append_transform_xpath(archive, "//src:unit");
-    srcml_append_transform_xslt(archive, "copy.xsl");
-    srcml_append_transform_relaxng(archive, "schema.rng");
-    dassert(!archive->transformations.size(), 0);
-    dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
-    dassert(archive->transformations.size(), 0);
-    srcml_free_archive(archive);  
-  }
+    {
+        srcml_archive * archive = srcml_create_archive();
+        archive->type = SRCML_ARCHIVE_RW;
+        srcml_append_transform_xpath(archive, "//src:unit");
+        srcml_append_transform_xslt(archive, "copy.xsl");
+        srcml_append_transform_relaxng(archive, "schema.rng");
+        dassert(!archive->transformations.size(), 0);
+        dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
+        dassert(archive->transformations.size(), 0);
+        srcml_free_archive(archive);
+    }
 
-  {
-    dassert(srcml_clear_transforms(0), SRCML_STATUS_ERROR);
-  }
+    {
+        dassert(srcml_clear_transforms(0), SRCML_STATUS_ERROR);
+    }
 
-  return 0;
+    return 0;
 
 }

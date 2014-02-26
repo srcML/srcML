@@ -24,7 +24,7 @@
 
   Unit tests for Options.
 
- */
+*/
 
 #include <Options.hpp>
 #include <stdio.h>
@@ -33,17 +33,17 @@
 
 int main() {
 
-  /*
-    isoption
-   */ 
+    /*
+      isoption
+    */
 
-  {
-    assert(isoption(1 | 2, 1));
-  }
+    {
+        assert(isoption(1 | 2, 1));
+    }
 
-  {
-    assert(!isoption(1 | 2, 4));
-  }
+    {
+        assert(!isoption(1 | 2, 4));
+    }
 
-  return 0;
+    return 0;
 }

@@ -37,8 +37,8 @@ int main(int argc, char* argv[]) {
 
     while((unit = srcml_read_unit_header(archive))) {
 
-	puts(srcml_unit_get_filename(unit));
-	srcml_free_unit(unit);
+        puts(srcml_unit_get_filename(unit));
+        srcml_free_unit(unit);
 
     }
 

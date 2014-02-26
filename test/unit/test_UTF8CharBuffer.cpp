@@ -21,7 +21,7 @@
 
 /*
   Test cases for UTF8CharBuffer.
- */
+*/
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
@@ -45,156 +45,156 @@ int main() {
 
     file.open("long.cpp");
     for(int i = 0; i < 4096; ++i)
-	file << 'a';
+        file << 'a';
     file.close();
 
-  /*
+    /*
 
-    getChar()
+      getChar()
 
-   */
+    */
 
-  {
+    {
 
-    UTF8CharBuffer utf8("a.cpp", "UTF-8");
-    assert(utf8.getChar() == 'a');
-    assert(utf8.getChar() == 'b');
-    assert(utf8.getChar() == 'c');
+        UTF8CharBuffer utf8("a.cpp", "UTF-8");
+        assert(utf8.getChar() == 'a');
+        assert(utf8.getChar() == 'b');
+        assert(utf8.getChar() == 'c');
 
-  }
-
-
-  {
-
-    UTF8CharBuffer utf8("abc", 3, "UTF-8");
-    assert(utf8.getChar() == 'a');
-    assert(utf8.getChar() == 'b');
-    assert(utf8.getChar() == 'c');
-
-  }
+    }
 
 
-  {
+    {
 
-    FILE * file = fopen("a.cpp", "r");
-    UTF8CharBuffer utf8(file, "UTF-8");
-    assert(utf8.getChar() == 'a');
-    assert(utf8.getChar() == 'b');
-    assert(utf8.getChar() == 'c');
-    fclose(file);
+        UTF8CharBuffer utf8("abc", 3, "UTF-8");
+        assert(utf8.getChar() == 'a');
+        assert(utf8.getChar() == 'b');
+        assert(utf8.getChar() == 'c');
 
-  }
-
-  {
-
-    int fd = open("a.cpp", O_RDONLY);
-    UTF8CharBuffer utf8(fd, "UTF-8");
-    assert(utf8.getChar() == 'a');
-    assert(utf8.getChar() == 'b');
-    assert(utf8.getChar() == 'c');
-    close(fd);
-
-  }
+    }
 
 
-  {
-      unsigned char s[9];
+    {
 
-      s[0] = '/';
-      s[1] = '*';
-      s[2] = '*';
-      s[3] = ' ';
-      s[4] = 254;
-      s[5] = 255;
-      s[6] = ' ';
-      s[7] = '*';
-      s[8] = '/';
+        FILE * file = fopen("a.cpp", "r");
+        UTF8CharBuffer utf8(file, "UTF-8");
+        assert(utf8.getChar() == 'a');
+        assert(utf8.getChar() == 'b');
+        assert(utf8.getChar() == 'c');
+        fclose(file);
 
-    UTF8CharBuffer utf8((const char *)s, 9, "ISO-8859-1");
-    assert(utf8.getChar() == '/');
-    assert(utf8.getChar() == '*');
-    assert(utf8.getChar() == '*');
-    assert(utf8.getChar() == ' ');
-    assert(utf8.getChar() == 195);
-    assert(utf8.getChar() == 190);
-    assert(utf8.getChar() == 195);
-    assert(utf8.getChar() == 191);
-    assert(utf8.getChar() == ' ');
-    assert(utf8.getChar() == '*');
-    assert(utf8.getChar() == '/');
-    
+    }
 
-  }
+    {
 
-  {
+        int fd = open("a.cpp", O_RDONLY);
+        UTF8CharBuffer utf8(fd, "UTF-8");
+        assert(utf8.getChar() == 'a');
+        assert(utf8.getChar() == 'b');
+        assert(utf8.getChar() == 'c');
+        close(fd);
 
-    UTF8CharBuffer utf8("iso.cpp", "ISO-8859-1");
-    assert(utf8.getChar() == '/');
-    assert(utf8.getChar() == '*');
-    assert(utf8.getChar() == '*');
-    assert(utf8.getChar() == ' ');
-    assert(utf8.getChar() == 195);
-    assert(utf8.getChar() == 190);
-    assert(utf8.getChar() == 195);
-    assert(utf8.getChar() == 191);
-    assert(utf8.getChar() == ' ');
-    assert(utf8.getChar() == '*');
-    assert(utf8.getChar() == '/');
-    
+    }
 
-  }
 
-  {
+    {
+        unsigned char s[9];
 
-    UTF8CharBuffer utf8("long.cpp", "UTF-8");
-    for(int i = 0; i < 4096; ++i)
-	assert(utf8.getChar() == 'a');
+        s[0] = '/';
+        s[1] = '*';
+        s[2] = '*';
+        s[3] = ' ';
+        s[4] = 254;
+        s[5] = 255;
+        s[6] = ' ';
+        s[7] = '*';
+        s[8] = '/';
 
-    assert(utf8.getChar() == -1);
-    
+        UTF8CharBuffer utf8((const char *)s, 9, "ISO-8859-1");
+        assert(utf8.getChar() == '/');
+        assert(utf8.getChar() == '*');
+        assert(utf8.getChar() == '*');
+        assert(utf8.getChar() == ' ');
+        assert(utf8.getChar() == 195);
+        assert(utf8.getChar() == 190);
+        assert(utf8.getChar() == 195);
+        assert(utf8.getChar() == 191);
+        assert(utf8.getChar() == ' ');
+        assert(utf8.getChar() == '*');
+        assert(utf8.getChar() == '/');
 
-  }
 
-  {
+    }
 
-    std::vector<char> s(4096, 'a');
+    {
 
-    UTF8CharBuffer utf8(&s.front(), 4096, "UTF-8");
-    for(int i = 0; i < 4096; ++i)
-	assert(utf8.getChar() == 'a');
+        UTF8CharBuffer utf8("iso.cpp", "ISO-8859-1");
+        assert(utf8.getChar() == '/');
+        assert(utf8.getChar() == '*');
+        assert(utf8.getChar() == '*');
+        assert(utf8.getChar() == ' ');
+        assert(utf8.getChar() == 195);
+        assert(utf8.getChar() == 190);
+        assert(utf8.getChar() == 195);
+        assert(utf8.getChar() == 191);
+        assert(utf8.getChar() == ' ');
+        assert(utf8.getChar() == '*');
+        assert(utf8.getChar() == '/');
 
-    assert(utf8.getChar() == -1);
-    
 
-  }
+    }
 
-  {
+    {
 
-    UTF8CharBuffer utf8("long.cpp", "ISO-8859-1");
-    for(int i = 0; i < 4096; ++i)
-	assert(utf8.getChar() == 'a');
+        UTF8CharBuffer utf8("long.cpp", "UTF-8");
+        for(int i = 0; i < 4096; ++i)
+            assert(utf8.getChar() == 'a');
 
-    assert(utf8.getChar() == -1);
-    
+        assert(utf8.getChar() == -1);
 
-  }
 
-  {
+    }
 
-    std::vector<char> s(4096, 'a');
+    {
 
-    UTF8CharBuffer utf8(&s.front(), 4096, "ISO-8859-1");
-    for(int i = 0; i < 4096; ++i)
-	assert(utf8.getChar() == 'a');
+        std::vector<char> s(4096, 'a');
 
-    assert(utf8.getChar() == -1);
-    
+        UTF8CharBuffer utf8(&s.front(), 4096, "UTF-8");
+        for(int i = 0; i < 4096; ++i)
+            assert(utf8.getChar() == 'a');
 
-  }
+        assert(utf8.getChar() == -1);
 
-  unlink("a.cpp");
-  unlink("iso.cpp");
-  unlink("long.cpp");
 
-  return 0;
+    }
+
+    {
+
+        UTF8CharBuffer utf8("long.cpp", "ISO-8859-1");
+        for(int i = 0; i < 4096; ++i)
+            assert(utf8.getChar() == 'a');
+
+        assert(utf8.getChar() == -1);
+
+
+    }
+
+    {
+
+        std::vector<char> s(4096, 'a');
+
+        UTF8CharBuffer utf8(&s.front(), 4096, "ISO-8859-1");
+        for(int i = 0; i < 4096; ++i)
+            assert(utf8.getChar() == 'a');
+
+        assert(utf8.getChar() == -1);
+
+
+    }
+
+    unlink("a.cpp");
+    unlink("iso.cpp");
+    unlink("long.cpp");
+
+    return 0;
 }

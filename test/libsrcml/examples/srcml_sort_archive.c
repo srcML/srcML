@@ -29,72 +29,72 @@
 #include <string.h>
 
 int main(int argc, char* argv[]) {
-  struct srcml_archive* iarchive;
-  struct srcml_archive* oarchive;
-  int num_units = 0;
-  struct srcml_unit* units[10];
-  const char* inputfile;
-  const char* outputfile;
+    struct srcml_archive* iarchive;
+    struct srcml_archive* oarchive;
+    int num_units = 0;
+    struct srcml_unit* units[10];
+    const char* inputfile;
+    const char* outputfile;
 
-  inputfile = "project.xml";
-  outputfile = "project_tmp.xml";
+    inputfile = "project.xml";
+    outputfile = "project_tmp.xml";
 
-  /* open up an existing archive */
-  iarchive = srcml_create_archive();
+    /* open up an existing archive */
+    iarchive = srcml_create_archive();
 
-  /* create a new srcml archive structure */
-  /* options and attributes of cloned archive start the same as
-     the original archive */
-  oarchive = srcml_clone_archive(iarchive);
-  srcml_read_open_filename(iarchive, inputfile);
-  while (1) {
+    /* create a new srcml archive structure */
+    /* options and attributes of cloned archive start the same as
+       the original archive */
+    oarchive = srcml_clone_archive(iarchive);
+    srcml_read_open_filename(iarchive, inputfile);
+    while (1) {
 
 
-    units[num_units] = srcml_read_unit(iarchive);
-    if (units[num_units] == 0)
-      break;
-    ++num_units;
+        units[num_units] = srcml_read_unit(iarchive);
+        if (units[num_units] == 0)
+            break;
+        ++num_units;
 
-  }
-  int i;
-  for(i = 1; i < num_units; ++i) {
+    }
+    int i;
+    for(i = 1; i < num_units; ++i) {
 
-    int j;
-    for(j = i; j > 0; --j) {
+        int j;
+        for(j = i; j > 0; --j) {
 
-      if(strcmp(srcml_unit_get_filename(units[j]), srcml_unit_get_filename(units[j - 1])) < 0) {
+            if(strcmp(srcml_unit_get_filename(units[j]), srcml_unit_get_filename(units[j - 1])) < 0) {
 
-        struct srcml_unit * tmp_unit = units[j];
-        units[j] = units[j - 1];
-        units[j - 1] = tmp_unit;
+                struct srcml_unit * tmp_unit = units[j];
+                units[j] = units[j - 1];
+                units[j - 1] = tmp_unit;
 
-      } else
-        break;
+            } else
+                break;
+
+        }
 
     }
 
-  }
+    /* open a srcML archive for output */
+    srcml_write_open_filename(oarchive, outputfile);
 
-  /* open a srcML archive for output */
-  srcml_write_open_filename(oarchive, outputfile);
-  
-  for(i = 0; i < num_units; ++i) {
+    for(i = 0; i < num_units; ++i) {
 
-    /* copy the files from the input archive to the output archive */
-    /* Translate to srcml and append to the archive */
-    srcml_write_unit(oarchive, units[i]);
+        /* copy the files from the input archive to the output archive */
+        /* Translate to srcml and append to the archive */
+        srcml_write_unit(oarchive, units[i]);
 
-    srcml_free_unit(units[i]);
+        srcml_free_unit(units[i]);
 
-  }
+    }
 
-  /* close the archives */
-  srcml_close_archive(oarchive);
-  srcml_close_archive(iarchive);
+    /* close the archives */
+    srcml_close_archive(oarchive);
+    srcml_close_archive(iarchive);
 
-  /* free the srcML archive data */
-  srcml_free_archive(oarchive);
-  srcml_free_archive(iarchive);
+    /* free the srcML archive data */
+    srcml_free_archive(oarchive);
+    srcml_free_archive(iarchive);
 
-return 0;
+    return 0;
 }

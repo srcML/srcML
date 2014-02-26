@@ -36,528 +36,528 @@
 
 int main() {
 
-  /* 
-     srcml_archive_get_src_encoding
-   */
+    /*
+      srcml_archive_get_src_encoding
+    */
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    archive->src_encoding = boost::optional<std::string>();
-    dassert(srcml_archive_get_src_encoding(archive), 0);
-    srcml_free_archive(archive);
-  }
+        srcml_archive * archive = srcml_create_archive();
+        archive->src_encoding = boost::optional<std::string>();
+        dassert(srcml_archive_get_src_encoding(archive), 0);
+        srcml_free_archive(archive);
+    }
 
-  {
-    dassert(srcml_archive_get_src_encoding(0), 0);
-  }
+    {
+        dassert(srcml_archive_get_src_encoding(0), 0);
+    }
 
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    archive->src_encoding = "foo";
-    dassert(srcml_archive_get_src_encoding(archive), std::string("foo"));
-    srcml_free_archive(archive);
-  }
+        srcml_archive * archive = srcml_create_archive();
+        archive->src_encoding = "foo";
+        dassert(srcml_archive_get_src_encoding(archive), std::string("foo"));
+        srcml_free_archive(archive);
+    }
 
 
-  /* 
-     srcml_archive_get_encoding
-   */
+    /*
+      srcml_archive_get_encoding
+    */
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    archive->encoding = boost::optional<std::string>();
-    dassert(srcml_archive_get_encoding(archive), 0);
-    srcml_free_archive(archive);
-  }
+        srcml_archive * archive = srcml_create_archive();
+        archive->encoding = boost::optional<std::string>();
+        dassert(srcml_archive_get_encoding(archive), 0);
+        srcml_free_archive(archive);
+    }
 
-  {
-    dassert(srcml_archive_get_encoding(0), 0);
-  }
+    {
+        dassert(srcml_archive_get_encoding(0), 0);
+    }
 
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    archive->encoding = "foo";
-    dassert(srcml_archive_get_encoding(archive), std::string("foo"));
-    srcml_free_archive(archive);
-  }
+        srcml_archive * archive = srcml_create_archive();
+        archive->encoding = "foo";
+        dassert(srcml_archive_get_encoding(archive), std::string("foo"));
+        srcml_free_archive(archive);
+    }
 
-  /* 
-     srcml_archive_get_language
-   */
+    /*
+      srcml_archive_get_language
+    */
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    archive->language = boost::optional<std::string>();
-    dassert(srcml_archive_get_language(archive), 0);
-    srcml_free_archive(archive);
-  }
+        srcml_archive * archive = srcml_create_archive();
+        archive->language = boost::optional<std::string>();
+        dassert(srcml_archive_get_language(archive), 0);
+        srcml_free_archive(archive);
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    archive->language = "foo";
-    dassert(srcml_archive_get_language(archive), std::string("foo"));
-    srcml_free_archive(archive);
-  }
+        srcml_archive * archive = srcml_create_archive();
+        archive->language = "foo";
+        dassert(srcml_archive_get_language(archive), std::string("foo"));
+        srcml_free_archive(archive);
+    }
 
-  {
-    dassert(srcml_archive_get_language(0), 0);
-  }
+    {
+        dassert(srcml_archive_get_language(0), 0);
+    }
 
-  /* 
-     srcml_archive_get_filename
-   */
+    /*
+      srcml_archive_get_filename
+    */
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    archive->filename = boost::optional<std::string>();
-    dassert(srcml_archive_get_filename(archive), 0);
-    srcml_free_archive(archive);
-  }
+        srcml_archive * archive = srcml_create_archive();
+        archive->filename = boost::optional<std::string>();
+        dassert(srcml_archive_get_filename(archive), 0);
+        srcml_free_archive(archive);
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    archive->filename = "foo";
-    dassert(srcml_archive_get_filename(archive), std::string("foo"));
-    srcml_free_archive(archive);
-  }
+        srcml_archive * archive = srcml_create_archive();
+        archive->filename = "foo";
+        dassert(srcml_archive_get_filename(archive), std::string("foo"));
+        srcml_free_archive(archive);
+    }
 
-  {
-    dassert(srcml_archive_get_filename(0), 0);
-  }
+    {
+        dassert(srcml_archive_get_filename(0), 0);
+    }
 
-  /* 
-     srcml_archive_get_directory
-   */
+    /*
+      srcml_archive_get_directory
+    */
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    archive->directory = boost::optional<std::string>();
-    dassert(srcml_archive_get_directory(archive), 0);
-    srcml_free_archive(archive);
-  }
+        srcml_archive * archive = srcml_create_archive();
+        archive->directory = boost::optional<std::string>();
+        dassert(srcml_archive_get_directory(archive), 0);
+        srcml_free_archive(archive);
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    archive->directory = "foo";
-    dassert(srcml_archive_get_directory(archive), std::string("foo"));
-    srcml_free_archive(archive);
-  }
+        srcml_archive * archive = srcml_create_archive();
+        archive->directory = "foo";
+        dassert(srcml_archive_get_directory(archive), std::string("foo"));
+        srcml_free_archive(archive);
+    }
 
-  {
-    dassert(srcml_archive_get_directory(0), 0);
-  }
+    {
+        dassert(srcml_archive_get_directory(0), 0);
+    }
 
-  /* 
-     srcml_archive_get_version
-   */
+    /*
+      srcml_archive_get_version
+    */
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    archive->version = boost::optional<std::string>();
-    dassert(srcml_archive_get_version(archive), 0);
-    srcml_free_archive(archive);
-  }
+        srcml_archive * archive = srcml_create_archive();
+        archive->version = boost::optional<std::string>();
+        dassert(srcml_archive_get_version(archive), 0);
+        srcml_free_archive(archive);
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    archive->version = "foo";
-    dassert(srcml_archive_get_version(archive), std::string("foo"));
-    srcml_free_archive(archive);
-  }
+        srcml_archive * archive = srcml_create_archive();
+        archive->version = "foo";
+        dassert(srcml_archive_get_version(archive), std::string("foo"));
+        srcml_free_archive(archive);
+    }
 
-  {
-    dassert(srcml_archive_get_version(0), 0);
-  }
+    {
+        dassert(srcml_archive_get_version(0), 0);
+    }
 
-  /*
-    srcml_archive_get_option
-   */
+    /*
+      srcml_archive_get_option
+    */
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    archive->options = 1;
+        archive->options = 1;
 
-    dassert(srcml_archive_get_options(archive), 1);
-    srcml_free_archive(archive);
-  }
+        dassert(srcml_archive_get_options(archive), 1);
+        srcml_free_archive(archive);
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    archive->options = 1 | 2;
+        archive->options = 1 | 2;
 
-    dassert(srcml_archive_get_options(archive), (1 | 2));
-    srcml_free_archive(archive);
-  }
+        dassert(srcml_archive_get_options(archive), (1 | 2));
+        srcml_free_archive(archive);
+    }
 
-  {
-    dassert(srcml_archive_get_options(0), 0);
-  }
+    {
+        dassert(srcml_archive_get_options(0), 0);
+    }
 
-  /*
-    srcml_archive_get_tabstop
-  */
+    /*
+      srcml_archive_get_tabstop
+    */
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    archive->tabstop = 4;
+        archive->tabstop = 4;
 
-    dassert(srcml_archive_get_tabstop(archive), 4);
-    srcml_free_archive(archive);
-  }
+        dassert(srcml_archive_get_tabstop(archive), 4);
+        srcml_free_archive(archive);
+    }
 
-  {
-    dassert(srcml_archive_get_tabstop(0), 0);
-  }
+    {
+        dassert(srcml_archive_get_tabstop(0), 0);
+    }
 
-  /* 
-     srcml_get_namespace_size
-   */
+    /*
+      srcml_get_namespace_size
+    */
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_namespace_size(archive), 7);
+        dassert(srcml_archive_get_namespace_size(archive), 7);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    srcml_archive_register_namespace(archive, "foo1", "bar1");
-    srcml_archive_register_namespace(archive, "foo2", "bar2");
-    dassert(srcml_archive_get_namespace_size(archive), 9);
+        srcml_archive_register_namespace(archive, "foo1", "bar1");
+        srcml_archive_register_namespace(archive, "foo2", "bar2");
+        dassert(srcml_archive_get_namespace_size(archive), 9);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
-    dassert(srcml_archive_get_namespace_size(0), -1);
-  }
+    {
+        dassert(srcml_archive_get_namespace_size(0), -1);
+    }
 
-  /* 
-     srcml_archive_get_prefix
-   */
+    /*
+      srcml_archive_get_prefix
+    */
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_prefix(archive, 1), std::string("cpp"));
+        dassert(srcml_archive_get_prefix(archive, 1), std::string("cpp"));
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_prefix(archive, -1), 0);
+        dassert(srcml_archive_get_prefix(archive, -1), 0);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_prefix(archive, 7), 0);
+        dassert(srcml_archive_get_prefix(archive, 7), 0);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
-    dassert(srcml_archive_get_prefix(0, 0), 0);
-  }
+    {
+        dassert(srcml_archive_get_prefix(0, 0), 0);
+    }
 
-  /* 
-     srcml_archive_get_prefix_uri
-   */
-  {
+    /*
+      srcml_archive_get_prefix_uri
+    */
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_prefix_uri(archive, "http://www.sdml.info/srcML/cpp"), std::string("cpp"));
+        dassert(srcml_archive_get_prefix_uri(archive, "http://www.sdml.info/srcML/cpp"), std::string("cpp"));
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_prefix_uri(archive, "bar3"), 0);
+        dassert(srcml_archive_get_prefix_uri(archive, "bar3"), 0);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_prefix_uri(archive, 0), 0);
+        dassert(srcml_archive_get_prefix_uri(archive, 0), 0);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
-    dassert(srcml_archive_get_prefix_uri(0, "http://www.sdml.info/srcML/cpp"), 0);
-  }
+    {
+        dassert(srcml_archive_get_prefix_uri(0, "http://www.sdml.info/srcML/cpp"), 0);
+    }
 
-  /* 
-     srcml_archive_get_namespace
-   */
+    /*
+      srcml_archive_get_namespace
+    */
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_namespace(archive, 1), std::string("http://www.sdml.info/srcML/cpp"));
+        dassert(srcml_archive_get_namespace(archive, 1), std::string("http://www.sdml.info/srcML/cpp"));
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_namespace(archive, -1), 0);
+        dassert(srcml_archive_get_namespace(archive, -1), 0);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_namespace(archive, 7), 0);
+        dassert(srcml_archive_get_namespace(archive, 7), 0);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
-    dassert(srcml_archive_get_namespace(0, 0), 0);
-  }
+    {
+        dassert(srcml_archive_get_namespace(0, 0), 0);
+    }
 
-  /* 
-     srcml_archive_get_namespace_prefix
-   */
+    /*
+      srcml_archive_get_namespace_prefix
+    */
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_namespace_prefix(archive, "cpp"), std::string("http://www.sdml.info/srcML/cpp"));
+        dassert(srcml_archive_get_namespace_prefix(archive, "cpp"), std::string("http://www.sdml.info/srcML/cpp"));
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_namespace_prefix(archive, "foo3"), 0);
+        dassert(srcml_archive_get_namespace_prefix(archive, "foo3"), 0);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_namespace_prefix(archive, 0), 0);
+        dassert(srcml_archive_get_namespace_prefix(archive, 0), 0);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
-    dassert(srcml_archive_get_namespace_prefix(0, "cpp"), 0);
-  }
+    {
+        dassert(srcml_archive_get_namespace_prefix(0, "cpp"), 0);
+    }
 
-  /* 
-     srcml_get_macro_list_size
-   */
+    /*
+      srcml_get_macro_list_size
+    */
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_macro_list_size(archive), 0);
+        dassert(srcml_archive_get_macro_list_size(archive), 0);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    srcml_archive_register_macro(archive, "foo1", "bar1");
-    srcml_archive_register_macro(archive, "foo2", "bar2");
-    dassert(srcml_archive_get_macro_list_size(archive), 2);
+        srcml_archive_register_macro(archive, "foo1", "bar1");
+        srcml_archive_register_macro(archive, "foo2", "bar2");
+        dassert(srcml_archive_get_macro_list_size(archive), 2);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
-    dassert(srcml_archive_get_macro_list_size(0), -1);
-  }
+    {
+        dassert(srcml_archive_get_macro_list_size(0), -1);
+    }
 
-  /* 
-     srcml_archive_get_macro_token
-   */
+    /*
+      srcml_archive_get_macro_token
+    */
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    srcml_archive_register_macro(archive, "foo1", "bar1");
-    srcml_archive_register_macro(archive, "foo2", "bar2");
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_register_macro(archive, "foo1", "bar1");
+        srcml_archive_register_macro(archive, "foo2", "bar2");
 
-    dassert(srcml_archive_get_macro_token(archive, 1), std::string("foo2"));
+        dassert(srcml_archive_get_macro_token(archive, 1), std::string("foo2"));
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_macro_token(archive, -1), 0);
+        dassert(srcml_archive_get_macro_token(archive, -1), 0);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_macro_token(archive, 7), 0);
+        dassert(srcml_archive_get_macro_token(archive, 7), 0);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
-    dassert(srcml_archive_get_macro_token(0, 0), 0);
-  }
+    {
+        dassert(srcml_archive_get_macro_token(0, 0), 0);
+    }
 
-  /* 
-     srcml_archive_get_macro_token_type
-   */
-  {
+    /*
+      srcml_archive_get_macro_token_type
+    */
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    srcml_archive_register_macro(archive, "foo1", "bar1");
-    srcml_archive_register_macro(archive, "foo2", "bar2");
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_register_macro(archive, "foo1", "bar1");
+        srcml_archive_register_macro(archive, "foo2", "bar2");
 
-    dassert(srcml_archive_get_macro_token_type(archive, "foo2"), std::string("bar2"));
+        dassert(srcml_archive_get_macro_token_type(archive, "foo2"), std::string("bar2"));
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_macro_token_type(archive, "foo3"), 0);
+        dassert(srcml_archive_get_macro_token_type(archive, "foo3"), 0);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_macro_token_type(archive, 0), 0);
+        dassert(srcml_archive_get_macro_token_type(archive, 0), 0);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
-    dassert(srcml_archive_get_macro_token_type(0, "foo2"), 0);
-  }
+    {
+        dassert(srcml_archive_get_macro_token_type(0, "foo2"), 0);
+    }
 
-  /* 
-     srcml_archive_get_macro_type
-   */
+    /*
+      srcml_archive_get_macro_type
+    */
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
-    srcml_archive_register_macro(archive, "foo1", "bar1");
-    srcml_archive_register_macro(archive, "foo2", "bar2");
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_register_macro(archive, "foo1", "bar1");
+        srcml_archive_register_macro(archive, "foo2", "bar2");
 
-    dassert(srcml_archive_get_macro_type(archive, 1), std::string("bar2"));
+        dassert(srcml_archive_get_macro_type(archive, 1), std::string("bar2"));
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_macro_type(archive, -1), 0);
+        dassert(srcml_archive_get_macro_type(archive, -1), 0);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
+    {
 
-    srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_create_archive();
 
-    dassert(srcml_archive_get_macro_type(archive, 7), 0);
+        dassert(srcml_archive_get_macro_type(archive, 7), 0);
 
-    srcml_free_archive(archive);
+        srcml_free_archive(archive);
 
-  }
+    }
 
-  {
-    dassert(srcml_archive_get_macro_type(0, 0), 0);
-  }
+    {
+        dassert(srcml_archive_get_macro_type(0, 0), 0);
+    }
 
-  return 0;
+    return 0;
 }

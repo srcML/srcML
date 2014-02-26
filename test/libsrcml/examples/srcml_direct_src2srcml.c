@@ -34,10 +34,10 @@
 
 int main(int argc, char* argv[]) {
 
-  /* Translate from a source-code file to a srcML file */
-  int error = srcml("a.cpp", "a.cpp.xml");
+    /* Translate from a source-code file to a srcML file */
+    int error = srcml("a.cpp", "a.cpp.xml");
 
-  if(error) puts(srcml_error_string());
+    if(error) puts(srcml_error_string());
 
-  return 0;
+    return 0;
 }

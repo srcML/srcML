@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
 
     /* add all the files to the archive */
     while ((unit = srcml_read_unit(archive))) {
-      
+
         /* can inquire about the current unit */
         language = srcml_unit_get_language(unit);
         filename = srcml_unit_get_filename(unit);

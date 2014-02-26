@@ -38,83 +38,83 @@
 
 int main() {
 
-  /* 
-     srcMLCreateMemoryParserCtxt
-   */
-  using namespace std;
-  
-  cout << "Test 1" << endl;
-  {
-    const char * s = "<unit/>";
-    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, (int)strlen(s));
-    dassert(!ctxt, 0);
-    xmlFreeParserCtxt(ctxt);
-  }
-  
-  cout << "Test 2" << endl;
-  {
-    const char * s = "<unit/>";
-    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, 0);
-    dassert(ctxt, 0);
-  }
-  
-  cout << "Test 3" << endl;
-  {
-    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(0, 1);
-    dassert(ctxt, 0);
-  }
+    /*
+      srcMLCreateMemoryParserCtxt
+    */
+    using namespace std;
 
-  /* 
-     srcMLCreateParserCtxt
-   */
-  cout << "Test 4" << endl;
-  {
-    const char * s = "test_srcml_xpath.cpp";
-    xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename(s, xmlParseCharEncoding(0));
-    xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(buffer_input);
-    dassert(!ctxt, 0);
-    xmlFreeParserCtxt(ctxt);
-  }
-  
-  cout << "Test 5" << endl;
-  {
-    xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(0);
-    dassert(ctxt, 0);
-  }
+    cout << "Test 1" << endl;
+    {
+        const char * s = "<unit/>";
+        xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, (int)strlen(s));
+        dassert(!ctxt, 0);
+        xmlFreeParserCtxt(ctxt);
+    }
 
-  /* 
-     srcMLParseDocument
-   */
-  
-  cout << "Test 6" << endl;
-  {
-    const char * s = "<unit/>";
-    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, (int)strlen(s));
-    dassert(srcMLParseDocument(ctxt, true), SRCML_STATUS_OK);
-    xmlFreeDoc(ctxt->myDoc);
-    xmlFreeParserCtxt(ctxt);
-  }
-  
-  cout << "Test 7" << endl;
-  {
-    const char * s = "<unit/>";
-    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, (int)strlen(s));
-    dassert(srcMLParseDocument(ctxt, false), SRCML_STATUS_OK);
-    xmlFreeDoc(ctxt->myDoc);
-    xmlFreeParserCtxt(ctxt);
-  }
-  
-  cout << "Test 8" << endl;
-  {
-    const char * s = "<unit/>";
-    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, (int)strlen(s));
-    dassert(srcMLParseDocument(0, false), SRCML_STATUS_ERROR);
-    xmlFreeDoc(ctxt->myDoc);
-    xmlFreeParserCtxt(ctxt);
-  }
+    cout << "Test 2" << endl;
+    {
+        const char * s = "<unit/>";
+        xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, 0);
+        dassert(ctxt, 0);
+    }
 
-  srcml_cleanup_globals();
+    cout << "Test 3" << endl;
+    {
+        xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(0, 1);
+        dassert(ctxt, 0);
+    }
 
-  return 0;
+    /*
+      srcMLCreateParserCtxt
+    */
+    cout << "Test 4" << endl;
+    {
+        const char * s = "test_srcml_xpath.cpp";
+        xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename(s, xmlParseCharEncoding(0));
+        xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(buffer_input);
+        dassert(!ctxt, 0);
+        xmlFreeParserCtxt(ctxt);
+    }
+
+    cout << "Test 5" << endl;
+    {
+        xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(0);
+        dassert(ctxt, 0);
+    }
+
+    /*
+      srcMLParseDocument
+    */
+
+    cout << "Test 6" << endl;
+    {
+        const char * s = "<unit/>";
+        xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, (int)strlen(s));
+        dassert(srcMLParseDocument(ctxt, true), SRCML_STATUS_OK);
+        xmlFreeDoc(ctxt->myDoc);
+        xmlFreeParserCtxt(ctxt);
+    }
+
+    cout << "Test 7" << endl;
+    {
+        const char * s = "<unit/>";
+        xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, (int)strlen(s));
+        dassert(srcMLParseDocument(ctxt, false), SRCML_STATUS_OK);
+        xmlFreeDoc(ctxt->myDoc);
+        xmlFreeParserCtxt(ctxt);
+    }
+
+    cout << "Test 8" << endl;
+    {
+        const char * s = "<unit/>";
+        xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, (int)strlen(s));
+        dassert(srcMLParseDocument(0, false), SRCML_STATUS_ERROR);
+        xmlFreeDoc(ctxt->myDoc);
+        xmlFreeParserCtxt(ctxt);
+    }
+
+    srcml_cleanup_globals();
+
+    return 0;
 
 }
