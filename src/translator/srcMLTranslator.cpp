@@ -31,10 +31,6 @@
 #include "srcMLOutput.hpp"
 #include "srcmlns.hpp"
 
-const char* const DEFAULT_TEXT_ENCODING = "ISO-8859-1";
-
-const char* const DEFAULT_XML_ENCODING = "UTF-8";
-
 /// constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
                                  const char* src_encoding,    // text encoding of source code
@@ -189,7 +185,6 @@ void srcMLTranslator::translate(const char* unit_directory,
 void srcMLTranslator::translate_separate(const char* unit_directory,
                                          const char* unit_filename, const char* unit_version,
                                          int language, UTF8CharBuffer * parser_input, xmlBuffer* output_buffer,
-                                         const char * src_encoding,
                                          OPTION_TYPE translation_options) {
 
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler(xml_encoding));
