@@ -41,10 +41,9 @@ class UTF8CharBuffer : public antlr::CharBuffer {
 public:
 
     // size of the original character buffer
-    static const size_t SRCBUFSIZE = 512;
+    static const size_t SRCBUFSIZE = 1024;
 
     // Create a character buffer
-    UTF8CharBuffer();
     UTF8CharBuffer(const char* ifilename, const char * encoding);
     UTF8CharBuffer(const char* c_buffer, size_t size, const char * encoding);
     UTF8CharBuffer(FILE * file, const char * encoding);

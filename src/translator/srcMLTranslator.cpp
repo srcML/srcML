@@ -106,10 +106,7 @@ void srcMLTranslator::setInput(const char* path) {
 
     try {
 
-        if(isoption(options, OPTION_INTERACTIVE))
-            pinput = new UTF8CharBuffer();
-        else
-            pinput = new UTF8CharBuffer(path, encoding);
+	pinput = new UTF8CharBuffer(path, encoding);
 
     } catch (const std::exception& e) {
         fprintf(stderr, "SRCML Exception: %s\n", e.what());

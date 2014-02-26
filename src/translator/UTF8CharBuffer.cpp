@@ -23,9 +23,6 @@
 #include <iostream>
 #include "UTF8CharBuffer.hpp"
 
-UTF8CharBuffer::UTF8CharBuffer()
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(false), cd(0) {}
-
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(true), cd(0) {
@@ -146,7 +143,7 @@ int UTF8CharBuffer::getChar() {
     }
 
     // individual 8-bit character to return
-    int c = (int) input_buffer[pos++];
+    int c = (int)input_buffer[pos++];
 
     // sequence "\r\n" where the '\r'
     // has already been converted to a '\n' so we need to skip over this '\n'
@@ -155,8 +152,6 @@ int UTF8CharBuffer::getChar() {
 
         // might need to refill the buffer
         if (pos >= size) {
-
-	    //buffer.clear();
 
             size = growBuffer();
 
