@@ -57,6 +57,7 @@ public:
 private:
 
     int growBuffer();
+    size_t convertEncodings(size_t num_to_convert);
     void processEncoding(const char * encoding);
 
     FILE * input;

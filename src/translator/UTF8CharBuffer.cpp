@@ -90,25 +90,36 @@ void UTF8CharBuffer::processEncoding(const char * encoding) {
 
 }
 
+size_t UTF8CharBuffer::convertEncodings(size_t num_to_convert) {
+
+
+    size_t num_in_convert = num_to_convert;
+    size_t num_out_convert = 4 * num_to_convert;
+
+    // iconv incements buffers need temporary since static and get refilled
+    unsigned char * input_buf = input_buffer;
+    char * raw = raw_buffer;
+    return iconv(cd, &raw, &num_in_convert, (char **)&input_buf, &num_out_convert);
+
+
+}
+
 int UTF8CharBuffer::growBuffer() {
 
     if(!input && !total_size) return 0;
 
+    // raw_buffer == input_buffer when not converting and using c string
     if(!input && !cd) input_buffer += size;
 
+    // read in the next amount
     size_t num_read = (size_t)total_size > SRCBUFSIZE ? SRCBUFSIZE : (size_t)total_size;
     if(input) num_read = fread(raw_buffer, 1, SRCBUFSIZE, input);
 
     if(num_read <= 0) return (int)num_read;
 
-    size_t num_in_convert = num_read;
-    size_t num_out_convert = 4 * num_read;
+    if(cd) convertEncodings(num_read);
 
-    size_t num_convert = num_read;
-    unsigned char * input_buf = input_buffer;
-    char * raw = raw_buffer;
-    if(cd) num_convert = iconv(cd, &raw, &num_in_convert, (char **)&input_buf, &num_out_convert);
-
+    // if from c string update starting position for raw memory
     if(!input) {
 
 	raw_buffer += num_read;
