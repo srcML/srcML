@@ -45,7 +45,7 @@ public:
 
     // Create a character buffer
     UTF8CharBuffer(const char* ifilename, const char * encoding);
-    UTF8CharBuffer(const char* c_buffer, size_t size, const char * encoding);
+    UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const char * encoding);
     UTF8CharBuffer(FILE * file, const char * encoding);
     UTF8CharBuffer(int fd, const char * encoding);
 
@@ -62,6 +62,7 @@ private:
     FILE * input;
     int pos;
     int size;
+    int total_size;
     bool lastcr;
     bool need_close;
     char * raw_buffer;

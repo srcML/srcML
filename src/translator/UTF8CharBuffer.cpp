@@ -25,7 +25,7 @@
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(true), cd(0) {
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), total_size(0), lastcr(false), need_close(true), cd(0) {
 
     if(!ifilename) throw UTF8FileError();
 
@@ -40,8 +40,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
 }
 
 
-UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t size, const char * encoding) 
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)size), lastcr(false), need_close(false), cd(0) {
+UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding) 
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), total_size((int)buffer_size), lastcr(false), need_close(false), cd(0) {
 
     if(!c_buffer) throw UTF8FileError();
 
@@ -52,7 +52,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t size, const char * 
 }    
 
 UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(false), cd(0) {
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), total_size(0), lastcr(false), need_close(false), cd(0) {
 
     if(!file) throw UTF8FileError();
 
@@ -64,7 +64,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
 }
 
 UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), need_close(true), cd(0) {
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), total_size(0), lastcr(false), need_close(true), cd(0) {
 
     if(fd < 0) throw UTF8FileError();
 
@@ -92,9 +92,10 @@ void UTF8CharBuffer::processEncoding(const char * encoding) {
 
 int UTF8CharBuffer::growBuffer() {
 
-    if(!input) return -1;
+    if(!input && !total_size) return 0;
 
-    size_t num_read = fread(raw_buffer, 1, SRCBUFSIZE, input);
+    size_t num_read = (size_t)total_size > SRCBUFSIZE ? SRCBUFSIZE : (size_t)total_size;
+    if(input) num_read = fread(raw_buffer, 1, SRCBUFSIZE, input);
 
     if(num_read <= 0) return (int)num_read;
 
@@ -102,9 +103,18 @@ int UTF8CharBuffer::growBuffer() {
     size_t num_out_convert = 4 * num_read;
 
     size_t num_convert = num_read;
-    if(cd) num_convert = iconv(cd, &raw_buffer, &num_in_convert, (char **)&input_buffer, &num_out_convert);
+    unsigned char * input_buf = input_buffer;
+    char * raw = raw_buffer;
+    if(cd) num_convert = iconv(cd, &raw, &num_in_convert, (char **)&input_buf, &num_out_convert);
 
-    return (int)num_convert;
+    if(!input) {
+
+	raw_buffer += num_read;
+	total_size -= num_read;
+
+    }
+
+    return (int)num_read;
 }
 
 /*
