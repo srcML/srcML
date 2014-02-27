@@ -160,7 +160,7 @@ void option_language(const std::string& value) {
     }
     srcml_request.att_language = value; 
 }
-void option_register_ext(const std::vector<std::string>& values) {srcml_request.register_ext = values; }
+void option_register_ext(const std::vector<std::string>& values) {srcml_request.language_ext = values; }
 
 void option_tabs(const int value) {
     // check tabstop
@@ -369,8 +369,8 @@ void debug_cli_opts(const struct srcml_request_t srcml_request) {
     std::cerr << "Files From: " << srcml_request.files_from << "\n";
     std::cerr << "Language: " << srcml_request.att_language << "\n";
 
-    for(size_t i = 0; i < srcml_request.register_ext.size(); ++i) {
-        std::cerr << "Register Ext #" << i <<": " << srcml_request.register_ext[i] << "\n";
+    for(size_t i = 0; i < srcml_request.language_ext.size(); ++i) {
+        std::cerr << "Register Ext #" << i <<": " << srcml_request.language_ext[i] << "\n";
     }
 
     std::cerr << "Tabs: " << srcml_request.tabs << "\n";

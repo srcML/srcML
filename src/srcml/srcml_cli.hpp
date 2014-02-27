@@ -73,7 +73,7 @@ struct srcml_request_t {
     std::string output_filename;
 
     std::string files_from;
-    std::vector<std::string> register_ext;
+    std::vector<std::string> language_ext;
     int tabs;
 
     // xml namespaces

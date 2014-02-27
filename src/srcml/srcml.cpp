@@ -126,7 +126,7 @@ int main(int argc, char * argv[]) {
             srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
 
         // register file extensions
-        BOOST_FOREACH(const std::string& ext, srcml_request.register_ext) {
+        BOOST_FOREACH(const std::string& ext, srcml_request.language_ext) {
             size_t pos = ext.find('=');
             srcml_archive_register_file_extension(srcml_arch, ext.substr(0, pos).c_str(), ext.substr(pos+1).c_str());
         }
