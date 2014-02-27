@@ -466,8 +466,9 @@ int main() {
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_language(unit, "C");
-        dassert(srcml_parse_unit_memory(unit, src.c_str(), 0), SRCML_STATUS_ERROR);
-
+        dassert(srcml_parse_unit_memory(unit, src.c_str(), 0), SRCML_STATUS_OK);
+	dassert(*unit->unit, "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\"/>");
+	
         srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
