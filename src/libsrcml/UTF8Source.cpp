@@ -25,7 +25,7 @@
 
 
 UTF8Source::UTF8Source(const char * filename, const char * encoding) 
-    : output(0), cd(0) {
+    : output(0), src_buffer(0), src_size(0), allocated(0), cd(0) {
 
     if(!filename) throw UTF8SourceError();
 
@@ -37,17 +37,21 @@ UTF8Source::UTF8Source(const char * filename, const char * encoding)
 
 }
 
-UTF8Source::UTF8Source(char ** buffer, size_t * size, const char * encoding)
-    : output(0), cd(0) {
+UTF8Source::UTF8Source(char ** src_buffer, size_t * src_size, const char * encoding)
+    : output(0), src_buffer(0), src_size(src_size), allocated(0), cd(0) {
 
-    if(!buffer) throw UTF8SourceError();
+    if(!src_buffer) throw UTF8SourceError();
+
+    (*src_buffer) = (char *)malloc(4 * SRCBUFSIZE);
+    (*src_size) = 0;
+    allocated = 4 * SRCBUFSIZE;
 
     processEncoding(encoding);
 
 }
 
 UTF8Source::UTF8Source(FILE * file, const char * encoding) 
-    : output(file), cd(0) {
+    : output(file), src_buffer(0), src_size(0), allocated(0), cd(0) {
 
     if(!output) throw UTF8SourceError();
 
@@ -56,7 +60,7 @@ UTF8Source::UTF8Source(FILE * file, const char * encoding)
 }
 
 UTF8Source::UTF8Source(int fd, const char * encoding) 
-    : output(0), cd(0) {
+    : output(0), src_buffer(0), src_size(0), allocated(0), cd(0) {
 
     if(fd < 0) throw UTF8SourceError();
 
@@ -90,12 +94,35 @@ size_t UTF8Source::growBuffer(const char * & raw_buffer, size_t size) {
     return (4 * size) - num_out_convert;
 }
 
+void growString(char * & str, size_t & allocated, size_t used, size_t needed) {
+
+    if(needed < (allocated - used)) return;
+
+    size_t new_size = (used + needed) * 2;
+
+    char * new_str = (char *)malloc(new_size);
+    strcpy(new_str, str);
+    str = new_str;
+    allocated = new_size;
+
+}
+
 /*
 
 */
 int UTF8Source::write_string(const char * input, size_t input_size) {
 
-    if(!cd) {
+    if(!cd && !output) {
+
+	growString(*src_buffer, allocated, *src_size, input_size);
+	strncpy(*src_buffer + *src_size, input, input_size); 
+	*src_size += input_size;
+
+	return 1;
+
+    }
+
+    if(!cd && output) {
 
 	fwrite(input, 1, input_size, output);
 	return 1;
@@ -110,7 +137,15 @@ int UTF8Source::write_string(const char * input, size_t input_size) {
 	size_t num_to_convert = size < SRCBUFSIZE ? size : SRCBUFSIZE;
 	size_t num_converted = growBuffer(input, num_to_convert);
 
-	fwrite(iconv_buffer, 1, num_converted, output);
+	if(output)
+	    fwrite(iconv_buffer, 1, num_converted, output);
+	else {
+
+	    growString(*src_buffer, allocated, *src_size, num_converted);
+	    strncpy(*src_buffer + *src_size, (const char *)iconv_buffer, num_converted); 
+	    *src_size += num_converted;
+
+	}	    
 
 	pos += num_to_convert;
 

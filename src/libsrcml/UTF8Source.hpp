@@ -47,7 +47,7 @@ public:
 
     // Create a character buffer
     UTF8Source(const char * filename, const char * encoding);
-    UTF8Source(char ** buffer, size_t * size, const char * encoding);
+    UTF8Source(char ** src_buffer, size_t * src_size, const char * encoding);
     UTF8Source(FILE * file, const char * encoding);
     UTF8Source(int fd, const char * encoding);
 
@@ -61,6 +61,9 @@ private:
     void processEncoding(const char * encoding);
 
     FILE * output;
+    char ** src_buffer;
+    size_t * src_size;
+    size_t allocated;
 
     iconv_t cd;
     unsigned char iconv_buffer[4 * SRCBUFSIZE];
