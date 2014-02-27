@@ -463,24 +463,21 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
     if(unit == NULL || src_filename == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) || (!unit->unit && !unit->read_header)) return SRCML_STATUS_ERROR;
 
-    xmlOutputBufferPtr output_buffer =
-        xmlOutputBufferCreateFilename(src_filename,
-                                      xmlFindCharEncodingHandler(unit->encoding ? unit->encoding->c_str() :
-                                                                 (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1")),
-                                      unit->archive->options & SRCML_OPTION_COMPRESS);
-    if(output_buffer == NULL) return SRCML_STATUS_ERROR;
+    try {
 
-    if(!unit->unit) {
+	UTF8OutputSource output_handler(src_filename, unit->encoding ? unit->encoding->c_str() :
+			      (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
 
-        unit->archive->reader->readsrc(output_buffer);
-        xmlOutputBufferClose(output_buffer);
-        return SRCML_STATUS_OK;
+	if(!unit->unit) {
 
-    }
+	    unit->archive->reader->readsrc(output_handler);
+	    return SRCML_STATUS_OK;
 
-    int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_buffer, unit->archive->options);
+	}
 
-    return status;
+	return srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options);
+
+    } catch(...) { return SRCML_STATUS_ERROR; }
 
 }
 
@@ -500,37 +497,22 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
 
     if(unit == NULL || src_buffer == NULL || src_size == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) || (!unit->unit && !unit->read_header)) return SRCML_STATUS_ERROR;
 
-    xmlBufferPtr buffer = xmlBufferCreate();
-    if(buffer == NULL) return SRCML_STATUS_ERROR;
-    xmlOutputBufferPtr output_buffer =
-        xmlOutputBufferCreateBuffer(buffer,
-                                    xmlFindCharEncodingHandler(unit->encoding ? unit->encoding->c_str() :
-                                                               (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1")));
-    if(output_buffer == NULL) {
+    try {
 
-        xmlBufferFree(buffer);
-        return SRCML_STATUS_ERROR;
+	UTF8OutputSource output_handler(src_buffer, (size_t *)src_size, unit->encoding ? unit->encoding->c_str() :
+				  (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
+	
+	if(!unit->unit) {
 
-    }
+	    unit->archive->reader->readsrc(output_handler);
 
-    if(!unit->unit) {
+	} else if(srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options) == SRCML_STATUS_ERROR) {
 
-        unit->archive->reader->readsrc(output_buffer);
-        xmlOutputBufferClose(output_buffer);
+	    return SRCML_STATUS_ERROR;
 
-    } else if(srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_buffer, unit->archive->options) == SRCML_STATUS_ERROR) {
-
-        xmlBufferFree(buffer);
-        return SRCML_STATUS_ERROR;
-
-    }
-
-    (*src_buffer) = (char *)buffer->content;
-    buffer->content = 0;
-    xmlBufferFree(buffer);
-    if(!buffer->content && !(*src_buffer)) return SRCML_STATUS_ERROR;
-
-    *src_size = (int)strlen(*src_buffer);
+	}
+	
+    } catch(...) { return SRCML_STATUS_ERROR; }
 
     return SRCML_STATUS_OK;
 
@@ -551,25 +533,22 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 
     if(unit == NULL || srcml_file == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) || (!unit->unit && !unit->read_header)) return SRCML_STATUS_ERROR;
 
-    xmlOutputBufferPtr output_buffer =
-        xmlOutputBufferCreateFile(srcml_file,
-                                  xmlFindCharEncodingHandler(unit->encoding ? unit->encoding->c_str() :
-                                                             (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1")));
+    try {
 
+	UTF8OutputSource output_handler(srcml_file, unit->encoding ? unit->encoding->c_str() :
+			      (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
 
-    if(output_buffer == NULL) return SRCML_STATUS_ERROR;
+	if(!unit->unit) {
 
-    if(!unit->unit) {
+	    unit->archive->reader->readsrc(output_handler);
 
-        unit->archive->reader->readsrc(output_buffer);
-        xmlOutputBufferClose(output_buffer);
-        return SRCML_STATUS_OK;
+	    return SRCML_STATUS_OK;
 
-    }
+	}
 
-    int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_buffer, unit->archive->options);
+	return srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options);
 
-    return status;
+    } catch(...) { return SRCML_STATUS_ERROR; }
 
 }
 
@@ -588,21 +567,17 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
     if(unit == NULL || srcml_fd < 0 || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) || (!unit->unit && !unit->read_header)) return SRCML_STATUS_ERROR;
 
-    xmlOutputBufferPtr output_buffer =
-        xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(unit->encoding ? unit->encoding->c_str() :
-                                                                     (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1")));
+    try {
 
-    if(output_buffer == NULL) return SRCML_STATUS_ERROR;
+	UTF8OutputSource output_handler(srcml_fd, unit->encoding ? unit->encoding->c_str() :
+			      (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
 
-    if(!unit->unit)
-        unit->archive->reader->readsrcML(unit->unit);
+	if(!unit->unit)
+	    unit->archive->reader->readsrcML(unit->unit);
 
-    // Must read unit before unparse
-    if(!unit->unit) return SRCML_STATUS_ERROR;
+	return srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options);
 
-    int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_buffer, unit->archive->options);
-
-    return status;
+    } catch(...) { return SRCML_STATUS_ERROR; }
 
 }
 
