@@ -70,7 +70,7 @@ struct srcml_request_t {
 
     std::string src_encoding;
 
-    std::string output;
+    std::string output_filename;
 
     std::string files_from;
     std::vector<std::string> register_ext;

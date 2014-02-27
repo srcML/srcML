@@ -139,7 +139,7 @@ void option_command(bool opt) {
 }
 
 void option_filename(const std::string& value) { srcml_request.att_filename = value; }
-void option_output(const std::string& value) {srcml_request.output = value; }
+void option_output(const std::string& value) {srcml_request.output_filename = value; }
 void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value; }
 
 void option_encoding(const std::string& value) {
@@ -180,7 +180,7 @@ void option_xpath(const std::string& value) {srcml_request.xpath = value; }
 void option_xpathparam(const std::vector<std::string>& values) {srcml_request.xpathparam = values; }
 void option_xslt(const std::string& value) {srcml_request.xslt = value; }
 void option_unit(const int value) {srcml_request.unit = value; }
-void option_to_dir(const std::string& value) {srcml_request.output = value; srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY; }
+void option_to_dir(const std::string& value) {srcml_request.output_filename = value; srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY; }
 void option_max_threads(const int value) {srcml_request.max_threads = value; }
 void positional_args(const std::vector<std::string>& value) {srcml_request.positional_args = value; }
 
@@ -363,7 +363,7 @@ void debug_cli_opts(const struct srcml_request_t srcml_request) {
     std::cerr << "Commands: " << srcml_request.command << "\n";
     std::cerr << "Markup: " << srcml_request.markup_options << "\n";
     std::cerr << "Filename: " << srcml_request.att_filename << "\n";
-    std::cerr << "Output: " << srcml_request.output << "\n";
+    std::cerr << "Output: " << srcml_request.output_filename << "\n";
     std::cerr << "SRC Encoding: " << srcml_request.src_encoding << "\n";
     std::cerr << "Encoding: " << srcml_request.att_encoding << "\n";
     std::cerr << "Files From: " << srcml_request.files_from << "\n";
