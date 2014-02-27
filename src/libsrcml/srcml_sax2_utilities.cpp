@@ -1,7 +1,6 @@
 /**
  * @file srcml_sax2_utilities.cpp
- * @copyright
- *
+
  * @copyright Copyright (C) 2013-2014  SDML (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
