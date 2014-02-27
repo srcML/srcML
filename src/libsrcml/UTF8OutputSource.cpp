@@ -1,7 +1,7 @@
 /**
  * @file UTF8CharBuffer.cpp
  *
- * @copyright Copyright (C) 2008-2014  SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014  SDML (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
@@ -135,7 +135,10 @@ int UTF8OutputSource::writeString(const char * input, size_t input_size) {
 
 	size_t size = input_size - pos;
 	size_t num_to_convert = size < SRCBUFSIZE ? size : SRCBUFSIZE;
+	errno = 0;
 	size_t num_converted = growBuffer(input, num_to_convert);
+
+	if(errno) return 0;
 
 	if(output)
 	    fwrite(iconv_buffer, 1, num_converted, output);
