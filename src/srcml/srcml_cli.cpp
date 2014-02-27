@@ -143,7 +143,7 @@ void option_output(const std::string& value) {srcml_request.output_filename = va
 void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value; }
 
 void option_encoding(const std::string& value) {
-    if (value != "" && srcml_check_encoding(value.c_str()) == 0) {
+    if (value == "" || srcml_check_encoding(value.c_str()) == 0) {
         std::cerr << "srcmlCLI: invalid encoding.\n";
         exit(1); //ERROR CODE TBD
     }
@@ -154,7 +154,7 @@ void option_files_from(const std::string& value) {srcml_request.files_from = val
 
 void option_language(const std::string& value) {
     // check language
-    if (value != "" && srcml_check_language(value.c_str()) == 0) {
+    if (value == "" || srcml_check_language(value.c_str()) == 0) {
         std::cerr << "srcmlCLI: invalid language.\n";
         exit(1); //ERROR CODE TBD
     }
