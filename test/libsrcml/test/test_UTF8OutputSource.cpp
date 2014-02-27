@@ -67,7 +67,7 @@ int main() {
      */
 
     {
-	char  * s;
+	char * s;
 	size_t i;
 	try {
 	    UTF8OutputSource utf8(&s, &i, "ISO-8859-1");
@@ -83,7 +83,7 @@ int main() {
     }
 
     {
-	char *s;
+	char * s;
 	try {
 	    UTF8OutputSource utf8(&s, NULL, "ISO-8859-1");
 	    assert(false);
@@ -91,7 +91,7 @@ int main() {
     }
 
     {
-	char  * s;
+	char * s;
 	size_t i;
 	try {
 	    UTF8OutputSource utf8(&s, &i, NULL);

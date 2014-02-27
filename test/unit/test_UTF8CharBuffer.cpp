@@ -49,6 +49,131 @@ int main() {
 
     /*
 
+      UTF8CharBuffer(const char * ifilename, const char * encoding)
+
+     */
+
+    {
+	try {
+	    UTF8CharBuffer utf8("a.cpp", "ISO-8859-1");
+	} catch(...) { assert(false); }
+    }
+
+    {
+	try {
+	    UTF8CharBuffer utf8((const char *)NULL, "ISO-8859-1");
+	    assert(false);
+	} catch(...) {}
+    }
+
+    {
+	try {
+	    UTF8CharBuffer utf8("a.cpp", NULL);
+	} catch(...) { assert(false); }
+    }
+
+    /*
+
+      UTF8CharBuffer(char * c_buffer, size_t buffer_size, const char * encoding)
+
+     */
+
+    {
+	const char * s;
+	size_t i;
+	try {
+	    UTF8CharBuffer utf8(s, i, "ISO-8859-1");
+	} catch(...) { assert(false); }
+    }
+
+    {
+	size_t i;
+	try {
+	    UTF8CharBuffer utf8(NULL, i, "ISO-8859-1");
+	    assert(false);
+	} catch(...) {}
+    }
+
+    {
+	const char * s;
+	try {
+	    UTF8CharBuffer utf8(s, 0, "ISO-8859-1");
+	    assert(false);
+	} catch(...) {}
+    }
+
+    {
+	const char * s;
+	size_t i;
+	try {
+	    UTF8CharBuffer utf8(s, i, NULL);
+	} catch(...) { assert(false); }
+    }
+
+    /*
+
+      UTF8CharBuffer(FILE * file, const char * encoding)
+
+     */
+
+    {
+	FILE * f = fopen("a.cpp", "r");
+	try {
+	    UTF8CharBuffer utf8(f, "ISO-8859-1");
+	} catch(...) { assert(false); }
+    }
+
+    {
+	try {
+	    UTF8CharBuffer utf8((FILE *)NULL, "ISO-8859-1");
+	    assert(false);
+	} catch(...) {}
+    }
+
+    {
+        FILE * f = fopen("a.cpp", "r");
+	try {
+	    UTF8CharBuffer utf8(f, NULL);
+	} catch(...) { assert(false); }
+    }
+
+    /*
+
+      UTF8CharBuffer(int fd, const char * encoding)
+
+     */
+
+    {
+	int f = open("a.cpp", O_RDONLY);
+	try {
+	    UTF8CharBuffer utf8(f, "ISO-8859-1");
+	} catch(...) { assert(false); }
+    }
+
+    {
+	int f = open("a.cpp", O_WRONLY);	
+	try {
+	    UTF8CharBuffer utf8(f, "ISO-8859-1");
+	    assert(false);
+	} catch(...) {}
+    }
+
+    {
+	try {
+	    UTF8CharBuffer utf8(-1, "ISO-8859-1");
+	    assert(false);
+	} catch(...) {}
+    }
+
+    {
+	int f = open("a.cpp", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+	try {
+	    UTF8CharBuffer utf8(f, NULL);
+	} catch(...) { assert(false); }
+    }
+
+    /*
+
       getChar()
 
     */
