@@ -102,6 +102,7 @@ void growString(char * & str, size_t & allocated, size_t used, size_t needed) {
 
     char * new_str = (char *)malloc(new_size);
     strcpy(new_str, str);
+    free(str);
     str = new_str;
     allocated = new_size;
 
