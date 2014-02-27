@@ -1,7 +1,7 @@
 /**
  * @file srcml_sax2_utilities.hpp
  *
- * @copyright Copyright (C) 2013-2014  SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,11 +21,13 @@
 #ifndef INCLUDDED_SRCML_SAX2_UTILITIES_HPP
 #define INCLUDDED_SRCML_SAX2_UTILITIES_HPP
 
+#include <UTF8OutputSource.hpp>
+
 #include <Options.hpp>
 
 #include <libxml/parserInternals.h>
 
-int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit = 0);
+int srcml_extract_text(const char * input_buffer, size_t size, UTF8OutputSource & output_handler, OPTION_TYPE options, int unit = 0);
 int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, OPTION_TYPE options, int unit = 0);
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpaths[], int fd, OPTION_TYPE options);
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xslts[], const char* params[], int paramcount, int fd, OPTION_TYPE options);

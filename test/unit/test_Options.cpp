@@ -1,8 +1,7 @@
 /**
  * @file test_Options.cpp
- * @copyright
  *
- * Copyright (C) 2013  SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +23,7 @@
 
   Unit tests for Options.
 
- */
+*/
 
 #include <Options.hpp>
 #include <stdio.h>
@@ -33,17 +32,17 @@
 
 int main() {
 
-  /*
-    isoption
-   */ 
+    /*
+      isoption
+    */
 
-  {
-    assert(isoption(1 | 2, 1));
-  }
+    {
+        assert(isoption(1 | 2, 1));
+    }
 
-  {
-    assert(!isoption(1 | 2, 4));
-  }
+    {
+        assert(!isoption(1 | 2, 4));
+    }
 
-  return 0;
+    return 0;
 }

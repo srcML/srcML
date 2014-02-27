@@ -1,121 +1,123 @@
-/*
-  srcMLParser.g
+/*!
+ * @file srcMLParser.g
+ * 
+ * @copyright Copyright (C) 2004-2014  SDML (www.srcML.org)
+ *
+ * This file is part of the srcML translator.
+ *
+ * The srcML translator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML translator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML translator; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
-  Copyright (C) 2004-2014  SDML (www.srcML.org)
-
-  This file is part of the srcML translator.
-
-  The srcML translator is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  The srcML translator is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with the srcML translator; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-  Comments:
-
-  This is an ANTLR grammar file for the main part of the srcML translator.
-  It is a mixture of ANTLR code with C++ code mixed in for the actions.
-
-  The grammar is for the C++ language.  It is unlike typical C++ parsers for many
-  reasons:
-
-  - ANTLR uses this code to generate a recursive-descent LL(k) parser.  This
-  parser starts at the leftmost token and tries to match the tokens to C++
-  source code.
-
-  - Additional classes are used to implement an event-driven parser.  Input
-  to the parser is a stream of tokens from the lexer.  Output from this parser
-  is a new stream of tokens.  The parser user calls nextToken repeatedly to
-  process all of the tokens.
-
-  - The parser is designed to be used interactively.  When the nextToken is
-  called a minimal number of input tokens are read to generate an output token.
-  This makes the parser very responsive and able to issue start statement
-  tokens before the end of the statement is reached.
-
-  - The parser insert additional tokens into the input stream corresponding to
-  start and end tags.
-
-  Matching:
-
-  - The parser does not attempt to detect invalid C++ code.  It is designed to
-  match well-formed C++ code.  It assumes that the input C++ code is valid.
-
-  - Whitespace and comments are handled in StreamMLParser.  They are diverted
-  from the input token stream and inserted into the output token stream.  There
-  is some processing to match these skipped tokens with the generated tokens
-  from the parser.
-
-  - There is no symbol table.  I repeat:  There is no symbol table.  No
-  grammar rules are based on the type of an identifier.
-
-  - Keywords are used to identify statements.  They are not used for types.
-  Type keywords are in tokens just like other identifiers.
-
-  Implementation:
-
-  - The state of the current parsing is stored in modes.  The modes use flags
-  to remember what state the parsing was in during the previous parse.
-
-  - Element start tokens are generated using the method startElement.  The
-  starting elements are stored in a stack in the current mode.
-
-  - Element end tokens are generated automatically when a mode ends.  The stack
-  of start tokens is popped of and ended automatically.
-
-  - Do not end an element explicitly.  End the mode instead.
-
-  Helpers:
-
-  - The class StreamParser provides stream processing.  The class StreamMLParser
-  provides markup language stream processing.  These are template classes which
-  use this parser as a template parameter base.
-
-  - The class TokenParser provides the virtual table for methods in StreamParser
-  that are called in this parser.
-
-  - Obviously this needs to be untangled but is not as easy as it should be.
-
-  - Additional methods for the parser are declared in class Mode.  These methods
-  only provide general support for the parser.  They do not, repeat, do not, contain
-  token specific processing.
-
-  Terminology:
-
-  The use of C++ terminology is sometimes contradictory.  This is especially true
-  for declarations and definitions, since a definition can also serve as a
-  declaration.  The following rules are used:
-
-  declaration - stating that something exists:
-
-      function declaration:  int f();
-      class declaration:     class A;
-      struct declaration:    struct A;
-      union declaration:     union A;
-      method declaration:    virtual int f(); // in class
-
-  definition - defining the layout or interface
-
-      function definition:  int f() {}
-      class definition:     class A { int a; }
-      struct definition:    struct A { int a; }
-      union definition:     union A { int a; }
-      method definition:    int A::f() {} // in or out of class
-
-  C vs. C++
-
-  Additional keywords in C++ may be identifiers in C.  This is handled in the
-  lexer which has symbols for all C++ (and C) keywords, but only will find them in
-  the input if in C++ mode.  They are matched as NAME in C mode.
-*/
+/*!
+ * Comments:
+ *
+ * This is an ANTLR grammar file for the main part of the srcML translator.
+ * It is a mixture of ANTLR code with C++ code mixed in for the actions.
+ *
+ * The grammar is for the C++ language.  It is unlike typical C++ parsers for many
+ * reasons:
+ *
+ * - ANTLR uses this code to generate a recursive-descent LL(k) parser.  This
+ * parser starts at the leftmost token and tries to match the tokens to C++
+ * source code.
+ *
+ * - Additional classes are used to implement an event-driven parser.  Input
+ * to the parser is a stream of tokens from the lexer.  Output from this parser
+ * is a new stream of tokens.  The parser user calls nextToken repeatedly to
+ * process all of the tokens.
+ *
+ * - The parser is designed to be used interactively.  When the nextToken is
+ * called a minimal number of input tokens are read to generate an output token.
+ * This makes the parser very responsive and able to issue start statement
+ * tokens before the end of the statement is reached.
+ *
+ * - The parser insert additional tokens into the input stream corresponding to
+ * start and end tags.
+ *
+ * Matching:
+ *
+ * - The parser does not attempt to detect invalid C++ code.  It is designed to
+ * match well-formed C++ code.  It assumes that the input C++ code is valid.
+ *
+ * - Whitespace and comments are handled in StreamMLParser.  They are diverted
+ * from the input token stream and inserted into the output token stream.  There
+ * is some processing to match these skipped tokens with the generated tokens
+ * from the parser.
+ *
+ * - There is no symbol table.  I repeat:  There is no symbol table.  No
+ * grammar rules are based on the type of an identifier.
+ *
+ * - Keywords are used to identify statements.  They are not used for types.
+ * Type keywords are in tokens just like other identifiers.
+ *
+ * Implementation:
+ *
+ * - The state of the current parsing is stored in modes.  The modes use flags
+ * to remember what state the parsing was in during the previous parse.
+ *
+ * - Element start tokens are generated using the method startElement.  The
+ * starting elements are stored in a stack in the current mode.
+ *
+ * - Element end tokens are generated automatically when a mode ends.  The stack
+ * of start tokens is popped of and ended automatically.
+ *
+ * - Do not end an element explicitly.  End the mode instead.
+ *
+ * Helpers:
+ *
+ * - The class StreamParser provides stream processing.  The class StreamMLParser
+ * provides markup language stream processing.  These are template classes which
+ * use this parser as a template parameter base.
+ *
+ * - The class TokenParser provides the virtual table for methods in StreamParser
+ * that are called in this parser.
+ *
+ * - Obviously this needs to be untangled but is not as easy as it should be.
+ *
+ * - Additional methods for the parser are declared in class Mode.  These methods
+ * only provide general support for the parser.  They do not, repeat, do not, contain
+ * token specific processing.
+ *
+ * Terminology:
+ *
+ * The use of C++ terminology is sometimes contradictory.  This is especially true
+ * for declarations and definitions, since a definition can also serve as a
+ * declaration.  The following rules are used:
+ *
+ * declaration - stating that something exists:
+ *
+ *     function declaration:  int f();
+ *     class declaration:     class A;
+ *     struct declaration:    struct A;
+ *     union declaration:     union A;
+ *     method declaration:    virtual int f(); // in class
+ *
+ * definition - defining the layout or interface
+ *
+ *     function definition:  int f() {}
+ *     class definition:     class A { int a; }
+ *     struct definition:    struct A { int a; }
+ *     union definition:     union A { int a; }
+ *     method definition:    int A::f() {} // in or out of class
+ *
+ * C vs. C++
+ *
+ * Additional keywords in C++ may be identifiers in C.  This is handled in the
+ * lexer which has symbols for all C++ (and C) keywords, but only will find them in
+ * the input if in C++ mode.  They are matched as NAME in C mode.
+ */
 
 header "pre_include_hpp" {
 #pragma GCC diagnostic ignored "-Wunused-parameter"
