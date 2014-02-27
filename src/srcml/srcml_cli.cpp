@@ -138,7 +138,7 @@ void option_command(bool opt) {
         srcml_request.command |= command;
 }
 
-void option_filename(const std::string& value) { srcml_request.filename = value; }
+void option_filename(const std::string& value) { srcml_request.att_filename = value; }
 void option_output(const std::string& value) {srcml_request.output = value; }
 void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value; }
 
@@ -362,7 +362,7 @@ void debug_cli_opts(const struct srcml_request_t srcml_request) {
 
     std::cerr << "Commands: " << srcml_request.command << "\n";
     std::cerr << "Markup: " << srcml_request.markup_options << "\n";
-    std::cerr << "Filename: " << srcml_request.filename << "\n";
+    std::cerr << "Filename: " << srcml_request.att_filename << "\n";
     std::cerr << "Output: " << srcml_request.output << "\n";
     std::cerr << "SRC Encoding: " << srcml_request.src_encoding << "\n";
     std::cerr << "Encoding: " << srcml_request.encoding << "\n";
