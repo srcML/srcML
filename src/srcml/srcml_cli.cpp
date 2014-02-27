@@ -147,7 +147,7 @@ void option_encoding(const std::string& value) {
         std::cerr << "srcmlCLI: invalid encoding.\n";
         exit(1); //ERROR CODE TBD
     }
-    srcml_request.encoding = value;
+    srcml_request.att_encoding = value;
 }
 
 void option_files_from(const std::string& value) {srcml_request.files_from = value; }
@@ -365,7 +365,7 @@ void debug_cli_opts(const struct srcml_request_t srcml_request) {
     std::cerr << "Filename: " << srcml_request.att_filename << "\n";
     std::cerr << "Output: " << srcml_request.output << "\n";
     std::cerr << "SRC Encoding: " << srcml_request.src_encoding << "\n";
-    std::cerr << "Encoding: " << srcml_request.encoding << "\n";
+    std::cerr << "Encoding: " << srcml_request.att_encoding << "\n";
     std::cerr << "Files From: " << srcml_request.files_from << "\n";
     std::cerr << "Language: " << srcml_request.att_language << "\n";
 

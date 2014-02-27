@@ -65,7 +65,7 @@ struct srcml_request_t {
     std::string att_language;
     boost::optional<std::string> att_filename;
     boost::optional<std::string> att_directory;
-    std::string encoding;
+    boost::optional<std::string> att_encoding;
     std::string src_versions;
 
     std::string src_encoding;

@@ -94,10 +94,7 @@ int main(int argc, char * argv[]) {
         srcml_archive* srcml_arch = srcml_create_archive();
 
         // set options for the output srcml archive
-        // TODO: replace "" with boost::optional. NOTE: "" is not a valid encoding and should
-        // be caught by srcml_cli.*
-        if (srcml_request.encoding != "")
-            srcml_archive_set_encoding(srcml_arch, srcml_request.encoding.c_str());
+        srcml_archive_set_encoding(srcml_arch, srcml_request.att_encoding->c_str());
 
         if (srcml_request.att_filename)
             srcml_archive_set_filename(srcml_arch, srcml_request.att_filename->c_str());
