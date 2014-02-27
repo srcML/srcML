@@ -102,9 +102,8 @@ int main(int argc, char * argv[]) {
         if (srcml_request.att_directory)
             srcml_archive_set_directory(srcml_arch, srcml_request.att_directory->c_str());
 
-        // TODO: replace use of _set with boost::optional
-        if (srcml_request.src_versions_set)
-            srcml_archive_set_version(srcml_arch, srcml_request.src_versions.c_str());
+        if (srcml_request.att_src_versions)
+            srcml_archive_set_version(srcml_arch, srcml_request.att_src_versions->c_str());
 
         // TODO: replace with boost::optional
         if (srcml_request.markup_options != 0)

@@ -171,7 +171,7 @@ void option_tabs(const int value) {
     srcml_request.tabs = value;
 }
 void option_directory(const std::string& value) {srcml_request.att_directory = value; }
-void option_src_versions(const std::string& value) {srcml_request.src_versions = value; srcml_request.src_versions_set = true; }
+void option_src_versions(const std::string& value) {srcml_request.att_src_versions = value; }
 void option_prefix(const std::string& value) {srcml_request.prefix = value; }
 void option_xmlns_uri(const std::string& value) {srcml_request.xmlns_uri = value; }
 void option_xmlns_prefix(const std::vector<std::string>& values) {srcml_request.xmlns_prefix = values; }
@@ -375,7 +375,7 @@ void debug_cli_opts(const struct srcml_request_t srcml_request) {
 
     std::cerr << "Tabs: " << srcml_request.tabs << "\n";
     std::cerr << "Directory: " << srcml_request.att_directory << "\n";
-    std::cerr << "Src Versions: " << srcml_request.src_versions << "\n";
+    std::cerr << "Src Versions: " << srcml_request.att_src_versions << "\n";
     std::cerr << "Prefix: " << srcml_request.prefix << "\n";
     std::cerr << "Xmlns Uri: " << srcml_request.xmlns_uri << "\n";
 
