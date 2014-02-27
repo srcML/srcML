@@ -401,6 +401,7 @@ verify_test("C", str(srcml.get_language_list(0)))
 verify_test("C++", str(srcml.get_language_list(1)))
 verify_test("C#", str(srcml.get_language_list(2)))
 verify_test("Java", str(srcml.get_language_list(3)))
+verify_test(None, str(srcml.get_language_list(4)))
 
 file = open("a.cpp", "w")
 file.write("a;\n")
