@@ -395,8 +395,12 @@ verify_test("Exception", test)
 # cleanup_globals
 srcml.cleanup_globals()
 
-# test language
-verify_test("['C', 'C++', 'C#', 'Java']", str(srcml.language_list()))
+# test language list
+verify_test(4, str(srcml.get_language_list_size()))
+verify_test("C", str(srcml.get_language_list(0)))
+verify_test("C++", str(srcml.get_language_list(1)))
+verify_test("C#", str(srcml.get_language_list(2)))
+verify_test("Java", str(srcml.get_language_list(3)))
 
 file = open("a.cpp", "w")
 file.write("a;\n")
