@@ -75,10 +75,9 @@ int main() {
 
     }
 
-
     {
 
-        FILE * file = fopen("a.cpp", "r");
+        FILE * file = fopen("a.cpp", "w");
 	{
 	    UTF8OutputSource utf8(file, "ISO-8859-1");
 	    dassert(utf8.writeString("abc", 3), 1);
@@ -98,7 +97,7 @@ int main() {
 
     {
 
-        int fd = open("a.cpp", O_RDONLY);
+        int fd = open("a.cpp", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
 	{
 	    UTF8OutputSource utf8(fd, "ISO-8859-1");
 	    dassert(utf8.writeString("abc", 3), 1);
@@ -117,12 +116,11 @@ int main() {
 
     }
 
-
     {
 
 	{
 	    UTF8OutputSource utf8("a.cpp", "ISO-8859-1");
-	    dassert(utf8.writeString("/** \ufeff */", 9), 1);
+	    dassert(utf8.writeString("/** \u00fe\u00ff */", 11), 1);
 	}
 
 	std::string src;
@@ -141,7 +139,7 @@ int main() {
 
 	{
 	    UTF8OutputSource utf8("a.cpp", "UTF-8");
-	    dassert(utf8.writeString("/** \ufeff */", 3), 1);
+	    dassert(utf8.writeString("/** \u00fe\u00ff */", 11), 1);
 	}
 
 	std::string src;
@@ -150,7 +148,7 @@ int main() {
 	while(in.get(c))
 	    src += c;
 
-	dassert(src, "/** \ufeff */");
+	dassert(src, "/** \u00fe\u00ff */");
 
         unlink("a.cpp");
     }
