@@ -1,7 +1,7 @@
 /**
  * @file test_UTF8OutputSource.cpp
  *
- * @copyright Copyright (C) 2014  SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,131 @@
 
 
 int main() {
+
+    /*
+
+      UTF8OutputSource(const char * filename, const char * encoding)
+
+     */
+
+    {
+	try {
+	    UTF8OutputSource utf8("a.cpp", "ISO-8859-1");
+	} catch(...) { assert(false); }
+    }
+
+    {
+	try {
+	    UTF8OutputSource utf8((const char *)NULL, "ISO-8859-1");
+	    assert(false);
+	} catch(...) {}
+    }
+
+    {
+	try {
+	    UTF8OutputSource utf8("a.cpp", NULL);
+	} catch(...) { assert(false); }
+    }
+
+    /*
+
+      UTF8OutputSource(char ** src_buffer, size_t * src_size, const char * encoding)
+
+     */
+
+    {
+	char  * s;
+	size_t i;
+	try {
+	    UTF8OutputSource utf8(&s, &i, "ISO-8859-1");
+	} catch(...) { assert(false); }
+    }
+
+    {
+	size_t i;
+	try {
+	    UTF8OutputSource utf8(NULL, &i, "ISO-8859-1");
+	    assert(false);
+	} catch(...) {}
+    }
+
+    {
+	char *s;
+	try {
+	    UTF8OutputSource utf8(&s, NULL, "ISO-8859-1");
+	    assert(false);
+	} catch(...) {}
+    }
+
+    {
+	char  * s;
+	size_t i;
+	try {
+	    UTF8OutputSource utf8(&s, &i, NULL);
+	} catch(...) { assert(false); }
+    }
+
+    /*
+
+      UTF8OutputSource(FILE * file, const char * encoding)
+
+     */
+
+    {
+	FILE * f = fopen("a.cpp", "w");
+	try {
+	    UTF8OutputSource utf8(f, "ISO-8859-1");
+	} catch(...) { assert(false); }
+    }
+
+    {
+	try {
+	    UTF8OutputSource utf8((FILE *)NULL, "ISO-8859-1");
+	    assert(false);
+	} catch(...) {}
+    }
+
+    {
+        FILE * f = fopen("a.cpp", "w");
+	try {
+	    UTF8OutputSource utf8(f, NULL);
+	} catch(...) { assert(false); }
+    }
+
+    /*
+
+      UTF8OutputSource(int fd, const char * encoding)
+
+     */
+
+    {
+	int f = open("a.cpp", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);	
+	try {
+	    UTF8OutputSource utf8(f, "ISO-8859-1");
+	} catch(...) { assert(false); }
+    }
+
+    {
+	int f = open("a.cpp", O_RDONLY);	
+	try {
+	    UTF8OutputSource utf8(f, "ISO-8859-1");
+	    assert(false);
+	} catch(...) {}
+    }
+
+    {
+	try {
+	    UTF8OutputSource utf8(-1, "ISO-8859-1");
+	    assert(false);
+	} catch(...) {}
+    }
+
+    {
+	int f = open("a.cpp", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+	try {
+	    UTF8OutputSource utf8(f, NULL);
+	} catch(...) { assert(false); }
+    }
 
     /*
 
