@@ -1,7 +1,7 @@
 /**
  * UTF8OutputSource.hpp
  *
- * Copyright (C) 2008-2014  SDML (www.srcML.org)
+ * Copyright (C) 2014  SDML (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
@@ -28,8 +28,8 @@
  * libxml stores data internally in UTF*
  */
 
-#ifndef INCLUDE_UTF8OutputSource_HPP
-#define INCLUDE_UTF8OutputSource_HPP
+#ifndef INCLUDE_UTF8OUTPUTSOURCE_HPP
+#define INCLUDE_UTF8OUTPUTSOURCE_HPP
 
 #include <cstring>
 
