@@ -63,10 +63,10 @@ private:
     FILE * output;
     char ** src_buffer;
     size_t * src_size;
+    char * buffer;
     size_t allocated;
 
     iconv_t cd;
     unsigned char iconv_buffer[4 * SRCBUFSIZE];
-
 };
 #endif
