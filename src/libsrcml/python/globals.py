@@ -174,9 +174,13 @@ libsrcml.srcml_get_macro_type.argtypes = [c_int]
 libsrcml.srcml_check_language.restype = c_int
 libsrcml.srcml_check_language.argtypes = [c_char_p]
 
-# const char** srcml_language_list();
-libsrcml.srcml_language_list.restype = POINTER(c_char_p)
-libsrcml.srcml_language_list.argtypes = []
+# int srcml_get_language_list_size();
+libsrcml.srcml_get_language_list_size.restype = c_int
+libsrcml.srcml_get_language_list_size.argtypes = []
+
+# const char* srcml_get_language_list(int pos);
+libsrcml.srcml_get_language_list.restype = c_char_p
+libsrcml.srcml_get_language_list.argtypes = [c_int]
 
 # const char* srcml_check_extension(const char* filename);
 libsrcml.srcml_check_extension.restype = c_char_p
@@ -292,18 +296,13 @@ def get_macro_type(pos) :
 def check_language(language) :
     return libsrcml.srcml_check_language(language)
 
-def language_list() :
+def get_language_list_size() :
 
-    lang_list = libsrcml.srcml_language_list()
+    return libsrcml.srcml_get_language_list_size()
 
-    ret = []
+def get_language_list(pos) :
 
-    i = 0
-    while lang_list[i] != None :
-        ret.append(lang_list[i])
-        i = i + 1
-
-    return ret
+    return libsrcml.srcml_get_language_list(pos)
 
 def check_extension(filename) :
     return libsrcml.srcml_check_extension(filename)
