@@ -96,14 +96,6 @@ int main() {
 
     {
 	const char * s;
-	try {
-	    UTF8CharBuffer utf8(s, 0, "ISO-8859-1");
-	    assert(false);
-	} catch(...) {}
-    }
-
-    {
-	const char * s;
 	size_t i;
 	try {
 	    UTF8CharBuffer utf8(s, i, NULL);
@@ -166,7 +158,7 @@ int main() {
     }
 
     {
-	int f = open("a.cpp", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+	int f = open("a.cpp", O_RDONLY);
 	try {
 	    UTF8CharBuffer utf8(f, NULL);
 	} catch(...) { assert(false); }
