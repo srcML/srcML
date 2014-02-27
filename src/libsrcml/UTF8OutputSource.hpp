@@ -1,7 +1,7 @@
 /**
- * UTF8CharBuffer.hpp
+ * UTF8OutputSource.hpp
  *
- * Copyright (C) 2008-2014 SDML (www.srcML.org)
+ * Copyright (C) 2014 SDML (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
@@ -28,52 +28,45 @@
  * libxml stores data internally in UTF*
  */
 
-#ifndef INCLUDE_UTF8CHARBUFFER_HPP
-#define INCLUDE_UTF8CHARBUFFER_HPP
+#ifndef INCLUDE_UTF8OUTPUTSOURCE_HPP
+#define INCLUDE_UTF8OUTPUTSOURCE_HPP
 
-#include <antlr/CharBuffer.hpp>
 #include <cstring>
 
 #include <stdio.h>
 #include <iconv.h>
 
-class UTF8FileError {};
+class UTF8OutputSourceError {};
 
 
-class UTF8CharBuffer : public antlr::CharBuffer {
+class UTF8OutputSource {
 public:
 
     // size of the original character buffer
     static const size_t SRCBUFSIZE = 1024;
 
     // Create a character buffer
-    UTF8CharBuffer(const char * ifilename, const char * encoding);
-    UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding);
-    UTF8CharBuffer(FILE * file, const char * encoding);
-    UTF8CharBuffer(int fd, const char * encoding);
+    UTF8OutputSource(const char * filename, const char * encoding);
+    UTF8OutputSource(char ** src_buffer, size_t * src_size, const char * encoding);
+    UTF8OutputSource(FILE * file, const char * encoding);
+    UTF8OutputSource(int fd, const char * encoding);
 
-    // Get the next character from the stream
-    int getChar();
+    int writeString(const char * input, size_t input_size);
 
-    ~UTF8CharBuffer();
+    ~UTF8OutputSource();
 
 private:
 
-    int growBuffer();
-    size_t convertEncodings(size_t num_to_convert);
+    size_t growBuffer(const char * & raw_buffer, size_t size);
     void processEncoding(const char * encoding);
 
-    FILE * input;
-    int pos;
-    int size;
-    int total_size;
-    bool lastcr;
-    bool need_close;
-    char * raw_buffer;
-    unsigned char * input_buffer;
-    iconv_t cd;
-    char buffer[SRCBUFSIZE];
-    char iconv_buffer[4 * SRCBUFSIZE];
+    FILE * output;
+    char ** src_buffer;
+    size_t * src_size;
+    char * buffer;
+    size_t allocated;
 
+    iconv_t cd;
+    unsigned char iconv_buffer[4 * SRCBUFSIZE];
 };
 #endif

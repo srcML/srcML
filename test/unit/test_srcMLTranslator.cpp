@@ -1,8 +1,7 @@
 /**
  * @file test_srcMLTranslator.cpp
- * @copyright
- *
- * Copyright (C) 2013  SDML (www.srcML.org)
+
+ * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,186 +23,193 @@
 
   Unit tests for srcMLTranslator.
 
- */
+*/
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+#include <fstream>
 #include <srcMLTranslator.hpp>
+#include <UTF8CharBuffer.hpp>
 #include <Language.hpp>
 #include <srcmlns.hpp>
 
 int main() {
 
-  std::string urisprefix[] = {
+    std::ofstream file("a.cpp");
+    file << "a;";
+    file.close();
 
-    SRCML_SRC_NS_PREFIX_DEFAULT,
-    SRCML_CPP_NS_PREFIX_DEFAULT,
-    SRCML_ERR_NS_PREFIX_DEFAULT,
-    SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
-    SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
-    SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
-    SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
-  };
+    std::string urisprefix[] = {
 
-  /*
+        SRCML_SRC_NS_PREFIX_DEFAULT,
+        SRCML_CPP_NS_PREFIX_DEFAULT,
+        SRCML_ERR_NS_PREFIX_DEFAULT,
+        SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
+        SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
+        SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
+        SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
+    };
 
-    srcMLTranslator
+    /*
 
-   */
+      srcMLTranslator
 
-  {
+    */
 
-    xmlBufferPtr buffer = xmlBufferCreate();
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-    OPTION_TYPE op = 0;
+    {
 
-    srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
-                                 output_buffer, op, "", "", "", urisprefix, 4);
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = 0;
 
-    translator.close();
-    xmlBufferFree(buffer);
-    
-  }
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, "", "", "", urisprefix, 4);
 
-  /*
+        translator.close();
+        xmlBufferFree(buffer);
 
-    srcMLTranslator
+    }
 
-   */
+    /*
 
-  {
+      srcMLTranslator
 
-    xmlBufferPtr buffer = xmlBufferCreate();
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-    OPTION_TYPE op = 0;
+    */
 
-    srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
-                                 output_buffer, op, "", "", "", urisprefix, 4);
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = 0;
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, "", "", "", urisprefix, 4);
 
 
-    translator.close();
-    xmlBufferFree(buffer);
-    
-  }
+        translator.close();
+        xmlBufferFree(buffer);
 
-  /*
+    }
 
-    setInput
+    /*
 
-   */
+      setInput
 
-  {
+    */
 
-    xmlBufferPtr buffer = xmlBufferCreate();
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-    OPTION_TYPE op = 0;
+    {
 
-    srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
-                                 output_buffer, op, "", "", "", urisprefix, 4);
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = 0;
 
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("a;", 2, xmlParseCharEncoding(0));
-    try {
-      translator.setInput(input);
-    } catch(...) { assert(false); }
-    xmlFreeParserInputBuffer(input);
-    translator.close();
-    xmlBufferFree(buffer);
-    
-  }
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, "", "", "", urisprefix, 4);
 
-  {
+        try {
+            translator.setInput("a.cpp");
+        } catch(...) { assert(false); }
+        translator.close();
+        xmlBufferFree(buffer);
 
-    xmlBufferPtr buffer = xmlBufferCreate();
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-    OPTION_TYPE op = 0;
+    }
 
-    srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
-                                 output_buffer, op, "", "", "", urisprefix, 4);
+    {
 
-    try {
-      translator.setInput((xmlParserInputBufferPtr)NULL);
-      assert(false);
-    } catch(...) {}
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = 0;
 
-    translator.close();
-    xmlBufferFree(buffer);
-    
-  }
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, "", "", "", urisprefix, 4);
 
-  /*
+        try {
+            translator.setInput(NULL);
+            assert(false);
+        } catch(...) {}
 
-    translate_separate
+        translator.close();
+        xmlBufferFree(buffer);
 
-   */
+    }
 
-  {
+    /*
 
-    xmlBufferPtr buffer = xmlBufferCreate();
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-    OPTION_TYPE op = 0;
+      translate_separate
 
-    srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
-                                 output_buffer, op, 0, 0, 0, urisprefix, 4);
+    */
 
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("a;", 2, (xmlCharEncoding)0);
+    {
 
-    xmlBufferPtr output = xmlBufferCreate();
-    translator.translate_separate(0,  0, 0, Language::LANGUAGE_CXX, input, output, 0, op);
-    assert((char *)output->content == std::string("<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>\n"));
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = 0;
 
-    xmlBufferFree(output);
-    translator.close();
-    xmlBufferFree(buffer);
-    
-  }
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, 0, 0, 0, urisprefix, 4);
 
-  /*
+        UTF8CharBuffer * input = new UTF8CharBuffer("a;", 2, "UTF-8");
 
-    add_unit
+        xmlBufferPtr output = xmlBufferCreate();
+        translator.translate_separate(0,  0, 0, Language::LANGUAGE_CXX, input, output, op);
+        assert((char *)output->content == std::string("<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>\n"));
 
-   */
+        xmlBufferFree(output);
+        translator.close();
+        xmlBufferFree(buffer);
 
-  {
+    }
 
-    xmlBufferPtr buffer = xmlBufferCreate();
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-    OPTION_TYPE op = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+    /*
 
-    srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
-                                 output_buffer, op, 0, 0, 0, urisprefix, 4);
+      add_unit
 
-    std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-    std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+    */
 
-    translator.add_unit(s.c_str());
-    translator.close();
-    std::string result = (const char *)buffer->content;
-    assert(result == decl + "\n" + s + "\n");
+    {
 
-    xmlBufferFree(buffer);
-    
-  }
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
 
-  {
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, 0, 0, 0, urisprefix, 4);
 
-    xmlBufferPtr buffer = xmlBufferCreate();
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-    OPTION_TYPE op = OPTION_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+        std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+        std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-    srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
-                                 output_buffer, op, 0, 0, 0, urisprefix, 4);
+        translator.add_unit(s.c_str());
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        assert(result == decl + "\n" + s + "\n");
 
-    std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-    std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        xmlBufferFree(buffer);
 
-    translator.add_unit(s.c_str());
-    translator.add_unit(s.c_str());
-    translator.close();
-    std::string result = (const char *)buffer->content;
-    assert(result == decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+    }
 
-    xmlBufferFree(buffer);
-    
-  }
+    {
 
-  return 0;
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, 0, 0, 0, urisprefix, 4);
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+        std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+
+        translator.add_unit(s.c_str());
+        translator.add_unit(s.c_str());
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        assert(result == decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    unlink("a.cpp");
+
+    return 0;
 }

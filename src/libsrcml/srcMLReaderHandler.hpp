@@ -1,8 +1,29 @@
+/**
+ * @file srcMLReaderHandler.cpp
+ *
+ * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ *
+ * The srcML Toolkit is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML Toolkit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML Toolkit; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
 #ifndef INCLUDED_SRCML_READER_HANDLER_HPP
 #define INCLUDED_SRCML_READER_HANDLER_HPP
 
 #include <srcMLHandler.hpp>
 #include <srcml_types.hpp>
+#include <UTF8OutputSource.hpp>
 
 #include <libxml/parser.h>
 #include <stdio.h>
@@ -47,7 +68,7 @@ private :
     srcml_unit * unit;
 
     /** output buffer for direct src write */
-    xmlOutputBufferPtr output_buffer;
+    UTF8OutputSource * output_handler;
 
     /** has reached end of parsing*/
     bool is_done;
@@ -85,7 +106,7 @@ public :
      *
      * Constructor.  Sets up mutex, conditions and state.
      */
-  srcMLReaderHandler() : unit(0), output_buffer(0), is_done(false), read_root(false),
+  srcMLReaderHandler() : unit(0), output_handler(0), is_done(false), read_root(false),
 			 collect_unit_attributes(false), collect_srcml(false), collect_src(false),
 			 terminate(false), is_empty(false), wait_root(true), skip(false) {
 
@@ -631,7 +652,7 @@ public :
 
         if(collect_src) {
 
-            xmlOutputBufferWrite(output_buffer, len, (const char *)ch);
+            output_handler->writeString((const char *)ch, len);
 
         } else {
 

@@ -1,7 +1,7 @@
 /*
   src_input_libarchive.cpp
 
-  Copyright (C) 2004-2014  SDML (www.srcML.org)
+  @copyright Copyright (C) 2004-2014 SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
@@ -75,40 +75,45 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
 
     // open the archive
     if (!isfstdin && archive_read_open_filename(arch, (!stdin ? input_file.c_str() : 0), 16384)!= ARCHIVE_OK) {
-        std::cerr << "Unable to open archive\n";
+        std::cerr << "Unable to open file\n";
         exit(1);
     } else if (isfstdin && archive_read_open_FILE(arch, fstdin)!= ARCHIVE_OK) {
-        std::cerr << "Unable to open archive\n";
+        std::cerr << "Unable to open file\n";
         exit(1);
     }
 
     bool empty = true;
     while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
         empty = false;
+
+        // default is filename from archive entry
         std::string filename = archive_entry_pathname(arch_entry);
-        /*
-          The header path for a standard file is just "data".
-          That needs to be swapped out with the actual file name from the
-          CLI arg.
-        */
-        if (!stdin && filename == "data")
+
+        // archive entry filename for non-archive input is "data"
+        if (filename == "data")
             filename = input_file;
 
-        if (!stdin) {
-            const char * language = (lang.compare("xml") == 0) ?  lang.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str());
-            if (!language) {
-                // Extension not supported
-                // Skip to next header
-                continue;
-            }
-        }
-        else {
-            // Stdin language declared via CLI
-            if (!srcml_archive_get_language(srcml_arch)) {
-                std::cerr << "Using stdin requires a defined language\n";
-                exit(1); // Stdin used with no language specified.
-            }
+        if (filename == "")
             filename = "-";
+
+        // language may have been explicitly set
+        std::string language = lang;
+
+        // if not explicitly set, language comes from extension
+        if (language == "") {
+            const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str());
+            if (l)
+                language = l;
+        }
+
+        if (language == "" && (stdin || isfstdin)) {
+            std::cerr << "Using stdin requires a declared language\n";
+            continue;
+        }
+
+        if (language == "" && !stdin) {
+            std::cerr << "Extension not supported\n";
+            continue;
         }
 
         ParseRequest request;
@@ -135,12 +140,12 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
 
     // If the input is empty
     if (empty) {
-      ParseRequest request;
-      request.buffer.clear();
-      request.filename = input_file;
-      request.srcml_arch = srcml_arch;
-      request.lang = ((srcml_archive_get_language(srcml_arch) || lang.compare("xml") == 0) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, input_file.c_str()));
-      queue.push(request);
+        ParseRequest request;
+        request.buffer.clear();
+        request.filename = input_file;
+        request.srcml_arch = srcml_arch;
+        request.lang = ((srcml_archive_get_language(srcml_arch) || lang.compare("xml") == 0) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, input_file.c_str()));
+        queue.push(request);
     }
 
     archive_read_finish(arch);

@@ -1,8 +1,7 @@
 /**
  * @file srcMLSAX2Reader.cpp
- * @copyright
  *
- * Copyright (C) 2013-2014  SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -221,16 +220,16 @@ int srcMLSAX2Reader::readsrcML(boost::optional<std::string> & unit) {
  *
  * @returns 1 on success and 0 if done
  */
-int srcMLSAX2Reader::readsrc(xmlOutputBufferPtr output_buffer) {
+int srcMLSAX2Reader::readsrc(UTF8OutputSource & output_handler) {
 
     if(handler.is_done) return 0;
     control.enable_comment(false);
     control.enable_cdataBlock(false);
-    handler.output_buffer = output_buffer;
+    handler.output_handler = &output_handler;
     handler.collect_src = true;
     handler.resume_and_wait();
     handler.collect_src = false;
-    handler.output_buffer = 0;
+    handler.output_handler = 0;
     control.enable_comment(true);
     control.enable_cdataBlock(true);
     if(handler.is_done) return 0;

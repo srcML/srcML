@@ -1,8 +1,7 @@
+##
+# @file CMakeLists.txt
 #
-#    CMakeLists.txt
-# @copyright
-# 
-# Copyright (C) 2013-2014  SDML (www.srcML.org)
+# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,18 +40,21 @@ macro(buildLib LIB_NAME LIB_TYPE)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME libsrcml)
-else()
+elseif(APPLE)
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/export_list")
+else()
+    set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml)
+
 endif()
 
     if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
         if(DYNAMIC_LOAD_ENABLED)
-                target_link_libraries(${LIB_NAME} PRIVATE ${LIBXML2_LIBS} ${ANTLR_LIB} ${BOOST_PROGRAM_OPTIONS_LIB} dl)
+                target_link_libraries(${LIB_NAME} PRIVATE ${LIBXML2_LIBS} ${ANTLR_LIB} ${BOOST_PROGRAM_OPTIONS_LIB} dl iconv)
         else()
-                target_link_libraries(${LIB_NAME} PRIVATE ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${BOOST_PROGRAM_OPTIONS_LIB} dl)
+                target_link_libraries(${LIB_NAME} PRIVATE ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${BOOST_PROGRAM_OPTIONS_LIB} dl iconv)
         endif()
     else()
-        target_link_libraries(${LIB_NAME} PRIVATE ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${BOOST_PROGRAM_OPTIONS_LIB})
+        target_link_libraries(${LIB_NAME} PRIVATE ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${BOOST_PROGRAM_OPTIONS_LIB} iconv)
     endif()
 endmacro()
 

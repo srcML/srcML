@@ -1,8 +1,7 @@
+##
+# @file CMakeLists.txt
 #
-#    CMakeLists.txt
-# @copyright
-# 
-# Copyright (C) 2013  SDML (www.srcML.org)
+# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,10 +23,6 @@ addUnitTest(test_Language test_Language.cpp)
 addUnitTest(test_Options test_Options.cpp)
 addUnitTest(test_State test_State.cpp)
 addUnitTest(test_UTF8CharBuffer test_UTF8CharBuffer.cpp ${LIBXML2_LIBRARIES})
-if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
-    copyDependentFile(test_UTF8CharBuffer.cpp)
-    add_dependencies(test_UTF8CharBuffer test_UTF8CharBuffer.cpp)
-endif()
 addUnitTest(test_srcMLState test_srcMLState.cpp)
 addUnitTest(test_srcMLStateStack test_srcMLStateStack.cpp)
 addUnitTest(test_srcMLTranslator test_srcMLTranslator.cpp ${LIBXML2_LIBRARIES})
