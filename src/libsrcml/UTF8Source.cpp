@@ -42,7 +42,7 @@ UTF8Source::UTF8Source(char ** src_buffer, size_t * src_size, const char * encod
 
     if(!src_buffer || !src_size) throw UTF8SourceError();
 
-    buffer = (char *)malloc(4 * SRCBUFSIZE);
+    buffer = (char *)malloc(4 * SRCBUFSIZE + 1);
     (*src_size) = 0;
     allocated = 4 * SRCBUFSIZE;
 
@@ -99,7 +99,7 @@ void growString(char * & str, size_t & allocated, size_t used, size_t needed) {
     if(needed < (allocated - used)) return;
 
     size_t new_size = (used + needed) * 2;
-    char * new_str = (char *)malloc(new_size);
+    char * new_str = (char *)malloc(new_size + 1);
     strcpy(new_str, str);
     free(str);
     str = new_str;
@@ -160,8 +160,8 @@ UTF8Source::~UTF8Source() {
 
     if(src_buffer) {
 
+	buffer[*src_size] = 0;
 	(*src_buffer) = buffer;
-	(*src_buffer)[*src_size] = 0;
 
     }
 
