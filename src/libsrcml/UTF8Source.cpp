@@ -158,6 +158,8 @@ UTF8Source::~UTF8Source() {
 
     if(cd) iconv_close(cd);
 
+    if(output) fclose(output);
+
     if(src_buffer) {
 
 	buffer[*src_size] = 0;
