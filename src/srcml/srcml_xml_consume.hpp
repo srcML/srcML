@@ -1,7 +1,7 @@
 /*
   srcml_consume.hpp
 
-  @copyright @copyright Copyright (C) 2014  SDML (www.srcML.org)
+  @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
