@@ -107,7 +107,7 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         }
 
         if (language == "" && (stdin || isfstdin)) {
-            std::cerr << "Using stdin requires a defined language\n";
+            std::cerr << "Using stdin requires a declared language\n";
             continue;
         }
 
