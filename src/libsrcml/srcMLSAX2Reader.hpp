@@ -25,6 +25,8 @@
 
 #include <srcMLControlHandler.hpp>
 
+#include <UTF8OutputSource.hpp>
+
 #include <Options.hpp>
 
 #include <libxml/xmlreader.h>
@@ -87,7 +89,7 @@ public :
     int readsrcML(boost::optional<std::string> & unit);
 
     // reads the next unit and returns it in parameter as src
-    int readsrc(xmlOutputBufferPtr output_buffer);
+    int readsrc(UTF8OutputSource & output_handler);
 
 };
 
