@@ -1023,8 +1023,8 @@ int main() {
     unlink("project_utf8.xml");
     unlink("project_latin.cpp");
     unlink("project_latin.xml");
-    unlink("project_latin_from_latin.cpp");
-    unlink("project_latin_from_latin.xml");
+    unlink("project_latin_from_utf8.cpp");
+    unlink("project_latin_from_utf8.xml");
     unlink("project_latin_from_latin.cpp");
     unlink("project_latin_from_latin.xml");
     unlink("project_macro.cpp");
