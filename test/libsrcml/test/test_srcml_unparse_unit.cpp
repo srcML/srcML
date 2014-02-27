@@ -397,6 +397,28 @@ int main() {
     {
 
         srcml_archive * archive = srcml_create_archive();
+        srcml_read_open_filename(archive, "project_utf8.xml");
+        srcml_unit * unit = srcml_read_unit(archive);
+        FILE * file = fopen("project.c", "w");
+	srcml_unit_set_encoding(unit, "UTF-8");
+        srcml_unparse_unit_FILE(unit, file);
+        fclose(file);
+        std::ifstream src_file("project.c");
+	std::string aunit;
+        char c = 0;
+        while(src_file.get(c)) {
+            aunit += c;
+	}
+        dassert(aunit, utf8_src);
+
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
         srcml_read_open_filename(archive, "project_macro.xml");
         srcml_unit * unit = srcml_read_unit(archive);
         FILE * file = fopen("project.c", "w");
@@ -530,6 +552,31 @@ int main() {
             aunit += c;
 	}
         dassert(aunit, src);
+
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+
+	unlink("project.c");
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+        srcml_read_open_filename(archive, "project_utf8.xml");
+        srcml_unit * unit = srcml_read_unit(archive);
+        int fd = open("project.c", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+	srcml_unit_set_encoding(unit, "UTF-8");
+        srcml_unparse_unit_fd(unit, fd);
+        close(fd);
+        std::ifstream src_file("project.c");
+	std::string aunit;
+        char c = 0;
+        while(src_file.get(c)) {
+            aunit += c;
+	}
+        dassert(aunit, utf8_src);
 
         srcml_free_unit(unit);
         srcml_close_archive(archive);
