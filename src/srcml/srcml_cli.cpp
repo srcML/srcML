@@ -158,7 +158,7 @@ void option_language(const std::string& value) {
         std::cerr << "srcmlCLI: invalid language.\n";
         exit(1); //ERROR CODE TBD
     }
-    srcml_request.language = value; 
+    srcml_request.att_language = value; 
 }
 void option_register_ext(const std::vector<std::string>& values) {srcml_request.register_ext = values; }
 
@@ -367,7 +367,7 @@ void debug_cli_opts(const struct srcml_request_t srcml_request) {
     std::cerr << "SRC Encoding: " << srcml_request.src_encoding << "\n";
     std::cerr << "Encoding: " << srcml_request.encoding << "\n";
     std::cerr << "Files From: " << srcml_request.files_from << "\n";
-    std::cerr << "Language: " << srcml_request.language << "\n";
+    std::cerr << "Language: " << srcml_request.att_language << "\n";
 
     for(size_t i = 0; i < srcml_request.register_ext.size(); ++i) {
         std::cerr << "Register Ext #" << i <<": " << srcml_request.register_ext[i] << "\n";

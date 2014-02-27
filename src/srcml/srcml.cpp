@@ -116,8 +116,8 @@ int main(int argc, char * argv[]) {
 
         // TODO: replace "" with boost::optional. NOTE: "" is not a valid language and should
         // be caught by srcml_cli.*
-        if (srcml_request.language != "") 
-            srcml_archive_set_language(srcml_arch, srcml_request.language.c_str());
+        if (srcml_request.att_language != "") 
+            srcml_archive_set_language(srcml_arch, srcml_request.att_language.c_str());
         else 
             srcml_archive_set_language(srcml_arch, SRCML_LANGUAGE_NONE);
 
@@ -168,13 +168,13 @@ int main(int argc, char * argv[]) {
 
             // call handler based on prefix
             if (isfstdin) {
-                src_input_libarchive(queue, srcml_arch, resource, srcml_request.language, true, fstdin);
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, true, fstdin);
             } else if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
-                src_input_filesystem(queue, srcml_arch, resource, srcml_request.language);
+                src_input_filesystem(queue, srcml_arch, resource, srcml_request.att_language);
             } else if (protocol == "file") {
-                src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language);
             } else if (protocol == "stdin") {
-                src_input_libarchive(queue, srcml_arch, resource, srcml_request.language);
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language);
             }
         }
 

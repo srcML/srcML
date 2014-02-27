@@ -62,7 +62,7 @@ struct srcml_request_t {
     int markup_options;
 
     // unit attributes
-    std::string language;
+    std::string att_language;
     boost::optional<std::string> filename;
     std::string directory;
     std::string encoding;
