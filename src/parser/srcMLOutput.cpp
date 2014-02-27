@@ -1,7 +1,7 @@
 /**
  * @file srcMLOutput.cpp
  *
- * @copyright Copyright (C) 2003-2014  SDML (www.srcML.org)
+ * @copyright Copyright (C) 2003-2014 SDML (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *

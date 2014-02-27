@@ -1,7 +1,7 @@
 /**
  * @file srcMLStateStack.hpp
  *
- * @copyright Copyright (C) 2004-2010  SDML (www.srcML.org)
+ * @copyright Copyright (C) 2004-2010 SDML (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *

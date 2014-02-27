@@ -1,7 +1,7 @@
 /**
  * UTF8OutputSource.hpp
  *
- * Copyright (C) 2014  SDML (www.srcML.org)
+ * Copyright (C) 2014 SDML (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
