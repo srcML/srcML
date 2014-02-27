@@ -137,6 +137,32 @@ int main() {
 
     {
 
+	char * s;
+	size_t i;
+	{
+	    UTF8OutputSource utf8(&s, &i, "ISO-8859-1");
+	    dassert(utf8.writeString("/** \u00fe\u00ff */", 11), 1);
+	}
+
+	dassert(s, std::string("/** \xfe\xff */"));
+
+    }
+
+    {
+
+	char * s;
+	size_t i;
+	{
+	    UTF8OutputSource utf8(&s, &i, "UTF-8");
+	    dassert(utf8.writeString("/** \u00fe\u00ff */", 11), 1);
+	}
+
+	dassert(s, std::string("/** \u00fe\u00ff */"));
+
+    }
+
+    {
+
 	{
 	    UTF8OutputSource utf8("a.cpp", "UTF-8");
 	    dassert(utf8.writeString("/** \u00fe\u00ff */", 11), 1);
@@ -226,6 +252,17 @@ int main() {
         dassert(i, 4096);
         for(int i = 0; i < 4096; ++i)
             dassert(s[i], 'a');
+
+    }
+
+    {
+
+	{
+	    UTF8OutputSource utf8("a.cpp", "ISO-8859-1");
+	    dassert(utf8.writeString("/** \ufeff */", 11), 0);
+	}
+
+        unlink("a.cpp");
 
     }
 
