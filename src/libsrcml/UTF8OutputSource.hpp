@@ -51,7 +51,7 @@ public:
     UTF8OutputSource(FILE * file, const char * encoding);
     UTF8OutputSource(int fd, const char * encoding);
 
-    int write_string(const char * input, size_t input_size);
+    int writeString(const char * input, size_t input_size);
 
     ~UTF8OutputSource();
 

@@ -652,7 +652,7 @@ public :
 
         if(collect_src) {
 
-            output_handler->write_string((const char *)ch, len);
+            output_handler->writeString((const char *)ch, len);
 
         } else {
 

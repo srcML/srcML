@@ -110,7 +110,7 @@ void growString(char * & str, size_t & allocated, size_t used, size_t needed) {
 /*
 
 */
-int UTF8OutputSource::write_string(const char * input, size_t input_size) {
+int UTF8OutputSource::writeString(const char * input, size_t input_size) {
 
     if(!cd && !output) {
 
