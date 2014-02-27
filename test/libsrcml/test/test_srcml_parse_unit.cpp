@@ -50,6 +50,7 @@ int main() {
     const std::string utf8_srcml = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \u2713 */</comment>\n</unit>";
     const std::string latin_srcml = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \u00fe\u00ff */</comment>\n</unit>";
     const std::string latin_from_utf8_srcml = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* &#10003; */</comment>\n</unit>";
+    const std::string latin_from_latin_srcml = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \xfe\xff */</comment>\n</unit>";
     const std::string srcml_macro = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><macro-list token=\"MACRO1\" type=\"src:macro\"/><macro-list token=\"MACRO2\" type=\"src:macro\"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>\n<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>\n</unit>";
 
     std::ofstream src_file_c("project.c");
@@ -177,6 +178,27 @@ int main() {
         srcml_unit_set_version(unit , "1");
         srcml_parse_unit_filename(unit, "project_latin.cpp");
         dassert(*unit->unit, latin_srcml);
+
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+	srcml_archive_set_encoding(archive, "ISO-8859-1");
+        srcml_write_open_filename(archive, "project.xml");
+        srcml_unit * unit = srcml_create_unit(archive);
+	srcml_unit_set_encoding(unit, "ISO-8859-1");
+        srcml_unit_set_language(unit, "C++");
+        srcml_unit_set_filename(unit, "project");
+        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_version(unit , "1");
+        srcml_parse_unit_filename(unit, "project_latin.cpp");
+        dassert(*unit->unit, latin_from_latin_srcml);
 
         srcml_free_unit(unit);
         srcml_close_archive(archive);
