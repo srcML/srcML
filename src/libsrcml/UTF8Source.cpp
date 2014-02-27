@@ -37,16 +37,36 @@ UTF8Source::UTF8Source(const char * filename, const char * encoding)
 
 }
 
-/*
-UTF8Source::UTF8Source(const char * raw_buffer, size_t buffer_size, const char * encoding) 
-    : output(0), raw_buffer(raw_buffer), pos(0), size(buffer_size), output_buffer(0), cd(0) {
+UTF8Source::UTF8Source(char ** buffer, size_t * size, const char * encoding)
+    : output(0), cd(0) {
 
-    if(!raw_buffer) throw UTF8SourceError();
+    if(!buffer) throw UTF8SourceError();
 
     processEncoding(encoding);
 
 }
-*/
+
+UTF8Source::UTF8Source(FILE * file, const char * encoding) 
+    : output(file), cd(0) {
+
+    if(!output) throw UTF8SourceError();
+
+    processEncoding(encoding);
+
+}
+
+UTF8Source::UTF8Source(int fd, const char * encoding) 
+    : output(0), cd(0) {
+
+    if(fd < 0) throw UTF8SourceError();
+
+    output = fdopen(fd, "w");
+
+    if(!output) throw UTF8SourceError();
+
+    processEncoding(encoding);
+
+}
 
 void UTF8Source::processEncoding(const char * encoding) {
 
@@ -59,7 +79,6 @@ void UTF8Source::processEncoding(const char * encoding) {
 }
 
 size_t UTF8Source::growBuffer(const char * & raw_buffer, size_t size) {
-
 
     size_t num_in_convert = size;
     size_t num_out_convert = 4 * size;
