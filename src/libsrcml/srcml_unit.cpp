@@ -465,7 +465,7 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
     try {
 
-	UTF8Source output_handler(src_filename, unit->encoding ? unit->encoding->c_str() :
+	UTF8OutputSource output_handler(src_filename, unit->encoding ? unit->encoding->c_str() :
 			      (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
 
 	if(!unit->unit) {
@@ -499,7 +499,7 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
 
     try {
 
-	UTF8Source output_handler(src_buffer, (size_t *)src_size, unit->encoding ? unit->encoding->c_str() :
+	UTF8OutputSource output_handler(src_buffer, (size_t *)src_size, unit->encoding ? unit->encoding->c_str() :
 				  (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
 	
 	if(!unit->unit) {
@@ -535,7 +535,7 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 
     try {
 
-	UTF8Source output_handler(srcml_file, unit->encoding ? unit->encoding->c_str() :
+	UTF8OutputSource output_handler(srcml_file, unit->encoding ? unit->encoding->c_str() :
 			      (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
 
 	if(!unit->unit) {
@@ -569,7 +569,7 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
     try {
 
-	UTF8Source output_handler(srcml_fd, unit->encoding ? unit->encoding->c_str() :
+	UTF8OutputSource output_handler(srcml_fd, unit->encoding ? unit->encoding->c_str() :
 			      (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
 
 	if(!unit->unit)

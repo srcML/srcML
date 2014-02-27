@@ -1,5 +1,5 @@
 /**
- * UTF8Source.hpp
+ * UTF8OutputSource.hpp
  *
  * Copyright (C) 2008-2014  SDML (www.srcML.org)
  *
@@ -28,32 +28,32 @@
  * libxml stores data internally in UTF*
  */
 
-#ifndef INCLUDE_UTF8Source_HPP
-#define INCLUDE_UTF8Source_HPP
+#ifndef INCLUDE_UTF8OutputSource_HPP
+#define INCLUDE_UTF8OutputSource_HPP
 
 #include <cstring>
 
 #include <stdio.h>
 #include <iconv.h>
 
-class UTF8SourceError {};
+class UTF8OutputSourceError {};
 
 
-class UTF8Source {
+class UTF8OutputSource {
 public:
 
     // size of the original character buffer
     static const size_t SRCBUFSIZE = 1024;
 
     // Create a character buffer
-    UTF8Source(const char * filename, const char * encoding);
-    UTF8Source(char ** src_buffer, size_t * src_size, const char * encoding);
-    UTF8Source(FILE * file, const char * encoding);
-    UTF8Source(int fd, const char * encoding);
+    UTF8OutputSource(const char * filename, const char * encoding);
+    UTF8OutputSource(char ** src_buffer, size_t * src_size, const char * encoding);
+    UTF8OutputSource(FILE * file, const char * encoding);
+    UTF8OutputSource(int fd, const char * encoding);
 
     int write_string(const char * input, size_t input_size);
 
-    ~UTF8Source();
+    ~UTF8OutputSource();
 
 private:
 

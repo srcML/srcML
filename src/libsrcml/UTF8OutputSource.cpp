@@ -21,26 +21,26 @@
  */
 
 #include <iostream>
-#include <UTF8Source.hpp>
+#include <UTF8OutputSource.hpp>
 
 
-UTF8Source::UTF8Source(const char * filename, const char * encoding) 
+UTF8OutputSource::UTF8OutputSource(const char * filename, const char * encoding) 
     : output(0), src_buffer(0), src_size(0), buffer(0), allocated(0), cd(0) {
 
-    if(!filename) throw UTF8SourceError();
+    if(!filename) throw UTF8OutputSourceError();
 
     output = fopen(filename, "w");
 
-    if(!output) throw UTF8SourceError();
+    if(!output) throw UTF8OutputSourceError();
 
     processEncoding(encoding);
 
 }
 
-UTF8Source::UTF8Source(char ** src_buffer, size_t * src_size, const char * encoding)
+UTF8OutputSource::UTF8OutputSource(char ** src_buffer, size_t * src_size, const char * encoding)
     : output(0), src_buffer(src_buffer), src_size(src_size), buffer(0), allocated(0), cd(0) {
 
-    if(!src_buffer || !src_size) throw UTF8SourceError();
+    if(!src_buffer || !src_size) throw UTF8OutputSourceError();
 
     buffer = (char *)malloc(4 * SRCBUFSIZE + 1);
     (*src_size) = 0;
@@ -50,29 +50,29 @@ UTF8Source::UTF8Source(char ** src_buffer, size_t * src_size, const char * encod
 
 }
 
-UTF8Source::UTF8Source(FILE * file, const char * encoding) 
+UTF8OutputSource::UTF8OutputSource(FILE * file, const char * encoding) 
     : output(file), src_buffer(0), src_size(0), buffer(0), allocated(0), cd(0) {
 
-    if(!output) throw UTF8SourceError();
+    if(!output) throw UTF8OutputSourceError();
 
     processEncoding(encoding);
 
 }
 
-UTF8Source::UTF8Source(int fd, const char * encoding) 
+UTF8OutputSource::UTF8OutputSource(int fd, const char * encoding) 
     : output(0), src_buffer(0), src_size(0), buffer(0), allocated(0), cd(0) {
 
-    if(fd < 0) throw UTF8SourceError();
+    if(fd < 0) throw UTF8OutputSourceError();
 
     output = fdopen(fd, "w");
 
-    if(!output) throw UTF8SourceError();
+    if(!output) throw UTF8OutputSourceError();
 
     processEncoding(encoding);
 
 }
 
-void UTF8Source::processEncoding(const char * encoding) {
+void UTF8OutputSource::processEncoding(const char * encoding) {
 
     if(encoding && strcmp("UTF-8", encoding) != 0) {
 
@@ -82,7 +82,7 @@ void UTF8Source::processEncoding(const char * encoding) {
 
 }
 
-size_t UTF8Source::growBuffer(const char * & raw_buffer, size_t size) {
+size_t UTF8OutputSource::growBuffer(const char * & raw_buffer, size_t size) {
 
     size_t num_in_convert = size;
     size_t num_out_convert = 4 * size;
@@ -110,7 +110,7 @@ void growString(char * & str, size_t & allocated, size_t used, size_t needed) {
 /*
 
 */
-int UTF8Source::write_string(const char * input, size_t input_size) {
+int UTF8OutputSource::write_string(const char * input, size_t input_size) {
 
     if(!cd && !output) {
 
@@ -154,7 +154,7 @@ int UTF8Source::write_string(const char * input, size_t input_size) {
     return 1;
 }
 
-UTF8Source::~UTF8Source() {
+UTF8OutputSource::~UTF8OutputSource() {
 
     if(cd) iconv_close(cd);
 

@@ -220,7 +220,7 @@ int srcMLSAX2Reader::readsrcML(boost::optional<std::string> & unit) {
  *
  * @returns 1 on success and 0 if done
  */
-int srcMLSAX2Reader::readsrc(UTF8Source & output_handler) {
+int srcMLSAX2Reader::readsrc(UTF8OutputSource & output_handler) {
 
     if(handler.is_done) return 0;
     control.enable_comment(false);

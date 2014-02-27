@@ -25,7 +25,7 @@
 
 #include <srcMLControlHandler.hpp>
 
-#include <UTF8Source.hpp>
+#include <UTF8OutputSource.hpp>
 
 #include <Options.hpp>
 
@@ -89,7 +89,7 @@ public :
     int readsrcML(boost::optional<std::string> & unit);
 
     // reads the next unit and returns it in parameter as src
-    int readsrc(UTF8Source & output_handler);
+    int readsrc(UTF8OutputSource & output_handler);
 
 };
 
