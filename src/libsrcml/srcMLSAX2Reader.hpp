@@ -63,7 +63,7 @@ public :
 
     // constructors
     srcMLSAX2Reader(const char * filename);
-    srcMLSAX2Reader(xmlParserInputBufferPtr input);
+    srcMLSAX2Reader(xmlParserInputBufferPtr input, const char * encoding = 0);
 
     // destructors
     ~srcMLSAX2Reader();

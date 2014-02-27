@@ -995,10 +995,11 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
 
     if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_ERROR;
 
-    archive->input = xmlParserInputBufferCreateFilename(srcml_filename, xmlParseCharEncoding(0));
+    archive->input = xmlParserInputBufferCreateFilename(srcml_filename, 
+							xmlParseCharEncoding(archive->encoding ? archive->encoding->c_str() : 0));
     try {
 
-        archive->reader = new srcMLSAX2Reader(srcml_filename);
+        archive->reader = new srcMLSAX2Reader(archive->input, archive->encoding ? archive->encoding->c_str() : 0);
 
     } catch(...) {
 
@@ -1029,10 +1030,11 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
 
     if(archive == NULL || buffer == NULL || buffer_size <= 0) return SRCML_STATUS_ERROR;
 
-    archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, xmlParseCharEncoding(0));
+    archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, //XML_CHAR_ENCODING_NONE
+						   xmlParseCharEncoding(archive->encoding ? archive->encoding->c_str() : 0));
     try {
 
-        archive->reader = new srcMLSAX2Reader(archive->input);
+        archive->reader = new srcMLSAX2Reader(archive->input, archive->encoding ? archive->encoding->c_str() : 0);
 
     } catch(...) {
 
@@ -1062,10 +1064,11 @@ int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
     if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_ERROR;
 
-    archive->input = xmlParserInputBufferCreateFile(srcml_file, xmlParseCharEncoding(0));
+    archive->input = xmlParserInputBufferCreateFile(srcml_file,
+						    xmlParseCharEncoding(archive->encoding ? archive->encoding->c_str() : 0));
     try {
 
-        archive->reader = new srcMLSAX2Reader(archive->input);
+        archive->reader = new srcMLSAX2Reader(archive->input, archive->encoding ? archive->encoding->c_str() : 0);
 
     } catch(...) {
 
@@ -1095,10 +1098,11 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
 
     if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_ERROR;
 
-    archive->input = xmlParserInputBufferCreateFd(srcml_fd, xmlParseCharEncoding(0));
+    archive->input = xmlParserInputBufferCreateFd(srcml_fd,
+						  xmlParseCharEncoding(archive->encoding ? archive->encoding->c_str() : 0));
     try {
 
-        archive->reader = new srcMLSAX2Reader(archive->input);
+        archive->reader = new srcMLSAX2Reader(archive->input, archive->encoding ? archive->encoding->c_str() : 0);
 
     } catch(...) {
 

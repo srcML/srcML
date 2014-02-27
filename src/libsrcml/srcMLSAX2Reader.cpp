@@ -88,8 +88,8 @@ srcMLSAX2Reader::srcMLSAX2Reader(const char * filename)
  *
  * Construct a srcMLSAX2Reader using a parser input buffer
  */
-srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input)
-    : control(input), read_root(false) {
+srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input, const char * encoding)
+    : control(input, encoding), read_root(false) {
 
     thread_args args = { &control, &handler };
 

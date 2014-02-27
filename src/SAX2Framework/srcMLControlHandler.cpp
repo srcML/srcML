@@ -67,11 +67,12 @@ srcMLControlHandler::srcMLControlHandler(const char * filename) : sax2_handler()
  *
  * Constructor
  */
-srcMLControlHandler::srcMLControlHandler(xmlParserInputBufferPtr input) : sax2_handler(), pop_input(true) {
+srcMLControlHandler::srcMLControlHandler(xmlParserInputBufferPtr input, const char * encoding) : sax2_handler(), pop_input(true) {
 
     srcml_control_handler_init();
 
-    ctxt = SAX2FrameworkCreateParserCtxt(input);
+    ctxt = SAX2FrameworkCreateParserCtxt(input, encoding);
+
     if(ctxt == NULL) throw std::string("File does not exist");
     sax = factory();
 
@@ -226,8 +227,9 @@ void srcMLControlHandler::parse(srcMLHandler * handler) {
     xmlSAXHandlerPtr save_sax = ctxt->sax;
     ctxt->sax = &sax;
     ctxt->_private = &sax2_handler;
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     int status = xmlParseDocument(ctxt);
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     ctxt->sax = save_sax;
 
     if(status != 0) {
@@ -237,6 +239,7 @@ void srcMLControlHandler::parse(srcMLHandler * handler) {
         size_t str_length = strlen(ep->message);
         ep->message[str_length - 1] = '\0';
         SAXError error = { std::string((const char *)ep->message), ep->code };
+
         throw error;
     }
 
