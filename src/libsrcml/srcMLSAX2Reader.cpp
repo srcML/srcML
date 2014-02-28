@@ -1,8 +1,7 @@
 /**
  * @file srcMLSAX2Reader.cpp
- * @copyright
  *
- * Copyright (C) 2013-2014  SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,11 +34,11 @@
  */
 struct thread_args {
 
-  /** control for sax processing */
-  srcMLControlHandler * control;
+    /** control for sax processing */
+    srcMLControlHandler * control;
 
-  /** handler with hooks for sax processing */
-  srcMLReaderHandler * handler;
+    /** handler with hooks for sax processing */
+    srcMLReaderHandler * handler;
 
 };
 
@@ -51,17 +50,19 @@ struct thread_args {
  */
 void * start_routine(void * arguments) {
 
-  thread_args * args = (thread_args *)arguments;
+    thread_args * args = (thread_args *)arguments;
 
-  try { 
-    args->control->parse(args->handler);
-  } catch(SAXError error) {
+    try {
+        args->control->parse(args->handler);
+    } catch(SAXError error) {
 
-    if(!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END))
-      fprintf(stderr, "Error Parsing: %s", error.message.c_str());
-  }
+        if(!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END))
+            fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
 
-  return 0;
+	// might have to release a lock here or set is_done;
+    }
+
+    return 0;
 
 }
 
@@ -71,13 +72,13 @@ void * start_routine(void * arguments) {
  *
  * Construct a srcMLSAX2Reader using a filename
  */
-srcMLSAX2Reader::srcMLSAX2Reader(const char * filename) 
-  : control(filename) {
+srcMLSAX2Reader::srcMLSAX2Reader(const char * filename)
+    : control(filename), read_root(false) {
 
-  thread_args args = { &control, &handler };
+    thread_args args = { &control, &handler };
 
-  thread = new boost::thread(start_routine, &args);
-  handler.wait();
+    thread = new boost::thread(start_routine, &args);
+    handler.wait();
 
 }
 
@@ -87,13 +88,13 @@ srcMLSAX2Reader::srcMLSAX2Reader(const char * filename)
  *
  * Construct a srcMLSAX2Reader using a parser input buffer
  */
-srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input) 
-  : control(input) {
+srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input)
+    : control(input), read_root(false) {
 
-  thread_args args = { &control, &handler };
+    thread_args args = { &control, &handler };
 
-  thread = new boost::thread(start_routine, &args);
-  handler.wait();
+    thread = new boost::thread(start_routine, &args);
+    handler.wait();
 
 }
 
@@ -104,9 +105,9 @@ srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input)
  */
 srcMLSAX2Reader::~srcMLSAX2Reader() {
 
-  handler.stop();
-  thread->join();
-  delete thread;
+    handler.stop();
+    thread->join();
+    delete thread;
 
 }
 
@@ -128,28 +129,30 @@ srcMLSAX2Reader::~srcMLSAX2Reader() {
  * @returns 1 on success and 0 on failure.
  */
 int srcMLSAX2Reader::readRootUnitAttributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
-                                        boost::optional<std::string> & directory, boost::optional<std::string> & version,
-                                        std::vector<std::string> & attributes,
-                                        std::vector<std::string> & prefixes,
-                                        std::vector<std::string> & namespaces,
-                                        OPTION_TYPE & options,
-					int & tabstop,
-					std::vector<std::string> & user_macro_list) {
+                                            boost::optional<std::string> & directory, boost::optional<std::string> & version,
+                                            std::vector<std::string> & attributes,
+                                            std::vector<std::string> & prefixes,
+                                            std::vector<std::string> & namespaces,
+                                            OPTION_TYPE & options,
+                                            int & tabstop,
+                                            std::vector<std::string> & user_macro_list) {
 
-  if(handler.read_root) return 0;
+    if(read_root || handler.read_root) return 0;
 
-  language = handler.archive->language;
-  filename = handler.archive->filename;
-  directory = handler.archive->directory;
-  version = handler.archive->version;
-  attributes = handler.archive->attributes;
-  prefixes = handler.archive->prefixes;
-  namespaces = handler.archive->namespaces;
-  options = handler.archive->options;
-  tabstop = handler.archive->tabstop;
-  user_macro_list = handler.archive->user_macro_list;
+    language.swap(handler.archive->language);
+    filename.swap(handler.archive->filename);
+    directory.swap(handler.archive->directory);
+    version.swap(handler.archive->version);
+    attributes.swap(handler.archive->attributes);
+    prefixes.swap(handler.archive->prefixes);
+    namespaces.swap(handler.archive->namespaces);
+    options = handler.archive->options;
+    tabstop = handler.archive->tabstop;
+    user_macro_list.swap(handler.archive->user_macro_list);
 
-  return 1;
+    read_root = true;
+
+    return 1;
 }
 
 /**
@@ -164,48 +167,72 @@ int srcMLSAX2Reader::readRootUnitAttributes(boost::optional<std::string> & langu
  * @returns 1 on success and 0 on failure.
  */
 int srcMLSAX2Reader::readUnitAttributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
-                                    boost::optional<std::string> & directory, boost::optional<std::string> & version) {
+                                        boost::optional<std::string> & directory, boost::optional<std::string> & version) {
 
-  if(handler.is_done) return 0;
+    if(handler.is_done) return 0;
+    handler.skip = true;
+    handler.collect_unit_attributes = true;
+    handler.resume_and_wait();
+    handler.collect_unit_attributes = false;
+    handler.skip = false;
+    if(handler.is_done) return 0;
 
-  handler.collect_unit_attributes = true;
-  handler.resume_and_wait();
-  handler.collect_unit_attributes = false;
+    language.swap(handler.unit->language);
+    filename.swap(handler.unit->filename);
+    directory.swap(handler.unit->directory);
+    version.swap(handler.unit->version);
 
-  if(handler.is_done) return 0;
-
-  language = handler.unit->language;
-  filename = handler.unit->filename;
-  directory = handler.unit->directory;
-  version = handler.unit->version;
-
-  return 1;
+    return 1;
 
 }
 
+
 /**
  * readsrcML
- * 
- * Read the next unit from a srcML Archive
- * and return it as a std::string. Uses
- * readsrcML(xmlTextWriterPtr writer).
+ * @param unit location in which to read srcML unit.
  *
- * @returns string on success and finished return a 0.
+ * Read the next unit from a srcML Archive
+ * and return in the passed string parameter.
+ *
+ * @returns 1 on success and 0 if done
  */
-boost::optional<std::string>  srcMLSAX2Reader::readsrcML() {
+int srcMLSAX2Reader::readsrcML(boost::optional<std::string> & unit) {
 
-  if(handler.is_done) return 0;
-  handler.collect_srcml = true;
-  handler.resume_and_wait();
-  handler.collect_srcml = false;
+    if(unit) unit = boost::optional<std::string>();
 
-  if(handler.is_done) return 0;
+    if(handler.is_done) return 0;
+    handler.collect_srcml = true;
+    handler.resume_and_wait();
+    handler.collect_srcml = false;
+    if(handler.is_done) return 0;
 
-  boost::optional<std::string>  unit = 0;
-  try {
-    if(handler.unit->unit) unit = handler.unit->unit;
-  } catch(...) {}
+    unit.swap(handler.unit->unit);
 
-  return unit;
+    return unit ? 1 : 0;
+}
 
+/**
+ * readsrc
+ * @param unit location in which to read src unit.
+ *
+ * Read the next unit from a srcML Archive
+ * and return in the passed string parameter.
+ *
+ * @returns 1 on success and 0 if done
+ */
+int srcMLSAX2Reader::readsrc(UTF8OutputSource & output_handler) {
+
+    if(handler.is_done) return 0;
+    control.enable_comment(false);
+    control.enable_cdataBlock(false);
+    handler.output_handler = &output_handler;
+    handler.collect_src = true;
+    handler.resume_and_wait();
+    handler.collect_src = false;
+    handler.output_handler = 0;
+    control.enable_comment(true);
+    control.enable_cdataBlock(true);
+    if(handler.is_done) return 0;
+
+    return 1;
 }

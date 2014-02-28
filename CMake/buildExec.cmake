@@ -1,6 +1,7 @@
-# @copyright
-# 
-# Copyright (C) 2013-2014  SDML (www.srcML.org)
+##
+# @file buildExec.cmake
+#
+# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,5 +30,5 @@
 macro(srcMLExec EXEC_NAME EXEC_FILE)
     add_executable(${EXEC_NAME} ${EXEC_FILE})
     target_link_libraries(${EXEC_NAME} ${ARGN})
-    set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+    set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/srcml_export_list")
 endmacro()

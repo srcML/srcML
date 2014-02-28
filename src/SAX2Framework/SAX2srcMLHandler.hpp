@@ -1,35 +1,44 @@
-/*
-  @file SAX2srcMLHandler.hpp
-
-  Copyright (C) 2004-2013  SDML (www.sdml.info)
-
-  This file is part of the srcML SAX2 Framework.
-
-  The srcML SAX2 Framework is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  The srcML SAX2 Framework is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with the srcML SAX2 Framework; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+/**
+ * @file SAX2srcMLHandler.hpp
+ *
+ * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ *
+ * This file is part of the srcML SAX2 Framework.
+ *
+ * The srcML SAX2 Framework is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML SAX2 Framework is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML SAX2 Framework; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #ifndef INCLUDED_SAX2SRCMLHANDLER_HPP
 #define INCLUDED_SAX2SRCMLHANDLER_HPP
 
-#include <srcMLHandler.hpp>
 #include <srcMLElement.hpp>
+class srcMLHandler;
 
 #include <libxml/parser.h>
 
 #include <string>
 #include <vector>
+
+enum srcMLMode {
+
+  ROOT,
+  UNIT,
+  END_UNIT,
+  END_ROOT
+
+};
 
 /**
  * SAX2srcMLHandler
@@ -39,17 +48,20 @@
  */
 struct SAX2srcMLHandler {
 
-  /** hooks for processing */
-  srcMLHandler * process;
+    /** hooks for processing */
+    srcMLHandler * process;
 
-  /** temporary storage for root unit */
-  srcMLElement root;
+    /** temporary storage for root unit */
+    srcMLElement root;
 
-  /** temporary storage for meta data */
-  std::vector<srcMLElement> meta_tags;
+    /** temporary storage for meta data */
+    std::vector<srcMLElement> meta_tags;
 
-  /** used to detect root unit */
-  bool is_archive;
+    /** used to detect root unit */
+    bool is_archive;
+
+    /** the current parsing mode */
+    srcMLMode mode;
 };
 
 /**
@@ -94,8 +106,8 @@ void endDocument(void * ctx);
  * Caches root info and immediately calls supplied handlers function.
  */
 void startRoot(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                           int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                           const xmlChar ** attributes);
+               int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
+               const xmlChar ** attributes);
 
 
 /**
@@ -114,8 +126,8 @@ void startRoot(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
  * Detects archive and acts accordingly.
  */
 void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                           int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                           const xmlChar ** attributes);
+                         int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
+                         const xmlChar ** attributes);
 /**
  * startUnit
  * @param ctx an xmlParserCtxtPtr
@@ -132,8 +144,8 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
  * Immediately calls supplied handlers function.
  */
 void startUnit(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                           int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                           const xmlChar ** attributes);
+               int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
+               const xmlChar ** attributes);
 
 /**
  * startElementNs
@@ -151,8 +163,8 @@ void startUnit(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
  * Immediately calls supplied handlers function.
  */
 void startElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                           int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                           const xmlChar ** attributes);
+                    int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
+                    const xmlChar ** attributes);
 
 /**
  * endElementNs

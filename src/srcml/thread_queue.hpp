@@ -1,22 +1,30 @@
-/*
-  c-pthread-queue - c implementation of a bounded buffer queue using posix threads
-  Copyright (C) 2008  Matthew Dickinson
+/**
+ * @file thread_queue.hpp
+ *
+ * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ *
+ * This file is part of the srcML Toolkit.
+ *
+ * The srcML Toolkit is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML Toolkit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML Toolkit; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-#include <pthread.h>
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
+#include <boost/thread.hpp>
+#pragma GCC diagnostic warning "-Wunused-parameter"
+#pragma GCC diagnostic warning "-Wshorten-64-to-32"
 
 #ifndef THREAD_QUEUE_H
 #define THREAD_QUEUE_H
@@ -24,54 +32,60 @@
 template <typename Type, int Capacity>
 class ThreadQueue {
 public:
-    ThreadQueue() :
-        used(0), back_index(0), front_index(0),
-        mutex(    (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER),
-        cond_full( (pthread_cond_t)PTHREAD_COND_INITIALIZER),
-        cond_empty((pthread_cond_t)PTHREAD_COND_INITIALIZER)
-        {}
+    ThreadQueue() : qsize(0), back(0), front(0), empty(false) {}
 
+    /* puts an element in the back of the queue by swapping with parameter */
     void push(Type& value) {
-        pthread_mutex_lock(&mutex);
-        while (used == Capacity)
-            pthread_cond_wait(&cond_full, &mutex);
-        buffer[back_index].swap(value);
-        ++back_index;
-        back_index %= Capacity;
-        ++used;
-        pthread_mutex_unlock(&mutex);
-        pthread_cond_signal(&cond_empty);
+        {
+            boost::unique_lock<boost::mutex> lock(mutex);
+            while (qsize == Capacity)
+                cond_full.wait(lock);
+
+            buffer[back].swap(value);
+            ++back %= Capacity;
+            ++qsize;
+        }
+        cond_empty.notify_one();
     }
 
-    void pop(Type& place) {
-        pthread_mutex_lock(&mutex);
-        while (used == 0)
-            pthread_cond_wait(&cond_empty, &mutex);
-        place.swap(buffer[front_index]);
-        ++front_index;
-        front_index %= Capacity;
-        --used;
-        pthread_mutex_unlock(&mutex);
-        pthread_cond_signal(&cond_full);
+    /* removes the front element from the queue by swapping with parameter */
+    void pop(Type& value) {
+        {
+            boost::unique_lock<boost::mutex> lock(mutex);
+            while (qsize == 0 && !empty)
+                cond_empty.wait(lock);
+
+            if (qsize == 0 && empty)
+                value.swap(empty_request);
+            else {
+                value.swap(buffer[front]);
+                ++front %= Capacity;
+                --qsize;
+            }
+        }
+        cond_full.notify_one();
     }
 
-    int size() {
-        pthread_mutex_lock(&mutex);
-        int tsize = used;
-        pthread_mutex_unlock(&mutex);
-        return tsize;
+    void done() {
+        {
+            boost::unique_lock<boost::mutex> lock(mutex);
+            empty = true;
+        }
+        cond_empty.notify_all();
     }
 
     ~ThreadQueue() {}
 
 private:
     Type buffer[Capacity];
-    int used;
-    int back_index;
-    int front_index;
-    pthread_mutex_t mutex;
-    pthread_cond_t cond_full;
-    pthread_cond_t cond_empty;
+    int qsize;
+    int back;
+    int front;
+    Type empty_request;
+    bool empty;
+    boost::mutex mutex;
+    boost::condition_variable cond_full;
+    boost::condition_variable cond_empty;
 };
 
 #endif

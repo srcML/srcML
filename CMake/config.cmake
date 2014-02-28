@@ -1,6 +1,7 @@
-# @copyright
-# 
-# Copyright (C) 2013-2014  SDML (www.srcML.org)
+##
+# @file config.cmake
+#
+# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +19,7 @@
 
 
 # 
-# It is epxected that the windows dependency directoy will contain a folder
+# It is expected that the windows dependency directoy will contain a folder
 # named dep which will contain all of the dependencies. For windows.
 # 
 # The layout of the folder will be as follows.
@@ -31,17 +32,9 @@
 option(ENABLE_SVN_INTEGRATION "Build with SVN integration." OFF)
 set_property(GLOBAL PROPERTY SVN_ENABLED ${ENABLE_SVN_INTEGRATION})
 
-# Adding SAX to configuration.
-option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" ON)
-set_property(GLOBAL PROPERTY SAX2_ENABLED ${LIBSRCML_SAX2_ENABLED})
-
 # Dynamic Load libraries (Unix only)
 option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and libexslt" ON)
 set_property(GLOBAL PROPERTY DYNAMIC_ENABLED ${DYNAMIC_LOAD_ENABLED})
-
-# Adding build option for srcml executable.
-option(ENABLE_NEW_SRCML_EXEC_BUILD "Build the newer version of the srcML executable." OFF)
-set_property(GLOBAL PROPERTY ENABLE_NEW_SRCML_EXEC_BUILD ${ENABLE_NEW_SRCML_EXEC_BUILD})
 
 # Setting some windows only properties.
 # @todo this breaks mingw32 build.

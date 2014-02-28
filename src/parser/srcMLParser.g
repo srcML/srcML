@@ -1,121 +1,123 @@
-/*
-  srcMLParser.g
+/*!
+ * @file srcMLParser.g
+ * 
+ * @copyright Copyright (C) 2004-2014  SDML (www.srcML.org)
+ *
+ * This file is part of the srcML translator.
+ *
+ * The srcML translator is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML translator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML translator; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
-  Copyright (C) 2004-2014  SDML (www.sdml.info)
-
-  This file is part of the srcML translator.
-
-  The srcML translator is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  The srcML translator is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with the srcML translator; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-  Comments:
-
-  This is an ANTLR grammar file for the main part of the srcML translator.
-  It is a mixture of ANTLR code with C++ code mixed in for the actions.
-
-  The grammar is for the C++ language.  It is unlike typical C++ parsers for many
-  reasons:
-
-  - ANTLR uses this code to generate a recursive-descent LL(k) parser.  This
-  parser starts at the leftmost token and tries to match the tokens to C++
-  source code.
-
-  - Additional classes are used to implement an event-driven parser.  Input
-  to the parser is a stream of tokens from the lexer.  Output from this parser
-  is a new stream of tokens.  The parser user calls nextToken repeatedly to
-  process all of the tokens.
-
-  - The parser is designed to be used interactively.  When the nextToken is
-  called a minimal number of input tokens are read to generate an output token.
-  This makes the parser very responsive and able to issue start statement
-  tokens before the end of the statement is reached.
-
-  - The parser insert additional tokens into the input stream corresponding to
-  start and end tags.
-
-  Matching:
-
-  - The parser does not attempt to detect invalid C++ code.  It is designed to
-  match well-formed C++ code.  It assumes that the input C++ code is valid.
-
-  - Whitespace and comments are handled in StreamMLParser.  They are diverted
-  from the input token stream and inserted into the output token stream.  There
-  is some processing to match these skipped tokens with the generated tokens
-  from the parser.
-
-  - There is no symbol table.  I repeat:  There is no symbol table.  No
-  grammar rules are based on the type of an identifier.
-
-  - Keywords are used to identify statements.  They are not used for types.
-  Type keywords are in tokens just like other identifiers.
-
-  Implementation:
-
-  - The state of the current parsing is stored in modes.  The modes use flags
-  to remember what state the parsing was in during the previous parse.
-
-  - Element start tokens are generated using the method startElement.  The
-  starting elements are stored in a stack in the current mode.
-
-  - Element end tokens are generated automatically when a mode ends.  The stack
-  of start tokens is popped of and ended automatically.
-
-  - Do not end an element explicitly.  End the mode instead.
-
-  Helpers:
-
-  - The class StreamParser provides stream processing.  The class StreamMLParser
-  provides markup language stream processing.  These are template classes which
-  use this parser as a template parameter base.
-
-  - The class TokenParser provides the virtual table for methods in StreamParser
-  that are called in this parser.
-
-  - Obviously this needs to be untangled but is not as easy as it should be.
-
-  - Additional methods for the parser are declared in class Mode.  These methods
-  only provide general support for the parser.  They do not, repeat, do not, contain
-  token specific processing.
-
-  Terminology:
-
-  The use of C++ terminology is sometimes contradictory.  This is especially true
-  for declarations and definitions, since a definition can also serve as a
-  declaration.  The following rules are used:
-
-  declaration - stating that something exists:
-
-      function declaration:  int f();
-      class declaration:     class A;
-      struct declaration:    struct A;
-      union declaration:     union A;
-      method declaration:    virtual int f(); // in class
-
-  definition - defining the layout or interface
-
-      function definition:  int f() {}
-      class definition:     class A { int a; }
-      struct definition:    struct A { int a; }
-      union definition:     union A { int a; }
-      method definition:    int A::f() {} // in or out of class
-
-  C vs. C++
-
-  Additional keywords in C++ may be identifiers in C.  This is handled in the
-  lexer which has symbols for all C++ (and C) keywords, but only will find them in
-  the input if in C++ mode.  They are matched as NAME in C mode.
-*/
+/*!
+ * Comments:
+ *
+ * This is an ANTLR grammar file for the main part of the srcML translator.
+ * It is a mixture of ANTLR code with C++ code mixed in for the actions.
+ *
+ * The grammar is for the C++ language.  It is unlike typical C++ parsers for many
+ * reasons:
+ *
+ * - ANTLR uses this code to generate a recursive-descent LL(k) parser.  This
+ * parser starts at the leftmost token and tries to match the tokens to C++
+ * source code.
+ *
+ * - Additional classes are used to implement an event-driven parser.  Input
+ * to the parser is a stream of tokens from the lexer.  Output from this parser
+ * is a new stream of tokens.  The parser user calls nextToken repeatedly to
+ * process all of the tokens.
+ *
+ * - The parser is designed to be used interactively.  When the nextToken is
+ * called a minimal number of input tokens are read to generate an output token.
+ * This makes the parser very responsive and able to issue start statement
+ * tokens before the end of the statement is reached.
+ *
+ * - The parser insert additional tokens into the input stream corresponding to
+ * start and end tags.
+ *
+ * Matching:
+ *
+ * - The parser does not attempt to detect invalid C++ code.  It is designed to
+ * match well-formed C++ code.  It assumes that the input C++ code is valid.
+ *
+ * - Whitespace and comments are handled in StreamMLParser.  They are diverted
+ * from the input token stream and inserted into the output token stream.  There
+ * is some processing to match these skipped tokens with the generated tokens
+ * from the parser.
+ *
+ * - There is no symbol table.  I repeat:  There is no symbol table.  No
+ * grammar rules are based on the type of an identifier.
+ *
+ * - Keywords are used to identify statements.  They are not used for types.
+ * Type keywords are in tokens just like other identifiers.
+ *
+ * Implementation:
+ *
+ * - The state of the current parsing is stored in modes.  The modes use flags
+ * to remember what state the parsing was in during the previous parse.
+ *
+ * - Element start tokens are generated using the method startElement.  The
+ * starting elements are stored in a stack in the current mode.
+ *
+ * - Element end tokens are generated automatically when a mode ends.  The stack
+ * of start tokens is popped of and ended automatically.
+ *
+ * - Do not end an element explicitly.  End the mode instead.
+ *
+ * Helpers:
+ *
+ * - The class StreamParser provides stream processing.  The class StreamMLParser
+ * provides markup language stream processing.  These are template classes which
+ * use this parser as a template parameter base.
+ *
+ * - The class TokenParser provides the virtual table for methods in StreamParser
+ * that are called in this parser.
+ *
+ * - Obviously this needs to be untangled but is not as easy as it should be.
+ *
+ * - Additional methods for the parser are declared in class Mode.  These methods
+ * only provide general support for the parser.  They do not, repeat, do not, contain
+ * token specific processing.
+ *
+ * Terminology:
+ *
+ * The use of C++ terminology is sometimes contradictory.  This is especially true
+ * for declarations and definitions, since a definition can also serve as a
+ * declaration.  The following rules are used:
+ *
+ * declaration - stating that something exists:
+ *
+ *     function declaration:  int f();
+ *     class declaration:     class A;
+ *     struct declaration:    struct A;
+ *     union declaration:     union A;
+ *     method declaration:    virtual int f(); // in class
+ *
+ * definition - defining the layout or interface
+ *
+ *     function definition:  int f() {}
+ *     class definition:     class A { int a; }
+ *     struct definition:    struct A { int a; }
+ *     union definition:     union A { int a; }
+ *     method definition:    int A::f() {} // in or out of class
+ *
+ * C vs. C++
+ *
+ * Additional keywords in C++ may be identifiers in C.  This is handled in the
+ * lexer which has symbols for all C++ (and C) keywords, but only will find them in
+ * the input if in C++ mode.  They are matched as NAME in C mode.
+ */
 
 header "pre_include_hpp" {
 #pragma GCC diagnostic ignored "-Wunused-parameter"
@@ -2388,10 +2390,6 @@ block_end[] { ENTRY_DEBUG } :
             if (inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
 
-            // @todo  Need a test case that makes this necessary
-            // end of block may lead to adjustment of cpp modes
-            cppmode_adjust();
-
         }
 ;
 
@@ -2855,6 +2853,17 @@ condition[] { ENTRY_DEBUG } :
             setMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
         }
         LPAREN
+
+        {
+            int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; 
+            pattern_check(stmt_type, secondtoken, type_count);
+            if(stmt_type == VARIABLE) {
+                startNewMode(MODE_INTERNAL_END_PAREN);
+                for_initialization_variable_declaration(type_count);
+            }
+
+        }
+
 ;
 
 // perform an arbitrary look ahead looking for a pattern
@@ -6102,7 +6111,7 @@ preprocessor[] { ENTRY_DEBUG
 
             tp.setType(SCPP_DEFINE);
         }
-        (cpp_define_name (options { greedy = true; } : cpp_define_value)*)* |
+        (options { greedy = true; } : cpp_define_name (options { greedy = true; } : cpp_define_value)*)* |
 
         IFNDEF
         {
@@ -6220,8 +6229,16 @@ catch[...] {
 cpp_garbage[] :
 
  ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | EOF)  /* EOF */
-
 ;
+
+cpp_check_end[] returns[bool is_end = false] {
+
+ if(LA(1) == EOL || LA(1) == LINECOMMENT_START || LA(1) == COMMENT_START || LA(1) == JAVADOC_COMMENT_START || LA(1) == DOXYGEN_COMMENT_START || LA(1) == LINE_DOXYGEN_COMMENT_START || LA(1) == EOF)  /* EOF */
+     return true;
+
+ return false;
+
+}:;
 
 // skip to eol
 eol_skip[int directive_token, bool markblockzero] {
@@ -6494,27 +6511,6 @@ cppmode_cleanup[] {
         ENTRY_DEBUG 
 } :;
 
-// ended modes that may lead to needed updates
-cppmode_adjust[] {
-
-    if (!isoption(parseoptions, OPTION_CPP_TEXT_ELSE) &&
-        !cppmode.empty() &&
-        cppmode.top().isclosed &&
-        size() < cppmode.top().statesize.back())
-
-        if (size() == cppmode.top().statesize[cppmode.top().statesize.size() - 1 - 1]) {
-
-            // end if part of cppmode
-            while (size() > cppmode.top().statesize.front())
-                endMode();
-
-            // done with this cppmode
-            cppmode.pop();
-       }
-
-    ENTRY_DEBUG 
-} :;
-
 // line continuation character
 line_continuation[] { ENTRY_DEBUG } :
         {
@@ -6529,12 +6525,74 @@ cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG 
 
         set_bool[markblockzero, LA(1) == CONSTANTS && LT(1)->getText() == "0"]
 
-        complete_expression
+        cpp_complete_expression
+;
+
+// an expression
+cpp_expression[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
+
+        { !inputState->guessing }?
+        (expression_process
+            expression_part_plus_linq[type]
+        ) | cpp_garbage
+
+;
+exception
+catch[...] {
+
+        startNewMode(MODE_LOCAL);
+        startElement(SNAME);
+        consume();
+        endMode();
+
+}
+
+// match a complete expression no stream
+cpp_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
+        }
+        (options { greedy = true; } :
+
+        // commas as in a list
+        { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
+        comma |
+
+        // right parentheses, unless we are in a pair of parentheses in an expression
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
+
+        // argument mode (as part of call)
+        { inMode(MODE_ARGUMENT) }? argument |
+
+        // expression with right parentheses if a previous match is in one
+        { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? cpp_expression |
+
+        COLON)*
 ;
 
 // symbol in cpp
 cpp_symbol[] { ENTRY_DEBUG } :
-        simple_identifier
+        (options { generateAmbigWarnings = false; } :
+            
+            simple_identifier | 
+
+        {
+
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+
+        }
+
+        cpp_garbage
+
+        {
+
+        endMode();
+
+        }
+    )
+
 ;
 
 cpp_define_name[] { CompleteElement element(this);
@@ -6547,7 +6605,7 @@ cpp_define_name[] { CompleteElement element(this);
 
             startElement(SCPP_MACRO_DEFN);
         }
-        simple_identifier (options { greedy = true; } : { line_pos == LT(1)->getLine() && pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
+        cpp_symbol (options { greedy = true; } : { line_pos == LT(1)->getLine() && pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
 ;
 
 cpp_define_parameter_list[] { CompleteElement element(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :

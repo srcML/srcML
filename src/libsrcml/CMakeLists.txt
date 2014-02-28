@@ -1,8 +1,7 @@
+##
+# @file CMakeLists.txt
 #
-#    CMakeLists.txt
-# @copyright
-# 
-# Copyright (C) 2013-2014  SDML (www.srcML.org)
+# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,4 +34,4 @@ if(NOT ${SAX2_ENABLED})
 endif()
 
 add_library(libsrcml OBJECT ${LIBSRCML_HEADERS} ${LIBSRCML_SOURCE})
-
+add_dependencies(libsrcml parser translator)

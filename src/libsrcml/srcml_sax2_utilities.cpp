@@ -1,8 +1,7 @@
 /**
  * @file srcml_sax2_utilities.cpp
- * @copyright
  *
- * Copyright (C) 2013-2014  SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +19,14 @@
  */
 
 #include <srcml_sax2_utilities.hpp>
+#include <srcMLSAX2Reader.hpp>
 #include <srcml.h>
 
-#include <ExtractUnitsSrc.hpp>
-#include <Properties.hpp>
+#include <sstream>
 #include <XPathQueryUnits.hpp>
 #include <XSLTUnits.hpp>
 #include <RelaxNGUnits.hpp>
+
 
 #include <srcexfun.hpp>
 
@@ -44,45 +44,48 @@
  * @param options srcml options
  * @param unit unit number to extract
  *
- * 
+ *
  * Extract a given unit from supplied srcML input buffer.
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
+int srcml_extract_text(const char * input_buffer, size_t size, UTF8OutputSource & output_handler, OPTION_TYPE options, int unit) {
 
-  if(output_buffer == NULL) return SRCML_STATUS_ERROR;
+    if(input_buffer == NULL || size == 0) return SRCML_STATUS_ERROR;
 
-  // setup parser
-  xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(input_buffer, (int)size);
-  if(ctxt == NULL) return SRCML_STATUS_ERROR;
+    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(input_buffer, (int)size, XML_CHAR_ENCODING_NONE);
 
-  // setup sax handler
-  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
-  xmlSAXHandlerPtr sax_save = ctxt->sax;
-  ctxt->sax = &sax;
+    if(input == NULL) return SRCML_STATUS_ERROR;
 
-  // setup process handling
-  ExtractUnitsSrc process(output_buffer);
+    srcMLSAX2Reader reader(input);
+    reader.readsrc(output_handler);
 
-  // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, unit, "");
-  ctxt->_private = &state;
+    return SRCML_STATUS_OK;
 
-  // process the document
-  int status = srcMLParseDocument(ctxt, true);
+}
 
-  // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = sax_save;
+/**
+ * srcml_extract_text_filename
+ * @param ifilename name of srcML file to extract text
+ * @param ofilename name of output file to put source
+ * @param encoding output encoding
+ * @param options srcml options
+ * @param unit unit number to extract
+ *
+ *
+ * Extract a given unit from supplied srcML directly to file.
+ *
+ * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ */
+int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, OPTION_TYPE options, int unit) {
 
-  // all done with parsing
-  xmlFreeParserCtxt(ctxt);
+    UTF8OutputSource output_handler(ofilename, encoding);
 
-  // make sure we did not end early
-  if (state.unit && state.count < state.unit)
-    throw OutOfRangeUnitError(state.count);
+    srcMLSAX2Reader reader(ifilename);
+    reader.readsrc(output_handler);
 
-  return status;
+    return SRCML_STATUS_OK;
+
 }
 
 /**
@@ -99,74 +102,62 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
  */
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpaths[], int fd, OPTION_TYPE options) {
 
-  if(input_buffer == NULL || context_element == NULL || xpaths == NULL || xpaths[0] == NULL || fd < 0) return SRCML_STATUS_ERROR;
+    if(input_buffer == NULL || context_element == NULL || xpaths == NULL || xpaths[0] == NULL || fd < 0) return SRCML_STATUS_ERROR;
 
-  // relative xpath changed to at any level
-  std::string s = xpaths[0];
-  //  if (s[0] != '/')
-  //    s = "//" + s;
+    // relative xpath changed to at any level
+    std::string s = xpaths[0];
+    //  if (s[0] != '/')
+    //    s = "//" + s;
 
-  // compile the xpath that will be applied to each unit
-  xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST s.c_str());
-  if (compiled_xpath == 0) {
-    fprintf(stderr, "srcml2src:  Unable to compile XPath '%s'\n", s.c_str());
-    return SRCML_STATUS_ERROR;
-  }
+    // compile the xpath that will be applied to each unit
+    xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST s.c_str());
+    if (compiled_xpath == 0) {
+        fprintf(stderr, "srcml2src:  Unable to compile XPath '%s'\n", s.c_str());
+        return SRCML_STATUS_ERROR;
+    }
 
-  // setup parser
-  xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input_buffer);
-  if (ctxt == NULL) return SRCML_STATUS_ERROR;
+    // setup process handling
+    XPathQueryUnits process(options, compiled_xpath, fd);
+    srcMLControlHandler control(input_buffer);
 
-  // setup sax handler
-  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
-  xmlSAXHandlerPtr sax_save = ctxt->sax;
-  ctxt->sax = &sax;
+    try {
 
-  // setup process handling
-  XPathQueryUnits process(0, options, compiled_xpath, fd);
+      control.parse(&process);
 
-  // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, -1, "");
-  ctxt->_private = &state;
+    } catch(SAXError error) {
 
-  // process the document
-  int status = srcMLParseDocument(ctxt, false);
+      fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
 
-  // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = sax_save;
+    }
 
-  // all done with parsing
-  xmlParserInputPtr input = inputPop(ctxt);
-  input->buf = NULL;
-  xmlFreeInputStream(input);
-  xmlFreeParserCtxt(ctxt);
-  xmlXPathFreeCompExpr(compiled_xpath);
+    xmlXPathFreeCompExpr(compiled_xpath);
 
-  return status;
+    return 0;//status;
+
 }
 
 /**
  * dlexsltRegisterAll
- * 
+ *
  * Allow for all exslt functions by dynamic load
  * of exslt library.
  */
 void dlexsltRegisterAll(void * handle) {
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-  typedef void (*exsltRegisterAll_function)();
+    typedef void (*exsltRegisterAll_function)();
 
-  dlerror();
-  exsltRegisterAll_function exsltRegisterAll;
-  *(void **)(&exsltRegisterAll) = dlsym(handle, "exsltRegisterAll");
-  char* error;
-  if ((error = dlerror()) != NULL) {
-    dlclose(handle);
-    return;
-  }
+    dlerror();
+    exsltRegisterAll_function exsltRegisterAll;
+    *(void **)(&exsltRegisterAll) = dlsym(handle, "exsltRegisterAll");
+    char* error;
+    if ((error = dlerror()) != NULL) {
+        dlclose(handle);
+        return;
+    }
 
-  // allow for all exslt functions
-  exsltRegisterAll();
+    // allow for all exslt functions
+    exsltRegisterAll();
 
 #endif
 
@@ -188,98 +179,88 @@ void dlexsltRegisterAll(void * handle) {
  */
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xslts[], const char* params[], int paramcount, int fd, OPTION_TYPE options) {
 
-  if(input_buffer == NULL || context_element == NULL || xslts == NULL || xslts[0] == NULL || fd < 0) return SRCML_STATUS_ERROR;
+    if(input_buffer == NULL || context_element == NULL || xslts == NULL || xslts[0] == NULL || fd < 0) return SRCML_STATUS_ERROR;
 
-  xmlInitParser();
+    xmlInitParser();
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-  typedef xsltStylesheetPtr (*xsltParseStylesheetFile_function) (const xmlChar*);
-  typedef void (*xsltCleanupGlobals_function)();
-  typedef void (*xsltFreeStylesheet_function)(xsltStylesheetPtr);
+    typedef xsltStylesheetPtr (*xsltParseStylesheetFile_function) (const xmlChar*);
+    typedef void (*xsltCleanupGlobals_function)();
+    typedef void (*xsltFreeStylesheet_function)(xsltStylesheetPtr);
 
-  void* handle = dlopen("libexslt.so", RTLD_LAZY);
-  if (!handle) {
-    handle = dlopen("libexslt.so.0", RTLD_LAZY);
+    void* handle = dlopen("libexslt.so", RTLD_LAZY);
     if (!handle) {
-      handle = dlopen("libexslt.dylib", RTLD_LAZY);
-      if (!handle) {
-        fprintf(stderr, "Unable to open libexslt library\n");
-        return SRCML_STATUS_ERROR;
-      }
+        handle = dlopen("libexslt.so.0", RTLD_LAZY);
+        if (!handle) {
+            handle = dlopen("libexslt.dylib", RTLD_LAZY);
+            if (!handle) {
+                fprintf(stderr, "Unable to open libexslt library\n");
+                return SRCML_STATUS_ERROR;
+            }
+        }
     }
-  }
 
-  // allow for all exstl functions
-  dlexsltRegisterAll(handle);
+    // allow for all exstl functions
+    dlexsltRegisterAll(handle);
 
-  dlerror();
-  xsltParseStylesheetFile_function xsltParseStylesheetFile;
-  *(void **)(&xsltParseStylesheetFile) = dlsym(handle, "xsltParseStylesheetFile");
-  char* error;
-  if ((error = dlerror()) != NULL) {
-    dlclose(handle);
-    return SRCML_STATUS_ERROR;
-  }
+    dlerror();
+    xsltParseStylesheetFile_function xsltParseStylesheetFile;
+    *(void **)(&xsltParseStylesheetFile) = dlsym(handle, "xsltParseStylesheetFile");
+    char* error;
+    if ((error = dlerror()) != NULL) {
+        dlclose(handle);
+        return SRCML_STATUS_ERROR;
+    }
 
-  dlerror();
-  xsltCleanupGlobals_function xsltCleanupGlobals;
-  *(void **)(&xsltCleanupGlobals) = dlsym(handle, "xsltCleanupGlobals");
-  if ((error = dlerror()) != NULL) {
-    dlclose(handle);
-    return SRCML_STATUS_ERROR;
-  }
+    dlerror();
+    xsltCleanupGlobals_function xsltCleanupGlobals;
+    *(void **)(&xsltCleanupGlobals) = dlsym(handle, "xsltCleanupGlobals");
+    if ((error = dlerror()) != NULL) {
+        dlclose(handle);
+        return SRCML_STATUS_ERROR;
+    }
 
-  dlerror();
-  xsltFreeStylesheet_function xsltFreeStylesheet;
-  *(void **)(&xsltFreeStylesheet) = dlsym(handle, "xsltFreeStylesheet");
-  if ((error = dlerror()) != NULL) {
-    dlclose(handle);
-    return SRCML_STATUS_ERROR;
-  }
+    dlerror();
+    xsltFreeStylesheet_function xsltFreeStylesheet;
+    *(void **)(&xsltFreeStylesheet) = dlsym(handle, "xsltFreeStylesheet");
+    if ((error = dlerror()) != NULL) {
+        dlclose(handle);
+        return SRCML_STATUS_ERROR;
+    }
 #endif
 
-  // parse the stylesheet
-  xsltStylesheetPtr stylesheet = xsltParseStylesheetFile(BAD_CAST xslts[0]);
-  if (!stylesheet)
-    return SRCML_STATUS_ERROR;
+    // parse the stylesheet
+    xsltStylesheetPtr stylesheet = xsltParseStylesheetFile(BAD_CAST xslts[0]);
+    if (!stylesheet)
+        return SRCML_STATUS_ERROR;
 
-  // setup parser
-  xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input_buffer);
-  if (ctxt == NULL) return SRCML_STATUS_ERROR;
 
-  // setup sax handler
-  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
-  xmlSAXHandlerPtr sax_save = ctxt->sax;
-  ctxt->sax = &sax;
 
-  // setup process handling
-  XSLTUnits process(context_element, 0, options, stylesheet, params, fd);
+    xsltsrcMLRegister();
 
-  // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, -1, "");
-  ctxt->_private = &state;
+    // setup process handling
+    XSLTUnits process(context_element, options, stylesheet, params, fd);
+    srcMLControlHandler control(input_buffer);
 
-  xsltsrcMLRegister();
+    try {
 
-  // process the document
-  int status = srcMLParseDocument(ctxt, false);
+      control.parse(&process);
 
-  // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = sax_save;
+    } catch(SAXError error) {
 
-  xsltFreeStylesheet(stylesheet);
-  xsltCleanupGlobals();
-  // all done with parsing
-  xmlParserInputPtr input = inputPop(ctxt);
-  input->buf = NULL;
-  xmlFreeInputStream(input);
-  xmlFreeParserCtxt(ctxt);
+      fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
+
+    }
+
+    xsltFreeStylesheet(stylesheet);
+    xsltCleanupGlobals();
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-  dlclose(handle);
+    dlclose(handle);
 #endif
 
-  return status;
+    return 0;//status;
+
 }
 
 /**
@@ -295,65 +276,60 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
  */
 int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int fd, OPTION_TYPE options) {
 
-  if(input_buffer == NULL || xslts == NULL || xslts[0] == NULL || fd < 0) return SRCML_STATUS_ERROR;
-  xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input_buffer);
-  if (ctxt == NULL) return SRCML_STATUS_ERROR;
+    if(input_buffer == NULL || xslts == NULL || xslts[0] == NULL || fd < 0) return SRCML_STATUS_ERROR;
 
-  // setup sax handler
-  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
-  xmlSAXHandlerPtr sax_save = ctxt->sax;
-  ctxt->sax = &sax;
+    xmlRelaxNGParserCtxtPtr relaxng = xmlRelaxNGNewParserCtxt(xslts[0]);
+    xmlRelaxNGPtr rng = xmlRelaxNGParse(relaxng);
+    xmlRelaxNGValidCtxtPtr rngctx = xmlRelaxNGNewValidCtxt(rng);
 
-  xmlRelaxNGParserCtxtPtr relaxng = xmlRelaxNGNewParserCtxt(xslts[0]);
-  xmlRelaxNGPtr rng = xmlRelaxNGParse(relaxng);
-  xmlRelaxNGValidCtxtPtr rngctx = xmlRelaxNGNewValidCtxt(rng);
-  RelaxNGUnits process(0, options, rngctx, fd);
+    RelaxNGUnits process(options, rngctx, fd);
+    srcMLControlHandler control(input_buffer);
 
-  // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, -1, "");
-  ctxt->_private = &state;
+    try {
 
-  int status = srcMLParseDocument(ctxt, false);
+      control.parse(&process);
 
-  ctxt->sax = sax_save;
+    } catch(SAXError error) {
 
-  xmlParserInputPtr input = inputPop(ctxt);
-  input->buf = NULL;
-  xmlFreeInputStream(input);
-  xmlFreeParserCtxt(ctxt);
-  xmlRelaxNGFreeValidCtxt(rngctx);
-  xmlRelaxNGFree(rng);
-  xmlRelaxNGFreeParserCtxt(relaxng);
+      fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
 
-  return status;
+    }
+
+    xmlRelaxNGFreeValidCtxt(rngctx);
+    xmlRelaxNGFree(rng);
+    xmlRelaxNGFreeParserCtxt(relaxng);
+
+    return 0;//status;
+
 }
 
 
-/** 
+/**
  * srcMLParseDocument
  * @param ctxt an XML parser ctxt
  * @param allowendearly allow early termination of SAX2 parser
- * 
+ *
  * Process srcML document with error reporting.
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
 
-  // process the document
-  int status;
-  if ((status = xmlParseDocument(ctxt)) == -1) {
+    // process the document
+    int status;
+    if ((status = xmlParseDocument(ctxt)) == -1) {
 
-    xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
+        xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
 
-    // special case
-    if (allowendearly && (ep->code == XML_ERR_EXTRA_CONTENT || ep->code == XML_ERR_DOCUMENT_END))
-      return SRCML_STATUS_OK;
+        // special case
+        if (allowendearly && (ep->code == XML_ERR_EXTRA_CONTENT || ep->code == XML_ERR_DOCUMENT_END))
+            return SRCML_STATUS_OK;
 
-    return SRCML_STATUS_ERROR;
-  }
+        return SRCML_STATUS_ERROR;
+    }
 
-  return SRCML_STATUS_OK;
+    return SRCML_STATUS_OK;
+
 }
 
 /**
@@ -367,30 +343,31 @@ int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
  */
 xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int size) {
 
-  xmlParserCtxtPtr ctxt = xmlCreateMemoryParserCtxt(buffer, size);
+    xmlParserCtxtPtr ctxt = xmlCreateMemoryParserCtxt(buffer, size);
 
-  return ctxt;
+    return ctxt;
+
 }
 
-#ifdef LIBXML2_NEW_BUFFER 
+#ifdef LIBXML2_NEW_BUFFER
 struct _xmlBuf {
-  xmlChar *content;           /* The buffer content UTF8 */
-  unsigned int compat_use;    /* for binary compatibility */
-  unsigned int compat_size;   /* for binary compatibility */
-  xmlBufferAllocationScheme alloc; /* The realloc method */
-  xmlChar *contentIO;         /* in IO mode we may have a different base */
-  size_t use;                 /* The buffer size used */
-  size_t size;                /* The buffer size */
-  xmlBufferPtr buffer;        /* wrapper for an old buffer */
-  int error;                  /* an error code if a failure occured */
+    xmlChar *content;           /* The buffer content UTF8 */
+    unsigned int compat_use;    /* for binary compatibility */
+    unsigned int compat_size;   /* for binary compatibility */
+    xmlBufferAllocationScheme alloc; /* The realloc method */
+    xmlChar *contentIO;         /* in IO mode we may have a different base */
+    size_t use;                 /* The buffer size used */
+    size_t size;                /* The buffer size */
+    xmlBufferPtr buffer;        /* wrapper for an old buffer */
+    int error;                  /* an error code if a failure occured */
 };
-#define CHECK_COMPAT(buf)                                   \
-  if (buf->size != (size_t) buf->compat_size)            \
-    if (buf->compat_size < INT_MAX)                    \
-      buf->size = buf->compat_size;                  \
-  if (buf->use != (size_t) buf->compat_use)              \
-    if (buf->compat_use < INT_MAX)                     \
-      buf->use = buf->compat_use;
+#define CHECK_COMPAT(buf)                       \
+    if (buf->size != (size_t) buf->compat_size) \
+        if (buf->compat_size < INT_MAX)         \
+            buf->size = buf->compat_size;       \
+    if (buf->use != (size_t) buf->compat_use)   \
+        if (buf->compat_use < INT_MAX)          \
+            buf->use = buf->compat_use;
 
 /**
  * xmlBufResetInput
@@ -403,10 +380,10 @@ struct _xmlBuf {
  */
 int
 xmlBufResetInput(xmlBuf * buf, xmlParserInputPtr input) {
-  if ((input == NULL) || (buf == NULL) || (buf->error))
-    return(-1);
+    if ((input == NULL) || (buf == NULL) || (buf->error))
+        return(-1);
     CHECK_COMPAT(buf)
-    input->base = input->cur = buf->content;
+        input->base = input->cur = buf->content;
     input->end = &buf->content[buf->use];
     return(0);
 
@@ -419,16 +396,16 @@ xmlBufResetInput(xmlBuf * buf, xmlParserInputPtr input) {
  *
  * Function is taken fro libxml2.
  *
- * @returns 0 
+ * @returns 0
  */
 int
 xmlBufResetInput(xmlBuffer * buf, xmlParserInputPtr input) {
-  input->base = input->buf->buffer->content;
-  input->cur = input->buf->buffer->content;
-  input->end = &input->buf->buffer->content[input->buf->buffer->use];
-  return 0;
-}
+    input->base = input->buf->buffer->content;
+    input->cur = input->buf->buffer->content;
+    input->end = &input->buf->buffer->content[input->buf->buffer->use];
+    return 0;
 
+}
 #endif
 
 /**
@@ -442,30 +419,31 @@ xmlBufResetInput(xmlBuffer * buf, xmlParserInputPtr input) {
  */
 xmlParserCtxtPtr
 srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input) {
-  xmlParserCtxtPtr ctxt;
-  xmlParserInputPtr input;
-  xmlParserInputBufferPtr buf;
+    xmlParserCtxtPtr ctxt;
+    xmlParserInputPtr input;
+    xmlParserInputBufferPtr buf;
 
-  ctxt = xmlNewParserCtxt();
-  if (ctxt == NULL)
-    return(NULL);
+    ctxt = xmlNewParserCtxt();
+    if (ctxt == NULL)
+        return(NULL);
 
-  buf = buffer_input;
-  if (buf == NULL) {
-    xmlFreeParserCtxt(ctxt);
-    return(NULL);
-  }
+    buf = buffer_input;
+    if (buf == NULL) {
+        xmlFreeParserCtxt(ctxt);
+        return(NULL);
+    }
 
-  input = xmlNewInputStream(ctxt);
-  if (input == NULL) {
-    xmlFreeParserCtxt(ctxt);
-    return(NULL);
-  }
+    input = xmlNewInputStream(ctxt);
+    if (input == NULL) {
+        xmlFreeParserCtxt(ctxt);
+        return(NULL);
+    }
 
-  input->filename = NULL;
-  input->buf = buf;
-  xmlBufResetInput(input->buf->buffer, input);
+    input->filename = NULL;
+    input->buf = buf;
+    xmlBufResetInput(input->buf->buffer, input);
 
-  inputPush(ctxt, input);
-  return(ctxt);
+    inputPush(ctxt, input);
+    return(ctxt);
+
 }

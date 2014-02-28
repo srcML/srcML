@@ -1,8 +1,23 @@
 #!/usr/bin/env python
+
+##
+# @file testsuite.py
 #
-# update.py
-#
-# Michael L. Collard
+# @copyright Copyright (C) 2006-2014 SDML (www.srcML.org)
+# 
+# The srcML Toolkit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# The srcML Toolkit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with the srcML Toolkit; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import sys
 import os.path
@@ -105,13 +120,19 @@ def extract_all(src, encoding):
         src_all = []
 
         archive = srcml_archive()
+	if src.find("problem") != -1 :
+		archive.set_encoding("ISO-8859-1")
+
+	if src.find("unicode") != -1 :
+		archive.set_src_encoding("UTF-8")
+
         archive.read_open_memory(src)
 
         unit = archive.read_unit()
         while unit != None :
-                all.append(unit.get_xml())
                 unit.unparse_memory()
                 src_all.append(unit.src())
+                all.append(unit.get_xml())
 		unit = archive.read_unit()
 
         archive.close()
@@ -190,12 +211,19 @@ def src2srcML(text_file, encoding, language, directory, filename, read_archive):
                 filename = None;
 
         archive = read_archive.clone()
+	if directory.find("problem") != -1 :
+		archive.set_encoding("ISO-8859-1")
 
         archive.write_open_memory()
+
         unit = srcml_unit(archive)
         unit.set_language(language)
+        if directory.find("unicode") != -1 :
+                unit.set_encoding("UTF-8")
+
         is_all =  directory.find(".all") 
         is_unicode = directory.find("unicode")
+
         if is_all != -1 or is_unicode != -1:
                 unit.set_filename(filename)
                 unit.set_directory(directory)

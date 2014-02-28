@@ -1,26 +1,25 @@
-/*
-  srcMLControlHandler.cpp
-
-  Copyright (C) 2004-2013  SDML (www.sdml.info)
-
-  This file is part of the srcML SAX2 Framework.
-
-  The srcML SAX2 Framework is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  The srcML SAX2 Framework is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with the srcML SAX2 Framework; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+/**
+ * @file srcMLControlHandler.cpp
+ *
+ * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ *
+ * The srcML Toolkit is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML Toolkit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML Toolkit; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 #include <srcMLControlHandler.hpp>
+#include <srcMLHandler.hpp>
 
 #include <SAX2Framework_utilities.hpp>
 
@@ -35,13 +34,13 @@ void libxml_error(void *ctx, const char *msg, ...) {}
 
 void srcml_control_handler_init() {
 
-  static bool initialized = false;
+    static bool initialized = false;
 
-  if(initialized) return;
+    if(initialized) return;
 
-  xmlGenericErrorFunc error_handler = (xmlGenericErrorFunc) libxml_error;
-  initGenericErrorDefaultFunc(&error_handler);
-  initialized = true;
+    xmlGenericErrorFunc error_handler = (xmlGenericErrorFunc) libxml_error;
+    initGenericErrorDefaultFunc(&error_handler);
+    initialized = true;
 
 }
 
@@ -53,28 +52,29 @@ void srcml_control_handler_init() {
  */
 srcMLControlHandler::srcMLControlHandler(const char * filename) : sax2_handler(), pop_input(false) {
 
-  srcml_control_handler_init();
+    srcml_control_handler_init();
 
-  ctxt = xmlCreateURLParserCtxt(filename, XML_PARSE_COMPACT | XML_PARSE_HUGE);
-  if(ctxt == NULL) throw std::string("File does not exist");
-  sax = factory();
+    ctxt = xmlCreateURLParserCtxt(filename, XML_PARSE_COMPACT | XML_PARSE_HUGE);
+    if(ctxt == NULL) throw std::string("File does not exist");
+    sax = factory();
 
 }
 
 
 /**
  * srcMLControlHandler
- * @param input pointer to a parser input buffer 
+ * @param input pointer to a parser input buffer
  *
  * Constructor
  */
-srcMLControlHandler::srcMLControlHandler(xmlParserInputBufferPtr input) : sax2_handler(), pop_input(true) {
+srcMLControlHandler::srcMLControlHandler(xmlParserInputBufferPtr input, const char * encoding) : sax2_handler(), pop_input(true) {
 
-  srcml_control_handler_init();
+    srcml_control_handler_init();
 
-  ctxt = SAX2FrameworkCreateParserCtxt(input);
-  if(ctxt == NULL) throw std::string("File does not exist");
-  sax = factory();
+    ctxt = SAX2FrameworkCreateParserCtxt(input, encoding);
+
+    if(ctxt == NULL) throw std::string("File does not exist");
+    sax = factory();
 
 }
 
@@ -85,8 +85,8 @@ srcMLControlHandler::srcMLControlHandler(xmlParserInputBufferPtr input) : sax2_h
  */
 srcMLControlHandler::~srcMLControlHandler() {
 
-  if(pop_input) inputPop(ctxt);
-  if(ctxt) xmlFreeParserCtxt(ctxt);
+    if(pop_input) inputPop(ctxt);
+    if(ctxt) xmlFreeParserCtxt(ctxt);
 
 }
 
@@ -95,11 +95,23 @@ srcMLControlHandler::~srcMLControlHandler() {
  *
  * Return the used sax handler.
  */
-const xmlSAXHandler & srcMLControlHandler::getSAX() const {
+xmlSAXHandler & srcMLControlHandler::getSAX() {
 
-  return sax;
+    return sax;
 
 }
+
+/**
+ * getCtxt
+ *
+ * Return the used parser context.
+ */
+xmlParserCtxtPtr srcMLControlHandler::getCtxt() {
+
+  return ctxt;
+
+}
+
 
 /**
  * enable_startDocument
@@ -109,8 +121,8 @@ const xmlSAXHandler & srcMLControlHandler::getSAX() const {
  */
 void srcMLControlHandler::enable_startDocument(bool enable) {
 
-  if(enable) sax.startDocument = startDocument;
-  else sax.startDocument = 0;
+    if(enable) sax.startDocument = startDocument;
+    else sax.startDocument = 0;
 
 }
 
@@ -122,8 +134,8 @@ void srcMLControlHandler::enable_startDocument(bool enable) {
  */
 void srcMLControlHandler::enable_endDocument(bool enable) {
 
-  if(enable) sax.endDocument = endDocument;
-  else sax.endDocument = 0;
+    if(enable) sax.endDocument = endDocument;
+    else sax.endDocument = 0;
 
 }
 
@@ -135,8 +147,8 @@ void srcMLControlHandler::enable_endDocument(bool enable) {
  */
 void srcMLControlHandler::enable_startElementNs(bool enable) {
 
-  if(enable) sax.startElementNs = startRoot;
-  else sax.startElementNs = 0;
+    if(enable) sax.startElementNs = startRoot;
+    else sax.startElementNs = 0;
 
 }
 
@@ -148,8 +160,8 @@ void srcMLControlHandler::enable_startElementNs(bool enable) {
  */
 void srcMLControlHandler::enable_endElementNs(bool enable) {
 
-  if(enable) sax.endElementNs = endElementNs;
-  else sax.endElementNs = 0;
+    if(enable) sax.endElementNs = endElementNs;
+    else sax.endElementNs = 0;
 
 }
 
@@ -161,8 +173,17 @@ void srcMLControlHandler::enable_endElementNs(bool enable) {
  */
 void srcMLControlHandler::enable_characters(bool enable) {
 
-  if(enable) sax.characters = charactersFirst;
-  else sax.characters = 0;
+  if(enable) {
+
+    sax.characters = charactersFirst;
+    sax.ignorableWhitespace = charactersFirst;
+
+  } else {
+
+    sax.characters = 0;
+    sax.ignorableWhitespace = 0;
+
+  }
 
 }
 
@@ -174,8 +195,8 @@ void srcMLControlHandler::enable_characters(bool enable) {
  */
 void srcMLControlHandler::enable_comment(bool enable) {
 
-  if(enable) sax.comment = comment;
-  else sax.comment = 0;
+    if(enable) sax.comment = comment;
+    else sax.comment = 0;
 
 }
 
@@ -187,8 +208,8 @@ void srcMLControlHandler::enable_comment(bool enable) {
  */
 void srcMLControlHandler::enable_cdataBlock(bool enable) {
 
-  if(enable) sax.cdataBlock = cdataBlock;
-  else sax.cdataBlock = 0;
+    if(enable) sax.cdataBlock = cdataBlock;
+    else sax.cdataBlock = 0;
 
 }
 
@@ -200,25 +221,27 @@ void srcMLControlHandler::enable_cdataBlock(bool enable) {
  */
 void srcMLControlHandler::parse(srcMLHandler * handler) {
 
-  sax2_handler.process = handler;
+    handler->set_control_handler(this);
+    sax2_handler.process = handler;
 
-  xmlSAXHandlerPtr save_sax = ctxt->sax;
-  ctxt->sax = &sax;
-  ctxt->_private = &sax2_handler;
+    xmlSAXHandlerPtr save_sax = ctxt->sax;
+    ctxt->sax = &sax;
+    ctxt->_private = &sax2_handler;
 
-  int status = xmlParseDocument(ctxt);
-  ctxt->sax = save_sax;
+    int status = xmlParseDocument(ctxt);
 
-  if(status != 0) {
+    ctxt->sax = save_sax;
 
-    xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
+    if(status != 0) {
 
-    size_t str_length = strlen(ep->message);
-    ep->message[str_length - 1] = '\0';
-    SAXError error = { std::string((const char *)ep->message), ep->code };
-    throw error;
-  }
-  ctxt->sax = save_sax;
+        xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
+
+        size_t str_length = strlen(ep->message);
+        ep->message[str_length - 1] = '\0';
+        SAXError error = { std::string((const char *)ep->message), ep->code };
+
+        throw error;
+    }
 
 }
 

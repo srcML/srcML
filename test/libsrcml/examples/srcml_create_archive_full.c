@@ -1,22 +1,22 @@
-/*
-  srcml_create_archive_full.c
-
-  Copyright (C) 2013-2014  SDML (www.srcML.org)
-
-  The srcML Toolkit is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  The srcML Toolkit is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with the srcML Toolkit; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+/**
+ * @file srcml_create_archive_full.c
+ *
+ * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ *
+ * The srcML Toolkit is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML Toolkit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML Toolkit; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /*
   Example program of the use of the C API for srcML.
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 
     /* change prefix of standard namespace */
     srcml_archive_register_namespace(archive, "s", "http://www.sdml.info/srcML/src");
-    
+
     /* default prefix is now for cpp namespace */
     srcml_archive_register_namespace(archive, "", "http://www.sdml.info/srcML/cpp");
 
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
     srcml_archive_register_namespace(archive, "doc", "http://www.sdml.info/srcML/doc");
 
     /*
-      Open and write to the archive 
+      Open and write to the archive
     */
 
     /* open a srcML archive for output */
