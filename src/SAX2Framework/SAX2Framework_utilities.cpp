@@ -20,6 +20,68 @@
 
 #include <SAX2Framework_utilities.hpp>
 
+#ifdef LIBXML2_NEW_BUFFER
+struct _xmlBuf {
+    xmlChar *content;           /* The buffer content UTF8 */
+    unsigned int compat_use;    /* for binary compatibility */
+    unsigned int compat_size;   /* for binary compatibility */
+    xmlBufferAllocationScheme alloc; /* The realloc method */
+    xmlChar *contentIO;         /* in IO mode we may have a different base */
+    size_t use;                 /* The buffer size used */
+    size_t size;                /* The buffer size */
+    xmlBufferPtr buffer;        /* wrapper for an old buffer */
+    int error;                  /* an error code if a failure occured */
+};
+
+#define _CHECK_COMPAT(buf)                      \
+    if (buf->size != (size_t) buf->compat_size) \
+        if (buf->compat_size < INT_MAX)         \
+            buf->size = buf->compat_size;       \
+    if (buf->use != (size_t) buf->compat_use)   \
+        if (buf->compat_use < INT_MAX)          \
+            buf->use = buf->compat_use;
+
+/**
+ * xmlBufResetInput
+ * @param buf XML buffer
+ * @param input XML parser input
+ *
+ * Function is taken from libxml2.
+ *
+ * @returns 0 on success and -1 on error.
+ */
+int
+_xmlBufResetInput(xmlBuf * buf, xmlParserInputPtr input) {
+    if ((input == NULL) || (buf == NULL) || (buf->error))
+        return(-1);
+    _CHECK_COMPAT(buf)
+        input->base = input->cur = buf->content;
+    input->end = &buf->content[buf->use];
+    return(0);
+
+}
+#else
+/**
+ * xmlBufResetInput
+ * @param buf XML buffer
+ * @param input XML parser input
+ *
+ * Function is taken fro libxml2.
+ *
+ * @returns 0  on success and -1 on error.
+ */
+int
+_xmlBufResetInput(xmlBuffer * buf, xmlParserInputPtr input) {
+    if ((input == NULL) || (buf == NULL))
+        return -1;
+    input->base = input->buf->buffer->content;
+    input->cur = input->buf->buffer->content;
+    input->end = &input->buf->buffer->content[input->buf->buffer->use];
+    return 0;
+}
+
+#endif
+
 /**
  * srcMLCreateParserCtxt
  * @param buffer_input a parser input buffer
@@ -33,15 +95,42 @@ xmlParserCtxtPtr
 SAX2FrameworkCreateParserCtxt(xmlParserInputBufferPtr buffer_input, const char * encoding) {
     xmlParserCtxtPtr ctxt;
     xmlParserInputPtr input;
+    xmlParserInputBufferPtr buf;
 
     ctxt = xmlNewParserCtxt();
-    if (ctxt == NULL) return NULL;
+    if (ctxt == NULL)
+        return(NULL);
 
-    input = xmlNewIOInputStream(ctxt, buffer_input, xmlParseCharEncoding(encoding));
+    buf = buffer_input;
+    if (buf == NULL) {
+        xmlFreeParserCtxt(ctxt);
+        return(NULL);
+    }
+
+    input = xmlNewInputStream(ctxt);
+    if (input == NULL) {
+        xmlFreeParserCtxt(ctxt);
+        return(NULL);
+    }
+
+    input->filename = NULL;
+    input->buf = buf;
+    _xmlBufResetInput(input->buf->buffer, input);
 
     inputPush(ctxt, input);
 
-    return ctxt;
+
+    if(encoding) {
+
+	ctxt->options |= XML_PARSE_IGNORE_ENC;
+	xmlSwitchEncoding(ctxt, xmlParseCharEncoding(encoding));
+	ctxt->charset = xmlParseCharEncoding(encoding);
+	ctxt->encoding = xmlStrdup((xmlChar *)encoding);
+
+    }
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, ctxt->charset);
+
+    return(ctxt);
 }
 
 void internal_stop_parser(xmlParserCtxtPtr ctxt) {

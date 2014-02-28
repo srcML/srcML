@@ -1030,7 +1030,7 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
 
     if(archive == NULL || buffer == NULL || buffer_size <= 0) return SRCML_STATUS_ERROR;
 
-    archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, //XML_CHAR_ENCODING_NONE
+    archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, 
 						   xmlParseCharEncoding(archive->encoding ? archive->encoding->c_str() : 0));
     try {
 
