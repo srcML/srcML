@@ -179,7 +179,7 @@ void option_tabs(const int value) {
 }
 void option_directory(const std::string& value) {srcml_request.att_directory = value; }
 void option_src_versions(const std::string& value) {srcml_request.att_src_versions = value; }
-void option_prefix(const std::string& value) {srcml_request.prefix = value; }
+void option_prefix(const std::string& value) {srcml_request.xmlns_prefix_query = value; }
 void option_xmlns_uri(const std::string& value) {srcml_request.xmlns_uri = value; }
 void option_xmlns_prefix(const std::vector<std::string>& values) {srcml_request.xmlns_prefix = values; }
 void option_relaxng(const std::string& value) {srcml_request.relaxng = value; }
@@ -249,6 +249,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("debug,g", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_DEBUG>), "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
             ("encoding,x", prog_opts::value<std::string>()->notifier(&option_encoding),"set the output XML encoding to ENC (default:  UTF-8)")
             ("expression,e", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
+            //TODO: 
             ("files-from", prog_opts::value<std::string>()->notifier(&option_files_from), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
             ("interactive,c", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INTERACTIVE>), "immediate output while parsing, default for keyboard input")
             ("language,l", prog_opts::value<std::string>()->notifier(&option_language), "set the language to C, C++, or Java")
@@ -298,6 +299,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         prefix.add_options()
+            // TODO: GOES IN THE ONE BELOW WITH A BLANK PREFIX.
             ("xmlns", prog_opts::value<std::string>()->notifier(&option_xmlns_uri), "set the default namespace to arg")
             ("xmlns:", prog_opts::value< std::vector<std::string> >()->notifier(&option_xmlns_prefix), "set the namespace arg format PREFIX=URI")
             ;
@@ -362,47 +364,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
     // Debug to see CLI inputs
     //debug_cli_opts(srcml_request);
     return srcml_request;
-}
-
-// Early debugging
-void debug_cli_opts(const struct srcml_request_t srcml_request) {
-
-    std::cerr << "Commands: " << srcml_request.command << "\n";
-    std::cerr << "Markup: " << srcml_request.markup_options << "\n";
-    std::cerr << "Filename: " << srcml_request.att_filename << "\n";
-    std::cerr << "Output: " << srcml_request.output_filename << "\n";
-    std::cerr << "SRC Encoding: " << srcml_request.src_encoding << "\n";
-    std::cerr << "Encoding: " << srcml_request.att_encoding << "\n";
-    std::cerr << "Files From: " << srcml_request.files_from << "\n";
-    std::cerr << "Language: " << srcml_request.att_language << "\n";
-
-    for(size_t i = 0; i < srcml_request.language_ext.size(); ++i) {
-        std::cerr << "Register Ext #" << i <<": " << srcml_request.language_ext[i] << "\n";
-    }
-
-    std::cerr << "Tabs: " << srcml_request.tabs << "\n";
-    std::cerr << "Directory: " << srcml_request.att_directory << "\n";
-    std::cerr << "Src Versions: " << srcml_request.att_src_versions << "\n";
-    std::cerr << "Prefix: " << srcml_request.prefix << "\n";
-    std::cerr << "Xmlns Uri: " << srcml_request.xmlns_uri << "\n";
-
-    for(size_t i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
-        std::cerr << "Xmlns Prefix #" << i << ": " << srcml_request.xmlns_prefix[i] << "\n";
-    }
-
-    std::cerr << "Relaxng: " << srcml_request.relaxng << "\n";
-    std::cerr << "Xpath: " << srcml_request.xpath << "\n";
-
-    for(size_t i = 0; i < srcml_request.xpathparam.size(); ++i) {
-        std::cerr << "Xpathparam #" << i <<": " << srcml_request.xpathparam[i] << "\n";
-    }
-
-    std::cerr << "Xslt: " << srcml_request.xslt << "\n";
-    std::cerr << "Unit: " << srcml_request.unit << "\n";
-
-    for(size_t i = 0; i < srcml_request.positional_args.size(); ++i) {
-        std::cerr << "Arg #" << i <<": " << srcml_request.positional_args[i] << "\n";
-    }
 }
 
 // Custom parser for xmlns: option

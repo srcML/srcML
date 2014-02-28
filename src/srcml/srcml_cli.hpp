@@ -75,13 +75,16 @@ struct srcml_request_t {
 
     std::string output_filename;
 
+    //filelist:// prefix
     std::string files_from;
     std::vector<std::string> language_ext;
     int tabs;
 
     // xml namespaces
-    std::string prefix;
-    std::string xmlns_uri;
+    // BECOME OPTIONAL
+    std::string xmlns_prefix_query;
+    std::string xmlns_uri; // Remove this
+
     std::vector<std::string> xmlns_prefix;
 
     // srcml transformation
