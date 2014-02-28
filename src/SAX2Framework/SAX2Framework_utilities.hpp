@@ -18,12 +18,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <libxml/parser.h>
 #include <libxml/parserInternals.h>
 
 #ifndef INCLUDDED_SAX2FRAMEWORK_UTILITIES_HPP
 #define INCLUDDED_SAX2FRAMEWORK_UTILITIES_HPP
 
-xmlParserCtxtPtr SAX2FrameworkCreateParserCtxt(xmlParserInputBufferPtr buffer_input);
+xmlParserCtxtPtr SAX2FrameworkCreateParserCtxt(xmlParserInputBufferPtr buffer_input, const char * encoding);
 
 void internal_stop_parser(xmlParserCtxtPtr ctxt);
 

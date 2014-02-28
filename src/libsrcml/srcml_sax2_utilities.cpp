@@ -53,7 +53,7 @@ int srcml_extract_text(const char * input_buffer, size_t size, UTF8OutputSource 
 
     if(input_buffer == NULL || size == 0) return SRCML_STATUS_ERROR;
 
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(input_buffer, (int)size, xmlParseCharEncoding(0));
+    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(input_buffer, (int)size, XML_CHAR_ENCODING_NONE);
 
     if(input == NULL) return SRCML_STATUS_ERROR;
 

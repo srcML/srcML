@@ -24,7 +24,7 @@
 #include <UTF8OutputSource.hpp>
 
 
-UTF8OutputSource::UTF8OutputSource(const char * filename, const char * encoding) 
+UTF8OutputSource::UTF8OutputSource(const char * filename, const char * encoding)
     : output(0), src_buffer(0), src_size(0), buffer(0), allocated(0), cd(0) {
 
     if(!filename) throw UTF8OutputSourceError();
@@ -50,7 +50,7 @@ UTF8OutputSource::UTF8OutputSource(char ** src_buffer, size_t * src_size, const 
 
 }
 
-UTF8OutputSource::UTF8OutputSource(FILE * file, const char * encoding) 
+UTF8OutputSource::UTF8OutputSource(FILE * file, const char * encoding)
     : output(file), src_buffer(0), src_size(0), buffer(0), allocated(0), cd(0) {
 
     if(!output) throw UTF8OutputSourceError();
@@ -59,7 +59,7 @@ UTF8OutputSource::UTF8OutputSource(FILE * file, const char * encoding)
 
 }
 
-UTF8OutputSource::UTF8OutputSource(int fd, const char * encoding) 
+UTF8OutputSource::UTF8OutputSource(int fd, const char * encoding)
     : output(0), src_buffer(0), src_size(0), buffer(0), allocated(0), cd(0) {
 
     if(fd < 0) throw UTF8OutputSourceError();

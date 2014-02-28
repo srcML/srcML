@@ -92,7 +92,7 @@ _xmlBufResetInput(xmlBuffer * buf, xmlParserInputPtr input) {
  * @returns xml parser ctxt
  */
 xmlParserCtxtPtr
-SAX2FrameworkCreateParserCtxt(xmlParserInputBufferPtr buffer_input) {
+SAX2FrameworkCreateParserCtxt(xmlParserInputBufferPtr buffer_input, const char * encoding) {
     xmlParserCtxtPtr ctxt;
     xmlParserInputPtr input;
     xmlParserInputBufferPtr buf;
@@ -118,6 +118,17 @@ SAX2FrameworkCreateParserCtxt(xmlParserInputBufferPtr buffer_input) {
     _xmlBufResetInput(input->buf->buffer, input);
 
     inputPush(ctxt, input);
+
+
+    if(encoding) {
+
+	ctxt->options |= XML_PARSE_IGNORE_ENC;
+	xmlSwitchEncoding(ctxt, xmlParseCharEncoding(encoding));
+	ctxt->charset = xmlParseCharEncoding(encoding);
+	ctxt->encoding = xmlStrdup((xmlChar *)encoding);
+
+    }
+
     return(ctxt);
 }
 

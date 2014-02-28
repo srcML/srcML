@@ -187,7 +187,7 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
                                          int language, UTF8CharBuffer * parser_input, xmlBuffer* output_buffer,
                                          OPTION_TYPE translation_options) {
 
-    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler(xml_encoding));
+    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler("UTF-8"));
     srcMLOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, uri, tabsize, obuffer);
     sep_out.initWriter();
     sep_out.setMacroList(user_macro_list);
