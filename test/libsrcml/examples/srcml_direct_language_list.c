@@ -28,10 +28,9 @@
 #include "srcml.h"
 
 int main(int argc, char* argv[]) {
-    const char** p;
 
-    for (p = srcml_language_list(); *p != 0; ++p)
-        puts(*p);
+    for (int i = 0; i < srcml_get_language_list_size(); ++i)
+        puts(srcml_get_language_list(i));
 
     return 0;
 }

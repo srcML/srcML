@@ -68,7 +68,8 @@ _srcml_get_prefix_uri
 _srcml_get_src_encoding
 _srcml_get_tabstop
 _srcml_get_version
-_srcml_language_list
+_srcml_get_language_list
+_srcml_get_language_list_size
 _srcml_parse_unit_fd
 _srcml_parse_unit_filename
 _srcml_parse_unit_memory

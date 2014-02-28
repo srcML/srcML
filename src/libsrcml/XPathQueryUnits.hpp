@@ -45,6 +45,7 @@
 #define dlsymvar(type, name) type name;  *(void **)(&name) = dlsym(handle, #name)
 
 #ifdef WIN32
+#include <io.h>
 #define snprintf _snprintf
 #endif
 

@@ -49,8 +49,6 @@ int main() {
     const std::string srcml_full = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
     const std::string utf8_srcml = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \u2713 */</comment>\n</unit>";
     const std::string latin_srcml = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \u00fe\u00ff */</comment>\n</unit>";
-    const std::string latin_from_utf8_srcml = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* &#10003; */</comment>\n</unit>";
-    const std::string latin_from_latin_srcml = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \xfe\xff */</comment>\n</unit>";
     const std::string srcml_macro = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><macro-list token=\"MACRO1\" type=\"src:macro\"/><macro-list token=\"MACRO2\" type=\"src:macro\"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>\n<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>\n</unit>";
 
     std::ofstream src_file_c("project.c");
@@ -159,7 +157,7 @@ int main() {
         srcml_unit_set_directory(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_parse_unit_filename(unit, "project_utf8.cpp");
-        dassert(*unit->unit, latin_from_utf8_srcml);
+        dassert(*unit->unit, utf8_srcml);
 
         srcml_free_unit(unit);
         srcml_close_archive(archive);
@@ -200,11 +198,13 @@ int main() {
         srcml_unit_set_directory(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_parse_unit_filename(unit, "project_latin.cpp");
-        dassert(*unit->unit, latin_from_latin_srcml);
+        dassert(*unit->unit, latin_srcml);
+	srcml_write_unit(archive, unit);
 
         srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
+	exit(0);
 
     }
 
@@ -364,7 +364,7 @@ int main() {
         srcml_unit_set_directory(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_parse_unit_memory(unit, utf8_src.c_str(), utf8_src.size());
-        dassert(*unit->unit, latin_from_utf8_srcml);
+        dassert(*unit->unit, utf8_srcml);
 
         srcml_free_unit(unit);
         srcml_close_archive(archive);
@@ -405,7 +405,7 @@ int main() {
         srcml_unit_set_directory(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_parse_unit_memory(unit, latin_src.c_str(), latin_src.size());
-        dassert(*unit->unit, latin_from_latin_srcml);
+        dassert(*unit->unit, latin_srcml);
 
         srcml_free_unit(unit);
         srcml_close_archive(archive);
@@ -466,8 +466,9 @@ int main() {
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_language(unit, "C");
-        dassert(srcml_parse_unit_memory(unit, src.c_str(), 0), SRCML_STATUS_ERROR);
-
+        dassert(srcml_parse_unit_memory(unit, src.c_str(), 0), SRCML_STATUS_OK);
+	dassert(*unit->unit, "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\"/>");
+	
         srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
@@ -581,7 +582,7 @@ int main() {
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project_utf8.cpp", "r");
         srcml_parse_unit_FILE(unit, file);
-        dassert(*unit->unit, latin_from_utf8_srcml);
+        dassert(*unit->unit, utf8_srcml);
         fclose(file);
 
         srcml_free_unit(unit);
@@ -626,7 +627,7 @@ int main() {
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project_latin.cpp", "r");
         srcml_parse_unit_FILE(unit, file);
-        dassert(*unit->unit, latin_from_latin_srcml);
+        dassert(*unit->unit, latin_srcml);
         fclose(file);
 
         srcml_free_unit(unit);
@@ -795,7 +796,7 @@ int main() {
         srcml_unit_set_version(unit , "1");
         int fd = open("project_utf8.cpp", O_RDONLY);
         srcml_parse_unit_fd(unit, fd);
-        dassert(*unit->unit, latin_from_utf8_srcml);
+        dassert(*unit->unit, utf8_srcml);
         close(fd);
 
         srcml_free_unit(unit);
@@ -840,7 +841,7 @@ int main() {
         srcml_unit_set_version(unit , "1");
         int fd = open("project_latin.cpp", O_RDONLY);
         srcml_parse_unit_fd(unit, fd);
-        dassert(*unit->unit, latin_from_latin_srcml);
+        dassert(*unit->unit, latin_srcml);
         close(fd);
 
         srcml_free_unit(unit);

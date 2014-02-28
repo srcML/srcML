@@ -185,8 +185,9 @@ __LIBSRCML_DECL const char*        srcml_get_macro_type(int pos);
 /* Source-code language is supported */
 __LIBSRCML_DECL int srcml_check_language(const char* language);
 
-/* Null-terminated array of supported source-code languages */
-__LIBSRCML_DECL const char** srcml_language_list();
+/* Query supported source-code languages */
+__LIBSRCML_DECL int srcml_get_language_list_size();
+__LIBSRCML_DECL const char* srcml_get_language_list(int pos);
 
 /* Currently registered language for a file extension
    When full filename is given, the extension is extracted */

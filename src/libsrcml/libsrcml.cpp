@@ -678,21 +678,39 @@ const char* srcml_get_macro_type(int pos) {
  * @param language a language
  *
  * Check if the current language is supported.
+ *
  * @returns Return the numeric representation for that language if supported.
  * Not supported returns 0.
  */
 int srcml_check_language(const char* language) { return language == 0 ? 0 : Language::getLanguage(language); }
 
 /**
- * srcml_language_list
+ * srcml_get_language_list_size
  *
- * Gets list of supported source-code languages as NULL-terminated array.
+ * Gets the number of languages supported.
  *
- * @returns NULL-terminated array of supported source-code languages
+ * @returns number of languages supported.
  */
-const char** srcml_language_list() {
+int srcml_get_language_list_size() {
+
+    return 4;
+}
+
+/**
+ * srcml_get_language_list
+ * @param pos position of a language list
+ *
+ * Gets the name of the supported language at pos.
+ *
+ * @returns Get the supported language name at pos
+ * on success and NULL on failure.
+ */
+const char * srcml_get_language_list(int pos) {
+
+    if(pos >= srcml_get_language_list_size()) return NULL;
+
     static const char* langs[] = { "C", "C++", "C#", "Java", 0 };
-    return langs;
+    return langs[pos];
 }
 
 /**
