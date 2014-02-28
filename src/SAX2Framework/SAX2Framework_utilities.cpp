@@ -122,7 +122,9 @@ SAX2FrameworkCreateParserCtxt(xmlParserInputBufferPtr buffer_input, const char *
 
     if(encoding) {
 
+#ifndef WIN32
 	ctxt->options |= XML_PARSE_IGNORE_ENC;
+#endif
 	xmlSwitchEncoding(ctxt, xmlParseCharEncoding(encoding));
 	ctxt->charset = xmlParseCharEncoding(encoding);
 	ctxt->encoding = xmlStrdup((xmlChar *)encoding);
