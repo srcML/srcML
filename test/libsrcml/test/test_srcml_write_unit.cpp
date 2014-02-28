@@ -43,7 +43,12 @@ int main() {
 
     const std::string utf8_srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" dir=\"test\" filename=\"project\" version=\"1\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \u2713 */</comment>\n</unit>\n\n</unit>\n";
 
-    const std::string latin_srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" dir=\"test\" filename=\"project\" version=\"1\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \u00fe\u00ff */</comment>\n</unit>\n\n</unit>\n";
+    const std::string utf8_srcml_latin = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" dir=\"test\" filename=\"project\" version=\"1\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* &#10003; */</comment>\n</unit>\n\n</unit>\n";
+
+    const std::string latin_srcml_latin = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" dir=\"test\" filename=\"project\" version=\"1\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \u00fe\u00ff */</comment>\n</unit>\n\n</unit>\n";
+
+    const std::string latin_srcml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" dir=\"test\" filename=\"project\" version=\"1\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \xfe\xff */</comment>\n</unit>\n\n</unit>\n";
+
     const std::string srcml_macro_no_xmldecl = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>\n<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>\n</unit>";
 
     const std::string srcml_macro_single_no_xmldecl = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><macro-list token=\"MACRO1\" type=\"src:macro\"/><macro-list token=\"MACRO2\" type=\"src:macro\"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>\n<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>\n</unit>";
@@ -227,6 +232,68 @@ int main() {
         srcml_free_archive(archive);
 
         dassert(s, utf8_srcml);
+        free(s);
+    }
+
+    {
+        char * s = 0;
+        int size;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_set_encoding(archive, "ISO-8859-1");
+        srcml_archive_set_language(archive, "C++");
+        srcml_archive_set_filename(archive, "project");
+        srcml_archive_set_directory(archive, "test");
+        srcml_archive_set_version(archive, "1");
+        srcml_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_create_unit(archive);
+        unit->unit = utf8_srcml_no_xmldecl;
+        srcml_write_unit(archive, unit);
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+
+        dassert(s, utf8_srcml_latin);
+        free(s);
+    }
+
+    {
+        char * s = 0;
+        int size;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_set_language(archive, "C++");
+        srcml_archive_set_filename(archive, "project");
+        srcml_archive_set_directory(archive, "test");
+        srcml_archive_set_version(archive, "1");
+        srcml_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_create_unit(archive);
+        unit->unit = latin_srcml_no_xmldecl;
+        srcml_write_unit(archive, unit);
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+
+        dassert(s, latin_srcml);
+        free(s);
+    }
+
+    {
+        char * s = 0;
+        int size;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_set_encoding(archive, "ISO-8859-1");
+        srcml_archive_set_language(archive, "C++");
+        srcml_archive_set_filename(archive, "project");
+        srcml_archive_set_directory(archive, "test");
+        srcml_archive_set_version(archive, "1");
+        srcml_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_create_unit(archive);
+        unit->unit = latin_srcml_no_xmldecl;
+        srcml_write_unit(archive, unit);
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+
+        dassert(s, latin_srcml_latin);
         free(s);
     }
 
