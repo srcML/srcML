@@ -62,7 +62,7 @@
 struct srcml_request_t {
     std::vector<std::string> positional_args;
     int command;
-    int markup_options;
+    boost::optional<int> markup_options;
 
     // unit attributes
     std::string att_language;

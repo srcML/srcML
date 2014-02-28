@@ -128,8 +128,15 @@ prog_opts::positional_options_description input_file;
 /* DREW:  Most of the no parameter options could be recorded this way */
 template <int option>
 void option_markup(bool opt) {
+    /* 
+      If we have markup options the NULL optional arguement needs to 
+        first be initializied before the bitwise work can be done.
+    */
+    if (!srcml_request.markup_options)
+        srcml_request.markup_options = 0;
+
     if (opt)
-        srcml_request.markup_options |= option;
+        *srcml_request.markup_options |= option;
 }
 
 template <int command>
@@ -223,7 +230,6 @@ void debug_cli_opts(const struct srcml_request_t srcml_request);
 // Interpretation of CLI options
 srcml_request_t parseCLI(int argc, char* argv[]) {
     try {
-
         general.add_options()
             ("compress,z", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_COMPRESS>), "output in gzip format")
             ("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
