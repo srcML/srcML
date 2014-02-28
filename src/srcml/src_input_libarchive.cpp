@@ -71,10 +71,10 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
 
     setup_libarchive(arch);
 
-    bool stdin = input_file == "-" && archive_compression(arch) != ARCHIVE_COMPRESSION_NONE;
+    bool is_stdin = input_file == "-" && archive_compression(arch) != ARCHIVE_COMPRESSION_NONE;
 
     // open the archive
-    if (!isfstdin && archive_read_open_filename(arch, (!stdin ? input_file.c_str() : 0), 16384)!= ARCHIVE_OK) {
+    if (!isfstdin && archive_read_open_filename(arch, (!is_stdin ? input_file.c_str() : 0), 16384)!= ARCHIVE_OK) {
         std::cerr << "Unable to open file\n";
         exit(1);
     } else if (isfstdin && archive_read_open_FILE(arch, fstdin)!= ARCHIVE_OK) {
@@ -106,12 +106,12 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
                 language = l;
         }
 
-        if (language == "" && (stdin || isfstdin)) {
+        if (language == "" && (is_stdin || isfstdin)) {
             std::cerr << "Using stdin requires a declared language\n";
             continue;
         }
 
-        if (language == "" && !stdin) {
+        if (language == "" && !is_stdin) {
             std::cerr << "Extension not supported\n";
             continue;
         }
