@@ -2938,7 +2938,11 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     inputState->guessing--;
     rewind(start);
 
-    if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
+    //if(type == 0 && (LA(1) == CLASS || LA(1) == STRUCT || LA(1) == UNION))
+      //  type = VARIABLE;
+
+//    else
+ if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
        && _tokenSet_26.member(LA(1)) && (!inLanguage(LANGUAGE_CXX_ONLY) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && save_la == TERMINATE)
         type = VARIABLE;
@@ -3946,9 +3950,11 @@ catch[antlr::RecognitionException] {
 // compound name for C
 compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        identifier
+        identifier ({ LA(1) == MULTOPS }? multops)*
+
         ( options { greedy = true; } :
             period { iscompound = true; }
+            ({ LA(1) == MULTOPS }? multops)*
             identifier
         )*
 ;
