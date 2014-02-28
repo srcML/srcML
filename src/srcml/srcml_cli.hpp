@@ -92,8 +92,6 @@ struct srcml_request_t {
 
     int unit;
     int max_threads;
-    bool help_set;
-    bool src_versions_set;
 };
 
 // parse the CLI options into a srcml client request

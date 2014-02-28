@@ -192,7 +192,6 @@ void option_max_threads(const int value) {srcml_request.max_threads = value; }
 void positional_args(const std::vector<std::string>& value) {srcml_request.positional_args = value; }
 
 void option_help(const std::string& help_opt) {
-    srcml_request.help_set = true;
     if (help_opt == "") {
         // TODO: A new header and footer for the general option
         std::cout << SRCML_HEADER << "\n";
