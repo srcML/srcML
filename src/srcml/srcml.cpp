@@ -96,7 +96,7 @@ int main(int argc, char * argv[]) {
         if (srcml_request.att_encoding)
             srcml_archive_set_encoding(srcml_arch, srcml_request.att_encoding->c_str());
 
-        if (srcml_request.att_filename)
+        if (srcml_request.att_filename && *srcml_request.att_filename != "-")
             srcml_archive_set_filename(srcml_arch, srcml_request.att_filename->c_str());
 
         if (srcml_request.att_directory)
