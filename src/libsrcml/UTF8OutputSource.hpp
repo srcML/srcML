@@ -46,10 +46,10 @@ public:
     static const size_t SRCBUFSIZE = 1024;
 
     // Create a character buffer
-    UTF8OutputSource(const char * filename, const char * to_encoding, const char * from_encoding);
-    UTF8OutputSource(char ** src_buffer, size_t * src_size, const char * to_encoding, const char * from_encoding);
-    UTF8OutputSource(FILE * file, const char * to_encoding, const char * from_encoding);
-    UTF8OutputSource(int fd, const char * to_encoding, const char * from_encoding);
+    UTF8OutputSource(const char * filename, const char * encoding);
+    UTF8OutputSource(char ** src_buffer, size_t * src_size, const char * encoding);
+    UTF8OutputSource(FILE * file, const char * encoding);
+    UTF8OutputSource(int fd, const char * encoding);
 
     int writeString(const char * input, size_t input_size);
 
@@ -58,7 +58,7 @@ public:
 private:
 
     size_t growBuffer(const char * & raw_buffer, size_t size);
-    void processEncoding(const char * to_encoding, const char * from_encoding);
+    void processEncoding(const char * encoding);
 
     FILE * output;
     char ** src_buffer;
