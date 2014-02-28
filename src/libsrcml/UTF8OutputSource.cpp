@@ -92,7 +92,7 @@ size_t UTF8OutputSource::growBuffer(const char * & raw_buffer, size_t size) {
 #if !defined(WIN32)
     iconv(cd, (char **)&raw_buffer, &num_in_convert, (char **)&output_buffer, &num_out_convert);
 #else
-    iconv(cd, (const char **)&raw_buffer, &num_in_convert, (const char **)&output_buffer, &num_out_convert);
+    iconv(cd, (const char **)&raw_buffer, &num_in_convert, (char **)&output_buffer, &num_out_convert);
 #endif
 
     return (4 * size) - num_out_convert;
