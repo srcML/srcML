@@ -227,10 +227,9 @@ void srcMLControlHandler::parse(srcMLHandler * handler) {
     xmlSAXHandlerPtr save_sax = ctxt->sax;
     ctxt->sax = &sax;
     ctxt->_private = &sax2_handler;
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, ctxt->charset);
+
     int status = xmlParseDocument(ctxt);
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, ctxt->charset);
+
     ctxt->sax = save_sax;
 
     if(status != 0) {

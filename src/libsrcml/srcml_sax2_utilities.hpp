@@ -27,7 +27,7 @@
 
 #include <libxml/parserInternals.h>
 
-int srcml_extract_text(const char * input_buffer, size_t size, UTF8OutputSource & output_handler, OPTION_TYPE options, int unit = 0);
+int srcml_extract_text(const char * input_buffer, size_t size, UTF8OutputSource & output_handler, const char * encoding, OPTION_TYPE options, int unit = 0);
 int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, OPTION_TYPE options, int unit = 0);
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpaths[], int fd, OPTION_TYPE options);
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xslts[], const char* params[], int paramcount, int fd, OPTION_TYPE options);

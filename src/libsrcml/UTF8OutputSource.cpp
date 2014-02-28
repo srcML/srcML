@@ -24,7 +24,8 @@
 #include <UTF8OutputSource.hpp>
 
 
-UTF8OutputSource::UTF8OutputSource(const char * filename, const char * encoding) 
+UTF8OutputSource::UTF8OutputSource(const char * filename, const char * to_encoding,
+				   const char * from_encoding) 
     : output(0), src_buffer(0), src_size(0), buffer(0), allocated(0), cd(0) {
 
     if(!filename) throw UTF8OutputSourceError();
@@ -33,11 +34,12 @@ UTF8OutputSource::UTF8OutputSource(const char * filename, const char * encoding)
 
     if(!output) throw UTF8OutputSourceError();
 
-    processEncoding(encoding);
+    processEncoding(to_encoding, from_encoding);
 
 }
 
-UTF8OutputSource::UTF8OutputSource(char ** src_buffer, size_t * src_size, const char * encoding)
+UTF8OutputSource::UTF8OutputSource(char ** src_buffer, size_t * src_size, const char * to_encoding,
+				   const char * from_encoding)
     : output(0), src_buffer(src_buffer), src_size(src_size), buffer(0), allocated(0), cd(0) {
 
     if(!src_buffer || !src_size) throw UTF8OutputSourceError();
@@ -46,20 +48,22 @@ UTF8OutputSource::UTF8OutputSource(char ** src_buffer, size_t * src_size, const 
     (*src_size) = 0;
     allocated = 4 * SRCBUFSIZE;
 
-    processEncoding(encoding);
+    processEncoding(to_encoding, from_encoding);
 
 }
 
-UTF8OutputSource::UTF8OutputSource(FILE * file, const char * encoding) 
+UTF8OutputSource::UTF8OutputSource(FILE * file, const char * to_encoding,
+				   const char * from_encoding) 
     : output(file), src_buffer(0), src_size(0), buffer(0), allocated(0), cd(0) {
 
     if(!output) throw UTF8OutputSourceError();
 
-    processEncoding(encoding);
+    processEncoding(to_encoding, from_encoding);
 
 }
 
-UTF8OutputSource::UTF8OutputSource(int fd, const char * encoding) 
+UTF8OutputSource::UTF8OutputSource(int fd, const char * to_encoding,
+				   const char * from_encoding)
     : output(0), src_buffer(0), src_size(0), buffer(0), allocated(0), cd(0) {
 
     if(fd < 0) throw UTF8OutputSourceError();
@@ -68,15 +72,15 @@ UTF8OutputSource::UTF8OutputSource(int fd, const char * encoding)
 
     if(!output) throw UTF8OutputSourceError();
 
-    processEncoding(encoding);
+    processEncoding(to_encoding, from_encoding);
 
 }
 
-void UTF8OutputSource::processEncoding(const char * encoding) {
+void UTF8OutputSource::processEncoding(const char * to_encoding, const char * from_encoding) {
 
-    if(encoding && strcmp("UTF-8", encoding) != 0) {
+    if(to_encoding && strcmp(from_encoding, to_encoding) != 0) {
 
-	cd = iconv_open(encoding, "UTF-8");
+	cd = iconv_open(to_encoding, from_encoding);
 
     }
 

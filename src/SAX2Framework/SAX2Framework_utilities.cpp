@@ -128,7 +128,6 @@ SAX2FrameworkCreateParserCtxt(xmlParserInputBufferPtr buffer_input, const char *
 	ctxt->encoding = xmlStrdup((xmlChar *)encoding);
 
     }
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, ctxt->charset);
 
     return(ctxt);
 }
