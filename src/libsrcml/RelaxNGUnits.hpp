@@ -33,7 +33,7 @@
 
 #include <UnitDOM.hpp>
 
-#ifndef WIN32
+#ifdef WIN32
 #include <io.h>
 #endif
 
