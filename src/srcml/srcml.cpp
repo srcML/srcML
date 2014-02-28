@@ -102,7 +102,6 @@ int main(int argc, char * argv[]) {
         if (srcml_request.att_src_versions)
             srcml_archive_set_version(srcml_arch, srcml_request.att_src_versions->c_str());
 
-        // TODO: replace with boost::optional
         if (srcml_request.markup_options)
             srcml_archive_enable_option(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options);
 
