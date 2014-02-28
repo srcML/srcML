@@ -218,7 +218,7 @@ int main(int argc, char * argv[]) {
                 boost::filesystem::create_directories(out.parent_path());
 
             // unparse directory to filename
-            srcml_unparse_unit_filename(unit, out.c_str());
+            srcml_unparse_unit_filename(unit, (const char *)out.c_str());
 
             // trace
             ++count;
