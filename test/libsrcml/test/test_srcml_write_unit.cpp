@@ -219,6 +219,7 @@ int main() {
         char * s = 0;
         int size;
         srcml_archive * archive = srcml_create_archive();
+        srcml_archive_set_encoding(archive, "UTF-8");
         srcml_archive_set_language(archive, "C++");
         srcml_archive_set_filename(archive, "project");
         srcml_archive_set_directory(archive, "test");
@@ -260,6 +261,7 @@ int main() {
         char * s = 0;
         int size;
         srcml_archive * archive = srcml_create_archive();
+        srcml_archive_set_encoding(archive, "UTF-8");
         srcml_archive_set_language(archive, "C++");
         srcml_archive_set_filename(archive, "project");
         srcml_archive_set_directory(archive, "test");
