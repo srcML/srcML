@@ -1,24 +1,24 @@
-/*
-  srcml_cli.cpp
-
-  @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
-
-  This file is part of the srcML Toolkit.
-
-  The srcML Toolkit is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  The srcML Toolkit is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with the srcML Toolkit; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+/**
+ * @file srcml_cli.cpp
+ *
+ * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ *
+ * This file is part of the srcML Toolkit.
+ *
+ * The srcML Toolkit is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML Toolkit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML Toolkit; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /*
   srcml_cli handles parsing for CLI options for srcml
@@ -143,7 +143,7 @@ void option_output(const std::string& value) {srcml_request.output_filename = va
 void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value; }
 
 void option_encoding(const std::string& value) {
-    if (value != "" && srcml_check_encoding(value.c_str()) == 0) {
+    if (value == "" || srcml_check_encoding(value.c_str()) == 0) {
         std::cerr << "srcmlCLI: invalid encoding.\n";
         exit(1); //ERROR CODE TBD
     }
@@ -154,7 +154,7 @@ void option_files_from(const std::string& value) {srcml_request.files_from = val
 
 void option_language(const std::string& value) {
     // check language
-    if (value != "" && srcml_check_language(value.c_str()) == 0) {
+    if (value == "" || srcml_check_language(value.c_str()) == 0) {
         std::cerr << "srcmlCLI: invalid language.\n";
         exit(1); //ERROR CODE TBD
     }
