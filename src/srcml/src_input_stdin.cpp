@@ -26,7 +26,13 @@
 
 #include <src_input_stdin.hpp>
 #include <stdio.h>
+
+#ifndef WIN32
 #include <unistd.h>
+#else
+#include <io.h>
+#endif
+
 #include <iostream>
 
 // check stdin for data
