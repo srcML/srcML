@@ -41,6 +41,10 @@
 
 #include <iostream>
 
+#ifdef WIN32
+#include <io.h>
+#endif
+
 int main(int argc, char * argv[]) {
 
     // parse the command line
