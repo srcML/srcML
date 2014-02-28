@@ -36,7 +36,7 @@ void srcml_list_unit_files(const std::vector<std::string>& pos_args) {
     BOOST_FOREACH(const std::string& input_file, pos_args) {
 
         boost::filesystem::path file(src_prefix_resource(input_file));
-        if(file.extension().compare(".xml") == 0)
+        if(file.extension().compare((const std::string &)std::string(".xml")) == 0)
             srcml_list_unit_files(file.string());
     }
 }

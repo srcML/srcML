@@ -128,8 +128,15 @@ prog_opts::positional_options_description input_file;
 /* DREW:  Most of the no parameter options could be recorded this way */
 template <int option>
 void option_markup(bool opt) {
+    /* 
+      If we have markup options the NULL optional arguement needs to 
+        first be initializied before the bitwise work can be done.
+    */
+    if (!srcml_request.markup_options)
+        srcml_request.markup_options = 0;
+
     if (opt)
-        srcml_request.markup_options |= option;
+        *srcml_request.markup_options |= option;
 }
 
 template <int command>
@@ -185,7 +192,6 @@ void option_max_threads(const int value) {srcml_request.max_threads = value; }
 void positional_args(const std::vector<std::string>& value) {srcml_request.positional_args = value; }
 
 void option_help(const std::string& help_opt) {
-    srcml_request.help_set = true;
     if (help_opt == "") {
         // TODO: A new header and footer for the general option
         std::cout << SRCML_HEADER << "\n";
@@ -223,7 +229,6 @@ void debug_cli_opts(const struct srcml_request_t srcml_request);
 // Interpretation of CLI options
 srcml_request_t parseCLI(int argc, char* argv[]) {
     try {
-
         general.add_options()
             ("compress,z", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_COMPRESS>), "output in gzip format")
             ("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
@@ -235,6 +240,8 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("max-threads", prog_opts::value<int>()->notifier(&option_max_threads)->default_value(4), "set the maximum number of threads srcml can spawn")
             ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")
             ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "display version number and exit")
+            ("src", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRC>), "explicitly declare src->srcml mode")
+            ("srcml", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRCML>), "explicitly declare srcml->src mode")
             ;
 
         src2srcml_options.add_options()

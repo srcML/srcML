@@ -55,11 +55,14 @@
 #define SRCML_COMMAND_INFO_SRC_VERSION  1<<18
 #define SRCML_COMMAND_TO_DIRECTORY      1<<19
 
+#define SRCML_COMMAND_SRC               1<<20
+#define SRCML_COMMAND_SRCML             1<<21
+
 // request for srcml client processing
 struct srcml_request_t {
     std::vector<std::string> positional_args;
     int command;
-    int markup_options;
+    boost::optional<int> markup_options;
 
     // unit attributes
     std::string att_language;
@@ -89,8 +92,6 @@ struct srcml_request_t {
 
     int unit;
     int max_threads;
-    bool help_set;
-    bool src_versions_set;
 };
 
 // parse the CLI options into a srcml client request

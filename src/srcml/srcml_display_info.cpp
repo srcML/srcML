@@ -38,7 +38,7 @@ void srcml_display_info(const std::vector<std::string>& pos_args) {
         std::string resource;
         std::string protocol;
         src_prefix_split_uri(input_file, protocol, resource);
-        boost::filesystem::path file (resource);
+        boost::filesystem::path file ((const std::string &)resource);
         if(file.extension().compare(".xml") == 0)
             srcml_display_info(resource);
     }

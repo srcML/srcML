@@ -41,6 +41,10 @@
 
 #include <iostream>
 
+#ifdef WIN32
+#include <io.h>
+#endif
+
 int main(int argc, char * argv[]) {
 
     // parse the command line
@@ -102,9 +106,8 @@ int main(int argc, char * argv[]) {
         if (srcml_request.att_src_versions)
             srcml_archive_set_version(srcml_arch, srcml_request.att_src_versions->c_str());
 
-        // TODO: replace with boost::optional
-        if (srcml_request.markup_options != 0)
-            srcml_archive_enable_option(srcml_arch, srcml_archive_get_options(srcml_arch) | srcml_request.markup_options);
+        if (srcml_request.markup_options)
+            srcml_archive_enable_option(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options);
 
         // TODO: replace "" with boost::optional. NOTE: "" is not a valid language and should
         // be caught by srcml_cli.*
@@ -116,7 +119,7 @@ int main(int argc, char * argv[]) {
         srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
 
         // archive or not
-        if (srcml_request.positional_args.size() == 1 && !(srcml_request.markup_options & SRCML_OPTION_ARCHIVE))
+        if (srcml_request.positional_args.size() == 1 && !(*srcml_request.markup_options & SRCML_OPTION_ARCHIVE))
             srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
         else
             srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
