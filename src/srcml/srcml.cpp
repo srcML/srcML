@@ -58,7 +58,6 @@ int main(int argc, char * argv[]) {
     }
 
     // find the first input that is not stdin
-    // TODO: Determine in CLI input
     boost::optional<std::string> nonstdin;
     for (int i = 0; i < (int)srcml_request.positional_args.size(); ++i) {
         if (srcml_request.positional_args[i] != "-") {
