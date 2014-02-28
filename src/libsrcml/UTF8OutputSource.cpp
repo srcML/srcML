@@ -89,7 +89,7 @@ size_t UTF8OutputSource::growBuffer(const char * & raw_buffer, size_t size) {
 
     // iconv incements buffers need temporary since static and get refilled
     unsigned char * output_buffer = iconv_buffer;
-#if !defined(WIN32)
+#ifndef WIN32
     iconv(cd, (char **)&raw_buffer, &num_in_convert, (char **)&output_buffer, &num_out_convert);
 #else
     iconv(cd, (const char **)&raw_buffer, &num_in_convert, (char **)&output_buffer, &num_out_convert);

@@ -33,6 +33,10 @@
 
 #include <UnitDOM.hpp>
 
+#ifndef WIN32
+#include <io.h>
+#endif
+
 class RelaxNGUnits : public UnitDOM {
 public :
 

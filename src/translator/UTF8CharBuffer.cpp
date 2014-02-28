@@ -99,7 +99,7 @@ size_t UTF8CharBuffer::convertEncodings(size_t num_to_convert) {
     // iconv incements buffers need temporary since static and get refilled
     unsigned char * input_buf = input_buffer;
     char * raw = raw_buffer;
-#if !defined(WIN32)
+#ifndef WIN32
     iconv(cd, &raw, &num_in_convert, (char **)&input_buf, &num_out_convert);
 #else
     iconv(cd, (const char **)&raw, &num_in_convert, (char **)&input_buf, &num_out_convert);

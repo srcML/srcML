@@ -48,6 +48,10 @@ typedef xmlDocPtr (*xsltApplyStylesheet_function) (xsltStylesheetPtr,xmlDocPtr,c
 #include <libexslt/exslt.h>
 #endif
 
+#ifndef WIN32
+#include <io.h>
+#endif
+
 class XSLTUnits : public UnitDOM {
 public :
 
