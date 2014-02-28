@@ -235,6 +235,8 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("max-threads", prog_opts::value<int>()->notifier(&option_max_threads)->default_value(4), "set the maximum number of threads srcml can spawn")
             ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")
             ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "display version number and exit")
+            ("src", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRC>), "explicitly declare src->srcml mode")
+            ("srcml", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRCML>), "explicitly declare srcml->src mode")
             ;
 
         src2srcml_options.add_options()
