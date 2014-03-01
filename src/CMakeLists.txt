@@ -65,7 +65,6 @@ set_target_properties(srcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_B
 buildLib(srcml_shared SHARED)
 set_target_properties(srcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-
 install(TARGETS srcml_shared srcml_static
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
