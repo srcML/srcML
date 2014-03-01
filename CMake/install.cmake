@@ -18,5 +18,6 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-install(FILES ${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h DESTINATION include)
-#install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/libsrcml DESTINATION src FILES_MATCHING PATTERN *.hpp PATTERN *.cpp)
+if(NOT WIN32)
+set(CMAKE_INSTALL_PREFIX "/usr/local")
+endif()
