@@ -86,7 +86,6 @@ struct srcml_request_t {
     // xml namespaces
     // BECOME OPTIONAL
     std::string xmlns_prefix_query;
-    std::string xmlns_uri; // Remove this
 
     std::vector<std::string> xmlns_prefix;
 

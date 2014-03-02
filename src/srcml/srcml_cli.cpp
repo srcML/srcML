@@ -180,7 +180,11 @@ void option_tabs(const int value) {
 void option_directory(const std::string& value) {srcml_request.att_directory = value; }
 void option_src_versions(const std::string& value) {srcml_request.att_src_versions = value; }
 void option_prefix(const std::string& value) {srcml_request.xmlns_prefix_query = value; }
-void option_xmlns_uri(const std::string& value) {srcml_request.xmlns_uri = value; }
+
+void option_xmlns_uri(const std::string& value) {
+  srcml_request.xmlns_prefix.push_back("=" + value);
+}
+
 void option_xmlns_prefix(const std::vector<std::string>& values) {srcml_request.xmlns_prefix = values; }
 void option_relaxng(const std::string& value) {srcml_request.relaxng = value; }
 void option_xpath(const std::string& value) {srcml_request.xpath = value; }
@@ -299,7 +303,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         prefix.add_options()
-            // TODO: GOES IN THE ONE BELOW WITH A BLANK PREFIX.
             ("xmlns", prog_opts::value<std::string>()->notifier(&option_xmlns_uri), "set the default namespace to arg")
             ("xmlns:", prog_opts::value< std::vector<std::string> >()->notifier(&option_xmlns_prefix), "set the namespace arg format PREFIX=URI")
             ;
