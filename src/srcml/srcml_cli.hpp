@@ -92,7 +92,7 @@ struct srcml_request_t {
     // TODO: MAKE VECTORS
     std::string xpath;
     std::string xslt;
-    std::string relaxng;
+    std::vector<std::string> relaxng;
     std::vector<std::string> xpathparam;
 
     int unit;
