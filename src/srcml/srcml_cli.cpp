@@ -189,7 +189,7 @@ void option_xmlns_prefix(const std::vector<std::string>& values) {srcml_request.
 void option_relaxng(const std::vector<std::string>& value) {srcml_request.relaxng = value; }
 void option_xpath(const std::string& value) {srcml_request.xpath = value; }
 void option_xpathparam(const std::vector<std::string>& values) {srcml_request.xpathparam = values; }
-void option_xslt(const std::string& value) {srcml_request.xslt = value; }
+void option_xslt(const std::vector<std::string>& value) {srcml_request.xslt = value; }
 void option_unit(const int value) {srcml_request.unit = value; }
 void option_to_dir(const std::string& value) {srcml_request.output_filename = value; srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY; }
 void option_max_threads(const int value) {srcml_request.max_threads = value; }
@@ -312,7 +312,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("relaxng", prog_opts::value< std::vector<std::string> >()->notifier(&option_relaxng), "output individual units that match RELAXNG_FILE (FILE or URI) arg")
             ("xpath", prog_opts::value<std::string>()->notifier(&option_xpath), "apply XPATH expression arg to each individual unit")
             ("xpathparam", prog_opts::value< std::vector<std::string> >()->notifier(&option_xpathparam), "passes a parameter NAME and VAL arg to the XSLT program. arg format NAME=VAL")
-            ("xslt", prog_opts::value<std::string>()->notifier(&option_xslt), "apply XSLT_FILE (FILE or URI) arg transformation to each individual unit")
+            ("xslt", prog_opts::value< std::vector<std::string> >()->notifier(&option_xslt), "apply XSLT_FILE (FILE or URI) arg transformation to each individual unit")
             ;
 
         srcml_archive_options.add_options()
