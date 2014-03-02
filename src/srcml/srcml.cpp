@@ -122,7 +122,7 @@ int main(int argc, char * argv[]) {
         srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
 
         // archive or not
-        if (srcml_request.input.size() == 1 && !(is_directory(boost::filesystem::path(src_prefix_resource(srcml_request.input[0]))))
+        if ((srcml_request.input.size() == 1 && !(is_directory(boost::filesystem::path(src_prefix_resource(srcml_request.input[0])))))
             && !(*srcml_request.markup_options & SRCML_OPTION_ARCHIVE))
             srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
         else
