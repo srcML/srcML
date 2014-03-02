@@ -89,8 +89,7 @@ struct srcml_request_t {
     std::vector<std::string> xmlns_prefix;
 
     // srcml transformation
-    // TODO: MAKE VECTORS
-    std::string xpath;
+    std::vector<std::string> xpath;
     std::vector<std::string> xslt;
     std::vector<std::string> relaxng;
     std::vector<std::string> xpathparam;
