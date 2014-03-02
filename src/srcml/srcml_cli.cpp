@@ -366,8 +366,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         std::cerr << e.what() << "\n";
         exit(1);
     }
-    // Debug to see CLI inputs
-    //debug_cli_opts(srcml_request);
+    
     return srcml_request;
 }
 
