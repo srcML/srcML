@@ -60,9 +60,8 @@
 
 // request for srcml client processing
 struct srcml_request_t {
-
-    // TODO: Rename to input
-    std::vector<std::string> positional_args;
+    
+    std::vector<std::string> input;
     int command;
     boost::optional<int> markup_options;
 

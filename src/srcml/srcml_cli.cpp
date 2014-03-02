@@ -193,7 +193,7 @@ void option_xslt(const std::string& value) {srcml_request.xslt = value; }
 void option_unit(const int value) {srcml_request.unit = value; }
 void option_to_dir(const std::string& value) {srcml_request.output_filename = value; srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY; }
 void option_max_threads(const int value) {srcml_request.max_threads = value; }
-void positional_args(const std::vector<std::string>& value) {srcml_request.positional_args = value; }
+void positional_args(const std::vector<std::string>& value) {srcml_request.input = value; }
 
 void option_help(const std::string& help_opt) {
     if (help_opt == "") {
@@ -351,8 +351,8 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // If no positional args (files,urls,etc.) stdin ("-") is used
         // TODO: GET RID OF THIS
-        if (srcml_request.positional_args.empty()) {
-            srcml_request.positional_args.push_back("-");
+        if (srcml_request.input.empty()) {
+            srcml_request.input.push_back("-");
         }
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
