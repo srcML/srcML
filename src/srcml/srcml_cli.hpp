@@ -60,6 +60,8 @@
 
 // request for srcml client processing
 struct srcml_request_t {
+
+    // TODO: Rename to input
     std::vector<std::string> positional_args;
     int command;
     boost::optional<int> markup_options;
@@ -68,11 +70,12 @@ struct srcml_request_t {
     std::string att_language;
     boost::optional<std::string> att_filename;
     boost::optional<std::string> att_directory;
-    boost::optional<std::string> att_encoding;
+    boost::optional<std::string> att_xml_encoding;
     boost::optional<std::string> att_src_versions;
 
     std::string src_encoding;
 
+    //TODO: BOOST OPTIONAL
     std::string output_filename;
 
     //filelist:// prefix
@@ -88,10 +91,11 @@ struct srcml_request_t {
     std::vector<std::string> xmlns_prefix;
 
     // srcml transformation
+    // TODO: MAKE VECTORS
     std::string xpath;
-    std::vector<std::string> xpathparam;
     std::string xslt;
     std::string relaxng;
+    std::vector<std::string> xpathparam;
 
     int unit;
     int max_threads;

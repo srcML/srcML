@@ -154,7 +154,7 @@ void option_encoding(const std::string& value) {
         std::cerr << "srcmlCLI: invalid encoding.\n";
         exit(1); //ERROR CODE TBD
     }
-    srcml_request.att_encoding = value;
+    srcml_request.att_xml_encoding = value;
 }
 
 void option_files_from(const std::string& value) {srcml_request.files_from = value; }
@@ -249,7 +249,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("debug,g", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_DEBUG>), "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
             ("encoding,x", prog_opts::value<std::string>()->notifier(&option_encoding),"set the output XML encoding to ENC (default:  UTF-8)")
             ("expression,e", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
-            //TODO: 
+            //TODO: Put files (PREFIXED) into positional args
             ("files-from", prog_opts::value<std::string>()->notifier(&option_files_from), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
             ("interactive,c", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INTERACTIVE>), "immediate output while parsing, default for keyboard input")
             ("language,l", prog_opts::value<std::string>()->notifier(&option_language), "set the language to C, C++, or Java")
@@ -318,6 +318,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         positional_options.add_options()
+            //TODO: Entry point for prefixing
             ("input-files", prog_opts::value< std::vector<std::string> >()->notifier(&positional_args), "input files")
             ;
 
@@ -346,6 +347,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         conflicting_options(cli_map, "quiet", "verbose");
 
         // If no positional args (files,urls,etc.) stdin ("-") is used
+        // TODO: GET RID OF THIS
         if (srcml_request.positional_args.empty()) {
             srcml_request.positional_args.push_back("-");
         }

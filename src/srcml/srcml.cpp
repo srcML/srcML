@@ -97,8 +97,8 @@ int main(int argc, char * argv[]) {
         srcml_archive* srcml_arch = srcml_create_archive();
 
         // set options for the output srcml archive
-        if (srcml_request.att_encoding)
-            srcml_archive_set_encoding(srcml_arch, srcml_request.att_encoding->c_str());
+        if (srcml_request.att_xml_encoding)
+            srcml_archive_set_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str());
 
         if (srcml_request.att_filename && *srcml_request.att_filename != "-")
             srcml_archive_set_filename(srcml_arch, srcml_request.att_filename->c_str());
@@ -122,7 +122,8 @@ int main(int argc, char * argv[]) {
         srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
 
         // archive or not
-        if (srcml_request.positional_args.size() == 1 && !(*srcml_request.markup_options & SRCML_OPTION_ARCHIVE))
+        if (srcml_request.positional_args.size() == 1 && !(is_directory(boost::filesystem::path(src_prefix_resource(srcml_request.positional_args[0]))))
+            && !(*srcml_request.markup_options & SRCML_OPTION_ARCHIVE))
             srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
         else
             srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
