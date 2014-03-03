@@ -82,7 +82,6 @@ struct srcml_request_t {
     int tabs;
 
     // xml namespaces
-    // BECOME OPTIONAL
     boost::optional<std::string> xmlns_prefix_query;
 
     std::vector<std::string> xmlns_prefix;
