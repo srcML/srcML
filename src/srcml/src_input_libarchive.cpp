@@ -131,7 +131,7 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         // rest of the srcml parsing fields
         request.filename = filename;
         request.srcml_arch = srcml_arch;
-        request.lang = ((srcml_archive_get_language(srcml_arch) || lang.compare("xml") == 0) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
+        request.lang = language;
 
         // Hand request off to the processing queue
         queue.push(request);
