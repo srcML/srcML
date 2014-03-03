@@ -469,7 +469,8 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 	const char * encoding   = unit->encoding ? unit->encoding->c_str() :
 	    (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
 
-	UTF8OutputSource output_handler(src_filename, encoding);
+	xmlOutputBufferPtr output_handler = xmlOutputBufferCreateFilename(src_filename, xmlFindCharEncodingHandler(encoding), 
+									 unit->archive->options & SRCML_OPTION_COMPRESS);
 
 
 	if(!unit->unit) {
@@ -506,13 +507,21 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
 	const char * encoding   = unit->encoding ? unit->encoding->c_str() :
 	    (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
 
-	UTF8OutputSource output_handler(src_buffer, (size_t *)src_size, encoding);
+	xmlBufferPtr buffer = xmlBufferCreate();
+	xmlOutputBufferPtr output_handler = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(encoding));
 	
 	if(!unit->unit) {
 
 	    unit->archive->reader->readsrc(output_handler);
 
 	} else if(srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options) == SRCML_STATUS_ERROR) {
+
+	    (*src_buffer) = (char *)buffer->content;
+	    buffer->content = 0;
+	    xmlBufferFree(buffer);
+	    if(!buffer->content && !(*src_buffer)) return SRCML_STATUS_ERROR;
+ 
+	    *src_size = (int)strlen(*src_buffer);
 
 	    return SRCML_STATUS_ERROR;
 
@@ -544,7 +553,7 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 	const char * encoding   = unit->encoding ? unit->encoding->c_str() :
 	    (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
 
-	UTF8OutputSource output_handler(srcml_file, encoding);
+	xmlOutputBufferPtr output_handler = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(encoding));
 
 
 	if(!unit->unit) {
@@ -581,7 +590,7 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 	const char * encoding   = unit->encoding ? unit->encoding->c_str() :
 	    (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
 
-	UTF8OutputSource output_handler(srcml_fd, encoding);
+	xmlOutputBufferPtr output_handler = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(encoding));
 
 	if(!unit->unit)
 	    unit->archive->reader->readsrcML(unit->unit);

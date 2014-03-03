@@ -49,7 +49,7 @@
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_extract_text(const char * input_buffer, size_t size, UTF8OutputSource & output_handler, OPTION_TYPE options, int unit) {
+int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBuffer * output_handler, OPTION_TYPE options, int unit) {
 
     if(input_buffer == NULL || size == 0) return SRCML_STATUS_ERROR;
 
@@ -79,10 +79,13 @@ int srcml_extract_text(const char * input_buffer, size_t size, UTF8OutputSource 
  */
 int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, OPTION_TYPE options, int unit) {
 
-    UTF8OutputSource output_handler(ofilename, encoding);
+    xmlOutputBufferPtr output_handler = xmlOutputBufferCreateFilename(ofilename, xmlFindCharEncodingHandler(encoding),
+								      options & SRCML_OPTION_COMPRESS);
 
     srcMLSAX2Reader reader(ifilename);
     reader.readsrc(output_handler);
+
+    xmlOutputBufferClose(output_handler);
 
     return SRCML_STATUS_OK;
 
