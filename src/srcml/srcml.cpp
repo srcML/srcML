@@ -164,7 +164,7 @@ int main(int argc, char * argv[]) {
 
             // call handler based on prefix
             if (fstdin) {
-                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, true, *fstdin);
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, fstdin);
             } else if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
                 src_input_filesystem(queue, srcml_arch, resource, srcml_request.att_language);
             } else if (protocol == "file") {

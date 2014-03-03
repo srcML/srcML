@@ -63,7 +63,7 @@ void setup_libarchive(archive* arch) {
 }
 
 // Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const std::string& lang, bool isfstdin, FILE* fstdin) {
+void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const std::string& lang, boost::optional<FILE*> fstdin) {
 
     // libArchive Setup
     archive* arch = archive_read_new();
@@ -74,10 +74,10 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
     bool is_stdin = input_file == "-" && archive_compression(arch) != ARCHIVE_COMPRESSION_NONE;
 
     // open the archive
-    if (!isfstdin && archive_read_open_filename(arch, (!is_stdin ? input_file.c_str() : 0), 16384)!= ARCHIVE_OK) {
+    if (!fstdin && archive_read_open_filename(arch, (!is_stdin ? input_file.c_str() : 0), 16384)!= ARCHIVE_OK) {
         std::cerr << "Unable to open file\n";
         exit(1);
-    } else if (isfstdin && archive_read_open_FILE(arch, fstdin)!= ARCHIVE_OK) {
+    } else if (fstdin && archive_read_open_FILE(arch, *fstdin)!= ARCHIVE_OK) {
         std::cerr << "Unable to open file\n";
         exit(1);
     }
@@ -106,7 +106,7 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
                 language = l;
         }
 
-        if (language == "" && (is_stdin || isfstdin)) {
+        if (language == "" && (is_stdin || fstdin)) {
             std::cerr << "Using stdin requires a declared language\n";
             continue;
         }
