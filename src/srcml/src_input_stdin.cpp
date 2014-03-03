@@ -26,11 +26,11 @@
 
 #include <src_input_stdin.hpp>
 
-#include <sys/select.h>
 #include <stdio.h>
 
 #ifndef WIN32
 #include <unistd.h>
+#include <sys/select.h>
 #else
 #include <io.h>
 #include <winsock2.h>
