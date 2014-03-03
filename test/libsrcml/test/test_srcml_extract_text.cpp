@@ -34,8 +34,9 @@
 #include <srcml_sax2_utilities.hpp>
 #include <srcml.h>
 #include <srcml_types.hpp>
-#include <UTF8OutputSource.hpp>
 #include <srcmlns.hpp>
+
+#include <libxml/xmlIO.h>
 
 #include "dassert.hpp"
 
@@ -47,10 +48,11 @@ int main() {
 
     {
         const char * s = "<unit>a;</unit>";
-	{
-	    UTF8OutputSource output_handler("project.xml", "ISO-8859-1");
-	    dassert(srcml_extract_text(s, strlen(s), output_handler, 0, 0), SRCML_STATUS_OK);
-	}
+
+	xmlOutputBufferPtr output_handler = xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0);
+	dassert(srcml_extract_text(s, strlen(s), output_handler, 0, 0), SRCML_STATUS_OK);
+	xmlOutputBufferClose(output_handler);
+
         std::ifstream in("project.xml");
         std::string output;
         std::string temp;
@@ -59,17 +61,18 @@ int main() {
 
         dassert(output, "a;");
         unlink("project.xml");
+
     }
 
     {
         const char * s = "<unit>a;</unit>";
-        UTF8OutputSource output_handler("project.xml", "ISO-8859-1");
+	xmlOutputBufferPtr output_handler = xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0);
         dassert(srcml_extract_text(0, strlen(s), output_handler, 0, 0), SRCML_STATUS_ERROR);
     }
 
     {
         const char * s = "<unit>a;</unit>";
-        UTF8OutputSource output_handler("project.xml", "ISO-8859-1");
+	xmlOutputBufferPtr output_handler = xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0);
         dassert(srcml_extract_text(s, 0, output_handler, 0, 0), SRCML_STATUS_ERROR);
     }
 
