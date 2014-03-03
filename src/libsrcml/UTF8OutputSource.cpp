@@ -20,9 +20,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <iostream>
 #include <UTF8OutputSource.hpp>
 
+#include <iostream>
+#include <stdlib.h>
+#include <errno.h>
 
 UTF8OutputSource::UTF8OutputSource(const char * filename, const char * encoding)
     : output(0), src_buffer(0), src_size(0), buffer(0), allocated(0), cd(0) {

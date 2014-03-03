@@ -22,3 +22,5 @@ file(GLOB LIBSRCML_SOURCE *.cpp)
 
 add_library(libsrcml OBJECT ${LIBSRCML_HEADERS} ${LIBSRCML_SOURCE})
 add_dependencies(libsrcml parser translator)
+
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION include)

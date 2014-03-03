@@ -24,6 +24,8 @@
 */
 
 #include <src_prefix.hpp>
+
+#include <string.h>
 #include <iostream>
 
 const char* PROTOCOL_SEPARATOR = "://";

@@ -25,6 +25,8 @@
 */
 
 #include <src_input_stdin.hpp>
+
+#include <sys/select.h>
 #include <stdio.h>
 
 #ifndef WIN32
