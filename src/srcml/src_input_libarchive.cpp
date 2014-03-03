@@ -74,10 +74,12 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
     bool is_stdin = input_file == "-" && archive_compression(arch) != ARCHIVE_COMPRESSION_NONE;
 
     // open the archive
-    if (!fstdin && archive_read_open_filename(arch, (!is_stdin ? input_file.c_str() : 0), 16384)!= ARCHIVE_OK) {
-        std::cerr << "Unable to open file\n";
-        exit(1);
-    } else if (fstdin && archive_read_open_FILE(arch, *fstdin)!= ARCHIVE_OK) {
+    int open_status;
+    if (fstdin)
+        open_status = fstdin && archive_read_open_FILE(arch, *fstdin);
+    else
+        open_status = archive_read_open_filename(arch, (!is_stdin ? input_file.c_str() : 0), 16384);
+    if (open_status != ARCHIVE_OK) {
         std::cerr << "Unable to open file\n";
         exit(1);
     }
