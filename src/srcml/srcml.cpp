@@ -141,10 +141,10 @@ int main(int argc, char * argv[]) {
         }
 
         // create the srcML output file. if compressed, must go through libarchive thread
-        srcml_write_open_filename(srcml_arch, srcml_request.output_filename.c_str());
+        srcml_write_open_filename(srcml_arch, srcml_request.output_filename->c_str());
 
         // gzip compression available from libsrcml
-        if (srcml_request.output_filename.size() > 3 && srcml_request.output_filename.substr(srcml_request.output_filename.size() - 3) == ".gz")
+        if (srcml_request.output_filename->size() > 3 && srcml_request.output_filename->substr(srcml_request.output_filename->size() - 3) == ".gz")
             srcml_archive_enable_option(srcml_arch, SRCML_OPTION_COMPRESS);
 
         // setup the parsing queue
@@ -204,8 +204,8 @@ int main(int argc, char * argv[]) {
 
         // construct the relative directory
         std::string prefix;
-        if (srcml_request.output_filename != "." && srcml_request.output_filename != "./")
-            prefix = srcml_request.output_filename;
+        if (*srcml_request.output_filename != "." && *srcml_request.output_filename != "./")
+            prefix = *srcml_request.output_filename;
  
         int count = 0;
         while (srcml_unit* unit = srcml_read_unit_header(arch)) {
@@ -241,7 +241,7 @@ int main(int argc, char * argv[]) {
 
         // TODO: We would have to use extend the API, or we will be creating/closing files
         srcml_archive* oarch = srcml_create_archive();
-        srcml_write_open_filename(oarch, srcml_request.output_filename.c_str());
+        srcml_write_open_filename(oarch, srcml_request.output_filename->c_str());
 
         srcml_write_unit(oarch, unit);
 
@@ -252,7 +252,7 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(arch);
 
     // srcml->src extract individual unit to stdout
-    } else if (isxml && srcml_request.unit != 0 && srcml_request.input.size() == 1 && srcml_request.output_filename == "-") {
+    } else if (isxml && srcml_request.unit != 0 && srcml_request.input.size() == 1 && *srcml_request.output_filename == "-") {
 
         srcml_archive* arch = srcml_create_archive();
 
@@ -274,13 +274,13 @@ int main(int argc, char * argv[]) {
 
         srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
 
-        srcml_unparse_unit_filename(unit, srcml_request.output_filename.c_str());
+        srcml_unparse_unit_filename(unit, srcml_request.output_filename->c_str());
 
         srcml_close_archive(arch);
         srcml_free_archive(arch);
 
     // srcml->src srcML file extracted to stdout
-    } else if (isxml && srcml_request.input.size() == 1 && srcml_request.output_filename == "-") {
+    } else if (isxml && srcml_request.input.size() == 1 && *srcml_request.output_filename == "-") {
 
         srcml_archive* arch = srcml_create_archive();
         srcml_read_open_FILE(arch, fstdin);
@@ -303,7 +303,7 @@ int main(int argc, char * argv[]) {
         archive_write_set_compression_gzip(ar);
         archive_write_set_format_pax_restricted(ar);
 
-        archive_write_open_filename(ar, srcml_request.output_filename.c_str());
+        archive_write_open_filename(ar, srcml_request.output_filename->c_str());
 
         srcml_archive* arch = srcml_create_archive();
         srcml_read_open_filename(arch, srcml_request.input[0].c_str());
