@@ -117,20 +117,18 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
             continue;
         }
 
+        // form the parsing request
         ParseRequest request;
+
+        // fill up the buffer
         request.buffer.clear();
-        while (true) {
-
-            const char* buffer;
-            size_t size;
-            int64_t offset;
-
-            if (archive_read_data_block(arch, (const void**) &buffer, &size, &offset) != ARCHIVE_OK)
-                break;
-
+        const char* buffer;
+        size_t size;
+        int64_t offset;
+        while (archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
             request.buffer.insert(request.buffer.end(), buffer, buffer + size);
-        }
 
+        // rest of the srcml parsing fields
         request.filename = filename;
         request.srcml_arch = srcml_arch;
         request.lang = ((srcml_archive_get_language(srcml_arch) || lang.compare("xml") == 0) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
