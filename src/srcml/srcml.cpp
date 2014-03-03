@@ -71,19 +71,17 @@ int main(int argc, char * argv[]) {
     }
 
     // determine whether the input is xml(srcml) or not
-    FILE* fstdin;
+    boost::optional<FILE*> fstdin;
     char c = 0;
-    bool isfstdin = false;
     if (nonstdin) {
         int firstinfd = open(nonstdin->c_str(), O_RDONLY);
         read(firstinfd, &c, 1);
         close(firstinfd);
     } else {
-        // Note: If stdin only, then have to read from this file*
-        isfstdin = true;
+        // Note: If stdin only, then have to read from this FILE*
         fstdin = fdopen(STDIN_FILENO, "r");
-        c = fgetc(fstdin);
-        ungetc(c, fstdin);
+        c = fgetc(*fstdin);
+        ungetc(c, *fstdin);
     }
     bool isxml = c == '<';
 
@@ -153,7 +151,7 @@ int main(int argc, char * argv[]) {
         BOOST_FOREACH(const std::string& input_file, srcml_request.input) {
 
             // if stdin, then there has to be data
-            if (!isfstdin && (input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
+            if (!fstdin && (input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
                 return 1; // stdin was requested, but no data was received
             }
 
@@ -165,8 +163,8 @@ int main(int argc, char * argv[]) {
             src_prefix_split_uri(uri, protocol, resource);
 
             // call handler based on prefix
-            if (isfstdin) {
-                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, true, fstdin);
+            if (fstdin) {
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, true, *fstdin);
             } else if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
                 src_input_filesystem(queue, srcml_arch, resource, srcml_request.att_language);
             } else if (protocol == "file") {
@@ -256,7 +254,7 @@ int main(int argc, char * argv[]) {
         srcml_archive* arch = srcml_create_archive();
 
         // we opened this already when checking for XML status
-        srcml_read_open_FILE(arch, fstdin);
+        srcml_read_open_FILE(arch, *fstdin);
 
         srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
 
@@ -282,7 +280,7 @@ int main(int argc, char * argv[]) {
     } else if (isxml && srcml_request.input.size() == 1 && *srcml_request.output_filename == "-") {
 
         srcml_archive* arch = srcml_create_archive();
-        srcml_read_open_FILE(arch, fstdin);
+        srcml_read_open_FILE(arch, *fstdin);
 
         srcml_unit* unit = srcml_read_unit(arch);
 
