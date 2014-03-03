@@ -52,11 +52,15 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
         // Open for write;
         out.initWriter();
 
-        out.outputXMLDecl();
 
         // root unit for compound srcML documents
-        if((options & OPTION_ARCHIVE) > 0)
+        if((options & OPTION_ARCHIVE) > 0) {
+
+	    out.outputXMLDecl();
+
             out.startUnit(0, root_directory, root_filename, root_version, true);
+
+	}
 
 }
 
@@ -85,11 +89,14 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
         // Open for write;
         out.initWriter();
 
-        out.outputXMLDecl();
-
         // root unit for compound srcML documents
-        if((options & OPTION_ARCHIVE) > 0)
+        if((options & OPTION_ARCHIVE) > 0) {
+
+	    out.outputXMLDecl();
+
             out.startUnit(0, root_directory, root_filename, root_version, true);
+
+	}
 
 }
 
@@ -114,11 +121,14 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
         // Open for write;
         out.initWriter();
 
-        out.outputXMLDecl();
-
         // root unit for compound srcML documents
-        if((options & OPTION_ARCHIVE) > 0)
+        if((options & OPTION_ARCHIVE) > 0) {
+
+	    out.outputXMLDecl();
+
             out.startUnit(0, root_directory, root_filename, root_version, true);
+
+	}
 
 }
 
@@ -158,14 +168,8 @@ void srcMLTranslator::translate(const char* unit_directory,
 
     if(first) {
 
-        out.initWriter();
-
-        out.outputXMLDecl();
-
-        // root unit for compound srcML documents
-        if((options & OPTION_ARCHIVE) > 0)
-            out.startUnit(0, root_directory, root_filename, root_version, true);
-
+        if((options & OPTION_ARCHIVE) == 0)
+	    out.outputXMLDecl();
 
     }
 
@@ -272,6 +276,9 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
 void srcMLTranslator::add_unit(const char* xml) {
 
     if(first) {
+
+        if((options & OPTION_ARCHIVE) == 0)
+	    out.outputXMLDecl();
 
 	if ((options & OPTION_ARCHIVE) > 0)
 	    out.processText("\n\n", 2);
