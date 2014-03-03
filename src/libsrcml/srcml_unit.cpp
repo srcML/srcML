@@ -475,6 +475,8 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 	if(!unit->unit) {
 
 	    unit->archive->reader->readsrc(output_handler);
+	    xmlOutputBufferClose(output_handler);
+
 	    return SRCML_STATUS_OK;
 
 	}
@@ -530,13 +532,7 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
 	} else if(srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options) == SRCML_STATUS_ERROR) {
 
 	    xmlOutputBufferClose(output_handler);
-
-	    (*src_buffer) = (char *)buffer->content;
-	    buffer->content = 0;
 	    xmlBufferFree(buffer);
-	    if(!buffer->content && !(*src_buffer)) return SRCML_STATUS_ERROR;
- 
-	    *src_size = (int)strlen(*src_buffer);
 
 	    return SRCML_STATUS_ERROR;
 
@@ -550,6 +546,17 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
 	return SRCML_STATUS_ERROR; 
 
     }
+
+    xmlOutputBufferClose(output_handler);
+
+    (*src_buffer) = (char *)buffer->content;
+    buffer->content = 0;
+    if(!buffer->content && !(*src_buffer)) return SRCML_STATUS_ERROR;
+    *src_size = (int)strlen(*src_buffer);
+
+   
+    xmlBufferFree(buffer);
+
 
     return SRCML_STATUS_OK;
 
@@ -580,6 +587,7 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 	if(!unit->unit) {
 
 	    unit->archive->reader->readsrc(output_handler);
+	    xmlOutputBufferClose(output_handler);
 
 	    return SRCML_STATUS_OK;
 
@@ -623,8 +631,14 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
     try {
 
 
-	if(!unit->unit)
-	    unit->archive->reader->readsrcML(unit->unit);
+	if(!unit->unit) {
+
+	    unit->archive->reader->readsrc(output_handler);
+	    xmlOutputBufferClose(output_handler);
+
+	    return SRCML_STATUS_OK;
+
+	}
 
 	int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options);
 	xmlOutputBufferClose(output_handler);
