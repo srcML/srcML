@@ -26,10 +26,14 @@
 #define SRC_INPUT_LIBARCHIVE_HPP
 
 #include <srcml.h>
-#include <thread_queue.hpp>
 #include <string>
 #include <parse_queue.hpp>
 
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const std::string& lang, boost::optional<FILE*> fstdin = boost::optional<FILE*>());
+void src_input_libarchive(ParseQueue& queue,                  // srcml parsing queue
+                          srcml_archive* srcml_arch,          // srcml archive to write to
+                          const std::string& input_filename,  // input filename
+                          const std::string& language,        // specified language
+                          boost::optional<FILE*> fstdin = boost::optional<FILE*>()  // stdin (if already opened)
+);
 
 #endif
