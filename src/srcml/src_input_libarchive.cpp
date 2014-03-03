@@ -67,7 +67,7 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
 
     // libArchive Setup
     archive* arch = archive_read_new();
-    archive_entry* arch_entry = archive_entry_new();
+    archive_entry* arch_entry;
 
     setup_libarchive(arch);
 
@@ -147,6 +147,7 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         request.lang = ((srcml_archive_get_language(srcml_arch) || lang.compare("xml") == 0) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, input_file.c_str()));
         queue.push(request);
     }
+
 
     archive_read_finish(arch);
 }
