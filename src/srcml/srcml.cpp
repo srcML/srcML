@@ -71,7 +71,6 @@ int main(int argc, char * argv[]) {
     }
 
     // determine whether the input is xml(srcml) or not
-    bool isxml = false;
     FILE* fstdin;
     char c = 0;
     bool isfstdin = false;
@@ -86,7 +85,7 @@ int main(int argc, char * argv[]) {
         c = fgetc(fstdin);
         ungetc(c, fstdin);
     }
-    isxml = c == '<';
+    bool isxml = c == '<';
 
     // src->srcml
     if (!isxml && (srcml_request.unit == 0) &&
