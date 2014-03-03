@@ -347,5 +347,7 @@ int main(int argc, char * argv[]) {
         std::cerr << "Option not implemented" << '\n';
     }
 
+    srcml_cleanup_globals();
+
     return 0;
 }
