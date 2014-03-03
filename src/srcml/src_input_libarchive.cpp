@@ -108,13 +108,12 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
                 language = l;
         }
 
-        if (language == "" && (is_stdin || fstdin)) {
-            std::cerr << "Using stdin requires a declared language\n";
-            continue;
-        }
-
-        if (language == "" && !is_stdin) {
-            std::cerr << "Extension not supported\n";
+        // at this point there are no other language options
+        if (language == "") {
+            if (is_stdin || fstdin)
+                std::cerr << "Using stdin requires a declared language\n";
+            else
+                std::cerr << "Extension not supported\n";
             continue;
         }
 
