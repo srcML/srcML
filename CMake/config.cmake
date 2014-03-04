@@ -63,7 +63,7 @@ else()
     find_package(LibXslt)
     set(Boost_NO_BOOST_CMAKE ON)
     set(Boost_USE_STATIC_LIBS ON)
-    find_package(Boost COMPONENTS program_options filesystem system thread regex REQUIRED)
+    find_package(Boost COMPONENTS program_options filesystem system thread regex date_time REQUIRED)
 
     # add include directories
     include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
