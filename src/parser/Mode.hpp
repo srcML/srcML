@@ -292,6 +292,32 @@ protected:
         return statev.inTransparentMode(m);
     }
 
+    void dupDownOverMode(const State::MODE_TYPE& m) {
+
+	std::list<srcMLState> alist;
+	while(!(statev.st.top().getMode() & m)) {
+
+	    alist.push_front(statev.st.top());
+	    statev.st.pop();
+
+	}
+
+	alist.push_front(statev.st.top());
+	statev.st.pop();
+
+	for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i)
+	    statev.st.push(*i);
+
+	alist.front().setMode(MODE_TOP);
+	for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i) {
+	    i->setMode(MODE_ISSUE_EMPTY_AT_POP);
+	    statev.st.push(*i);
+
+	}
+
+
+    }
+
     // End elements down to a mode
     void endDownToMode(const State::MODE_TYPE& ele);
 
