@@ -159,7 +159,7 @@ void option_encoding(const std::string& value) {
     srcml_request.att_xml_encoding = value;
 }
 
-void option_files_from(const std::string& value) {srcml_request.files_from = value; }
+void option_files_from(const std::vector<std::string>& value) {srcml_request.files_from = value; }
 
 void option_language(const std::string& value) {
     // check language
@@ -267,7 +267,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("encoding,x", prog_opts::value<std::string>()->notifier(&option_encoding),"set the output XML encoding to ENC (default:  UTF-8)")
             ("expression,e", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
             //TODO: Put files (PREFIXED) into positional args
-            ("files-from", prog_opts::value<std::string>()->notifier(&option_files_from), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
+            ("files-from", prog_opts::value< std::vector<std::string> >()->notifier(&option_files_from), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
             ("interactive,c", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INTERACTIVE>), "immediate output while parsing, default for keyboard input")
             ("language,l", prog_opts::value<std::string>()->notifier(&option_language), "set the language to C, C++, or Java")
             ("register-ext", prog_opts::value< std::vector<std::string> >()->notifier(&option_register_ext), "register file extension EXT for source-code language LANG. arg format EXT=LANG")

@@ -77,7 +77,7 @@ struct srcml_request_t {
     boost::optional<std::string> output_filename;
 
     //filelist:// prefix
-    std::string files_from;
+    std::vector<std::string> files_from;
     std::vector<std::string> language_ext;
     int tabs;
 
