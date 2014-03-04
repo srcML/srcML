@@ -185,7 +185,10 @@ void option_xmlns_uri(const std::string& value) {
   srcml_request.xmlns_prefix.push_back("=" + value);
 }
 
-void option_xmlns_prefix(const std::vector<std::string>& values) {srcml_request.xmlns_prefix = values; }
+void option_xmlns_prefix(const std::vector<std::string>& values) {
+    srcml_request.xmlns_prefix.insert(srcml_request.xmlns_prefix.end(), values.begin(), values.end());
+}
+
 void option_relaxng(const std::vector<std::string>& value) {srcml_request.relaxng = value; }
 void option_xpath(const std::vector<std::string>& value) {srcml_request.xpath = value; }
 void option_xpathparam(const std::vector<std::string>& values) {srcml_request.xpathparam = values; }
