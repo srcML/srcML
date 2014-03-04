@@ -257,6 +257,9 @@ protected:
     }
 
 private:
+
+    friend class Mode;
+
     TokenParser* parser;
     std::stack<Base> st;
 };
