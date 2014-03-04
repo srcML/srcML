@@ -102,11 +102,9 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         std::string language = lang;
 
         // if not explicitly set, language comes from extension
-        if (language == "") {
-            const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str());
-            if (l)
+        if (language == "")
+            if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
                 language = l;
-        }
 
         // at this point there are no other language options
         if (language == "") {
@@ -119,19 +117,17 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
 
         // form the parsing request
         ParseRequest request;
+        request.filename = filename;
+        request.srcml_arch = srcml_arch;
+        request.lang = language;
 
-        // fill up the buffer
+        // fill up the parse request buffer
         request.buffer.clear();
         const char* buffer;
         size_t size;
         int64_t offset;
         while (archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
             request.buffer.insert(request.buffer.end(), buffer, buffer + size);
-
-        // rest of the srcml parsing fields
-        request.filename = filename;
-        request.srcml_arch = srcml_arch;
-        request.lang = language;
 
         // Hand request off to the processing queue
         queue.push(request);
@@ -140,13 +136,11 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
     // If the input is empty
     if (empty) {
         ParseRequest request;
-        request.buffer.clear();
         request.filename = input_file;
         request.srcml_arch = srcml_arch;
-        request.lang = ((srcml_archive_get_language(srcml_arch) || lang.compare("xml") == 0) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, input_file.c_str()));
+        request.lang = srcml_archive_get_language(srcml_arch) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, input_file.c_str());
         queue.push(request);
     }
-
 
     archive_read_finish(arch);
 }
