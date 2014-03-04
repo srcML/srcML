@@ -292,10 +292,10 @@ protected:
         return statev.inTransparentMode(m);
     }
 
-    void testDupModes() {
+    void dupDownOverMode(const State::MODE_TYPE& m) {
 
 	std::list<srcMLState> alist;
-	while(!(statev.st.top().getMode() & MODE_STATEMENT)) {
+	while(!(statev.st.top().getMode() & m)) {
 
 	    alist.push_front(statev.st.top());
 	    statev.st.pop();

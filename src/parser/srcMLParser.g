@@ -6391,7 +6391,7 @@ eol_post[int directive_token, bool markblockzero] {
 
                         if(*pos == TERMINATE) {
 
-                            testDupModes();
+                            dupDownOverMode(MODE_STATEMENT);
 
                         }
 
