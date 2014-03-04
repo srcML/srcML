@@ -63,7 +63,7 @@ void setup_libarchive(archive* arch) {
 }
 
 // Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const std::string& lang, boost::optional<FILE*> fstdin) {
+void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const boost::optional<std::string>& lang, boost::optional<FILE*> fstdin) {
 
     // libArchive Setup
     archive* arch = archive_read_new();
@@ -99,7 +99,10 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
             filename = "-";
 
         // language may have been explicitly set
-        std::string language = lang;
+        std::string language;
+
+        if (lang)
+            language = *lang;
 
         // if not explicitly set, language comes from extension
         if (language == "")
@@ -138,7 +141,7 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         ParseRequest request;
         request.filename = input_file;
         request.srcml_arch = srcml_arch;
-        request.lang = srcml_archive_get_language(srcml_arch) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, input_file.c_str());
+        request.lang = srcml_archive_get_language(srcml_arch) ? lang->c_str() : srcml_archive_check_extension(srcml_arch, input_file.c_str());
         queue.push(request);
     }
 

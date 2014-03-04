@@ -32,7 +32,7 @@
 void src_input_libarchive(ParseQueue& queue,                  // srcml parsing queue
                           srcml_archive* srcml_arch,          // srcml archive to write to
                           const std::string& input_filename,  // input filename
-                          const std::string& language,        // specified language
+                          const boost::optional<std::string>& language,        // specified language
                           boost::optional<FILE*> fstdin = boost::optional<FILE*>()  // stdin (if already opened)
 );
 

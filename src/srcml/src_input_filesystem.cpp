@@ -30,7 +30,7 @@
 #include <list>
 #include <vector>
 
-void src_input_filesystem(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const std::string& lang) {
+void src_input_filesystem(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const boost::optional<std::string>& lang) {
     boost::filesystem::path localPath(input);
     std::list<boost::filesystem::path> dirs;
     dirs.push_front(localPath);
