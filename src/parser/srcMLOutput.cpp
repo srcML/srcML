@@ -581,8 +581,8 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     if(isoption(OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
 
 
-    std::string universal_time =
-	boost::posix_time::to_iso_string(boost::posix_time::second_clock::universal_time());
+    std::string current_time =
+	boost::posix_time::to_simple_string(boost::posix_time::second_clock::universal_time());
     std::string stab = stabs.str();
 
     // list of attributes
@@ -592,7 +592,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
         { UNIT_ATTRIBUTE_REVISION, isoption(OPTION_REVISION) ? srcml_version_string() : 0 },
 
         // timestamp attribute
-        { UNIT_ATTRIBUTE_TIMESTAMP, isoption(OPTION_ARCHIVE) && depth == 0 ? universal_time.c_str() : 0 },
+        { UNIT_ATTRIBUTE_TIMESTAMP, isoption(OPTION_ARCHIVE) && depth == 0 ? current_time.c_str() : 0 },
 
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },
