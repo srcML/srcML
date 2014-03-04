@@ -582,7 +582,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
 
     std::string universal_time =
-	boost::posix_time::to_simple_string(boost::posix_time::second_clock::universal_time().time_of_day());
+	boost::posix_time::to_iso_string(boost::posix_time::second_clock::universal_time());
     std::string stab = stabs.str();
 
     // list of attributes
