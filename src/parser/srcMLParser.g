@@ -135,7 +135,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -2447,7 +2447,7 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // do the pre terminate processing
-terminate_pre[] { ENTRY_DEBUG } :
+terminate_pre[] { ENTRY_DEBUG fprintf(stderr, "HERE: %s %s %d 0x%llx\n", __FILE__, __FUNCTION__, __LINE__, getMode());} :
         {
             // end any elements inside of the statement
             if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST))
@@ -6365,7 +6365,7 @@ eol_post[int directive_token, bool markblockzero] {
 
                 // should work unless also creates a dangling lcurly or lparen
                 // in which case may need to run on everthing except else.
-                if(isoption(parseoptions, OPTION_CPPIF_CHECK)) {
+                if(isoption(parseoptions, OPTION_CPPIF_CHECK) && !inputState->guessing) {
 
                     std::list<int> end_order = cppif_end_count_check();
                     State::MODE_TYPE current_mode = getMode();
@@ -6379,7 +6379,7 @@ eol_post[int directive_token, bool markblockzero] {
 
                         }
 
-                        if(*pos == RPAREN) {
+                        if(0 && *pos == RPAREN) {
                             startNewMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP);
                             if(inTransparentMode(MODE_CONDITION))
                                 addElement(SCONDITION);
@@ -6389,8 +6389,8 @@ eol_post[int directive_token, bool markblockzero] {
                         }
 
                         if(*pos == TERMINATE) {
-                            startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP);
-                            addElement(SEXPRESSION_STATEMENT);
+
+                            testDupModes();
 
                         }
 

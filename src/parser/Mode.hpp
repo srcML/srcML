@@ -292,6 +292,34 @@ protected:
         return statev.inTransparentMode(m);
     }
 
+    void testDupModes() {
+	fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+	std::list<srcMLState> alist;
+	while(!(statev.st.top().getMode() & MODE_STATEMENT)) {
+	fprintf(stderr, "HERE: %s %s %d 0x%llx\n", __FILE__, __FUNCTION__, __LINE__, statev.st.top().getMode());
+
+	    alist.push_front(statev.st.top());
+	    statev.st.pop();
+
+	}
+
+	alist.push_front(statev.st.top());
+	fprintf(stderr, "HERE: %s %s %d 0x%llx\n", __FILE__, __FUNCTION__, __LINE__, statev.st.top().getMode());
+	statev.st.pop();
+	fprintf(stderr, "HERE: %s %s %d 0x%llx\n", __FILE__, __FUNCTION__, __LINE__, statev.st.top().getMode());
+
+	for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i)
+	    statev.st.push(*i);
+
+	for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i) {
+	    i->setMode(MODE_ISSUE_EMPTY_AT_POP);
+	    statev.st.push(*i);
+
+	}
+
+
+    }
+
     // End elements down to a mode
     void endDownToMode(const State::MODE_TYPE& ele);
 
