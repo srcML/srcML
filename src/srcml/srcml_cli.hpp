@@ -72,7 +72,7 @@ struct srcml_request_t {
     boost::optional<std::string> att_xml_encoding;
     boost::optional<std::string> att_src_versions;
 
-    std::string src_encoding;
+    boost::optional<std::string> src_encoding;
 
     boost::optional<std::string> output_filename;
 
