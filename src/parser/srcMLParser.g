@@ -135,7 +135,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -2447,7 +2447,7 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // do the pre terminate processing
-terminate_pre[] { ENTRY_DEBUG fprintf(stderr, "HERE: %s %s %d 0x%llx\n", __FILE__, __FUNCTION__, __LINE__, getMode());} :
+terminate_pre[] { ENTRY_DEBUG } :
         {
             // end any elements inside of the statement
             if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST))
@@ -2467,7 +2467,11 @@ terminate_post[] { ENTRY_DEBUG } :
         {
             // end all statements this statement is nested in
             // special case when ending then of if statement
-            if (!isoption(parseoptions, OPTION_EXPRESSION) &&
+            if(inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP)) {
+
+                endMode();
+
+            } else if (!isoption(parseoptions, OPTION_EXPRESSION) &&
                  (!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT)) &&
                 !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INTERNAL_END_PAREN)) {
 
