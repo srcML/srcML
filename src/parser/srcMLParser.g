@@ -6383,12 +6383,9 @@ eol_post[int directive_token, bool markblockzero] {
 
                         }
 
-                        if(0 && *pos == RPAREN) {
+                        if(inTransparentMode(MODE_CONDITION) && *pos == RPAREN) {
                             startNewMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP);
-                            if(inTransparentMode(MODE_CONDITION))
-                                addElement(SCONDITION);
-                            else
-                                addElement(SNOP);
+                            addElement(SCONDITION);
 
                         }
 
