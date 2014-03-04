@@ -616,13 +616,6 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
     if(outer) outputMacroList();
 
-    // leave space for nested unit
-    if (outer && isoption(OPTION_ARCHIVE)) {
-
-        processText("\n\n", 2);
-
-    }
-
     ++depth;
 }
 
