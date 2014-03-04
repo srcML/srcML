@@ -116,8 +116,6 @@ int main(int argc, char * argv[]) {
         if (srcml_request.markup_options)
             srcml_archive_enable_option(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options);
 
-        // TODO: replace "" with boost::optional. NOTE: "" is not a valid language and should
-        // be caught by srcml_cli.*
         if (srcml_request.att_language)
             srcml_archive_set_language(srcml_arch, srcml_request.att_language->c_str());
         else
