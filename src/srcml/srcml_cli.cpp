@@ -26,6 +26,7 @@
 
 #include <srcml_cli.hpp>
 #include <boost/program_options.hpp>
+#include <boost/foreach.hpp>
 
 namespace prog_opts = boost::program_options;
 
@@ -196,7 +197,15 @@ void option_xslt(const std::vector<std::string>& value) {srcml_request.xslt = va
 void option_unit(const int value) {srcml_request.unit = value; }
 void option_to_dir(const std::string& value) {srcml_request.output_filename = value; srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY; }
 void option_max_threads(const int value) {srcml_request.max_threads = value; }
-void positional_args(const std::vector<std::string>& value) {srcml_request.input = value; }
+void positional_args(const std::vector<std::string>& value) {
+    srcml_request.input.reserve(value.size());
+
+    std::string prefix = "";
+    BOOST_FOREACH(const std::string& iname, value) {
+
+        srcml_request.input.push_back(prefix + iname);
+    }
+}
 
 void option_help(const std::string& help_opt) {
     if (help_opt == "") {
