@@ -23,7 +23,6 @@
 
 #include <srcMLHandler.hpp>
 #include <srcml_types.hpp>
-#include <UTF8OutputSource.hpp>
 
 #include <libxml/parser.h>
 #include <stdio.h>
@@ -68,7 +67,7 @@ private :
     srcml_unit * unit;
 
     /** output buffer for direct src write */
-    UTF8OutputSource * output_handler;
+    xmlOutputBufferPtr output_handler;
 
     /** has reached end of parsing*/
     bool is_done;
@@ -652,7 +651,7 @@ public :
 
         if(collect_src) {
 
-            output_handler->writeString((const char *)ch, len);
+            xmlOutputBufferWrite(output_handler, len, (const char *)ch);
 
         } else {
 
