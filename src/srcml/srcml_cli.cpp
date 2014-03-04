@@ -146,8 +146,9 @@ void option_command(bool opt) {
         srcml_request.command |= command;
 }
 
-void option_filename(const std::string& value) { srcml_request.att_filename = value; }
-void option_output(const std::string& value) {srcml_request.output_filename = value; }
+template <boost::optional<std::string> srcml_request_t::*pfield>
+void option_field(const std::string& value) { srcml_request.*pfield = value; }
+
 void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value; }
 
 void option_encoding(const std::string& value) {
@@ -250,7 +251,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
             ("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NAMESPACE_DECL>), "do not output any namespace declarations")
             ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_XML_DECL>), "do not output the XML declaration")
-            ("output,o", prog_opts::value<std::string>()->notifier(&option_output)->default_value("-"), "write result ouput to arg which is a FILE or URI")
+            ("output,o", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::output_filename>)->default_value("-"), "write result ouput to arg which is a FILE or URI")
             ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "suppresses status messages")
             ("src-encoding,t", prog_opts::value<std::string>()->notifier(&option_src_encoding), "set the input source encoding to arg (default:  ISO-8859-1)")
             ("max-threads", prog_opts::value<int>()->notifier(&option_max_threads)->default_value(4), "set the maximum number of threads srcml can spawn")
@@ -297,7 +298,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         src2srcml_metadata.add_options()
             ("directory,d", prog_opts::value<std::string>()->notifier(&option_directory), "set the arg directory attribute")
-            ("filename,f", prog_opts::value<std::string>()->notifier(&option_filename), "set the arg filename attribute")
+            ("filename,f", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_filename>), "set the arg filename attribute")
             ("src-version,s", prog_opts::value<std::string>()->notifier(&option_src_versions), "set the arg version attribute")
             ;
 
