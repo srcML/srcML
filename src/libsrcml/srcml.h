@@ -84,7 +84,7 @@ __LIBSRCML_DECL const char* srcml_version_string();
 
 /* Options */
 /** Create an archive */
-#define SRCML_OPTION_ARCHIVE        1<<0
+#define SRCML_OPTION_ARCHIVE           1<<0
 /** Markups literal in special namespace */
 #define SRCML_OPTION_LITERAL           1<<1
 /** Markups modifiers in special namespace */
@@ -100,9 +100,9 @@ __LIBSRCML_DECL const char* srcml_version_string();
 /** Markup preprocessor elements (default for C, C++, C#) */
 #define SRCML_OPTION_CPP_NOMACRO       1<<7
 /** Issue an XML declaration */
-#define SRCML_OPTION_XML_DECL       1<<8
+#define SRCML_OPTION_XML_DECL          1<<8
 /** Include any XML namespace declarations */
-#define SRCML_OPTION_NAMESPACE_DECL 1<<9
+#define SRCML_OPTION_NAMESPACE_DECL    1<<9
 /** Leave as text preprocessor else parts (default: markup) */
 #define SRCML_OPTION_CPP_TEXT_ELSE     1<<10
 /** Markup preprocessor @code #if 0 @endcode sections (default: leave as text) */
@@ -113,6 +113,8 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_COMPRESS          1<<13
 /** Nest if in else if intead of elseif tag */
 #define SRCML_OPTION_NESTIF            1<<14
+/** Output timestamp attribute on root unit (default: on) */
+#define SRCML_OPTION_TIMESTAMP         1<<15
 
 /* srcml status messages */
 /** Return status indicating no errors */

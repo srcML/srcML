@@ -105,6 +105,9 @@ const OPTION_TYPE OPTION_COMPRESSED  = ull(1) << __COUNTER__; /* 13 */
 // @src2srcml
 const OPTION_TYPE OPTION_NESTIF  = ull(1) << __COUNTER__; /* 14 */
 
+// @src2srcml
+const OPTION_TYPE OPTION_TIMESTAMP  = ull(1) << __COUNTER__; /* 15 */
+
 // end SRCML_OPTIONS
 
 // path
