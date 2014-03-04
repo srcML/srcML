@@ -172,4 +172,15 @@
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 
+<unit>
+<if>if<condition>()</condition><then> <block>{
+    <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+        <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;<expr_stmt/>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+        <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+}</block></then></if>
+</unit>
+
 </unit>

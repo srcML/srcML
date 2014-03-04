@@ -2465,22 +2465,32 @@ terminate_pre[] { ENTRY_DEBUG } :
 // do the post terminate processing
 terminate_post[] { ENTRY_DEBUG } :
         {
+
             // end all statements this statement is nested in
             // special case when ending then of if statement
-            if(inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP)) {
-
-                endMode();
-
-            } else if (!isoption(parseoptions, OPTION_EXPRESSION) &&
+            if (!isoption(parseoptions, OPTION_EXPRESSION) &&
                  (!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT)) &&
-                !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INTERNAL_END_PAREN)) {
+                !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INTERNAL_END_PAREN)
+            && !inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP)) {
 
                 // end down to either a block or top section, or to an if or else
                 endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE);
 
             }
         }
+
         else_handling
+
+        {
+
+            if(inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP)) {
+
+                endMode();
+
+            }
+
+        }
+
 ;
 
 /*
@@ -2496,6 +2506,7 @@ terminate_post[] { ENTRY_DEBUG } :
 */
 else_handling[] { ENTRY_DEBUG } :
         {
+
             // record the current size of the top of the cppmode stack to detect
             // any #else or #endif in consumeSkippedTokens
             // see below
@@ -6327,7 +6338,10 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
             else end_order.push_back(RCURLY);
         }
 
-        if(LA(1) == TERMINATE && inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT)) end_order.push_back(TERMINATE);
+        if(LA(1) == TERMINATE && inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT)) {
+            end_order.push_back(TERMINATE);
+
+        }
 
         prev = LA(1);
         consume();
