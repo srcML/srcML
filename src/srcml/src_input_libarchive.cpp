@@ -84,13 +84,12 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         exit(1);
     }
 
+    /* In general, go through this once for each time the header can be read
+       Exception: if empty, go through the loop exactly once */
     int count = 0;
-    int status;
-    while ((status = archive_read_next_header(arch, &arch_entry)) >= ARCHIVE_OK) {
-
-        // allow one time through loop when archive is empty
-        if (status == ARCHIVE_EOF && count)
-            break;
+    int status = ARCHIVE_OK;
+    while (status == ARCHIVE_OK &&
+        (((status = archive_read_next_header(arch, &arch_entry)) == ARCHIVE_OK) || (status == ARCHIVE_EOF && !count))) {
 
         // default is filename from archive entry (if not empty)
         std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(arch_entry) : "";
@@ -145,10 +144,6 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         queue.push(request);
 
         ++count;
-
-        // only allowed once through if at EOF
-        if (status == ARCHIVE_EOF)
-            break;
     }
 
     archive_read_finish(arch);
