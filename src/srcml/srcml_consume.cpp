@@ -47,8 +47,8 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
 
         // build and parse
         srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
-        if (pr.filename != "-")
-            srcml_unit_set_filename(unit, pr.filename.c_str());
+        if (pr.filename)
+            srcml_unit_set_filename(unit, pr.filename->c_str());
         srcml_unit_set_language(unit, pr.lang.c_str());
         srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
 

@@ -34,6 +34,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/optional.hpp>
+
 struct ParseRequest {
     ParseRequest() : buffer(0), srcml_arch(0), position(0) {}
 
@@ -57,11 +59,11 @@ struct ParseRequest {
 
     // empty ParseRequests indicate termination
     bool empty() const {
-        return filename.empty() && buffer.empty() && lang.empty();
+        return filename && buffer.empty() && lang.empty();
     }
 
     // Fields required by thread to process a unit
-    std::string filename;
+    boost::optional<std::string> filename;
     std::string directory;
     std::string version;
     std::vector<char> buffer;
