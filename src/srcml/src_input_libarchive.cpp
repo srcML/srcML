@@ -84,18 +84,23 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         exit(1);
     }
 
-    const std::string& main_filename = option_filename ? *option_filename : (input_file != "" ? input_file : "-");
+    int count = 0;
+    int status;
+    while ((status = archive_read_next_header(arch, &arch_entry)) >= ARCHIVE_OK) {
 
-    bool empty = true;
-    while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
-        empty = false;
+        // allow one time through loop when archive is empty
+        if (status == ARCHIVE_EOF && count)
+            break;
 
-        // default is filename from archive entry
-        std::string filename = archive_entry_pathname(arch_entry);
+        // default is filename from archive entry (if not empty)
+        std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(arch_entry) : "";
 
         // archive entry filename for non-archive input is "data"
-        if (filename == "data")
-            filename = main_filename;
+        if (filename == "data" || filename.empty())
+            filename = input_file;
+
+        if (option_filename)
+            filename = *option_filename;
 
         // language may have been explicitly set
         std::string language;
@@ -119,8 +124,8 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
 
         // form the parsing request
         ParseRequest request;
-        if (option_filename || main_filename != "-")
-            request.filename = main_filename;
+        if (option_filename || filename != "-")
+            request.filename = filename;
         if (option_directory)
             request.directory = *option_directory;
         if (option_version)
@@ -133,25 +138,17 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         const char* buffer;
         size_t size;
         int64_t offset;
-        while (archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
+        while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
             request.buffer.insert(request.buffer.end(), buffer, buffer + size);
 
         // Hand request off to the processing queue
         queue.push(request);
-    }
 
-    // If the input is empty
-    if (empty) {
-        ParseRequest request;
-        if (option_filename || main_filename != "-")
-            request.filename = main_filename;
-        if (option_directory)
-            request.directory = *option_directory;
-        if (option_version)
-            request.version = *option_version;
-        request.srcml_arch = srcml_arch;
-        request.lang = srcml_archive_get_language(srcml_arch) ? lang->c_str() : srcml_archive_check_extension(srcml_arch, input_file.c_str());
-        queue.push(request);
+        ++count;
+
+        // only allowed once through if at EOF
+        if (status == ARCHIVE_EOF)
+            break;
     }
 
     archive_read_finish(arch);
