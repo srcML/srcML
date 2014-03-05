@@ -214,6 +214,9 @@ def srcml2srcversion():
 
         return last_line.strip()
 
+if len(sys.argv) > 1:
+        globals()["limit"] = int(sys.argv[1])
+
 src2srcml = os.environ.get("SRC2SRCML")
 if src2srcml == "" or src2srcml == None:
         if sys.platform == 'cygwin' :
