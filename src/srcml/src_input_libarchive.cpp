@@ -84,6 +84,8 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         exit(1);
     }
 
+    const std::string& main_filename = option_filename ? *option_filename : (input_file != "" ? input_file : "-");
+
     bool empty = true;
     while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
         empty = false;
@@ -93,13 +95,7 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
 
         // archive entry filename for non-archive input is "data"
         if (filename == "data")
-            filename = input_file;
-
-        if (option_filename)
-            filename = *option_filename;
-
-        if (filename == "")
-            filename = "-";
+            filename = main_filename;
 
         // language may have been explicitly set
         std::string language;
@@ -123,7 +119,7 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
 
         // form the parsing request
         ParseRequest request;
-        request.filename = filename;
+        request.filename = main_filename;
         request.srcml_arch = srcml_arch;
         request.lang = language;
 
@@ -142,7 +138,7 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
     // If the input is empty
     if (empty) {
         ParseRequest request;
-        request.filename = input_file;
+        request.filename = main_filename;
         request.srcml_arch = srcml_arch;
         request.lang = srcml_archive_get_language(srcml_arch) ? lang->c_str() : srcml_archive_check_extension(srcml_arch, input_file.c_str());
         queue.push(request);
