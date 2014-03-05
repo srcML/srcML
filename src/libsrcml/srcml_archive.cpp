@@ -596,13 +596,13 @@ int srcml_archive_get_namespace_size(const struct srcml_archive* archive) {
 }
 
 /**
- * srcml_archive_get_prefix
+ * srcml_archive_get_namespace_prefix
  * @param pos namespace position
  *
  * @returns Get prefix for the given position on success
  * and NULL on failure.
  */
-const char* srcml_archive_get_prefix(const struct srcml_archive* archive, int pos) {
+const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archive, int pos) {
 
     if(archive == NULL) return 0;
 
@@ -619,13 +619,13 @@ const char* srcml_archive_get_prefix(const struct srcml_archive* archive, int po
 }
 
 /**
- * srcml_archive_get_prefix_uri
+ * srcml_archive_get_prefix_from_uri
  * @param namespace_uri an XML namespace
  *
  * @returns Get the registered prefix for the given namespace
  * on success and NULL on failure.
  */
-const char* srcml_archive_get_prefix_uri(const struct srcml_archive* archive, const char* namespace_uri) {
+const char* srcml_archive_get_prefix_from_uri(const struct srcml_archive* archive, const char* namespace_uri) {
 
     if(archive == NULL || namespace_uri == NULL) return 0;
 
@@ -641,13 +641,13 @@ const char* srcml_archive_get_prefix_uri(const struct srcml_archive* archive, co
 }
 
 /**
- * srcml_archive_get_namespace
+ * srcml_archive_get_namespace_uri
  * @param pos position in namespaces
  *
  * @returns Get the namespace at the given pos on succcess
  * and NULL on failure.
  */
-const char* srcml_archive_get_namespace(const struct srcml_archive* archive, int pos) {
+const char* srcml_archive_get_namespace_uri(const struct srcml_archive* archive, int pos) {
 
     if(archive == NULL) return 0;
 
@@ -664,13 +664,13 @@ const char* srcml_archive_get_namespace(const struct srcml_archive* archive, int
 }
 
 /**
- * srcml_archive_get_namespace_prefix
+ * srcml_archive_get_uri_from_prefix
  * @param prefix an XML prefix
  *
  * @returns Get the first namespace for the given prefix on success
  * and NULL on failure.
  */
-const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archive, const char* prefix) {
+const char* srcml_archive_get_uri_from_prefix(const struct srcml_archive* archive, const char* prefix) {
 
     if(archive == NULL || prefix == NULL) return 0;
 

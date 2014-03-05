@@ -565,54 +565,54 @@ int srcml_get_namespace_size() {
 }
 
 /**
- * srcml_get_prefix
+ * srcml_get_namespace_prefix
  * @param pos namespace position
  *
  * @returns Get prefix for the given position on success
  * and NULL on failure.
  */
-const char* srcml_get_prefix(int pos) {
+const char* srcml_get_namespace_prefix(int pos) {
 
-    return srcml_archive_get_prefix(&global_archive, pos);
+    return srcml_archive_get_namespace_prefix(&global_archive, pos);
 
 }
 
 /**
- * srcml_get_prefix_uri
+ * srcml_get_prefix_from_uri
  * @param namespace_uri an XML namespace
  *
  * @returns Get the registered prefix for the given namespace
  * on success and NULL on failure.
  */
-const char* srcml_get_prefix_uri(const char* namespace_uri) {
+const char* srcml_get_prefix_from_uri(const char* namespace_uri) {
 
-    return srcml_archive_get_prefix_uri(&global_archive, namespace_uri);
+    return srcml_archive_get_prefix_from_uri(&global_archive, namespace_uri);
 
 }
 
 /**
- * srcml_get_namespace
+ * srcml_get_namespace_uri
  * @param pos position in namespaces
  *
  * @returns Get the namespace at the given pos on succcess
  * and NULL on failure.
  */
-const char* srcml_get_namespace(int pos) {
+const char* srcml_get_namespace_uri(int pos) {
 
-    return srcml_archive_get_namespace(&global_archive, pos);
+    return srcml_archive_get_namespace_uri(&global_archive, pos);
 
 }
 
 /**
- * srcml_get_namespace_prefix
+ * srcml_get_uri_from_prefix
  * @param prefix an XML prefix
  *
  * @returns Get the first namespace for the given prefix on success
  * and NULL on failure.
  */
-const char* srcml_get_namespace_prefix(const char* prefix) {
+const char* srcml_get_uri_from_prefix(const char* prefix) {
 
-    return srcml_archive_get_namespace_prefix(&global_archive, prefix);
+    return srcml_archive_get_uri_from_prefix(&global_archive, prefix);
 
 }
 
