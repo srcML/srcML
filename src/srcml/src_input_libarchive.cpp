@@ -63,7 +63,14 @@ void setup_libarchive(archive* arch) {
 }
 
 // Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const boost::optional<std::string>& lang, const boost::optional<std::string>& option_filename, const boost::optional<std::string>& option_directory, const boost::optional<std::string>& option_version, boost::optional<FILE*> fstdin) {
+void src_input_libarchive(ParseQueue& queue,
+                          srcml_archive* srcml_arch,
+                          const std::string& input_file,
+                          const boost::optional<std::string>& lang,
+                          const boost::optional<std::string>& option_filename,
+                          const boost::optional<std::string>& option_directory,
+                          const boost::optional<std::string>& option_version,
+                          boost::optional<FILE*> fstdin) {
 
     // libArchive Setup
     archive* arch = archive_read_new();
