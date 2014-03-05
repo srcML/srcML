@@ -239,22 +239,22 @@ protected:
     }
 
     void endMode() {
-        fprintf(stderr, "HERE: %s %s %d 0x%llx\n", __FILE__, __FUNCTION__, __LINE__, getMode());
+
         statev.endCurrentMode();
     }
 
     void endMode(const State::MODE_TYPE& m) {
-        fprintf(stderr, "HERE: %s %s %d 0x%llx\n", __FILE__, __FUNCTION__, __LINE__, getMode());
+
         statev.endCurrentMode(m);
     }
 
     void endLastMode() {
-        fprintf(stderr, "HERE: %s %s %d 0x%llx\n", __FILE__, __FUNCTION__, __LINE__, getMode());
+
         statev.endLastMode();
     }
 
     void endTopMode() {
-        fprintf(stderr, "HERE: %s %s %d 0x%llx\n", __FILE__, __FUNCTION__, __LINE__, getMode());
+
         statev.endCurrentMode();
     }
 

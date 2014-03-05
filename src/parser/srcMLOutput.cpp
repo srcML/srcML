@@ -742,13 +742,11 @@ void srcMLOutput::processToken(const antlr::RefToken& token) {
         else
             xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
         ++openelementcount;
-	fprintf(stderr, "HERE START: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, localname);
     }
 
     if (!isstart(token) || isempty(token)) {
         xmlTextWriterEndElement(xout);
         --openelementcount;
-	fprintf(stderr, "HERE END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, localname);
     }
 }
 
