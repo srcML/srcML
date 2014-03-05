@@ -156,11 +156,13 @@ public:
 
     const static State::MODE_TYPE MODE_ISSUE_EMPTY_AT_POP;
 
+    const static State::MODE_TYPE MODE_END_AT_ENDIF;
+
 public:
 
     Mode(TokenParser* ptp, int lang)
         : Language(lang), statev(ptp)
-    {}
+        {}
 
     ~Mode() {}
 
@@ -294,26 +296,30 @@ protected:
 
     void dupDownOverMode(const State::MODE_TYPE& m) {
 
-	std::list<srcMLState> alist;
-	while(!(statev.st.top().getMode() & m)) {
+        std::list<srcMLState> alist;
+        while(!(statev.st.top().getMode() & m)) {
 
-	    alist.push_front(statev.st.top());
-	    statev.st.pop();
+            alist.push_front(statev.st.top());
+            statev.st.pop();
 
-	}
+        }
 
-	alist.push_front(statev.st.top());
-	statev.st.pop();
+        alist.push_front(statev.st.top());
+        statev.st.pop();
 
-	for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i)
-	    statev.st.push(*i);
 
-	alist.front().setMode(MODE_TOP);
-	for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i) {
-	    i->setMode(MODE_ISSUE_EMPTY_AT_POP);
-	    statev.st.push(*i);
+        alist.front().setMode(MODE_TOP | MODE_END_AT_ENDIF);
+        for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i) {
+            i->setMode(MODE_END_AT_ENDIF);
+            statev.st.push(*i);
+        }
 
-	}
+        alist.front().openelements = std::stack<int>();
+        for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i) {
+            i->setMode(MODE_ISSUE_EMPTY_AT_POP);
+            statev.st.push(*i);
+
+        }
 
 
     }

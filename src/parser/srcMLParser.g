@@ -2471,7 +2471,8 @@ terminate_post[] { ENTRY_DEBUG } :
             if (!isoption(parseoptions, OPTION_EXPRESSION) &&
                  (!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT)) &&
                 !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INTERNAL_END_PAREN)
-            && !inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP)) {
+                && !inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP)
+                && !inMode(MODE_END_AT_ENDIF)) {
 
                 // end down to either a block or top section, or to an if or else
                 endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE);
@@ -6285,6 +6286,21 @@ eol[int directive_token, bool markblockzero] {
 
             endMode(MODE_PARSE_EOL);
 ENTRY_DEBUG } :
+
+        {
+            if(directive_token == ENDIF) {
+
+                bool end_statement = inMode(MODE_END_AT_ENDIF);
+                while(inMode(MODE_END_AT_ENDIF))
+                    endMode();
+                
+                if(end_statement)
+                    else_handling();
+
+            }
+
+        }
+
         (EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | eof)
         eol_post[directive_token, markblockzero]
 ;

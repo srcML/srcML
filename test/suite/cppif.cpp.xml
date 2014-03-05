@@ -166,20 +166,20 @@
 <unit>
 <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
-      <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;<expr_stmt/>
+      <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
-      <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+      <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></expr_stmt>
 </unit>
 
 <unit>
 <if>if<condition>()</condition><then> <block>{
     <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
-        <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;<expr_stmt/>
+        <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
-        <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+        <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></expr_stmt>
 }</block></then></if>
 </unit>
 
@@ -187,10 +187,10 @@
 <if>if<condition>()</condition><then>
     <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
-        <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;<expr_stmt/>
+        <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
-        <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></then></if>
-<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+        <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></expr_stmt></then></if>
 
 </unit>
 
@@ -198,10 +198,10 @@
 <else>else <block>{
     <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
-        <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;<expr_stmt/>
+        <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
-        <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+        <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></expr_stmt>
 }</block></else>
 </unit>
 
@@ -209,11 +209,34 @@
 <else>else
     <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
-        <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;<expr_stmt/>
+        <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
-        <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></else>
-<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+        <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></expr_stmt></else>
 
+</unit>
+
+<unit>
+<if>if<condition>()</condition><then>
+    <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+        <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+        <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></expr_stmt></then></if>
+<else>else <empty_stmt>;</empty_stmt></else>
+</unit>
+
+<unit>
+<if>if<condition>()</condition><then>
+<if>if<condition>()</condition><then>
+    <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+        <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+        <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></expr_stmt></then></if></then></if>
+<else>else <empty_stmt>;</empty_stmt></else>
 </unit>
 
 </unit>
