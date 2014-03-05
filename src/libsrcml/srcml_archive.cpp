@@ -69,7 +69,7 @@ srcml_archive* srcml_create_archive()
     } catch(...) { return 0; }
 
     archive->type = SRCML_ARCHIVE_INVALID;
-    archive->options = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL;
+    archive->options = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TIMESTAMP;
     archive->tabstop = 8;
     archive->translator = 0;
     archive->reader = 0;
