@@ -117,6 +117,18 @@ void srcMLTranslator::setInput(const char* path) {
 // close the output
 void srcMLTranslator::close() {
 
+    if(first && (options & OPTION_ARCHIVE) > 0) {
+
+        // Open for write;
+        out.initWriter();
+
+	out.outputXMLDecl();
+
+        // root unit for compound srcML documents
+	out.startUnit(0, root_directory, root_filename, root_version, true);
+
+    }
+
     out.close();
 }
 
@@ -266,18 +278,6 @@ void srcMLTranslator::add_unit(const char* xml) {
 
 // destructor
 srcMLTranslator::~srcMLTranslator() {
-
-    if(first && (options & OPTION_ARCHIVE) > 0) {
-
-        // Open for write;
-        out.initWriter();
-
-	out.outputXMLDecl();
-
-        // root unit for compound srcML documents
-	out.startUnit(0, root_directory, root_filename, root_version, true);
-
-    }
 
     if(str_buffer && buffer->use) {
 
