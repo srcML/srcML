@@ -95,10 +95,10 @@ archive.set_tabstop(4)
 verify_test(4, archive.get_tabstop())
 
 verify_test(7, archive.get_namespace_size());
-verify_test("cpp", archive.get_prefix(1))
-verify_test("cpp", archive.get_prefix_uri("http://www.sdml.info/srcML/cpp"))
-verify_test("http://www.sdml.info/srcML/cpp", archive.get_namespace(1))
-verify_test("http://www.sdml.info/srcML/cpp", archive.get_namespace_prefix("cpp"))
+verify_test("cpp", archive.get_namespace_prefix(1))
+verify_test("cpp", archive.get_prefix_from_uri("http://www.sdml.info/srcML/cpp"))
+verify_test("http://www.sdml.info/srcML/cpp", archive.get_namespace_uri(1))
+verify_test("http://www.sdml.info/srcML/cpp", archive.get_uri_from_prefix("cpp"))
 
 archive.register_macro("MACRO", "src:macro")
 verify_test(1, archive.get_macro_list_size());
@@ -466,10 +466,10 @@ srcml.set_options(srcml.SRCML_OPTION_XML_DECL | srcml.SRCML_OPTION_NAMESPACE_DEC
 srcml.set_tabstop(8)
 
 verify_test(7, srcml.get_namespace_size());
-verify_test("cpp", srcml.get_prefix(1))
-verify_test("cpp", srcml.get_prefix_uri("http://www.sdml.info/srcML/cpp"))
-verify_test("http://www.sdml.info/srcML/cpp", srcml.get_namespace(1))
-verify_test("http://www.sdml.info/srcML/cpp", srcml.get_namespace_prefix("cpp"))
+verify_test("cpp", srcml.get_namespace_prefix(1))
+verify_test("cpp", srcml.get_prefix_from_uri("http://www.sdml.info/srcML/cpp"))
+verify_test("http://www.sdml.info/srcML/cpp", srcml.get_namespace_uri(1))
+verify_test("http://www.sdml.info/srcML/cpp", srcml.get_uri_from_prefix("cpp"))
 
 srcml.register_macro("MACRO", "src:macro")
 verify_test(1, srcml.get_macro_list_size());
