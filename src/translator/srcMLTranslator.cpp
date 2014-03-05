@@ -47,22 +47,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
       out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri, tabsize, 0), tabsize(tabsize), uri(uri),
-      str_buffer(0), size(0) {
-
-        // Open for write;
-        out.initWriter();
-
-
-        // root unit for compound srcML documents
-        if((options & OPTION_ARCHIVE) > 0) {
-
-	    out.outputXMLDecl();
-
-            out.startUnit(0, root_directory, root_filename, root_version, true);
-
-	}
-
-}
+      str_buffer(0), size(0) {}
 
 // constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
@@ -86,18 +71,6 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
     out.setOutputBuffer(obuffer);
 
-        // Open for write;
-        out.initWriter();
-
-        // root unit for compound srcML documents
-        if((options & OPTION_ARCHIVE) > 0) {
-
-	    out.outputXMLDecl();
-
-            out.startUnit(0, root_directory, root_filename, root_version, true);
-
-	}
-
 }
 
 // constructor
@@ -116,21 +89,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
       out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, output_buffer), tabsize(tabsize), uri(uri),
-      str_buffer(0), size(0) {
-
-        // Open for write;
-        out.initWriter();
-
-        // root unit for compound srcML documents
-        if((options & OPTION_ARCHIVE) > 0) {
-
-	    out.outputXMLDecl();
-
-            out.startUnit(0, root_directory, root_filename, root_version, true);
-
-	}
-
-}
+      str_buffer(0), size(0) {}
 
 void srcMLTranslator::setMacroList(std::vector<std::string> & list) {
     user_macro_list = list;
@@ -168,8 +127,13 @@ void srcMLTranslator::translate(const char* unit_directory,
 
     if(first) {
 
-        if((options & OPTION_ARCHIVE) == 0)
-	    out.outputXMLDecl();
+        out.initWriter();
+
+        out.outputXMLDecl();
+
+        // root unit for compound srcML documents
+	if((options & OPTION_ARCHIVE) > 0)
+            out.startUnit(0, root_directory, root_filename, root_version, true);
 
     }
 
@@ -277,12 +241,17 @@ void srcMLTranslator::add_unit(const char* xml) {
 
     if(first) {
 
-        if((options & OPTION_ARCHIVE) == 0)
-	    out.outputXMLDecl();
+        // Open for write;
+        out.initWriter();
+
+	out.outputXMLDecl();
+
+        // root unit for compound srcML documents
+        if((options & OPTION_ARCHIVE) > 0)
+            out.startUnit(0, root_directory, root_filename, root_version, true);
 
 	if ((options & OPTION_ARCHIVE) > 0)
 	    out.processText("\n\n", 2);
-
 
     }
 
@@ -297,6 +266,18 @@ void srcMLTranslator::add_unit(const char* xml) {
 
 // destructor
 srcMLTranslator::~srcMLTranslator() {
+
+    if(first && (options & OPTION_ARCHIVE) > 0) {
+
+        // Open for write;
+        out.initWriter();
+
+	out.outputXMLDecl();
+
+        // root unit for compound srcML documents
+	out.startUnit(0, root_directory, root_filename, root_version, true);
+
+    }
 
     if(str_buffer && buffer->use) {
 
