@@ -93,7 +93,7 @@ int main(int argc, char * argv[]) {
     }
 
     // src->srcml
-    if (!isxml && (srcml_request.unit == 0)) {
+    if (!isxml) {
 
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_create_archive();
@@ -197,42 +197,47 @@ int main(int argc, char * argv[]) {
         srcml_list_unit_files(srcml_request.input);
 
         // srcml->src srcML file to filesystem
-    } else if (isxml && (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) && srcml_request.input.size() == 1) {
-
-        srcml_archive* arch = srcml_create_archive();
-        if (!fstdin)
-            srcml_read_open_filename(arch, srcml_request.input[0].c_str());
-        else
-            srcml_read_open_FILE(arch, *fstdin);
-
-        // construct the relative directory
-        std::string prefix;
-        if (*srcml_request.output_filename != "." && *srcml_request.output_filename != "./")
-            prefix = *srcml_request.output_filename;
+    } else if (isxml && (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY)) {
 
         int count = 0;
-        while (srcml_unit* unit = srcml_read_unit_header(arch)) {
+
+        // process command line inputs
+        BOOST_FOREACH(const std::string& input_file, srcml_request.input) {
+
+            srcml_archive* arch = srcml_create_archive();
+            if (!fstdin)
+                srcml_read_open_filename(arch, input_file.c_str());
+            else
+                srcml_read_open_FILE(arch, *fstdin);
 
             // construct the relative directory
-            boost::filesystem::path out(prefix);
-            out /= srcml_unit_get_filename(unit);
+            std::string prefix;
+            if (*srcml_request.output_filename != "." && *srcml_request.output_filename != "./")
+                prefix = *srcml_request.output_filename;
 
-            // create the path
-            if (!is_directory(out.parent_path()))
-                boost::filesystem::create_directories(out.parent_path());
+            while (srcml_unit* unit = srcml_read_unit_header(arch)) {
 
-            // unparse directory to filename
-            srcml_unparse_unit_filename(unit, (const char *)out.c_str());
+                // construct the relative directory
+                boost::filesystem::path out(prefix);
+                out /= srcml_unit_get_filename(unit);
 
-            // trace
-            ++count;
-            std::cerr << std::setw(5) << count << ' ' << out.c_str() << '\n';
+                // create the path
+                if (!is_directory(out.parent_path()))
+                    boost::filesystem::create_directories(out.parent_path());
 
-            srcml_free_unit(unit);
+                // unparse directory to filename
+                srcml_unparse_unit_filename(unit, out.c_str());
+
+                // trace
+                ++count;
+                std::cerr << std::setw(5) << count << ' ' << out.c_str() << '\n';
+
+                srcml_free_unit(unit);
+            }
+
+            srcml_close_archive(arch);
+            srcml_free_archive(arch);
         }
-
-        srcml_close_archive(arch);
-        srcml_free_archive(arch);
 
         // srcml->src extract individual unit in XML
     } else if (isxml && (srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
