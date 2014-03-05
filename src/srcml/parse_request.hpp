@@ -28,6 +28,7 @@
 #ifndef PARSE_REQUEST_HPP
 #define PARSE_REQUEST_HPP
 
+#include <algorithm>
 #include <archive.h>
 #include <srcml.h>
 
@@ -45,16 +46,9 @@ struct ParseRequest {
         directory.swap(other.directory);
         version.swap(other.version);
         buffer.swap(other.buffer);
-
-        srcml_archive* temp = srcml_arch;
-        srcml_arch = other.srcml_arch;
-        other.srcml_arch = temp;
-
+        std::swap(srcml_arch, other.srcml_arch);
         lang.swap(other.lang);
-
-        int pos = position;
-        position = other.position;
-        other.position = pos;
+        std::swap(position, other.position);
     }
 
     // empty ParseRequests indicate termination
