@@ -110,6 +110,9 @@ public :
 			 terminate(false), is_empty(false), wait_root(true), skip(false) {
 
         archive = srcml_create_archive();
+
+	srcml_archive_disable_option(archive, SRCML_OPTION_TIMESTAMP);
+
         archive->prefixes.clear();
         archive->namespaces.clear();
 
