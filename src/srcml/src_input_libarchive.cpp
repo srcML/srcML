@@ -120,6 +120,8 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         // form the parsing request
         ParseRequest request;
         request.filename = main_filename;
+        if (option_directory)
+            request.directory = *option_directory;
         request.srcml_arch = srcml_arch;
         request.lang = language;
 
@@ -139,6 +141,8 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
     if (empty) {
         ParseRequest request;
         request.filename = main_filename;
+        if (option_directory)
+            request.directory = *option_directory;
         request.srcml_arch = srcml_arch;
         request.lang = srcml_archive_get_language(srcml_arch) ? lang->c_str() : srcml_archive_check_extension(srcml_arch, input_file.c_str());
         queue.push(request);
