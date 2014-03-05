@@ -181,6 +181,7 @@ unit.set_language("C++")
 unit.parse_fd(src_fd)
 archive.write_unit(unit)
 archive.close()
+os.close(src_fd)
 os.close(fd)
 
 file = open("project.xml", "r")
