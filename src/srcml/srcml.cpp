@@ -93,7 +93,7 @@ int main(int argc, char * argv[]) {
     }
 
     // src->srcml
-    if (!isxml && (srcml_request.unit == 0) && ((srcml_request.input.size() > 1) || fstdin)) {
+    if (!isxml && (srcml_request.unit == 0)) {
 
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_create_archive();
