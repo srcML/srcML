@@ -93,9 +93,7 @@ int main(int argc, char * argv[]) {
     }
 
     // src->srcml
-    if (!isxml && (srcml_request.unit == 0) &&
-        ((srcml_request.input.size() > 1) ||
-         (src_language(srcml_request.input[0]).compare("xml") != 0))) {
+    if (!isxml && (srcml_request.unit == 0) && ((srcml_request.input.size() > 1) || fstdin)) {
 
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_create_archive();
@@ -104,14 +102,14 @@ int main(int argc, char * argv[]) {
         if (srcml_request.att_xml_encoding)
             srcml_archive_set_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str());
 
-        if (srcml_request.att_filename && *srcml_request.att_filename != "-")
+        if (srcml_request.att_filename)
             srcml_archive_set_filename(srcml_arch, srcml_request.att_filename->c_str());
 
         if (srcml_request.att_directory)
             srcml_archive_set_directory(srcml_arch, srcml_request.att_directory->c_str());
 
-        if (srcml_request.att_src_versions)
-            srcml_archive_set_version(srcml_arch, srcml_request.att_src_versions->c_str());
+        if (srcml_request.att_version)
+            srcml_archive_set_version(srcml_arch, srcml_request.att_version->c_str());
 
         if (srcml_request.markup_options)
             srcml_archive_enable_option(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options);
@@ -169,13 +167,13 @@ int main(int argc, char * argv[]) {
 
             // call handler based on prefix
             if (fstdin) {
-                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, fstdin);
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, fstdin);
             } else if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
                 src_input_filesystem(queue, srcml_arch, resource, srcml_request.att_language);
             } else if (protocol == "file") {
-                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory);
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
             } else if (protocol == "stdin") {
-                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory);
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
             }
         }
 

@@ -63,7 +63,7 @@ void setup_libarchive(archive* arch) {
 }
 
 // Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const boost::optional<std::string>& lang, const boost::optional<std::string>& option_filename, const boost::optional<std::string>& option_directory, boost::optional<FILE*> fstdin) {
+void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const boost::optional<std::string>& lang, const boost::optional<std::string>& option_filename, const boost::optional<std::string>& option_directory, const boost::optional<std::string>& option_version, boost::optional<FILE*> fstdin) {
 
     // libArchive Setup
     archive* arch = archive_read_new();
@@ -119,9 +119,12 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
 
         // form the parsing request
         ParseRequest request;
-        request.filename = main_filename;
+        if (option_filename || main_filename != "-")
+            request.filename = main_filename;
         if (option_directory)
             request.directory = *option_directory;
+        if (option_version)
+            request.version = *option_version;
         request.srcml_arch = srcml_arch;
         request.lang = language;
 
@@ -140,9 +143,12 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
     // If the input is empty
     if (empty) {
         ParseRequest request;
-        request.filename = main_filename;
+        if (option_filename || main_filename != "-")
+            request.filename = main_filename;
         if (option_directory)
             request.directory = *option_directory;
+        if (option_version)
+            request.version = *option_version;
         request.srcml_arch = srcml_arch;
         request.lang = srcml_archive_get_language(srcml_arch) ? lang->c_str() : srcml_archive_check_extension(srcml_arch, input_file.c_str());
         queue.push(request);
