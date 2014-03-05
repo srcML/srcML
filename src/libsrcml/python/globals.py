@@ -22,8 +22,8 @@ from ctypes import cdll, c_int, c_char_p, POINTER, c_ulonglong
 from exception import *
 
 LIBSRCML_PATH=""
-if os.path.exists('../../../bin/Debug/libsrcml.dylib') :
-    LIBSRCML_PATH = "../../../bin/Debug/libsrcml.dylib"
+if os.path.exists('../../../bin/libsrcml.dylib') :
+    LIBSRCML_PATH = "../../../bin/libsrcml.dylib"
 elif os.path.exists('../../../bin/libsrcml.so') :
     LIBSRCML_PATH = "../../../bin/libsrcml.so"
 elif os.path.exists('../../../bin/libsrcml.dll') :

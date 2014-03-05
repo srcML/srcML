@@ -60,7 +60,8 @@ def verify_test(correct, output) :
         correct = str(correct).replace("\r", "")
         output  = str(output).replace("\r", "")
 
-    if correct != output :
+    if str(correct) != str(output) :
+
         print str(globals()['test_count']) + "\t"
         for line in difflib.unified_diff(str(correct).split("\n"), str(output).split("\n")) :
             print line
@@ -111,6 +112,7 @@ file = open("a.foo", "w")
 gen = file.write("")
 file.close()
 archive = srcml.srcml_archive()
+archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP)
 archive.disable_option(srcml.SRCML_OPTION_ARCHIVE)
 archive.register_file_extension("foo", "C++")
 archive.register_namespace("s", "http://www.sdml.info/srcML/src")
@@ -139,6 +141,7 @@ file = open("a.cpp", "w")
 gen = file.write(src)
 file.close()
 archive = srcml.srcml_archive()
+archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP)
 archive.write_open_filename("project.xml")
 unit = srcml.srcml_unit(archive)
 unit.parse_filename("a.cpp")
@@ -154,6 +157,7 @@ os.remove("project.xml")
 
 # memory
 archive = srcml.srcml_archive()
+archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP)
 archive.write_open_memory()
 unit = srcml.srcml_unit(archive)
 unit.set_language("C++")
@@ -168,6 +172,7 @@ file = open("a.cpp", "w")
 gen = file.write(src)
 file.close()
 archive = srcml.srcml_archive()
+archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP)
 fd = os.open("project.xml", os.O_WRONLY | os.O_CREAT)
 archive.write_open_fd(fd)
 src_fd = os.open("a.cpp", os.O_RDONLY)
@@ -176,7 +181,6 @@ unit.set_language("C++")
 unit.parse_fd(src_fd)
 archive.write_unit(unit)
 archive.close()
-os.close(src_fd)
 os.close(fd)
 
 file = open("project.xml", "r")
@@ -191,6 +195,7 @@ file = open("a.cpp", "w")
 gen = file.write(src)
 file.close()
 archive = srcml.srcml_archive()
+archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP)
 file = libc.fopen("project.xml", "w")
 archive.write_open_FILE(file)
 src_file = libc.fopen("a.cpp", "r")
