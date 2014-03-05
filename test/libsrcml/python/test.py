@@ -372,7 +372,9 @@ archive.apply_transforms(oarchive)
 oarchive.close()
 archive.close()
 
-verify_test(None, oarchive.srcML())
+verify_test("""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src"/>
+""", oarchive.srcML())
 
 # unit set/get
 archive = srcml.srcml_archive()
