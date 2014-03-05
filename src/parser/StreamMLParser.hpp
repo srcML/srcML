@@ -76,6 +76,7 @@ public:
 
         pushEToken(id);
         Base::currentState().pop();
+	fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, id);
     }
 
     // starts an element
