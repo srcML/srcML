@@ -262,21 +262,6 @@ int main(int argc, char * argv[]) {
         srcml_close_archive(arch);
         srcml_free_archive(arch);
 
-        // srcml->src extract individual unit to stdout
-    } else if (isxml && srcml_request.unit != 0 && srcml_request.input.size() == 1 && *srcml_request.output_filename == "-") {
-
-        srcml_archive* arch = srcml_create_archive();
-
-        // we opened this already when checking for XML status
-        srcml_read_open_FILE(arch, *fstdin);
-
-        srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
-
-        srcml_unparse_unit_fd(unit, STDOUT_FILENO);
-
-        srcml_close_archive(arch);
-        srcml_free_archive(arch);
-
         // srcml->src extract individual unit to file
     } else if (isxml && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
 
@@ -307,7 +292,7 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(arch);
 
         // srcml->src srcML file to libarchive file
-    } else if (isxml && srcml_request.input.size() == 1) {
+    } else if (isxml) {
 
         // TODO: What if this is a simple, single file? or to stdout?
         archive* ar = archive_write_new();
@@ -319,44 +304,48 @@ int main(int argc, char * argv[]) {
 
         archive_write_open_filename(ar, srcml_request.output_filename->c_str());
 
-        srcml_archive* arch = srcml_create_archive();
-        if (!fstdin)
-            srcml_read_open_filename(arch, srcml_request.input[0].c_str());
-        else
-            srcml_read_open_FILE(arch, *fstdin);
+        // process command line inputs
+        BOOST_FOREACH(const std::string& input_file, srcml_request.input) {
 
-        while (srcml_unit* unit = srcml_read_unit(arch)) {
+            srcml_archive* arch = srcml_create_archive();
+            if (!fstdin)
+                srcml_read_open_filename(arch, input_file.c_str());
+            else
+                srcml_read_open_FILE(arch, *fstdin);
 
-            // unparse the unit into its own buffer
-            char* buffer;
-            int buffer_size;
-            srcml_unparse_unit_memory(unit, &buffer, &buffer_size);
+            while (srcml_unit* unit = srcml_read_unit(arch)) {
 
-            // setup the entry header
-            archive_entry* entry = archive_entry_new();
-            archive_entry_set_pathname(entry, srcml_unit_get_filename(unit));
-            archive_entry_set_size(entry, buffer_size);
-            archive_entry_set_filetype(entry, AE_IFREG);
-            archive_entry_set_perm(entry, 0644);
+                // unparse the unit into its own buffer
+                char* buffer;
+                int buffer_size;
+                srcml_unparse_unit_memory(unit, &buffer, &buffer_size);
 
-            time_t now = time(NULL);
-            archive_entry_set_atime(entry, now, 0);
-            archive_entry_set_ctime(entry, now, 0);
-            archive_entry_set_mtime(entry, now, 0);
-            archive_write_header(ar, entry);
+                // setup the entry header
+                archive_entry* entry = archive_entry_new();
+                archive_entry_set_pathname(entry, srcml_unit_get_filename(unit));
+                archive_entry_set_size(entry, buffer_size);
+                archive_entry_set_filetype(entry, AE_IFREG);
+                archive_entry_set_perm(entry, 0644);
 
-            // write the data to the entry
-            archive_write_data(ar, buffer, buffer_size);
+                time_t now = time(NULL);
+                archive_entry_set_atime(entry, now, 0);
+                archive_entry_set_ctime(entry, now, 0);
+                archive_entry_set_mtime(entry, now, 0);
+                archive_write_header(ar, entry);
 
-            // done with the archive entry
-            archive_entry_free(entry);
+                // write the data to the entry
+                archive_write_data(ar, buffer, buffer_size);
 
-            // done with the srcML unit
-            srcml_free_unit(unit);
+                // done with the archive entry
+                archive_entry_free(entry);
+
+                // done with the srcML unit
+                srcml_free_unit(unit);
+            }
+
+            srcml_close_archive(arch);
+            srcml_free_archive(arch);
         }
-
-        srcml_close_archive(arch);
-        srcml_free_archive(arch);
 
         archive_write_close(ar);
         archive_write_finish(ar);
