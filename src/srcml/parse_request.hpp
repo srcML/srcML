@@ -40,6 +40,8 @@ struct ParseRequest {
     void swap(ParseRequest& other) {
 
         filename.swap(other.filename);
+        directory.swap(other.directory);
+        version.swap(other.version);
         buffer.swap(other.buffer);
 
         srcml_archive* temp = srcml_arch;
@@ -60,6 +62,8 @@ struct ParseRequest {
 
     // Fields required by thread to process a unit
     std::string filename;
+    std::string directory;
+    std::string version;
     std::vector<char> buffer;
     srcml_archive * srcml_arch;
     std::string lang;

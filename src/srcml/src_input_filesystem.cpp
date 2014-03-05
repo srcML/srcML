@@ -52,7 +52,7 @@ void src_input_filesystem(ParseQueue& queue, srcml_archive* srcml_arch, const st
 
             if (is_regular_file(*it)) {
                 if (srcml_archive_check_extension(srcml_arch, it->string().c_str()))
-                    src_input_libarchive(queue, srcml_arch, it->string(), lang);
+                    src_input_libarchive(queue, srcml_arch, it->string(), 0, 0, lang);
             }
         }
     }

@@ -169,13 +169,13 @@ int main(int argc, char * argv[]) {
 
             // call handler based on prefix
             if (fstdin) {
-                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, fstdin);
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, fstdin);
             } else if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
                 src_input_filesystem(queue, srcml_arch, resource, srcml_request.att_language);
             } else if (protocol == "file") {
-                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language);
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory);
             } else if (protocol == "stdin") {
-                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language);
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory);
             }
         }
 
@@ -202,7 +202,10 @@ int main(int argc, char * argv[]) {
     } else if (isxml && (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) && srcml_request.input.size() == 1) {
 
         srcml_archive* arch = srcml_create_archive();
-        srcml_read_open_filename(arch, srcml_request.input[0].c_str());
+        if (!fstdin)
+            srcml_read_open_filename(arch, srcml_request.input[0].c_str());
+        else
+            srcml_read_open_FILE(arch, *fstdin);
 
         // construct the relative directory
         std::string prefix;
@@ -237,7 +240,10 @@ int main(int argc, char * argv[]) {
     } else if (isxml && (srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
 
         srcml_archive* arch = srcml_create_archive();
-        srcml_read_open_filename(arch, srcml_request.input[0].c_str());
+        if (!fstdin)
+            srcml_read_open_filename(arch, srcml_request.input[0].c_str());
+        else
+            srcml_read_open_FILE(arch, *fstdin);
 
         srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
 
@@ -272,7 +278,10 @@ int main(int argc, char * argv[]) {
     } else if (isxml && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
 
         srcml_archive* arch = srcml_create_archive();
-        srcml_read_open_filename(arch, srcml_request.input[0].c_str());
+        if (!fstdin)
+            srcml_read_open_filename(arch, srcml_request.input[0].c_str());
+        else
+            srcml_read_open_FILE(arch, *fstdin);
 
         srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
 
@@ -308,7 +317,10 @@ int main(int argc, char * argv[]) {
         archive_write_open_filename(ar, srcml_request.output_filename->c_str());
 
         srcml_archive* arch = srcml_create_archive();
-        srcml_read_open_filename(arch, srcml_request.input[0].c_str());
+        if (!fstdin)
+            srcml_read_open_filename(arch, srcml_request.input[0].c_str());
+        else
+            srcml_read_open_FILE(arch, *fstdin);
 
         while (srcml_unit* unit = srcml_read_unit(arch)) {
 

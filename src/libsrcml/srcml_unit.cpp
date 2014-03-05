@@ -342,7 +342,11 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
  */
 int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
 
-    if(unit == NULL || src_buffer == NULL || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
+    if(unit == NULL || (src_buffer == NULL && buffer_size != 0) || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
+
+    // if the buffer size is 0, then ignore the buffer and use this internal one
+    if (buffer_size == 0)
+        src_buffer = " ";
 
     int lang = srcml_check_language(unit->language ? unit->language->c_str() : "C++");
 
