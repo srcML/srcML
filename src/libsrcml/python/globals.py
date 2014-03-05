@@ -151,20 +151,20 @@ libsrcml.srcml_get_namespace_size.restype = c_int
 libsrcml.srcml_get_namespace_size.argtypes = []
 
 # const char* srcml_get_prefix(int pos);
-libsrcml.srcml_get_prefix.restype = c_char_p
-libsrcml.srcml_get_prefix.argtypes = [c_int]
+libsrcml.srcml_get_namespace_prefix.restype = c_char_p
+libsrcml.srcml_get_namespace_prefix.argtypes = [c_int]
 
 # const char* srcml_get_prefix_uri(const char* namespace_uri);
-libsrcml.srcml_get_prefix_uri.restype = c_char_p
-libsrcml.srcml_get_prefix_uri.argtypes = [c_char_p]
+libsrcml.srcml_get_prefix_from_uri.restype = c_char_p
+libsrcml.srcml_get_prefix_from_uri.argtypes = [c_char_p]
 
 # const char* srcml_get_namespace(int pos);
-libsrcml.srcml_get_namespace.restype = c_char_p
-libsrcml.srcml_get_namespace.argtypes = [c_int]
+libsrcml.srcml_get_namespace_uri.restype = c_char_p
+libsrcml.srcml_get_namespace_uri.argtypes = [c_int]
 
 # const char* srcml_get_namespace_prefix(const char* prefix);
-libsrcml.srcml_get_namespace_prefix.restype = c_char_p
-libsrcml.srcml_get_namespace_prefix.argtypes = [c_char_p]
+libsrcml.srcml_get_uri_from_prefix.restype = c_char_p
+libsrcml.srcml_get_uri_from_prefix.argtypes = [c_char_p]
 
 # int         srcml_get_macro_list_size();
 libsrcml.srcml_get_macro_list_size.restype = c_int
@@ -281,16 +281,16 @@ def get_tabstop() :
 def get_namespace_size() :
     return libsrcml.srcml_get_namespace_size()
 
-def get_prefix(pos) :
+def get_namespace_prefix(pos) :
     return libsrcml.srcml_get_prefix(pos)
 
-def get_prefix_uri(ns) :
+def get_prefix_from_uri(ns) :
     return libsrcml.srcml_get_prefix_uri(ns)
 
-def get_namespace(pos) :
+def get_namespace_uri(pos) :
     return libsrcml.srcml_get_namespace(pos)
 
-def get_namespace_prefix(prefix) :
+def get_uri_from_prefix(prefix) :
     return libsrcml.srcml_get_namespace_prefix(prefix)
 
 def get_macro_list_size() :

@@ -159,21 +159,21 @@ libsrcml.srcml_archive_get_tabstop.argtypes = [c_void_p]
 libsrcml.srcml_archive_get_namespace_size.restype = c_int
 libsrcml.srcml_archive_get_namespace_size.argtypes = [c_void_p]
 
-# const char* srcml_archive_get_prefix(const struct srcml_archive* archive, int pos);
-libsrcml.srcml_archive_get_prefix.restype = c_char_p
-libsrcml.srcml_archive_get_prefix.argtypes = [c_void_p, c_int]
+# const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archive, int pos);
+libsrcml.srcml_archive_get_namespace_prefix.restype = c_char_p
+libsrcml.srcml_archive_get_namespace_prefix.argtypes = [c_void_p, c_int]
 
-# const char* srcml_archive_get_prefix_uri(const struct srcml_archive* archive, const char* namespace_uri);
-libsrcml.srcml_archive_get_prefix_uri.restype = c_char_p
-libsrcml.srcml_archive_get_prefix_uri.argtypes = [c_void_p, c_char_p]
+# const char* srcml_archive_get_prefix_from_uri(const struct srcml_archive* archive, const char* namespace_uri);
+libsrcml.srcml_archive_get_prefix_from_uri.restype = c_char_p
+libsrcml.srcml_archive_get_prefix_from_uri.argtypes = [c_void_p, c_char_p]
 
 # const char* srcml_archive_get_namespace(const struct srcml_archive* archive, int pos);
-libsrcml.srcml_archive_get_namespace.restype = c_char_p
-libsrcml.srcml_archive_get_namespace.argtypes = [c_void_p, c_int]
+libsrcml.srcml_archive_get_namespace_uri.restype = c_char_p
+libsrcml.srcml_archive_get_namespace_uri.argtypes = [c_void_p, c_int]
 
 # const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archive, const char* prefix);
-libsrcml.srcml_archive_get_namespace_prefix.restype = c_char_p
-libsrcml.srcml_archive_get_namespace_prefix.argtypes = [c_void_p, c_char_p]
+libsrcml.srcml_archive_get_uri_from_prefix.restype = c_char_p
+libsrcml.srcml_archive_get_uri_from_prefix.argtypes = [c_void_p, c_char_p]
 
 # int         srcml_archive_get_macro_list_size(const struct srcml_archive* archive);
 libsrcml.srcml_archive_get_macro_list_size.restype = c_int
@@ -334,16 +334,16 @@ class srcml_archive :
     def get_namespace_size(self) :
         return libsrcml.srcml_archive_get_namespace_size(self.archive)
 
-    def get_prefix(self, pos) :
+    def get_namespace_prefix(self, pos) :
         return libsrcml.srcml_archive_get_prefix(self.archive, pos)
 
-    def get_prefix_uri(self, ns) :
+    def get_prefix_from_uri(self, ns) :
         return libsrcml.srcml_archive_get_prefix_uri(self.archive, ns)
 
-    def get_namespace(self, pos) :
+    def get_namespace_uri(self, pos) :
         return libsrcml.srcml_archive_get_namespace(self.archive, pos)
 
-    def get_namespace_prefix(self, prefix) :
+    def get_uri_from_prefix(self, prefix) :
         return libsrcml.srcml_archive_get_namespace_prefix(self.archive, prefix)
 
     def get_macro_list_size(self) :
