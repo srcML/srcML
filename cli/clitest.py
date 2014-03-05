@@ -23,12 +23,17 @@ eol_error_list = []
 test_line = ""
 error_lines = []
 
+limit = 0
+
 def check(command, input, output):
 
         if sys.platform == 'cygwin' and input != "" :
                 return
 
         globals()["test_count"] += 1
+        if globals()["limit"] != 0 and globals()["test_count"] > globals()["limit"]:
+                exit(0)
+
         globals()["test_line"] = os.path.basename(command[0]) + ' ' + ' '.join(command[1:])
         print test_count, os.path.basename(command[0]), ' '.join(command[1:])
         
@@ -151,7 +156,7 @@ def getreturn(command, input):
 
 
 def checkallforms(base, shortflag, longflag, optionvalue, progin, progout):
-        if base == src2srcml and (shortflag != option.LANGUAGE_FLAG_SHORT or longflag != option.LANGUAGE_FLAG_SHORT) :
+        if base == src2srcml and not(shortflag == option.LANGUAGE_FLAG_SHORT or longflag == option.LANGUAGE_FLAG_FULL) :
                 if optionvalue != "":
                         check([base, option.LANGUAGE_FLAG_SHORT, 'C++', shortflag, optionvalue], progin, progout)
                         check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag, optionvalue], progin, progout)
@@ -269,6 +274,7 @@ srcml = xml_declaration + """
 """
 checkallforms(src2srcml, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C", "", srcml)
 
+
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java"/>
 """
@@ -304,6 +310,7 @@ srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar"/>
 """
 checkallforms(src2srcml, option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "bar", "", srcml)
+
 
 ##
 # version flag
