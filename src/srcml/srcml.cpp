@@ -169,13 +169,13 @@ int main(int argc, char * argv[]) {
 
             // call handler based on prefix
             if (fstdin) {
-                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, fstdin);
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, fstdin);
             } else if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
                 src_input_filesystem(queue, srcml_arch, resource, srcml_request.att_language);
             } else if (protocol == "file") {
-                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language);
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory);
             } else if (protocol == "stdin") {
-                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language);
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory);
             }
         }
 
