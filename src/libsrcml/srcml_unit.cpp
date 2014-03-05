@@ -299,13 +299,10 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
  */
 int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
-    if(unit == NULL || src_filename == NULL || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
+    if(unit == NULL || src_filename == NULL || (!unit->language && !unit->archive->language) || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
-    int file_lang = Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
-    int lang = unit->language ? srcml_check_language(unit->language->c_str()) :
-        (file_lang != Language::LANGUAGE_NONE && file_lang != 0 ? file_lang : srcml_check_language("C++"));
-
-
+    int lang = unit->language ? srcml_check_language(unit->language->c_str())
+        : srcml_check_language(unit->archive->language->c_str());
 
     OPTION_TYPE translation_options = unit->archive->options;
 
@@ -342,9 +339,10 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
  */
 int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
 
-    if(unit == NULL || src_buffer == NULL || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
+    if(unit == NULL || src_buffer == NULL || (!unit->language && !unit->archive->language) || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
-    int lang = srcml_check_language(unit->language ? unit->language->c_str() : "C++");
+    int lang = unit->language ? srcml_check_language(unit->language->c_str())
+    : srcml_check_language(unit->archive->language->c_str());
 
     OPTION_TYPE translation_options = unit->archive->options;
 
@@ -380,10 +378,11 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
  */
 int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
-    if(unit == NULL || src_file == NULL || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
+    if(unit == NULL || src_file == NULL || (!unit->language && !unit->archive->language) || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
-    int lang = srcml_check_language(unit->language ? unit->language->c_str() : "C++");
-
+    int lang = unit->language ? srcml_check_language(unit->language->c_str())
+    : srcml_check_language(unit->archive->language->c_str());
+    
     OPTION_TYPE translation_options = unit->archive->options;
 
     if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
@@ -418,9 +417,10 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
  */
 int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
-    if(unit == NULL || src_fd < 0 || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
+    if(unit == NULL || src_fd < 0 || (!unit->language && !unit->archive->language) || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
-    int lang = srcml_check_language(unit->language ? unit->language->c_str() : "C++");
+    int lang = unit->language ? srcml_check_language(unit->language->c_str())
+    : srcml_check_language(unit->archive->language->c_str());
 
     OPTION_TYPE translation_options = unit->archive->options;
 
