@@ -64,7 +64,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
 }
 
 UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), total_size(0), lastcr(false), need_close(true), cd(0) {
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), total_size(0), lastcr(false), need_close(false), cd(0) {
 
     if(fd < 0) throw UTF8FileError();
 
