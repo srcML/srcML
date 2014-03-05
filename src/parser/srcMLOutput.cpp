@@ -592,7 +592,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
         { UNIT_ATTRIBUTE_REVISION, isoption(OPTION_REVISION) ? srcml_version_string() : 0 },
 
         // timestamp attribute
-        { UNIT_ATTRIBUTE_TIMESTAMP, isoption(OPTION_ARCHIVE) && depth == 0 ? current_time.c_str() : 0 },
+        { UNIT_ATTRIBUTE_TIMESTAMP, isoption(OPTION_TIMESTAMP) && depth != 0 ? current_time.c_str() : 0 },
 
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },
