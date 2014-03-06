@@ -65,6 +65,10 @@ set_target_properties(srcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_B
 buildLib(srcml_shared SHARED)
 set_target_properties(srcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+if(NOT ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"))
+    install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.dylib\")")
+endif()
+
 install(TARGETS srcml_shared srcml_static
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
