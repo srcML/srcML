@@ -49,6 +49,7 @@ struct ParseRequest {
         std::swap(srcml_arch, other.srcml_arch);
         lang.swap(other.lang);
         std::swap(position, other.position);
+        disk_filename.swap(other.disk_filename);
     }
 
     // empty ParseRequests indicate termination
@@ -64,6 +65,7 @@ struct ParseRequest {
     srcml_archive * srcml_arch;
     std::string lang;
     int position;
+    std::string disk_filename;
 };
 
 #endif

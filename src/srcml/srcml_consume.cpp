@@ -54,7 +54,12 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
         if (pr.version)
             srcml_unit_set_version(unit, pr.version->c_str());
         srcml_unit_set_language(unit, pr.lang.c_str());
-        srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
+
+        if (pr.disk_filename == "") {
+            srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
+        } else {
+            srcml_parse_unit_filename(unit, pr.disk_filename.c_str());
+        }
 
         // write unit
         WriteRequest wr;
