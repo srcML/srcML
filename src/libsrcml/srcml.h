@@ -118,9 +118,11 @@ __LIBSRCML_DECL const char* srcml_version_string();
 
 /* srcml status messages */
 /** Return status indicating no errors */
-#define SRCML_STATUS_OK    0
+#define SRCML_STATUS_OK               0
 /** Return status indicating errors occurred */
-#define SRCML_STATUS_ERROR 1
+#define SRCML_STATUS_ERROR            1
+/** Return status indicating an invalid argument */
+#define SRCML_STATUS_INVALID_ARGUMENT 2
 
 /* libsrcml data structures */
 struct srcml_archive;

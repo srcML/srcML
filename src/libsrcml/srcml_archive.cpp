@@ -182,11 +182,11 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
  *
  * Set the default source encoding of the srcML Archive.
  *
- * @returns SRCML_STATUS_OK on success andd SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_archive_set_src_encoding(srcml_archive* archive, const char* src_encoding) {
 
-    if(archive == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->src_encoding = src_encoding ? std::string(src_encoding) : boost::optional<std::string>();
 
@@ -201,11 +201,11 @@ int srcml_archive_set_src_encoding(srcml_archive* archive, const char* src_encod
  *
  * Set the xml encoding of the srcML Archive.
  *
- * @returns SRCML_STATUS_OK on success andd SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
 
-    if(archive == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->encoding = encoding ? std::string(encoding) : boost::optional<std::string>();
 
@@ -220,11 +220,11 @@ int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
  *
  * Set the language of the srcML Archive.
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_archive_set_language(srcml_archive* archive, const char* language) {
 
-    if(archive == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->language = language ? std::string(language) : boost::optional<std::string>();
 
@@ -239,11 +239,11 @@ int srcml_archive_set_language(srcml_archive* archive, const char* language) {
  *
  * Set the root filename attribute of the srcML Archive.
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
 
-    if(archive == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->filename = filename ? std::string(filename) : boost::optional<std::string>();
 
@@ -258,11 +258,11 @@ int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
  *
  * Set the root directory attribute of the srcML Archive.
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_archive_set_directory (srcml_archive* archive, const char* directory) {
 
-    if(archive == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->directory = directory ? std::string(directory) : boost::optional<std::string>();
 
@@ -277,46 +277,13 @@ int srcml_archive_set_directory (srcml_archive* archive, const char* directory) 
  *
  * Set the root version attribute of the srcML Archive.
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_archive_set_version(srcml_archive* archive, const char* version) {
 
-    if(archive == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->version = version ? std::string(version) : boost::optional<std::string>();
-
-    return SRCML_STATUS_OK;
-
-}
-
-/**
- * srcml_archive_set_attributes
- * @param archive a srcml_archive
- * @param attr an array of name-value c string pairs
- *
- * Set/add other root attributes.
- *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
- */
-int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2]) {
-
-    if(archive == NULL) return SRCML_STATUS_ERROR;
-
-    archive->attributes.clear();
-
-    while((*attr)[0]) {
-
-        if((*attr)[1] == 0) {
-            archive->attributes.clear();
-            return SRCML_STATUS_ERROR;
-
-        }
-
-        archive->attributes.push_back((*attr)[0]);
-        archive->attributes.push_back((*attr)[1]);
-        ++attr;
-
-    }
 
     return SRCML_STATUS_OK;
 
@@ -329,11 +296,11 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2])
  *
  * Set all options for processing an archive (erases all previous).
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_archive_set_options(srcml_archive* archive, unsigned long long options) {
 
-    if(archive == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->options = options;
     return SRCML_STATUS_OK;
@@ -348,11 +315,11 @@ int srcml_archive_set_options(srcml_archive* archive, unsigned long long options
  * Enable/set a srcml option, adding to the previously active options.
  * May set multiple options with same call by |ing each.
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_archive_enable_option(srcml_archive* archive, unsigned long long option) {
 
-    if(archive == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->options |= option;
     return SRCML_STATUS_OK;
@@ -367,11 +334,11 @@ int srcml_archive_enable_option(srcml_archive* archive, unsigned long long optio
  * Remove a srcml option.
  * May clear multiple options with same call by |ing each.
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_archive_disable_option(srcml_archive* archive, unsigned long long option) {
 
-    if(archive == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->options &= ~option;
     return SRCML_STATUS_OK;
@@ -385,11 +352,11 @@ int srcml_archive_disable_option(srcml_archive* archive, unsigned long long opti
  *
  * Set the tabstop size for position/column calculation.
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_archive_set_tabstop(srcml_archive* archive, int tabstop) {
 
-    if(archive == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->tabstop = tabstop;
     return SRCML_STATUS_OK;
@@ -408,8 +375,8 @@ int srcml_archive_set_tabstop(srcml_archive* archive, int tabstop) {
  */
 int srcml_archive_register_file_extension(srcml_archive* archive, const char* extension, const char* language) {
 
-    if(archive == NULL || extension == 0 || language == 0)
-        return SRCML_STATUS_ERROR;
+    if(archive == NULL || extension == NULL || language == NULL)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     if(Language::registerUserExt(extension, language, archive->registered_languages))
         return SRCML_STATUS_OK;
@@ -428,7 +395,7 @@ int srcml_archive_register_file_extension(srcml_archive* archive, const char* ex
  */
 int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix, const char* ns) {
 
-    if(archive == NULL || prefix == 0 || ns == 0) return SRCML_STATUS_ERROR;
+    if(archive == NULL || prefix == NULL || ns == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     try {
 
@@ -461,7 +428,7 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
  */
 int srcml_archive_register_macro(srcml_archive* archive, const char* token, const char* type) {
 
-    if(archive == NULL || token == 0 || type == 0) return SRCML_STATUS_ERROR;
+    if(archive == NULL || token == NULL || type == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     try {
 
