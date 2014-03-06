@@ -172,11 +172,26 @@ __LIBSRCML_DECL const char*        srcml_get_directory();
 __LIBSRCML_DECL const char*        srcml_get_version  ();
 __LIBSRCML_DECL unsigned long long srcml_get_options  ();
 __LIBSRCML_DECL int                srcml_get_tabstop  ();
+
+/*
+  XML namespaces
+*/
+
+/* Number of declared XML namespaces */
 __LIBSRCML_DECL int                srcml_get_namespace_size();
-__LIBSRCML_DECL const char*        srcml_get_prefix(int pos);
-__LIBSRCML_DECL const char*        srcml_get_prefix_uri(const char* namespace_uri);
-__LIBSRCML_DECL const char*        srcml_get_namespace(int pos);
+
+/* Prefix of the namespace at that position, where empty namespace is an empty string, and 0 is invalid position */
+__LIBSRCML_DECL const char*        srcml_get_prefix(int position);
+
+/* URI of the namespace at that position, where 0 is invalid position */
+__LIBSRCML_DECL const char*        srcml_get_namespace(int position);
+
+/* Prefix of the namespace with this namespace uri */
+__LIBSRCML_DECL const char*        srcml_get_prefix_uri(const char* uri);
+
+/* URI of the namespace with this namespace prefix */
 __LIBSRCML_DECL const char*        srcml_get_namespace_prefix(const char* prefix);
+
 __LIBSRCML_DECL int                srcml_get_macro_list_size();
 __LIBSRCML_DECL const char*        srcml_get_macro_token(int pos);
 __LIBSRCML_DECL const char*        srcml_get_macro_token_type(const char* namespace_uri);

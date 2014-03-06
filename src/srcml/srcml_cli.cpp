@@ -309,7 +309,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         src2srcml_metadata.add_options()
             ("directory,d", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_directory>), "set the arg directory attribute")
             ("filename,f", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_filename>), "set the arg filename attribute")
-            ("src-version,s", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_src_versions>), "set the arg version attribute")
+            ("src-version,s", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_version>), "set the arg version attribute")
             ;
 
         srcml2src_metadata.add_options()
@@ -372,11 +372,9 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         // Check option conflicts
         conflicting_options(cli_map, "quiet", "verbose");
 
-        // If no positional args (files,urls,etc.) stdin ("-") is used
-        // TODO: GET RID OF THIS
-        if (srcml_request.input.empty()) {
+        // If input was from stdin, then artificially put a "-" into the list of input files
+        if (srcml_request.input.empty())
             srcml_request.input.push_back("-");
-        }
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
         // automatic interactive use from stdin (not on redirect or pipe)

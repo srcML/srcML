@@ -63,7 +63,14 @@ void setup_libarchive(archive* arch) {
 }
 
 // Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const boost::optional<std::string>& lang, const boost::optional<std::string>& option_filename, const boost::optional<std::string>& option_directory, boost::optional<FILE*> fstdin) {
+void src_input_libarchive(ParseQueue& queue,
+                          srcml_archive* srcml_arch,
+                          const std::string& input_file,
+                          const boost::optional<std::string>& lang,
+                          const boost::optional<std::string>& option_filename,
+                          const boost::optional<std::string>& option_directory,
+                          const boost::optional<std::string>& option_version,
+                          boost::optional<FILE*> fstdin) {
 
     // libArchive Setup
     archive* arch = archive_read_new();
@@ -84,18 +91,22 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         exit(1);
     }
 
-    const std::string& main_filename = option_filename ? *option_filename : (input_file != "" ? input_file : "-");
+    /* In general, go through this once for each time the header can be read
+       Exception: if empty, go through the loop exactly once */
+    int count = 0;
+    int status = ARCHIVE_OK;
+    while (status == ARCHIVE_OK &&
+        (((status = archive_read_next_header(arch, &arch_entry)) == ARCHIVE_OK) || (status == ARCHIVE_EOF && !count))) {
 
-    bool empty = true;
-    while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
-        empty = false;
-
-        // default is filename from archive entry
-        std::string filename = archive_entry_pathname(arch_entry);
+        // default is filename from archive entry (if not empty)
+        std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(arch_entry) : "";
 
         // archive entry filename for non-archive input is "data"
-        if (filename == "data")
-            filename = main_filename;
+        if (filename == "data" || filename.empty())
+            filename = input_file;
+
+        if (option_filename)
+            filename = *option_filename;
 
         // language may have been explicitly set
         std::string language;
@@ -119,9 +130,12 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
 
         // form the parsing request
         ParseRequest request;
-        request.filename = main_filename;
+        if (option_filename || filename != "-")
+            request.filename = filename;
         if (option_directory)
             request.directory = *option_directory;
+        if (option_version)
+            request.version = *option_version;
         request.srcml_arch = srcml_arch;
         request.lang = language;
 
@@ -130,22 +144,13 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
         const char* buffer;
         size_t size;
         int64_t offset;
-        while (archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
+        while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
             request.buffer.insert(request.buffer.end(), buffer, buffer + size);
 
         // Hand request off to the processing queue
         queue.push(request);
-    }
 
-    // If the input is empty
-    if (empty) {
-        ParseRequest request;
-        request.filename = main_filename;
-        if (option_directory)
-            request.directory = *option_directory;
-        request.srcml_arch = srcml_arch;
-        request.lang = srcml_archive_get_language(srcml_arch) ? lang->c_str() : srcml_archive_check_extension(srcml_arch, input_file.c_str());
-        queue.push(request);
+        ++count;
     }
 
     archive_read_finish(arch);

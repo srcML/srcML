@@ -31,6 +31,8 @@
 #include <srcml.h>
 #include <string>
 
+#include <boost/optional.hpp>
+
 struct WriteRequest {
     WriteRequest() : srcml_arch(0), unit(0), position(0) {}
 
@@ -61,7 +63,7 @@ struct WriteRequest {
     srcml_unit* unit;
 
     int position;
-    std::string filename;
+    boost::optional<std::string> filename;
 };
 
 bool operator<(const WriteRequest& n1, const WriteRequest& n2);

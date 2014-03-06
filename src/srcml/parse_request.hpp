@@ -28,11 +28,14 @@
 #ifndef PARSE_REQUEST_HPP
 #define PARSE_REQUEST_HPP
 
+#include <algorithm>
 #include <archive.h>
 #include <srcml.h>
 
 #include <string>
 #include <vector>
+
+#include <boost/optional.hpp>
 
 struct ParseRequest {
     ParseRequest() : buffer(0), srcml_arch(0), position(0) {}
@@ -43,27 +46,20 @@ struct ParseRequest {
         directory.swap(other.directory);
         version.swap(other.version);
         buffer.swap(other.buffer);
-
-        srcml_archive* temp = srcml_arch;
-        srcml_arch = other.srcml_arch;
-        other.srcml_arch = temp;
-
+        std::swap(srcml_arch, other.srcml_arch);
         lang.swap(other.lang);
-
-        int pos = position;
-        position = other.position;
-        other.position = pos;
+        std::swap(position, other.position);
     }
 
     // empty ParseRequests indicate termination
     bool empty() const {
-        return filename.empty() && buffer.empty() && lang.empty();
+        return filename && buffer.empty() && lang.empty();
     }
 
     // Fields required by thread to process a unit
-    std::string filename;
-    std::string directory;
-    std::string version;
+    boost::optional<std::string> filename;
+    boost::optional<std::string> directory;
+    boost::optional<std::string> version;
     std::vector<char> buffer;
     srcml_archive * srcml_arch;
     std::string lang;
