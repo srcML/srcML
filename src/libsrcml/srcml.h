@@ -123,6 +123,8 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_STATUS_ERROR            1
 /** Return status indicating an invalid argument */
 #define SRCML_STATUS_INVALID_ARGUMENT 2
+/** Return status indicating an invalid read I/O operation (such as write on read only archive */
+#define SRCML_STATUS_INVALID_IO_OPERATION 3
 
 /* libsrcml data structures */
 struct srcml_archive;

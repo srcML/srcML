@@ -301,7 +301,8 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
     if(unit == NULL || src_filename == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+    if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW) 
+	return SRCML_STATUS_INVALID_IO_OPERATION;
 
     int file_lang = Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
     int lang = unit->language ? srcml_check_language(unit->language->c_str()) :
@@ -346,7 +347,8 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
 
     if(unit == NULL || src_buffer == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+    if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
+	return SRCML_STATUS_INVALID_IO_OPERATION;
 
     int lang = srcml_check_language(unit->language ? unit->language->c_str() : "C++");
 
@@ -386,7 +388,8 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
     if(unit == NULL || src_file == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+    if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW) 
+	return SRCML_STATUS_INVALID_IO_OPERATION;
 
     int lang = srcml_check_language(unit->language ? unit->language->c_str() : "C++");
 
@@ -426,7 +429,8 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
     if(unit == NULL || src_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+    if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
+	return SRCML_STATUS_INVALID_IO_OPERATION;
 
     int lang = srcml_check_language(unit->language ? unit->language->c_str() : "C++");
 
@@ -472,7 +476,8 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
     if(unit == NULL || src_filename == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) 
+	return SRCML_STATUS_INVALID_IO_OPERATION;
 
     if(!unit->unit && !unit->read_header) return SRCML_STATUS_ERROR;
 
@@ -525,7 +530,8 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
 
     if(unit == NULL || src_buffer == NULL || src_size == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) 
+	return SRCML_STATUS_INVALID_IO_OPERATION;
 
     if(!unit->unit && !unit->read_header) return SRCML_STATUS_ERROR;
 
@@ -590,7 +596,8 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 
     if(unit == NULL || srcml_file == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) 
+	return SRCML_STATUS_INVALID_IO_OPERATION;
 
     if(!unit->unit && !unit->read_header) return SRCML_STATUS_ERROR;
 
@@ -640,7 +647,8 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
     if(unit == NULL || srcml_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) 
+	return SRCML_STATUS_INVALID_IO_OPERATION;
 
     if(!unit->unit && !unit->read_header) return SRCML_STATUS_ERROR;
 
