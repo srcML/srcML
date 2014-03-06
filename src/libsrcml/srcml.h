@@ -125,7 +125,7 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_STATUS_INVALID_ARGUMENT 2
 /** Return status indicating an invalid read I/O operation (such as write on read only archive) */
 #define SRCML_STATUS_INVALID_IO_OPERATION 3
-/** Return status indicating invalid input */
+/** Return status indicating that their is some problem with the input */
 #define SRCML_STATUS_INVALID_INPUT 4
 /** Return status indicating an unitialized unit */
 #define SRCML_STATUS_UNINITIALIZED_UNIT 5
