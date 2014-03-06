@@ -28,6 +28,7 @@
 #include <srcml.h>
 #include <string>
 #include <parse_queue.hpp>
+#include <boost/optional.hpp>
 
 void src_input_libarchive(ParseQueue& queue,                  // srcml parsing queue
                           srcml_archive* srcml_arch,          // srcml archive to write to

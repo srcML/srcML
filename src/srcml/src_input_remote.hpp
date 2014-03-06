@@ -23,3 +23,22 @@
 /*
   src_input_remote assigns remote files and archives to the srcml parsing queue
 */
+
+#ifndef SRC_INPUT_REMOTE_HPP
+#define SRC_INPUT_REMOTE_HPP
+
+#include <srcml.h>
+#include <string>
+#include <parse_queue.hpp>
+#include <boost/optional.hpp>
+
+void src_input_remote(ParseQueue& queue,                  // srcml parsing queue
+                          srcml_archive* srcml_arch,      // srcml archive to write to
+                          const std::string& remote_uri,  // input filename
+                          const boost::optional<std::string>& language,        // specified language
+                          const boost::optional<std::string>& option_filename,
+                          const boost::optional<std::string>& option_directory,
+                          boost::optional<FILE*> fstdin = boost::optional<FILE*>()  // stdin (if already opened)
+);
+
+#endif

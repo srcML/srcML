@@ -28,6 +28,7 @@
 #include <src_input_libarchive.hpp>
 #include <src_input_filesystem.hpp>
 #include <src_input_stdin.hpp>
+#include <src_input_remote.hpp>
 #include <srcml_display_info.hpp>
 #include <srcml_list_unit_files.hpp>
 #include <src_prefix.hpp>
@@ -176,7 +177,10 @@ int main(int argc, char * argv[]) {
                 src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory);
             } else if (protocol == "stdin") {
                 src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory);
+            } else if (protocol == "http" || protocol == "https") {
+                src_input_remote(queue, srcml_arch, uri, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory);
             }
+
         }
 
         // wait for the parsing queue to finish
