@@ -46,7 +46,7 @@
  */
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
 
-    if(archive == NULL || xpath_string == 0) return SRCML_STATUS_ERROR;
+    if(archive == NULL || xpath_string == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
 
     transform tran = { SRCML_XPATH, xpath_string };
@@ -68,7 +68,7 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
  */
 int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filename) {
 
-    if(archive == NULL || xslt_filename == 0) return SRCML_STATUS_ERROR;
+    if(archive == NULL || xslt_filename == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
 
     transform tran = { SRCML_XSLT, xslt_filename };
@@ -90,7 +90,7 @@ int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filenam
  */
 int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_filename) {
 
-    if(archive == NULL || relaxng_filename == 0) return SRCML_STATUS_ERROR;
+    if(archive == NULL || relaxng_filename == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
 
     transform tran = { SRCML_RELAXNG, relaxng_filename };
@@ -106,11 +106,11 @@ int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_f
  *
  * Remove all transformations from archive.
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_clear_transforms(srcml_archive * archive) {
 
-    if(archive == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->transformations.clear();
 
@@ -131,7 +131,7 @@ int srcml_clear_transforms(srcml_archive * archive) {
  */
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
-    if(iarchive == NULL || oarchive == NULL) return SRCML_STATUS_ERROR;
+    if(iarchive == NULL || oarchive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     static const char * transform_filename_template = "srcml_transform_XXXXXXXX";
 

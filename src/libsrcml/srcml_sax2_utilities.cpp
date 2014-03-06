@@ -47,11 +47,11 @@
  *
  * Extract a given unit from supplied srcML input buffer.
  *
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBuffer * output_handler, OPTION_TYPE options, int unit) {
 
-    if(input_buffer == NULL || size == 0) return SRCML_STATUS_ERROR;
+    if(input_buffer == NULL || size == 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(input_buffer, (int)size, XML_CHAR_ENCODING_NONE);
 
@@ -105,7 +105,8 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
  */
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpaths[], int fd, OPTION_TYPE options) {
 
-    if(input_buffer == NULL || context_element == NULL || xpaths == NULL || xpaths[0] == NULL || fd < 0) return SRCML_STATUS_ERROR;
+    if(input_buffer == NULL || context_element == NULL ||
+       xpaths == NULL || xpaths[0] == NULL || fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
     // relative xpath changed to at any level
     std::string s = xpaths[0];
@@ -182,7 +183,8 @@ void dlexsltRegisterAll(void * handle) {
  */
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xslts[], const char* params[], int paramcount, int fd, OPTION_TYPE options) {
 
-    if(input_buffer == NULL || context_element == NULL || xslts == NULL || xslts[0] == NULL || fd < 0) return SRCML_STATUS_ERROR;
+    if(input_buffer == NULL || context_element == NULL ||
+       xslts == NULL || xslts[0] == NULL || fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlInitParser();
 
@@ -269,7 +271,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 /**
  * srcml_relaxng
  * @param input_buffer a parser input buffer
- * @param xslts a NULL-terminated list of RelaxNG schemas
+ * @param relaxngs a NULL-terminated list of RelaxNG schemas
  * @param fd output file descriptor
  * @param options srcml options
  *
@@ -277,11 +279,11 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int fd, OPTION_TYPE options) {
+int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** relaxngs, int fd, OPTION_TYPE options) {
 
-    if(input_buffer == NULL || xslts == NULL || xslts[0] == NULL || fd < 0) return SRCML_STATUS_ERROR;
+    if(input_buffer == NULL || relaxngs == NULL || relaxngs[0] == NULL || fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    xmlRelaxNGParserCtxtPtr relaxng = xmlRelaxNGNewParserCtxt(xslts[0]);
+    xmlRelaxNGParserCtxtPtr relaxng = xmlRelaxNGNewParserCtxt(relaxngs[0]);
     xmlRelaxNGPtr rng = xmlRelaxNGParse(relaxng);
     xmlRelaxNGValidCtxtPtr rngctx = xmlRelaxNGNewValidCtxt(rng);
 
