@@ -395,7 +395,7 @@ int main() {
         srcml_archive_set_version(archive, "1");
         srcml_archive_register_namespace(archive, "s", "http://www.sdml.info/srcML/src");
         srcml_write_open_memory(archive, &s, &size);
-        dassert(srcml_write_unit(archive, 0), SRCML_STATUS_ERROR);
+        dassert(srcml_write_unit(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
         free(s);
@@ -404,7 +404,7 @@ int main() {
     {
         srcml_archive * archive = srcml_create_archive();
         srcml_unit * unit = srcml_create_unit(archive);
-        dassert(srcml_write_unit(0, unit), SRCML_STATUS_ERROR);
+        dassert(srcml_write_unit(0, unit), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_free_unit(unit);
         srcml_free_archive(archive);
     }

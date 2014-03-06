@@ -75,7 +75,7 @@ int main() {
                       , S_IRUSR | S_IWUSR
 #endif
                       );
-        dassert(srcml_xpath(0, "src:unit", "//src:unit", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_ERROR);
+        dassert(srcml_xpath(0, "src:unit", "//src:unit", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         unlink("project.xml");
     }
 
@@ -90,7 +90,7 @@ int main() {
                       , S_IRUSR | S_IWUSR
 #endif
                       );
-        dassert(srcml_xpath(buffer_input, 0, "//src:unit", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_ERROR);
+        dassert(srcml_xpath(buffer_input, 0, "//src:unit", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
         unlink("project.xml");
@@ -107,7 +107,7 @@ int main() {
                       , S_IRUSR | S_IWUSR
 #endif
                       );
-        dassert(srcml_xpath(buffer_input, "src:unit", 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_ERROR);
+        dassert(srcml_xpath(buffer_input, "src:unit", 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
         unlink("project.xml");
@@ -119,7 +119,7 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        dassert(srcml_xpath(buffer_input, "src:unit", "//src:unit", -1, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_ERROR);
+        dassert(srcml_xpath(buffer_input, "src:unit", "//src:unit", -1, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
     }
