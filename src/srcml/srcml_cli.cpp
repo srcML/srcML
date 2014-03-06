@@ -214,6 +214,9 @@ void positional_args(const std::vector<std::string>& value) {
     std::string prefix = "";
     BOOST_FOREACH(const std::string& iname, value) {
 
+        if (iname == "-")
+            srcml_request.sawstdin = true;
+
         srcml_request.input.push_back(prefix + iname);
     }
 }
@@ -371,6 +374,12 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // Check option conflicts
         conflicting_options(cli_map, "quiet", "verbose");
+
+        if ((srcml_request.input.empty() || srcml_request.sawstdin) && !srcml_request.att_language) {
+
+            std::cerr << "Using stdin requires a declared language\n";
+            exit(1);
+        }
 
         // If input was from stdin, then artificially put a "-" into the list of input files
         if (srcml_request.input.empty())

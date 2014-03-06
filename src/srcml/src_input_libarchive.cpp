@@ -122,10 +122,7 @@ void src_input_libarchive(ParseQueue& queue,
 
         // at this point there are no other language options
         if (language == "") {
-            if (filename == "-" || fstdin)
-                std::cerr << "Using stdin requires a declared language\n";
-            else
-                std::cerr << "Extension not supported\n";
+            std::cerr << "Extension not supported\n";
             continue;
         }
 
