@@ -207,8 +207,8 @@ int main(int argc, char * argv[]) {
     else if (tosrcml && srcml_request.command & SRCML_COMMAND_LIST) {
         srcml_list_unit_files(srcml_request.input);
 
-        // srcml->src srcML file to filesystem
-    } else if (tosrcml && (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY)) {
+    // srcml->src srcML file to filesystem
+    } else if (tosrc && (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY)) {
 
         int count = 0;
 
@@ -250,7 +250,7 @@ int main(int argc, char * argv[]) {
             srcml_free_archive(arch);
         }
 
-        // srcml->src extract individual unit in XML
+    // srcml->src extract individual unit in XML
     } else if (tosrcml && (srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
 
         srcml_archive* arch = srcml_create_archive();
