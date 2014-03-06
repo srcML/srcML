@@ -146,9 +146,9 @@ int main() {
         srcml_free_archive(archive);
         fclose(file);
 
-        char buf[1];
+        //char buf[1];
         file = fopen("project.xml", "r");
-        size_t num_read = fread(buf, 1, 1, file);
+        //size_t num_read = fread(buf, 1, 1, file);
         fclose(file);
         //dassert(num_read, 0);
 
@@ -188,9 +188,9 @@ int main() {
         srcml_free_archive(archive);
         close(fd);
 
-        char buf[1];
-        fd = open("project.xml", O_RDONLY);
-        size_t num_read = read(fd, buf, 1);
+        //char buf[1];
+        //fd = open("project.xml", O_RDONLY);
+        //size_t num_read = read(fd, buf, 1);
         close(fd);
         //dassert(num_read, 0);
     }
