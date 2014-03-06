@@ -370,7 +370,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_create_unit(archive);
-        dassert(srcml_write_unit(archive, unit), SRCML_STATUS_ERROR);
+        dassert(srcml_write_unit(archive, unit), SRCML_STATUS_UNINITIALIZED_UNIT);
         srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);

@@ -1102,7 +1102,7 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
 
     if(archive == NULL || unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(!unit->unit && !unit->read_header) return SRCML_STATUS_ERROR;
+    if(!unit->unit && !unit->read_header) return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     boost::optional<std::string> read_unit;
     if(!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
