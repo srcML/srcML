@@ -195,10 +195,6 @@ __LIBSRCML_DECL const char* srcml_get_language_list(int pos);
    When full filename is given, the extension is extracted */
 __LIBSRCML_DECL const char* srcml_check_extension(const char* filename);
 
-/* Currently supported format, e.g., tar.gz
-   When full filename is given, the extension is extracted */
-__LIBSRCML_DECL int srcml_check_format(const char* format);
-
 /* Particular encoding is supported, both for input and output */
 __LIBSRCML_DECL int srcml_check_encoding(const char* encoding);
 

@@ -33,7 +33,6 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <boost/regex.hpp>
 
 #include <vector>
 #include <string>
@@ -124,8 +123,7 @@ int srcml_version_number() {
  *
  * Translates to/from srcML
  * Input files with extension xml and language set to xml result in srcml2src behaviour.
- * All other ending extensions result in src2srcml.  Currently, xml files are not detected if they are
- * in any other archive format e.g. tar, gz i.e. a.xml.tar.gz.  Only a.xml will be detected from extension.
+ * All other ending extensions result in src2srcml.  
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
@@ -724,33 +722,6 @@ const char * srcml_get_language_list(int pos) {
 const char * srcml_check_extension(const char* filename) {
 
     return srcml_archive_check_extension(&global_archive, filename);
-
-}
-
-/**
- * srcml_check_format
- * @param format an archive or compression extension, e.g., tar.gz
- *
- * Check if the format is currently supported
- * Full filename can be provided, and extension will be extracted
- * @returns Return if format is supported.
- */
-int srcml_check_format(const char* format) {
-
-    if(format == NULL) return 0;
-
-    static const boost::regex extRegEx("\\.(xz|zg|bz2|tar).*$");
-
-    // reversed copy of the path
-    std::size_t length = strlen(format);
-    boost::cmatch what;
-
-    if(boost::regex_search(format, format + length, what,extRegEx)) {
-
-        return 1;
-
-    } else
-        return 0;
 
 }
 

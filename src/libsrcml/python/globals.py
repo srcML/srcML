@@ -198,10 +198,6 @@ libsrcml.srcml_get_language_list.argtypes = [c_int]
 libsrcml.srcml_check_extension.restype = c_char_p
 libsrcml.srcml_check_extension.argtypes = [c_char_p]
 
-# int srcml_check_format(const char* format);
-libsrcml.srcml_check_format.restype = c_int
-libsrcml.srcml_check_format.argtypes = [c_char_p]
-
 # int srcml_check_encoding(const char* encoding);
 libsrcml.srcml_check_encoding.restype = c_int
 libsrcml.srcml_check_encoding.argtypes = [c_char_p]
@@ -318,9 +314,6 @@ def get_language_list(pos) :
 
 def check_extension(filename) :
     return libsrcml.srcml_check_extension(filename)
-
-def check_format(format) :
-    return libsrcml.srcml_check_format(format)
 
 def check_encoding(encoding) :
     return libsrcml.srcml_check_encoding(encoding)
