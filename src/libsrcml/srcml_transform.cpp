@@ -42,12 +42,12 @@
  * Append the XPath expression to the list
  * of transformation/queries.  As of yet no way to specify context
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
 
     if(archive == NULL || xpath_string == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
     transform tran = { SRCML_XPATH, xpath_string };
     archive->transformations.push_back(tran);
@@ -64,12 +64,12 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
  * Append the XSLT program filename path to the list
  * of transformation/queries.  As of yet no way to specify parameters or context
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filename) {
 
     if(archive == NULL || xslt_filename == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
     transform tran = { SRCML_XSLT, xslt_filename };
     archive->transformations.push_back(tran);
@@ -86,12 +86,12 @@ int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filenam
  * Append the RelaxNG schema filename path to the list
  * of transformation/queries.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_filename) {
 
     if(archive == NULL || relaxng_filename == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
     transform tran = { SRCML_RELAXNG, relaxng_filename };
     archive->transformations.push_back(tran);
@@ -127,7 +127,7 @@ int srcml_clear_transforms(srcml_archive * archive) {
  * Intermediate results are stored in a temporary file.
  * Transformations are cleared.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 

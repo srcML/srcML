@@ -380,7 +380,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_unit * unit = srcml_create_unit(archive);
         unit->unit = "<unit/>";
-        dassert(srcml_write_unit(archive, unit), SRCML_STATUS_ERROR);
+        dassert(srcml_write_unit(archive, unit), SRCML_STATUS_INVALID_IO_OPERATION);
         srcml_free_unit(unit);
         srcml_free_archive(archive);
     }

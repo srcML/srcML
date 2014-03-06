@@ -54,7 +54,7 @@ int main() {
 
     {
         srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_append_transform_xpath(archive, "//src:unit"), SRCML_STATUS_ERROR);
+        dassert(srcml_append_transform_xpath(archive, "//src:unit"), SRCML_STATUS_INVALID_IO_OPERATION);
 
         srcml_free_archive(archive);
     }
@@ -90,7 +90,7 @@ int main() {
 
     {
         srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_append_transform_xslt(archive, "copy.xsl"), SRCML_STATUS_ERROR);
+        dassert(srcml_append_transform_xslt(archive, "copy.xsl"), SRCML_STATUS_INVALID_IO_OPERATION);
 
         srcml_free_archive(archive);
     }
@@ -126,7 +126,7 @@ int main() {
 
     {
         srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_append_transform_relaxng(archive, "schema.rng"), SRCML_STATUS_ERROR);
+        dassert(srcml_append_transform_relaxng(archive, "schema.rng"), SRCML_STATUS_INVALID_IO_OPERATION);
 
         srcml_free_archive(archive);
     }
