@@ -30,6 +30,8 @@
 #include <write_queue.hpp>
 #include <iostream>
 
+static int count = 0;
+
 // Public consumption thread function
 void srcml_write(WriteQueue* queue) {
 
@@ -43,10 +45,17 @@ void srcml_write(WriteQueue* queue) {
         if (!pr.position)
             break;
 
+        if (pr.status == -300) {
+
+            std::cerr << std::setw(5) << "-" << " " << pr.filename << " Extension not supported\n";
+            continue;
+        }
+
         // write the unit
         srcml_write_unit(pr.srcml_arch, pr.unit);
+        ++count;
 
-        //    std::cerr << std::setw(5) << pr.position << " " << pr.filename << '\n';
+        std::cerr << std::setw(5) << count << " " << pr.filename << '\n';
 
         // free the unit
         srcml_free_unit(pr.unit);

@@ -56,12 +56,6 @@ void src_input_file(ParseQueue& queue,
         if (const char* l = srcml_archive_check_extension(srcml_arch, input_file.c_str()))
             language = l;
 
-    // at this point there are no other language options
-    if (language == "") {
-        std::cerr << "Extension not supported\n";
-        return;
-    }
-
     // form the parsing request
     ParseRequest request;
     if (option_filename || filename != "_")

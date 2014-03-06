@@ -45,20 +45,29 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
         if (pr.position == 0)
             break;
 
-        // build and parse
-        srcml_unit * unit = srcml_create_unit(pr.srcml_arch);
-        if (pr.filename)
-            srcml_unit_set_filename(unit, pr.filename->c_str());
-        if (pr.directory)
-            srcml_unit_set_directory(unit, pr.directory->c_str());
-        if (pr.version)
-            srcml_unit_set_version(unit, pr.version->c_str());
-        srcml_unit_set_language(unit, pr.language.c_str());
+        int status = 0;
 
-        if (pr.disk_filename == "") {
-            srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
-        } else {
-            srcml_parse_unit_filename(unit, pr.disk_filename.c_str());
+        // at this point there are no other language options
+        if (pr.language == "")
+            status = -300;
+
+        // build and parse
+        srcml_unit * unit = 0;
+        if (!status) {
+            unit = srcml_create_unit(pr.srcml_arch);
+            if (pr.filename)
+                srcml_unit_set_filename(unit, pr.filename->c_str());
+            if (pr.directory)
+                srcml_unit_set_directory(unit, pr.directory->c_str());
+            if (pr.version)
+                srcml_unit_set_version(unit, pr.version->c_str());
+            srcml_unit_set_language(unit, pr.language.c_str());
+
+            if (pr.disk_filename == "") {
+                status = srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
+            } else {
+                status = srcml_parse_unit_filename(unit, pr.disk_filename.c_str());
+            }
         }
 
         // write unit
@@ -67,6 +76,7 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
         wr.unit = unit;
         wr.position = pr.position;
         wr.filename = pr.filename;
+        wr.status = status;
         wqueue->push(wr);
     }
 }

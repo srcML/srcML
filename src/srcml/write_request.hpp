@@ -28,6 +28,7 @@
 #ifndef WRITE_REQUEST_HPP
 #define WRITE_REQUEST_HPP
 
+#include <algorithm>
 #include <srcml.h>
 #include <string>
 
@@ -51,6 +52,8 @@ struct WriteRequest {
         other.position = pos;
 
         filename.swap(other.filename);
+
+        std::swap(status, other.status);
     }
 
     // empty WriteRequests indicate termination
@@ -64,6 +67,7 @@ struct WriteRequest {
 
     int position;
     boost::optional<std::string> filename;
+    int status;
 };
 
 bool operator<(const WriteRequest& n1, const WriteRequest& n2);
