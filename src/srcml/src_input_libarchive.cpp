@@ -99,6 +99,10 @@ void src_input_libarchive(ParseQueue& queue,
         (((status = archive_read_next_header(arch, &arch_entry)) == ARCHIVE_OK) ||
          (status == ARCHIVE_EOF && !count))) {
 
+        // skip any directories
+        if (status == ARCHIVE_OK && archive_entry_filetype(arch_entry) == AE_IFDIR)
+            continue;
+
         // default is filename from archive entry (if not empty)
         std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(arch_entry) : "";
 
