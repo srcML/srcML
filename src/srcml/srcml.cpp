@@ -174,7 +174,7 @@ int main(int argc, char * argv[]) {
             } else if (protocol == "file") {
                 src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
             } else if (protocol == "stdin") {
-                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory);
+                src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
             } else if (protocol == "http" || protocol == "https") {
                 src_input_remote(queue, srcml_arch, uri, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory);
             }
