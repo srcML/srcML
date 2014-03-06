@@ -104,6 +104,9 @@ int main(int argc, char * argv[]) {
         if (srcml_request.att_xml_encoding)
             srcml_archive_set_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str());
 
+        if (srcml_request.src_encoding)
+            srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str());
+
         if (srcml_request.att_filename)
             srcml_archive_set_filename(srcml_arch, srcml_request.att_filename->c_str());
 
