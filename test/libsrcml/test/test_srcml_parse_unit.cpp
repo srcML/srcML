@@ -256,7 +256,7 @@ int main() {
 	srcml_archive_disable_option(archive, SRCML_OPTION_TIMESTAMP);
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
-        dassert(srcml_parse_unit_filename(unit, "project.cpp"), SRCML_STATUS_ERROR);
+        dassert(srcml_parse_unit_filename(unit, "project.cpp"), SRCML_STATUS_INVALID_INPUT);
 
         srcml_free_unit(unit);
         srcml_close_archive(archive);

@@ -180,7 +180,7 @@ int main() {
     }
 
     {
-        dassert(srcml("foo.c", "foo.xml"), SRCML_STATUS_ERROR);
+        dassert(srcml("foo.c", "foo.xml"), SRCML_STATUS_INVALID_INPUT);
     }
 
     /*

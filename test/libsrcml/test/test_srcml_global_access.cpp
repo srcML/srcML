@@ -206,7 +206,7 @@ int main() {
     }
 
     {
-        dassert(srcml_register_file_extension("foo", "C+"), SRCML_STATUS_ERROR);
+        dassert(srcml_register_file_extension("foo", "C+"), SRCML_STATUS_INVALID_INPUT);
     }
 
     {

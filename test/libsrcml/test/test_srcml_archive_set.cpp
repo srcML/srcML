@@ -374,7 +374,7 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
 
-        dassert(srcml_archive_register_file_extension(archive, "foo", "C+"), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_register_file_extension(archive, "foo", "C+"), SRCML_STATUS_INVALID_INPUT);
         srcml_free_archive(archive);
 
     }
