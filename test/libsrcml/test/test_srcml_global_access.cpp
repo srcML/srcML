@@ -210,11 +210,11 @@ int main() {
     }
 
     {
-        dassert(srcml_register_file_extension("foo", 0), SRCML_STATUS_ERROR);
+        dassert(srcml_register_file_extension("foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     {
-        dassert(srcml_register_file_extension(0, "C++"), SRCML_STATUS_ERROR);
+        dassert(srcml_register_file_extension(0, "C++"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -234,11 +234,11 @@ int main() {
     }
 
     {
-        dassert(srcml_register_namespace(0, "bar"), SRCML_STATUS_ERROR);
+        dassert(srcml_register_namespace(0, "bar"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     {
-        dassert(srcml_register_namespace("foo", 0), SRCML_STATUS_ERROR);
+        dassert(srcml_register_namespace("foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -261,11 +261,11 @@ int main() {
     }
 
     {
-        dassert(srcml_register_macro(0, "bar"), SRCML_STATUS_ERROR);
+        dassert(srcml_register_macro(0, "bar"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     {
-        dassert(srcml_register_macro("foo", 0), SRCML_STATUS_ERROR);
+        dassert(srcml_register_macro("foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
