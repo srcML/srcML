@@ -138,7 +138,7 @@ void src_input_libarchive(ParseQueue& queue,
         if (option_version)
             request.version = *option_version;
         request.srcml_arch = srcml_arch;
-        request.lang = language;
+        request.language = language;
 
         // fill up the parse request buffer
         request.buffer.clear();

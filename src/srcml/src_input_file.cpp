@@ -35,7 +35,7 @@
 void src_input_file(ParseQueue& queue,
                     srcml_archive* srcml_arch,
                     const std::string& input_file,
-                    const boost::optional<std::string>& lang,
+                    const boost::optional<std::string>& option_language,
                     const boost::optional<std::string>& option_filename,
                     const boost::optional<std::string>& option_directory,
                     const boost::optional<std::string>& option_version) {
@@ -48,8 +48,8 @@ void src_input_file(ParseQueue& queue,
     // language may have been explicitly set
     std::string language;
 
-    if (lang)
-        language = *lang;
+    if (option_language)
+        language = *option_language;
 
     // if not explicitly set, language comes from extension
     if (language == "")
@@ -71,7 +71,7 @@ void src_input_file(ParseQueue& queue,
     if (option_version)
         request.version = *option_version;
     request.srcml_arch = srcml_arch;
-    request.lang = language;
+    request.language = language;
     request.disk_filename = input_file;
 
     // Hand request off to the processing queue
