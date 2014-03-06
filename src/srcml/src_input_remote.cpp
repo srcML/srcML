@@ -25,6 +25,24 @@
 */
 
 #include <src_input_remote.hpp>
+#include <vector>
+#include <curl/curl.h>
+#include <archive.h>
+#include <archive_entry.h>
+
+#ifdef __MACH__
+#include <sys/time.h>
+#define CLOCK_REALTIME 0
+//clock_gettime is not implemented on OSX
+int clock_gettime(int /*clk_id*/, struct timespec* t) {
+    struct timeval now;
+    int rv = gettimeofday(&now, NULL);
+    if (rv) return rv;
+    t->tv_sec  = now.tv_sec;
+    t->tv_nsec = now.tv_usec * 1000;
+    return 0;
+}
+#endif
 
 void src_input_remote(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& remote_uri, const boost::optional<std::string>& language, const boost::optional<std::string>& option_filename, const boost::optional<std::string>& option_directory, boost::optional<FILE*> fstdin) {    
     return;
