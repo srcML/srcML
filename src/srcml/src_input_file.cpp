@@ -64,7 +64,7 @@ void src_input_file(ParseQueue& queue,
 
     // form the parsing request
     ParseRequest request;
-    if (option_filename)
+    if (option_filename || filename != "_")
         request.filename = filename;
     request.directory = option_directory;
     request.version = option_version;
