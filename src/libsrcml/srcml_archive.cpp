@@ -751,7 +751,7 @@ const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, in
  */
 int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
-    if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->type = SRCML_ARCHIVE_WRITE;
 
@@ -790,7 +790,7 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
  */
 int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
 
-    if(archive == NULL || buffer == NULL || size == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL || buffer == NULL || size == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->type = SRCML_ARCHIVE_WRITE;
 
@@ -830,7 +830,7 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
  */
 int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
-    if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
     if(output_buffer == NULL) return SRCML_STATUS_ERROR;
@@ -877,7 +877,7 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
  */
 int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
 
-    if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_ERROR;
+    if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
     if(output_buffer == NULL) return SRCML_STATUS_ERROR;
@@ -960,7 +960,7 @@ static void srcml_read_internal(srcml_archive * archive) {
  */
 int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
-    if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->input = xmlParserInputBufferCreateFilename(srcml_filename, XML_CHAR_ENCODING_NONE);
     try {
@@ -994,7 +994,7 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
  */
 int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t buffer_size) {
 
-    if(archive == NULL || buffer == NULL || buffer_size <= 0) return SRCML_STATUS_ERROR;
+    if(archive == NULL || buffer == NULL || buffer_size <= 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, XML_CHAR_ENCODING_NONE);
     try {
@@ -1027,7 +1027,7 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
  */
 int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
-    if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->input = xmlParserInputBufferCreateFile(srcml_file, XML_CHAR_ENCODING_NONE);
     try {
@@ -1060,7 +1060,7 @@ int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
  */
 int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
 
-    if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_ERROR;
+    if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->input = xmlParserInputBufferCreateFd(srcml_fd, XML_CHAR_ENCODING_NONE);
     try {
@@ -1100,7 +1100,9 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
  */
 int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
 
-    if(archive == NULL || unit == NULL || (!unit->unit && !unit->read_header)) return SRCML_STATUS_ERROR;
+    if(archive == NULL || unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(!unit->unit && !unit->read_header) return SRCML_STATUS_ERROR;
 
     boost::optional<std::string> read_unit;
     if(!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
