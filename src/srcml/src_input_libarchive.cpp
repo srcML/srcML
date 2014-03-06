@@ -66,7 +66,7 @@ void setup_libarchive(archive* arch) {
 void src_input_libarchive(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const std::string& input_file,
-                          const boost::optional<std::string>& lang,
+                          const boost::optional<std::string>& option_language,
                           const boost::optional<std::string>& option_filename,
                           const boost::optional<std::string>& option_directory,
                           const boost::optional<std::string>& option_version,
@@ -96,7 +96,8 @@ void src_input_libarchive(ParseQueue& queue,
     int count = 0;
     int status = ARCHIVE_OK;
     while (status == ARCHIVE_OK &&
-        (((status = archive_read_next_header(arch, &arch_entry)) == ARCHIVE_OK) || (status == ARCHIVE_EOF && !count))) {
+        (((status = archive_read_next_header(arch, &arch_entry)) == ARCHIVE_OK) ||
+         (status == ARCHIVE_EOF && !count))) {
 
         // default is filename from archive entry (if not empty)
         std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(arch_entry) : "";
@@ -111,8 +112,8 @@ void src_input_libarchive(ParseQueue& queue,
         // language may have been explicitly set
         std::string language;
 
-        if (lang)
-            language = *lang;
+        if (option_language)
+            language = *option_language;
 
         // if not explicitly set, language comes from extension
         if (language == "")
