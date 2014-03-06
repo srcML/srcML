@@ -4005,7 +4005,8 @@ function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 // mark specifiers
 specifier[] { ENTRY_DEBUG } :
-        single_keyword_specifier | alignas_specifier
+        single_keyword_specifier | alignas_specifier | macro_specifier_call
+
 ;
 
 // match a single word specifier
@@ -4029,9 +4030,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
             { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP | TRANSIENT) |
 
-            CONST |
-
-            MACRO_SPECIFIER
+            CONST
         )
 ;
 
@@ -4433,6 +4432,7 @@ macro_specifier_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
             startNewMode(MODE_STATEMENT | MODE_TOP);
 
             // start the macro call element
+            startElement(SFUNCTION_SPECIFIER);
             startElement(SMACRO_CALL);
 
             startNewMode(MODE_LOCAL);
