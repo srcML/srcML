@@ -132,7 +132,7 @@ int srcml(const char* input_filename, const char* output_filename) {
     if(!input_filename || !output_filename) {
 
         srcml_error = "No input file provided";
-        return  SRCML_STATUS_ERROR;
+        return  SRCML_STATUS_INVALID_ARGUMENT;
 
     }
 
@@ -275,7 +275,7 @@ int srcml(const char* input_filename, const char* output_filename) {
  *
  * Set the source encoding.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_src_encoding(const char* encoding) {
 
@@ -289,7 +289,7 @@ int srcml_set_src_encoding(const char* encoding) {
  *
  * Set the xml encoding.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_encoding(const char* encoding) {
 
@@ -303,7 +303,7 @@ int srcml_set_encoding(const char* encoding) {
  *
  * Set the language to use to parse.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_language(const char* language) {
 
@@ -317,7 +317,7 @@ int srcml_set_language(const char* language) {
  *
  * Set the filename attribute for the root unit.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_filename(const char* filename) {
 
@@ -331,7 +331,7 @@ int srcml_set_filename(const char* filename) {
  *
  * Set the directory attribute for the root unit.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_directory(const char* directory) {
 
@@ -345,7 +345,7 @@ int srcml_set_directory(const char* directory) {
  *
  * Set the version attribute.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_version(const char* version) {
 
@@ -359,7 +359,7 @@ int srcml_set_version(const char* version) {
  *
  * Set the srcml options.  Clears all previously set.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_options(unsigned long long option) {
 
@@ -373,7 +373,7 @@ int srcml_set_options(unsigned long long option) {
  *
  * Enable/set the srcml options.  Multiple may be enabled.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_enable_option(unsigned long long option) {
 
@@ -387,7 +387,7 @@ int srcml_enable_option(unsigned long long option) {
  *
  * Remove an option.  May use multiple option with the same call.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_disable_option(unsigned long long option) {
 
@@ -401,7 +401,7 @@ int srcml_disable_option(unsigned long long option) {
  *
  * Set the size of the tabstop.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_tabstop(int tabstop) {
 
