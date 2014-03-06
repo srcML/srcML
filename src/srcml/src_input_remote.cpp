@@ -44,6 +44,8 @@ int clock_gettime(int /*clk_id*/, struct timespec* t) {
 }
 #endif
 
+#define CURL_BUFFER_SIZE 16000
+
 void src_input_remote(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& remote_uri, const boost::optional<std::string>& language, const boost::optional<std::string>& option_filename, const boost::optional<std::string>& option_directory, boost::optional<FILE*> fstdin) {    
     return;
 }
