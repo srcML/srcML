@@ -119,7 +119,7 @@ int main(int argc, char * argv[]) {
             srcml_archive_set_version(srcml_arch, srcml_request.att_version->c_str());
 
         if (srcml_request.markup_options)
-            srcml_archive_enable_option(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options);
+            srcml_archive_set_options(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options);
 
         if (srcml_request.att_language)
             srcml_archive_set_language(srcml_arch, srcml_request.att_language->c_str());
@@ -128,12 +128,16 @@ int main(int argc, char * argv[]) {
 
         srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
 
+        bool isdir = is_directory(boost::filesystem::path(src_prefix_resource(srcml_request.input[0])));
+
         // archive or not
-        if ((srcml_request.input.size() == 1 && !(is_directory(boost::filesystem::path(src_prefix_resource(srcml_request.input[0])))))
-            && !(*srcml_request.markup_options & SRCML_OPTION_ARCHIVE))
+        if (srcml_request.input.size() == 1 && !isdir &&
+             !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_OPTION_ARCHIVE))) {
+
             srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
-        else
+        } else {
             srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+        }
 
         // register file extensions
         BOOST_FOREACH(const std::string& ext, srcml_request.language_ext) {

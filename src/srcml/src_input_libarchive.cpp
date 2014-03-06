@@ -106,9 +106,13 @@ void src_input_libarchive(ParseQueue& queue,
         // default is filename from archive entry (if not empty)
         std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(arch_entry) : "";
 
+        if (count && filename != "data")
+            srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+
         // archive entry filename for non-archive input is "data"
-        if (filename == "data" || filename.empty())
+        if (filename == "data" || filename.empty()) {
             filename = input_file;
+        }
 
         if (option_filename)
             filename = *option_filename;
