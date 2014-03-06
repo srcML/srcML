@@ -295,7 +295,7 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
  * Convert to srcML the contents of src_filename and
  * place it into the unit.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
@@ -341,7 +341,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
  * Convert to srcML the contents of buffer up to size buffer_size and
  * place it into the unit.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
 
@@ -382,7 +382,7 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
  * Convert to srcML the contents of src_file and
  * place it into the unit.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
@@ -423,7 +423,7 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
  * Convert to srcML the contents of src_fd
  * place it into the unit.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
@@ -470,7 +470,7 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
  * src_filename.  If the srcML was not read in, but the attributes were
  * read in the xml and unparse that value.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
@@ -479,7 +479,7 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
     if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) 
 	return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    if(!unit->unit && !unit->read_header) return SRCML_STATUS_ERROR;
+    if(!unit->unit && !unit->read_header) return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     const char * encoding   = unit->encoding ? unit->encoding->c_str() :
 	(unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
@@ -524,7 +524,7 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
  * read in the xml and unparse that value.  src_buffer is allocated in the function and
  * needs to be freed after finished using.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_size) {
 
@@ -533,7 +533,7 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
     if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) 
 	return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    if(!unit->unit && !unit->read_header) return SRCML_STATUS_ERROR;
+    if(!unit->unit && !unit->read_header) return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     const char * encoding   = unit->encoding ? unit->encoding->c_str() :
 	(unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
@@ -590,7 +590,7 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
  * srcml_file.  If the srcML was not read in, but the attributes were
  * read in the xml and unparse that value.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 
@@ -599,7 +599,7 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
     if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) 
 	return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    if(!unit->unit && !unit->read_header) return SRCML_STATUS_ERROR;
+    if(!unit->unit && !unit->read_header) return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     const char * encoding   = unit->encoding ? unit->encoding->c_str() :
 	(unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
@@ -641,7 +641,7 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
  * descriptor srcml_fd.  If the srcML was not read in, but the attributes were
  * read in the xml and unparse that value.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
@@ -650,7 +650,7 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
     if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) 
 	return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    if(!unit->unit && !unit->read_header) return SRCML_STATUS_ERROR;
+    if(!unit->unit && !unit->read_header) return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     const char * encoding   = unit->encoding ? unit->encoding->c_str() :
 	(unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");

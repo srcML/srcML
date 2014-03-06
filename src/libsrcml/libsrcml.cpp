@@ -125,7 +125,7 @@ int srcml_version_number() {
  * Input files with extension xml and language set to xml result in srcml2src behaviour.
  * All other ending extensions result in src2srcml.  
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml(const char* input_filename, const char* output_filename) {
 
@@ -416,7 +416,7 @@ int srcml_set_tabstop(int tabstop) {
  *
  * Associate the given extension with the given language.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and a status error code on failure.
  */
 int srcml_register_file_extension(const char* extension, const char* language) {
 
@@ -431,7 +431,7 @@ int srcml_register_file_extension(const char* extension, const char* language) {
  *
  * Add a new namespace or change the prefix of an existing namespace.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and a status error code on failure.
  */
 int srcml_register_namespace(const char* prefix, const char* ns) {
 
@@ -447,7 +447,7 @@ int srcml_register_namespace(const char* prefix, const char* ns) {
  *
  * Register a macro (token) to be processed as a special type
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_register_macro(const char* prefix, const char* ns) {
 

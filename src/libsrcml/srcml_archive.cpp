@@ -371,7 +371,7 @@ int srcml_archive_set_tabstop(srcml_archive* archive, int tabstop) {
  *
  * Set the given extension to be associate with the given language.
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_archive_register_file_extension(srcml_archive* archive, const char* extension, const char* language) {
 
@@ -391,7 +391,7 @@ int srcml_archive_register_file_extension(srcml_archive* archive, const char* ex
  *
  * Create a new namespace or change the prefix of an existing namespace.
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix, const char* ns) {
 
@@ -424,7 +424,7 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
  *
  * Register a macro (token) to be processed as a special type
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_archive_register_macro(srcml_archive* archive, const char* token, const char* type) {
 
@@ -747,7 +747,7 @@ const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, in
  * Open up a srcml_archive for writing.  Set the output
  * to go to the file srcml_filename.
  *
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
@@ -786,7 +786,7 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
  * to be to memory.  Buffer is allocated and set to the location
  * buffer points at.  Buffer must be freed after use.
  *
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
 
@@ -826,7 +826,7 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
  * Open up a srcml_archive for writing.  Set the output
  * to go to the FILE srcml_file.
  *
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
@@ -873,7 +873,7 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
  * Open up a srcml_archive for writing.  Set the output
  * to go to the file descriptor srcml_fd.
  *
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
 
@@ -956,7 +956,7 @@ static void srcml_read_internal(srcml_archive * archive) {
  * Open a srcML archive for reading.  Set the input to be read from
  * srcml_filename.
  *
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
@@ -990,7 +990,7 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
  * Open a srcML archive for reading.  Set the input to be read from
  * the buffer up until buffer_size.
  *
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t buffer_size) {
 
@@ -1023,7 +1023,7 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
  * Open a srcML archive for reading.  Set the input to be read from
  * the FILE srcml_file.
  *
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
@@ -1056,7 +1056,7 @@ int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
  * Open a srcML archive for reading.  Set the input to be read from
  * the file descriptor srcml_fd.
  *
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
 
@@ -1096,7 +1096,7 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
  * If copying from a read and only the attributes have been read
  * read in the xml and output.
  *
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
 
@@ -1108,7 +1108,7 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
     if(!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->readsrcML(read_unit);
 
-    if(!unit->unit && !read_unit) return SRCML_STATUS_ERROR;
+    if(!unit->unit && !read_unit) return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
     archive->translator->add_unit(read_unit ? read_unit->c_str() : unit->unit->c_str());
