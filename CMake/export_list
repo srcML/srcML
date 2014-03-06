@@ -37,7 +37,6 @@ _srcml_archive_set_version
 _srcml_check_encoding
 _srcml_check_exslt
 _srcml_check_extension
-_srcml_check_format
 _srcml_check_language
 _srcml_check_xslt
 _srcml_cleanup_globals
