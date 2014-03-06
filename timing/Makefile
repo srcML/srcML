@@ -4,8 +4,8 @@
 EXE_DIR = ../bin/
 OBJ_DIR = ../obj/
 
-SRC2SRCML_BIN=../bin/src2srcml
-SRCML2SRC_BIN=../bin/srcml2src
+SRC2SRCML_BIN=../bin/srcml
+SRCML2SRC_BIN=../bin/srcml
 
 TIME=${firstword ${wildcard /usr/local/bin/gtime /opt/local/bin/gtime /usr/bin/time}} --format="%U"
 
@@ -20,7 +20,7 @@ SED=${firstword ${wildcard /usr/local/bin/gsed /opt/local/bin/gsed /bin/sed /usr
 ECHO=${firstword ${wildcard /usr/local/bin/gecho /opt/local/bin/gecho /bin/echo}}
 
 PHONY : time
-time : ../bin/src2srcml
+time : ../bin/srcml
 	@${SRC2SRCML_BIN} --version
 	@${ECHO}
 	@${SRCML2SRC_BIN} --version

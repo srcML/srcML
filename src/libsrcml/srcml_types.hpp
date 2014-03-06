@@ -1,8 +1,7 @@
 /**
  * @file srcml_types.hpp
- * @copyright
  *
- * Copyright (C) 2013-2014  SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,12 +30,11 @@
 #include <string>
 #include <vector>
 
-class srcMLReader;
 class srcMLSAX2Reader;
 
 /**
  * SRCML_TRANSORM_TYPE
- * 
+ *
  * Transformation types, xpath, xslt, and relaxng
  */
 enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
@@ -47,16 +45,16 @@ enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
  * Struct to hold transformation information for latter application.
  */
 struct transform {
-  /** a transformation type */
-  SRCML_TRANSFORM_TYPE type;
-  /** the transformation to perform */
-  std::string transformation;
+    /** a transformation type */
+    SRCML_TRANSFORM_TYPE type;
+    /** the transformation to perform */
+    std::string transformation;
 
 };
 
 /**
  * SRCML_ARCHIVE_TYPE
- * 
+ *
  * Archive type read, write, or read/write.
  */
 enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_INVALID, SRCML_ARCHIVE_RW, SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
@@ -68,58 +66,55 @@ enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_INVALID, SRCML_ARCHIVE_RW, SRCML_ARCHIVE
  */
 struct srcml_archive {
 
-  /** type archive type read/write */
-  SRCML_ARCHIVE_TYPE type;
+    /** type archive type read/write */
+    SRCML_ARCHIVE_TYPE type;
 
-  /** an attribute for a name of a file */
-  boost::optional<std::string> filename;
-  /** an attribute for an encoding */
-  boost::optional<std::string> encoding;
-  /** an attribute for an ecoding */
-  boost::optional<std::string> xml_encoding;
-  /** an attribute for a language */
-  boost::optional<std::string> language;
-  /** an attribute for a directory path */
-  boost::optional<std::string> directory;
-  /** an attribute for a version string */
-  boost::optional<std::string> version;
-  /** an array of name-value attribute pairs */
-  std::vector<std::string>  attributes;
+    /** an attribute for a name of a file */
+    boost::optional<std::string> filename;
+    /** an attribute for the xml encoding */
+    boost::optional<std::string> encoding;
+    /** source encoding */
+    boost::optional<std::string> src_encoding;
+    /** an attribute for a language */
+    boost::optional<std::string> language;
+    /** an attribute for a directory path */
+    boost::optional<std::string> directory;
+    /** an attribute for a version string */
+    boost::optional<std::string> version;
+    /** an array of name-value attribute pairs */
+    std::vector<std::string>  attributes;
 
-  /** srcml options */
-  OPTION_TYPE options;
+    /** srcml options */
+    OPTION_TYPE options;
 
-  /** size of tabstop */
-  int tabstop;
+    /** size of tabstop */
+    int tabstop;
 
-  /** an array of XML namespace prefixes */
-  std::vector<std::string> prefixes;
+    /** an array of XML namespace prefixes */
+    std::vector<std::string> prefixes;
 
-  /** namespaces an array of XML namespaces */
-  std::vector<std::string> namespaces;
+    /** namespaces an array of XML namespaces */
+    std::vector<std::string> namespaces;
 
-  /** an array of registered extension language pairs */
-  std::vector<pair> registered_languages;
+    /** an array of registered extension language pairs */
+    std::vector<pair> registered_languages;
 
-  /** an array of user defined macros and their types */
-  std::vector<std::string> user_macro_list;
+    /** an array of user defined macros and their types */
+    std::vector<std::string> user_macro_list;
 
-  /** a srcMLTranslator for writing and parsing */
-  srcMLTranslator * translator;
+    /** a srcMLTranslator for writing and parsing */
+    srcMLTranslator * translator;
 
-  /** a srcMLReader for reading */
-#ifdef SAX2
-  srcMLSAX2Reader * reader;
-#else
-  srcMLReader * reader;
-#endif
-  /** xmlParserInputBuffer for reading */
-  xmlParserInputBufferPtr input;
-  /** close the input buffer? */
-  bool close_input;
+    /** a srcMLReader for reading */
+    srcMLSAX2Reader * reader;
 
-  /** an array of transformations to apply */
-  std::vector<transform> transformations;
+    /** xmlParserInputBuffer for reading */
+    xmlParserInputBufferPtr input;
+    /** close the input buffer? */
+    bool close_input;
+
+    /** an array of transformations to apply */
+    std::vector<transform> transformations;
 };
 
 /**
@@ -127,22 +122,26 @@ struct srcml_archive {
  *
  * Hold data pertaining to a unit in an archive,
  * such as the transformed or collected unit.
-*/
+ */
 struct srcml_unit {
-  /** the archive the unit is created from */
-  srcml_archive* archive;
+    /** the archive the unit is created from */
+    srcml_archive* archive;
 
-  /** an attribute for a language */
-  boost::optional<std::string> language;
-  /** an attribute name for a file */
-  boost::optional<std::string> filename;
-  /** an attribute for a directory path */
-  boost::optional<std::string> directory;
-  /** an attribute for a version string */
-  boost::optional<std::string> version;
+    /** source encoding */
+    boost::optional<std::string> encoding;
+    /** an attribute for a language */
+    boost::optional<std::string> language;
+    /** an attribute name for a file */
+    boost::optional<std::string> filename;
+    /** an attribute for a directory path */
+    boost::optional<std::string> directory;
+    /** an attribute for a version string */
+    boost::optional<std::string> version;
 
-  /** a buffer to store srcml from read and after parsing */
-  boost::optional<std::string> unit;
+    /** store if attributes have been read */
+    bool read_header;
+    /** a buffer to store srcml from read and after parsing */
+    boost::optional<std::string> unit;
 };
 
 #endif

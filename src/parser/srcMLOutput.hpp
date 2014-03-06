@@ -1,24 +1,26 @@
-/*
-  srcMLOutput.hpp
+/**
+ * @file srcMLOutput.hpp
+ *
+ * @copyright Copyright (C) 2003-2014 SDML (www.srcML.org)
+ *
+ * This file is part of the srcML Toolkit.
+ *
+ * The srcML Toolkit is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML Toolkit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML Toolkit; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
-  Copyright (C) 2003-2014  SDML (www.srcML.org)
-
-  This file is part of the srcML Toolkit.
-
-  The srcML Toolkit is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  The srcML Toolkit is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with the srcML Toolkit; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
+/**
   XML output
 */
 
@@ -47,18 +49,15 @@ public:
                 const char* language,
                 const char* encoding,
                 OPTION_TYPE& option,
-                const char* uri[],
+                std::string * uri,
                 int tabsize,
-                xmlBuffer* output_buffer = 0,
-                xmlOutputBuffer * output_buf = 0,
-                std::string * string_uri = 0
-        );
+                xmlOutputBuffer * output_buffer = 0
+                );
 
-  void initWriter();
-  xmlTextWriter * getWriter();
-  void setWriter(xmlTextWriter *);
-  int getDepth();
-  void setDepth(int thedepth);
+    void setOutputBuffer(xmlOutputBufferPtr output_buffer);
+    void initWriter();
+    xmlTextWriter * getWriter();
+    void setDepth(int thedepth);
 
     static bool checkEncoding(const char* encoding);
 
@@ -89,8 +88,6 @@ public:
     const char * columnAttributeValue(const antlr::RefToken& token);
     const char * lineAttributeValue(int aline);
 
-    virtual const char * convert_num2prefix(unsigned int i) const;
-
     // destructor
     ~srcMLOutput();
 
@@ -106,8 +103,7 @@ public:
     const char* unit_version;
     OPTION_TYPE& options;
     const char* xml_encoding;
-    const char** num2prefix;
-    std::string * num2sprefix;
+    std::string * num2prefix;
     int openelementcount;
 
     int curline;
@@ -115,8 +111,7 @@ public:
     int tabsize;
 
     int depth;
-    xmlBuffer* output_buffer;
-    xmlOutputBuffer * output_buf;  
+    xmlOutputBuffer * output_buffer;
 
     // output line attribute content
     std::string lineAttribute;

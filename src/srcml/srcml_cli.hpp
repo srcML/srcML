@@ -1,24 +1,24 @@
-/*
-  srcml_cli.hpp
-
-  Copyright (C) 2013-2014  SDML (www.srcML.org)
-
-  This file is part of the srcML Toolkit.
-
-  The srcML Toolkit is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  The srcML Toolkit is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with the srcML Toolkit; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+/**
+ * @file srcml_cli.hpp
+ *
+ * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ *
+ * This file is part of the srcML Toolkit.
+ *
+ * The srcML Toolkit is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML Toolkit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML Toolkit; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /*
   srcml_cli handles parsing for CLI options for srcml
@@ -30,9 +30,10 @@
 #include <srcml.h>
 #include <string>
 #include <vector>
+#include <boost/optional.hpp>
 #include <iostream>
 
-/* These are internal to srcml */
+// Internal srcml command options
 #define SRCML_COMMAND_LONGINFO          1<<0
 #define SRCML_COMMAND_INFO              1<<1
 #define SRCML_COMMAND_INFO_FILENAME     1<<2
@@ -54,35 +55,49 @@
 #define SRCML_COMMAND_INFO_SRC_VERSION  1<<18
 #define SRCML_COMMAND_TO_DIRECTORY      1<<19
 
+#define SRCML_COMMAND_SRC               1<<20
+#define SRCML_COMMAND_SRCML             1<<21
+
+// request for srcml client processing
 struct srcml_request_t {
-  int command;
-  int markup_options;
-  std::string filename;
-  std::string output;
-  std::string src_encoding;
-  std::string encoding;
-  std::string files_from;
-  std::string language;
-  std::vector<std::string> register_ext;
-  int tabs;
-  std::string directory;
-  std::string src_versions;
-  std::string prefix;
-  std::string xmlns_uri;
-  std::vector<std::string> xmlns_prefix;
-  std::string relaxng;
-  std::string xpath;
-  std::vector<std::string> xpathparam;
-  std::string xslt;
-  int unit;
-  int max_threads;
-  std::vector<std::string> positional_args;
-  bool help_set;
-  bool directory_set;
-  bool filename_set;
-  bool src_versions_set;
+    std::vector<std::string> positional_args;
+    int command;
+    boost::optional<int> markup_options;
+
+    // unit attributes
+    std::string att_language;
+    boost::optional<std::string> att_filename;
+    boost::optional<std::string> att_directory;
+    boost::optional<std::string> att_encoding;
+    boost::optional<std::string> att_src_versions;
+
+    std::string src_encoding;
+
+    std::string output_filename;
+
+    //filelist:// prefix
+    std::string files_from;
+    std::vector<std::string> language_ext;
+    int tabs;
+
+    // xml namespaces
+    // BECOME OPTIONAL
+    std::string xmlns_prefix_query;
+    std::string xmlns_uri; // Remove this
+
+    std::vector<std::string> xmlns_prefix;
+
+    // srcml transformation
+    std::string xpath;
+    std::vector<std::string> xpathparam;
+    std::string xslt;
+    std::string relaxng;
+
+    int unit;
+    int max_threads;
 };
 
-srcml_request_t parseCLI (int argc, char* argv[]);
+// parse the CLI options into a srcml client request
+srcml_request_t parseCLI(int argc, char* argv[]);
 
 #endif

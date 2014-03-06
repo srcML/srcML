@@ -1,3 +1,22 @@
+##
+# @file srcml_unit.py
+#
+# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+#
+# The srcML Toolkit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# The srcML Toolkit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with the srcML Toolkit; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
 from globals import libsrcml
 from ctypes import c_int, c_void_p, c_char_p, pointer
 from exception import *
@@ -42,6 +61,10 @@ libsrcml.srcml_create_unit.argtypes = [c_void_p]
 libsrcml.srcml_free_unit.restype = None
 libsrcml.srcml_free_unit.argtypes = [c_void_p]
 
+# int srcml_unit_set_encoding (struct srcml_unit*, const char* encoding);
+libsrcml.srcml_unit_set_encoding.restype = c_int
+libsrcml.srcml_unit_set_encoding.argtypes = [c_void_p, c_char_p]
+
 # int srcml_unit_set_language (struct srcml_unit*, const char* language);
 libsrcml.srcml_unit_set_language.restype = c_int
 libsrcml.srcml_unit_set_language.argtypes = [c_void_p, c_char_p]
@@ -57,6 +80,10 @@ libsrcml.srcml_unit_set_directory.argtypes = [c_void_p, c_char_p]
 # int srcml_unit_set_version  (struct srcml_unit*, const char* version);
 libsrcml.srcml_unit_set_version.restype = c_int
 libsrcml.srcml_unit_set_version.argtypes = [c_void_p, c_char_p]
+
+# const char* srcml_unit_get_encoding (const struct srcml_unit*);
+libsrcml.srcml_unit_get_encoding.restype = c_char_p
+libsrcml.srcml_unit_get_encoding.argtypes = [c_void_p]
 
 # const char* srcml_unit_get_language (const struct srcml_unit*);
 libsrcml.srcml_unit_get_language.restype = c_char_p
@@ -112,6 +139,9 @@ class srcml_unit :
     def unparse_fd(self, src_fd) :
         check_return(libsrcml.srcml_unparse_unit_fd(self.unit, src_fd))
 
+    def set_encoding(self, encoding) :
+        check_return(libsrcml.srcml_unit_set_encoding(self.unit, encoding))
+
     def set_language(self, language) :
         check_return(libsrcml.srcml_unit_set_language(self.unit, language))
 
@@ -123,6 +153,9 @@ class srcml_unit :
 
     def set_version(self, version) :
         check_return(libsrcml.srcml_unit_set_version(self.unit, version))
+
+    def get_encoding(self) :
+        return libsrcml.srcml_unit_get_encoding(self.unit)
 
     def get_language(self) :
         return libsrcml.srcml_unit_get_language(self.unit)

@@ -4,4 +4,4 @@ test_State
 test_UTF8CharBuffer
 test_srcMLState
 test_srcMLStateStack
-test_srcMLTranslatorCore
+test_srcMLTranslator

@@ -1,8 +1,7 @@
+##
+# @file CMakeLists.txt
 #
-#    CMakeLists.txt
-# @copyright
-# 
-# Copyright (C) 2013  SDML (www.srcML.org)
+# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,9 +22,15 @@ file(GLOB SRCML_HEADERS *.hpp)
 file(GLOB SRCML_SOURCE *.cpp)
 list(REMOVE_ITEM SRCML_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcml.cpp)
 
+get_property(LIBARCHIVE_LIBS  GLOBAL PROPERTY LIBARCHIVE_LIBS)
 get_property(BOOST_PROGRAM_OPTIONS_LIB GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB)
 
-srcMLExec(srcml "srcml.cpp;${SRCML_HEADERS};${SRCML_SOURCE}" srcml_static ${BOOST_PROGRAM_OPTIONS_LIB})
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+srcMLExec(srcml "srcml.cpp;${SRCML_HEADERS};${SRCML_SOURCE}" srcml_shared ${LIBARCHIVE_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} ws2_32)
+else()
+srcMLExec(srcml "srcml.cpp;${SRCML_HEADERS};${SRCML_SOURCE}" srcml_shared ${LIBARCHIVE_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB})
+    install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-u\" \"-r\" \"${CMAKE_BINARY_DIR}/bin/srcml\")")
+endif()
 
 install(TARGETS srcml
     RUNTIME DESTINATION bin

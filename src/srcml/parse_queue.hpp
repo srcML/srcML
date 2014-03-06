@@ -1,27 +1,27 @@
+/**
+ * @file parse_queue.hpp
+ *
+ * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ *
+ * This file is part of the srcML Toolkit.
+ *
+ * The srcML Toolkit is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML Toolkit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML Toolkit; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
 /*
-  parse_queue.hpp
-
-  Copyright (C) 2014  SDML (www.srcML.org)
-
-  This file is part of the srcML Toolkit.
-
-  The srcML Toolkit is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  The srcML Toolkit is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with the srcML Toolkit; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-
-/*
-*/
+ */
 
 #ifndef PARSE_QUEUE_HPP
 #define PARSE_QUEUE_HPP
@@ -40,7 +40,7 @@ void srcml_consume(ParseQueue*, WriteQueue*);
 
 class ParseQueue {
 public:
-    typedef ThreadQueue<ParseRequest, 10> Queue_Type;
+    typedef ThreadQueue<ParseRequest, 40> Queue_Type;
 
     ParseQueue(int max_threads) : max_threads(max_threads), counter(0) {}
 

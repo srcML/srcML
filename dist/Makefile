@@ -31,6 +31,8 @@ SRC_DIR_BASE=${BASE}-src
 SRC_DIR=${SRC_DIR_BASE}/src
 BIN_DIR=${SRC_DIR_BASE}/bin
 DOC_DIR=${SRC_DIR_BASE}/doc
+CMAKE_DIR=${SRC_DIR_BASE}/CMake
+CMAKE_LIST=${SRC_DIR_BASE}/CMakeLists.txt
 WINBIN_DIR=${BASE}-windows
 DLL_DIR=../../../dlls
 
@@ -83,11 +85,11 @@ cleansrc :
 src : ${SRC_TAR_GZ} ${SRC_ZIP}
 
 ${SRC_TAR_GZ} : exp
-	tar czf $@ ${SRC_DIR} ${BIN_DIR} ${DOC_DIR}
+	tar czf $@ ${SRC_DIR} ${BIN_DIR} ${DOC_DIR} ${CMAKE_DIR} ${CMAKE_LIST}
 	gunzip --test $@
 
 ${SRC_ZIP} : exp
-	zip -orql $@ ${SRC_DIR} ${BIN_DIR} ${DOC_DIR}
+	zip -orql $@ ${SRC_DIR} ${BIN_DIR} ${DOC_DIR} ${CMAKE_DIR} ${CMAKE_LIST}
 	unzip -uq $@
 
 ##

@@ -150,4 +150,16 @@
 	<continue>continue;</continue></else></if></else></if></else></if>
 </unit>
 
+<unit>
+<if>if<condition>(<decl><type><name>int</name></type> <name>a</name> =<init> <expr>0</expr></init></decl>)</condition><then><empty_stmt>;</empty_stmt></then></if>
+</unit>
+
+<unit>
+<if>if<condition>(<decl><type><name>int</name></type> <name>a</name> =<init> <expr>0</expr></init></decl>)</condition><then> <expr_stmt><expr><name>a</name></expr>;</expr_stmt></then></if>
+</unit>
+
+<unit>
+<if>if<condition>(<decl><type><name>int</name></type> <name>a</name> =<init> <expr>0</expr></init></decl>)</condition><then> <block>{}</block></then></if>
+</unit>
+
 </unit>
