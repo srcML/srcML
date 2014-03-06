@@ -67,13 +67,13 @@ int main() {
     {
         const char * s = "<unit>a;</unit>";
 	xmlOutputBufferPtr output_handler = xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0);
-        dassert(srcml_extract_text(0, strlen(s), output_handler, 0, 0), SRCML_STATUS_ERROR);
+        dassert(srcml_extract_text(0, strlen(s), output_handler, 0, 0), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     {
         const char * s = "<unit>a;</unit>";
 	xmlOutputBufferPtr output_handler = xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0);
-        dassert(srcml_extract_text(s, 0, output_handler, 0, 0), SRCML_STATUS_ERROR);
+        dassert(srcml_extract_text(s, 0, output_handler, 0, 0), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     srcml_cleanup_globals();

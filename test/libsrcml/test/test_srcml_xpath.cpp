@@ -52,13 +52,12 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        const char * xpaths[2] = {"//src:unit", 0 };
         int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC
 #ifndef LIBSRCML_COMPILER_IS_MSVC
                       , S_IRUSR | S_IWUSR
 #endif
                       );
-        dassert(srcml_xpath(buffer_input, "src:unit", xpaths, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
+        dassert(srcml_xpath(buffer_input, "src:unit", "//src:unit", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
         std::ifstream in("project.xml");
         std::string output;
         std::string temp;
@@ -71,13 +70,12 @@ int main() {
     }
 
     {
-        const char * xpaths[2] = {"//src:unit", 0 };
         int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC
 #ifndef LIBSRCML_COMPILER_IS_MSVC
                       , S_IRUSR | S_IWUSR
 #endif
                       );
-        dassert(srcml_xpath(0, "src:unit", xpaths, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_ERROR);
+        dassert(srcml_xpath(0, "src:unit", "//src:unit", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         unlink("project.xml");
     }
 
@@ -87,13 +85,12 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        const char * xpaths[2] = {"//src:unit", 0 };
         int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC
 #ifndef LIBSRCML_COMPILER_IS_MSVC
                       , S_IRUSR | S_IWUSR
 #endif
                       );
-        dassert(srcml_xpath(buffer_input, 0, xpaths, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_ERROR);
+        dassert(srcml_xpath(buffer_input, 0, "//src:unit", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
         unlink("project.xml");
@@ -110,7 +107,7 @@ int main() {
                       , S_IRUSR | S_IWUSR
 #endif
                       );
-        dassert(srcml_xpath(buffer_input, "src:unit", 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_ERROR);
+        dassert(srcml_xpath(buffer_input, "src:unit", 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
         unlink("project.xml");
@@ -122,26 +119,7 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        const char * xpaths[2] = {0, 0 };
-        int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC
-#ifndef LIBSRCML_COMPILER_IS_MSVC
-                      , S_IRUSR | S_IWUSR
-#endif
-                      );
-        dassert(srcml_xpath(buffer_input, "src:unit", xpaths, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_ERROR);
-        xmlFreeParserInputBuffer(buffer_input);
-        unlink("input.xml");
-        unlink("project.xml");
-    }
-
-    {
-        const char * s = "<unit>a;</unit>";
-        std::ofstream file("input.xml");
-        file << s;
-        file.close();
-        xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        const char * xpaths[2] = {"//src:unit", 0 };
-        dassert(srcml_xpath(buffer_input, "src:unit", xpaths, -1, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_ERROR);
+        dassert(srcml_xpath(buffer_input, "src:unit", "//src:unit", -1, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
     }
