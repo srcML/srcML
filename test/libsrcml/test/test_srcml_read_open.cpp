@@ -177,14 +177,14 @@ int main() {
     {
 
         srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_read_open_filename(archive, 0), SRCML_STATUS_ERROR);
+        dassert(srcml_read_open_filename(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_free_archive(archive);
 
     }
 
     {
-        dassert(srcml_read_open_filename(0, "project.xml"), SRCML_STATUS_ERROR);
+        dassert(srcml_read_open_filename(0, "project.xml"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -284,7 +284,7 @@ int main() {
     {
 
         srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_read_open_memory(archive, 0, 1), SRCML_STATUS_ERROR);
+        dassert(srcml_read_open_memory(archive, 0, 1), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_free_archive(archive);
 
@@ -293,14 +293,14 @@ int main() {
     {
 
         srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_read_open_memory(archive, srcml.c_str(), 0), SRCML_STATUS_ERROR);
+        dassert(srcml_read_open_memory(archive, srcml.c_str(), 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_free_archive(archive);
 
     }
 
     {
-        dassert(srcml_read_open_memory(0, srcml.c_str(), srcml.size()), SRCML_STATUS_ERROR);
+        dassert(srcml_read_open_memory(0, srcml.c_str(), srcml.size()), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -413,7 +413,7 @@ int main() {
     {
 
         srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_read_open_FILE(archive, 0), SRCML_STATUS_ERROR);
+        dassert(srcml_read_open_FILE(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_free_archive(archive);
 
@@ -421,7 +421,7 @@ int main() {
 
     {
         FILE * file = fopen("project_ns.xml", "r");
-        dassert(srcml_read_open_FILE(0, file), SRCML_STATUS_ERROR);
+        dassert(srcml_read_open_FILE(0, file), SRCML_STATUS_INVALID_ARGUMENT);
         fclose(file);
     }
 
@@ -535,7 +535,7 @@ int main() {
     {
 
         srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_read_open_fd(archive, -1), SRCML_STATUS_ERROR);
+        dassert(srcml_read_open_fd(archive, -1), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_free_archive(archive);
 
@@ -543,7 +543,7 @@ int main() {
 
     {
         int fd = open("project_ns.xml", O_RDONLY);
-        dassert(srcml_read_open_fd(0, fd), SRCML_STATUS_ERROR);
+        dassert(srcml_read_open_fd(0, fd), SRCML_STATUS_INVALID_ARGUMENT);
         close(fd);
     }
 
