@@ -133,10 +133,8 @@ void src_input_libarchive(ParseQueue& queue,
         ParseRequest request;
         if (option_filename || filename != "-")
             request.filename = filename;
-        if (option_directory)
-            request.directory = *option_directory;
-        if (option_version)
-            request.version = *option_version;
+        request.directory = option_directory;
+        request.version = option_version;
         request.srcml_arch = srcml_arch;
         request.language = language;
 

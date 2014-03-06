@@ -66,10 +66,8 @@ void src_input_file(ParseQueue& queue,
     ParseRequest request;
     if (option_filename)
         request.filename = filename;
-    if (option_directory)
-        request.directory = *option_directory;
-    if (option_version)
-        request.version = *option_version;
+    request.directory = option_directory;
+    request.version = option_version;
     request.srcml_arch = srcml_arch;
     request.language = language;
     request.disk_filename = input_file;
