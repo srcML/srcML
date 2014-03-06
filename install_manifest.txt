@@ -1,4 +1,0 @@
-/usr/local/lib/libsrcml.dylib
-/usr/local/lib/libsrcml.a
-/usr/local/include/srcml.h
-/usr/local/bin/srcml
