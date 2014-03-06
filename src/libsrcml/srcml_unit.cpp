@@ -38,12 +38,12 @@
  *
  * Set the encoding for the srcml unit.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
 int srcml_unit_set_encoding(srcml_unit* unit, const char* encoding) {
 
-    if(unit == NULL) return SRCML_STATUS_ERROR;
+    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     unit->encoding = encoding ? std::string(encoding) : boost::optional<std::string>();
 
@@ -58,12 +58,12 @@ int srcml_unit_set_encoding(srcml_unit* unit, const char* encoding) {
  *
  * Set the language for the srcml unit.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
 int srcml_unit_set_language(srcml_unit* unit, const char* language) {
 
-    if(unit == NULL) return SRCML_STATUS_ERROR;
+    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     unit->language = language ? std::string(language) : boost::optional<std::string>();
 
@@ -78,12 +78,12 @@ int srcml_unit_set_language(srcml_unit* unit, const char* language) {
  *
  * Set the filename attribute for the srcml unit.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
 int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 
-    if(unit == NULL) return SRCML_STATUS_ERROR;
+    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     unit->filename = filename ? std::string(filename) : boost::optional<std::string>();
 
@@ -98,12 +98,12 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
  *
  * Set the directory attribute for the srcml unit.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
 int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
 
-    if(unit == NULL) return SRCML_STATUS_ERROR;
+    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
 
     unit->directory = directory ? std::string(directory) : boost::optional<std::string>();
@@ -119,12 +119,12 @@ int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
  *
  * Set the version attribute for the srcml unit.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
 int srcml_unit_set_version(srcml_unit* unit, const char* version) {
 
-    if(unit == NULL) return SRCML_STATUS_ERROR;
+    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     unit->version = version ? std::string(version) : boost::optional<std::string>();
 
@@ -299,7 +299,9 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
  */
 int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
-    if(unit == NULL || src_filename == NULL || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
+    if(unit == NULL || src_filename == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
 
     int file_lang = Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
     int lang = unit->language ? srcml_check_language(unit->language->c_str()) :
@@ -342,7 +344,9 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
  */
 int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
 
-    if(unit == NULL || src_buffer == NULL || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
+    if(unit == NULL || src_buffer == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
 
     int lang = srcml_check_language(unit->language ? unit->language->c_str() : "C++");
 
@@ -380,7 +384,9 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
  */
 int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
-    if(unit == NULL || src_file == NULL || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
+    if(unit == NULL || src_file == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
 
     int lang = srcml_check_language(unit->language ? unit->language->c_str() : "C++");
 
@@ -418,7 +424,9 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
  */
 int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
-    if(unit == NULL || src_fd < 0 || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
+    if(unit == NULL || src_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
 
     int lang = srcml_check_language(unit->language ? unit->language->c_str() : "C++");
 
@@ -462,7 +470,11 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
  */
 int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
-    if(unit == NULL || src_filename == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) || (!unit->unit && !unit->read_header)) return SRCML_STATUS_ERROR;
+    if(unit == NULL || src_filename == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+
+    if(!unit->unit && !unit->read_header) return SRCML_STATUS_ERROR;
 
     const char * encoding   = unit->encoding ? unit->encoding->c_str() :
 	(unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
@@ -495,9 +507,6 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
     
     }
 
-
-
-
 }
 
 /**
@@ -514,7 +523,11 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
  */
 int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_size) {
 
-    if(unit == NULL || src_buffer == NULL || src_size == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) || (!unit->unit && !unit->read_header)) return SRCML_STATUS_ERROR;
+    if(unit == NULL || src_buffer == NULL || src_size == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+
+    if(!unit->unit && !unit->read_header) return SRCML_STATUS_ERROR;
 
     const char * encoding   = unit->encoding ? unit->encoding->c_str() :
 	(unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
@@ -575,7 +588,11 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
  */
 int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 
-    if(unit == NULL || srcml_file == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) || (!unit->unit && !unit->read_header)) return SRCML_STATUS_ERROR;
+    if(unit == NULL || srcml_file == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+
+    if(!unit->unit && !unit->read_header) return SRCML_STATUS_ERROR;
 
     const char * encoding   = unit->encoding ? unit->encoding->c_str() :
 	(unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
@@ -621,7 +638,11 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
  */
 int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
-    if(unit == NULL || srcml_fd < 0 || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) || (!unit->unit && !unit->read_header)) return SRCML_STATUS_ERROR;
+    if(unit == NULL || srcml_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+
+    if(!unit->unit && !unit->read_header) return SRCML_STATUS_ERROR;
 
     const char * encoding   = unit->encoding ? unit->encoding->c_str() :
 	(unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
@@ -692,11 +713,11 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
  *
  * Free the contents of a srcml_unit.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_free_unit(srcml_unit* unit) {
 
-    if(unit == NULL) return SRCML_STATUS_ERROR;
+    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     delete unit;
 
