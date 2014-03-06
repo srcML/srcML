@@ -166,7 +166,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
             close(transform_fd);
             free((void *)transform_filename);
-            return SRCML_STATUS_ERROR;
+            return SRCML_STATUS_INVALID_INPUT;
 
         }
         int error = 0;
@@ -210,14 +210,14 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
             if(last_transform_filename)  unlink(last_transform_filename);
             free((void *)last_transform_filename);
 
-            return SRCML_STATUS_ERROR;
+            return SRCML_STATUS_INVALID_INPUT;
         }
 
         if(i != 0) xmlFreeParserInputBuffer(pinput);
         if(last_transform_filename) unlink(last_transform_filename);
         free((void *)last_transform_filename);
         last_transform_filename = transform_filename;
-        if(error == SRCML_STATUS_ERROR) {
+        if(error != SRCML_STATUS_OK) {
             if(last_transform_filename) unlink(last_transform_filename);
             free((void *)last_transform_filename);
             return error;

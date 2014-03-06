@@ -228,7 +228,7 @@ int srcml(const char* input_filename, const char* output_filename) {
         translator.close();
 
         if(error)
-            return  SRCML_STATUS_ERROR;
+            return  SRCML_STATUS_INVALID_INPUT;
 
     } else {
 
@@ -249,7 +249,7 @@ int srcml(const char* input_filename, const char* output_filename) {
             } else
                 srcml_error = "No language provided.";
 
-            return SRCML_STATUS_ERROR;
+            return SRCML_STATUS_INVALID_INPUT;
 
         }
 
