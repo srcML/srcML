@@ -570,7 +570,7 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
 
     (*src_buffer) = (char *)buffer->content;
     buffer->content = 0;
-    if(!buffer->content && !(*src_buffer)) return SRCML_STATUS_INVALID_INPUT;
+    if(!buffer->content && !(*src_buffer)) return SRCML_STATUS_ERROR;
     *src_size = (int)strlen(*src_buffer);
 
    
