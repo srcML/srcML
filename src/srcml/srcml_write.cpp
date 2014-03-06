@@ -47,7 +47,7 @@ void srcml_write(WriteQueue* queue) {
 
         if (pr.status == -300) {
 
-            std::cerr << std::setw(5) << "-" << " " << pr.filename << " Extension not supported\n";
+            std::cerr << std::setw(5) << "-" << " " << *pr.filename << " Extension not supported\n";
             continue;
         }
 
@@ -55,7 +55,7 @@ void srcml_write(WriteQueue* queue) {
         srcml_write_unit(pr.srcml_arch, pr.unit);
         ++count;
 
-        std::cerr << std::setw(5) << count << " " << pr.filename << '\n';
+        std::cerr << std::setw(5) << count << " " << *pr.filename << '\n';
 
         // free the unit
         srcml_free_unit(pr.unit);
