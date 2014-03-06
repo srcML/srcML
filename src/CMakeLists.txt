@@ -41,7 +41,7 @@ macro(buildLib LIB_NAME LIB_TYPE)
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME libsrcml)
 elseif(APPLE)
-    set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/export_list")
+    set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/export_list")
 else()
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml)
 
