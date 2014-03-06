@@ -20,4 +20,8 @@
 
 if(NOT WIN32)
 set(CMAKE_INSTALL_PREFIX "/usr/local")
+# set strip command
+set(CMAKE_STRIP "/usr/bin/strip -x" CACHE FILENAME "Path to a program." FORCE)
 endif()
+
+set(CMAKE_INSTALL_DO_STRIP ON CACHE BOOL "Do strip on install." FORCE)
