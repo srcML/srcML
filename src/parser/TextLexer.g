@@ -121,9 +121,9 @@ DSIGN :
         ({ inLanguage(LANGUAGE_JAVA) }? { $setType(NAME); } NAME)?
 ;
 
-NAME options { testLiterals = true; } { char lastchar = LA(1); } :
+NAME options { testLiterals = true; } { char lastchar = LA(1); bool ismacrochar = true;} :
         { startline = false; }
-        ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')
+        ('a'..'z' { ismacrochar = false; } | 'A'..'Z' | '_' | '\200'..'\377' { ismacrochar = false; })
         (
 
             { lastchar == 'L' || lastchar == 'U' || lastchar == 'u' }?
@@ -141,11 +141,14 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
             { inLanguage(LANGUAGE_CXX_ONLY) && (lastchar == 'L' || lastchar == 'U' || lastchar == 'u')}? ('R' '"')=> 'R'
             { $setType(STRING_START); rawstring = true; } STRING_START |
 
-            (options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')*
-        )
+            ((options { greedy = true; } : '0'..'9' | 'a'..'z' { ismacrochar = false; } | 'A'..'Z' | '_' |
+                '\200'..'\377' { ismacrochar = false; } )*
 
-        {
-
+                // NOTE: This is NOT called when in guessing mode. Not sure when this happens in the lexer
+                {
+                    if(isoption(options, OPTION_MACRO_PATTERN) && ismacrochar) $setType(MACRO_NAME);
+                })
+/*
             if(isoption(options, OPTION_MACRO_PATTERN)) {
                 static const boost::regex macro_name_match("[A-Z][A-Z_]+");
                 static const boost::match_flag_type flags = boost::match_default;
@@ -161,11 +164,9 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
                     (what[0].length() == (boost::match_results<std::string::const_iterator>::difference_type)temp_name.size());
                 
                 if(is_regex_match) $setType(MACRO_NAME);
-                
             }
-
-        }
-
+*/
+        )
 ;
 
 // Single-line comments (no EOL)
