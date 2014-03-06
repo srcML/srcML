@@ -380,7 +380,7 @@ int srcml_archive_register_file_extension(srcml_archive* archive, const char* ex
 
     if(Language::registerUserExt(extension, language, archive->registered_languages))
         return SRCML_STATUS_OK;
-    return SRCML_STATUS_ERROR;
+    return SRCML_STATUS_INVALID_INPUT;
 }
 
 /**

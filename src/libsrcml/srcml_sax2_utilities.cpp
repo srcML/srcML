@@ -55,7 +55,7 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBuffer *
 
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(input_buffer, (int)size, XML_CHAR_ENCODING_NONE);
 
-    if(input == NULL) return SRCML_STATUS_ERROR;
+    if(input == NULL) return SRCML_STATUS_INVALID_INPUT;
 
     srcMLSAX2Reader reader(input);
     reader.readsrc(output_handler);
@@ -75,7 +75,7 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBuffer *
  *
  * Extract a given unit from supplied srcML directly to file.
  *
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, OPTION_TYPE options, int unit) {
 
@@ -101,7 +101,7 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
  *
  * XPath evaluation of the nested units.
  *
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpath, int fd, OPTION_TYPE options) {
 
@@ -117,7 +117,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
     xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST s.c_str());
     if (compiled_xpath == 0) {
         fprintf(stderr, "srcml2src:  Unable to compile XPath '%s'\n", s.c_str());
-        return SRCML_STATUS_ERROR;
+        return SRCML_STATUS_INVALID_INPUT;
     }
 
     // setup process handling
@@ -179,7 +179,7 @@ void dlexsltRegisterAll(void * handle) {
  *
  * XSLT evaluation of the nested units.
  *
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xslt, const char* params[], int paramcount, int fd, OPTION_TYPE options) {
 
@@ -277,7 +277,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
  *
  * RelaxNG evaluation of the nested units.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char* relaxng, int fd, OPTION_TYPE options) {
 
@@ -316,7 +316,7 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char* relaxng, int
  *
  * Process srcML document with error reporting.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
 
@@ -330,7 +330,7 @@ int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
         if (allowendearly && (ep->code == XML_ERR_EXTRA_CONTENT || ep->code == XML_ERR_DOCUMENT_END))
             return SRCML_STATUS_OK;
 
-        return SRCML_STATUS_ERROR;
+        return SRCML_STATUS_INVALID_INPUT;
     }
 
     return SRCML_STATUS_OK;
