@@ -292,7 +292,7 @@ __LIBSRCML_DECL int srcml_parse_unit_fd      (struct srcml_unit*, int src_fd);
 __LIBSRCML_DECL int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*);
 
 /* Free allocated unit */
-__LIBSRCML_DECL int srcml_free_unit(struct srcml_unit*);
+__LIBSRCML_DECL void srcml_free_unit(struct srcml_unit*);
 
 /* Close the srcML archive */
 __LIBSRCML_DECL void srcml_close_archive(struct srcml_archive*);

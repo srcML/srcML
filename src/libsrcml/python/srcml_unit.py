@@ -57,7 +57,7 @@ libsrcml.srcml_unparse_unit_fd.argtypes = [c_void_p, c_int]
 libsrcml.srcml_create_unit.restype = c_void_p
 libsrcml.srcml_create_unit.argtypes = [c_void_p]
 
-# int srcml_free_unit(struct srcml_unit*);
+# void srcml_free_unit(struct srcml_unit*);
 libsrcml.srcml_free_unit.restype = None
 libsrcml.srcml_free_unit.argtypes = [c_void_p]
 

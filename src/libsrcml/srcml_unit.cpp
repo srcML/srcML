@@ -720,16 +720,12 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
  * @param unit a srcml unit
  *
  * Free the contents of a srcml_unit.
- *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_free_unit(srcml_unit* unit) {
+void srcml_free_unit(srcml_unit* unit) {
 
-    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(unit == NULL) return;
 
     delete unit;
-
-    return SRCML_STATUS_OK;
 
 }
 
