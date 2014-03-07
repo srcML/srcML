@@ -35,7 +35,7 @@ static int count = 0;
 // Public consumption thread function
 void srcml_write(WriteQueue* queue) {
 
-    int isarchive = -5;
+    int isarchive = -1;
 
     WriteRequest pr;
     while (true) {
@@ -47,26 +47,30 @@ void srcml_write(WriteQueue* queue) {
         if (!pr.position)
             break;
 
-        if (isarchive == -5)
+        // first time through need to set if this is an archive or not
+        if (isarchive == -1)
             isarchive = (srcml_archive_get_options(pr.srcml_arch) & SRCML_OPTION_ARCHIVE) > 0;
 
-        if (pr.status == -300) {
+        // write the unit
+        if (pr.status == SRCML_STATUS_OK) {
+            srcml_write_unit(pr.srcml_arch, pr.unit);
 
-            if (isarchive) 
+            ++count;
+            if (isarchive)
+                std::cerr << std::setw(5) << count << " " << *pr.filename << '\n';
+
+        } else if (pr.status == SRCML_STATUS_UNSET_LANGUAGE) {
+
+            if (isarchive)
                 std::cerr << std::setw(5) << "-" << " " << *pr.filename << '\n';
             else
                 std::cerr << "Extension not supported\n";
-            continue;
+        } else {
+            std::cerr << "Internal eror " << pr.status << "\n";
         }
 
-        // write the unit
-        srcml_write_unit(pr.srcml_arch, pr.unit);
-        ++count;
-
-        if (isarchive)
-            std::cerr << std::setw(5) << count << " " << *pr.filename << '\n';
-
         // free the unit
-        srcml_free_unit(pr.unit);
+        if (pr.unit)
+            srcml_free_unit(pr.unit);
     }
 }

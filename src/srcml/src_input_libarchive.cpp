@@ -96,8 +96,8 @@ void src_input_libarchive(ParseQueue& queue,
     int count = 0;
     int status = ARCHIVE_OK;
     while (status == ARCHIVE_OK &&
-        (((status = archive_read_next_header(arch, &arch_entry)) == ARCHIVE_OK) ||
-         (status == ARCHIVE_EOF && !count))) {
+           (((status = archive_read_next_header(arch, &arch_entry)) == ARCHIVE_OK) ||
+            (status == ARCHIVE_EOF && !count))) {
 
         // skip any directories
         if (status == ARCHIVE_OK && archive_entry_filetype(arch_entry) == AE_IFDIR)
@@ -124,6 +124,7 @@ void src_input_libarchive(ParseQueue& queue,
             language = *option_language;
 
         // if not explicitly set, language comes from extension
+        // we have to do this ourselves, since libsrcml won't for memory
         if (language.empty())
             if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
                 language = l;
@@ -136,14 +137,17 @@ void src_input_libarchive(ParseQueue& queue,
         request.version = option_version;
         request.srcml_arch = srcml_arch;
         request.language = language;
+        request.status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
         // fill up the parse request buffer
         request.buffer.clear();
-        const char* buffer;
-        size_t size;
-        int64_t offset;
-        while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
-            request.buffer.insert(request.buffer.end(), buffer, buffer + size);
+        if (!status) {
+            const char* buffer;
+            size_t size;
+            int64_t offset;
+            while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
+                request.buffer.insert(request.buffer.end(), buffer, buffer + size);
+        }
 
         // Hand request off to the processing queue
         queue.push(request);

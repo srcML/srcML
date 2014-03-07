@@ -35,7 +35,7 @@
 #include <boost/optional.hpp>
 
 struct WriteRequest {
-    WriteRequest() : srcml_arch(0), unit(0), position(0) {}
+    WriteRequest() : srcml_arch(0), unit(0), position(0), status(0) {}
 
     void swap(WriteRequest& other) {
 
