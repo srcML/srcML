@@ -176,13 +176,15 @@ int main(int argc, char * argv[]) {
             std::string resource;
             src_prefix_split_uri(uri, protocol, resource);
 
+            std::string extension = boost::filesystem::extension(boost::filesystem::path(resource));
+
             // call handler based on prefix
             if (fstdin) {
                 src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, fstdin);
             } else if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
                 src_input_filesystem(queue, srcml_arch, resource, srcml_request.att_language);
-//            } else if (protocol == "file" && boost::filesystem::extension(boost::filesystem::path(resource)) != ".tar") {
-//                src_input_file(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
+            } else if (protocol == "file" && extension != ".tar" && extension != ".gz") {
+                src_input_file(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
             } else if (protocol == "file") {
                 src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
             } else if (protocol == "stdin") {
