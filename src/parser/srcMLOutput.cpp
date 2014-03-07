@@ -582,7 +582,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
 
     std::string current_time =
-	boost::posix_time::to_simple_string(boost::posix_time::second_clock::universal_time());
+        boost::posix_time::to_simple_string(boost::posix_time::second_clock::universal_time());
     std::string stab = stabs.str();
 
     // list of attributes
@@ -743,12 +743,12 @@ void srcMLOutput::processToken(const antlr::RefToken& token) {
             xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
         ++openelementcount;
 
-	if(isoption(OPTION_DEBUG_TIMER)) {
+        if(isoption(OPTION_DEBUG_TIMER)) {
 
-	    std::string time = to_simple_string(boost::posix_time::microsec_clock::universal_time() - debug_time_start);
-	    xmlTextWriterWriteAttribute(xout, BAD_CAST "time", BAD_CAST time.c_str());
+            std::string time = to_simple_string(boost::posix_time::microsec_clock::universal_time() - debug_time_start);
+            xmlTextWriterWriteAttribute(xout, BAD_CAST "time", BAD_CAST time.c_str());
 
-	}
+        }
 
     }
 

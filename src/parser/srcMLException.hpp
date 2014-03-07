@@ -20,7 +20,7 @@
 
 /**
  * Changes segmentation errors to an thrown exception.
-*/
+ */
 
 #ifndef SRCMLEXCEPTION_HPP
 #define SRCMLEXCEPTION_HPP

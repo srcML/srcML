@@ -128,9 +128,9 @@ prog_opts::positional_options_description input_file;
 /* DREW:  Most of the no parameter options could be recorded this way */
 template <int option>
 void option_markup(bool opt) {
-    /* 
-      If we have markup options the NULL optional arguement needs to 
-        first be initializied before the bitwise work can be done.
+    /*
+      If we have markup options the NULL optional arguement needs to
+      first be initializied before the bitwise work can be done.
     */
     if (!srcml_request.markup_options)
         srcml_request.markup_options = 0;
@@ -165,7 +165,7 @@ void option_language(const std::string& value) {
         std::cerr << "srcmlCLI: invalid language.\n";
         exit(1); //ERROR CODE TBD
     }
-    srcml_request.att_language = value; 
+    srcml_request.att_language = value;
 }
 void option_register_ext(const std::vector<std::string>& values) {srcml_request.language_ext = values; }
 
@@ -249,7 +249,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("debug,g", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_DEBUG>), "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
             ("encoding,x", prog_opts::value<std::string>()->notifier(&option_encoding),"set the output XML encoding to ENC (default:  UTF-8)")
             ("expression,e", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
-            //TODO: 
+            //TODO:
             ("files-from", prog_opts::value<std::string>()->notifier(&option_files_from), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
             ("interactive,c", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INTERACTIVE>), "immediate output while parsing, default for keyboard input")
             ("language,l", prog_opts::value<std::string>()->notifier(&option_language), "set the language to C, C++, or Java")

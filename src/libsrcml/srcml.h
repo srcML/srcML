@@ -123,14 +123,16 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_STATUS_ERROR            1
 /** Return status indicating an invalid argument */
 #define SRCML_STATUS_INVALID_ARGUMENT 2
-/** Return status indicating an invalid read I/O operation (such as write on read only archive) */
-#define SRCML_STATUS_INVALID_IO_OPERATION 3
 /** Return status indicating that their is some problem with the input */
-#define SRCML_STATUS_INVALID_INPUT 4
+#define SRCML_STATUS_INVALID_INPUT 3
+/** Return status indicating an invalid read I/O operation (such as write on read only archive) */
+#define SRCML_STATUS_INVALID_IO_OPERATION 4
+/** Return status indicating that their is some problem with the input */
+#define SRCML_STATUS_IO_ERROR 5
 /** Return status indicating an unitialized unit */
-#define SRCML_STATUS_UNINITIALIZED_UNIT 5
+#define SRCML_STATUS_UNINITIALIZED_UNIT 6
 /** Return status indicating an unset language */
-#define SRCML_STATUS_UNSET_LANGUAGE 6
+#define SRCML_STATUS_UNSET_LANGUAGE 7
 
 /* libsrcml data structures */
 struct srcml_archive;
