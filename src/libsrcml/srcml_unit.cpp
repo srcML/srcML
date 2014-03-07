@@ -346,7 +346,10 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
  */
 int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
 
-    if(unit == NULL || src_buffer == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(unit == NULL || (buffer_size != 0 && src_buffer == NULL)) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(src_buffer == NULL)
+        src_buffer = "";
 
     if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
 	return SRCML_STATUS_INVALID_IO_OPERATION;
@@ -354,7 +357,7 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
 	: (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
 
-    if(lang == SRCML_LANGUAGE_NONE) return SRCML_STATUS_UNSET_LANGUAGE; 
+    if(lang == SRCML_LANGUAGE_NONE) return SRCML_STATUS_UNSET_LANGUAGE;
 
     OPTION_TYPE translation_options = unit->archive->options;
 
