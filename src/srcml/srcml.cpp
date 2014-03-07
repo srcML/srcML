@@ -211,23 +211,9 @@ int main(int argc, char * argv[]) {
     else if (tosrcml && srcml_request.command & SRCML_COMMAND_LIST) {
         srcml_list_unit_files(srcml_request.input);
 
-<<<<<<< HEAD
-        // srcml->src srcML file to filesystem
-    } else if (isxml && (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) && srcml_request.positional_args.size() == 1) {
-
-        srcml_archive* arch = srcml_create_archive();
-        srcml_read_open_filename(arch, srcml_request.positional_args[0].c_str());
-
-        // construct the relative directory
-        std::string prefix;
-        if (srcml_request.output_filename != "." && srcml_request.output_filename != "./")
-            prefix = srcml_request.output_filename;
-
-=======
     // srcml->src srcML file to filesystem
     } else if (tosrc && (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY)) {
 
->>>>>>> client
         int count = 0;
 
         // process command line inputs
@@ -250,18 +236,9 @@ int main(int argc, char * argv[]) {
                 boost::filesystem::path out(prefix);
                 out /= srcml_unit_get_filename(unit);
 
-<<<<<<< HEAD
-            // trace
-            ++count;
-            std::cerr << std::setw(5) << count << ' ' << out.c_str() << '\n';
-
-            srcml_free_unit(unit);
-        }
-=======
                 // create the path
                 if (!is_directory(out.parent_path()))
                     boost::filesystem::create_directories(out.parent_path());
->>>>>>> client
 
                 // unparse directory to filename
                 srcml_unparse_unit_filename(unit, out.c_str());
@@ -277,13 +254,9 @@ int main(int argc, char * argv[]) {
             srcml_free_archive(arch);
         }
 
-<<<<<<< HEAD
-        // srcml->src extract individual unit in XML
-    } else if (isxml && (srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.positional_args.size() == 1) {
-=======
+
     // srcml->src extract individual unit in XML
     } else if (tosrcml && (srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
->>>>>>> client
 
         srcml_archive* arch = srcml_create_archive();
         if (!fstdin)
@@ -305,28 +278,6 @@ int main(int argc, char * argv[]) {
         srcml_close_archive(arch);
         srcml_free_archive(arch);
 
-<<<<<<< HEAD
-        // srcml->src extract individual unit to stdout
-    } else if (isxml && srcml_request.unit != 0 && srcml_request.positional_args.size() == 1 && srcml_request.output_filename == "-") {
-
-        srcml_archive* arch = srcml_create_archive();
-
-        // we opened this already when checking for XML status
-        srcml_read_open_FILE(arch, fstdin);
-
-        srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
-
-        srcml_unparse_unit_fd(unit, STDOUT_FILENO);
-
-        srcml_close_archive(arch);
-        srcml_free_archive(arch);
-
-        // srcml->src extract individual unit to file
-    } else if (isxml && srcml_request.unit != 0 && srcml_request.positional_args.size() == 1) {
-
-        srcml_archive* arch = srcml_create_archive();
-        srcml_read_open_filename(arch, srcml_request.positional_args[0].c_str());
-=======
         // srcml->src extract individual unit to file
     } else if (tosrcml && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
 
@@ -335,7 +286,6 @@ int main(int argc, char * argv[]) {
             srcml_read_open_filename(arch, srcml_request.input[0].c_str());
         else
             srcml_read_open_FILE(arch, *fstdin);
->>>>>>> client
 
         srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
 
@@ -345,11 +295,7 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(arch);
 
         // srcml->src srcML file extracted to stdout
-<<<<<<< HEAD
-    } else if (isxml && srcml_request.positional_args.size() == 1 && srcml_request.output_filename == "-") {
-=======
     } else if (tosrcml && srcml_request.input.size() == 1 && *srcml_request.output_filename == "-") {
->>>>>>> client
 
         srcml_archive* arch = srcml_create_archive();
         srcml_read_open_FILE(arch, *fstdin);
@@ -362,11 +308,7 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(arch);
 
         // srcml->src srcML file to libarchive file
-<<<<<<< HEAD
-    } else if (isxml && srcml_request.positional_args.size() == 1) {
-=======
     } else if (tosrcml) {
->>>>>>> client
 
         // TODO: What if this is a simple, single file? or to stdout?
         archive* ar = archive_write_new();
