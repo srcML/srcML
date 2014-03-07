@@ -25,12 +25,6 @@ add_subdirectory(srcml)
 file(GLOB SAX2FRAMEWORK_HEADERS SAX2Framework/*.hpp)
 file(GLOB SAX2FRAMEWORK_SOURCE SAX2Framework/*.cpp)
 
-get_property(DYNAMIC_LOAD_ENABLED GLOBAL PROPERTY DYNAMIC_LOAD_ENABLED)
-get_property(LIBXML2_LIBS GLOBAL PROPERTY LIBXML2_LIBS)
-get_property(LIBXSLT_LIBS GLOBAL PROPERTY LIBXSLT_LIBS)
-get_property(BOOST_PROGRAM_OPTIONS_LIB GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB)
-get_property(ANTLR_LIB GLOBAL PROPERTY ANTLR_LIB)
-
 # buildLib
 #  Used to help with the creation of the srcML library.
 #  - LIB_NAME is the name of the library and target
@@ -50,15 +44,7 @@ else()
 
 endif()
 
-    if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
-        if(DYNAMIC_LOAD_ENABLED)
-                target_link_libraries(${LIB_NAME} PRIVATE ${LIBXML2_LIBS} ${ANTLR_LIB} ${BOOST_PROGRAM_OPTIONS_LIB} dl iconv)
-        else()
-                target_link_libraries(${LIB_NAME} PRIVATE ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${BOOST_PROGRAM_OPTIONS_LIB} dl iconv)
-        endif()
-    else()
-        target_link_libraries(${LIB_NAME} PRIVATE ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${BOOST_PROGRAM_OPTIONS_LIB} iconv)
-    endif()
+    target_link_libraries(${LIB_NAME} PRIVATE ${LIBSRCML_LIBRARIES})
 endmacro()
 
 # Building static and dynamic libraries for srcML.
