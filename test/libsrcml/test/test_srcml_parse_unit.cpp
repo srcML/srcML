@@ -74,7 +74,6 @@ int main() {
     /*
       srcml_parse_unit_filename
     */
-
     {
 
         srcml_archive * archive = srcml_create_archive();
@@ -94,6 +93,7 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
 	srcml_archive_disable_option(archive, SRCML_OPTION_TIMESTAMP);
+	srcml_archive_register_file_extension(archive, "foo", "C++");
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_filename(unit, "project");
@@ -328,6 +328,7 @@ int main() {
 	srcml_archive_disable_option(archive, SRCML_OPTION_TIMESTAMP);
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
         srcml_unit_set_directory(unit, "test");
         srcml_unit_set_version(unit , "1");
@@ -472,6 +473,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit_set_language(unit, "C");
         srcml_parse_unit_memory(unit, src.c_str(), src.size());
         assert(unit->unit->find("timestamp" != 0));
 
@@ -565,6 +567,7 @@ int main() {
 	srcml_archive_disable_option(archive, SRCML_OPTION_TIMESTAMP);
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
+	srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
         srcml_unit_set_directory(unit, "test");
         srcml_unit_set_version(unit , "1");
@@ -724,6 +727,7 @@ int main() {
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         FILE * file = fopen("project.c", "r");
+        srcml_unit_set_language(unit, "C");
         srcml_parse_unit_FILE(unit, file);
         assert(unit->unit->find("timestamp" != 0));
         fclose(file);
@@ -806,6 +810,7 @@ int main() {
 	srcml_archive_disable_option(archive, SRCML_OPTION_TIMESTAMP);
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
+	srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
         srcml_unit_set_directory(unit, "test");
         srcml_unit_set_version(unit , "1");
@@ -965,6 +970,7 @@ int main() {
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         int fd = open("project.c", O_RDONLY);
+        srcml_unit_set_language(unit, "C");
         srcml_parse_unit_fd(unit, fd);
         assert(unit->unit->find("timestamp" != 0));
         close(fd);

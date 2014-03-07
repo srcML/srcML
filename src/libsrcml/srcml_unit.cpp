@@ -305,7 +305,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 	return SRCML_STATUS_INVALID_IO_OPERATION;
 
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
-	: srcml_check_language(unit->archive->language->c_str());
+	: (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
 
     if(lang == SRCML_LANGUAGE_NONE) lang = Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
 
@@ -352,7 +352,7 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
 	return SRCML_STATUS_INVALID_IO_OPERATION;
 
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
-	: srcml_check_language(unit->archive->language->c_str());
+	: (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
 
     if(lang == SRCML_LANGUAGE_NONE) return SRCML_STATUS_UNSET_LANGUAGE; 
 
@@ -396,7 +396,7 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 	return SRCML_STATUS_INVALID_IO_OPERATION;
 
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
-	: srcml_check_language(unit->archive->language->c_str());
+	: (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
 
     if(lang == SRCML_LANGUAGE_NONE) return SRCML_STATUS_UNSET_LANGUAGE; 
 
@@ -440,7 +440,7 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 	return SRCML_STATUS_INVALID_IO_OPERATION;
 
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
-	: srcml_check_language(unit->archive->language->c_str());
+	: (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
 
     if(lang == SRCML_LANGUAGE_NONE) return SRCML_STATUS_UNSET_LANGUAGE; 
 
