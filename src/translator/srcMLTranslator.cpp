@@ -42,7 +42,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* version,         // root unit version
                                  std::string * uri,           // uri prefixes
                                  int tabsize                  // size of tabs
-    )
+                                 )
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
@@ -61,7 +61,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* version,         // root unit version
                                  std::string * uri,           // uri prefixes
                                  int tabsize                  // size of tabs
-    )
+                                 )
     :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
        encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
        out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, 0), tabsize(tabsize),
@@ -84,7 +84,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* version,         // root unit version
                                  std::string * uri,           // uri prefixes
                                  int tabsize                  // size of tabs
-    )
+                                 )
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
@@ -101,7 +101,7 @@ void srcMLTranslator::setInput(const char* path) {
 
     try {
 
-	pinput = new UTF8CharBuffer(path, encoding);
+        pinput = new UTF8CharBuffer(path, encoding);
 
     } catch (const std::exception& e) {
         fprintf(stderr, "SRCML Exception: %s\n", e.what());
@@ -122,10 +122,10 @@ void srcMLTranslator::close() {
         // Open for write;
         out.initWriter();
 
-	out.outputXMLDecl();
+        out.outputXMLDecl();
 
         // root unit for compound srcML documents
-	out.startUnit(0, root_directory, root_filename, root_version, true);
+        out.startUnit(0, root_directory, root_filename, root_version, true);
 
     }
 
@@ -144,7 +144,7 @@ void srcMLTranslator::translate(const char* unit_directory,
         out.outputXMLDecl();
 
         // root unit for compound srcML documents
-	if((options & OPTION_ARCHIVE) > 0)
+        if((options & OPTION_ARCHIVE) > 0)
             out.startUnit(0, root_directory, root_filename, root_version, true);
 
     }
@@ -256,14 +256,14 @@ void srcMLTranslator::add_unit(const char* xml) {
         // Open for write;
         out.initWriter();
 
-	out.outputXMLDecl();
+        out.outputXMLDecl();
 
         // root unit for compound srcML documents
         if((options & OPTION_ARCHIVE) > 0)
             out.startUnit(0, root_directory, root_filename, root_version, true);
 
-	if ((options & OPTION_ARCHIVE) > 0)
-	    out.processText("\n\n", 2);
+        if ((options & OPTION_ARCHIVE) > 0)
+            out.processText("\n\n", 2);
 
     }
 

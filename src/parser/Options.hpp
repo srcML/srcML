@@ -278,4 +278,7 @@ const OPTION_TYPE OPTION_MACRO_LIST  = ull(1) << __COUNTER__;
 // @src2srcml
 const OPTION_TYPE OPTION_CPPIF_CHECK  = ull(1) << __COUNTER__;
 
+// @src2srcml
+const OPTION_TYPE OPTION_DEBUG_TIMER  = ull(1) << __COUNTER__;
+
 #endif

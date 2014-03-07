@@ -16,6 +16,7 @@ CPackSourceConfig.cmake
 cmake_install.cmake
 CTestTestfile.cmake
 DartConfiguration.tcl
+install_manifest.txt
 Testing
 Makefile
 !dist/Makefile

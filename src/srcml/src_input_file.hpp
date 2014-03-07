@@ -1,5 +1,5 @@
 /**
- * @file src_input_filesystem.hpp
+ * @file src_input_file.hpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -18,20 +18,24 @@
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * Source input from local files, stdin, and source archives for srcml parsing queue
  */
 
-/*
-  src_input_filesystem assigns directories to parse request
-*/
-
-#ifndef SRC_INPUT_FILESYSTEM_HPP
-#define SRC_INPUT_FILESYSTEM_HPP
+#ifndef SRC_INPUT_FILE_HPP
+#define SRC_INPUT_FILE_HPP
 
 #include <srcml.h>
-#include <thread_queue.hpp>
 #include <string>
 #include <parse_queue.hpp>
 
-void src_input_filesystem(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const boost::optional<std::string>& lang);
+void src_input_file(ParseQueue& queue,                  // srcml parsing queue
+                    srcml_archive* srcml_arch,          // srcml archive to write to
+                    const std::string& input_filename,  // input filename
+                    const boost::optional<std::string>& language,        // specified language
+                    const boost::optional<std::string>& option_filename,
+                    const boost::optional<std::string>& option_directory,
+                    const boost::optional<std::string>& option_version
+);
 
 #endif

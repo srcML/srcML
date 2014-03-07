@@ -52,13 +52,12 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        const char * relaxngs[2] = {"schema.rng", 0 };
         int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC
 #ifndef LIBSRCML_COMPILER_IS_MSVC
                       , S_IRUSR | S_IWUSR
 #endif
                       );
-        dassert(srcml_relaxng(buffer_input, relaxngs, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
+        dassert(srcml_relaxng(buffer_input, "schema.rng", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
         std::ifstream in("project.xml");
         std::string output;
         std::string temp;
@@ -71,13 +70,12 @@ int main() {
     }
 
     {
-        const char * relaxngs[2] = {"schema.rng", 0 };
         int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC
 #ifndef LIBSRCML_COMPILER_IS_MSVC
                       , S_IRUSR | S_IWUSR
 #endif
                       );
-        dassert(srcml_relaxng(0, relaxngs, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_ERROR);
+        dassert(srcml_relaxng(0, "schema.rng", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         unlink("project.xml");
     }
 
@@ -92,7 +90,7 @@ int main() {
                       , S_IRUSR | S_IWUSR
 #endif
                       );
-        dassert(srcml_relaxng(buffer_input, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_ERROR);
+        dassert(srcml_relaxng(buffer_input, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
         unlink("project.xml");
@@ -104,26 +102,7 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        const char * relaxngs[2] = {0, 0 };
-        int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC
-#ifndef LIBSRCML_COMPILER_IS_MSVC
-                      , S_IRUSR | S_IWUSR
-#endif
-                      );
-        dassert(srcml_relaxng(buffer_input, relaxngs, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_ERROR);
-        xmlFreeParserInputBuffer(buffer_input);
-        unlink("input.xml");
-        unlink("project.xml");
-    }
-
-    {
-        const char * s = "<unit>a;</unit>";
-        std::ofstream file("input.xml");
-        file << s;
-        file.close();
-        xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        const char * relaxngs[2] = {"schema.rng", 0 };
-        dassert(srcml_relaxng(buffer_input, relaxngs, -1, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_ERROR);
+        dassert(srcml_relaxng(buffer_input, "schema.rng", -1, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
     }

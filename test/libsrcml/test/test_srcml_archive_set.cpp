@@ -55,7 +55,7 @@ int main() {
     }
 
     {
-        dassert(srcml_archive_set_src_encoding(0, "foo"), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_set_src_encoding(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -79,7 +79,7 @@ int main() {
     }
 
     {
-        dassert(srcml_archive_set_encoding(0, "foo"), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_set_encoding(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -103,7 +103,7 @@ int main() {
     }
 
     {
-        dassert(srcml_archive_set_language(0, "foo"), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_set_language(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -127,7 +127,7 @@ int main() {
     }
 
     {
-        dassert(srcml_archive_set_filename(0, "foo"), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_set_filename(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -151,7 +151,7 @@ int main() {
     }
 
     {
-        dassert(srcml_archive_set_directory(0, "foo"), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_set_directory(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -175,7 +175,7 @@ int main() {
     }
 
     {
-        dassert(srcml_archive_set_version(0, "foo"), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_set_version(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -236,7 +236,7 @@ int main() {
     }
 
     {
-        dassert(srcml_archive_set_options(0, 1 | 2 | 4), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_set_options(0, 1 | 2 | 4), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -279,7 +279,7 @@ int main() {
     }
 
     {
-        dassert(srcml_archive_enable_option(0, 1), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_enable_option(0, 1), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -334,7 +334,7 @@ int main() {
     }
 
     {
-        dassert(srcml_archive_disable_option(0, 1), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_disable_option(0, 1), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -352,7 +352,7 @@ int main() {
     }
 
     {
-        dassert(srcml_archive_set_tabstop(0, 4), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_set_tabstop(0, 4), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -374,7 +374,7 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
 
-        dassert(srcml_archive_register_file_extension(archive, "foo", "C+"), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_register_file_extension(archive, "foo", "C+"), SRCML_STATUS_INVALID_INPUT);
         srcml_free_archive(archive);
 
     }
@@ -383,7 +383,7 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
 
-        dassert(srcml_archive_register_file_extension(archive, "foo", 0), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_register_file_extension(archive, "foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_free_archive(archive);
 
     }
@@ -392,13 +392,13 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
 
-        dassert(srcml_archive_register_file_extension(archive, 0, "C++"), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_register_file_extension(archive, 0, "C++"), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_free_archive(archive);
 
     }
 
     {
-        dassert(srcml_archive_register_file_extension(0, "foo", "C++"), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_register_file_extension(0, "foo", "C++"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -433,7 +433,7 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
 
-        dassert(srcml_archive_register_namespace(archive, 0, "bar"), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_register_namespace(archive, 0, "bar"), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_free_archive(archive);
 
     }
@@ -442,13 +442,13 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
 
-        dassert(srcml_archive_register_namespace(archive, "foo", 0), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_register_namespace(archive, "foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_free_archive(archive);
 
     }
 
     {
-        dassert(srcml_archive_register_namespace(0, "foo", "bar"), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_register_namespace(0, "foo", "bar"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -484,7 +484,7 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
 
-        dassert(srcml_archive_register_macro(archive, 0, "bar"), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_register_macro(archive, 0, "bar"), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_free_archive(archive);
 
     }
@@ -493,13 +493,13 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
 
-        dassert(srcml_archive_register_macro(archive, "foo", 0), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_register_macro(archive, "foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_free_archive(archive);
 
     }
 
     {
-        dassert(srcml_archive_register_macro(0, "foo", "bar"), SRCML_STATUS_ERROR);
+        dassert(srcml_archive_register_macro(0, "foo", "bar"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     return 0;

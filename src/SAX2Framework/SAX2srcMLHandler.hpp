@@ -33,10 +33,10 @@ class srcMLHandler;
 
 enum srcMLMode {
 
-  ROOT,
-  UNIT,
-  END_UNIT,
-  END_ROOT
+    ROOT,
+    UNIT,
+    END_UNIT,
+    END_ROOT
 
 };
 

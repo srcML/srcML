@@ -17,16 +17,13 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-subdirs(parser translator libsrcml srcml)
+add_subdirectory(parser)
+add_subdirectory(translator)
+add_subdirectory(libsrcml)
+add_subdirectory(srcml)
 
 file(GLOB SAX2FRAMEWORK_HEADERS SAX2Framework/*.hpp)
 file(GLOB SAX2FRAMEWORK_SOURCE SAX2Framework/*.cpp)
-
-get_property(DYNAMIC_LOAD_ENABLED GLOBAL PROPERTY DYNAMIC_LOAD_ENABLED)
-get_property(LIBXML2_LIBS GLOBAL PROPERTY LIBXML2_LIBS)
-get_property(LIBXSLT_LIBS GLOBAL PROPERTY LIBXSLT_LIBS)
-get_property(BOOST_PROGRAM_OPTIONS_LIB GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB)
-get_property(ANTLR_LIB GLOBAL PROPERTY ANTLR_LIB)
 
 # buildLib
 #  Used to help with the creation of the srcML library.
@@ -41,21 +38,13 @@ macro(buildLib LIB_NAME LIB_TYPE)
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME libsrcml)
 elseif(APPLE)
-    set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/export_list")
+    set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/export_list")
 else()
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml)
 
 endif()
 
-    if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
-        if(DYNAMIC_LOAD_ENABLED)
-                target_link_libraries(${LIB_NAME} PRIVATE ${LIBXML2_LIBS} ${ANTLR_LIB} ${BOOST_PROGRAM_OPTIONS_LIB} dl iconv)
-        else()
-                target_link_libraries(${LIB_NAME} PRIVATE ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${BOOST_PROGRAM_OPTIONS_LIB} dl iconv)
-        endif()
-    else()
-        target_link_libraries(${LIB_NAME} PRIVATE ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${ANTLR_LIB} ${BOOST_PROGRAM_OPTIONS_LIB} iconv)
-    endif()
+    target_link_libraries(${LIB_NAME} PRIVATE ${LIBSRCML_LIBRARIES})
 endmacro()
 
 # Building static and dynamic libraries for srcML.
@@ -64,6 +53,10 @@ set_target_properties(srcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_B
 
 buildLib(srcml_shared SHARED)
 set_target_properties(srcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+if(NOT ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"))
+    install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.dylib\")")
+endif()
 
 install(TARGETS srcml_shared srcml_static
     RUNTIME DESTINATION bin

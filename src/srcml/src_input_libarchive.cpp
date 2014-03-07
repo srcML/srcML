@@ -63,7 +63,14 @@ void setup_libarchive(archive* arch) {
 }
 
 // Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input_file, const std::string& lang, bool isfstdin, FILE* fstdin) {
+void src_input_libarchive(ParseQueue& queue,
+                          srcml_archive* srcml_arch,
+                          const std::string& input_file,
+                          const boost::optional<std::string>& option_language,
+                          const boost::optional<std::string>& option_filename,
+                          const boost::optional<std::string>& option_directory,
+                          const boost::optional<std::string>& option_version,
+                          boost::optional<FILE*> fstdin) {
 
     // libArchive Setup
     archive* arch = archive_read_new();
@@ -71,83 +78,78 @@ void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const st
 
     setup_libarchive(arch);
 
-    bool is_stdin = input_file == "-" && archive_compression(arch) != ARCHIVE_COMPRESSION_NONE;
-
     // open the archive
-    if (!isfstdin && archive_read_open_filename(arch, (!is_stdin ? input_file.c_str() : 0), 16384)!= ARCHIVE_OK) {
-        std::cerr << "Unable to open file\n";
-        exit(1);
-    } else if (isfstdin && archive_read_open_FILE(arch, fstdin)!= ARCHIVE_OK) {
+    int open_status;
+    if (fstdin)
+        open_status = archive_read_open_FILE(arch, *fstdin);
+    else if (input_file == "-")
+        open_status = archive_read_open_filename(arch, 0, 16384);
+    else
+        open_status = archive_read_open_filename(arch, input_file.c_str(), 16384);
+    if (open_status != ARCHIVE_OK) {
         std::cerr << "Unable to open file\n";
         exit(1);
     }
 
-    bool empty = true;
-    while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
-        empty = false;
+    /* In general, go through this once for each time the header can be read
+       Exception: if empty, go through the loop exactly once */
+    int count = 0;
+    int status = ARCHIVE_OK;
+    while (status == ARCHIVE_OK &&
+        (((status = archive_read_next_header(arch, &arch_entry)) == ARCHIVE_OK) ||
+         (status == ARCHIVE_EOF && !count))) {
 
-        // default is filename from archive entry
-        std::string filename = archive_entry_pathname(arch_entry);
+        // skip any directories
+        if (status == ARCHIVE_OK && archive_entry_filetype(arch_entry) == AE_IFDIR)
+            continue;
+
+        // default is filename from archive entry (if not empty)
+        std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(arch_entry) : "";
+
+        if (count && filename != "data")
+            srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
 
         // archive entry filename for non-archive input is "data"
-        if (filename == "data")
+        if (filename.empty() || filename == "data") {
             filename = input_file;
+        }
 
-        if (filename == "")
-            filename = "-";
+        if (option_filename)
+            filename = *option_filename;
 
         // language may have been explicitly set
-        std::string language = lang;
+        std::string language;
+
+        if (option_language)
+            language = *option_language;
 
         // if not explicitly set, language comes from extension
-        if (language == "") {
-            const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str());
-            if (l)
+        if (language.empty())
+            if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
                 language = l;
-        }
 
-        if (language == "" && (is_stdin || isfstdin)) {
-            std::cerr << "Using stdin requires a declared language\n";
-            continue;
-        }
-
-        if (language == "" && !is_stdin) {
-            std::cerr << "Extension not supported\n";
-            continue;
-        }
-
+        // form the parsing request
         ParseRequest request;
-        request.buffer.clear();
-        while (true) {
-
-            const char* buffer;
-            size_t size;
-            int64_t offset;
-
-            if (archive_read_data_block(arch, (const void**) &buffer, &size, &offset) != ARCHIVE_OK)
-                break;
-
-            request.buffer.insert(request.buffer.end(), buffer, buffer + size);
-        }
-
-        request.filename = filename;
+        if (option_filename || filename != "-")
+            request.filename = filename;
+        request.directory = option_directory;
+        request.version = option_version;
         request.srcml_arch = srcml_arch;
-        request.lang = ((srcml_archive_get_language(srcml_arch) || lang.compare("xml") == 0) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, filename.c_str()));
+        request.language = language;
+
+        // fill up the parse request buffer
+        request.buffer.clear();
+        const char* buffer;
+        size_t size;
+        int64_t offset;
+        while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
+            request.buffer.insert(request.buffer.end(), buffer, buffer + size);
 
         // Hand request off to the processing queue
         queue.push(request);
-    }
 
-    // If the input is empty
-    if (empty) {
-        ParseRequest request;
-        request.buffer.clear();
-        request.filename = input_file;
-        request.srcml_arch = srcml_arch;
-        request.lang = ((srcml_archive_get_language(srcml_arch) || lang.compare("xml") == 0) ? lang.c_str() : srcml_archive_check_extension(srcml_arch, input_file.c_str()));
-        queue.push(request);
+        ++count;
     }
-
 
     archive_read_finish(arch);
 }

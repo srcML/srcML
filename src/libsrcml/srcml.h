@@ -118,9 +118,21 @@ __LIBSRCML_DECL const char* srcml_version_string();
 
 /* srcml status messages */
 /** Return status indicating no errors */
-#define SRCML_STATUS_OK    0
+#define SRCML_STATUS_OK               0
 /** Return status indicating errors occurred */
-#define SRCML_STATUS_ERROR 1
+#define SRCML_STATUS_ERROR            1
+/** Return status indicating an invalid argument */
+#define SRCML_STATUS_INVALID_ARGUMENT 2
+/** Return status indicating that their is some problem with the input */
+#define SRCML_STATUS_INVALID_INPUT 3
+/** Return status indicating an invalid read I/O operation (such as write on read only archive) */
+#define SRCML_STATUS_INVALID_IO_OPERATION 4
+/** Return status indicating that their is some problem with the input */
+#define SRCML_STATUS_IO_ERROR 5
+/** Return status indicating an unitialized unit */
+#define SRCML_STATUS_UNINITIALIZED_UNIT 6
+/** Return status indicating an unset language */
+#define SRCML_STATUS_UNSET_LANGUAGE 7
 
 /* libsrcml data structures */
 struct srcml_archive;
@@ -174,11 +186,26 @@ __LIBSRCML_DECL const char*        srcml_get_directory();
 __LIBSRCML_DECL const char*        srcml_get_version  ();
 __LIBSRCML_DECL unsigned long long srcml_get_options  ();
 __LIBSRCML_DECL int                srcml_get_tabstop  ();
+
+/*
+  XML namespaces
+*/
+
+/* Number of declared XML namespaces */
 __LIBSRCML_DECL int                srcml_get_namespace_size();
+
+/* Prefix of the namespace at that position, where empty namespace is an empty string, and 0 is invalid position */
 __LIBSRCML_DECL const char*        srcml_get_namespace_prefix(int pos);
+
+/* Prefix of the namespace with this namespace uri */
 __LIBSRCML_DECL const char*        srcml_get_prefix_from_uri(const char* namespace_uri);
+
+/* URI of the namespace at that position, where 0 is invalid position */
 __LIBSRCML_DECL const char*        srcml_get_namespace_uri(int pos);
+
+/* URI of the namespace with this namespace prefix */
 __LIBSRCML_DECL const char*        srcml_get_uri_from_prefix(const char* prefix);
+
 __LIBSRCML_DECL int                srcml_get_macro_list_size();
 __LIBSRCML_DECL const char*        srcml_get_macro_token(int pos);
 __LIBSRCML_DECL const char*        srcml_get_macro_token_type(const char* namespace_uri);
@@ -194,10 +221,6 @@ __LIBSRCML_DECL const char* srcml_get_language_list(int pos);
 /* Currently registered language for a file extension
    When full filename is given, the extension is extracted */
 __LIBSRCML_DECL const char* srcml_check_extension(const char* filename);
-
-/* Currently supported format, e.g., tar.gz
-   When full filename is given, the extension is extracted */
-__LIBSRCML_DECL int srcml_check_format(const char* format);
 
 /* Particular encoding is supported, both for input and output */
 __LIBSRCML_DECL int srcml_check_encoding(const char* encoding);
@@ -288,7 +311,7 @@ __LIBSRCML_DECL int srcml_parse_unit_fd      (struct srcml_unit*, int src_fd);
 __LIBSRCML_DECL int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*);
 
 /* Free allocated unit */
-__LIBSRCML_DECL int srcml_free_unit(struct srcml_unit*);
+__LIBSRCML_DECL void srcml_free_unit(struct srcml_unit*);
 
 /* Close the srcML archive */
 __LIBSRCML_DECL void srcml_close_archive(struct srcml_archive*);
