@@ -119,11 +119,6 @@ endforeach()
 list(REMOVE_ITEM PARSER_HEADERS ${updatedRemoveList})
 list(REMOVE_ITEM PARSER_SOURCE ${updatedRemoveList})
 
-get_property(SVN_ENABLED GLOBAL PROPERTY SVN_ENABLED)
-if(NOT ${SVN_ENABLED})
-    list(REMOVE_ITEM PARSER_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/svn_io.cpp)
-endif()
-
 if(WIN32)
 add_library(parser OBJECT
     ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.cpp

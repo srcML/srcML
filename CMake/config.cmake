@@ -27,14 +27,8 @@
 #       include
 #       lib
 
-
-# Adding SVN Configuration.
-option(ENABLE_SVN_INTEGRATION "Build with SVN integration." OFF)
-set_property(GLOBAL PROPERTY SVN_ENABLED ${ENABLE_SVN_INTEGRATION})
-
 # Dynamic Load libraries (Unix only)
 option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and libexslt" ON)
-set_property(GLOBAL PROPERTY DYNAMIC_ENABLED ${DYNAMIC_LOAD_ENABLED})
 
 # Setting some windows only properties.
 # @todo this breaks mingw32 build.
