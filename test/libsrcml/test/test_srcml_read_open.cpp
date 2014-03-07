@@ -168,7 +168,7 @@ int main() {
     {
 
         srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_read_open_filename(archive, "foobar.xml"), SRCML_STATUS_INVALID_INPUT);
+        dassert(srcml_read_open_filename(archive, "foobar.xml"), SRCML_STATUS_IO_ERROR);
 
         srcml_free_archive(archive);
 
