@@ -254,6 +254,7 @@ int main(int argc, char * argv[]) {
             srcml_free_archive(arch);
         }
 
+
     // srcml->src extract individual unit in XML
     } else if (tosrc && (srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
 

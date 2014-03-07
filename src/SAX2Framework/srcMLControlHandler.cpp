@@ -108,7 +108,7 @@ xmlSAXHandler & srcMLControlHandler::getSAX() {
  */
 xmlParserCtxtPtr srcMLControlHandler::getCtxt() {
 
-  return ctxt;
+    return ctxt;
 
 }
 
@@ -173,17 +173,17 @@ void srcMLControlHandler::enable_endElementNs(bool enable) {
  */
 void srcMLControlHandler::enable_characters(bool enable) {
 
-  if(enable) {
+    if(enable) {
 
-    sax.characters = charactersFirst;
-    sax.ignorableWhitespace = charactersFirst;
+        sax.characters = charactersFirst;
+        sax.ignorableWhitespace = charactersFirst;
 
-  } else {
+    } else {
 
-    sax.characters = 0;
-    sax.ignorableWhitespace = 0;
+        sax.characters = 0;
+        sax.ignorableWhitespace = 0;
 
-  }
+    }
 
 }
 

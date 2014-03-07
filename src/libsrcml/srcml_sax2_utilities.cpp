@@ -55,7 +55,7 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBuffer *
 
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(input_buffer, (int)size, XML_CHAR_ENCODING_NONE);
 
-    if(input == NULL) return SRCML_STATUS_INVALID_INPUT;
+    if(input == NULL) return SRCML_STATUS_IO_ERROR;
 
     srcMLSAX2Reader reader(input);
     reader.readsrc(output_handler);
@@ -80,7 +80,7 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBuffer *
 int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, OPTION_TYPE options, int unit) {
 
     xmlOutputBufferPtr output_handler = xmlOutputBufferCreateFilename(ofilename, xmlFindCharEncodingHandler(encoding),
-								      options & SRCML_OPTION_COMPRESS);
+                                                                      options & SRCML_OPTION_COMPRESS);
 
     srcMLSAX2Reader reader(ifilename);
     reader.readsrc(output_handler);
@@ -126,11 +126,11 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
 
     try {
 
-      control.parse(&process);
+        control.parse(&process);
 
     } catch(SAXError error) {
 
-      fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
+        fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
 
     }
 
@@ -249,11 +249,11 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 
     try {
 
-      control.parse(&process);
+        control.parse(&process);
 
     } catch(SAXError error) {
 
-      fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
+        fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
 
     }
 
@@ -292,11 +292,11 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char* relaxng, int
 
     try {
 
-      control.parse(&process);
+        control.parse(&process);
 
     } catch(SAXError error) {
 
-      fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
+        fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
 
     }
 
@@ -330,7 +330,7 @@ int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
         if (allowendearly && (ep->code == XML_ERR_EXTRA_CONTENT || ep->code == XML_ERR_DOCUMENT_END))
             return SRCML_STATUS_OK;
 
-        return SRCML_STATUS_INVALID_INPUT;
+        return SRCML_STATUS_IO_ERROR;
     }
 
     return SRCML_STATUS_OK;

@@ -129,9 +129,9 @@ prog_opts::positional_options_description input_file;
 /* DREW:  Most of the no parameter options could be recorded this way */
 template <int option>
 void option_markup(bool opt) {
-    /* 
-      If we have markup options the NULL optional arguement needs to 
-        first be initializied before the bitwise work can be done.
+    /*
+      If we have markup options the NULL optional arguement needs to
+      first be initializied before the bitwise work can be done.
     */
     if (!srcml_request.markup_options)
         srcml_request.markup_options = 0;
@@ -179,7 +179,7 @@ void option_field<&srcml_request_t::att_language>(const std::string& value) {
         std::cerr << "srcmlCLI: invalid language.\n";
         exit(1); //ERROR CODE TBD
     }
-    srcml_request.att_language = value; 
+    srcml_request.att_language = value;
 }
 
 // option tabs

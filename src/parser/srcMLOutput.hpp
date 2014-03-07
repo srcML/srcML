@@ -21,7 +21,7 @@
  */
 
 /**
-  XML output
+   XML output
 */
 
 #ifndef SRCMLOUTPUT_HPP
