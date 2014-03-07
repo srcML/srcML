@@ -110,7 +110,7 @@ void src_input_libarchive(ParseQueue& queue,
             srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
 
         // archive entry filename for non-archive input is "data"
-        if (filename == "data" || filename.empty()) {
+        if (filename.empty() || filename == "data") {
             filename = input_file;
         }
 
@@ -124,7 +124,7 @@ void src_input_libarchive(ParseQueue& queue,
             language = *option_language;
 
         // if not explicitly set, language comes from extension
-        if (language == "")
+        if (language.empty())
             if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
                 language = l;
 

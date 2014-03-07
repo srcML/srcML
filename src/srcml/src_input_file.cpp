@@ -52,7 +52,7 @@ void src_input_file(ParseQueue& queue,
         language = *option_language;
 
     // if not explicitly set, language comes from extension
-    if (language == "")
+    if (language.empty())
         if (const char* l = srcml_archive_check_extension(srcml_arch, input_file.c_str()))
             language = l;
 

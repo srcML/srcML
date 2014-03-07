@@ -163,7 +163,7 @@ void option_field(int value) { srcml_request.*pfield = value; }
 template <>
 void option_field<&srcml_request_t::att_xml_encoding>(const std::string& value) {
 
-    if (value == "" || srcml_check_encoding(value.c_str()) == 0) {
+    if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
         std::cerr << "srcmlCLI: invalid encoding.\n";
         exit(1); //ERROR CODE TBD
     }
@@ -175,7 +175,7 @@ template <>
 void option_field<&srcml_request_t::att_language>(const std::string& value) {
 
     // check language
-    if (value == "" || srcml_check_language(value.c_str()) == 0) {
+    if (value.empty() || srcml_check_language(value.c_str()) == 0) {
         std::cerr << "srcmlCLI: invalid language.\n";
         exit(1); //ERROR CODE TBD
     }
@@ -222,7 +222,7 @@ void positional_args(const std::vector<std::string>& value) {
 }
 
 void option_help(const std::string& help_opt) {
-    if (help_opt == "") {
+    if (help_opt.empty()) {
         // TODO: A new header and footer for the general option
         std::cout << SRCML_HEADER << "\n";
         std::cout << general << "\n";

@@ -48,7 +48,7 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
         int status = 0;
 
         // at this point there are no other language options
-        if (pr.language == "")
+        if (pr.language.empty())
             status = -300;
 
         // build and parse
@@ -63,7 +63,7 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
                 srcml_unit_set_version(unit, pr.version->c_str());
             srcml_unit_set_language(unit, pr.language.c_str());
 
-            if (pr.disk_filename == "") {
+            if (pr.disk_filename.empty()) {
                 status = srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
             } else {
                 status = srcml_parse_unit_filename(unit, pr.disk_filename.c_str());
