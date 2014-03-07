@@ -78,10 +78,10 @@ find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr
 
 if(DYNAMIC_LOAD_ENABLED)
 set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} dl iconv
-		        CACHE STRING "Libraries needed to build libsrcml")
+		        CACHE INTERNAL "Libraries needed to build libsrcml")
 else()
 set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES}  ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} iconv
-		       CACHE STRING "Libraries needed to build libsrcml")
+		       CACHE INTERNAL "Libraries needed to build libsrcml")
 endif()
 
 
@@ -89,7 +89,7 @@ if(NOT WIN32 AND NOT APPLE)
 set(LIBSRCML_LIBRARIES ${LIBSRCML_LIBRARIES};rt)
 endif()
 
-set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} CACHE STRING "Libraries needed to build srcml")
+set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} CACHE INTERNAL "Libraries needed to build srcml")
 
 
 # Finding antlr library.
