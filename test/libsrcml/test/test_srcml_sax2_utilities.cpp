@@ -107,7 +107,7 @@ int main() {
     {
         const char * s = "<unit/>";
         xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, (int)strlen(s));
-        dassert(srcMLParseDocument(0, false), SRCML_STATUS_ERROR);
+        dassert(srcMLParseDocument(0, false), SRCML_STATUS_INVALID_INPUT);
         xmlFreeDoc(ctxt->myDoc);
         xmlFreeParserCtxt(ctxt);
     }

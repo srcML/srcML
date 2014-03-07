@@ -84,7 +84,7 @@ __LIBSRCML_DECL const char* srcml_version_string();
 
 /* Options */
 /** Create an archive */
-#define SRCML_OPTION_ARCHIVE        1<<0
+#define SRCML_OPTION_ARCHIVE           1<<0
 /** Markups literal in special namespace */
 #define SRCML_OPTION_LITERAL           1<<1
 /** Markups modifiers in special namespace */
@@ -100,9 +100,9 @@ __LIBSRCML_DECL const char* srcml_version_string();
 /** Markup preprocessor elements (default for C, C++, C#) */
 #define SRCML_OPTION_CPP_NOMACRO       1<<7
 /** Issue an XML declaration */
-#define SRCML_OPTION_XML_DECL       1<<8
+#define SRCML_OPTION_XML_DECL          1<<8
 /** Include any XML namespace declarations */
-#define SRCML_OPTION_NAMESPACE_DECL 1<<9
+#define SRCML_OPTION_NAMESPACE_DECL    1<<9
 /** Leave as text preprocessor else parts (default: markup) */
 #define SRCML_OPTION_CPP_TEXT_ELSE     1<<10
 /** Markup preprocessor @code #if 0 @endcode sections (default: leave as text) */
@@ -113,12 +113,22 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_COMPRESS          1<<13
 /** Nest if in else if intead of elseif tag */
 #define SRCML_OPTION_NESTIF            1<<14
+/** Output timestamp attribute on root unit (default: on) */
+#define SRCML_OPTION_TIMESTAMP         1<<15
 
 /* srcml status messages */
 /** Return status indicating no errors */
-#define SRCML_STATUS_OK    0
+#define SRCML_STATUS_OK               0
 /** Return status indicating errors occurred */
-#define SRCML_STATUS_ERROR 1
+#define SRCML_STATUS_ERROR            1
+/** Return status indicating an invalid argument */
+#define SRCML_STATUS_INVALID_ARGUMENT 2
+/** Return status indicating an invalid read I/O operation (such as write on read only archive) */
+#define SRCML_STATUS_INVALID_IO_OPERATION 3
+/** Return status indicating that their is some problem with the input */
+#define SRCML_STATUS_INVALID_INPUT 4
+/** Return status indicating an unitialized unit */
+#define SRCML_STATUS_UNINITIALIZED_UNIT 5
 
 /* libsrcml data structures */
 struct srcml_archive;
@@ -173,10 +183,10 @@ __LIBSRCML_DECL const char*        srcml_get_version  ();
 __LIBSRCML_DECL unsigned long long srcml_get_options  ();
 __LIBSRCML_DECL int                srcml_get_tabstop  ();
 __LIBSRCML_DECL int                srcml_get_namespace_size();
-__LIBSRCML_DECL const char*        srcml_get_prefix(int pos);
-__LIBSRCML_DECL const char*        srcml_get_prefix_uri(const char* namespace_uri);
-__LIBSRCML_DECL const char*        srcml_get_namespace(int pos);
-__LIBSRCML_DECL const char*        srcml_get_namespace_prefix(const char* prefix);
+__LIBSRCML_DECL const char*        srcml_get_namespace_prefix(int pos);
+__LIBSRCML_DECL const char*        srcml_get_prefix_from_uri(const char* namespace_uri);
+__LIBSRCML_DECL const char*        srcml_get_namespace_uri(int pos);
+__LIBSRCML_DECL const char*        srcml_get_uri_from_prefix(const char* prefix);
 __LIBSRCML_DECL int                srcml_get_macro_list_size();
 __LIBSRCML_DECL const char*        srcml_get_macro_token(int pos);
 __LIBSRCML_DECL const char*        srcml_get_macro_token_type(const char* namespace_uri);
@@ -192,10 +202,6 @@ __LIBSRCML_DECL const char* srcml_get_language_list(int pos);
 /* Currently registered language for a file extension
    When full filename is given, the extension is extracted */
 __LIBSRCML_DECL const char* srcml_check_extension(const char* filename);
-
-/* Currently supported format, e.g., tar.gz
-   When full filename is given, the extension is extracted */
-__LIBSRCML_DECL int srcml_check_format(const char* format);
 
 /* Particular encoding is supported, both for input and output */
 __LIBSRCML_DECL int srcml_check_encoding(const char* encoding);
@@ -255,10 +261,10 @@ __LIBSRCML_DECL const char*        srcml_archive_get_version         (const stru
 __LIBSRCML_DECL unsigned long long srcml_archive_get_options         (const struct srcml_archive*);
 __LIBSRCML_DECL int                srcml_archive_get_tabstop         (const struct srcml_archive*);
 __LIBSRCML_DECL int                srcml_archive_get_namespace_size(const struct srcml_archive*);
-__LIBSRCML_DECL const char*        srcml_archive_get_prefix(const struct srcml_archive*, int pos);
-__LIBSRCML_DECL const char*        srcml_archive_get_prefix_uri(const struct srcml_archive*, const char* namespace_uri);
-__LIBSRCML_DECL const char*        srcml_archive_get_namespace(const struct srcml_archive*, int pos);
-__LIBSRCML_DECL const char*        srcml_archive_get_namespace_prefix(const struct srcml_archive*, const char* prefix);
+__LIBSRCML_DECL const char*        srcml_archive_get_namespace_prefix(const struct srcml_archive*, int pos);
+__LIBSRCML_DECL const char*        srcml_archive_get_prefix_from_uri(const struct srcml_archive*, const char* namespace_uri);
+__LIBSRCML_DECL const char*        srcml_archive_get_namespace_uri(const struct srcml_archive*, int pos);
+__LIBSRCML_DECL const char*        srcml_archive_get_uri_from_prefix(const struct srcml_archive*, const char* prefix);
 __LIBSRCML_DECL int                srcml_archive_get_macro_list_size (const struct srcml_archive*);
 __LIBSRCML_DECL const char*        srcml_archive_get_macro_token     (const struct srcml_archive*, int pos);
 __LIBSRCML_DECL const char*        srcml_archive_get_macro_token_type(const struct srcml_archive*, const char* namespace_uri);
@@ -286,7 +292,7 @@ __LIBSRCML_DECL int srcml_parse_unit_fd      (struct srcml_unit*, int src_fd);
 __LIBSRCML_DECL int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*);
 
 /* Free allocated unit */
-__LIBSRCML_DECL int srcml_free_unit(struct srcml_unit*);
+__LIBSRCML_DECL void srcml_free_unit(struct srcml_unit*);
 
 /* Close the srcML archive */
 __LIBSRCML_DECL void srcml_close_archive(struct srcml_archive*);
