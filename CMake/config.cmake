@@ -49,7 +49,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(BOOST_DIR $ENV{BOOST_ROOT})
     include_directories(${BOOST_DIR})
     link_directories(${BOOST_DIR}/stage/lib)
-else()
+Else()
     set(WINDOWS_DEP_PATH "")
     # Locating packages.
     find_package(LibArchive REQUIRED)
@@ -66,32 +66,35 @@ else()
         include_directories(${LIBXSLT_INCLUDE_DIR})
     endif()
 
-    if(ENABLE_SVN_INTEGRATION)
-        include_directories(/usr/include/apr-1.0 /usr/include/subversion-1 /usr/local/include/subversion-1)
-    endif()
-
     if(LIBXSLT_EXSLT_LIBRARY)
         set_property(GLOBAL PROPERTY LIBXSLT_LIBS ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY})
     else()
         set_property(GLOBAL PROPERTY LIBXSLT_LIBS "")
     endif()
     
-    # Setting Properties
-    set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS ${LibArchive_LIBRARIES})
-    set_property(GLOBAL PROPERTY LIBXML2_LIBS ${LIBXML2_LIBRARIES})
     include_directories(${Boost_INCLUDE_DIR})
+
 endif()
 set_property(GLOBAL PROPERTY WINDOWS_DEP_PATH ${WINDOWS_DEP_PATH})
 
-if(NOT WIN32 AND NOT APPLE)
-set_property(GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB ${Boost_LIBRARIES};rt)
+# Locating the antlr library.
+find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
+
+if(DYNAMIC_LOAD_ENABLED)
+set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} dl iconv
+		        CACHE STRING "Libraries needed to build libsrcml")
 else()
-set_property(GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB ${Boost_LIBRARIES})
+set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES}  ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} iconv
+		       CACHE STRING "Libraries needed to build libsrcml")
 endif()
 
-# Locating the antlr library.
-find_library(ANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
-set_property(GLOBAL PROPERTY ANTLR_LIB ${ANTLR_LIB})
+
+if(NOT WIN32 AND NOT APPLE)
+set(LIBSRCML_LIBRARIES ${LIBSRCML_LIBRARIES};rt)
+endif()
+
+set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} CACHE STRING "Libraries needed to build srcml")
+
 
 # Finding antlr library.
 find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin C:/antlr/277/bin)
