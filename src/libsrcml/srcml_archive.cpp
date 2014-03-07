@@ -771,7 +771,7 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
                                                   archive->tabstop);
         archive->translator->setMacroList(archive->user_macro_list);
 
-    } catch(...) { return SRCML_STATUS_INVALID_INPUT; }
+    } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
     return SRCML_STATUS_OK;
 
@@ -812,7 +812,7 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
 
         archive->translator->setMacroList(archive->user_macro_list);
 
-    } catch(...) { return SRCML_STATUS_INVALID_INPUT; }
+    } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
     return SRCML_STATUS_OK;
 
@@ -833,7 +833,7 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
     if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
-    if(output_buffer == NULL) return SRCML_STATUS_INVALID_INPUT;
+    if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
 
     archive->type = SRCML_ARCHIVE_WRITE;
 
@@ -857,7 +857,7 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
     } catch(...) {
 
         xmlOutputBufferClose(output_buffer);
-        return SRCML_STATUS_INVALID_INPUT;
+        return SRCML_STATUS_IO_ERROR;
 
     }
 
@@ -880,7 +880,7 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
     if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
-    if(output_buffer == NULL) return SRCML_STATUS_INVALID_INPUT;
+    if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
 
     archive->type = SRCML_ARCHIVE_WRITE;
 
@@ -904,7 +904,7 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
     } catch(...) {
 
         xmlOutputBufferClose(output_buffer);
-        return SRCML_STATUS_INVALID_INPUT;
+        return SRCML_STATUS_IO_ERROR;
 
     }
 
@@ -970,7 +970,7 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
     } catch(...) {
 
         xmlFreeParserInputBuffer(archive->input);
-        return SRCML_STATUS_INVALID_INPUT;
+        return SRCML_STATUS_IO_ERROR;
 
     }
 
@@ -1004,7 +1004,7 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
     } catch(...) {
 
         xmlFreeParserInputBuffer(archive->input);
-        return SRCML_STATUS_INVALID_INPUT;
+        return SRCML_STATUS_IO_ERROR;
 
     }
 
@@ -1037,7 +1037,7 @@ int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
     } catch(...) {
 
         xmlFreeParserInputBuffer(archive->input);
-        return SRCML_STATUS_INVALID_INPUT;
+        return SRCML_STATUS_IO_ERROR;
 
     }
 
@@ -1070,7 +1070,7 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
     } catch(...) {
 
         xmlFreeParserInputBuffer(archive->input);
-        return SRCML_STATUS_INVALID_INPUT;
+        return SRCML_STATUS_IO_ERROR;
 
     }
 

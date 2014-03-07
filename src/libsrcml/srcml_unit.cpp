@@ -254,7 +254,7 @@ const char* srcml_unit_get_xml(struct srcml_unit* unit) {
  * output buffer, translates a current input and places the
  * contents into the unit.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_INPUT on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_IO_ERROR on failure.
  */
 static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer * input, OPTION_TYPE translation_options) {
 
@@ -268,7 +268,7 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
     } catch(...) {
 
         xmlBufferFree(output_buffer);
-        return SRCML_STATUS_INVALID_INPUT;
+        return SRCML_STATUS_IO_ERROR;
 
     }
 
@@ -324,7 +324,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
         input = new UTF8CharBuffer(src_filename, unit->encoding ? unit->encoding->c_str()
                                    : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
 
-    } catch(...) { return SRCML_STATUS_INVALID_INPUT; }
+    } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
 
     int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
@@ -370,7 +370,7 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
                                    : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
 
 
-    } catch(...) { return SRCML_STATUS_INVALID_INPUT; }
+    } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
     int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
 
@@ -413,7 +413,7 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
         input = new UTF8CharBuffer(src_file, unit->encoding ? unit->encoding->c_str()
                                    : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
 
-    } catch(...) { return SRCML_STATUS_INVALID_INPUT; }
+    } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
 
     int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
@@ -457,7 +457,7 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
         input = new UTF8CharBuffer(src_fd, unit->encoding ? unit->encoding->c_str()
                                    : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
 
-    } catch(...) { return SRCML_STATUS_INVALID_INPUT; }
+    } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
     int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
 
@@ -518,7 +518,7 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
         xmlOutputBufferClose(output_handler);
 
-        return SRCML_STATUS_INVALID_INPUT;
+        return SRCML_STATUS_IO_ERROR;
 
     }
 
@@ -558,12 +558,12 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
 
             unit->archive->reader->readsrc(output_handler);
 
-        } else if(srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options) == SRCML_STATUS_INVALID_INPUT) {
+        } else if(int error = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options)) {
 
             xmlOutputBufferClose(output_handler);
             xmlBufferFree(buffer);
 
-            return SRCML_STATUS_INVALID_INPUT;
+            return error;
 
         }
 
@@ -572,7 +572,7 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
         xmlOutputBufferClose(output_handler);
         xmlBufferFree(buffer);
 
-        return SRCML_STATUS_INVALID_INPUT;
+        return SRCML_STATUS_IO_ERROR;
 
     }
 
@@ -636,7 +636,7 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 
         xmlOutputBufferClose(output_handler);
 
-        return SRCML_STATUS_INVALID_INPUT;
+        return SRCML_STATUS_IO_ERROR;
 
     }
 
@@ -688,7 +688,7 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
         xmlOutputBufferClose(output_handler);
 
-        return SRCML_STATUS_INVALID_INPUT;
+        return SRCML_STATUS_IO_ERROR;
 
     }
 

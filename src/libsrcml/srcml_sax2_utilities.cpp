@@ -55,7 +55,7 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBuffer *
 
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(input_buffer, (int)size, XML_CHAR_ENCODING_NONE);
 
-    if(input == NULL) return SRCML_STATUS_INVALID_INPUT;
+    if(input == NULL) return SRCML_STATUS_IO_ERROR;
 
     srcMLSAX2Reader reader(input);
     reader.readsrc(output_handler);
@@ -330,7 +330,7 @@ int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
         if (allowendearly && (ep->code == XML_ERR_EXTRA_CONTENT || ep->code == XML_ERR_DOCUMENT_END))
             return SRCML_STATUS_OK;
 
-        return SRCML_STATUS_INVALID_INPUT;
+        return SRCML_STATUS_IO_ERROR;
     }
 
     return SRCML_STATUS_OK;
