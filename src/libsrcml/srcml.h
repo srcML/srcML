@@ -129,6 +129,8 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_STATUS_INVALID_INPUT 4
 /** Return status indicating an unitialized unit */
 #define SRCML_STATUS_UNINITIALIZED_UNIT 5
+/** Return status indicating an unset language */
+#define SRCML_STATUS_UNSET_LANGUAGE 6
 
 /* libsrcml data structures */
 struct srcml_archive;

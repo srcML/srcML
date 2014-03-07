@@ -304,11 +304,12 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
     if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW) 
 	return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    int file_lang = Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
-    int lang = unit->language ? srcml_check_language(unit->language->c_str()) :
-        (file_lang != Language::LANGUAGE_NONE && file_lang != 0 ? file_lang : srcml_check_language("C++"));
+    int lang = unit->language ? srcml_check_language(unit->language->c_str())
+	: srcml_check_language(unit->archive->language->c_str());
 
+    if(lang == SRCML_LANGUAGE_NONE) lang = Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
 
+    if(lang == SRCML_LANGUAGE_NONE) return SRCML_STATUS_UNSET_LANGUAGE; 
 
     OPTION_TYPE translation_options = unit->archive->options;
 
@@ -350,7 +351,10 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
     if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
 	return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    int lang = srcml_check_language(unit->language ? unit->language->c_str() : "C++");
+    int lang = unit->language ? srcml_check_language(unit->language->c_str())
+	: srcml_check_language(unit->archive->language->c_str());
+
+    if(lang == SRCML_LANGUAGE_NONE) return SRCML_STATUS_UNSET_LANGUAGE; 
 
     OPTION_TYPE translation_options = unit->archive->options;
 
@@ -391,7 +395,10 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
     if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW) 
 	return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    int lang = srcml_check_language(unit->language ? unit->language->c_str() : "C++");
+    int lang = unit->language ? srcml_check_language(unit->language->c_str())
+	: srcml_check_language(unit->archive->language->c_str());
+
+    if(lang == SRCML_LANGUAGE_NONE) return SRCML_STATUS_UNSET_LANGUAGE; 
 
     OPTION_TYPE translation_options = unit->archive->options;
 
@@ -432,7 +439,10 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
     if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
 	return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    int lang = srcml_check_language(unit->language ? unit->language->c_str() : "C++");
+    int lang = unit->language ? srcml_check_language(unit->language->c_str())
+	: srcml_check_language(unit->archive->language->c_str());
+
+    if(lang == SRCML_LANGUAGE_NONE) return SRCML_STATUS_UNSET_LANGUAGE; 
 
     OPTION_TYPE translation_options = unit->archive->options;
 
