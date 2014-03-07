@@ -200,19 +200,19 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(srcml_arch);
     }
     // srcml long info
-    else if (tosrc && srcml_request.command & SRCML_COMMAND_LONGINFO) {
+    else if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
         srcml_display_info(srcml_request.input);
     }
     // srcml info
-    else if (tosrc && srcml_request.command & SRCML_COMMAND_INFO) {
+    else if (srcml_request.command & SRCML_COMMAND_INFO) {
         srcml_display_info(srcml_request.input);
     }
     // list filenames in srcml archive
-    else if (tosrc && srcml_request.command & SRCML_COMMAND_LIST) {
+    else if (srcml_request.command & SRCML_COMMAND_LIST) {
         srcml_list_unit_files(srcml_request.input);
 
     // srcml->src srcML file to filesystem
-    } else if (tosrc && (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY)) {
+    } else if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
 
         int count = 0;
 
