@@ -176,13 +176,15 @@ int main(int argc, char * argv[]) {
             std::string resource;
             src_prefix_split_uri(uri, protocol, resource);
 
+            std::string extension = boost::filesystem::extension(boost::filesystem::path(resource));
+
             // call handler based on prefix
             if (fstdin) {
                 src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, fstdin);
             } else if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
                 src_input_filesystem(queue, srcml_arch, resource, srcml_request.att_language);
-//            } else if (protocol == "file" && boost::filesystem::extension(boost::filesystem::path(resource)) != ".tar") {
-//                src_input_file(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
+            } else if (protocol == "file" && extension != ".tar" && extension != ".gz") {
+                src_input_file(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
             } else if (protocol == "file") {
                 src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
             } else if (protocol == "stdin") {
@@ -200,19 +202,19 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(srcml_arch);
     }
     // srcml long info
-    else if (tosrcml && srcml_request.command & SRCML_COMMAND_LONGINFO) {
+    else if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
         srcml_display_info(srcml_request.input);
     }
     // srcml info
-    else if (tosrcml && srcml_request.command & SRCML_COMMAND_INFO) {
+    else if (srcml_request.command & SRCML_COMMAND_INFO) {
         srcml_display_info(srcml_request.input);
     }
     // list filenames in srcml archive
-    else if (tosrcml && srcml_request.command & SRCML_COMMAND_LIST) {
+    else if (srcml_request.command & SRCML_COMMAND_LIST) {
         srcml_list_unit_files(srcml_request.input);
 
     // srcml->src srcML file to filesystem
-    } else if (tosrc && (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY)) {
+    } else if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
 
         int count = 0;
 
@@ -256,7 +258,7 @@ int main(int argc, char * argv[]) {
 
 
     // srcml->src extract individual unit in XML
-    } else if (tosrcml && (srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
+    } else if (tosrc && (srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
 
         srcml_archive* arch = srcml_create_archive();
         if (!fstdin)
@@ -279,7 +281,7 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(arch);
 
         // srcml->src extract individual unit to file
-    } else if (tosrcml && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
+    } else if (tosrc && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
 
         srcml_archive* arch = srcml_create_archive();
         if (!fstdin)
@@ -295,7 +297,7 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(arch);
 
         // srcml->src srcML file extracted to stdout
-    } else if (tosrcml && srcml_request.input.size() == 1 && *srcml_request.output_filename == "-") {
+    } else if (tosrc && srcml_request.input.size() == 1 && *srcml_request.output_filename == "-") {
 
         srcml_archive* arch = srcml_create_archive();
         srcml_read_open_FILE(arch, *fstdin);
@@ -308,7 +310,7 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(arch);
 
         // srcml->src srcML file to libarchive file
-    } else if (tosrcml) {
+    } else if (tosrc) {
 
         // TODO: What if this is a simple, single file? or to stdout?
         archive* ar = archive_write_new();

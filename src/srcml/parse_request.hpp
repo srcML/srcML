@@ -38,18 +38,19 @@
 #include <boost/optional.hpp>
 
 struct ParseRequest {
-    ParseRequest() : buffer(0), srcml_arch(0), position(0) {}
+    ParseRequest() : buffer(0), srcml_arch(0), position(0), status(0) {}
 
     void swap(ParseRequest& other) {
 
-        filename.swap(other.filename);
-        directory.swap(other.directory);
-        version.swap(other.version);
-        buffer.swap(other.buffer);
+        std::swap(filename, other.filename);
+        std::swap(directory, other.directory);
+        std::swap(version, other.version);
+        std::swap(buffer, other.buffer);
         std::swap(srcml_arch, other.srcml_arch);
-        language.swap(other.language);
+        std::swap(language, other.language);
         std::swap(position, other.position);
-        disk_filename.swap(other.disk_filename);
+        std::swap(disk_filename, other.disk_filename);
+        std::swap(status, other.status);
     }
 
     // empty ParseRequests indicate termination
@@ -66,6 +67,7 @@ struct ParseRequest {
     std::string language;
     int position;
     std::string disk_filename;
+    int status;
 };
 
 #endif

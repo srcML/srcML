@@ -52,6 +52,7 @@ class Language {
 public:
 
     enum Languages {
+        LANGUAGE_NONE = 0,
         LANGUAGE_C = 1,
         LANGUAGE_CXX = 2,
         LANGUAGE_CXX_11 = 4,
@@ -63,7 +64,6 @@ public:
         LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY,
         LANGUAGE_JAVA_FAMILY = LANGUAGE_JAVA | LANGUAGE_ASPECTJ,
         LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY,
-        LANGUAGE_NONE = 64,
         LANGUAGE_ALL = ~0
     };
 
