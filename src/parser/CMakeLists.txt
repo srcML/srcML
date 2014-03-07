@@ -83,12 +83,8 @@ RunAntlr("${srcMLParserOutputFiles}"
 )
 
 # Running SED/GREP macro for token extraction.
-get_property(SED_EXE GLOBAL PROPERTY SED_EXE)
-get_property(GREP_EXE GLOBAL PROPERTY GREP_EXE)
-
 # @todo this breaks mingw32 build.
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    get_property(WINDOWS_DEP_PATH GLOBAL PROPERTY WINDOWS_DEP_PATH)
     add_custom_command(
         OUTPUT srcMLParserTokenTypesMacro.hpp
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}

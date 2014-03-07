@@ -42,19 +42,22 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
         message(FATAL_ERROR "SVN integration not tested on windows.")
     endif()
     # FIXME
-    set_property(GLOBAL PROPERTY LIBXSLT_LIBS libxslt.lib libexslt.lib)
-    set_property(GLOBAL PROPERTY LIBARCHIVE_LIBS archive.lib)
-    set_property(GLOBAL PROPERTY LIBXML2_LIBS libxml2.lib iconv.lib)
+    set(LIBXSLT_LIBRARIES libxslt.lib)
+    set(LIBXSLT_EXSLT_LIBRARY libexslt.lib)
+    set(LIBARCHIVE_LIBS archive.lib)
+    set(LIBXML2_LIBRARIES libxml2.lib iconv.lib)
     include_directories(C:/antlr/277/include)
     set(BOOST_DIR $ENV{BOOST_ROOT})
     include_directories(${BOOST_DIR})
     link_directories(${BOOST_DIR}/stage/lib)
-Else()
+else()
     set(WINDOWS_DEP_PATH "")
     # Locating packages.
     find_package(LibArchive REQUIRED)
     find_package(LibXml2 REQUIRED)
-    find_package(LibXslt)
+if(NOT DYNAMIC_LOAD_ENABLED)
+    find_package(LibXslt REQUIRED)
+endif()
     set(Boost_NO_BOOST_CMAKE ON)
     set(Boost_USE_STATIC_LIBS ON)
     find_package(Boost COMPONENTS program_options filesystem system thread regex date_time REQUIRED)
@@ -66,16 +69,9 @@ Else()
         include_directories(${LIBXSLT_INCLUDE_DIR})
     endif()
 
-    if(LIBXSLT_EXSLT_LIBRARY)
-        set_property(GLOBAL PROPERTY LIBXSLT_LIBS ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY})
-    else()
-        set_property(GLOBAL PROPERTY LIBXSLT_LIBS "")
-    endif()
-    
     include_directories(${Boost_INCLUDE_DIR})
 
 endif()
-set_property(GLOBAL PROPERTY WINDOWS_DEP_PATH ${WINDOWS_DEP_PATH})
 
 # Locating the antlr library.
 find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
@@ -98,15 +94,12 @@ set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} CACHE STRING "Lib
 
 # Finding antlr library.
 find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin C:/antlr/277/bin)
-set_property(GLOBAL PROPERTY ANTLR_EXE ${ANTLR_EXE})
 
 # Finding SED
 find_program(SED_EXE NAMES gsed sed PATHS /opt/local/bin /usr/local /bin ${WINDOWS_DEP_PATH}/bin)
-set_property(GLOBAL PROPERTY SED_EXE ${SED_EXE})
 
 # Finding GREP
 find_program(GREP_EXE grep PATHS /bin /usr/bin ${WINDOWS_DEP_PATH}/bin)
-set_property(GLOBAL PROPERTY GREP_EXE ${GREP_EXE})
 
 find_package(PythonInterp REQUIRED)
 
@@ -119,7 +112,6 @@ if(NOT ${PYTHON_VERSION_MAJOR} EQUAL "2")
         message(FATAL_ERROR "Version of python found is not 2.6.X")
     endif()
 endif()
-set_property(GLOBAL PROPERTY PYTHON_INTERP_EXE ${PYTHON_EXECUTABLE})
 
 
 # Adding global configuration for the load DLL macro.
