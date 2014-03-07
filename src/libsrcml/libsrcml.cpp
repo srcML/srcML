@@ -123,7 +123,7 @@ int srcml_version_number() {
  *
  * Translates to/from srcML
  * Input files with extension xml and language set to xml result in srcml2src behaviour.
- * All other ending extensions result in src2srcml.  
+ * All other ending extensions result in src2srcml.
  *
  * @returns SRCML_STATUS_OK on success and a status error code on failure.
  */

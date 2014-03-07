@@ -36,11 +36,11 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
     raw_buffer = (char *)buffer;
 
     processEncoding(encoding);
-	
+
 }
 
 
-UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding) 
+UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding)
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), total_size((int)buffer_size), lastcr(false), need_close(false), cd(0) {
 
     if(!c_buffer) throw UTF8FileError();
@@ -49,7 +49,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 
     processEncoding(encoding);
 
-}    
+}
 
 UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), total_size(0), lastcr(false), need_close(false), cd(0) {
@@ -83,8 +83,8 @@ void UTF8CharBuffer::processEncoding(const char * encoding) {
     input_buffer = (unsigned char *)raw_buffer;
     if(encoding && strcmp("UTF-8", encoding) != 0) {
 
-	cd = iconv_open("UTF-8", encoding);
-	input_buffer = (unsigned char *)iconv_buffer;
+        cd = iconv_open("UTF-8", encoding);
+        input_buffer = (unsigned char *)iconv_buffer;
 
     }
 
@@ -128,9 +128,9 @@ int UTF8CharBuffer::growBuffer() {
     // if from c string update starting position for raw memory
     if(!input) {
 
-	raw_buffer += num_read;
+        raw_buffer += num_read;
 
-	total_size -= num_read;
+        total_size -= num_read;
 
     }
 
