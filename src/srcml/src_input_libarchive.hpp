@@ -18,21 +18,26 @@
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
-/*
-  src_input_libarchive assigns local files, stdin, and archival input to the
-  srcml parsing queue
+ *
+ * Source input from local files, stdin, and source archives for srcml parsing queue
 */
 
 #ifndef SRC_INPUT_LIBARCHIVE_HPP
 #define SRC_INPUT_LIBARCHIVE_HPP
 
 #include <srcml.h>
-#include <thread_queue.hpp>
 #include <string>
 #include <parse_queue.hpp>
+#include <boost/optional.hpp>
 
-void src_input_libarchive(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const std::string& lang, bool isfstdin = false, FILE* fstdin = 0);
+void src_input_libarchive(ParseQueue& queue,                  // srcml parsing queue
+                          srcml_archive* srcml_arch,          // srcml archive to write to
+                          const std::string& input_filename,  // input filename
+                          const boost::optional<std::string>& language,        // specified language
+                          const boost::optional<std::string>& option_filename,
+                          const boost::optional<std::string>& option_directory,
+                          const boost::optional<std::string>& option_version,
+                          boost::optional<FILE*> fstdin = boost::optional<FILE*>()  // stdin (if already opened)
+);
 
 #endif

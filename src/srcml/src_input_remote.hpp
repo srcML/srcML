@@ -1,5 +1,5 @@
 /**
- * @file src_input_filesystem.hpp
+ * @file src_input_remote.hpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -21,17 +21,24 @@
  */
 
 /*
-  src_input_filesystem assigns directories to parse request
+  src_input_remote assigns remote files and archives to the srcml parsing queue
 */
 
-#ifndef SRC_INPUT_FILESYSTEM_HPP
-#define SRC_INPUT_FILESYSTEM_HPP
+#ifndef SRC_INPUT_REMOTE_HPP
+#define SRC_INPUT_REMOTE_HPP
 
 #include <srcml.h>
-#include <thread_queue.hpp>
 #include <string>
 #include <parse_queue.hpp>
+#include <boost/optional.hpp>
 
-void src_input_filesystem(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const boost::optional<std::string>& lang);
+void src_input_remote(ParseQueue& queue,                  // srcml parsing queue
+                          srcml_archive* srcml_arch,      // srcml archive to write to
+                          const std::string& remote_uri,  // input filename
+                          const boost::optional<std::string>& language,        // specified language
+                          const boost::optional<std::string>& option_filename,
+                          const boost::optional<std::string>& option_directory,
+                          boost::optional<FILE*> fstdin = boost::optional<FILE*>()  // stdin (if already opened)
+);
 
 #endif

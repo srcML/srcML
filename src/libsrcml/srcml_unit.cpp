@@ -346,7 +346,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
  */
 int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
 
-    if(unit == NULL || src_buffer == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(unit == NULL || (buffer_size && src_buffer == NULL)) return SRCML_STATUS_INVALID_ARGUMENT;
 
     if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
         return SRCML_STATUS_INVALID_IO_OPERATION;

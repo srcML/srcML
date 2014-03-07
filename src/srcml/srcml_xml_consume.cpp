@@ -38,7 +38,7 @@ void xml_consume(ParseQueue* queue) {
 
         // Parse srcml back to source (srcml2src)
         srcml_archive* arch = srcml_create_archive();
-        srcml_read_open_filename(arch, pr.filename.c_str());
+        srcml_read_open_filename(arch, pr.filename->c_str());
         srcml_unit* unit;
 
         while (true) {

@@ -30,7 +30,7 @@
 #include <list>
 #include <vector>
 
-void src_input_filesystem(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const std::string& lang) {
+void src_input_filesystem(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const boost::optional<std::string>& lang) {
     boost::filesystem::path localPath(input);
     std::list<boost::filesystem::path> dirs;
     dirs.push_front(localPath);
@@ -52,7 +52,7 @@ void src_input_filesystem(ParseQueue& queue, srcml_archive* srcml_arch, const st
 
             if (is_regular_file(*it)) {
                 if (srcml_archive_check_extension(srcml_arch, it->string().c_str()))
-                    src_input_libarchive(queue, srcml_arch, it->string(), lang);
+                    src_input_libarchive(queue, srcml_arch, it->string(), 0, 0, 0, lang);
             }
         }
     }

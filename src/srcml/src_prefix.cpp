@@ -50,6 +50,7 @@ std::string src_prefix_add_uri(const std::string& input_file) {
             return uri;
         }
     }
+    uri = input_file;
     return uri;
 }
 
