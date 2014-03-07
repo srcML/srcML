@@ -23,7 +23,6 @@
 
 #include <srcMLHandler.hpp>
 #include <srcml_types.hpp>
-#include <UTF8OutputSource.hpp>
 
 #include <libxml/parser.h>
 #include <stdio.h>
@@ -68,7 +67,7 @@ private :
     srcml_unit * unit;
 
     /** output buffer for direct src write */
-    UTF8OutputSource * output_handler;
+    xmlOutputBufferPtr output_handler;
 
     /** has reached end of parsing*/
     bool is_done;
@@ -111,6 +110,9 @@ public :
 			 terminate(false), is_empty(false), wait_root(true), skip(false) {
 
         archive = srcml_create_archive();
+
+	srcml_archive_disable_option(archive, SRCML_OPTION_TIMESTAMP);
+
         archive->prefixes.clear();
         archive->namespaces.clear();
 
@@ -212,7 +214,9 @@ public :
             std::string value = "";
             value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
 
-            if(attribute == "language")
+            if(attribute == "timestamp")
+                srcml_archive_enable_option(archive, SRCML_OPTION_TIMESTAMP);
+            else if(attribute == "language")
                 srcml_archive_set_language(archive, value.c_str());
             else if(attribute == "filename")
                 srcml_archive_set_filename(archive, value.c_str());
@@ -403,7 +407,9 @@ public :
             std::string value = "";
             value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
 
-            if(attribute == "language")
+            if(attribute == "timestamp")
+                srcml_archive_enable_option(archive, SRCML_OPTION_TIMESTAMP);
+            else if(attribute == "language")
                 srcml_unit_set_language(unit, value.c_str());
             else if(attribute == "filename")
                 srcml_unit_set_filename(unit, value.c_str());
@@ -652,7 +658,7 @@ public :
 
         if(collect_src) {
 
-            output_handler->writeString((const char *)ch, len);
+            xmlOutputBufferWrite(output_handler, len, (const char *)ch);
 
         } else {
 

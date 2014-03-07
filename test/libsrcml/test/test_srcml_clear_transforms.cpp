@@ -92,7 +92,7 @@ int main() {
     }
 
     {
-        dassert(srcml_clear_transforms(0), SRCML_STATUS_ERROR);
+        dassert(srcml_clear_transforms(0), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     return 0;

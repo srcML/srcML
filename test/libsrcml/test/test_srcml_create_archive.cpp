@@ -46,7 +46,8 @@ int main() {
         dassert(archive->version, 0);
         dassert(archive->attributes.size(), 0);
 
-        dassert(archive->options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
+        dassert(archive->options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL
+				   | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TIMESTAMP));
 
         dassert(archive->tabstop, 8);
         dassert(archive->prefixes.size(), 7);

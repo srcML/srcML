@@ -206,15 +206,15 @@ int main() {
     }
 
     {
-        dassert(srcml_register_file_extension("foo", "C+"), SRCML_STATUS_ERROR);
+        dassert(srcml_register_file_extension("foo", "C+"), SRCML_STATUS_INVALID_INPUT);
     }
 
     {
-        dassert(srcml_register_file_extension("foo", 0), SRCML_STATUS_ERROR);
+        dassert(srcml_register_file_extension("foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     {
-        dassert(srcml_register_file_extension(0, "C++"), SRCML_STATUS_ERROR);
+        dassert(srcml_register_file_extension(0, "C++"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -234,11 +234,11 @@ int main() {
     }
 
     {
-        dassert(srcml_register_namespace(0, "bar"), SRCML_STATUS_ERROR);
+        dassert(srcml_register_namespace(0, "bar"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     {
-        dassert(srcml_register_namespace("foo", 0), SRCML_STATUS_ERROR);
+        dassert(srcml_register_namespace("foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -261,11 +261,11 @@ int main() {
     }
 
     {
-        dassert(srcml_register_macro(0, "bar"), SRCML_STATUS_ERROR);
+        dassert(srcml_register_macro(0, "bar"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     {
-        dassert(srcml_register_macro("foo", 0), SRCML_STATUS_ERROR);
+        dassert(srcml_register_macro("foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -396,67 +396,67 @@ int main() {
     }
 
     /*
-      srcml_get_prefix
-    */
-
-    {
-        dassert(srcml_get_prefix(1), std::string("foo2"));
-    }
-
-    {
-        dassert(srcml_get_prefix(-1), 0);
-    }
-
-    {
-        dassert(srcml_get_prefix(3), 0);
-    }
-
-    /*
-      srcml_get_prefix_uri
-    */
-
-    {
-        dassert(srcml_get_prefix_uri("bar2"), std::string("foo2"));
-    }
-
-    {
-        dassert(srcml_get_prefix_uri("bar4"), 0);
-    }
-
-    {
-        dassert(srcml_get_prefix_uri(0), 0);
-    }
-
-    /*
-      srcml_get_namespace
-    */
-
-    {
-        dassert(srcml_get_namespace(1), std::string("bar2"));
-    }
-
-    {
-        dassert(srcml_get_namespace(-1), 0);
-    }
-
-    {
-        dassert(srcml_get_namespace(3), 0);
-    }
-
-    /*
       srcml_get_namespace_prefix
     */
 
     {
-        dassert(srcml_get_namespace_prefix("foo2"), std::string("bar"));
+        dassert(srcml_get_namespace_prefix(1), std::string("foo2"));
     }
 
     {
-        dassert(srcml_get_namespace_prefix("foo4"), 0);
+        dassert(srcml_get_namespace_prefix(-1), 0);
     }
 
     {
-        dassert(srcml_get_namespace_prefix(0), 0);
+        dassert(srcml_get_namespace_prefix(3), 0);
+    }
+
+    /*
+      srcml_get_prefix_from_uri
+    */
+
+    {
+        dassert(srcml_get_prefix_from_uri("bar2"), std::string("foo2"));
+    }
+
+    {
+        dassert(srcml_get_prefix_from_uri("bar4"), 0);
+    }
+
+    {
+        dassert(srcml_get_prefix_from_uri(0), 0);
+    }
+
+    /*
+      srcml_get_namespace_uri
+    */
+
+    {
+        dassert(srcml_get_namespace_uri(1), std::string("bar2"));
+    }
+
+    {
+        dassert(srcml_get_namespace_uri(-1), 0);
+    }
+
+    {
+        dassert(srcml_get_namespace_uri(3), 0);
+    }
+
+    /*
+      srcml_get_uri_from_prefix
+    */
+
+    {
+        dassert(srcml_get_uri_from_prefix("foo2"), std::string("bar"));
+    }
+
+    {
+        dassert(srcml_get_uri_from_prefix("foo4"), 0);
+    }
+
+    {
+        dassert(srcml_get_uri_from_prefix(0), 0);
     }
 
     /*

@@ -220,12 +220,12 @@ int srcMLSAX2Reader::readsrcML(boost::optional<std::string> & unit) {
  *
  * @returns 1 on success and 0 if done
  */
-int srcMLSAX2Reader::readsrc(UTF8OutputSource & output_handler) {
+int srcMLSAX2Reader::readsrc(xmlOutputBufferPtr output_handler) {
 
     if(handler.is_done) return 0;
     control.enable_comment(false);
     control.enable_cdataBlock(false);
-    handler.output_handler = &output_handler;
+    handler.output_handler = output_handler;
     handler.collect_src = true;
     handler.resume_and_wait();
     handler.collect_src = false;

@@ -38,6 +38,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 #include <libxml/xmlwriter.h>
 
 class srcMLOutput : public srcMLParserTokenTypes {
@@ -112,6 +114,7 @@ public:
 
     int depth;
     xmlOutputBuffer * output_buffer;
+    boost::posix_time::ptime debug_time_start;
 
     // output line attribute content
     std::string lineAttribute;

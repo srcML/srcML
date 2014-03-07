@@ -260,119 +260,6 @@ int main() {
     }
 
     /*
-      srcml_archive_get_prefix
-    */
-
-    {
-
-        srcml_archive * archive = srcml_create_archive();
-
-        dassert(srcml_archive_get_prefix(archive, 1), std::string("cpp"));
-
-        srcml_free_archive(archive);
-
-    }
-
-    {
-
-        srcml_archive * archive = srcml_create_archive();
-
-        dassert(srcml_archive_get_prefix(archive, -1), 0);
-
-        srcml_free_archive(archive);
-
-    }
-
-    {
-
-        srcml_archive * archive = srcml_create_archive();
-
-        dassert(srcml_archive_get_prefix(archive, 7), 0);
-
-        srcml_free_archive(archive);
-
-    }
-
-    {
-        dassert(srcml_archive_get_prefix(0, 0), 0);
-    }
-
-    /*
-      srcml_archive_get_prefix_uri
-    */
-    {
-
-        srcml_archive * archive = srcml_create_archive();
-
-        dassert(srcml_archive_get_prefix_uri(archive, "http://www.sdml.info/srcML/cpp"), std::string("cpp"));
-
-        srcml_free_archive(archive);
-
-    }
-
-    {
-
-        srcml_archive * archive = srcml_create_archive();
-
-        dassert(srcml_archive_get_prefix_uri(archive, "bar3"), 0);
-
-        srcml_free_archive(archive);
-
-    }
-
-    {
-
-        srcml_archive * archive = srcml_create_archive();
-
-        dassert(srcml_archive_get_prefix_uri(archive, 0), 0);
-
-        srcml_free_archive(archive);
-
-    }
-
-    {
-        dassert(srcml_archive_get_prefix_uri(0, "http://www.sdml.info/srcML/cpp"), 0);
-    }
-
-    /*
-      srcml_archive_get_namespace
-    */
-
-    {
-
-        srcml_archive * archive = srcml_create_archive();
-
-        dassert(srcml_archive_get_namespace(archive, 1), std::string("http://www.sdml.info/srcML/cpp"));
-
-        srcml_free_archive(archive);
-
-    }
-
-    {
-
-        srcml_archive * archive = srcml_create_archive();
-
-        dassert(srcml_archive_get_namespace(archive, -1), 0);
-
-        srcml_free_archive(archive);
-
-    }
-
-    {
-
-        srcml_archive * archive = srcml_create_archive();
-
-        dassert(srcml_archive_get_namespace(archive, 7), 0);
-
-        srcml_free_archive(archive);
-
-    }
-
-    {
-        dassert(srcml_archive_get_namespace(0, 0), 0);
-    }
-
-    /*
       srcml_archive_get_namespace_prefix
     */
 
@@ -380,7 +267,7 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
 
-        dassert(srcml_archive_get_namespace_prefix(archive, "cpp"), std::string("http://www.sdml.info/srcML/cpp"));
+        dassert(srcml_archive_get_namespace_prefix(archive, 1), std::string("cpp"));
 
         srcml_free_archive(archive);
 
@@ -390,7 +277,7 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
 
-        dassert(srcml_archive_get_namespace_prefix(archive, "foo3"), 0);
+        dassert(srcml_archive_get_namespace_prefix(archive, -1), 0);
 
         srcml_free_archive(archive);
 
@@ -400,14 +287,127 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
 
-        dassert(srcml_archive_get_namespace_prefix(archive, 0), 0);
+        dassert(srcml_archive_get_namespace_prefix(archive, 7), 0);
 
         srcml_free_archive(archive);
 
     }
 
     {
-        dassert(srcml_archive_get_namespace_prefix(0, "cpp"), 0);
+        dassert(srcml_archive_get_namespace_prefix(0, 0), 0);
+    }
+
+    /*
+      srcml_archive_get_prefix_from_uri
+    */
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+
+        dassert(srcml_archive_get_prefix_from_uri(archive, "http://www.sdml.info/srcML/cpp"), std::string("cpp"));
+
+        srcml_free_archive(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+
+        dassert(srcml_archive_get_prefix_from_uri(archive, "bar3"), 0);
+
+        srcml_free_archive(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+
+        dassert(srcml_archive_get_prefix_from_uri(archive, 0), 0);
+
+        srcml_free_archive(archive);
+
+    }
+
+    {
+        dassert(srcml_archive_get_prefix_from_uri(0, "http://www.sdml.info/srcML/cpp"), 0);
+    }
+
+    /*
+      srcml_archive_get_namespace_uri
+    */
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+
+        dassert(srcml_archive_get_namespace_uri(archive, 1), std::string("http://www.sdml.info/srcML/cpp"));
+
+        srcml_free_archive(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+
+        dassert(srcml_archive_get_namespace_uri(archive, -1), 0);
+
+        srcml_free_archive(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+
+        dassert(srcml_archive_get_namespace_uri(archive, 7), 0);
+
+        srcml_free_archive(archive);
+
+    }
+
+    {
+        dassert(srcml_archive_get_namespace_uri(0, 0), 0);
+    }
+
+    /*
+      srcml_archive_get_uri_from_prefix
+    */
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+
+        dassert(srcml_archive_get_uri_from_prefix(archive, "cpp"), std::string("http://www.sdml.info/srcML/cpp"));
+
+        srcml_free_archive(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+
+        dassert(srcml_archive_get_uri_from_prefix(archive, "foo3"), 0);
+
+        srcml_free_archive(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+
+        dassert(srcml_archive_get_uri_from_prefix(archive, 0), 0);
+
+        srcml_free_archive(archive);
+
+    }
+
+    {
+        dassert(srcml_archive_get_uri_from_prefix(0, "cpp"), 0);
     }
 
     /*

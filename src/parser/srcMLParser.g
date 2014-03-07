@@ -2465,18 +2465,33 @@ terminate_pre[] { ENTRY_DEBUG } :
 // do the post terminate processing
 terminate_post[] { ENTRY_DEBUG } :
         {
+
             // end all statements this statement is nested in
             // special case when ending then of if statement
             if (!isoption(parseoptions, OPTION_EXPRESSION) &&
                  (!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT)) &&
-                !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INTERNAL_END_PAREN)) {
+                !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INTERNAL_END_PAREN)
+                && !inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP)
+                && !inMode(MODE_END_AT_ENDIF)) {
 
                 // end down to either a block or top section, or to an if or else
                 endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE);
 
             }
         }
+
         else_handling
+
+        {
+
+            if(inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP)) {
+
+                endMode();
+
+            }
+
+        }
+
 ;
 
 /*
@@ -2492,6 +2507,7 @@ terminate_post[] { ENTRY_DEBUG } :
 */
 else_handling[] { ENTRY_DEBUG } :
         {
+
             // record the current size of the top of the cppmode stack to detect
             // any #else or #endif in consumeSkippedTokens
             // see below
@@ -3989,7 +4005,8 @@ function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 // mark specifiers
 specifier[] { ENTRY_DEBUG } :
-        single_keyword_specifier | alignas_specifier
+        single_keyword_specifier | alignas_specifier | macro_specifier_call
+
 ;
 
 // match a single word specifier
@@ -4013,9 +4030,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
             { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP | TRANSIENT) |
 
-            CONST |
-
-            MACRO_SPECIFIER
+            CONST
         )
 ;
 
@@ -4417,6 +4432,7 @@ macro_specifier_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
             startNewMode(MODE_STATEMENT | MODE_TOP);
 
             // start the macro call element
+            startElement(SFUNCTION_SPECIFIER);
             startElement(SMACRO_CALL);
 
             startNewMode(MODE_LOCAL);
@@ -6270,6 +6286,21 @@ eol[int directive_token, bool markblockzero] {
 
             endMode(MODE_PARSE_EOL);
 ENTRY_DEBUG } :
+
+        {
+            if(directive_token == ENDIF) {
+
+                bool end_statement = inMode(MODE_END_AT_ENDIF);
+                while(inMode(MODE_END_AT_ENDIF))
+                    endMode();
+                
+                if(end_statement)
+                    else_handling();
+
+            }
+
+        }
+
         (EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | eof)
         eol_post[directive_token, markblockzero]
 ;
@@ -6323,6 +6354,11 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
             else end_order.push_back(RCURLY);
         }
 
+        if(LA(1) == TERMINATE && inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT)) {
+            end_order.push_back(TERMINATE);
+
+        }
+
         prev = LA(1);
         consume();
 
@@ -6363,7 +6399,7 @@ eol_post[int directive_token, bool markblockzero] {
 
                 // should work unless also creates a dangling lcurly or lparen
                 // in which case may need to run on everthing except else.
-                if(isoption(parseoptions, OPTION_CPPIF_CHECK)) {
+                if(isoption(parseoptions, OPTION_CPPIF_CHECK) && !inputState->guessing) {
 
                     std::list<int> end_order = cppif_end_count_check();
                     State::MODE_TYPE current_mode = getMode();
@@ -6377,9 +6413,15 @@ eol_post[int directive_token, bool markblockzero] {
 
                         }
 
-                        if(*pos == RPAREN) {
+                        if(inTransparentMode(MODE_CONDITION) && *pos == RPAREN) {
                             startNewMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP);
                             addElement(SCONDITION);
+
+                        }
+
+                        if(*pos == TERMINATE) {
+
+                            dupDownOverMode(MODE_STATEMENT);
 
                         }
 

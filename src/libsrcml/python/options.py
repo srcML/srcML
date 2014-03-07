@@ -61,6 +61,10 @@ SRCML_OPTION_CPP_MARKUP_IF0    = 1<<11
 SRCML_OPTION_APPLY_ROOT        = 1<<12
 # Compress the output file
 SRCML_OPTION_COMPRESS          = 1<<13
+# Nest if in else if intead of elseif tag
+SRCML_OPTION_NESTIF            = 1<<14
+# Output timestamp attribute on root unit (default: on) 
+SRCML_OPTION_TIMESTAMP         = 1<<15
 # Return status indicating no errors
 SRCML_STATUS_OK    = 0
 # Return status indicating errors occurred

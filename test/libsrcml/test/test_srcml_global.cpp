@@ -180,7 +180,7 @@ int main() {
     }
 
     {
-        dassert(srcml("foo.c", "foo.xml"), SRCML_STATUS_ERROR);
+        dassert(srcml("foo.c", "foo.xml"), SRCML_STATUS_INVALID_INPUT);
     }
 
     /*
@@ -254,38 +254,6 @@ int main() {
 
     {
         dassert(srcml_check_extension(0), 0);
-    }
-
-    /*
-      srcml_check_format
-    */
-
-    {
-        dassert(srcml_check_format("a.tar"), 1);
-    }
-
-    {
-        dassert(srcml_check_format("a.tar.bz2"), 1);
-    }
-
-    {
-        dassert(srcml_check_format("a.tar.gz"), 1);
-    }
-
-    {
-        dassert(srcml_check_format("a.tar.xz"), 1);
-    }
-
-    {
-        dassert(srcml_check_format("a.xz"), 1);
-    }
-
-    {
-        dassert(srcml_check_format("a.foo"), 0);
-    }
-
-    {
-        dassert(srcml_check_format(0), 0);
     }
 
     /*

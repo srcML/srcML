@@ -60,7 +60,8 @@ def verify_test(correct, output) :
         correct = str(correct).replace("\r", "")
         output  = str(output).replace("\r", "")
 
-    if correct != output :
+    if str(correct) != str(output) :
+
         print str(globals()['test_count']) + "\t"
         for line in difflib.unified_diff(str(correct).split("\n"), str(output).split("\n")) :
             print line
@@ -94,10 +95,10 @@ archive.set_tabstop(4)
 verify_test(4, archive.get_tabstop())
 
 verify_test(7, archive.get_namespace_size());
-verify_test("cpp", archive.get_prefix(1))
-verify_test("cpp", archive.get_prefix_uri("http://www.sdml.info/srcML/cpp"))
-verify_test("http://www.sdml.info/srcML/cpp", archive.get_namespace(1))
-verify_test("http://www.sdml.info/srcML/cpp", archive.get_namespace_prefix("cpp"))
+verify_test("cpp", archive.get_namespace_prefix(1))
+verify_test("cpp", archive.get_prefix_from_uri("http://www.sdml.info/srcML/cpp"))
+verify_test("http://www.sdml.info/srcML/cpp", archive.get_namespace_uri(1))
+verify_test("http://www.sdml.info/srcML/cpp", archive.get_uri_from_prefix("cpp"))
 
 archive.register_macro("MACRO", "src:macro")
 verify_test(1, archive.get_macro_list_size());
@@ -111,6 +112,7 @@ file = open("a.foo", "w")
 gen = file.write("")
 file.close()
 archive = srcml.srcml_archive()
+archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP)
 archive.disable_option(srcml.SRCML_OPTION_ARCHIVE)
 archive.register_file_extension("foo", "C++")
 archive.register_namespace("s", "http://www.sdml.info/srcML/src")
@@ -139,6 +141,7 @@ file = open("a.cpp", "w")
 gen = file.write(src)
 file.close()
 archive = srcml.srcml_archive()
+archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP)
 archive.write_open_filename("project.xml")
 unit = srcml.srcml_unit(archive)
 unit.parse_filename("a.cpp")
@@ -154,6 +157,7 @@ os.remove("project.xml")
 
 # memory
 archive = srcml.srcml_archive()
+archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP)
 archive.write_open_memory()
 unit = srcml.srcml_unit(archive)
 unit.set_language("C++")
@@ -168,6 +172,7 @@ file = open("a.cpp", "w")
 gen = file.write(src)
 file.close()
 archive = srcml.srcml_archive()
+archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP)
 fd = os.open("project.xml", os.O_WRONLY | os.O_CREAT)
 archive.write_open_fd(fd)
 src_fd = os.open("a.cpp", os.O_RDONLY)
@@ -191,6 +196,7 @@ file = open("a.cpp", "w")
 gen = file.write(src)
 file.close()
 archive = srcml.srcml_archive()
+archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP)
 file = libc.fopen("project.xml", "w")
 archive.write_open_FILE(file)
 src_file = libc.fopen("a.cpp", "r")
@@ -366,7 +372,9 @@ archive.apply_transforms(oarchive)
 oarchive.close()
 archive.close()
 
-verify_test(None, oarchive.srcML())
+verify_test("""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src"/>
+""", oarchive.srcML())
 
 # unit set/get
 archive = srcml.srcml_archive()
@@ -458,10 +466,10 @@ srcml.set_options(srcml.SRCML_OPTION_XML_DECL | srcml.SRCML_OPTION_NAMESPACE_DEC
 srcml.set_tabstop(8)
 
 verify_test(7, srcml.get_namespace_size());
-verify_test("cpp", srcml.get_prefix(1))
-verify_test("cpp", srcml.get_prefix_uri("http://www.sdml.info/srcML/cpp"))
-verify_test("http://www.sdml.info/srcML/cpp", srcml.get_namespace(1))
-verify_test("http://www.sdml.info/srcML/cpp", srcml.get_namespace_prefix("cpp"))
+verify_test("cpp", srcml.get_namespace_prefix(1))
+verify_test("cpp", srcml.get_prefix_from_uri("http://www.sdml.info/srcML/cpp"))
+verify_test("http://www.sdml.info/srcML/cpp", srcml.get_namespace_uri(1))
+verify_test("http://www.sdml.info/srcML/cpp", srcml.get_uri_from_prefix("cpp"))
 
 srcml.register_macro("MACRO", "src:macro")
 verify_test(1, srcml.get_macro_list_size());
@@ -487,7 +495,6 @@ verify_test(asrcml, xml)
 
 verify_test(2, srcml.check_language("C++"))
 verify_test("C++", srcml.check_extension("a.cpp"))
-verify_test(1, srcml.check_format("a.cpp.tar"))
 verify_test(1, srcml.check_encoding("UTF-8"))
 verify_test(1, srcml.check_xslt())
 verify_test(1, srcml.check_exslt())

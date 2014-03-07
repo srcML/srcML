@@ -102,6 +102,7 @@ int main() {
 
     }
 
+/*
     {
         try {
             srcMLSAX2Reader reader("foo.xml");
@@ -109,6 +110,7 @@ int main() {
         } catch(...) {}
 
     }
+*/
 
     {
         try {

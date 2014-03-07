@@ -18,7 +18,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # Build and add tests
-addUnitTest(test_UTF8OutputSource test_UTF8OutputSource.cpp)
 addUnitTest(test_srcMLSAX2Reader test_srcMLSAX2Reader.cpp ${LIBXML2_LIBRARIES})
 addUnitTest(test_srcml_append_transform test_srcml_append_transform.cpp)
 addUnitTest(test_srcml_apply_transforms test_srcml_apply_transforms.cpp)

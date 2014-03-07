@@ -33,7 +33,6 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <boost/regex.hpp>
 
 #include <vector>
 #include <string>
@@ -124,17 +123,16 @@ int srcml_version_number() {
  *
  * Translates to/from srcML
  * Input files with extension xml and language set to xml result in srcml2src behaviour.
- * All other ending extensions result in src2srcml.  Currently, xml files are not detected if they are
- * in any other archive format e.g. tar, gz i.e. a.xml.tar.gz.  Only a.xml will be detected from extension.
+ * All other ending extensions result in src2srcml.  
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml(const char* input_filename, const char* output_filename) {
 
     if(!input_filename || !output_filename) {
 
         srcml_error = "No input file provided";
-        return  SRCML_STATUS_ERROR;
+        return  SRCML_STATUS_INVALID_ARGUMENT;
 
     }
 
@@ -230,7 +228,7 @@ int srcml(const char* input_filename, const char* output_filename) {
         translator.close();
 
         if(error)
-            return  SRCML_STATUS_ERROR;
+            return  SRCML_STATUS_INVALID_INPUT;
 
     } else {
 
@@ -251,7 +249,7 @@ int srcml(const char* input_filename, const char* output_filename) {
             } else
                 srcml_error = "No language provided.";
 
-            return SRCML_STATUS_ERROR;
+            return SRCML_STATUS_INVALID_INPUT;
 
         }
 
@@ -277,7 +275,7 @@ int srcml(const char* input_filename, const char* output_filename) {
  *
  * Set the source encoding.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_src_encoding(const char* encoding) {
 
@@ -291,7 +289,7 @@ int srcml_set_src_encoding(const char* encoding) {
  *
  * Set the xml encoding.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_encoding(const char* encoding) {
 
@@ -305,7 +303,7 @@ int srcml_set_encoding(const char* encoding) {
  *
  * Set the language to use to parse.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_language(const char* language) {
 
@@ -319,7 +317,7 @@ int srcml_set_language(const char* language) {
  *
  * Set the filename attribute for the root unit.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_filename(const char* filename) {
 
@@ -333,7 +331,7 @@ int srcml_set_filename(const char* filename) {
  *
  * Set the directory attribute for the root unit.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_directory(const char* directory) {
 
@@ -347,7 +345,7 @@ int srcml_set_directory(const char* directory) {
  *
  * Set the version attribute.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_version(const char* version) {
 
@@ -361,7 +359,7 @@ int srcml_set_version(const char* version) {
  *
  * Set the srcml options.  Clears all previously set.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_options(unsigned long long option) {
 
@@ -375,7 +373,7 @@ int srcml_set_options(unsigned long long option) {
  *
  * Enable/set the srcml options.  Multiple may be enabled.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_enable_option(unsigned long long option) {
 
@@ -389,7 +387,7 @@ int srcml_enable_option(unsigned long long option) {
  *
  * Remove an option.  May use multiple option with the same call.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_disable_option(unsigned long long option) {
 
@@ -403,7 +401,7 @@ int srcml_disable_option(unsigned long long option) {
  *
  * Set the size of the tabstop.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_set_tabstop(int tabstop) {
 
@@ -418,7 +416,7 @@ int srcml_set_tabstop(int tabstop) {
  *
  * Associate the given extension with the given language.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and a status error code on failure.
  */
 int srcml_register_file_extension(const char* extension, const char* language) {
 
@@ -433,7 +431,7 @@ int srcml_register_file_extension(const char* extension, const char* language) {
  *
  * Add a new namespace or change the prefix of an existing namespace.
  *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK success and a status error code on failure.
  */
 int srcml_register_namespace(const char* prefix, const char* ns) {
 
@@ -449,7 +447,7 @@ int srcml_register_namespace(const char* prefix, const char* ns) {
  *
  * Register a macro (token) to be processed as a special type
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_register_macro(const char* prefix, const char* ns) {
 
@@ -565,54 +563,54 @@ int srcml_get_namespace_size() {
 }
 
 /**
- * srcml_get_prefix
+ * srcml_get_namespace_prefix
  * @param pos namespace position
  *
  * @returns Get prefix for the given position on success
  * and NULL on failure.
  */
-const char* srcml_get_prefix(int pos) {
+const char* srcml_get_namespace_prefix(int pos) {
 
-    return srcml_archive_get_prefix(&global_archive, pos);
+    return srcml_archive_get_namespace_prefix(&global_archive, pos);
 
 }
 
 /**
- * srcml_get_prefix_uri
+ * srcml_get_prefix_from_uri
  * @param namespace_uri an XML namespace
  *
  * @returns Get the registered prefix for the given namespace
  * on success and NULL on failure.
  */
-const char* srcml_get_prefix_uri(const char* namespace_uri) {
+const char* srcml_get_prefix_from_uri(const char* namespace_uri) {
 
-    return srcml_archive_get_prefix_uri(&global_archive, namespace_uri);
+    return srcml_archive_get_prefix_from_uri(&global_archive, namespace_uri);
 
 }
 
 /**
- * srcml_get_namespace
+ * srcml_get_namespace_uri
  * @param pos position in namespaces
  *
  * @returns Get the namespace at the given pos on succcess
  * and NULL on failure.
  */
-const char* srcml_get_namespace(int pos) {
+const char* srcml_get_namespace_uri(int pos) {
 
-    return srcml_archive_get_namespace(&global_archive, pos);
+    return srcml_archive_get_namespace_uri(&global_archive, pos);
 
 }
 
 /**
- * srcml_get_namespace_prefix
+ * srcml_get_uri_from_prefix
  * @param prefix an XML prefix
  *
  * @returns Get the first namespace for the given prefix on success
  * and NULL on failure.
  */
-const char* srcml_get_namespace_prefix(const char* prefix) {
+const char* srcml_get_uri_from_prefix(const char* prefix) {
 
-    return srcml_archive_get_namespace_prefix(&global_archive, prefix);
+    return srcml_archive_get_uri_from_prefix(&global_archive, prefix);
 
 }
 
@@ -724,33 +722,6 @@ const char * srcml_get_language_list(int pos) {
 const char * srcml_check_extension(const char* filename) {
 
     return srcml_archive_check_extension(&global_archive, filename);
-
-}
-
-/**
- * srcml_check_format
- * @param format an archive or compression extension, e.g., tar.gz
- *
- * Check if the format is currently supported
- * Full filename can be provided, and extension will be extracted
- * @returns Return if format is supported.
- */
-int srcml_check_format(const char* format) {
-
-    if(format == NULL) return 0;
-
-    static const boost::regex extRegEx("\\.(xz|zg|bz2|tar).*$");
-
-    // reversed copy of the path
-    std::size_t length = strlen(format);
-    boost::cmatch what;
-
-    if(boost::regex_search(format, format + length, what,extRegEx)) {
-
-        return 1;
-
-    } else
-        return 0;
 
 }
 

@@ -62,6 +62,7 @@ const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
 const char* const UNIT_ATTRIBUTE_VERSION = "version";
 const char* const UNIT_ATTRIBUTE_REVISION = "srcml-revision";
 const char* const UNIT_ATTRIBUTE_OPTIONS = "options";
+const char* const UNIT_ATTRIBUTE_TIMESTAMP = "timestamp";
 const char* const UNIT_ATTRIBUTE_ITEM = "item";
 const char* const UNIT_ATTRIBUTE_PATH = "item";
 

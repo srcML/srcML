@@ -71,7 +71,6 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
     out.setOutputBuffer(obuffer);
 
-
 }
 
 // constructor
@@ -118,6 +117,18 @@ void srcMLTranslator::setInput(const char* path) {
 // close the output
 void srcMLTranslator::close() {
 
+    if(first && (options & OPTION_ARCHIVE) > 0) {
+
+        // Open for write;
+        out.initWriter();
+
+	out.outputXMLDecl();
+
+        // root unit for compound srcML documents
+	out.startUnit(0, root_directory, root_filename, root_version, true);
+
+    }
+
     out.close();
 }
 
@@ -133,9 +144,8 @@ void srcMLTranslator::translate(const char* unit_directory,
         out.outputXMLDecl();
 
         // root unit for compound srcML documents
-        if((options & OPTION_ARCHIVE) > 0)
+	if((options & OPTION_ARCHIVE) > 0)
             out.startUnit(0, root_directory, root_filename, root_version, true);
-
 
     }
 
@@ -246,12 +256,14 @@ void srcMLTranslator::add_unit(const char* xml) {
         // Open for write;
         out.initWriter();
 
-        out.outputXMLDecl();
+	out.outputXMLDecl();
 
         // root unit for compound srcML documents
         if((options & OPTION_ARCHIVE) > 0)
             out.startUnit(0, root_directory, root_filename, root_version, true);
 
+	if ((options & OPTION_ARCHIVE) > 0)
+	    out.processText("\n\n", 2);
 
     }
 
