@@ -59,7 +59,7 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
             srcml_unit_set_language(unit, pr.language.c_str());
 
             if (pr.disk_filename.empty()) {
-                pr.status = srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
+                pr.status = srcml_parse_unit_memory(unit, &pr.buffer.front(), pr.buffer.size());
             } else {
                 pr.status = srcml_parse_unit_filename(unit, pr.disk_filename.c_str());
             }
