@@ -223,9 +223,9 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
 
         state->process->charactersRoot((const xmlChar *)state->root.characters.c_str(), (int)state->root.characters.size());
 
-	state->process->increment_unit_count();
+        state->process->increment_unit_count();
 
-	state->mode = UNIT;
+        state->mode = UNIT;
         state->process->startUnit(localname, prefix, URI,
                                   nb_namespaces, namespaces, nb_attributes,
                                   nb_defaulted, attributes);
@@ -236,8 +236,8 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
     if(ctxt->sax->startElementNs) ctxt->sax->startElementNs = &startElementNs;
     if(ctxt->sax->characters) {
 
-      ctxt->sax->characters = &charactersUnit;
-      ctxt->sax->ignorableWhitespace = &charactersUnit;
+        ctxt->sax->characters = &charactersUnit;
+        ctxt->sax->ignorableWhitespace = &charactersUnit;
 
     }
 
@@ -293,8 +293,8 @@ void startUnit(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
     if(ctxt->sax->startElementNs) ctxt->sax->startElementNs = &startElementNs;
     if(ctxt->sax->characters) {
 
-	ctxt->sax->characters = &charactersUnit;
-	ctxt->sax->ignorableWhitespace = &charactersUnit;
+        ctxt->sax->characters = &charactersUnit;
+        ctxt->sax->ignorableWhitespace = &charactersUnit;
 
     }
 
@@ -401,20 +401,20 @@ void endElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix,
 
         if(ctxt->sax->startElementNs == &startUnit) {
 
-	    state->mode = END_ROOT;
+            state->mode = END_ROOT;
             state->process->endRoot(localname, prefix, URI);
 
         } else {
 
-	    state->mode = END_UNIT;
+            state->mode = END_UNIT;
             state->process->endUnit(localname, prefix, URI);
             if(ctxt->sax->startElementNs) ctxt->sax->startElementNs = &startUnit;
             if(ctxt->sax->characters) {
 
-	      ctxt->sax->characters = &charactersRoot;
-	      ctxt->sax->ignorableWhitespace = &charactersRoot;
+                ctxt->sax->characters = &charactersRoot;
+                ctxt->sax->ignorableWhitespace = &charactersRoot;
 
-	    }
+            }
         }
 
     } else {

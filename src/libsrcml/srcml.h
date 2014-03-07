@@ -123,14 +123,16 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_STATUS_ERROR            1
 /** Return status indicating an invalid argument */
 #define SRCML_STATUS_INVALID_ARGUMENT 2
-/** Return status indicating an invalid read I/O operation (such as write on read only archive) */
-#define SRCML_STATUS_INVALID_IO_OPERATION 3
 /** Return status indicating that their is some problem with the input */
-#define SRCML_STATUS_INVALID_INPUT 4
+#define SRCML_STATUS_INVALID_INPUT 3
+/** Return status indicating an invalid read I/O operation (such as write on read only archive) */
+#define SRCML_STATUS_INVALID_IO_OPERATION 4
+/** Return status indicating that their is some problem with the input */
+#define SRCML_STATUS_IO_ERROR 5
 /** Return status indicating an unitialized unit */
-#define SRCML_STATUS_UNINITIALIZED_UNIT 5
+#define SRCML_STATUS_UNINITIALIZED_UNIT 6
 /** Return status indicating an unset language */
-#define SRCML_STATUS_UNSET_LANGUAGE 6
+#define SRCML_STATUS_UNSET_LANGUAGE 7
 
 /* libsrcml data structures */
 struct srcml_archive;
@@ -184,11 +186,26 @@ __LIBSRCML_DECL const char*        srcml_get_directory();
 __LIBSRCML_DECL const char*        srcml_get_version  ();
 __LIBSRCML_DECL unsigned long long srcml_get_options  ();
 __LIBSRCML_DECL int                srcml_get_tabstop  ();
+
+/*
+  XML namespaces
+*/
+
+/* Number of declared XML namespaces */
 __LIBSRCML_DECL int                srcml_get_namespace_size();
+
+/* Prefix of the namespace at that position, where empty namespace is an empty string, and 0 is invalid position */
 __LIBSRCML_DECL const char*        srcml_get_namespace_prefix(int pos);
+
+/* Prefix of the namespace with this namespace uri */
 __LIBSRCML_DECL const char*        srcml_get_prefix_from_uri(const char* namespace_uri);
+
+/* URI of the namespace at that position, where 0 is invalid position */
 __LIBSRCML_DECL const char*        srcml_get_namespace_uri(int pos);
+
+/* URI of the namespace with this namespace prefix */
 __LIBSRCML_DECL const char*        srcml_get_uri_from_prefix(const char* prefix);
+
 __LIBSRCML_DECL int                srcml_get_macro_list_size();
 __LIBSRCML_DECL const char*        srcml_get_macro_token(int pos);
 __LIBSRCML_DECL const char*        srcml_get_macro_token_type(const char* namespace_uri);

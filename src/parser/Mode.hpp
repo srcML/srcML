@@ -162,7 +162,7 @@ public:
 
     Mode(TokenParser* ptp, int lang)
         : Language(lang), statev(ptp)
-        {}
+    {}
 
     ~Mode() {}
 

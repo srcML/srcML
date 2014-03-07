@@ -39,43 +39,43 @@ class srcMLTranslator : public Language {
 public:
 
     srcMLTranslator(int language,
-                        const char* src_encoding,
-                        const char* xml_encoding,
-                        const char* srcml_filename,
-                        OPTION_TYPE& options,
-                        const char* directory,
-                        const char* filename,
-                        const char* version,
-  		        std::string * uri,
-                        int tabsize
-                        );
+                    const char* src_encoding,
+                    const char* xml_encoding,
+                    const char* srcml_filename,
+                    OPTION_TYPE& options,
+                    const char* directory,
+                    const char* filename,
+                    const char* version,
+                    std::string * uri,
+                    int tabsize
+                    );
 
     // constructor
     srcMLTranslator(int language,
                     const char* src_encoding,
                     const char* xml_encoding,
                     char** str_buf,
-		    int * size, 
+                    int * size,
                     OPTION_TYPE& options,
                     const char* directory,
                     const char* filename,
                     const char* version,
-		    std::string * uri,
+                    std::string * uri,
                     int tabsize
                     );
 
     // constructor
     srcMLTranslator(int language,
-                        const char* src_encoding,
-                        const char* xml_encoding,
-                        xmlOutputBuffer * output_buffer,
-                        OPTION_TYPE& options,
-                        const char* directory,
-                        const char* filename,
-                        const char* version,
-  		        std::string * uri,
-                        int tabsize
-                        );
+                    const char* src_encoding,
+                    const char* xml_encoding,
+                    xmlOutputBuffer * output_buffer,
+                    OPTION_TYPE& options,
+                    const char* directory,
+                    const char* filename,
+                    const char* version,
+                    std::string * uri,
+                    int tabsize
+                    );
 
     void setMacroList(std::vector<std::string> & list);
     void setInput(const char* path);

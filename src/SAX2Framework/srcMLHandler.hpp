@@ -44,7 +44,7 @@ protected:
     int unit_count;
 
 public :
-  
+
     /**
      * srcMLHandler
      *
@@ -54,7 +54,7 @@ public :
 
     /**
      * set_control_handler
-     * @param control_handler pointer to control class 
+     * @param control_handler pointer to control class
      *
      * Used by srcMLControlHandler to provide access to self
      * for such things as disabeling sax parsing.
@@ -79,10 +79,10 @@ public :
     /**
      * get_control_handler
      *
-     * Get the control handler. 
+     * Get the control handler.
      */
     srcMLControlHandler & get_control_handler() {
- 
+
         return *control_handler;
 
     }
@@ -103,7 +103,7 @@ public :
         control_handler->getSAX().comment = 0;
         control_handler->getSAX().ignorableWhitespace = 0;
 
-	xmlStopParser(control_handler->getCtxt());
+        xmlStopParser(control_handler->getCtxt());
 
     }
 

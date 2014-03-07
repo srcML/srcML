@@ -17,7 +17,10 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-subdirs(parser translator libsrcml srcml)
+add_subdirectory(parser)
+add_subdirectory(translator)
+add_subdirectory(libsrcml)
+add_subdirectory(srcml)
 
 file(GLOB SAX2FRAMEWORK_HEADERS SAX2Framework/*.hpp)
 file(GLOB SAX2FRAMEWORK_SOURCE SAX2Framework/*.cpp)
