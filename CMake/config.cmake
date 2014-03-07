@@ -28,7 +28,9 @@
 #       lib
 
 # Dynamic Load libraries (Unix only)
+if(NOT WIN32)
 option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and libexslt" ON)
+endif()
 
 # Setting some windows only properties.
 # @todo this breaks mingw32 build.
