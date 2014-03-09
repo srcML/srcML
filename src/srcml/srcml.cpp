@@ -30,6 +30,7 @@
 #include <src_input_filesystem.hpp>
 #include <src_input_stdin.hpp>
 #include <src_input_remote.hpp>
+#include <srcml_output_libarchive.hpp>
 #include <srcml_display_info.hpp>
 #include <srcml_list_unit_files.hpp>
 #include <src_prefix.hpp>
@@ -331,35 +332,8 @@ int main(int argc, char * argv[]) {
             else
                 srcml_read_open_FILE(arch, *fstdin);
 
-            while (srcml_unit* unit = srcml_read_unit(arch)) {
-
-                // unparse the unit into its own buffer
-                char* buffer;
-                int buffer_size;
-                srcml_unparse_unit_memory(unit, &buffer, &buffer_size);
-
-                // setup the entry header
-                archive_entry* entry = archive_entry_new();
-                archive_entry_set_pathname(entry, srcml_unit_get_filename(unit));
-                archive_entry_set_size(entry, buffer_size);
-                archive_entry_set_filetype(entry, AE_IFREG);
-                archive_entry_set_perm(entry, 0644);
-
-                time_t now = time(NULL);
-                archive_entry_set_atime(entry, now, 0);
-                archive_entry_set_ctime(entry, now, 0);
-                archive_entry_set_mtime(entry, now, 0);
-                archive_write_header(ar, entry);
-
-                // write the data to the entry
-                archive_write_data(ar, buffer, buffer_size);
-
-                // done with the archive entry
-                archive_entry_free(entry);
-
-                // done with the srcML unit
-                srcml_free_unit(unit);
-            }
+            // extract this srcml archive to the source archive
+            srcml_output_libarchive(arch, ar);
 
             srcml_close_archive(arch);
             srcml_free_archive(arch);
