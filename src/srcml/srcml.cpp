@@ -31,6 +31,7 @@
 #include <src_input_stdin.hpp>
 #include <src_input_remote.hpp>
 #include <srcml_output_libarchive.hpp>
+#include <srcml_output_filesystem.hpp>
 #include <srcml_display_info.hpp>
 #include <srcml_list_unit_files.hpp>
 #include <src_prefix.hpp>
@@ -228,35 +229,11 @@ int main(int argc, char * argv[]) {
             else
                 srcml_read_open_FILE(arch, *fstdin);
 
-            // construct the relative directory
-            std::string prefix;
-            if (*srcml_request.output_filename != "." && *srcml_request.output_filename != "./")
-                prefix = *srcml_request.output_filename;
-
-            while (srcml_unit* unit = srcml_read_unit_header(arch)) {
-
-                // construct the relative directory
-                boost::filesystem::path out(prefix);
-                out /= srcml_unit_get_filename(unit);
-
-                // create the path
-                if (!is_directory(out.parent_path()))
-                    boost::filesystem::create_directories(out.parent_path());
-
-                // unparse directory to filename
-                srcml_unparse_unit_filename(unit, out.c_str());
-
-                // trace
-                ++count;
-                std::cerr << std::setw(5) << count << ' ' << out.c_str() << '\n';
-
-                srcml_free_unit(unit);
-            }
+            srcml_output_filesystem(arch, *srcml_request.output_filename, count);
 
             srcml_close_archive(arch);
             srcml_free_archive(arch);
         }
-
 
     // srcml->src extract individual unit in XML
     } else if (tosrc && (srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
@@ -282,7 +259,7 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(arch);
 
         // srcml->src extract individual unit to file
-    } else if (tosrc && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
+    } else if (tosrc && srcml_request.input.size() == 1 && srcml_request.unit > 0) {
 
         srcml_archive* arch = srcml_create_archive();
         if (!fstdin)
@@ -292,7 +269,10 @@ int main(int argc, char * argv[]) {
 
         srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
 
-        srcml_unparse_unit_filename(unit, srcml_request.output_filename->c_str());
+        if (*srcml_request.output_filename == "-")
+            srcml_unparse_unit_fd(unit, STDOUT_FILENO);
+        else
+            srcml_unparse_unit_filename(unit, srcml_request.output_filename->c_str());
 
         srcml_close_archive(arch);
         srcml_free_archive(arch);
@@ -301,7 +281,10 @@ int main(int argc, char * argv[]) {
     } else if (tosrc && srcml_request.input.size() == 1 && *srcml_request.output_filename == "-") {
 
         srcml_archive* arch = srcml_create_archive();
-        srcml_read_open_FILE(arch, *fstdin);
+        if (!fstdin)
+            srcml_read_open_filename(arch, srcml_request.input[0].c_str());
+        else
+            srcml_read_open_FILE(arch, *fstdin);
 
         srcml_unit* unit = srcml_read_unit(arch);
 
