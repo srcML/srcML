@@ -25,6 +25,7 @@
 */
 
 #include <srcml_cli.hpp>
+#include <src_prefix.hpp>
 #include <boost/program_options.hpp>
 #include <boost/foreach.hpp>
 
@@ -211,13 +212,12 @@ void option_to_dir(const std::string& value) {
 void positional_args(const std::vector<std::string>& value) {
     srcml_request.input.reserve(value.size());
 
-    std::string prefix = "";
     BOOST_FOREACH(const std::string& iname, value) {
 
         if (iname == "-")
             srcml_request.sawstdin = true;
 
-        srcml_request.input.push_back(prefix + iname);
+        srcml_request.input.push_back(src_prefix_add_uri(iname));
     }
 }
 
@@ -352,7 +352,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         positional_options.add_options()
-            //TODO: Entry point for prefixing
             ("input-files", prog_opts::value< std::vector<std::string> >()->notifier(&positional_args), "input files")
             ;
 

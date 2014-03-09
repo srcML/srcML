@@ -44,7 +44,7 @@ std::string src_prefix_add_uri(const std::string& input_file) {
         }
 
         // Check for local file
-        if (input_file.find("http:") == std::string::npos) {
+        if (input_file.find("http:") == std::string::npos || input_file.find("https:") == std::string::npos) {
             uri = input_file;
             uri.insert(0, "file://");
             return uri;
