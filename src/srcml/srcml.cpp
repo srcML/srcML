@@ -203,6 +203,26 @@ int main(int argc, char * argv[]) {
         srcml_close_archive(srcml_arch);
         srcml_free_archive(srcml_arch);
     }
+    // srcml->src language
+    else if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE){
+
+    }
+    // srcml->src directory
+    else if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY){
+        
+    }
+    // srcml->src filename
+    else if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME){
+        
+    }
+    // srcml->src src version
+    else if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION){
+        
+    }
+    // srcml->src encoding
+    else if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING){
+        
+    }
     // srcml long info
     else if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
         srcml_display_info(srcml_request.input);
