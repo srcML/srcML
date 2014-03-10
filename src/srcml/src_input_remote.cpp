@@ -110,7 +110,7 @@ void curl_cleanup(curl *curling) {
     curl_easy_cleanup(curling->handle);
 }
 
-ssize_t arch_my_read(archive *a, void *client_data, const void **buff)
+ssize_t arch_my_read(archive *, void *client_data, const void **buff)
 {
     curl *mydata = (curl*) client_data;
 
@@ -124,7 +124,7 @@ ssize_t arch_my_read(archive *a, void *client_data, const void **buff)
     return mydata->data_len;
 }
 
-int arch_my_close(archive *a, void *client_data)
+int arch_my_close(archive *, void *client_data)
 {
     curl *mydata = (curl*) client_data;
     curl_messages(mydata);
