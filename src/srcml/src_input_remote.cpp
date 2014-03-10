@@ -46,7 +46,6 @@ int clock_gettime(int /*clk_id*/, struct timespec* t) {
 
 #define CURL_BUFFER_SIZE 16000
 
-#if 0
 struct curl {
     CURL *handle;
     CURLM *multi_handle;
@@ -138,9 +137,7 @@ int arch_init(archive *a, const std::string& input) {
     return archive_read_open(a, curl_create(input), arch_my_open, arch_my_read, arch_my_close);
 }
 
-#endif
 void src_input_remote(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& remote_uri, const boost::optional<std::string>& language, const boost::optional<std::string>& option_filename, const boost::optional<std::string>& option_directory, boost::optional<FILE*> fstdin) {    
-#if 0
     // READ ARCHIVE
     archive *arch;
     archive_entry *entry;
@@ -188,5 +185,4 @@ void src_input_remote(ParseQueue& queue, srcml_archive* srcml_arch, const std::s
         }
         archive_read_finish(arch);
     }
-#endif
 }

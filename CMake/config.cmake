@@ -28,7 +28,9 @@
 #       lib
 
 # Dynamic Load libraries (Unix only)
+if(NOT WIN32)
 option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and libexslt" ON)
+endif()
 
 # Setting some windows only properties.
 # @todo this breaks mingw32 build.
@@ -55,15 +57,16 @@ else()
     # Locating packages.
     find_package(LibArchive REQUIRED)
     find_package(LibXml2 REQUIRED)
-if(NOT DYNAMIC_LOAD_ENABLED)
-    find_package(LibXslt REQUIRED)
-endif()
+    if(NOT DYNAMIC_LOAD_ENABLED)
+        find_package(LibXslt REQUIRED)
+    endif()
+    find_package(CURL REQUIRED)
     set(Boost_NO_BOOST_CMAKE ON)
     set(Boost_USE_STATIC_LIBS ON)
     find_package(Boost COMPONENTS program_options filesystem system thread regex date_time REQUIRED)
 
     # add include directories
-    include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
+    include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIRS})
 
     if(LIBXSLT_FOUND)
         include_directories(${LIBXSLT_INCLUDE_DIR})
@@ -89,7 +92,7 @@ if(NOT WIN32 AND NOT APPLE)
 set(LIBSRCML_LIBRARIES ${LIBSRCML_LIBRARIES};rt)
 endif()
 
-set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} CACHE INTERNAL "Libraries needed to build srcml")
+set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} CACHE INTERNAL "Libraries needed to build srcml")
 
 
 # Finding antlr library.
