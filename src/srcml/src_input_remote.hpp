@@ -32,13 +32,12 @@
 #include <parse_queue.hpp>
 #include <boost/optional.hpp>
 
-void src_input_remote(ParseQueue& queue,                  // srcml parsing queue
-                          srcml_archive* srcml_arch,      // srcml archive to write to
-                          const std::string& remote_uri,  // input filename
-                          const boost::optional<std::string>& language,        // specified language
-                          const boost::optional<std::string>& option_filename,
-                          const boost::optional<std::string>& option_directory,
-                          boost::optional<FILE*> fstdin = boost::optional<FILE*>()  // stdin (if already opened)
-);
+void src_input_remote(ParseQueue& queue,
+                      srcml_archive* srcml_arch,
+                      const std::string& remote_uri,
+                      const boost::optional<std::string>& option_language,
+                      const boost::optional<std::string>& option_filename,
+                      const boost::optional<std::string>& option_directory,
+                      const boost::optional<std::string>& option_version);
 
 #endif

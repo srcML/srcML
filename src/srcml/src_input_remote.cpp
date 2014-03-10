@@ -95,14 +95,14 @@ void curl_messages(curl *curling) {
     while ((curling->msg = curl_multi_info_read(curling->multi_handle, &curling->msgs_left))) {
         if (curling->msg->msg == CURLMSG_DONE) {
             if (curling->msg->data.result == 0) {
-                std::cerr << "Download Complete!\n";    
+//                std::cerr << "Download Complete!\n";
             }
             else {
-                std::cerr << "Download status: " << curling->msg->data.result << "\n";  
+                std::cerr << "Download status: " << curling->msg->data.result << "\n";
             }
             break;
         }
-    } 
+    }
 }
 
 void curl_cleanup(curl *curling) {
@@ -137,8 +137,15 @@ int arch_init(archive *a, const std::string& input) {
     return archive_read_open(a, curl_create(input), arch_my_open, arch_my_read, arch_my_close);
 }
 
-void src_input_remote(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& remote_uri, const boost::optional<std::string>& language, const boost::optional<std::string>& option_filename, const boost::optional<std::string>& option_directory, boost::optional<FILE*> fstdin) {    
+void src_input_remote(ParseQueue& queue,
+                      srcml_archive* srcml_arch,
+                      const std::string& remote_uri,
+                      const boost::optional<std::string>& option_language,
+                      const boost::optional<std::string>& option_filename,
+                      const boost::optional<std::string>& option_directory,
+                      const boost::optional<std::string>& option_version) {
     // READ ARCHIVE
+
     archive *arch;
     archive_entry *entry;
     arch = archive_read_new();
@@ -154,34 +161,99 @@ void src_input_remote(ParseQueue& queue, srcml_archive* srcml_arch, const std::s
     archive_read_support_format_empty(arch);
 
     /* Check libarchive version enable version specific features/syntax */
-    #if ARCHIVE_VERSION_NUMBER < 3000000
-        // V2 Only Settings
-        // Compressions
-        archive_read_support_compression_all(arch);
-    #else
-        // V3 Only Settings
-        // File Formats
-        archive_read_support_format_7zip(arch);
-        archive_read_support_format_cab(arch);
-        archive_read_support_format_lha(arch);
-        archive_read_support_format_rar(arch);
+#if ARCHIVE_VERSION_NUMBER < 3000000
+    // V2 Only Settings
+    // Compressions
+    archive_read_support_compression_all(arch);
+#else
+    // V3 Only Settings
+    // File Formats
+    archive_read_support_format_7zip(arch);
+    archive_read_support_format_cab(arch);
+    archive_read_support_format_lha(arch);
+    archive_read_support_format_rar(arch);
 
-        // Compressions
-        archive_read_support_filter_all(arch);
-    #endif
+    // Compressions
+    archive_read_support_filter_all(arch);
+#endif
 
     if (arch_init(arch, remote_uri) == ARCHIVE_OK) {
-        while (archive_read_next_header(arch, &entry) == ARCHIVE_OK) {
-            while (1) {
-                std::vector<char> buff(CURL_BUFFER_SIZE);
-                ssize_t size = archive_read_data(arch, &buff[0], CURL_BUFFER_SIZE);
-                
-                if (size == 0)
-                    break;
+/*
+  while (archive_read_next_header(arch, &entry) == ARCHIVE_OK) {
+  while (1) {
+  std::vector<char> buff(CURL_BUFFER_SIZE);
+  ssize_t size = archive_read_data(arch, &buff[0], CURL_BUFFER_SIZE);
 
-                for (int i = 0; i < size; ++i)
-                    putc(buff[i], stdout);
+  if (size == 0)
+  break;
+
+  for (int i = 0; i < size; ++i)
+  putc(buff[i], stdout);
+  }
+  }
+*/
+        /* In general, go through this once for each time the header can be read
+           Exception: if empty, go through the loop exactly once */
+        int count = 0;
+        int status = ARCHIVE_OK;
+        while (status == ARCHIVE_OK &&
+               (((status = archive_read_next_header(arch, &entry)) == ARCHIVE_OK) ||
+                (status == ARCHIVE_EOF && !count))) {
+
+            // skip any directories
+            if (status == ARCHIVE_OK && archive_entry_filetype(entry) == AE_IFDIR)
+                continue;
+
+            // default is filename from archive entry (if not empty)
+            std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(entry) : "";
+
+            if (count && filename != "data")
+                srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+
+            // archive entry filename for non-archive input is "data"
+            if (filename.empty() || filename == "data") {
+                filename = remote_uri;
             }
+
+            if (option_filename)
+                filename = *option_filename;
+
+            // language may have been explicitly set
+            std::string language;
+
+            if (option_language)
+                language = *option_language;
+
+            // if not explicitly set, language comes from extension
+            // we have to do this ourselves, since libsrcml won't for memory
+            if (language.empty())
+                if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
+                    language = l;
+
+            // form the parsing request
+            ParseRequest request;
+            if (option_filename || filename != "-")
+                request.filename = filename;
+            request.directory = option_directory;
+            request.version = option_version;
+            request.srcml_arch = srcml_arch;
+            request.language = language;
+            request.status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
+
+            // fill up the parse request buffer
+            request.buffer.clear();
+            if (!status) {
+                const char* buffer;
+                size_t size;
+                int64_t offset;
+                while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
+                    request.buffer.insert(request.buffer.end(), buffer, buffer + size);
+            }
+
+            // Hand request off to the processing queue
+            queue.push(request);
+
+            ++count;
         }
         archive_read_finish(arch);
     }
