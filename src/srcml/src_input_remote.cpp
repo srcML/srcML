@@ -20,12 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
-  src_input_remote assigns remote files and archives to the srcml parsing queue
-*/
-
 #include <src_input_remote.hpp>
-#include <vector>
 #include <curl/curl.h>
 #include <archive.h>
 #include <archive_entry.h>
@@ -44,24 +39,24 @@ int clock_gettime(int /*clk_id*/, struct timespec* t) {
 }
 #endif
 
-#define CURL_BUFFER_SIZE 16000
+namespace {
+    struct curl {
+        CURL* handle;
+        CURLM* multi_handle;
+        CURLMsg* msg;
+        int msgs_left;
+        int still_running;
+        size_t data_len;
+        char* data_buffer;
+        std::string source;
+    };
+}
 
-struct curl {
-    CURL *handle;
-    CURLM *multi_handle;
-    CURLMsg *msg;
-    int msgs_left;
-    int still_running;
-    size_t data_len;
-    char *data_buffer;
-    std::string source;
-};
+size_t curl_cb(void* buffer, size_t len, size_t nmemb, void* data);
 
-size_t curl_cb(void *buffer, size_t len, size_t nmemb, void *data);
-
-int archive_curl_open(archive *, void *client_data);
+int     archive_curl_open(archive *, void *client_data);
 ssize_t archive_curl_read(archive *, void *client_data, const void **buff);
-int archive_curl_close(archive *, void *client_data);
+int     archive_curl_close(archive *, void *client_data);
 
 void src_input_remote(ParseQueue& queue,
                       srcml_archive* srcml_arch,
@@ -175,12 +170,12 @@ void src_input_remote(ParseQueue& queue,
 
 size_t curl_cb(void* buffer, size_t len, size_t nmemb, void* data) {
 
-    curl *curling = (curl*) data;
+    curl *curldata = (curl*) data;
 
-    curling->data_len = len * nmemb;
-    curling->data_buffer = (char*)buffer;
+    curldata->data_buffer = (char*)buffer;
+    curldata->data_len = len * nmemb;
 
-    return curling->data_len;
+    return curldata->data_len;
 }
 
 int archive_curl_open(archive*, void* client_data) {

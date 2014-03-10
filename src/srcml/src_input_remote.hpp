@@ -28,8 +28,8 @@
 #define SRC_INPUT_REMOTE_HPP
 
 #include <srcml.h>
-#include <string>
 #include <parse_queue.hpp>
+#include <string>
 #include <boost/optional.hpp>
 
 void src_input_remote(ParseQueue& queue,
