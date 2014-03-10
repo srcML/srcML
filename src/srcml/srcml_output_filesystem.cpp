@@ -26,7 +26,7 @@
 #include <iomanip>
 #include <boost/filesystem.hpp>
 
-void srcml_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, int count) {
+void srcml_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log) {
 
     // construct the relative directory
     std::string prefix;
@@ -47,8 +47,7 @@ void srcml_output_filesystem(srcml_archive* srcml_arch, const std::string& outpu
         srcml_unparse_unit_filename(unit, out.c_str());
 
         // trace
-        ++count;
-        std::cerr << std::setw(5) << count << ' ' << out.c_str() << '\n';
+        log << "a" << out.c_str();
 
         srcml_free_unit(unit);
     }

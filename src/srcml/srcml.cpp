@@ -37,6 +37,7 @@
 #include <src_prefix.hpp>
 #include <src_input_validator.hpp>
 #include <src_language.hpp>
+#include <trace_log.hpp>
 
 #include <archive.h>
 #include <archive_entry.h>
@@ -233,7 +234,7 @@ int main(int argc, char * argv[]) {
     // srcml->src srcML file to filesystem
     } else if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
 
-        int count = 0;
+        TraceLog log(std::cerr, *srcml_request.markup_options);
 
         // process command line inputs
         BOOST_FOREACH(const std::string& input_file, srcml_request.input) {
@@ -244,7 +245,7 @@ int main(int argc, char * argv[]) {
             else
                 srcml_read_open_FILE(arch, *fstdin);
 
-            srcml_output_filesystem(arch, *srcml_request.output_filename, count);
+            srcml_output_filesystem(arch, *srcml_request.output_filename, log);
 
             srcml_close_archive(arch);
             srcml_free_archive(arch);

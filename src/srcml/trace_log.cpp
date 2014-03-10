@@ -1,5 +1,5 @@
 /**
- * @file srcml_output_filesystem.hpp
+ * @file trace_log.cpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -18,16 +18,35 @@
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
-*/
+ */
 
-#ifndef SRCML_OUTPUT_FILESYSTEM_HPP
-#define SRCML_OUTPUT_FILESYSTEM_HPP
-
-#include <srcml.h>
-#include <string>
 #include <trace_log.hpp>
 
-void srcml_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log);
+TraceLog::TraceLog(std::ostream& out, int options)
+        : out(out), count(0), overallcount(0) {
 
-#endif
+        enabled = options & SRCML_COMMAND_VERBOSE;
+    }
+
+TraceLog& operator<<(TraceLog& tlog, char c) {
+
+    if (!tlog.enabled)
+        return tlog;
+
+    if (c != '-')
+        ++tlog.count;
+
+    tlog.out << std::setw(5) << tlog.count;
+
+    return tlog;
+}
+
+TraceLog& operator<<(TraceLog& tlog, const std::string& s) {
+
+    if (!tlog.enabled)
+        return tlog;
+
+    tlog.out << s << '\n';
+
+    return tlog;
+}
