@@ -133,10 +133,6 @@ int arch_my_close(archive *, void *client_data)
     return 0;
 }
 
-int arch_init(archive *a, const std::string& input) {
-    return archive_read_open(a, curl_create(input), arch_my_open, arch_my_read, arch_my_close);
-}
-
 void src_input_remote(ParseQueue& queue,
                       srcml_archive* srcml_arch,
                       const std::string& remote_uri,
@@ -177,7 +173,8 @@ void src_input_remote(ParseQueue& queue,
     archive_read_support_filter_all(arch);
 #endif
 
-    if (arch_init(arch, remote_uri) == ARCHIVE_OK) {
+    int status = archive_read_open(arch, curl_create(remote_uri), arch_my_open, arch_my_read, arch_my_close);
+    if (status == ARCHIVE_OK) {
 
         /* In general, go through this once for each time the header can be read
            Exception: if empty, go through the loop exactly once */
