@@ -38,6 +38,7 @@
 #include <src_input_validator.hpp>
 #include <src_language.hpp>
 #include <trace_log.hpp>
+#include <srcml_options.hpp>
 
 #include <archive.h>
 #include <archive_entry.h>
@@ -57,6 +58,8 @@ int main(int argc, char * argv[]) {
 
     // parse the command line
     srcml_request_t srcml_request = parseCLI(argc, argv);
+
+    SRCMLOptions::set(srcml_request.command);
 
     // version
     if (srcml_request.command & SRCML_COMMAND_VERSION) {

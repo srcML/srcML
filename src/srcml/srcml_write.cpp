@@ -29,6 +29,7 @@
 #include <srcml.h>
 #include <write_queue.hpp>
 #include <iostream>
+#include <srcml_options.hpp>
 
 static int count = 0;
 
@@ -36,6 +37,8 @@ static int count = 0;
 void srcml_write(WriteQueue* queue) {
 
     int isarchive = -1;
+
+    bool verbose = SRCMLOptions::get() & SRCML_COMMAND_VERBOSE;
 
     WriteRequest pr;
     while (true) {
@@ -56,14 +59,14 @@ void srcml_write(WriteQueue* queue) {
             srcml_write_unit(pr.srcml_arch, pr.unit);
 
             ++count;
-            if (isarchive)
+            if (isarchive && verbose)
                 std::cerr << std::setw(5) << count << " " << *pr.filename << '\n';
 
         } else if (pr.status == SRCML_STATUS_UNSET_LANGUAGE) {
 
-            if (isarchive)
+            if (isarchive && verbose)
                 std::cerr << std::setw(5) << "-" << " " << *pr.filename << '\n';
-            else
+            else if (!isarchive)
                 std::cerr << "Extension not supported\n";
         } else {
             std::cerr << "Internal eror " << pr.status << "\n";
