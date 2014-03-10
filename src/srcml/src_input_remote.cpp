@@ -170,7 +170,7 @@ void src_input_remote(ParseQueue& queue,
 
 size_t curl_cb(void* buffer, size_t len, size_t nmemb, void* data) {
 
-    curl *curldata = (curl*) data;
+    curl* curldata = (curl*) data;
 
     curldata->data_buffer = (char*)buffer;
     curldata->data_len = len * nmemb;
@@ -208,8 +208,7 @@ ssize_t archive_curl_read(archive*, void* client_data, const void** buff) {
     curl* curldata = (curl*) client_data;
 
     curldata->data_len = 0;
-
-    while(curldata->data_len == 0 && curldata->still_running) {
+    while (curldata->data_len == 0 && curldata->still_running) {
         curl_multi_perform(curldata->multi_handle, &curldata->still_running);
     }
 
