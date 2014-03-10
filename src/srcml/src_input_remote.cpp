@@ -59,9 +59,9 @@ struct curl {
 
 size_t curl_cb(void *buffer, size_t len, size_t nmemb, void *data);
 
-int arch_my_open(archive *, void *client_data);
-ssize_t arch_my_read(archive *, void *client_data, const void **buff);
-int arch_my_close(archive *, void *client_data);
+int archive_curl_open(archive *, void *client_data);
+ssize_t archive_curl_read(archive *, void *client_data, const void **buff);
+int archive_curl_close(archive *, void *client_data);
 
 void src_input_remote(ParseQueue& queue,
                       srcml_archive* srcml_arch,
@@ -103,7 +103,7 @@ void src_input_remote(ParseQueue& queue,
 
     curl curling;
     curling.source = remote_uri;
-    int status = archive_read_open(arch, &curling, arch_my_open, arch_my_read, arch_my_close);
+    int status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
     if (status == ARCHIVE_OK) {
 
         /* In general, go through this once for each time the header can be read
@@ -183,7 +183,7 @@ size_t curl_cb(void* buffer, size_t len, size_t nmemb, void* data) {
     return curling->data_len;
 }
 
-int arch_my_open(archive*, void* client_data) {
+int archive_curl_open(archive*, void* client_data) {
 
     curl *curling = (curl*) client_data;
 
@@ -208,7 +208,7 @@ int arch_my_open(archive*, void* client_data) {
     return ARCHIVE_OK;
 }
 
-ssize_t arch_my_read(archive*, void* client_data, const void** buff) {
+ssize_t archive_curl_read(archive*, void* client_data, const void** buff) {
 
     curl *mydata = (curl*) client_data;
 
@@ -222,7 +222,7 @@ ssize_t arch_my_read(archive*, void* client_data, const void** buff) {
     return mydata->data_len;
 }
 
-int arch_my_close(archive*, void* client_data) {
+int archive_curl_close(archive*, void* client_data) {
 
     curl*mydata = (curl*) client_data;
 
