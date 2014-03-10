@@ -29,10 +29,10 @@
 #include <string>
 #include <parse_queue.hpp>
 
-void src_input_file(ParseQueue& queue,                  // srcml parsing queue
-                    srcml_archive* srcml_arch,          // srcml archive to write to
-                    const std::string& input_filename,  // input filename
-                    const boost::optional<std::string>& language,        // specified language
+void src_input_file(ParseQueue& queue,
+                    srcml_archive* srcml_arch,
+                    const std::string& input_filename,
+                    const boost::optional<std::string>& language,
                     const boost::optional<std::string>& option_filename,
                     const boost::optional<std::string>& option_directory,
                     const boost::optional<std::string>& option_version
