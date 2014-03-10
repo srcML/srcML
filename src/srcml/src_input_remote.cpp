@@ -126,9 +126,8 @@ void src_input_remote(ParseQueue& queue,
                 srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
 
             // archive entry filename for non-archive input is "data"
-            if (filename.empty() || filename == "data") {
+            if (filename.empty() || filename == "data")
                 filename = remote_uri;
-            }
 
             if (option_filename)
                 filename = *option_filename;
@@ -174,14 +173,17 @@ void src_input_remote(ParseQueue& queue,
     }
 }
 
-size_t curl_cb(void *buffer, size_t len, size_t nmemb, void *data) {
+size_t curl_cb(void* buffer, size_t len, size_t nmemb, void* data) {
+
     curl *curling = (curl*) data;
+
     curling->data_len = len * nmemb;
-    curling->data_buffer = (char *)buffer;
+    curling->data_buffer = (char*)buffer;
+
     return curling->data_len;
 }
 
-int arch_my_open(archive *, void *client_data) {
+int arch_my_open(archive*, void* client_data) {
 
     curl *curling = (curl*) client_data;
 
@@ -206,7 +208,7 @@ int arch_my_open(archive *, void *client_data) {
     return ARCHIVE_OK;
 }
 
-ssize_t arch_my_read(archive *, void *client_data, const void **buff) {
+ssize_t arch_my_read(archive*, void* client_data, const void** buff) {
 
     curl *mydata = (curl*) client_data;
 
@@ -220,9 +222,9 @@ ssize_t arch_my_read(archive *, void *client_data, const void **buff) {
     return mydata->data_len;
 }
 
-int arch_my_close(archive *, void *client_data) {
+int arch_my_close(archive*, void* client_data) {
 
-    curl *mydata = (curl*) client_data;
+    curl*mydata = (curl*) client_data;
 
     while ((mydata->msg = curl_multi_info_read(mydata->multi_handle, &mydata->msgs_left))) {
         if (mydata->msg->msg == CURLMSG_DONE) {
