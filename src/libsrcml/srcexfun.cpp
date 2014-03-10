@@ -263,6 +263,45 @@ void xsltsrcMLRegister () {
                                   BAD_CAST SRCML_SRC_NS_URI,
                                   srcPowersetFunction);
 
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "statement", "/src:unit//node()[self::src:while or self::src:if or self::src:return or self::src:for]");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "statement_node", "[self::src:while or self::src:if or self::src:return or self::src:for]");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "if", "/src:unit//src:if");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "while", "/src:unit//src:while");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "nestedwhile", ".//src:while//src:while");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "returntype", "/src:unit//src:function/src:type");
+
+    // srcdiff containing functions
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hascommon",
+                                   "self::*[not(descendant::diff:*) or descendant::diff:common]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasinsert",
+                                   "descendant::diff:insert[1]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasdelete",
+                                   "descendant::diff:delete[1]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasdifference",
+                                   "descendant::diff:*[self::diff:insert or self::diff:delete]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "haschange",
+                                   "descendant::diff:insert[following-sibling::node()[1][self::diff:delete] or preceding-sibling::node()[1][self::diff:delete]][1]");
+
+    // srcdiff includes functions
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "common",
+                                   "not(ancestor::diff:*[1][self::diff:insert or self::diff:delete])");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "inserted",
+                                   "ancestor::diff:*[1][self::diff:insert]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "deleted",
+                                   "ancestor::diff:*[1][self::diff:delete]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "difference",
+                                   "ancestor::diff:*[1][self::diff:insert or self::diff:delete]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "changed",
+                                   "ancestor::diff:*[1][self::diff:insert[following-sibling::node()[1][self::diff:delete] or preceding-sibling::node()[1][self::diff:delete]] or self::diff:delete[following-sibling::node()[1][self::diff:insert] or preceding-sibling::node()[1][self::diff:insert]]]");
+
     // register all the xpath extension functions
     for (std::vector<struct xpath_ext_function>::size_type i = 0; i < MACROS.size(); ++i) {
 

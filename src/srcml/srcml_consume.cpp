@@ -45,15 +45,10 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
         if (pr.position == 0)
             break;
 
-        int status = 0;
-
-        // at this point there are no other language options
-        if (pr.language.empty())
-            status = -300;
-
         // build and parse
         srcml_unit * unit = 0;
-        if (!status) {
+
+        if (!pr.status) {
             unit = srcml_create_unit(pr.srcml_arch);
             if (pr.filename)
                 srcml_unit_set_filename(unit, pr.filename->c_str());
@@ -64,9 +59,9 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
             srcml_unit_set_language(unit, pr.language.c_str());
 
             if (pr.disk_filename.empty()) {
-                status = srcml_parse_unit_memory(unit, &pr.buffer[0], pr.buffer.size());
+                pr.status = srcml_parse_unit_memory(unit, &pr.buffer.front(), pr.buffer.size());
             } else {
-                status = srcml_parse_unit_filename(unit, pr.disk_filename.c_str());
+                pr.status = srcml_parse_unit_filename(unit, pr.disk_filename.c_str());
             }
         }
 
@@ -76,7 +71,7 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
         wr.unit = unit;
         wr.position = pr.position;
         wr.filename = pr.filename;
-        wr.status = status;
+        wr.status = pr.status;
         wqueue->push(wr);
     }
 }

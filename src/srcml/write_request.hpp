@@ -35,24 +35,14 @@
 #include <boost/optional.hpp>
 
 struct WriteRequest {
-    WriteRequest() : srcml_arch(0), unit(0), position(0) {}
+    WriteRequest() : srcml_arch(0), unit(0), position(0), status(0) {}
 
     void swap(WriteRequest& other) {
 
-        srcml_archive* utempa = srcml_arch;
-        srcml_arch = other.srcml_arch;
-        other.srcml_arch = utempa;
-
-        srcml_unit* utemp = unit;
-        unit = other.unit;
-        other.unit = utemp;
-
-        int pos = position;
-        position = other.position;
-        other.position = pos;
-
-        filename.swap(other.filename);
-
+        std::swap(srcml_arch, other.srcml_arch);
+        std::swap(unit, other.unit);
+        std::swap(position, other.position);
+        std::swap(filename, other.filename);
         std::swap(status, other.status);
     }
 
