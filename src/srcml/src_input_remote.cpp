@@ -178,20 +178,7 @@ void src_input_remote(ParseQueue& queue,
 #endif
 
     if (arch_init(arch, remote_uri) == ARCHIVE_OK) {
-/*
-  while (archive_read_next_header(arch, &entry) == ARCHIVE_OK) {
-  while (1) {
-  std::vector<char> buff(CURL_BUFFER_SIZE);
-  ssize_t size = archive_read_data(arch, &buff[0], CURL_BUFFER_SIZE);
 
-  if (size == 0)
-  break;
-
-  for (int i = 0; i < size; ++i)
-  putc(buff[i], stdout);
-  }
-  }
-*/
         /* In general, go through this once for each time the header can be read
            Exception: if empty, go through the loop exactly once */
         int count = 0;
