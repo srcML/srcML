@@ -91,25 +91,6 @@ int arch_my_open(archive *, void *client_data) {
     return ARCHIVE_OK;
 }
 
-void curl_messages(curl *curling) {
-    while ((curling->msg = curl_multi_info_read(curling->multi_handle, &curling->msgs_left))) {
-        if (curling->msg->msg == CURLMSG_DONE) {
-            if (curling->msg->data.result == 0) {
-//                std::cerr << "Download Complete!\n";
-            }
-            else {
-                std::cerr << "Download status: " << curling->msg->data.result << "\n";
-            }
-            break;
-        }
-    }
-}
-
-void curl_cleanup(curl *curling) {
-    curl_multi_cleanup(curling->multi_handle);
-    curl_easy_cleanup(curling->handle);
-}
-
 ssize_t arch_my_read(archive *, void *client_data, const void **buff)
 {
     curl *mydata = (curl*) client_data;
@@ -127,8 +108,22 @@ ssize_t arch_my_read(archive *, void *client_data, const void **buff)
 int arch_my_close(archive *, void *client_data)
 {
     curl *mydata = (curl*) client_data;
-    curl_messages(mydata);
-    curl_cleanup(mydata);
+
+    while ((mydata->msg = curl_multi_info_read(mydata->multi_handle, &mydata->msgs_left))) {
+        if (mydata->msg->msg == CURLMSG_DONE) {
+            if (mydata->msg->data.result == 0) {
+//                std::cerr << "Download Complete!\n";
+            }
+            else {
+                std::cerr << "Download status: " << mydata->msg->data.result << "\n";
+            }
+            break;
+        }
+    }
+
+    curl_multi_cleanup(mydata->multi_handle);
+    curl_easy_cleanup(mydata->handle);
+
     delete mydata;
     return 0;
 }
