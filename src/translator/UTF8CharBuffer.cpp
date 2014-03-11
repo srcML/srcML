@@ -87,32 +87,6 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
 
     if(!input) throw UTF8FileError();
 
-  size = input && input->buffer && xmlBufContent(input->buffer) ? (int)strlen((const char *)xmlBufContent(input->buffer)) : 0;
-
-  /* If we do not have an encoding at the start, then there is no raw buffer created
-     or used.  Unfortunately, we have to open the file with our encoding defined. */
-  if(encoding && input->encoder) {
-    pos = 0;
-#ifdef LIBXML2_NEW_BUFFER
-//    if(input->raw)
-//      xmlBufferFree(input->raw);
-    input->raw = input->buffer;
-    input->rawconsumed = 0;
-    xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(XML_CHAR_ENCODING_8859_1);
-    input->buffer = temp_parser->buffer;
-    temp_parser->buffer = 0;
-    xmlFreeParserInputBuffer(temp_parser);
-    size = growBuffer();
-#else
-    if(input->raw)
-      xmlBufferFree(input->raw);
-    input->raw = input->buffer;
-    input->rawconsumed = 0;
-    input->buffer = xmlBufferCreate();
-    size = growBuffer();
-#endif
-  }
-
     processEncoding(encoding);
 
 }
@@ -125,32 +99,6 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
     input = xmlParserInputBufferCreateFd(fd, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
-
-  size = input && input->buffer && xmlBufContent(input->buffer) ? (int)strlen((const char *)xmlBufContent(input->buffer)) : 0;
-
-  /* If we do not have an encoding at the start, then there is no raw buffer created
-     or used.  Unfortunately, we have to open the file with our encoding defined. */
-  if(encoding && input->encoder) {
-    pos = 0;
-#ifdef LIBXML2_NEW_BUFFER
-//    if(input->raw)
-//      xmlBufferFree(input->raw);
-    input->raw = input->buffer;
-    input->rawconsumed = 0;
-    xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(XML_CHAR_ENCODING_8859_1);
-    input->buffer = temp_parser->buffer;
-    temp_parser->buffer = 0;
-    xmlFreeParserInputBuffer(temp_parser);
-    size = growBuffer();
-#else
-    if(input->raw)
-      xmlBufferFree(input->raw);
-    input->raw = input->buffer;
-    input->rawconsumed = 0;
-    input->buffer = xmlBufferCreate();
-    size = growBuffer();
-#endif
-  }
 
     processEncoding(encoding);
 
