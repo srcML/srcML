@@ -79,8 +79,8 @@ int main() {
      */
 
     {
-	const char * s;
-	size_t i;
+	const char * s = "";
+	size_t i = 1;
 	try {
 	    UTF8CharBuffer utf8(s, i, "ISO-8859-1");
 	} catch(...) { assert(false); }
@@ -95,8 +95,16 @@ int main() {
     }
 
     {
-	const char * s;
-	size_t i;
+	const char * s = "";
+	size_t i = 1;
+	try {
+	    UTF8CharBuffer utf8(s, i, NULL);
+	} catch(...) { assert(false); }
+    }
+
+    {
+	const char * s = "";
+	size_t i = 0;
 	try {
 	    UTF8CharBuffer utf8(s, i, NULL);
 	} catch(...) { assert(false); }
@@ -140,14 +148,6 @@ int main() {
 	try {
 	    UTF8CharBuffer utf8(f, "ISO-8859-1");
 	} catch(...) { assert(false); }
-    }
-
-    {
-	int f = open("a.cpp", O_WRONLY);	
-	try {
-	    UTF8CharBuffer utf8(f, "ISO-8859-1");
-	    assert(false);
-	} catch(...) {}
     }
 
     {
@@ -212,7 +212,6 @@ int main() {
 
     }
 
-
     {
         unsigned char s[9];
 
@@ -239,7 +238,6 @@ int main() {
         assert(utf8.getChar() == '*');
         assert(utf8.getChar() == '/');
 
-
     }
 
     {
@@ -257,7 +255,6 @@ int main() {
         assert(utf8.getChar() == '*');
         assert(utf8.getChar() == '/');
 
-
     }
 
     {
@@ -266,8 +263,7 @@ int main() {
         for(int i = 0; i < 4096; ++i)
             assert(utf8.getChar() == 'a');
 
-        assert(utf8.getChar() == -1);
-
+	assert(utf8.getChar() == -1);
 
     }
 
@@ -281,7 +277,6 @@ int main() {
 
         assert(utf8.getChar() == -1);
 
-
     }
 
     {
@@ -291,7 +286,6 @@ int main() {
             assert(utf8.getChar() == 'a');
 
         assert(utf8.getChar() == -1);
-
 
     }
 
@@ -304,7 +298,6 @@ int main() {
             assert(utf8.getChar() == 'a');
 
         assert(utf8.getChar() == -1);
-
 
     }
 
