@@ -244,4 +244,8 @@ UTF8CharBuffer::~UTF8CharBuffer() {
     xmlFreeParserInputBuffer(input);
     SHA1_Final(hash, &ctx);
 
+    for(int i = 0; i < 20; ++i)
+	fprintf(stderr, "%x", hash[i]);
+    fprintf(stderr, "\n");
+
 }
