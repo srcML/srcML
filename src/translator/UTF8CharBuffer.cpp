@@ -37,7 +37,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
 
 }
 
-
 UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding)
     : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)buffer_size), lastcr(false) {
 
@@ -154,7 +153,10 @@ void UTF8CharBuffer::init(const char * encoding) {
     }
 
     SHA1_Init(&ctx);
-    SHA1_Update(&ctx, xmlBufContent(input->raw), size);
+    if(input->encoder)
+        SHA1_Update(&ctx, xmlBufContent(input->raw), size);
+    else
+        SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
 
 }
 
@@ -190,7 +192,10 @@ int UTF8CharBuffer::getChar() {
         if (size == -1 || size == 0)
             return -1;
 
-	SHA1_Update(&ctx, xmlBufContent(input->raw), size);
+        if(input->encoder)
+            SHA1_Update(&ctx, xmlBufContent(input->raw), size);
+        else
+            SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
 
         // start at the beginning
         pos = 0;
@@ -220,7 +225,10 @@ int UTF8CharBuffer::getChar() {
             if (size == -1 || size == 0)
                 return -1;
 
-	    SHA1_Update(&ctx, xmlBufContent(input->raw), size);
+            if(input->encoder)
+                SHA1_Update(&ctx, xmlBufContent(input->raw), size);
+            else
+                SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
 
             // start at the beginning
             pos = 0;
@@ -245,7 +253,7 @@ UTF8CharBuffer::~UTF8CharBuffer() {
     SHA1_Final(hash, &ctx);
 
     for(int i = 0; i < 20; ++i)
-	fprintf(stderr, "%x", hash[i]);
+        fprintf(stderr, "%x", hash[i]);
     fprintf(stderr, "\n");
 
 }
