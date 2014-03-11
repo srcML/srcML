@@ -407,8 +407,11 @@ public :
             std::string value = "";
             value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
 
-            if(attribute == "timestamp")
+            if(attribute == "timestamp") {
                 srcml_archive_enable_option(archive, SRCML_OPTION_TIMESTAMP);
+		srcml_unit_set_timestamp(unit, value.c_str());
+            } else if(attribute == "hash")
+		srcml_unit_set_hash(unit, value.c_str());
             else if(attribute == "language")
                 srcml_unit_set_language(unit, value.c_str());
             else if(attribute == "filename")

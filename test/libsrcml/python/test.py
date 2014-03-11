@@ -181,7 +181,7 @@ unit.set_language("C++")
 unit.parse_fd(src_fd)
 archive.write_unit(unit)
 archive.close()
-os.close(src_fd)
+#os.close(src_fd)
 os.close(fd)
 
 file = open("project.xml", "r")
@@ -383,10 +383,14 @@ unit.set_filename("b.cpp")
 unit.set_language("C")
 unit.set_directory("directory")
 unit.set_version("1.1")
+unit.set_timestamp("today")
+unit.set_hash("0123456789abcdef")
 verify_test("b.cpp", unit.get_filename())
 verify_test("C", unit.get_language())
 verify_test("directory", unit.get_directory())
 verify_test("1.1", unit.get_version())
+verify_test("today", unit.get_timestamp())
+verify_test("0123456789abcdef", unit.get_hash())
 archive.close()
 
 # exception
@@ -432,11 +436,15 @@ srcml.set_language("C++")
 srcml.set_filename("a.cpp")
 srcml.set_directory("directory")
 srcml.set_version("version")
+srcml.set_timestamp("timestamp")
+srcml.set_hash("hash")
 
 verify_test("C++", srcml.get_language())
 verify_test("a.cpp", srcml.get_filename())
 verify_test("directory", srcml.get_directory())
 verify_test("version", srcml.get_version())
+verify_test("timestamp", srcml.get_timestamp())
+verify_test("hash", srcml.get_hash())
 
 srcml.set_options(0)
 srcml.enable_option(1)
@@ -487,7 +495,7 @@ file.close()
 os.remove("a.foo")
 
 asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.foo"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
+<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" timestamp="timestamp" hash="hash" language="C++" filename="a.foo"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
 </s:unit>
 """
 

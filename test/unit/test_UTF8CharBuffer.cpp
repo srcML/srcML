@@ -79,8 +79,8 @@ int main() {
      */
 
     {
-	const char * s;
-	size_t i;
+	const char * s = "";
+	size_t i = 1;
 	try {
 	    UTF8CharBuffer utf8(s, i, "ISO-8859-1");
 	} catch(...) { assert(false); }
@@ -95,8 +95,16 @@ int main() {
     }
 
     {
-	const char * s;
-	size_t i;
+	const char * s = "";
+	size_t i = 1;
+	try {
+	    UTF8CharBuffer utf8(s, i, NULL);
+	} catch(...) { assert(false); }
+    }
+
+    {
+	const char * s = "";
+	size_t i = 0;
 	try {
 	    UTF8CharBuffer utf8(s, i, NULL);
 	} catch(...) { assert(false); }
@@ -143,14 +151,6 @@ int main() {
     }
 
     {
-	int f = open("a.cpp", O_WRONLY);	
-	try {
-	    UTF8CharBuffer utf8(f, "ISO-8859-1");
-	    assert(false);
-	} catch(...) {}
-    }
-
-    {
 	try {
 	    UTF8CharBuffer utf8(-1, "ISO-8859-1");
 	    assert(false);
@@ -179,7 +179,6 @@ int main() {
 
     }
 
-
     {
 
         UTF8CharBuffer utf8("abc", 3, "UTF-8");
@@ -193,10 +192,12 @@ int main() {
     {
 
         FILE * file = fopen("a.cpp", "r");
-        UTF8CharBuffer utf8(file, "UTF-8");
-        assert(utf8.getChar() == 'a');
-        assert(utf8.getChar() == 'b');
-        assert(utf8.getChar() == 'c');
+	{
+	    UTF8CharBuffer utf8(file, "UTF-8");
+	    assert(utf8.getChar() == 'a');
+	    assert(utf8.getChar() == 'b');
+	    assert(utf8.getChar() == 'c');
+	}
         fclose(file);
 
     }
@@ -204,14 +205,15 @@ int main() {
     {
 
         int fd = open("a.cpp", O_RDONLY);
-        UTF8CharBuffer utf8(fd, "UTF-8");
-        assert(utf8.getChar() == 'a');
-        assert(utf8.getChar() == 'b');
-        assert(utf8.getChar() == 'c');
+	{
+	    UTF8CharBuffer utf8(fd, "UTF-8");
+	    assert(utf8.getChar() == 'a');
+	    assert(utf8.getChar() == 'b');
+	    assert(utf8.getChar() == 'c');
+	}
         close(fd);
 
     }
-
 
     {
         unsigned char s[9];
@@ -239,7 +241,6 @@ int main() {
         assert(utf8.getChar() == '*');
         assert(utf8.getChar() == '/');
 
-
     }
 
     {
@@ -257,7 +258,6 @@ int main() {
         assert(utf8.getChar() == '*');
         assert(utf8.getChar() == '/');
 
-
     }
 
     {
@@ -266,8 +266,7 @@ int main() {
         for(int i = 0; i < 4096; ++i)
             assert(utf8.getChar() == 'a');
 
-        assert(utf8.getChar() == -1);
-
+	assert(utf8.getChar() == -1);
 
     }
 
@@ -281,7 +280,6 @@ int main() {
 
         assert(utf8.getChar() == -1);
 
-
     }
 
     {
@@ -291,7 +289,6 @@ int main() {
             assert(utf8.getChar() == 'a');
 
         assert(utf8.getChar() == -1);
-
 
     }
 
@@ -304,7 +301,6 @@ int main() {
             assert(utf8.getChar() == 'a');
 
         assert(utf8.getChar() == -1);
-
 
     }
 

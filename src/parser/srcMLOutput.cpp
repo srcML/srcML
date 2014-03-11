@@ -434,13 +434,16 @@ void srcMLOutput::setTokenStream(TokenStream& ints) {
     input = &ints;
 }
 
-void srcMLOutput::consume(const char* language, const char* directory, const char* filename, const char* version) {
+void srcMLOutput::consume(const char* language, const char* directory, const char* filename,
+			  const char* version, const char* timestamp, const char* hash) {
 
     // store attributes so that first occurrence of unit element will be correct
     unit_dir = directory;
     unit_filename = filename;
     unit_version = version;
+    unit_timestamp = timestamp;
     unit_language = language;
+    unit_hash = hash;
 
     // consume all input until EOF
     while (consume_next() != antlr::Token::EOF_TYPE) {
@@ -541,7 +544,10 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
     }
 }
 
-void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
+void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename,
+			    const char* version, const char* timestamp,
+			    const char* hash,
+			    bool outer) {
 
     const char * prefix = num2prefix[0].c_str();
     std::string maintag = prefix ? prefix : "";
@@ -580,9 +586,6 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     if(isoption(OPTION_NESTIF))         { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NESTIF"; }
     if(isoption(OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
 
-
-    std::string current_time =
-        boost::posix_time::to_simple_string(boost::posix_time::second_clock::universal_time());
     std::string stab = stabs.str();
 
     // list of attributes
@@ -592,7 +595,10 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
         { UNIT_ATTRIBUTE_REVISION, isoption(OPTION_REVISION) ? srcml_version_string() : 0 },
 
         // timestamp attribute
-        { UNIT_ATTRIBUTE_TIMESTAMP, isoption(OPTION_TIMESTAMP) && depth != 0 ? current_time.c_str() : 0 },
+        { UNIT_ATTRIBUTE_TIMESTAMP, timestamp },
+
+        // timestamp attribute
+        { UNIT_ATTRIBUTE_HASH, hash },
 
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },
@@ -651,7 +657,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
         // keep track of number of open elements
         openelementcount = 0;
-        startUnit(unit_language, unit_dir, unit_filename, unit_version, !isoption(OPTION_ARCHIVE));
+        startUnit(unit_language, unit_dir, unit_filename, unit_version, unit_timestamp, unit_hash, !isoption(OPTION_ARCHIVE));
 
     } else {
 

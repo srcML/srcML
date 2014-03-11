@@ -35,7 +35,8 @@
 #include <cstring>
 
 #include <stdio.h>
-#include <iconv.h>
+
+#include <libxml/xmlIO.h>
 
 class UTF8FileError {};
 
@@ -60,20 +61,12 @@ public:
 private:
 
     int growBuffer();
-    size_t convertEncodings(size_t num_to_convert);
     void processEncoding(const char * encoding);
 
-    FILE * input;
+    xmlParserInputBufferPtr input;
     int pos;
     int size;
-    int total_size;
     bool lastcr;
-    bool need_close;
-    char * raw_buffer;
-    unsigned char * input_buffer;
-    iconv_t cd;
-    char buffer[SRCBUFSIZE];
-    char iconv_buffer[4 * SRCBUFSIZE];
 
 };
 #endif

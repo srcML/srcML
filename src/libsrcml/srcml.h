@@ -164,12 +164,14 @@ __LIBSRCML_DECL int srcml(const char* input_filename, const char* output_filenam
 /*
   Global settings.  Can be used with convenience function srcml()
 */
-__LIBSRCML_DECL int srcml_set_src_encoding           (const char* encoding);
+__LIBSRCML_DECL int srcml_set_src_encoding       (const char* encoding);
 __LIBSRCML_DECL int srcml_set_encoding           (const char* encoding);
 __LIBSRCML_DECL int srcml_set_language           (const char* language);
 __LIBSRCML_DECL int srcml_set_filename           (const char* filename);
 __LIBSRCML_DECL int srcml_set_directory          (const char* directory);
 __LIBSRCML_DECL int srcml_set_version            (const char* version);
+__LIBSRCML_DECL int srcml_set_timestamp          (const char* timestamp);
+__LIBSRCML_DECL int srcml_set_hash               (const char* hash);
 __LIBSRCML_DECL int srcml_set_options            (unsigned long long option);
 __LIBSRCML_DECL int srcml_enable_option          (unsigned long long option);
 __LIBSRCML_DECL int srcml_disable_option         (unsigned long long option);
@@ -184,6 +186,8 @@ __LIBSRCML_DECL const char*        srcml_get_language ();
 __LIBSRCML_DECL const char*        srcml_get_filename ();
 __LIBSRCML_DECL const char*        srcml_get_directory();
 __LIBSRCML_DECL const char*        srcml_get_version  ();
+__LIBSRCML_DECL const char*        srcml_get_timestamp();
+__LIBSRCML_DECL const char*        srcml_get_hash();
 __LIBSRCML_DECL unsigned long long srcml_get_options  ();
 __LIBSRCML_DECL int                srcml_get_tabstop  ();
 
@@ -299,6 +303,8 @@ __LIBSRCML_DECL int srcml_unit_set_language (struct srcml_unit*, const char* lan
 __LIBSRCML_DECL int srcml_unit_set_filename (struct srcml_unit*, const char* filename);
 __LIBSRCML_DECL int srcml_unit_set_directory(struct srcml_unit*, const char* directory);
 __LIBSRCML_DECL int srcml_unit_set_version  (struct srcml_unit*, const char* version);
+__LIBSRCML_DECL int srcml_unit_set_timestamp(struct srcml_unit*, const char* timestamp);
+__LIBSRCML_DECL int srcml_unit_set_hash     (struct srcml_unit*, const char* hash);
 
 /* Convert to srcml.  Files/buffer can be compressed, but not a
    source archive format (e.g., not .tar) */
@@ -346,6 +352,8 @@ __LIBSRCML_DECL const char* srcml_unit_get_language (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_filename (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_directory(const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_version  (const struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_timestamp(const struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_hash     (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_xml      (struct srcml_unit*);
 
 /* Convert from srcML to source code */

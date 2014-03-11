@@ -81,6 +81,14 @@ libsrcml.srcml_unit_set_directory.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_unit_set_version.restype = c_int
 libsrcml.srcml_unit_set_version.argtypes = [c_void_p, c_char_p]
 
+# int srcml_unit_set_timestamp  (struct srcml_unit*, const char* timestamp);
+libsrcml.srcml_unit_set_timestamp.restype = c_int
+libsrcml.srcml_unit_set_timestamp.argtypes = [c_void_p, c_char_p]
+
+# int srcml_unit_set_hash  (struct srcml_unit*, const char* hash);
+libsrcml.srcml_unit_set_hash.restype = c_int
+libsrcml.srcml_unit_set_hash.argtypes = [c_void_p, c_char_p]
+
 # const char* srcml_unit_get_encoding (const struct srcml_unit*);
 libsrcml.srcml_unit_get_encoding.restype = c_char_p
 libsrcml.srcml_unit_get_encoding.argtypes = [c_void_p]
@@ -100,6 +108,14 @@ libsrcml.srcml_unit_get_directory.argtypes = [c_void_p]
 # const char* srcml_unit_get_version  (const struct srcml_unit*);
 libsrcml.srcml_unit_get_version.restype = c_char_p
 libsrcml.srcml_unit_get_version.argtypes = [c_void_p]
+
+# const char* srcml_unit_get_timestamp  (const struct srcml_unit*);
+libsrcml.srcml_unit_get_timestamp.restype = c_char_p
+libsrcml.srcml_unit_get_timestamp.argtypes = [c_void_p]
+
+# const char* srcml_unit_get_hash  (const struct srcml_unit*);
+libsrcml.srcml_unit_get_hash.restype = c_char_p
+libsrcml.srcml_unit_get_hash.argtypes = [c_void_p]
 
 # const char* srcml_unit_get_xml      (const struct srcml_unit*);
 libsrcml.srcml_unit_get_xml.restype = c_char_p
@@ -154,6 +170,12 @@ class srcml_unit :
     def set_version(self, version) :
         check_return(libsrcml.srcml_unit_set_version(self.unit, version))
 
+    def set_timestamp(self, timestamp) :
+        check_return(libsrcml.srcml_unit_set_timestamp(self.unit, timestamp))
+
+    def set_hash(self, hash) :
+        check_return(libsrcml.srcml_unit_set_hash(self.unit, hash))
+
     def get_encoding(self) :
         return libsrcml.srcml_unit_get_encoding(self.unit)
 
@@ -168,6 +190,12 @@ class srcml_unit :
 
     def get_version(self) :
         return libsrcml.srcml_unit_get_version(self.unit)
+
+    def get_timestamp(self) :
+        return libsrcml.srcml_unit_get_timestamp(self.unit)
+
+    def get_hash(self) :
+        return libsrcml.srcml_unit_get_hash(self.unit)
 
     def get_xml(self) :
         return libsrcml.srcml_unit_get_xml(self.unit)
