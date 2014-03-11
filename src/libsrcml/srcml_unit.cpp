@@ -343,6 +343,7 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
                                                       unit->filename ? unit->filename->c_str() : 0,
                                                       unit->version ? unit->version->c_str() : 0,
                                                       timestamp ? timestamp->c_str() : 0,
+                                                      unit->hash ? unit->hash->c_str() : 0,
 						      lang, input, output_buffer,
                                                       translation_options);
     } catch(...) {

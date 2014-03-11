@@ -66,7 +66,7 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
  *
  * global unit for use with srcml() function.  Defaulted values.
  */
-srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, 0 };
+srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 /******************************************************************************
  *                                                                            *
  *                           Global Cleanup function                          *
@@ -220,6 +220,7 @@ int srcml(const char* input_filename, const char* output_filename) {
                                  global_archive.filename ? global_archive.filename->c_str() : input_filename,
                                  global_archive.version ? global_archive.version->c_str() : 0,
                                  global_unit.timestamp ? global_unit.timestamp->c_str() : 0,
+                                 global_unit.hash ? global_unit.hash->c_str() : 0,
                                  lang);
             options &= ~SRCML_OPTION_CPP;
 

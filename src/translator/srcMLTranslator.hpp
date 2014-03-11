@@ -87,12 +87,14 @@ public:
                    const char* unit_filename = 0,
                    const char* unit_version = 0,
                    const char* unit_timestamp = 0,
+                   const char* unit_hash = 0,
                    int language = 0);
 
     void translate_separate(const char* unit_directory,
                             const char* unit_filename,
 			    const char* unit_version,
 			    const char* unit_timestamp,
+			    const char* unit_hash,
                             int language, UTF8CharBuffer * parser_input, xmlBuffer* output_buffer,
                             OPTION_TYPE translation_options);
 
