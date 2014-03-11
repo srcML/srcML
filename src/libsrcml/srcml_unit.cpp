@@ -154,6 +154,26 @@ int srcml_unit_set_timestamp(srcml_unit* unit, const char* timestamp) {
 
 }
 
+/**
+ * srcml_unit_set_hash
+ * @param unit a srcml unit
+ * @param hash a hash string
+ *
+ * Set the hash attribute for the srcml unit.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
+ * on failure.
+ */
+int srcml_unit_set_hash(srcml_unit* unit, const char* hash) {
+
+    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    unit->hash = hash ? std::string(hash) : boost::optional<std::string>();
+
+    return SRCML_STATUS_OK;
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                           Accessor functions                               *
@@ -257,6 +277,22 @@ const char* srcml_unit_get_timestamp(const struct srcml_unit* unit) {
 }
 
 /**
+ * srcml_unit_get_hash
+ * @param unit a srcml unit
+ *
+ * Get the hash for the srcml unit.
+ *
+ * @returns hash on success and NULL on failure.
+ */
+const char* srcml_unit_get_hash(const struct srcml_unit* unit) {
+
+    if(unit == NULL) return 0;
+
+    return unit->hash ? unit->hash->c_str() : 0;
+
+}
+
+/**
  * srcml_unit_get_xml
  * @param unit a srcml unit
  *
@@ -307,6 +343,7 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
                                                       unit->filename ? unit->filename->c_str() : 0,
                                                       unit->version ? unit->version->c_str() : 0,
                                                       timestamp ? timestamp->c_str() : 0,
+                                                      unit->hash ? unit->hash->c_str() : 0,
 						      lang, input, output_buffer,
                                                       translation_options);
     } catch(...) {

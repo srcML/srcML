@@ -137,6 +137,20 @@ int main() {
     }
 
     /*
+      srcml_set_hash
+    */
+
+    {
+        srcml_set_hash(0);
+        dassert(global_unit.hash, 0);
+    }
+
+    {
+        srcml_set_hash("foo");
+        dassert(*global_unit.hash, "foo");
+    }
+
+    /*
       srcml_set_options
     */
 
@@ -386,6 +400,21 @@ int main() {
         global_unit.timestamp = "foo";
         dassert(srcml_get_timestamp(), std::string("foo"));
         global_unit.timestamp = boost::optional<std::string>();
+    }
+
+    /*
+      srcml_get_hash
+    */
+
+    {
+        global_unit.hash = boost::optional<std::string>();
+        dassert(srcml_get_hash(), 0);
+    }
+
+    {
+        global_unit.hash = "foo";
+        dassert(srcml_get_hash(), std::string("foo"));
+        global_unit.hash = boost::optional<std::string>();
     }
 
     /*

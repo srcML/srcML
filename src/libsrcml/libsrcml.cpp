@@ -66,7 +66,7 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
  *
  * global unit for use with srcml() function.  Defaulted values.
  */
-srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, 0 };
+srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 /******************************************************************************
  *                                                                            *
  *                           Global Cleanup function                          *
@@ -220,6 +220,7 @@ int srcml(const char* input_filename, const char* output_filename) {
                                  global_archive.filename ? global_archive.filename->c_str() : input_filename,
                                  global_archive.version ? global_archive.version->c_str() : 0,
                                  global_unit.timestamp ? global_unit.timestamp->c_str() : 0,
+                                 global_unit.hash ? global_unit.hash->c_str() : 0,
                                  lang);
             options &= ~SRCML_OPTION_CPP;
 
@@ -371,6 +372,20 @@ int srcml_set_version(const char* version) {
 int srcml_set_timestamp(const char* timestamp) {
 
     return srcml_unit_set_timestamp(&global_unit, timestamp);
+
+}
+
+/**
+ * srcml_set_hash
+ * @param hash a hash string
+ *
+ * Set the hash attribute.
+ *
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
+ */
+int srcml_set_hash(const char* hash) {
+
+    return srcml_unit_set_hash(&global_unit, hash);
 
 }
 
@@ -558,6 +573,17 @@ const char* srcml_get_version() {
 const char* srcml_get_timestamp() {
 
     return srcml_unit_get_timestamp(&global_unit);
+
+}
+
+/**
+ * srcml_get_hash
+ *
+ * @returns Get the hash attribute on success and NULL on failure.
+ */
+const char* srcml_get_hash() {
+
+    return srcml_unit_get_hash(&global_unit);
 
 }
 

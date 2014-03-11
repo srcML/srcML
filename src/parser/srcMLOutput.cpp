@@ -435,7 +435,7 @@ void srcMLOutput::setTokenStream(TokenStream& ints) {
 }
 
 void srcMLOutput::consume(const char* language, const char* directory, const char* filename,
-			  const char* version, const char* timestamp) {
+			  const char* version, const char* timestamp, const char* hash) {
 
     // store attributes so that first occurrence of unit element will be correct
     unit_dir = directory;
@@ -443,6 +443,7 @@ void srcMLOutput::consume(const char* language, const char* directory, const cha
     unit_version = version;
     unit_timestamp = timestamp;
     unit_language = language;
+    unit_hash = hash;
 
     // consume all input until EOF
     while (consume_next() != antlr::Token::EOF_TYPE) {
@@ -545,6 +546,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 
 void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename,
 			    const char* version, const char* timestamp,
+			    const char* hash,
 			    bool outer) {
 
     const char * prefix = num2prefix[0].c_str();
@@ -594,6 +596,9 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
         // timestamp attribute
         { UNIT_ATTRIBUTE_TIMESTAMP, timestamp },
+
+        // timestamp attribute
+        { UNIT_ATTRIBUTE_HASH, hash },
 
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },
@@ -652,7 +657,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
         // keep track of number of open elements
         openelementcount = 0;
-        startUnit(unit_language, unit_dir, unit_filename, unit_version, unit_timestamp, !isoption(OPTION_ARCHIVE));
+        startUnit(unit_language, unit_dir, unit_filename, unit_version, unit_timestamp, unit_hash, !isoption(OPTION_ARCHIVE));
 
     } else {
 

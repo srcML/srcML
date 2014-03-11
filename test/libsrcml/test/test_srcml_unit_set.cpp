@@ -180,6 +180,30 @@ int main() {
         dassert(srcml_unit_set_timestamp(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
+    /*
+      srcml_unit_set_hash
+    */
+
+    {
+
+        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit_set_hash(unit, 0);
+        dassert(unit->hash, 0);
+        srcml_free_unit(unit);
+    }
+
+    {
+
+        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit_set_hash(unit, "foo");
+        dassert(*unit->hash, "foo");
+        srcml_free_unit(unit);
+    }
+
+    {
+        dassert(srcml_unit_set_hash(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
+    }
+
     srcml_free_archive(archive);
 
     return 0;

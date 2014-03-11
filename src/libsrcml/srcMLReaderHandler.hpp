@@ -410,7 +410,9 @@ public :
             if(attribute == "timestamp") {
                 srcml_archive_enable_option(archive, SRCML_OPTION_TIMESTAMP);
 		srcml_unit_set_timestamp(unit, value.c_str());
-            } else if(attribute == "language")
+            } else if(attribute == "hash")
+		srcml_unit_set_hash(unit, value.c_str());
+            else if(attribute == "language")
                 srcml_unit_set_language(unit, value.c_str());
             else if(attribute == "filename")
                 srcml_unit_set_filename(unit, value.c_str());
