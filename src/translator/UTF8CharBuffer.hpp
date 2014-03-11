@@ -35,7 +35,8 @@
 #include <cstring>
 
 #include <stdio.h>
-#include <iconv.h>
+
+#include <libxml/xmlIO.h>
 
 class UTF8FileError {};
 
@@ -62,11 +63,10 @@ private:
     int growBuffer();
     void processEncoding(const char * encoding);
 
+    xmlParserInputBufferPtr input;
     int pos;
     int size;
     bool lastcr;
-    xmlParserInputBufferPtr input;
-    bool free;
 
 };
 #endif

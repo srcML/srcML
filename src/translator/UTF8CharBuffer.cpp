@@ -25,15 +25,13 @@
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
-    : antlr::CharBuffer(std::cin), pos(0), size(0), lastcr(false), free(true) {
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false) {
 
     if(!ifilename) throw UTF8FileError();
 
-    xmlParserInputBufferCreateFilename(ifilename, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE))
+    input = xmlParserInputBufferCreateFilename(ifilename, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
-
-    raw_buffer = (char *)buffer;
 
     processEncoding(encoding);
 
@@ -41,38 +39,39 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
 
 
 UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), total_size((int)buffer_size), lastcr(false), need_close(false), cd(0) {
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)buffer_size), lastcr(false) {
 
     if(!c_buffer) throw UTF8FileError();
 
-    raw_buffer = (char *)c_buffer;
+    input = xmlParserInputBufferCreateMem(c_buffer, size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+
+    if(!input) throw UTF8FileError();
 
     processEncoding(encoding);
 
 }
 
 UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), total_size(0), lastcr(false), need_close(false), cd(0) {
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false) {
 
     if(!file) throw UTF8FileError();
 
-    input = file;
-    raw_buffer = (char *)buffer;
+    input = xmlParserInputBufferCreateFile(file, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+
+    if(!input) throw UTF8FileError();
 
     processEncoding(encoding);
 
 }
 
 UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), total_size(0), lastcr(false), need_close(false), cd(0) {
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false) {
 
     if(fd < 0) throw UTF8FileError();
 
-    input = fdopen(fd, "r");
+    input = xmlParserInputBufferCreateFd(fd, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
-
-    raw_buffer = (char *)buffer;
 
     processEncoding(encoding);
 
@@ -211,5 +210,6 @@ int UTF8CharBuffer::getChar() {
 
 UTF8CharBuffer::~UTF8CharBuffer() {
 
-  if(free) xmlFreeParserInputBuffer(input);
+  xmlFreeParserInputBuffer(input);
+
 }
