@@ -77,6 +77,8 @@ int main(int argc, char * argv[]) {
         tosrc = true;
     } else if (srcml_request.command & SRCML_COMMAND_SRCML) {
         tosrcml = true;
+    } else if (!srcml_request.files_from.empty()) {
+        tosrcml = true;
     } else {
         // find the first input that is not stdin
         boost::optional<std::string> nonstdin;
@@ -145,6 +147,8 @@ int main(int argc, char * argv[]) {
             srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
         }
 
+        srcml_archive_disable_option(srcml_arch, SRCML_OPTION_TIMESTAMP);
+
         // register file extensions
         BOOST_FOREACH(const std::string& ext, srcml_request.language_ext) {
             size_t pos = ext.find('=');
@@ -183,6 +187,15 @@ int main(int argc, char * argv[]) {
             src_prefix_split_uri(uri, protocol, resource);
 
             std::string extension = boost::filesystem::extension(boost::filesystem::path(resource));
+
+            // see if is in files_from list
+            bool in_files_from = false;
+            BOOST_FOREACH (const std::string& f, srcml_request.files_from) {
+                if (input_file == f) {
+                    in_files_from = true;
+                    break;
+                }
+            }
 
             // call handler based on prefix
             if (fstdin) {
