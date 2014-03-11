@@ -151,7 +151,7 @@ int main() {
         UTF8CharBuffer * input = new UTF8CharBuffer("a;", 2, "UTF-8");
 
         xmlBufferPtr output = xmlBufferCreate();
-        translator.translate_separate(0,  0, 0, Language::LANGUAGE_CXX, input, output, op);
+        translator.translate_separate(0, 0, 0, 0, Language::LANGUAGE_CXX, input, output, op);
         assert((char *)output->content == std::string("<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>\n"));
 
         xmlBufferFree(output);
