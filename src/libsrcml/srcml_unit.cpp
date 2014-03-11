@@ -355,6 +355,14 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
 
     input->close();
 
+    if(!unit->hash) {
+
+	const unsigned char * hash = input->getHash();
+
+	unit->hash;
+
+    }
+
     size_t length = strlen((const char *)output_buffer->content);
     while(length > 0 && output_buffer->content[length - 1] == '\n')
         --length;
