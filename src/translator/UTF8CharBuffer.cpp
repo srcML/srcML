@@ -44,35 +44,31 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
     if(!c_buffer) throw UTF8FileError();
 
     if(size == 0)
-	input = xmlParserInputBufferCreateMem("\xff\xff\xff\xff", 1, encoding ? xmlParseCharEncoding("UTF-8") : XML_CHAR_ENCODING_NONE);
+        input = xmlParserInputBufferCreateMem("\xff\xff\xff\xff", 1, encoding ? xmlParseCharEncoding("UTF-8") : XML_CHAR_ENCODING_NONE);
     else
-	input = xmlParserInputBufferCreateMem(c_buffer, size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+        input = xmlParserInputBufferCreateMem(c_buffer, size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
 
-  /* If we do not have an encoding at the start, then there is no raw buffer created
-     or used.  Unfortunately, we have to open the file with our encoding defined. */
-  if(encoding && input->encoder) {
-    pos = 0;
+    /* Mem seems to skip encoding  force it */
+    if(encoding && input->encoder) {
 #ifdef LIBXML2_NEW_BUFFER
-//    if(input->raw)
-//      xmlBufferFree(input->raw);
-    input->raw = input->buffer;
-    input->rawconsumed = 0;
-    xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(XML_CHAR_ENCODING_8859_1);
-    input->buffer = temp_parser->buffer;
-    temp_parser->buffer = 0;
-    xmlFreeParserInputBuffer(temp_parser);
-    size = growBuffer();
+        input->raw = input->buffer;
+        input->rawconsumed = 0;
+        xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(XML_CHAR_ENCODING_8859_1);
+        input->buffer = temp_parser->buffer;
+        temp_parser->buffer = 0;
+        xmlFreeParserInputBuffer(temp_parser);
+        size = growBuffer();
 #else
-    if(input->raw)
-      xmlBufferFree(input->raw);
-    input->raw = input->buffer;
-    input->rawconsumed = 0;
-    input->buffer = xmlBufferCreate();
-    size = growBuffer();
+        if(input->raw)
+            xmlBufferFree(input->raw);
+        input->raw = input->buffer;
+        input->rawconsumed = 0;
+        input->buffer = xmlBufferCreate();
+        size = growBuffer();
 #endif
-  }
+    }
 
     processEncoding(encoding);
 
@@ -106,56 +102,56 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
 
 void UTF8CharBuffer::processEncoding(const char * encoding) {
 
-  /* If an encoding was not specified, then try to detect it.
-     This is especially important for the BOM for UTF-8.
-     If nothing is detected, then use ISO-8859-1 */
-  if (!encoding) {
+    /* If an encoding was not specified, then try to detect it.
+       This is especially important for the BOM for UTF-8.
+       If nothing is detected, then use ISO-8859-1 */
+    if (!encoding) {
 
-    // input enough characters to detect.
-    // 4 is good because you either get 4 or some standard size which is probably larger (really)
-    size = xmlParserInputBufferGrow(input, 4);
+        // input enough characters to detect.
+        // 4 is good because you either get 4 or some standard size which is probably larger (really)
+        size = xmlParserInputBufferGrow(input, 4);
 
-    // detect (and remove) BOMs for UTF8 and UTF16
-    if (size >= 3 &&
-        xmlBufContent(input->buffer)[0] == 0xEF &&
-        xmlBufContent(input->buffer)[1] == 0xBB &&
-        xmlBufContent(input->buffer)[2] == 0xBF) {
+        // detect (and remove) BOMs for UTF8 and UTF16
+        if (size >= 3 &&
+            xmlBufContent(input->buffer)[0] == 0xEF &&
+            xmlBufContent(input->buffer)[1] == 0xBB &&
+            xmlBufContent(input->buffer)[2] == 0xBF) {
 
-      pos = 3;
+            pos = 3;
 
-    } else {
+        } else {
 
-      // assume ISO-8859-1 unless we can detect it otherwise
-      xmlCharEncoding denc = XML_CHAR_ENCODING_8859_1;
+            // assume ISO-8859-1 unless we can detect it otherwise
+            xmlCharEncoding denc = XML_CHAR_ENCODING_8859_1;
 
-      // now see if we can detect it
-      xmlCharEncoding newdenc = xmlDetectCharEncoding(xmlBufContent(input->buffer), size);
-      if (newdenc)
-        denc = newdenc;
+            // now see if we can detect it
+            xmlCharEncoding newdenc = xmlDetectCharEncoding(xmlBufContent(input->buffer), size);
+            if (newdenc)
+                denc = newdenc;
 
-      /* Transform the data already read in */
+            /* Transform the data already read in */
 
-      // since original encoding was NONE, no raw buffer was allocated, so use the regular buffer
-      pos = 0;
-      input->raw = input->buffer;
-      input->rawconsumed = 0;
+            // since original encoding was NONE, no raw buffer was allocated, so use the regular buffer
+            pos = 0;
+            input->raw = input->buffer;
+            input->rawconsumed = 0;
 
-      // need a new regular buffer
+            // need a new regular buffer
 #ifdef LIBXML2_NEW_BUFFER
-      xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(denc);
-      input->buffer = temp_parser->buffer;
-      temp_parser->buffer = 0;
-      xmlFreeParserInputBuffer(temp_parser);
+            xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(denc);
+            input->buffer = temp_parser->buffer;
+            temp_parser->buffer = 0;
+            xmlFreeParserInputBuffer(temp_parser);
 #else
-      input->buffer = xmlBufferCreate();
+            input->buffer = xmlBufferCreate();
 #endif
-      // setup the encoder being used
-      input->encoder = xmlGetCharEncodingHandler(denc);
+            // setup the encoder being used
+            input->encoder = xmlGetCharEncodingHandler(denc);
 
-      // fill up the buffer with even more data
-      size = growBuffer();
+            // fill up the buffer with even more data
+            size = growBuffer();
+        }
     }
-  }
 }
 
 int UTF8CharBuffer::growBuffer() {
@@ -173,70 +169,70 @@ int UTF8CharBuffer::growBuffer() {
 */
 int UTF8CharBuffer::getChar() {
 
-  if(!input) return getchar();
+    if(!input) return getchar();
 
-  // need to refill the buffer
-  if (size == 0 || pos >= size) {
+    // need to refill the buffer
+    if (size == 0 || pos >= size) {
 
-    // refill the buffer
+        // refill the buffer
 #ifdef LIBXML2_NEW_BUFFER
-    xmlBufShrink(input->buffer, size);
+        xmlBufShrink(input->buffer, size);
 #else
-    input->buffer->use = 0;
+        input->buffer->use = 0;
 #endif
-    size = xmlParserInputBufferGrow(input, SRCBUFSIZE);
+        size = xmlParserInputBufferGrow(input, SRCBUFSIZE);
 
-    // found problem or eof
-    if (size == -1 || size == 0)
-      return -1;
+        // found problem or eof
+        if (size == -1 || size == 0)
+            return -1;
 
-    // start at the beginning
-    pos = 0;
-  }
-
-  // individual 8-bit character to return
-  int c = (int) xmlBufContent(input->buffer)[pos++];
-
-  // sequence "\r\n" where the '\r'
-  // has already been converted to a '\n' so we need to skip over this '\n'
-  if (lastcr && c == '\n') {
-    lastcr = false;
-
-    // might need to refill the buffer
-    if (pos >= size) {
-
-      // refill the buffer
-#ifdef LIBXML2_NEW_BUFFER
-    xmlBufShrink(input->buffer, size);
-#else
-    input->buffer->use = 0;
-#endif
-
-      size = growBuffer();
-
-      // found problem or eof
-      if (size == -1 || size == 0)
-        return -1;
-
-      // start at the beginning
-      pos = 0;
+        // start at the beginning
+        pos = 0;
     }
 
-    // certain to have a character
-    c = (int) xmlBufContent(input->buffer)[pos++];
-  }
+    // individual 8-bit character to return
+    int c = (int) xmlBufContent(input->buffer)[pos++];
 
-  // convert carriage returns to a line feed
-  if (c == '\r') {
-    lastcr = true;
-    c = '\n';
-  }
+    // sequence "\r\n" where the '\r'
+    // has already been converted to a '\n' so we need to skip over this '\n'
+    if (lastcr && c == '\n') {
+        lastcr = false;
 
-  return c;
+        // might need to refill the buffer
+        if (pos >= size) {
+
+            // refill the buffer
+#ifdef LIBXML2_NEW_BUFFER
+            xmlBufShrink(input->buffer, size);
+#else
+            input->buffer->use = 0;
+#endif
+
+            size = growBuffer();
+
+            // found problem or eof
+            if (size == -1 || size == 0)
+                return -1;
+
+            // start at the beginning
+            pos = 0;
+        }
+
+        // certain to have a character
+        c = (int) xmlBufContent(input->buffer)[pos++];
+    }
+
+    // convert carriage returns to a line feed
+    if (c == '\r') {
+        lastcr = true;
+        c = '\n';
+    }
+
+    return c;
 }
 
 UTF8CharBuffer::~UTF8CharBuffer() {
 
-  xmlFreeParserInputBuffer(input);
+    xmlFreeParserInputBuffer(input);
 
 }
