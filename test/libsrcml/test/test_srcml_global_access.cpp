@@ -34,6 +34,7 @@
 #include "dassert.hpp"
 
 extern srcml_archive global_archive;
+extern srcml_unit global_unit;
 
 int main() {
 
@@ -119,6 +120,20 @@ int main() {
     {
         srcml_set_version("foo");
         dassert(*global_archive.version, "foo");
+    }
+
+    /*
+      srcml_set_timestamp
+    */
+
+    {
+        srcml_set_timestamp(0);
+        dassert(global_unit.timestamp, 0);
+    }
+
+    {
+        srcml_set_timestamp("foo");
+        dassert(*global_unit.timestamp, "foo");
     }
 
     /*
@@ -356,6 +371,21 @@ int main() {
         global_archive.version = "foo";
         dassert(srcml_get_version(), std::string("foo"));
         global_archive.version = boost::optional<std::string>();
+    }
+
+    /*
+      srcml_get_timestamp
+    */
+
+    {
+        global_unit.timestamp = boost::optional<std::string>();
+        dassert(srcml_get_timestamp(), 0);
+    }
+
+    {
+        global_unit.timestamp = "foo";
+        dassert(srcml_get_timestamp(), std::string("foo"));
+        global_unit.timestamp = boost::optional<std::string>();
     }
 
     /*
