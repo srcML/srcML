@@ -375,6 +375,20 @@ int srcml_set_timestamp(const char* timestamp) {
 }
 
 /**
+ * srcml_set_hash
+ * @param hash a hash string
+ *
+ * Set the hash attribute.
+ *
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
+ */
+int srcml_set_hash(const char* hash) {
+
+    return srcml_unit_set_hash(&global_unit, hash);
+
+}
+
+/**
  * srcml_set_options
  * @param option a srcml options
  *
@@ -558,6 +572,17 @@ const char* srcml_get_version() {
 const char* srcml_get_timestamp() {
 
     return srcml_unit_get_timestamp(&global_unit);
+
+}
+
+/**
+ * srcml_get_hash
+ *
+ * @returns Get the hash attribute on success and NULL on failure.
+ */
+const char* srcml_get_hash() {
+
+    return srcml_unit_get_hash(&global_unit);
 
 }
 

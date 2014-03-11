@@ -139,6 +139,8 @@ struct srcml_unit {
     boost::optional<std::string> version;
     /** an attribute for a timestamp string */
     boost::optional<std::string> timestamp;
+    /** an attribute for a hash string */
+    boost::optional<std::string> hash;
 
     /** store if attributes have been read */
     bool read_header;
