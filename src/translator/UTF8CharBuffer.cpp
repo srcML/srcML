@@ -43,7 +43,10 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 
     if(!c_buffer) throw UTF8FileError();
 
-    input = xmlParserInputBufferCreateMem(c_buffer, size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+    if(size == 0)
+	input = xmlParserInputBufferCreateMem("\xff\xff\xff\xff", 1, encoding ? xmlParseCharEncoding("UTF-8") : XML_CHAR_ENCODING_NONE);
+    else
+	input = xmlParserInputBufferCreateMem(c_buffer, size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
 
