@@ -25,6 +25,8 @@
 
 #include <UTF8CharBuffer.hpp>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 /******************************************************************************
  *                                                                            *
  *                           Set up functions                                 *
@@ -132,6 +134,26 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
 
 }
 
+/**
+ * srcml_unit_set_timestamp
+ * @param unit a srcml unit
+ * @param timestamp a timestamp string
+ *
+ * Set the timestamp attribute for the srcml unit.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
+ * on failure.
+ */
+int srcml_unit_set_timestamp(srcml_unit* unit, const char* timestamp) {
+
+    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    unit->timestamp = timestamp ? std::string(timestamp) : boost::optional<std::string>();
+
+    return SRCML_STATUS_OK;
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                           Accessor functions                               *
@@ -219,6 +241,22 @@ const char* srcml_unit_get_version(const struct srcml_unit* unit) {
 }
 
 /**
+ * srcml_unit_get_timestamp
+ * @param unit a srcml unit
+ *
+ * Get the timestamp for the srcml unit.
+ *
+ * @returns timestamp on success and NULL on failure.
+ */
+const char* srcml_unit_get_timestamp(const struct srcml_unit* unit) {
+
+    if(unit == NULL) return 0;
+
+    return unit->timestamp ? unit->timestamp->c_str() : 0;
+
+}
+
+/**
  * srcml_unit_get_xml
  * @param unit a srcml unit
  *
@@ -258,12 +296,18 @@ const char* srcml_unit_get_xml(struct srcml_unit* unit) {
  */
 static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer * input, OPTION_TYPE translation_options) {
 
+    boost::optional<std::string> timestamp = !unit->timestamp 
+	&&  (translation_options & SRCML_OPTION_TIMESTAMP) ? 
+	boost::posix_time::to_simple_string(boost::posix_time::second_clock::universal_time()) : unit->timestamp;
+
     xmlBuffer * output_buffer = xmlBufferCreate();
     try {
 
         unit->archive->translator->translate_separate(unit->directory ? unit->directory->c_str() : 0,
                                                       unit->filename ? unit->filename->c_str() : 0,
-                                                      unit->version ? unit->version->c_str() : 0, lang, input, output_buffer,
+                                                      unit->version ? unit->version->c_str() : 0,
+                                                      timestamp ? timestamp->c_str() : 0,
+						      lang, input, output_buffer,
                                                       translation_options);
     } catch(...) {
 

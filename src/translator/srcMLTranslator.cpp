@@ -125,7 +125,7 @@ void srcMLTranslator::close() {
         out.outputXMLDecl();
 
         // root unit for compound srcML documents
-        out.startUnit(0, root_directory, root_filename, root_version, true);
+        out.startUnit(0, root_directory, root_filename, root_version, 0, true);
 
     }
 
@@ -134,7 +134,9 @@ void srcMLTranslator::close() {
 
 // translate from input stream to output stream
 void srcMLTranslator::translate(const char* unit_directory,
-                                const char* unit_filename, const char* unit_version,
+                                const char* unit_filename,
+				const char* unit_version,
+				const char* unit_timestamp,
                                 int language) {
 
     if(first) {
@@ -145,7 +147,7 @@ void srcMLTranslator::translate(const char* unit_directory,
 
         // root unit for compound srcML documents
         if((options & OPTION_ARCHIVE) > 0)
-            out.startUnit(0, root_directory, root_filename, root_version, true);
+            out.startUnit(0, root_directory, root_filename, root_version, 0, true);
 
     }
 
@@ -178,7 +180,7 @@ void srcMLTranslator::translate(const char* unit_directory,
 
         // parse and form srcML output with unit attributes
         Language l(language);
-        out.consume(l.getLanguageString(), unit_directory, unit_filename, unit_version);
+        out.consume(l.getLanguageString(), unit_directory, unit_filename, unit_version, unit_timestamp);
 
     } catch (const std::exception& e) {
         fprintf(stderr, "SRCML Exception: %s\n", e.what());
@@ -193,7 +195,9 @@ void srcMLTranslator::translate(const char* unit_directory,
 
 // translate from input stream to output stream separate of current output stream
 void srcMLTranslator::translate_separate(const char* unit_directory,
-                                         const char* unit_filename, const char* unit_version,
+                                         const char* unit_filename,
+					 const char* unit_version,
+					 const char* unit_timestamp,
                                          int language, UTF8CharBuffer * parser_input, xmlBuffer* output_buffer,
                                          OPTION_TYPE translation_options) {
 
@@ -233,7 +237,7 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
 
         // parse and form srcML output with unit attributes
         Language l(language);
-        sep_out.consume(l.getLanguageString(), unit_directory, unit_filename, unit_version);
+        sep_out.consume(l.getLanguageString(), unit_directory, unit_filename, unit_version, unit_timestamp);
 
     } catch (const std::exception& e) {
         fprintf(stderr, "SRCML Exception: %s\n", e.what());
@@ -260,7 +264,7 @@ void srcMLTranslator::add_unit(const char* xml) {
 
         // root unit for compound srcML documents
         if((options & OPTION_ARCHIVE) > 0)
-            out.startUnit(0, root_directory, root_filename, root_version, true);
+            out.startUnit(0, root_directory, root_filename, root_version, 0, true);
 
         if ((options & OPTION_ARCHIVE) > 0)
             out.processText("\n\n", 2);

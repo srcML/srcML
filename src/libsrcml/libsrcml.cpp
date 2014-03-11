@@ -61,6 +61,12 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
                                  8, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
                                  std::vector<std::string>(), 0, 0, 0, 0, std::vector<transform>() };
 
+/**
+ * @var global_unit
+ *
+ * global unit for use with srcml() function.  Defaulted values.
+ */
+srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, 0 };
 /******************************************************************************
  *                                                                            *
  *                           Global Cleanup function                          *
@@ -213,6 +219,7 @@ int srcml(const char* input_filename, const char* output_filename) {
             translator.translate(global_archive.directory ? global_archive.directory->c_str() : 0,
                                  global_archive.filename ? global_archive.filename->c_str() : input_filename,
                                  global_archive.version ? global_archive.version->c_str() : 0,
+                                 global_unit.timestamp ? global_unit.timestamp->c_str() : 0,
                                  lang);
             options &= ~SRCML_OPTION_CPP;
 
@@ -350,6 +357,20 @@ int srcml_set_directory(const char* directory) {
 int srcml_set_version(const char* version) {
 
     return srcml_archive_set_version(&global_archive, version);
+
+}
+
+/**
+ * srcml_set_timestamp
+ * @param timestamp a timestamp string
+ *
+ * Set the timestamp attribute.
+ *
+ * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
+ */
+int srcml_set_timestamp(const char* timestamp) {
+
+    return srcml_unit_set_timestamp(&global_unit, timestamp);
 
 }
 
@@ -526,6 +547,17 @@ const char* srcml_get_directory() {
 const char* srcml_get_version() {
 
     return srcml_archive_get_version(&global_archive);
+
+}
+
+/**
+ * srcml_get_timestamp
+ *
+ * @returns Get the timestamp attribute on success and NULL on failure.
+ */
+const char* srcml_get_timestamp() {
+
+    return srcml_unit_get_timestamp(&global_unit);
 
 }
 

@@ -25,6 +25,7 @@
 */
 
 #include <srcml_cli.hpp>
+#include <src_prefix.hpp>
 #include <boost/program_options.hpp>
 #include <boost/foreach.hpp>
 
@@ -211,13 +212,12 @@ void option_to_dir(const std::string& value) {
 void positional_args(const std::vector<std::string>& value) {
     srcml_request.input.reserve(value.size());
 
-    std::string prefix = "";
     BOOST_FOREACH(const std::string& iname, value) {
 
         if (iname == "-")
             srcml_request.sawstdin = true;
 
-        srcml_request.input.push_back(prefix + iname);
+        srcml_request.input.push_back(src_prefix_add_uri(iname));
     }
 }
 
@@ -287,11 +287,11 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         srcml2src_options.add_options()
-            ("show-language", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE>), "display source language and exit")
-            ("show-directory", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY>), "display source directory name and exit")
-            ("show-filename", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_FILENAME>), "display source filename and exit")
-            ("show-src-version", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION>), "display source version and exit")
-            ("show-encoding", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_ENCODING>), "display xml encoding and exit")
+            ("get-language", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE>), "display source language and exit")
+            ("get-directory", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY>), "display source directory name and exit")
+            ("get-filename", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_FILENAME>), "display source filename and exit")
+            ("get-src-version", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION>), "display source version and exit")
+            ("get-encoding", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_ENCODING>), "display xml encoding and exit")
             ("xml,X", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "output in XML instead of text")
             ;
 
@@ -352,7 +352,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         positional_options.add_options()
-            //TODO: Entry point for prefixing
             ("input-files", prog_opts::value< std::vector<std::string> >()->notifier(&positional_args), "input files")
             ;
 
