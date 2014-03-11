@@ -57,6 +57,8 @@ public:
     // Get the next character from the stream
     int getChar();
 
+    const unsigned char * getHash();
+
     void close();
 
     ~UTF8CharBuffer();

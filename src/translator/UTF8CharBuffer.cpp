@@ -247,6 +247,13 @@ int UTF8CharBuffer::getChar() {
     return c;
 }
 
+const unsigned char * UTF8CharBuffer::getHash() {
+
+    return (const unsigned char *)strndup((const char *)hash, 20);
+
+}
+
+
 void UTF8CharBuffer::close() {
 
     xmlFreeParserInputBuffer(input);
