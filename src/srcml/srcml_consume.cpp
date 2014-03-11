@@ -97,7 +97,7 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
                 hexchar[md[19] >> 4], hexchar[md[19] & 0x0F],
                 '\0'
             };
-            srcml_unit_set_version(unit, outmd);
+//            srcml_unit_set_version(unit, outmd);
 
             if (pr.disk_filename.empty()) {
                 pr.status = srcml_parse_unit_memory(unit, &pr.buffer.front(), pr.buffer.size());
