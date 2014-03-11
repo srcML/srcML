@@ -90,7 +90,7 @@ public:
                    const char* unit_hash = 0,
                    int language = 0);
 
-    const unsigned char * translate_separate(const char* unit_directory,
+    void translate_separate(const char* unit_directory,
                             const char* unit_filename,
 			    const char* unit_version,
 			    const char* unit_timestamp,

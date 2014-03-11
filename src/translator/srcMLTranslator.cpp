@@ -195,7 +195,7 @@ void srcMLTranslator::translate(const char* unit_directory,
 }
 
 // translate from input stream to output stream separate of current output stream
-const unsigned char * srcMLTranslator::translate_separate(const char* unit_directory,
+void srcMLTranslator::translate_separate(const char* unit_directory,
                                          const char* unit_filename,
 					 const char* unit_version,
 					 const char* unit_timestamp,
@@ -252,8 +252,6 @@ const unsigned char * srcMLTranslator::translate_separate(const char* unit_direc
     }
 
     sep_out.setDepth(0);
-
-    return 0;
 
 }
 
