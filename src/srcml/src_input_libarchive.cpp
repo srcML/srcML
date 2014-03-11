@@ -142,10 +142,11 @@ void src_input_libarchive(ParseQueue& queue,
         // fill up the parse request buffer
         request.buffer.clear();
         if (!status) {
+            request.buffer.reserve(archive_entry_size(arch_entry));
             const char* buffer;
             size_t size;
             int64_t offset;
-            while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
+            while (archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
                 request.buffer.insert(request.buffer.end(), buffer, buffer + size);
         }
 
