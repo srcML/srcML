@@ -299,6 +299,7 @@ __LIBSRCML_DECL int srcml_unit_set_language (struct srcml_unit*, const char* lan
 __LIBSRCML_DECL int srcml_unit_set_filename (struct srcml_unit*, const char* filename);
 __LIBSRCML_DECL int srcml_unit_set_directory(struct srcml_unit*, const char* directory);
 __LIBSRCML_DECL int srcml_unit_set_version  (struct srcml_unit*, const char* version);
+__LIBSRCML_DECL int srcml_unit_set_timestamp(struct srcml_unit*, const char* timestamp);
 
 /* Convert to srcml.  Files/buffer can be compressed, but not a
    source archive format (e.g., not .tar) */
@@ -346,6 +347,7 @@ __LIBSRCML_DECL const char* srcml_unit_get_language (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_filename (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_directory(const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_version  (const struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_timestamp(const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_xml      (struct srcml_unit*);
 
 /* Convert from srcML to source code */

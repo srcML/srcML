@@ -132,6 +132,26 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
 
 }
 
+/**
+ * srcml_unit_set_timestamp
+ * @param unit a srcml unit
+ * @param timestamp a timestamp string
+ *
+ * Set the timestamp attribute for the srcml unit.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
+ * on failure.
+ */
+int srcml_unit_set_timestamp(srcml_unit* unit, const char* timestamp) {
+
+    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    unit->timestamp = timestamp ? std::string(timestamp) : boost::optional<std::string>();
+
+    return SRCML_STATUS_OK;
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                           Accessor functions                               *
@@ -215,6 +235,22 @@ const char* srcml_unit_get_version(const struct srcml_unit* unit) {
     if(unit == NULL) return 0;
 
     return unit->version ? unit->version->c_str() : 0;
+
+}
+
+/**
+ * srcml_unit_get_timestamp
+ * @param unit a srcml unit
+ *
+ * Get the timestamp for the srcml unit.
+ *
+ * @returns timestamp on success and NULL on failure.
+ */
+const char* srcml_unit_get_timestamp(const struct srcml_unit* unit) {
+
+    if(unit == NULL) return 0;
+
+    return unit->timestamp ? unit->timestamp->c_str() : 0;
 
 }
 
