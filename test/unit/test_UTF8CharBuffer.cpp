@@ -179,7 +179,6 @@ int main() {
 
     }
 
-
     {
 
         UTF8CharBuffer utf8("abc", 3, "UTF-8");
@@ -193,10 +192,12 @@ int main() {
     {
 
         FILE * file = fopen("a.cpp", "r");
-        UTF8CharBuffer utf8(file, "UTF-8");
-        assert(utf8.getChar() == 'a');
-        assert(utf8.getChar() == 'b');
-        assert(utf8.getChar() == 'c');
+	{
+	    UTF8CharBuffer utf8(file, "UTF-8");
+	    assert(utf8.getChar() == 'a');
+	    assert(utf8.getChar() == 'b');
+	    assert(utf8.getChar() == 'c');
+	}
         fclose(file);
 
     }
@@ -204,10 +205,12 @@ int main() {
     {
 
         int fd = open("a.cpp", O_RDONLY);
-        UTF8CharBuffer utf8(fd, "UTF-8");
-        assert(utf8.getChar() == 'a');
-        assert(utf8.getChar() == 'b');
-        assert(utf8.getChar() == 'c');
+	{
+	    UTF8CharBuffer utf8(fd, "UTF-8");
+	    assert(utf8.getChar() == 'a');
+	    assert(utf8.getChar() == 'b');
+	    assert(utf8.getChar() == 'c');
+	}
         close(fd);
 
     }
