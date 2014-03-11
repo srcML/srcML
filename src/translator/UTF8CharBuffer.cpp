@@ -154,6 +154,7 @@ void UTF8CharBuffer::init(const char * encoding) {
     }
 
     SHA1_Init(&ctx);
+    SHA1_Update(&ctx, xmlBufContent(input->raw), size);
 
 }
 
@@ -189,6 +190,8 @@ int UTF8CharBuffer::getChar() {
         if (size == -1 || size == 0)
             return -1;
 
+	SHA1_Update(&ctx, xmlBufContent(input->raw), size);
+
         // start at the beginning
         pos = 0;
     }
@@ -216,6 +219,8 @@ int UTF8CharBuffer::getChar() {
             // found problem or eof
             if (size == -1 || size == 0)
                 return -1;
+
+	    SHA1_Update(&ctx, xmlBufContent(input->raw), size);
 
             // start at the beginning
             pos = 0;
