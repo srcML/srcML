@@ -33,7 +33,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
 
     if(!input) throw UTF8FileError();
 
-    processEncoding(encoding);
+    init(encoding);
 
 }
 
@@ -70,7 +70,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 #endif
     }
 
-    processEncoding(encoding);
+    init(encoding);
 
 }
 
@@ -83,7 +83,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
 
     if(!input) throw UTF8FileError();
 
-    processEncoding(encoding);
+    init(encoding);
 
 }
 
@@ -96,11 +96,11 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
 
     if(!input) throw UTF8FileError();
 
-    processEncoding(encoding);
+    init(encoding);
 
 }
 
-void UTF8CharBuffer::processEncoding(const char * encoding) {
+void UTF8CharBuffer::init(const char * encoding) {
 
     /* If an encoding was not specified, then try to detect it.
        This is especially important for the BOM for UTF-8.
@@ -152,6 +152,9 @@ void UTF8CharBuffer::processEncoding(const char * encoding) {
             size = growBuffer();
         }
     }
+
+    SHA1_Init(&ctx);
+
 }
 
 int UTF8CharBuffer::growBuffer() {
@@ -234,5 +237,6 @@ int UTF8CharBuffer::getChar() {
 UTF8CharBuffer::~UTF8CharBuffer() {
 
     xmlFreeParserInputBuffer(input);
+    SHA1_Final(hash, &ctx);
 
 }

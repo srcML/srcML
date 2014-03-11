@@ -37,6 +37,7 @@
 #include <stdio.h>
 
 #include <libxml/xmlIO.h>
+#include <openssl/sha.h>
 
 class UTF8FileError {};
 
@@ -61,12 +62,14 @@ public:
 private:
 
     int growBuffer();
-    void processEncoding(const char * encoding);
+    void init(const char * encoding);
 
     xmlParserInputBufferPtr input;
     int pos;
     int size;
     bool lastcr;
+    SHA_CTX ctx;
+    unsigned char hash[20];
 
 };
 #endif
