@@ -60,20 +60,13 @@ public:
 private:
 
     int growBuffer();
-    size_t convertEncodings(size_t num_to_convert);
     void processEncoding(const char * encoding);
 
-    FILE * input;
     int pos;
     int size;
-    int total_size;
     bool lastcr;
-    bool need_close;
-    char * raw_buffer;
-    unsigned char * input_buffer;
-    iconv_t cd;
-    char buffer[SRCBUFSIZE];
-    char iconv_buffer[4 * SRCBUFSIZE];
+    xmlParserInputBufferPtr input;
+    bool free;
 
 };
 #endif
