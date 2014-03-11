@@ -491,7 +491,7 @@ file.close()
 os.remove("a.foo")
 
 asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.foo"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
+<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" timestamp="timestamp" language="C++" filename="a.foo"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
 </s:unit>
 """
 
