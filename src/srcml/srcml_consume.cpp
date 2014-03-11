@@ -26,6 +26,11 @@
 
 #ifdef __MACH__
 #include <CommonCrypto/CommonDigest.h>
+#define SHA1(a,b,c) CC_SHA1(a,b,c)
+#define SHA_DIGEST_LENGTH CC_SHA1_DIGEST_LENGTH
+#define SHA_LONG CC_LONG
+#else
+#include <openssl/sha.h>
 #endif
 #include <srcml_consume.hpp>
 #include <srcml.h>
@@ -62,11 +67,10 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
                 srcml_unit_set_version(unit, pr.version->c_str());
             srcml_unit_set_language(unit, pr.language.c_str());
 
-#ifdef __MACH__
             // compute the SHA1 has for this unit
             // based on the code as encoding in the original file
-            unsigned char md[CC_SHA1_DIGEST_LENGTH];
-            CC_SHA1(&pr.buffer.front(), (CC_LONG)pr.buffer.size(), md);
+            unsigned char md[SHA_DIGEST_LENGTH];
+            SHA1((const unsigned char*)&pr.buffer.front(), (SHA_LONG)pr.buffer.size(), md);
 
             // convert to hex ascii string
             static const char hexchar[] = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
@@ -94,7 +98,7 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
                 '\0'
             };
             srcml_unit_set_version(unit, outmd);
-#endif
+
             if (pr.disk_filename.empty()) {
                 pr.status = srcml_parse_unit_memory(unit, &pr.buffer.front(), pr.buffer.size());
             } else {
