@@ -73,7 +73,8 @@ public:
                    const char* unit_directory, const char* unit_filename, const char* unit_version, bool outer);
 
     // consume the entire tokenstream with output of srcml
-    void consume(const char* language, const char* unit_directory, const char* unit_filename, const char* unit_version = "");
+    void consume(const char* language, const char* unit_directory, const char* unit_filename
+		 , const char* unit_version, const char* unit_timestamp);
 
     // close the output
     void close();
@@ -103,6 +104,7 @@ public:
     const char* unit_dir;
     const char* unit_filename;
     const char* unit_version;
+    const char* unit_timestamp;
     OPTION_TYPE& options;
     const char* xml_encoding;
     std::string * num2prefix;

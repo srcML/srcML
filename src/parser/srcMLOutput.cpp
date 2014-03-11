@@ -434,12 +434,14 @@ void srcMLOutput::setTokenStream(TokenStream& ints) {
     input = &ints;
 }
 
-void srcMLOutput::consume(const char* language, const char* directory, const char* filename, const char* version) {
+void srcMLOutput::consume(const char* language, const char* directory, const char* filename,
+			  const char* version, const char* timestamp) {
 
     // store attributes so that first occurrence of unit element will be correct
     unit_dir = directory;
     unit_filename = filename;
     unit_version = version;
+    unit_timestamp = timestamp;
     unit_language = language;
 
     // consume all input until EOF

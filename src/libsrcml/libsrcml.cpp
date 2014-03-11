@@ -219,6 +219,7 @@ int srcml(const char* input_filename, const char* output_filename) {
             translator.translate(global_archive.directory ? global_archive.directory->c_str() : 0,
                                  global_archive.filename ? global_archive.filename->c_str() : input_filename,
                                  global_archive.version ? global_archive.version->c_str() : 0,
+                                 global_unit.timestamp ? global_unit.timestamp->c_str() : 0,
                                  lang);
             options &= ~SRCML_OPTION_CPP;
 
