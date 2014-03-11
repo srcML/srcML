@@ -70,7 +70,9 @@ public:
 
     // start a unit element with the passed metadata
     void startUnit(const char* unit_language,
-                   const char* unit_directory, const char* unit_filename, const char* unit_version, bool outer);
+                   const char* unit_directory, const char* unit_filename,
+		   const char* unit_version, const char* unit_timestamp,
+		   bool outer);
 
     // consume the entire tokenstream with output of srcml
     void consume(const char* language, const char* unit_directory, const char* unit_filename

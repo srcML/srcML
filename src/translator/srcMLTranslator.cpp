@@ -125,7 +125,7 @@ void srcMLTranslator::close() {
         out.outputXMLDecl();
 
         // root unit for compound srcML documents
-        out.startUnit(0, root_directory, root_filename, root_version, true);
+        out.startUnit(0, root_directory, root_filename, root_version, 0, true);
 
     }
 
@@ -147,7 +147,7 @@ void srcMLTranslator::translate(const char* unit_directory,
 
         // root unit for compound srcML documents
         if((options & OPTION_ARCHIVE) > 0)
-            out.startUnit(0, root_directory, root_filename, root_version, true);
+            out.startUnit(0, root_directory, root_filename, root_version, 0, true);
 
     }
 
@@ -264,7 +264,7 @@ void srcMLTranslator::add_unit(const char* xml) {
 
         // root unit for compound srcML documents
         if((options & OPTION_ARCHIVE) > 0)
-            out.startUnit(0, root_directory, root_filename, root_version, true);
+            out.startUnit(0, root_directory, root_filename, root_version, 0, true);
 
         if ((options & OPTION_ARCHIVE) > 0)
             out.processText("\n\n", 2);
