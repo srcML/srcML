@@ -104,6 +104,11 @@ int main(int argc, char * argv[]) {
         tosrcml = !tosrc;
     }
 
+    if (tosrcml && (srcml_request.input.empty() || srcml_request.sawstdin) && !srcml_request.att_language) {
+            std::cerr << "Using stdin requires a declared language\n";
+            exit(1);
+    }
+
     // src->srcml
     if (tosrcml) {
 
