@@ -247,13 +247,21 @@ int UTF8CharBuffer::getChar() {
     return c;
 }
 
-UTF8CharBuffer::~UTF8CharBuffer() {
+void UTF8CharBuffer::close() {
 
     xmlFreeParserInputBuffer(input);
+    input = 0;
+
     SHA1_Final(hash, &ctx);
 
     for(int i = 0; i < 20; ++i)
         fprintf(stderr, "%x", hash[i]);
     fprintf(stderr, "\n");
+
+}
+
+UTF8CharBuffer::~UTF8CharBuffer() {
+
+    if(input) close();
 
 }
