@@ -101,7 +101,7 @@ void srcMLTranslator::setInput(const char* path) {
 
     try {
 
-        pinput = new UTF8CharBuffer(path, encoding);
+        pinput = new UTF8CharBuffer(path, encoding, false);
 
     } catch (const std::exception& e) {
         fprintf(stderr, "SRCML Exception: %s\n", e.what());

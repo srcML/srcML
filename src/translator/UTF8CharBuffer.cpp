@@ -27,8 +27,8 @@
 #include <sstream>
 
 // Create a character buffer
-UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false) {
+UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bool make_hash)
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), make_hash(make_hash) {
 
     if(!ifilename) throw UTF8FileError();
 
@@ -40,8 +40,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
 
 }
 
-UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)buffer_size), lastcr(false) {
+UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, bool make_hash)
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)buffer_size), lastcr(false), make_hash(make_hash) {
 
     if(!c_buffer) throw UTF8FileError();
 
@@ -76,8 +76,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 
 }
 
-UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false) {
+UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, bool make_hash)
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), make_hash(make_hash) {
 
     if(!file) throw UTF8FileError();
 
@@ -89,8 +89,8 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
 
 }
 
-UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false) {
+UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, bool make_hash)
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), make_hash(make_hash) {
 
     if(fd < 0) throw UTF8FileError();
 
@@ -155,11 +155,15 @@ void UTF8CharBuffer::init(const char * encoding) {
         }
     }
 
-    SHA1_Init(&ctx);
-    if(input->encoder)
-        SHA1_Update(&ctx, xmlBufContent(input->raw), size);
-    else
-        SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
+    if(make_hash) {
+
+	SHA1_Init(&ctx);
+	if(input->encoder && 0)
+	    SHA1_Update(&ctx, xmlBufContent(input->raw), size);
+	else
+	    SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
+
+    }
 
 }
 
@@ -195,10 +199,14 @@ int UTF8CharBuffer::getChar() {
         if (size == -1 || size == 0)
             return -1;
 
-        if(input->encoder)
-            SHA1_Update(&ctx, xmlBufContent(input->raw), size);
-        else
-            SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
+	if(make_hash) {
+
+	    if(input->encoder && 0)
+		SHA1_Update(&ctx, xmlBufContent(input->raw), size);
+	    else
+		SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
+
+	}
 
         // start at the beginning
         pos = 0;
@@ -228,10 +236,14 @@ int UTF8CharBuffer::getChar() {
             if (size == -1 || size == 0)
                 return -1;
 
-            if(input->encoder)
-                SHA1_Update(&ctx, xmlBufContent(input->raw), size);
-            else
-                SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
+	    if(make_hash) {
+
+		if(input->encoder && 0)
+		    SHA1_Update(&ctx, xmlBufContent(input->raw), size);
+		else
+		    SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
+
+	    }
 
             // start at the beginning
             pos = 0;
@@ -267,9 +279,11 @@ void UTF8CharBuffer::close() {
     SHA1_Final(md, &ctx);
 
     std::ostringstream hash_stream;
-    for(int i = 0; i < SHA_DIGEST_LENGTH; ++i)
+    for(int i = 0; i < SHA_DIGEST_LENGTH; ++i) {
 	hash_stream << std::hex << (unsigned int)md[i];
-
+	fprintf(stderr, "%x", (unsigned int)md[i]);
+    }
+    fprintf(stderr, "\n");
     hash = hash_stream.str();
 
 }

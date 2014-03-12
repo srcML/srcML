@@ -358,7 +358,7 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
     if(!unit->hash && (translation_options & SRCML_OPTION_HASH)) {
 
 	unit->hash = input->getHash();
-
+	fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, unit->hash->c_str());
     }
 
     size_t length = strlen((const char *)output_buffer->content);
@@ -410,7 +410,8 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
     try {
 
         input = new UTF8CharBuffer(src_filename, unit->encoding ? unit->encoding->c_str()
-                                   : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
+                                   : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"),
+				   translation_options & SRCML_OPTION_HASH);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
@@ -455,7 +456,8 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
     try {
 
         input = new UTF8CharBuffer(src_buffer ? src_buffer : "", buffer_size, unit->encoding ? unit->encoding->c_str()
-                                   : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
+                                   : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"),
+                                   translation_options & SRCML_OPTION_HASH);
 
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
@@ -499,7 +501,8 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
     try {
 
         input = new UTF8CharBuffer(src_file, unit->encoding ? unit->encoding->c_str()
-                                   : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
+                                   : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"),
+                                   translation_options & SRCML_OPTION_HASH);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
@@ -543,7 +546,8 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
     try {
 
         input = new UTF8CharBuffer(src_fd, unit->encoding ? unit->encoding->c_str()
-                                   : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"));
+                                   : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"),
+                                   translation_options & SRCML_OPTION_HASH);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
