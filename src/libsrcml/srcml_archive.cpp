@@ -69,7 +69,8 @@ srcml_archive* srcml_create_archive()
     } catch(...) { return 0; }
 
     archive->type = SRCML_ARCHIVE_INVALID;
-    archive->options = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TIMESTAMP;
+    archive->options = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TIMESTAMP
+	| SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH;
     archive->tabstop = 8;
     archive->translator = 0;
     archive->reader = 0;
@@ -1111,7 +1112,8 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
     if(!unit->unit && !read_unit) return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
-    archive->translator->add_unit(read_unit ? read_unit->c_str() : unit->unit->c_str());
+    archive->translator->add_unit(read_unit ? read_unit->c_str() : *unit->unit,
+				  unit->output_hash && unit->hash ? unit->hash->c_str() : 0);
 
     return SRCML_STATUS_OK;
 }

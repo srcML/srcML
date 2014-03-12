@@ -98,7 +98,7 @@ public:
                             int language, UTF8CharBuffer * parser_input, xmlBuffer* output_buffer,
                             OPTION_TYPE translation_options);
 
-    void add_unit(const char* xml);
+    void add_unit(std::string xml, const char * hash);
 
     // destructor
     ~srcMLTranslator();

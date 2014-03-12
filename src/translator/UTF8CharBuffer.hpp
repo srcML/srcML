@@ -37,6 +37,9 @@
 #include <stdio.h>
 
 #include <libxml/xmlIO.h>
+#include <openssl/sha.h>
+
+#include <boost/optional.hpp>
 
 class UTF8FileError {};
 
@@ -48,10 +51,10 @@ public:
     static const size_t SRCBUFSIZE = 1024;
 
     // Create a character buffer
-    UTF8CharBuffer(const char * ifilename, const char * encoding);
-    UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding);
-    UTF8CharBuffer(FILE * file, const char * encoding);
-    UTF8CharBuffer(int fd, const char * encoding);
+    UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash);
+    UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, boost::optional<std::string> * hash);
+    UTF8CharBuffer(FILE * file, const char * encoding, boost::optional<std::string> * hash);
+    UTF8CharBuffer(int fd, const char * encoding, boost::optional<std::string> * hash);
 
     // Get the next character from the stream
     int getChar();
@@ -61,12 +64,14 @@ public:
 private:
 
     int growBuffer();
-    void processEncoding(const char * encoding);
+    void init(const char * encoding);
 
     xmlParserInputBufferPtr input;
     int pos;
     int size;
     bool lastcr;
+    boost::optional<std::string> * hash;
+    SHA_CTX ctx;
 
 };
 #endif

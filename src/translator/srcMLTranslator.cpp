@@ -101,7 +101,7 @@ void srcMLTranslator::setInput(const char* path) {
 
     try {
 
-        pinput = new UTF8CharBuffer(path, encoding);
+        pinput = new UTF8CharBuffer(path, encoding, 0);
 
     } catch (const std::exception& e) {
         fprintf(stderr, "SRCML Exception: %s\n", e.what());
@@ -255,7 +255,7 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
 
 }
 
-void srcMLTranslator::add_unit(const char* xml) {
+void srcMLTranslator::add_unit(std::string xml, const char * hash) {
 
     if(first) {
 
@@ -274,7 +274,31 @@ void srcMLTranslator::add_unit(const char* xml) {
     }
 
     first = false;
-    xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml);
+
+    if(hash ) {
+
+	std::string::size_type pos = xml.find('>');
+	if(pos == std::string::npos) return;
+
+	std::string::size_type hash_pos = xml.rfind("hash", pos);
+
+
+	int offset = 0;
+	if(hash_pos != pos) {
+
+	    xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)xml.c_str(), (int)hash_pos + 6);
+	    xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)hash);
+	    offset = (int)hash_pos + 6;
+
+	}
+	
+	xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml.c_str() + offset);
+
+    } else {
+
+	xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml.c_str());
+
+    }
 
     if ((options & OPTION_ARCHIVE) > 0)
         out.processText("\n\n", 2);
