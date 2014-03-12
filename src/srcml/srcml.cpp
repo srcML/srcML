@@ -29,7 +29,6 @@
 #include <src_input_file.hpp>
 #include <src_input_filesystem.hpp>
 #include <src_input_stdin.hpp>
-#include <src_input_remote.hpp>
 #include <srcml_output_libarchive.hpp>
 #include <srcml_output_filesystem.hpp>
 #include <srcml_display_info.hpp>
@@ -223,7 +222,7 @@ int main(int argc, char * argv[]) {
             } else if (protocol == "stdin") {
                 src_input_libarchive(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
             } else if (protocol == "http" || protocol == "https") {
-                src_input_remote(queue, srcml_arch, uri, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
+                src_input_libarchive(queue, srcml_arch, uri, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
             }
         }
 
