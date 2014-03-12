@@ -89,18 +89,17 @@ int main(int argc, char * argv[]) {
             }
         }
 
-        char c = 0;
         if (nonstdin) {
-            int firstinfd = open(nonstdin->c_str(), O_RDONLY);
-            read(firstinfd, &c, 1);
-            close(firstinfd);
+            // base on extension
+            tosrc = !boost::filesystem::path(nonstdin->c_str()).extension().compare(".xml");
         } else {
-            // Note: If stdin only, then have to read from this FILE*
+            // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
             fstdin = fdopen(STDIN_FILENO, "r");
-            c = fgetc(*fstdin);
+            char c = fgetc(*fstdin);
             ungetc(c, *fstdin);
+            tosrc = c == '<';
         }
-        tosrc = c == '<';
+
         tosrcml = !tosrc;
     }
 
@@ -111,6 +110,7 @@ int main(int argc, char * argv[]) {
 
     // src->srcml
     if (tosrcml) {
+
 
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_create_archive();
@@ -141,11 +141,14 @@ int main(int argc, char * argv[]) {
 
         srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
 
-        bool isdir = is_directory(boost::filesystem::path(src_prefix_resource(srcml_request.input[0])));
-
-        // archive or not
-        if (srcml_request.input.size() == 1 && !isdir &&
-             !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_OPTION_ARCHIVE))) {
+        // non-archive when:
+        //   only one input
+        //   not a directory (if local file)
+        //   no cli request to make it a directory
+        if (srcml_request.input.size() == 1 && 
+            !is_directory(boost::filesystem::path(src_prefix_resource(srcml_request.input[0]))) &&
+            !(srcml_request.markup_options &&
+              (*srcml_request.markup_options & SRCML_OPTION_ARCHIVE))) {
 
             srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
         } else {
