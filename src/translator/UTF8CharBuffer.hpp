@@ -57,7 +57,7 @@ public:
     // Get the next character from the stream
     int getChar();
 
-    const unsigned char * getHash();
+    std::string getHash();
 
     void close();
 
@@ -73,7 +73,7 @@ private:
     int size;
     bool lastcr;
     SHA_CTX ctx;
-    unsigned char hash[20];
+    std::string hash;
 
 };
 #endif

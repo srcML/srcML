@@ -20,8 +20,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <iostream>
+
 #include "UTF8CharBuffer.hpp"
+
+#include <iostream>
+#include <sstream>
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
@@ -247,9 +250,9 @@ int UTF8CharBuffer::getChar() {
     return c;
 }
 
-const unsigned char * UTF8CharBuffer::getHash() {
+std::string UTF8CharBuffer::getHash() {
 
-    return (const unsigned char *)strndup((const char *)hash, 20);
+    return hash;
 
 }
 
@@ -259,11 +262,15 @@ void UTF8CharBuffer::close() {
     xmlFreeParserInputBuffer(input);
     input = 0;
 
-    SHA1_Final(hash, &ctx);
+    unsigned char md[20];
 
-    for(int i = 0; i < 20; ++i)
-        fprintf(stderr, "%x", hash[i]);
-    fprintf(stderr, "\n");
+    SHA1_Final(md, &ctx);
+
+    std::ostringstream hash_stream;
+    for(int i = 0; i < SHA_DIGEST_LENGTH; ++i)
+	hash_stream << std::hex << (char)md[i];
+
+    hash = hash_stream.str();
 
 }
 

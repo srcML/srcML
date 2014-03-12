@@ -355,11 +355,9 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
 
     input->close();
 
-    if(!unit->hash) {
+    if(!unit->hash && (translation_options & SRCML_OPTION_HASH)) {
 
-	const unsigned char * hash = input->getHash();
-
-	unit->hash;
+	unit->hash = input->getHash();
 
     }
 
