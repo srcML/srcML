@@ -66,7 +66,7 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
  *
  * global unit for use with srcml() function.  Defaulted values.
  */
-srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 /******************************************************************************
  *                                                                            *
  *                           Global Cleanup function                          *
