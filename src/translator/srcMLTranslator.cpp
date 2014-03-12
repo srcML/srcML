@@ -255,7 +255,7 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
 
 }
 
-void srcMLTranslator::add_unit(const char* xml) {
+void srcMLTranslator::add_unit(const char* xml, const char * hash) {
 
     if(first) {
 
