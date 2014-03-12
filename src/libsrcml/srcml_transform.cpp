@@ -57,7 +57,7 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
 }
 
 /**
- * srcml_append_transform_xslt
+ * srcml_append_transform_xslt_filename
  * @param archive a srcml_archive
  * @param xslt_filename an XSLT program filename path
  *
@@ -66,7 +66,7 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filename) {
+int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xslt_filename) {
 
     if(archive == NULL || xslt_filename == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
@@ -88,7 +88,7 @@ int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filenam
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_filename) {
+int srcml_append_transform_relaxng_filename(srcml_archive* archive, const char* relaxng_filename) {
 
     if(archive == NULL || relaxng_filename == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;

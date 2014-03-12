@@ -1,8 +1,7 @@
 _srcml
-_srcml_append_transform_relaxng
+_srcml_append_transform_relaxng_filename
 _srcml_append_transform_xpath
-_srcml_append_transform_xslt
-_srcml_apply_transforms
+_srcml_append_transform_xslt_filename
 _srcml_archive_check_extension
 _srcml_archive_disable_option
 _srcml_archive_enable_option
