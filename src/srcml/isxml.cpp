@@ -21,9 +21,12 @@
  */
 
 #include <isxml.hpp>
+#include <boost/static_assert.hpp>
 
 // determine if XML from first four bytes in almost any encoding
 bool isxml(unsigned char ar[], ssize_t size) {
+
+    BOOST_STATIC_ASSERT_MSG(sizeof(unsigned int) == 4, "Size of unsigned int needs to be 4");
 
     if (size < 4)
         return false;
@@ -35,7 +38,7 @@ bool isxml(unsigned char ar[], ssize_t size) {
     data.d[2] = ar[2];
     data.d[3] = ar[3];
 
-    // determine if XML from first four bytes in almost any encoding
+    // determine if XML by looking for xml declaration in first four bytes in almost any encoding
     return
         (data.i == 0x3C000000) || // UCS-4BE
         (data.i == 0x0000003C) || // UCS-4LE
