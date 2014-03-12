@@ -201,15 +201,6 @@ int main(int argc, char * argv[]) {
 
             std::string extension = boost::filesystem::extension(boost::filesystem::path(resource));
 
-            // see if is in files_from list
-            bool in_files_from = false;
-            BOOST_FOREACH (const std::string& f, srcml_request.files_from) {
-                if (input_file == f) {
-                    in_files_from = true;
-                    break;
-                }
-            }
-
             // call handler based on prefix
             if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
                 src_input_filesystem(queue, srcml_arch, resource, srcml_request.att_language);
