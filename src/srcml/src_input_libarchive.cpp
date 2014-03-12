@@ -31,20 +31,6 @@
 #include <archive_entry.h>
 #include <boost/filesystem.hpp>
 
-#ifdef __MACH__
-#include <sys/time.h>
-#define CLOCK_REALTIME 0
-//clock_gettime is not implemented on OSX
-int clock_gettime(int /*clk_id*/, struct timespec* t) {
-    struct timeval now;
-    int rv = gettimeofday(&now, NULL);
-    if (rv) return rv;
-    t->tv_sec  = now.tv_sec;
-    t->tv_nsec = now.tv_usec * 1000;
-    return 0;
-}
-#endif
-
 namespace {
     struct curl {
         CURL* handle;
@@ -56,13 +42,13 @@ namespace {
         char* data_buffer;
         std::string source;
     };
+
+    size_t curl_cb(void* buffer, size_t len, size_t nmemb, void* data);
+
+    int     archive_curl_open(archive *, void *client_data);
+    ssize_t archive_curl_read(archive *, void *client_data, const void **buff);
+    int     archive_curl_close(archive *, void *client_data);
 }
-
-static size_t curl_cb(void* buffer, size_t len, size_t nmemb, void* data);
-
-static int     archive_curl_open(archive *, void *client_data);
-static ssize_t archive_curl_read(archive *, void *client_data, const void **buff);
-static int     archive_curl_close(archive *, void *client_data);
 
 // Convert input to a ParseRequest and assign request to the processing queue
 void src_input_libarchive(ParseQueue& queue,
@@ -191,71 +177,74 @@ void src_input_libarchive(ParseQueue& queue,
     }
 }
 
+namespace {
 
-size_t curl_cb(void* buffer, size_t len, size_t nmemb, void* data) {
+    size_t curl_cb(void* buffer, size_t len, size_t nmemb, void* data) {
 
-    curl* curldata = (curl*) data;
+        curl* curldata = (curl*) data;
 
-    curldata->data_buffer = (char*)buffer;
-    curldata->data_len = len * nmemb;
+        curldata->data_buffer = (char*)buffer;
+        curldata->data_len = len * nmemb;
 
-    return curldata->data_len;
-}
+        return curldata->data_len;
+    }
 
-int archive_curl_open(archive*, void* client_data) {
+    int archive_curl_open(archive*, void* client_data) {
 
-    curl* curldata = (curl*) client_data;
+        curl* curldata = (curl*) client_data;
 
-    curl_global_init(CURL_GLOBAL_DEFAULT);
+        curl_global_init(CURL_GLOBAL_DEFAULT);
 
-    curldata->handle = curl_easy_init();
+        curldata->handle = curl_easy_init();
 
-    curl_easy_setopt(curldata->handle, CURLOPT_SSL_VERIFYPEER, 0L);
-    curl_easy_setopt(curldata->handle, CURLOPT_SSL_VERIFYHOST, 0L);
-    curl_easy_setopt(curldata->handle, CURLOPT_HTTPAUTH, (long)CURLAUTH_ANY);
-    curl_easy_setopt(curldata->handle, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(curldata->handle, CURLOPT_VERBOSE, 0L);
-    curl_easy_setopt(curldata->handle, CURLOPT_WRITEFUNCTION, curl_cb);
-    curl_easy_setopt(curldata->handle, CURLOPT_WRITEDATA, curldata);
-    curl_easy_setopt(curldata->handle, CURLOPT_URL, curldata->source.c_str());
+        curl_easy_setopt(curldata->handle, CURLOPT_SSL_VERIFYPEER, 0L);
+        curl_easy_setopt(curldata->handle, CURLOPT_SSL_VERIFYHOST, 0L);
+        curl_easy_setopt(curldata->handle, CURLOPT_HTTPAUTH, (long)CURLAUTH_ANY);
+        curl_easy_setopt(curldata->handle, CURLOPT_FOLLOWLOCATION, 1L);
+        curl_easy_setopt(curldata->handle, CURLOPT_VERBOSE, 0L);
+        curl_easy_setopt(curldata->handle, CURLOPT_WRITEFUNCTION, curl_cb);
+        curl_easy_setopt(curldata->handle, CURLOPT_WRITEDATA, curldata);
+        curl_easy_setopt(curldata->handle, CURLOPT_URL, curldata->source.c_str());
 
-    curldata->multi_handle = curl_multi_init();
-    curl_multi_add_handle(curldata->multi_handle, curldata->handle);
-    curl_multi_perform(curldata->multi_handle, &curldata->still_running);
-
-    // TODO: SOMETHING HERE TO MAKE SURE THE FILE IS ACTUALLY PRESENT
-    return ARCHIVE_OK;
-}
-
-ssize_t archive_curl_read(archive*, void* client_data, const void** buff) {
-
-    curl* curldata = (curl*) client_data;
-
-    curldata->data_len = 0;
-    while (curldata->data_len == 0 && curldata->still_running) {
+        curldata->multi_handle = curl_multi_init();
+        curl_multi_add_handle(curldata->multi_handle, curldata->handle);
         curl_multi_perform(curldata->multi_handle, &curldata->still_running);
+
+        // TODO: SOMETHING HERE TO MAKE SURE THE FILE IS ACTUALLY PRESENT
+        return ARCHIVE_OK;
     }
 
-    *buff = curldata->data_buffer;
+    ssize_t archive_curl_read(archive*, void* client_data, const void** buff) {
 
-    return curldata->data_len;
-}
+        curl* curldata = (curl*) client_data;
 
-int archive_curl_close(archive*, void* client_data) {
-
-    curl* curldata = (curl*) client_data;
-/*
-    while ((curldata->msg = curl_multi_info_read(curldata->multi_handle, &curldata->msgs_left))) {
-        if (curldata->msg->msg == CURLMSG_DONE) {
-            if (curldata->msg->data.result) {
-//                std::cerr << "Download status: " << curldata->msg->data.result << "\n";
-            }
-            break;
+        curldata->data_len = 0;
+        while (curldata->data_len == 0 && curldata->still_running) {
+            curl_multi_perform(curldata->multi_handle, &curldata->still_running);
         }
-    }
-*/
-    curl_multi_cleanup(curldata->multi_handle);
-    curl_easy_cleanup(curldata->handle);
 
-    return 0;
+        *buff = curldata->data_buffer;
+
+        return curldata->data_len;
+    }
+
+    int archive_curl_close(archive*, void* client_data) {
+
+        curl* curldata = (curl*) client_data;
+/*
+  while ((curldata->msg = curl_multi_info_read(curldata->multi_handle, &curldata->msgs_left))) {
+  if (curldata->msg->msg == CURLMSG_DONE) {
+  if (curldata->msg->data.result) {
+//                std::cerr << "Download status: " << curldata->msg->data.result << "\n";
 }
+break;
+}
+}
+*/
+        curl_multi_cleanup(curldata->multi_handle);
+        curl_easy_cleanup(curldata->handle);
+
+        return 0;
+    }
+
+};
