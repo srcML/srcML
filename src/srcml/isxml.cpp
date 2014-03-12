@@ -22,23 +22,23 @@
 
 #include <isxml.hpp>
 #include <boost/static_assert.hpp>
+#include <stdint.h>
 
 // determine if XML from first four bytes in almost any encoding
 bool isxml(unsigned char ar[], ssize_t size) {
-
-    BOOST_STATIC_ASSERT_MSG(sizeof(unsigned int) == 4, "Size of unsigned int needs to be 4");
 
     if (size < 4)
         return false;
 
     // treat unsigned int field as just 4 bytes regardless of endianness
-    union { unsigned int i; unsigned char d[4]; } data;
+    union { uint32_t i; unsigned char d[4]; } data;
     data.d[0] = ar[0];
     data.d[1] = ar[1];
     data.d[2] = ar[2];
     data.d[3] = ar[3];
 
-    // determine if XML by looking for xml declaration in first four bytes in almost any encoding
+    // determine if XML by looking for xml declaration (i.e., '<?xm')
+    // in first four bytes in almost any encoding
     return
         (data.i == 0x3C000000) || // UCS-4BE
         (data.i == 0x0000003C) || // UCS-4LE
