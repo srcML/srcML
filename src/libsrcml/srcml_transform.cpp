@@ -79,6 +79,72 @@ int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xsl
 }
 
 /**
+ * srcml_append_transform_xslt_memory
+ * @param archive a srcml_archive
+ * @param xslt_buffer an XSLT program buffer in memory
+ *
+ * Append the XSLT program in memory to the list
+ * of transformation/queries.  As of yet no way to specify parameters or context
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_append_transform_xslt_memory(srcml_archive* archive, const char* xslt_buffer, size_t size) {
+
+    if(archive == NULL || xslt_buffer == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    transform tran = { SRCML_XSLT, xslt_buffer };
+    archive->transformations.push_back(tran);
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_append_transform_xslt_FILE
+ * @param archive a srcml_archive
+ * @param xslt_file a FILE containing an XSLT program
+ *
+ * Append the XSLT program in FILE to the list
+ * of transformation/queries.  As of yet no way to specify parameters or context
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_append_transform_xslt_FILE(srcml_archive* archive, FILE* xslt_file) {
+
+    if(archive == NULL || xslt_file == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    //transform tran = { SRCML_XSLT, xslt_file };
+    //archive->transformations.push_back(tran);
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_append_transform_xslt_fd
+ * @param archive a srcml_archive
+ * @param xslt_fd a file descriptor containing an XSLT program 
+ *
+ * Append the XSLT program in fd to the list
+ * of transformation/queries.  As of yet no way to specify parameters or context
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_append_transform_xslt_fd(srcml_archive* archive, int xslt_fd) {
+
+    if(archive == NULL || xslt_fd == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    //transform tran = { SRCML_XSLT, xslt_fd };
+    //archive->transformations.push_back(tran);
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
  * srcml_append_transform_relaxng
  * @param archive a srcml archive
  * @param relaxng_filename a RelaxNG schema filename path
