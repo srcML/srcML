@@ -271,14 +271,16 @@ UTF8CharBuffer::~UTF8CharBuffer() {
 
     unsigned char md[20];
 
-    SHA1_Final(md, &ctx);
+    if(hash) {
 
-    std::ostringstream hash_stream;
-    for(int i = 0; i < SHA_DIGEST_LENGTH; ++i) {
-	hash_stream << std::hex << (unsigned int)md[i];
-	fprintf(stderr, "%x", (unsigned int)md[i]);
+	SHA1_Final(md, &ctx);
+
+	std::ostringstream hash_stream;
+	for(int i = 0; i < SHA_DIGEST_LENGTH; ++i)
+	    hash_stream << std::hex << (unsigned int)md[i];
+
+	*hash = hash_stream.str();
+
     }
-    fprintf(stderr, "\n");
-    *hash = hash_stream.str();
 
 }
