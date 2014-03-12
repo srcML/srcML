@@ -39,6 +39,7 @@
 #include <src_language.hpp>
 #include <trace_log.hpp>
 #include <srcml_options.hpp>
+#include <isxml.hpp>
 
 #include <archive.h>
 #include <archive_entry.h>
@@ -95,17 +96,19 @@ int main(int argc, char * argv[]) {
         } else {
             // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
             fstdin = fdopen(STDIN_FILENO, "r");
-            char c = fgetc(*fstdin);
-            ungetc(c, *fstdin);
-            tosrc = c == '<';
+            unsigned char data[4];
+            ssize_t size = fread(&data, 1, 4, *fstdin);
+            rewind(*fstdin);
+
+            tosrc = isxml(data, size);
         }
 
         tosrcml = !tosrc;
     }
 
     if (tosrcml && (srcml_request.input.empty() || srcml_request.sawstdin) && !srcml_request.att_language) {
-            std::cerr << "Using stdin requires a declared language\n";
-            exit(1);
+        std::cerr << "Using stdin requires a declared language\n";
+        exit(1);
     }
 
     // src->srcml
@@ -145,7 +148,7 @@ int main(int argc, char * argv[]) {
         //   only one input
         //   not a directory (if local file)
         //   no cli request to make it a directory
-        if (srcml_request.input.size() == 1 && 
+        if (srcml_request.input.size() == 1 &&
             !is_directory(boost::filesystem::path(src_prefix_resource(srcml_request.input[0]))) &&
             !(srcml_request.markup_options &&
               (*srcml_request.markup_options & SRCML_OPTION_ARCHIVE))) {
@@ -255,7 +258,7 @@ int main(int argc, char * argv[]) {
     else if (srcml_request.command & SRCML_COMMAND_LIST) {
         srcml_list_unit_files(srcml_request.input);
 
-    // srcml->src srcML file to filesystem
+        // srcml->src srcML file to filesystem
     } else if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
 
         TraceLog log(std::cerr, *srcml_request.markup_options);
@@ -275,7 +278,7 @@ int main(int argc, char * argv[]) {
             srcml_free_archive(arch);
         }
 
-    // srcml->src extract individual unit in XML
+        // srcml->src extract individual unit in XML
     } else if (tosrc && (srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
 
         srcml_archive* arch = srcml_create_archive();
