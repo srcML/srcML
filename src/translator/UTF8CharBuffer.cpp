@@ -20,12 +20,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <iostream>
+
 #include "UTF8CharBuffer.hpp"
 
+#include <iostream>
+#include <sstream>
+
 // Create a character buffer
-UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false) {
+UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash)
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
 
     if(!ifilename) throw UTF8FileError();
 
@@ -33,13 +36,12 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding)
 
     if(!input) throw UTF8FileError();
 
-    processEncoding(encoding);
+    init(encoding);
 
 }
 
-
-UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)buffer_size), lastcr(false) {
+UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, boost::optional<std::string> * hash)
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)buffer_size), lastcr(false), hash(hash) {
 
     if(!c_buffer) throw UTF8FileError();
 
@@ -70,12 +72,12 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 #endif
     }
 
-    processEncoding(encoding);
+    init(encoding);
 
 }
 
-UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false) {
+UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::optional<std::string> * hash)
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
 
     if(!file) throw UTF8FileError();
 
@@ -83,12 +85,12 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding)
 
     if(!input) throw UTF8FileError();
 
-    processEncoding(encoding);
+    init(encoding);
 
 }
 
-UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false) {
+UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<std::string> * hash)
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
 
     if(fd < 0) throw UTF8FileError();
 
@@ -96,11 +98,11 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding)
 
     if(!input) throw UTF8FileError();
 
-    processEncoding(encoding);
+    init(encoding);
 
 }
 
-void UTF8CharBuffer::processEncoding(const char * encoding) {
+void UTF8CharBuffer::init(const char * encoding) {
 
     /* If an encoding was not specified, then try to detect it.
        This is especially important for the BOM for UTF-8.
@@ -152,6 +154,17 @@ void UTF8CharBuffer::processEncoding(const char * encoding) {
             size = growBuffer();
         }
     }
+
+    if(hash) {
+
+	SHA1_Init(&ctx);
+	if(input->encoder && 0)
+	    SHA1_Update(&ctx, xmlBufContent(input->raw), size);
+	else
+	    SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
+
+    }
+
 }
 
 int UTF8CharBuffer::growBuffer() {
@@ -186,6 +199,15 @@ int UTF8CharBuffer::getChar() {
         if (size == -1 || size == 0)
             return -1;
 
+	if(hash) {
+
+	    if(input->encoder && 0)
+		SHA1_Update(&ctx, xmlBufContent(input->raw), size);
+	    else
+		SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
+
+	}
+
         // start at the beginning
         pos = 0;
     }
@@ -214,6 +236,15 @@ int UTF8CharBuffer::getChar() {
             if (size == -1 || size == 0)
                 return -1;
 
+	    if(hash) {
+
+		if(input->encoder && 0)
+		    SHA1_Update(&ctx, xmlBufContent(input->raw), size);
+		else
+		    SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
+
+	    }
+
             // start at the beginning
             pos = 0;
         }
@@ -233,6 +264,23 @@ int UTF8CharBuffer::getChar() {
 
 UTF8CharBuffer::~UTF8CharBuffer() {
 
+    if(!input) return;
+
     xmlFreeParserInputBuffer(input);
+    input = 0;
+
+    unsigned char md[20];
+
+    if(hash) {
+
+	SHA1_Final(md, &ctx);
+
+	std::ostringstream hash_stream;
+	for(int i = 0; i < SHA_DIGEST_LENGTH; ++i)
+	    hash_stream << std::hex << (unsigned int)md[i];
+
+	*hash = hash_stream.str();
+
+    }
 
 }
