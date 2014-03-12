@@ -353,12 +353,10 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
 
     }
 
-    input->close();
-
     if(!unit->hash && (translation_options & SRCML_OPTION_HASH)) {
 
-	unit->hash = input->getHash();
-	fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, unit->hash->c_str());
+	//unit->hash = input->getHash();
+
     }
 
     size_t length = strlen((const char *)output_buffer->content);

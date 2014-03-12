@@ -262,14 +262,9 @@ int UTF8CharBuffer::getChar() {
     return c;
 }
 
-std::string UTF8CharBuffer::getHash() {
+UTF8CharBuffer::~UTF8CharBuffer() {
 
-    return hash;
-
-}
-
-
-void UTF8CharBuffer::close() {
+    if(!input) return;
 
     xmlFreeParserInputBuffer(input);
     input = 0;
@@ -285,11 +280,5 @@ void UTF8CharBuffer::close() {
     }
     fprintf(stderr, "\n");
     hash = hash_stream.str();
-
-}
-
-UTF8CharBuffer::~UTF8CharBuffer() {
-
-    if(input) close();
 
 }
