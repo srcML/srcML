@@ -268,7 +268,7 @@ void UTF8CharBuffer::close() {
 
     std::ostringstream hash_stream;
     for(int i = 0; i < SHA_DIGEST_LENGTH; ++i)
-	hash_stream << std::hex << (char)md[i];
+	hash_stream << std::hex << (unsigned int)md[i];
 
     hash = hash_stream.str();
 
