@@ -27,8 +27,8 @@
 #include <sstream>
 
 // Create a character buffer
-UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bool make_hash)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), make_hash(make_hash) {
+UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash)
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
 
     if(!ifilename) throw UTF8FileError();
 
@@ -40,8 +40,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
 
 }
 
-UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, bool make_hash)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)buffer_size), lastcr(false), make_hash(make_hash) {
+UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, boost::optional<std::string> * hash)
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)buffer_size), lastcr(false), hash(hash) {
 
     if(!c_buffer) throw UTF8FileError();
 
@@ -76,8 +76,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 
 }
 
-UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, bool make_hash)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), make_hash(make_hash) {
+UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::optional<std::string> * hash)
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
 
     if(!file) throw UTF8FileError();
 
@@ -89,8 +89,8 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, bool make_has
 
 }
 
-UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, bool make_hash)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), make_hash(make_hash) {
+UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<std::string> * hash)
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
 
     if(fd < 0) throw UTF8FileError();
 
@@ -155,7 +155,7 @@ void UTF8CharBuffer::init(const char * encoding) {
         }
     }
 
-    if(make_hash) {
+    if(hash) {
 
 	SHA1_Init(&ctx);
 	if(input->encoder && 0)
@@ -199,7 +199,7 @@ int UTF8CharBuffer::getChar() {
         if (size == -1 || size == 0)
             return -1;
 
-	if(make_hash) {
+	if(hash) {
 
 	    if(input->encoder && 0)
 		SHA1_Update(&ctx, xmlBufContent(input->raw), size);
@@ -236,7 +236,7 @@ int UTF8CharBuffer::getChar() {
             if (size == -1 || size == 0)
                 return -1;
 
-	    if(make_hash) {
+	    if(hash) {
 
 		if(input->encoder && 0)
 		    SHA1_Update(&ctx, xmlBufContent(input->raw), size);
@@ -279,6 +279,6 @@ UTF8CharBuffer::~UTF8CharBuffer() {
 	fprintf(stderr, "%x", (unsigned int)md[i]);
     }
     fprintf(stderr, "\n");
-    hash = hash_stream.str();
+    *hash = hash_stream.str();
 
 }
