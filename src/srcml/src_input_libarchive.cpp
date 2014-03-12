@@ -83,7 +83,7 @@ void src_input_libarchive(ParseQueue& queue,
     if (fstdin)
         open_status = archive_read_open_FILE(arch, *fstdin);
     else if (input_file == "-")
-        open_status = archive_read_open_filename(arch, 0, 16384);
+        open_status = archive_read_open_fd(arch, 0, 16384);
     else
         open_status = archive_read_open_filename(arch, input_file.c_str(), 16384);
     if (open_status != ARCHIVE_OK) {
