@@ -42,6 +42,7 @@
 #include <write_request.hpp>
 #include <write_queue.hpp>
 #include <iomanip>
+#include <boost/static_assert.hpp>
 
 // Public consumption thread function
 void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
@@ -74,6 +75,7 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
 
             // convert to hex ascii string
             static const char hexchar[] = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
+            BOOST_STATIC_ASSERT_MSG(sizeof(hexchar) == 16, "Wrong size for hex conversion");
             const char outmd[] = {
                 hexchar[md[0] >> 4], hexchar[md[0] & 0x0F],
                 hexchar[md[1] >> 4], hexchar[md[1] & 0x0F],
@@ -97,6 +99,8 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
                 hexchar[md[19] >> 4], hexchar[md[19] & 0x0F],
                 '\0'
             };
+            BOOST_STATIC_ASSERT_MSG(sizeof(outmd)/sizeof(outmd[0]) == (SHA_DIGEST_LENGTH * 2 + 1),
+                                    "Wrong size for SHA_DIGEST_LENGTH conversion");
 //            srcml_unit_set_hash(unit, outmd);
 
             if (pr.disk_filename.empty()) {
