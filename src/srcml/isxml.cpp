@@ -28,6 +28,7 @@ bool isxml(unsigned char ar[], ssize_t size) {
     if (size < 4)
         return false;
 
+    // treat unsigned int field as just 4 bytes regardless of endianness
     union { unsigned int i; unsigned char d[4]; } data;
     data.d[0] = ar[0];
     data.d[1] = ar[1];

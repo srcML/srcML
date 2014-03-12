@@ -96,10 +96,13 @@ int main(int argc, char * argv[]) {
         } else {
             // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
             fstdin = fdopen(STDIN_FILENO, "r");
+
+            // read the first 4 bytes as separate characters to get around byte ordering
             unsigned char data[4];
             ssize_t size = fread(&data, 1, 4, *fstdin);
             rewind(*fstdin);
 
+            // pass the first 4 bytes and the size actually read in
             tosrc = isxml(data, size);
         }
 
