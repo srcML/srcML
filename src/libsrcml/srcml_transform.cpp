@@ -52,7 +52,7 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
     if(archive == NULL || xpath_string == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    transform tran = { SRCML_XPATH, xpath_string, 0 };
+    transform tran = { SRCML_XPATH, { xpath_string } };
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -76,7 +76,9 @@ int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xsl
 
     xmlDocPtr doc = xmlReadFile(xslt_filename, 0, 0);
 
-    transform tran = { SRCML_XSLT, "", doc };
+    transform tran = { SRCML_XSLT, { 0 } };
+    tran.transformation.doc = doc;
+
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -100,7 +102,9 @@ int srcml_append_transform_xslt_memory(srcml_archive* archive, const char* xslt_
 
     xmlDocPtr doc = xmlReadMemory(xslt_buffer, (int)size, 0, 0, 0);
 
-    transform tran = { SRCML_XSLT, "", doc };
+    transform tran = { SRCML_XSLT, { 0 } };
+    tran.transformation.doc = doc;
+
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -124,7 +128,10 @@ int srcml_append_transform_xslt_FILE(srcml_archive* archive, FILE* xslt_file) {
 
     xmlRegisterDefaultInputCallbacks();
     xmlDocPtr doc = xmlReadIO(xmlFileRead, xmlFileClose, xslt_file, 0, 0, 0);
-    transform tran = { SRCML_XSLT, "", doc };
+
+    transform tran = { SRCML_XSLT, { 0 } };
+    tran.transformation.doc = doc;
+
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -148,7 +155,9 @@ int srcml_append_transform_xslt_fd(srcml_archive* archive, int xslt_fd) {
 
     xmlDocPtr doc = xmlReadFd(xslt_fd, 0, 0, 0);
 
-    transform tran = { SRCML_XSLT, "", doc };
+    transform tran = { SRCML_XSLT, { 0 } };
+    tran.transformation.doc = doc;
+
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -172,7 +181,9 @@ int srcml_append_transform_relaxng_filename(srcml_archive* archive, const char* 
 
     xmlDocPtr doc = xmlReadFile(relaxng_filename, 0, 0);
 
-    transform tran = { SRCML_RELAXNG, "", doc };
+    transform tran = { SRCML_RELAXNG, { 0 } };
+    tran.transformation.doc = doc;
+
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -196,7 +207,9 @@ int srcml_append_transform_relaxng_memory(srcml_archive* archive, const char* re
 
     xmlDocPtr doc = xmlReadMemory(relaxng_buffer, (int)size, 0, 0, 0);
 
-    transform tran = { SRCML_RELAXNG, "", doc };
+    transform tran = { SRCML_RELAXNG, { 0 } };
+    tran.transformation.doc = doc;
+
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -221,7 +234,9 @@ int srcml_append_transform_relaxng_FILE(srcml_archive* archive, FILE* relaxng_fi
     xmlRegisterDefaultInputCallbacks();
     xmlDocPtr doc = xmlReadIO(xmlFileRead, xmlFileClose, relaxng_file, 0, 0, 0);
 
-    transform tran = { SRCML_RELAXNG, "", doc };
+    transform tran = { SRCML_RELAXNG, { 0 } };
+    tran.transformation.doc = doc;
+
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -245,7 +260,9 @@ int srcml_append_transform_relaxng_fd(srcml_archive* archive, int relaxng_fd) {
 
     xmlDocPtr doc = xmlReadFd(relaxng_fd, 0, 0, 0);
 
-    transform tran = { SRCML_RELAXNG, "", doc };
+    transform tran = { SRCML_RELAXNG, { 0 } };
+    tran.transformation.doc = doc;
+
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -329,7 +346,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
             case SRCML_XPATH: {
 
                 error = srcml_xpath(pinput, "src:unit",
-                                    iarchive->transformations.at(i).transformation.c_str(),
+                                    iarchive->transformations.at(i).transformation.str,
                                     transform_fd, oarchive->options);
                 break;
             }
@@ -338,7 +355,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
                 const char * params[1] = { 0 };
                 error = srcml_xslt(pinput, "src:unit",
-                                   iarchive->transformations.at(i).transformation.c_str(),
+                                   iarchive->transformations.at(i).transformation.doc,
                                    params, 0, transform_fd, oarchive->options);
                 break;
             }
@@ -346,7 +363,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
             case SRCML_RELAXNG: {
 
                 error = srcml_relaxng(pinput,
-                                      iarchive->transformations.at(i).transformation.c_str(),
+                                      iarchive->transformations.at(i).transformation.doc,
                                       transform_fd, oarchive->options);
                 break;
             }
