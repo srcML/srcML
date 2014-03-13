@@ -281,6 +281,9 @@ int srcml_clear_transforms(srcml_archive * archive) {
 
     if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
+    for(std::vector<transform>::iterator itr = archive->transformations.begin(); itr != archive->transformations.end(); ++itr)
+	if(itr->type == SRCML_XSLT || itr->type == SRCML_RELAXNG)
+	    xmlFreeDoc(itr->transformation.doc);
     archive->transformations.clear();
 
     return SRCML_STATUS_OK;
