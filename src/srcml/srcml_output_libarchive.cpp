@@ -24,18 +24,22 @@
 #include <srcml.h>
 #include <archive.h>
 #include <archive_entry.h>
+#include <stdlib.h>
 
 void srcml_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
 
+    int arch_status = ARCHIVE_OK;
     while (srcml_unit* unit = srcml_read_unit(srcml_arch)) {
 
-        // unparse the unit into its own buffer
+        // setup the entry header
+        archive_entry* entry = archive_entry_new();
+        if (!entry)
+            break;
+
         char* buffer;
         int buffer_size;
         srcml_unparse_unit_memory(unit, &buffer, &buffer_size);
 
-        // setup the entry header
-        archive_entry* entry = archive_entry_new();
         archive_entry_set_pathname(entry, srcml_unit_get_filename(unit));
         archive_entry_set_size(entry, buffer_size);
         archive_entry_set_filetype(entry, AE_IFREG);
@@ -45,15 +49,19 @@ void srcml_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
         archive_entry_set_atime(entry, now, 0);
         archive_entry_set_ctime(entry, now, 0);
         archive_entry_set_mtime(entry, now, 0);
-        archive_write_header(src_archive, entry);
 
-        // write the data to the entry
-        archive_write_data(src_archive, buffer, buffer_size);
+        if ((arch_status = archive_write_header(src_archive, entry)) != ARCHIVE_OK)
+            break;
 
-        // done with the archive entry
+        // write the data into the archive
+        arch_status = archive_write_data(src_archive, buffer, (ssize_t)buffer_size);
+        if (arch_status != ARCHIVE_OK || arch_status != buffer_size)
+            break;
+
+        free(buffer);
+
         archive_entry_free(entry);
 
-        // done with the srcML unit
         srcml_free_unit(unit);
     }
 }
