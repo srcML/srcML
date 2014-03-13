@@ -92,7 +92,14 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
 
     if(!ifilename) throw UTF8FileError();
 
-    input = xmlParserInputBufferCreateFilename(ifilename, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+    void * file = xmlFileOpen(ifilename);
+
+    srcMLFile * sfile = new srcMLFile();
+    sfile->file = (FILE *)file;
+    hash ? sfile->ctx = &ctx : 0;
+
+    input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sfile, 
+					 encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
 
@@ -159,7 +166,12 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
 
     if(fd < 0) throw UTF8FileError();
 
-    input = xmlParserInputBufferCreateFd(fd, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+    srcMLFd * sfd = new srcMLFd();
+    sfd->fd = fd;
+    hash ? sfd->ctx = &ctx : 0;
+
+    input = xmlParserInputBufferCreateIO(srcMLFdRead, srcMLFdClose, sfd, 
+					 encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
 
