@@ -22,11 +22,17 @@
 
 #include <srcml_input_srcml.hpp>
 
-void srcml_input_srcml(const std::string& input_filename, srcml_archive* srcml_outarch) {
+void srcml_input_srcml(const std::string& input_filename,
+                       srcml_archive* srcml_outarch,
+                       boost::optional<FILE*> fstdin) {
 
     // open the input srcml archive
     srcml_archive* srcml_inarch = srcml_create_archive();
-    srcml_read_open_filename(srcml_inarch, input_filename.c_str());
+
+    if (!fstdin)
+        srcml_read_open_filename(srcml_inarch, input_filename.c_str());
+    else
+        srcml_read_open_FILE(srcml_inarch, *fstdin);
 
     // process each entry in the input srcml archive
     while (srcml_unit* unit = srcml_read_unit(srcml_inarch)) {
