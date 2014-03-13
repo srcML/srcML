@@ -30,6 +30,34 @@
 #define xmlBufContent(b) (b->content)
 #endif
 
+struct srcMLFile {
+
+    FILE * file;
+    SHA_CTX * ctx;
+
+};
+
+int srcMLFileRead(void * context,  char * buffer, int len) {
+
+    srcMLFile * sfile = (srcMLFile *)context;
+    size_t num_read = xmlFileRead(sfile->file, buffer, len);
+
+    if(sfile->ctx)
+	SHA1_Update(sfile->ctx, buffer, num_read);
+
+    return num_read;
+}
+
+int srcMLFileClose(void * context) {
+
+    srcMLFile * sfile = (srcMLFile *)context;
+    int ret = xmlFileClose(sfile->file);
+
+    delete sfile;
+
+    return ret;
+}
+
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash)
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
@@ -85,7 +113,12 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
 
     if(!file) throw UTF8FileError();
 
-    input = xmlParserInputBufferCreateFile(file, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+    srcMLFile * sfile = new srcMLFile();
+    sfile->file = file;
+    hash ? sfile->ctx = &ctx : 0;
+
+    input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sfile, 
+					 encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
 
@@ -159,12 +192,8 @@ void UTF8CharBuffer::init(const char * encoding) {
         }
     }
 
-    if(hash) {
-
+    if(hash)
 	SHA1_Init(&ctx);
-	SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
-
-    }
 
 }
 
@@ -200,12 +229,6 @@ int UTF8CharBuffer::getChar() {
         if (size == -1 || size == 0)
             return -1;
 
-	if(hash) {
-
-	    SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
-
-	}
-
         // start at the beginning
         pos = 0;
     }
@@ -233,12 +256,6 @@ int UTF8CharBuffer::getChar() {
             // found problem or eof
             if (size == -1 || size == 0)
                 return -1;
-
-	    if(hash) {
-
-		SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
-
-	    }
 
             // start at the beginning
             pos = 0;
