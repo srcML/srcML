@@ -75,6 +75,7 @@ int main() {
      */
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -90,9 +91,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -109,9 +112,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_full);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -129,9 +134,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_a_after);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -149,6 +156,7 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_b_after);
         free(s);
+
     }
 
     /*
@@ -156,6 +164,7 @@ int main() {
      */
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -172,9 +181,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -191,9 +202,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_full);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -210,9 +223,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_a);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -229,6 +244,7 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_b);
         free(s);
+
     }
 
     /*
@@ -236,6 +252,7 @@ int main() {
      */
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -252,9 +269,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -271,9 +290,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_full);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -290,9 +311,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_a);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -309,6 +332,7 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_b);
         free(s);
+
     }
 
     /*
@@ -316,6 +340,7 @@ int main() {
      */
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -334,9 +359,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -355,9 +382,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_full);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -376,9 +405,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_a);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -397,6 +428,7 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_b);
         free(s);
+
     }
 
     /*
@@ -404,6 +436,7 @@ int main() {
      */
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -422,9 +455,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -444,9 +479,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_full);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -466,9 +503,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_a);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -488,6 +527,7 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_b);
         free(s);
+
     }
 
     /*
@@ -495,6 +535,7 @@ int main() {
      */
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -511,9 +552,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -530,9 +573,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_full);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -549,9 +594,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_a);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -568,6 +615,7 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_b);
         free(s);
+
     }
 
     /*
@@ -575,6 +623,7 @@ int main() {
      */
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -591,9 +640,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -610,9 +661,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_full);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -629,9 +682,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_a);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -648,6 +703,7 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_b);
         free(s);
+
     }
 
     /*
@@ -655,6 +711,7 @@ int main() {
      */
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -674,9 +731,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -696,9 +755,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_full);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -718,9 +779,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_a);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -740,6 +803,7 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_b);
         free(s);
+
     }
 
     /*
@@ -747,6 +811,7 @@ int main() {
      */
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -766,9 +831,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -788,9 +855,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_full);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -810,9 +879,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_a);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -832,6 +903,7 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_b);
         free(s);
+
     }
 
     /*
