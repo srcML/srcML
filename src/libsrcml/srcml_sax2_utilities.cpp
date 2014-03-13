@@ -257,6 +257,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 
     }
 
+    stylesheet->doc = 0;
     xsltFreeStylesheet(stylesheet);
     xsltCleanupGlobals();
 
