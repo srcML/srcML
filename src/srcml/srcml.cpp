@@ -29,6 +29,7 @@
 #include <src_input_file.hpp>
 #include <src_input_filesystem.hpp>
 #include <src_input_stdin.hpp>
+#include <srcml_input_srcml.hpp>
 #include <src_output_libarchive.hpp>
 #include <src_output_filesystem.hpp>
 #include <srcml_display_info.hpp>
@@ -217,7 +218,10 @@ int main(int argc, char * argv[]) {
             std::string extension = boost::filesystem::extension(boost::filesystem::path(resource));
 
             // call handler based on prefix
-            if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
+            if (extension == ".xml") {
+
+                srcml_input_srcml(resource, srcml_arch);
+            } else if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
                 src_input_filesystem(queue, srcml_arch, resource, srcml_request.att_language);
 
             } else if (protocol == "file" && extension != ".tar" && extension != ".gz" && extension != ".zip") {
