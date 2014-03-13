@@ -52,6 +52,7 @@ int main() {
     const std::string srcml_macro = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><macro-list token=\"MACRO1\" type=\"src:macro\"/><macro-list token=\"MACRO2\" type=\"src:macro\"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>\n<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>\n</unit>";
     const std::string srcml_timestamp = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" timestamp=\"today\" language=\"C\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
     const std::string srcml_hash = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" hash=\"0123456789abcdef\" language=\"C\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
+    const std::string srcml_hash_generated = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" hash=\"\" language=\"C\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
 
     std::ofstream src_file_c("project.c");
     src_file_c << src;
@@ -310,6 +311,21 @@ int main() {
 	srcml_unit_set_timestamp(unit, "today");
         srcml_parse_unit_filename(unit, "project.c");
         dassert(*unit->unit, srcml_timestamp);
+
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_TIMESTAMP);
+        srcml_write_open_filename(archive, "project.xml");
+        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_parse_unit_filename(unit, "project.c");
+        dassert(*unit->unit, srcml_hash_generated);
 
         srcml_free_unit(unit);
         srcml_close_archive(archive);

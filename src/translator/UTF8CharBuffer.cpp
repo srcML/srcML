@@ -96,6 +96,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
     if(!ifilename) throw UTF8FileError();
 
     void * file = xmlFileOpen(ifilename);
+    if(!file) throw UTF8FileError();
 
     srcMLFile * sfile = new srcMLFile();
     sfile->file = (FILE *)file;
