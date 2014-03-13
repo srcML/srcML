@@ -105,9 +105,9 @@ void src_input_libarchive(ParseQueue& queue,
         open_status = archive_read_open_fd(arch, 0, 16384);
 
     else
-        open_status = archive_read_open_filename(arch, input_file.c_str(), 16384);
+        open_status = archive_read_open_filename(arch, input_file.substr(5).c_str(), 16384);
     if (open_status != ARCHIVE_OK) {
-        std::cerr << "Unable to open file\n";
+        std::cerr << "Unable to open file " << input_file << '\n';
         exit(1);
     }
 
