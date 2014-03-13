@@ -284,7 +284,8 @@ void srcMLTranslator::add_unit(std::string xml, const char * hash) {
 
 
 	int offset = 0;
-	if(hash_pos != pos) {
+
+	if(hash_pos != std::string::npos) {
 
 	    xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)xml.c_str(), (int)hash_pos + 6);
 	    xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)hash);
