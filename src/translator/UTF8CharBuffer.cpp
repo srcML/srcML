@@ -30,6 +30,8 @@
 #ifndef LIBXML2_NEW_BUFFER
 #define xmlBufContent(b) (b->content)
 #endif
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 struct srcMLFile {
 
@@ -347,3 +349,5 @@ UTF8CharBuffer::~UTF8CharBuffer() {
     }
 
 }
+
+#pragma GCC diagnostic pop
