@@ -37,6 +37,13 @@ struct srcMLFile {
 
 };
 
+struct srcMLFd {
+
+    int fd;
+    SHA_CTX * ctx;
+
+};
+
 int srcMLFileRead(void * context,  char * buffer, int len) {
 
     srcMLFile * sfile = (srcMLFile *)context;
@@ -45,7 +52,7 @@ int srcMLFileRead(void * context,  char * buffer, int len) {
     if(sfile->ctx)
 	SHA1_Update(sfile->ctx, buffer, num_read);
 
-    return num_read;
+    return (int)num_read;
 }
 
 int srcMLFileClose(void * context) {
@@ -54,6 +61,27 @@ int srcMLFileClose(void * context) {
     int ret = xmlFileClose(sfile->file);
 
     delete sfile;
+
+    return ret;
+}
+
+int srcMLFdRead(void * context,  char * buffer, int len) {
+
+    srcMLFd * sfd = (srcMLFd *)context;
+    size_t num_read = read(sfd->fd, buffer, len);
+
+    if(sfd->ctx)
+	SHA1_Update(sfd->ctx, buffer, num_read);
+
+    return (int)num_read;
+}
+
+int srcMLFdClose(void * context) {
+
+    srcMLFd * sfd = (srcMLFd *)context;
+    int ret = close(sfd->fd);
+
+    delete sfd;
 
     return ret;
 }
