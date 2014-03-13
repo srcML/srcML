@@ -439,12 +439,38 @@ int main() {
         srcml_read_open_memory(archive, s.c_str(), s.size());
         srcml_append_transform_xpath(archive, "//src:unit");
         srcml_append_transform_xslt_filename(archive, "copy.xsl");
+        srcml_append_transform_xslt_memory(archive, copy.c_str(), copy.size());
+	FILE * f = fopen("copy.xsl", "r");
+        srcml_append_transform_xslt_FILE(archive, f);
+	fclose(f);
+	int fd = open("copy.xsl", O_RDONLY);
+        srcml_append_transform_xslt_fd(archive, fd);
+	close(fd);
         srcml_append_transform_relaxng_filename(archive, "schema.rng");
+        srcml_append_transform_relaxng_memory(archive, schema.c_str(), schema.size());
+	f = fopen("schema.rng", "r");
+        srcml_append_transform_relaxng_FILE(archive, f);
+	fclose(f);
+	fd = open("copy.xsl", O_RDONLY);
+        srcml_append_transform_relaxng_fd(archive, fd);
+	close(fd);
 
         dassert(archive->transformations.at(0).type, SRCML_XPATH);
         dassert(archive->transformations.at(0).transformation.str, "//src:unit");
         dassert(archive->transformations.at(1).type, SRCML_XSLT);
         assert(archive->transformations.at(1).transformation.doc != 0);
+        dassert(archive->transformations.at(1).type, SRCML_XSLT);
+        assert(archive->transformations.at(1).transformation.doc != 0);
+        dassert(archive->transformations.at(1).type, SRCML_XSLT);
+        assert(archive->transformations.at(1).transformation.doc != 0);
+        dassert(archive->transformations.at(1).type, SRCML_XSLT);
+        assert(archive->transformations.at(1).transformation.doc != 0);
+        dassert(archive->transformations.back().type, SRCML_RELAXNG);
+        assert(archive->transformations.back().transformation.doc != 0);
+        dassert(archive->transformations.back().type, SRCML_RELAXNG);
+        assert(archive->transformations.back().transformation.doc != 0);
+        dassert(archive->transformations.back().type, SRCML_RELAXNG);
+        assert(archive->transformations.back().transformation.doc != 0);
         dassert(archive->transformations.back().type, SRCML_RELAXNG);
         assert(archive->transformations.back().transformation.doc != 0);
 
