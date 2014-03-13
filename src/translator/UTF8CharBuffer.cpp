@@ -25,10 +25,69 @@
 
 #include <iostream>
 #include <sstream>
+#include <iomanip>
 
 #ifndef LIBXML2_NEW_BUFFER
 #define xmlBufContent(b) (b->content)
 #endif
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
+struct srcMLFile {
+
+    FILE * file;
+    SHA_CTX * ctx;
+
+};
+
+struct srcMLFd {
+
+    int fd;
+    SHA_CTX * ctx;
+
+};
+
+int srcMLFileRead(void * context,  char * buffer, int len) {
+
+    srcMLFile * sfile = (srcMLFile *)context;
+    size_t num_read = xmlFileRead(sfile->file, buffer, len);
+
+    if(sfile->ctx)
+	SHA1_Update(sfile->ctx, buffer, num_read);
+
+    return (int)num_read;
+}
+
+int srcMLFileClose(void * context) {
+
+    srcMLFile * sfile = (srcMLFile *)context;
+    int ret = xmlFileClose(sfile->file);
+
+    delete sfile;
+
+    return ret;
+}
+
+int srcMLFdRead(void * context,  char * buffer, int len) {
+
+    srcMLFd * sfd = (srcMLFd *)context;
+    size_t num_read = read(sfd->fd, buffer, len);
+
+    if(sfd->ctx)
+	SHA1_Update(sfd->ctx, buffer, num_read);
+
+    return (int)num_read;
+}
+
+int srcMLFdClose(void * context) {
+
+    srcMLFd * sfd = (srcMLFd *)context;
+    int ret = close(sfd->fd);
+
+    delete sfd;
+
+    return ret;
+}
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash)
@@ -36,9 +95,19 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
 
     if(!ifilename) throw UTF8FileError();
 
-    input = xmlParserInputBufferCreateFilename(ifilename, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+    void * file = xmlFileOpen(ifilename);
+    if(!file) throw UTF8FileError();
+
+    srcMLFile * sfile = new srcMLFile();
+    sfile->file = (FILE *)file;
+    hash ? sfile->ctx = &ctx : 0;
+
+    input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sfile, 
+					 encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
+
+    if(hash) SHA1_Init(&ctx);
 
     init(encoding);
 
@@ -48,6 +117,13 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
     : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)buffer_size), lastcr(false), hash(hash) {
 
     if(!c_buffer) throw UTF8FileError();
+
+    if(hash) {
+
+	SHA1_Init(&ctx);
+	SHA1_Update(&ctx, c_buffer, buffer_size);
+
+    }
 
     if(size == 0)
         input = xmlParserInputBufferCreateMem("\xff\xff\xff\xff", 1, encoding ? xmlParseCharEncoding("UTF-8") : XML_CHAR_ENCODING_NONE);
@@ -85,9 +161,16 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
 
     if(!file) throw UTF8FileError();
 
-    input = xmlParserInputBufferCreateFile(file, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+    srcMLFile * sfile = new srcMLFile();
+    sfile->file = file;
+    hash ? sfile->ctx = &ctx : 0;
+
+    input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sfile, 
+					 encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
+
+    if(hash) SHA1_Init(&ctx);
 
     init(encoding);
 
@@ -98,9 +181,16 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
 
     if(fd < 0) throw UTF8FileError();
 
-    input = xmlParserInputBufferCreateFd(fd, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+    srcMLFd * sfd = new srcMLFd();
+    sfd->fd = fd;
+    hash ? sfd->ctx = &ctx : 0;
+
+    input = xmlParserInputBufferCreateIO(srcMLFdRead, srcMLFdClose, sfd, 
+					 encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
+
+    if(hash) SHA1_Init(&ctx);
 
     init(encoding);
 
@@ -159,13 +249,6 @@ void UTF8CharBuffer::init(const char * encoding) {
         }
     }
 
-    if(hash) {
-
-	SHA1_Init(&ctx);
-	SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
-
-    }
-
 }
 
 int UTF8CharBuffer::growBuffer() {
@@ -200,12 +283,6 @@ int UTF8CharBuffer::getChar() {
         if (size == -1 || size == 0)
             return -1;
 
-	if(hash) {
-
-	    SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
-
-	}
-
         // start at the beginning
         pos = 0;
     }
@@ -233,12 +310,6 @@ int UTF8CharBuffer::getChar() {
             // found problem or eof
             if (size == -1 || size == 0)
                 return -1;
-
-	    if(hash) {
-
-		SHA1_Update(&ctx, xmlBufContent(input->buffer), size);
-
-	    }
 
             // start at the beginning
             pos = 0;
@@ -272,10 +343,12 @@ UTF8CharBuffer::~UTF8CharBuffer() {
 
 	std::ostringstream hash_stream;
 	for(int i = 0; i < SHA_DIGEST_LENGTH; ++i)
-	    hash_stream << std::hex << (unsigned int)md[i];
+	    hash_stream << std::setw(2) << std::setfill('0') << std::right << std::hex << (unsigned int)md[i];
 
 	*hash = hash_stream.str();
 
     }
 
 }
+
+#pragma GCC diagnostic pop
