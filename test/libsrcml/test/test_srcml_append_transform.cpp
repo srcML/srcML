@@ -437,7 +437,9 @@ int main() {
     {
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_memory(archive, s.c_str(), s.size());
+
         srcml_append_transform_xpath(archive, "//src:unit");
+
         srcml_append_transform_xslt_filename(archive, "copy.xsl");
         srcml_append_transform_xslt_memory(archive, copy.c_str(), copy.size());
 	FILE * f = fopen("copy.xsl", "r");
@@ -446,6 +448,7 @@ int main() {
 	int fd = open("copy.xsl", O_RDONLY);
         srcml_append_transform_xslt_fd(archive, fd);
 	close(fd);
+
         srcml_append_transform_relaxng_filename(archive, "schema.rng");
         srcml_append_transform_relaxng_memory(archive, schema.c_str(), schema.size());
 	f = fopen("schema.rng", "r");
