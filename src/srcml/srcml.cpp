@@ -69,10 +69,24 @@ int main(int argc, char * argv[]) {
         return 0;
     }
 
+    const int SRCML_COMMAND_INSRCML =
+        SRCML_COMMAND_LONGINFO |
+        SRCML_COMMAND_INFO    |
+        SRCML_COMMAND_INFO_FILENAME |
+        SRCML_COMMAND_VERSION |
+        SRCML_COMMAND_LIST |
+        SRCML_COMMAND_UNITS |
+        SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE |
+        SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY |
+        SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
+        SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
+        SRCML_COMMAND_DISPLAY_SRCML_ENCODING;
+
     // determine whether the input is xml(srcml) or not
     boost::optional<FILE*> fstdin;
     bool tosrc = false;
     bool tosrcml = false;
+    bool insrcml = srcml_request.command & SRCML_COMMAND_INSRCML;
     if (srcml_request.command & SRCML_COMMAND_SRC) {
         tosrc = true;
     } else if (srcml_request.command & SRCML_COMMAND_SRCML) {
