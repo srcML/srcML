@@ -338,8 +338,12 @@ UTF8CharBuffer::~UTF8CharBuffer() {
 	SHA1_Final(md, &ctx);
 
 	std::ostringstream hash_stream;
-	for(int i = 0; i < SHA_DIGEST_LENGTH; ++i)
+	for(int i = 0; i < SHA_DIGEST_LENGTH; ++i) {
+	    if((unsigned int)md[i] < 0xf)
+		hash_stream << '0';
 	    hash_stream << std::hex << (unsigned int)md[i];
+
+	}
 
 	*hash = hash_stream.str();
 
