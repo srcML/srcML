@@ -335,7 +335,7 @@ archive.close()
 
 verify_test(asrcml, oarchive.srcML())
 
-# xslt
+# xslt filename
 archive = srcml.srcml_archive()
 archive.read_open_memory(asrcml)
 archive.append_transform_xslt_filename("copy.xsl")
@@ -347,7 +347,50 @@ archive.close()
 
 verify_test(asrcml, oarchive.srcML())
 
-# relaxng
+# xslt memory
+archive = srcml.srcml_archive()
+archive.read_open_memory(asrcml)
+f = open("copy.xsl", "r")
+copy = f.read()
+f.close()
+archive.append_transform_xslt_memory(copy)
+oarchive = archive.clone()
+oarchive.write_open_memory()
+archive.apply_transforms(oarchive)
+oarchive.close()
+archive.close()
+
+verify_test(asrcml, oarchive.srcML())
+
+# xslt FILE
+archive = srcml.srcml_archive()
+archive.read_open_memory(asrcml)
+file = libc.fopen("copy.xsl", "r")
+libc.fclose(file)
+archive.append_transform_xslt_FILE(file)
+oarchive = archive.clone()
+oarchive.write_open_memory()
+archive.apply_transforms(oarchive)
+oarchive.close()
+archive.close()
+
+verify_test(asrcml, oarchive.srcML())
+
+# xslt fd
+archive = srcml.srcml_archive()
+archive.read_open_memory(asrcml)
+fd = os.open("copy.xsl", O_RDONLY)
+archive.append_transform_xslt_fd("copy.xsl")
+os.close(fd)
+oarchive = archive.clone()
+oarchive.write_open_memory()
+archive.apply_transforms(oarchive)
+oarchive.close()
+archive.close()
+
+verify_test(asrcml, oarchive.srcML())
+
+# relaxng filename
 archive = srcml.srcml_archive()
 archive.read_open_memory(asrcml)
 archive.append_transform_relaxng_filename("schema.rng")
