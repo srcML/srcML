@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <iomanip>
 
 #ifndef LIBXML2_NEW_BUFFER
 #define xmlBufContent(b) (b->content)
@@ -338,12 +339,8 @@ UTF8CharBuffer::~UTF8CharBuffer() {
 	SHA1_Final(md, &ctx);
 
 	std::ostringstream hash_stream;
-	for(int i = 0; i < SHA_DIGEST_LENGTH; ++i) {
-	    if((unsigned int)md[i] < 0xf)
-		hash_stream << '0';
-	    hash_stream << std::hex << (unsigned int)md[i];
-
-	}
+	for(int i = 0; i < SHA_DIGEST_LENGTH; ++i)
+	    hash_stream << std::setw(2) << std::setfill('0') << std::right << std::hex << (unsigned int)md[i];
 
 	*hash = hash_stream.str();
 
