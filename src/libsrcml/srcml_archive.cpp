@@ -103,6 +103,7 @@ srcml_archive* srcml_create_archive()
 void srcml_free_archive(srcml_archive * archive) {
 
     if(archive == NULL) return;
+    srcml_clear_transforms(archive);
 
     delete archive;
 }
