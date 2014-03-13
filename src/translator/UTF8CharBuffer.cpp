@@ -26,6 +26,10 @@
 #include <iostream>
 #include <sstream>
 
+#ifndef LIBXML2_NEW_BUFFER
+#define xmlBufContent(b) (b->content)
+#endif
+
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash)
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
