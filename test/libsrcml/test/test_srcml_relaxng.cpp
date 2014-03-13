@@ -57,13 +57,15 @@ int main() {
                       , S_IRUSR | S_IWUSR
 #endif
                       );
-        dassert(srcml_relaxng(buffer_input, "schema.rng", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
+	xmlDocPtr doc = xmlReadFile("schema.rng", 0, 0);
+        dassert(srcml_relaxng(buffer_input, doc, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
         std::ifstream in("project.xml");
         std::string output;
         std::string temp;
         while(in >> temp)
             output += temp;
         dassert(output, "<?xmlversion=\"1.0\"encoding=\"\"standalone=\"yes\"?><unit>a;</unit>");
+	xmlFreeDoc(doc);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
         unlink("project.xml");
@@ -75,7 +77,10 @@ int main() {
                       , S_IRUSR | S_IWUSR
 #endif
                       );
-        dassert(srcml_relaxng(0, "schema.rng", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+	xmlDocPtr doc = xmlReadFile("schema.rng", 0, 0);
+        dassert(srcml_relaxng(0, doc, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+
+        xmlFreeDoc(doc);
         unlink("project.xml");
     }
 
@@ -91,6 +96,7 @@ int main() {
 #endif
                       );
         dassert(srcml_relaxng(buffer_input, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
         unlink("project.xml");
@@ -102,7 +108,9 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        dassert(srcml_relaxng(buffer_input, "schema.rng", -1, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+	xmlDocPtr doc = xmlReadFile("schema.rng", 0, 0);
+        dassert(srcml_relaxng(buffer_input, doc, -1, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+        xmlFreeDoc(doc);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
     }

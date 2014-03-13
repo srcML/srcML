@@ -171,7 +171,7 @@ void dlexsltRegisterAll(void * handle) {
  * srcml_xslt
  * @param input_buffer a parser input buffer
  * @param context_element a srcml element to be used as the context
- * @param xslt XSLT program filename
+ * @param xslt xmlDocPtr containing an XSLT program
  * @param params NULL-terminated list of XSLT parameters
  * @param paramcount number of XSLT parameters
  * @param fd output file descriptor
@@ -181,7 +181,7 @@ void dlexsltRegisterAll(void * handle) {
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xslt, const char* params[], int paramcount, int fd, OPTION_TYPE options) {
+int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const char* params[], int paramcount, int fd, OPTION_TYPE options) {
 
     if(input_buffer == NULL || context_element == NULL ||
        xslt == NULL || fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
@@ -189,7 +189,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     xmlInitParser();
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-    typedef xsltStylesheetPtr (*xsltParseStylesheetFile_function) (const xmlChar*);
+    typedef xsltStylesheetPtr (*xsltParseStylesheetDoc_function) (xmlDocPtr);
     typedef void (*xsltCleanupGlobals_function)();
     typedef void (*xsltFreeStylesheet_function)(xsltStylesheetPtr);
 
@@ -209,8 +209,8 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     dlexsltRegisterAll(handle);
 
     dlerror();
-    xsltParseStylesheetFile_function xsltParseStylesheetFile;
-    *(void **)(&xsltParseStylesheetFile) = dlsym(handle, "xsltParseStylesheetFile");
+    xsltParseStylesheetDoc_function xsltParseStylesheetDoc;
+    *(void **)(&xsltParseStylesheetDoc) = dlsym(handle, "xsltParseStylesheetDoc");
     char* error;
     if ((error = dlerror()) != NULL) {
         dlclose(handle);
@@ -235,7 +235,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 #endif
 
     // parse the stylesheet
-    xsltStylesheetPtr stylesheet = xsltParseStylesheetFile(BAD_CAST xslt);
+    xsltStylesheetPtr stylesheet = xsltParseStylesheetDoc(xslt);
     if (!stylesheet)
         return SRCML_STATUS_ERROR;
 
@@ -257,6 +257,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 
     }
 
+    stylesheet->doc = 0;
     xsltFreeStylesheet(stylesheet);
     xsltCleanupGlobals();
 
@@ -271,7 +272,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 /**
  * srcml_relaxng
  * @param input_buffer a parser input buffer
- * @param relaxng RelaxNG schema
+ * @param relaxng xmlDocPtr containing a RelaxNG schema
  * @param fd output file descriptor
  * @param options srcml options
  *
@@ -279,11 +280,11 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char* relaxng, int fd, OPTION_TYPE options) {
+int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, int fd, OPTION_TYPE options) {
 
     if(input_buffer == NULL || relaxng == NULL || fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    xmlRelaxNGParserCtxtPtr relaxng_parser_ctxt = xmlRelaxNGNewParserCtxt(relaxng);
+    xmlRelaxNGParserCtxtPtr relaxng_parser_ctxt = xmlRelaxNGNewDocParserCtxt(relaxng);
     xmlRelaxNGPtr rng = xmlRelaxNGParse(relaxng_parser_ctxt);
     xmlRelaxNGValidCtxtPtr rngctx = xmlRelaxNGNewValidCtxt(rng);
 

@@ -37,7 +37,7 @@ int main(int argc, char * argv[]) {
     oarchive = srcml_clone_archive(iarchive);
     srcml_write_open_filename(oarchive, "relaxng.xml");
 
-    srcml_append_transform_relaxng(iarchive, "schema.rng");
+    srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
 
     srcml_apply_transforms(iarchive, oarchive);
 

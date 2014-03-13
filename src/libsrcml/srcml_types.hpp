@@ -47,8 +47,16 @@ enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
 struct transform {
     /** a transformation type */
     SRCML_TRANSFORM_TYPE type;
-    /** the transformation to perform */
-    std::string transformation;
+
+    /** union holding the transformation */
+    union {
+
+	/** the transformation to perform for XPath */
+	const char * str;
+	/** the transformation to perform for XSLT and relaxng */
+	xmlDocPtr doc;
+
+    } transformation;
 
 };
 

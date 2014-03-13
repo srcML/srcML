@@ -38,8 +38,8 @@ int main(int argc, char * argv[]) {
     srcml_write_open_filename(oarchive, "transform.xml");
 
     srcml_append_transform_xpath(iarchive, "//src:unit");
-    srcml_append_transform_xslt(iarchive, "copy.xsl");
-    srcml_append_transform_relaxng(iarchive, "schema.rng");
+    srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
+    srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
 
     srcml_apply_transforms(iarchive, oarchive);
 
