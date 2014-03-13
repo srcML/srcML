@@ -103,6 +103,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
 
     if(!input) throw UTF8FileError();
 
+    if(hash) SHA1_Init(&ctx);
+
     init(encoding);
 
 }
@@ -111,6 +113,13 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
     : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)buffer_size), lastcr(false), hash(hash) {
 
     if(!c_buffer) throw UTF8FileError();
+
+    if(hash) {
+
+	SHA1_Init(&ctx);
+	SHA1_Update(&ctx, c_buffer, buffer_size);
+
+    }
 
     if(size == 0)
         input = xmlParserInputBufferCreateMem("\xff\xff\xff\xff", 1, encoding ? xmlParseCharEncoding("UTF-8") : XML_CHAR_ENCODING_NONE);
@@ -157,6 +166,8 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
 
     if(!input) throw UTF8FileError();
 
+    if(hash) SHA1_Init(&ctx);
+
     init(encoding);
 
 }
@@ -174,6 +185,8 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
 					 encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
+
+    if(hash) SHA1_Init(&ctx);
 
     init(encoding);
 
@@ -231,9 +244,6 @@ void UTF8CharBuffer::init(const char * encoding) {
             size = growBuffer();
         }
     }
-
-    if(hash)
-	SHA1_Init(&ctx);
 
 }
 
