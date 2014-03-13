@@ -1,5 +1,5 @@
 /**
- * @file srcml_output_filesystem.hpp
+ * @file src_output_filesystem.hpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -21,13 +21,13 @@
  *
 */
 
-#ifndef SRCML_OUTPUT_FILESYSTEM_HPP
-#define SRCML_OUTPUT_FILESYSTEM_HPP
+#ifndef SRC_OUTPUT_FILESYSTEM_HPP
+#define SRC_OUTPUT_FILESYSTEM_HPP
 
 #include <srcml.h>
 #include <string>
 #include <trace_log.hpp>
 
-void srcml_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log);
+void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log);
 
 #endif

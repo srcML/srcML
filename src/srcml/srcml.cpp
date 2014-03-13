@@ -30,7 +30,7 @@
 #include <src_input_filesystem.hpp>
 #include <src_input_stdin.hpp>
 #include <src_output_libarchive.hpp>
-#include <srcml_output_filesystem.hpp>
+#include <src_output_filesystem.hpp>
 #include <srcml_display_info.hpp>
 #include <srcml_list_unit_files.hpp>
 #include <src_prefix.hpp>
@@ -264,7 +264,7 @@ int main(int argc, char * argv[]) {
             else
                 srcml_read_open_FILE(arch, *fstdin);
 
-            srcml_output_filesystem(arch, *srcml_request.output_filename, log);
+            src_output_filesystem(arch, *srcml_request.output_filename, log);
 
             srcml_close_archive(arch);
             srcml_free_archive(arch);
