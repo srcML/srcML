@@ -219,7 +219,6 @@ int main(int argc, char * argv[]) {
 
             // call handler based on prefix
             if (extension == ".xml") { 
-                fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
                 srcml_input_srcml(resource, srcml_arch, fstdin);
             } else if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
