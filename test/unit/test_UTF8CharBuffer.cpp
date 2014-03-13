@@ -28,6 +28,7 @@
 #include <cassert>
 #include <fstream>
 #include <UTF8CharBuffer.hpp>
+#include <boost/optional.hpp>
 
 int main() {
 
@@ -44,7 +45,7 @@ int main() {
 
     file.open("utf8.cpp");
     file << "/** ";
-    file << "\u00fe\u00ff";
+    file << "þÿ";
     file << " */";
     file.close();
 
@@ -310,8 +311,109 @@ int main() {
 
     }
 
+    /*
+      hash
+    */
+
+    {
+
+	boost::optional<std::string> hash;
+	{
+
+	    UTF8CharBuffer utf8("iso.cpp", "ISO-8859-1", &hash);
+	    assert(utf8.getChar() == '/');
+	    assert(utf8.getChar() == '*');
+	    assert(utf8.getChar() == '*');
+	    assert(utf8.getChar() == ' ');
+	    assert(utf8.getChar() == 195);
+	    assert(utf8.getChar() == 190);
+	    assert(utf8.getChar() == 195);
+	    assert(utf8.getChar() == 191);
+	    assert(utf8.getChar() == ' ');
+	    assert(utf8.getChar() == '*');
+	    assert(utf8.getChar() == '/');
+
+	}
+
+	assert(hash == std::string("594bb6deba9a7dbec4f4a560333a11fe1d4a3ad9"));
+
+    }
+
+    {
+
+	boost::optional<std::string> hash;
+	{
+
+	    UTF8CharBuffer utf8("utf8.cpp", "UTF-8", &hash);
+	    assert(utf8.getChar() == '/');
+	    assert(utf8.getChar() == '*');
+	    assert(utf8.getChar() == '*');
+	    assert(utf8.getChar() == ' ');
+	    assert(utf8.getChar() == 195);
+	    assert(utf8.getChar() == 190);
+	    assert(utf8.getChar() == 195);
+	    assert(utf8.getChar() == 191);
+	    assert(utf8.getChar() == ' ');
+	    assert(utf8.getChar() == '*');
+	    assert(utf8.getChar() == '/');
+
+	}
+
+	assert(hash == std::string("45933290ed0df422e5936271ad6e08a77fd714bf"));
+
+    }
+
+    {
+
+	boost::optional<std::string> hash;
+	{
+
+	    UTF8CharBuffer utf8("/** \xfe\xff */", "ISO-8859-1", &hash);
+	    assert(utf8.getChar() == '/');
+	    assert(utf8.getChar() == '*');
+	    assert(utf8.getChar() == '*');
+	    assert(utf8.getChar() == ' ');
+	    assert(utf8.getChar() == 195);
+	    assert(utf8.getChar() == 190);
+	    assert(utf8.getChar() == 195);
+	    assert(utf8.getChar() == 191);
+	    assert(utf8.getChar() == ' ');
+	    assert(utf8.getChar() == '*');
+	    assert(utf8.getChar() == '/');
+
+	}
+
+	assert(hash == std::string("594bb6deba9a7dbec4f4a560333a11fe1d4a3ad9"));
+
+    }
+
+    {
+
+	boost::optional<std::string> hash;
+	{
+
+	    UTF8CharBuffer utf8("/** þÿ */", "UTF-8", &hash);
+	    assert(utf8.getChar() == '/');
+	    assert(utf8.getChar() == '*');
+	    assert(utf8.getChar() == '*');
+	    assert(utf8.getChar() == ' ');
+	    assert(utf8.getChar() == 195);
+	    assert(utf8.getChar() == 190);
+	    assert(utf8.getChar() == 195);
+	    assert(utf8.getChar() == 191);
+	    assert(utf8.getChar() == ' ');
+	    assert(utf8.getChar() == '*');
+	    assert(utf8.getChar() == '/');
+
+	}
+
+	assert(hash == std::string("45933290ed0df422e5936271ad6e08a77fd714bf"));
+
+    }
+
     unlink("a.cpp");
     unlink("iso.cpp");
+    unlink("utf8.cpp");
     unlink("long.cpp");
 
     return 0;
