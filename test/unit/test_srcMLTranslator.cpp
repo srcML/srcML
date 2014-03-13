@@ -249,10 +249,9 @@ int main() {
         std::string s = "<unit hash=\"0123456789abcdef\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(s_before.c_str(), "0123456789abcdef");
+        translator.add_unit(s_before.c_str(), "0123456789abcdef");
         translator.close();
         std::string result = (const char *)buffer->content;
-	fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n").c_str());
-	fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, result.c_str());
 	assert(result == decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
         xmlBufferFree(buffer);
