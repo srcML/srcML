@@ -29,7 +29,7 @@
 #include <src_input_file.hpp>
 #include <src_input_filesystem.hpp>
 #include <src_input_stdin.hpp>
-#include <srcml_output_libarchive.hpp>
+#include <src_output_libarchive.hpp>
 #include <srcml_output_filesystem.hpp>
 #include <srcml_display_info.hpp>
 #include <srcml_list_unit_files.hpp>
@@ -351,7 +351,7 @@ int main(int argc, char * argv[]) {
                 srcml_read_open_FILE(arch, *fstdin);
 
             // extract this srcml archive to the source archive
-            srcml_output_libarchive(arch, ar);
+            src_output_libarchive(arch, ar);
 
             srcml_close_archive(arch);
             srcml_free_archive(arch);

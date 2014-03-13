@@ -1,5 +1,5 @@
 /**
- * @file srcml_output_libarchive.hpp
+ * @file src_output_libarchive.hpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -21,12 +21,12 @@
  *
 */
 
-#ifndef SRCML_OUTPUT_LIBARCHIVE_HPP
-#define SRCML_OUTPUT_LIBARCHIVE_HPP
+#ifndef SRC_OUTPUT_LIBARCHIVE_HPP
+#define SRC_OUTPUT_LIBARCHIVE_HPP
 
 #include <archive.h>
 #include <srcml.h>
 
-void srcml_output_libarchive(srcml_archive* srcml_arch, archive* ar);
+void src_output_libarchive(srcml_archive* srcml_arch, archive* ar);
 
 #endif

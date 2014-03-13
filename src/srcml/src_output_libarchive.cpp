@@ -1,5 +1,5 @@
 /**
- * @file srcml_output_libarchive.cpp
+ * @file src_output_libarchive.cpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -20,13 +20,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <srcml_output_libarchive.hpp>
+#include <src_output_libarchive.hpp>
 #include <srcml.h>
 #include <archive.h>
 #include <archive_entry.h>
 #include <stdlib.h>
 
-void srcml_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
+void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
 
     int arch_status = ARCHIVE_OK;
     while (srcml_unit* unit = srcml_read_unit(srcml_arch)) {
