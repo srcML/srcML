@@ -65,7 +65,7 @@ int main() {
         while(in >> temp)
             output += temp;
         dassert(output, "<?xmlversion=\"1.0\"encoding=\"\"standalone=\"yes\"?><unit>a;</unit>");
-        xmlFreeDoc(doc);
+//        xmlFreeDoc(doc);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
         unlink("project.xml");
