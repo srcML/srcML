@@ -237,145 +237,152 @@ int main(int argc, char * argv[]) {
         srcml_close_archive(srcml_arch);
         srcml_free_archive(srcml_arch);
     }
-    // srcml->src language
-    else if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE){
-    }
-    // srcml->src directory
-    else if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY){
-    }
-    // srcml->src filename
-    else if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME){
-    }
-    // srcml->src src version
-    else if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION){
-    }
-    // srcml->src encoding
-    else if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING){
-    }
-    // srcml long info
-    else if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
-        srcml_display_info(srcml_request.input);
-    }
-    // srcml info
-    else if (srcml_request.command & SRCML_COMMAND_INFO) {
-        srcml_display_info(srcml_request.input);
-    }
-    // list filenames in srcml archive
-    else if (srcml_request.command & SRCML_COMMAND_LIST) {
-        srcml_list_unit_files(srcml_request.input);
 
+    if (insrcml) {
+        // srcml->src language
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE){
+        }
+        // srcml->src directory
+        else if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY){
+        }
+        // srcml->src filename
+        else if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME){
+        }
+        // srcml->src src version
+        else if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION){
+        }
+        // srcml->src encoding
+        else if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING){
+        }
+        // srcml long info
+        else if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
+            srcml_display_info(srcml_request.input);
+        }
+        // srcml info
+        else if (srcml_request.command & SRCML_COMMAND_INFO) {
+            srcml_display_info(srcml_request.input);
+        }
+        // list filenames in srcml archive
+        else if (srcml_request.command & SRCML_COMMAND_LIST) {
+            srcml_list_unit_files(srcml_request.input);
+
+        }
+    }
+
+    if (tosrc) {
         // srcml->src srcML file to filesystem
-    } else if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
+        if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
 
-        TraceLog log(std::cerr, *srcml_request.markup_options);
+            TraceLog log(std::cerr, *srcml_request.markup_options);
 
-        // process command line inputs
-        BOOST_FOREACH(const std::string& input_file, srcml_request.input) {
+            // process command line inputs
+            BOOST_FOREACH(const std::string& input_file, srcml_request.input) {
+
+                srcml_archive* arch = srcml_create_archive();
+                if (!fstdin)
+                    srcml_read_open_filename(arch, input_file.c_str());
+                else
+                    srcml_read_open_FILE(arch, *fstdin);
+
+                src_output_filesystem(arch, *srcml_request.output_filename, log);
+
+                srcml_close_archive(arch);
+                srcml_free_archive(arch);
+            }
+
+            // srcml->src extract individual unit in XML
+        } else if (tosrc && (srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
 
             srcml_archive* arch = srcml_create_archive();
             if (!fstdin)
-                srcml_read_open_filename(arch, input_file.c_str());
+                srcml_read_open_filename(arch, srcml_request.input[0].c_str());
             else
                 srcml_read_open_FILE(arch, *fstdin);
 
-            src_output_filesystem(arch, *srcml_request.output_filename, log);
+            srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
+
+            // TODO: We would have to use extend the API, or we will be creating/closing files
+            srcml_archive* oarch = srcml_create_archive();
+            srcml_write_open_filename(oarch, srcml_request.output_filename->c_str());
+
+            srcml_write_unit(oarch, unit);
+
+            srcml_close_archive(oarch);
+            srcml_free_archive(oarch);
 
             srcml_close_archive(arch);
             srcml_free_archive(arch);
-        }
 
-        // srcml->src extract individual unit in XML
-    } else if (tosrc && (srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
+            // srcml->src extract individual unit to file
+        } else if (tosrc && srcml_request.input.size() == 1 && srcml_request.unit > 0) {
 
-        srcml_archive* arch = srcml_create_archive();
-        if (!fstdin)
-            srcml_read_open_filename(arch, srcml_request.input[0].c_str());
-        else
-            srcml_read_open_FILE(arch, *fstdin);
+            srcml_archive* arch = srcml_create_archive();
+            if (!fstdin)
+                srcml_read_open_filename(arch, srcml_request.input[0].c_str());
+            else
+                srcml_read_open_FILE(arch, *fstdin);
 
-        srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
+            srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
 
-        // TODO: We would have to use extend the API, or we will be creating/closing files
-        srcml_archive* oarch = srcml_create_archive();
-        srcml_write_open_filename(oarch, srcml_request.output_filename->c_str());
+            if (*srcml_request.output_filename == "-")
+                srcml_unparse_unit_fd(unit, STDOUT_FILENO);
+            else
+                srcml_unparse_unit_filename(unit, srcml_request.output_filename->c_str());
 
-        srcml_write_unit(oarch, unit);
+            srcml_close_archive(arch);
+            srcml_free_archive(arch);
 
-        srcml_close_archive(oarch);
-        srcml_free_archive(oarch);
+            // srcml->src srcML file extracted to stdout
+        } else if (tosrc && srcml_request.input.size() == 1 && *srcml_request.output_filename == "-") {
 
-        srcml_close_archive(arch);
-        srcml_free_archive(arch);
+            srcml_archive* arch = srcml_create_archive();
+            if (!fstdin)
+                srcml_read_open_filename(arch, srcml_request.input[0].c_str());
+            else
+                srcml_read_open_FILE(arch, *fstdin);
 
-        // srcml->src extract individual unit to file
-    } else if (tosrc && srcml_request.input.size() == 1 && srcml_request.unit > 0) {
+            srcml_unit* unit = srcml_read_unit(arch);
 
-        srcml_archive* arch = srcml_create_archive();
-        if (!fstdin)
-            srcml_read_open_filename(arch, srcml_request.input[0].c_str());
-        else
-            srcml_read_open_FILE(arch, *fstdin);
-
-        srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
-
-        if (*srcml_request.output_filename == "-")
             srcml_unparse_unit_fd(unit, STDOUT_FILENO);
-        else
-            srcml_unparse_unit_filename(unit, srcml_request.output_filename->c_str());
-
-        srcml_close_archive(arch);
-        srcml_free_archive(arch);
-
-        // srcml->src srcML file extracted to stdout
-    } else if (tosrc && srcml_request.input.size() == 1 && *srcml_request.output_filename == "-") {
-
-        srcml_archive* arch = srcml_create_archive();
-        if (!fstdin)
-            srcml_read_open_filename(arch, srcml_request.input[0].c_str());
-        else
-            srcml_read_open_FILE(arch, *fstdin);
-
-        srcml_unit* unit = srcml_read_unit(arch);
-
-        srcml_unparse_unit_fd(unit, STDOUT_FILENO);
-
-        srcml_close_archive(arch);
-        srcml_free_archive(arch);
-
-        // srcml->src srcML file to libarchive file
-    } else if (tosrc) {
-
-        // TODO: What if this is a simple, single file? or to stdout?
-        archive* ar = archive_write_new();
-
-        // setup compression and format
-        // TODO: Needs to be generalized from output file extension
-        archive_write_set_compression_gzip(ar);
-        archive_write_set_format_pax_restricted(ar);
-
-        archive_write_open_filename(ar, srcml_request.output_filename->c_str());
-
-        // process command line inputs
-        BOOST_FOREACH(const std::string& input_file, srcml_request.input) {
-
-            srcml_archive* arch = srcml_create_archive();
-            if (!fstdin)
-                srcml_read_open_filename(arch, input_file.c_str());
-            else
-                srcml_read_open_FILE(arch, *fstdin);
-
-            // extract this srcml archive to the source archive
-            src_output_libarchive(arch, ar);
 
             srcml_close_archive(arch);
             srcml_free_archive(arch);
+
+            // srcml->src srcML file to libarchive file
+        } else if (tosrc) {
+
+            // TODO: What if this is a simple, single file? or to stdout?
+            archive* ar = archive_write_new();
+
+            // setup compression and format
+            // TODO: Needs to be generalized from output file extension
+            archive_write_set_compression_gzip(ar);
+            archive_write_set_format_pax_restricted(ar);
+
+            archive_write_open_filename(ar, srcml_request.output_filename->c_str());
+
+            // process command line inputs
+            BOOST_FOREACH(const std::string& input_file, srcml_request.input) {
+
+                srcml_archive* arch = srcml_create_archive();
+                if (!fstdin)
+                    srcml_read_open_filename(arch, input_file.c_str());
+                else
+                    srcml_read_open_FILE(arch, *fstdin);
+
+                // extract this srcml archive to the source archive
+                src_output_libarchive(arch, ar);
+
+                srcml_close_archive(arch);
+                srcml_free_archive(arch);
+            }
+
+            archive_write_close(ar);
+            archive_write_finish(ar);
+
+        } else {
+            std::cerr << "Option not implemented" << '\n';
         }
-
-        archive_write_close(ar);
-        archive_write_finish(ar);
-
-    } else {
-        std::cerr << "Option not implemented" << '\n';
     }
 
     srcml_cleanup_globals();
