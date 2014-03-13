@@ -30,8 +30,6 @@
 #ifndef LIBXML2_NEW_BUFFER
 #define xmlBufContent(b) (b->content)
 #endif
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 struct srcMLFile {
 
@@ -53,7 +51,7 @@ int srcMLFileRead(void * context,  char * buffer, int len) {
     size_t num_read = xmlFileRead(sfile->file, buffer, len);
 
     if(sfile->ctx)
-	SHA1_Update(sfile->ctx, buffer, num_read);
+	SHA1_Update(sfile->ctx, buffer, (LONG)num_read);
 
     return (int)num_read;
 }
@@ -74,7 +72,7 @@ int srcMLFdRead(void * context,  char * buffer, int len) {
     size_t num_read = read(sfd->fd, buffer, len);
 
     if(sfd->ctx)
-	SHA1_Update(sfd->ctx, buffer, num_read);
+	SHA1_Update(sfd->ctx, buffer, (LONG)num_read);
 
     return (int)num_read;
 }
@@ -121,7 +119,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
     if(hash) {
 
 	SHA1_Init(&ctx);
-	SHA1_Update(&ctx, c_buffer, buffer_size);
+	SHA1_Update(&ctx, c_buffer, (LONG)buffer_size);
 
     }
 
@@ -350,5 +348,3 @@ UTF8CharBuffer::~UTF8CharBuffer() {
     }
 
 }
-
-#pragma GCC diagnostic pop
