@@ -418,7 +418,7 @@ class srcml_archive :
         check_return(libsrcml.srcml_append_transform_xslt_filename(self.archive, xslt_filename))
 
     def append_transform_xslt_memory(self, xslt_buffer) :
-        check_return(libsrcml.srcml_append_transform_xsl_memory(self.archive, xslt_buffer, len(xslt_buffer)))
+        check_return(libsrcml.srcml_append_transform_xslt_memory(self.archive, xslt_buffer, len(xslt_buffer)))
 
     def append_transform_xslt_FILE(self, xslt_file) :
         check_return(libsrcml.srcml_append_transform_xslt_FILE(self.archive, xslt_file))
