@@ -42,6 +42,12 @@ int main() {
     file << " */";
     file.close();
 
+    file.open("utf8.cpp");
+    file << "/** ";
+    file << "\u00fe\u00ff";
+    file << " */";
+    file.close();
+
     file.open("long.cpp");
     for(int i = 0; i < 4096; ++i)
         file << 'a';
