@@ -55,20 +55,20 @@ int main() {
 
     {
 	try {
-	    UTF8CharBuffer utf8("a.cpp", "ISO-8859-1");
+	    UTF8CharBuffer utf8("a.cpp", "ISO-8859-1", 0);
 	} catch(...) { assert(false); }
     }
 
     {
 	try {
-	    UTF8CharBuffer utf8((const char *)NULL, "ISO-8859-1");
+	    UTF8CharBuffer utf8((const char *)NULL, "ISO-8859-1", 0);
 	    assert(false);
 	} catch(...) {}
     }
 
     {
 	try {
-	    UTF8CharBuffer utf8("a.cpp", NULL);
+	    UTF8CharBuffer utf8("a.cpp", NULL, 0);
 	} catch(...) { assert(false); }
     }
 
@@ -82,14 +82,14 @@ int main() {
 	const char * s = "";
 	size_t i = 1;
 	try {
-	    UTF8CharBuffer utf8(s, i, "ISO-8859-1");
+	    UTF8CharBuffer utf8(s, i, "ISO-8859-1", 0);
 	} catch(...) { assert(false); }
     }
 
     {
 	size_t i;
 	try {
-	    UTF8CharBuffer utf8(NULL, i, "ISO-8859-1");
+	    UTF8CharBuffer utf8(NULL, i, "ISO-8859-1", 0);
 	    assert(false);
 	} catch(...) {}
     }
@@ -98,7 +98,7 @@ int main() {
 	const char * s = "";
 	size_t i = 1;
 	try {
-	    UTF8CharBuffer utf8(s, i, NULL);
+	    UTF8CharBuffer utf8(s, i, NULL, 0);
 	} catch(...) { assert(false); }
     }
 
@@ -106,7 +106,7 @@ int main() {
 	const char * s = "";
 	size_t i = 0;
 	try {
-	    UTF8CharBuffer utf8(s, i, NULL);
+	    UTF8CharBuffer utf8(s, i, NULL, 0);
 	} catch(...) { assert(false); }
     }
 
@@ -119,13 +119,13 @@ int main() {
     {
 	FILE * f = fopen("a.cpp", "r");
 	try {
-	    UTF8CharBuffer utf8(f, "ISO-8859-1");
+	    UTF8CharBuffer utf8(f, "ISO-8859-1", 0);
 	} catch(...) { assert(false); }
     }
 
     {
 	try {
-	    UTF8CharBuffer utf8((FILE *)NULL, "ISO-8859-1");
+	    UTF8CharBuffer utf8((FILE *)NULL, "ISO-8859-1", 0);
 	    assert(false);
 	} catch(...) {}
     }
@@ -133,7 +133,7 @@ int main() {
     {
         FILE * f = fopen("a.cpp", "r");
 	try {
-	    UTF8CharBuffer utf8(f, NULL);
+	    UTF8CharBuffer utf8(f, NULL, 0);
 	} catch(...) { assert(false); }
     }
 
@@ -146,13 +146,13 @@ int main() {
     {
 	int f = open("a.cpp", O_RDONLY);
 	try {
-	    UTF8CharBuffer utf8(f, "ISO-8859-1");
+	    UTF8CharBuffer utf8(f, "ISO-8859-1", 0);
 	} catch(...) { assert(false); }
     }
 
     {
 	try {
-	    UTF8CharBuffer utf8(-1, "ISO-8859-1");
+	    UTF8CharBuffer utf8(-1, "ISO-8859-1", 0);
 	    assert(false);
 	} catch(...) {}
     }
@@ -160,7 +160,7 @@ int main() {
     {
 	int f = open("a.cpp", O_RDONLY);
 	try {
-	    UTF8CharBuffer utf8(f, NULL);
+	    UTF8CharBuffer utf8(f, NULL, 0);
 	} catch(...) { assert(false); }
     }
 
@@ -172,7 +172,7 @@ int main() {
 
     {
 
-        UTF8CharBuffer utf8("a.cpp", "UTF-8");
+        UTF8CharBuffer utf8("a.cpp", "UTF-8", 0);
         assert(utf8.getChar() == 'a');
         assert(utf8.getChar() == 'b');
         assert(utf8.getChar() == 'c');
@@ -181,7 +181,7 @@ int main() {
 
     {
 
-        UTF8CharBuffer utf8("abc", 3, "UTF-8");
+        UTF8CharBuffer utf8("abc", 3, "UTF-8", 0);
         assert(utf8.getChar() == 'a');
         assert(utf8.getChar() == 'b');
         assert(utf8.getChar() == 'c');
@@ -193,7 +193,7 @@ int main() {
 
         FILE * file = fopen("a.cpp", "r");
 	{
-	    UTF8CharBuffer utf8(file, "UTF-8");
+	    UTF8CharBuffer utf8(file, "UTF-8", 0);
 	    assert(utf8.getChar() == 'a');
 	    assert(utf8.getChar() == 'b');
 	    assert(utf8.getChar() == 'c');
@@ -206,7 +206,7 @@ int main() {
 
         int fd = open("a.cpp", O_RDONLY);
 	{
-	    UTF8CharBuffer utf8(fd, "UTF-8");
+	    UTF8CharBuffer utf8(fd, "UTF-8", 0);
 	    assert(utf8.getChar() == 'a');
 	    assert(utf8.getChar() == 'b');
 	    assert(utf8.getChar() == 'c');
@@ -228,7 +228,7 @@ int main() {
         s[7] = '*';
         s[8] = '/';
 
-        UTF8CharBuffer utf8((const char *)s, 9, "ISO-8859-1");
+        UTF8CharBuffer utf8((const char *)s, 9, "ISO-8859-1", 0);
         assert(utf8.getChar() == '/');
         assert(utf8.getChar() == '*');
         assert(utf8.getChar() == '*');
@@ -245,7 +245,7 @@ int main() {
 
     {
 
-        UTF8CharBuffer utf8("iso.cpp", "ISO-8859-1");
+        UTF8CharBuffer utf8("iso.cpp", "ISO-8859-1", 0);
         assert(utf8.getChar() == '/');
         assert(utf8.getChar() == '*');
         assert(utf8.getChar() == '*');
@@ -262,7 +262,7 @@ int main() {
 
     {
 
-        UTF8CharBuffer utf8("long.cpp", "UTF-8");
+        UTF8CharBuffer utf8("long.cpp", "UTF-8", 0);
         for(int i = 0; i < 4096; ++i)
             assert(utf8.getChar() == 'a');
 
@@ -274,7 +274,7 @@ int main() {
 
         std::vector<char> s(4096, 'a');
 
-        UTF8CharBuffer utf8(&s.front(), 4096, "UTF-8");
+        UTF8CharBuffer utf8(&s.front(), 4096, "UTF-8", 0);
         for(int i = 0; i < 4096; ++i)
             assert(utf8.getChar() == 'a');
 
@@ -284,7 +284,7 @@ int main() {
 
     {
 
-        UTF8CharBuffer utf8("long.cpp", "ISO-8859-1");
+        UTF8CharBuffer utf8("long.cpp", "ISO-8859-1", 0);
         for(int i = 0; i < 4096; ++i)
             assert(utf8.getChar() == 'a');
 
@@ -296,7 +296,7 @@ int main() {
 
         std::vector<char> s(4096, 'a');
 
-        UTF8CharBuffer utf8(&s.front(), 4096, "ISO-8859-1");
+        UTF8CharBuffer utf8(&s.front(), 4096, "ISO-8859-1", 0);
         for(int i = 0; i < 4096; ++i)
             assert(utf8.getChar() == 'a');
 

@@ -148,7 +148,7 @@ int main() {
         srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
                                    output_buffer, op, 0, 0, 0, urisprefix, 4);
 
-        UTF8CharBuffer * input = new UTF8CharBuffer("a;", 2, "UTF-8");
+        UTF8CharBuffer * input = new UTF8CharBuffer("a;", 2, "UTF-8", 0);
 
         xmlBufferPtr output = xmlBufferCreate();
         translator.translate_separate(0, 0, 0, 0, 0, Language::LANGUAGE_CXX, input, output, op);
@@ -178,7 +178,7 @@ int main() {
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(s.c_str());
+        translator.add_unit(s.c_str(), 0);
         translator.close();
         std::string result = (const char *)buffer->content;
         assert(result == decl + "\n" + s + "\n");
@@ -199,8 +199,8 @@ int main() {
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(s.c_str());
-        translator.add_unit(s.c_str());
+        translator.add_unit(s.c_str(), 0);
+        translator.add_unit(s.c_str(), 0);
         translator.close();
         std::string result = (const char *)buffer->content;
         assert(result == decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
