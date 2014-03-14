@@ -1,5 +1,5 @@
 /**
- * @file src_input_file.hpp
+ * @file srcml_input_srcml.cpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -18,24 +18,31 @@
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * Source input from local files, stdin, and source archives for srcml parsing queue
  */
 
-#ifndef SRC_INPUT_FILE_HPP
-#define SRC_INPUT_FILE_HPP
+#include <srcml_input_srcml.hpp>
 
-#include <srcml.h>
-#include <string>
-#include <parse_queue.hpp>
+void srcml_input_srcml(const std::string& input_filename,
+                       srcml_archive* srcml_outarch,
+                       boost::optional<FILE*> fstdin) {
 
-void src_input_file(ParseQueue& queue,
-                    srcml_archive* srcml_arch,
-                    const std::string& input_filename,
-                    const boost::optional<std::string>& language,
-                    const boost::optional<std::string>& option_filename,
-                    const boost::optional<std::string>& option_directory,
-                    const boost::optional<std::string>& option_version
-);
+    // open the input srcml archive
+    srcml_archive* srcml_inarch = srcml_create_archive();
 
-#endif
+    if (!fstdin)
+        srcml_read_open_filename(srcml_inarch, input_filename.c_str());
+    else
+        srcml_read_open_FILE(srcml_inarch, *fstdin);
+
+    // process each entry in the input srcml archive
+    while (srcml_unit* unit = srcml_read_unit(srcml_inarch)) {
+
+        // write the just-read unit to the output srcml archive
+        srcml_write_unit(srcml_outarch, unit);
+
+        srcml_free_unit(unit);
+    }
+
+    // done with the input srcml archive
+    srcml_close_archive(srcml_inarch);
+}

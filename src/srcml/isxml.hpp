@@ -1,5 +1,5 @@
 /**
- * @file srcml_output_filesystem.hpp
+ * @file isxml.hpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -18,16 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
-*/
+ */
 
-#ifndef SRCML_OUTPUT_FILESYSTEM_HPP
-#define SRCML_OUTPUT_FILESYSTEM_HPP
+#ifndef INCLUDED_IS_XML_HPP
+#define INCLUDED_IS_XML_HPP
 
-#include <srcml.h>
-#include <string>
-#include <trace_log.hpp>
+#include <stdio.h>
 
-void srcml_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log);
+// determine if XML from first four bytes in almost any encoding
+bool isxml(unsigned char ar[], ssize_t size);
 
 #endif

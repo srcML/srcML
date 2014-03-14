@@ -1,5 +1,5 @@
 /**
- * @file srcml_output_libarchive.hpp
+ * @file srcml_options.hpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -18,15 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
-*/
+ */
 
-#ifndef SRCML_OUTPUT_LIBARCHIVE_HPP
-#define SRCML_OUTPUT_LIBARCHIVE_HPP
+#ifndef SRCML_OPTIONS_HPP
+#define SRCML_OPTIONS_HPP
 
-#include <archive.h>
-#include <srcml.h>
+#include <srcml_cli.hpp>
 
-void srcml_output_libarchive(srcml_archive* srcml_arch, archive* ar);
+static int opt;
+
+class SRCMLOptions {
+public:
+    static void set(int options) { opt = options; }
+
+    static int get()  { return opt; }
+};
 
 #endif

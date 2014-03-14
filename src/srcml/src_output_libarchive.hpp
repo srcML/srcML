@@ -1,5 +1,5 @@
 /**
- * @file src_input_file.hpp
+ * @file src_output_libarchive.hpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -19,23 +19,14 @@
  * along with the srcML Toolkit; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * Source input from local files, stdin, and source archives for srcml parsing queue
- */
+*/
 
-#ifndef SRC_INPUT_FILE_HPP
-#define SRC_INPUT_FILE_HPP
+#ifndef SRC_OUTPUT_LIBARCHIVE_HPP
+#define SRC_OUTPUT_LIBARCHIVE_HPP
 
+#include <archive.h>
 #include <srcml.h>
-#include <string>
-#include <parse_queue.hpp>
 
-void src_input_file(ParseQueue& queue,
-                    srcml_archive* srcml_arch,
-                    const std::string& input_filename,
-                    const boost::optional<std::string>& language,
-                    const boost::optional<std::string>& option_filename,
-                    const boost::optional<std::string>& option_directory,
-                    const boost::optional<std::string>& option_version
-);
+void src_output_libarchive(srcml_archive* srcml_arch, archive* ar);
 
 #endif

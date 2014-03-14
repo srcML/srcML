@@ -160,6 +160,15 @@ void option_field(const std::string& value) { srcml_request.*pfield = value; }
 template <int srcml_request_t::*pfield>
 void option_field(int value) { srcml_request.*pfield = value; }
 
+// option files_from
+template <>
+void option_field<&srcml_request_t::files_from>(const std::vector<std::string>& value) {
+
+    srcml_request.files_from = value;
+
+    srcml_request.input.insert(srcml_request.input.end(), value.begin(), value.end());
+}
+
 // option xml encoding attribute
 template <>
 void option_field<&srcml_request_t::att_xml_encoding>(const std::string& value) {
@@ -378,12 +387,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // Check option conflicts
         conflicting_options(cli_map, "quiet", "verbose");
-
-        if ((srcml_request.input.empty() || srcml_request.sawstdin) && !srcml_request.att_language) {
-
-            std::cerr << "Using stdin requires a declared language\n";
-            exit(1);
-        }
 
         // If input was from stdin, then artificially put a "-" into the list of input files
         if (srcml_request.input.empty())

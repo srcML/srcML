@@ -1,5 +1,5 @@
 /**
- * @file srcml_xml_consume.hpp
+ * @file src_output_filesystem.hpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -18,17 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
-/*
-  srcml_xml_consume calls appropriate libsrcml functions for processing srcml file data
+ *
 */
 
-#ifndef SRCML_XML_CONSUME_HPP
-#define SRCML_XML_CONSUME_HPP
+#ifndef SRC_OUTPUT_FILESYSTEM_HPP
+#define SRC_OUTPUT_FILESYSTEM_HPP
 
-class ParseQueue;
+#include <srcml.h>
+#include <string>
+#include <trace_log.hpp>
 
-void xml_consume(ParseQueue* queue);
+void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log);
 
 #endif

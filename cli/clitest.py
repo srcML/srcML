@@ -450,7 +450,7 @@ srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="foo" version="1.2"/>
 """
 
-checkallforms(srcml2src, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "", srcml, "C++\n")
+check(srcml2src, option.LANGUAGE_DISPLAY_FLAG, srcml)
 checkallforms(srcml2src, option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "", srcml, "bar\n")
 checkallforms(srcml2src, option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "", srcml, "foo\n")
 checkallforms(srcml2src, option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "", srcml, "1.2\n")
