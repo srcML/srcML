@@ -3947,7 +3947,7 @@ compound_name_csharp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY
 
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
-            (dcolon { iscompound = true; } | period { iscompound = true; })
+            (dcolon { iscompound = true; } | (period | member_pointer) { iscompound = true; })
             ( options { greedy = true; } : dcolon)*
             (multops)*
             (DESTOP set_bool[isdestructor])*
@@ -3964,7 +3964,7 @@ compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
         identifier
         ( options { greedy = true; } :
-            period { iscompound = true; }
+            (period | member_pointer) { iscompound = true; }
             identifier
         )*
 ;
