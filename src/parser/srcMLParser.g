@@ -5286,7 +5286,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; ENTRY
             if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
                 general_operators();
         }
-        | /* newop | */ period |
+        | /* newop | */ period | member_pointer | member_pointer_dereference | dot_dereference |
 
         // left parentheses
         lparen_marked
