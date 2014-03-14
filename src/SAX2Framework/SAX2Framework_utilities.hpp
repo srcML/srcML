@@ -24,7 +24,7 @@
 #ifndef INCLUDDED_SAX2FRAMEWORK_UTILITIES_HPP
 #define INCLUDDED_SAX2FRAMEWORK_UTILITIES_HPP
 
-xmlParserCtxtPtr SAX2FrameworkCreateParserCtxt(xmlParserInputBufferPtr buffer_input, const char * encoding);
+xmlParserCtxtPtr SAX2FrameworkCreateParserCtxt(xmlParserInputBufferPtr buffer_input);
 
 void internal_stop_parser(xmlParserCtxtPtr ctxt);
 
