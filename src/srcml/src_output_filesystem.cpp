@@ -1,5 +1,5 @@
 /**
- * @file srcml_output_filesystem.cpp
+ * @file src_output_filesystem.cpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -20,13 +20,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <srcml_output_filesystem.hpp>
+#include <src_output_filesystem.hpp>
 #include <srcml.h>
 #include <iostream>
 #include <iomanip>
 #include <boost/filesystem.hpp>
 
-void srcml_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log) {
+void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log) {
 
     // construct the relative directory
     std::string prefix;

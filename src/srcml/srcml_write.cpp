@@ -29,13 +29,15 @@
 #include <srcml.h>
 #include <write_queue.hpp>
 #include <iostream>
-
-static int count = 0;
+#include <srcml_options.hpp>
+#include <trace_log.hpp>
 
 // Public consumption thread function
 void srcml_write(WriteQueue* queue) {
 
-    int isarchive = -1;
+    boost::optional<bool> isarchive;
+
+    TraceLog log(std::cerr, SRCMLOptions::get());
 
     WriteRequest pr;
     while (true) {
@@ -48,23 +50,23 @@ void srcml_write(WriteQueue* queue) {
             break;
 
         // first time through need to set if this is an archive or not
-        if (isarchive == -1)
+        if (!isarchive)
             isarchive = (srcml_archive_get_options(pr.srcml_arch) & SRCML_OPTION_ARCHIVE) > 0;
 
         // write the unit
         if (pr.status == SRCML_STATUS_OK) {
             srcml_write_unit(pr.srcml_arch, pr.unit);
 
-            ++count;
-            if (isarchive)
-                std::cerr << std::setw(5) << count << " " << *pr.filename << '\n';
+            if (*isarchive)
+                log << 'a' << *pr.filename;
 
         } else if (pr.status == SRCML_STATUS_UNSET_LANGUAGE) {
 
-            if (isarchive)
-                std::cerr << std::setw(5) << "-" << " " << *pr.filename << '\n';
+            if (*isarchive)
+                log << '-' << *pr.filename;
             else
                 std::cerr << "Extension not supported\n";
+
         } else {
             std::cerr << "Internal eror " << pr.status << "\n";
         }

@@ -28,8 +28,6 @@
 #ifndef SRCML_WRITE_HPP
 #define SRCML_WRITE_HPP
 
-#include <thread_oqueue.hpp>
-
 class WriteQueue;
 
 void srcml_write(WriteQueue* queue);

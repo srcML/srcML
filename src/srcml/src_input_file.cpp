@@ -20,16 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
-  src_input_file assigns local files, stdin, and archival input to the
-  srcml parsing queue
-*/
-
 #include <src_input_file.hpp>
-#include <iostream>
-#include <archive.h>
-#include <archive_entry.h>
-#include <boost/filesystem.hpp>
 
 // Convert input to a ParseRequest and assign request to the processing queue
 void src_input_file(ParseQueue& queue,
@@ -38,14 +29,14 @@ void src_input_file(ParseQueue& queue,
                     const boost::optional<std::string>& option_language,
                     const boost::optional<std::string>& option_filename,
                     const boost::optional<std::string>& option_directory,
-                    const boost::optional<std::string>& option_version) {
-
-    std::string filename = option_filename ? *option_filename : input_file;
-
+                    const boost::optional<std::string>& option_version) 
+{
     // form the parsing request
     ParseRequest request;
-    if (option_filename || filename != "_")
-       request.filename = filename;
+    if (option_filename)
+        request.filename = *option_filename;
+    else if (input_file != "_")
+        request.filename = input_file;
     request.directory = option_directory;
     request.version = option_version;
     request.srcml_arch = srcml_arch;
