@@ -53,7 +53,7 @@ int main() {
         dassert(archive->type, SRCML_ARCHIVE_WRITE);
         dassert(!archive->translator, 0);
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
-                                                     | SRCML_OPTION_TIMESTAMP));
+                                                     | SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH));
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
@@ -92,7 +92,7 @@ int main() {
         dassert(archive->type, SRCML_ARCHIVE_WRITE);
         dassert(!archive->translator, 0);
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
-                                                     | SRCML_OPTION_TIMESTAMP));
+                                                     | SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH));
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
@@ -140,7 +140,7 @@ int main() {
         dassert(archive->type, SRCML_ARCHIVE_WRITE);
         dassert(!archive->translator, 0);
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
-                                                     | SRCML_OPTION_TIMESTAMP));
+                                                     | SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH));
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
@@ -182,7 +182,7 @@ int main() {
         dassert(archive->type, SRCML_ARCHIVE_WRITE);
         dassert(!archive->translator, 0);
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
-                                                     | SRCML_OPTION_TIMESTAMP));
+                                                     | SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH));
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);

@@ -217,15 +217,39 @@ libsrcml.srcml_clear_transforms.argtypes = [c_void_p]
 
 # int srcml_append_transform_xpath(struct srcml_archive*, const char* xpath_string);
 libsrcml.srcml_append_transform_xpath.restype = c_int
-libsrcml.srcml_append_transform_xpath.argtypes = [c_void_p]
+libsrcml.srcml_append_transform_xpath.argtypes = [c_void_p, c_char_p]
 
-# int srcml_append_transform_xslt(struct srcml_archive*, const char* xslt_filename);
-libsrcml.srcml_append_transform_xslt.restype = c_int
-libsrcml.srcml_append_transform_xslt.argtypes = [c_void_p]
+# int srcml_append_transform_xslt_filename(struct srcml_archive*, const char* xslt_filename);
+libsrcml.srcml_append_transform_xslt_filename.restype = c_int
+libsrcml.srcml_append_transform_xslt_filename.argtypes = [c_void_p, c_char_p]
 
-# int srcml_append_transform_relaxng(struct srcml_archive*, const char* relaxng_filename);
-libsrcml.srcml_append_transform_relaxng.restype = c_int
-libsrcml.srcml_append_transform_relaxng.argtypes = [c_void_p]
+# int srcml_append_transform_xslt_memory     (struct srcml_archive*, const char* xslt_buffer, size_t size);
+libsrcml.srcml_append_transform_xslt_memory.restype = c_int
+libsrcml.srcml_append_transform_xslt_memory.argtypes = [c_void_p, c_char_p, c_int]
+
+# int srcml_append_transform_xslt_FILE       (struct srcml_archive*, FILE* xslt_file);
+libsrcml.srcml_append_transform_xslt_FILE.restype = c_int
+libsrcml.srcml_append_transform_xslt_FILE.argtypes = [c_void_p, c_void_p]
+
+# int srcml_append_transform_xslt_fd         (struct srcml_archive*, int xslt_fd);
+libsrcml.srcml_append_transform_xslt_fd.restype = c_int
+libsrcml.srcml_append_transform_xslt_fd.argtypes = [c_void_p, c_int]
+
+# int srcml_append_transform_relaxng_filename(struct srcml_archive*, const char* relaxng_filename);
+libsrcml.srcml_append_transform_relaxng_filename.restype = c_int
+libsrcml.srcml_append_transform_relaxng_filename.argtypes = [c_void_p, c_char_p]
+
+# int srcml_append_transform_relaxng_memory  (struct srcml_archive*, const char* relaxng_buffer, size_t size);
+libsrcml.srcml_append_transform_relaxng_memory.restype = c_int
+libsrcml.srcml_append_transform_relaxng_memory.argtypes = [c_void_p, c_char_p, c_int]
+
+# int srcml_append_transform_relaxng_FILE    (struct srcml_archive*, FILE* relaxng_file);
+libsrcml.srcml_append_transform_relaxng_FILE.restype = c_int
+libsrcml.srcml_append_transform_relaxng_FILE.argtypes = [c_void_p, c_void_p]
+
+# int srcml_append_transform_relaxng_fd      (struct srcml_archive*, int relaxng_fd);
+libsrcml.srcml_append_transform_relaxng_fd.restype = c_int
+libsrcml.srcml_append_transform_relaxng_fd.argtypes = [c_void_p, c_int]
 
 # int srcml_apply_transforms(struct srcml_archive* iarchive, struct srcml_archive* oarchive);
 libsrcml.srcml_apply_transforms.restype = c_int
@@ -390,11 +414,29 @@ class srcml_archive :
     def append_transform_xpath(self, xpath_string) :
         check_return(libsrcml.srcml_append_transform_xpath(self.archive, xpath_string))
 
-    def append_transform_xslt(self, xslt_filename) :
-        check_return(libsrcml.srcml_append_transform_xslt(self.archive, xslt_filename))
+    def append_transform_xslt_filename(self, xslt_filename) :
+        check_return(libsrcml.srcml_append_transform_xslt_filename(self.archive, xslt_filename))
 
-    def append_transform_relaxng(self, relaxng_filename) :
-        check_return(libsrcml.srcml_append_transform_relaxng(self.archive, relaxng_filename))
+    def append_transform_xslt_memory(self, xslt_buffer) :
+        check_return(libsrcml.srcml_append_transform_xslt_memory(self.archive, xslt_buffer, len(xslt_buffer)))
+
+    def append_transform_xslt_FILE(self, xslt_file) :
+        check_return(libsrcml.srcml_append_transform_xslt_FILE(self.archive, xslt_file))
+
+    def append_transform_xslt_fd(self, xslt_fd) :
+        check_return(libsrcml.srcml_append_transform_xslt_fd(self.archive, xslt_fd))
+
+    def append_transform_relaxng_filename(self, relaxng_filename) :
+        check_return(libsrcml.srcml_append_transform_relaxng_filename(self.archive, relaxng_filename))
+
+    def append_transform_relaxng_memory(self, relaxng_buffer) :
+        check_return(libsrcml.srcml_append_transform_relaxng_memory(self.archive, relaxng_buffer, len(relaxng_buffer)))
+
+    def append_transform_relaxng_FILE(self, relaxng_file) :
+        check_return(libsrcml.srcml_append_transform_relaxng_FILE(self.archive, relaxng_file))
+
+    def append_transform_relaxng_fd(self, relaxng_fd) :
+        check_return(libsrcml.srcml_append_transform_relaxng_fd(self.archive, relaxng_fd))
 
     def apply_transforms(self, oarchive) :
         check_return(libsrcml.srcml_apply_transforms(self.archive, oarchive.archive))

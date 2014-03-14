@@ -57,13 +57,15 @@ int main() {
                       , S_IRUSR | S_IWUSR
 #endif
                       );
-        dassert(srcml_xslt(buffer_input, "src:unit", "copy.xsl", 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
+	xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
+        dassert(srcml_xslt(buffer_input, "src:unit", doc, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
         std::ifstream in("project.xml");
         std::string output;
         std::string temp;
         while(in >> temp)
             output += temp;
         dassert(output, "<?xmlversion=\"1.0\"encoding=\"\"standalone=\"yes\"?><unit>a;</unit>");
+        xmlFreeDoc(doc);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
         unlink("project.xml");
@@ -75,7 +77,9 @@ int main() {
                       , S_IRUSR | S_IWUSR
 #endif
                       );
-        dassert(srcml_xslt(0, "src:unit", "copy.xsl", 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+	xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
+        dassert(srcml_xslt(0, "src:unit", doc, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+        xmlFreeDoc(doc);
         unlink("project.xml");
     }
 
@@ -90,7 +94,9 @@ int main() {
                       , S_IRUSR | S_IWUSR
 #endif
                       );
-        dassert(srcml_xslt(buffer_input, 0, "copy.xsl", 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+	xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
+        dassert(srcml_xslt(buffer_input, 0, doc, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+        xmlFreeDoc(doc);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
         unlink("project.xml");
@@ -119,7 +125,9 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        dassert(srcml_xslt(buffer_input, "src:unit", "copy.xsl", 0, 0, -1, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+	xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
+        dassert(srcml_xslt(buffer_input, "src:unit", doc, 0, 0, -1, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+        xmlFreeDoc(doc);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
     }

@@ -37,7 +37,19 @@
 #include <stdio.h>
 
 #include <libxml/xmlIO.h>
+
+#ifdef __MACH__
+#include <CommonCrypto/CommonDigest.h>
+#define SHA_CTX CC_SHA1_CTX
+#define SHA1_Init CC_SHA1_Init
+#define SHA1_Update CC_SHA1_Update
+#define SHA1_Final CC_SHA1_Final
+#define LONG CC_LONG
+#define SHA_DIGEST_LENGTH CC_SHA1_DIGEST_LENGTH
+#else
 #include <openssl/sha.h>
+#define LONG unsigned long
+#endif
 
 #include <boost/optional.hpp>
 

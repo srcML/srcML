@@ -111,7 +111,7 @@ public :
 
         archive = srcml_create_archive();
 
-        srcml_archive_disable_option(archive, SRCML_OPTION_TIMESTAMP);
+        srcml_archive_disable_option(archive, SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH);
 
         archive->prefixes.clear();
         archive->namespaces.clear();

@@ -120,21 +120,21 @@ __LIBSRCML_DECL const char* srcml_version_string();
 
 /* srcml status messages */
 /** Return status indicating no errors */
-#define SRCML_STATUS_OK               0
+#define SRCML_STATUS_OK                   0
 /** Return status indicating errors occurred */
-#define SRCML_STATUS_ERROR            1
+#define SRCML_STATUS_ERROR                1
 /** Return status indicating an invalid argument */
-#define SRCML_STATUS_INVALID_ARGUMENT 2
+#define SRCML_STATUS_INVALID_ARGUMENT     2
 /** Return status indicating that their is some problem with the input */
-#define SRCML_STATUS_INVALID_INPUT 3
+#define SRCML_STATUS_INVALID_INPUT        3
 /** Return status indicating an invalid read I/O operation (such as write on read only archive) */
 #define SRCML_STATUS_INVALID_IO_OPERATION 4
 /** Return status indicating that their is some problem with the input */
-#define SRCML_STATUS_IO_ERROR 5
+#define SRCML_STATUS_IO_ERROR             5
 /** Return status indicating an unitialized unit */
-#define SRCML_STATUS_UNINITIALIZED_UNIT 6
+#define SRCML_STATUS_UNINITIALIZED_UNIT   6
 /** Return status indicating an unset language */
-#define SRCML_STATUS_UNSET_LANGUAGE 7
+#define SRCML_STATUS_UNSET_LANGUAGE       7
 
 /* libsrcml data structures */
 struct srcml_archive;
@@ -369,11 +369,17 @@ __LIBSRCML_DECL int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd
 __LIBSRCML_DECL const char** srcml_list(const char* srcml_filename);
 
 /* srcML XPath query and XSLT transform functions */
-__LIBSRCML_DECL int srcml_clear_transforms(struct srcml_archive*);
-__LIBSRCML_DECL int srcml_append_transform_xpath(struct srcml_archive*, const char* xpath_string);
-__LIBSRCML_DECL int srcml_append_transform_xslt(struct srcml_archive*, const char* xslt_filename);
-__LIBSRCML_DECL int srcml_append_transform_relaxng(struct srcml_archive*, const char* relaxng_filename);
-__LIBSRCML_DECL int srcml_apply_transforms(struct srcml_archive* iarchive, struct srcml_archive* oarchive);
+__LIBSRCML_DECL int srcml_clear_transforms                 (struct srcml_archive*);
+__LIBSRCML_DECL int srcml_append_transform_xpath           (struct srcml_archive*, const char* xpath_string);
+__LIBSRCML_DECL int srcml_append_transform_xslt_filename   (struct srcml_archive*, const char* xslt_filename);
+__LIBSRCML_DECL int srcml_append_transform_xslt_memory     (struct srcml_archive*, const char* xslt_buffer, size_t size);
+__LIBSRCML_DECL int srcml_append_transform_xslt_FILE       (struct srcml_archive*, FILE* xslt_file);
+__LIBSRCML_DECL int srcml_append_transform_xslt_fd         (struct srcml_archive*, int xslt_fd);
+__LIBSRCML_DECL int srcml_append_transform_relaxng_filename(struct srcml_archive*, const char* relaxng_filename);
+__LIBSRCML_DECL int srcml_append_transform_relaxng_memory  (struct srcml_archive*, const char* relaxng_buffer, size_t size);
+__LIBSRCML_DECL int srcml_append_transform_relaxng_FILE    (struct srcml_archive*, FILE* relaxng_file);
+__LIBSRCML_DECL int srcml_append_transform_relaxng_fd      (struct srcml_archive*, int relaxng_fd);
+__LIBSRCML_DECL int srcml_apply_transforms                 (struct srcml_archive* iarchive, struct srcml_archive* oarchive);
 
 /* Augment read to use user defined xml handlers */
 __LIBSRCML_DECL int srcml_set_xml_handler_start_unit(struct srcml_archive*);

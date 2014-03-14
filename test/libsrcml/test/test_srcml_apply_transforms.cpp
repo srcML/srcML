@@ -26,6 +26,12 @@
 #include <string.h>
 #include <cassert>
 #include <fstream>
+#if defined(__GNUC__) && !defined(__MINGW32__)
+#include <unistd.h>
+#else
+#include <io.h>
+#endif
+#include <fcntl.h>
 
 #include <srcml.h>
 #include <srcml_types.hpp>
@@ -42,10 +48,34 @@ int main() {
     const std::string srcml_b_after = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\" dir=\"test\" filename=\"project\" version=\"1\">\n\n<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
     const std::string srcml_full = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\">\n\n<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
 
+    std::string copy;
+    {
+	std::ifstream in("copy.xsl");
+	char c = 0;
+        while(in.get(c)) {
+            copy += c;
+        }
+    }
+
+    std::string schema;
+    {
+	std::ifstream in("schema.rng");
+	char c = 0;
+        while(in.get(c)) {
+            schema += c;
+        }
+    }
+
     /*
       srcml_apply_transforms
     */
+
+    /*
+      xpath
+     */
+
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -61,9 +91,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -80,9 +112,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_full);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -100,9 +134,11 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_a_after);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
@@ -120,14 +156,20 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_b_after);
         free(s);
+
     }
 
+    /*
+      xslt_filename
+     */
+
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml.c_str(), srcml.size());
-        srcml_append_transform_xslt(iarchive, "copy.xsl");
+        srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
 
@@ -139,14 +181,16 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
-        srcml_append_transform_xslt(iarchive, "copy.xsl");
+        srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
 
@@ -158,14 +202,16 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_full);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
-        srcml_append_transform_xslt(iarchive, "copy.xsl");
+        srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
 
@@ -177,14 +223,16 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_a);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
-        srcml_append_transform_xslt(iarchive, "copy.xsl");
+        srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
 
@@ -196,14 +244,20 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_b);
         free(s);
+
     }
 
+    /*
+      xslt_memory
+     */
+
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml.c_str(), srcml.size());
-        srcml_append_transform_relaxng(iarchive, "schema.rng");
+        srcml_append_transform_xslt_memory(iarchive, copy.c_str(), copy.size());
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
 
@@ -215,14 +269,16 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
-        srcml_append_transform_relaxng(iarchive, "schema.rng");
+        srcml_append_transform_xslt_memory(iarchive, copy.c_str(), copy.size());
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
 
@@ -234,14 +290,16 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_full);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
-        srcml_append_transform_relaxng(iarchive, "schema.rng");
+        srcml_append_transform_xslt_memory(iarchive, copy.c_str(), copy.size());
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
 
@@ -253,14 +311,16 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_a);
         free(s);
+
     }
 
     {
+
         char * s;
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
-        srcml_append_transform_relaxng(iarchive, "schema.rng");
+        srcml_append_transform_xslt_memory(iarchive, copy.c_str(), copy.size());
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
 
@@ -272,6 +332,745 @@ int main() {
         srcml_free_archive(iarchive);
         dassert(s, srcml_b);
         free(s);
+
+    }
+
+    /*
+      xslt_FILE
+     */
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml.c_str(), srcml.size());
+	FILE * f = fopen("copy.xsl", "r");
+        srcml_append_transform_xslt_FILE(iarchive, f);
+	fclose(f);
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+	FILE * f = fopen("copy.xsl", "r");
+        srcml_append_transform_xslt_FILE(iarchive, f);
+	fclose(f);
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_full);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
+	FILE * f = fopen("copy.xsl", "r");
+        srcml_append_transform_xslt_FILE(iarchive, f);
+	fclose(f);
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_a);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
+	FILE * f = fopen("copy.xsl", "r");
+        srcml_append_transform_xslt_FILE(iarchive, f);
+	fclose(f);
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_b);
+        free(s);
+
+    }
+
+    /*
+      xslt_fd
+     */
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml.c_str(), srcml.size());
+	int fd = open("copy.xsl", O_RDONLY);
+        srcml_append_transform_xslt_fd(iarchive, fd);
+	close(fd);
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+	int fd = open("copy.xsl", O_RDONLY);
+        srcml_append_transform_xslt_fd(iarchive, fd);
+        close(fd);
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_full);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
+	int fd = open("copy.xsl", O_RDONLY);
+        srcml_append_transform_xslt_fd(iarchive, fd);
+        close(fd);
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_a);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
+	int fd = open("copy.xsl", O_RDONLY);
+        srcml_append_transform_xslt_fd(iarchive, fd);
+        close(fd);
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_b);
+        free(s);
+
+    }
+
+    /*
+      relaxng_filename
+     */
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml.c_str(), srcml.size());
+        srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+        srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_full);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
+        srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_a);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
+        srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_b);
+        free(s);
+
+    }
+
+    /*
+      relaxng_memory
+     */
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml.c_str(), srcml.size());
+        srcml_append_transform_relaxng_memory(iarchive, schema.c_str(), schema.size());
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+        srcml_append_transform_relaxng_memory(iarchive, schema.c_str(), schema.size());
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_full);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
+        srcml_append_transform_relaxng_memory(iarchive, schema.c_str(), schema.size());
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_a);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
+        srcml_append_transform_relaxng_memory(iarchive, schema.c_str(), schema.size());
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_b);
+        free(s);
+
+    }
+
+    /*
+      relaxng_FILE
+     */
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml.c_str(), srcml.size());
+	FILE * f = fopen("schema.rng", "r");
+        srcml_append_transform_relaxng_FILE(iarchive, f);
+	fclose(f);
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+        FILE * f = fopen("schema.rng", "r");
+        srcml_append_transform_relaxng_FILE(iarchive, f);
+	fclose(f);
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_full);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
+        FILE * f = fopen("schema.rng", "r");
+        srcml_append_transform_relaxng_FILE(iarchive, f);
+	fclose(f);
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_a);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
+        FILE * f = fopen("schema.rng", "r");
+        srcml_append_transform_relaxng_FILE(iarchive, f);
+	fclose(f);
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_b);
+        free(s);
+
+    }
+
+    /*
+      relaxng_fd
+     */
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml.c_str(), srcml.size());
+	int fd = open("schema.rng", O_RDONLY);
+        srcml_append_transform_relaxng_fd(iarchive, fd);
+	close(fd);
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+	int fd = open("schema.rng", O_RDONLY);
+        srcml_append_transform_relaxng_fd(iarchive, fd);
+	close(fd);
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_full);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
+	int fd = open("schema.rng", O_RDONLY);
+        srcml_append_transform_relaxng_fd(iarchive, fd);
+	close(fd);
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_a);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
+	int fd = open("schema.rng", O_RDONLY);
+        srcml_append_transform_relaxng_fd(iarchive, fd);
+	close(fd);
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_b);
+        free(s);
+
+    }
+
+    /*
+      all
+     */
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml.c_str(), srcml.size());
+
+        srcml_append_transform_xpath(iarchive, "//src:unit");
+
+        srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
+        srcml_append_transform_xslt_memory(iarchive, copy.c_str(), copy.size());
+	FILE * f = fopen("copy.xsl", "r");
+        srcml_append_transform_xslt_FILE(iarchive, f);
+	fclose(f);
+	int fd = open("copy.xsl", O_RDONLY);
+        srcml_append_transform_xslt_fd(iarchive, fd);
+	close(fd);
+
+        srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
+        srcml_append_transform_relaxng_memory(iarchive, schema.c_str(), schema.size());
+	f = fopen("schema.rng", "r");
+        srcml_append_transform_relaxng_FILE(iarchive, f);
+	fclose(f);
+	fd = open("schema.rng", O_RDONLY);
+        srcml_append_transform_relaxng_fd(iarchive, fd);
+	close(fd);
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml);
+        free(s);
+
+    }
+
+    {
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+
+        srcml_append_transform_xpath(iarchive, "//src:unit");
+
+        srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
+        srcml_append_transform_xslt_memory(iarchive, copy.c_str(), copy.size());
+	FILE * f = fopen("copy.xsl", "r");
+        srcml_append_transform_xslt_FILE(iarchive, f);
+	fclose(f);
+	int fd = open("copy.xsl", O_RDONLY);
+        srcml_append_transform_xslt_fd(iarchive, fd);
+	close(fd);
+
+        srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
+        srcml_append_transform_relaxng_memory(iarchive, schema.c_str(), schema.size());
+	f = fopen("schema.rng", "r");
+        srcml_append_transform_relaxng_FILE(iarchive, f);
+	fclose(f);
+	fd = open("schema.rng", O_RDONLY);
+        srcml_append_transform_relaxng_fd(iarchive, fd);
+	close(fd);
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_full);
+        free(s);
+
+    }
+
+    {
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
+
+        srcml_append_transform_xpath(iarchive, "//src:unit");
+
+        srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
+        srcml_append_transform_xslt_memory(iarchive, copy.c_str(), copy.size());
+	FILE * f = fopen("copy.xsl", "r");
+        srcml_append_transform_xslt_FILE(iarchive, f);
+	fclose(f);
+	int fd = open("copy.xsl", O_RDONLY);
+        srcml_append_transform_xslt_fd(iarchive, fd);
+	close(fd);
+
+        srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
+        srcml_append_transform_relaxng_memory(iarchive, schema.c_str(), schema.size());
+	f = fopen("schema.rng", "r");
+        srcml_append_transform_relaxng_FILE(iarchive, f);
+	fclose(f);
+	fd = open("schema.rng", O_RDONLY);
+        srcml_append_transform_relaxng_fd(iarchive, fd);
+	close(fd);
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+	srcml_archive_enable_option(oarchive, SRCML_OPTION_ARCHIVE);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_a_after);
+        free(s);
+
+    }
+
+    {
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
+
+        srcml_append_transform_xpath(iarchive, "//src:unit");
+
+        srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
+        srcml_append_transform_xslt_memory(iarchive, copy.c_str(), copy.size());
+	FILE * f = fopen("copy.xsl", "r");
+        srcml_append_transform_xslt_FILE(iarchive, f);
+	fclose(f);
+	int fd = open("copy.xsl", O_RDONLY);
+        srcml_append_transform_xslt_fd(iarchive, fd);
+	close(fd);
+
+        srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
+        srcml_append_transform_relaxng_memory(iarchive, schema.c_str(), schema.size());
+	f = fopen("schema.rng", "r");
+        srcml_append_transform_relaxng_FILE(iarchive, f);
+	fclose(f);
+	fd = open("schema.rng", O_RDONLY);
+        srcml_append_transform_relaxng_fd(iarchive, fd);
+	close(fd);
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+	srcml_archive_enable_option(oarchive, SRCML_OPTION_ARCHIVE);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_b_after);
+        free(s);
+
     }
 
     srcml_cleanup_globals();
