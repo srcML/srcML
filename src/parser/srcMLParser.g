@@ -2923,7 +2923,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         type_count = posin - 1;
 
     // enum
-    else if (type == 0 && sawenum)
+    else if (sawenum)
         type = ENUM_DECL;
 
     // may just have a single macro (no parens possibly) before a statement
@@ -6023,7 +6023,7 @@ enum_definition[] { ENTRY_DEBUG } :
             // start the enum definition element
             startElement(SENUM);
         }
-        ENUM
+        (specifier)* ENUM
 ;
 
 // header for enum class
