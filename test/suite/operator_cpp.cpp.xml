@@ -2,6 +2,10 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" dir="operator" filename="operator_cpp">
 
 <unit>
+<expr_stmt><expr><name><name>a</name><op:operator>-&gt;*</op:operator><name>b</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
 <expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>&gt;</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
