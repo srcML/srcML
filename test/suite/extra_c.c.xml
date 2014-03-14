@@ -21,7 +21,7 @@
 
 <unit>
 <block>{
-	<if>if <condition>(<expr>(<call><name>aurora_paranoia_check</name><argument_list>(<argument><expr><name>port</name></expr></argument>, <argument><expr><name>tty</name>-&gt;<name>name</name></expr></argument>, <argument><expr>"aurora_open"</expr></argument>)</argument_list></call>)</expr></condition><then> <block>{
+	<if>if <condition>(<expr>(<call><name>aurora_paranoia_check</name><argument_list>(<argument><expr><name>port</name></expr></argument>, <argument><expr><name><name>tty</name>-&gt;<name>name</name></name></expr></argument>, <argument><expr>"aurora_open"</expr></argument>)</argument_list></call>)</expr></condition><then> <block>{
 <cpp:ifdef>#<cpp:directive>ifdef</cpp:directive> <name>AURORA_DEBUG</name></cpp:ifdef>
 		<expr_stmt><expr><call><name>printk</name><argument_list>(<argument><expr>"a"</expr></argument>)</argument_list></call></expr>;</expr_stmt>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
