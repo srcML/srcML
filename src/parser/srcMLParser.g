@@ -3962,9 +3962,11 @@ catch[antlr::RecognitionException] {
 // compound name for C
 compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        identifier
+        identifier (options { greedy = true; }: { LA(1) == MULTOPS }? multops)*
+
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
+            ({LA(1) == MULTOPS }? multops)*
             identifier
         )*
 ;
