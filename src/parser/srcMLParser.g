@@ -135,7 +135,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -725,6 +725,11 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
 
         // detect the declaration/definition type
         pattern_check(stmt_type, secondtoken, type_count);
+
+        if(stmt_type == VARIABLE && inTransparentMode(MODE_ENUM)) {
+            short_variable_declaration();
+            return;
+        }
 
         ENTRY_DEBUG } :
 
@@ -2913,10 +2918,11 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         type_count = posin - 1;
 
     // enum
-    else if (type == 0 && sawenum) {
+    else if (type == 0 && sawenum)
         type = ENUM_DECL;
 
-    }
+    else if(type == 0 && type_count == 0 && inTransparentMode(MODE_ENUM))
+        type = VARIABLE;
 
     // may just have a single macro (no parens possibly) before a statement
     else if (type == 0 && type_count == 0 && _tokenSet_1.member(LA(1)))
@@ -6000,7 +6006,7 @@ enum_definition[] { ENTRY_DEBUG } :
         {
             // statement
             // end init correctly
-            startNewMode(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_ENUM | MODE_END_AT_BLOCK);
+            startNewMode(MODE_STATEMENT | MODE_DECL | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_ENUM | MODE_END_AT_BLOCK);
 
             // start the enum definition element
             startElement(SENUM);
@@ -6010,7 +6016,7 @@ enum_definition[] { ENTRY_DEBUG } :
         {
             // statement
             // end init correctly
-            startNewMode(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_ENUM);
+            startNewMode(MODE_STATEMENT | MODE_DECL | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_ENUM);
 
             // start the enum definition element
             startElement(SENUM);
@@ -6044,7 +6050,7 @@ enum_definition_complete[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         // start of enum definition block
         {
-            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_BLOCK | MODE_NEST);
+            startNewMode(MODE_TOP | MODE_LIST | MODE_DECL | MODE_EXPECT | MODE_BLOCK | MODE_NEST);
 
             startElement(SBLOCK);
         }
