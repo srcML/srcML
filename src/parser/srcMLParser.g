@@ -636,6 +636,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         terminate |
 
+        { inMode(MODE_ENUM) }? enum_block |
+
         // don't confuse with expression block
         { ((inTransparentMode(MODE_CONDITION) ||
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
@@ -725,11 +727,6 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
 
         // detect the declaration/definition type
         pattern_check(stmt_type, secondtoken, type_count);
-
-        if(stmt_type == VARIABLE && inTransparentMode(MODE_ENUM)) {
-            short_variable_declaration();
-            return;
-        }
 
         ENTRY_DEBUG } :
 
@@ -2592,7 +2589,14 @@ else_handling[] { ENTRY_DEBUG } :
 
 // mid-statement
 statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = NONE;
-                   CALLTYPE type = NOCALL;  bool isempty = false; ENTRY_DEBUG } :
+                   CALLTYPE type = NOCALL;  bool isempty = false; ENTRY_DEBUG 
+
+        if(inMode(MODE_ENUM) && inMode(MODE_LIST)) {
+            short_variable_declaration();
+            return;
+        }
+
+    } :
 
         { inMode(MODE_EAT_TYPE) }?
         type_identifier
@@ -2602,6 +2606,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { inTransparentMode(MODE_END_LIST_AT_BLOCK) }?
         { endDownToMode(MODE_LIST); endMode(MODE_LIST); }
         lcurly |
+
 
         /*
           MODE_EXPRESSION
@@ -2920,9 +2925,6 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     // enum
     else if (type == 0 && sawenum)
         type = ENUM_DECL;
-
-    else if(type == 0 && type_count == 0 && inTransparentMode(MODE_ENUM))
-        type = VARIABLE;
 
     // may just have a single macro (no parens possibly) before a statement
     else if (type == 0 && type_count == 0 && _tokenSet_1.member(LA(1)))
@@ -6064,6 +6066,18 @@ enum_definition_complete[] { CompleteElement element(this); ENTRY_DEBUG } :
             endDownToMode(MODE_TOP);
         }
         RCURLY
+;
+
+// enum block beginning and setup
+enum_block[] { ENTRY_DEBUG } :
+        lcurly_base
+        {
+            // nesting blocks, not statement
+            replaceMode(MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_NEST | MODE_END_AT_BLOCK_NO_TERMINATE);
+
+            // end this expression block correctly
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_ENUM);
+        }
 ;
 
 /*
