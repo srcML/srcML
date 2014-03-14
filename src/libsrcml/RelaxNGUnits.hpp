@@ -33,6 +33,10 @@
 
 #include <UnitDOM.hpp>
 
+#ifdef WIN32
+#include <io.h>
+#endif
+
 class RelaxNGUnits : public UnitDOM {
 public :
 
@@ -82,7 +86,7 @@ public :
                     xmlOutputBufferWriteElementNs(buf, meta_tags->at(i).localname, meta_tags->at(i).prefix, meta_tags->at(i).URI,
                                                   meta_tags->at(i).nb_namespaces, meta_tags->at(i).namespaces,
                                                   meta_tags->at(i).nb_attributes, meta_tags->at(i).nb_defaulted, meta_tags->at(i).attributes);
-		    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
                 }
 
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));

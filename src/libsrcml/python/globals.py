@@ -34,6 +34,18 @@ elif os.path.exists('../bin/libsrcml.so') :
     LIBSRCML_PATH = "../bin/libsrcml.so"
 elif os.path.exists('../bin/libsrcml.dll') :
     LIBSRCML_PATH = "../bin/libsrcml.dll"
+elif os.path.exists('../bin/Release/libsrcml.dylib') :
+    LIBSRCML_PATH = "../bin/Release/libsrcml.dylib"
+elif os.path.exists('../bin/Release/libsrcml.so') :
+    LIBSRCML_PATH = "../bin/Release/libsrcml.so"
+elif os.path.exists('../bin/Release/libsrcml.dll') :
+    LIBSRCML_PATH = "../bin/Release/libsrcml.dll"
+elif os.path.exists('../bin/Debug/libsrcml.dylib') :
+    LIBSRCML_PATH = "../bin/Debug/libsrcml.dylib"
+elif os.path.exists('../bin/Debug/libsrcml.so') :
+    LIBSRCML_PATH = "../bin/Debug/libsrcml.so"
+elif os.path.exists('../bin/Debug/libsrcml.dll') :
+    LIBSRCML_PATH = "../bin/Debug/libsrcml.dll"
 
 libsrcml = cdll.LoadLibrary(LIBSRCML_PATH)
 
@@ -82,6 +94,10 @@ libsrcml.srcml_set_directory.argtypes = [c_char_p]
 libsrcml.srcml_set_version.restype = c_int
 libsrcml.srcml_set_version.argtypes = [c_char_p]
 
+# int srcml_set_hash   (const char* hash);
+libsrcml.srcml_set_hash.restype = c_int
+libsrcml.srcml_set_hash.argtypes = [c_char_p]
+
 # int srcml_set_options   (int option);
 libsrcml.srcml_set_options.restype = c_int
 libsrcml.srcml_set_options.argtypes = [c_ulonglong]
@@ -126,6 +142,14 @@ libsrcml.srcml_get_directory.argtypes = []
 libsrcml.srcml_get_version.restype = c_char_p
 libsrcml.srcml_get_version.argtypes = []
 
+# const char* srcml_get_timestamp  ();
+libsrcml.srcml_get_timestamp.restype = c_char_p
+libsrcml.srcml_get_timestamp.argtypes = []
+
+# const char* srcml_get_hash  ();
+libsrcml.srcml_get_hash.restype = c_char_p
+libsrcml.srcml_get_hash.argtypes = []
+
 # int         srcml_get_options  ();
 libsrcml.srcml_get_options.restype = c_ulonglong
 libsrcml.srcml_get_options.argtypes = []
@@ -138,21 +162,21 @@ libsrcml.srcml_get_tabstop.argtypes = []
 libsrcml.srcml_get_namespace_size.restype = c_int
 libsrcml.srcml_get_namespace_size.argtypes = []
 
-# const char* srcml_get_prefix(int pos);
-libsrcml.srcml_get_prefix.restype = c_char_p
-libsrcml.srcml_get_prefix.argtypes = [c_int]
-
-# const char* srcml_get_prefix_uri(const char* namespace_uri);
-libsrcml.srcml_get_prefix_uri.restype = c_char_p
-libsrcml.srcml_get_prefix_uri.argtypes = [c_char_p]
-
-# const char* srcml_get_namespace(int pos);
-libsrcml.srcml_get_namespace.restype = c_char_p
-libsrcml.srcml_get_namespace.argtypes = [c_int]
-
-# const char* srcml_get_namespace_prefix(const char* prefix);
+# const char* srcml_get_namespae_prefix(int pos);
 libsrcml.srcml_get_namespace_prefix.restype = c_char_p
-libsrcml.srcml_get_namespace_prefix.argtypes = [c_char_p]
+libsrcml.srcml_get_namespace_prefix.argtypes = [c_int]
+
+# const char* srcml_get_prefix_from_uri(const char* namespace_uri);
+libsrcml.srcml_get_prefix_from_uri.restype = c_char_p
+libsrcml.srcml_get_prefix_from_uri.argtypes = [c_char_p]
+
+# const char* srcml_get_namespace_uri(int pos);
+libsrcml.srcml_get_namespace_uri.restype = c_char_p
+libsrcml.srcml_get_namespace_uri.argtypes = [c_int]
+
+# const char* srcml_get_uri_from_prefix(const char* prefix);
+libsrcml.srcml_get_uri_from_prefix.restype = c_char_p
+libsrcml.srcml_get_uri_from_prefix.argtypes = [c_char_p]
 
 # int         srcml_get_macro_list_size();
 libsrcml.srcml_get_macro_list_size.restype = c_int
@@ -185,10 +209,6 @@ libsrcml.srcml_get_language_list.argtypes = [c_int]
 # const char* srcml_check_extension(const char* filename);
 libsrcml.srcml_check_extension.restype = c_char_p
 libsrcml.srcml_check_extension.argtypes = [c_char_p]
-
-# int srcml_check_format(const char* format);
-libsrcml.srcml_check_format.restype = c_int
-libsrcml.srcml_check_format.argtypes = [c_char_p]
 
 # int srcml_check_encoding(const char* encoding);
 libsrcml.srcml_check_encoding.restype = c_int
@@ -223,6 +243,12 @@ def set_directory(directory) :
 
 def set_version(version) :
     check_return(libsrcml.srcml_set_version(version))
+
+def set_timestamp(timestamp) :
+    check_return(libsrcml.srcml_set_timestamp(timestamp))
+
+def set_hash(hash) :
+    check_return(libsrcml.srcml_set_hash(hash))
 
 def set_options(options) :
     check_return(libsrcml.srcml_set_options(options))
@@ -260,6 +286,12 @@ def get_directory() :
 def get_version() :
     return libsrcml.srcml_get_version()
 
+def get_timestamp() :
+    return libsrcml.srcml_get_timestamp()
+
+def get_hash() :
+    return libsrcml.srcml_get_hash()
+
 def get_options() :
     return libsrcml.srcml_get_options()
 
@@ -269,17 +301,17 @@ def get_tabstop() :
 def get_namespace_size() :
     return libsrcml.srcml_get_namespace_size()
 
-def get_prefix(pos) :
-    return libsrcml.srcml_get_prefix(pos)
+def get_namespace_prefix(pos) :
+    return libsrcml.srcml_get_namespace_prefix(pos)
 
-def get_prefix_uri(ns) :
-    return libsrcml.srcml_get_prefix_uri(ns)
+def get_prefix_from_uri(ns) :
+    return libsrcml.srcml_get_prefix_from_uri(ns)
 
-def get_namespace(pos) :
-    return libsrcml.srcml_get_namespace(pos)
+def get_namespace_uri(pos) :
+    return libsrcml.srcml_get_namespace_uri(pos)
 
-def get_namespace_prefix(prefix) :
-    return libsrcml.srcml_get_namespace_prefix(prefix)
+def get_uri_from_prefix(prefix) :
+    return libsrcml.srcml_get_uri_from_prefix(prefix)
 
 def get_macro_list_size() :
     return libsrcml.srcml_get_macro_list_size()
@@ -306,9 +338,6 @@ def get_language_list(pos) :
 
 def check_extension(filename) :
     return libsrcml.srcml_check_extension(filename)
-
-def check_format(format) :
-    return libsrcml.srcml_check_format(format)
 
 def check_encoding(encoding) :
     return libsrcml.srcml_check_encoding(encoding)

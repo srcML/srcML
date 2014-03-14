@@ -118,6 +118,7 @@ SAX2FrameworkCreateParserCtxt(xmlParserInputBufferPtr buffer_input) {
     _xmlBufResetInput(input->buf->buffer, input);
 
     inputPush(ctxt, input);
+
     return(ctxt);
 }
 

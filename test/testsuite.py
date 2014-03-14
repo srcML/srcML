@@ -212,7 +212,7 @@ def src2srcML(text_file, encoding, language, directory, filename, read_archive):
 
         archive = read_archive.clone()
 	if directory.find("problem") != -1 :
-		archive.set_encoding("UTF-8")
+		archive.set_encoding("ISO-8859-1")
 
         archive.write_open_memory()
 

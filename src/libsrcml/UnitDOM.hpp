@@ -75,12 +75,12 @@ public :
 
     // collect namespaces from root unit.  Start to build the tree if OPTION_APPLY_ROOT
     virtual void startRoot(const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-			   int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-			   const xmlChar** attributes, std::vector<srcMLElement> * meta_tags) {
+                           int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                           const xmlChar** attributes, std::vector<srcMLElement> * meta_tags) {
 
         SAX2srcMLHandler* handler = (SAX2srcMLHandler*)get_control_handler().getCtxt()->_private;
         root = &handler->root;
-	this->meta_tags = meta_tags;
+        this->meta_tags = meta_tags;
 
         // record namespaces in an extensible list so we can add the per unit
         for (int i = 0; i < nb_namespaces; ++i) {
@@ -128,22 +128,22 @@ public :
             data.push_back(namespaces[i * 2 + 1]);
         }
 
-	/*
+        /*
 
-	  This should not be needed since start root should always be called.
-        // if applying to entire archive, then just build this node
-        if (isoption(options, OPTION_APPLY_ROOT)) {
+          This should not be needed since start root should always be called.
+          // if applying to entire archive, then just build this node
+          if (isoption(options, OPTION_APPLY_ROOT)) {
 
-            // if apply root and not archive then startRootUnit may not have been called
-            static bool started = false;
-            if(!is_archive && !started) xmlSAX2StartDocument(ctxt);
-            started = true;
-            xmlSAX2StartElementNs(ctxt, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
-                                  nb_defaulted, attributes);
+          // if apply root and not archive then startRootUnit may not have been called
+          static bool started = false;
+          if(!is_archive && !started) xmlSAX2StartDocument(ctxt);
+          started = true;
+          xmlSAX2StartElementNs(ctxt, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
+          nb_defaulted, attributes);
 
-            return;
-        }
-	*/
+          return;
+          }
+        */
 
         // start the document for this unit
         //xmlSAX2StartDocument(ctxt);
@@ -177,8 +177,8 @@ public :
     // characters in unit tree
     virtual void charactersRoot(const xmlChar* ch, int len) {
 
-      if(isoption(options, OPTION_APPLY_ROOT))
-        xmlSAX2Characters(ctxt, ch, len);
+        if(isoption(options, OPTION_APPLY_ROOT))
+            xmlSAX2Characters(ctxt, ch, len);
     }
 
     // CDATA block in unit tree
@@ -222,10 +222,10 @@ public :
 
         if(isoption(options, OPTION_APPLY_ROOT)) {
 
-  	    // finish building the unit tree
-	    xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
+            // finish building the unit tree
+            xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
 
-	    // End the document and free it if applied to unit individually
+            // End the document and free it if applied to unit individually
             xmlSAX2EndDocument(ctxt);
 
             // apply the necessary processing
@@ -247,18 +247,18 @@ public :
         // endDocument can be called, even if startDocument was not for empty input
         if (!found || error)
             return;
-	/*
+        /*
         // end the entire input document and run apply if applied to root.
         if (isoption(options, OPTION_APPLY_ROOT)) {
-            xmlSAX2EndDocument(ctxt);
+        xmlSAX2EndDocument(ctxt);
 
-            if ((error = !apply()))
-	      stop_parser();
+        if ((error = !apply()))
+        stop_parser();
 
-            xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-            onode->name = NULL;
+        xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
+        onode->name = NULL;
 
-	    }*/
+        }*/
 
         // free up the document that has this particular unit
         xmlFreeDoc(ctxt->myDoc);
@@ -267,7 +267,7 @@ public :
         // end the output
         endOutput();
 
-}
+    }
 
 protected:
 

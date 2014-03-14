@@ -44,6 +44,8 @@ int main() {
         dassert(unit->filename, 0);
         dassert(unit->directory, 0);
         dassert(unit->version, 0);
+        dassert(unit->timestamp, 0);
+        dassert(unit->hash, 0);
         dassert(unit->unit, 0);
 
         srcml_free_unit(unit);

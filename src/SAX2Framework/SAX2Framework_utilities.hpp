@@ -18,6 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <libxml/parser.h>
 #include <libxml/parserInternals.h>
 
 #ifndef INCLUDDED_SAX2FRAMEWORK_UTILITIES_HPP

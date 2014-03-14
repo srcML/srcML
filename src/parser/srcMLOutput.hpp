@@ -21,7 +21,7 @@
  */
 
 /**
-  XML output
+   XML output
 */
 
 #ifndef SRCMLOUTPUT_HPP
@@ -37,6 +37,11 @@
 #include "srcMLException.hpp"
 #include <string>
 #include <vector>
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
+#include <boost/date_time/posix_time/posix_time.hpp>
+#pragma GCC diagnostic pop
 
 #include <libxml/xmlwriter.h>
 
@@ -68,10 +73,14 @@ public:
 
     // start a unit element with the passed metadata
     void startUnit(const char* unit_language,
-                   const char* unit_directory, const char* unit_filename, const char* unit_version, bool outer);
+                   const char* unit_directory, const char* unit_filename,
+		   const char* unit_version, const char* unit_timestamp,
+		   const char* unit_hash,
+		   bool outer);
 
     // consume the entire tokenstream with output of srcml
-    void consume(const char* language, const char* unit_directory, const char* unit_filename, const char* unit_version = "");
+    void consume(const char* language, const char* unit_directory, const char* unit_filename,
+		 const char* unit_version, const char* unit_timestamp, const char* unit_hash);
 
     // close the output
     void close();
@@ -101,6 +110,8 @@ public:
     const char* unit_dir;
     const char* unit_filename;
     const char* unit_version;
+    const char* unit_timestamp;
+    const char* unit_hash;
     OPTION_TYPE& options;
     const char* xml_encoding;
     std::string * num2prefix;
@@ -112,6 +123,7 @@ public:
 
     int depth;
     xmlOutputBuffer * output_buffer;
+    boost::posix_time::ptime debug_time_start;
 
     // output line attribute content
     std::string lineAttribute;

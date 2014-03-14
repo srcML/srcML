@@ -157,6 +157,54 @@ int main() {
     }
 
     /*
+      srcml_unit_get_timestamp
+    */
+
+    {
+
+        srcml_unit * unit = srcml_create_unit(archive);
+        unit->timestamp = boost::optional<std::string>();
+        dassert(srcml_unit_get_timestamp(unit), 0);
+        srcml_free_unit(unit);
+    }
+
+    {
+
+        srcml_unit * unit = srcml_create_unit(archive);
+        unit->timestamp = "foo";
+        dassert(srcml_unit_get_timestamp(unit), std::string("foo"));
+        srcml_free_unit(unit);
+    }
+
+    {
+        dassert(srcml_unit_get_timestamp(0), 0);
+    }
+
+    /*
+      srcml_unit_get_hash
+    */
+
+    {
+
+        srcml_unit * unit = srcml_create_unit(archive);
+        unit->hash = boost::optional<std::string>();
+        dassert(srcml_unit_get_hash(unit), 0);
+        srcml_free_unit(unit);
+    }
+
+    {
+
+        srcml_unit * unit = srcml_create_unit(archive);
+        unit->hash = "foo";
+        dassert(srcml_unit_get_hash(unit), std::string("foo"));
+        srcml_free_unit(unit);
+    }
+
+    {
+        dassert(srcml_unit_get_hash(0), 0);
+    }
+
+    /*
       srcml_unit_get_xml
     */
 

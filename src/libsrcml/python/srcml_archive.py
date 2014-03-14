@@ -159,21 +159,21 @@ libsrcml.srcml_archive_get_tabstop.argtypes = [c_void_p]
 libsrcml.srcml_archive_get_namespace_size.restype = c_int
 libsrcml.srcml_archive_get_namespace_size.argtypes = [c_void_p]
 
-# const char* srcml_archive_get_prefix(const struct srcml_archive* archive, int pos);
-libsrcml.srcml_archive_get_prefix.restype = c_char_p
-libsrcml.srcml_archive_get_prefix.argtypes = [c_void_p, c_int]
-
-# const char* srcml_archive_get_prefix_uri(const struct srcml_archive* archive, const char* namespace_uri);
-libsrcml.srcml_archive_get_prefix_uri.restype = c_char_p
-libsrcml.srcml_archive_get_prefix_uri.argtypes = [c_void_p, c_char_p]
-
-# const char* srcml_archive_get_namespace(const struct srcml_archive* archive, int pos);
-libsrcml.srcml_archive_get_namespace.restype = c_char_p
-libsrcml.srcml_archive_get_namespace.argtypes = [c_void_p, c_int]
-
-# const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archive, const char* prefix);
+# const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archive, int pos);
 libsrcml.srcml_archive_get_namespace_prefix.restype = c_char_p
-libsrcml.srcml_archive_get_namespace_prefix.argtypes = [c_void_p, c_char_p]
+libsrcml.srcml_archive_get_namespace_prefix.argtypes = [c_void_p, c_int]
+
+# const char* srcml_archive_get_prefix_from_uri(const struct srcml_archive* archive, const char* namespace_uri);
+libsrcml.srcml_archive_get_prefix_from_uri.restype = c_char_p
+libsrcml.srcml_archive_get_prefix_from_uri.argtypes = [c_void_p, c_char_p]
+
+# const char* srcml_archive_get_namespace_uri(const struct srcml_archive* archive, int pos);
+libsrcml.srcml_archive_get_namespace_uri.restype = c_char_p
+libsrcml.srcml_archive_get_namespace_uri.argtypes = [c_void_p, c_int]
+
+# const char* srcml_archive_get_uri_from_prefix(const struct srcml_archive* archive, const char* prefix);
+libsrcml.srcml_archive_get_uri_from_prefix.restype = c_char_p
+libsrcml.srcml_archive_get_uri_from_prefix.argtypes = [c_void_p, c_char_p]
 
 # int         srcml_archive_get_macro_list_size(const struct srcml_archive* archive);
 libsrcml.srcml_archive_get_macro_list_size.restype = c_int
@@ -217,15 +217,39 @@ libsrcml.srcml_clear_transforms.argtypes = [c_void_p]
 
 # int srcml_append_transform_xpath(struct srcml_archive*, const char* xpath_string);
 libsrcml.srcml_append_transform_xpath.restype = c_int
-libsrcml.srcml_append_transform_xpath.argtypes = [c_void_p]
+libsrcml.srcml_append_transform_xpath.argtypes = [c_void_p, c_char_p]
 
-# int srcml_append_transform_xslt(struct srcml_archive*, const char* xslt_filename);
-libsrcml.srcml_append_transform_xslt.restype = c_int
-libsrcml.srcml_append_transform_xslt.argtypes = [c_void_p]
+# int srcml_append_transform_xslt_filename(struct srcml_archive*, const char* xslt_filename);
+libsrcml.srcml_append_transform_xslt_filename.restype = c_int
+libsrcml.srcml_append_transform_xslt_filename.argtypes = [c_void_p, c_char_p]
 
-# int srcml_append_transform_relaxng(struct srcml_archive*, const char* relaxng_filename);
-libsrcml.srcml_append_transform_relaxng.restype = c_int
-libsrcml.srcml_append_transform_relaxng.argtypes = [c_void_p]
+# int srcml_append_transform_xslt_memory     (struct srcml_archive*, const char* xslt_buffer, size_t size);
+libsrcml.srcml_append_transform_xslt_memory.restype = c_int
+libsrcml.srcml_append_transform_xslt_memory.argtypes = [c_void_p, c_char_p, c_int]
+
+# int srcml_append_transform_xslt_FILE       (struct srcml_archive*, FILE* xslt_file);
+libsrcml.srcml_append_transform_xslt_FILE.restype = c_int
+libsrcml.srcml_append_transform_xslt_FILE.argtypes = [c_void_p, c_void_p]
+
+# int srcml_append_transform_xslt_fd         (struct srcml_archive*, int xslt_fd);
+libsrcml.srcml_append_transform_xslt_fd.restype = c_int
+libsrcml.srcml_append_transform_xslt_fd.argtypes = [c_void_p, c_int]
+
+# int srcml_append_transform_relaxng_filename(struct srcml_archive*, const char* relaxng_filename);
+libsrcml.srcml_append_transform_relaxng_filename.restype = c_int
+libsrcml.srcml_append_transform_relaxng_filename.argtypes = [c_void_p, c_char_p]
+
+# int srcml_append_transform_relaxng_memory  (struct srcml_archive*, const char* relaxng_buffer, size_t size);
+libsrcml.srcml_append_transform_relaxng_memory.restype = c_int
+libsrcml.srcml_append_transform_relaxng_memory.argtypes = [c_void_p, c_char_p, c_int]
+
+# int srcml_append_transform_relaxng_FILE    (struct srcml_archive*, FILE* relaxng_file);
+libsrcml.srcml_append_transform_relaxng_FILE.restype = c_int
+libsrcml.srcml_append_transform_relaxng_FILE.argtypes = [c_void_p, c_void_p]
+
+# int srcml_append_transform_relaxng_fd      (struct srcml_archive*, int relaxng_fd);
+libsrcml.srcml_append_transform_relaxng_fd.restype = c_int
+libsrcml.srcml_append_transform_relaxng_fd.argtypes = [c_void_p, c_int]
 
 # int srcml_apply_transforms(struct srcml_archive* iarchive, struct srcml_archive* oarchive);
 libsrcml.srcml_apply_transforms.restype = c_int
@@ -334,17 +358,17 @@ class srcml_archive :
     def get_namespace_size(self) :
         return libsrcml.srcml_archive_get_namespace_size(self.archive)
 
-    def get_prefix(self, pos) :
-        return libsrcml.srcml_archive_get_prefix(self.archive, pos)
+    def get_namespace_prefix(self, pos) :
+        return libsrcml.srcml_archive_get_namespace_prefix(self.archive, pos)
 
-    def get_prefix_uri(self, ns) :
-        return libsrcml.srcml_archive_get_prefix_uri(self.archive, ns)
+    def get_prefix_from_uri(self, ns) :
+        return libsrcml.srcml_archive_get_prefix_from_uri(self.archive, ns)
 
-    def get_namespace(self, pos) :
-        return libsrcml.srcml_archive_get_namespace(self.archive, pos)
+    def get_namespace_uri(self, pos) :
+        return libsrcml.srcml_archive_get_namespace_uri(self.archive, pos)
 
-    def get_namespace_prefix(self, prefix) :
-        return libsrcml.srcml_archive_get_namespace_prefix(self.archive, prefix)
+    def get_uri_from_prefix(self, prefix) :
+        return libsrcml.srcml_archive_get_uri_from_prefix(self.archive, prefix)
 
     def get_macro_list_size(self) :
         return libsrcml.srcml_archive_get_macro_list_size(self.archive)
@@ -390,11 +414,29 @@ class srcml_archive :
     def append_transform_xpath(self, xpath_string) :
         check_return(libsrcml.srcml_append_transform_xpath(self.archive, xpath_string))
 
-    def append_transform_xslt(self, xslt_filename) :
-        check_return(libsrcml.srcml_append_transform_xslt(self.archive, xslt_filename))
+    def append_transform_xslt_filename(self, xslt_filename) :
+        check_return(libsrcml.srcml_append_transform_xslt_filename(self.archive, xslt_filename))
 
-    def append_transform_relaxng(self, relaxng_filename) :
-        check_return(libsrcml.srcml_append_transform_relaxng(self.archive, relaxng_filename))
+    def append_transform_xslt_memory(self, xslt_buffer) :
+        check_return(libsrcml.srcml_append_transform_xslt_memory(self.archive, xslt_buffer, len(xslt_buffer)))
+
+    def append_transform_xslt_FILE(self, xslt_file) :
+        check_return(libsrcml.srcml_append_transform_xslt_FILE(self.archive, xslt_file))
+
+    def append_transform_xslt_fd(self, xslt_fd) :
+        check_return(libsrcml.srcml_append_transform_xslt_fd(self.archive, xslt_fd))
+
+    def append_transform_relaxng_filename(self, relaxng_filename) :
+        check_return(libsrcml.srcml_append_transform_relaxng_filename(self.archive, relaxng_filename))
+
+    def append_transform_relaxng_memory(self, relaxng_buffer) :
+        check_return(libsrcml.srcml_append_transform_relaxng_memory(self.archive, relaxng_buffer, len(relaxng_buffer)))
+
+    def append_transform_relaxng_FILE(self, relaxng_file) :
+        check_return(libsrcml.srcml_append_transform_relaxng_FILE(self.archive, relaxng_file))
+
+    def append_transform_relaxng_fd(self, relaxng_fd) :
+        check_return(libsrcml.srcml_append_transform_relaxng_fd(self.archive, relaxng_fd))
 
     def apply_transforms(self, oarchive) :
         check_return(libsrcml.srcml_apply_transforms(self.archive, oarchive.archive))

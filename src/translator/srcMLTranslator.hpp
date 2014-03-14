@@ -39,43 +39,43 @@ class srcMLTranslator : public Language {
 public:
 
     srcMLTranslator(int language,
-                        const char* src_encoding,
-                        const char* xml_encoding,
-                        const char* srcml_filename,
-                        OPTION_TYPE& options,
-                        const char* directory,
-                        const char* filename,
-                        const char* version,
-  		        std::string * uri,
-                        int tabsize
-                        );
+                    const char* src_encoding,
+                    const char* xml_encoding,
+                    const char* srcml_filename,
+                    OPTION_TYPE& options,
+                    const char* directory,
+                    const char* filename,
+                    const char* version,
+                    std::string * uri,
+                    int tabsize
+                    );
 
     // constructor
     srcMLTranslator(int language,
                     const char* src_encoding,
                     const char* xml_encoding,
                     char** str_buf,
-		    int * size, 
+                    int * size,
                     OPTION_TYPE& options,
                     const char* directory,
                     const char* filename,
                     const char* version,
-		    std::string * uri,
+                    std::string * uri,
                     int tabsize
                     );
 
     // constructor
     srcMLTranslator(int language,
-                        const char* src_encoding,
-                        const char* xml_encoding,
-                        xmlOutputBuffer * output_buffer,
-                        OPTION_TYPE& options,
-                        const char* directory,
-                        const char* filename,
-                        const char* version,
-  		        std::string * uri,
-                        int tabsize
-                        );
+                    const char* src_encoding,
+                    const char* xml_encoding,
+                    xmlOutputBuffer * output_buffer,
+                    OPTION_TYPE& options,
+                    const char* directory,
+                    const char* filename,
+                    const char* version,
+                    std::string * uri,
+                    int tabsize
+                    );
 
     void setMacroList(std::vector<std::string> & list);
     void setInput(const char* path);
@@ -86,14 +86,19 @@ public:
     void translate(const char* unit_directory = 0,
                    const char* unit_filename = 0,
                    const char* unit_version = 0,
+                   const char* unit_timestamp = 0,
+                   const char* unit_hash = 0,
                    int language = 0);
 
     void translate_separate(const char* unit_directory,
-                            const char* unit_filename, const char* unit_version,
+                            const char* unit_filename,
+			    const char* unit_version,
+			    const char* unit_timestamp,
+			    const char* unit_hash,
                             int language, UTF8CharBuffer * parser_input, xmlBuffer* output_buffer,
                             OPTION_TYPE translation_options);
 
-    void add_unit(const char* xml);
+    void add_unit(std::string xml, const char * hash);
 
     // destructor
     ~srcMLTranslator();

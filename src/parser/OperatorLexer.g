@@ -62,6 +62,8 @@ BAR; // |
 
 // C++
 TRETURN; // ->
+MPDEREF;
+DOTDEREF;
 
 // C#
 LAMBDA;
@@ -134,7 +136,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
            '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3; gt = true; }) { ++realbegin; } )+ */ 
 
        '+' ('+' | '=')? |
-       '-' ('-' | '=' | '>' { star = true; $setText("-&gt;"); $setType(TRETURN);})? ({ star }? '*' { $setText("-&gt;*"); $setType(OPERATORS); })? |
+       '-' ('-' | '=' | '>' { star = true; $setText("-&gt;"); $setType(TRETURN);})? ({ star }? '*' { $setText("-&gt;*"); $setType(MPDEREF); })? |
        '*' ('=')? |
 //       '/' ('=')? |
        '%' ('=')? |
@@ -176,7 +178,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
         '?' { if (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) $setType(QMARK); } ('?' { $setType(OPERATORS); })* | // part of ternary
         '~'  | // has to be separate if part of name
 
-        '.' ('*' | '.' ( '.' { $setType(DOTDOTDOT); } | { $setType(DOTDOT); }) | { $setType(CONSTANTS); } CONSTANTS | ) |
+        '.' ('*' { $setType(DOTDEREF); } | '.' ( '.' { $setType(DOTDOTDOT); } | { $setType(DOTDOT); }) | { $setType(CONSTANTS); } CONSTANTS | ) |
 
         '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
         )

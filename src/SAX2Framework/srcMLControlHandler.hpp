@@ -53,7 +53,7 @@ private :
     // Process to execute call backs
     SAX2srcMLHandler sax2_handler;
 
-    bool pop_input;
+    xmlParserInputBufferPtr input;
 
 public :
 
@@ -63,7 +63,7 @@ public :
      *
      * Constructor
      */
-    srcMLControlHandler(const char * filename);
+    srcMLControlHandler(const char * filename, const char * encoding = 0);
     srcMLControlHandler(xmlParserInputBufferPtr input);
 
     /**

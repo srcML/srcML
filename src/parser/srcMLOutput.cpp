@@ -334,7 +334,8 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          )
     : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
       unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(uri)
-    , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), output_buffer(output_buffer)
+    , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), output_buffer(output_buffer),
+      debug_time_start(boost::posix_time::microsec_clock::universal_time())
 {
 
     // setup attributes names for line/column position if used
@@ -433,13 +434,16 @@ void srcMLOutput::setTokenStream(TokenStream& ints) {
     input = &ints;
 }
 
-void srcMLOutput::consume(const char* language, const char* directory, const char* filename, const char* version) {
+void srcMLOutput::consume(const char* language, const char* directory, const char* filename,
+			  const char* version, const char* timestamp, const char* hash) {
 
     // store attributes so that first occurrence of unit element will be correct
     unit_dir = directory;
     unit_filename = filename;
     unit_version = version;
+    unit_timestamp = timestamp;
     unit_language = language;
+    unit_hash = hash;
 
     // consume all input until EOF
     while (consume_next() != antlr::Token::EOF_TYPE) {
@@ -540,7 +544,10 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
     }
 }
 
-void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
+void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename,
+			    const char* version, const char* timestamp,
+			    const char* hash,
+			    bool outer) {
 
     const char * prefix = num2prefix[0].c_str();
     std::string maintag = prefix ? prefix : "";
@@ -587,6 +594,12 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
         // version attribute
         { UNIT_ATTRIBUTE_REVISION, isoption(OPTION_REVISION) ? srcml_version_string() : 0 },
 
+        // timestamp attribute
+        { UNIT_ATTRIBUTE_TIMESTAMP, timestamp },
+
+        // timestamp attribute
+        { UNIT_ATTRIBUTE_HASH, hash },
+
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },
 
@@ -616,13 +629,6 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
     if(outer) outputMacroList();
 
-    // leave space for nested unit
-    if (outer && isoption(OPTION_ARCHIVE)) {
-
-        processText("\n\n", 2);
-
-    }
-
     ++depth;
 }
 
@@ -651,7 +657,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
         // keep track of number of open elements
         openelementcount = 0;
-        startUnit(unit_language, unit_dir, unit_filename, unit_version, !isoption(OPTION_ARCHIVE));
+        startUnit(unit_language, unit_dir, unit_filename, unit_version, unit_timestamp, unit_hash, !isoption(OPTION_ARCHIVE));
 
     } else {
 
@@ -742,6 +748,14 @@ void srcMLOutput::processToken(const antlr::RefToken& token) {
         else
             xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
         ++openelementcount;
+
+        if(isoption(OPTION_DEBUG_TIMER)) {
+
+            std::string time = to_simple_string(boost::posix_time::microsec_clock::universal_time() - debug_time_start);
+            xmlTextWriterWriteAttribute(xout, BAD_CAST "time", BAD_CAST time.c_str());
+
+        }
+
     }
 
     if (!isstart(token) || isempty(token)) {

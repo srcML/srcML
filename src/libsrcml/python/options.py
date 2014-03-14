@@ -61,7 +61,25 @@ SRCML_OPTION_CPP_MARKUP_IF0    = 1<<11
 SRCML_OPTION_APPLY_ROOT        = 1<<12
 # Compress the output file
 SRCML_OPTION_COMPRESS          = 1<<13
+# Nest if in else if intead of elseif tag
+SRCML_OPTION_NESTIF            = 1<<14
+# Output timestamp attribute on each unit (default: on)
+SRCML_OPTION_TIMESTAMP         = 1<<15
+# Output hash attribute on each unit (default: on)
+SRCML_OPTION_HASH              = 1<<16
 # Return status indicating no errors
-SRCML_STATUS_OK    = 0
+SRCML_STATUS_OK                   = 0
 # Return status indicating errors occurred
-SRCML_STATUS_ERROR = 1
+SRCML_STATUS_ERROR                = 1
+# Return status indicating an invalid argument
+SRCML_STATUS_INVALID_ARGUMENT     = 2
+# Return status indicating that their is some problem with the input
+SRCML_STATUS_INVALID_INPUT        = 3
+# Return status indicating an invalid read I/O operation (such as write on read only archive)
+SRCML_STATUS_INVALID_IO_OPERATION = 4
+# Return status indicating that their is some problem with the input
+SRCML_STATUS_IO_ERROR             = 5
+# Return status indicating an unitialized unit
+SRCML_STATUS_UNINITIALIZED_UNIT   = 6
+# Return status indicating an unset language
+SRCML_STATUS_UNSET_LANGUAGE       = 7

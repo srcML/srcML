@@ -59,7 +59,7 @@ void * start_routine(void * arguments) {
         if(!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END))
             fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
 
-	// might have to release a lock here or set is_done;
+        // might have to release a lock here or set is_done;
     }
 
     return 0;
@@ -220,12 +220,12 @@ int srcMLSAX2Reader::readsrcML(boost::optional<std::string> & unit) {
  *
  * @returns 1 on success and 0 if done
  */
-int srcMLSAX2Reader::readsrc(UTF8OutputSource & output_handler) {
+int srcMLSAX2Reader::readsrc(xmlOutputBufferPtr output_handler) {
 
     if(handler.is_done) return 0;
     control.enable_comment(false);
     control.enable_cdataBlock(false);
-    handler.output_handler = &output_handler;
+    handler.output_handler = output_handler;
     handler.collect_src = true;
     handler.resume_and_wait();
     handler.collect_src = false;

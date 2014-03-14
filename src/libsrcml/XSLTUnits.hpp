@@ -48,6 +48,10 @@ typedef xmlDocPtr (*xsltApplyStylesheet_function) (xsltStylesheetPtr,xmlDocPtr,c
 #include <libexslt/exslt.h>
 #endif
 
+#ifdef WIN32
+#include <io.h>
+#endif
+
 class XSLTUnits : public UnitDOM {
 public :
 
@@ -156,7 +160,7 @@ public :
                     xmlOutputBufferWriteElementNs(buf, meta_tags->at(i).localname, meta_tags->at(i).prefix, meta_tags->at(i).URI,
                                                   meta_tags->at(i).nb_namespaces, meta_tags->at(i).namespaces,
                                                   meta_tags->at(i).nb_attributes, meta_tags->at(i).nb_defaulted, meta_tags->at(i).attributes);
-		    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
                 }
 

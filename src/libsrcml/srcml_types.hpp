@@ -47,8 +47,16 @@ enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
 struct transform {
     /** a transformation type */
     SRCML_TRANSFORM_TYPE type;
-    /** the transformation to perform */
-    std::string transformation;
+
+    /** union holding the transformation */
+    union {
+
+	/** the transformation to perform for XPath */
+	const char * str;
+	/** the transformation to perform for XSLT and relaxng */
+	xmlDocPtr doc;
+
+    } transformation;
 
 };
 
@@ -137,9 +145,15 @@ struct srcml_unit {
     boost::optional<std::string> directory;
     /** an attribute for a version string */
     boost::optional<std::string> version;
+    /** an attribute for a timestamp string */
+    boost::optional<std::string> timestamp;
+    /** an attribute for a hash string */
+    boost::optional<std::string> hash;
 
     /** store if attributes have been read */
     bool read_header;
+    /** indicate if hash needs added to output */
+    bool output_hash;
     /** a buffer to store srcml from read and after parsing */
     boost::optional<std::string> unit;
 };

@@ -102,13 +102,15 @@ int main() {
 
     }
 
-    {
-        try {
-            srcMLSAX2Reader reader("foo.xml");
-            assert(false);
-        } catch(...) {}
+    /*
+      {
+      try {
+      srcMLSAX2Reader reader("foo.xml");
+      assert(false);
+      } catch(...) {}
 
-    }
+      }
+    */
 
     {
         try {

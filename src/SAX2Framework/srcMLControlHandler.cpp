@@ -50,11 +50,16 @@ void srcml_control_handler_init() {
  *
  * Constructor
  */
-srcMLControlHandler::srcMLControlHandler(const char * filename) : sax2_handler(), pop_input(false) {
+srcMLControlHandler::srcMLControlHandler(const char * filename, const char * encoding) : sax2_handler(), input(0) {
 
     srcml_control_handler_init();
 
-    ctxt = xmlCreateURLParserCtxt(filename, XML_PARSE_COMPACT | XML_PARSE_HUGE);
+    input =
+        xmlParserInputBufferCreateFilename(filename,
+                                           encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+
+    ctxt = SAX2FrameworkCreateParserCtxt(input);
+
     if(ctxt == NULL) throw std::string("File does not exist");
     sax = factory();
 
@@ -67,11 +72,12 @@ srcMLControlHandler::srcMLControlHandler(const char * filename) : sax2_handler()
  *
  * Constructor
  */
-srcMLControlHandler::srcMLControlHandler(xmlParserInputBufferPtr input) : sax2_handler(), pop_input(true) {
+srcMLControlHandler::srcMLControlHandler(xmlParserInputBufferPtr input) : sax2_handler(), input(0) {
 
     srcml_control_handler_init();
 
     ctxt = SAX2FrameworkCreateParserCtxt(input);
+
     if(ctxt == NULL) throw std::string("File does not exist");
     sax = factory();
 
@@ -84,8 +90,9 @@ srcMLControlHandler::srcMLControlHandler(xmlParserInputBufferPtr input) : sax2_h
  */
 srcMLControlHandler::~srcMLControlHandler() {
 
-    if(pop_input) inputPop(ctxt);
+    inputPop(ctxt);
     if(ctxt) xmlFreeParserCtxt(ctxt);
+    if(input) xmlFreeParserInputBuffer(input);
 
 }
 
@@ -107,7 +114,7 @@ xmlSAXHandler & srcMLControlHandler::getSAX() {
  */
 xmlParserCtxtPtr srcMLControlHandler::getCtxt() {
 
-  return ctxt;
+    return ctxt;
 
 }
 
@@ -172,17 +179,17 @@ void srcMLControlHandler::enable_endElementNs(bool enable) {
  */
 void srcMLControlHandler::enable_characters(bool enable) {
 
-  if(enable) {
+    if(enable) {
 
-    sax.characters = charactersFirst;
-    sax.ignorableWhitespace = charactersFirst;
+        sax.characters = charactersFirst;
+        sax.ignorableWhitespace = charactersFirst;
 
-  } else {
+    } else {
 
-    sax.characters = 0;
-    sax.ignorableWhitespace = 0;
+        sax.characters = 0;
+        sax.ignorableWhitespace = 0;
 
-  }
+    }
 
 }
 
@@ -228,6 +235,7 @@ void srcMLControlHandler::parse(srcMLHandler * handler) {
     ctxt->_private = &sax2_handler;
 
     int status = xmlParseDocument(ctxt);
+
     ctxt->sax = save_sax;
 
     if(status != 0) {
@@ -237,6 +245,7 @@ void srcMLControlHandler::parse(srcMLHandler * handler) {
         size_t str_length = strlen(ep->message);
         ep->message[str_length - 1] = '\0';
         SAXError error = { std::string((const char *)ep->message), ep->code };
+
         throw error;
     }
 

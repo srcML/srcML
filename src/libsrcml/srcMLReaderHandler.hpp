@@ -23,7 +23,6 @@
 
 #include <srcMLHandler.hpp>
 #include <srcml_types.hpp>
-#include <UTF8OutputSource.hpp>
 
 #include <libxml/parser.h>
 #include <stdio.h>
@@ -68,7 +67,7 @@ private :
     srcml_unit * unit;
 
     /** output buffer for direct src write */
-    UTF8OutputSource * output_handler;
+    xmlOutputBufferPtr output_handler;
 
     /** has reached end of parsing*/
     bool is_done;
@@ -106,11 +105,14 @@ public :
      *
      * Constructor.  Sets up mutex, conditions and state.
      */
-  srcMLReaderHandler() : unit(0), output_handler(0), is_done(false), read_root(false),
-			 collect_unit_attributes(false), collect_srcml(false), collect_src(false),
-			 terminate(false), is_empty(false), wait_root(true), skip(false) {
+    srcMLReaderHandler() : unit(0), output_handler(0), is_done(false), read_root(false),
+                           collect_unit_attributes(false), collect_srcml(false), collect_src(false),
+                           terminate(false), is_empty(false), wait_root(true), skip(false) {
 
         archive = srcml_create_archive();
+
+        srcml_archive_disable_option(archive, SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH);
+
         archive->prefixes.clear();
         archive->namespaces.clear();
 
@@ -212,7 +214,9 @@ public :
             std::string value = "";
             value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
 
-            if(attribute == "language")
+            if(attribute == "timestamp")
+                srcml_archive_enable_option(archive, SRCML_OPTION_TIMESTAMP);
+            else if(attribute == "language")
                 srcml_archive_set_language(archive, value.c_str());
             else if(attribute == "filename")
                 srcml_archive_set_filename(archive, value.c_str());
@@ -403,7 +407,12 @@ public :
             std::string value = "";
             value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
 
-            if(attribute == "language")
+            if(attribute == "timestamp") {
+                srcml_archive_enable_option(archive, SRCML_OPTION_TIMESTAMP);
+		srcml_unit_set_timestamp(unit, value.c_str());
+            } else if(attribute == "hash")
+		srcml_unit_set_hash(unit, value.c_str());
+            else if(attribute == "language")
                 srcml_unit_set_language(unit, value.c_str());
             else if(attribute == "filename")
                 srcml_unit_set_filename(unit, value.c_str());
@@ -424,14 +433,14 @@ public :
 
         }
 
-	if(skip) {
+        if(skip) {
 
-	  get_control_handler().enable_startElementNs(false);
-	  get_control_handler().enable_characters(false);
-	  get_control_handler().enable_comment(false);
-	  get_control_handler().enable_cdataBlock(false);
+            get_control_handler().enable_startElementNs(false);
+            get_control_handler().enable_characters(false);
+            get_control_handler().enable_comment(false);
+            get_control_handler().enable_cdataBlock(false);
 
-	}
+        }
 
         if(collect_srcml) {
 
@@ -493,15 +502,15 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-	if(collect_src && localname[0] == 'e' && localname[1] == 's'
-	   && strcmp((const char *)localname, "escape") == 0) {
+        if(collect_src && localname[0] == 'e' && localname[1] == 's'
+           && strcmp((const char *)localname, "escape") == 0) {
 
-	  char value = (int)strtol((const char*) attributes[3], NULL, 0);
+            char value = (int)strtol((const char*) attributes[3], NULL, 0);
 
-	  charactersUnit((xmlChar *)&value, 1);
-	  
+            charactersUnit((xmlChar *)&value, 1);
 
-	} 
+
+        }
 
         if(is_empty && collect_srcml) *unit->unit += ">";
         is_empty = true;
@@ -563,14 +572,14 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-	if(skip) {
+        if(skip) {
 
-	  get_control_handler().enable_startElementNs(true);
-	  get_control_handler().enable_characters(true);
-	  get_control_handler().enable_comment(true);
-	  get_control_handler().enable_cdataBlock(true);
+            get_control_handler().enable_startElementNs(true);
+            get_control_handler().enable_characters(true);
+            get_control_handler().enable_comment(true);
+            get_control_handler().enable_cdataBlock(true);
 
-	}
+        }
 
 
         //if(is_empty) *unit->unit += ">";
@@ -652,7 +661,7 @@ public :
 
         if(collect_src) {
 
-            output_handler->writeString((const char *)ch, len);
+            xmlOutputBufferWrite(output_handler, len, (const char *)ch);
 
         } else {
 

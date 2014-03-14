@@ -105,6 +105,9 @@ const OPTION_TYPE OPTION_COMPRESSED  = ull(1) << __COUNTER__; /* 13 */
 // @src2srcml
 const OPTION_TYPE OPTION_NESTIF  = ull(1) << __COUNTER__; /* 14 */
 
+// @src2srcml
+const OPTION_TYPE OPTION_TIMESTAMP  = ull(1) << __COUNTER__; /* 15 */
+
 // end SRCML_OPTIONS
 
 // path
@@ -274,5 +277,8 @@ const OPTION_TYPE OPTION_MACRO_LIST  = ull(1) << __COUNTER__;
 
 // @src2srcml
 const OPTION_TYPE OPTION_CPPIF_CHECK  = ull(1) << __COUNTER__;
+
+// @src2srcml
+const OPTION_TYPE OPTION_DEBUG_TIMER  = ull(1) << __COUNTER__;
 
 #endif

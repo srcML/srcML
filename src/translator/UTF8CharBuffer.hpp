@@ -35,7 +35,23 @@
 #include <cstring>
 
 #include <stdio.h>
-#include <iconv.h>
+
+#include <libxml/xmlIO.h>
+
+#ifdef __MACH__
+#include <CommonCrypto/CommonDigest.h>
+#define SHA_CTX CC_SHA1_CTX
+#define SHA1_Init CC_SHA1_Init
+#define SHA1_Update CC_SHA1_Update
+#define SHA1_Final CC_SHA1_Final
+#define LONG CC_LONG
+#define SHA_DIGEST_LENGTH CC_SHA1_DIGEST_LENGTH
+#else
+#include <openssl/sha.h>
+#define LONG unsigned long
+#endif
+
+#include <boost/optional.hpp>
 
 class UTF8FileError {};
 
@@ -47,10 +63,10 @@ public:
     static const size_t SRCBUFSIZE = 1024;
 
     // Create a character buffer
-    UTF8CharBuffer(const char * ifilename, const char * encoding);
-    UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding);
-    UTF8CharBuffer(FILE * file, const char * encoding);
-    UTF8CharBuffer(int fd, const char * encoding);
+    UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash);
+    UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, boost::optional<std::string> * hash);
+    UTF8CharBuffer(FILE * file, const char * encoding, boost::optional<std::string> * hash);
+    UTF8CharBuffer(int fd, const char * encoding, boost::optional<std::string> * hash);
 
     // Get the next character from the stream
     int getChar();
@@ -60,20 +76,14 @@ public:
 private:
 
     int growBuffer();
-    size_t convertEncodings(size_t num_to_convert);
-    void processEncoding(const char * encoding);
+    void init(const char * encoding);
 
-    FILE * input;
+    xmlParserInputBufferPtr input;
     int pos;
     int size;
-    int total_size;
     bool lastcr;
-    bool need_close;
-    char * raw_buffer;
-    unsigned char * input_buffer;
-    iconv_t cd;
-    char buffer[SRCBUFSIZE];
-    char iconv_buffer[4 * SRCBUFSIZE];
+    boost::optional<std::string> * hash;
+    SHA_CTX ctx;
 
 };
 #endif

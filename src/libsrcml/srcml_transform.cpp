@@ -31,8 +31,11 @@
 #include <unistd.h>
 #else
 #include <io.h>
-
 #endif
+
+#include <libxml/parser.h>
+#include <libxml/xmlIO.h>
+
 
 /**
  * srcml_append_transform_xpath
@@ -42,14 +45,14 @@
  * Append the XPath expression to the list
  * of transformation/queries.  As of yet no way to specify context
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
 
-    if(archive == NULL || xpath_string == 0) return SRCML_STATUS_ERROR;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+    if(archive == NULL || xpath_string == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    transform tran = { SRCML_XPATH, xpath_string };
+    transform tran = { SRCML_XPATH, { xpath_string } };
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -57,21 +60,25 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
 }
 
 /**
- * srcml_append_transform_xslt
+ * srcml_append_transform_xslt_filename
  * @param archive a srcml_archive
  * @param xslt_filename an XSLT program filename path
  *
  * Append the XSLT program filename path to the list
  * of transformation/queries.  As of yet no way to specify parameters or context
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filename) {
+int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xslt_filename) {
 
-    if(archive == NULL || xslt_filename == 0) return SRCML_STATUS_ERROR;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+    if(archive == NULL || xslt_filename == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    transform tran = { SRCML_XSLT, xslt_filename };
+    xmlDocPtr doc = xmlReadFile(xslt_filename, 0, 0);
+
+    transform tran = { SRCML_XSLT, { 0 } };
+    tran.transformation.doc = doc;
+
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -79,21 +86,183 @@ int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filenam
 }
 
 /**
- * srcml_append_transform_relaxng
+ * srcml_append_transform_xslt_memory
+ * @param archive a srcml_archive
+ * @param xslt_buffer a buffer holding an XSLT
+ *
+ * Append the XSLT program in the buffer to the list
+ * of transformation/queries.  As of yet no way to specify parameters or context
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_append_transform_xslt_memory(srcml_archive* archive, const char* xslt_buffer, size_t size) {
+
+    if(archive == NULL || xslt_buffer == 0 || size == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    xmlDocPtr doc = xmlReadMemory(xslt_buffer, (int)size, 0, 0, 0);
+
+    transform tran = { SRCML_XSLT, { 0 } };
+    tran.transformation.doc = doc;
+
+    archive->transformations.push_back(tran);
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_append_transform_xslt_FILE
+ * @param archive a srcml_archive
+ * @param xslt_file a FILE containing an XSLT program
+ *
+ * Append the XSLT program in FILE to the list
+ * of transformation/queries.  As of yet no way to specify parameters or context
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_append_transform_xslt_FILE(srcml_archive* archive, FILE* xslt_file) {
+
+    if(archive == NULL || xslt_file == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    xmlRegisterDefaultInputCallbacks();
+    xmlDocPtr doc = xmlReadIO(xmlFileRead, xmlFileClose, xslt_file, 0, 0, 0);
+
+    transform tran = { SRCML_XSLT, { 0 } };
+    tran.transformation.doc = doc;
+
+    archive->transformations.push_back(tran);
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_append_transform_xslt_fd
+ * @param archive a srcml_archive
+ * @param xslt_fd a file descriptor containing an XSLT program 
+ *
+ * Append the XSLT program in fd to the list
+ * of transformation/queries.  As of yet no way to specify parameters or context
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_append_transform_xslt_fd(srcml_archive* archive, int xslt_fd) {
+
+    if(archive == NULL || xslt_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    xmlDocPtr doc = xmlReadFd(xslt_fd, 0, 0, 0);
+
+    transform tran = { SRCML_XSLT, { 0 } };
+    tran.transformation.doc = doc;
+
+    archive->transformations.push_back(tran);
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_append_transform_relaxng_filename
  * @param archive a srcml archive
  * @param relaxng_filename a RelaxNG schema filename path
  *
  * Append the RelaxNG schema filename path to the list
  * of transformation/queries.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_filename) {
+int srcml_append_transform_relaxng_filename(srcml_archive* archive, const char* relaxng_filename) {
 
-    if(archive == NULL || relaxng_filename == 0) return SRCML_STATUS_ERROR;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
+    if(archive == NULL || relaxng_filename == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    transform tran = { SRCML_RELAXNG, relaxng_filename };
+    xmlDocPtr doc = xmlReadFile(relaxng_filename, 0, 0);
+
+    transform tran = { SRCML_RELAXNG, { 0 } };
+    tran.transformation.doc = doc;
+
+    archive->transformations.push_back(tran);
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_append_transform_relaxng_memory
+ * @param archive a srcml archive
+ * @param relaxng_buffer a buffer holding a RelaxNG schema
+ *
+ * Append the RelaxNG schema in the buffer to the list
+ * of transformation/queries.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_append_transform_relaxng_memory(srcml_archive* archive, const char* relaxng_buffer, size_t size) {
+
+    if(archive == NULL || relaxng_buffer == 0 || size == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    xmlDocPtr doc = xmlReadMemory(relaxng_buffer, (int)size, 0, 0, 0);
+
+    transform tran = { SRCML_RELAXNG, { 0 } };
+    tran.transformation.doc = doc;
+
+    archive->transformations.push_back(tran);
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_append_transform_relaxng_FILE
+ * @param archive a srcml archive
+ * @param relaxng_file a FILE containing aRelaxNG schema
+ *
+ * Append the RelaxNG schema in FILE to the list
+ * of transformation/queries.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_append_transform_relaxng_FILE(srcml_archive* archive, FILE* relaxng_file) {
+
+    if(archive == NULL || relaxng_file == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    xmlRegisterDefaultInputCallbacks();
+    xmlDocPtr doc = xmlReadIO(xmlFileRead, xmlFileClose, relaxng_file, 0, 0, 0);
+
+    transform tran = { SRCML_RELAXNG, { 0 } };
+    tran.transformation.doc = doc;
+
+    archive->transformations.push_back(tran);
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_append_transform_relaxng_fd
+ * @param archive a srcml archive
+ * @param relaxng_fd a file descriptor containing a RelaxNG schema
+ *
+ * Append the RelaxNG schema in fd to the list
+ * of transformation/queries.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_append_transform_relaxng_fd(srcml_archive* archive, int relaxng_fd) {
+
+    if(archive == NULL || relaxng_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    xmlDocPtr doc = xmlReadFd(relaxng_fd, 0, 0, 0);
+
+    transform tran = { SRCML_RELAXNG, { 0 } };
+    tran.transformation.doc = doc;
+
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -106,12 +275,15 @@ int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_f
  *
  * Remove all transformations from archive.
  *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
 int srcml_clear_transforms(srcml_archive * archive) {
 
-    if(archive == NULL) return SRCML_STATUS_ERROR;
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
+    for(std::vector<transform>::iterator itr = archive->transformations.begin(); itr != archive->transformations.end(); ++itr)
+	if(itr->type == SRCML_XSLT || itr->type == SRCML_RELAXNG)
+	    xmlFreeDoc(itr->transformation.doc);
     archive->transformations.clear();
 
     return SRCML_STATUS_OK;
@@ -127,11 +299,11 @@ int srcml_clear_transforms(srcml_archive * archive) {
  * Intermediate results are stored in a temporary file.
  * Transformations are cleared.
  *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
-    if(iarchive == NULL || oarchive == NULL) return SRCML_STATUS_ERROR;
+    if(iarchive == NULL || oarchive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     static const char * transform_filename_template = "srcml_transform_XXXXXXXX";
 
@@ -166,7 +338,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
             close(transform_fd);
             free((void *)transform_filename);
-            return SRCML_STATUS_ERROR;
+            return SRCML_STATUS_INVALID_INPUT;
 
         }
         int error = 0;
@@ -176,23 +348,26 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
             case SRCML_XPATH: {
 
-                const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-                error = srcml_xpath(pinput, "src:unit", xpaths, transform_fd, oarchive->options);
+                error = srcml_xpath(pinput, "src:unit",
+                                    iarchive->transformations.at(i).transformation.str,
+                                    transform_fd, oarchive->options);
                 break;
             }
 
             case SRCML_XSLT: {
 
-                const char * xslts[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
                 const char * params[1] = { 0 };
-                error = srcml_xslt(pinput, "src:unit", xslts, params, 0, transform_fd, oarchive->options);
+                error = srcml_xslt(pinput, "src:unit",
+                                   iarchive->transformations.at(i).transformation.doc,
+                                   params, 0, transform_fd, oarchive->options);
                 break;
             }
 
             case SRCML_RELAXNG: {
 
-                const char * relaxngs[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-                error = srcml_relaxng(pinput, relaxngs, transform_fd, oarchive->options);
+                error = srcml_relaxng(pinput,
+                                      iarchive->transformations.at(i).transformation.doc,
+                                      transform_fd, oarchive->options);
                 break;
             }
 
@@ -207,14 +382,14 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
             if(last_transform_filename)  unlink(last_transform_filename);
             free((void *)last_transform_filename);
 
-            return SRCML_STATUS_ERROR;
+            return SRCML_STATUS_INVALID_INPUT;
         }
 
         if(i != 0) xmlFreeParserInputBuffer(pinput);
         if(last_transform_filename) unlink(last_transform_filename);
         free((void *)last_transform_filename);
         last_transform_filename = transform_filename;
-        if(error == SRCML_STATUS_ERROR) {
+        if(error != SRCML_STATUS_OK) {
             if(last_transform_filename) unlink(last_transform_filename);
             free((void *)last_transform_filename);
             return error;

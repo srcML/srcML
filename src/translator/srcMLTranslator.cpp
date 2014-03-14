@@ -42,7 +42,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* version,         // root unit version
                                  std::string * uri,           // uri prefixes
                                  int tabsize                  // size of tabs
-    )
+                                 )
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
@@ -61,7 +61,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* version,         // root unit version
                                  std::string * uri,           // uri prefixes
                                  int tabsize                  // size of tabs
-    )
+                                 )
     :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
        encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
        out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, 0), tabsize(tabsize),
@@ -70,7 +70,6 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
     buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
     out.setOutputBuffer(obuffer);
-
 
 }
 
@@ -85,7 +84,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* version,         // root unit version
                                  std::string * uri,           // uri prefixes
                                  int tabsize                  // size of tabs
-    )
+                                 )
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
@@ -102,7 +101,7 @@ void srcMLTranslator::setInput(const char* path) {
 
     try {
 
-	pinput = new UTF8CharBuffer(path, encoding);
+        pinput = new UTF8CharBuffer(path, encoding, 0);
 
     } catch (const std::exception& e) {
         fprintf(stderr, "SRCML Exception: %s\n", e.what());
@@ -118,12 +117,27 @@ void srcMLTranslator::setInput(const char* path) {
 // close the output
 void srcMLTranslator::close() {
 
+    if(first && (options & OPTION_ARCHIVE) > 0) {
+
+        // Open for write;
+        out.initWriter();
+
+        out.outputXMLDecl();
+
+        // root unit for compound srcML documents
+        out.startUnit(0, root_directory, root_filename, root_version, 0, 0, true);
+
+    }
+
     out.close();
 }
 
 // translate from input stream to output stream
 void srcMLTranslator::translate(const char* unit_directory,
-                                const char* unit_filename, const char* unit_version,
+                                const char* unit_filename,
+				const char* unit_version,
+				const char* unit_timestamp,
+				const char* unit_hash,
                                 int language) {
 
     if(first) {
@@ -134,8 +148,7 @@ void srcMLTranslator::translate(const char* unit_directory,
 
         // root unit for compound srcML documents
         if((options & OPTION_ARCHIVE) > 0)
-            out.startUnit(0, root_directory, root_filename, root_version, true);
-
+            out.startUnit(0, root_directory, root_filename, root_version, 0, 0, true);
 
     }
 
@@ -168,7 +181,7 @@ void srcMLTranslator::translate(const char* unit_directory,
 
         // parse and form srcML output with unit attributes
         Language l(language);
-        out.consume(l.getLanguageString(), unit_directory, unit_filename, unit_version);
+        out.consume(l.getLanguageString(), unit_directory, unit_filename, unit_version, unit_timestamp, unit_hash);
 
     } catch (const std::exception& e) {
         fprintf(stderr, "SRCML Exception: %s\n", e.what());
@@ -183,11 +196,14 @@ void srcMLTranslator::translate(const char* unit_directory,
 
 // translate from input stream to output stream separate of current output stream
 void srcMLTranslator::translate_separate(const char* unit_directory,
-                                         const char* unit_filename, const char* unit_version,
+                                         const char* unit_filename,
+					 const char* unit_version,
+					 const char* unit_timestamp,
+					 const char* unit_hash,
                                          int language, UTF8CharBuffer * parser_input, xmlBuffer* output_buffer,
                                          OPTION_TYPE translation_options) {
 
-    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler(xml_encoding));
+    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler("UTF-8"));
     srcMLOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, uri, tabsize, obuffer);
     sep_out.initWriter();
     sep_out.setMacroList(user_macro_list);
@@ -223,7 +239,7 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
 
         // parse and form srcML output with unit attributes
         Language l(language);
-        sep_out.consume(l.getLanguageString(), unit_directory, unit_filename, unit_version);
+        sep_out.consume(l.getLanguageString(), unit_directory, unit_filename, unit_version, unit_timestamp, unit_hash);
 
     } catch (const std::exception& e) {
         fprintf(stderr, "SRCML Exception: %s\n", e.what());
@@ -239,7 +255,7 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
 
 }
 
-void srcMLTranslator::add_unit(const char* xml) {
+void srcMLTranslator::add_unit(std::string xml, const char * hash) {
 
     if(first) {
 
@@ -250,13 +266,40 @@ void srcMLTranslator::add_unit(const char* xml) {
 
         // root unit for compound srcML documents
         if((options & OPTION_ARCHIVE) > 0)
-            out.startUnit(0, root_directory, root_filename, root_version, true);
+            out.startUnit(0, root_directory, root_filename, root_version, 0, 0, true);
 
+        if ((options & OPTION_ARCHIVE) > 0)
+            out.processText("\n\n", 2);
 
     }
 
     first = false;
-    xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml);
+
+    if(hash) {
+
+	std::string::size_type pos = xml.find('>');
+	if(pos == std::string::npos) return;
+
+	std::string::size_type hash_pos = xml.rfind("hash", pos);
+
+
+	int offset = 0;
+
+	if(hash_pos != std::string::npos) {
+
+	    xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)xml.c_str(), (int)hash_pos + 6);
+	    xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)hash);
+	    offset = (int)hash_pos + 6;
+
+	}
+	
+	xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml.c_str() + offset);
+
+    } else {
+
+	xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml.c_str());
+
+    }
 
     if ((options & OPTION_ARCHIVE) > 0)
         out.processText("\n\n", 2);
