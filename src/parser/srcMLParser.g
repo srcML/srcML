@@ -2380,8 +2380,8 @@ block_end[] { ENTRY_DEBUG } :
                 endMode();
             }
 
-            if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP | LANGUAGE_CXX_ONLY))
-                endMode();
+            //if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP | LANGUAGE_CXX_ONLY))
+                //endMode();
 
             if (!(anonymous_class) && (!(inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM))
                                        || ((inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) && endstatement)))
