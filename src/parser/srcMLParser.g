@@ -662,7 +662,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_CXX_ONLY) && inMode(MODE_USING) }? using_aliasing |
 
         // statements identified by pattern (i.e., do not start with a keyword)
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? pattern_statements |
+        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && !inTransparentMode(MODE_ENUM)}? pattern_statements |
 
         // in the middle of a statement
         statement_part
@@ -2103,7 +2103,7 @@ enum_class_definition[] { ENTRY_DEBUG } :
         
         { setMode(MODE_ENUM); }
 
-        class_preamble ENUM (class_header lcurly | lcurly)
+        class_preamble ENUM (class_header enum_block | enum_block)
 
 ;
 
