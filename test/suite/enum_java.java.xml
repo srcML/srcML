@@ -36,14 +36,14 @@
 <unit>
 <enum><specifier>public</specifier> enum <name>Planet</name> <block>{
 
-    <decl><call><name>MERCURY</name> <argument_list>(<argument><expr>3.303e+23</expr></argument>, <argument><expr>2.4397e6</expr></argument>)</argument_list></call></decl>,
-    <decl><call><name>VENUS</name>   <argument_list>(<argument><expr>4.869e+24</expr></argument>, <argument><expr>6.0518e6</expr></argument>)</argument_list></call></decl>,
-    <decl><call><name>EARTH</name>   <argument_list>(<argument><expr>5.976e+24</expr></argument>, <argument><expr>6.37814e6</expr></argument>)</argument_list></call></decl>,
-    <decl><call><name>MARS</name>    <argument_list>(<argument><expr>6.421e+23</expr></argument>, <argument><expr>3.3972e6</expr></argument>)</argument_list></call></decl>,
-    <decl><call><name>JUPITER</name> <argument_list>(<argument><expr>1.9e+27</expr></argument>,   <argument><expr>7.1492e7</expr></argument>)</argument_list></call></decl>,
-    <decl><call><name>SATURN</name>  <argument_list>(<argument><expr>5.688e+26</expr></argument>, <argument><expr>6.0268e7</expr></argument>)</argument_list></call></decl>,
-    <decl><call><name>URANUS</name>  <argument_list>(<argument><expr>8.686e+25</expr></argument>, <argument><expr>2.5559e7</expr></argument>)</argument_list></call></decl>,
-    <decl><call><name>NEPTUNE</name> <argument_list>(<argument><expr>1.024e+26</expr></argument>, <argument><expr>2.4746e7</expr></argument>)</argument_list></call></decl>;
+    <decl><name>MERCURY</name> <argument_list>(<argument><expr>3.303e+23</expr></argument>, <argument><expr>2.4397e6</expr></argument>)</argument_list></decl>,
+    <decl><name>VENUS</name>   <argument_list>(<argument><expr>4.869e+24</expr></argument>, <argument><expr>6.0518e6</expr></argument>)</argument_list></decl>,
+    <decl><name>EARTH</name>   <argument_list>(<argument><expr>5.976e+24</expr></argument>, <argument><expr>6.37814e6</expr></argument>)</argument_list></decl>,
+    <decl><name>MARS</name>    <argument_list>(<argument><expr>6.421e+23</expr></argument>, <argument><expr>3.3972e6</expr></argument>)</argument_list></decl>,
+    <decl><name>JUPITER</name> <argument_list>(<argument><expr>1.9e+27</expr></argument>,   <argument><expr>7.1492e7</expr></argument>)</argument_list></decl>,
+    <decl><name>SATURN</name>  <argument_list>(<argument><expr>5.688e+26</expr></argument>, <argument><expr>6.0268e7</expr></argument>)</argument_list></decl>,
+    <decl><name>URANUS</name>  <argument_list>(<argument><expr>8.686e+25</expr></argument>, <argument><expr>2.5559e7</expr></argument>)</argument_list></decl>,
+    <decl><name>NEPTUNE</name> <argument_list>(<argument><expr>1.024e+26</expr></argument>, <argument><expr>2.4746e7</expr></argument>)</argument_list></decl>;
 
     <decl_stmt><decl><type><specifier>private</specifier> <specifier>final</specifier> <name>double</name></type> <name>mass</name></decl>;</decl_stmt>   <comment type="line">// in kilograms</comment>
     <decl_stmt><decl><type><specifier>private</specifier> <specifier>final</specifier> <name>double</name></type> <name>radius</name></decl>;</decl_stmt> <comment type="line">// in meters</comment>
