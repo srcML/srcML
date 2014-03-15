@@ -662,7 +662,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_CXX_ONLY) && inMode(MODE_USING) }? using_aliasing |
 
         // statements identified by pattern (i.e., do not start with a keyword)
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? pattern_statements |
+        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && !inTransparentMode(MODE_ENUM)}? pattern_statements |
 
         // in the middle of a statement
         statement_part
@@ -2592,7 +2592,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
                    CALLTYPE type = NOCALL;  bool isempty = false; ENTRY_DEBUG 
 
         if(inMode(MODE_ENUM) && inMode(MODE_LIST)) {
-            short_variable_declaration();
+            enum_short_variable_declaration();
             return;
         }
 
@@ -2818,6 +2818,9 @@ comma[] { ENTRY_DEBUG } :
             // comma in a variable initialization end init of current variable
             if (inMode(MODE_IN_INIT))
                 endMode(MODE_IN_INIT);
+
+            if(inTransparentMode(MODE_ENUM))
+                endDownToModeSet(MODE_ENUM);
 
         }
         comma_marked
@@ -6053,6 +6056,20 @@ enum_definition[] { ENTRY_DEBUG } :
             startElement(SENUM);
         }
         (specifier)* ENUM
+;
+
+// processing for short variable declaration
+enum_short_variable_declaration[] { ENTRY_DEBUG } :
+        {
+            // declaration
+            startNewMode(MODE_LOCAL);
+
+            // start the declaration
+            startElement(SDECLARATION);
+
+            // variable declarations may be in a list
+            startNewMode(MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+        }
 ;
 
 // header for enum class
