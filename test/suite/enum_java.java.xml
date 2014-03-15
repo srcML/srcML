@@ -18,19 +18,19 @@
 </unit>
 
 <unit>
-<enum>enum <block>{ <decl><name>a</name> = 0</decl> }</block></enum>
+<enum>enum <block>{ <decl><name>a</name> =<init> <expr>0</expr></init></decl> }</block></enum>
 </unit>
 
 <unit>
-<enum>enum <name>a</name> <block>{ <decl><name>b</name> = 0</decl> }</block></enum>
+<enum>enum <name>a</name> <block>{ <decl><name>b</name> =<init> <expr>0</expr></init></decl> }</block></enum>
 </unit>
 
 <unit>
-<enum>enum <block>{ <decl><name>a</name> = 0</decl>, <decl><name>b</name></decl> }</block></enum>
+<enum>enum <block>{ <decl><name>a</name> =<init> <expr>0</expr></init></decl>, <decl><name>b</name></decl> }</block></enum>
 </unit>
 
 <unit>
-<enum>enum <name>a</name> <block>{ <decl><name>b</name> = 0</decl>, <decl><name>c</name></decl> }</block></enum>
+<enum>enum <name>a</name> <block>{ <decl><name>b</name> =<init> <expr>0</expr></init></decl>, <decl><name>c</name></decl> }</block></enum>
 </unit>
 
 <unit>
