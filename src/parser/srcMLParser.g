@@ -6119,10 +6119,16 @@ enum_block[] { ENTRY_DEBUG } :
         lcurly_base
         {
             // nesting blocks, not statement
-            replaceMode(MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_NEST | MODE_END_AT_BLOCK_NO_TERMINATE);
+            if(inLanguage(LANGUAGE_JAVA))
+                startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK | MODE_ENUM);
+            else {
 
-            // end this expression block correctly
-            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_ENUM);
+                replaceMode(MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_NEST | MODE_END_AT_BLOCK_NO_TERMINATE);
+
+                // end this expression block correctly
+                 startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_ENUM);
+
+            }
         }
 ;
 
