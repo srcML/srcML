@@ -41,7 +41,9 @@ extern.c.xml
 extern.cs.xml
 for.c.xml
 for.cs.xml
-for.java.xml
+for_base.c.xml
+for_base.cs.xml
+for_base.java.xml
 foreach.java.xml
 function.c.xml
 function.cs.xml

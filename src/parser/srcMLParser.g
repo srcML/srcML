@@ -3930,7 +3930,7 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
 
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
-            (dcolon { iscompound = true; } | period { iscompound = true; })
+            (dcolon { iscompound = true; } | (period | member_pointer | member_pointer_dereference | dot_dereference) { iscompound = true; })
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
@@ -3955,7 +3955,7 @@ compound_name_csharp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY
 
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
-            (dcolon { iscompound = true; } | period { iscompound = true; })
+            (dcolon { iscompound = true; } | (period | member_pointer) { iscompound = true; })
             ( options { greedy = true; } : dcolon)*
             (multops)*
             (DESTOP set_bool[isdestructor])*
@@ -3970,9 +3970,11 @@ catch[antlr::RecognitionException] {
 // compound name for C
 compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        identifier
+        identifier (options { greedy = true; }: { LA(1) == MULTOPS }? multops)*
+
         ( options { greedy = true; } :
-            period { iscompound = true; }
+            (period | member_pointer) { iscompound = true; }
+            ({LA(1) == MULTOPS }? multops)*
             identifier
         )*
 ;
@@ -5042,7 +5044,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
                 startElement(SOPERATOR);
         }
         (
-            OPERATORS | TRETURN | TEMPOPS |
+            OPERATORS | TEMPOPS |
             TEMPOPE ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? EQUAL)? |
             EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF |
             QMARK ({ SkipBufferSize() == 0 }? QMARK)? | { inLanguage(LANGUAGE_JAVA) }? BAR |
@@ -5167,6 +5169,33 @@ period[] { LightweightElement element(this); ENTRY_DEBUG } :
         PERIOD
 ;
 
+// ->* operator
+member_pointer[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR))
+                startElement(SOPERATOR);
+        }
+      TRETURN  
+;
+
+// ->* operator
+member_pointer_dereference[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR))
+                startElement(SOPERATOR);
+        }
+      MPDEREF  
+;
+
+// .* operator
+dot_dereference[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR))
+                startElement(SOPERATOR);
+        }
+        DOTDEREF
+;
+
 // Namespace operator '::'
 dcolon[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
@@ -5267,7 +5296,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; ENTRY
             if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
                 general_operators();
         }
-        | /* newop | */ period |
+        | /* newop | */ period | member_pointer | member_pointer_dereference | dot_dereference |
 
         // left parentheses
         lparen_marked
