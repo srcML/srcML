@@ -1068,8 +1068,11 @@ function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
 // match a function identifier
 function_identifier[] { ENTRY_DEBUG } :
 
-        // typical name
+        // typical name  
         compound_name_inner[false] |
+
+        { function_pointer_name_check() }? 
+        function_pointer_name |
 
         function_identifier_main |
 
@@ -3857,6 +3860,47 @@ typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
         TYPENAME
 ;
 
+function_pointer_name_check[] returns[bool is_fp_name = false] {
+
+    if(LA(1) == LPAREN && (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY))) {
+
+        ++inputState->guessing;
+        int start = mark();
+
+        try {
+
+            function_pointer_name_grammar();
+            is_fp_name = LA(1) == PERIOD || LA(1) == TRETURN
+                || (inLanguage(LANGUAGE_CXX_ONLY) && (LA(1) == MPDEREF || LA(1) == DOTDEREF));
+
+        } catch(...) {}
+       
+
+        rewind(start);
+        --inputState->guessing;
+
+    }
+
+ENTRY_DEBUG } :;
+
+function_pointer_name[] { CompleteElement element(this); ENTRY_DEBUG }:
+
+        {
+
+            startNewMode(MODE_LOCAL);
+
+            startElement(SNAME);
+
+        }
+
+        function_pointer_name_grammar (period | member_pointer | member_pointer_dereference | dot_dereference)
+
+        ({ function_pointer_name_check() }? function_pointer_name_grammar (period | member_pointer | member_pointer_dereference | dot_dereference))*
+
+        compound_name_inner[false]
+        
+    ;
+
 // Markup names
 compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
         compound_name_inner[true]
@@ -5296,6 +5340,8 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; ENTRY
         | /* newop | */ period | member_pointer | member_pointer_dereference | dot_dereference |
 
         // left parentheses
+        { function_pointer_name_check() }?
+        function_pointer_name |
         lparen_marked
         {
             startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);

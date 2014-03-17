@@ -2,11 +2,27 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="expression">
 
 <unit>
-  <expr_stmt><expr><noexcept>noexcept</noexcept></expr>;</expr_stmt>
+<expr_stmt><expr><noexcept>noexcept</noexcept></expr>;</expr_stmt>
 </unit>
 
 <unit>
-  <expr_stmt><expr><noexcept>noexcept(<argument><expr><name>A</name></expr></argument>)</noexcept></expr>;</expr_stmt>
+<expr_stmt><expr><noexcept>noexcept(<argument><expr><name>A</name></expr></argument>)</noexcept></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>(*<name>a</name>).<name>b</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>(*<name>a</name>)-&gt;<name>b</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>(*<name>a</name>)-&gt;*<name>b</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>(*<name>a</name>).*<name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 </unit>

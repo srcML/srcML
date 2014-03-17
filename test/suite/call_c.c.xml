@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="call_c">
+
+<unit>
+<expr_stmt><expr><call><name>(*<name>a</name>).<name>b</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>(*<name>a</name>)-&gt;<name>b</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>(*<name>a</name>).(*<name>b</name>)-&gt;(*<name>c</name>).<name>d</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>(*<name>a</name>).(*<name>b</name>)-&gt;(*<name>c</name>).<name>d</name></name></expr>;</expr_stmt>
+</unit>
+
+</unit>
