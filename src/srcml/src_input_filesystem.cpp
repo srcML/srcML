@@ -38,8 +38,6 @@ void src_input_filesystem(ParseQueue& queue,
     // setup the list of directories with the input as the first one
     std::list<boost::filesystem::path> dirs(1, boost::filesystem::path(input));
 
-    fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-
     while (!dirs.empty()) {
 
         // prepare a list of sorted files for the back() directory

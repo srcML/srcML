@@ -94,24 +94,21 @@ void src_input_libarchive(ParseQueue& queue,
     curl curling;
     int open_status;
     if (fstdin) {
-        fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
         open_status = archive_read_open_FILE(arch, *fstdin);
-    }
 
-    else if (input_file.substr(0, 4) == "http") {
-fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+    } else if (input_file.substr(0, 4) == "http") {
 
         curling.source = input_file;
         open_status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
 
     } else if (input_file == "stdin:///-") {
-    fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
         open_status = archive_read_open_fd(arch, 0, 16384);
-}
-    else
+    } else {
+
         open_status = archive_read_open_filename(arch, input_file.substr(5).c_str(), 16384);
+    }
     if (open_status != ARCHIVE_OK) {
         std::cerr << "Unable to open file " << input_file << '\n';
         exit(1);
