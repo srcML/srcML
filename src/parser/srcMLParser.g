@@ -1066,10 +1066,12 @@ function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
 ;
 
 // match a function identifier
-function_identifier[] { bool is_fp_name; ENTRY_DEBUG } :
+function_identifier[] { bool is_fp_name = false; ENTRY_DEBUG } :
 
         // typical name
-        ({ is_fp_name = function_pointer_name_check() }? function_pointer_name)* compound_name_inner[false]
+        ({ (is_fp_name = function_pointer_name_check()) }? 
+        { startElement(SNAME); } function_pointer_name)*
+        compound_name_inner[false]
         {
             if(is_fp_name)
                 endMode(); 
@@ -3884,11 +3886,6 @@ function_pointer_name_check[] returns[bool is_fp_name = false] {
 ENTRY_DEBUG } :;
 
 function_pointer_name[] { ENTRY_DEBUG }:
-
-        {
-            startNewMode(MODE_LOCAL);
-            startElement(SNAME);
-        }
 
         function_pointer_name_grammar period
 
