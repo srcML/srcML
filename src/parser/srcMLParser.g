@@ -1066,18 +1066,13 @@ function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
 ;
 
 // match a function identifier
-function_identifier[] { bool is_fp_name = false; ENTRY_DEBUG } :
+function_identifier[] { ENTRY_DEBUG } :
 
         // typical name  
         compound_name_inner[false] |
 
-        { (is_fp_name = function_pointer_name_check()) }? 
-        ({ startElement(SNAME); } ({ (is_fp_name = function_pointer_name_check()) }? function_pointer_name)*
-        compound_name_inner[false]
-        {
-            if(is_fp_name)
-                endMode(); 
-        }) |
+        { function_pointer_name_check() }? 
+        function_pointer_name |
 
         function_identifier_main |
 
@@ -3888,10 +3883,22 @@ function_pointer_name_check[] returns[bool is_fp_name = false] {
 
 ENTRY_DEBUG } :;
 
-function_pointer_name[] { ENTRY_DEBUG }:
+function_pointer_name[] { CompleteElement element(this); ENTRY_DEBUG }:
+
+        {
+
+            startNewMode(MODE_LOCAL);
+
+            startElement(SNAME);
+
+        }
 
         function_pointer_name_grammar (period | member_pointer | member_pointer_dereference | dot_dereference)
 
+        ({ function_pointer_name_check() }? function_pointer_name_grammar (period | member_pointer | member_pointer_dereference | dot_dereference))*
+
+        compound_name_inner[false]
+        
     ;
 
 // Markup names
