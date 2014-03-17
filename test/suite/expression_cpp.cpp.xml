@@ -25,4 +25,12 @@
 <expr_stmt><expr><name>(*<name>a</name>).*<name>b</name></name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><call><call><name>a</name><argument_list>()</argument_list></call><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><call><call><name>a</name><argument_list>()</argument_list></call><argument_list>()</argument_list></call><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
 </unit>
