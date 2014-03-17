@@ -158,6 +158,8 @@ public:
 
     const static State::MODE_TYPE MODE_END_AT_ENDIF;
 
+    const static State::MODE_TYPE MODE_ARGUMENT_LIST;
+
 public:
 
     Mode(TokenParser* ptp, int lang)
