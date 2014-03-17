@@ -6025,24 +6025,36 @@ nested_terminate[] {
 } :
         TERMINATE
 ;
+enum_preprocessing[] { ENTRY_DEBUG} :
+
+        {
+            bool intypedef = inMode(MODE_TYPEDEF);
+
+            if (intypedef)
+                startElement(STYPE);
+
+            // statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_ENUM | MODE_DECL);
+
+            // start the enum definition
+            startElement(SENUM);
+
+            // classes end at the end of the block
+            if (intypedef) {
+                setMode(MODE_END_AT_BLOCK);
+            }
+        }
+;
+
 
 // definition of an enum
 enum_definition[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         enum_class_definition |
 
-        { inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) }?
-        {
-            // statement
-            // end init correctly
-            startNewMode(MODE_STATEMENT | MODE_DECL | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_ENUM | MODE_END_AT_BLOCK);
-
-            // start the enum definition element
-            startElement(SENUM);
-        }
-        class_preamble
-        ENUM |
-        (specifier)* class_preprocessing[SENUM] { replaceMode(MODE_CLASS, MODE_ENUM); } ENUM
+        { inLanguage(LANGUAGE_CSHARP) }?
+        enum_preprocessing class_preamble ENUM |
+        (specifier)* enum_preprocessing ENUM
 ;
 
 // processing for short variable declaration
