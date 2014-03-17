@@ -1066,10 +1066,14 @@ function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
 ;
 
 // match a function identifier
-function_identifier[] { ENTRY_DEBUG } :
+function_identifier[] { bool is_fp_name; ENTRY_DEBUG } :
 
         // typical name
-        ({ function_pointer_name_check() }? function_pointer_name)* compound_name_inner[false] { endMode(); } |
+        ({ is_fp_name = function_pointer_name_check() }? function_pointer_name)* compound_name_inner[false]
+        {
+            if(is_fp_name)
+                endMode(); 
+        } |
 
         function_identifier_main |
 
