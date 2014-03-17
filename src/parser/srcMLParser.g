@@ -1072,7 +1072,7 @@ function_identifier[] { bool is_fp_name = false; ENTRY_DEBUG } :
         compound_name_inner[false] |
 
         { (is_fp_name = function_pointer_name_check()) }? 
-        (({ startElement(SNAME); } function_pointer_name)*
+        ({ startElement(SNAME); } ({ (is_fp_name = function_pointer_name_check()) }? function_pointer_name)*
         compound_name_inner[false]
         {
             if(is_fp_name)
