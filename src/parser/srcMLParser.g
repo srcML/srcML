@@ -2604,6 +2604,9 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         lcurly |
 
 
+        { inMode(MODE_ENUM) && inMode(MODE_LIST) }?
+        enum_short_variable_declaration |
+
         /*
           MODE_EXPRESSION
         */
@@ -2777,10 +2780,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         rparen |
 
         // seem to end up here for colon in ternary operator
-        colon_marked |
-
-        { inMode(MODE_ENUM) && inMode(MODE_LIST) }?
-        enum_short_variable_declaration
+        colon_marked
 
 ;
 
