@@ -644,6 +644,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
         && (!inLanguage(LANGUAGE_CXX_ONLY) || !inTransparentMode(MODE_INIT | MODE_EXPECT))) || inTransparentMode(MODE_ANONYMOUS) }? lcurly |
 
+        { inMode(MODE_ARGUMENT_LIST) }? call_argument_list |
+
         // switch cases @test switch
         { !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }?
         colon |
@@ -4260,7 +4262,7 @@ annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
 call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST);
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
 
             // start the function call element
             startElement(SFUNCTION_CALL);
@@ -4273,7 +4275,7 @@ call[] { ENTRY_DEBUG } :
 call_argument_list[] { ENTRY_DEBUG } :
         {
             // list of parameters
-            setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN);
+            replaceMode(MODE_ARGUMENT_LIST, MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN);
 
             // start the argument list
             startElement(SARGUMENT_LIST);
