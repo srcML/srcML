@@ -1069,7 +1069,7 @@ function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
 function_identifier[] { ENTRY_DEBUG } :
 
         // typical name
-        compound_name_inner[false] |
+        ({ function_pointer_name_check() }? function_pointer_name)* compound_name_inner[false] { endMode(); } |
 
         function_identifier_main |
 
@@ -3856,6 +3856,39 @@ typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
         }
         TYPENAME
 ;
+
+function_pointer_name_check[] returns[bool is_fp_name = false] {
+
+    if(LA(1) == LPAREN && (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY))) {
+
+        ++inputState->guessing;
+        int start = mark();
+
+        try {
+
+            function_pointer_name_grammar();
+            is_fp_name = LA(1) == PERIOD;
+
+        } catch(...) {}
+       
+
+        rewind(start);
+        --inputState->guessing;
+
+    }
+
+ENTRY_DEBUG } :;
+
+function_pointer_name[] { ENTRY_DEBUG }:
+
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME);
+        }
+
+        function_pointer_name_grammar period
+
+    ;
 
 // Markup names
 compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
