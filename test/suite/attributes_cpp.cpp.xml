@@ -94,11 +94,11 @@
 </unit>
 
 <unit>
-<enum>enum <attribute>[[]]</attribute> <name>a</name> <block>{}</block></enum>
+<enum>enum <attribute>[[]]</attribute> <name>a</name> <block>{}</block>;</enum>
 </unit>
 
 <unit>
-<enum>enum class <attribute>[[]]</attribute> <name>a</name> <block>{}</block></enum>
+<enum>enum class <attribute>[[]]</attribute> <name>a</name> <block>{}</block>;</enum>
 </unit>
 
 <unit>
