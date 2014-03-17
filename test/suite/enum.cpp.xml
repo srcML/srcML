@@ -2,35 +2,35 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="enum">
 
 <unit>
-<enum>enum <block>{ <expr><name>a</name></expr> }</block>;</enum>
+<enum>enum <block>{ <decl><name>a</name></decl> }</block>;</enum>
 </unit>
 
 <unit>
-<enum>enum <name>a</name> <block>{ <expr><name>b</name></expr> }</block>;</enum>
+<enum>enum <name>a</name> <block>{ <decl><name>b</name></decl> }</block>;</enum>
 </unit>
 
 <unit>
-<enum>enum <block>{ <expr><name>a</name></expr>, <expr><name>b</name></expr> }</block>;</enum>
+<enum>enum <block>{ <decl><name>a</name></decl>, <decl><name>b</name></decl> }</block>;</enum>
 </unit>
 
 <unit>
-<enum>enum <name>a</name> <block>{ <expr><name>b</name></expr>, <expr><name>c</name></expr> }</block>;</enum>
+<enum>enum <name>a</name> <block>{ <decl><name>b</name></decl>, <decl><name>c</name></decl> }</block>;</enum>
 </unit>
 
 <unit>
-<enum>enum <block>{ <expr><name>a</name> = 0</expr> }</block>;</enum>
+<enum>enum <block>{ <decl><name>a</name> =<init> <expr>0</expr></init></decl> }</block>;</enum>
 </unit>
 
 <unit>
-<enum>enum <name>a</name> <block>{ <expr><name>b</name> = 0</expr> }</block>;</enum>
+<enum>enum <name>a</name> <block>{ <decl><name>b</name> =<init> <expr>0</expr></init></decl> }</block>;</enum>
 </unit>
 
 <unit>
-<enum>enum <block>{ <expr><name>a</name> = 0</expr>, <expr><name>b</name></expr> }</block>;</enum>
+<enum>enum <block>{ <decl><name>a</name> =<init> <expr>0</expr></init></decl>, <decl><name>b</name></decl> }</block>;</enum>
 </unit>
 
 <unit>
-<enum>enum <name>a</name> <block>{ <expr><name>b</name> = 0</expr>, <expr><name>c</name></expr> }</block>;</enum>
+<enum>enum <name>a</name> <block>{ <decl><name>b</name> =<init> <expr>0</expr></init></decl>, <decl><name>c</name></decl> }</block>;</enum>
 </unit>
 
 </unit>

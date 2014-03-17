@@ -636,6 +636,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         terminate |
 
+        { inMode(MODE_ENUM) }? enum_block |
+
         // don't confuse with expression block
         { ((inTransparentMode(MODE_CONDITION) ||
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
@@ -660,7 +662,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_CXX_ONLY) && inMode(MODE_USING) }? using_aliasing |
 
         // statements identified by pattern (i.e., do not start with a keyword)
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? pattern_statements |
+        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL)}? pattern_statements |
 
         // in the middle of a statement
         statement_part
@@ -821,6 +823,8 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         // call
         { isoption(parseoptions, OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, isempty, secondtoken) && type == MACRO)) }?
         macro_call |
+
+        { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration |
 
         expression_statement[type]
 ;
@@ -2101,7 +2105,7 @@ enum_class_definition[] { ENTRY_DEBUG } :
         
         { setMode(MODE_ENUM); }
 
-        class_preamble ENUM (class_header lcurly | lcurly)
+        class_preamble ENUM (class_header enum_block | enum_block)
 
 ;
 
@@ -2361,7 +2365,7 @@ block_end[] { ENTRY_DEBUG } :
             endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
 
             bool endstatement = inMode(MODE_END_AT_BLOCK);
-            bool anonymous_class = inMode(MODE_CLASS) && inMode(MODE_END_AT_BLOCK);
+            bool anonymous_class = (inMode(MODE_CLASS) | inMode(MODE_ENUM)) && inMode(MODE_END_AT_BLOCK);
 
             // some statements end with the block
             if (inMode(MODE_END_AT_BLOCK)) {
@@ -2378,14 +2382,9 @@ block_end[] { ENTRY_DEBUG } :
                 endMode();
             }
 
-            if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP | LANGUAGE_CXX_ONLY))
-                endMode();
-
-            if (!(anonymous_class) && (!(inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM))
-                                       || ((inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) && endstatement)))
+            if (!(anonymous_class) && (!(inMode(MODE_CLASS) || inMode(MODE_ENUM)) || endstatement))
                 else_handling();
 
-            // if we are in a declaration (as part of a class/struct/union definition)
             // then we needed to markup the (abbreviated) variable declaration
             if (inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
@@ -2440,7 +2439,8 @@ terminate[] { ENTRY_DEBUG } :
 // match the actual terminate token
 terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (inMode(MODE_STATEMENT | MODE_NEST) && !inMode(MODE_DECL))
+            if (inMode(MODE_STATEMENT | MODE_NEST) && (!inMode(MODE_DECL)
+            && (!inLanguage(LANGUAGE_JAVA) || !inMode(MODE_ENUM | MODE_LIST))))
                 startElement(SEMPTY);
         }
         TERMINATE
@@ -2598,6 +2598,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { endDownToMode(MODE_LIST); endMode(MODE_LIST); }
         lcurly |
 
+
+        { inMode(MODE_ENUM) && inMode(MODE_LIST) }?
+        enum_short_variable_declaration |
+
         /*
           MODE_EXPRESSION
         */
@@ -2682,7 +2686,6 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
         variable_declaration_nameinit |
 
-        // variable name
         { inMode(MODE_ENUM) }?
         enum_class_header |
 
@@ -2772,6 +2775,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // seem to end up here for colon in ternary operator
         colon_marked
+
 ;
 
 // mark ( operator
@@ -2808,6 +2812,9 @@ comma[] { ENTRY_DEBUG } :
             // comma in a variable initialization end init of current variable
             if (inMode(MODE_IN_INIT))
                 endMode(MODE_IN_INIT);
+
+            if(inTransparentMode(MODE_ENUM) && inMode(MODE_INIT | MODE_EXPECT))
+                endDownToModeSet(MODE_ENUM | MODE_TOP);
 
         }
         comma_marked
@@ -2913,10 +2920,8 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         type_count = posin - 1;
 
     // enum
-    else if (type == 0 && sawenum) {
+    else if (sawenum)
         type = ENUM_DECL;
-
-    }
 
     // may just have a single macro (no parens possibly) before a statement
     else if (type == 0 && type_count == 0 && _tokenSet_1.member(LA(1)))
@@ -6019,32 +6024,50 @@ nested_terminate[] {
 } :
         TERMINATE
 ;
+enum_preprocessing[] { ENTRY_DEBUG} :
+
+        {
+            bool intypedef = inMode(MODE_TYPEDEF);
+
+            if (intypedef)
+                startElement(STYPE);
+
+            // statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_ENUM | MODE_DECL);
+
+            // start the enum definition
+            startElement(SENUM);
+
+            // classes end at the end of the block
+            if (intypedef) {
+                setMode(MODE_END_AT_BLOCK);
+            }
+        }
+;
+
 
 // definition of an enum
 enum_definition[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         enum_class_definition |
 
-        { inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) }?
-        {
-            // statement
-            // end init correctly
-            startNewMode(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_ENUM | MODE_END_AT_BLOCK);
+        { inLanguage(LANGUAGE_CSHARP) }?
+        enum_preprocessing class_preamble ENUM |
+        enum_preprocessing (specifier)* ENUM (enum_class_header)*
+;
 
-            // start the enum definition element
-            startElement(SENUM);
-        }
-        class_preamble
-        ENUM |
+// processing for short variable declaration
+enum_short_variable_declaration[] { ENTRY_DEBUG } :
         {
-            // statement
-            // end init correctly
-            startNewMode(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_ENUM);
+            // declaration
+            startNewMode(MODE_LOCAL);
 
-            // start the enum definition element
-            startElement(SENUM);
-        }
-        ENUM
+            // start the declaration
+            startElement(SDECLARATION);
+
+            // variable declarations may be in a list
+            startNewMode(MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+        } variable_declaration_nameinit
 ;
 
 // header for enum class
@@ -6073,7 +6096,7 @@ enum_definition_complete[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         // start of enum definition block
         {
-            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_BLOCK | MODE_NEST);
+            startNewMode(MODE_TOP | MODE_LIST | MODE_DECL | MODE_EXPECT | MODE_BLOCK | MODE_NEST);
 
             startElement(SBLOCK);
         }
@@ -6087,6 +6110,21 @@ enum_definition_complete[] { CompleteElement element(this); ENTRY_DEBUG } :
             endDownToMode(MODE_TOP);
         }
         RCURLY
+;
+
+// enum block beginning and setup
+enum_block[] { ENTRY_DEBUG } :
+        lcurly_base
+        {
+            // nesting blocks, not statement
+            if(inLanguage(LANGUAGE_JAVA))
+                setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK | MODE_ENUM);
+            else {
+
+                setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK | MODE_ENUM);
+
+            }
+        }
 ;
 
 /*
