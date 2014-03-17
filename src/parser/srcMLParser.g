@@ -724,7 +724,7 @@ keyword_statements[] { ENTRY_DEBUG } :
   Basically we have an identifier and we don't know yet whether it starts an expression
   function definition, function declaration, or even a label.
 */
-pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = false; int call_count = 0;
+pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = false; int call_count = 1;
         STMT_TYPE stmt_type = NONE; CALLTYPE type = NOCALL;
 
         // detect the declaration/definition type
@@ -828,7 +828,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
 
         { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration |
 
-        expression_statement[type]
+        expression_statement[type, call_count]
 ;
 
 // efficient way to view the token after the current LA(1)
@@ -2652,7 +2652,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         macro_call |
 
         { inMode(MODE_EXPRESSION | MODE_EXPECT) }?
-        expression[type] |
+        expression[type, call_count] |
 
         // already in an expression, and run into a keyword
         // so stop the expression, and markup the keyword statement
@@ -4260,15 +4260,8 @@ annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // call  function call, macro, etc.
-call[] { ENTRY_DEBUG } :
+call[int call_count = 1] { ENTRY_DEBUG } :
         {
-            CALLTYPE type; bool isempty; int call_count = 1;
-
-            if(inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY))
-                perform_call_check(type, isempty, call_count, -1);
-
-            if(call_count == 0)
-                call_count = 1;
 
             do {
 
@@ -4938,11 +4931,11 @@ expression_statement_process[] { ENTRY_DEBUG } :
 ;
 
 // an expression statment
-expression_statement[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
+expression_statement[CALLTYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
 
         expression_statement_process
 
-        expression[type]
+        expression[type, call_count]
 ;
 
 // declartion statement
@@ -5279,11 +5272,11 @@ expression_process[] { ENTRY_DEBUG } :
 ;
 
 // an expression
-expression[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
+expression[CALLTYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
 
         expression_process
 
-        expression_part_plus_linq[type]
+        expression_part_plus_linq[type, call_count]
 ;
 
 // setup for expression linq
@@ -5295,16 +5288,16 @@ expression_setup_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 ;
 
 // expression with linq
-expression_part_plus_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
+expression_part_plus_linq[CALLTYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token_string().find('=') == std::string::npos }?
         (linq_expression_pure)=> linq_expression |
 
-        expression_part[type]
+        expression_part[type, call_count]
 ;
 
 // the expression part
-expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
+expression_part[CALLTYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; ENTRY_DEBUG } :
 
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
@@ -5341,7 +5334,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; int c
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
             // however I believe parameter_list matches a right paren of the call.
-           (call | sizeof_call | alignof_call) argument |
+           (call[call_count] | sizeof_call | alignof_call) argument |
 
         // macro call
         { type == MACRO }? macro_call |
