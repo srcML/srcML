@@ -94,15 +94,15 @@
 </unit>
 
 <unit>
-<typedef>typedef <enum>enum <block>{ <decl><name>a</name></decl> }</block> <decl><name>a</name></decl>;</enum></typedef>
+<typedef>typedef <type><enum>enum <block>{ <decl><name>a</name></decl> }</block></enum></type> <name>a</name>;</typedef>
 </unit>
 
 <unit>
-<typedef>typedef <enum>enum <block>{ <decl><name>a</name></decl>, <decl><name>b</name></decl> }</block> <decl><name>a</name></decl>;</enum></typedef>
+<typedef>typedef <type><enum>enum <block>{ <decl><name>a</name></decl>, <decl><name>b</name></decl> }</block></enum></type> <name>a</name>;</typedef>
 </unit>
 
 <unit>
-<typedef>typedef <enum>enum <block>{ <decl><name>a</name></decl>, <decl><name>b</name> =<init> <expr><name>c</name></expr></init></decl> }</block> <decl><name>a</name></decl>;</enum></typedef>
+<typedef>typedef <type><enum>enum <block>{ <decl><name>a</name></decl>, <decl><name>b</name> =<init> <expr><name>c</name></expr></init></decl> }</block></enum></type> <name>a</name>;</typedef>
 </unit>
 
 <unit>

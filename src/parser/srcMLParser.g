@@ -2365,7 +2365,7 @@ block_end[] { ENTRY_DEBUG } :
             endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
 
             bool endstatement = inMode(MODE_END_AT_BLOCK);
-            bool anonymous_class = inMode(MODE_CLASS) && inMode(MODE_END_AT_BLOCK);
+            bool anonymous_class = (inMode(MODE_CLASS) | inMode(MODE_ENUM)) && inMode(MODE_END_AT_BLOCK);
 
             // some statements end with the block
             if (inMode(MODE_END_AT_BLOCK)) {
@@ -2382,14 +2382,9 @@ block_end[] { ENTRY_DEBUG } :
                 endMode();
             }
 
-            //if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP | LANGUAGE_CXX_ONLY))
-                //endMode();
-
-            if (!(anonymous_class) && (!(inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM))
-                                       || ((inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) && endstatement)))
+            if (!(anonymous_class) && (!(inMode(MODE_CLASS) || inMode(MODE_ENUM)) || endstatement))
                 else_handling();
 
-            // if we are in a declaration (as part of a class/struct/union definition)
             // then we needed to markup the (abbreviated) variable declaration
             if (inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
@@ -6047,15 +6042,7 @@ enum_definition[] { ENTRY_DEBUG } :
         }
         class_preamble
         ENUM |
-        {
-            // statement
-            // end init correctly
-            startNewMode(MODE_STATEMENT | MODE_DECL | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_ENUM);
-
-            // start the enum definition element
-            startElement(SENUM);
-        }
-        (specifier)* ENUM
+        (specifier)* class_preprocessing[SENUM] { replaceMode(MODE_CLASS, MODE_ENUM); } ENUM
 ;
 
 // processing for short variable declaration
@@ -6123,10 +6110,7 @@ enum_block[] { ENTRY_DEBUG } :
                 setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK | MODE_ENUM);
             else {
 
-                replaceMode(MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_NEST | MODE_END_AT_BLOCK_NO_TERMINATE);
-
-                // end this expression block correctly
-                 startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_ENUM);
+                setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK | MODE_ENUM);
 
             }
         }
