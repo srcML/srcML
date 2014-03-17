@@ -2687,10 +2687,6 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         variable_declaration_nameinit |
 
         // variable name
-        { inMode(MODE_ENUM) }?
-        enum_class_header |
-
-        // variable name
         { inMode(MODE_VARIABLE_NAME) }?
         variable_identifier |
 
@@ -6054,7 +6050,7 @@ enum_definition[] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_CSHARP) }?
         enum_preprocessing class_preamble ENUM |
-        (specifier)* enum_preprocessing ENUM
+        enum_preprocessing (specifier)* ENUM enum_class_header
 ;
 
 // processing for short variable declaration
