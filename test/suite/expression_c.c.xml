@@ -17,4 +17,12 @@
 <expr_stmt><expr><call><call><call><name>a</name><argument_list>()</argument_list></call><argument_list>()</argument_list></call><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><name>a</name> + <call><call><name>b</name><argument_list>()</argument_list></call><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><call><name>b</name><argument_list>()</argument_list></call><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
 </unit>
