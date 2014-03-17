@@ -662,7 +662,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_CXX_ONLY) && inMode(MODE_USING) }? using_aliasing |
 
         // statements identified by pattern (i.e., do not start with a keyword)
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && !inTransparentMode(MODE_ENUM)}? pattern_statements |
+        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL)}? pattern_statements |
 
         // in the middle of a statement
         statement_part
@@ -823,6 +823,8 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         // call
         { isoption(parseoptions, OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, isempty, secondtoken) && type == MACRO)) }?
         macro_call |
+
+        { inTransparentMode(MODE_ENUM) }? enum_short_variable_declaration |
 
         expression_statement[type]
 ;
@@ -2589,14 +2591,7 @@ else_handling[] { ENTRY_DEBUG } :
 
 // mid-statement
 statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = NONE;
-                   CALLTYPE type = NOCALL;  bool isempty = false; ENTRY_DEBUG 
-
-        if(inMode(MODE_ENUM) && inMode(MODE_LIST)) {
-            enum_short_variable_declaration();
-            return;
-        }
-
-    } :
+                   CALLTYPE type = NOCALL;  bool isempty = false; ENTRY_DEBUG } :
 
         { inMode(MODE_EAT_TYPE) }?
         type_identifier
@@ -2781,7 +2776,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         rparen |
 
         // seem to end up here for colon in ternary operator
-        colon_marked
+        colon_marked |
+
+        { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration
+
 ;
 
 // mark ( operator
@@ -6069,7 +6067,7 @@ enum_short_variable_declaration[] { ENTRY_DEBUG } :
 
             // variable declarations may be in a list
             startNewMode(MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
-        }
+        } variable_declaration_nameinit
 ;
 
 // header for enum class
