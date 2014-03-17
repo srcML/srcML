@@ -135,7 +135,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -2444,7 +2444,8 @@ terminate[] { ENTRY_DEBUG } :
 // match the actual terminate token
 terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (inMode(MODE_STATEMENT | MODE_NEST) && !inMode(MODE_DECL))
+            if (inMode(MODE_STATEMENT | MODE_NEST) && (!inMode(MODE_DECL)
+            && (!inLanguage(LANGUAGE_JAVA) || !inMode(MODE_ENUM | MODE_LIST))))
                 startElement(SEMPTY);
         }
         TERMINATE
