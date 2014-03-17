@@ -3875,7 +3875,8 @@ function_pointer_name_check[] returns[bool is_fp_name = false] {
         try {
 
             function_pointer_name_grammar();
-            is_fp_name = LA(1) == PERIOD;
+            is_fp_name = LA(1) == PERIOD || LA(1) == TRETURN
+                || (inLanguage(LANGUAGE_CXX_ONLY) && (LA(1) == MPDEREF || LA(1) == DOTDEREF));
 
         } catch(...) {}
        
@@ -3889,7 +3890,7 @@ ENTRY_DEBUG } :;
 
 function_pointer_name[] { ENTRY_DEBUG }:
 
-        function_pointer_name_grammar period
+        function_pointer_name_grammar (period | member_pointer | member_pointer_dereference | dot_dereference)
 
     ;
 
