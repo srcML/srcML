@@ -724,7 +724,7 @@ keyword_statements[] { ENTRY_DEBUG } :
   Basically we have an identifier and we don't know yet whether it starts an expression
   function definition, function declaration, or even a label.
 */
-pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = false;
+pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = false; int call_count = 0;
         STMT_TYPE stmt_type = NONE; CALLTYPE type = NOCALL;
 
         // detect the declaration/definition type
@@ -823,7 +823,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         extern_definition |
 
         // call
-        { isoption(parseoptions, OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, isempty, secondtoken) && type == MACRO)) }?
+        { isoption(parseoptions, OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO)) }?
         macro_call |
 
         { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration |
@@ -1378,7 +1378,7 @@ property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 // Check and see if this is a call and what type
-perform_call_check[CALLTYPE& type, bool & isempty, int secondtoken] returns [bool iscall] {
+perform_call_check[CALLTYPE& type, bool & isempty, int & call_count, int secondtoken] returns [bool iscall] {
 
     iscall = true;
     isempty = false;
@@ -1391,8 +1391,9 @@ perform_call_check[CALLTYPE& type, bool & isempty, int secondtoken] returns [boo
     int postnametoken = 0;
     int argumenttoken = 0;
     int postcalltoken = 0;
+    call_count = 0;
     try {
-        call_check(postnametoken, argumenttoken, postcalltoken, isempty);
+        call_check(postnametoken, argumenttoken, postcalltoken, isempty, call_count);
 
         // call syntax succeeded
         type = CALL;
@@ -1433,7 +1434,7 @@ perform_call_check[CALLTYPE& type, bool & isempty, int secondtoken] returns [boo
     ENTRY_DEBUG } :;
 
 // check if call is call
-call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty] { ENTRY_DEBUG } :
+call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty, int & call_count] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
         (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF)
@@ -1444,7 +1445,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & is
         (
             { isoption(parseoptions, OPTION_CPP) }?
             // check for proper form of argument list
-            call_check_paren_pair[argumenttoken]
+            (call_check_paren_pair[argumenttoken] set_int[call_count, call_count + 1])*
 
             // record token after argument list to differentiate between call and macro
             markend[postcalltoken] |
@@ -2592,7 +2593,7 @@ else_handling[] { ENTRY_DEBUG } :
 
 // mid-statement
 statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = NONE;
-                   CALLTYPE type = NOCALL;  bool isempty = false; ENTRY_DEBUG } :
+                   CALLTYPE type = NOCALL;  bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
 
         { inMode(MODE_EAT_TYPE) }?
         type_identifier
@@ -2647,7 +2648,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // start of argument for return or throw statement
         { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
-            isoption(parseoptions, OPTION_CPP) && perform_call_check(type, isempty, secondtoken) && type == MACRO }?
+            isoption(parseoptions, OPTION_CPP) && perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO }?
         macro_call |
 
         { inMode(MODE_EXPRESSION | MODE_EXPECT) }?
@@ -3664,7 +3665,7 @@ complete_argument_list[] { ENTRY_DEBUG } :
 
 // Full, complete expression matched all at once (no stream).
 complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALLTYPE type = NOCALL; 
-    bool isempty = false; ENTRY_DEBUG } :
+    bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false] |
         { getCurly() == 0 }? rcurly_argument |
         {
@@ -3680,7 +3681,7 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALLT
 
          { LA(1) == RPAREN }? expression { --count_paren; } |
 
-         { perform_call_check(type, isempty, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression |
+         { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression |
 
          expression |
 
@@ -3700,7 +3701,7 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALLT
 // Full, complete expression matched all at once (no stream).
 // May be better version of complete_expression
 complete_default_parameter[] { CompleteElement element(this); int count_paren = 0; CALLTYPE type = NOCALL; 
-    bool isempty = false; ENTRY_DEBUG } : 
+    bool isempty = false; int call_count = 0; ENTRY_DEBUG } : 
        { getParen() == 0 }? rparen[false] |
         { getCurly() == 0 }? rcurly_argument |
         {
@@ -3715,7 +3716,7 @@ complete_default_parameter[] { CompleteElement element(this); int count_paren = 
 
         { LA(1) == RPAREN && !inputState->guessing}? expression set_int[count_paren, count_paren - 1] |
 
-        { perform_call_check(type, isempty, -1) && type == CALL }? 
+        { perform_call_check(type, isempty, call_count, -1) && type == CALL }? 
         set_int[count_paren, isempty ? count_paren : count_paren + 1] expression |
 
          expression |
@@ -4261,11 +4262,24 @@ annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
 // call  function call, macro, etc.
 call[] { ENTRY_DEBUG } :
         {
-            // start a new mode that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+            CALLTYPE type; bool isempty; int call_count = 1;
 
-            // start the function call element
-            startElement(SFUNCTION_CALL);
+            if(inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY))
+                perform_call_check(type, isempty, call_count, -1);
+
+            if(call_count == 0)
+                call_count = 1;
+
+            while(call_count-- > 0) {
+
+                // start a new mode that will end after the argument list
+                startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+
+                // start the function call element
+                startElement(SFUNCTION_CALL);
+
+            }
+
         }
         function_identifier
         call_argument_list
@@ -5290,7 +5304,7 @@ expression_part_plus_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 ;
 
 // the expression part
-expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; ENTRY_DEBUG } :
+expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
 
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
@@ -5322,7 +5336,7 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; bool isempty = false; ENTRY
 
         // call
         // distinguish between a call and a macro
-        { type == CALL || (perform_call_check(type, isempty, -1) && type == CALL) }?
+        { type == CALL || (perform_call_check(type, isempty, call_count, -1) && type == CALL) }?
 
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
