@@ -1450,7 +1450,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & is
             // record token after argument list to differentiate between call and macro
             markend[postcalltoken] |
 
-            LPAREN
+            LPAREN set_int[call_count, 1]
         )
 ;
 
@@ -4270,7 +4270,7 @@ call[] { ENTRY_DEBUG } :
             if(call_count == 0)
                 call_count = 1;
 
-            while(call_count-- > 0) {
+            do {
 
                 // start a new mode that will end after the argument list
                 startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
@@ -4278,7 +4278,7 @@ call[] { ENTRY_DEBUG } :
                 // start the function call element
                 startElement(SFUNCTION_CALL);
 
-            }
+            } while(--call_count > 0);
 
         }
         function_identifier
