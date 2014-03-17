@@ -2819,8 +2819,8 @@ comma[] { ENTRY_DEBUG } :
             if (inMode(MODE_IN_INIT))
                 endMode(MODE_IN_INIT);
 
-            if(inTransparentMode(MODE_ENUM))
-                endDownToModeSet(MODE_ENUM);
+            if(inTransparentMode(MODE_ENUM) && !(inTransparentMode(MODE_IN_INIT) || inTransparentMode(MODE_ARGUMENT)))
+                endDownToModeSet(MODE_ENUM | MODE_TOP);
 
         }
         comma_marked
@@ -6120,7 +6120,7 @@ enum_block[] { ENTRY_DEBUG } :
         {
             // nesting blocks, not statement
             if(inLanguage(LANGUAGE_JAVA))
-                startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK | MODE_ENUM);
+                setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK | MODE_ENUM);
             else {
 
                 replaceMode(MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_NEST | MODE_END_AT_BLOCK_NO_TERMINATE);
