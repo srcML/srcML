@@ -824,7 +824,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         { isoption(parseoptions, OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, isempty, secondtoken) && type == MACRO)) }?
         macro_call |
 
-        { inTransparentMode(MODE_ENUM) }? enum_short_variable_declaration |
+        { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration |
 
         expression_statement[type]
 ;
@@ -2778,7 +2778,8 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // seem to end up here for colon in ternary operator
         colon_marked |
 
-        { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration
+        { inMode(MODE_ENUM) && inMode(MODE_LIST) }?
+        enum_short_variable_declaration
 
 ;
 
@@ -2817,7 +2818,7 @@ comma[] { ENTRY_DEBUG } :
             if (inMode(MODE_IN_INIT))
                 endMode(MODE_IN_INIT);
 
-            if(inTransparentMode(MODE_ENUM) && !(inTransparentMode(MODE_IN_INIT) || inTransparentMode(MODE_ARGUMENT)))
+            if(inTransparentMode(MODE_ENUM) && inMode(MODE_INIT | MODE_EXPECT))
                 endDownToModeSet(MODE_ENUM | MODE_TOP);
 
         }
