@@ -133,7 +133,7 @@ int main(int argc, char * argv[]) {
                 }
             }
 
-            for (ssize_t i = size; i >= 0; --i)
+            for (ssize_t i = size - 1; i >= 0; --i)
                 ungetc(data[i], *fstdin);
 
             // pass the first 4 bytes and the size actually read in
