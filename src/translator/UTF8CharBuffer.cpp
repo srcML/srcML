@@ -35,18 +35,21 @@ struct srcMLFile {
 
     FILE * file;
 #ifdef _MSC_BUILD
-    HCRYPTHASH crypt_hash;
+    HCRYPTHASH ctx;
 #else
     SHA_CTX * ctx;
 #endif
-
 
 };
 
 struct srcMLFd {
 
     int fd;
+ #ifdef _MSC_BUILD
+    HCRYPTHASH crypt_hash;
+#else
     SHA_CTX * ctx;
+#endif
 
 };
 
@@ -57,7 +60,7 @@ int srcMLFileRead(void * context,  char * buffer, int len) {
 
     if(sfile->ctx)
 #ifdef _MSC_BUILD
-    CryptHashData(sfile->crypt_hash buffer, num_read, 0)
+    CryptHashData(sfile->ctx buffer, num_read, 0)
 #else
 	SHA1_Update(sfile->ctx, buffer, (LONG)num_read);
 #endif
@@ -82,7 +85,7 @@ int srcMLFdRead(void * context,  char * buffer, int len) {
 
     if(sfd->ctx)
 #ifdef _MSC_BUILD
-    CryptHashData(sfd->crypt_hash, buffer, num_read, 0)
+    CryptHashData(sfd->ctx, buffer, num_read, 0)
 #else
     SHA1_Update(sfd->ctx, buffer, (LONG)num_read);
 #endif
@@ -112,7 +115,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
     srcMLFile * sfile = new srcMLFile();
     sfile->file = (FILE *)file;
 #ifdef _MSC_BUILD    
-    hash ? sfile->crypt_hash = crypt_hash : 0;
+    hash ? sfile->ctx = crypt_hash : 0;
 #else
     hash ? sfile->ctx = &ctx : 0;
 #endif
@@ -145,7 +148,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 #ifdef _MSC_BUILD    
     CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
     CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-    CryptHashData(sfd->crypt_hash, buffer, num_read, 0)
+    CryptHashData(crypt_hash, buffer, num_read, 0)
 #else
     SHA1_Init(&ctx);
     SHA1_Update(&ctx, c_buffer, (LONG)buffer_size);
@@ -192,7 +195,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
     srcMLFile * sfile = new srcMLFile();
     sfile->file = file;
 #ifdef _MSC_BUILD    
-    hash ? sfile->crypt_hash = crypt_hash : 0;
+    hash ? sfile->ctx= crypt_hash : 0;
 #else
     hash ? sfile->ctx = &ctx : 0;
 #endif

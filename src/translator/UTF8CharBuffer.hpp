@@ -39,7 +39,8 @@
 #include <libxml/xmlIO.h>
 
 #ifdef _MSC_BUILD
- #include <Wincrypt.h>
+#include <windows.h>
+#include <Wincrypt.h>
 #elif defined(__MACH__)
 #include <CommonCrypto/CommonDigest.h>
 #define SHA_CTX CC_SHA1_CTX
