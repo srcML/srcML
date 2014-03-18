@@ -1,5 +1,5 @@
 /**
- * @file src_input_filesystem.hpp
+ * @file parse_queue.cpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -20,17 +20,31 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
-  src_input_filesystem assigns directories to parse request
-*/
-
-#ifndef SRC_INPUT_FILESYSTEM_HPP
-#define SRC_INPUT_FILESYSTEM_HPP
-
-#include <srcml.h>
 #include <parse_queue.hpp>
-#include <string>
 
-void src_input_filesystem(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const boost::optional<std::string>& lang);
+ParseQueue::ParseQueue(int max_threads) : max_threads(max_threads), counter(0) {}
 
-#endif
+/* puts an element in the back of the queue by swapping with parameter */
+void ParseQueue::push(ParseRequest& value) {
+
+    // create threads as requests are pushed
+    // no more then max threads however
+    if (writers.size() < max_threads)
+        writers.create_thread( boost::bind(srcml_consume, this, &wqueue) );
+
+    ++counter;
+    value.position = counter;
+    queue.push(value);
+}
+
+/* removes the front element from the queue by swapping with parameter */
+void ParseQueue::pop(ParseRequest& value) {
+    queue.pop(value);
+}
+
+void ParseQueue::wait() {
+    queue.done();
+    writers.join_all();
+
+    wqueue.wait();
+}

@@ -93,19 +93,22 @@ void src_input_libarchive(ParseQueue& queue,
     // open the archive
     curl curling;
     int open_status;
-    if (fstdin)
+    if (fstdin) {
+
         open_status = archive_read_open_FILE(arch, *fstdin);
 
-    else if (input_file.substr(0, 4) == "http") {
+    } else if (input_file.substr(0, 4) == "http") {
 
         curling.source = input_file;
         open_status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
 
-    } else if (input_file == "-")
-        open_status = archive_read_open_fd(arch, 0, 16384);
+    } else if (input_file == "stdin:///-") {
 
-    else
+        open_status = archive_read_open_fd(arch, 0, 16384);
+    } else {
+
         open_status = archive_read_open_filename(arch, input_file.substr(5).c_str(), 16384);
+    }
     if (open_status != ARCHIVE_OK) {
         std::cerr << "Unable to open file " << input_file << '\n';
         exit(1);

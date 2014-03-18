@@ -47,6 +47,7 @@
 #include <boost/foreach.hpp>
 
 #include <iostream>
+#include <errno.h>
 
 #ifdef WIN32
 #include <io.h>
@@ -85,15 +86,15 @@ int main(int argc, char * argv[]) {
 
     // determine whether the input is xml(srcml) or not
     boost::optional<FILE*> fstdin;
-    bool tosrc = false;
-    bool tosrcml = false;
+    bool createsrc = false;
+    bool createsrcml = false;
     bool insrcml = srcml_request.command & SRCML_COMMAND_INSRCML;
     if (srcml_request.command & SRCML_COMMAND_SRC) {
-        tosrc = true;
+        createsrc = true;
     } else if (srcml_request.command & SRCML_COMMAND_SRCML) {
-        tosrcml = true;
+        createsrcml = true;
     } else if (!srcml_request.files_from.empty()) {
-        tosrcml = true;
+        createsrcml = true;
     } else {
         // find the first input that is not stdin
         boost::optional<std::string> nonstdin;
@@ -106,30 +107,49 @@ int main(int argc, char * argv[]) {
 
         if (nonstdin) {
             // base on extension
-            tosrc = !boost::filesystem::path(nonstdin->c_str()).extension().compare(".xml");
+            createsrc = !boost::filesystem::path(nonstdin->c_str()).extension().compare(".xml");
         } else {
             // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
             fstdin = fdopen(STDIN_FILENO, "r");
 
             // read the first 4 bytes as separate characters to get around byte ordering
             unsigned char data[4];
-            ssize_t size = fread(&data, 1, 4, *fstdin);
-            rewind(*fstdin);
+            ssize_t size = 0;
+            int c;
+            if ((c = getc(*fstdin)) != EOF) {
+                data[0] = c;
+                ++size;
+                if ((c = getc(*fstdin)) != EOF) {
+                    data[1] = c;
+                    ++size;
+                    if ((c = getc(*fstdin)) != EOF) {
+                        data[2] = c;
+                        ++size;
+                        if ((c = getc(*fstdin)) != EOF) {
+                            data[3] = c;
+                            ++size;
+                        }
+                    }
+                }
+            }
+
+            for (ssize_t i = size; i >= 0; --i)
+                ungetc(data[i], *fstdin);
 
             // pass the first 4 bytes and the size actually read in
-            tosrc = isxml(data, size);
+            createsrc = isxml(data, size);
         }
 
-        tosrcml = !tosrc;
+        createsrcml = !createsrc;
     }
 
-    if (tosrcml && (srcml_request.input.empty() || srcml_request.sawstdin) && !srcml_request.att_language) {
+    if (createsrcml && (srcml_request.input.empty() || srcml_request.sawstdin) && !srcml_request.att_language) {
         std::cerr << "Using stdin requires a declared language\n";
         exit(1);
     }
 
     // src->srcml
-    if (tosrcml) {
+    if (createsrcml) {
 
 
         // create the output srcml archive
@@ -274,7 +294,7 @@ int main(int argc, char * argv[]) {
         }
     }
 
-    if (tosrc) {
+    if (createsrc) {
         // srcml->src srcML file to filesystem
         if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
 
@@ -296,7 +316,7 @@ int main(int argc, char * argv[]) {
             }
 
             // srcml->src extract individual unit in XML
-        } else if (tosrc && (srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
+        } else if (createsrc && (srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && srcml_request.input.size() == 1) {
 
             srcml_archive* arch = srcml_create_archive();
             if (!fstdin)
@@ -319,7 +339,7 @@ int main(int argc, char * argv[]) {
             srcml_free_archive(arch);
 
             // srcml->src extract individual unit to file
-        } else if (tosrc && srcml_request.input.size() == 1 && srcml_request.unit > 0) {
+        } else if (createsrc && srcml_request.input.size() == 1 && srcml_request.unit > 0) {
 
             srcml_archive* arch = srcml_create_archive();
             if (!fstdin)
@@ -338,7 +358,7 @@ int main(int argc, char * argv[]) {
             srcml_free_archive(arch);
 
             // srcml->src srcML file extracted to stdout
-        } else if (tosrc && srcml_request.input.size() == 1 && *srcml_request.output_filename == "-") {
+        } else if (createsrc && srcml_request.input.size() == 1 && *srcml_request.output_filename == "-") {
 
             srcml_archive* arch = srcml_create_archive();
             if (!fstdin)
@@ -354,7 +374,7 @@ int main(int argc, char * argv[]) {
             srcml_free_archive(arch);
 
             // srcml->src srcML file to libarchive file
-        } else if (tosrc) {
+        } else if (createsrc) {
 
             // TODO: What if this is a simple, single file? or to stdout?
             archive* ar = archive_write_new();
