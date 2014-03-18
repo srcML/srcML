@@ -26,3 +26,5 @@ Makefile
 !test/cli/Makefile
 !test/Makefile
 !timing/Makefile
+srcML.sublime-project
+srcML.sublime-workspace
