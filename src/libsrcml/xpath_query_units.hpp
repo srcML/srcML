@@ -1,5 +1,5 @@
 /**
- * @file XPathQueryUnits.cpp
+ * @file xpath_query_units.cpp
  *
  * @copyright Copyright (C) 2008-2014 SDML (www.srcML.org)
  *
@@ -20,8 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_XPATHQUERYUNITS_HPP
-#define INCLUDED_XPATHQUERYUNITS_HPP
+#ifndef INCLUDED_XPATH_QUERY_UNITS_HPP
+#define INCLUDED_XPATH_QUERY_UNITS_HPP
 
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
@@ -35,7 +35,7 @@
 #define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
 #include <srcexfun.hpp>
-#include <UnitDOM.hpp>
+#include <unit_dom.hpp>
 #include <srcmlns.hpp>
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
@@ -49,20 +49,20 @@
 #define snprintf _snprintf
 #endif
 
-class XPathQueryUnits : public UnitDOM {
+class xpath_query_units : public unit_dom {
 public :
 
-    XPathQueryUnits(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath, int fd = 0)
-        : UnitDOM(options), options(options),
+    xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath, int fd = 0)
+        : unit_dom(options), options(options),
           compiled_xpath(compiled_xpath), total(0), found(false), needroot(true), closetag(false), fd(fd) {
     }
 
-    virtual ~XPathQueryUnits() {}
+    virtual ~xpath_query_units() {}
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-    virtual void startOutput() {
+    virtual void start_output() {
 
         buf = xmlOutputBufferCreateFd(fd, NULL);
 
@@ -319,7 +319,7 @@ public :
                     xmlNsPtr savens = onode->nsDef;
                     if(!isoption(options, OPTION_APPLY_ROOT)) {
                         onode->nsDef = savens;
-                        for (std::vector<const xmlChar*>::size_type i = 0; i < UnitDOM::rootsize / 2; ++i)
+                        for (std::vector<const xmlChar*>::size_type i = 0; i < unit_dom::rootsize / 2; ++i)
                             onode->nsDef = onode->nsDef->next;
                     }
                     // dump the namespace-modified tree
@@ -492,7 +492,7 @@ public :
         return true;
     }
 
-    virtual void endOutput() {
+    virtual void end_output() {
 
         // finalize results
         switch (nodetype) {

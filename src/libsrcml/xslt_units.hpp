@@ -1,5 +1,5 @@
 /**
- * @file XSLTUnits.cpp
+ * @file xslt_units.cpp
  *
  * @copyright Copyright (C) 2008-2014 SDML (www.srcML.org)
  *
@@ -20,8 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_XSLTUNITS_HPP
-#define INCLUDED_XSLTUNITS_HPP
+#ifndef INCLUDED_XSLT_UNITS_HPP
+#define INCLUDED_XSLT_UNITS_HPP
 
 #include <libxml/parser.h>
 #include <libxslt/transform.h>
@@ -31,7 +31,7 @@
 
 #include <srcexfun.hpp>
 
-#include <UnitDOM.hpp>
+#include <unit_dom.hpp>
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
 typedef xmlDocPtr (*xsltApplyStylesheetUser_function) (xsltStylesheetPtr,xmlDocPtr,const char **,const char *, FILE *,
@@ -52,12 +52,12 @@ typedef xmlDocPtr (*xsltApplyStylesheet_function) (xsltStylesheetPtr,xmlDocPtr,c
 #include <io.h>
 #endif
 
-class XSLTUnits : public UnitDOM {
+class xslt_units : public unit_dom {
 public :
 
-    XSLTUnits(const char* a_context_element, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
+    xslt_units(const char* a_context_element, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
               const char** params, int fd = 0)
-        : UnitDOM(options), options(options),
+        : unit_dom(options), options(options),
           stylesheet(stylesheet), found(false),
           result_type(0), params(params), fd(fd) {
 
@@ -98,13 +98,13 @@ public :
 #endif
     }
 
-    virtual ~XSLTUnits() {
+    virtual ~xslt_units() {
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
         dlclose(handle);
 #endif
     }
 
-    virtual void startOutput() {
+    virtual void start_output() {
 
         // setup output
         buf = xmlOutputBufferCreateFd(fd, NULL);
@@ -226,7 +226,7 @@ public :
 
     }
 
-    virtual void endOutput() {
+    virtual void end_output() {
 
         // root unit end tag
         if (result_type == XML_ELEMENT_NODE && found && is_archive && !isoption(options, OPTION_APPLY_ROOT)) {

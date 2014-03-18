@@ -1,5 +1,5 @@
 /**
- * @file RelaxNGUnits.cpp
+ * @file relaxng_units.cpp
  *
  * @copyright Copyright (C) 2008-2014 SDML (www.srcML.org)
  *
@@ -20,8 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_RelaxNGUNITS_HPP
-#define INCLUDED_RelaxNGUNITS_HPP
+#ifndef INCLUDED_RELAXNG_UNITS_HPP
+#define INCLUDED_RELAXNG_UNITS_HPP
 
 #include <libxml/parser.h>
 #include <libxml/relaxng.h>
@@ -31,22 +31,22 @@
 
 #include <srcexfun.hpp>
 
-#include <UnitDOM.hpp>
+#include <unit_dom.hpp>
 
 #ifdef WIN32
 #include <io.h>
 #endif
 
-class RelaxNGUnits : public UnitDOM {
+class relaxng_units : public unit_dom {
 public :
 
-    RelaxNGUnits(OPTION_TYPE options, xmlRelaxNGValidCtxtPtr rngctx, int fd = 0)
-        : UnitDOM(options), options(options), rngctx(rngctx), fd(fd), found(false), root_prefix(0) {
+    relaxng_units(OPTION_TYPE options, xmlRelaxNGValidCtxtPtr rngctx, int fd = 0)
+        : unit_dom(options), options(options), rngctx(rngctx), fd(fd), found(false), root_prefix(0) {
     }
 
-    virtual ~RelaxNGUnits() {}
+    virtual ~relaxng_units() {}
 
-    virtual void startOutput() {
+    virtual void start_output() {
 
         buf = xmlOutputBufferCreateFd(fd, NULL);
         // TODO:  Detect error
@@ -131,7 +131,7 @@ public :
         return true;
     }
 
-    virtual void endOutput() {
+    virtual void end_output() {
 
         // root unit end tag
         if (is_archive && !isoption(options, OPTION_APPLY_ROOT)) {

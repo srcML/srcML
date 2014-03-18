@@ -1,5 +1,5 @@
 /**
- * @file UnitDOM.cpp
+ * @file unit_dom.cpp
  *
  * @copyright Copyright (C) 2011-2014 SDML (www.srcML.org)
  *
@@ -20,8 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_UNITDOM_HPP
-#define INCLUDED_UNITDOM_HPP
+#ifndef INCLUDED_UNIT_DOM_HPP
+#define INCLUDED_UNIT_DOM_HPP
 
 #include <libxml/SAX2.h>
 
@@ -30,19 +30,19 @@
 #include <string>
 #include <vector>
 
-class UnitDOM : public srcMLHandler {
+class unit_dom : public srcMLHandler {
 public :
 
-    UnitDOM(OPTION_TYPE options) : rootsize(0), found(false), options(options), error(false) {}
+    unit_dom(OPTION_TYPE options) : rootsize(0), found(false), options(options), error(false) {}
 
-    virtual ~UnitDOM() {}
+    virtual ~unit_dom() {}
 
-    virtual OPTION_TYPE getOptions() const { return options; }
+    virtual OPTION_TYPE get_options() const { return options; }
 
     /*
       Called exactly once at beginnning of document  Override for intended behavior.
     */
-    virtual void startOutput() = 0;
+    virtual void start_output() = 0;
 
     /*
       Called exactly once for each unit.  For an archive, not called on the root unit
@@ -55,7 +55,7 @@ public :
     /*
       Called exactly once at end of document.  Override for intended behavior.
     */
-    virtual void endOutput() = 0;
+    virtual void end_output() = 0;
 
     // start creating the document and setup output for the units
     virtual void startDocument() {
@@ -67,7 +67,7 @@ public :
         found = true;
 
         // setup output
-        startOutput();
+        start_output();
 
         xmlSAX2StartDocument(ctxt);
 
@@ -265,7 +265,7 @@ public :
         ctxt->myDoc = 0;
 
         // end the output
-        endOutput();
+        end_output();
 
     }
 

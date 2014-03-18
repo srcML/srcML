@@ -23,9 +23,9 @@
 #include <srcml.h>
 
 #include <sstream>
-#include <XPathQueryUnits.hpp>
-#include <XSLTUnits.hpp>
-#include <RelaxNGUnits.hpp>
+#include <xpath_query_units.hpp>
+#include <xslt_units.hpp>
+#include <relaxng_units.hpp>
 
 
 #include <srcexfun.hpp>
@@ -121,7 +121,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
     }
 
     // setup process handling
-    XPathQueryUnits process(options, compiled_xpath, fd);
+    xpath_query_units process(options, compiled_xpath, fd);
     srcMLControlHandler control(input_buffer);
 
     try {
@@ -244,7 +244,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     xsltsrcMLRegister();
 
     // setup process handling
-    XSLTUnits process(context_element, options, stylesheet, params, fd);
+    xslt_units process(context_element, options, stylesheet, params, fd);
     srcMLControlHandler control(input_buffer);
 
     try {
@@ -288,7 +288,7 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, int f
     xmlRelaxNGPtr rng = xmlRelaxNGParse(relaxng_parser_ctxt);
     xmlRelaxNGValidCtxtPtr rngctx = xmlRelaxNGNewValidCtxt(rng);
 
-    RelaxNGUnits process(options, rngctx, fd);
+    relaxng_units process(options, rngctx, fd);
     srcMLControlHandler control(input_buffer);
 
     try {
