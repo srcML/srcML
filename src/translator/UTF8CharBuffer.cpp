@@ -34,7 +34,12 @@
 struct srcMLFile {
 
     FILE * file;
+#ifdef _MSC_BUILD
+    HCRYPTHASH crypt_hash;
+#else
     SHA_CTX * ctx;
+#endif
+
 
 };
 
@@ -51,7 +56,11 @@ int srcMLFileRead(void * context,  char * buffer, int len) {
     size_t num_read = xmlFileRead(sfile->file, buffer, len);
 
     if(sfile->ctx)
+#ifdef _MSC_BUILD
+    CryptHashData(sfile->crypt_hash buffer, num_read, 0)
+#else
 	SHA1_Update(sfile->ctx, buffer, (LONG)num_read);
+#endif
 
     return (int)num_read;
 }
@@ -72,7 +81,11 @@ int srcMLFdRead(void * context,  char * buffer, int len) {
     size_t num_read = read(sfd->fd, buffer, len);
 
     if(sfd->ctx)
-	SHA1_Update(sfd->ctx, buffer, (LONG)num_read);
+#ifdef _MSC_BUILD
+    CryptHashData(sfd->crypt_hash, buffer, num_read, 0)
+#else
+    SHA1_Update(sfd->ctx, buffer, (LONG)num_read);
+#endif
 
     return (int)num_read;
 }
@@ -98,14 +111,25 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
 
     srcMLFile * sfile = new srcMLFile();
     sfile->file = (FILE *)file;
+#ifdef _MSC_BUILD    
+    hash ? sfile->crypt_hash = crypt_hash : 0;
+#else
     hash ? sfile->ctx = &ctx : 0;
+#endif
 
     input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sfile, 
 					 encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
 
-    if(hash) SHA1_Init(&ctx);
+
+    if(hash) 
+#ifdef _MSC_BUILD 
+        CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
+        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
+#else
+        SHA1_Init(&ctx);
+#endif
 
     init(encoding);
 
@@ -118,8 +142,14 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 
     if(hash) {
 
-	SHA1_Init(&ctx);
-	SHA1_Update(&ctx, c_buffer, (LONG)buffer_size);
+#ifdef _MSC_BUILD    
+    CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
+    CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
+    CryptHashData(sfd->crypt_hash, buffer, num_read, 0)
+#else
+    SHA1_Init(&ctx);
+    SHA1_Update(&ctx, c_buffer, (LONG)buffer_size);
+#endif
 
     }
 
@@ -161,14 +191,24 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
 
     srcMLFile * sfile = new srcMLFile();
     sfile->file = file;
+#ifdef _MSC_BUILD    
+    hash ? sfile->crypt_hash = crypt_hash : 0;
+#else
     hash ? sfile->ctx = &ctx : 0;
+#endif
 
     input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sfile, 
 					 encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
 
-    if(hash) SHA1_Init(&ctx);
+    if(hash) 
+#ifdef _MSC_BUILD 
+        CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
+        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
+#else
+        SHA1_Init(&ctx);
+#endif
 
     init(encoding);
 
@@ -181,14 +221,24 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
 
     srcMLFd * sfd = new srcMLFd();
     sfd->fd = fd;
+#ifdef _MSC_BUILD    
+    hash ? sfd->crypt_hash = crypt_hash : 0;
+#else
     hash ? sfd->ctx = &ctx : 0;
+#endif
 
     input = xmlParserInputBufferCreateIO(srcMLFdRead, srcMLFdClose, sfd, 
 					 encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
 
-    if(hash) SHA1_Init(&ctx);
+    if(hash) 
+#ifdef _MSC_BUILD 
+        CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
+        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
+#else
+        SHA1_Init(&ctx);
+#endif
 
     init(encoding);
 
@@ -336,8 +386,15 @@ UTF8CharBuffer::~UTF8CharBuffer() {
     unsigned char md[20];
 
     if(hash) {
+#ifdef _MSC_BUILD
+    DWORD        SHA_DIGEST_LENGTH;
+    DWORD        hash_length_size = sizeof(DWORD);
+    CryptGetHashParam(crypt_hash, HP_HASHSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
+    CryptGetHashParam(crypt_hash, HP_HASHVAL, (BYTE *)md, &SHA_DIGEST_LENGTH, 0);
+#else
 
 	SHA1_Final(md, &ctx);
+#endif
 
 	std::ostringstream hash_stream;
 	for(int i = 0; i < SHA_DIGEST_LENGTH; ++i)

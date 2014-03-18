@@ -38,7 +38,9 @@
 
 #include <libxml/xmlIO.h>
 
-#ifdef __MACH__
+#ifdef _MSC_BUILD
+ #include <Wincrypt.h>
+#elif defined(__MACH__)
 #include <CommonCrypto/CommonDigest.h>
 #define SHA_CTX CC_SHA1_CTX
 #define SHA1_Init CC_SHA1_Init
@@ -83,7 +85,12 @@ private:
     int size;
     bool lastcr;
     boost::optional<std::string> * hash;
+#ifdef _MSC_BUILD  
+    HCRYPTPROV   crypt_provider;
+    HCRYPTHASH   crypt_hash;
+#else
     SHA_CTX ctx;
+#endif
 
 };
 #endif
