@@ -24,6 +24,9 @@ machines = [
     , "ubuntu10test64"
     , "ubuntu12build64"
     , "ubuntu12test64"
+    , "maclion"
+    , "macmountainlion"
+    , "macmavericks"
 ]
 
 options = []

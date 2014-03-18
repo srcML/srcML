@@ -24,6 +24,9 @@ machines = [
  , '"Ubuntu Linux 10.04 Test (64-bit)"'
  , '"Ubuntu Linux 12.04 Build (64-bit)"'
  , '"Ubuntu Linux 12.04 Test (64-bit)"'
+ , '"Mac OS X Lion"'
+ , '"Mac OS X Mountain Lion"'
+ , '"Mac OS X Mavericks"'
 ]
 
 options = []
