@@ -189,11 +189,11 @@ public :
 
                 // xml declaration
                 if (isoption(options, OPTION_XMLDECL))
-                    xmlOutputBufferWriteXMLDecl(ctxt, buf);
+                    xml_output_buffer_write_xml_decl(ctxt, buf);
 
                 // output a root element, just like the one read in
                 // note that this has to be ended somewhere
-                xmlOutputBufferWriteElementNs(buf, root->localname, root->prefix, root->URI,
+                xml_output_buffer_write_element_ns(buf, root->localname, root->prefix, root->URI,
                                               root->nb_namespaces, root->namespaces,
                                               is_archive ? root->nb_attributes : 0, root->nb_defaulted, is_archive ? root->attributes : 0);
 
@@ -203,7 +203,7 @@ public :
 
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
                     for(std::vector<std::string>::size_type i = 0; i < meta_tags->size(); ++i) {
-                        xmlOutputBufferWriteElementNs(buf, meta_tags->at(i).localname, meta_tags->at(i).prefix, meta_tags->at(i).URI,
+                        xml_output_buffer_write_element_ns(buf, meta_tags->at(i).localname, meta_tags->at(i).prefix, meta_tags->at(i).URI,
                                                       meta_tags->at(i).nb_namespaces, meta_tags->at(i).namespaces,
                                                       meta_tags->at(i).nb_attributes, meta_tags->at(i).nb_defaulted, meta_tags->at(i).attributes);
 
@@ -264,7 +264,7 @@ public :
 
                         // output a wrapping element, just like the one read in
                         // note that this has to be ended somewhere
-                        xmlOutputBufferWriteElementNs(wrap, root->localname, root->prefix, root->URI,
+                        xml_output_buffer_write_element_ns(wrap, root->localname, root->prefix, root->URI,
                                                       (int)((data.size() - rootsize) / 2), &data[rootsize],
                                                       0, 0, 0);
 
@@ -546,7 +546,7 @@ public :
         xmlOutputBufferClose(buf);
     }
 
-    static void xmlOutputBufferWriteXMLDecl(xmlParserCtxtPtr ctxt, xmlOutputBufferPtr buf) {
+    static void xml_output_buffer_write_xml_decl(xmlParserCtxtPtr ctxt, xmlOutputBufferPtr buf) {
 
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?xml version=\""));
         xmlOutputBufferWriteString(buf, (const char*) ctxt->version);
@@ -557,7 +557,7 @@ public :
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
     }
 
-    void xmlOutputBufferWriteElementNs(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
+    void xml_output_buffer_write_element_ns(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
                                        const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
                                        int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
@@ -603,7 +603,7 @@ public :
         }
     }
 
-    void xmlOutputBufferWriteElementNs(std::string& s, const xmlChar* localname, const xmlChar* prefix,
+    void xml_output_buffer_write_element_ns(std::string& s, const xmlChar* localname, const xmlChar* prefix,
                                        const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
                                        int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 

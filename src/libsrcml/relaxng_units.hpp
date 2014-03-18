@@ -67,7 +67,7 @@ public :
 
             // output the xml declaration, if needed
             if (!found && isoption(options, OPTION_XMLDECL))
-                xmlOutputBufferWriteXMLDecl(ctxt, buf);
+                xml_output_buffer_write_xml_decl(ctxt, buf);
 
             // output the root unit start tag
             // this is only if in per-unit mode and this is the first result found
@@ -76,14 +76,14 @@ public :
 
                 // output a root element, just like the one read in
                 // note that this has to be ended somewhere
-                xmlOutputBufferWriteElementNs(buf, root->localname, root->prefix, root->URI,
+                xml_output_buffer_write_element_ns(buf, root->localname, root->prefix, root->URI,
                                               root->nb_namespaces, root->namespaces,
                                               is_archive ? root->nb_attributes : 0, root->nb_defaulted, root->attributes);
 
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
 
                 for(std::vector<std::string>::size_type i = 0; i < meta_tags->size(); ++i) {
-                    xmlOutputBufferWriteElementNs(buf, meta_tags->at(i).localname, meta_tags->at(i).prefix, meta_tags->at(i).URI,
+                    xml_output_buffer_write_element_ns(buf, meta_tags->at(i).localname, meta_tags->at(i).prefix, meta_tags->at(i).URI,
                                                   meta_tags->at(i).nb_namespaces, meta_tags->at(i).namespaces,
                                                   meta_tags->at(i).nb_attributes, meta_tags->at(i).nb_defaulted, meta_tags->at(i).attributes);
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
@@ -98,7 +98,7 @@ public :
             xmlNodePtr node = xmlDocGetRootElement(ctxt->myDoc);
             // output start unit tag
             if(node)
-                xmlOutputBufferWriteElementNodeNs(buf, *node, is_archive);
+                xml_output_buffer_write_element_node_ns(buf, *node, is_archive);
 
             // output any children
             if(node && node->children) {
@@ -150,7 +150,7 @@ public :
         xmlOutputBufferClose(buf);
     }
 
-    static void xmlOutputBufferWriteXMLDecl(xmlParserCtxtPtr ctxt, xmlOutputBufferPtr buf) {
+    static void xml_output_buffer_write_xml_decl(xmlParserCtxtPtr ctxt, xmlOutputBufferPtr buf) {
 
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?xml version=\""));
         xmlOutputBufferWriteString(buf, (const char*) ctxt->version);
@@ -161,7 +161,7 @@ public :
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
     }
 
-    static void xmlOutputBufferWriteElementNodeNs(xmlOutputBufferPtr buf, xmlNode & node, bool isarchive) {
+    static void xml_output_buffer_write_element_node_ns(xmlOutputBufferPtr buf, xmlNode & node, bool isarchive) {
 
         // record if this is an empty element since it will be erased by the attribute copying
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
@@ -240,7 +240,7 @@ public :
 
     }
 
-    static void xmlOutputBufferWriteElementNs(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
+    static void xml_output_buffer_write_element_ns(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
                                               const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
                                               int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
@@ -282,7 +282,7 @@ public :
         }
     }
 
-    static void xmlOutputBufferWriteElementNs(std::string& s, const xmlChar* localname, const xmlChar* prefix,
+    static void xml_output_buffer_write_element_ns(std::string& s, const xmlChar* localname, const xmlChar* prefix,
                                               const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
                                               int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
