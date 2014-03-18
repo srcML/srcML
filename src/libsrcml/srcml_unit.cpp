@@ -21,7 +21,7 @@
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcml_sax2_utilities.hpp>
-#include <srcMLSAX2Reader.hpp>
+#include <srcml_sax2_reader.hpp>
 
 #include <UTF8CharBuffer.hpp>
 
@@ -307,7 +307,7 @@ const char* srcml_unit_get_xml(struct srcml_unit* unit) {
     if(unit == NULL || (!unit->unit && !unit->read_header)) return 0;
 
     if(!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
-        unit->archive->reader->readsrcML(unit->unit);
+        unit->archive->reader->read_srcml(unit->unit);
 
     return unit->unit ? unit->unit->c_str() : 0;
 
@@ -589,7 +589,7 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
         if(!unit->unit) {
 
-            unit->archive->reader->readsrc(output_handler);
+            unit->archive->reader->read_src(output_handler);
             xmlOutputBufferClose(output_handler);
 
             return SRCML_STATUS_OK;
@@ -644,7 +644,7 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_siz
 
         if(!unit->unit) {
 
-            unit->archive->reader->readsrc(output_handler);
+            unit->archive->reader->read_src(output_handler);
 
         } else if(int error = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options)) {
 
@@ -708,7 +708,7 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 
         if(!unit->unit) {
 
-            unit->archive->reader->readsrc(output_handler);
+            unit->archive->reader->read_src(output_handler);
             xmlOutputBufferClose(output_handler);
 
             return SRCML_STATUS_OK;
@@ -760,7 +760,7 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
         if(!unit->unit) {
 
-            unit->archive->reader->readsrc(output_handler);
+            unit->archive->reader->read_src(output_handler);
             xmlOutputBufferClose(output_handler);
 
             return SRCML_STATUS_OK;

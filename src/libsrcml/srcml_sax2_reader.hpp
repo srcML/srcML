@@ -1,5 +1,5 @@
 /**
- * @file srcMLSAX2Reader.hpp
+ * @file srcml_sax2_reader.hpp
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
@@ -21,7 +21,7 @@
 #ifndef INCLUDED_SRCML_SAX2_READER_HPP
 #define INCLUDED_SRCML_SAX2_READER_HPP
 
-#include <srcMLReaderHandler.hpp>
+#include <srcml_reader_handler.hpp>
 
 #include <srcMLControlHandler.hpp>
 
@@ -37,13 +37,13 @@
 #include <boost/optional.hpp>
 
 /**
- * srcMLSAX2Reader
+ * srcml_sax2_reader
  *
  * Extend XML Text Reader interface to
  * progressively read a srcML Archive collecting
  * units and reading unit attributes.
  */
-class srcMLSAX2Reader {
+class srcml_sax2_reader {
 
 private :
 
@@ -52,7 +52,7 @@ private :
     /** boolean for marking if read root */
     bool read_root;
     /** handler with hooks for sax parsing */
-    srcMLReaderHandler handler;
+    srcml_reader_handler handler;
 
     /** thread running execution */
     boost::thread * thread;
@@ -60,14 +60,14 @@ private :
 public :
 
     // constructors
-    srcMLSAX2Reader(const char * filename);
-    srcMLSAX2Reader(xmlParserInputBufferPtr input);
+    srcml_sax2_reader(const char * filename);
+    srcml_sax2_reader(xmlParserInputBufferPtr input);
 
     // destructors
-    ~srcMLSAX2Reader();
+    ~srcml_sax2_reader();
 
     // read attribute and namespace information from root unit.  Does not advance read.
-    int readRootUnitAttributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
+    int read_root_unit_attributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
                                boost::optional<std::string> & directory, boost::optional<std::string> & version,
                                std::vector<std::string> & attributes,
                                std::vector<std::string> & prefixes,
@@ -80,14 +80,14 @@ public :
     /* finds next unit tag if not current unit and sets attributes.  Consumes unit.
        Unit is still avaible for readsrcML or read.  But not readUnitAttributes.
     */
-    int readUnitAttributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
+    int read_unit_attributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
                            boost::optional<std::string> & directory, boost::optional<std::string> & version);
 
     // reads the next unit and returns it in parameter as srcML
-    int readsrcML(boost::optional<std::string> & unit);
+    int read_srcml(boost::optional<std::string> & unit);
 
     // reads the next unit and returns it in parameter as src
-    int readsrc(xmlOutputBufferPtr output_handler);
+    int read_src(xmlOutputBufferPtr output_handler);
 
 };
 

@@ -1,5 +1,5 @@
 /**
- * @file srcMLSAX2Reader.cpp
+ * @file srcml_sax2_reader.cpp
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <srcMLSAX2Reader.hpp>
+#include <srcml_sax2_reader.hpp>
 
 #include <srcmlns.hpp>
 #include <srcml.h>
@@ -38,7 +38,7 @@ struct thread_args {
     srcMLControlHandler * control;
 
     /** handler with hooks for sax processing */
-    srcMLReaderHandler * handler;
+    srcml_reader_handler * handler;
 
 };
 
@@ -67,12 +67,12 @@ void * start_routine(void * arguments) {
 }
 
 /**
- * srcMLSAX2Reader
+ * srcml_sax2_reader
  * @param filename name of a file
  *
- * Construct a srcMLSAX2Reader using a filename
+ * Construct a srcml_sax2_reader using a filename
  */
-srcMLSAX2Reader::srcMLSAX2Reader(const char * filename)
+srcml_sax2_reader::srcml_sax2_reader(const char * filename)
     : control(filename), read_root(false) {
 
     thread_args args = { &control, &handler };
@@ -83,12 +83,12 @@ srcMLSAX2Reader::srcMLSAX2Reader(const char * filename)
 }
 
 /**
- * srcMLSAX2Reader
+ * srcml_sax2_reader
  * @param input parser input buffer
  *
- * Construct a srcMLSAX2Reader using a parser input buffer
+ * Construct a srcml_sax2_reader using a parser input buffer
  */
-srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input)
+srcml_sax2_reader::srcml_sax2_reader(xmlParserInputBufferPtr input)
     : control(input), read_root(false) {
 
     thread_args args = { &control, &handler };
@@ -99,11 +99,11 @@ srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input)
 }
 
 /**
- * ~srcMLSAX2Reader
+ * ~srcml_sax2_reader
  *
- * Destructor a srcMLSAX2Reader
+ * Destructor a srcml_sax2_reader
  */
-srcMLSAX2Reader::~srcMLSAX2Reader() {
+srcml_sax2_reader::~srcml_sax2_reader() {
 
     handler.stop();
     thread->join();
@@ -112,7 +112,7 @@ srcMLSAX2Reader::~srcMLSAX2Reader() {
 }
 
 /**
- * readRootUnitAttributes
+ * read_root_unit_attributes
  * @param language a location to store the language attribute
  * @param filename a location to store the filename attribute
  * @param directory a location to store the directory attribute
@@ -128,7 +128,7 @@ srcMLSAX2Reader::~srcMLSAX2Reader() {
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcMLSAX2Reader::readRootUnitAttributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
+int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
                                             boost::optional<std::string> & directory, boost::optional<std::string> & version,
                                             std::vector<std::string> & attributes,
                                             std::vector<std::string> & prefixes,
@@ -156,7 +156,7 @@ int srcMLSAX2Reader::readRootUnitAttributes(boost::optional<std::string> & langu
 }
 
 /**
- * readUnitAttributes
+ * read_unit_attributes
  * @param language a location to store the language attribute
  * @param filename a location to store the filename attribute
  * @param directory a location to store the directory attribute
@@ -166,7 +166,7 @@ int srcMLSAX2Reader::readRootUnitAttributes(boost::optional<std::string> & langu
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcMLSAX2Reader::readUnitAttributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
+int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
                                         boost::optional<std::string> & directory, boost::optional<std::string> & version) {
 
     if(handler.is_done) return 0;
@@ -188,7 +188,7 @@ int srcMLSAX2Reader::readUnitAttributes(boost::optional<std::string> & language,
 
 
 /**
- * readsrcML
+ * read_srcml
  * @param unit location in which to read srcML unit.
  *
  * Read the next unit from a srcML Archive
@@ -196,7 +196,7 @@ int srcMLSAX2Reader::readUnitAttributes(boost::optional<std::string> & language,
  *
  * @returns 1 on success and 0 if done
  */
-int srcMLSAX2Reader::readsrcML(boost::optional<std::string> & unit) {
+int srcml_sax2_reader::read_srcml(boost::optional<std::string> & unit) {
 
     if(unit) unit = boost::optional<std::string>();
 
@@ -212,7 +212,7 @@ int srcMLSAX2Reader::readsrcML(boost::optional<std::string> & unit) {
 }
 
 /**
- * readsrc
+ * read_src
  * @param unit location in which to read src unit.
  *
  * Read the next unit from a srcML Archive
@@ -220,7 +220,7 @@ int srcMLSAX2Reader::readsrcML(boost::optional<std::string> & unit) {
  *
  * @returns 1 on success and 0 if done
  */
-int srcMLSAX2Reader::readsrc(xmlOutputBufferPtr output_handler) {
+int srcml_sax2_reader::read_src(xmlOutputBufferPtr output_handler) {
 
     if(handler.is_done) return 0;
     control.enable_comment(false);

@@ -30,7 +30,7 @@
 #include <string>
 #include <vector>
 
-class srcMLSAX2Reader;
+class srcml_sax2_reader;
 
 /**
  * SRCML_TRANSORM_TYPE
@@ -114,7 +114,7 @@ struct srcml_archive {
     srcMLTranslator * translator;
 
     /** a srcMLReader for reading */
-    srcMLSAX2Reader * reader;
+    srcml_sax2_reader * reader;
 
     /** xmlParserInputBuffer for reading */
     xmlParserInputBufferPtr input;

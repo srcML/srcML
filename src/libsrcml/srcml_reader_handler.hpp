@@ -1,5 +1,6 @@
 /**
- * @file srcMLReaderHandler.cpp
+ * @file srcml_reader_handler
+.cpp
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
@@ -43,14 +44,15 @@
 #pragma GCC diagnostic warning "-Wshorten-64-to-32"
 
 /**
- * srcMLReaderHandler
+ * srcml_reader_handler
+
  *
  * Inherits from srcMLHandler to provide hooks into
  * SAX2 parsing. Provides starting and stoping using
  * threads.  Collects attributes, namespaces and srcML
  * from units.
  */
-class srcMLReaderHandler : public srcMLHandler {
+class srcml_reader_handler : public srcMLHandler {
 
 private :
 
@@ -97,15 +99,17 @@ private :
 
 public :
 
-    /** Give access to membeers for srcMLSAX2Reader class */
-    friend class srcMLSAX2Reader;
+    /** Give access to membeers for srcml_sax2_reader class */
+    friend class srcml_sax2_reader;
 
     /**
-     * srcMLReaderHandler
+     * srcml_reader_handler
+    
      *
      * Constructor.  Sets up mutex, conditions and state.
      */
-    srcMLReaderHandler() : unit(0), output_handler(0), is_done(false), read_root(false),
+    srcml_reader_handler
+() : unit(0), output_handler(0), is_done(false), read_root(false),
                            collect_unit_attributes(false), collect_srcml(false), collect_src(false),
                            terminate(false), is_empty(false), wait_root(true), skip(false) {
 
@@ -119,11 +123,13 @@ public :
     }
 
     /**
-     * ~srcMLReaderHandler
+     * ~srcml_reader_handler
+    
      *
      * Destructor, deletes mutex and conditions.
      */
-    ~srcMLReaderHandler() {}
+    ~srcml_reader_handler
+() {}
 
     /**
      * wait

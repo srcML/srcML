@@ -19,7 +19,7 @@
  */
 
 #include <srcml_sax2_utilities.hpp>
-#include <srcMLSAX2Reader.hpp>
+#include <srcml_sax2_reader.hpp>
 #include <srcml.h>
 
 #include <sstream>
@@ -57,8 +57,8 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBuffer *
 
     if(input == NULL) return SRCML_STATUS_IO_ERROR;
 
-    srcMLSAX2Reader reader(input);
-    reader.readsrc(output_handler);
+    srcml_sax2_reader reader(input);
+    reader.read_src(output_handler);
 
     return SRCML_STATUS_OK;
 
@@ -82,8 +82,8 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
     xmlOutputBufferPtr output_handler = xmlOutputBufferCreateFilename(ofilename, xmlFindCharEncodingHandler(encoding),
                                                                       options & SRCML_OPTION_COMPRESS);
 
-    srcMLSAX2Reader reader(ifilename);
-    reader.readsrc(output_handler);
+    srcml_sax2_reader reader(ifilename);
+    reader.read_src(output_handler);
 
     xmlOutputBufferClose(output_handler);
 

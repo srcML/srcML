@@ -20,7 +20,7 @@
 
 #include <srcml.h>
 #include <srcml_types.hpp>
-#include <srcMLSAX2Reader.hpp>
+#include <srcml_sax2_reader.hpp>
 
 #include <srcmlns.hpp>
 
@@ -933,7 +933,7 @@ static void srcml_read_internal(srcml_archive * archive) {
     archive->type = SRCML_ARCHIVE_READ;
 
     boost::optional<std::string> language, filename, directory, version;
-    bool done = !archive->reader->readRootUnitAttributes(language, filename, directory, version,
+    bool done = !archive->reader->read_root_unit_attributes(language, filename, directory, version,
                                                          archive->attributes, archive->prefixes,
                                                          archive->namespaces,
                                                          archive->options,
@@ -967,7 +967,7 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
     archive->input = xmlParserInputBufferCreateFilename(srcml_filename, XML_CHAR_ENCODING_NONE);
     try {
 
-        archive->reader = new srcMLSAX2Reader(archive->input);
+        archive->reader = new srcml_sax2_reader(archive->input);
 
     } catch(...) {
 
@@ -1001,7 +1001,7 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
     archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, XML_CHAR_ENCODING_NONE);
     try {
 
-        archive->reader = new srcMLSAX2Reader(archive->input);
+        archive->reader = new srcml_sax2_reader(archive->input);
 
     } catch(...) {
 
@@ -1034,7 +1034,7 @@ int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
     archive->input = xmlParserInputBufferCreateFile(srcml_file, XML_CHAR_ENCODING_NONE);
     try {
 
-        archive->reader = new srcMLSAX2Reader(archive->input);
+        archive->reader = new srcml_sax2_reader(archive->input);
 
     } catch(...) {
 
@@ -1067,7 +1067,7 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
     archive->input = xmlParserInputBufferCreateFd(srcml_fd, XML_CHAR_ENCODING_NONE);
     try {
 
-        archive->reader = new srcMLSAX2Reader(archive->input);
+        archive->reader = new srcml_sax2_reader(archive->input);
 
     } catch(...) {
 
@@ -1108,7 +1108,7 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
 
     boost::optional<std::string> read_unit;
     if(!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
-        unit->archive->reader->readsrcML(read_unit);
+        unit->archive->reader->read_srcml(read_unit);
 
     if(!unit->unit && !read_unit) return SRCML_STATUS_UNINITIALIZED_UNIT;
 
@@ -1137,7 +1137,7 @@ srcml_unit* srcml_read_unit_header(srcml_archive* archive) {
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
     srcml_unit * unit = srcml_create_unit(archive);
-    int not_done = archive->reader->readUnitAttributes(unit->language, unit->filename, unit->directory, unit->version);
+    int not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->directory, unit->version);
 
     if(!not_done) {
         srcml_free_unit(unit);
@@ -1168,8 +1168,8 @@ srcml_unit* srcml_read_unit_xml(srcml_archive* archive) {
     srcml_unit * unit = srcml_create_unit(archive);
     int not_done = 0;
     if(!unit->read_header)
-        not_done = archive->reader->readUnitAttributes(unit->language, unit->filename, unit->directory, unit->version);
-    archive->reader->readsrcML(unit->unit);
+        not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->directory, unit->version);
+    archive->reader->read_srcml(unit->unit);
 
     if(!not_done || !unit->unit) {
         srcml_free_unit(unit);
@@ -1199,8 +1199,8 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
     srcml_unit * unit = srcml_create_unit(archive);
     int not_done = 0;
     if(!unit->read_header)
-        not_done = archive->reader->readUnitAttributes(unit->language, unit->filename, unit->directory, unit->version);
-    archive->reader->readsrcML(unit->unit);
+        not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->directory, unit->version);
+    archive->reader->read_srcml(unit->unit);
 
     if(!not_done || !unit->unit) {
         srcml_free_unit(unit);
