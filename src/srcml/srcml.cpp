@@ -244,12 +244,10 @@ int main(int argc, char * argv[]) {
             } else if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
                 src_input_filesystem(queue, srcml_arch, resource, srcml_request.att_language);
 
-            } else if (protocol == "file" && extension != ".tar" && extension != ".gz" && extension != ".zip") {
-
+            } else if (protocol == "file" && !(is_archive(extension)) && !(is_compressed(extension))) {
                 src_input_file(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
 
             } else {
-
                 src_input_libarchive(queue, srcml_arch, uri, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, fstdin);
 
             }
