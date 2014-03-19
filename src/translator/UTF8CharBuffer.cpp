@@ -118,6 +118,17 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
     void * file = xmlFileOpen(ifilename);
     if(!file) throw UTF8FileError();
 
+    if(hash) {
+#ifdef _MSC_BUILD 
+        BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
+        if(! success && GetLastError() == NTE_BAD_KEYSET)
+            success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
+        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
+#else
+        SHA1_Init(&ctx);
+#endif
+    }
+
     srcMLFile * sfile = new srcMLFile();
     sfile->file = (FILE *)file;
 #ifdef _MSC_BUILD    
@@ -131,17 +142,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
 
     if(!input) throw UTF8FileError();
 
-
-    if(hash) {
-#ifdef _MSC_BUILD 
-        BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
-        if(! success && GetLastError() == NTE_BAD_KEYSET)
-            success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-#else
-        SHA1_Init(&ctx);
-#endif
-    }
 
     init(encoding);
 
@@ -157,8 +157,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
         BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
         if(!success && GetLastError() == NTE_BAD_KEYSET)
             success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-        CryptHashData(crypt_hash, (BYTE *)c_buffer, buffer_size, 0);
+    CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
+    CryptHashData(crypt_hash, (BYTE *)c_buffer, buffer_size, 0);
 #else
     SHA1_Init(&ctx);
     SHA1_Update(&ctx, c_buffer, (LONG)buffer_size);
@@ -202,6 +202,15 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
 
     if(!file) throw UTF8FileError();
 
+    if(hash) {
+#ifdef _MSC_BUILD 
+        CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
+        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
+#else
+        SHA1_Init(&ctx);
+#endif
+    }
+
     srcMLFile * sfile = new srcMLFile();
     sfile->file = file;
 #ifdef _MSC_BUILD    
@@ -215,16 +224,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
 
     if(!input) throw UTF8FileError();
 
-    if(hash) {
-#ifdef _MSC_BUILD 
-        BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
-        if(!success && GetLastError() == NTE_BAD_KEYSET)
-            success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-#else
-        SHA1_Init(&ctx);
-#endif
-    }
+
 
     init(encoding);
 
@@ -235,6 +235,16 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
 
     if(fd < 0) throw UTF8FileError();
 
+
+    if(hash) {
+#ifdef _MSC_BUILD 
+        CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
+        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
+#else
+        SHA1_Init(&ctx);
+#endif
+    }
+    
     srcMLFd * sfd = new srcMLFd();
     sfd->fd = fd;
 #ifdef _MSC_BUILD    
@@ -247,17 +257,6 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
 					 encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
-
-    if(hash) {
-#ifdef _MSC_BUILD 
-        BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
-        if(!success && GetLastError() == NTE_BAD_KEYSET)
-            success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-#else
-        SHA1_Init(&ctx);
-#endif
-    }
 
     init(encoding);
 
