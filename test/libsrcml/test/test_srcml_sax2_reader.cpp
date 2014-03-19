@@ -1,5 +1,5 @@
 /**
- * @file test_srcMLSAX2Reader.cpp
+ * @file test_srcml_sax2_reader.cpp
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for srcMLSAX2Reader
+  Test cases for srcml_sax2_reader
 */
 
 // includes
@@ -37,7 +37,7 @@
 #include <fcntl.h>
 
 #include <srcml.h>
-#include <srcMLSAX2Reader.hpp>
+#include <srcml_sax2_reader.hpp>
 #include <srcmlns.hpp>
 #include "dassert.hpp"
 
@@ -90,12 +90,12 @@ int main() {
     srcml_file_empty_nested.close();
 
     /*
-      srcMLSAX2Reader(const char * filename)
+      srcml_sax2_reader(const char * filename)
     */
 
     {
         try {
-            srcMLSAX2Reader reader("project.xml");
+            srcml_sax2_reader reader("project.xml");
 
         } catch(...) {
             assert(false);
@@ -106,7 +106,7 @@ int main() {
     /*
       {
       try {
-      srcMLSAX2Reader reader("foo.xml");
+      srcml_sax2_reader reader("foo.xml");
       assert(false);
       } catch(...) {}
 
@@ -115,20 +115,20 @@ int main() {
 
     {
         try {
-            srcMLSAX2Reader reader((const char *)NULL);
+            srcml_sax2_reader reader((const char *)NULL);
             assert(false);
         } catch(...) {}
 
     }
 
     /*
-      srcMLSAX2Reader(xmlParserInputBufferPtr input)
+      srcml_sax2_reader(xmlParserInputBufferPtr input)
     */
 
     {
         xmlParserInputBufferPtr input = xmlParserInputBufferCreateFilename("project.xml", xmlParseCharEncoding(0));
         try {
-            srcMLSAX2Reader reader(input);
+            srcml_sax2_reader reader(input);
         } catch(...) {
             assert(false);
         }
@@ -137,7 +137,7 @@ int main() {
 
     {
         try {
-            srcMLSAX2Reader reader((xmlParserInputBufferPtr)NULL);
+            srcml_sax2_reader reader((xmlParserInputBufferPtr)NULL);
             assert(false);
         } catch(...) {}
 
@@ -148,7 +148,7 @@ int main() {
     */
 
     {
-        srcMLSAX2Reader reader("project.xml");
+        srcml_sax2_reader reader("project.xml");
         boost::optional<std::string> language, filename, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
@@ -193,7 +193,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_ns.xml");
+        srcml_sax2_reader reader("project_ns.xml");
         boost::optional<std::string> language, filename, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
@@ -238,7 +238,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_single.xml");
+        srcml_sax2_reader reader("project_single.xml");
         boost::optional<std::string> language, filename, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
@@ -285,7 +285,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_empty_single.xml");
+        srcml_sax2_reader reader("project_empty_single.xml");
         boost::optional<std::string> language, filename, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
@@ -332,7 +332,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_empty_nested.xml");
+        srcml_sax2_reader reader("project_empty_nested.xml");
         boost::optional<std::string> language, filename, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
@@ -373,7 +373,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project.xml");
+        srcml_sax2_reader reader("project.xml");
         boost::optional<std::string> language, filename, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
@@ -393,7 +393,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_ns.xml");
+        srcml_sax2_reader reader("project_ns.xml");
         boost::optional<std::string> language, filename, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
@@ -413,7 +413,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_single.xml");
+        srcml_sax2_reader reader("project_single.xml");
         boost::optional<std::string> language, filename, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
@@ -433,7 +433,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_empty_single.xml");
+        srcml_sax2_reader reader("project_empty_single.xml");
         boost::optional<std::string> language, filename, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
@@ -453,7 +453,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_empty_nested.xml");
+        srcml_sax2_reader reader("project_empty_nested.xml");
         boost::optional<std::string> language, filename, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
@@ -477,7 +477,7 @@ int main() {
     */
 
     {
-        srcMLSAX2Reader reader("project.xml");
+        srcml_sax2_reader reader("project.xml");
         boost::optional<std::string> language, filename, directory, version;
         reader.readUnitAttributes(language, filename, directory, version);
         dassert(*language, "C++");
@@ -496,7 +496,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_ns.xml");
+        srcml_sax2_reader reader("project_ns.xml");
         boost::optional<std::string> language, filename, directory, version;
         reader.readUnitAttributes(language, filename, directory, version);
         dassert(*language, "C++");
@@ -515,7 +515,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_single.xml");
+        srcml_sax2_reader reader("project_single.xml");
         boost::optional<std::string> language, filename, directory, version;
         reader.readUnitAttributes(language, filename, directory, version);
         dassert(*language, "C++");
@@ -527,7 +527,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_empty_single.xml");
+        srcml_sax2_reader reader("project_empty_single.xml");
         boost::optional<std::string> language, filename, directory, version;
         reader.readUnitAttributes(language, filename, directory, version);
         dassert(*language, "C++");
@@ -539,7 +539,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_empty_nested.xml");
+        srcml_sax2_reader reader("project_empty_nested.xml");
         boost::optional<std::string> language, filename, directory, version;
         reader.readUnitAttributes(language, filename, directory, version);
         dassert(*language, "C++");
@@ -562,7 +562,7 @@ int main() {
     */
 
     {
-        srcMLSAX2Reader reader("project.xml");
+        srcml_sax2_reader reader("project.xml");
         boost::optional<std::string> unit;
         reader.readsrcML(unit);
         dassert(*unit, srcml_a);
@@ -575,7 +575,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_ns.xml");
+        srcml_sax2_reader reader("project_ns.xml");
         boost::optional<std::string> unit;
         reader.readsrcML(unit);
         dassert(*unit, srcml_ns_a);
@@ -588,7 +588,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_single.xml");
+        srcml_sax2_reader reader("project_single.xml");
         boost::optional<std::string> unit;
         reader.readsrcML(unit);
         dassert(*unit, srcml_single_a);
@@ -599,7 +599,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_empty_single.xml");
+        srcml_sax2_reader reader("project_empty_single.xml");
         boost::optional<std::string> unit;
         reader.readsrcML(unit);
         dassert(*unit, srcml_empty_single_as_unit);
@@ -610,7 +610,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_empty_nested.xml");
+        srcml_sax2_reader reader("project_empty_nested.xml");
         boost::optional<std::string> unit;
         reader.readsrcML(unit);
         dassert(*unit, srcml_empty_nested_a);
@@ -627,7 +627,7 @@ int main() {
     */
 
     {
-        srcMLSAX2Reader reader("project.xml");
+        srcml_sax2_reader reader("project.xml");
         boost::optional<std::string> language, filename, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
@@ -680,7 +680,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_ns.xml");
+        srcml_sax2_reader reader("project_ns.xml");
         boost::optional<std::string> language, filename, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
@@ -733,7 +733,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_single.xml");
+        srcml_sax2_reader reader("project_single.xml");
         boost::optional<std::string> language, filename, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
@@ -778,7 +778,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_empty_single.xml");
+        srcml_sax2_reader reader("project_empty_single.xml");
         boost::optional<std::string> language, filename, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
@@ -823,7 +823,7 @@ int main() {
     }
 
     {
-        srcMLSAX2Reader reader("project_empty_nested.xml");
+        srcml_sax2_reader reader("project_empty_nested.xml");
         boost::optional<std::string> language, filename, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
