@@ -34,8 +34,6 @@
 #define strdup _strdup
 #endif
 
-#endif
-
 #include <libxml/parser.h>
 #include <libxml/xmlIO.h>
 
