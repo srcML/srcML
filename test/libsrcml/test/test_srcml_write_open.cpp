@@ -30,13 +30,14 @@
 #include <unistd.h>
 #else
 #include <io.h>
-#include "windows_macros.hpp"
 #endif
 #include <fcntl.h>
 
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
+
+#include <srcml_macros.hpp>
 
 #include "dassert.hpp"
 
@@ -175,7 +176,7 @@ int main() {
     */
 
     {
-        int fd = open("project.xml", O_WRONLY);
+        int fd = OPEN("project.xml", O_WRONLY, 0);
 
         srcml_archive * archive = srcml_create_archive();
         srcml_write_open_fd(archive, fd);
@@ -187,12 +188,12 @@ int main() {
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        close(fd);
+        CLOSE(fd);
 
         //char buf[1];
-        //fd = open("project.xml", O_RDONLY);
+        //fd = OPEN("project.xml", O_RDONLY, 0);
         //size_t num_read = read(fd, buf, 1);
-        close(fd);
+        CLOSE(fd);
         //dassert(num_read, 0);
     }
 
@@ -206,9 +207,9 @@ int main() {
     }
 
     {
-        int fd = open("project_ns.xml", O_WRONLY);
+        int fd = OPEN("project_ns.xml", O_WRONLY, 0);
         dassert(srcml_write_open_fd(0, fd), SRCML_STATUS_INVALID_ARGUMENT);
-        close(fd);
+        CLOSE(fd);
     }
 
     unlink("project.xml");
