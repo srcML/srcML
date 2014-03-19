@@ -18,10 +18,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <srcml_macros.hpp>
+
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcml_sax2_utilities.hpp>
-#include <srcml_macros.hpp>
 
 #include <stdio.h>
 
@@ -32,7 +33,6 @@
 #include <unistd.h>
 #else
 #include <io.h>
-#define strdup _strdup
 #endif
 
 #include <libxml/parser.h>
