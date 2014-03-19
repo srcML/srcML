@@ -22,13 +22,14 @@
 
   Test cases for srcml_xpath
 */
+  
+#include <srcml_macros.hpp>
+  
 #include <stdio.h>
 #include <string.h>
 #include <cassert>
 #include <fstream>
 
-#include <srcml_macros.hpp>
-  
 #if defined(__GNUC__) && !defined(__MINGW32__)
 #include <unistd.h>
 #else

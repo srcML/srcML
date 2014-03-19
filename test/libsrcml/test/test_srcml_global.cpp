@@ -22,6 +22,9 @@
 
   Test cases for global functions
 */
+
+#include <srcml_macros.hpp>
+
 #include <stdio.h>
 #include <string.h>
 #include <cassert>
@@ -31,8 +34,6 @@
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
-
-#include <srcml_macros.hpp>
 
 #include "dassert.hpp"
 
