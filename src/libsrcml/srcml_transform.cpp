@@ -21,6 +21,7 @@
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcml_sax2_utilities.hpp>
+#include <srcml_macros.hpp>
 
 #include <stdio.h>
 
@@ -324,11 +325,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
         int transform_fd = mkstemp(transform_filename);
 #else
         mktemp(transform_filename);
-        int transform_fd = open(transform_filename, O_WRONLY | O_CREAT | O_TRUNC
-#ifndef LIBSRCML_COMPILER_IS_MSVC
-                                , S_IRUSR | S_IWUSR
-#endif
-                                );
+        int transform_fd = OPEN(transform_filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 #endif
 
         xmlParserInputBufferPtr pinput = 0;
@@ -337,7 +334,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
         if(pinput == NULL) {
 
-            close(transform_fd);
+            CLOSE(transform_fd);
             free((void *)transform_filename);
             return SRCML_STATUS_INVALID_INPUT;
 
@@ -378,7 +375,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
         } catch(...) {
 
-            close(transform_fd);
+            CLOSE(transform_fd);
             if(i != 0) xmlFreeParserInputBuffer(pinput);
             if(last_transform_filename)  unlink(last_transform_filename);
             free((void *)last_transform_filename);

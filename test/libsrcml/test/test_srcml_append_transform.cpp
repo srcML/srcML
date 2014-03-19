@@ -30,13 +30,14 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include <srcml_macros.hpp>
+
 #include <string>
 #include <fstream>
 #if defined(__GNUC__) && !defined(__MINGW32__)
 #include <unistd.h>
 #else
 #include <io.h>
-#include "windows_macros.hpp"
 #endif
 #include <fcntl.h>
 
@@ -230,9 +231,9 @@ int main() {
     {
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_memory(archive, s.c_str(), s.size());
-        int fd = open("copy.xsl", O_RDONLY);
+        int fd = OPEN("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(archive, fd);
-	close(fd);
+	CLOSE(fd);
 
         dassert(archive->transformations.back().type, SRCML_XSLT);
         assert(archive->transformations.back().transformation.doc != 0);
@@ -243,9 +244,9 @@ int main() {
 
     {
         srcml_archive * archive = srcml_create_archive();
-        int fd = open("copy.xsl", O_RDONLY);
+        int fd = OPEN("copy.xsl", O_RDONLY, 0);
         dassert(srcml_append_transform_xslt_fd(archive, fd), SRCML_STATUS_INVALID_IO_OPERATION);
-	close(fd);
+	CLOSE(fd);
 
         srcml_free_archive(archive);
     }
@@ -260,9 +261,9 @@ int main() {
     }
 
     {
-        int fd = open("copy.xsl", O_RDONLY);
+        int fd = OPEN("copy.xsl", O_RDONLY, 0);
         dassert(srcml_append_transform_xslt_fd(0, fd), SRCML_STATUS_INVALID_ARGUMENT);
-	close(fd);
+	CLOSE(fd);
     }
 
     /*
@@ -395,9 +396,9 @@ int main() {
     {
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_memory(archive, s.c_str(), s.size());
-	int fd = open("schema.rng", O_RDONLY);
+	int fd = OPEN("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(archive, fd);
-	close(fd);
+	CLOSE(fd);
 
         dassert(archive->transformations.back().type, SRCML_RELAXNG);
         assert(archive->transformations.back().transformation.doc != 0);
@@ -408,9 +409,9 @@ int main() {
 
     {
         srcml_archive * archive = srcml_create_archive();
-	int fd = open("schema.rng", O_RDONLY);
+	int fd = OPEN("schema.rng", O_RDONLY, 0);
         dassert(srcml_append_transform_relaxng_fd(archive, fd), SRCML_STATUS_INVALID_IO_OPERATION);
-	close(fd);
+	CLOSE(fd);
 
         srcml_free_archive(archive);
     }
@@ -426,9 +427,9 @@ int main() {
 
     {
 
-	int fd = open("schema.rng", O_RDONLY);
+	int fd = OPEN("schema.rng", O_RDONLY, 0);
         dassert(srcml_append_transform_relaxng_fd(0, fd), SRCML_STATUS_INVALID_ARGUMENT);
-	close(fd);
+	CLOSE(fd);
     }
 
     /*
@@ -446,18 +447,18 @@ int main() {
 	FILE * f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(archive, f);
 	fclose(f);
-	int fd = open("copy.xsl", O_RDONLY);
+	int fd = OPEN("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(archive, fd);
-	close(fd);
+	CLOSE(fd);
 
         srcml_append_transform_relaxng_filename(archive, "schema.rng");
         srcml_append_transform_relaxng_memory(archive, schema.c_str(), schema.size());
 	f = fopen("schema.rng", "r");
         srcml_append_transform_relaxng_FILE(archive, f);
 	fclose(f);
-	fd = open("copy.xsl", O_RDONLY);
+	fd = OPEN("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(archive, fd);
-	close(fd);
+	CLOSE(fd);
 
         dassert(archive->transformations.at(0).type, SRCML_XPATH);
         dassert(archive->transformations.at(0).transformation.str, "//src:unit");

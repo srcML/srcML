@@ -30,13 +30,14 @@
 #include <unistd.h>
 #else
 #include <io.h>
-#include "windows_macros.hpp"
 #endif
 #include <fcntl.h>
 
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
+
+#include <srcml_macros.hpp>
 
 #include "dassert.hpp"
 
@@ -431,7 +432,7 @@ int main() {
     */
 
     {
-        int fd = open("project.xml", O_RDONLY);
+        int fd = OPEN("project.xml", O_RDONLY, 0);
 
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_fd(archive, fd);
@@ -445,12 +446,12 @@ int main() {
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        close(fd);
+        CLOSE(fd);
 
     }
 
     {
-        int fd = open("project_single.xml", O_RDONLY);
+        int fd = OPEN("project_single.xml", O_RDONLY, 0);
 
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_fd(archive, fd);
@@ -466,13 +467,13 @@ int main() {
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        close(fd);
+        CLOSE(fd);
 
     }
 
     {
 
-        int fd = open("project_ns.xml", O_RDONLY);
+        int fd = OPEN("project_ns.xml", O_RDONLY, 0);
 
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_fd(archive, fd);
@@ -484,13 +485,13 @@ int main() {
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        close(fd);
+        CLOSE(fd);
 
     }
 
     {
 
-        int fd = open("project_macro.xml", O_RDONLY);
+        int fd = OPEN("project_macro.xml", O_RDONLY, 0);
 
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_fd(archive, fd);
@@ -506,13 +507,13 @@ int main() {
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        close(fd);
+        CLOSE(fd);
 
     }
 
     {
 
-        int fd = open("project_macro_single.xml", O_RDONLY);
+        int fd = OPEN("project_macro_single.xml", O_RDONLY, 0);
 
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_fd(archive, fd);
@@ -529,7 +530,7 @@ int main() {
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        close(fd);
+        CLOSE(fd);
 
     }
 
@@ -543,9 +544,9 @@ int main() {
     }
 
     {
-        int fd = open("project_ns.xml", O_RDONLY);
+        int fd = OPEN("project_ns.xml", O_RDONLY, 0);
         dassert(srcml_read_open_fd(0, fd), SRCML_STATUS_INVALID_ARGUMENT);
-        close(fd);
+        CLOSE(fd);
     }
 
     unlink("project.xml");

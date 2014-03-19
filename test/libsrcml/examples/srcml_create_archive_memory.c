@@ -31,10 +31,11 @@
 #include <stdlib.h>
 #ifdef _MSC_BUILD  
 #include <io.h>
-#include "windows_macros.h"
 #else
 #include <unistd.h>
 #endif
+
+#include <srcml_macros.hpp>
 
 int main(int argc, char* argv[]) {
     int i;
@@ -57,9 +58,9 @@ int main(int argc, char* argv[]) {
 
         /* Translate to srcml and append to the archive */
         char buffer[256];
-        srcml_input = open(argv[i], O_RDONLY);
-        int num_read = read(srcml_input, buffer, 256);
-        close(srcml_input);
+        srcml_input = OPEN(argv[i], O_RDONLY, 0);
+        int num_read = READ(srcml_input, buffer, 256);
+        CLOSE(srcml_input);
         srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
 
         srcml_parse_unit_memory(unit, buffer, num_read);

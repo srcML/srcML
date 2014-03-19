@@ -38,6 +38,8 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#include <srcml_macros.hpp>
+
 #include "dassert.hpp"
 
 int main() {
@@ -442,9 +444,9 @@ int main() {
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml.c_str(), srcml.size());
-	int fd = open("copy.xsl", O_RDONLY);
+	int fd = OPEN("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(iarchive, fd);
-	close(fd);
+	CLOSE(fd);
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
 
@@ -465,9 +467,9 @@ int main() {
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
-	int fd = open("copy.xsl", O_RDONLY);
+	int fd = OPEN("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(iarchive, fd);
-        close(fd);
+        CLOSE(fd);
 
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
@@ -489,9 +491,9 @@ int main() {
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
-	int fd = open("copy.xsl", O_RDONLY);
+	int fd = OPEN("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(iarchive, fd);
-        close(fd);
+        CLOSE(fd);
 
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
@@ -513,9 +515,9 @@ int main() {
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
-	int fd = open("copy.xsl", O_RDONLY);
+	int fd = OPEN("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(iarchive, fd);
-        close(fd);
+        CLOSE(fd);
 
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
@@ -817,9 +819,9 @@ int main() {
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml.c_str(), srcml.size());
-	int fd = open("schema.rng", O_RDONLY);
+	int fd = OPEN("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(iarchive, fd);
-	close(fd);
+	CLOSE(fd);
 
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
@@ -841,9 +843,9 @@ int main() {
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
-	int fd = open("schema.rng", O_RDONLY);
+	int fd = OPEN("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(iarchive, fd);
-	close(fd);
+	CLOSE(fd);
 
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
@@ -865,9 +867,9 @@ int main() {
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
-	int fd = open("schema.rng", O_RDONLY);
+	int fd = OPEN("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(iarchive, fd);
-	close(fd);
+	CLOSE(fd);
 
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
@@ -889,9 +891,9 @@ int main() {
         int size;
         srcml_archive * iarchive = srcml_create_archive();
         srcml_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
-	int fd = open("schema.rng", O_RDONLY);
+	int fd = OPEN("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(iarchive, fd);
-	close(fd);
+	CLOSE(fd);
 
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
@@ -925,18 +927,18 @@ int main() {
 	FILE * f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(iarchive, f);
 	fclose(f);
-	int fd = open("copy.xsl", O_RDONLY);
+	int fd = OPEN("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(iarchive, fd);
-	close(fd);
+	CLOSE(fd);
 
         srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
         srcml_append_transform_relaxng_memory(iarchive, schema.c_str(), schema.size());
 	f = fopen("schema.rng", "r");
         srcml_append_transform_relaxng_FILE(iarchive, f);
 	fclose(f);
-	fd = open("schema.rng", O_RDONLY);
+	fd = OPEN("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(iarchive, fd);
-	close(fd);
+	CLOSE(fd);
 
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
@@ -965,18 +967,18 @@ int main() {
 	FILE * f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(iarchive, f);
 	fclose(f);
-	int fd = open("copy.xsl", O_RDONLY);
+	int fd = OPEN("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(iarchive, fd);
-	close(fd);
+	CLOSE(fd);
 
         srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
         srcml_append_transform_relaxng_memory(iarchive, schema.c_str(), schema.size());
 	f = fopen("schema.rng", "r");
         srcml_append_transform_relaxng_FILE(iarchive, f);
 	fclose(f);
-	fd = open("schema.rng", O_RDONLY);
+	fd = OPEN("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(iarchive, fd);
-	close(fd);
+	CLOSE(fd);
 
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
@@ -1005,18 +1007,18 @@ int main() {
 	FILE * f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(iarchive, f);
 	fclose(f);
-	int fd = open("copy.xsl", O_RDONLY);
+	int fd = OPEN("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(iarchive, fd);
-	close(fd);
+	CLOSE(fd);
 
         srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
         srcml_append_transform_relaxng_memory(iarchive, schema.c_str(), schema.size());
 	f = fopen("schema.rng", "r");
         srcml_append_transform_relaxng_FILE(iarchive, f);
 	fclose(f);
-	fd = open("schema.rng", O_RDONLY);
+	fd = OPEN("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(iarchive, fd);
-	close(fd);
+	CLOSE(fd);
 
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
 	srcml_archive_enable_option(oarchive, SRCML_OPTION_ARCHIVE);
@@ -1046,18 +1048,18 @@ int main() {
 	FILE * f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(iarchive, f);
 	fclose(f);
-	int fd = open("copy.xsl", O_RDONLY);
+	int fd = OPEN("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(iarchive, fd);
-	close(fd);
+	CLOSE(fd);
 
         srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
         srcml_append_transform_relaxng_memory(iarchive, schema.c_str(), schema.size());
 	f = fopen("schema.rng", "r");
         srcml_append_transform_relaxng_FILE(iarchive, f);
 	fclose(f);
-	fd = open("schema.rng", O_RDONLY);
+	fd = OPEN("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(iarchive, fd);
-	close(fd);
+	CLOSE(fd);
 
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
 	srcml_archive_enable_option(oarchive, SRCML_OPTION_ARCHIVE);

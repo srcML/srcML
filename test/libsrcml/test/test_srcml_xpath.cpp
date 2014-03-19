@@ -30,7 +30,6 @@
 #include <unistd.h>
 #else
 #include <io.h>
-#include "windows_macros.hpp"
 #endif
 #include <fcntl.h>
 
@@ -38,6 +37,8 @@
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
+
+#include <srcml_macros.hpp>
 
 #include "dassert.hpp"
 
@@ -53,11 +54,7 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC
-#ifndef LIBSRCML_COMPILER_IS_MSVC
-                      , S_IRUSR | S_IWUSR
-#endif
-                      );
+        int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
         dassert(srcml_xpath(buffer_input, "src:unit", "//src:unit", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
         std::ifstream in("project.xml");
         std::string output;
@@ -71,11 +68,7 @@ int main() {
     }
 
     {
-        int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC
-#ifndef LIBSRCML_COMPILER_IS_MSVC
-                      , S_IRUSR | S_IWUSR
-#endif
-                      );
+        int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
         dassert(srcml_xpath(0, "src:unit", "//src:unit", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         unlink("project.xml");
     }
@@ -86,11 +79,7 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC
-#ifndef LIBSRCML_COMPILER_IS_MSVC
-                      , S_IRUSR | S_IWUSR
-#endif
-                      );
+        int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
         dassert(srcml_xpath(buffer_input, 0, "//src:unit", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
@@ -103,11 +92,7 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC
-#ifndef LIBSRCML_COMPILER_IS_MSVC
-                      , S_IRUSR | S_IWUSR
-#endif
-                      );
+        int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
         dassert(srcml_xpath(buffer_input, "src:unit", 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeParserInputBuffer(buffer_input);
         unlink("input.xml");
