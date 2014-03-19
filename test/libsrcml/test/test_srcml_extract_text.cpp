@@ -22,6 +22,9 @@
 
   Test cases for srcml_extract_text
 */
+
+#include <srcml_macros.hpp>
+  
 #include <stdio.h>
 #include <string.h>
 #include <cassert>
