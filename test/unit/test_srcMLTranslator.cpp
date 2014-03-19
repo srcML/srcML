@@ -26,7 +26,11 @@
 */
 #include <stdio.h>
 #include <string.h>
+#ifndef _MSC_BUILD  
 #include <unistd.h>
+#else
+#include <io.h>
+#endif
 #include <fstream>
 #include <srcMLTranslator.hpp>
 #include <UTF8CharBuffer.hpp>
