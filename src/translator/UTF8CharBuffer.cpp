@@ -50,7 +50,7 @@ struct srcMLFd {
 
     int fd;
  #ifdef _MSC_BUILD
-    HCRYPTHASH crypt_hash;
+    HCRYPTHASH ctx;
 #else
     SHA_CTX * ctx;
 #endif
