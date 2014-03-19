@@ -315,7 +315,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
         char * transform_filename = strdup(transform_filename_template);
         if(!transform_filename) {
 
-            if(last_transform_filename) unlink(last_transform_filename);
+            if(last_transform_filename) UNLINK(last_transform_filename);
             free((void *)last_transform_filename);
             return SRCML_STATUS_ERROR;
 
@@ -377,18 +377,18 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
             CLOSE(transform_fd);
             if(i != 0) xmlFreeParserInputBuffer(pinput);
-            if(last_transform_filename)  unlink(last_transform_filename);
+            if(last_transform_filename)  UNLINK(last_transform_filename);
             free((void *)last_transform_filename);
 
             return SRCML_STATUS_INVALID_INPUT;
         }
 
         if(i != 0) xmlFreeParserInputBuffer(pinput);
-        if(last_transform_filename) unlink(last_transform_filename);
+        if(last_transform_filename) UNLINK(last_transform_filename);
         free((void *)last_transform_filename);
         last_transform_filename = transform_filename;
         if(error != SRCML_STATUS_OK) {
-            if(last_transform_filename) unlink(last_transform_filename);
+            if(last_transform_filename) UNLINK(last_transform_filename);
             free((void *)last_transform_filename);
             return error;
         }
@@ -409,7 +409,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     srcml_close_archive(tmp_archive);
     srcml_free_archive(tmp_archive);
-    if(last_transform_filename) unlink(last_transform_filename);
+    if(last_transform_filename) UNLINK(last_transform_filename);
     free((void *)last_transform_filename);
 
     iarchive->transformations.clear();
