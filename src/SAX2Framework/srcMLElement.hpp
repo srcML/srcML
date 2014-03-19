@@ -21,6 +21,12 @@
 #ifndef INCLUDED_SRCML_ELEMENT_HPP
 #define INCLUDED_SRCML_ELEMENT_HPP
 
+#ifndef _MSC_BUILD
+#define STRDUP strdup
+#else
+#define STRDUP _strdup
+#endif
+
 #include <SAX2Framework_utilities.hpp>
 
 #include <libxml/parser.h>
@@ -53,13 +59,13 @@ struct srcMLElement {
           attributes(0) {
 
         // save all the info in case this is not a srcML archive
-        this->localname = localname ? (xmlChar*) strdup((const char*) localname) : 0;
+        this->localname = localname ? (xmlChar*) STRDUP((const char*) localname) : 0;
         CHECK_COPY(localname, this->localname);
 
-        this->prefix = prefix ? (xmlChar*) strdup((const char*) prefix) : 0;
+        this->prefix = prefix ? (xmlChar*) STRDUP((const char*) prefix) : 0;
         CHECK_COPY(prefix, this->prefix);
 
-        this->URI = URI ? (xmlChar*) strdup((const char*) URI) : 0;
+        this->URI = URI ? (xmlChar*) STRDUP((const char*) URI) : 0;
         CHECK_COPY(URI, this->URI);
 
         this->nb_namespaces = nb_namespaces;
@@ -76,7 +82,7 @@ struct srcMLElement {
                 this->namespaces[i] = this->URI;
             else {
 
-                this->namespaces[i] = namespaces[i] ? (xmlChar*) strdup((const char*) namespaces[i]) : 0;
+                this->namespaces[i] = namespaces[i] ? (xmlChar*) STRDUP((const char*) namespaces[i]) : 0;
                 CHECK_COPY(namespaces[i], this->namespaces[i]);
             }
 
@@ -92,11 +98,11 @@ struct srcMLElement {
         memset(this->attributes, 0, nb_length);
 
         for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
-            this->attributes[index] = attributes[index] ? (xmlChar*) strdup((const char*) attributes[index]) : 0;
+            this->attributes[index] = attributes[index] ? (xmlChar*) STRDUP((const char*) attributes[index]) : 0;
             CHECK_COPY(attributes[index], this->attributes[index]);
-            this->attributes[index + 1] = attributes[index + 1] ? (xmlChar*) strdup((const char*) attributes[index + 1]) : 0;
+            this->attributes[index + 1] = attributes[index + 1] ? (xmlChar*) STRDUP((const char*) attributes[index + 1]) : 0;
             CHECK_COPY(attributes[index + 1], this->attributes[index + 1]);
-            this->attributes[index + 2] = attributes[index + 2] ? (xmlChar*) strdup((const char*) attributes[index + 2]) : 0;
+            this->attributes[index + 2] = attributes[index + 2] ? (xmlChar*) STRDUP((const char*) attributes[index + 2]) : 0;
             CHECK_COPY(attributes[index + 2], this->attributes[index + 2]);
 
             int vallength = (int)(attributes[index + 4] - attributes[index + 3]);
@@ -118,13 +124,13 @@ struct srcMLElement {
           attributes(0) {
 
         // save all the info in case this is not a srcML archive
-        this->localname = element.localname ? (xmlChar*) strdup((const char*) element.localname) : 0;
+        this->localname = element.localname ? (xmlChar*) STRDUP((const char*) element.localname) : 0;
         CHECK_COPY(element.localname, this->localname);
 
-        this->prefix = element.prefix ? (xmlChar*) strdup((const char*) element.prefix) : 0;
+        this->prefix = element.prefix ? (xmlChar*) STRDUP((const char*) element.prefix) : 0;
         CHECK_COPY(element.prefix, this->prefix);
 
-        this->URI = element.URI ? (xmlChar*) strdup((const char*) element.URI) : 0;
+        this->URI = element.URI ? (xmlChar*) STRDUP((const char*) element.URI) : 0;
         CHECK_COPY(element.URI, this->URI);
 
         this->nb_namespaces = element.nb_namespaces;
@@ -134,7 +140,7 @@ struct srcMLElement {
         memset(this->namespaces, 0, ns_length);
 
         for (int i = 0; i < ns_length; ++i) {
-            this->namespaces[i] = element.namespaces[i] ? (xmlChar*) strdup((const char*) element.namespaces[i]) : 0;
+            this->namespaces[i] = element.namespaces[i] ? (xmlChar*) STRDUP((const char*) element.namespaces[i]) : 0;
             CHECK_COPY(element.namespaces[i], this->namespaces[i]);
         }
 
@@ -148,11 +154,11 @@ struct srcMLElement {
         memset(this->attributes, 0, nb_length);
 
         for (int i = 0, index = 0; i < element.nb_attributes; ++i, index += 5) {
-            this->attributes[index] = element.attributes[index] ? (xmlChar*) strdup((const char*) element.attributes[index]) : 0;
+            this->attributes[index] = element.attributes[index] ? (xmlChar*) STRDUP((const char*) element.attributes[index]) : 0;
             CHECK_COPY(element.attributes[index], this->attributes[index]);
-            this->attributes[index + 1] = element.attributes[index + 1] ? (xmlChar*) strdup((const char*) element.attributes[index + 1]) : 0;
+            this->attributes[index + 1] = element.attributes[index + 1] ? (xmlChar*) STRDUP((const char*) element.attributes[index + 1]) : 0;
             CHECK_COPY(element.attributes[index + 1], this->attributes[index + 1]);
-            this->attributes[index + 2] = element.attributes[index + 2] ? (xmlChar*) strdup((const char*) element.attributes[index + 2]) : 0;
+            this->attributes[index + 2] = element.attributes[index + 2] ? (xmlChar*) STRDUP((const char*) element.attributes[index + 2]) : 0;
             CHECK_COPY(element.attributes[index + 2], this->attributes[index + 2]);
 
             int vallength = (int)(element.attributes[index + 4] - element.attributes[index + 3]);
