@@ -8,7 +8,7 @@
 #define WRITE(FILE, BUF, NUM) write(FILE, BUF, NUM)
 #else
  #define OPEN(FILE, ACCESS, PERM) _open(FILE, ACCESS)
-#define close(FILE) _close(FILE)
+#define CLOSE(FILE) _close(FILE)
 #define READ(FILE, BUF, NUM) _read(FILE, BUF, NUM)
 #define WRITE(FILE, BUF, NUM) _write(FILE, BUF, NUM)
 #endif
