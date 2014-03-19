@@ -27,10 +27,13 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifndef WIN32
+#ifndef _MSC_BUILD
 #include <unistd.h>
 #else
 #include <io.h>
+#define strdup _strdup
+#endif
+
 #endif
 
 #include <libxml/parser.h>

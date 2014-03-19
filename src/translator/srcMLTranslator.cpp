@@ -30,6 +30,9 @@
 #include "StreamMLParser.hpp"
 #include "srcMLOutput.hpp"
 #include "srcmlns.hpp"
+#ifdef _MSC_BUILD
+#define strdup _strdup
+#endif
 
 /// constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
