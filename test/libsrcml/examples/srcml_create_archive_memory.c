@@ -29,7 +29,12 @@
 #include <string.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#ifdef _MSC_BUILD  
+#include <io.h>
+#include <windows_macros.hpp>
+#else
 #include <unistd.h>
+#endif
 
 int main(int argc, char* argv[]) {
     int i;

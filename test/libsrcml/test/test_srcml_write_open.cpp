@@ -30,6 +30,7 @@
 #include <unistd.h>
 #else
 #include <io.h>
+#include <windows_macros.hpp>
 #endif
 #include <fcntl.h>
 

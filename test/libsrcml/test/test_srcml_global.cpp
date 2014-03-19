@@ -32,6 +32,10 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
+#ifdef _MSC_BUILD  
+#include <windows_macros.hpp>
+  #endif
+
 #include "dassert.hpp"
 
 extern srcml_archive global_archive;

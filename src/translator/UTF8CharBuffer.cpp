@@ -27,9 +27,11 @@
 #include <sstream>
 #include <iomanip>
 
- #ifdef _MSC_BUILD
- #include <io.h>
- #endif
+#ifdef _MSC_BUILD
+#include <io.h>
+#define read _read
+#define close _close
+#endif
 
 #ifndef LIBXML2_NEW_BUFFER
 #define xmlBufContent(b) (b->content)
