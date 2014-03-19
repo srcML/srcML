@@ -31,8 +31,12 @@
 #include <Options.hpp>
 #include <srcmlns.hpp>
 
-#include <string.h>
+#include <cstring>
 #include <stdlib.h>
+
+#ifdef _MSC_BUILD
+#define strlen _strlen
+#endif
 
 #include <vector>
 #include <string>

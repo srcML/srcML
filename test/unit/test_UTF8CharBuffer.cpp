@@ -24,7 +24,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
+#ifndef _MSC_BUILD  
 #include <unistd.h>
+#else
+#include <io.h>
+#endif
 #include <cassert>
 #include <fstream>
 #include <UTF8CharBuffer.hpp>

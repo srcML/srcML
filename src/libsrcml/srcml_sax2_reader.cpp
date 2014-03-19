@@ -24,7 +24,11 @@
 #include <srcml.h>
 
 #include <stdlib.h>
-#include <string.h>
+#include <cstring>
+
+#ifdef _MSC_BUILD
+#define strdup _strdup
+#endif
 
 /**
  * thread_args
