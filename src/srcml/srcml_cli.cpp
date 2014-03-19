@@ -165,8 +165,9 @@ template <>
 void option_field<&srcml_request_t::files_from>(const std::vector<std::string>& value) {
 
     srcml_request.files_from = value;
-
-    srcml_request.input.insert(srcml_request.input.end(), value.begin(), value.end());
+    BOOST_FOREACH(const std::string& inputFile, value) {
+      srcml_request.input.push_back("files-from://" + inputFile);
+    }
 }
 
 // option xml encoding attribute
@@ -288,7 +289,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("debug,g", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_DEBUG>), "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
             ("encoding,x", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_xml_encoding>),"set the output XML encoding to ENC (default:  UTF-8)")
             ("expression,e", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
-            //TODO: Put files (PREFIXED) into positional args
             ("files-from", prog_opts::value<std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::files_from>), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
             ("interactive,c", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INTERACTIVE>), "immediate output while parsing, default for keyboard input")
             ("language,l", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_language>), "set the language to C, C++, or Java")

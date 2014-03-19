@@ -253,5 +253,36 @@ break;
 
         return 0;
     }
-
 };
+
+bool is_archive(const std::string& input_file_extension) {
+    std::string last_extension = input_file_extension;
+    std::string::size_type pos = last_extension.find_last_of(".");
+    if (pos != std::string::npos)
+        last_extension = last_extension.substr(pos);
+
+    int index = 0;
+    while (archive_extensions[index] != 0) {
+        if (last_extension.compare(archive_extensions[index]) == 0)
+            return true;
+
+        ++index;
+    }
+    return false;
+}
+
+bool is_compressed(const std::string& input_file_extension) {
+    std::string last_extension = input_file_extension;
+    std::string::size_type pos = last_extension.find_last_of(".");
+    if (pos != std::string::npos)
+        last_extension = last_extension.substr(pos);
+
+    int index = 0;
+    while (compression_extensions[index] != 0) {
+        if (last_extension.compare(archive_extensions[index]) == 0)
+            return true;
+
+        ++index;
+    }
+    return false;
+}
