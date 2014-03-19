@@ -27,10 +27,6 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#ifdef _MSC_BUILD
-#define strlen _strlen
-#endif
-
 /******************************************************************************
  *                                                                            *
  *                           Set up functions                                 *
