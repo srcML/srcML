@@ -1471,11 +1471,11 @@ int main() {
 
     }
 
-    unlink("project.c");
-    unlink("project.foo");
-    unlink("project_utf8.foo");
-    unlink("project_latin.foo");
-    unlink("project.xml");
+    UNLINK("project.c");
+    UNLINK("project.foo");
+    UNLINK("project_utf8.foo");
+    UNLINK("project_latin.foo");
+    UNLINK("project.xml");
 
     srcml_cleanup_globals();
 

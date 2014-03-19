@@ -214,8 +214,8 @@ int main() {
         CLOSE(fd);
     }
 
-    unlink("project.xml");
-    unlink("project_ns.xml");
+    UNLINK("project.xml");
+    UNLINK("project_ns.xml");
 
     srcml_cleanup_globals();
 

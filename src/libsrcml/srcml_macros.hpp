@@ -8,6 +8,8 @@
 #define READ(FILE, BUF, NUM) read(FILE, BUF, NUM)
 #define WRITE(FILE, BUF, NUM) write(FILE, BUF, NUM)
 
+#define UNLINK unlink
+
 #else
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -17,7 +19,7 @@
 #define READ(FILE, BUF, NUM) _read(FILE, BUF, NUM)
 #define WRITE(FILE, BUF, NUM) _write(FILE, BUF, NUM)
 
-#define unlink _unlink
+#define UNLINK(FILE) _unlink(FILE)
 
 #endif
 

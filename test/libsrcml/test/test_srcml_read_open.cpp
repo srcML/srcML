@@ -551,11 +551,11 @@ int main() {
         CLOSE(fd);
     }
 
-    unlink("project.xml");
-    unlink("project_single.xml");
-    unlink("project_ns.xml");
-    unlink("project_macro.xml");
-    unlink("project_macro_single.xml");
+    UNLINK("project.xml");
+    UNLINK("project_single.xml");
+    UNLINK("project_ns.xml");
+    UNLINK("project_macro.xml");
+    UNLINK("project_macro_single.xml");
 
     srcml_cleanup_globals();
 

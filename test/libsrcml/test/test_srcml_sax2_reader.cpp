@@ -870,11 +870,11 @@ int main() {
         dassert(reader.read_srcml(unit), 0);
     }
 
-    unlink("project.xml");
-    unlink("project_single.xml");
-    unlink("project_ns.xml");
-    unlink("project_empty_single.xml");
-    unlink("project_empty_nested.xml");
+    UNLINK("project.xml");
+    UNLINK("project_single.xml");
+    UNLINK("project_ns.xml");
+    UNLINK("project_empty_single.xml");
+    UNLINK("project_empty_nested.xml");
 
     srcml_cleanup_globals();
 

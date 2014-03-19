@@ -63,7 +63,7 @@ int main() {
             output += temp;
 
         dassert(output, "a;");
-        unlink("project.xml");
+        UNLINK("project.xml");
 
     }
 

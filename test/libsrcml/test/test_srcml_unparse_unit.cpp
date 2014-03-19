@@ -787,7 +787,7 @@ int main() {
         srcml_close_archive(archive);
         srcml_free_archive(archive);
 
-        unlink("project.c");
+        UNLINK("project.c");
 
     }
 
@@ -812,7 +812,7 @@ int main() {
         srcml_close_archive(archive);
         srcml_free_archive(archive);
 
-        unlink("project_utf8.cpp");
+        UNLINK("project_utf8.cpp");
 
     }
 
@@ -837,7 +837,7 @@ int main() {
         srcml_close_archive(archive);
         srcml_free_archive(archive);
 
-        unlink("project_latin_from_utf8.cpp");
+        UNLINK("project_latin_from_utf8.cpp");
 
     }
 
@@ -862,7 +862,7 @@ int main() {
         srcml_close_archive(archive);
         srcml_free_archive(archive);
 
-        unlink("project_latin.cpp");
+        UNLINK("project_latin.cpp");
 
     }
 
@@ -887,7 +887,7 @@ int main() {
         srcml_close_archive(archive);
         srcml_free_archive(archive);
 
-        unlink("project_latin_from_latin.cpp");
+        UNLINK("project_latin_from_latin.cpp");
 
     }
 
@@ -911,7 +911,7 @@ int main() {
         srcml_close_archive(archive);
         srcml_free_archive(archive);
 
-        unlink("project_macro.cpp");
+        UNLINK("project_macro.cpp");
 
     }
 
@@ -935,7 +935,7 @@ int main() {
         srcml_close_archive(archive);
         srcml_free_archive(archive);
 
-        unlink("project_macro_single.cpp");
+        UNLINK("project_macro_single.cpp");
 
     }
 
@@ -959,7 +959,7 @@ int main() {
         srcml_close_archive(archive);
         srcml_free_archive(archive);
 
-        unlink("project.c");
+        UNLINK("project.c");
 
     }
 
@@ -1021,20 +1021,20 @@ int main() {
 
     }
 
-    unlink("project.c");
-    unlink("project.xml");
-    unlink("project_utf8.cpp");
-    unlink("project_utf8.xml");
-    unlink("project_latin.cpp");
-    unlink("project_latin.xml");
-    unlink("project_latin_from_utf8.cpp");
-    unlink("project_latin_from_utf8.xml");
-    unlink("project_latin_from_latin.cpp");
-    unlink("project_latin_from_latin.xml");
-    unlink("project_macro.cpp");
-    unlink("project_macro.xml");
-    unlink("project_macro_single.cpp");
-    unlink("project_macro_single.xml");
+    UNLINK("project.c");
+    UNLINK("project.xml");
+    UNLINK("project_utf8.cpp");
+    UNLINK("project_utf8.xml");
+    UNLINK("project_latin.cpp");
+    UNLINK("project_latin.xml");
+    UNLINK("project_latin_from_utf8.cpp");
+    UNLINK("project_latin_from_utf8.xml");
+    UNLINK("project_latin_from_latin.cpp");
+    UNLINK("project_latin_from_latin.xml");
+    UNLINK("project_macro.cpp");
+    UNLINK("project_macro.xml");
+    UNLINK("project_macro_single.cpp");
+    UNLINK("project_macro_single.xml");
 
     srcml_cleanup_globals();
 

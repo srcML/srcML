@@ -67,8 +67,8 @@ int main() {
         dassert(output, "<?xmlversion=\"1.0\"encoding=\"\"standalone=\"yes\"?><unit>a;</unit>");
 	xmlFreeDoc(doc);
         xmlFreeParserInputBuffer(buffer_input);
-        unlink("input.xml");
-        unlink("project.xml");
+        UNLINK("input.xml");
+        UNLINK("project.xml");
     }
 
     {
@@ -77,7 +77,7 @@ int main() {
         dassert(srcml_relaxng(0, doc, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
 
         xmlFreeDoc(doc);
-        unlink("project.xml");
+        UNLINK("project.xml");
     }
 
     {
@@ -90,8 +90,8 @@ int main() {
         dassert(srcml_relaxng(buffer_input, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
 
         xmlFreeParserInputBuffer(buffer_input);
-        unlink("input.xml");
-        unlink("project.xml");
+        UNLINK("input.xml");
+        UNLINK("project.xml");
     }
 
     {
@@ -104,7 +104,7 @@ int main() {
         dassert(srcml_relaxng(buffer_input, doc, -1, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeDoc(doc);
         xmlFreeParserInputBuffer(buffer_input);
-        unlink("input.xml");
+        UNLINK("input.xml");
     }
 
     srcml_cleanup_globals();
