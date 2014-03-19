@@ -229,7 +229,7 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
     srcMLFd * sfd = new srcMLFd();
     sfd->fd = fd;
 #ifdef _MSC_BUILD    
-    hash ? sfd->crypt_hash = crypt_hash : 0;
+    hash ? sfd->ctx = crypt_hash : 0;
 #else
     hash ? sfd->ctx = &ctx : 0;
 #endif
