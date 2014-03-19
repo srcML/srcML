@@ -23,6 +23,8 @@
 
 #include "UTF8CharBuffer.hpp"
 
+ #include <srcml_macros.hpp>
+
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -87,7 +89,7 @@ int srcMLFileClose(void * context) {
 int srcMLFdRead(void * context,  char * buffer, int len) {
 
     srcMLFd * sfd = (srcMLFd *)context;
-    size_t num_read = read(sfd->fd, buffer, len);
+    size_t num_read = READ(sfd->fd, buffer, len);
 
     if(sfd->ctx)
 #ifdef _MSC_BUILD
@@ -102,7 +104,7 @@ int srcMLFdRead(void * context,  char * buffer, int len) {
 int srcMLFdClose(void * context) {
 
     srcMLFd * sfd = (srcMLFd *)context;
-    int ret = close(sfd->fd);
+    int ret = CLOSE(sfd->fd);
 
     delete sfd;
 
