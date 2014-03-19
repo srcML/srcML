@@ -28,8 +28,8 @@
  * libxml stores data internally in UTF*
  */
 
-#ifndef INCLUDE_UTF8CHARBUFFER_HPP
-#define INCLUDE_UTF8CHARBUFFER_HPP
+#ifndef INCLUDED_UTF8CHARBUFFER_HPP
+#define INCLUDED_UTF8CHARBUFFER_HPP
 
 #include <antlr/CharBuffer.hpp>
 #include <cstring>
