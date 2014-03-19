@@ -132,13 +132,14 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
     if(!input) throw UTF8FileError();
 
 
-    if(hash) 
+    if(hash) {
 #ifdef _MSC_BUILD 
         CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
         CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
 #else
         SHA1_Init(&ctx);
 #endif
+    }
 
     init(encoding);
 
@@ -211,13 +212,14 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
 
     if(!input) throw UTF8FileError();
 
-    if(hash) 
+    if(hash) {
 #ifdef _MSC_BUILD 
         CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
         CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
 #else
         SHA1_Init(&ctx);
 #endif
+    }
 
     init(encoding);
 
@@ -241,13 +243,14 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
 
     if(!input) throw UTF8FileError();
 
-    if(hash) 
+    if(hash) {
 #ifdef _MSC_BUILD 
         CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
         CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
 #else
         SHA1_Init(&ctx);
 #endif
+    }
 
     init(encoding);
 
