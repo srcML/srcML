@@ -146,7 +146,7 @@ header "post_include_hpp" {
 #define assertMode(m)
 
 enum STMT_TYPE { NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL, EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION };
-enum CALLTYPE { NOCALL, CALL, MACRO };
+enum CALL_TYPE { NOCALL, CALL, MACRO };
 
 // position in output stream
 struct TokenPosition {
@@ -725,7 +725,7 @@ keyword_statements[] { ENTRY_DEBUG } :
   function definition, function declaration, or even a label.
 */
 pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = false; int call_count = 1;
-        STMT_TYPE stmt_type = NONE; CALLTYPE type = NOCALL;
+        STMT_TYPE stmt_type = NONE; CALL_TYPE type = NOCALL;
 
         // detect the declaration/definition type
         pattern_check(stmt_type, secondtoken, type_count);
@@ -1378,7 +1378,7 @@ property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 // Check and see if this is a call and what type
-perform_call_check[CALLTYPE& type, bool & isempty, int & call_count, int secondtoken] returns [bool iscall] {
+perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int secondtoken] returns [bool iscall] {
 
     iscall = true;
     isempty = false;
@@ -2593,7 +2593,7 @@ else_handling[] { ENTRY_DEBUG } :
 
 // mid-statement
 statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = NONE;
-                   CALLTYPE type = NOCALL;  bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
+                   CALL_TYPE type = NOCALL;  bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
 
         { inMode(MODE_EAT_TYPE) }?
         type_identifier
@@ -3664,7 +3664,7 @@ complete_argument_list[] { ENTRY_DEBUG } :
 ;
 
 // Full, complete expression matched all at once (no stream).
-complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALLTYPE type = NOCALL; 
+complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_TYPE type = NOCALL; 
     bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false] |
         { getCurly() == 0 }? rcurly_argument |
@@ -3700,7 +3700,7 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALLT
 
 // Full, complete expression matched all at once (no stream).
 // May be better version of complete_expression
-complete_default_parameter[] { CompleteElement element(this); int count_paren = 0; CALLTYPE type = NOCALL; 
+complete_default_parameter[] { CompleteElement element(this); int count_paren = 0; CALL_TYPE type = NOCALL; 
     bool isempty = false; int call_count = 0; ENTRY_DEBUG } : 
        { getParen() == 0 }? rparen[false] |
         { getCurly() == 0 }? rcurly_argument |
@@ -4931,7 +4931,7 @@ expression_statement_process[] { ENTRY_DEBUG } :
 ;
 
 // an expression statment
-expression_statement[CALLTYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
+expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
 
         expression_statement_process
 
@@ -5272,7 +5272,7 @@ expression_process[] { ENTRY_DEBUG } :
 ;
 
 // an expression
-expression[CALLTYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
+expression[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
 
         expression_process
 
@@ -5280,7 +5280,7 @@ expression[CALLTYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
 ;
 
 // setup for expression linq
-expression_setup_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
+expression_setup_linq[CALL_TYPE type = NOCALL] { ENTRY_DEBUG } :
 
         expression_process
 
@@ -5288,7 +5288,7 @@ expression_setup_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 ;
 
 // expression with linq
-expression_part_plus_linq[CALLTYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
+expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token_string().find('=') == std::string::npos }?
         (linq_expression_pure)=> linq_expression |
@@ -5297,7 +5297,7 @@ expression_part_plus_linq[CALLTYPE type = NOCALL, int call_count = 1] { ENTRY_DE
 ;
 
 // the expression part
-expression_part[CALLTYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; ENTRY_DEBUG } :
+expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; ENTRY_DEBUG } :
 
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
@@ -6682,7 +6682,7 @@ cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG 
 ;
 
 // an expression
-cpp_expression[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
+cpp_expression[CALL_TYPE type = NOCALL] { ENTRY_DEBUG } :
 
         { !inputState->guessing }?
         (expression_process
