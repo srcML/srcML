@@ -26,6 +26,9 @@
 #include <string.h>
 #include <cassert>
 #include <fstream>
+
+#include <srcml_macros.hpp>
+  
 #if defined(__GNUC__) && !defined(__MINGW32__)
 #include <unistd.h>
 #else
@@ -36,8 +39,6 @@
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
-
-#include <srcml_macros.hpp>
 
 #include "dassert.hpp"
 
