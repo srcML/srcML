@@ -30,7 +30,6 @@
 #include <unistd.h>
 #else
 #include <io.h>
-#include "windows_macros.hpp"
 #endif
 #include <fcntl.h>
 
@@ -38,6 +37,8 @@
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
+
+#include <srcml_macros.hpp>
 
 #include "dassert.hpp"
 
@@ -53,11 +54,7 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC
-#ifndef LIBSRCML_COMPILER_IS_MSVC
-                      , S_IRUSR | S_IWUSR
-#endif
-                      );
+        int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 	xmlDocPtr doc = xmlReadFile("schema.rng", 0, 0);
         dassert(srcml_relaxng(buffer_input, doc, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
         std::ifstream in("project.xml");
@@ -73,11 +70,7 @@ int main() {
     }
 
     {
-        int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC
-#ifndef LIBSRCML_COMPILER_IS_MSVC
-                      , S_IRUSR | S_IWUSR
-#endif
-                      );
+        int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 	xmlDocPtr doc = xmlReadFile("schema.rng", 0, 0);
         dassert(srcml_relaxng(0, doc, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
 
@@ -91,11 +84,7 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC
-#ifndef LIBSRCML_COMPILER_IS_MSVC
-                      , S_IRUSR | S_IWUSR
-#endif
-                      );
+        int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
         dassert(srcml_relaxng(buffer_input, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
 
         xmlFreeParserInputBuffer(buffer_input);
