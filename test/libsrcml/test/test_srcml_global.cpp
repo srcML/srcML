@@ -32,9 +32,7 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
-#ifdef _MSC_BUILD  
-#include "windows_macros.hpp"
-#endif
+#include <srcml_macros.hpp>
 
 #include "dassert.hpp"
 

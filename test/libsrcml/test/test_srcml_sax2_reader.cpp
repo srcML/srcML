@@ -32,13 +32,15 @@
 #include <unistd.h>
 #else
 #include <io.h>
-#include "windows_macros.hpp"
 #endif
 #include <fcntl.h>
 
 #include <srcml.h>
 #include <srcml_sax2_reader.hpp>
 #include <srcmlns.hpp>
+
+#include <srcml_macros.hpp>
+
 #include "dassert.hpp"
 
 #include <boost/optional.hpp>
