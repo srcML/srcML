@@ -134,7 +134,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
 
     if(hash) {
 #ifdef _MSC_BUILD 
-        CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
+        CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
         CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
 #else
         SHA1_Init(&ctx);
@@ -153,7 +153,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
     if(hash) {
 
 #ifdef _MSC_BUILD    
-    CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
+    CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
     CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
     CryptHashData(crypt_hash, (BYTE *)c_buffer, buffer_size, 0);
 #else
@@ -214,7 +214,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
 
     if(hash) {
 #ifdef _MSC_BUILD 
-        CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
+        CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
         CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
 #else
         SHA1_Init(&ctx);
@@ -245,7 +245,7 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
 
     if(hash) {
 #ifdef _MSC_BUILD 
-        CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
+        CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
         CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
 #else
         SHA1_Init(&ctx);
