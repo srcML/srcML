@@ -27,6 +27,10 @@
 #include <sstream>
 #include <iomanip>
 
+ #ifdef _MSC_BUILD
+ #include <io.h>
+ #endif
+
 #ifndef LIBXML2_NEW_BUFFER
 #define xmlBufContent(b) (b->content)
 #endif
@@ -60,7 +64,7 @@ int srcMLFileRead(void * context,  char * buffer, int len) {
 
     if(sfile->ctx)
 #ifdef _MSC_BUILD
-    CryptHashData(sfile->ctx buffer, num_read, 0);
+    CryptHashData(sfile->ctx, (BYTE *)buffer, num_read, 0);
 #else
 	SHA1_Update(sfile->ctx, buffer, (LONG)num_read);
 #endif
@@ -85,7 +89,7 @@ int srcMLFdRead(void * context,  char * buffer, int len) {
 
     if(sfd->ctx)
 #ifdef _MSC_BUILD
-    CryptHashData(sfd->ctx, buffer, num_read, 0);
+    CryptHashData(sfd->ctx, (BYTE *)buffer, num_read, 0);
 #else
     SHA1_Update(sfd->ctx, buffer, (LONG)num_read);
 #endif
@@ -148,7 +152,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 #ifdef _MSC_BUILD    
     CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
     CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-    CryptHashData(crypt_hash, buffer, num_read, 0);
+    CryptHashData(crypt_hash, (BYTE *)c_buffer, buffer_size, 0);
 #else
     SHA1_Init(&ctx);
     SHA1_Update(&ctx, c_buffer, (LONG)buffer_size);
