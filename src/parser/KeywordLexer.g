@@ -35,6 +35,15 @@ header {
    #include "CommentTextLexer.hpp"
    #include "srcMLToken.hpp"
    #include "Options.hpp"
+   #undef CONST
+   #undef VOID
+   #undef DELETE
+   #undef FALSE
+   #undef TRUE
+   #undef INTERFACE
+   #undef OUT
+   #undef IN
+   #undef THIS
 }
 
 header "post_include_cpp" {
