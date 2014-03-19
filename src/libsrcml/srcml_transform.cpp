@@ -312,7 +312,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     const char * last_transform_filename = 0;
     for(std::vector<transform>::size_type i = 0; i < iarchive->transformations.size(); ++i) {
 
-        char * transform_filename = strdup(transform_filename_template);
+        char * transform_filename = STRDUP(transform_filename_template);
         if(!transform_filename) {
 
             if(last_transform_filename) UNLINK(last_transform_filename);
@@ -324,7 +324,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 #if defined(__GNUG__) && !defined(__MINGW32__)
         int transform_fd = mkstemp(transform_filename);
 #else
-        mktemp(transform_filename);
+        MKTEMP(transform_filename);
         int transform_fd = OPEN(transform_filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 #endif
 
