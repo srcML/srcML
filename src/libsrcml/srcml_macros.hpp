@@ -10,6 +10,8 @@
 
 #else
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #define OPEN(FILE, ACCESS, PERM) _open(FILE, ACCESS)
 #define CLOSE(FILE) _close(FILE)
 #define READ(FILE, BUF, NUM) _read(FILE, BUF, NUM)
