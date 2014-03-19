@@ -70,7 +70,7 @@ srcml_archive* srcml_create_archive()
 
     archive->type = SRCML_ARCHIVE_INVALID;
     archive->options = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TIMESTAMP
-	| SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH;
+        | SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH;
     archive->tabstop = 8;
     archive->translator = 0;
     archive->reader = 0;
@@ -934,11 +934,11 @@ static void srcml_read_internal(srcml_archive * archive) {
 
     boost::optional<std::string> language, filename, directory, version;
     bool done = !archive->reader->read_root_unit_attributes(language, filename, directory, version,
-                                                         archive->attributes, archive->prefixes,
-                                                         archive->namespaces,
-                                                         archive->options,
-                                                         archive->tabstop,
-                                                         archive->user_macro_list);
+                                                            archive->attributes, archive->prefixes,
+                                                            archive->namespaces,
+                                                            archive->options,
+                                                            archive->tabstop,
+                                                            archive->user_macro_list);
     if(!done) {
 
         archive->language = language;
@@ -1114,7 +1114,7 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
 
     if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
     archive->translator->add_unit(read_unit ? read_unit->c_str() : *unit->unit,
-				  unit->output_hash && unit->hash ? unit->hash->c_str() : 0);
+                                  unit->output_hash && unit->hash ? unit->hash->c_str() : 0);
 
     return SRCML_STATUS_OK;
 }

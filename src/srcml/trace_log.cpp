@@ -23,10 +23,10 @@
 #include <trace_log.hpp>
 
 TraceLog::TraceLog(std::ostream& out, int options)
-        : out(out), count(0), overallcount(0) {
+    : out(out), count(0), overallcount(0) {
 
-        enabled = options & SRCML_COMMAND_VERBOSE;
-    }
+    enabled = options & SRCML_COMMAND_VERBOSE;
+}
 
 TraceLog& operator<<(TraceLog& tlog, char c) {
 

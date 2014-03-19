@@ -23,7 +23,7 @@
 
 #include "UTF8CharBuffer.hpp"
 
- #include <srcml_macros.hpp>
+#include <srcml_macros.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -53,7 +53,7 @@ struct srcMLFile {
 struct srcMLFd {
 
     int fd;
- #ifdef _MSC_BUILD
+#ifdef _MSC_BUILD
     HCRYPTHASH * ctx;
 #else
     SHA_CTX * ctx;
@@ -68,9 +68,9 @@ int srcMLFileRead(void * context,  char * buffer, int len) {
 
     if(sfile->ctx)
 #ifdef _MSC_BUILD
-    CryptHashData(*sfile->ctx, (BYTE *)buffer, num_read, 0);
+        CryptHashData(*sfile->ctx, (BYTE *)buffer, num_read, 0);
 #else
-	SHA1_Update(sfile->ctx, buffer, (LONG)num_read);
+    SHA1_Update(sfile->ctx, buffer, (LONG)num_read);
 #endif
 
     return (int)num_read;
@@ -93,7 +93,7 @@ int srcMLFdRead(void * context,  char * buffer, int len) {
 
     if(sfd->ctx)
 #ifdef _MSC_BUILD
-    CryptHashData(*sfd->ctx, (BYTE *)buffer, num_read, 0);
+        CryptHashData(*sfd->ctx, (BYTE *)buffer, num_read, 0);
 #else
     SHA1_Update(sfd->ctx, buffer, (LONG)num_read);
 #endif
@@ -121,7 +121,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
     if(!file) throw UTF8FileError();
 
     if(hash) {
-#ifdef _MSC_BUILD 
+#ifdef _MSC_BUILD
         BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
         if(! success && GetLastError() == NTE_BAD_KEYSET)
             success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
@@ -133,14 +133,14 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
 
     srcMLFile * sfile = new srcMLFile();
     sfile->file = (FILE *)file;
-#ifdef _MSC_BUILD    
+#ifdef _MSC_BUILD
     hash ? sfile->ctx = &crypt_hash : 0;
 #else
     hash ? sfile->ctx = &ctx : 0;
 #endif
 
-    input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sfile, 
-					 encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+    input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sfile,
+                                         encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
 
@@ -155,15 +155,15 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
     if(!c_buffer) throw UTF8FileError();
 
     if(hash) {
-#ifdef _MSC_BUILD    
+#ifdef _MSC_BUILD
         BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
         if(!success && GetLastError() == NTE_BAD_KEYSET)
             success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-    CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-    CryptHashData(crypt_hash, (BYTE *)c_buffer, buffer_size, 0);
+        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
+        CryptHashData(crypt_hash, (BYTE *)c_buffer, buffer_size, 0);
 #else
-    SHA1_Init(&ctx);
-    SHA1_Update(&ctx, c_buffer, (LONG)buffer_size);
+        SHA1_Init(&ctx);
+        SHA1_Update(&ctx, c_buffer, (LONG)buffer_size);
 #endif
 
     }
@@ -205,7 +205,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
     if(!file) throw UTF8FileError();
 
     if(hash) {
-#ifdef _MSC_BUILD 
+#ifdef _MSC_BUILD
         CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
         CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
 #else
@@ -215,14 +215,14 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
 
     srcMLFile * sfile = new srcMLFile();
     sfile->file = file;
-#ifdef _MSC_BUILD    
+#ifdef _MSC_BUILD
     hash ? sfile->ctx= &crypt_hash : 0;
 #else
     hash ? sfile->ctx = &ctx : 0;
 #endif
 
-    input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sfile, 
-					 encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+    input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sfile,
+                                         encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
 
@@ -239,7 +239,7 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
 
 
     if(hash) {
-#ifdef _MSC_BUILD 
+#ifdef _MSC_BUILD
         CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
         CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
 #else
@@ -249,14 +249,14 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
 
     srcMLFd * sfd = new srcMLFd();
     sfd->fd = fd;
-#ifdef _MSC_BUILD    
+#ifdef _MSC_BUILD
     hash ? sfd->ctx = &crypt_hash : 0;
 #else
     hash ? sfd->ctx = &ctx : 0;
 #endif
 
-    input = xmlParserInputBufferCreateIO(srcMLFdRead, srcMLFdClose, sfd, 
-					 encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+    input = xmlParserInputBufferCreateIO(srcMLFdRead, srcMLFdClose, sfd,
+                                         encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
 
@@ -407,20 +407,20 @@ UTF8CharBuffer::~UTF8CharBuffer() {
 
     if(hash) {
 #ifdef _MSC_BUILD
-    DWORD        SHA_DIGEST_LENGTH;
-    DWORD        hash_length_size = sizeof(DWORD);
-    CryptGetHashParam(crypt_hash, HP_HASHSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
-    CryptGetHashParam(crypt_hash, HP_HASHVAL, (BYTE *)md, &SHA_DIGEST_LENGTH, 0);
+        DWORD        SHA_DIGEST_LENGTH;
+        DWORD        hash_length_size = sizeof(DWORD);
+        CryptGetHashParam(crypt_hash, HP_HASHSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
+        CryptGetHashParam(crypt_hash, HP_HASHVAL, (BYTE *)md, &SHA_DIGEST_LENGTH, 0);
 #else
 
-	SHA1_Final(md, &ctx);
+        SHA1_Final(md, &ctx);
 #endif
 
-	std::ostringstream hash_stream;
-	for(int i = 0; i < SHA_DIGEST_LENGTH; ++i)
-	    hash_stream << std::setw(2) << std::setfill('0') << std::right << std::hex << (unsigned int)md[i];
+        std::ostringstream hash_stream;
+        for(int i = 0; i < SHA_DIGEST_LENGTH; ++i)
+            hash_stream << std::setw(2) << std::setfill('0') << std::right << std::hex << (unsigned int)md[i];
 
-	*hash = hash_stream.str();
+        *hash = hash_stream.str();
 
     }
 

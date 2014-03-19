@@ -143,7 +143,7 @@ int srcml_append_transform_xslt_FILE(srcml_archive* archive, FILE* xslt_file) {
 /**
  * srcml_append_transform_xslt_fd
  * @param archive a srcml_archive
- * @param xslt_fd a file descriptor containing an XSLT program 
+ * @param xslt_fd a file descriptor containing an XSLT program
  *
  * Append the XSLT program in fd to the list
  * of transformation/queries.  As of yet no way to specify parameters or context
@@ -284,8 +284,8 @@ int srcml_clear_transforms(srcml_archive * archive) {
     if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     for(std::vector<transform>::iterator itr = archive->transformations.begin(); itr != archive->transformations.end(); ++itr)
-	if(itr->type == SRCML_XSLT || itr->type == SRCML_RELAXNG)
-	    xmlFreeDoc(itr->transformation.doc);
+        if(itr->type == SRCML_XSLT || itr->type == SRCML_RELAXNG)
+            xmlFreeDoc(itr->transformation.doc);
     archive->transformations.clear();
 
     return SRCML_STATUS_OK;

@@ -51,10 +51,10 @@ struct transform {
     /** union holding the transformation */
     union {
 
-	/** the transformation to perform for XPath */
-	const char * str;
-	/** the transformation to perform for XSLT and relaxng */
-	xmlDocPtr doc;
+        /** the transformation to perform for XPath */
+        const char * str;
+        /** the transformation to perform for XSLT and relaxng */
+        xmlDocPtr doc;
 
     } transformation;
 

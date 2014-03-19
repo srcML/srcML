@@ -166,7 +166,7 @@ void option_field<&srcml_request_t::files_from>(const std::vector<std::string>& 
 
     srcml_request.files_from = value;
     BOOST_FOREACH(const std::string& inputFile, value) {
-      srcml_request.input.push_back("files-from://" + inputFile);
+        srcml_request.input.push_back("files-from://" + inputFile);
     }
 }
 
@@ -206,7 +206,7 @@ void option_field<&srcml_request_t::tabs>(int value) {
 }
 
 void option_xmlns_uri(const std::string& value) {
-  srcml_request.xmlns_prefix.push_back("=" + value);
+    srcml_request.xmlns_prefix.push_back("=" + value);
 }
 
 void option_xmlns_prefix(const std::vector<std::string>& values) {
@@ -216,7 +216,7 @@ void option_xmlns_prefix(const std::vector<std::string>& values) {
 // option language attribute
 void option_to_dir(const std::string& value) {
     srcml_request.output_filename = value;
-    srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY; 
+    srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
 }
 
 void positional_args(const std::vector<std::string>& value) {

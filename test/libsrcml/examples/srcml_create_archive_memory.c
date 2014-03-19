@@ -29,7 +29,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#ifdef _MSC_BUILD  
+#ifdef _MSC_BUILD
 #include <io.h>
 #else
 #include <unistd.h>

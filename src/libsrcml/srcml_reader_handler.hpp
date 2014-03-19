@@ -1,6 +1,6 @@
 /**
  * @file srcml_reader_handler
-.cpp
+ .cpp
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
@@ -104,14 +104,14 @@ public :
 
     /**
      * srcml_reader_handler
-    
+
      *
      * Constructor.  Sets up mutex, conditions and state.
      */
     srcml_reader_handler
-() : unit(0), output_handler(0), is_done(false), read_root(false),
-                           collect_unit_attributes(false), collect_srcml(false), collect_src(false),
-                           terminate(false), is_empty(false), wait_root(true), skip(false) {
+    () : unit(0), output_handler(0), is_done(false), read_root(false),
+         collect_unit_attributes(false), collect_srcml(false), collect_src(false),
+         terminate(false), is_empty(false), wait_root(true), skip(false) {
 
         archive = srcml_create_archive();
 
@@ -124,12 +124,12 @@ public :
 
     /**
      * ~srcml_reader_handler
-    
+
      *
      * Destructor, deletes mutex and conditions.
      */
     ~srcml_reader_handler
-() {}
+    () {}
 
     /**
      * wait
@@ -415,9 +415,9 @@ public :
 
             if(attribute == "timestamp") {
                 srcml_archive_enable_option(archive, SRCML_OPTION_TIMESTAMP);
-		srcml_unit_set_timestamp(unit, value.c_str());
+                srcml_unit_set_timestamp(unit, value.c_str());
             } else if(attribute == "hash")
-		srcml_unit_set_hash(unit, value.c_str());
+                srcml_unit_set_hash(unit, value.c_str());
             else if(attribute == "language")
                 srcml_unit_set_language(unit, value.c_str());
             else if(attribute == "filename")

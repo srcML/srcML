@@ -138,9 +138,9 @@ void srcMLTranslator::close() {
 // translate from input stream to output stream
 void srcMLTranslator::translate(const char* unit_directory,
                                 const char* unit_filename,
-				const char* unit_version,
-				const char* unit_timestamp,
-				const char* unit_hash,
+                                const char* unit_version,
+                                const char* unit_timestamp,
+                                const char* unit_hash,
                                 int language) {
 
     if(first) {
@@ -200,9 +200,9 @@ void srcMLTranslator::translate(const char* unit_directory,
 // translate from input stream to output stream separate of current output stream
 void srcMLTranslator::translate_separate(const char* unit_directory,
                                          const char* unit_filename,
-					 const char* unit_version,
-					 const char* unit_timestamp,
-					 const char* unit_hash,
+                                         const char* unit_version,
+                                         const char* unit_timestamp,
+                                         const char* unit_hash,
                                          int language, UTF8CharBuffer * parser_input, xmlBuffer* output_buffer,
                                          OPTION_TYPE translation_options) {
 
@@ -280,27 +280,27 @@ void srcMLTranslator::add_unit(std::string xml, const char * hash) {
 
     if(hash) {
 
-	std::string::size_type pos = xml.find('>');
-	if(pos == std::string::npos) return;
+        std::string::size_type pos = xml.find('>');
+        if(pos == std::string::npos) return;
 
-	std::string::size_type hash_pos = xml.rfind("hash", pos);
+        std::string::size_type hash_pos = xml.rfind("hash", pos);
 
 
-	int offset = 0;
+        int offset = 0;
 
-	if(hash_pos != std::string::npos) {
+        if(hash_pos != std::string::npos) {
 
-	    xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)xml.c_str(), (int)hash_pos + 6);
-	    xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)hash);
-	    offset = (int)hash_pos + 6;
+            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)xml.c_str(), (int)hash_pos + 6);
+            xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)hash);
+            offset = (int)hash_pos + 6;
 
-	}
-	
-	xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml.c_str() + offset);
+        }
+
+        xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml.c_str() + offset);
 
     } else {
 
-	xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml.c_str());
+        xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml.c_str());
 
     }
 

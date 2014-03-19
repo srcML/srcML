@@ -435,7 +435,7 @@ void srcMLOutput::setTokenStream(TokenStream& ints) {
 }
 
 void srcMLOutput::consume(const char* language, const char* directory, const char* filename,
-			  const char* version, const char* timestamp, const char* hash) {
+                          const char* version, const char* timestamp, const char* hash) {
 
     // store attributes so that first occurrence of unit element will be correct
     unit_dir = directory;
@@ -545,9 +545,9 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 }
 
 void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename,
-			    const char* version, const char* timestamp,
-			    const char* hash,
-			    bool outer) {
+                            const char* version, const char* timestamp,
+                            const char* hash,
+                            bool outer) {
 
     const char * prefix = num2prefix[0].c_str();
     std::string maintag = prefix ? prefix : "";

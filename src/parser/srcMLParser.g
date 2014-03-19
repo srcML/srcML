@@ -6108,7 +6108,7 @@ enum_definition[] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_CSHARP) }?
         enum_preprocessing class_preamble ENUM |
-        enum_preprocessing (specifier)* ENUM (enum_class_header)*
+        enum_preprocessing (options { greedy = true; } : specifier)* ENUM (options { greedy = true; } : enum_class_header)*
 ;
 
 // processing for short variable declaration

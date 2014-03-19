@@ -26,7 +26,7 @@
 */
 #include <stdio.h>
 #include <string.h>
-#ifndef _MSC_BUILD  
+#ifndef _MSC_BUILD
 #include <unistd.h>
 #else
 #include <io.h>
@@ -215,7 +215,7 @@ int main() {
 
     /*
       add_unit hash
-     */
+    */
 
     {
 
@@ -256,7 +256,7 @@ int main() {
         translator.add_unit(s_before.c_str(), "0123456789abcdef");
         translator.close();
         std::string result = (const char *)buffer->content;
-	assert(result == decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+        assert(result == decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
         xmlBufferFree(buffer);
 
@@ -299,7 +299,7 @@ int main() {
         translator.add_unit(s.c_str(), "0123456789abcdef");
         translator.close();
         std::string result = (const char *)buffer->content;
-	assert(result == decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+        assert(result == decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
         xmlBufferFree(buffer);
 
@@ -341,7 +341,7 @@ int main() {
         translator.add_unit(s.c_str(), "0123456789abcdef");
         translator.close();
         std::string result = (const char *)buffer->content;
-	assert(result == decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + "</unit>\n");
+        assert(result == decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + "</unit>\n");
 
         xmlBufferFree(buffer);
 

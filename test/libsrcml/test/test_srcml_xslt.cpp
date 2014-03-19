@@ -57,7 +57,7 @@ int main() {
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
         int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-	xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
+        xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
         dassert(srcml_xslt(buffer_input, "src:unit", doc, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
         std::ifstream in("project.xml");
         std::string output;
@@ -73,7 +73,7 @@ int main() {
 
     {
         int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-	xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
+        xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
         dassert(srcml_xslt(0, "src:unit", doc, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeDoc(doc);
         UNLINK("project.xml");
@@ -86,7 +86,7 @@ int main() {
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
         int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-	xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
+        xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
         dassert(srcml_xslt(buffer_input, 0, doc, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeDoc(doc);
         xmlFreeParserInputBuffer(buffer_input);
@@ -113,7 +113,7 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-	xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
+        xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
         dassert(srcml_xslt(buffer_input, "src:unit", doc, 0, 0, -1, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeDoc(doc);
         xmlFreeParserInputBuffer(buffer_input);

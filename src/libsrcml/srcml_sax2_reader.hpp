@@ -68,20 +68,20 @@ public :
 
     // read attribute and namespace information from root unit.  Does not advance read.
     int read_root_unit_attributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
-                               boost::optional<std::string> & directory, boost::optional<std::string> & version,
-                               std::vector<std::string> & attributes,
-                               std::vector<std::string> & prefixes,
-                               std::vector<std::string> & namespaces,
-                               OPTION_TYPE & options,
-                               int & tabstop,
-                               std::vector<std::string> & user_macro_list);
+                                  boost::optional<std::string> & directory, boost::optional<std::string> & version,
+                                  std::vector<std::string> & attributes,
+                                  std::vector<std::string> & prefixes,
+                                  std::vector<std::string> & namespaces,
+                                  OPTION_TYPE & options,
+                                  int & tabstop,
+                                  std::vector<std::string> & user_macro_list);
 
 
     /* finds next unit tag if not current unit and sets attributes.  Consumes unit.
        Unit is still avaible for readsrcML or read.  But not readUnitAttributes.
     */
     int read_unit_attributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
-                           boost::optional<std::string> & directory, boost::optional<std::string> & version);
+                             boost::optional<std::string> & directory, boost::optional<std::string> & version);
 
     // reads the next unit and returns it in parameter as srcML
     int read_srcml(boost::optional<std::string> & unit);

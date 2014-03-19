@@ -101,7 +101,7 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
             };
             BOOST_STATIC_ASSERT_MSG(sizeof(outmd)/sizeof(outmd[0]) == (SHA_DIGEST_LENGTH * 2 + 1),
                                     "Wrong size for SHA_DIGEST_LENGTH conversion");
-//            srcml_unit_set_hash(unit, outmd);
+            //            srcml_unit_set_hash(unit, outmd);
 
             if (pr.disk_filename.empty()) {
                 pr.status = srcml_parse_unit_memory(unit, &pr.buffer.front(), pr.buffer.size());

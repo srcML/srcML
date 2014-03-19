@@ -312,7 +312,7 @@ int main() {
         srcml_archive_disable_option(archive, SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH);
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
-	srcml_unit_set_timestamp(unit, "today");
+        srcml_unit_set_timestamp(unit, "today");
         srcml_parse_unit_filename(unit, "project.c");
         dassert(*unit->unit, srcml_timestamp);
 
@@ -343,7 +343,7 @@ int main() {
         srcml_archive_disable_option(archive, SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH);
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
-	srcml_unit_set_hash(unit, "0123456789abcdef");
+        srcml_unit_set_hash(unit, "0123456789abcdef");
         srcml_parse_unit_filename(unit, "project.c");
         dassert(*unit->unit, srcml_hash);
 

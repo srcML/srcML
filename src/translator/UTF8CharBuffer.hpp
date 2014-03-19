@@ -86,7 +86,7 @@ private:
     int size;
     bool lastcr;
     boost::optional<std::string> * hash;
-#ifdef _MSC_BUILD  
+#ifdef _MSC_BUILD
     HCRYPTPROV   crypt_provider;
     HCRYPTHASH   crypt_hash;
 #else

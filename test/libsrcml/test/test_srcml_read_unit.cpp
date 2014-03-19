@@ -158,7 +158,7 @@ int main() {
         srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-    
+
     }
 
     {
@@ -183,7 +183,7 @@ int main() {
         srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-    
+
     }
 
     {

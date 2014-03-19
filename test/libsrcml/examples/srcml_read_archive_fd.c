@@ -27,14 +27,14 @@
 #include "srcml.h"
 #include <fcntl.h>
 #include <sys/stat.h>
-#ifdef _MSC_BUILD  
+#ifdef _MSC_BUILD
 #include <io.h>
 #else
 #include <unistd.h>
 #endif
 
 #include <srcml_macros.hpp>
-  
+
 int main(int argc, char* argv[]) {
     int srcml_input;
     int srcml_output;

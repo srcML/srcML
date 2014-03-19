@@ -36,6 +36,6 @@ void src_input_file(ParseQueue& queue,
                     const boost::optional<std::string>& option_filename,
                     const boost::optional<std::string>& option_directory,
                     const boost::optional<std::string>& option_version
-);
+                    );
 
 #endif

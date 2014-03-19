@@ -56,7 +56,7 @@ class xslt_units : public unit_dom {
 public :
 
     xslt_units(const char* a_context_element, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
-              const char** params, int fd = 0)
+               const char** params, int fd = 0)
         : unit_dom(options), options(options),
           stylesheet(stylesheet), found(false),
           result_type(0), params(params), fd(fd) {
@@ -151,15 +151,15 @@ public :
                 // output a root element, just like the one read in
                 // note that this has to be ended somewhere
                 xml_output_buffer_write_element_ns(buf, root->localname, root->prefix, root->URI,
-                                              root->nb_namespaces, root->namespaces,
-                                              is_archive ? root->nb_attributes : 0, root->nb_defaulted, root->attributes);
+                                                   root->nb_namespaces, root->namespaces,
+                                                   is_archive ? root->nb_attributes : 0, root->nb_defaulted, root->attributes);
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
 
                 for(std::vector<std::string>::size_type i = 0; i < meta_tags->size(); ++i) {
 
                     xml_output_buffer_write_element_ns(buf, meta_tags->at(i).localname, meta_tags->at(i).prefix, meta_tags->at(i).URI,
-                                                  meta_tags->at(i).nb_namespaces, meta_tags->at(i).namespaces,
-                                                  meta_tags->at(i).nb_attributes, meta_tags->at(i).nb_defaulted, meta_tags->at(i).attributes);
+                                                       meta_tags->at(i).nb_namespaces, meta_tags->at(i).namespaces,
+                                                       meta_tags->at(i).nb_attributes, meta_tags->at(i).nb_defaulted, meta_tags->at(i).attributes);
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
                 }
@@ -263,8 +263,8 @@ public :
     }
 
     static void xml_output_buffer_write_element_ns(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
-                                              const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
-                                              int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
+                                                   const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
+                                                   int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
         if (prefix != NULL) {
@@ -305,8 +305,8 @@ public :
     }
 
     static void xml_output_buffer_write_element_ns(std::string& s, const xmlChar* localname, const xmlChar* prefix,
-                                              const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
-                                              int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
+                                                   const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
+                                                   int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
         s.append(LITERALPLUSSIZE("<"));
         if (prefix != NULL) {

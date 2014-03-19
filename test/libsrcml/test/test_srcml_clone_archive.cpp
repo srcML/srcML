@@ -57,8 +57,8 @@ int main() {
         archive->reader = (srcml_sax2_reader *)1;
         archive->input = (xmlParserInputBufferPtr)1;
         transform trans;
-	trans.type = SRCML_XPATH;
-	trans.transformation.str = "//src:unit";
+        trans.type = SRCML_XPATH;
+        trans.transformation.str = "//src:unit";
         archive->transformations.push_back(trans);
 
         srcml_archive * new_archive = srcml_clone_archive(archive);

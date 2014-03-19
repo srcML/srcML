@@ -22,9 +22,9 @@
 
   Test cases for srcml_xpath
 */
-  
+
 #include <srcml_macros.hpp>
-  
+
 #include <stdio.h>
 #include <string.h>
 #include <cassert>

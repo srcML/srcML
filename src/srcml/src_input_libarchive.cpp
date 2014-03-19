@@ -238,16 +238,16 @@ namespace {
     int archive_curl_close(archive*, void* client_data) {
 
         curl* curldata = (curl*) client_data;
-/*
-  while ((curldata->msg = curl_multi_info_read(curldata->multi_handle, &curldata->msgs_left))) {
-  if (curldata->msg->msg == CURLMSG_DONE) {
-  if (curldata->msg->data.result) {
-//                std::cerr << "Download status: " << curldata->msg->data.result << "\n";
-}
-break;
-}
-}
-*/
+        /*
+          while ((curldata->msg = curl_multi_info_read(curldata->multi_handle, &curldata->msgs_left))) {
+          if (curldata->msg->msg == CURLMSG_DONE) {
+          if (curldata->msg->data.result) {
+          //                std::cerr << "Download status: " << curldata->msg->data.result << "\n";
+          }
+          break;
+          }
+          }
+        */
         curl_multi_cleanup(curldata->multi_handle);
         curl_easy_cleanup(curldata->handle);
 
