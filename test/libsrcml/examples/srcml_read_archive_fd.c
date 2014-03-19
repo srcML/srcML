@@ -29,10 +29,11 @@
 #include <sys/stat.h>
 #ifdef _MSC_BUILD  
 #include <io.h>
-#include "windows_macros.h"
 #else
 #include <unistd.h>
 #endif
+
+#include <srcml_macros.hpp>
   
 int main(int argc, char* argv[]) {
     int srcml_input;
@@ -46,7 +47,7 @@ int main(int argc, char* argv[]) {
     archive = srcml_create_archive();
 
     /* open a srcML archive for input */
-    srcml_input = open("project.xml", O_RDONLY);
+    srcml_input = OPEN("project.xml", O_RDONLY, 0);
     srcml_read_open_fd(archive, srcml_input);
 
     /* add all the files to the archive */
@@ -57,17 +58,17 @@ int main(int argc, char* argv[]) {
         filename = srcml_unit_get_filename(unit);
 
         /* uparse and write to a file */
-        srcml_output = open(filename, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+        srcml_output = OPEN(filename, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
         srcml_unparse_unit_fd(unit, srcml_output);
 
         srcml_free_unit(unit);
-        close(srcml_output);
+        CLOSE(srcml_output);
     }
 
 
     /* close the srcML archive */
     srcml_close_archive(archive);
-    close(srcml_input);
+    CLOSE(srcml_input);
 
     /* free the srcML archive data */
     srcml_free_archive(archive);

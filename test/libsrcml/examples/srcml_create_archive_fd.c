@@ -29,10 +29,11 @@
 #include <sys/stat.h>
 #ifdef _MSC_BUILD  
 #include <io.h>
-#include "windows_macros.h"
 #else
 #include <unistd.h>
 #endif
+
+#include <srcml_macros.hpp>
 
 
 int main(int argc, char* argv[]) {
@@ -46,7 +47,7 @@ int main(int argc, char* argv[]) {
     archive = srcml_create_archive();
 
     /* setup our output file using a file descriptor */
-    srcml_output = open("project.xml", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+    srcml_output = OPEN("project.xml", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
 
     /* open a srcML archive for output */
     srcml_write_open_fd(archive, srcml_output);
@@ -59,21 +60,21 @@ int main(int argc, char* argv[]) {
         srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
 
         /* Translate to srcml */
-        srcml_input = open(argv[i], O_RDONLY);
+        srcml_input = OPEN(argv[i], O_RDONLY, 0);
         srcml_parse_unit_fd(unit, srcml_input);
 
         /* Append to the archive */
         srcml_write_unit(archive, unit);
 
         srcml_free_unit(unit);
-        close(srcml_input);
+        CLOSE(srcml_input);
     }
 
     /* close the srcML archive */
     srcml_close_archive(archive);
 
     /* file can now be closed also */
-    close(srcml_output);
+    CLOSE(srcml_output);
 
     /* free the srcML archive data */
     srcml_free_archive(archive);
