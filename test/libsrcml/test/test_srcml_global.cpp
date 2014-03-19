@@ -33,7 +33,7 @@
 #include <srcmlns.hpp>
 
 #ifdef _MSC_BUILD  
-#include <"windows_macros.hpp">
+#include "windows_macros.hpp"
 #endif
 
 #include "dassert.hpp"

@@ -1,5 +1,5 @@
 /**
- * @file test_srcMLSAX2Reader.cpp
+ * @file test_srcml_sax2_reader.cpp
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
@@ -54,7 +54,7 @@ int main() {
         archive->user_macro_list.push_back("bar");
         srcml_archive_register_file_extension(archive, "foo", "bar");
         archive->translator = (srcMLTranslator *)1;
-        archive->reader = (srcMLSAX2Reader *)1;
+        archive->reader = (srcml_sax2_reader *)1;
         archive->input = (xmlParserInputBufferPtr)1;
         transform trans;
 	trans.type = SRCML_XPATH;
