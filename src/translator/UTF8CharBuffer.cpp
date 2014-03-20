@@ -29,10 +29,12 @@
 #include <sstream>
 #include <iomanip>
 
-#ifdef _MSC_BUILD
+ #include <stdio.h>
+
+#ifndef _MSC_BUILD
+#include <unistd.h>
+#else
 #include <io.h>
-#define read _read
-#define close _close
 #endif
 
 #ifndef LIBXML2_NEW_BUFFER
