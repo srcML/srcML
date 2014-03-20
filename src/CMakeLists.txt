@@ -36,7 +36,7 @@ macro(buildLib LIB_NAME LIB_TYPE)
      ${SAX2FRAMEWORK_SOURCE} ${SAX2FRAMEWORK_HEADERS})
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS "/SAFESEH:NO")
+    set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_DEBUG "/SAFESEH:NO")
 elseif(APPLE)
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/export_list")
 else()
