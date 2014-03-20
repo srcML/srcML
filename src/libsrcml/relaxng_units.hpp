@@ -52,7 +52,7 @@ public :
         // TODO:  Detect error
 
 #ifdef LIBSRCML_COMPILER_IS_MSVC
-        buf->writecallback = (xmlOutputWriteCallback)write;
+        buf->writecallback = (xmlOutputWriteCallback)_write;
 #endif
 
     }
