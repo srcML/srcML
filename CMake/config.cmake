@@ -146,42 +146,8 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     add_definitions(/DLIBSRCML_COMPILER_IS_MSVC)
     # message(STATUS "MSVC Compiler not completely configured yet")
     set(MSVC_WARNINGS "/W3 /wd4068 /wd4101 /D_CRT_SECURE_NO_WARNINGS")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} ${MSVC_WARNINGS} /Od /ZI /MDd")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} ${MSVC_WARNINGS} /Od /SAFESEH:NO /ZI /MDd")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} ${MSVC_WARNINGS} /Ox")
-    # message(STATUS "${CMAKE_CXX_FLAGS_RELEASE}")
-    # message(STATUS "DEBUGGING Flags${CMAKE_CXX_FLAGS_DEBUG}")
-    # Actual Debug cmd line args
-    # /GS /TP /analyze- /W3 /Zc:wchar_t /I"C:/antlr/277/include/antlr" /I"C:/Users/bbart_000/Documents/GitHub/srcML/dep/include"
-    # /I"C:/antlr/277/include" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/srcml"
-    # /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/oldclient"
-    # /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/libsrcml"
-    # /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/parser"
-    # /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/translator"
-    # /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/SAX2Framework"
-    # /Zi /Gm- /Od /Ob0 /Fd"srcml_static.dir\Debug\vc120.pdb" /fp:precise
-    # /D "WIN32" /D "_WINDOWS" /D "_DEBUG" /D "VERSION=\"1\"" /D "REVISION=\"1\""
-    # /D "CMAKE_INTDIR=\"Debug\"" /D "_MBCS" /errorReport:prompt /WX- /Zc:forScope
-    # /RTC1 /GR /Gd /Oy- /MDd /Fa"Debug/" /EHsc /nologo /Fo"srcml_static.dir\Debug\"
-    # /Fp"srcml_static.dir\Debug\srcml.pch" 
-    
-    # Actual Release cmd line arguments
-    # /GS /TP /analyze- /W3 /Zc:wchar_t /I"C:/antlr/277/include/antlr" /I"C:/Users/bbart_000/Documents/GitHub/srcML/dep/include" /I"C:/antlr/277/include" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/srcml" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/oldclient" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/libsrcml" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/parser" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/translator" /I"C:/Users/bbart_000/Documents/GitHub/srcML/src/SAX2Framework" /Gm- /O2 /Ob2 /Fd"srcml_static.dir\Release\vc120.pdb" /fp:precise /D "WIN32" /D "_WINDOWS" /D "NDEBUG" /D "VERSION=\"1\"" /D "REVISION=\"1\"" /D "CMAKE_INTDIR=\"Release\"" /D "_MBCS" /errorReport:prompt /WX- /Zc:forScope /GR /Gd /Oy- /MD /Fa"Release/" /EHsc /nologo /Fo"srcml_static.dir\Release\" /Fp"srcml_static.dir\Release\srcml.pch" 
-    
-    # Release Default Command Line Options
-    # /GS /GL /analyze- /W3 /Gy /Zc:wchar_t /Zi /Gm- /O2 /Fd"Release\vc120.pdb"
-    # /fp:precise /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_LIB" /D "_UNICODE" /D "UNICODE"
-    # /errorReport:prompt /WX- /Zc:forScope /Gd /Oy- /Oi /MD /Fa"Release\" /EHsc
-    # /nologo /Fo"Release\" /Fp"Release\TestingCompilerFlags.pch" 
-    
-    # Debugging Command line options
-    # /GS /analyze- /W3 /Zc:wchar_t /ZI /Gm /Od /Fd"Debug\vc120.pdb" /fp:precise
-    # /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_LIB" /D "_UNICODE" /D "UNICODE"
-    # /errorReport:prompt /WX- /Zc:forScope /RTC1 /Gd /Oy- /MDd /Fa"Debug\" /EHsc 
-    # /nologo /Fo"Debug\" /Fp"Debug\TestingCompilerFlags.pch" 
-    # set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized")
-    # # Adding global compiler definitions.
-    # set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${GCC_WARNINGS}")
-    # set(CMAKE_CXX_FLAGS "-fPIC -O3 -g -DDEBUG --coverage -fprofile-arcs ${GCC_WARNINGS}")
 else()
     message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
 endif()
