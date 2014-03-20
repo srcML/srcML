@@ -174,7 +174,7 @@ static void srcPowersetFunction (xmlXPathParserContextPtr ctxt, int nargs) {
     xmlNodeSetPtr ret = xmlXPathNodeSetCreate(NULL);
 
     // number of sets
-    int setsize = pow(2, master->nodeNr);
+    int setsize = (int)pow(2, master->nodeNr);
 
     // create all the sets
     for (int setnum = 0; setnum < setsize; ++setnum) {
