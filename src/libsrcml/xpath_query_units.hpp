@@ -415,7 +415,7 @@ public :
             if (!isoption(options, OPTION_XPATH_TOTAL))
                 xmlOutputBufferWriteString(buf, result_nodes->boolval ? "true\n" : "false\n");
 
-            result_bool |= result_nodes->boolval;
+            result_bool |= (result_nodes->boolval != 0);
             break;
 
             // string
