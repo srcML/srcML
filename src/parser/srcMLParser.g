@@ -6366,12 +6366,13 @@ catch[...] {
 // do all the cpp garbage
 cpp_garbage[] :
 
- ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START)
+ ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START) /* @todo re-add EOF antlr is generating 1 for EOF but EOF hold -1 there is token
+ with 1 EOF_ however, adding fails to generate */
 ;
 
 cpp_check_end[] returns[bool is_end = false] {
 
- if(LA(1) == EOL || LA(1) == LINECOMMENT_START || LA(1) == COMMENT_START || LA(1) == JAVADOC_COMMENT_START || LA(1) == DOXYGEN_COMMENT_START || LA(1) == LINE_DOXYGEN_COMMENT_START || LA(1) == EOF)  /* EOF */
+ if(LA(1) == EOL || LA(1) == LINECOMMENT_START || LA(1) == COMMENT_START || LA(1) == JAVADOC_COMMENT_START || LA(1) == DOXYGEN_COMMENT_START || LA(1) == LINE_DOXYGEN_COMMENT_START || LA(1) == EOF || LA(1) == 1)  /* EOF */
      return true;
 
  return false;
