@@ -417,7 +417,7 @@ UTF8CharBuffer::~UTF8CharBuffer() {
 #endif
 
         std::ostringstream hash_stream;
-        for(int i = 0; i < SHA_DIGEST_LENGTH; ++i)
+        for(unsigned int i = 0; i < SHA_DIGEST_LENGTH; ++i)
             hash_stream << std::setw(2) << std::setfill('0') << std::right << std::hex << (unsigned int)md[i];
 
         *hash = hash_stream.str();
