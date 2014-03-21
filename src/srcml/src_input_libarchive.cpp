@@ -170,8 +170,12 @@ void src_input_libarchive(ParseQueue& queue,
             if (!status) {
                 const char* buffer;
                 size_t size;
+#if ARCHIVE_VERSION_NUMBER < 3000000
+                off_t offset;
+#else
                 int64_t offset;
-                while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, (off_t *)&offset) == ARCHIVE_OK)
+#endif
+                while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
                     request.buffer.insert(request.buffer.end(), buffer, buffer + size);
             }
 
