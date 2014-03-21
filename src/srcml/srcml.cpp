@@ -293,6 +293,7 @@ int main(int argc, char * argv[]) {
     }
 
     if (createsrc) {
+
         // srcml->src srcML file to filesystem
         if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
 
@@ -360,7 +361,7 @@ int main(int argc, char * argv[]) {
 
             srcml_archive* arch = srcml_create_archive();
             if (!fstdin)
-                srcml_read_open_filename(arch, srcml_request.input[0].c_str());
+                srcml_read_open_filename(arch, srcml_request.input[0].substr(7).c_str());
             else
                 srcml_read_open_FILE(arch, *fstdin);
 
