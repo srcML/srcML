@@ -105,7 +105,6 @@ int main(int argc, char * argv[]) {
         //  * A single src file implies src->srcml
         // Note: src->srcml->src implies a temporary srcml file
 
-        // find the first input that is not stdin
         int count_src = 0;
         BOOST_FOREACH(const std::string& input_filename, srcml_request.input) {
             if (input_filename != "stdin://-" && input_filename != "-") {
@@ -130,8 +129,16 @@ int main(int argc, char * argv[]) {
             }
         }
 
-        createsrcml = count_src > 0;
-        createsrc = count_src == 0;
+        // now see where we are at on the output format
+        if (count_src > 0) {
+            createsrcml = true;
+            createsrc = srcml_request.output_filename && *srcml_request.output_filename != "-"
+                && boost::filesystem::path(srcml_request.output_filename->c_str()).extension().compare(".xml") != 0;
+        } else {
+            createsrcml = srcml_request.output_filename && *srcml_request.output_filename != "-"
+                && boost::filesystem::path(srcml_request.output_filename->c_str()).extension().compare(".xml") == 0;
+            createsrc = !createsrcml;
+        }
     }
 
     if (createsrcml && (srcml_request.input.empty() || srcml_request.sawstdin) && !srcml_request.att_language) {
@@ -141,7 +148,6 @@ int main(int argc, char * argv[]) {
 
     // src->srcml
     if (createsrcml) {
-
 
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_create_archive();
