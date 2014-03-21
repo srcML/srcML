@@ -37,7 +37,7 @@ background = ""
 
 for arg in sys.argv[1:] :
 
-    if arg.lower().find("bg") != -1 :
+    if arg.lower().find("--bg") != 0 :
         background = "true"
         argv.remove(arg)
 
