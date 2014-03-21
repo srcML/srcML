@@ -171,7 +171,7 @@ void src_input_libarchive(ParseQueue& queue,
                 const char* buffer;
                 size_t size;
                 int64_t offset;
-                while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
+                while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, (off_t *)&offset) == ARCHIVE_OK)
                     request.buffer.insert(request.buffer.end(), buffer, buffer + size);
             }
 
