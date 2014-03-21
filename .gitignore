@@ -6,6 +6,7 @@
 .DS_Store
 
 bin
+dist
 dep
 
 # cmake/ctest/cpack
