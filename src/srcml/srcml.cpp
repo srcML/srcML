@@ -98,33 +98,40 @@ int main(int argc, char * argv[]) {
     } else if (!srcml_request.files_from.empty()) {
         createsrcml = true;
     } else {
+
+        // Need to determine if we need src->srcml, srcml->src, or src->srcml->src
+        // This is determined using the types of the input files
+        //  * All src files imply src->srcml
+        //  * A single src file implies src->srcml
+        // Note: src->srcml->src implies a temporary srcml file
+
         // find the first input that is not stdin
-        boost::optional<std::string> nonstdin;
+        int count_src = 0;
         BOOST_FOREACH(const std::string& input_filename, srcml_request.input) {
             if (input_filename != "stdin://-" && input_filename != "-") {
-                nonstdin = input_filename;
-                break;
+
+                // base on extension
+                if (boost::filesystem::path(input_filename.substr(7).c_str()).extension().compare(".xml") != 0)
+                    ++count_src;
+
+            } else {
+
+                // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
+                fstdin = fdopen(STDIN_FILENO, "r");
+
+                // read the first 4 bytes as separate characters to get around byte ordering
+                unsigned char data[4];
+                ssize_t size = 0;
+                peek4char(*fstdin, data, &size);
+
+                // pass the first 4 bytes and the size actually read in
+                if (!isxml(data, size))
+                    ++count_src;
             }
         }
 
-        if (nonstdin) {
-            // base on extension
-            createsrc = !boost::filesystem::path(nonstdin->c_str()).extension().compare(".xml");
-        } else {
-
-            // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
-            fstdin = fdopen(STDIN_FILENO, "r");
-
-            // read the first 4 bytes as separate characters to get around byte ordering
-            unsigned char data[4];
-            ssize_t size = 0;
-            peek4char(*fstdin, data, &size);
-
-            // pass the first 4 bytes and the size actually read in
-            createsrc = isxml(data, size);
-        }
-
-        createsrcml = !createsrc;
+        createsrcml = count_src > 0;
+        createsrc = count_src == 0;
     }
 
     if (createsrcml && (srcml_request.input.empty() || srcml_request.sawstdin) && !srcml_request.att_language) {
