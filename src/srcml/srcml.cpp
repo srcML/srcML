@@ -56,6 +56,8 @@
 #define STDERR_FILENO   2       /* standard error file descriptor */
 #endif
 
+void peek4char(FILE* fp, unsigned char data[], ssize_t* psize);
+
 int main(int argc, char * argv[]) {
 
     // parse the command line
@@ -109,32 +111,14 @@ int main(int argc, char * argv[]) {
             // base on extension
             createsrc = !boost::filesystem::path(nonstdin->c_str()).extension().compare(".xml");
         } else {
+
             // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
             fstdin = fdopen(STDIN_FILENO, "r");
 
             // read the first 4 bytes as separate characters to get around byte ordering
             unsigned char data[4];
             ssize_t size = 0;
-            int c;
-            if ((c = getc(*fstdin)) != EOF) {
-                data[0] = c;
-                ++size;
-                if ((c = getc(*fstdin)) != EOF) {
-                    data[1] = c;
-                    ++size;
-                    if ((c = getc(*fstdin)) != EOF) {
-                        data[2] = c;
-                        ++size;
-                        if ((c = getc(*fstdin)) != EOF) {
-                            data[3] = c;
-                            ++size;
-                        }
-                    }
-                }
-            }
-
-            for (ssize_t i = size - 1; i >= 0; --i)
-                ungetc(data[i], *fstdin);
+            peek4char(*fstdin, data, &size);
 
             // pass the first 4 bytes and the size actually read in
             createsrc = isxml(data, size);
@@ -413,3 +397,28 @@ int main(int argc, char * argv[]) {
 
     return 0;
 }
+
+void peek4char(FILE* fp, unsigned char data[], ssize_t* psize) {
+    *psize = 0;
+    int c;
+    if ((c = getc(fp)) != EOF) {
+        data[0] = c;
+        ++(*psize);
+        if ((c = getc(fp)) != EOF) {
+            data[1] = c;
+            ++(*psize);
+            if ((c = getc(fp)) != EOF) {
+                data[2] = c;
+                ++(*psize);
+                if ((c = getc(fp)) != EOF) {
+                    data[3] = c;
+                    ++(*psize);
+                }
+            }
+        }
+    }
+
+    for (ssize_t i = (*psize) - 1; i >= 0; --i)
+        ungetc(data[i], fp);
+}
+
