@@ -4,7 +4,7 @@
 
 ./sshall.py --build 'bash -c "cd /srcML; git checkout master; git pull"'
 
-./sshall.py --build 'bash -c "cd /srcML/dist; make clean; make"'
+./sshall.py --build 'bash -c "cd /srcML/; git clean -fdx; cmake .; make; cpack"'
 ./sshall.py --build 'bash -c "chown -R srcml:srcml /srcML"'
 
 scp fedora19build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora19
@@ -22,7 +22,7 @@ scp ubuntu12build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04
 scp ubuntu10build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu10.04-64
 scp ubuntu12build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04-64
 
-./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML/dist; make clean; make windowsdyn"'
+./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML; git clean -fdx; mingw32-cmake .; make; cpack"'
 ./sshall.py --fedora --build --20 --~64 'bash -c "chown -R srcml:srcml /srcML"'
 scp fedora20build:/srcML/dist/srcML*.zip ~/Dropbox/srcML/Windows
 
