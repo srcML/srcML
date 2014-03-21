@@ -37,25 +37,23 @@ WINBIN_DIR=${BASE}-windows
 DLL_DIR=../../../dlls
 
 # executables
-SRC2SRCML_BIN=src2srcml
-SRCML2SRC_BIN=srcml2src
-SRC2SRCML_EXE=src2srcml.exe
-SRCML2SRC_EXE=srcml2src.exe
+SRCML_BIN=srcml
+SRCML_EXE=srcml.exe
 
-SRC2SRCML_PATH=${BIN_DIR}/${SRC2SRCML_BIN}
-SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_BIN}
+SRCML_PATH=${BIN_DIR}/${SRCML_BIN}
 
-WIN_SRC2SRCML_PATH=${BIN_DIR}/${SRC2SRCML_EXE}
-WIN_SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_EXE}
+WIN_SRCML_PATH=${BIN_DIR}/${SRCML_EXE}
 LIBSRCML_BASE=${BIN_DIR}/libsrcml
 LIBSRCML_SO=${LIBSRCML_BASE}.so
 LIBSRCML_DYLIB=${LIBSRCML_BASE}.dylib
 LIBSRCML_DLL=${LIBSRCML_BASE}.dll
+LIBSRCML_UNIX=$(shell [[ $(shell uname) = 'Linux' ]] && echo ${LIBSRCML_SO}) $(shell [[ $(shell uname) = 'Darwin' ]] && echo ${LIBSRCML_DYLIB})
+
 
 DOC_FILES=${DOC_DIR}/src2srcml.1.gz ${DOC_DIR}/srcml2src.1.gz ${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
 WIN_DOC_FILES=${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
-DIST_FILES=${DOC_FILES} ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
-WIN_DIST_FILES=${WIN_DOC_FILES} ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
+DIST_FILES= ${SRCML_PATH} ${LIBSRCML_UNIX} #${DOC_FILES}
+WIN_DIST_FILES=${WIN_SRCML_PATH} ${LIBSRCML_DLL} #${WIN_DOC_FILES}
 
 # generate files
 all : src bin
@@ -98,9 +96,8 @@ bin : ${SRC_TAR_GZ}
 	tar xzf ${SRC_TAR_GZ}
 	cd ${SRC_DIR_BASE} && cmake . && make
 	cd ${DOC_DIR} && make
-	strip ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
+	strip -x ${SRCML_PATH} ${LIBSRCML_UNIX}
 	mkdir ${BASE} && ${CP} ${DIST_FILES} ${BASE}
-#	( test -e ${LIBSRCML_SO} && cp ${LIBSRCML_SO} ${BASE} ) || ( test -e ${LIBSRCML_DYLIB} && cp ${LIBSRCML_DYLIB} ${BASE} )
 	tar czf ${UNIX_TAR_GZ} ${BASE}
 
 windows : ${SRC_ZIP}
@@ -108,22 +105,21 @@ windows : ${SRC_ZIP}
 	cd ${SRC_DIR_BASE} && mingw32-cmake . && make
 	cd ${SRC_DIR_BASE} && rm -f CMakeCache.txt && cmake . && make
 	cd ${DOC_DIR} && make
-	i686-pc-mingw32-strip ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
+	${STRIP} ${WIN_SRCML_PATH} ${LIBSRCML_DLL}
 	mkdir ${WIN_BASE} && ${CP} ${WIN_DIST_FILES} ${WIN_BASE}
 	unix2dos ${WIN_BASE}/*.html
-	zip -oql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll ${WIN_BASE}/src2srcml.html ${WIN_BASE}/srcml2src.html
+	zip -oql ${WIN_ZIP} ${WIN_DIST_FILES}
 
 windowsdyn : ${SRC_ZIP}
 	unzip -uq  ${SRC_ZIP}
 	cd ${SRC_DIR_BASE} && mingw32-cmake . && make
 	cd ${SRC_DIR_BASE} && rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake && cmake . && make
 	cd ${DOC_DIR} && make clean && make
-	${STRIP} ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH} ${LIBSRCML_DLL}
+	${STRIP} ${WIN_SRCML_PATH} ${LIBSRCML_DLL}
 	mkdir ${WIN_BASE} && ${CP} ${WIN_DIST_FILES} ${WIN_BASE}
 	${CP} ../dlls/*.dll ${WIN_BASE}
-	${CP} ${BIN_DIR}/libsrcml.dll ${WIN_BASE}
 	unix2dos ${WIN_BASE}/*.html
-	zip -oql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll ${WIN_BASE}/src2srcml.html ${WIN_BASE}/srcml2src.html
+	zip -oql ${WIN_ZIP} ${WIN_DIST_FILES}
 
 dll :
 	echo ${DLL_DIR}
