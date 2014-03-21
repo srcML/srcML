@@ -32,6 +32,5 @@ bash -c "cd ~/srcML; git pull"
 
 bash -c "cd ~/srcML; git clean -fdx; cmake .; make; cpack"
 
-bash -c "tar czf ~/srcML/dist/srcML.tar.gz -C ~/srcML/dist/ srcML"
 bash -c "cp ~/srcML/dist/*.tar.gz ~/Dropbox/srcML/Unix/OSX"
 
