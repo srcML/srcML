@@ -90,4 +90,4 @@ else :
     command = "gecho -e " + list + " | gxargs -I% -t ssh root@" + "'%' " + args 
     print command
 
-    #os.system(command)
+    os.system(command)
