@@ -99,7 +99,7 @@ int main(int argc, char * argv[]) {
         // find the first input that is not stdin
         boost::optional<std::string> nonstdin;
         BOOST_FOREACH(const std::string& input_filename, srcml_request.input) {
-            if (input_filename != "-") {
+            if (input_filename != "stdin://-" && input_filename != "-") {
                 nonstdin = input_filename;
                 break;
             }
