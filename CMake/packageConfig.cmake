@@ -23,16 +23,18 @@
 # CMake directives and config for CPack.
  
 
+# set package name
+#set(CPACK_PACKAGE_FILE_NAME "srcML-${CMAKE_SYSTEM_NAME}")
+
 # Generator settings
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
- set(CPACK_GENERATOR "ZIP")
+set(CPACK_PACKAGE_FILE_NAME "srcML-Win")
+set(CPACK_GENERATOR "ZIP")
 else()
+set(CPACK_PACKAGE_FILE_NAME "srcML")
 set(CPACK_GENERATOR "TGZ;TBZ2")
 endif()
  
-# set package name
-set(CPACK_PACKAGE_FILE_NAME "srcML-${CMAKE_SYSTEM_NAME}")
-
 # set summary
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")
 
