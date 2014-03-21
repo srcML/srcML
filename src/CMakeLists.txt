@@ -56,7 +56,7 @@ set_target_properties(srcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_B
 
 if(APPLE)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.dylib\")")
-elif(NOT ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"))
+elseif(NOT ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"))
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.so\")")
 endif()
 
