@@ -35,7 +35,10 @@
 #include <srcml_input_srcml.hpp>
 
 // create srcml from the current request
-void create_srcml(srcml_request_t& srcml_request, boost::optional<FILE*> fstdin, const std::string& output) {
+void create_srcml(srcml_request_t& srcml_request,
+                  boost::optional<FILE*> fstdin,
+                  const std::string& output,
+                  boost::optional<FILE*> fstdout) {
 
     // create the output srcml archive
     srcml_archive* srcml_arch = srcml_create_archive();
@@ -96,7 +99,10 @@ void create_srcml(srcml_request_t& srcml_request, boost::optional<FILE*> fstdin,
     }
 
     // create the srcML output file. if compressed, must go through libarchive thread
-    srcml_write_open_filename(srcml_arch, srcml_request.output_filename->c_str());
+    if (!fstdout)
+        srcml_write_open_filename(srcml_arch, srcml_request.output_filename->c_str());
+    else
+        srcml_write_open_FILE(srcml_arch, *fstdout);
 
     // gzip compression available from libsrcml
     if (srcml_request.output_filename->size() > 3 && srcml_request.output_filename->substr(srcml_request.output_filename->size() - 3) == ".gz")

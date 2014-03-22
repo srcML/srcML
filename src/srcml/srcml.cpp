@@ -138,10 +138,11 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
 
+    boost::optional<FILE*> fstdout;
     // STAGE 1: Create any srcml that we need
     //          This includes an "merges"
     if (createsrcml)
-        create_srcml(srcml_request, fstdin, *srcml_request.output_filename);
+        create_srcml(srcml_request, fstdin, *srcml_request.output_filename, fstdout);
 
     if (insrcml) {
         // create the output srcml archive
