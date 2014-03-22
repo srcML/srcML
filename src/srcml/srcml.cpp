@@ -219,12 +219,10 @@ int main(int argc, char * argv[]) {
                 return 1; // stdin was requested, but no data was received
             }
 
-            std::string uri = src_prefix_add_uri(input_file);
-
             // split the URI
             std::string protocol;
             std::string resource;
-            src_prefix_split_uri(uri, protocol, resource);
+            src_prefix_split_uri(input_file, protocol, resource);
 
             std::string extension = boost::filesystem::extension(boost::filesystem::path(resource));
 
@@ -239,7 +237,7 @@ int main(int argc, char * argv[]) {
                 src_input_file(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
 
             } else {
-                src_input_libarchive(queue, srcml_arch, uri, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, fstdin);
+                src_input_libarchive(queue, srcml_arch, input_file, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, fstdin);
 
             }
         }
