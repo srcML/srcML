@@ -137,7 +137,6 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
 
-
     // STAGE 1: Create any srcml that we need
     //          This includes an "merges"
     if (createsrcml)
