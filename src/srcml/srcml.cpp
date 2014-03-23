@@ -242,10 +242,10 @@ int main(int argc, char * argv[]) {
 
     if (internalpipe) {
 
-        create_src(local_input_sources, srcml_request);
+        create_src(local_input_sources, srcml_request, output);
 
     } else if (createsrc) {
-        create_src(input_sources, srcml_request);
+        create_src(input_sources, srcml_request, output);
     }
 
     srcml_cleanup_globals();

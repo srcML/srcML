@@ -29,7 +29,8 @@
 
 // create srcml from the current request
 void create_src(srcml_input_t& input_sources,
-                srcml_request_t& srcml_request) {
+                srcml_request_t& srcml_request,
+                srcml_output_src& output) {
 
     // srcml->src srcML file to filesystem
     if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
@@ -48,7 +49,7 @@ void create_src(srcml_input_t& input_sources,
             else
                 status = srcml_read_open_filename(arch, input_source.c_str());
 
-            src_output_filesystem(arch, *srcml_request.output_filename, log);
+            src_output_filesystem(arch, output, log);
 
             srcml_close_archive(arch);
             srcml_free_archive(arch);
@@ -72,7 +73,7 @@ void create_src(srcml_input_t& input_sources,
 
         // TODO: We would have to use extend the API, or we will be creating/closing files
         srcml_archive* oarch = srcml_create_archive();
-        srcml_write_open_filename(oarch, srcml_request.output_filename->c_str());
+        srcml_write_open_filename(oarch, output.c_str());
 
         srcml_write_unit(oarch, unit);
 
@@ -98,16 +99,16 @@ void create_src(srcml_input_t& input_sources,
 
         srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
 
-        if (*srcml_request.output_filename == "-")
+        if (output == "-")
             srcml_unparse_unit_fd(unit, STDOUT_FILENO);
         else
-            srcml_unparse_unit_filename(unit, srcml_request.output_filename->c_str());
+            srcml_unparse_unit_filename(unit, output.c_str());
 
         srcml_close_archive(arch);
         srcml_free_archive(arch);
 
         // srcml->src srcML file extracted to stdout
-    } else if (input_sources.size() == 1 && *srcml_request.output_filename == "-") {
+    } else if (input_sources.size() == 1 && output == "-") {
 
         const srcml_input_src& input_source = input_sources[0];
 
@@ -138,7 +139,7 @@ void create_src(srcml_input_t& input_sources,
         archive_write_set_compression_gzip(ar);
         archive_write_set_format_pax_restricted(ar);
 
-        archive_write_open_filename(ar, srcml_request.output_filename->c_str());
+        archive_write_open_filename(ar, output.c_str());
 
         // process command line inputs
         BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
