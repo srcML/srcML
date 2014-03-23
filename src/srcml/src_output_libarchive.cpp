@@ -55,8 +55,8 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
 
         // write the data into the archive
         arch_status = archive_write_data(src_archive, buffer, (size_t) buffer_size);
-        if (arch_status != ARCHIVE_OK || arch_status != buffer_size)
-            break;
+//        if (arch_status != ARCHIVE_OK || arch_status != buffer_size)
+//            break;
 
         free(buffer);
 

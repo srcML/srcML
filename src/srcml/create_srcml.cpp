@@ -38,7 +38,8 @@
 void create_srcml(srcml_request_t& srcml_request,
                   boost::optional<FILE*> fstdin,
                   const std::string& output,
-                  boost::optional<FILE*> fstdout) {
+                  boost::optional<FILE*> fstdout,
+                  boost::optional<int> fdout) {
 
     // create the output srcml archive
     srcml_archive* srcml_arch = srcml_create_archive();
@@ -99,10 +100,14 @@ void create_srcml(srcml_request_t& srcml_request,
     }
 
     // create the srcML output file. if compressed, must go through libarchive thread
-    if (!fstdout)
-        srcml_write_open_filename(srcml_arch, srcml_request.output_filename->c_str());
-    else
-        srcml_write_open_FILE(srcml_arch, *fstdout);
+    int status = 0;
+    if (!fstdout && !fdout) {
+        status = srcml_write_open_filename(srcml_arch, srcml_request.output_filename->c_str());
+    } else if (fdout) {
+        status = srcml_write_open_fd(srcml_arch, *fdout);
+    } else {
+        status = srcml_write_open_FILE(srcml_arch, *fstdout);
+    }
 
     // gzip compression available from libsrcml
     if (srcml_request.output_filename->size() > 3 && srcml_request.output_filename->substr(srcml_request.output_filename->size() - 3) == ".gz")
@@ -129,16 +134,19 @@ void create_srcml(srcml_request_t& srcml_request,
         std::string extension = boost::filesystem::extension(boost::filesystem::path(resource));
 
         // call handler based on prefix
-        if (extension == ".xml") {
+        if (!fstdin && extension == ".xml") {
 
             srcml_input_srcml(resource, srcml_arch, fstdin);
-        } else if ((protocol == "file") && is_directory(boost::filesystem::path(resource))) {
+        } else if (!fstdin && (protocol == "file") && is_directory(boost::filesystem::path(resource))) {
+
             src_input_filesystem(queue, srcml_arch, resource, srcml_request.att_language);
 
-        } else if (protocol == "file" && !(is_archive(extension)) && !(is_compressed(extension))) {
+        } else if (!fstdin && protocol == "file" && !(is_archive(extension)) && !(is_compressed(extension))) {
+
             src_input_file(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
 
         } else {
+
             src_input_libarchive(queue, srcml_arch, uri, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, fstdin);
 
         }
@@ -150,4 +158,8 @@ void create_srcml(srcml_request_t& srcml_request,
     // close the created srcML archive
     srcml_close_archive(srcml_arch);
     srcml_free_archive(srcml_arch);
+
+    // if we were writing to a file descriptor, then close it
+    if (fdout)
+        close(*fdout);
 }

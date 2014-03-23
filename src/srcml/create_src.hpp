@@ -28,7 +28,10 @@
 #include <boost/optional.hpp>
 
 // create srcml from the current request
-void create_src(srcml_request_t& srcml_request, boost::optional<FILE*>, const std::string& output);
+void create_src(srcml_request_t& srcml_request,
+                boost::optional<FILE*>,
+                boost::optional<int>,
+                const std::string& output);
 
 #endif
 

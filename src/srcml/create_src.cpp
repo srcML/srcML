@@ -28,7 +28,10 @@
 #include <src_output_filesystem.hpp>
 
 // create srcml from the current request
-void create_src(srcml_request_t& srcml_request, boost::optional<FILE*> fstdin, const std::string& output) {
+void create_src(srcml_request_t& srcml_request,
+                boost::optional<FILE*> fstdin,
+                boost::optional<int> fdin,
+                const std::string& output) {
 
     // srcml->src srcML file to filesystem
     if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
@@ -39,8 +42,10 @@ void create_src(srcml_request_t& srcml_request, boost::optional<FILE*> fstdin, c
         BOOST_FOREACH(const std::string& input_file, srcml_request.input) {
 
             srcml_archive* arch = srcml_create_archive();
-            if (!fstdin)
+            if (!fstdin && !fdin)
                 srcml_read_open_filename(arch, input_file.c_str());
+            else if (fdin)
+                srcml_read_open_fd(arch, *fdin);
             else
                 srcml_read_open_FILE(arch, *fstdin);
 
@@ -125,10 +130,14 @@ void create_src(srcml_request_t& srcml_request, boost::optional<FILE*> fstdin, c
         BOOST_FOREACH(const std::string& input_file, srcml_request.input) {
 
             srcml_archive* arch = srcml_create_archive();
-            if (!fstdin)
-                srcml_read_open_filename(arch, input_file.c_str());
-            else
-                srcml_read_open_FILE(arch, *fstdin);
+            int status;
+            if (!fstdin && !fdin) {
+                status = srcml_read_open_filename(arch, input_file.c_str());
+            } else if (fdin) {
+                status = srcml_read_open_fd(arch, *fdin);
+            } else {
+                status = srcml_read_open_FILE(arch, *fstdin);
+            }
 
             // extract this srcml archive to the source archive
             src_output_libarchive(arch, ar);

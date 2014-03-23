@@ -32,6 +32,9 @@
 #include <create_src.hpp>
 #include <isxml.hpp>
 #include <src_prefix.hpp>
+#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
+#include <boost/thread.hpp>
+#pragma GCC diagnostic warning "-Wshorten-64-to-32"
 
 #include <archive.h>
 #include <archive_entry.h>
@@ -138,11 +141,27 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
 
+    bool internalpipe = createsrcml && createsrc;
     boost::optional<FILE*> fstdout;
-    // STAGE 1: Create any srcml that we need
-    //          This includes an "merges"
-    if (createsrcml)
-        create_srcml(srcml_request, fstdin, *srcml_request.output_filename, fstdout);
+    boost::optional<FILE*> tfstdin;
+    boost::thread_group srcml_create_thread;
+    boost::optional<int> fdout;
+    boost::optional<int> fdin;
+
+    if (internalpipe) {
+
+        // setup a pipe for src->srcml can write to, and srcml->src can read from
+        int fds[2];
+        pipe(fds);
+        fdout = fds[1];
+        fdin = fds[0];
+
+        // start src->srcml writing to the pipe
+        srcml_create_thread.create_thread( boost::bind(create_srcml, srcml_request, fstdin, *srcml_request.output_filename, fstdout, fdout));
+
+    } else if (createsrcml) {
+        create_srcml(srcml_request, fstdin, *srcml_request.output_filename, boost::optional<FILE*>(), fdout);
+    }
 
     if (insrcml) {
         // create the output srcml archive
@@ -157,7 +176,7 @@ int main(int argc, char * argv[]) {
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE){
             const char* archive_info = srcml_archive_get_language(srcml_arch);
             if (archive_info)
-                std::cout << "Language: " << archive_info << "\n"; 
+                std::cout << "Language: " << archive_info << "\n";
         }
         // srcml->src directory
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY){
@@ -200,8 +219,17 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(srcml_arch);
     }
 
-    if (createsrc) {
-        create_src(srcml_request, fstdin, *srcml_request.output_filename);
+    if (internalpipe) {
+
+        srcml_request_t treq = srcml_request;
+        treq.input.clear();
+        treq.input.push_back("-");
+        srcml_create_thread.create_thread( boost::bind(create_src,treq, tfstdin, fdin, *srcml_request.output_filename));
+
+        srcml_create_thread.join_all();
+
+    } else if (createsrc) {
+        create_src(srcml_request, fstdin, 0, *srcml_request.output_filename);
     }
 
     srcml_cleanup_globals();
