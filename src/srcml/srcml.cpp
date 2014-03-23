@@ -82,13 +82,10 @@ int main(int argc, char * argv[]) {
         SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
         SRCML_COMMAND_DISPLAY_SRCML_ENCODING;
 
-    // determine whether the input is xml(srcml) or not
-
     // We would prefer to just deal with the inputs one-by-one, however we need
     // to know whether they are all srcml, or a mixture first, so lets do it here
     // our own input sources as we determine things about them
-    std::vector<srcml_input_src> input_sources(srcml_request.input.size());
-    boost::optional<FILE*> fstdin;
+    srcml_input_t input_sources(srcml_request.input.size());
     int i = 0;
     BOOST_FOREACH(const std::string& input_filename, srcml_request.input) {
 
@@ -158,18 +155,22 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
 
-// src->srcml
-// complicated by we may need src->srcml->src, so an internal pipe may be necessary
+    // src->srcml
+    // complicated by we may need src->srcml->src, so an internal pipe may be necessary
     bool internalpipe = createsrcml && createsrc;
     boost::thread_group srcml_create_thread;
-    int fds[2];
+    srcml_input_t local_input_sources(1);
     if (internalpipe) {
 
         // setup a pipe for src->srcml can write to fds[1], and srcml->src can read from fds[0]
+        int fds[2];
         pipe(fds);
 
         // start src->srcml writing to the pipe
         srcml_create_thread.create_thread( boost::bind(create_srcml, input_sources, srcml_request, fds[1]));
+
+        local_input_sources[0] = "-";
+        local_input_sources[0] = fds[0];
 
     } else if (createsrcml) {
         create_srcml(input_sources, srcml_request, boost::optional<int>());
@@ -233,15 +234,7 @@ int main(int argc, char * argv[]) {
 
     if (internalpipe) {
 
-        // create a copy of the request so that it goes through the loop once
-        srcml_request_t treq = srcml_request;
-        treq.input.clear();
-        treq.input.push_back("-");
-
-        srcml_input_t local_input_sources(1);
-        local_input_sources[0] = "-";
-        local_input_sources[0] = fds[0];
-        create_src(local_input_sources, treq);
+        create_src(local_input_sources, srcml_request);
 
     } else if (createsrc) {
         create_src(input_sources, srcml_request);
