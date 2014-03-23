@@ -53,9 +53,11 @@ public:
     bool has_fileptr() const { return fileptr; }
     bool has_fd() const { return fd; }
 
-    const std::string& get_filename() const { return *filename; }
-    FILE* get_fileptr() const { return *fileptr; }
-    int get_fd() const { return *fd; }
+    operator const std::string&() const { return *filename; }
+    operator FILE*() const { return *fileptr; }
+    operator int() const { return *fd; }
+
+    const char* c_str() const { return filename->c_str(); }
 
 private:
     boost::optional<std::string> filename;

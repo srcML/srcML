@@ -120,7 +120,7 @@ void create_srcml(srcml_input_t& input_sources,
             return; // stdin was requested, but no data was received
         }
 
-        std::string uri = src_prefix_add_uri(input_file.get_filename());
+        std::string uri = src_prefix_add_uri(input_file);
 
         // split the URI
         std::string protocol;
@@ -132,11 +132,11 @@ void create_srcml(srcml_input_t& input_sources,
         // call handler based on prefix
         if (input_file.has_fileptr() && extension != ".xml") {
 
-            src_input_libarchive(queue, srcml_arch, uri, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, input_file.get_fileptr());
+            src_input_libarchive(queue, srcml_arch, uri, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, (FILE*) input_file);
 
         } else if (input_file.has_fileptr() && extension == ".xml") {
 
-            srcml_input_srcml(resource, srcml_arch, input_file.get_fileptr());
+            srcml_input_srcml(resource, srcml_arch, (FILE*) input_file);
 
         } else if (extension == ".xml") {
 

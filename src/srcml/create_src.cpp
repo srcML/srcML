@@ -42,11 +42,11 @@ void create_src(srcml_input_t& input_sources,
             srcml_archive* arch = srcml_create_archive();
             int status;
             if (input_file.has_fd())
-                status = srcml_read_open_fd(arch, input_file.get_fd());
+                status = srcml_read_open_fd(arch, input_file);
             else if (input_file.has_fileptr())
-                status = srcml_read_open_FILE(arch, input_file.get_fileptr());
+                status = srcml_read_open_FILE(arch, input_file);
             else
-                status = srcml_read_open_filename(arch, input_file.get_filename().c_str());
+                status = srcml_read_open_filename(arch, input_file.c_str());
 
             src_output_filesystem(arch, *srcml_request.output_filename, log);
 
@@ -62,11 +62,11 @@ void create_src(srcml_input_t& input_sources,
         srcml_archive* arch = srcml_create_archive();
         int status;
         if (input_file.has_fd())
-            status = srcml_read_open_fd(arch, input_file.get_fd());
+            status = srcml_read_open_fd(arch, input_file);
         else if (input_file.has_fileptr())
-            status = srcml_read_open_FILE(arch, input_file.get_fileptr());
+            status = srcml_read_open_FILE(arch, input_file);
         else
-            status = srcml_read_open_filename(arch, input_file.get_filename().c_str());
+            status = srcml_read_open_filename(arch, input_file.c_str());
 
         srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
 
@@ -90,11 +90,11 @@ void create_src(srcml_input_t& input_sources,
         srcml_archive* arch = srcml_create_archive();
         int status;
         if (input_file.has_fd())
-            status = srcml_read_open_fd(arch, input_file.get_fd());
+            status = srcml_read_open_fd(arch, input_file);
         else if (input_file.has_fileptr())
-            status = srcml_read_open_FILE(arch, input_file.get_fileptr());
+            status = srcml_read_open_FILE(arch, input_file);
         else
-            status = srcml_read_open_filename(arch, input_file.get_filename().c_str());
+            status = srcml_read_open_filename(arch, input_file.c_str());
 
         srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
 
@@ -114,11 +114,11 @@ void create_src(srcml_input_t& input_sources,
         srcml_archive* arch = srcml_create_archive();
         int status;
         if (input_file.has_fd())
-            status = srcml_read_open_fd(arch, input_file.get_fd());
+            status = srcml_read_open_fd(arch, input_file);
         else if (input_file.has_fileptr())
-            status = srcml_read_open_FILE(arch, input_file.get_fileptr());
+            status = srcml_read_open_FILE(arch, input_file);
         else
-            status = srcml_read_open_filename(arch, input_file.get_filename().c_str());
+            status = srcml_read_open_filename(arch, input_file.c_str());
 
         srcml_unit* unit = srcml_read_unit(arch);
 
@@ -146,11 +146,11 @@ void create_src(srcml_input_t& input_sources,
             srcml_archive* arch = srcml_create_archive();
             int status;
             if (input_file.has_fd())
-                status = srcml_read_open_fd(arch, input_file.get_fd());
+                status = srcml_read_open_fd(arch, input_file);
             else if (input_file.has_fileptr())
-                status = srcml_read_open_FILE(arch, input_file.get_fileptr());
+                status = srcml_read_open_FILE(arch, input_file);
             else
-                status = srcml_read_open_filename(arch, input_file.get_filename().c_str());
+                status = srcml_read_open_filename(arch, input_file.c_str());
 
             // extract this srcml archive to the source archive
             src_output_libarchive(arch, ar);
