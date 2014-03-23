@@ -157,10 +157,10 @@ int main(int argc, char * argv[]) {
         fdin = fds[0];
 
         // start src->srcml writing to the pipe
-        srcml_create_thread.create_thread( boost::bind(create_srcml, srcml_request, fstdin, *srcml_request.output_filename, fstdout, fdout));
+        srcml_create_thread.create_thread( boost::bind(create_srcml, srcml_request, fstdin, fstdout, fdout));
 
     } else if (createsrcml) {
-        create_srcml(srcml_request, fstdin, *srcml_request.output_filename, boost::optional<FILE*>(), fdout);
+        create_srcml(srcml_request, fstdin, boost::optional<FILE*>(), fdout);
     }
 
     if (insrcml) {
@@ -221,10 +221,12 @@ int main(int argc, char * argv[]) {
 
     if (internalpipe) {
 
+        // create a copy of the request so that it goes through the loop once
         srcml_request_t treq = srcml_request;
         treq.input.clear();
         treq.input.push_back("-");
-        srcml_create_thread.create_thread( boost::bind(create_src,treq, tfstdin, fdin));
+
+        srcml_create_thread.create_thread( boost::bind(create_src, treq, tfstdin, fdin));
 
         srcml_create_thread.join_all();
 

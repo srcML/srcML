@@ -37,7 +37,6 @@
 // create srcml from the current request
 void create_srcml(srcml_request_t& srcml_request,
                   boost::optional<FILE*> fstdin,
-                  const std::string& output,
                   boost::optional<FILE*> fstdout,
                   boost::optional<int> fdout) {
 
