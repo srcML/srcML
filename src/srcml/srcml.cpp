@@ -240,10 +240,11 @@ int main(int argc, char * argv[]) {
 
         srcml_input_t local_input_sources(1);
         local_input_sources[0] = "-";
-        create_src(local_input_sources, treq, boost::optional<FILE*>(), fds[0]);
+        local_input_sources[0] = fds[0];
+        create_src(local_input_sources, treq);
 
     } else if (createsrc) {
-        create_src(input_sources, srcml_request, fstdin, boost::optional<int>());
+        create_src(input_sources, srcml_request);
     }
 
     srcml_cleanup_globals();
