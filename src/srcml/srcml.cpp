@@ -224,12 +224,12 @@ int main(int argc, char * argv[]) {
         srcml_request_t treq = srcml_request;
         treq.input.clear();
         treq.input.push_back("-");
-        srcml_create_thread.create_thread( boost::bind(create_src,treq, tfstdin, fdin, *srcml_request.output_filename));
+        srcml_create_thread.create_thread( boost::bind(create_src,treq, tfstdin, fdin));
 
         srcml_create_thread.join_all();
 
     } else if (createsrc) {
-        create_src(srcml_request, fstdin, 0, *srcml_request.output_filename);
+        create_src(srcml_request, fstdin, 0);
     }
 
     srcml_cleanup_globals();

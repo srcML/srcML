@@ -30,8 +30,7 @@
 // create srcml from the current request
 void create_src(srcml_request_t& srcml_request,
                 boost::optional<FILE*> fstdin,
-                boost::optional<int> fdin,
-                const std::string& output) {
+                boost::optional<int> fdin) {
 
     // srcml->src srcML file to filesystem
     if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
