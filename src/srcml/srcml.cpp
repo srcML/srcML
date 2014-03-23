@@ -169,10 +169,10 @@ int main(int argc, char * argv[]) {
         pipe(fds);
 
         // start src->srcml writing to the pipe
-        srcml_create_thread.create_thread( boost::bind(create_srcml, srcml_request, fstdin, fds[1]));
+        srcml_create_thread.create_thread( boost::bind(create_srcml, input_sources, srcml_request, fstdin, fds[1]));
 
     } else if (createsrcml) {
-        create_srcml(srcml_request, fstdin, boost::optional<int>());
+        create_srcml(input_sources, srcml_request, fstdin, boost::optional<int>());
     }
 
     if (insrcml) {
@@ -238,13 +238,12 @@ int main(int argc, char * argv[]) {
         treq.input.clear();
         treq.input.push_back("-");
 
-        create_src(treq, boost::optional<FILE*>(), fds[0]);
-//        srcml_create_thread.create_thread( boost::bind(create_src, treq, boost::optional<FILE*>(), fds[0]));
-
-//        srcml_create_thread.join_all();
+        srcml_input_t local_input_sources(1);
+        local_input_sources[0] = "-";
+        create_src(local_input_sources, treq, boost::optional<FILE*>(), fds[0]);
 
     } else if (createsrc) {
-        create_src(srcml_request, fstdin, boost::optional<int>());
+        create_src(input_sources, srcml_request, fstdin, boost::optional<int>());
     }
 
     srcml_cleanup_globals();

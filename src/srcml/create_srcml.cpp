@@ -35,7 +35,8 @@
 #include <srcml_input_srcml.hpp>
 
 // create srcml from the current request
-void create_srcml(srcml_request_t& srcml_request,
+void create_srcml(srcml_input_t& input_sources,
+                  srcml_request_t& srcml_request,
                   boost::optional<FILE*> fstdin,
                   boost::optional<int> fdout) {
 

@@ -29,6 +29,10 @@
 #include <boost/optional.hpp>
 #include <iostream>
 
+class srcml_input_src;
+
+typedef std::vector<srcml_input_src> srcml_input_t;
+
 class srcml_input_src {
 public:
     srcml_input_src& operator=(const std::string& other) { filename = other; return *this; }

@@ -24,11 +24,13 @@
 #define CREATE_SRC_HPP
 
 #include <srcml_cli.hpp>
+#include <srcml_input_src.hpp>
 #include <string>
 #include <boost/optional.hpp>
 
 // create srcml from the current request
-void create_src(srcml_request_t& srcml_request,
+void create_src(srcml_input_t& input_sources,
+                srcml_request_t& srcml_request,
                 boost::optional<FILE*>,
                 boost::optional<int>);
 
