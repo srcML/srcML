@@ -114,14 +114,14 @@ void create_srcml(srcml_input_t& input_sources,
     ParseQueue queue(srcml_request.max_threads);
 
     // process command line inputs
-    BOOST_FOREACH(const std::string& input_file, srcml_request.input) {
+    BOOST_FOREACH(const srcml_input_src& input_file, input_sources) {
 
         // if stdin, then there has to be data
         if (!fstdin && (input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
             return; // stdin was requested, but no data was received
         }
 
-        std::string uri = src_prefix_add_uri(input_file);
+        std::string uri = src_prefix_add_uri(input_file.get_filename());
 
         // split the URI
         std::string protocol;
