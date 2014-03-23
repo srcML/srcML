@@ -116,7 +116,7 @@ void create_srcml(srcml_input_t& input_sources,
     BOOST_FOREACH(const srcml_input_src& input_file, input_sources) {
 
         // if stdin, then there has to be data
-        if (!input_file.has_fileptr() && (input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
+        if (!contains<FILE*>(input_file) && (input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
             return; // stdin was requested, but no data was received
         }
 
@@ -130,11 +130,11 @@ void create_srcml(srcml_input_t& input_sources,
         std::string extension = boost::filesystem::extension(boost::filesystem::path(resource));
 
         // call handler based on prefix
-        if (input_file.has_fileptr() && extension != ".xml") {
+        if (contains<FILE*>(input_file) && extension != ".xml") {
 
             src_input_libarchive(queue, srcml_arch, uri, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, (FILE*) input_file);
 
-        } else if (input_file.has_fileptr() && extension == ".xml") {
+        } else if (contains<FILE*>(input_file) && extension == ".xml") {
 
             srcml_input_srcml(resource, srcml_arch, (FILE*) input_file);
 

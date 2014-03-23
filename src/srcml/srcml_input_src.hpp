@@ -66,4 +66,16 @@ private:
     boost::optional<bool> is_xml;
 };
 
+template <typename T>
+inline bool contains(const srcml_input_src&) { return false; }
+
+template <>
+inline bool contains<std::string>(const srcml_input_src& input) { return input.has_name(); }
+
+template <>
+inline bool contains<FILE*>(const srcml_input_src& input) { return input.has_fileptr(); }
+
+template <>
+inline bool contains<int>(const srcml_input_src& input) { return input.has_fd(); }
+
 #endif
