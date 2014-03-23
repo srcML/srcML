@@ -118,36 +118,34 @@ int main(int argc, char * argv[]) {
     bool createsrc = false;
     bool createsrcml = false;
     bool insrcml = srcml_request.command & SRCML_COMMAND_INSRCML;
-    if (srcml_request.command & SRCML_COMMAND_SRC) {
-        createsrc = true;
-    } else if (srcml_request.command & SRCML_COMMAND_SRCML) {
+
+    // Need to determine if we need src->srcml, srcml->src, or src->srcml->src
+    // This is determined using the types of the input files
+    //  * All src files imply src->srcml
+    //  * A single src file implies src->srcml
+    // Note: src->srcml->src implies a temporary srcml file
+    int count_src = 0;
+    BOOST_FOREACH(const srcml_input_src& input_filename, input_sources)
+        if (!input_filename.isxml())
+            ++count_src;
+
+    if (count_src > 0) {
         createsrcml = true;
-    } else if (!srcml_request.files_from.empty()) {
-        createsrcml = true;
+        createsrc = srcml_request.output_filename && *srcml_request.output_filename != "-"
+            && boost::filesystem::path(srcml_request.output_filename->c_str()).extension().compare(".xml") != 0;
     } else {
+        createsrcml = srcml_request.output_filename && *srcml_request.output_filename != "-"
+            && boost::filesystem::path(srcml_request.output_filename->c_str()).extension().compare(".xml") == 0;
+        createsrc = !createsrcml;
+    }
 
-        // Need to determine if we need src->srcml, srcml->src, or src->srcml->src
-        // This is determined using the types of the input files
-        //  * All src files imply src->srcml
-        //  * A single src file implies src->srcml
-        // Note: src->srcml->src implies a temporary srcml file
-        int count_src = 0;
-        BOOST_FOREACH(const srcml_input_src& input_filename, input_sources) {
-
-            if (!input_filename.isxml())
-                ++count_src;
-        }
-
-        // now see where we are at on the output format
-        if (count_src > 0) {
-            createsrcml = true;
-            createsrc = srcml_request.output_filename && *srcml_request.output_filename != "-"
-                && boost::filesystem::path(srcml_request.output_filename->c_str()).extension().compare(".xml") != 0;
-        } else {
-            createsrcml = srcml_request.output_filename && *srcml_request.output_filename != "-"
-                && boost::filesystem::path(srcml_request.output_filename->c_str()).extension().compare(".xml") == 0;
-            createsrc = !createsrcml;
-        }
+    // adjust if explicitly told differently
+    if (!createsrc && srcml_request.command & SRCML_COMMAND_SRC) {
+        createsrc = true;
+    } else if (!createsrcml && srcml_request.command & SRCML_COMMAND_SRCML) {
+        createsrcml = true;
+    } else if (!createsrcml && !srcml_request.files_from.empty()) {
+        createsrcml = true;
     }
 
     if (createsrcml && (srcml_request.input.empty() || srcml_request.sawstdin) && !srcml_request.att_language) {
