@@ -86,12 +86,13 @@ int main(int argc, char * argv[]) {
     // to know whether they are all srcml, or a mixture first, so lets do it here
     // our own input sources as we determine things about them
     srcml_input_t input_sources(srcml_request.input.begin(), srcml_request.input.end());
-    BOOST_FOREACH(srcml_input_src& input_filename, input_sources) {
+    srcml_input_src* pstdin = 0;
+    BOOST_FOREACH(srcml_input_src& input, input_sources) {
 
-        if (input_filename != "stdin://-" && (std::string)input_filename != "-") {
+        if (input != "stdin://-" && input != "-") {
 
             // base on extension
-            input_filename.isxml(boost::filesystem::path(std::string(input_filename).substr(7).c_str()).extension().compare(".xml") == 0);
+            input.isxml(boost::filesystem::path(src_prefix_resource(input).c_str()).extension().compare(".xml") == 0);
 
         } else {
 
@@ -104,9 +105,11 @@ int main(int argc, char * argv[]) {
             peek4char(fstdin, data, &size);
 
             // pass the first 4 bytes and the size actually read in
-            input_filename.isxml(isxml(data, size));
+            input.isxml(isxml(data, size));
 
-            input_filename = fstdin;
+            input = fstdin;
+
+            pstdin = &input;
         }
     }
 
@@ -118,22 +121,27 @@ int main(int argc, char * argv[]) {
     else
         output = "-";
     if (!(output == "-"))
-        output.isxml(boost::filesystem::path(srcml_request.output_filename->c_str()).extension().compare(".xml") == 0);
+        output.isxml(boost::filesystem::path(output.c_str()).extension().compare(".xml") == 0);
+    else
+        output.isxml(false);
 
-    bool createsrc = false;
+    // Now we can determine what processing needs to occur
+    // src->srcml
     bool createsrcml = false;
+
+    // srcml->src
+    bool createsrc = false;
+
+    // metadata(srcml)
     bool insrcml = srcml_request.command & SRCML_COMMAND_INSRCML;
 
-    // Need to determine if we need src->srcml, srcml->src, or src->srcml->src
-    // This is determined using the types of the input files
-    //  * All src files imply src->srcml
-    //  * A single src file implies src->srcml
+    // All src input files imply src->srcml
+    // A single src input file implies src->srcml
     // Note: src->srcml->src implies a temporary srcml file
     int count_src = 0;
-    BOOST_FOREACH(const srcml_input_src& input_filename, input_sources)
-        if (!input_filename.isxml())
+    BOOST_FOREACH(const srcml_input_src& input, input_sources)
+        if (!input.isxml())
             ++count_src;
-
     if (count_src > 0) {
         createsrcml = true;
         createsrc = !output.isxml();
@@ -151,7 +159,8 @@ int main(int argc, char * argv[]) {
         createsrcml = true;
     }
 
-    if (createsrcml && (srcml_request.input.empty() || srcml_request.sawstdin) && !srcml_request.att_language) {
+    // Now that we finally know whether 
+    if (createsrcml && pstdin && !pstdin->isxml() && !srcml_request.att_language) {
         std::cerr << "Using stdin requires a declared language\n";
         exit(1);
     }
@@ -164,6 +173,7 @@ int main(int argc, char * argv[]) {
         create_srcml(input_sources, srcml_request, output);
 
     } if (createsrcml && createsrc) {
+        fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
         // setup a pipe for src->srcml can write to fds[1], and srcml->src can read from fds[0]
         int fds[2];
@@ -239,6 +249,8 @@ int main(int argc, char * argv[]) {
 
     // srcml->src
     if (createsrc) {
+
+        fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
         create_src(pipe_input_sources.empty()? input_sources : pipe_input_sources, srcml_request, output);
     }
