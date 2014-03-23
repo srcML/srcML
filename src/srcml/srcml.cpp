@@ -124,7 +124,7 @@ int main(int argc, char * argv[]) {
         output = "-";
     if (!(output == "-"))
         output.isxml(boost::filesystem::path(srcml_request.output_filename->c_str()).extension().compare(".xml") == 0);
-    
+
     bool createsrc = false;
     bool createsrcml = false;
     bool insrcml = srcml_request.command & SRCML_COMMAND_INSRCML;
@@ -163,25 +163,27 @@ int main(int argc, char * argv[]) {
 
     // src->srcml
     // complicated by we may need src->srcml->src, so an internal pipe may be necessary
-    bool internalpipe = createsrcml && createsrc;
     boost::thread_group srcml_create_thread;
-    srcml_input_t local_input_sources(1);
-    if (internalpipe) {
+    srcml_input_t local_input_sources;
+    if (createsrcml && !createsrc) {
+
+        create_srcml(input_sources, srcml_request, output);
+
+    } if (createsrcml && createsrc) {
 
         // setup a pipe for src->srcml can write to fds[1], and srcml->src can read from fds[0]
         int fds[2];
         pipe(fds);
 
+        // set the output destination
         output = fds[1];
 
         // start src->srcml writing to the pipe
         srcml_create_thread.create_thread( boost::bind(create_srcml, input_sources, srcml_request, output) );
 
+        local_input_sources.resize(1);
         local_input_sources[0] = "-";
         local_input_sources[0] = fds[0];
-
-    } else if (createsrcml) {
-        create_srcml(input_sources, srcml_request, output);
     }
 
     if (insrcml) {
@@ -240,12 +242,10 @@ int main(int argc, char * argv[]) {
         srcml_free_archive(srcml_arch);
     }
 
-    if (internalpipe) {
+    // srcml->src
+    if (createsrc) {
 
-        create_src(local_input_sources, srcml_request, output);
-
-    } else if (createsrc) {
-        create_src(input_sources, srcml_request, output);
+        create_src(local_input_sources.empty()? input_sources : local_input_sources, srcml_request, output);
     }
 
     srcml_cleanup_globals();
