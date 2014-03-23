@@ -169,10 +169,10 @@ int main(int argc, char * argv[]) {
         pipe(fds);
 
         // start src->srcml writing to the pipe
-        srcml_create_thread.create_thread( boost::bind(create_srcml, input_sources, srcml_request, fstdin, fds[1]));
+        srcml_create_thread.create_thread( boost::bind(create_srcml, input_sources, srcml_request, fds[1]));
 
     } else if (createsrcml) {
-        create_srcml(input_sources, srcml_request, fstdin, boost::optional<int>());
+        create_srcml(input_sources, srcml_request, boost::optional<int>());
     }
 
     if (insrcml) {
