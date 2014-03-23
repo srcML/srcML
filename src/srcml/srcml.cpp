@@ -115,6 +115,16 @@ int main(int argc, char * argv[]) {
         ++i;
     }
 
+    // now lets do the same sort of processing for the output
+    // yes, I know the class name will need to be changes
+    srcml_input_src output;
+    if (srcml_request.output_filename)
+        output = *srcml_request.output_filename;
+    else
+        output = "-";
+    if (!(output == "-"))
+        output.isxml(boost::filesystem::path(srcml_request.output_filename->c_str()).extension().compare(".xml") == 0);
+    
     bool createsrc = false;
     bool createsrcml = false;
     bool insrcml = srcml_request.command & SRCML_COMMAND_INSRCML;
@@ -131,11 +141,9 @@ int main(int argc, char * argv[]) {
 
     if (count_src > 0) {
         createsrcml = true;
-        createsrc = srcml_request.output_filename && *srcml_request.output_filename != "-"
-            && boost::filesystem::path(srcml_request.output_filename->c_str()).extension().compare(".xml") != 0;
+        createsrc = !output.isxml();
     } else {
-        createsrcml = srcml_request.output_filename && *srcml_request.output_filename != "-"
-            && boost::filesystem::path(srcml_request.output_filename->c_str()).extension().compare(".xml") == 0;
+        createsrcml = output.isxml();
         createsrc = !createsrcml;
     }
 
@@ -164,14 +172,16 @@ int main(int argc, char * argv[]) {
         int fds[2];
         pipe(fds);
 
+        output = fds[1];
+
         // start src->srcml writing to the pipe
-        srcml_create_thread.create_thread( boost::bind(create_srcml, input_sources, srcml_request, fds[1]));
+        srcml_create_thread.create_thread( boost::bind(create_srcml, input_sources, srcml_request, output) );
 
         local_input_sources[0] = "-";
         local_input_sources[0] = fds[0];
 
     } else if (createsrcml) {
-        create_srcml(input_sources, srcml_request, boost::optional<int>());
+        create_srcml(input_sources, srcml_request, output);
     }
 
     if (insrcml) {
