@@ -133,6 +133,7 @@ void create_srcml(srcml_request_t& srcml_request,
         if (!fstdin && extension == ".xml") {
 
             srcml_input_srcml(resource, srcml_arch, fstdin);
+
         } else if (!fstdin && (protocol == "file") && is_directory(boost::filesystem::path(resource))) {
 
             src_input_filesystem(queue, srcml_arch, resource, srcml_request.att_language);

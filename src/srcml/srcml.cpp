@@ -22,6 +22,7 @@
 
 #include <srcml.h>
 #include <srcml_cli.hpp>
+#include <srcml_input_src.hpp>
 #include <srcml_display_info.hpp>
 #include <srcml_list_unit_files.hpp>
 #include <src_input_validator.hpp>
@@ -82,7 +83,41 @@ int main(int argc, char * argv[]) {
         SRCML_COMMAND_DISPLAY_SRCML_ENCODING;
 
     // determine whether the input is xml(srcml) or not
+
+    // We would prefer to just deal with the inputs one-by-one, however we need
+    // to know whether they are all srcml, or a mixture first, so lets do it here
+    // our own input sources as we determine things about them
+    std::vector<srcml_input_src> input_sources(srcml_request.input.size());
     boost::optional<FILE*> fstdin;
+    int i = 0;
+    BOOST_FOREACH(const std::string& input_filename, srcml_request.input) {
+
+        // copy the name
+        input_sources[i] = input_filename;
+
+        if (input_filename != "stdin://-" && input_filename != "-") {
+
+            // base on extension
+            input_sources[i].isxml(boost::filesystem::path(input_filename.substr(7).c_str()).extension().compare(".xml") == 0);
+        } else {
+
+            // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
+            FILE* fstdin = fdopen(STDIN_FILENO, "r");
+
+            // read the first 4 bytes as separate characters to get around byte ordering
+            unsigned char data[4];
+            ssize_t size = 0;
+            peek4char(fstdin, data, &size);
+
+            // pass the first 4 bytes and the size actually read in
+            input_sources[i].isxml(isxml(data, size));
+
+            input_sources[i] = fstdin;
+        }
+
+        ++i;
+    }
+
     bool createsrc = false;
     bool createsrcml = false;
     bool insrcml = srcml_request.command & SRCML_COMMAND_INSRCML;
@@ -99,29 +134,11 @@ int main(int argc, char * argv[]) {
         //  * All src files imply src->srcml
         //  * A single src file implies src->srcml
         // Note: src->srcml->src implies a temporary srcml file
-
         int count_src = 0;
-        BOOST_FOREACH(const std::string& input_filename, srcml_request.input) {
-            if (input_filename != "stdin://-" && input_filename != "-") {
+        BOOST_FOREACH(const srcml_input_src& input_filename, input_sources) {
 
-                // base on extension
-                if (boost::filesystem::path(input_filename.substr(7).c_str()).extension().compare(".xml") != 0)
-                    ++count_src;
-
-            } else {
-
-                // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
-                fstdin = fdopen(STDIN_FILENO, "r");
-
-                // read the first 4 bytes as separate characters to get around byte ordering
-                unsigned char data[4];
-                ssize_t size = 0;
-                peek4char(*fstdin, data, &size);
-
-                // pass the first 4 bytes and the size actually read in
-                if (!isxml(data, size))
-                    ++count_src;
-            }
+            if (!input_filename.isxml())
+                ++count_src;
         }
 
         // now see where we are at on the output format
@@ -141,8 +158,8 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
 
-    // src->srcml
-    // complicated by we may need src->srcml->src, so an internal pipe may be necessary
+// src->srcml
+// complicated by we may need src->srcml->src, so an internal pipe may be necessary
     bool internalpipe = createsrcml && createsrc;
     boost::thread_group srcml_create_thread;
     int fds[2];
