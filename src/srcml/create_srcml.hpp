@@ -30,7 +30,6 @@
 // create srcml from the current request
 void create_srcml(srcml_request_t& srcml_request,
                   boost::optional<FILE*>,
-                  boost::optional<FILE*> fstdout,
                   boost::optional<int> fdout);
 
 #endif

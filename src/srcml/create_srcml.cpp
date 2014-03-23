@@ -37,7 +37,6 @@
 // create srcml from the current request
 void create_srcml(srcml_request_t& srcml_request,
                   boost::optional<FILE*> fstdin,
-                  boost::optional<FILE*> fstdout,
                   boost::optional<int> fdout) {
 
     // create the output srcml archive
@@ -100,12 +99,10 @@ void create_srcml(srcml_request_t& srcml_request,
 
     // create the srcML output file. if compressed, must go through libarchive thread
     int status = 0;
-    if (!fstdout && !fdout) {
+    if (!fdout) {
         status = srcml_write_open_filename(srcml_arch, srcml_request.output_filename->c_str());
-    } else if (fdout) {
-        status = srcml_write_open_fd(srcml_arch, *fdout);
     } else {
-        status = srcml_write_open_FILE(srcml_arch, *fstdout);
+        status = srcml_write_open_fd(srcml_arch, *fdout);
     }
 
     // gzip compression available from libsrcml

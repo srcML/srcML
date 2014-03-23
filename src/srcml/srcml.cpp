@@ -141,26 +141,21 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
 
+    // src->srcml
+    // complicated by we may need src->srcml->src, so an internal pipe may be necessary
     bool internalpipe = createsrcml && createsrc;
-    boost::optional<FILE*> fstdout;
-    boost::optional<FILE*> tfstdin;
     boost::thread_group srcml_create_thread;
-    boost::optional<int> fdout;
-    boost::optional<int> fdin;
-
+    int fds[2];
     if (internalpipe) {
 
-        // setup a pipe for src->srcml can write to, and srcml->src can read from
-        int fds[2];
+        // setup a pipe for src->srcml can write to fds[1], and srcml->src can read from fds[0]
         pipe(fds);
-        fdout = fds[1];
-        fdin = fds[0];
 
         // start src->srcml writing to the pipe
-        srcml_create_thread.create_thread( boost::bind(create_srcml, srcml_request, fstdin, fstdout, fdout));
+        srcml_create_thread.create_thread( boost::bind(create_srcml, srcml_request, fstdin, fds[1]));
 
     } else if (createsrcml) {
-        create_srcml(srcml_request, fstdin, boost::optional<FILE*>(), fdout);
+        create_srcml(srcml_request, fstdin, boost::optional<int>());
     }
 
     if (insrcml) {
@@ -226,12 +221,13 @@ int main(int argc, char * argv[]) {
         treq.input.clear();
         treq.input.push_back("-");
 
-        srcml_create_thread.create_thread( boost::bind(create_src, treq, tfstdin, fdin));
+        create_src(treq, boost::optional<FILE*>(), fds[0]);
+//        srcml_create_thread.create_thread( boost::bind(create_src, treq, boost::optional<FILE*>(), fds[0]));
 
-        srcml_create_thread.join_all();
+//        srcml_create_thread.join_all();
 
     } else if (createsrc) {
-        create_src(srcml_request, fstdin, 0);
+        create_src(srcml_request, fstdin, boost::optional<int>());
     }
 
     srcml_cleanup_globals();
