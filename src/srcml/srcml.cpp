@@ -32,6 +32,7 @@
 #include <create_srcml.hpp>
 #include <create_src.hpp>
 #include <isxml.hpp>
+#include <peek4char.hpp>
 #include <src_prefix.hpp>
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <boost/thread.hpp>
@@ -52,7 +53,19 @@
 #define STDERR_FILENO   2       /* standard error file descriptor */
 #endif
 
-void peek4char(FILE* fp, unsigned char data[], ssize_t* psize);
+// commands that are simple queries on srcml
+const int SRCML_COMMAND_INSRCML =
+    SRCML_COMMAND_LONGINFO |
+    SRCML_COMMAND_INFO    |
+    SRCML_COMMAND_INFO_FILENAME |
+    SRCML_COMMAND_VERSION |
+    SRCML_COMMAND_LIST |
+    SRCML_COMMAND_UNITS |
+    SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE |
+    SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY |
+    SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
+    SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
+    SRCML_COMMAND_DISPLAY_SRCML_ENCODING;
 
 int main(int argc, char * argv[]) {
 
@@ -68,19 +81,6 @@ int main(int argc, char * argv[]) {
         std::cout << "libarchive Version " << ARCHIVE_VERSION_NUMBER << "\n";
         return 0;
     }
-
-    const int SRCML_COMMAND_INSRCML =
-        SRCML_COMMAND_LONGINFO |
-        SRCML_COMMAND_INFO    |
-        SRCML_COMMAND_INFO_FILENAME |
-        SRCML_COMMAND_VERSION |
-        SRCML_COMMAND_LIST |
-        SRCML_COMMAND_UNITS |
-        SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE |
-        SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY |
-        SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
-        SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
-        SRCML_COMMAND_DISPLAY_SRCML_ENCODING;
 
     // We would prefer to just deal with the inputs one-by-one, however we need
     // to know whether they are all srcml, or a mixture first, so lets do it here
@@ -244,28 +244,3 @@ int main(int argc, char * argv[]) {
 
     return 0;
 }
-
-void peek4char(FILE* fp, unsigned char data[], ssize_t* psize) {
-    *psize = 0;
-    int c;
-    if ((c = getc(fp)) != EOF) {
-        data[0] = c;
-        ++(*psize);
-        if ((c = getc(fp)) != EOF) {
-            data[1] = c;
-            ++(*psize);
-            if ((c = getc(fp)) != EOF) {
-                data[2] = c;
-                ++(*psize);
-                if ((c = getc(fp)) != EOF) {
-                    data[3] = c;
-                    ++(*psize);
-                }
-            }
-        }
-    }
-
-    for (ssize_t i = (*psize) - 1; i >= 0; --i)
-        ungetc(data[i], fp);
-}
-
