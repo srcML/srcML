@@ -36,6 +36,9 @@ typedef srcml_input_src srcml_output_src;
 
 class srcml_input_src {
 public:
+    srcml_input_src() {}
+    srcml_input_src(const std::string& other) { filename = other; }
+
     srcml_input_src& operator=(const std::string& other) { filename = other; return *this; }
     srcml_input_src& operator=(FILE* other) { fileptr = other; return *this; }
     srcml_input_src& operator=(int other) { fd = other; return *this; }
@@ -43,6 +46,8 @@ public:
     bool operator==(const std::string& other) const { return other == *filename; }
 
     bool operator==(const char* other) const { return *filename == other; }
+
+    bool operator!=(const char* other) const { return *filename != other; }
 
     void isxml(bool result) { is_xml = result; }
     bool isxml() const { return is_xml && *is_xml; }

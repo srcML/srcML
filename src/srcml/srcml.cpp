@@ -85,17 +85,14 @@ int main(int argc, char * argv[]) {
     // We would prefer to just deal with the inputs one-by-one, however we need
     // to know whether they are all srcml, or a mixture first, so lets do it here
     // our own input sources as we determine things about them
-    srcml_input_t input_sources(srcml_request.input.size());
-    int i = 0;
-    BOOST_FOREACH(const std::string& input_filename, srcml_request.input) {
+    srcml_input_t input_sources(srcml_request.input.begin(), srcml_request.input.end());
+    BOOST_FOREACH(srcml_input_src& input_filename, input_sources) {
 
-        // copy the name
-        input_sources[i] = input_filename;
-
-        if (input_filename != "stdin://-" && input_filename != "-") {
+        if (input_filename != "stdin://-" && (std::string)input_filename != "-") {
 
             // base on extension
-            input_sources[i].isxml(boost::filesystem::path(input_filename.substr(7).c_str()).extension().compare(".xml") == 0);
+            input_filename.isxml(boost::filesystem::path(std::string(input_filename).substr(7).c_str()).extension().compare(".xml") == 0);
+
         } else {
 
             // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
@@ -107,12 +104,10 @@ int main(int argc, char * argv[]) {
             peek4char(fstdin, data, &size);
 
             // pass the first 4 bytes and the size actually read in
-            input_sources[i].isxml(isxml(data, size));
+            input_filename.isxml(isxml(data, size));
 
-            input_sources[i] = fstdin;
+            input_filename = fstdin;
         }
-
-        ++i;
     }
 
     // now lets do the same sort of processing for the output
@@ -161,10 +156,9 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
 
-    // src->srcml
-    // complicated by we may need src->srcml->src, so an internal pipe may be necessary
+    // src->srcml (or src->srcml->src)
     boost::thread_group srcml_create_thread;
-    srcml_input_t local_input_sources;
+    srcml_input_t pipe_input_sources;
     if (createsrcml && !createsrc) {
 
         create_srcml(input_sources, srcml_request, output);
@@ -181,9 +175,10 @@ int main(int argc, char * argv[]) {
         // start src->srcml writing to the pipe
         srcml_create_thread.create_thread( boost::bind(create_srcml, input_sources, srcml_request, output) );
 
-        local_input_sources.resize(1);
-        local_input_sources[0] = "-";
-        local_input_sources[0] = fds[0];
+        // the srcml->src stage must now read from internal input sources
+        pipe_input_sources.resize(1);
+        pipe_input_sources[0] = "-";
+        pipe_input_sources[0] = fds[0];
     }
 
     if (insrcml) {
@@ -245,7 +240,7 @@ int main(int argc, char * argv[]) {
     // srcml->src
     if (createsrc) {
 
-        create_src(local_input_sources.empty()? input_sources : local_input_sources, srcml_request, output);
+        create_src(pipe_input_sources.empty()? input_sources : pipe_input_sources, srcml_request, output);
     }
 
     srcml_cleanup_globals();
