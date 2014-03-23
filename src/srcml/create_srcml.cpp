@@ -113,14 +113,14 @@ void create_srcml(srcml_input_t& input_sources,
     ParseQueue queue(srcml_request.max_threads);
 
     // process command line inputs
-    BOOST_FOREACH(const srcml_input_src& input_file, input_sources) {
+    BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
 
         // if stdin, then there has to be data
-        if (!contains<FILE*>(input_file) && (input_file == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
+        if (!contains<FILE*>(input_source) && (input_source == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
             return; // stdin was requested, but no data was received
         }
 
-        std::string uri = src_prefix_add_uri(input_file);
+        std::string uri = src_prefix_add_uri(input_source);
 
         // split the URI
         std::string protocol;
@@ -130,13 +130,13 @@ void create_srcml(srcml_input_t& input_sources,
         std::string extension = boost::filesystem::extension(boost::filesystem::path(resource));
 
         // call handler based on prefix
-        if (contains<FILE*>(input_file) && extension != ".xml") {
+        if (contains<FILE*>(input_source) && extension != ".xml") {
 
-            src_input_libarchive(queue, srcml_arch, uri, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, (FILE*) input_file);
+            src_input_libarchive(queue, srcml_arch, uri, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, (FILE*) input_source);
 
-        } else if (contains<FILE*>(input_file) && extension == ".xml") {
+        } else if (contains<FILE*>(input_source) && extension == ".xml") {
 
-            srcml_input_srcml(resource, srcml_arch, (FILE*) input_file);
+            srcml_input_srcml(resource, srcml_arch, (FILE*) input_source);
 
         } else if (extension == ".xml") {
 

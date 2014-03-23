@@ -37,16 +37,16 @@ void create_src(srcml_input_t& input_sources,
         TraceLog log(std::cerr, *srcml_request.markup_options);
 
         // process command line inputs
-        BOOST_FOREACH(const srcml_input_src& input_file, input_sources) {
+        BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
 
             srcml_archive* arch = srcml_create_archive();
             int status;
-            if (input_file.has_fd())
-                status = srcml_read_open_fd(arch, input_file);
-            else if (input_file.has_fileptr())
-                status = srcml_read_open_FILE(arch, input_file);
+            if (contains<int>(input_source))
+                status = srcml_read_open_fd(arch, input_source);
+            else if (contains<FILE*>(input_source))
+                status = srcml_read_open_FILE(arch, input_source);
             else
-                status = srcml_read_open_filename(arch, input_file.c_str());
+                status = srcml_read_open_filename(arch, input_source.c_str());
 
             src_output_filesystem(arch, *srcml_request.output_filename, log);
 
@@ -57,16 +57,16 @@ void create_src(srcml_input_t& input_sources,
         // srcml->src extract individual unit in XML
     } else if ((srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && input_sources.size() == 1) {
 
-        const srcml_input_src& input_file = input_sources[0];
+        const srcml_input_src& input_source = input_sources[0];
 
         srcml_archive* arch = srcml_create_archive();
         int status;
-        if (input_file.has_fd())
-            status = srcml_read_open_fd(arch, input_file);
-        else if (input_file.has_fileptr())
-            status = srcml_read_open_FILE(arch, input_file);
+        if (contains<int>(input_source))
+            status = srcml_read_open_fd(arch, input_source);
+        else if (contains<FILE*>(input_source))
+            status = srcml_read_open_FILE(arch, input_source);
         else
-            status = srcml_read_open_filename(arch, input_file.c_str());
+            status = srcml_read_open_filename(arch, input_source.c_str());
 
         srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
 
@@ -85,16 +85,16 @@ void create_src(srcml_input_t& input_sources,
         // srcml->src extract individual unit to file
     } else if (input_sources.size() == 1 && srcml_request.unit > 0) {
 
-        const srcml_input_src& input_file = input_sources[0];
+        const srcml_input_src& input_source = input_sources[0];
 
         srcml_archive* arch = srcml_create_archive();
         int status;
-        if (input_file.has_fd())
-            status = srcml_read_open_fd(arch, input_file);
-        else if (input_file.has_fileptr())
-            status = srcml_read_open_FILE(arch, input_file);
+        if (contains<int>(input_source))
+            status = srcml_read_open_fd(arch, input_source);
+        else if (contains<FILE*>(input_source))
+            status = srcml_read_open_FILE(arch, input_source);
         else
-            status = srcml_read_open_filename(arch, input_file.c_str());
+            status = srcml_read_open_filename(arch, input_source.c_str());
 
         srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
 
@@ -109,16 +109,16 @@ void create_src(srcml_input_t& input_sources,
         // srcml->src srcML file extracted to stdout
     } else if (input_sources.size() == 1 && *srcml_request.output_filename == "-") {
 
-        const srcml_input_src& input_file = input_sources[0];
+        const srcml_input_src& input_source = input_sources[0];
 
         srcml_archive* arch = srcml_create_archive();
         int status;
-        if (input_file.has_fd())
-            status = srcml_read_open_fd(arch, input_file);
-        else if (input_file.has_fileptr())
-            status = srcml_read_open_FILE(arch, input_file);
+        if (contains<int>(input_source))
+            status = srcml_read_open_fd(arch, input_source);
+        else if (contains<FILE*>(input_source))
+            status = srcml_read_open_FILE(arch, input_source);
         else
-            status = srcml_read_open_filename(arch, input_file.c_str());
+            status = srcml_read_open_filename(arch, input_source.c_str());
 
         srcml_unit* unit = srcml_read_unit(arch);
 
@@ -141,16 +141,16 @@ void create_src(srcml_input_t& input_sources,
         archive_write_open_filename(ar, srcml_request.output_filename->c_str());
 
         // process command line inputs
-        BOOST_FOREACH(const srcml_input_src& input_file, input_sources) {
+        BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
 
             srcml_archive* arch = srcml_create_archive();
             int status;
-            if (input_file.has_fd())
-                status = srcml_read_open_fd(arch, input_file);
-            else if (input_file.has_fileptr())
-                status = srcml_read_open_FILE(arch, input_file);
+            if (contains<int>(input_source))
+                status = srcml_read_open_fd(arch, input_source);
+            else if (contains<FILE*>(input_source))
+                status = srcml_read_open_FILE(arch, input_source);
             else
-                status = srcml_read_open_filename(arch, input_file.c_str());
+                status = srcml_read_open_filename(arch, input_source.c_str());
 
             // extract this srcml archive to the source archive
             src_output_libarchive(arch, ar);
