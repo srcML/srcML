@@ -142,9 +142,9 @@ void create_src(srcml_input_t& input_sources,
             if (contains<int>(destination))
                 status = archive_write_open_fd(ar, destination);
             else
-                archive_write_open_filename(ar, destination.resource.c_str());
+                status = archive_write_open_filename(ar, destination.resource.c_str());
 
-            // process command line inputs
+            // extract all the srcml archives to this libarchive
             BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
 
                 srcMLReadArchive arch(input_source);

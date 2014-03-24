@@ -91,10 +91,6 @@ int main(int argc, char * argv[]) {
 
         if (input == "stdin://-" || input == "-") {
 
-            if (pstdin) {
-                // double stdin
-            }
-
             // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
             FILE* fstdin = fdopen(STDIN_FILENO, "r");
 
@@ -109,6 +105,8 @@ int main(int argc, char * argv[]) {
             input = fstdin;
 
             pstdin = &input;
+
+            break;
         }
     }
 
@@ -125,24 +123,30 @@ int main(int argc, char * argv[]) {
     // metadata(srcml)
     bool insrcml = srcml_request.command & SRCML_COMMAND_INSRCML;
 
-    // All src input files imply src->srcml
     // A single src input file implies src->srcml
     // Note: src->srcml->src implies a temporary srcml file
     bool src_input = false;
-    BOOST_FOREACH(const srcml_input_src& input, input_sources)
+    BOOST_FOREACH(const srcml_input_src& input, input_sources) {
         if (input.isxml == false) {
             src_input = true;
             break;
         }
+    }
     if (src_input) {
+        // at least one src file, so we have to create srcml
+        // may also have to go back to src
         createsrcml = true;
         createsrc = destination.isxml == false;
     } else {
-        createsrcml = destination.isxml == true;
-        createsrc = !createsrcml;
+        // all inputs are srcml, so result depends on destination
+        // if destination is srcml, no src creation
+        // if destination is src (or indeterminate), create src
+        createsrc = destination.isxml == false;
+        createsrcml = !createsrc;
     }
 
-    // adjust if explicitly told differently
+    // adjust if explicitly told differently via commands
+    // TODO: may detect some errors here
     if (!createsrc && srcml_request.command & SRCML_COMMAND_SRC) {
         createsrc = true;
     } else if (!createsrcml && srcml_request.command & SRCML_COMMAND_SRCML) {
@@ -152,12 +156,11 @@ int main(int argc, char * argv[]) {
     }
 
     // when creating srcml, if we have source std input, we have to have a requested language
-    // note: necessary since boost::tribool overloads &&, and prevents short circuiting of pointer check
-    if (createsrcml && pstdin) {
-       if (!pstdin->isxml && !srcml_request.att_language) {
+    // note: always compare boost::tribool to values, since
+    // boost::tribool overloads &&, and prevents short circuiting of pointer check
+    if (createsrcml && pstdin && (pstdin->isxml == false) && !srcml_request.att_language) {
             std::cerr << "Using stdin requires a declared language\n";
             exit(1);
-        }
     }
 
     // src->srcml (or src->srcml->src)
