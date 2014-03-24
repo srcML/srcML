@@ -157,7 +157,7 @@ void src_input_libarchive(ParseQueue& queue,
 
             // form the parsing request
             ParseRequest request;
-            if (option_filename || (filename != "-" && filename != "stdin://-"))
+            if (option_filename || (filename != "-"))
                 request.filename = filename;
             request.directory = option_directory;
             request.version = option_version;

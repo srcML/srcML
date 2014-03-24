@@ -88,7 +88,7 @@ int main(int argc, char * argv[]) {
     srcml_input_src* pstdin = 0;
     BOOST_FOREACH(srcml_input_src& input, input_sources) {
 
-        if (input == "stdin://-" || input == "-") {
+        if (input == "-") {
 
             // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
             FILE* fstdin = fdopen(STDIN_FILENO, "r");
