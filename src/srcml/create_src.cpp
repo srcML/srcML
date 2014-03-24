@@ -48,7 +48,7 @@ public:
         else if (contains<FILE*>(input_source))
             status = srcml_read_open_FILE(arch, input_source);
         else
-            status = srcml_read_open_filename(arch, input_source.resource.c_str());
+            status = srcml_read_open_filename(arch, input_source.c_str());
         if (status != SRCML_STATUS_OK)
             throw status;
     }
@@ -101,6 +101,8 @@ void create_src(srcml_input_t& input_sources,
 
             srcml_write_unit(oarch, unit);
 
+            srcml_free_unit(unit);
+
             srcml_close_archive(oarch);
             srcml_free_archive(oarch);
 
@@ -117,15 +119,31 @@ void create_src(srcml_input_t& input_sources,
             else
                 srcml_unparse_unit_filename(unit, destination.c_str());
 
+            srcml_free_unit(unit);
+
         } else if (input_sources.size() == 1 && destination == "-") {
 
-            // srcml->src extract file
+            // srcml->src extract to stdout
 
             srcMLReadArchive arch(input_sources[0]);
 
             srcml_unit* unit = srcml_read_unit(arch);
 
             srcml_unparse_unit_fd(unit, STDOUT_FILENO);
+
+            srcml_free_unit(unit);
+
+        } else if (input_sources.size() == 1 && srcml_check_extension(destination.c_str())) {
+
+            // srcml->src extract to plain code file
+
+            srcMLReadArchive arch(input_sources[0]);
+
+            srcml_unit* unit = srcml_read_unit(arch);
+
+            srcml_unparse_unit_filename(unit, destination.c_str());
+
+            srcml_free_unit(unit);
 
         } else {
 
