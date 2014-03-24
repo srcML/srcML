@@ -244,8 +244,6 @@ int main(int argc, char * argv[]) {
     // srcml->src
     if (createsrc) {
 
-        fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-
         create_src(pipe_input_sources.empty()? input_sources : pipe_input_sources, srcml_request, destination);
     }
 

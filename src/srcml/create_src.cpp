@@ -48,7 +48,7 @@ public:
         else if (contains<FILE*>(input_source))
             status = srcml_read_open_FILE(arch, input_source);
         else
-            status = srcml_read_open_filename(arch, input_source.c_str());
+            status = srcml_read_open_filename(arch, input_source.resource.c_str());
         if (status != SRCML_STATUS_OK)
             throw status;
     }
@@ -69,6 +69,8 @@ private:
 void create_src(srcml_input_t& input_sources,
                 srcml_request_t& srcml_request,
                 srcml_output_dest& destination) {
+
+
     try {
 
         if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
@@ -136,10 +138,11 @@ void create_src(srcml_input_t& input_sources,
             archive_write_set_compression_gzip(ar);
             archive_write_set_format_pax_restricted(ar);
 
+            int status = ARCHIVE_OK;
             if (contains<int>(destination))
-                archive_write_open_fd(ar, destination);
+                status = archive_write_open_fd(ar, destination);
             else
-                archive_write_open_filename(ar, destination.c_str());
+                archive_write_open_filename(ar, destination.resource.c_str());
 
             // process command line inputs
             BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
