@@ -155,8 +155,6 @@ int main(int argc, char * argv[]) {
     }
 
     // when creating srcml, if we have source std input, we have to have a requested language
-    // note: always compare boost::tribool to values, since
-    // boost::tribool overloads &&, and prevents short circuiting of pointer check
     if (createsrcml && pstdin && (pstdin->state == SRC) && !srcml_request.att_language) {
             std::cerr << "Using stdin requires a declared language\n";
             exit(1);

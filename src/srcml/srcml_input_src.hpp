@@ -46,8 +46,7 @@ public:
     srcml_input_src() {}
     srcml_input_src(const std::string& other) : state(INDETERMINATE) { 
 
-        // TODO: This should always be done by srcml_cli, and can eventually be removed
-        filename = src_prefix_add_uri(other);
+        filename = other;
 
         src_prefix_split_uri(filename, protocol, resource);
         extension = boost::filesystem::path(resource.c_str()).extension().string();

@@ -69,8 +69,6 @@ private:
 void create_src(srcml_input_t& input_sources,
                 srcml_request_t& srcml_request,
                 srcml_output_dest& destination) {
-
-
     try {
 
         if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
