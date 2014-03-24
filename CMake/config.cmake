@@ -30,6 +30,8 @@
 # Dynamic Load libraries (Unix only)
 if(NOT WIN32)
 option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and libexslt" ON)
+else()
+add_definitions(-DNO_DLLOAD)
 endif()
 
 # Setting some windows only properties.
@@ -83,11 +85,11 @@ if(DYNAMIC_LOAD_ENABLED)
 set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} dl crypto
                 CACHE INTERNAL "Libraries needed to build libsrcml")
 elseif(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} crypto
+set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} crypto
                 CACHE INTERNAL "Libraries needed to build libsrcml")
 else()
 set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES}  ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${Boost_LIBRARIES} ${ANTLR_LIBRARY}
-		       CACHE INTERNAL "Libraries needed to build libsrcml")
+                CACHE INTERNAL "Libraries needed to build libsrcml")
 endif()
 
 
@@ -95,7 +97,12 @@ if(NOT WIN32 AND NOT APPLE)
 set(LIBSRCML_LIBRARIES ${LIBSRCML_LIBRARIES};rt)
 endif()
 
+if(NOT WIN32)
 set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} CACHE INTERNAL "Libraries needed to build srcml")
+else()
+set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 CACHE INTERNAL "Libraries needed to build srcml\
+")
+endif()
 
 
 # Finding antlr library.
