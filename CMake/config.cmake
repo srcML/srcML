@@ -99,7 +99,7 @@ endif()
 
 if(NOT WIN32)
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} crypto CACHE INTERNAL "Libraries needed to build srcml")
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+elseif(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 crypto CACHE INTERNAL "Libraries needed to build srcml")
 else()
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 CACHE INTERNAL "Libraries needed to build srcml")
