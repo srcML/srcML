@@ -26,7 +26,6 @@
 #include <srcml.h>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
-#include <src_prefix.hpp>
 #include <parse_queue.hpp>
 #include <src_input_libarchive.hpp>
 #include <src_input_file.hpp>
@@ -72,10 +71,9 @@ void create_srcml(srcml_input_t& input_sources,
     //   only one input
     //   not a directory (if local file)
     //   no cli request to make it a directory
-    if (srcml_request.input.size() == 1 &&
-        !is_directory(boost::filesystem::path(src_prefix_resource(srcml_request.input[0]))) &&
-        !(srcml_request.markup_options &&
-          (*srcml_request.markup_options & SRCML_OPTION_ARCHIVE))) {
+    if (input_sources.size() == 1 &&
+        !boost::filesystem::is_directory(input_sources[0].resource) &&
+        !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_OPTION_ARCHIVE))) {
 
         srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
     } else {
