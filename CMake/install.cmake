@@ -20,7 +20,7 @@
 
 if(NOT WIN32)
     set(CMAKE_INSTALL_PREFIX "/usr/local")
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+elseif(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     file(GLOB SRCML_DLLS ${CMAKE_SOURCE_DIR}/dlls/*)
     install(FILES ${SRCML_DLLS} DESTINATION bin)
 endif()
