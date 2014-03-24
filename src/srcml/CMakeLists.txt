@@ -26,7 +26,7 @@ srcMLExec(srcml "srcml.cpp;${SRCML_HEADERS};${SRCML_SOURCE}" srcml_shared ${SRCM
 
 if(APPLE)							     
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\" \"-u\" \"-r\" \"${CMAKE_BINARY_DIR}/bin/srcml\")")
-else(NOT WIN32)
+elseif(NOT WIN32)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\" \"${CMAKE_BINARY_DIR}/bin/srcml\")")
 endif()
 

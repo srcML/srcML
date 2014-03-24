@@ -29,9 +29,11 @@
 
 # Dynamic Load libraries (Unix only)
 if(NOT WIN32)
-option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and libexslt" ON)
-else()
-add_definitions(-DNO_DLLOAD)
+    option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and libexslt" ON)
+endif()
+
+if(NOT DYNAMIC_LOAD_ENABLED)
+    add_definitions(-DNO_DLLOAD)
 endif()
 
 # Setting some windows only properties.
