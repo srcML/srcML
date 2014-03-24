@@ -139,7 +139,7 @@ endif()
 # The default configuration is to compile in DEBUG mode. These flags can be directly
 # overridden by setting the property of a target you wish to change them for.
 if(${CMAKE_COMPILER_IS_GNUCXX})
-    set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized")
+    set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas")
     # Adding global compiler definitions.
     set(CMAKE_CXX_FLAGS "-fPIC -O3 ${GCC_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${GCC_WARNINGS}")
