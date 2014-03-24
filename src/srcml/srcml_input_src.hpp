@@ -28,6 +28,9 @@
 #include <vector>
 #include <boost/optional.hpp>
 #include <iostream>
+#include <src_prefix.hpp>
+#include <boost/filesystem.hpp>
+#include <algorithm>
 
 class srcml_input_src;
 
@@ -37,9 +40,16 @@ typedef srcml_input_src srcml_output_src;
 class srcml_input_src {
 public:
     srcml_input_src() {}
-    srcml_input_src(const std::string& other) { filename = other; }
+    srcml_input_src(const std::string& other) { 
 
-    srcml_input_src& operator=(const std::string& other) { filename = other; return *this; }
+        filename = src_prefix_add_uri(other);
+
+        src_prefix_split_uri(filename, protocol, resource);
+        extension = boost::filesystem::path(resource.c_str()).extension().string();
+        isxml(extension == ".xml");
+    }
+
+    srcml_input_src& operator=(const std::string& other) { srcml_input_src t(other); swap(t); return *this; }
     srcml_input_src& operator=(FILE* other) { fileptr = other; return *this; }
     srcml_input_src& operator=(int other) { fd = other; return *this; }
 
@@ -55,6 +65,17 @@ public:
     bool issrc() const { return is_xml && !*is_xml; }
 
     const char* c_str() const { return filename.c_str(); }
+
+    void swap(srcml_input_src& other) {
+
+        std::swap(filename, other.filename);
+        std::swap(resource, other.resource);
+        std::swap(extension, other.extension);
+        std::swap(protocol, other.protocol);
+        std::swap(fileptr, other.fileptr);
+        std::swap(fd, other.fd);
+        std::swap(is_xml, other.is_xml);
+    }
 
     std::string filename;
     std::string resource;
