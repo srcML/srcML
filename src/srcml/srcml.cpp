@@ -91,6 +91,10 @@ int main(int argc, char * argv[]) {
 
         if (input == "stdin://-" || input == "-") {
 
+            if (pstdin) {
+                // double stdin
+            }
+
             // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
             FILE* fstdin = fdopen(STDIN_FILENO, "r");
 
@@ -115,10 +119,6 @@ int main(int argc, char * argv[]) {
         output = *srcml_request.output_filename;
     else
         output = "-";
-    if (!(output == "-"))
-        output.isxml(boost::filesystem::path(output.c_str()).extension().compare(".xml") == 0);
-    else
-        output.isxml(false);
 
     // Now we can determine what processing needs to occur
     // src->srcml
