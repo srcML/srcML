@@ -90,9 +90,7 @@ void src_input_libarchive(ParseQueue& queue,                  // srcml parsing q
                           const boost::optional<std::string>& language,        // specified language
                           const boost::optional<std::string>& option_filename,
                           const boost::optional<std::string>& option_directory,
-                          const boost::optional<std::string>& option_version,
-                          boost::optional<FILE*> fstdin = boost::optional<FILE*>()  // stdin (if already opened)
-                          );
+                          const boost::optional<std::string>& option_version);
 
 bool is_archive(const std::string& input_file_extension);
 bool is_compressed(const std::string& input_file_extension);

@@ -20,16 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
-  src_input_libarchive assigns local files, stdin, and archival input to the
-  srcml parsing queue
-*/
-
 #include <src_input_libarchive.hpp>
 #include <curl/curl.h>
 #include <archive.h>
 #include <archive_entry.h>
-#include <boost/filesystem.hpp>
 
 namespace {
     struct curl {
@@ -57,8 +51,7 @@ void src_input_libarchive(ParseQueue& queue,
                           const boost::optional<std::string>& option_language,
                           const boost::optional<std::string>& option_filename,
                           const boost::optional<std::string>& option_directory,
-                          const boost::optional<std::string>& option_version,
-                          boost::optional<FILE*> fstdin) {
+                          const boost::optional<std::string>& option_version) {
 
     archive* arch = archive_read_new();
 
@@ -93,9 +86,9 @@ void src_input_libarchive(ParseQueue& queue,
     // open the archive
     curl curling;
     int open_status;
-    if (fstdin) {
+    if (input_file == "-") {
 
-        open_status = archive_read_open_FILE(arch, *fstdin);
+        open_status = archive_read_open_FILE(arch, input_file);
 
     } else if (input_file.protocol == "http") {
 
