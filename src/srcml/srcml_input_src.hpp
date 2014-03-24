@@ -35,7 +35,7 @@
 class srcml_input_src;
 
 typedef std::vector<srcml_input_src> srcml_input_t;
-typedef srcml_input_src srcml_output_src;
+typedef srcml_input_src srcml_output_dest;
 
 class srcml_input_src {
 public:

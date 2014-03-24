@@ -113,7 +113,7 @@ int main(int argc, char * argv[]) {
     }
 
     // now lets do the same sort of processing for the output
-    srcml_input_src output = srcml_request.output_filename ? *srcml_request.output_filename : "";
+    srcml_output_dest output = srcml_request.output_filename ? *srcml_request.output_filename : "";
 
     // Now we can determine what processing needs to occur
     // src->srcml
