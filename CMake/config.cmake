@@ -81,7 +81,10 @@ find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr
 
 if(DYNAMIC_LOAD_ENABLED)
 set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} dl crypto
-		        CACHE INTERNAL "Libraries needed to build libsrcml")
+                CACHE INTERNAL "Libraries needed to build libsrcml")
+elseif(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} crypto
+                CACHE INTERNAL "Libraries needed to build libsrcml")
 else()
 set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES}  ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${Boost_LIBRARIES} ${ANTLR_LIBRARY}
 		       CACHE INTERNAL "Libraries needed to build libsrcml")
