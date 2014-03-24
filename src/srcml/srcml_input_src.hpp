@@ -38,24 +38,28 @@ class srcml_input_src;
 typedef std::vector<srcml_input_src> srcml_input_t;
 typedef srcml_input_src srcml_output_dest;
 
+enum STATES { INDETERMINATE, SRC, SRCML };
+
 class srcml_input_src {
 public:
-    srcml_input_src() {}
-    srcml_input_src(const std::string& other) { 
 
+    srcml_input_src() {}
+    srcml_input_src(const std::string& other) : state(INDETERMINATE) { 
+
+        // TODO: This should always be done by srcml_cli, and can eventually be removed
         filename = src_prefix_add_uri(other);
 
         src_prefix_split_uri(filename, protocol, resource);
         extension = boost::filesystem::path(resource.c_str()).extension().string();
         if (resource != "-")
-            isxml = extension == ".xml";
+            state = extension == ".xml" ? SRCML : SRC;
     }
 
     srcml_input_src& operator=(const std::string& other) { srcml_input_src t(other); swap(t); return *this; }
     srcml_input_src& operator=(FILE* other) { fileptr = other; return *this; }
     srcml_input_src& operator=(int other) { fd = other; return *this; }
 
-    operator const std::string&() const { return filename; }
+    operator const std::string&() const { return resource; }
     operator FILE*() const { return *fileptr; }
     operator int() const { return *fd; }
 
@@ -72,16 +76,16 @@ public:
         std::swap(protocol, other.protocol);
         std::swap(fileptr, other.fileptr);
         std::swap(fd, other.fd);
-        std::swap(isxml, other.isxml);
+        std::swap(state, other.state);
     }
 
     std::string filename;
+    std::string protocol;
     std::string resource;
     std::string extension;
-    std::string protocol;
     boost::optional<FILE*> fileptr;
     boost::optional<int> fd;
-    boost::tribool isxml;
+    enum STATES state;
 };
 
 template <typename T>

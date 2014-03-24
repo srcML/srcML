@@ -100,7 +100,7 @@ void create_srcml(srcml_input_t& input_sources,
     if (contains<int>(output))
         status = srcml_write_open_fd(srcml_arch, output);
     else 
-        status = srcml_write_open_filename(srcml_arch, output.resource.c_str());
+        status = srcml_write_open_filename(srcml_arch, output.c_str());
 
     // gzip compression available from libsrcml
     if (srcml_request.output_filename->size() > 3 && srcml_request.output_filename->substr(srcml_request.output_filename->size() - 3) == ".gz")

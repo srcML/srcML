@@ -100,7 +100,7 @@ int main(int argc, char * argv[]) {
             peek4char(fstdin, data, &size);
 
             // pass the first 4 bytes and the size actually read in
-            input.isxml = isxml(data, size);
+            input.state = isxml(data, size) ? SRCML : SRC;
 
             input = fstdin;
 
@@ -127,7 +127,7 @@ int main(int argc, char * argv[]) {
     // Note: src->srcml->src implies a temporary srcml file
     bool src_input = false;
     BOOST_FOREACH(const srcml_input_src& input, input_sources) {
-        if (input.isxml == false) {
+        if (input.state == SRC) {
             src_input = true;
             break;
         }
@@ -136,12 +136,12 @@ int main(int argc, char * argv[]) {
         // at least one src file, so we have to create srcml
         // may also have to go back to src
         createsrcml = true;
-        createsrc = destination.isxml == false;
+        createsrc = destination.state == SRC;
     } else {
         // all inputs are srcml, so result depends on destination
         // if destination is srcml, no src creation
         // if destination is src (or indeterminate), create src
-        createsrc = destination.isxml == false;
+        createsrc = destination.state == SRC;
         createsrcml = !createsrc;
     }
 
@@ -158,7 +158,7 @@ int main(int argc, char * argv[]) {
     // when creating srcml, if we have source std input, we have to have a requested language
     // note: always compare boost::tribool to values, since
     // boost::tribool overloads &&, and prevents short circuiting of pointer check
-    if (createsrcml && pstdin && (pstdin->isxml == false) && !srcml_request.att_language) {
+    if (createsrcml && pstdin && (pstdin->state == SRC) && !srcml_request.att_language) {
             std::cerr << "Using stdin requires a declared language\n";
             exit(1);
     }
