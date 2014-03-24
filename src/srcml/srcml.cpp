@@ -71,6 +71,7 @@ int main(int argc, char * argv[]) {
     // parse the command line
     srcml_request_t srcml_request = parseCLI(argc, argv);
 
+    // global options
     SRCMLOptions::set(srcml_request.command);
 
     // version
@@ -88,6 +89,7 @@ int main(int argc, char * argv[]) {
     srcml_input_src* pstdin = 0;
     BOOST_FOREACH(srcml_input_src& input, input_sources) {
 
+        // stdin specially handled
         if (input == "-") {
 
             // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
@@ -110,9 +112,10 @@ int main(int argc, char * argv[]) {
     }
 
     // do the same sort of processing for the output destination
-    srcml_output_dest destination = srcml_request.output_filename ? *srcml_request.output_filename : "-";
+    srcml_output_dest destination = srcml_request.output_filename ? *srcml_request.output_filename : "stdout:///-";
 
-    // Now we can determine what processing needs to occur
+    // Determine what processing needs to occur
+
     // src->srcml
     bool createsrcml = false;
 
@@ -145,7 +148,7 @@ int main(int argc, char * argv[]) {
     }
 
     // adjust if explicitly told differently via commands
-    // TODO: may detect some errors here
+    // TODO: may detect some inconsistencies here
     if (!createsrc && srcml_request.command & SRCML_COMMAND_SRC) {
         createsrc = true;
     } else if (!createsrcml && srcml_request.command & SRCML_COMMAND_SRCML) {
@@ -161,7 +164,8 @@ int main(int argc, char * argv[]) {
     }
 
     // src->srcml (or src->srcml->src)
-    boost::thread_group srcml_create_thread;
+    // No need to join or wait as it will write to destination pipe
+    boost::thread_group create_srcml_thread;
     srcml_input_t pipe_input_sources;
     if (createsrcml && !createsrc) {
 
@@ -177,11 +181,12 @@ int main(int argc, char * argv[]) {
         destination = fds[1];
 
         // start src->srcml writing to the pipe
-        srcml_create_thread.create_thread( boost::bind(create_srcml, input_sources, srcml_request, destination) );
+        // No need to join or wait as it will write to destination pipe
+        create_srcml_thread.create_thread( boost::bind(create_srcml, input_sources, srcml_request, destination) );
 
         // the srcml->src stage must now read from internal input sources
         pipe_input_sources.resize(1);
-        pipe_input_sources[0] = "-";
+        pipe_input_sources[0] = "stdin://-";
         pipe_input_sources[0] = fds[0];
     }
 
