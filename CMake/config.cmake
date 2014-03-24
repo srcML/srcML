@@ -100,8 +100,7 @@ endif()
 if(NOT WIN32)
 set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} CACHE INTERNAL "Libraries needed to build srcml")
 else()
-set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 CACHE INTERNAL "Libraries needed to build srcml\
-")
+set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 CACHE INTERNAL "Libraries needed to build srcml")
 endif()
 
 
