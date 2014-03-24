@@ -103,7 +103,7 @@ void create_srcml(srcml_input_t& input_sources,
         status = srcml_write_open_filename(srcml_arch, destination.c_str());
 
     // gzip compression available from libsrcml
-    if (srcml_request.output_filename->size() > 3 && srcml_request.output_filename->substr(srcml_request.output_filename->size() - 3) == ".gz")
+    if (destination.extension == ".gz")
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_COMPRESS);
 
     // setup the parsing queue
@@ -119,15 +119,15 @@ void create_srcml(srcml_input_t& input_sources,
         }
 
         // call handler based on prefix
-        if (contains<FILE*>(input) && input.extension != ".xml") {
+        if (contains<FILE*>(input) && input.state == SRC) {
 
             src_input_libarchive(queue, srcml_arch, input.filename, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, (FILE*) input);
 
-        } else if (contains<FILE*>(input) && input.extension == ".xml") {
+        } else if (contains<FILE*>(input) && input.state == SRCML) {
 
             srcml_input_srcml(input.resource, srcml_arch, (FILE*) input);
 
-        } else if (input.extension == ".xml") {
+        } else if (input.state == SRCML) {
 
             srcml_input_srcml(input.resource, srcml_arch);
 
@@ -142,7 +142,6 @@ void create_srcml(srcml_input_t& input_sources,
         } else {
 
             src_input_libarchive(queue, srcml_arch, input.filename, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
-
         }
     }
 
