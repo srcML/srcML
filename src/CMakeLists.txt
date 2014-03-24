@@ -58,8 +58,6 @@ if(APPLE)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.dylib\")")
 elseif(NOT ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") AND NOT WIN32)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.so\")")
-elseif(NOT ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"))
-   install(DIRECTORY ${CMAKE_SOURCE_DIR}/dlls DESTINATION bin)
 endif()
 
 install(TARGETS srcml_shared srcml_static
