@@ -60,6 +60,9 @@ public:
     boost::optional<FILE*> fileptr;
     boost::optional<int> fd;
     boost::optional<bool> is_xml;
+    std::string resource;
+    std::string extension;
+    std::string protocol;
 };
 
 template <typename T>

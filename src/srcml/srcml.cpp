@@ -89,12 +89,11 @@ int main(int argc, char * argv[]) {
     srcml_input_src* pstdin = 0;
     BOOST_FOREACH(srcml_input_src& input, input_sources) {
 
-        if (input != "stdin://-" && input != "-") {
+        src_prefix_split_uri(input, input.protocol, input.resource);
+        input.extension = boost::filesystem::path(input.resource.c_str()).extension().string();
+        input.isxml(input.extension == ".xml");
 
-            // base on extension
-            input.isxml(boost::filesystem::path(src_prefix_resource(input).c_str()).extension().compare(".xml") == 0);
-
-        } else {
+        if (input == "stdin://-" || input == "-") {
 
             // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
             FILE* fstdin = fdopen(STDIN_FILENO, "r");
