@@ -121,7 +121,8 @@ void create_srcml(srcml_input_t& input_sources,
         // call handler based on prefix
         if (contains<FILE*>(input) && input.state == SRC) {
 
-            src_input_libarchive(queue, srcml_arch, input.filename, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, (FILE*) input);
+
+            src_input_libarchive(queue, srcml_arch, input, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, (FILE*) input);
 
         } else if (contains<FILE*>(input) && input.state == SRCML) {
 
@@ -129,19 +130,19 @@ void create_srcml(srcml_input_t& input_sources,
 
         } else if (input.state == SRCML) {
 
-            srcml_input_srcml(input.resource, srcml_arch);
+            srcml_input_srcml(input, srcml_arch);
 
         } else if (input.protocol == "file" && boost::filesystem::is_directory(input.resource)) {
 
-            src_input_filesystem(queue, srcml_arch, input.resource, srcml_request.att_language);
+            src_input_filesystem(queue, srcml_arch, input, srcml_request.att_language);
 
         } else if (input.protocol == "file" && !is_archive(input.extension) && !is_compressed(input.extension)) {
 
-            src_input_file(queue, srcml_arch, input.resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
+            src_input_file(queue, srcml_arch, input, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
 
         } else {
 
-            src_input_libarchive(queue, srcml_arch, input.filename, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
+            src_input_libarchive(queue, srcml_arch, input, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
         }
     }
 

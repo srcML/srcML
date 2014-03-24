@@ -66,7 +66,7 @@ public:
     bool operator==(const std::string& other) const { return other == filename; }
     bool operator!=(const char* other) const { return filename != other; }
 
-    const char* c_str() const { return filename.c_str(); }
+    const char* c_str() const { return resource.c_str(); }
 
     void swap(srcml_input_src& other) {
 
