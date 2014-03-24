@@ -113,7 +113,7 @@ int main(int argc, char * argv[]) {
     }
 
     // now lets do the same sort of processing for the output
-    srcml_output_dest output = srcml_request.output_filename ? *srcml_request.output_filename : "";
+    srcml_output_dest destination = srcml_request.output_filename ? *srcml_request.output_filename : "";
 
     // Now we can determine what processing needs to occur
     // src->srcml
@@ -134,9 +134,9 @@ int main(int argc, char * argv[]) {
             ++count_src;
     if (count_src > 0) {
         createsrcml = true;
-        createsrc = !output.isxml();
+        createsrc = !destination.isxml();
     } else {
-        createsrcml = output.isxml();
+        createsrcml = destination.isxml();
         createsrc = !createsrcml;
     }
 
@@ -160,7 +160,7 @@ int main(int argc, char * argv[]) {
     srcml_input_t pipe_input_sources;
     if (createsrcml && !createsrc) {
 
-        create_srcml(input_sources, srcml_request, output);
+        create_srcml(input_sources, srcml_request, destination);
 
     } if (createsrcml && createsrc) {
 
@@ -169,10 +169,10 @@ int main(int argc, char * argv[]) {
         pipe(fds);
 
         // set the output destination
-        output = fds[1];
+        destination = fds[1];
 
         // start src->srcml writing to the pipe
-        srcml_create_thread.create_thread( boost::bind(create_srcml, input_sources, srcml_request, output) );
+        srcml_create_thread.create_thread( boost::bind(create_srcml, input_sources, srcml_request, destination) );
 
         // the srcml->src stage must now read from internal input sources
         pipe_input_sources.resize(1);
@@ -241,7 +241,7 @@ int main(int argc, char * argv[]) {
 
         fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
-        create_src(pipe_input_sources.empty()? input_sources : pipe_input_sources, srcml_request, output);
+        create_src(pipe_input_sources.empty()? input_sources : pipe_input_sources, srcml_request, destination);
     }
 
     srcml_cleanup_globals();
