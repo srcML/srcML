@@ -115,43 +115,35 @@ void create_srcml(srcml_input_t& input_sources,
     BOOST_FOREACH(const srcml_input_src& input, input_sources) {
 
         // if stdin, then there has to be data
-        if (!contains<FILE*>(input) && (input == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) && !src_input_stdin()) {
+        if (!contains<FILE*>(input) && (input == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) &&
+            !src_input_stdin()) {
             return; // stdin was requested, but no data was received
         }
 
-        std::string uri = src_prefix_add_uri(input);
-
-        // split the URI
-        std::string protocol;
-        std::string resource;
-        src_prefix_split_uri(uri, protocol, resource);
-
-        std::string extension = boost::filesystem::extension(boost::filesystem::path(resource));
-
         // call handler based on prefix
-        if (contains<FILE*>(input) && extension != ".xml") {
+        if (contains<FILE*>(input) && input.extension != ".xml") {
 
-            src_input_libarchive(queue, srcml_arch, uri, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, (FILE*) input);
+            src_input_libarchive(queue, srcml_arch, input.filename, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version, (FILE*) input);
 
-        } else if (contains<FILE*>(input) && extension == ".xml") {
+        } else if (contains<FILE*>(input) && input.extension == ".xml") {
 
-            srcml_input_srcml(resource, srcml_arch, (FILE*) input);
+            srcml_input_srcml(input.resource, srcml_arch, (FILE*) input);
 
-        } else if (extension == ".xml") {
+        } else if (input.extension == ".xml") {
 
-            srcml_input_srcml(resource, srcml_arch);
+            srcml_input_srcml(input.resource, srcml_arch);
 
-        } else if (protocol == "file" && is_directory(boost::filesystem::path(resource))) {
+        } else if (input.protocol == "file" && boost::filesystem::is_directory(input.resource)) {
 
-            src_input_filesystem(queue, srcml_arch, resource, srcml_request.att_language);
+            src_input_filesystem(queue, srcml_arch, input.resource, srcml_request.att_language);
 
-        } else if (protocol == "file" && !is_archive(extension) && !is_compressed(extension)) {
+        } else if (input.protocol == "file" && !is_archive(input.extension) && !is_compressed(input.extension)) {
 
-            src_input_file(queue, srcml_arch, resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
+            src_input_file(queue, srcml_arch, input.resource, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
 
         } else {
 
-            src_input_libarchive(queue, srcml_arch, uri, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
+            src_input_libarchive(queue, srcml_arch, input.filename, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
 
         }
     }

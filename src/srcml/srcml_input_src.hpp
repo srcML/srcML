@@ -43,33 +43,30 @@ public:
     srcml_input_src& operator=(FILE* other) { fileptr = other; return *this; }
     srcml_input_src& operator=(int other) { fd = other; return *this; }
 
-    operator const std::string&() const { return *filename; }
+    operator const std::string&() const { return filename; }
     operator FILE*() const { return *fileptr; }
     operator int() const { return *fd; }
 
-    bool operator==(const std::string& other) const { return other == *filename; }
-    bool operator!=(const char* other) const { return *filename != other; }
+    bool operator==(const std::string& other) const { return other == filename; }
+    bool operator!=(const char* other) const { return filename != other; }
 
     void isxml(bool result) { is_xml = result; }
     bool isxml() const { return is_xml && *is_xml; }
     bool issrc() const { return is_xml && !*is_xml; }
 
-    const char* c_str() const { return filename->c_str(); }
+    const char* c_str() const { return filename.c_str(); }
 
-    boost::optional<std::string> filename;
-    boost::optional<FILE*> fileptr;
-    boost::optional<int> fd;
-    boost::optional<bool> is_xml;
+    std::string filename;
     std::string resource;
     std::string extension;
     std::string protocol;
+    boost::optional<FILE*> fileptr;
+    boost::optional<int> fd;
+    boost::optional<bool> is_xml;
 };
 
 template <typename T>
 inline bool contains(const srcml_input_src&) { return false; }
-
-template <>
-inline bool contains<std::string>(const srcml_input_src& input) { return input.filename; }
 
 template <>
 inline bool contains<FILE*>(const srcml_input_src& input) { return input.fileptr; }

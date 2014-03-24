@@ -89,6 +89,7 @@ int main(int argc, char * argv[]) {
     srcml_input_src* pstdin = 0;
     BOOST_FOREACH(srcml_input_src& input, input_sources) {
 
+        input = src_prefix_add_uri(input);
         src_prefix_split_uri(input, input.protocol, input.resource);
         input.extension = boost::filesystem::path(input.resource.c_str()).extension().string();
         input.isxml(input.extension == ".xml");
