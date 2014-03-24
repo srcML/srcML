@@ -36,7 +36,7 @@
 // create srcml from the current request
 void create_srcml(srcml_input_t& input_sources,
                   srcml_request_t& srcml_request,
-                  srcml_output_dest& output) {
+                  srcml_output_dest& destination) {
 
     // create the output srcml archive
     srcml_archive* srcml_arch = srcml_create_archive();
@@ -97,10 +97,10 @@ void create_srcml(srcml_input_t& input_sources,
 
     // create the srcML output file. if compressed, must go through libarchive thread
     int status = 0;
-    if (contains<int>(output))
-        status = srcml_write_open_fd(srcml_arch, output);
+    if (contains<int>(destination))
+        status = srcml_write_open_fd(srcml_arch, destination);
     else 
-        status = srcml_write_open_filename(srcml_arch, output.c_str());
+        status = srcml_write_open_filename(srcml_arch, destination.c_str());
 
     // gzip compression available from libsrcml
     if (srcml_request.output_filename->size() > 3 && srcml_request.output_filename->substr(srcml_request.output_filename->size() - 3) == ".gz")
@@ -154,6 +154,6 @@ void create_srcml(srcml_input_t& input_sources,
     srcml_free_archive(srcml_arch);
 
     // if we were writing to a file descriptor, then close it
-    if (contains<int>(output))
-        close(output);
+    if (contains<int>(destination))
+        close(destination);
 }

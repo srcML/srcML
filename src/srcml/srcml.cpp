@@ -27,7 +27,6 @@
 #include <srcml_list_unit_files.hpp>
 #include <src_input_validator.hpp>
 #include <src_language.hpp>
-#include <trace_log.hpp>
 #include <srcml_options.hpp>
 #include <create_srcml.hpp>
 #include <create_src.hpp>
