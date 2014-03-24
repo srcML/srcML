@@ -30,6 +30,7 @@
 #include <iostream>
 #include <src_prefix.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/logic/tribool.hpp>
 #include <algorithm>
 
 class srcml_input_src;
@@ -46,7 +47,8 @@ public:
 
         src_prefix_split_uri(filename, protocol, resource);
         extension = boost::filesystem::path(resource.c_str()).extension().string();
-        isxml(extension == ".xml");
+        if (resource != "-")
+            isxml = extension == ".xml";
     }
 
     srcml_input_src& operator=(const std::string& other) { srcml_input_src t(other); swap(t); return *this; }
@@ -60,10 +62,6 @@ public:
     bool operator==(const std::string& other) const { return other == filename; }
     bool operator!=(const char* other) const { return filename != other; }
 
-    void isxml(bool result) { is_xml = result; }
-    bool isxml() const { return is_xml && *is_xml; }
-    bool issrc() const { return is_xml && !*is_xml; }
-
     const char* c_str() const { return filename.c_str(); }
 
     void swap(srcml_input_src& other) {
@@ -74,7 +72,7 @@ public:
         std::swap(protocol, other.protocol);
         std::swap(fileptr, other.fileptr);
         std::swap(fd, other.fd);
-        std::swap(is_xml, other.is_xml);
+        std::swap(isxml, other.isxml);
     }
 
     std::string filename;
@@ -83,7 +81,7 @@ public:
     std::string protocol;
     boost::optional<FILE*> fileptr;
     boost::optional<int> fd;
-    boost::optional<bool> is_xml;
+    boost::tribool isxml;
 };
 
 template <typename T>

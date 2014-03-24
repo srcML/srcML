@@ -104,7 +104,7 @@ int main(int argc, char * argv[]) {
             peek4char(fstdin, data, &size);
 
             // pass the first 4 bytes and the size actually read in
-            input.isxml(isxml(data, size));
+            input.isxml = isxml(data, size);
 
             input = fstdin;
 
@@ -112,8 +112,8 @@ int main(int argc, char * argv[]) {
         }
     }
 
-    // now lets do the same sort of processing for the output
-    srcml_output_dest destination = srcml_request.output_filename ? *srcml_request.output_filename : "";
+    // do the same sort of processing for the output destination
+    srcml_output_dest destination = srcml_request.output_filename ? *srcml_request.output_filename : "-";
 
     // Now we can determine what processing needs to occur
     // src->srcml
@@ -128,15 +128,17 @@ int main(int argc, char * argv[]) {
     // All src input files imply src->srcml
     // A single src input file implies src->srcml
     // Note: src->srcml->src implies a temporary srcml file
-    int count_src = 0;
+    bool src_input = false;
     BOOST_FOREACH(const srcml_input_src& input, input_sources)
-        if (!input.isxml())
-            ++count_src;
-    if (count_src > 0) {
+        if (input.isxml == false) {
+            src_input = true;
+            break;
+        }
+    if (src_input) {
         createsrcml = true;
-        createsrc = !destination.isxml();
+        createsrc = destination.isxml == false;
     } else {
-        createsrcml = destination.isxml();
+        createsrcml = destination.isxml == true;
         createsrc = !createsrcml;
     }
 
@@ -150,9 +152,12 @@ int main(int argc, char * argv[]) {
     }
 
     // when creating srcml, if we have source std input, we have to have a requested language
-    if (createsrcml && pstdin && !pstdin->isxml() && !srcml_request.att_language) {
-        std::cerr << "Using stdin requires a declared language\n";
-        exit(1);
+    // note: necessary since boost::tribool overloads &&, and prevents short circuiting of pointer check
+    if (createsrcml && pstdin) {
+       if (!pstdin->isxml && !srcml_request.att_language) {
+            std::cerr << "Using stdin requires a declared language\n";
+            exit(1);
+        }
     }
 
     // src->srcml (or src->srcml->src)
