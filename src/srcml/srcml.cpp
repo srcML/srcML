@@ -113,12 +113,7 @@ int main(int argc, char * argv[]) {
     }
 
     // now lets do the same sort of processing for the output
-    // yes, I know the class name will need to be changes
-    srcml_input_src output;
-    if (srcml_request.output_filename)
-        output = *srcml_request.output_filename;
-    else
-        output = "-";
+    srcml_input_src output = srcml_request.output_filename ? *srcml_request.output_filename : "";
 
     // Now we can determine what processing needs to occur
     // src->srcml
@@ -154,7 +149,7 @@ int main(int argc, char * argv[]) {
         createsrcml = true;
     }
 
-    // Now that we finally know whether 
+    // when creating srcml, if we have source std input, we have to have a requested language
     if (createsrcml && pstdin && !pstdin->isxml() && !srcml_request.att_language) {
         std::cerr << "Using stdin requires a declared language\n";
         exit(1);
@@ -168,7 +163,6 @@ int main(int argc, char * argv[]) {
         create_srcml(input_sources, srcml_request, output);
 
     } if (createsrcml && createsrc) {
-        fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
         // setup a pipe for src->srcml can write to fds[1], and srcml->src can read from fds[0]
         int fds[2];
