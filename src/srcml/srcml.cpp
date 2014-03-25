@@ -29,6 +29,7 @@
 #include <src_language.hpp>
 #include <srcml_options.hpp>
 #include <create_srcml.hpp>
+#include <process_srcml.hpp>
 #include <create_src.hpp>
 #include <isxml.hpp>
 #include <peek4char.hpp>
