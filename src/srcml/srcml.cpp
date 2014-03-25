@@ -157,26 +157,29 @@ int main(int argc, char * argv[]) {
         commands.push_back(create_srcml);
 
     // srcml->srcml processing
-   // if (false)
-//        commands.push_back(process_srcml);
+    if (false)
+        commands.push_back(process_srcml);
 
     // srcml->src
     if (createsrc)
         commands.push_back(create_src);
 
-    // execute the commands
+    // execute all but the last command in the sequence
     boost::thread_group create_srcml_thread;
     int prevpipe = 0;
     while (commands.size() > 1) {
 
+        // create a pipe for output
         int fds[2];
         pipe(fds);
 
+        // run the front command in the sequence with possible input from previous pipe, and output to a new pipe
         create_srcml_thread.create_thread( boost::bind(commands.front(),
             srcml_request,
             prevpipe ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevpipe)),
             srcml_output_dest("-", fds[1])));
 
+        // will become input on next command
         prevpipe = fds[0];
 
         commands.pop_front();
@@ -186,6 +189,9 @@ int main(int argc, char * argv[]) {
     commands.front()(srcml_request,
                      !prevpipe ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevpipe)),
                      destination);
+
+    // for normal processing, should not be needed. Basically for safety with error handling
+    create_srcml_thread.join_all();
 
     srcml_cleanup_globals();
 
