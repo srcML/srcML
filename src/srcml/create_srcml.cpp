@@ -21,10 +21,7 @@
  */
 
 #include <create_srcml.hpp>
-#include <stdio.h>
-#include <fcntl.h>
 #include <srcml.h>
-#include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <parse_queue.hpp>
 #include <src_input_libarchive.hpp>
@@ -113,6 +110,7 @@ void create_srcml(srcml_input_t& input_sources,
     BOOST_FOREACH(const srcml_input_src& input, input_sources) {
 
         // if stdin, then there has to be data
+        // TODO: Safe to remove this? We already read data.
         if (!contains<FILE*>(input) && (input == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) &&
             !src_input_stdin()) {
             return; // stdin was requested, but no data was received
