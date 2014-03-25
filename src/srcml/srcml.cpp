@@ -144,7 +144,7 @@ int main(int argc, char * argv[]) {
     }
 
     if (insrcml) {
-        srcml_display_metadata(srcml_request.command, input_sources);
+        srcml_display_metadata(srcml_request, input_sources, destination);
         exit(0);
     }
 
