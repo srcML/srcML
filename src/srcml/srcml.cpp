@@ -145,42 +145,48 @@ int main(int argc, char * argv[]) {
             exit(1);
     }
 
-    // src->srcml (or src->srcml->src)
+    if (insrcml) {
+        srcml_display_metadata(srcml_request);
+        exit(0);
+    }
+
+    // setup the commands
+    typedef void (*command)(const srcml_input_t& input_sources, const srcml_request_t& srcml_request, const srcml_output_dest& destination);
+    std::list<command> commands;
+
+    // src->srcml
+    if (createsrcml)
+        commands.push_back(create_srcml);
+
+    // srcml->srcml processing
+   // if (false)
+//        commands.push_back(process_srcml);
+
+    // srcml->src
+    if (createsrc)
+        commands.push_back(create_src);
+
+    // execute the commands
     boost::thread_group create_srcml_thread;
-    srcml_input_t pipe_input_sources;
-    if (createsrcml && !createsrc) {
+    int prevpipe = 0;
+    while (commands.size() > 1) {
 
-        create_srcml(input_sources, srcml_request, destination);
-
-    } if (createsrcml && createsrc) {
-
-        // setup a pipe for src->srcml can write to fds[1], and srcml->src can read from fds[0]
         int fds[2];
         pipe(fds);
 
-        // set the output destination
-        destination = fds[1];
+        create_srcml_thread.create_thread( boost::bind(commands.front(),
+            prevpipe ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevpipe)),
+            srcml_request,
+            srcml_output_dest("-", fds[1])));
 
-        // start src->srcml writing to the pipe
-        // No need to join or wait as it will write to destination pipe
-        create_srcml_thread.create_thread( boost::bind(create_srcml, input_sources, srcml_request, destination) );
+        prevpipe = fds[0];
 
-        // No need to join or wait as the thread will write to destination pipe, then return
-
-        // the srcml->src stage must now read from internal input sources
-        pipe_input_sources.push_back(srcml_input_src("stdin://-", fds[0]));
+        commands.pop_front();
     }
 
-    if (insrcml) {
-        srcml_display_metadata(srcml_request);
-    }
-
-    // srcml->src
-    if (createsrc) {
-
-        // creating src from external input sources, or from internal pipe
-        create_src(pipe_input_sources.empty()? input_sources : pipe_input_sources, srcml_request, destination);
-    }
+    // execute the last command in the sequence
+    commands.front()(!prevpipe ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevpipe)),
+                    srcml_request, destination);
 
     srcml_cleanup_globals();
 

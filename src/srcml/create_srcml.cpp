@@ -31,11 +31,11 @@
 #include <srcml_input_srcml.hpp>
 
 // create srcml from the current request
-void create_srcml(srcml_input_t& input_sources,
-                  srcml_request_t& srcml_request,
-                  srcml_output_dest& destination) {
+void create_srcml(const srcml_input_t& input_sources,
+                  const srcml_request_t& srcml_request,
+                  const srcml_output_dest& destination) {
 
-    // create the output srcml archive
+     // create the output srcml archive
     srcml_archive* srcml_arch = srcml_create_archive();
 
     // set options for the output srcml archive
@@ -110,13 +110,14 @@ void create_srcml(srcml_input_t& input_sources,
 
     // process input sources
     BOOST_FOREACH(const srcml_input_src& input, input_sources) {
-
+/*
         // if stdin, then there has to be data
         // TODO: Safe to remove this? We already read data.
         if (!contains<FILE*>(input) && (input.protocol == "stdin") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) &&
             !src_input_stdin()) {
             return; // stdin was requested, but no data was received
         }
+*/
 
         // call handler based on prefix
         if (input.state == SRCML) {

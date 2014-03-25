@@ -62,6 +62,14 @@ public:
         swap(s);
     }
 
+    srcml_input_src(int fds) {
+
+        srcml_input_src s("-");
+        s = fds;
+
+        swap(s);
+    }
+
     srcml_input_src& operator=(const std::string& other) { srcml_input_src t(other); swap(t); return *this; }
     srcml_input_src& operator=(FILE* other) { fileptr = other; return *this; }
     srcml_input_src& operator=(int other) { fd = other; return *this; }

@@ -27,9 +27,9 @@
 #include <srcml_input_src.hpp>
 
 // create srcml from the current request
-void create_src(srcml_input_t& input_sources,
-                srcml_request_t& srcml_request,
-                srcml_output_dest& output);
+void create_src(const srcml_input_t& input_sources,
+                const srcml_request_t& srcml_request,
+                const srcml_output_dest& output);
 
 #endif
 
