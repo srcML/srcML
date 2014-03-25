@@ -22,18 +22,17 @@
 
 #include <srcml_input_srcml.hpp>
 
-void srcml_input_srcml(const srcml_input_src& input_filename,
+void srcml_input_srcml(const srcml_input_src& srcml_input,
                        srcml_archive* srcml_output_archive) {
 
-    // open the input srcml archive
+    // open the srcml input archive
     srcml_archive* srcml_input_archive = srcml_create_archive();
-
-    if (contains<int>(input_filename))
-        srcml_read_open_fd(srcml_input_archive, input_filename);
-    else if (contains<FILE*>(input_filename))
-        srcml_read_open_FILE(srcml_input_archive, input_filename);
+    if (contains<int>(srcml_input))
+        srcml_read_open_fd(srcml_input_archive, srcml_input);
+    else if (contains<FILE*>(srcml_input))
+        srcml_read_open_FILE(srcml_input_archive, srcml_input);
     else
-        srcml_read_open_filename(srcml_input_archive, input_filename.c_str());
+        srcml_read_open_filename(srcml_input_archive, srcml_input.c_str());
 
     // process each entry in the input srcml archive
     while (srcml_unit* unit = srcml_read_unit(srcml_input_archive)) {

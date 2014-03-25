@@ -31,6 +31,9 @@
 #include <parse_queue.hpp>
 #include <string>
 
-void src_input_filesystem(ParseQueue& queue, srcml_archive* srcml_arch, const std::string& input, const boost::optional<std::string>& lang);
+void src_input_filesystem(ParseQueue& queue,
+  						  srcml_archive* srcml_arch,
+						  const std::string& input_filename,
+						  const boost::optional<std::string>& language);
 
 #endif

@@ -36,7 +36,7 @@ void src_input_filesystem(ParseQueue& queue,
                           const std::string& input,
                           const boost::optional<std::string>& language)
 {
-    // setup the list of directories with the input as the first one
+    // list of directories with the input as the first one
     std::list<boost::filesystem::path> dirs(1, boost::filesystem::path(input));
 
     while (!dirs.empty()) {
@@ -49,13 +49,12 @@ void src_input_filesystem(ParseQueue& queue,
 
         // process the files from the top directory
         BOOST_FOREACH(boost::filesystem::path& file, files) {
-//        for (std::vector<boost::filesystem::path>::const_iterator it (files.begin()); it != files.end(); ++it) {
 
             // regular files are passed to the handler
             if (is_regular_file(file))
                 src_input_libarchive(queue, srcml_arch, file.string(), 0, 0, 0, language);
 
-            // directories are put at the back()??? or back???
+            // directories are put at the back
             else if (is_directory(file))
                 dirs.push_back(file);
         }
