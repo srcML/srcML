@@ -155,15 +155,16 @@ int main(int argc, char * argv[]) {
     if (!srcml_request.xpath.empty() || !srcml_request.xslt.empty() || !srcml_request.relaxng.empty())
         commands.push_back(process_srcml);
 
+    // srcml metadata. Note: This is a last command only
     if (insrcml)
         commands.push_back(srcml_display_metadata);
 
-    // srcml->src
+    // srcml->src. Note: This is a last command only
     if (createsrc)
         commands.push_back(create_src);
 
     // execute all but the last command in the sequence
-    boost::thread_group create_srcml_thread;
+    boost::thread_group command_processing_threads;
     int prevpipe = 0;
     while (commands.size() > 1) {
 
@@ -172,7 +173,7 @@ int main(int argc, char * argv[]) {
         pipe(fds);
 
         // run the front command in the sequence with possible input from previous pipe, and output to a new pipe
-        create_srcml_thread.create_thread( boost::bind(commands.front(),
+        command_processing_threads.create_thread( boost::bind(commands.front(),
             srcml_request,
             prevpipe ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevpipe)),
             srcml_output_dest("-", fds[1])));
@@ -189,7 +190,7 @@ int main(int argc, char * argv[]) {
                      destination);
 
     // for normal processing, should not be needed. Basically for safety with error handling
-    create_srcml_thread.join_all();
+    command_processing_threads.join_all();
 
     srcml_cleanup_globals();
 
