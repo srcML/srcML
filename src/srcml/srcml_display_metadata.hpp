@@ -29,8 +29,8 @@
 
 #include <string>
 #include <vector>
+#include <srcml_cli.hpp>
 
-void srcml_display_info(const std::vector<std::string>& pos_args);
-void srcml_display_info(const std::string& srcml_input);
+void srcml_display_metadata(const srcml_request_t& srcml_request);
 
 #endif
