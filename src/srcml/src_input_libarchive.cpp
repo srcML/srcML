@@ -20,16 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
-  src_input_libarchive assigns local files, stdin, and archival input to the
-  srcml parsing queue
-*/
-
 #include <src_input_libarchive.hpp>
 #include <curl/curl.h>
 #include <archive.h>
 #include <archive_entry.h>
-#include <boost/filesystem.hpp>
 
 namespace {
     struct curl {
@@ -53,12 +47,11 @@ namespace {
 // Convert input to a ParseRequest and assign request to the processing queue
 void src_input_libarchive(ParseQueue& queue,
                           srcml_archive* srcml_arch,
-                          const std::string& input_file,
+                          const srcml_input_src& input_file,
                           const boost::optional<std::string>& option_language,
                           const boost::optional<std::string>& option_filename,
                           const boost::optional<std::string>& option_directory,
-                          const boost::optional<std::string>& option_version,
-                          boost::optional<FILE*> fstdin) {
+                          const boost::optional<std::string>& option_version) {
 
     archive* arch = archive_read_new();
 
@@ -93,24 +86,24 @@ void src_input_libarchive(ParseQueue& queue,
     // open the archive
     curl curling;
     int open_status;
-    if (fstdin) {
+    if (input_file == "-") {
 
-        open_status = archive_read_open_FILE(arch, *fstdin);
+        open_status = archive_read_open_FILE(arch, input_file);
 
-    } else if (input_file.substr(0, 4) == "http") {
+    } else if (input_file.protocol == "http") {
 
-        curling.source = input_file;
+        curling.source = input_file.filename;
         open_status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
 
-    } else if (input_file == "stdin:///-") {
+    } else if (input_file == "-") {
 
         open_status = archive_read_open_fd(arch, 0, 16384);
     } else {
 
-        open_status = archive_read_open_filename(arch, input_file.substr(5).c_str(), 16384);
+        open_status = archive_read_open_filename(arch, input_file.c_str(), 16384);
     }
     if (open_status != ARCHIVE_OK) {
-        std::cerr << "Unable to open file " << input_file << '\n';
+        std::cerr << "Unable to open file " << input_file.filename << '\n';
         exit(1);
     }
 
@@ -138,7 +131,7 @@ void src_input_libarchive(ParseQueue& queue,
 
             // archive entry filename for non-archive input is "data"
             if (filename.empty() || filename == "data")
-                filename = input_file;
+                filename = input_file.resource;
 
             if (option_filename)
                 filename = *option_filename;
@@ -157,7 +150,7 @@ void src_input_libarchive(ParseQueue& queue,
 
             // form the parsing request
             ParseRequest request;
-            if (option_filename || filename != "-")
+            if (option_filename || (filename != "-"))
                 request.filename = filename;
             request.directory = option_directory;
             request.version = option_version;

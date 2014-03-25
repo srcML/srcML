@@ -29,8 +29,8 @@ void src_input_file(ParseQueue& queue,
                     const boost::optional<std::string>& option_language,
                     const boost::optional<std::string>& option_filename,
                     const boost::optional<std::string>& option_directory,
-                    const boost::optional<std::string>& option_version)
-{
+                    const boost::optional<std::string>& option_version) {
+
     // form the parsing request
     ParseRequest request;
     if (option_filename)
