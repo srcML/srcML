@@ -119,11 +119,7 @@ void create_srcml(srcml_input_t& input_sources,
         }
 
         // call handler based on prefix
-        if (contains<FILE*>(input) && input.state == SRC) {
-
-            src_input_libarchive(queue, srcml_arch, input, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
-
-        } else if (input.state == SRCML) {
+        if (input.state == SRCML) {
 
             srcml_input_srcml(input, srcml_arch);
 
