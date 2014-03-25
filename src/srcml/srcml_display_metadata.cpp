@@ -27,16 +27,28 @@
 #include <srcml_display_metadata.hpp>
 #include <src_prefix.hpp>
 #include <srcml.h>
-#include <srcml_list_unit_files.hpp>
 #include <iostream>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
+#include <iomanip>
 
-void srcml_display_info(const std::string& srcml_input) {
+// display all files in srcml archive
+void srcml_list_unit_files(srcml_archive* srcml_arch) {
 
     int numUnits = 0;
-    srcml_archive* srcml_arch = srcml_create_archive();
-    srcml_read_open_filename(srcml_arch, srcml_input.c_str());
+    while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
+
+        ++numUnits;
+
+        std::cout << std::setw(5) << numUnits << ' ' << srcml_unit_get_filename(unit) << '\n';
+
+        srcml_free_unit(unit);
+    }
+}
+
+void srcml_display_info(srcml_archive* srcml_arch) {
+
+    int numUnits = 0;
 
     while (true) {
         srcml_unit* unit = srcml_read_unit(srcml_arch);
@@ -63,27 +75,23 @@ void srcml_display_info(const std::string& srcml_input) {
     }
 
     std::cout << "units=" << numUnits << "\n";
-
-    srcml_free_archive(srcml_arch);
-}
-
-// TODO: Need to show encoding
-// TODO: Need to not show language for archive
-void srcml_display_info(const srcml_input_t& src_input) {
-    BOOST_FOREACH(const srcml_input_src& input_file, src_input) {
-        boost::filesystem::path file (input_file);
-        if(file.extension().compare((const std::string &)std::string(".xml")) == 0)
-            srcml_display_info(input_file);
-    }
 }
 
 void srcml_display_metadata(int command, const srcml_input_t& src_input) {
     // create the output srcml archive
     srcml_archive* srcml_arch = srcml_create_archive();
     // Assuming one srcml input
-    if (srcml_read_open_filename(srcml_arch, (src_prefix_resource(src_input[0]).c_str())) != SRCML_STATUS_OK) {
-        std::cerr << "srcML file " << src_prefix_resource(src_input[0]) << " could not be opened.\n";
-        return; // Error on opening the the srcml
+    if (contains<int>(src_input[0])) {
+        if (srcml_read_open_fd(srcml_arch, src_input[0]) != SRCML_STATUS_OK) {
+            std::cerr << "srcML file descriptor could not be opened.\n";
+            return; // Error on opening the the srcml
+        }
+    }
+    else {
+        if (srcml_read_open_filename(srcml_arch, (src_prefix_resource(src_input[0]).c_str())) != SRCML_STATUS_OK) {
+            std::cerr << "srcML file " << src_prefix_resource(src_input[0]) << " could not be opened.\n";
+            return; // Error on opening the the srcml
+        }
     }
 
     // srcml->src language
@@ -119,16 +127,17 @@ void srcml_display_metadata(int command, const srcml_input_t& src_input) {
     }
     // srcml long info
     if (command & SRCML_COMMAND_LONGINFO) {
-        srcml_display_info(src_input);
+        srcml_display_info(srcml_arch);
     }
     // srcml info
     if (command & SRCML_COMMAND_INFO) {
-        srcml_display_info(src_input);
+        srcml_display_info(srcml_arch);
     }
     // list filenames in srcml archive
     if (command & SRCML_COMMAND_LIST) {
-        srcml_list_unit_files(src_input);
+        srcml_list_unit_files(srcml_arch);
     }
 
+    srcml_close_archive(srcml_arch);
     srcml_free_archive(srcml_arch);
 }

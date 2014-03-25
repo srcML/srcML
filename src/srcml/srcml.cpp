@@ -24,7 +24,6 @@
 #include <srcml_cli.hpp>
 #include <srcml_input_src.hpp>
 #include <srcml_display_metadata.hpp>
-#include <srcml_list_unit_files.hpp>
 #include <src_input_validator.hpp>
 #include <src_language.hpp>
 #include <srcml_options.hpp>
