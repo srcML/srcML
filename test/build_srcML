@@ -5,9 +5,9 @@
 ./sshall.py --build 'bash -c "cd /srcML; git checkout master; git pull"'
 
 ./sshall.py --build 'bash -c "cd /srcML/; git clean -fdx; cmake .; make; cpack"'
-./sshall.py --fedora --build 'bash -c "cd /srcML/; git cpack -G RPM"'
-./sshall.py --suse --build 'bash -c "cd /srcML/; git cpack -G RPM"'
-./sshall.py --ubuntu --build 'bash -c "cd /srcML/; git cpack -G DEB"'
+./sshall.py --fedora --build 'bash -c "cd /srcML/; cpack -G RPM"'
+./sshall.py --suse --build 'bash -c "cd /srcML/; cpack -G RPM"'
+./sshall.py --ubuntu --build 'bash -c "cd /srcML/; cpack -G DEB"'
 ./sshall.py --build 'bash -c "chown -R srcml:srcml /srcML"'
 
 scp fedora19build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora19
