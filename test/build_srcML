@@ -5,22 +5,35 @@
 ./sshall.py --build 'bash -c "cd /srcML; git checkout master; git pull"'
 
 ./sshall.py --build 'bash -c "cd /srcML/; git clean -fdx; cmake .; make; cpack"'
+./sshall.py --fedora --build 'bash -c "cd /srcML/; git cpack -G RPM"'
+./sshall.py --suse --build 'bash -c "cd /srcML/; git cpack -G RPM"'
+./sshall.py --ubuntu --build 'bash -c "cd /srcML/; git cpack -G DEB"'
 ./sshall.py --build 'bash -c "chown -R srcml:srcml /srcML"'
 
 scp fedora19build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora19
+scp fedora19build:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora19
 scp fedora20build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora20
+scp fedora20build:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora20
 
 scp fedora19build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora19-64
+scp fedora19build64:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora19-64
 scp fedora20build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora20-64
+scp fedora20build64:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora20-64
 
 scp suse13build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/openSUSE13.1
+scp suse13build:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/openSUSE13.1
 scp suse13build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/openSUSE13.1-64
+scp suse13build64:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/openSUSE13.1-64
 
 scp ubuntu10build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu10.04
+scp ubuntu10build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu10.04
 scp ubuntu12build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04
+scp ubuntu12build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu12.04
 
 scp ubuntu10build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu10.04-64
+scp ubuntu10build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu10.04-64
 scp ubuntu12build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04-64
+scp ubuntu12build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu12.04-64
 
 ./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML; cp -r ~/dlls .; git clean -fdx; mingw32-cmake .; make; cpack"'
 ./sshall.py --fedora --build --20 --~64 'bash -c "chown -R srcml:srcml /srcML"'
