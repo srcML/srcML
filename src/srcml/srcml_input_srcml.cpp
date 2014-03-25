@@ -29,10 +29,12 @@ void srcml_input_srcml(const srcml_input_src& input_filename,
     // open the input srcml archive
     srcml_archive* srcml_inarch = srcml_create_archive();
 
-    if (!fstdin)
-        srcml_read_open_filename(srcml_inarch, input_filename.c_str());
+    if (contains<int>(input_filename))
+        srcml_read_open_fd(srcml_inarch, input_filename);
+    else if (contains<FILE*>(input_filename))
+        srcml_read_open_FILE(srcml_inarch, input_filename);
     else
-        srcml_read_open_FILE(srcml_inarch, *fstdin);
+        srcml_read_open_filename(srcml_inarch, input_filename.c_str());
 
     // process each entry in the input srcml archive
     while (srcml_unit* unit = srcml_read_unit(srcml_inarch)) {
