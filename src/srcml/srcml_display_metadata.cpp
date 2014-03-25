@@ -81,17 +81,23 @@ void srcml_display_metadata(int command, const srcml_input_t& src_input) {
     BOOST_FOREACH(const srcml_input_src& input, src_input) {
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_create_archive();
-        
+
         if (contains<int>(input)) {
             if (srcml_read_open_fd(srcml_arch, input) != SRCML_STATUS_OK) {
                 std::cerr << "srcML file descriptor could not be opened.\n";
-                return; // Error on opening the the srcml
+                return;
             }
+        }
+        else if (contains<FILE*>(input)){
+            if (srcml_read_open_FILE(srcml_arch, input) != SRCML_STATUS_OK) {
+                std::cerr << "srcML file pointer could not be opened.\n";
+                return;
+            }   
         }
         else {
             if (srcml_read_open_filename(srcml_arch, (src_prefix_resource(input).c_str())) != SRCML_STATUS_OK) {
                 std::cerr << "srcML file " << src_prefix_resource(input) << " could not be opened.\n";
-                return; // Error on opening the the srcml
+                return;
             }
         }
 
