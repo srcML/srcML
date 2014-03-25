@@ -114,13 +114,7 @@ int main(int argc, char * argv[]) {
 
     // A single src input file implies src->srcml
     // Note: src->srcml->src implies a temporary srcml file
-    bool src_input = false;
-    BOOST_FOREACH(const srcml_input_src& input, input_sources) {
-        if (input.state == SRC) {
-            src_input = true;
-            break;
-        }
-    }
+    bool src_input = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
 
     // create srcml when there is a src input, or the command is not to create src
     bool createsrcml = src_input ? true : !insrcml && !createsrc;
@@ -159,6 +153,9 @@ int main(int argc, char * argv[]) {
     // srcml->src. Note: This is a last command only
     if (createsrc)
         commands.push_back(create_src);
+
+    assert(!commands.empty());
+    assert(commands.size() <= 3);
 
     // execute the commands in the sequence
     srcml_execute(srcml_request, commands, input_sources, destination);

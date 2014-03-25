@@ -112,4 +112,6 @@ inline bool contains<FILE*>(const srcml_input_src& input) { return input.fileptr
 template <>
 inline bool contains<int>(const srcml_input_src& input) { return input.fd; }
 
+inline bool is_src(const srcml_input_src& input) { return input.state == SRC; }
+
 #endif
