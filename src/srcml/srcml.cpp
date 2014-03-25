@@ -29,13 +29,11 @@
 #include <srcml_options.hpp>
 #include <create_srcml.hpp>
 #include <process_srcml.hpp>
+#include <srcml_execute.hpp>
 #include <create_src.hpp>
 #include <isxml.hpp>
 #include <peek4char.hpp>
 #include <src_prefix.hpp>
-#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/thread.hpp>
-#pragma GCC diagnostic warning "-Wshorten-64-to-32"
 
 #include <archive.h>
 #include <archive_entry.h>
@@ -144,7 +142,6 @@ int main(int argc, char * argv[]) {
     }
 
     // setup the commands
-    typedef void (*command)(const srcml_request_t& srcml_request, const srcml_input_t& input_sources, const srcml_output_dest& destination);
     std::list<command> commands;
 
     // src->srcml
@@ -163,34 +160,8 @@ int main(int argc, char * argv[]) {
     if (createsrc)
         commands.push_back(create_src);
 
-    // execute all but the last command in the sequence
-    boost::thread_group command_processing_threads;
-    int prevpipe = 0;
-    while (commands.size() > 1) {
-
-        // create a pipe for output
-        int fds[2];
-        pipe(fds);
-
-        // run the front command in the sequence with possible input from previous pipe, and output to a new pipe
-        command_processing_threads.create_thread( boost::bind(commands.front(),
-            srcml_request,
-            prevpipe ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevpipe)),
-            srcml_output_dest("-", fds[1])));
-
-        // will become input on next command
-        prevpipe = fds[0];
-
-        commands.pop_front();
-    }
-
-    // execute the last command in the sequence
-    commands.front()(srcml_request,
-                     !prevpipe ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevpipe)),
-                     destination);
-
-    // for normal processing, should not be needed. Basically for safety with error handling
-    command_processing_threads.join_all();
+    // execute the commands in the sequence
+    srcml_execute(srcml_request, commands, input_sources, destination);
 
     srcml_cleanup_globals();
 
