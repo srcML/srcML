@@ -220,12 +220,13 @@ void option_to_dir(const std::string& value) {
 }
 
 void positional_args(const std::vector<std::string>& value) {
-    srcml_request.input.reserve(value.size());
+    srcml_request.input.reserve(srcml_request.input.size() + value.size());
 
     BOOST_FOREACH(const std::string& iname, value) {
 
+        // record the position of stdin
         if (iname == "-")
-            srcml_request.sawstdin = true;
+            srcml_request.stdindex = (int) srcml_request.input.size();
 
         srcml_request.input.push_back(src_prefix_add_uri(iname));
     }
@@ -390,7 +391,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // If input was from stdin, then artificially put a "-" into the list of input files
         if (srcml_request.input.empty())
-            srcml_request.input.push_back("-");
+          positional_args(std::vector<std::string>(1, "-"));
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
         // automatic interactive use from stdin (not on redirect or pipe)

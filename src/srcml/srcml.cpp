@@ -88,15 +88,7 @@ int main(int argc, char * argv[]) {
     srcml_input_t input_sources(srcml_request.input.begin(), srcml_request.input.end());
 
     // find the location of standard input
-    // TODO: In srcml_cli, record the index position of stdin when found or set, so no
-    // search is necessary
-    srcml_input_src* pstdin = 0;
-    BOOST_FOREACH(srcml_input_src& input, input_sources) {
-        if (input == "-") {
-            pstdin = &input;
-            break;
-        }
-    }
+    srcml_input_src* pstdin = srcml_request.stdindex ? &input_sources[*srcml_request.stdindex] : 0;
 
     // standard input handled as FILE* to be able to peek
     if (pstdin) {

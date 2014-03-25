@@ -68,7 +68,7 @@
 struct srcml_request_t {
 
     std::vector<std::string> input;
-    bool sawstdin;
+    boost::optional<int> stdindex;
 
     int command;
     boost::optional<int> markup_options;
