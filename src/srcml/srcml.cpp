@@ -149,7 +149,7 @@ int main(int argc, char * argv[]) {
     }
 
     // setup the commands
-    typedef void (*command)(const srcml_input_t& input_sources, const srcml_request_t& srcml_request, const srcml_output_dest& destination);
+    typedef void (*command)(const srcml_request_t& srcml_request, const srcml_input_t& input_sources, const srcml_output_dest& destination);
     std::list<command> commands;
 
     // src->srcml
@@ -173,8 +173,8 @@ int main(int argc, char * argv[]) {
         pipe(fds);
 
         create_srcml_thread.create_thread( boost::bind(commands.front(),
-            prevpipe ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevpipe)),
             srcml_request,
+            prevpipe ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevpipe)),
             srcml_output_dest("-", fds[1])));
 
         prevpipe = fds[0];
@@ -183,8 +183,9 @@ int main(int argc, char * argv[]) {
     }
 
     // execute the last command in the sequence
-    commands.front()(!prevpipe ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevpipe)),
-                    srcml_request, destination);
+    commands.front()(srcml_request,
+                     !prevpipe ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevpipe)),
+                     destination);
 
     srcml_cleanup_globals();
 
