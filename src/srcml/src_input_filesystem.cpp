@@ -27,6 +27,7 @@
 #include <src_input_libarchive.hpp>
 #include <src_input_filesystem.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/foreach.hpp>
 #include <list>
 #include <vector>
 
@@ -46,16 +47,17 @@ void src_input_filesystem(ParseQueue& queue,
         sort(files.begin(), files.end());
         dirs.pop_back();
 
-        // process the files from the top direcotry
-        for (std::vector<boost::filesystem::path>::const_iterator it (files.begin()); it != files.end(); ++it) {
+        // process the files from the top directory
+        BOOST_FOREACH(boost::filesystem::path& file, files) {
+//        for (std::vector<boost::filesystem::path>::const_iterator it (files.begin()); it != files.end(); ++it) {
 
             // regular files are passed to the handler
-            if (is_regular_file(*it))
-                src_input_libarchive(queue, srcml_arch, it->string(), 0, 0, 0, language);
+            if (is_regular_file(file))
+                src_input_libarchive(queue, srcml_arch, file.string(), 0, 0, 0, language);
 
             // directories are put at the back()??? or back???
-            else if (is_directory(*it))
-                dirs.push_back(*it);
+            else if (is_directory(file))
+                dirs.push_back(file);
         }
     }
 }
