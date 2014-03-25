@@ -31,8 +31,8 @@
 #include <srcml_input_srcml.hpp>
 
 // create srcml from the current request
-void create_srcml(const srcml_input_t& input_sources,
-                  const srcml_request_t& srcml_request,
+void create_srcml(const srcml_request_t& srcml_request,
+                  const srcml_input_t& input_sources,
                   const srcml_output_dest& destination) {
 
      // create the output srcml archive
