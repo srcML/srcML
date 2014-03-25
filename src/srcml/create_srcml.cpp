@@ -113,7 +113,7 @@ void create_srcml(srcml_input_t& input_sources,
 
         // if stdin, then there has to be data
         // TODO: Safe to remove this? We already read data.
-        if (!contains<FILE*>(input) && (input == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) &&
+        if (!contains<FILE*>(input) && (input.protocol == "stdin") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) &&
             !src_input_stdin()) {
             return; // stdin was requested, but no data was received
         }
