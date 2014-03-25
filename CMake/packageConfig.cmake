@@ -50,7 +50,7 @@ set(CPACK_PACKAGE_VERSION_PATCH "0")
 #set(CPACK_STRIP_FILES ON)
  
 # set output directory
-set(CPACK_PACKAGE_DIRECTORY ${CMAKE_HOME_DIRECTORY}/dist)
+set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 
 # include other specific configurations
 include(debian)
