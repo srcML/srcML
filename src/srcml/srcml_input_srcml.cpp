@@ -23,27 +23,28 @@
 #include <srcml_input_srcml.hpp>
 
 void srcml_input_srcml(const srcml_input_src& input_filename,
-                       srcml_archive* srcml_outarch) {
+                       srcml_archive* srcml_output_archive) {
 
     // open the input srcml archive
-    srcml_archive* srcml_inarch = srcml_create_archive();
+    srcml_archive* srcml_input_archive = srcml_create_archive();
 
     if (contains<int>(input_filename))
-        srcml_read_open_fd(srcml_inarch, input_filename);
+        srcml_read_open_fd(srcml_input_archive, input_filename);
     else if (contains<FILE*>(input_filename))
-        srcml_read_open_FILE(srcml_inarch, input_filename);
+        srcml_read_open_FILE(srcml_input_archive, input_filename);
     else
-        srcml_read_open_filename(srcml_inarch, input_filename.c_str());
+        srcml_read_open_filename(srcml_input_archive, input_filename.c_str());
 
     // process each entry in the input srcml archive
-    while (srcml_unit* unit = srcml_read_unit(srcml_inarch)) {
+    while (srcml_unit* unit = srcml_read_unit(srcml_input_archive)) {
 
         // write the just-read unit to the output srcml archive
-        srcml_write_unit(srcml_outarch, unit);
+        srcml_write_unit(srcml_output_archive, unit);
 
         srcml_free_unit(unit);
     }
 
     // done with the input srcml archive
-    srcml_close_archive(srcml_inarch);
+    srcml_close_archive(srcml_input_archive);
+    srcml_free_archive(srcml_input_archive);
 }
