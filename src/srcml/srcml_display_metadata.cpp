@@ -84,19 +84,19 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
         if (contains<int>(input)) {
             if (srcml_read_open_fd(srcml_arch, input) != SRCML_STATUS_OK) {
-                std::cerr << "srcML file descriptor could not be opened.\n";
+                std::cerr << "Srcml input cannot not be opened.\n";
                 return;
             }
         }
         else if (contains<FILE*>(input)){
             if (srcml_read_open_FILE(srcml_arch, input) != SRCML_STATUS_OK) {
-                std::cerr << "srcML file pointer could not be opened.\n";
+                std::cerr << "Srcml input cannot not be opened.\n";
                 return;
             }   
         }
         else {
             if (srcml_read_open_filename(srcml_arch, (src_prefix_resource(input).c_str())) != SRCML_STATUS_OK) {
-                std::cerr << "srcML file " << src_prefix_resource(input) << " could not be opened.\n";
+                std::cerr << "Srcml input cannot not be opened.\n";
                 return;
             }
         }
