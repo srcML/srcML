@@ -24,7 +24,6 @@
 #include <srcml_cli.hpp>
 #include <srcml_input_src.hpp>
 #include <srcml_display_metadata.hpp>
-#include <srcml_list_unit_files.hpp>
 #include <src_input_validator.hpp>
 #include <src_language.hpp>
 #include <srcml_options.hpp>
@@ -105,8 +104,7 @@ int main(int argc, char * argv[]) {
     }
 
     // output destination setup just like an input source
-    // TODO: Make output_filename not boost::optional
-    srcml_output_dest destination(*srcml_request.output_filename);
+    srcml_output_dest destination(srcml_request.output_filename);
 
     // Determine what processing needs to occur based on the inputs, outputs, and commands
 
@@ -146,7 +144,7 @@ int main(int argc, char * argv[]) {
     }
 
     if (insrcml) {
-        srcml_display_metadata(srcml_request);
+        srcml_display_metadata(srcml_request.command, input_sources);
         exit(0);
     }
 
