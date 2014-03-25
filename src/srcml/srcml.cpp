@@ -82,39 +82,35 @@ int main(int argc, char * argv[]) {
         return 0;
     }
 
-    // We would prefer to just deal with the inputs one-by-one, however we need
-    // to know whether they are all srcml, or a mixture first, so lets do it here
-    // our own input sources as we determine things about them
+    // convert the list of input filenames to actual input sources
     srcml_input_t input_sources(srcml_request.input.begin(), srcml_request.input.end());
 
-    // find the location of standard input
+    // input source that is stdin, if it exists
     srcml_input_src* pstdin = srcml_request.stdindex ? &input_sources[*srcml_request.stdindex] : 0;
 
     // standard input handled as FILE* to be able to peek
     if (pstdin) {
 
-        // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
+        // FILE* becomes part of stdin input source
         pstdin->fileptr = fdopen(STDIN_FILENO, "r");
 
-        // read the first 4 bytes as separate characters to get around byte ordering
+        // peek at the first 4 bytes
         unsigned char data[4];
         ssize_t size = 0;
         peek4char(*(pstdin->fileptr), data, &size);
 
-        // pass the first 4 bytes and the size actually read in
+        // from the first up-to 4 bytes determine if is srcML or not
         pstdin->state = isxml(data, size) ? SRCML : SRC;
     }
 
-    // do the same sort of processing for the output destination
-    srcml_output_dest destination = srcml_request.output_filename ? *srcml_request.output_filename : "stdout:///-";
+    // output destination setup just like an input source
+    // TODO: Make output_filename not boost::optional
+    srcml_output_dest destination(*srcml_request.output_filename);
 
-    // Determine what processing needs to occur
+    // Determine what processing needs to occur based on the inputs, outputs, and commands
 
-    // src->srcml
-    bool createsrcml = false;
-
-    // srcml->src
-    bool createsrc = false;
+    // srcml->src, based on the destination
+    bool createsrc = destination.state == SRC;
 
     // metadata(srcml)
     bool insrcml = srcml_request.command & SRCML_COMMAND_INSRCML;
@@ -128,20 +124,11 @@ int main(int argc, char * argv[]) {
             break;
         }
     }
-    if (src_input) {
-        // at least one src file, so we have to create srcml
-        // may also have to go back to src
-        createsrcml = true;
-        createsrc = destination.state == SRC;
-    } else {
-        // all inputs are srcml, so result depends on destination
-        // if destination is srcml, no src creation
-        // if destination is src (or indeterminate), create src
-        createsrc = destination.state == SRC;
-        createsrcml = !createsrc;
-    }
 
-    // adjust if explicitly told differently via commands
+    // create srcml when there is a src input, or the command is not to create src
+    bool createsrcml = src_input ? true : !createsrc;
+
+    // adjust if explicitly told differently via command line options
     // TODO: may warn/error on some inconsistencies here
     if (!createsrc && srcml_request.command & SRCML_COMMAND_SRC) {
         createsrc = true;
@@ -151,7 +138,7 @@ int main(int argc, char * argv[]) {
         createsrcml = true;
     }
 
-    // when creating srcml, and standard input is used for source, we the user must have specified a language
+    // language is required when creating srcml and standard input is used for source
     if (createsrcml && pstdin && (pstdin->state == SRC) && !srcml_request.att_language) {
             std::cerr << "Using stdin requires a declared language\n";
             exit(1);
@@ -180,9 +167,7 @@ int main(int argc, char * argv[]) {
         // No need to join or wait as the thread will write to destination pipe, then return
 
         // the srcml->src stage must now read from internal input sources
-        pipe_input_sources.resize(1);
-        pipe_input_sources[0] = "stdin://-"; // TOCHECK: What is the proper prefix for this protocol?
-        pipe_input_sources[0] = fds[0];
+        pipe_input_sources.push_back(srcml_input_src("stdin://-", fds[0]));
     }
 
     if (insrcml) {
