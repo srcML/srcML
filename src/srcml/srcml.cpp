@@ -86,29 +86,31 @@ int main(int argc, char * argv[]) {
     // to know whether they are all srcml, or a mixture first, so lets do it here
     // our own input sources as we determine things about them
     srcml_input_t input_sources(srcml_request.input.begin(), srcml_request.input.end());
+
+    // find the location of standard input
+    // TODO: In srcml_cli, record the index position of stdin when found or set, so no
+    // search is necessary
     srcml_input_src* pstdin = 0;
     BOOST_FOREACH(srcml_input_src& input, input_sources) {
-
-        // stdin specially handled
         if (input == "-") {
-
-            // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
-            FILE* fstdin = fdopen(STDIN_FILENO, "r");
-
-            // read the first 4 bytes as separate characters to get around byte ordering
-            unsigned char data[4];
-            ssize_t size = 0;
-            peek4char(fstdin, data, &size);
-
-            // pass the first 4 bytes and the size actually read in
-            input.state = isxml(data, size) ? SRCML : SRC;
-
-            input = fstdin;
-
             pstdin = &input;
-
             break;
         }
+    }
+
+    // standard input handled as FILE* to be able to peek
+    if (pstdin) {
+
+        // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
+        pstdin->fileptr = fdopen(STDIN_FILENO, "r");
+
+        // read the first 4 bytes as separate characters to get around byte ordering
+        unsigned char data[4];
+        ssize_t size = 0;
+        peek4char(*(pstdin->fileptr), data, &size);
+
+        // pass the first 4 bytes and the size actually read in
+        pstdin->state = isxml(data, size) ? SRCML : SRC;
     }
 
     // do the same sort of processing for the output destination
@@ -148,7 +150,7 @@ int main(int argc, char * argv[]) {
     }
 
     // adjust if explicitly told differently via commands
-    // TODO: may detect some inconsistencies here
+    // TODO: may warn/error on some inconsistencies here
     if (!createsrc && srcml_request.command & SRCML_COMMAND_SRC) {
         createsrc = true;
     } else if (!createsrcml && srcml_request.command & SRCML_COMMAND_SRCML) {
@@ -157,14 +159,13 @@ int main(int argc, char * argv[]) {
         createsrcml = true;
     }
 
-    // when creating srcml, if we have source std input, we have to have a requested language
+    // when creating srcml, and standard input is used for source, we the user must have specified a language
     if (createsrcml && pstdin && (pstdin->state == SRC) && !srcml_request.att_language) {
             std::cerr << "Using stdin requires a declared language\n";
             exit(1);
     }
 
     // src->srcml (or src->srcml->src)
-    // No need to join or wait as it will write to destination pipe
     boost::thread_group create_srcml_thread;
     srcml_input_t pipe_input_sources;
     if (createsrcml && !createsrc) {
@@ -184,9 +185,11 @@ int main(int argc, char * argv[]) {
         // No need to join or wait as it will write to destination pipe
         create_srcml_thread.create_thread( boost::bind(create_srcml, input_sources, srcml_request, destination) );
 
+        // No need to join or wait as the thread will write to destination pipe, then return
+
         // the srcml->src stage must now read from internal input sources
         pipe_input_sources.resize(1);
-        pipe_input_sources[0] = "stdin://-";
+        pipe_input_sources[0] = "stdin://-"; // TOCHECK: What is the proper prefix for this protocol?
         pipe_input_sources[0] = fds[0];
     }
 
@@ -249,6 +252,7 @@ int main(int argc, char * argv[]) {
     // srcml->src
     if (createsrc) {
 
+        // creating src from external input sources, or from internal pipe
         create_src(pipe_input_sources.empty()? input_sources : pipe_input_sources, srcml_request, destination);
     }
 
