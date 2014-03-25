@@ -108,11 +108,11 @@ int main(int argc, char * argv[]) {
 
     // Determine what processing needs to occur based on the inputs, outputs, and commands
 
-    // srcml->src, based on the destination
-    bool createsrc = destination.state == SRC;
-
     // metadata(srcml)
     bool insrcml = srcml_request.command & SRCML_COMMAND_INSRCML;
+
+    // srcml->src, based on the destination
+    bool createsrc = !insrcml && destination.state == SRC;
 
     // A single src input file implies src->srcml
     // Note: src->srcml->src implies a temporary srcml file
@@ -125,7 +125,7 @@ int main(int argc, char * argv[]) {
     }
 
     // create srcml when there is a src input, or the command is not to create src
-    bool createsrcml = src_input ? true : !createsrc;
+    bool createsrcml = src_input ? true : !insrcml && !createsrc;
 
     // adjust if explicitly told differently via command line options
     // TODO: may warn/error on some inconsistencies here
@@ -143,11 +143,6 @@ int main(int argc, char * argv[]) {
             exit(1);
     }
 
-    if (insrcml) {
-        srcml_display_metadata(srcml_request, input_sources, destination);
-        exit(0);
-    }
-
     // setup the commands
     typedef void (*command)(const srcml_request_t& srcml_request, const srcml_input_t& input_sources, const srcml_output_dest& destination);
     std::list<command> commands;
@@ -159,6 +154,9 @@ int main(int argc, char * argv[]) {
     // srcml->srcml processing
     if (!srcml_request.xpath.empty() || !srcml_request.xslt.empty() || !srcml_request.relaxng.empty())
         commands.push_back(process_srcml);
+
+    if (insrcml)
+        commands.push_back(srcml_display_metadata);
 
     // srcml->src
     if (createsrc)
