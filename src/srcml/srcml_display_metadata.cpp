@@ -24,7 +24,7 @@
   srcml_display_info.cpp display info about a given srcml input file.
 */
 
-#include <srcml_display_info.hpp>
+#include <srcml_display_metadata.hpp>
 #include <src_prefix.hpp>
 #include <srcml.h>
 #include <iostream>

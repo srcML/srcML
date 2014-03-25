@@ -24,8 +24,8 @@
   srcml_display_info.hpp display info about a given srcml input file.
 */
 
-#ifndef SRCML_DISPLAY_INFO_HPP
-#define SRCML_DISPLAY_INFO_HPP
+#ifndef SRCML_DISPLAY_METADATA_HPP
+#define SRCML_DISPLAY_METADATA_HPP
 
 #include <string>
 #include <vector>

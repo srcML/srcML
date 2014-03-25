@@ -23,7 +23,7 @@
 #include <srcml.h>
 #include <srcml_cli.hpp>
 #include <srcml_input_src.hpp>
-#include <srcml_display_info.hpp>
+#include <srcml_display_metadata.hpp>
 #include <srcml_list_unit_files.hpp>
 #include <src_input_validator.hpp>
 #include <src_language.hpp>
