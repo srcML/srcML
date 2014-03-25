@@ -157,7 +157,7 @@ int main(int argc, char * argv[]) {
         commands.push_back(create_srcml);
 
     // srcml->srcml processing
-    if (false)
+    if (!srcml_request.xpath.empty() || !srcml_request.xslt.empty() || !srcml_request.relaxng.empty())
         commands.push_back(process_srcml);
 
     // srcml->src
