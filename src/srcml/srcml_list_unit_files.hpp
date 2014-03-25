@@ -29,8 +29,9 @@
 
 #include <string>
 #include <vector>
+#include <srcml_input_src.hpp>
 
-void srcml_list_unit_files(const std::vector<std::string>& pos_args);
+void srcml_list_unit_files(const srcml_input_t& src_input);
 void srcml_list_unit_files(const std::string& srcml_input);
 
 #endif

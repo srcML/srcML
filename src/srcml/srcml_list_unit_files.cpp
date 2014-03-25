@@ -32,12 +32,11 @@
 #include <boost/foreach.hpp>
 #include <src_prefix.hpp>
 
-void srcml_list_unit_files(const std::vector<std::string>& pos_args) {
-    BOOST_FOREACH(const std::string& input_file, pos_args) {
-
-        boost::filesystem::path file(src_prefix_resource(input_file));
+void srcml_list_unit_files(const srcml_input_t& src_input) {
+    BOOST_FOREACH(const srcml_input_src& input_file, src_input) {
+        boost::filesystem::path file (input_file);
         if(file.extension().compare((const std::string &)std::string(".xml")) == 0)
-            srcml_list_unit_files(file.string());
+            srcml_list_unit_files(input_file);
     }
 }
 

@@ -30,7 +30,8 @@
 #include <string>
 #include <vector>
 #include <srcml_cli.hpp>
+#include <srcml_input_src.hpp>
 
-void srcml_display_metadata(const srcml_request_t& srcml_request);
+void srcml_display_metadata(int command, const srcml_input_t& src_input);
 
 #endif
