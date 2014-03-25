@@ -25,10 +25,11 @@
 #define SRCML_INPUT_SRCML_HPP
 
 #include <srcml.h>
+#include <srcml_input_src.hpp>
 #include <string>
 #include <boost/optional.hpp>
 
-void srcml_input_srcml(const std::string& input_archive_filename,
+void srcml_input_srcml(const srcml_input_src& input_archive_source,
                        srcml_archive* srcml_output_archive,
                        boost::optional<FILE*> fstdin = boost::optional<FILE*>()
                        );

@@ -22,7 +22,7 @@
 
 #include <srcml_input_srcml.hpp>
 
-void srcml_input_srcml(const std::string& input_filename,
+void srcml_input_srcml(const srcml_input_src& input_filename,
                        srcml_archive* srcml_outarch,
                        boost::optional<FILE*> fstdin) {
 
