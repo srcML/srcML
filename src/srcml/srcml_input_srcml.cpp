@@ -22,8 +22,8 @@
 
 #include <srcml_input_srcml.hpp>
 
-void srcml_input_srcml(const srcml_input_src& srcml_input,
-                       srcml_archive* srcml_output_archive) {
+void srcml_input_srcml(srcml_archive* srcml_output_archive,
+                       const srcml_input_src& srcml_input) {
 
     // open the srcml input archive
     srcml_archive* srcml_input_archive = srcml_create_archive();

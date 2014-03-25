@@ -27,7 +27,7 @@
 #include <srcml.h>
 #include <srcml_input_src.hpp>
 
-void srcml_input_srcml(const srcml_input_src& srcml_input_source,
-                       srcml_archive* srcml_output_archive);
+void srcml_input_srcml(srcml_archive* srcml_output_archive,
+					   const srcml_input_src& srcml_input_source);
 
 #endif
