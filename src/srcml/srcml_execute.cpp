@@ -32,6 +32,7 @@ void srcml_execute(const srcml_request_t& srcml_request,
 
     // execute all but the last command in the sequence
     boost::thread_group command_processing_threads;
+
     int prevpipe = 0;
     while (commands.size() > 1) {
 

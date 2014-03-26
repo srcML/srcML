@@ -121,10 +121,10 @@ int main(int argc, char * argv[]) {
     std::list<command> commands;
     bool terminate = false;
 
-    long src_input_size = std::count_if(input_sources.begin(), input_sources.end(), is_src);
+    bool src_input = std::count_if(input_sources.begin(), input_sources.end(), is_src) > 0;
    
     // src->srcml when there is any src input
-    if (src_input_size > 0) {
+    if (src_input) {
 
         // language is required when creating srcml and standard input is used for source
         if (pstdin && (pstdin->state == SRC) && !srcml_request.att_language) {
@@ -147,7 +147,7 @@ int main(int argc, char * argv[]) {
     }
 
     // srcml->src, based on the destination
-    if (!terminate && (src_input_size == 0 || destination.state == SRC)) {
+    if (!terminate && (!src_input || destination.state == SRC)) {
         commands.push_back(create_src);
         terminate = true;
     }
