@@ -106,8 +106,11 @@ int main(int argc, char * argv[]) {
 
     // Determine what processing needs to occur based on the inputs, outputs, and commands
 
+    long src_input_size = std::count_if(input_sources.begin(), input_sources.end(), is_src);
+    long xml_input_size = input_sources.size() - src_input_size;
+
     // src->srcml when there is any src input
-    bool createsrcml = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
+    bool createsrcml = src_input_size > 0;
 
     // language is required when creating srcml and standard input is used for source
     if (createsrcml && pstdin && (pstdin->state == SRC) && !srcml_request.att_language) {
@@ -119,8 +122,8 @@ int main(int argc, char * argv[]) {
     bool insrcml = srcml_request.command & SRCML_COMMAND_INSRCML;
 
     // srcml->src, based on the destination
-    bool createsrc = !insrcml && destination.state == SRC;
-
+    bool createsrc = !insrcml && (src_input_size == 0 || destination.state == SRC);
+/*
     // adjust if explicitly told differently via command line options
     // TODO: may warn/error on some inconsistencies here
     if (!createsrc && srcml_request.command & SRCML_COMMAND_SRC) {
@@ -130,7 +133,7 @@ int main(int argc, char * argv[]) {
     } else if (!createsrcml && !srcml_request.files_from.empty()) {
         createsrcml = true;
     }
-
+*/
     // setup the commands
     std::list<command> commands;
 
@@ -142,11 +145,11 @@ int main(int argc, char * argv[]) {
     if (!srcml_request.xpath.empty() || !srcml_request.xslt.empty() || !srcml_request.relaxng.empty())
         commands.push_back(process_srcml);
 
-    // srcml metadata. Note: This is a last command only
+    // srcml metadata. Note: This is a terminating command only
     if (insrcml)
         commands.push_back(srcml_display_metadata);
 
-    // srcml->src. Note: This is a last command only
+    // srcml->src. Note: This is a terminating command only
     if (createsrc)
         commands.push_back(create_src);
 

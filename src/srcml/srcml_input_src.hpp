@@ -52,6 +52,10 @@ public:
         extension = boost::filesystem::path(resource.c_str()).extension().string();
         if (resource != "-")
             state = extension == ".xml" ? SRCML : SRC;
+        if (protocol == "stdin")
+            fd = 0;
+        if (protocol == "stdout")
+            fd = 1;
     }
 
     srcml_input_src(const std::string& other, int fds) {

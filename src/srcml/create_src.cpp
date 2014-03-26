@@ -69,6 +69,7 @@ private:
 void create_src(const srcml_request_t& srcml_request,
                 const srcml_input_t& input_sources,
                 const srcml_output_dest& destination) {
+
     try {
 
         if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
@@ -155,10 +156,11 @@ void create_src(const srcml_request_t& srcml_request,
             archive_write_set_format_pax_restricted(ar);
 
             int status = ARCHIVE_OK;
-            if (contains<int>(destination))
+            if (contains<int>(destination)) {
                 status = archive_write_open_fd(ar, destination);
-            else
+            } else {
                 status = archive_write_open_filename(ar, destination.resource.c_str());
+            }
 
             // extract all the srcml archives to this libarchive
             BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
