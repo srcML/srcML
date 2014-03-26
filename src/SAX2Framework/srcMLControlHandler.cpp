@@ -50,7 +50,7 @@ void srcml_control_handler_init() {
  *
  * Constructor
  */
-srcMLControlHandler::srcMLControlHandler(const char * filename, const char * encoding) : sax2_handler(), input(0), pop_input(false) {
+srcMLControlHandler::srcMLControlHandler(const char * filename, const char * encoding) : sax2_handler(), input(0), pop_input(true) {
 
     srcml_control_handler_init();
 
@@ -72,7 +72,7 @@ srcMLControlHandler::srcMLControlHandler(const char * filename, const char * enc
  *
  * Constructor
  */
-srcMLControlHandler::srcMLControlHandler(xmlParserInputBufferPtr input) : sax2_handler(), input(0), pop_input(true) {
+srcMLControlHandler::srcMLControlHandler(xmlParserInputBufferPtr input) : sax2_handler(), input(0), pop_input(false) {
 
     srcml_control_handler_init();
 
