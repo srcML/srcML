@@ -105,6 +105,8 @@ public:
     boost::optional<FILE*> fileptr;
     boost::optional<int> fd;
     enum STATES state;
+    std::vector<std::string> compressions;
+    std::vector<std::string> archives;
 };
 
 template <typename T>

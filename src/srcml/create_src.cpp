@@ -152,8 +152,8 @@ void create_src(const srcml_request_t& srcml_request,
 
             // setup compression and format
             // TODO: Needs to be generalized from destination file extension
-            archive_write_set_compression_gzip(ar);
-            archive_write_set_format_pax_restricted(ar);
+            //archive_write_set_compression_gzip(ar);
+            //archive_write_set_format_pax_restricted(ar);
 
             int status = ARCHIVE_OK;
             if (contains<int>(destination)) {
