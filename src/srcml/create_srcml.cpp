@@ -43,7 +43,7 @@ void create_srcml_handler(ParseQueue& queue,
 
         } else if (input.protocol == "filelist") {
 
-            src_input_filelist(queue, srcml_arch, input, srcml_request.att_language);
+            src_input_filelist(queue, srcml_arch, srcml_request, input);
 
         } else if (input.protocol == "file" && boost::filesystem::is_directory(input.resource)) {
 
