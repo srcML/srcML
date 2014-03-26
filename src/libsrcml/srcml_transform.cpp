@@ -234,7 +234,7 @@ int srcml_append_transform_relaxng_FILE(srcml_archive* archive, FILE* relaxng_fi
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
     xmlRegisterDefaultInputCallbacks();
-    xmlDocPtr doc = xmlReadIO(xmlFileRead, 0 relaxng_file, 0, 0, 0);
+    xmlDocPtr doc = xmlReadIO(xmlFileRead, 0, relaxng_file, 0, 0, 0);
 
     transform tran = { SRCML_RELAXNG, { 0 } };
     tran.transformation.doc = doc;
