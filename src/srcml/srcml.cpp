@@ -32,29 +32,7 @@
 #include <peek4char.hpp>
 
 #include <archive.h>
-
 #include <iostream>
-
-#ifdef WIN32
-#include <io.h>
-#define  STDIN_FILENO   0       /* standard input file descriptor */
-#define STDOUT_FILENO   1       /* standard output file descriptor */
-#define STDERR_FILENO   2       /* standard error file descriptor */
-#endif
-
-// commands that are simple queries on srcml
-const int SRCML_COMMAND_INSRCML =
-    SRCML_COMMAND_LONGINFO |
-    SRCML_COMMAND_INFO    |
-    SRCML_COMMAND_INFO_FILENAME |
-    SRCML_COMMAND_VERSION |
-    SRCML_COMMAND_LIST |
-    SRCML_COMMAND_UNITS |
-    SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE |
-    SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY |
-    SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
-    SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
-    SRCML_COMMAND_DISPLAY_SRCML_ENCODING;
 
 int main(int argc, char * argv[]) {
 
