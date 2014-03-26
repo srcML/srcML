@@ -120,7 +120,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             srcml_free_unit(unit);
 
-        } else if (input_sources.size() == 1 && destination == "-") {
+        } else if (input_sources.size() == 1 && contains<int>(destination)) {
 
             // srcml->src extract to stdout
 
@@ -128,7 +128,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             srcml_unit* unit = srcml_read_unit(arch);
 
-            srcml_unparse_unit_fd(unit, STDOUT_FILENO);
+            srcml_unparse_unit_fd(unit, destination);
 
             srcml_free_unit(unit);
 
@@ -152,8 +152,8 @@ void create_src(const srcml_request_t& srcml_request,
 
             // setup compression and format
             // TODO: Needs to be generalized from destination file extension
-            //archive_write_set_compression_gzip(ar);
-            //archive_write_set_format_pax_restricted(ar);
+            archive_write_set_compression_gzip(ar);
+            archive_write_set_format_pax_restricted(ar);
 
             int status = ARCHIVE_OK;
             if (contains<int>(destination)) {
