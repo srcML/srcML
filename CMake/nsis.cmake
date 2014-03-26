@@ -26,4 +26,4 @@ set(CPACK_NSIS_INSTALLED_ICON_NAME ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico)
 set(CPACK_NSIS_MODIFY_PATH ON)
 
 # set contact in add/remove programs
-set(CPACK_NSIS_CONTACT "Software Developement Laboratories <bugs@srcML.org>"")
+set(CPACK_NSIS_CONTACT "Software Developement Laboratories <bugs@srcML.org>")
