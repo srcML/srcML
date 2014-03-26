@@ -22,26 +22,18 @@
 
 #include <srcml.h>
 #include <srcml_cli.hpp>
-#include <srcml_input_src.hpp>
-#include <srcml_display_metadata.hpp>
-#include <src_input_validator.hpp>
-#include <src_language.hpp>
 #include <srcml_options.hpp>
 #include <create_srcml.hpp>
-#include <process_srcml.hpp>
-#include <srcml_execute.hpp>
 #include <create_src.hpp>
+#include <process_srcml.hpp>
+#include <srcml_display_metadata.hpp>
+#include <srcml_execute.hpp>
 #include <isxml.hpp>
 #include <peek4char.hpp>
-#include <src_prefix.hpp>
 
 #include <archive.h>
-#include <archive_entry.h>
-#include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 
 #include <iostream>
-#include <errno.h>
 
 #ifdef WIN32
 #include <io.h>

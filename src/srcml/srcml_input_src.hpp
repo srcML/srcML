@@ -33,6 +33,13 @@
 #include <boost/logic/tribool.hpp>
 #include <algorithm>
 
+#ifdef WIN32
+#include <io.h>
+#define  STDIN_FILENO   0       /* standard input file descriptor */
+#define STDOUT_FILENO   1       /* standard output file descriptor */
+#define STDERR_FILENO   2       /* standard error file descriptor */
+#endif
+
 class srcml_input_src;
 
 typedef std::vector<srcml_input_src> srcml_input_t;
