@@ -108,8 +108,7 @@ public :
      *
      * Constructor.  Sets up mutex, conditions and state.
      */
-    srcml_reader_handler
-    () : unit(0), output_handler(0), is_done(false), read_root(false),
+    srcml_reader_handler() : unit(0), output_handler(0), is_done(false), read_root(false),
          collect_unit_attributes(false), collect_srcml(false), collect_src(false),
          terminate(false), is_empty(false), wait_root(true), skip(false) {
 
@@ -128,8 +127,11 @@ public :
      *
      * Destructor, deletes mutex and conditions.
      */
-    ~srcml_reader_handler
-    () {}
+    ~srcml_reader_handler() {
+
+        srcml_free_archive(archive);
+
+    }
 
     /**
      * wait
