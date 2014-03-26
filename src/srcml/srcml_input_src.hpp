@@ -48,10 +48,47 @@ public:
 
         filename = other;
 
+        // since boost::filesystem does not support URIs, separate out the protocol
         src_prefix_split_uri(filename, protocol, resource);
-        extension = boost::filesystem::path(resource.c_str()).extension().string();
+
+        // boost::filesystem does not handle multiple extensions
+        // so extract
+        boost::filesystem::path rpath(resource.c_str());
+
+        // collect compressions
+        while (rpath.has_extension()) {
+            std::string ext = rpath.extension().string();
+            if (ext != ".gz" && ext != ".bz2")
+                break;
+            compressions.push_back(ext);
+            rpath = rpath.stem().string();
+        }
+
+        // collect archives
+        while (rpath.has_extension()) {
+            std::string ext = rpath.extension().string();
+            if (ext != ".tar")
+                break;
+            archives.push_back(ext);
+            plainfile = rpath.string();
+            extension = ext;
+
+            rpath = rpath.stem().string();
+        }
+
+        // collect real extension
+        if (rpath.has_extension()) {
+            extension = rpath.extension().string();
+            plainfile = rpath.string();
+        }
+
         if (resource != "-")
             state = extension == ".xml" ? SRCML : SRC;
+
+//        fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, resource.c_str());
+//        fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, plainfile.c_str());
+//        fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, extension.c_str());
+
         if (protocol == "stdin")
             fd = 0;
         if (protocol == "stdout")
@@ -90,17 +127,21 @@ public:
     void swap(srcml_input_src& other) {
 
         std::swap(filename, other.filename);
-        std::swap(resource, other.resource);
-        std::swap(extension, other.extension);
         std::swap(protocol, other.protocol);
+        std::swap(resource, other.resource);
+        std::swap(plainfile, other.plainfile);
+        std::swap(extension, other.extension);
         std::swap(fileptr, other.fileptr);
         std::swap(fd, other.fd);
         std::swap(state, other.state);
+        std::swap(compressions, other.compressions);
+        std::swap(archives, other.archives);
     }
 
     std::string filename;
     std::string protocol;
     std::string resource;
+    std::string plainfile;
     std::string extension;
     boost::optional<FILE*> fileptr;
     boost::optional<int> fd;
