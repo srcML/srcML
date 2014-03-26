@@ -28,6 +28,12 @@ set(CPACK_PACKAGE_NAME "srcML")
 # set package name
 #set(CPACK_PACKAGE_FILE_NAME "srcML-${CMAKE_SYSTEM_NAME}")
 
+# set executables
+set(CPACK_PACKAGE_EXECUTABLES srcml;srcML)
+
+# set Desktop links
+set(CPACK_CREATE_DESKTOP_LINKS srcml)
+
 # Generator settings
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(CPACK_PACKAGE_FILE_NAME "srcML-Win")
