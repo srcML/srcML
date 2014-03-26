@@ -61,6 +61,7 @@ int main(int argc, char * argv[]) {
 
         // FILE* becomes part of stdin input source
         pstdin->fileptr = fdopen(STDIN_FILENO, "r");
+        pstdin->fd = boost::none;
 
         // peek at the first 4 bytes
         unsigned char data[4];
