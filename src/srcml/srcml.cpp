@@ -106,18 +106,20 @@ int main(int argc, char * argv[]) {
 
     // Determine what processing needs to occur based on the inputs, outputs, and commands
 
-    // metadata(srcml)
+    // src->srcml when there is any src input
+    bool createsrcml = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
+
+    // language is required when creating srcml and standard input is used for source
+    if (createsrcml && pstdin && (pstdin->state == SRC) && !srcml_request.att_language) {
+            std::cerr << "Using stdin requires a declared language\n";
+            exit(1);
+    }
+
+    // metadata(srcml) based on command
     bool insrcml = srcml_request.command & SRCML_COMMAND_INSRCML;
 
     // srcml->src, based on the destination
     bool createsrc = !insrcml && destination.state == SRC;
-
-    // A single src input file implies src->srcml
-    // Note: src->srcml->src implies a temporary srcml file
-    bool src_input = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
-
-    // create srcml when there is a src input, or the command is not to create src
-    bool createsrcml = src_input ? true : !insrcml && !createsrc;
 
     // adjust if explicitly told differently via command line options
     // TODO: may warn/error on some inconsistencies here
@@ -127,12 +129,6 @@ int main(int argc, char * argv[]) {
         createsrcml = true;
     } else if (!createsrcml && !srcml_request.files_from.empty()) {
         createsrcml = true;
-    }
-
-    // language is required when creating srcml and standard input is used for source
-    if (createsrcml && pstdin && (pstdin->state == SRC) && !srcml_request.att_language) {
-            std::cerr << "Using stdin requires a declared language\n";
-            exit(1);
     }
 
     // setup the commands
