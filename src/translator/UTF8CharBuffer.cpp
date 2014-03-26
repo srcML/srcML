@@ -44,6 +44,7 @@
 struct srcMLFile {
 
     FILE * file;
+    bool close_file;
 #ifdef _MSC_BUILD
     HCRYPTHASH * ctx;
 #else
@@ -72,7 +73,7 @@ int srcMLFileRead(void * context,  char * buffer, int len) {
 #ifdef _MSC_BUILD
         CryptHashData(*sfile->ctx, (BYTE *)buffer, num_read, 0);
 #else
-    SHA1_Update(sfile->ctx, buffer, (LONG)num_read);
+        SHA1_Update(sfile->ctx, buffer, (LONG)num_read);
 #endif
 
     return (int)num_read;
@@ -135,6 +136,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
 
     srcMLFile * sfile = new srcMLFile();
     sfile->file = (FILE *)file;
+    sfile->close_file = true;
 #ifdef _MSC_BUILD
     hash ? sfile->ctx = &crypt_hash : 0;
 #else
@@ -217,6 +219,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
 
     srcMLFile * sfile = new srcMLFile();
     sfile->file = file;
+    sfile->close_file = false;
 #ifdef _MSC_BUILD
     hash ? sfile->ctx= &crypt_hash : 0;
 #else
