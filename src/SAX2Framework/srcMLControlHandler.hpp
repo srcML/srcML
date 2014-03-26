@@ -55,6 +55,8 @@ private :
 
     xmlParserInputBufferPtr input;
 
+    bool pop_input;
+
 public :
 
     /**
