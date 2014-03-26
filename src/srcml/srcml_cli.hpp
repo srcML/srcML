@@ -68,7 +68,7 @@
 struct srcml_request_t {
 
     std::vector<std::string> input;
-    bool sawstdin;
+    boost::optional<int> stdindex;
 
     int command;
     boost::optional<int> markup_options;
@@ -82,7 +82,7 @@ struct srcml_request_t {
 
     boost::optional<std::string> src_encoding;
 
-    boost::optional<std::string> output_filename;
+    std::string output_filename;
 
     //filelist:// prefix
     std::vector<std::string> files_from;

@@ -54,6 +54,22 @@ public:
             state = extension == ".xml" ? SRCML : SRC;
     }
 
+    srcml_input_src(const std::string& other, int fds) {
+
+        srcml_input_src s(other);
+        s = fds;
+
+        swap(s);
+    }
+
+    srcml_input_src(int fds) {
+
+        srcml_input_src s("-");
+        s = fds;
+
+        swap(s);
+    }
+
     srcml_input_src& operator=(const std::string& other) { srcml_input_src t(other); swap(t); return *this; }
     srcml_input_src& operator=(FILE* other) { fileptr = other; return *this; }
     srcml_input_src& operator=(int other) { fd = other; return *this; }
@@ -95,5 +111,7 @@ inline bool contains<FILE*>(const srcml_input_src& input) { return input.fileptr
 
 template <>
 inline bool contains<int>(const srcml_input_src& input) { return input.fd; }
+
+inline bool is_src(const srcml_input_src& input) { return input.state == SRC; }
 
 #endif

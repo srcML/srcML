@@ -1,5 +1,5 @@
 /**
- * @file create_src.hpp
+ * @file process_srcml.hpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -20,16 +20,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef CREATE_SRC_HPP
-#define CREATE_SRC_HPP
+#include <process_srcml.hpp>
+#include <srcml.h>
+#include <boost/foreach.hpp>
 
-#include <srcml_cli.hpp>
-#include <srcml_input_src.hpp>
+// process srcml with query or transformation
+void process_srcml(const srcml_request_t& srcml_request,
+			       const srcml_input_t& input_sources,
+                   const srcml_output_dest& output) {
 
-// create srcml from the current request
-void create_src(const srcml_request_t& srcml_request,
-		        const srcml_input_t& input_sources,
-                const srcml_output_dest& output);
 
-#endif
-
+}

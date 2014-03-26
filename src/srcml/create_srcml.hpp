@@ -29,9 +29,9 @@
 #include <boost/optional.hpp>
 
 // create srcml from the current request
-void create_srcml(srcml_input_t& input_sources,
-                  srcml_request_t& srcml_request,
-                  srcml_output_dest& output);
+void create_srcml(const srcml_request_t& srcml_request,
+                  const srcml_input_t& input_sources,
+                  const srcml_output_dest& destination);
 
 #endif
 

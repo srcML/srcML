@@ -1,5 +1,5 @@
 /**
- * @file srcml_display_info.hpp
+ * @file process_srcml.hpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -20,17 +20,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
-  srcml_display_info.hpp display info about a given srcml input file.
-*/
+#ifndef PROCESS_SRCML_HPP
+#define PROCESS_SRCML_HPP
 
-#ifndef SRCML_DISPLAY_INFO_HPP
-#define SRCML_DISPLAY_INFO_HPP
+#include <srcml_cli.hpp>
+#include <srcml_input_src.hpp>
 
-#include <string>
-#include <vector>
-
-void srcml_display_info(const std::vector<std::string>& pos_args);
-void srcml_display_info(const std::string& srcml_input);
+// process srcml with query or transformation
+void process_srcml(const srcml_request_t& srcml_request,
+			       const srcml_input_t& input_sources,
+                   const srcml_output_dest& output);
 
 #endif
+

@@ -23,19 +23,17 @@
 #include <srcml.h>
 #include <srcml_cli.hpp>
 #include <srcml_input_src.hpp>
-#include <srcml_display_info.hpp>
-#include <srcml_list_unit_files.hpp>
+#include <srcml_display_metadata.hpp>
 #include <src_input_validator.hpp>
 #include <src_language.hpp>
 #include <srcml_options.hpp>
 #include <create_srcml.hpp>
+#include <process_srcml.hpp>
+#include <srcml_execute.hpp>
 #include <create_src.hpp>
 #include <isxml.hpp>
 #include <peek4char.hpp>
 #include <src_prefix.hpp>
-#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/thread.hpp>
-#pragma GCC diagnostic warning "-Wshorten-64-to-32"
 
 #include <archive.h>
 #include <archive_entry.h>
@@ -82,73 +80,47 @@ int main(int argc, char * argv[]) {
         return 0;
     }
 
-    // We would prefer to just deal with the inputs one-by-one, however we need
-    // to know whether they are all srcml, or a mixture first, so lets do it here
-    // our own input sources as we determine things about them
+    // convert the list of input filenames to actual input sources
     srcml_input_t input_sources(srcml_request.input.begin(), srcml_request.input.end());
-    srcml_input_src* pstdin = 0;
-    BOOST_FOREACH(srcml_input_src& input, input_sources) {
 
-        // stdin specially handled
-        if (input == "-") {
+    // input source that is stdin, if it exists
+    srcml_input_src* pstdin = srcml_request.stdindex ? &input_sources[*srcml_request.stdindex] : 0;
 
-            // Note: If stdin only, then have to read from this FILE*, then make sure to use it below
-            FILE* fstdin = fdopen(STDIN_FILENO, "r");
+    // standard input handled as FILE* to be able to peek
+    if (pstdin) {
 
-            // read the first 4 bytes as separate characters to get around byte ordering
-            unsigned char data[4];
-            ssize_t size = 0;
-            peek4char(fstdin, data, &size);
+        // FILE* becomes part of stdin input source
+        pstdin->fileptr = fdopen(STDIN_FILENO, "r");
 
-            // pass the first 4 bytes and the size actually read in
-            input.state = isxml(data, size) ? SRCML : SRC;
+        // peek at the first 4 bytes
+        unsigned char data[4];
+        ssize_t size = 0;
+        peek4char(*(pstdin->fileptr), data, &size);
 
-            input = fstdin;
-
-            pstdin = &input;
-
-            break;
-        }
+        // from the first up-to 4 bytes determine if is srcML or not
+        pstdin->state = isxml(data, size) ? SRCML : SRC;
     }
 
-    // do the same sort of processing for the output destination
-    srcml_output_dest destination = srcml_request.output_filename ? *srcml_request.output_filename : "stdout:///-";
+    // output destination setup just like an input source
+    srcml_output_dest destination(srcml_request.output_filename);
 
-    // Determine what processing needs to occur
-
-    // src->srcml
-    bool createsrcml = false;
-
-    // srcml->src
-    bool createsrc = false;
+    // Determine what processing needs to occur based on the inputs, outputs, and commands
 
     // metadata(srcml)
     bool insrcml = srcml_request.command & SRCML_COMMAND_INSRCML;
 
+    // srcml->src, based on the destination
+    bool createsrc = !insrcml && destination.state == SRC;
+
     // A single src input file implies src->srcml
     // Note: src->srcml->src implies a temporary srcml file
-    bool src_input = false;
-    BOOST_FOREACH(const srcml_input_src& input, input_sources) {
-        if (input.state == SRC) {
-            src_input = true;
-            break;
-        }
-    }
-    if (src_input) {
-        // at least one src file, so we have to create srcml
-        // may also have to go back to src
-        createsrcml = true;
-        createsrc = destination.state == SRC;
-    } else {
-        // all inputs are srcml, so result depends on destination
-        // if destination is srcml, no src creation
-        // if destination is src (or indeterminate), create src
-        createsrc = destination.state == SRC;
-        createsrcml = !createsrc;
-    }
+    bool src_input = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
 
-    // adjust if explicitly told differently via commands
-    // TODO: may detect some inconsistencies here
+    // create srcml when there is a src input, or the command is not to create src
+    bool createsrcml = src_input ? true : !insrcml && !createsrc;
+
+    // adjust if explicitly told differently via command line options
+    // TODO: may warn/error on some inconsistencies here
     if (!createsrc && srcml_request.command & SRCML_COMMAND_SRC) {
         createsrc = true;
     } else if (!createsrcml && srcml_request.command & SRCML_COMMAND_SRCML) {
@@ -157,100 +129,36 @@ int main(int argc, char * argv[]) {
         createsrcml = true;
     }
 
-    // when creating srcml, if we have source std input, we have to have a requested language
+    // language is required when creating srcml and standard input is used for source
     if (createsrcml && pstdin && (pstdin->state == SRC) && !srcml_request.att_language) {
             std::cerr << "Using stdin requires a declared language\n";
             exit(1);
     }
 
-    // src->srcml (or src->srcml->src)
-    // No need to join or wait as it will write to destination pipe
-    boost::thread_group create_srcml_thread;
-    srcml_input_t pipe_input_sources;
-    if (createsrcml && !createsrc) {
+    // setup the commands
+    std::list<command> commands;
 
-        create_srcml(input_sources, srcml_request, destination);
+    // src->srcml
+    if (createsrcml)
+        commands.push_back(create_srcml);
 
-    } if (createsrcml && createsrc) {
+    // srcml->srcml processing
+    if (!srcml_request.xpath.empty() || !srcml_request.xslt.empty() || !srcml_request.relaxng.empty())
+        commands.push_back(process_srcml);
 
-        // setup a pipe for src->srcml can write to fds[1], and srcml->src can read from fds[0]
-        int fds[2];
-        pipe(fds);
+    // srcml metadata. Note: This is a last command only
+    if (insrcml)
+        commands.push_back(srcml_display_metadata);
 
-        // set the output destination
-        destination = fds[1];
+    // srcml->src. Note: This is a last command only
+    if (createsrc)
+        commands.push_back(create_src);
 
-        // start src->srcml writing to the pipe
-        // No need to join or wait as it will write to destination pipe
-        create_srcml_thread.create_thread( boost::bind(create_srcml, input_sources, srcml_request, destination) );
+    assert(!commands.empty());
+    assert(commands.size() <= 3);
 
-        // the srcml->src stage must now read from internal input sources
-        pipe_input_sources.resize(1);
-        pipe_input_sources[0] = "stdin://-";
-        pipe_input_sources[0] = fds[0];
-    }
-
-    if (insrcml) {
-        // create the output srcml archive
-        srcml_archive* srcml_arch = srcml_create_archive();
-        // Assuming one srcml input
-        if (srcml_read_open_filename(srcml_arch, (src_prefix_resource(srcml_request.input[0]).c_str())) != SRCML_STATUS_OK) {
-            std::cerr << "srcML file " << src_prefix_resource(srcml_request.input[0]) << " could not be opened.\n";
-            return 1; // Error on opening the the srcml
-        }
-
-        // srcml->src language
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE){
-            const char* archive_info = srcml_archive_get_language(srcml_arch);
-            if (archive_info)
-                std::cout << "Language: " << archive_info << "\n";
-        }
-        // srcml->src directory
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY){
-            const char* archive_info = srcml_archive_get_directory(srcml_arch);
-            if (archive_info)
-                std::cout << "Directory: " << archive_info << "\n";
-        }
-        // srcml->src filename
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME){
-            const char* archive_info = srcml_archive_get_filename(srcml_arch);
-            if (archive_info)
-                std::cout << "Filename: " << archive_info << "\n";
-        }
-        // srcml->src src version
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION){
-            const char* archive_info = srcml_archive_get_version(srcml_arch);
-            if (archive_info)
-                std::cout << "Version: " << archive_info << "\n";
-        }
-        // srcml->src encoding
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING){
-            const char* archive_info = srcml_archive_get_src_encoding(srcml_arch);
-            if (archive_info)
-                std::cout << "Source Encoding: " << archive_info << "\n";
-        }
-        // srcml long info
-        if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
-            srcml_display_info(srcml_request.input);
-        }
-        // srcml info
-        if (srcml_request.command & SRCML_COMMAND_INFO) {
-            srcml_display_info(srcml_request.input);
-        }
-        // list filenames in srcml archive
-        if (srcml_request.command & SRCML_COMMAND_LIST) {
-            srcml_list_unit_files(srcml_request.input);
-
-        }
-
-        srcml_free_archive(srcml_arch);
-    }
-
-    // srcml->src
-    if (createsrc) {
-
-        create_src(pipe_input_sources.empty()? input_sources : pipe_input_sources, srcml_request, destination);
-    }
+    // execute the commands in the sequence
+    srcml_execute(srcml_request, commands, input_sources, destination);
 
     srcml_cleanup_globals();
 

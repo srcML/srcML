@@ -1,5 +1,5 @@
 /**
- * @file create_src.hpp
+ * @file srcml_consume.hpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -20,16 +20,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef CREATE_SRC_HPP
-#define CREATE_SRC_HPP
+/*
+  srcml_consume calls appropriate libsrcml functions for processing source file data
+*/
+
+#ifndef SRCML_EXECUTE_HPP
+#define SRCML_EXECUTE_HPP
 
 #include <srcml_cli.hpp>
 #include <srcml_input_src.hpp>
+#include <list>
 
-// create srcml from the current request
-void create_src(const srcml_request_t& srcml_request,
-		        const srcml_input_t& input_sources,
-                const srcml_output_dest& output);
+typedef void (*command)(const srcml_request_t& srcml_request, const srcml_input_t& input_sources, const srcml_output_dest& destination);
+
+void srcml_execute(const srcml_request_t& srcml_request,
+				   std::list<command>& commands,
+				   const srcml_input_t& input_sources,
+                   const srcml_output_dest& output);
 
 #endif
-

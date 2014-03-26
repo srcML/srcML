@@ -220,12 +220,13 @@ void option_to_dir(const std::string& value) {
 }
 
 void positional_args(const std::vector<std::string>& value) {
-    srcml_request.input.reserve(value.size());
+    srcml_request.input.reserve(srcml_request.input.size() + value.size());
 
     BOOST_FOREACH(const std::string& iname, value) {
 
+        // record the position of stdin
         if (iname == "-")
-            srcml_request.sawstdin = true;
+            srcml_request.stdindex = (int) srcml_request.input.size();
 
         srcml_request.input.push_back(src_prefix_add_uri(iname));
     }
@@ -274,7 +275,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
             ("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NAMESPACE_DECL>), "do not output any namespace declarations")
             ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_XML_DECL>), "do not output the XML declaration")
-            ("output,o", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::output_filename>)->default_value("-"), "write result ouput to arg which is a FILE or URI")
+            ("output,o", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::output_filename>)->default_value("stdout://-"), "write result ouput to arg which is a FILE or URI")
             ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "suppresses status messages")
             ("src-encoding,t", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::src_encoding>), "set the input source encoding to arg (default:  ISO-8859-1)")
             ("max-threads", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->default_value(4), "set the maximum number of threads srcml can spawn")
@@ -390,7 +391,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // If input was from stdin, then artificially put a "-" into the list of input files
         if (srcml_request.input.empty())
-            srcml_request.input.push_back("-");
+          positional_args(std::vector<std::string>(1, "stdin://-"));
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
         // automatic interactive use from stdin (not on redirect or pipe)

@@ -22,27 +22,28 @@
 
 #include <srcml_input_srcml.hpp>
 
-void srcml_input_srcml(const std::string& input_filename,
-                       srcml_archive* srcml_outarch,
-                       boost::optional<FILE*> fstdin) {
+void srcml_input_srcml(srcml_archive* srcml_output_archive,
+                       const srcml_input_src& srcml_input) {
 
-    // open the input srcml archive
-    srcml_archive* srcml_inarch = srcml_create_archive();
-
-    if (!fstdin)
-        srcml_read_open_filename(srcml_inarch, input_filename.c_str());
+    // open the srcml input archive
+    srcml_archive* srcml_input_archive = srcml_create_archive();
+    if (contains<int>(srcml_input))
+        srcml_read_open_fd(srcml_input_archive, srcml_input);
+    else if (contains<FILE*>(srcml_input))
+        srcml_read_open_FILE(srcml_input_archive, srcml_input);
     else
-        srcml_read_open_FILE(srcml_inarch, *fstdin);
+        srcml_read_open_filename(srcml_input_archive, srcml_input.c_str());
 
     // process each entry in the input srcml archive
-    while (srcml_unit* unit = srcml_read_unit(srcml_inarch)) {
+    while (srcml_unit* unit = srcml_read_unit(srcml_input_archive)) {
 
         // write the just-read unit to the output srcml archive
-        srcml_write_unit(srcml_outarch, unit);
+        srcml_write_unit(srcml_output_archive, unit);
 
         srcml_free_unit(unit);
     }
 
     // done with the input srcml archive
-    srcml_close_archive(srcml_inarch);
+    srcml_close_archive(srcml_input_archive);
+    srcml_free_archive(srcml_input_archive);
 }

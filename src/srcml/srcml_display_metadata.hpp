@@ -1,5 +1,5 @@
 /**
- * @file srcml_list_unit_files.hpp
+ * @file srcml_display_info.hpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -21,16 +21,17 @@
  */
 
 /*
-  srcml_list_unit_files.cpp function for listing all unit files contained in a srcml archive
+  srcml_display_info.hpp display info about a given srcml input file.
 */
 
-#ifndef SRCML_LIST_UNIT_FILES_HPP
-#define SRCML_LIST_UNIT_FILES_HPP
+#ifndef SRCML_DISPLAY_METADATA_HPP
+#define SRCML_DISPLAY_METADATA_HPP
 
 #include <string>
 #include <vector>
+#include <srcml_cli.hpp>
+#include <srcml_input_src.hpp>
 
-void srcml_list_unit_files(const std::vector<std::string>& pos_args);
-void srcml_list_unit_files(const std::string& srcml_input);
+void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&);
 
 #endif

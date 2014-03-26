@@ -86,7 +86,11 @@ void src_input_libarchive(ParseQueue& queue,
     // open the archive
     curl curling;
     int open_status;
-    if (input_file == "-") {
+    if (contains<int>(input_file)) {
+
+        open_status = archive_read_open_fd(arch, input_file, 16384);
+
+    } else if (contains<FILE*>(input_file)) {
 
         open_status = archive_read_open_FILE(arch, input_file);
 
@@ -95,9 +99,6 @@ void src_input_libarchive(ParseQueue& queue,
         curling.source = input_file.filename;
         open_status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
 
-    } else if (input_file == "-") {
-
-        open_status = archive_read_open_fd(arch, 0, 16384);
     } else {
 
         open_status = archive_read_open_filename(arch, input_file.c_str(), 16384);

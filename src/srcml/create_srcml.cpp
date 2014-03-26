@@ -21,10 +21,7 @@
  */
 
 #include <create_srcml.hpp>
-#include <stdio.h>
-#include <fcntl.h>
 #include <srcml.h>
-#include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <parse_queue.hpp>
 #include <src_input_libarchive.hpp>
@@ -34,11 +31,11 @@
 #include <srcml_input_srcml.hpp>
 
 // create srcml from the current request
-void create_srcml(srcml_input_t& input_sources,
-                  srcml_request_t& srcml_request,
-                  srcml_output_dest& destination) {
+void create_srcml(const srcml_request_t& srcml_request,
+                  const srcml_input_t& input_sources,
+                  const srcml_output_dest& destination) {
 
-    // create the output srcml archive
+     // create the output srcml archive
     srcml_archive* srcml_arch = srcml_create_archive();
 
     // set options for the output srcml archive
@@ -69,17 +66,19 @@ void create_srcml(srcml_input_t& input_sources,
 
     // non-archive when:
     //   only one input
+    //   no cli request to make it an archive
     //   not a directory (if local file)
-    //   no cli request to make it a directory
+    // TODO: check if a plain file. Source archives, i.e., .tar.gz, always produce srcml archives
     if (input_sources.size() == 1 &&
-        !boost::filesystem::is_directory(input_sources[0].resource) &&
-        !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_OPTION_ARCHIVE))) {
+        !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) &&
+        !boost::filesystem::is_directory(input_sources[0].resource)) {
 
         srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
     } else {
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
     }
 
+    // turned off for now due to cli testing
     srcml_archive_disable_option(srcml_arch, SRCML_OPTION_HASH);
     srcml_archive_disable_option(srcml_arch, SRCML_OPTION_TIMESTAMP);
 
@@ -95,7 +94,7 @@ void create_srcml(srcml_input_t& input_sources,
         srcml_archive_register_namespace(srcml_arch, ns.substr(0,pos).c_str(), ns.substr(pos+1).c_str());
     }
 
-    // create the srcML output file. if compressed, must go through libarchive thread
+    // create the srcML output file
     int status = 0;
     if (contains<int>(destination))
         status = srcml_write_open_fd(srcml_arch, destination);
@@ -109,27 +108,21 @@ void create_srcml(srcml_input_t& input_sources,
     // setup the parsing queue
     ParseQueue queue(srcml_request.max_threads);
 
-    // process command line inputs
+    // process input sources
     BOOST_FOREACH(const srcml_input_src& input, input_sources) {
-
+/*
         // if stdin, then there has to be data
-        if (!contains<FILE*>(input) && (input == "-") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) &&
+        // TODO: Safe to remove this? We already read data.
+        if (!contains<FILE*>(input) && (input.protocol == "stdin") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) &&
             !src_input_stdin()) {
             return; // stdin was requested, but no data was received
         }
+*/
 
         // call handler based on prefix
-        if (contains<FILE*>(input) && input.state == SRC) {
+        if (input.state == SRCML) {
 
-            src_input_libarchive(queue, srcml_arch, input, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
-
-        } else if (contains<FILE*>(input) && input.state == SRCML) {
-
-            srcml_input_srcml(input.resource, srcml_arch, (FILE*) input);
-
-        } else if (input.state == SRCML) {
-
-            srcml_input_srcml(input, srcml_arch);
+            srcml_input_srcml(srcml_arch, input);
 
         } else if (input.protocol == "file" && boost::filesystem::is_directory(input.resource)) {
 
