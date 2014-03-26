@@ -28,12 +28,12 @@
 #define SRC_INPUT_FILESYSTEM_HPP
 
 #include <srcml.h>
+#include <srcml_cli.hpp>
 #include <parse_queue.hpp>
-#include <string>
 
 void src_input_filesystem(ParseQueue& queue,
   						  srcml_archive* srcml_arch,
-						  const std::string& input_filename,
-						  const boost::optional<std::string>& language);
+  						  const srcml_request_t& srcml_request,
+						  const std::string& input_filename);
 
 #endif
