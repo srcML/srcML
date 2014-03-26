@@ -84,19 +84,22 @@ void create_src(const srcml_request_t& srcml_request,
                 src_output_filesystem(arch, destination, log);
             }
 
-        } else if ((srcml_request.command & SRCML_COMMAND_XML) && srcml_request.unit != 0 && input_sources.size() == 1) {
+        } else if (input_sources.size() == 1 && (srcml_request.command & SRCML_COMMAND_XML)) {
 
             // srcml->src extract individual unit in XML
 
             srcMLReadArchive arch(input_sources[0]);
 
-            srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
+            srcml_unit* unit = srcml_request.unit == 0 ? srcml_read_unit(arch) : srcml_read_unit_position(arch, srcml_request.unit);
 
             srcml_archive* oarch = srcml_create_archive();
             if (contains<int>(destination))
                 srcml_write_open_fd(oarch, destination);
             else
                 srcml_write_open_filename(oarch, destination.c_str());
+
+            if (destination.compressions[0] == ".gz")
+                srcml_archive_enable_option(oarch, SRCML_OPTION_COMPRESS);
 
             srcml_write_unit(oarch, unit);
 
@@ -105,34 +108,20 @@ void create_src(const srcml_request_t& srcml_request,
             srcml_close_archive(oarch);
             srcml_free_archive(oarch);
 
-        } else if (input_sources.size() == 1 && srcml_request.unit > 0) {
-
-            // srcml->src extract individual unit
-
-            srcMLReadArchive arch(input_sources[0]);
-
-            srcml_unit* unit = srcml_read_unit_position(arch, srcml_request.unit);
-
-            if (contains<int>(destination))
-                srcml_unparse_unit_fd(unit, destination);
-            else
-                srcml_unparse_unit_filename(unit, destination.c_str());
-
-            srcml_free_unit(unit);
-
-        } else if (input_sources.size() == 1 && contains<int>(destination)) {
+        } else if (input_sources.size() == 1 && contains<int>(destination) &&
+                   destination.compressions.empty() && destination.archives.empty()) {
 
             // srcml->src extract to stdout
 
             srcMLReadArchive arch(input_sources[0]);
 
-            srcml_unit* unit = srcml_read_unit(arch);
+            srcml_unit* unit = srcml_request.unit == 0 ? srcml_read_unit(arch) : srcml_read_unit_position(arch, srcml_request.unit);
 
             srcml_unparse_unit_fd(unit, destination);
 
             srcml_free_unit(unit);
 
-        } else if (input_sources.size() == 1 && srcml_check_extension(destination.c_str())) {
+        } else if (input_sources.size() == 1 && destination.compressions.empty() && destination.archives.empty()) {
 
             // srcml->src extract to plain code file
 
