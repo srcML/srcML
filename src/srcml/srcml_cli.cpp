@@ -225,7 +225,7 @@ void positional_args(const std::vector<std::string>& value) {
     BOOST_FOREACH(const std::string& iname, value) {
 
         // record the position of stdin
-        if (iname == "-")
+        if (iname == "-" || iname == "stdin://-")
             srcml_request.stdindex = (int) srcml_request.input.size();
 
         srcml_request.input.push_back(src_prefix_add_uri(iname));
