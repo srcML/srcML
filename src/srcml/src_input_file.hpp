@@ -26,16 +26,13 @@
 #define SRC_INPUT_FILE_HPP
 
 #include <srcml.h>
+#include <srcml_cli.hpp>
 #include <string>
 #include <parse_queue.hpp>
 
 void src_input_file(ParseQueue& queue,
                     srcml_archive* srcml_arch,
-                    const std::string& input_filename,
-                    const boost::optional<std::string>& language,
-                    const boost::optional<std::string>& option_filename,
-                    const boost::optional<std::string>& option_directory,
-                    const boost::optional<std::string>& option_version
-                    );
+                    const srcml_request_t& srcml_request,
+                    const std::string& input_file);
 
 #endif

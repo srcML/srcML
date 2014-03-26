@@ -51,7 +51,7 @@ void create_srcml_handler(ParseQueue& queue,
 
         } else if (input.protocol == "file" && !is_archive(input.extension) && !is_compressed(input.extension)) {
 
-            src_input_file(queue, srcml_arch, input, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
+            src_input_file(queue, srcml_arch, srcml_request, input);
 
         } else {
 

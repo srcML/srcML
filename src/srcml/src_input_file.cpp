@@ -25,22 +25,19 @@
 // Convert input to a ParseRequest and assign request to the processing queue
 void src_input_file(ParseQueue& queue,
                     srcml_archive* srcml_arch,
-                    const std::string& input_file,
-                    const boost::optional<std::string>& option_language,
-                    const boost::optional<std::string>& option_filename,
-                    const boost::optional<std::string>& option_directory,
-                    const boost::optional<std::string>& option_version) {
+                    const srcml_request_t& srcml_request,
+                    const std::string& input_file) {
 
     // form the parsing request
     ParseRequest request;
-    if (option_filename)
-        request.filename = *option_filename;
+    if (srcml_request.att_filename)
+        request.filename = *srcml_request.att_filename;
     else if (input_file != "_")
         request.filename = input_file;
-    request.directory = option_directory;
-    request.version = option_version;
+    request.directory = srcml_request.att_directory;
+    request.version = srcml_request.att_version;
     request.srcml_arch = srcml_arch;
-    request.language = option_language ? *option_language : "";
+    request.language = srcml_request.att_language ? *srcml_request.att_language : "";
     request.disk_filename = input_file;
 
     // Hand request off to the processing queue
