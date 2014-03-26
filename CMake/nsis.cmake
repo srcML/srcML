@@ -20,7 +20,7 @@
 # set icons
 set(CPACK_NSIS_MUI_ICON ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico)
 set(CPACK_NSIS_MUI_UNIICON ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico)
-set(CPACK_NSIS_INSTALLED_ICON_NAME ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico)
+set(CPACK_NSIS_INSTALLED_ICON_NAME srcml_icon.ico)
 
 # set add to path variable and ask for shortcut
 set(CPACK_NSIS_MODIFY_PATH ON)
