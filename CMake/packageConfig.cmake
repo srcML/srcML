@@ -57,6 +57,9 @@ set(CPACK_PACKAGE_VERSION_PATCH "0")
 # license
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/COPYING)
 
+# icon
+set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico)
+
 # strip executables
 #set(CPACK_STRIP_FILES ON)
  
@@ -67,6 +70,7 @@ set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 include(debian)
 include(rpm)
 include(packageMaker)
+include(nsis)
 
 # needs to be last so not overwritten
 include(CPack)
