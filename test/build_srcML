@@ -44,7 +44,9 @@ scp ubuntu12build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu12.04-64
 #scp macmavericksbuild:/srcML/dist/srcML*.dmg ~/Dropbox/srcML/Unix/MacMavericks/
 
 ./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML; cp -r ~/dlls .; git clean -fdx; mingw32-cmake .; make; cpack"'
+./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML/; cpack -G NSIS"'
 ./sshall.py --fedora --build --20 --~64 'bash -c "chown -R srcml:srcml /srcML"'
 scp fedora20build:/srcML/dist/srcML*.zip ~/Dropbox/srcML/Windows
+scp fedora20build:/srcML/dist/srcML*.exe ~/Dropbox/srcML/Windows
 
 bash -c "cd ~/Dropbox/srcML/Windows; unzip -ouq srcML-Win.zip;"
