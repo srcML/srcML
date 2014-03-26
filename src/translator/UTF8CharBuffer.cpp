@@ -82,7 +82,8 @@ int srcMLFileRead(void * context,  char * buffer, int len) {
 int srcMLFileClose(void * context) {
 
     srcMLFile * sfile = (srcMLFile *)context;
-    int ret = xmlFileClose(sfile->file);
+    int ret = 0;
+    if(sfile->close_file) ret = xmlFileClose(sfile->file);
 
     delete sfile;
 
@@ -98,7 +99,7 @@ int srcMLFdRead(void * context,  char * buffer, int len) {
 #ifdef _MSC_BUILD
         CryptHashData(*sfd->ctx, (BYTE *)buffer, num_read, 0);
 #else
-    SHA1_Update(sfd->ctx, buffer, (LONG)num_read);
+        SHA1_Update(sfd->ctx, buffer, (LONG)num_read);
 #endif
 
     return (int)num_read;
@@ -107,7 +108,7 @@ int srcMLFdRead(void * context,  char * buffer, int len) {
 int srcMLFdClose(void * context) {
 
     srcMLFd * sfd = (srcMLFd *)context;
-    int ret = CLOSE(sfd->fd);
+    int ret = 0; //CLOSE(sfd->fd);
 
     delete sfd;
 
