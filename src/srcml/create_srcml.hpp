@@ -25,13 +25,17 @@
 
 #include <srcml_cli.hpp>
 #include <srcml_input_src.hpp>
-#include <string>
-#include <boost/optional.hpp>
+#include <parse_queue.hpp>
 
 // create srcml from the current request
 void create_srcml(const srcml_request_t& srcml_request,
                   const srcml_input_t& input_sources,
                   const srcml_output_dest& destination);
+
+void create_srcml_handler(ParseQueue& queue, 
+                          srcml_archive* srcml_arch,
+                          const srcml_request_t& srcml_request,
+                          const srcml_input_src& input);
 
 #endif
 

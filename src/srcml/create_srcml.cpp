@@ -31,6 +31,34 @@
 #include <src_input_stdin.hpp>
 #include <srcml_input_srcml.hpp>
 
+void create_srcml_handler(ParseQueue& queue, 
+                          srcml_archive* srcml_arch,
+                          const srcml_request_t& srcml_request,
+                          const srcml_input_src& input) {
+
+            // call handler based on prefix
+        if (input.state == SRCML) {
+
+            srcml_input_srcml(queue, srcml_arch, input);
+
+        } else if (input.protocol == "filelist") {
+
+            src_input_filelist(queue, srcml_arch, input, srcml_request.att_language);
+
+        } else if (input.protocol == "file" && boost::filesystem::is_directory(input.resource)) {
+
+            src_input_filesystem(queue, srcml_arch, input, srcml_request.att_language);
+
+        } else if (input.protocol == "file" && !is_archive(input.extension) && !is_compressed(input.extension)) {
+
+            src_input_file(queue, srcml_arch, input, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
+
+        } else {
+
+            src_input_libarchive(queue, srcml_arch, input, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
+        }
+}
+
 // create srcml from the current request
 void create_srcml(const srcml_request_t& srcml_request,
                   const srcml_input_t& input_sources,
@@ -119,28 +147,7 @@ void create_srcml(const srcml_request_t& srcml_request,
             return; // stdin was requested, but no data was received
         }
 */
-
-        // call handler based on prefix
-        if (input.state == SRCML) {
-
-            srcml_input_srcml(queue, srcml_arch, input);
-
-        } else if (input.protocol == "filelist") {
-
-            src_input_filelist(queue, srcml_arch, input, srcml_request.att_language);
-
-        } else if (input.protocol == "file" && boost::filesystem::is_directory(input.resource)) {
-
-            src_input_filesystem(queue, srcml_arch, input, srcml_request.att_language);
-
-        } else if (input.protocol == "file" && !is_archive(input.extension) && !is_compressed(input.extension)) {
-
-            src_input_file(queue, srcml_arch, input, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
-
-        } else {
-
-            src_input_libarchive(queue, srcml_arch, input, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
-        }
+        create_srcml_handler(queue, srcml_arch, srcml_request, input);
     }
 
     // wait for the parsing queue to finish
