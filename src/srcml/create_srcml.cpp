@@ -122,7 +122,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         // call handler based on prefix
         if (input.state == SRCML) {
 
-            srcml_input_srcml(srcml_arch, input);
+            srcml_input_srcml(queue, srcml_arch, input);
 
         } else if (input.protocol == "file" && boost::filesystem::is_directory(input.resource)) {
 
