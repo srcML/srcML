@@ -27,6 +27,7 @@
 #include <src_input_libarchive.hpp>
 #include <src_input_file.hpp>
 #include <src_input_filesystem.hpp>
+#include <src_input_filelist.hpp>
 #include <src_input_stdin.hpp>
 #include <srcml_input_srcml.hpp>
 
@@ -123,6 +124,10 @@ void create_srcml(const srcml_request_t& srcml_request,
         if (input.state == SRCML) {
 
             srcml_input_srcml(queue, srcml_arch, input);
+
+        } else if (input.protocol == "filelist") {
+
+            src_input_filelist(queue, srcml_arch, input, srcml_request.att_language);
 
         } else if (input.protocol == "file" && boost::filesystem::is_directory(input.resource)) {
 
