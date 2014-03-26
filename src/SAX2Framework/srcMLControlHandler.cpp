@@ -90,6 +90,7 @@ srcMLControlHandler::srcMLControlHandler(xmlParserInputBufferPtr input) : sax2_h
  */
 srcMLControlHandler::~srcMLControlHandler() {
 
+    inputPop(ctxt);
     if(ctxt) xmlFreeParserCtxt(ctxt);
     if(input) xmlFreeParserInputBuffer(input);
 
