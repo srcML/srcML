@@ -65,7 +65,10 @@ set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/COPYING)
 
 # icon
 set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico)
+
+if(WIN32)
 install(FILES ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico DESTINATION .)
+endif()
 
 # strip executables
 #set(CPACK_STRIP_FILES ON)
