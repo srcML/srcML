@@ -98,9 +98,9 @@ public:
 //        fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, extension.c_str());
 
         if (protocol == "stdin")
-            fd = 0;
+            fd = STDIN_FILENO;
         if (protocol == "stdout")
-            fd = 1;
+            fd = STDOUT_FILENO;
     }
 
     srcml_input_src(const std::string& other, int fds) {
