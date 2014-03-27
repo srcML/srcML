@@ -275,6 +275,8 @@ int main() {
         assert(!srcml_check_encoding(0));
     }
 
+    srcml_cleanup_globals();
+
     UNLINK("a.cpp");
     UNLINK("project.xml");
     UNLINK("project_c.xml");
