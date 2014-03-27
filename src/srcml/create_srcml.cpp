@@ -36,7 +36,7 @@ void create_srcml_handler(ParseQueue& queue,
                           const srcml_request_t& srcml_request,
                           const srcml_input_src& input) {
 
-            // call handler based on prefix
+        // call appropriate handler
         if (input.state == SRCML) {
 
             srcml_input_srcml(queue, srcml_arch, input);
