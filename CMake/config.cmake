@@ -142,11 +142,17 @@ endif()
 # The default configuration is to compile in DEBUG mode. These flags can be directly
 # overridden by setting the property of a target you wish to change them for.
 if(${CMAKE_COMPILER_IS_GNUCXX})
+
+    string(FIND ${CMAKE_CXX_COMPILER} "mingw32" IS_MINGW32)
+    if(IS_MINGW32 EQUAL -1)
+      set(USE_FPIC -fPIC)
+    endif()
+
     set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas")
-    # Adding global compiler definitions.
-    set(CMAKE_CXX_FLAGS "-fPIC -O3 ${GCC_WARNINGS}")
-    set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${GCC_WARNINGS}")
-    set(CMAKE_CXX_FLAGS_DEBUG "-fPIC -O3 -g -DDEBUG --coverage -fprofile-arcs ${GCC_WARNINGS}")
+    # Adding global compiler definitions.                                                                                      
+    set(CMAKE_CXX_FLAGS "${USE_FPIC} -O3 ${GCC_WARNINGS}")
+    set(CMAKE_CXX_FLAGS_RELEASE "${USE_FPIC} -O3 -DNDEBUG ${GCC_WARNINGS}")
+    set(CMAKE_CXX_FLAGS_DEBUG "${USE_FPIC} -O3 -g -DDEBUG --coverage -fprofile-arcs ${GCC_WARNINGS}")
 
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # Configuring the Clang compiler
