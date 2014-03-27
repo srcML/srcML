@@ -512,12 +512,14 @@ int main() {
         dassert(srcml_unit_get_directory(unit), 0);
         dassert(srcml_unit_get_version(unit), 0);
         dassert(unit->unit, 0);
+        srcml_free_unit(unit);
         unit = srcml_read_unit_header(archive);
         dassert(srcml_unit_get_language(unit), std::string("C"));
         dassert(srcml_unit_get_filename(unit), std::string("project.c"));
         dassert(srcml_unit_get_directory(unit), 0);
         dassert(srcml_unit_get_version(unit), 0);
         dassert(unit->unit, 0);
+        srcml_free_unit(unit);
         unit = srcml_read_unit_header(archive);
         dassert(unit, 0);
 
