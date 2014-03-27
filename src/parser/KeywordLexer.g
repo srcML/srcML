@@ -28,25 +28,26 @@ header "pre_include_hpp" {
 
 header {
     #pragma GCC diagnostic warning "-Wunused-parameter"
-   #include <string>
-   #include "Language.hpp"
-   #include "UTF8CharBuffer.hpp"
-   #include "antlr/TokenStreamSelector.hpp"
-   #include "CommentTextLexer.hpp"
-   #include "srcMLToken.hpp"
-   #include "Options.hpp"
-   #undef CONST
-   #undef VOID
-   #undef DELETE
-   #undef FALSE
-   #undef TRUE
-   #undef INTERFACE
-   #undef OUT
-   #undef IN
-   #undef THIS
+    #include <string>
+    #include "Language.hpp"
+    #include "UTF8CharBuffer.hpp"
+    #include "antlr/TokenStreamSelector.hpp"
+    #include "CommentTextLexer.hpp"
+    #include "srcMLToken.hpp"
+    #include "Options.hpp"
+    #undef CONST
+    #undef VOID
+    #undef DELETE
+    #undef FALSE
+    #undef TRUE
+    #undef INTERFACE
+    #undef OUT
+    #undef IN
+    #undef THIS
 }
 
 header "post_include_cpp" {
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 
 void KeywordLexer::changetotextlexer(int typeend) {
           selector->push("text"); 
