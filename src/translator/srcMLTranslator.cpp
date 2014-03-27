@@ -278,6 +278,8 @@ void srcMLTranslator::add_unit(std::string xml, const char * hash) {
 
     first = false;
 
+    char * cxml = (char *)xml.c_str();
+
     if(!isoption(options, OPTION_ARCHIVE)) {
 
         std::string::size_type pos = xml.find('>');
@@ -303,41 +305,45 @@ void srcMLTranslator::add_unit(std::string xml, const char * hash) {
             ns += "\"";
 
             // write out up to unit
-            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)xml.c_str(), unit_pos + 4);
+            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)xml.c_str(), (int)unit_pos + 4);
 
             // write out namespace declaration
             xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)ns.c_str());
 
-            // write out remaining
-            xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml.c_str() + unit_pos + 4);
+            // update pointer for remaining
+            cxml += unit_pos + 4;
 
         }
 
-    } else if(hash) {
+    } 
 
-        std::string::size_type pos = xml.find('>');
+    if(hash) {
+
+        std::string remaining = cxml;
+
+        std::string::size_type pos = remaining.find('>');
         if(pos == std::string::npos) return;
 
-        std::string::size_type hash_pos = xml.rfind("hash", pos);
+        std::string::size_type hash_pos = remaining.rfind("hash", pos);
 
-
-        int offset = 0;
 
         if(hash_pos != std::string::npos) {
 
-            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)xml.c_str(), (int)hash_pos + 6);
+            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)remaining.c_str(), (int)hash_pos + 6);
             xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)hash);
-            offset = (int)hash_pos + 6;
+            cxml += hash_pos + 6;
+
+            // consume hash if already there
+            if(cxml[0] != '"')
+                cxml += 20;
 
         }
 
-        xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml.c_str() + offset);
 
-    } else {
+    } 
 
-        xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml.c_str());
+    xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)cxml);
 
-    }
 
     if ((options & OPTION_ARCHIVE) > 0)
         out.processText("\n\n", 2);
