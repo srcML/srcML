@@ -37,6 +37,7 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
 
         // construct the relative directory
         boost::filesystem::path out(prefix);
+        out /= srcml_unit_get_directory(unit);
         out /= srcml_unit_get_filename(unit);
 
         // create the path
