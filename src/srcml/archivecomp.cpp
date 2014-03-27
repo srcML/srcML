@@ -22,34 +22,67 @@
 
 #include <archivecomp.hpp>
 
+// Extension that map to archive types
+static const char* archive_extensions[] = {
+#if ARCHIVE_VERSION_NUMBER >= 3000000
+    ".7z",
+#endif
+
+    ".ar",
+
+#if ARCHIVE_VERSION_NUMBER >= 3000000
+    ".cab",
+#endif
+
+    ".cpio",
+    ".iso",
+
+#if ARCHIVE_VERSION_NUMBER >= 3000000
+    ".lha",
+    ".lzh",
+#endif
+
+    ".mtree",
+    ".pax",
+
+#if ARCHIVE_VERSION_NUMBER >= 3000000
+    ".rar",
+#endif
+
+    ".shar",
+    ".tar",
+    ".taz",  // (archive w/ compression)
+    ".tb2",  // (archive w/ compression)
+    ".tbz",  // (archive w/ compression)
+    ".tbz2", // (archive w/ compression)
+    ".tgz",  // (archive w/ compression)
+    ".tlz",  // (archive w/ compression)
+    ".txz",  // (archive w/ compression)
+    ".xar",
+    ".zip",  // (archive w/ compression)
+};
+
+// Extension that map to compression types
+static const char* compression_extensions[] = {
+    ".bz"
+    ".bz2",
+    ".gz",
+    ".lz",
+    ".lzma",
+    ".xz",
+    ".z",
+};
+
 bool is_archive(const std::string& input_file_extension) {
-    std::string last_extension = input_file_extension;
-    std::string::size_type pos = last_extension.find_last_of(".");
-    if (pos != std::string::npos)
-        last_extension = last_extension.substr(pos);
 
-    int index = 0;
-    while (archive_extensions[index] != 0) {
-        if (last_extension.compare(archive_extensions[index]) == 0)
-            return true;
+    const char** end = archive_extensions + sizeof(archive_extensions) / sizeof(archive_extensions[0]);
 
-        ++index;
-    }
-    return false;
+    return std::find(archive_extensions, end, input_file_extension) != end;
 }
 
 bool is_compressed(const std::string& input_file_extension) {
-    std::string last_extension = input_file_extension;
-    std::string::size_type pos = last_extension.find_last_of(".");
-    if (pos != std::string::npos)
-        last_extension = last_extension.substr(pos);
 
-    int index = 0;
-    while (compression_extensions[index] != 0) {
-        if (last_extension.compare(archive_extensions[index]) == 0)
-            return true;
+    const char** end = compression_extensions + sizeof(compression_extensions) / sizeof(compression_extensions[0]);
 
-        ++index;
-    }
-    return false;
+    return std::find(compression_extensions, end, input_file_extension) != end;
 }

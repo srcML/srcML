@@ -32,6 +32,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/logic/tribool.hpp>
 #include <algorithm>
+#include <archivecomp.hpp>
 
 #ifdef WIN32
 #include <io.h>
@@ -65,7 +66,7 @@ public:
         // collect compressions
         while (rpath.has_extension()) {
             std::string ext = rpath.extension().string();
-            if (ext != ".gz" && ext != ".bz2")
+            if (!is_compressed(ext))
                 break;
             compressions.push_back(ext);
             rpath = rpath.stem().string();
@@ -74,7 +75,7 @@ public:
         // collect archives
         while (rpath.has_extension()) {
             std::string ext = rpath.extension().string();
-            if (ext != ".tar")
+            if (!is_archive(ext))
                 break;
             archives.push_back(ext);
             plainfile = rpath.string();
