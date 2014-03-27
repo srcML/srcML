@@ -54,6 +54,5 @@ if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
     add_dependencies(test_srcml_xslt copy.xsl)
     
     copyDependentFile(test_srcml_xpath.cpp)
-    add_dependencies(test_srcml_sax2_utilities test_srcml_xpath.cpp)
     
 endif()
