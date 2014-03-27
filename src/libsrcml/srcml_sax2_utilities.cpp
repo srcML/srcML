@@ -257,10 +257,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 
     }
 
-/// @todo This is a memory leak (at least in Ubuntu), however removing in Mac causes a free error
-#if __APPLE__
     stylesheet->doc = 0;
-#endif
     xsltFreeStylesheet(stylesheet);
     xsltCleanupGlobals();
 
