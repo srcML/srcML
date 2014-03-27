@@ -808,6 +808,7 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
     } catch(...) { return 0; }
     unit->archive = archive;
     unit->read_header = false;
+    unit->output_hash = false;
 
     return unit;
 
