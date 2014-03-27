@@ -106,10 +106,11 @@ struct srcMLElement {
             CHECK_COPY(attributes[index + 2], this->attributes[index + 2]);
 
             int vallength = (int)(attributes[index + 4] - attributes[index + 3]);
-            this->attributes[index + 3] = (const xmlChar*) malloc(vallength);
+            this->attributes[index + 3] = (const xmlChar*) malloc(vallength + 1);
             CHECK_COPY(attributes[index + 3], this->attributes[index + 3]);
 
             strncpy((char *) this->attributes[index + 3], (const char*) attributes[index + 3], vallength);
+            ((char *)this->attributes[index + 3])[vallength] = 0;
             this->attributes[index + 4] = this->attributes[index + 3] + vallength;
 
         }
@@ -162,10 +163,11 @@ struct srcMLElement {
             CHECK_COPY(element.attributes[index + 2], this->attributes[index + 2]);
 
             int vallength = (int)(element.attributes[index + 4] - element.attributes[index + 3]);
-            this->attributes[index + 3] = (const xmlChar*) malloc(vallength);
+            this->attributes[index + 3] = (const xmlChar*) malloc(vallength + 1);
             CHECK_COPY(element.attributes[index + 3], this->attributes[index + 3]);
 
             strncpy((char *) this->attributes[index + 3], (const char*) element.attributes[index + 3], vallength);
+            ((char *)this->attributes[index + 3])[vallength] = 0;
             this->attributes[index + 4] = this->attributes[index + 3] + vallength;
 
         }
