@@ -48,11 +48,7 @@ namespace {
 void src_input_libarchive(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
-                          const srcml_input_src& input_file,
-                          const boost::optional<std::string>& option_language,
-                          const boost::optional<std::string>& option_filename,
-                          const boost::optional<std::string>& option_directory,
-                          const boost::optional<std::string>& option_version) {
+                          const srcml_input_src& input_file) {
 
     archive* arch = archive_read_new();
 
@@ -135,14 +131,14 @@ void src_input_libarchive(ParseQueue& queue,
             if (filename.empty() || filename == "data")
                 filename = input_file.resource;
 
-            if (option_filename)
-                filename = *option_filename;
+            if (srcml_request.att_filename)
+                filename = *srcml_request.att_filename;
 
             // language may have been explicitly set
             std::string language;
 
-            if (option_language)
-                language = *option_language;
+            if (srcml_request.att_language)
+                language = *srcml_request.att_language;
 
             // if not explicitly set, language comes from extension
             // we have to do this ourselves, since libsrcml won't for memory
@@ -152,10 +148,10 @@ void src_input_libarchive(ParseQueue& queue,
 
             // form the parsing request
             ParseRequest request;
-            if (option_filename || (filename != "-"))
+            if (srcml_request.att_filename || (filename != "-"))
                 request.filename = filename;
-            request.directory = option_directory;
-            request.version = option_version;
+            request.directory = srcml_request.att_directory;
+            request.version = srcml_request.att_version;
             request.srcml_arch = srcml_arch;
             request.language = language;
             request.status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;

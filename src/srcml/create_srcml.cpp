@@ -55,7 +55,7 @@ void create_srcml_handler(ParseQueue& queue,
 
         } else {
 
-            src_input_libarchive(queue, srcml_arch, srcml_request, input, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
+            src_input_libarchive(queue, srcml_arch, srcml_request, input);
         }
 }
 

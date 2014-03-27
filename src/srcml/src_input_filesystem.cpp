@@ -52,7 +52,7 @@ void src_input_filesystem(ParseQueue& queue,
 
             // regular files are passed to the handler
             if (is_regular_file(file))
-                src_input_libarchive(queue, srcml_arch, srcml_request, file.string(), 0, 0, 0, srcml_request.att_language);
+                src_input_libarchive(queue, srcml_arch, srcml_request, file.string());
 
             // directories are put at the back
             else if (is_directory(file))
