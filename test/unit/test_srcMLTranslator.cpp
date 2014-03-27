@@ -349,6 +349,28 @@ int main() {
 
     }
 
+        {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, 0, 0, 0, urisprefix, 4);
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+        std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+
+        translator.add_unit(s_before.c_str(), "0123456789abcdef");
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        assert(result == decl + "\n" + s + "\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
     {
 
         xmlBufferPtr buffer = xmlBufferCreate();
