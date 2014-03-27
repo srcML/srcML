@@ -60,6 +60,9 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBuffer *
     srcml_sax2_reader reader(input);
     reader.read_src(output_handler);
 
+    
+    xmlFreeParserInputBuffer(input);
+
     return SRCML_STATUS_OK;
 
 }
