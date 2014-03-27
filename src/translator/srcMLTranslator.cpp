@@ -313,9 +313,7 @@ void srcMLTranslator::add_unit(std::string xml, const char * hash) {
 
         }
 
-    }
-
-    if(hash) {
+    } else if(hash) {
 
         std::string::size_type pos = xml.find('>');
         if(pos == std::string::npos) return;
