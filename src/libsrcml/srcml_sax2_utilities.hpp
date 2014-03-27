@@ -26,14 +26,10 @@
 #include <libxml/parserInternals.h>
 
 int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit = 0);
+/// @todo needs test cases
 int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, OPTION_TYPE options, int unit = 0);
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpath, int fd, OPTION_TYPE options);
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const char* params[], int paramcount, int fd, OPTION_TYPE options);
 int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, int fd, OPTION_TYPE options);
-
-// local function forward declarations
-xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int size);
-int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly);
-xmlParserCtxtPtr srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input);
 
 #endif
