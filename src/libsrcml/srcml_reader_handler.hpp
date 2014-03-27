@@ -130,6 +130,7 @@ public :
     ~srcml_reader_handler() {
 
         srcml_free_archive(archive);
+        if(unit) srcml_free_unit(unit);
 
     }
 
