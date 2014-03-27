@@ -53,7 +53,7 @@ public:
     srcml_input_src() {}
     srcml_input_src(const std::string& other) : state(INDETERMINATE) { 
 
-        filename = other;
+        filename = src_prefix_add_uri(other);
 
         // since boost::filesystem does not support URIs, separate out the protocol
         src_prefix_split_uri(filename, protocol, resource);
