@@ -158,20 +158,24 @@ def getreturn(command, input):
 def checkallforms(base, shortflag, longflag, optionvalue, progin, progout):
         if base == src2srcml and not(shortflag == option.LANGUAGE_FLAG_SHORT or longflag == option.LANGUAGE_FLAG_FULL) :
                 if optionvalue != "":
-                        check([base, option.LANGUAGE_FLAG_SHORT, 'C++', shortflag, optionvalue], progin, progout)
+                        if shortflag != "":
+                                check([base, option.LANGUAGE_FLAG_SHORT, 'C++', shortflag, optionvalue], progin, progout)
                         check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag, optionvalue], progin, progout)
                         check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag + "=" + optionvalue], progin, progout)
                 else:
-                        check([base, option.LANGUAGE_FLAG_SHORT, 'C++', shortflag], progin, progout)
+                        if shortflag != "":
+                                check([base, option.LANGUAGE_FLAG_SHORT, 'C++', shortflag], progin, progout)
                         check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag], progin, progout)
 
         else :
                 if optionvalue != "":
-                        check([base, shortflag, optionvalue], progin, progout)
+                        if shortflag != "":
+                                check([base, shortflag, optionvalue], progin, progout)
                         check([base, longflag, optionvalue], progin, progout)
                         check([base, longflag + "=" + optionvalue], progin, progout)
                 else:
-                        check([base, shortflag], progin, progout)
+                        if shortflag != "":
+                                check([base, shortflag], progin, progout)
                         check([base, longflag], progin, progout)
 
         return
@@ -450,29 +454,29 @@ srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="foo" version="1.2"/>
 """
 
-check(srcml2src, option.LANGUAGE_DISPLAY_FLAG, srcml)
-checkallforms(srcml2src, option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "", srcml, "bar\n")
-checkallforms(srcml2src, option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "", srcml, "foo\n")
-checkallforms(srcml2src, option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "", srcml, "1.2\n")
-checkallforms(srcml2src, option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "", srcml, default_srcml2src_encoding + "\n")
+checkallforms(srcml2src, "", option.LANGUAGE_DISPLAY_FLAG, "", srcml, "C++\n")
+checkallforms(srcml2src, "", option.DIRECTORY_DISPLAY_FLAG, "", srcml, "bar\n")
+checkallforms(srcml2src, "", option.FILENAME_DISPLAY_FLAG, "", srcml, "foo\n")
+checkallforms(srcml2src, "", option.SRCVERSION_DISPLAY_FLAG, "", srcml, "1.2\n")
+checkallforms(srcml2src, "", option.ENCODING_DISPLAY_FLAG, "", srcml, default_srcml2src_encoding + "\n")
 
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="" dir="" filename="" version=""/>
 """
 
-checkallforms(srcml2src, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "", srcml, "\n")
-checkallforms(srcml2src, option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "", srcml, "\n")
-checkallforms(srcml2src, option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "", srcml, "\n")
-checkallforms(srcml2src, option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "", srcml, "\n")
+checkallforms(srcml2src, "", option.LANGUAGE_DISPLAY_FLAG, "", srcml, "\n")
+checkallforms(srcml2src, "", option.DIRECTORY_DISPLAY_FLAG, "", srcml, "\n")
+checkallforms(srcml2src, "", option.FILENAME_DISPLAY_FLAG, "", srcml, "\n")
+checkallforms(srcml2src, "", option.SRCVERSION_DISPLAY_FLAG, "", srcml, "\n")
 
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp"/>
 """
 
-checkallforms(srcml2src, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "", srcml, "")
-checkallforms(srcml2src, option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "", srcml, "")
-checkallforms(srcml2src, option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "", srcml, "")
-checkallforms(srcml2src, option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "", srcml, "")
+checkallforms(srcml2src, "", option.LANGUAGE_DISPLAY_FLAG, "", srcml, "")
+checkallforms(srcml2src, "", option.DIRECTORY_DISPLAY_FLAG, "", srcml, "")
+checkallforms(srcml2src, "", option.FILENAME_DISPLAY_FLAG, "", srcml, "")
+checkallforms(srcml2src, "", option.SRCVERSION_DISPLAY_FLAG, "", srcml, "")
 
 check([srcml2src, option.NESTED_FLAG], srcml, "0\n")
 check([srcml2src, option.NESTED_FLAG], nestedfile, "2\n")
