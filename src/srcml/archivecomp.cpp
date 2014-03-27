@@ -21,68 +21,103 @@
  */
 
 #include <archivecomp.hpp>
+#include <string.h>
+#include <errno.h>
 
 // Extension that map to archive types
-static const char* archive_extensions[] = {
+static struct { const char *name; int (*setter)(struct archive *); } format_calls[] = {
 #if ARCHIVE_VERSION_NUMBER >= 3000000
-    ".7z",
+    { ".7z", 0 },
 #endif
 
-    ".ar",
+    { ".ar", 0 },
 
 #if ARCHIVE_VERSION_NUMBER >= 3000000
-    ".cab",
+    { ".cab", 0 },
 #endif
 
-    ".cpio",
-    ".iso",
+    { ".cpio", 0 },
+    { ".iso", 0 },
 
 #if ARCHIVE_VERSION_NUMBER >= 3000000
-    ".lha",
-    ".lzh",
+    { ".lha", 0 },
+    { ".lzh", 0 },
 #endif
 
-    ".mtree",
-    ".pax",
+    { ".mtree", 0 },
+    { ".pax", 0 },
 
 #if ARCHIVE_VERSION_NUMBER >= 3000000
-    ".rar",
+    { ".rar", 0 },
 #endif
 
-    ".shar",
-    ".tar",
-    ".taz",  // (archive w/ compression)
-    ".tb2",  // (archive w/ compression)
-    ".tbz",  // (archive w/ compression)
-    ".tbz2", // (archive w/ compression)
-    ".tgz",  // (archive w/ compression)
-    ".tlz",  // (archive w/ compression)
-    ".txz",  // (archive w/ compression)
-    ".xar",
-    ".zip",  // (archive w/ compression)
+    { ".shar", 0 },
+    { ".tar", archive_write_set_format_pax_restricted },
+    { ".taz", 0 },  // (archive w/ compression)
+    { ".tb2", 0 },  // (archive w/ compression)
+    { ".tbz", 0 },  // (archive w/ compression)
+    { ".tbz2", 0 }, // (archive w/ compression)
+    { ".tgz", 0 },  // (archive w/ compression)
+    { ".tlz", 0 },  // (archive w/ compression)
+    { ".txz", 0 },  // (archive w/ compression)
+    { ".xar", 0 },
+    { ".zip", archive_write_set_format_zip },  // (archive w/ compression)
+    { NULL, NULL }
 };
 
 // Extension that map to compression types
-static const char* compression_extensions[] = {
-    ".bz"
-    ".bz2",
-    ".gz",
-    ".lz",
-    ".lzma",
-    ".xz",
-    ".z",
+static struct { const char *name; int (*setter)(struct archive *); } compression_calls[] = {
+    { ".bz"  , 0 },
+    { ".bz2" , archive_write_set_compression_bzip2 },
+    { ".gz"  , archive_write_set_compression_gzip },
+    { ".lz"  , 0 },
+    { ".lzma", archive_write_set_compression_lzma },
+    { ".xz " , archive_write_set_compression_xz },
+    { ".z"   , archive_write_set_compression_compress },
+    { NULL, NULL }
 };
 
-bool is_archive(const std::string& input_file_extension) {
+int archive_write_set_format_by_extension(struct archive* ar, const char* extension) {
 
-    const char** end = archive_extensions + sizeof(archive_extensions) / sizeof(archive_extensions[0]);
+    for (int i = 0; format_calls[i].name != NULL; ++i)
+        if (strcmp(extension, format_calls[i].name) == 0) {
+            if (!format_calls[i].setter)
+                break;
+            return ((format_calls[i].setter)(ar));
+        }
 
-    return std::find(archive_extensions, end, input_file_extension) != end;
+    archive_set_error(ar, EINVAL, "No such format for this extension '%s'", extension);
+    return ARCHIVE_FATAL;
 }
 
-bool is_compressed(const std::string& input_file_extension) {
+int archive_write_set_compression_by_extension(struct archive* ar, const char* extension) {
 
-    const char** end = compression_extensions + sizeof(compression_extensions) / sizeof(compression_extensions[0]);
+    for (int i = 0; compression_calls[i].name != NULL; ++i)
+        if (strcmp(extension, compression_calls[i].name) == 0) {
+            if (!compression_calls[i].setter)
+                break;
+            return ((compression_calls[i].setter)(ar));
+        }
 
-    return std::find(compression_extensions, end, input_file_extension) != end;
+    archive_set_error(ar, EINVAL, "No such compression for this extension '%s'", extension);
+    return ARCHIVE_FATAL;
+}
+
+
+bool is_archive(const std::string& extension) {
+
+    for (int i = 0; format_calls[i].name != NULL; ++i)
+        if (strcmp(extension.c_str(), format_calls[i].name) == 0)
+            return true;
+
+    return false;
+}
+
+bool is_compressed(const std::string& extension) {
+
+    for (int i = 0; compression_calls[i].name != NULL; ++i)
+        if (strcmp(extension.c_str(), compression_calls[i].name) == 0)
+            return true;
+
+    return false;
 }
