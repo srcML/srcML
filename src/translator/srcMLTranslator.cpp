@@ -278,23 +278,38 @@ void srcMLTranslator::add_unit(std::string xml, const char * hash) {
 
     first = false;
 
-    if(isoption(options, OPTION_ARCHIVE)) {
+    if(!isoption(options, OPTION_ARCHIVE)) {
 
         std::string::size_type pos = xml.find('>');
         if(pos == std::string::npos) return;
 
         std::string::size_type src_ns_pos = xml.rfind(SRCML_SRC_NS_URI, pos);
 
-
-        int offset = 0;
-
         if(src_ns_pos == std::string::npos) {
 
+            std::string::size_type unit_pos = xml.find("unit");
+
+            std::string ns = " xmlns";
+
+            if(unit_pos != 1) {
+
+                ns += ":";
+                ns += xml.substr(1, xml.find(":"));
+
+            }
+
+            ns += "=\"";
+            ns += SRCML_SRC_NS_URI;
+            ns += "\"";
+
             // write out up to unit
-            //xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)xml.c_str(), );
+            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)xml.c_str(), unit_pos + 4);
 
             // write out namespace declaration
-            //xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)hash);
+            xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)ns.c_str());
+
+            // write out remaining
+            xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml.c_str() + unit_pos + 4);
 
         }
 
