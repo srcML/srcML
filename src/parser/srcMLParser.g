@@ -4956,14 +4956,14 @@ variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
 // processing for short variable declaration
 short_variable_declaration[] { ENTRY_DEBUG } :
         {
+            // variable declarations may be in a list
+            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
             // declaration
             startNewMode(MODE_LOCAL);
 
             // start the declaration
             startElement(SDECLARATION);
-
-            // variable declarations may be in a list
-            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
         }
 ;
 
