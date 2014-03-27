@@ -75,7 +75,6 @@ srcml_archive* srcml_create_archive()
     archive->translator = 0;
     archive->reader = 0;
     archive->input = 0;
-    archive->close_input = 0;
 
     // default prefixes
     srcml_archive_register_namespace(archive, SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);
@@ -977,7 +976,6 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
     }
 
     srcml_read_internal(archive);
-    archive->close_input = true;
 
     return SRCML_STATUS_OK;
 
@@ -1011,7 +1009,6 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
     }
 
     srcml_read_internal(archive);
-    archive->close_input = true;
 
     return SRCML_STATUS_OK;
 
@@ -1044,7 +1041,6 @@ int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
     }
 
     srcml_read_internal(archive);
-    archive->close_input = false;
 
     return SRCML_STATUS_OK;
 
@@ -1077,7 +1073,6 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
     }
 
     srcml_read_internal(archive);
-    archive->close_input = false;
 
     return SRCML_STATUS_OK;
 
