@@ -32,6 +32,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/logic/tribool.hpp>
 #include <algorithm>
+#include <archivecomp.hpp>
 
 #ifdef WIN32
 #include <io.h>
@@ -53,7 +54,7 @@ public:
     srcml_input_src() {}
     srcml_input_src(const std::string& other) : state(INDETERMINATE) { 
 
-        filename = other;
+        filename = src_prefix_add_uri(other);
 
         // since boost::filesystem does not support URIs, separate out the protocol
         src_prefix_split_uri(filename, protocol, resource);
@@ -65,7 +66,7 @@ public:
         // collect compressions
         while (rpath.has_extension()) {
             std::string ext = rpath.extension().string();
-            if (ext != ".gz" && ext != ".bz2")
+            if (!is_compressed(ext))
                 break;
             compressions.push_back(ext);
             rpath = rpath.stem().string();
@@ -74,7 +75,7 @@ public:
         // collect archives
         while (rpath.has_extension()) {
             std::string ext = rpath.extension().string();
-            if (ext != ".tar")
+            if (!is_archive(ext))
                 break;
             archives.push_back(ext);
             plainfile = rpath.string();
@@ -97,9 +98,9 @@ public:
 //        fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, extension.c_str());
 
         if (protocol == "stdin")
-            fd = 0;
+            fd = STDIN_FILENO;
         if (protocol == "stdout")
-            fd = 1;
+            fd = STDOUT_FILENO;
     }
 
     srcml_input_src(const std::string& other, int fds) {

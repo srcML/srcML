@@ -39,7 +39,7 @@ int main(int argc, char * argv[]) {
     // parse the command line
     srcml_request_t srcml_request = parseCLI(argc, argv);
 
-    // global options
+    // setup global options
     SRCMLOptions::set(srcml_request.command);
 
     // version
@@ -61,6 +61,7 @@ int main(int argc, char * argv[]) {
 
         // FILE* becomes part of stdin input source
         pstdin->fileptr = fdopen(STDIN_FILENO, "r");
+        pstdin->fd = boost::none;
 
         // peek at the first 4 bytes
         unsigned char data[4];

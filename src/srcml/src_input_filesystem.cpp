@@ -33,9 +33,9 @@
 
 void src_input_filesystem(ParseQueue& queue,
                           srcml_archive* srcml_arch,
-                          const std::string& input,
-                          const boost::optional<std::string>& language)
-{
+                          const srcml_request_t& srcml_request,
+                          const std::string& input) {
+
     // list of directories with the input as the first one
     std::list<boost::filesystem::path> dirs(1, boost::filesystem::path(input));
 
@@ -52,7 +52,7 @@ void src_input_filesystem(ParseQueue& queue,
 
             // regular files are passed to the handler
             if (is_regular_file(file))
-                src_input_libarchive(queue, srcml_arch, file.string(), 0, 0, 0, language);
+                src_input_libarchive(queue, srcml_arch, file.string(), 0, 0, 0, srcml_request.att_language);
 
             // directories are put at the back
             else if (is_directory(file))

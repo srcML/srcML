@@ -27,8 +27,37 @@
 #include <src_input_libarchive.hpp>
 #include <src_input_file.hpp>
 #include <src_input_filesystem.hpp>
+#include <src_input_filelist.hpp>
 #include <src_input_stdin.hpp>
 #include <srcml_input_srcml.hpp>
+
+void create_srcml_handler(ParseQueue& queue, 
+                          srcml_archive* srcml_arch,
+                          const srcml_request_t& srcml_request,
+                          const srcml_input_src& input) {
+
+        // call appropriate handler
+        if (input.state == SRCML) {
+
+            srcml_input_srcml(queue, srcml_arch, input);
+
+        } else if (input.protocol == "filelist") {
+
+            src_input_filelist(queue, srcml_arch, srcml_request, input);
+
+        } else if (input.protocol == "file" && boost::filesystem::is_directory(input.resource)) {
+
+            src_input_filesystem(queue, srcml_arch, srcml_request, input);
+
+        } else if (input.protocol == "file" && input.compressions.empty() && input.archives.empty()) {
+
+            src_input_file(queue, srcml_arch, srcml_request, input);
+
+        } else {
+
+            src_input_libarchive(queue, srcml_arch, input, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
+        }
+}
 
 // create srcml from the current request
 void create_srcml(const srcml_request_t& srcml_request,
@@ -69,7 +98,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     //   no cli request to make it an archive
     //   not a directory (if local file)
     // TODO: check if a plain file. Source archives, i.e., .tar.gz, always produce srcml archives
-    if (input_sources.size() == 1 &&
+    if (input_sources.size() == 1 && input_sources[0].protocol != "filelist" &&
         !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) &&
         !boost::filesystem::is_directory(input_sources[0].resource)) {
 
@@ -96,10 +125,11 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // create the srcML output file
     int status = 0;
-    if (contains<int>(destination))
+    if (contains<int>(destination)) {
         status = srcml_write_open_fd(srcml_arch, destination);
-    else 
+    } else {
         status = srcml_write_open_filename(srcml_arch, destination.c_str());
+    }
 
     // gzip compression available from libsrcml
     if (destination.extension == ".gz")
@@ -118,24 +148,7 @@ void create_srcml(const srcml_request_t& srcml_request,
             return; // stdin was requested, but no data was received
         }
 */
-
-        // call handler based on prefix
-        if (input.state == SRCML) {
-
-            srcml_input_srcml(srcml_arch, input);
-
-        } else if (input.protocol == "file" && boost::filesystem::is_directory(input.resource)) {
-
-            src_input_filesystem(queue, srcml_arch, input, srcml_request.att_language);
-
-        } else if (input.protocol == "file" && !is_archive(input.extension) && !is_compressed(input.extension)) {
-
-            src_input_file(queue, srcml_arch, input, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
-
-        } else {
-
-            src_input_libarchive(queue, srcml_arch, input, srcml_request.att_language, srcml_request.att_filename, srcml_request.att_directory, srcml_request.att_version);
-        }
+        create_srcml_handler(queue, srcml_arch, srcml_request, input);
     }
 
     // wait for the parsing queue to finish

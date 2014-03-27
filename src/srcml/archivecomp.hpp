@@ -1,5 +1,5 @@
 /**
- * @file create_srcml.hpp
+ * @file archivecomp.hpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -18,24 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * Source input from local files, stdin, and source archives for srcml parsing queue
  */
 
-#ifndef CREATE_SRCML_HPP
-#define CREATE_SRCML_HPP
+#ifndef ARCHIVECOMP_HPP
+#define ARCHIVECOMP_HPP
 
-#include <srcml_cli.hpp>
-#include <srcml_input_src.hpp>
-#include <parse_queue.hpp>
+#include <archive.h>
+#include <string>
 
-// create srcml from the current request
-void create_srcml(const srcml_request_t& srcml_request,
-                  const srcml_input_t& input_sources,
-                  const srcml_output_dest& destination);
+int archive_write_set_format_by_extension(struct archive*, const char* extension);
+int archive_write_set_compression_by_extension(struct archive*, const char* extension);
 
-void create_srcml_handler(ParseQueue& queue, 
-                          srcml_archive* srcml_arch,
-                          const srcml_request_t& srcml_request,
-                          const srcml_input_src& input);
+bool is_archive(const std::string& input_file_extension);
+bool is_compressed(const std::string& input_file_extension);
 
 #endif
-

@@ -98,7 +98,7 @@ void create_src(const srcml_request_t& srcml_request,
             else
                 srcml_write_open_filename(oarch, destination.c_str());
 
-            if (destination.compressions[0] == ".gz")
+            if (!destination.compressions.empty() && destination.compressions[0] == ".gz")
                 srcml_archive_enable_option(oarch, SRCML_OPTION_COMPRESS);
 
             srcml_write_unit(oarch, unit);
@@ -139,16 +139,23 @@ void create_src(const srcml_request_t& srcml_request,
 
             archive* ar = archive_write_new();
 
-            // setup compression and format
-            // TODO: Needs to be generalized from destination file extension
-            archive_write_set_compression_gzip(ar);
-            archive_write_set_format_pax_restricted(ar);
+            // setup format
+            BOOST_FOREACH(const std::string& ext, destination.archives)
+                archive_write_set_format_by_extension(ar, ext.c_str());
+
+            // setup compressions
+            BOOST_FOREACH(const std::string& ext, destination.compressions)
+                archive_write_set_compression_by_extension(ar, ext.c_str());
 
             int status = ARCHIVE_OK;
             if (contains<int>(destination)) {
                 status = archive_write_open_fd(ar, destination);
             } else {
                 status = archive_write_open_filename(ar, destination.resource.c_str());
+            }
+            if (status != ARCHIVE_OK) {
+                std::cerr << status;
+                exit(1);
             }
 
             // extract all the srcml archives to this libarchive

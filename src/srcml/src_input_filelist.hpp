@@ -1,5 +1,5 @@
 /**
- * @file create_srcml.hpp
+ * @file src_input_filelist.hpp
  *
  * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -20,22 +20,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef CREATE_SRCML_HPP
-#define CREATE_SRCML_HPP
+#ifndef SRC_INPUT_FILELIST_HPP
+#define SRC_INPUT_FILELIST_HPP
 
-#include <srcml_cli.hpp>
-#include <srcml_input_src.hpp>
 #include <parse_queue.hpp>
+#include <srcml_cli.hpp>
+#include <srcml.h>
+#include <string>
+#include <boost/optional.hpp>
 
-// create srcml from the current request
-void create_srcml(const srcml_request_t& srcml_request,
-                  const srcml_input_t& input_sources,
-                  const srcml_output_dest& destination);
-
-void create_srcml_handler(ParseQueue& queue, 
-                          srcml_archive* srcml_arch,
-                          const srcml_request_t& srcml_request,
-                          const srcml_input_src& input);
+void src_input_filelist(ParseQueue& queue,
+ 						srcml_archive* srcml_arch,
+						const srcml_request_t& srcml_request,
+						const std::string& input_filename);
 
 #endif
-

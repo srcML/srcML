@@ -166,7 +166,7 @@ void option_field<&srcml_request_t::files_from>(const std::vector<std::string>& 
 
     srcml_request.files_from = value;
     BOOST_FOREACH(const std::string& inputFile, value) {
-        srcml_request.input.push_back("files-from://" + inputFile);
+        srcml_request.input.push_back("filelist://" + inputFile);
     }
 }
 
@@ -205,6 +205,11 @@ void option_field<&srcml_request_t::tabs>(int value) {
     srcml_request.tabs = value;
 }
 
+template <>
+void option_field<&srcml_request_t::output_filename>(const std::string& value) {
+    srcml_request.output_filename = value == "-" ? "stdout://-" : value;
+}
+
 void option_xmlns_uri(const std::string& value) {
     srcml_request.xmlns_prefix.push_back("=" + value);
 }
@@ -225,7 +230,7 @@ void positional_args(const std::vector<std::string>& value) {
     BOOST_FOREACH(const std::string& iname, value) {
 
         // record the position of stdin
-        if (iname == "-")
+        if (iname == "-" || iname == "stdin://-")
             srcml_request.stdindex = (int) srcml_request.input.size();
 
         srcml_request.input.push_back(src_prefix_add_uri(iname));
