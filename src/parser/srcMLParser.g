@@ -135,7 +135,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -4948,13 +4948,8 @@ variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
                 // start the declaration statement
                 startElement(SDECLARATION_STATEMENT);
 
-            // declaration
-            startNewMode(MODE_LOCAL);
-
-            if (!inTransparentMode(MODE_INNER_DECL) || inTransparentMode(MODE_CLASS))
-                // start the declaration
-                startElement(SDECLARATION);
         }
+
         variable_declaration[type_count]
 ;
 
@@ -4975,8 +4970,20 @@ short_variable_declaration[] { ENTRY_DEBUG } :
 // more of the inner part of a declaration
 variable_declaration[int type_count] { ENTRY_DEBUG } :
         {
+
+            bool output_decl = !inTransparentMode(MODE_INNER_DECL) || inTransparentMode(MODE_CLASS);
+
             // variable declarations may be in a list
             startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+            // declaration
+            startNewMode(MODE_LOCAL);
+
+            if (output_decl)
+
+                // start the declaration
+                startElement(SDECLARATION);
+
         }
         variable_declaration_type[type_count]
 ;
@@ -5001,6 +5008,15 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 // Variable declaration name and optional initialization
 variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
         ENTRY_DEBUG } :
+
+         {
+
+             if(!inMode(MODE_LOCAL))
+                // start the declaration
+                startElement(SDECLARATION);
+
+        }
+
         ({ inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[false] | compound_name)
         {
             // expect a possible initialization
