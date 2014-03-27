@@ -47,6 +47,7 @@ namespace {
 // Convert input to a ParseRequest and assign request to the processing queue
 void src_input_libarchive(ParseQueue& queue,
                           srcml_archive* srcml_arch,
+                          const srcml_request_t& srcml_request,
                           const srcml_input_src& input_file,
                           const boost::optional<std::string>& option_language,
                           const boost::optional<std::string>& option_filename,

@@ -26,16 +26,18 @@
 #define SRC_INPUT_LIBARCHIVE_HPP
 
 #include <srcml.h>
+#include <srcml_cli.hpp>
 #include <string>
 #include <parse_queue.hpp>
 #include <boost/optional.hpp>
 #include <srcml_input_src.hpp>
 #include <archivecomp.hpp>
 
-void src_input_libarchive(ParseQueue& queue,                  // srcml parsing queue
-                          srcml_archive* srcml_arch,          // srcml archive to write to
-                          const srcml_input_src& input,  // input source
-                          const boost::optional<std::string>& language,        // specified language
+void src_input_libarchive(ParseQueue& queue,
+                          srcml_archive* srcml_arch,
+						  const srcml_request_t& srcml_request,
+                          const srcml_input_src& input,
+                          const boost::optional<std::string>& language,
                           const boost::optional<std::string>& option_filename,
                           const boost::optional<std::string>& option_directory,
                           const boost::optional<std::string>& option_version);
