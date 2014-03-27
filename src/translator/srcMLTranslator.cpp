@@ -282,21 +282,24 @@ void srcMLTranslator::add_unit(std::string xml, const char * hash) {
 
     if(!isoption(options, OPTION_ARCHIVE)) {
 
-        std::string::size_type pos = xml.find('>');
-        if(pos == std::string::npos) return;
+        char * pos = strchr(cxml, '>');
+        if(pos == 0) return;
 
-        std::string::size_type src_ns_pos = xml.rfind(SRCML_SRC_NS_URI, pos);
+        char * src_ns_pos = strnstr(cxml, SRCML_SRC_NS_URI, pos - cxml);
 
-        if(src_ns_pos == std::string::npos) {
+        if(src_ns_pos == 0) {
 
-            std::string::size_type unit_pos = xml.find("unit");
+            char * unit_pos = strstr(cxml, "unit");
 
             std::string ns = " xmlns";
 
-            if(unit_pos != 1) {
+            if((unit_pos - cxml) != 1) {
 
                 ns += ":";
-                ns += xml.substr(1, xml.find(":"));
+                char * colon_pos = strchr(cxml, ':');
+                colon_pos[0] = 0;
+                ns += (cxml + 1);
+                colon_pos[0] = ':';
 
             }
 
@@ -305,13 +308,13 @@ void srcMLTranslator::add_unit(std::string xml, const char * hash) {
             ns += "\"";
 
             // write out up to unit
-            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)xml.c_str(), (int)unit_pos + 4);
+            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)cxml, (int)((unit_pos + 4) - cxml));
 
             // write out namespace declaration
             xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)ns.c_str());
 
             // update pointer for remaining
-            cxml += unit_pos + 4;
+            cxml = unit_pos + 4;
 
         }
 
@@ -319,19 +322,17 @@ void srcMLTranslator::add_unit(std::string xml, const char * hash) {
 
     if(hash) {
 
-        std::string remaining = cxml;
+        char * pos = strchr(cxml, '>');
+        if(pos == 0) return;
 
-        std::string::size_type pos = remaining.find('>');
-        if(pos == std::string::npos) return;
-
-        std::string::size_type hash_pos = remaining.rfind("hash", pos);
+        char * hash_pos = strnstr(cxml, "hash", pos - cxml);
 
 
-        if(hash_pos != std::string::npos) {
+        if(hash_pos != 0) {
 
-            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)remaining.c_str(), (int)hash_pos + 6);
+            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)cxml, (int)((hash_pos + 6) - cxml));
             xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)hash);
-            cxml += hash_pos + 6;
+            cxml = hash_pos + 6;
 
             // consume hash if already there
             if(cxml[0] != '"')
