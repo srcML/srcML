@@ -28,6 +28,7 @@
 #include <create_srcml.hpp>
 #include <iostream>
 #include <fstream>
+#include <boost/algorithm/string.hpp>
 
 void src_input_filelist(ParseQueue& queue,
                         srcml_archive* srcml_arch,
@@ -37,6 +38,11 @@ void src_input_filelist(ParseQueue& queue,
     std::ifstream filelist(input);
     std::string line;
     while (getline(filelist, line)) {
+
+		boost::algorithm::trim(line);
+
+		if (line[0] == '#')
+			continue;
 
         create_srcml_handler(queue, srcml_arch, srcml_request, line);
     }
