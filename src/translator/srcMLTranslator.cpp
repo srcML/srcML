@@ -30,6 +30,9 @@
 #include "StreamMLParser.hpp"
 #include "srcMLOutput.hpp"
 #include "srcmlns.hpp"
+
+#include <cstring>
+
 #ifdef _MSC_BUILD
 #define strdup _strdup
 #endif
