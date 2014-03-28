@@ -412,7 +412,7 @@ protected:
     /** Size of data */
     std::vector<const xmlChar*>::size_type rootsize;
 
-    /* we have started processing */
+    /** we have started processing */
     bool found;
 
     /** srcML options */
