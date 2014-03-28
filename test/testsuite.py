@@ -379,7 +379,7 @@ if use_exec :
         print src2srcmlversion()
         print srcml2srcversion()
 else :
-	sys.path.append("../src/libsrcml/python")
+	sys.path.append("../python/src")
 	from srcml import *
         print version_string()
 
