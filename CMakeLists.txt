@@ -49,6 +49,11 @@ endif()
 
 # Including extra directories.
 add_subdirectory(src)
-#add_subdirectory(test)
-#add_subdirectory(examples)
 
+if(BUILD_TESTS)
+    add_subdirectory(test)
+endif()
+
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
