@@ -48,6 +48,7 @@
 extern "C" {
 #endif
 
+/** Function export macro */
 #if defined(WIN32) && !defined(__MINGW32__)
 #define __LIBSRCML_DECL __declspec(dllexport)
 #else
@@ -364,10 +365,6 @@ extern "C" {
     __LIBSRCML_DECL int srcml_unparse_unit_FILE    (struct srcml_unit*, FILE* srcml_file);
     __LIBSRCML_DECL int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
 
-    // @todo Consider removing this and making srcml client iterate over the values
-    // Problems with memory handling
-    __LIBSRCML_DECL const char** srcml_list(const char* srcml_filename);
-
     /* srcML XPath query and XSLT transform functions */
     __LIBSRCML_DECL int srcml_clear_transforms                 (struct srcml_archive*);
     __LIBSRCML_DECL int srcml_append_transform_xpath           (struct srcml_archive*, const char* xpath_string);
@@ -382,6 +379,7 @@ extern "C" {
     __LIBSRCML_DECL int srcml_apply_transforms                 (struct srcml_archive* iarchive, struct srcml_archive* oarchive);
 
     /* Augment read to use user defined xml handlers */
+   /*
     __LIBSRCML_DECL int srcml_set_xml_handler_start_unit(struct srcml_archive*);
     __LIBSRCML_DECL int srcml_set_xml_handler_start_element(struct srcml_archive*);
     __LIBSRCML_DECL int srcml_set_xml_handler_characters(struct srcml_archive*);
@@ -393,6 +391,7 @@ extern "C" {
     __LIBSRCML_DECL int srcml_xml_handler_parse_archive(struct srcml_archive*);
     __LIBSRCML_DECL int srcml_xml_handler_release(struct srcml_archive*);
     __LIBSRCML_DECL int srcml_xml_handler_stop(struct srcml_archive*);
+    */
 
 #ifdef __cplusplus
 }

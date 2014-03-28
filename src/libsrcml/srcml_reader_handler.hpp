@@ -203,6 +203,7 @@ public :
      * @param nb_attributes number of attributes
      * @param nb_defaulted number defaulted attributes
      * @param attributes the attributes (name/prefix/uri/value start/value end/)
+     * @param meta_tags vector of elements composed of metage tags defined after root tag
      *
      * Overidden startRoot to handle collection of root attributes. Stop before continue
      */

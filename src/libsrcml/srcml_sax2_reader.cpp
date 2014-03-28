@@ -217,14 +217,14 @@ int srcml_sax2_reader::read_srcml(boost::optional<std::string> & unit) {
 
 /**
  * read_src
- * @param unit location in which to read src unit.
+ * @param output_buffer output buffer to write text
  *
  * Read the next unit from a srcML Archive
  * and return in the passed string parameter.
  *
  * @returns 1 on success and 0 if done
  */
-int srcml_sax2_reader::read_src(xmlOutputBufferPtr output_handler) {
+int srcml_sax2_reader::read_src(xmlOutputBufferPtr output_buffer {
 
     if(handler.is_done) return 0;
     control.enable_comment(false);

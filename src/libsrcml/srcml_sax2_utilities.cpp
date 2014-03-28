@@ -49,7 +49,7 @@
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBuffer * output_handler, OPTION_TYPE options, int unit) {
+int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBuffer * output_buffer, OPTION_TYPE options, int unit) {
 
     if(input_buffer == NULL || size == 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
@@ -58,7 +58,7 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBuffer *
     if(input == NULL) return SRCML_STATUS_IO_ERROR;
 
     srcml_sax2_reader reader(input);
-    reader.read_src(output_handler);
+    reader.read_src(output_buffer);
 
     
     xmlFreeParserInputBuffer(input);
@@ -82,13 +82,13 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBuffer *
  */
 int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, OPTION_TYPE options, int unit) {
 
-    xmlOutputBufferPtr output_handler = xmlOutputBufferCreateFilename(ofilename, xmlFindCharEncodingHandler(encoding),
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(ofilename, xmlFindCharEncodingHandler(encoding),
                                                                       options & SRCML_OPTION_COMPRESS);
 
     srcml_sax2_reader reader(ifilename);
-    reader.read_src(output_handler);
+    reader.read_src(output_buffer);
 
-    xmlOutputBufferClose(output_handler);
+    xmlOutputBufferClose(output_buffer);
 
     return SRCML_STATUS_OK;
 

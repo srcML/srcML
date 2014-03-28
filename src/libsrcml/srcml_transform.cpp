@@ -91,7 +91,8 @@ int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xsl
  * srcml_append_transform_xslt_memory
  * @param archive a srcml_archive
  * @param xslt_buffer a buffer holding an XSLT
- *
+ * @param size the size of the passed buffer
+*
  * Append the XSLT program in the buffer to the list
  * of transformation/queries.  As of yet no way to specify parameters or context
  *
@@ -196,6 +197,7 @@ int srcml_append_transform_relaxng_filename(srcml_archive* archive, const char* 
  * srcml_append_transform_relaxng_memory
  * @param archive a srcml archive
  * @param relaxng_buffer a buffer holding a RelaxNG schema
+ * @param size the size of the passed buffer
  *
  * Append the RelaxNG schema in the buffer to the list
  * of transformation/queries.
