@@ -26,7 +26,9 @@
 #include <libxml/parser.h>
 #include <libxslt/transform.h>
 
+/** size of string then the literal */
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
+ /** literal followed by its size */
 #define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
 #include <srcexfun.hpp>
@@ -52,6 +54,11 @@ typedef xmlDocPtr (*xsltApplyStylesheet_function) (xsltStylesheetPtr,xmlDocPtr,c
 #include <io.h>
 #endif
 
+/**
+ * xslt_units
+ *
+ * Extends unit_dom to execute XSLT program and write results.
+ */
 class xslt_units : public unit_dom {
 public :
 

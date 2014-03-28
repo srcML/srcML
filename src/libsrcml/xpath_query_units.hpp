@@ -31,7 +31,9 @@
 
 #include <libexslt/exslt.h>
 
+/** size of string then the literal */
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
+/** literal followed by its size */
 #define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
 #include <srcexfun.hpp>
@@ -42,6 +44,7 @@
 #include <dlfcn.h>
 #endif
 
+/** create a variable for dynamically load from library */
 #define dlsymvar(type, name) type name;  *(void **)(&name) = dlsym(handle, #name)
 
 #ifdef WIN32
@@ -49,6 +52,11 @@
 #define snprintf _snprintf
 #endif
 
+/**
+ * xpath_query_units
+ *
+ * Extends unit_dom to execute XPath expression and write results.
+ */
 class xpath_query_units : public unit_dom {
 public :
 
@@ -576,6 +584,13 @@ public :
         xmlOutputBufferClose(buf);
     }
 
+    /**
+     * xml_output_buffer_write_xml_decl
+     * @param ctxt an xml parser context
+     * @param buf output buffer to write element
+     *
+     * Write the xml declaration to output buffer.
+     */
     static void xml_output_buffer_write_xml_decl(xmlParserCtxtPtr ctxt, xmlOutputBufferPtr buf) {
 
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?xml version=\""));

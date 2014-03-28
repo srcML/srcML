@@ -1,6 +1,5 @@
 /**
- * @file srcml_reader_handler
- .cpp
+ * @file srcml_reader_handler.hpp
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *

@@ -44,12 +44,11 @@
  * @param options srcml options
  * @param unit unit number to extract
  *
- *
  * Extract a given unit from supplied srcML input buffer.
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBuffer * output_buffer, OPTION_TYPE options, int unit) {
+int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
 
     if(input_buffer == NULL || size == 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
@@ -74,7 +73,6 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBuffer *
  * @param encoding output encoding
  * @param options srcml options
  * @param unit unit number to extract
- *
  *
  * Extract a given unit from supplied srcML directly to file.
  *

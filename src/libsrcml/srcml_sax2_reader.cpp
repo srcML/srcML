@@ -126,6 +126,7 @@ srcml_sax2_reader::~srcml_sax2_reader() {
  * @param namespaces an array to store gathered XML naamespaces
  * @param options a variable to set used options
  * @param tabstop a variable to set the tabstop
+ * @param user_macro_list a variable to set the list of user defined macros
  *
  * Read attributes and namespace information fromt the root unit,
  * setting the necessary options.

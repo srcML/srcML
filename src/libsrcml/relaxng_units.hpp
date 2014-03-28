@@ -26,7 +26,9 @@
 #include <libxml/parser.h>
 #include <libxml/relaxng.h>
 
+/** size of string then the literal */
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
+ /** literal followed by its size */
 #define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
 #include <srcexfun.hpp>
@@ -37,6 +39,11 @@
 #include <io.h>
 #endif
 
+/**
+ * relaxng_units
+ *
+ * Extends unit_dom to execute RelaxNG grammar and write results.
+ */
 class relaxng_units : public unit_dom {
 public :
 
