@@ -94,7 +94,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     )
 else()
     add_custom_command(
-        OUTPUT srcMLParserTokenTypesMacro.hpp
+        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
         DEPENDS srcMLParserTokenTypes.hpp
         COMMAND ${GREP_EXE} '=' ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypes.hpp | ${SED_EXE} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e "s/^/\#define TOKEN_/g" > ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp)
 
