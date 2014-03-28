@@ -86,7 +86,7 @@ RunAntlr("${srcMLParserOutputFiles}"
 # @todo this breaks mingw32 build.
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     add_custom_command(
-        OUTPUT srcMLParserTokenTypesMacro.hpp
+        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         DEPENDS srcMLParserTokenTypes.hpp
         COMMAND ${GREP_EXE} -e "=" srcMLParserTokenTypes.hpp > PhaseOne.txt
