@@ -220,7 +220,20 @@ public :
 
     }
 
-    // build start element nodes in unit tree
+    /**
+     * startElementNs
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param nb_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param nb_attributes the number of attributes on the tag
+     * @param nb_defaulted the number of defaulted attributes
+     * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
+     *
+     * SAX handler function for start of an element.
+     * Build start element nodes in unit tree.
+     */
     virtual void startElementNs(const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                                 int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                                 const xmlChar** attributes) {
@@ -228,38 +241,81 @@ public :
         xmlSAX2StartElementNs(ctxt, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
     }
 
-    // build end element nodes in unit tree
+    /**
+     * endElementNs
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     *
+     * SAX handler function for end of an element.
+     * Build end element nodes in unit tree.
+     */
     virtual void endElementNs(const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
         xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
     }
 
-    // characters in unit tree
+    /**
+     * charactersUnit
+     * @param ch the characers
+     * @param len number of characters
+     *
+     * SAX handler function for character handling within a unit.
+     * Characters in unit tree.
+     */
     virtual void charactersUnit(const xmlChar* ch, int len) {
 
         xmlSAX2Characters(ctxt, ch, len);
     }
 
-    // characters in unit tree
+    /**
+     * charactersRoot
+     * @param ch the characers
+     * @param len number of characters
+     *
+     * SAX handler function for character handling at the root level.
+     * Characters in unit tree.
+     */
     virtual void charactersRoot(const xmlChar* ch, int len) {
 
         if(isoption(options, OPTION_APPLY_ROOT))
             xmlSAX2Characters(ctxt, ch, len);
     }
 
-    // CDATA block in unit tree
+    /**
+     * cdataBlock
+     * @param value the pcdata content
+     * @param len the block length
+     *
+     * Called when a pcdata block has been parsed.
+     * CDATA block in unit tree.
+     */
     virtual void cdatablock(const xmlChar* ch, int len) {
 
         xmlSAX2CDataBlock(ctxt, ch, len);
     }
 
-    // comments in unit tree
+     /**
+     * comment
+     * @param value the comment content
+     *
+     * A comment has been parsed.
+     * Comments in unit tree.
+     */
     virtual void comments(const xmlChar* ch) {
 
         xmlSAX2Comment(ctxt, ch);
     }
 
-    // end the construction of the unit tree, apply processing, and delete
+    /**
+     * endUnit
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     *
+     * SAX handler function for end of an unit.
+     * End the construction of the unit tree, apply processing, and delete.
+     */
     virtual void endUnit(const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
         // finish building the unit tree
@@ -283,7 +339,15 @@ public :
 
     }
 
-    // end the construction of the unit tree, apply processing, and delete
+    /**
+     * endRoot
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     *
+     * SAX handler function for end of the root element.
+     * End the construction of the unit tree, apply processing, and delete.
+     */
     virtual void endRoot(const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
         if(isoption(options, OPTION_APPLY_ROOT)) {
@@ -308,6 +372,11 @@ public :
 
     }
 
+    /**
+     * endDocument
+     *
+     * SAX handler function for end of document.
+     */
     virtual void endDocument() {
 
         // endDocument can be called, even if startDocument was not for empty input
@@ -337,13 +406,28 @@ public :
 
 protected:
 
+    /** Root namespaces */
     std::vector<const xmlChar*> data;
+
+    /** Size of data */
     std::vector<const xmlChar*>::size_type rootsize;
+
+    /* we have started processing */
     bool found;
+
+    /** srcML options */
     OPTION_TYPE options;
+
+    /** found an error */
     bool error;
+
+    /** the current parser ctxt */
     xmlParserCtxtPtr ctxt;
+
+    /**  The root element */
     srcMLElement * root;
+
+    /**  The meta tags for the root element */
     std::vector<srcMLElement> * meta_tags;
 
 };
