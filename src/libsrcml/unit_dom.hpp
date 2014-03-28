@@ -79,7 +79,7 @@ public :
      * Formed unit combines namespaces from root and individual unit.  Full DOM of
      * individual unit is provided.  Cleanup of DOM unit is automatic.
      *
-     * @returns true on success 0 on failure.
+     * @returns true on success false on failure.
      */
     virtual bool apply() = 0;
 

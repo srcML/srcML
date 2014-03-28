@@ -136,6 +136,13 @@ public :
 
     }
 
+    /**
+     * apply
+     *
+     * Apply XSLT program, writing results.
+     * 
+     * @returns true on success false on failure.
+     */
     virtual bool apply() {
 
         setPosition((int)unit_count);
@@ -246,6 +253,11 @@ public :
 
     }
 
+    /**
+     * end_output
+     *
+     * Finish the archive and close buffer.
+     */
     virtual void end_output() {
 
         // root unit end tag
@@ -271,6 +283,13 @@ public :
         xmlOutputBufferClose(buf);
     }
 
+    /**
+     * xml_output_buffer_write_xml_decl
+     * @param ctxt an xml parser context
+     * @param buf output buffer to write element
+     *
+     * Write the xml declaration to output buffer.
+     */
     static void xml_output_buffer_write_xml_decl(xmlParserCtxtPtr ctxt, xmlOutputBufferPtr buf) {
 
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?xml version=\""));
@@ -282,6 +301,20 @@ public :
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
     }
 
+    /**
+     * xml_output_buffer_write_element_ns
+     * @param buf output buffer to write element
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param nb_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param nb_attributes the number of attributes on the tag
+     * @param nb_defaulted the number of defaulted attributes
+     * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
+     *
+     * Write an element to output buffer.
+     */
     static void xml_output_buffer_write_element_ns(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
                                                    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
                                                    int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
@@ -324,6 +357,20 @@ public :
         }
     }
 
+    /**
+     * xml_output_buffer_write_element_ns
+     * @param s string to write output
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param nb_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param nb_attributes the number of attributes on the tag
+     * @param nb_defaulted the number of defaulted attributes
+     * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
+     *
+     * Write an element to a string.
+     */
     static void xml_output_buffer_write_element_ns(std::string& s, const xmlChar* localname, const xmlChar* prefix,
                                                    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
                                                    int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
