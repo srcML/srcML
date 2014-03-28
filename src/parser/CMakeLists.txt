@@ -120,7 +120,7 @@ add_library(parser OBJECT
     ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.cpp
-    srcMLParserTokenTypesMacro.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
     ${PARSER_HEADERS}
     ${PARSER_SOURCE}
 )
@@ -129,7 +129,7 @@ add_library(parser OBJECT
     ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.cpp
-    srcMLParserTokenTypesMacro.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
     token_set_check.txt
     ${PARSER_HEADERS}
     ${PARSER_SOURCE}
