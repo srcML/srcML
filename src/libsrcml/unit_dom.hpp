@@ -290,9 +290,9 @@ public :
      * Called when a pcdata block has been parsed.
      * CDATA block in unit tree.
      */
-    virtual void cdatablock(const xmlChar* ch, int len) {
+    virtual void cdatablock(const xmlChar* value, int len) {
 
-        xmlSAX2CDataBlock(ctxt, ch, len);
+        xmlSAX2CDataBlock(ctxt, value, len);
     }
 
      /**
@@ -302,9 +302,9 @@ public :
      * A comment has been parsed.
      * Comments in unit tree.
      */
-    virtual void comments(const xmlChar* ch) {
+    virtual void comments(const xmlChar* value) {
 
-        xmlSAX2Comment(ctxt, ch);
+        xmlSAX2Comment(ctxt, value);
     }
 
     /**
