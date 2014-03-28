@@ -30,31 +30,64 @@
 #include <string>
 #include <vector>
 
+/**
+ * unit_dom
+ *
+ * Extends srcMLHandler to build a DOM for each unit separately
+ * using libxml2 functions.  Inherit from to specify the start_output,
+ * end_output, and apply functions.
+ */
 class unit_dom : public srcMLHandler {
 public :
 
+    /**
+     * unit_dom
+     * @param options list of srcML options
+     *
+     * Constructor.
+     */
     unit_dom(OPTION_TYPE options) : rootsize(0), found(false), options(options), error(false) {}
 
+    /**
+     * ~unit_dom
+     *
+     * Destructor.
+     */
     virtual ~unit_dom() {}
 
+    /**
+     * get_options
+     *
+     * Get method providing access to options.
+     *
+     * @returns the srcML options
+     */
     virtual OPTION_TYPE get_options() const { return options; }
 
-    /*
-      Called exactly once at beginnning of document  Override for intended behavior.
-    */
+    /**
+     * start_output
+     *
+     * Pure virtual that is called exactly once at beginnning of document  Override for intended behavior.
+     */
     virtual void start_output() = 0;
 
-    /*
-      Called exactly once for each unit.  For an archive, not called on the root unit
-
-      Formed unit combines namespaces from root and individual unit.  Full DOM of
-      individual unit is provided.  Cleanup of DOM unit is automatic.
-    */
+    /**
+     * apply
+     *
+     * Pure virtual that is called exactly once for each unit.  For an archive, not called on the root unit
+     *
+     * Formed unit combines namespaces from root and individual unit.  Full DOM of
+     * individual unit is provided.  Cleanup of DOM unit is automatic.
+     *
+     * @returns true on success 0 on failure.
+     */
     virtual bool apply() = 0;
 
-    /*
-      Called exactly once at end of document.  Override for intended behavior.
-    */
+    /**
+     * end_output
+     *
+     * Pure virtual that is called exactly once at end of document.  Override for intended behavior.
+     */
     virtual void end_output() = 0;
 
     // start creating the document and setup output for the units

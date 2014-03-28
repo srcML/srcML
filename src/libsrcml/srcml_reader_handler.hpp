@@ -45,7 +45,6 @@
 
 /**
  * srcml_reader_handler
-
  *
  * Inherits from srcMLHandler to provide hooks into
  * SAX2 parsing. Provides starting and stoping using
@@ -104,7 +103,6 @@ public :
 
     /**
      * srcml_reader_handler
-
      *
      * Constructor.  Sets up mutex, conditions and state.
      */
@@ -123,7 +121,6 @@ public :
 
     /**
      * ~srcml_reader_handler
-
      *
      * Destructor, deletes mutex and conditions.
      */
