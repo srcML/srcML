@@ -5011,7 +5011,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 
          {
 
-             if(!inMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT))
+             if(!inMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT) && inMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT))
                 // start the declaration
                 startElement(SDECLARATION);
 
