@@ -90,7 +90,12 @@ public :
      */
     virtual void end_output() = 0;
 
-    // start creating the document and setup output for the units
+    /**
+     * startDocument
+     *
+     * SAX handler function for start of document.
+     * Starts creating the document and setup output for the units.
+     */
     virtual void startDocument() {
 
         ctxt = get_control_handler().getCtxt();
@@ -106,7 +111,22 @@ public :
 
     }
 
-    // collect namespaces from root unit.  Start to build the tree if OPTION_APPLY_ROOT
+ 
+    /**
+     * startRoot
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param nb_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param nb_attributes the number of attributes on the tag
+     * @param nb_defaulted the number of defaulted attributes
+     * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
+     * @param meta_tags vector of elements composed of metage tags defined after root tag
+     *
+     * SAX handler function for start of the root element.
+     * Collect namespaces from root unit.  Start to build the tree if OPTION_APPLY_ROOT.
+     */
     virtual void startRoot(const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                            int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                            const xmlChar** attributes, std::vector<srcMLElement> * meta_tags) {
@@ -134,7 +154,20 @@ public :
 
     }
 
-    // start to create an individual unit, merging namespace details from the root (if it exists)
+    /**
+     * startUnit
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param nb_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param nb_attributes the number of attributes on the tag
+     * @param nb_defaulted the number of defaulted attributes
+     * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
+     *
+     * SAX handler function for start of an unit.
+     * Start to create an individual unit, merging namespace details from the root (if it exists).
+     */
     virtual void startUnit(const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                            int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                            const xmlChar** attributes) {
