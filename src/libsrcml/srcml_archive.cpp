@@ -1061,6 +1061,7 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
     if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->input = xmlParserInputBufferCreateFd(srcml_fd, XML_CHAR_ENCODING_NONE);
+    archive->input->closecallback = 0;
     try {
 
         archive->reader = new srcml_sax2_reader(archive->input);
