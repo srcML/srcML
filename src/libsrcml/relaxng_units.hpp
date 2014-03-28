@@ -40,12 +40,30 @@
 class relaxng_units : public unit_dom {
 public :
 
+    /**
+     * relaxng_units
+     * @param options list of srcML options
+     * @param rngctx RelaxNG context pointer
+     * @param fd file descriptor in which to write
+     *
+     * Constructor.
+     */
     relaxng_units(OPTION_TYPE options, xmlRelaxNGValidCtxtPtr rngctx, int fd = 0)
         : unit_dom(options), options(options), rngctx(rngctx), fd(fd), found(false), root_prefix(0) {
     }
 
+    /**
+     * ~relaxng_units
+     *
+     * Destructor.
+     */
     virtual ~relaxng_units() {}
 
+    /**
+     * start_output
+     *
+     * Create output buffer.
+     */
     virtual void start_output() {
 
         buf = xmlOutputBufferCreateFd(fd, NULL);

@@ -52,16 +52,34 @@
 class xpath_query_units : public unit_dom {
 public :
 
+    /**
+     * xpath_query_units
+     * @param options list of srcML options
+     * @param compiled_xpath Combined XPath expression
+     * @param fd file descriptor in which to write
+     *
+     * Constructor.
+     */
     xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath, int fd = 0)
         : unit_dom(options), options(options),
           compiled_xpath(compiled_xpath), total(0), found(false), needroot(true), closetag(false), fd(fd) {
     }
 
+    /**
+     * ~xpath_query_units
+     *
+     * Destructor.
+     */
     virtual ~xpath_query_units() {}
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
+    /**
+     * start_output
+     *
+     * Create the output buffer and setup XPath.
+     */
     virtual void start_output() {
 
         buf = xmlOutputBufferCreateFd(fd, NULL);

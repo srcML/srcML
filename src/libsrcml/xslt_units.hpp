@@ -55,6 +55,16 @@ typedef xmlDocPtr (*xsltApplyStylesheet_function) (xsltStylesheetPtr,xmlDocPtr,c
 class xslt_units : public unit_dom {
 public :
 
+    /**
+     * xslt_units
+     * @param a_context_element an element that provides a context
+     * @param options list of srcML options
+     * @param stylesheet an XSLT stylesheet
+     * @param params XSLT parameters
+     * @param fd file descriptor in which to write
+     *
+     * Constructor.  Dynamically loads XSLT functions.
+     */
     xslt_units(const char* a_context_element, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
                const char** params, int fd = 0)
         : unit_dom(options), options(options),
@@ -98,12 +108,22 @@ public :
 #endif
     }
 
+    /**
+     * ~xslt_units
+     *
+     * Destructor.  Closes dynamically loaded library.
+     */
     virtual ~xslt_units() {
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
         dlclose(handle);
 #endif
     }
 
+    /**
+     * start_output
+     *
+     * Create output buffer.
+     */
     virtual void start_output() {
 
         // setup output
