@@ -270,7 +270,7 @@ static void srcPowersetFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
 /**
  * xpathsrcMLRegister
- * @param ctxt an xml XPath context
+ * @param context an xml XPath context
  *
  * Register srcML XPath extension functions.
  */
@@ -398,6 +398,9 @@ void xsltsrcMLRegister () {
 
 /**
  * xpathRegisterExtensionFunction
+ * @param prefix a prefix for extension function
+ * @param name a name for extension function
+ * @param xpath the xpath expression
  *
  * Save extension functions to MACROS.
  */
