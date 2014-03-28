@@ -31,6 +31,7 @@
 #pragma GCC diagnostic warning "-Wshorten-64-to-32"
 #include <write_request.hpp>
 #include <thread_oqueue.hpp>
+#include <thread_queue.hpp>
 #include <string>
 #include <srcml.h>
 
@@ -40,7 +41,8 @@ void srcml_write(WriteQueue*);
 
 class WriteQueue {
 public:
-    typedef ThreadOQueue/*<10>*/ Queue_Type;
+//    typedef ThreadOQueue/*<10>*/ Queue_Type;
+    typedef ThreadQueue<WriteRequest, 10> Queue_Type;
 
     WriteQueue() : max_threads(1) {}
 
