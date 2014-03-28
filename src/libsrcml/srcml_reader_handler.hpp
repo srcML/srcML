@@ -68,7 +68,7 @@ private :
     srcml_unit * unit;
 
     /** output buffer for direct src write */
-    xmlOutputBufferPtr output_handler;
+    xmlOutputBufferPtr output_buffer;
 
     /** has reached end of parsing*/
     bool is_done;
@@ -106,7 +106,7 @@ public :
      *
      * Constructor.  Sets up mutex, conditions and state.
      */
-    srcml_reader_handler() : unit(0), output_handler(0), is_done(false), read_root(false),
+    srcml_reader_handler() : unit(0), output_buffer(0), is_done(false), read_root(false),
          collect_unit_attributes(false), collect_srcml(false), collect_src(false),
          terminate(false), is_empty(false), wait_root(true), skip(false) {
 
@@ -668,7 +668,7 @@ public :
 
         if(collect_src) {
 
-            xmlOutputBufferWrite(output_handler, len, (const char *)ch);
+            xmlOutputBufferWrite(output_buffer, len, (const char *)ch);
 
         } else {
 
