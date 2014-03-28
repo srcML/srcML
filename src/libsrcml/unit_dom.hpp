@@ -1,5 +1,5 @@
 /**
- * @file unit_dom.cpp
+ * @file unit_dom.hpp
  *
  * @copyright Copyright (C) 2011-2014 SDML (www.srcML.org)
  *

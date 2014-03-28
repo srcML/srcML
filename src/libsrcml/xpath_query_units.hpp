@@ -1,5 +1,5 @@
 /**
- * @file xpath_query_units.cpp
+ * @file xpath_query_units.hpp
  *
  * @copyright Copyright (C) 2008-2014 SDML (www.srcML.org)
  *

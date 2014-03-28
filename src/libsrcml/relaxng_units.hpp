@@ -1,5 +1,5 @@
 /**
- * @file relaxng_units.cpp
+ * @file relaxng_units.hpp
  *
  * @copyright Copyright (C) 2008-2014 SDML (www.srcML.org)
  *

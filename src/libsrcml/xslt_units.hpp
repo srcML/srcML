@@ -1,5 +1,5 @@
 /**
- * @file xslt_units.cpp
+ * @file xslt_units.hpp
  *
  * @copyright Copyright (C) 2008-2014 SDML (www.srcML.org)
  *
