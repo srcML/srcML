@@ -826,7 +826,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         { isoption(parseoptions, OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO)) }?
         macro_call |
 
-        { inMode(MODE_ENUM) && inMode(MODE_LIST) }? short_variable_declaration |
+        { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration |
 
         expression_statement[type, call_count]
 ;
@@ -2606,7 +2606,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
 
         { inMode(MODE_ENUM) && inMode(MODE_LIST) }?
-        short_variable_declaration |
+        enum_short_variable_declaration |
 
         /*
           MODE_EXPRESSION
@@ -6183,6 +6183,22 @@ enum_block[] { ENTRY_DEBUG } :
             }
         }
 ;
+
+// processing for short variable declaration
+enum_short_variable_declaration[] { ENTRY_DEBUG } :
+        {
+            // variable declarations may be in a list
+            startNewMode(MODE_LIST);
+
+            // declaration
+            startNewMode(MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+            // start the declaration
+            startElement(SDECLARATION);
+        }
+        variable_declaration_nameinit
+;
+
 
 /*
   end of file
