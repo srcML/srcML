@@ -1639,8 +1639,6 @@ for_initialization_variable_declaration[int type_count] { ENTRY_DEBUG } :
             // start a new mode for the expression which will end
             // inside of the terminate
             startNewMode(MODE_LIST);
-
-            startElement(SDECLARATION);
         }
         variable_declaration[type_count]
 ;
