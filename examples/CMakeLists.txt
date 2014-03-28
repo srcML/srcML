@@ -1,1 +1,1 @@
-include(libsrcml)
+add_subdirectory(libsrcml)
