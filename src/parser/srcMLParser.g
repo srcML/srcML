@@ -826,7 +826,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         { isoption(parseoptions, OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO)) }?
         macro_call |
 
-        { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration |
+        { inMode(MODE_ENUM) && inMode(MODE_LIST) }? short_variable_declaration |
 
         expression_statement[type, call_count]
 ;
@@ -2606,7 +2606,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
 
         { inMode(MODE_ENUM) && inMode(MODE_LIST) }?
-        enum_short_variable_declaration |
+        short_variable_declaration |
 
         /*
           MODE_EXPRESSION
@@ -4957,10 +4957,10 @@ variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
 short_variable_declaration[] { ENTRY_DEBUG } :
         {
             // variable declarations may be in a list
-            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+            startNewMode(MODE_LIST);
 
             // declaration
-            startNewMode(MODE_LOCAL);
+            startNewMode(MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
             // start the declaration
             startElement(SDECLARATION);
@@ -4974,10 +4974,10 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
             bool output_decl = !inTransparentMode(MODE_INNER_DECL) || inTransparentMode(MODE_CLASS);
 
             // variable declarations may be in a list
-            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+            startNewMode(MODE_LIST);
 
             // declaration
-            startNewMode(MODE_LOCAL);
+            startNewMode(MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
             if (output_decl)
 
@@ -5011,7 +5011,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 
          {
 
-             if(!inMode(MODE_LOCAL))
+             if(!inMode(MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT))
                 // start the declaration
                 startElement(SDECLARATION);
 
@@ -6125,20 +6125,6 @@ enum_definition[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_CSHARP) }?
         enum_preprocessing class_preamble ENUM |
         enum_preprocessing (options { greedy = true; } : specifier)* ENUM (options { greedy = true; } : enum_class_header)*
-;
-
-// processing for short variable declaration
-enum_short_variable_declaration[] { ENTRY_DEBUG } :
-        {
-            // declaration
-            startNewMode(MODE_LOCAL);
-
-            // start the declaration
-            startElement(SDECLARATION);
-
-            // variable declarations may be in a list
-            startNewMode(MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
-        } variable_declaration_nameinit
 ;
 
 // header for enum class
