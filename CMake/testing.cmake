@@ -35,7 +35,7 @@
 macro(addUnitTest TEST_NAME FILE_NAME)
     add_executable(${TEST_NAME} ${FILE_NAME})
     target_link_libraries(${TEST_NAME} srcml_static ${ARGN})
-    add_test(${TEST_NAME} ${TEST_NAME})
+    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
     set_target_properties(${TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endmacro()
 

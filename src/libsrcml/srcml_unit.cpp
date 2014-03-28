@@ -616,6 +616,7 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
  * srcml_unparse_unit_memory
  * @param unit a srcml unit
  * @param src_buffer an output buffer address
+ * @param src_size the size of the resulting buffer
  *
  * Convert the srcML in unit into source code and place it into the address
  * pointed to by src_buffer.  If the srcML was not read in, but the attributes were
@@ -808,6 +809,7 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
     } catch(...) { return 0; }
     unit->archive = archive;
     unit->read_header = false;
+    unit->output_hash = false;
 
     return unit;
 

@@ -1,7 +1,7 @@
 ##
-# @file debian.cmake
+# @file nsis.cmake
 #
-# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+# @copyright Copyright (C) 2014 SDML (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,26 +17,13 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-# set Debian package name
-set(CPACK_DEBIAN_PACKAGE_NAME "srcML")
+# set icons
+set(CPACK_NSIS_MUI_ICON ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico)
+set(CPACK_NSIS_MUI_UNIICON ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico)
+set(CPACK_NSIS_INSTALLED_ICON_NAME srcml_icon.ico)
 
-# set architecture
-set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
+# set add to path variable and ask for shortcut
+set(CPACK_NSIS_MODIFY_PATH ON)
 
-# set dependencies
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libxml2 (>= 2.7.8), libxslt1.1 (>= 1.1.26), libarchive12 (>= 3.0.3)")
-
-# set package type
-set(CPACK_DEBIAN_PACKAGE_SECTION "devel")
-
-# set the package priority
-set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
-
-# set recommended package
-set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "yes")
-
-# set package suggests
-set(CPACK_DEBIAN_PACKAGE_SUGGESTS "yes")
-
-# set extra processing
-set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "")
+# set contact in add/remove programs
+set(CPACK_NSIS_CONTACT "Software Developement Laboratories <bugs@srcML.org>")

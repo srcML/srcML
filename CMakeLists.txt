@@ -16,11 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
 #
 #    The CMake project file for srcML.
 #
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.12)
 project(srcML)
 
 enable_testing()
@@ -28,7 +27,6 @@ enable_testing()
 # Setting up Project includes.
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 include (srcml)
-
 
 # Setting up source include directories.
 include_directories(src/srcml src/libsrcml src/parser src/translator src/SAX2Framework)
@@ -51,5 +49,11 @@ endif()
 
 # Including extra directories.
 add_subdirectory(src)
-#add_subdirectory(test)
 
+if(BUILD_TESTS)
+    add_subdirectory(test)
+endif()
+
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()

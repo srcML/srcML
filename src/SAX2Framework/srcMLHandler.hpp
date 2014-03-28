@@ -149,6 +149,7 @@ public :
      * @param nb_attributes the number of attributes on the tag
      * @param nb_defaulted the number of defaulted attributes
      * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
+     * @param meta_tags vector of elements composed of metage tags defined after root tag
      *
      * SAX handler function for start of the root element.
      * Overide for desired behaviour.

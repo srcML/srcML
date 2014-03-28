@@ -29,8 +29,15 @@
 
 # Dynamic Load libraries (Unix only)
 if(NOT WIN32)
-option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and libexslt" ON)
+    option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and libexslt" ON)
 endif()
+
+if(NOT DYNAMIC_LOAD_ENABLED)
+    add_definitions(-DNO_DLLOAD)
+endif()
+
+option(BUILD_TESTS "Dynamically load some libraries such as libxslt and libexslt" OFF)
+option(BUILD_EXAMPLES "Dynamically load some libraries such as libxslt and libexslt" OFF)
 
 # Setting some windows only properties.
 # @todo this breaks mingw32 build.
@@ -80,11 +87,17 @@ endif()
 find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
 
 if(DYNAMIC_LOAD_ENABLED)
-set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} dl crypto
-		        CACHE INTERNAL "Libraries needed to build libsrcml")
+    set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} dl crypto pthread
+                CACHE INTERNAL "Libraries needed to build libsrcml")
+elseif(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" AND NOT WIN32)
+    set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} crypto pthread
+                CACHE INTERNAL "Libraries needed to build libsrcml")
+elseif(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} crypto pthread
+                CACHE INTERNAL "Libraries needed to build libsrcml")
 else()
-set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES}  ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${Boost_LIBRARIES} ${ANTLR_LIBRARY}
-		       CACHE INTERNAL "Libraries needed to build libsrcml")
+    set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${Boost_LIBRARIES} ${ANTLR_LIBRARY}
+                CACHE INTERNAL "Libraries needed to build libsrcml")
 endif()
 
 
@@ -92,7 +105,13 @@ if(NOT WIN32 AND NOT APPLE)
 set(LIBSRCML_LIBRARIES ${LIBSRCML_LIBRARIES};rt)
 endif()
 
-set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} CACHE INTERNAL "Libraries needed to build srcml")
+if(NOT WIN32)
+    set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} crypto CACHE INTERNAL "Libraries needed to build srcml")
+elseif(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 crypto CACHE INTERNAL "Libraries needed to build srcml")
+else()
+    set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 CACHE INTERNAL "Libraries needed to build srcml")
+endif()
 
 
 # Finding antlr library.
@@ -126,15 +145,21 @@ endif()
 # The default configuration is to compile in DEBUG mode. These flags can be directly
 # overridden by setting the property of a target you wish to change them for.
 if(${CMAKE_COMPILER_IS_GNUCXX})
-    set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized")
-    # Adding global compiler definitions.
-    set(CMAKE_CXX_FLAGS "-fPIC -O3 ${GCC_WARNINGS}")
-    set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${GCC_WARNINGS}")
-    set(CMAKE_CXX_FLAGS_DEBUG "-fPIC -O3 -g -DDEBUG --coverage -fprofile-arcs ${GCC_WARNINGS}")
+
+    string(FIND ${CMAKE_CXX_COMPILER} "mingw32" IS_MINGW32)
+    if(IS_MINGW32 EQUAL -1)
+      set(USE_FPIC -fPIC)
+    endif()
+
+    set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas")
+    # Adding global compiler definitions.                                                                                      
+    set(CMAKE_CXX_FLAGS "${USE_FPIC} -O3 ${GCC_WARNINGS}")
+    set(CMAKE_CXX_FLAGS_RELEASE "${USE_FPIC} -O3 -DNDEBUG ${GCC_WARNINGS}")
+    set(CMAKE_CXX_FLAGS_DEBUG "${USE_FPIC} -O3 -g -DDEBUG --coverage -fprofile-arcs ${GCC_WARNINGS}")
 
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # Configuring the Clang compiler
-    set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32")
+    set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32 -Wno-unknown-pragmas")
     set(CMAKE_CXX_FLAGS "-fPIC -O3 ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_DEBUG "-fPIC -O0 -g -DDEBUG ${CLANG_WARNINGS}")

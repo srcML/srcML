@@ -21,20 +21,36 @@
 #
 #
 # CMake directives and config for CPack.
- 
+
+# set package name
+set(CPACK_PACKAGE_NAME "srcML") 
+
+# set package name
+#set(CPACK_PACKAGE_FILE_NAME "srcML-${CMAKE_SYSTEM_NAME}")
+
+# set executables
+set(CPACK_PACKAGE_EXECUTABLES srcml;srcML)
+
+# set Desktop links
+set(CPACK_CREATE_DESKTOP_LINKS srcml)
 
 # Generator settings
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
- set(CPACK_GENERATOR "ZIP")
+    set(CPACK_PACKAGE_FILE_NAME "srcML-Win")
+    set(CPACK_GENERATOR "ZIP")
 else()
-set(CPACK_GENERATOR "TGZ;TBZ2")
+    set(CPACK_PACKAGE_FILE_NAME "srcML")
+    set(CPACK_GENERATOR "TGZ;TBZ2")
 endif()
  
-# set package name
-set(CPACK_PACKAGE_FILE_NAME "srcML-${CMAKE_SYSTEM_NAME}")
-
 # set summary
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")
+
+# description
+set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/doc/src2srcml.xml)
+
+# vendor
+set(CPACK_PACKAGE_VENDOR "Software Developement Laboratories (SDML)")
 
 # contact
 set(CPACK_PACKAGE_CONTACT "Software Developement Laboratories <bugs@srcML.org>")
@@ -44,16 +60,33 @@ set(CPACK_PACKAGE_VERSION_MAJOR "1")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
 set(CPACK_PACKAGE_VERSION_PATCH "0")
 
+# license
+set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/COPYING.txt)
+
+# README
+set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README.txt)
+
+# welcome message
+set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/CMake/welcome.txt)
+
+# icon
+set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico)
+
+if(WIN32)
+install(FILES ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico DESTINATION .)
+endif()
+
 # strip executables
 #set(CPACK_STRIP_FILES ON)
  
 # set output directory
-set(CPACK_PACKAGE_DIRECTORY ${CMAKE_HOME_DIRECTORY}/dist)
+set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 
 # include other specific configurations
 include(debian)
 include(rpm)
 include(packageMaker)
+include(nsis)
 
 # needs to be last so not overwritten
 include(CPack)

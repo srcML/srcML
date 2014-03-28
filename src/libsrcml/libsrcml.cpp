@@ -59,7 +59,7 @@ std::string srcml_error;
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL,
                                  8, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
-                                 std::vector<std::string>(), 0, 0, 0, 0, std::vector<transform>() };
+                                 std::vector<std::string>(), 0, 0, 0, std::vector<transform>() };
 
 /**
  * @var global_unit
@@ -477,7 +477,6 @@ int srcml_register_namespace(const char* prefix, const char* ns) {
 
 /**
  * srcml_archive_register_macro
- * @param archive a srcml_archive
  * @param token name of macro
  * @param type macro type
  *
@@ -485,9 +484,9 @@ int srcml_register_namespace(const char* prefix, const char* ns) {
  *
  * @returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_register_macro(const char* prefix, const char* ns) {
+int srcml_register_macro(const char* token, const char* type) {
 
-    return srcml_archive_register_macro(&global_archive, prefix, ns);
+    return srcml_archive_register_macro(&global_archive, token, type);
 
 }
 

@@ -72,7 +72,7 @@ struct srcMLElement {
         int ns_length = nb_namespaces * 2;
         this->namespaces = (const xmlChar**) malloc(ns_length * sizeof(namespaces[0]));
         CHECK_COPY(namespaces, this->namespaces);
-        memset(this->namespaces, 0, ns_length);
+        memset(this->namespaces, 0, ns_length * sizeof(namespaces[0]));
 
         for (int i = 0; i < ns_length; ++i) {
 
@@ -95,7 +95,7 @@ struct srcMLElement {
         this->attributes = (const xmlChar**) malloc(nb_length * sizeof(attributes[0]));
         CHECK_COPY(attributes, this->attributes);
 
-        memset(this->attributes, 0, nb_length);
+        memset(this->attributes, 0, nb_length * sizeof(attributes[0]));
 
         for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
             this->attributes[index] = attributes[index] ? (xmlChar*) STRDUP((const char*) attributes[index]) : 0;
@@ -106,10 +106,11 @@ struct srcMLElement {
             CHECK_COPY(attributes[index + 2], this->attributes[index + 2]);
 
             int vallength = (int)(attributes[index + 4] - attributes[index + 3]);
-            this->attributes[index + 3] = (const xmlChar*) malloc(vallength);
+            this->attributes[index + 3] = (const xmlChar*) malloc(vallength + 1);
             CHECK_COPY(attributes[index + 3], this->attributes[index + 3]);
 
             strncpy((char *) this->attributes[index + 3], (const char*) attributes[index + 3], vallength);
+            ((char *)this->attributes[index + 3])[vallength] = 0;
             this->attributes[index + 4] = this->attributes[index + 3] + vallength;
 
         }
@@ -137,7 +138,7 @@ struct srcMLElement {
         int ns_length = element.nb_namespaces * 2;
         this->namespaces = (const xmlChar**) malloc(ns_length * sizeof(element.namespaces[0]));
         CHECK_COPY(element.namespaces, this->namespaces);
-        memset(this->namespaces, 0, ns_length);
+        memset(this->namespaces, 0, ns_length * sizeof(element.namespaces[0]));
 
         for (int i = 0; i < ns_length; ++i) {
             this->namespaces[i] = element.namespaces[i] ? (xmlChar*) STRDUP((const char*) element.namespaces[i]) : 0;
@@ -151,7 +152,7 @@ struct srcMLElement {
         this->attributes = (const xmlChar**) malloc(nb_length * sizeof(element.attributes[0]));
         CHECK_COPY(element.attributes, this->attributes);
 
-        memset(this->attributes, 0, nb_length);
+        memset(this->attributes, 0, nb_length * sizeof(element.attributes[0]));
 
         for (int i = 0, index = 0; i < element.nb_attributes; ++i, index += 5) {
             this->attributes[index] = element.attributes[index] ? (xmlChar*) STRDUP((const char*) element.attributes[index]) : 0;
@@ -162,10 +163,11 @@ struct srcMLElement {
             CHECK_COPY(element.attributes[index + 2], this->attributes[index + 2]);
 
             int vallength = (int)(element.attributes[index + 4] - element.attributes[index + 3]);
-            this->attributes[index + 3] = (const xmlChar*) malloc(vallength);
+            this->attributes[index + 3] = (const xmlChar*) malloc(vallength + 1);
             CHECK_COPY(element.attributes[index + 3], this->attributes[index + 3]);
 
             strncpy((char *) this->attributes[index + 3], (const char*) element.attributes[index + 3], vallength);
+            ((char *)this->attributes[index + 3])[vallength] = 0;
             this->attributes[index + 4] = this->attributes[index + 3] + vallength;
 
         }

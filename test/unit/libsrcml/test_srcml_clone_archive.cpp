@@ -105,7 +105,6 @@ int main() {
         dassert(new_archive->translator, 0);
         dassert(new_archive->reader, 0);
         dassert(new_archive->input, 0);
-        dassert(new_archive->close_input, 0);
 
         dassert(new_archive->transformations.size(), 0);
 

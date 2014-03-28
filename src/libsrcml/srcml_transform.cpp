@@ -91,7 +91,8 @@ int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xsl
  * srcml_append_transform_xslt_memory
  * @param archive a srcml_archive
  * @param xslt_buffer a buffer holding an XSLT
- *
+ * @param size the size of the passed buffer
+*
  * Append the XSLT program in the buffer to the list
  * of transformation/queries.  As of yet no way to specify parameters or context
  *
@@ -129,7 +130,7 @@ int srcml_append_transform_xslt_FILE(srcml_archive* archive, FILE* xslt_file) {
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
     xmlRegisterDefaultInputCallbacks();
-    xmlDocPtr doc = xmlReadIO(xmlFileRead, xmlFileClose, xslt_file, 0, 0, 0);
+    xmlDocPtr doc = xmlReadIO(xmlFileRead, 0, xslt_file, 0, 0, 0);
 
     transform tran = { SRCML_XSLT, { 0 } };
     tran.transformation.doc = doc;
@@ -196,6 +197,7 @@ int srcml_append_transform_relaxng_filename(srcml_archive* archive, const char* 
  * srcml_append_transform_relaxng_memory
  * @param archive a srcml archive
  * @param relaxng_buffer a buffer holding a RelaxNG schema
+ * @param size the size of the passed buffer
  *
  * Append the RelaxNG schema in the buffer to the list
  * of transformation/queries.
@@ -234,7 +236,7 @@ int srcml_append_transform_relaxng_FILE(srcml_archive* archive, FILE* relaxng_fi
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
     xmlRegisterDefaultInputCallbacks();
-    xmlDocPtr doc = xmlReadIO(xmlFileRead, xmlFileClose, relaxng_file, 0, 0, 0);
+    xmlDocPtr doc = xmlReadIO(xmlFileRead, 0, relaxng_file, 0, 0, 0);
 
     transform tran = { SRCML_RELAXNG, { 0 } };
     tran.transformation.doc = doc;
@@ -412,7 +414,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     if(last_transform_filename) UNLINK(last_transform_filename);
     free((void *)last_transform_filename);
 
-    iarchive->transformations.clear();
+    srcml_clear_transforms(iarchive);
 
     return SRCML_STATUS_OK;
 

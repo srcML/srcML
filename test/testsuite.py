@@ -379,7 +379,7 @@ if use_exec :
         print src2srcmlversion()
         print srcml2srcversion()
 else :
-	sys.path.append("../src/libsrcml/python")
+	sys.path.append("../python/src")
 	from srcml import *
         print version_string()
 
@@ -602,7 +602,7 @@ print
 f = open(error_filename, "w")
 
 if error_count == 0:
-	print "No errors out of " + str(total_count) + " cases" 
+	print "Errors: 0 out of " + str(total_count) + " cases" 
 else:
 	# break errorlist into two, one with original name, one with a name with a dot in it
 	oerrorlist = []

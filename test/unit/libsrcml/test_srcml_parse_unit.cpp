@@ -413,6 +413,7 @@ int main() {
         srcml_unit * unit = srcml_create_unit(archive);
         dassert(srcml_parse_unit_filename(unit, "project.foo"), SRCML_STATUS_UNSET_LANGUAGE);
 
+        srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
 
@@ -1132,6 +1133,7 @@ int main() {
         dassert(srcml_parse_unit_FILE(unit, file), SRCML_STATUS_UNSET_LANGUAGE);
         fclose(file);
 
+        srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
 
@@ -1466,6 +1468,7 @@ int main() {
         dassert(srcml_parse_unit_fd(unit, fd), SRCML_STATUS_UNSET_LANGUAGE);
         CLOSE(fd);
 
+        srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
 

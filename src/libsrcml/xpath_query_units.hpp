@@ -1,5 +1,5 @@
 /**
- * @file xpath_query_units.cpp
+ * @file xpath_query_units.hpp
  *
  * @copyright Copyright (C) 2008-2014 SDML (www.srcML.org)
  *
@@ -31,7 +31,9 @@
 
 #include <libexslt/exslt.h>
 
+/** size of string then the literal */
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
+/** literal followed by its size */
 #define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
 #include <srcexfun.hpp>
@@ -42,6 +44,7 @@
 #include <dlfcn.h>
 #endif
 
+/** create a variable for dynamically load from library */
 #define dlsymvar(type, name) type name;  *(void **)(&name) = dlsym(handle, #name)
 
 #ifdef WIN32
@@ -49,19 +52,42 @@
 #define snprintf _snprintf
 #endif
 
+/**
+ * xpath_query_units
+ *
+ * Extends unit_dom to execute XPath expression and write results.
+ */
 class xpath_query_units : public unit_dom {
 public :
 
+    /**
+     * xpath_query_units
+     * @param options list of srcML options
+     * @param compiled_xpath Combined XPath expression
+     * @param fd file descriptor in which to write
+     *
+     * Constructor.
+     */
     xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath, int fd = 0)
         : unit_dom(options), options(options),
           compiled_xpath(compiled_xpath), total(0), found(false), needroot(true), closetag(false), fd(fd) {
     }
 
+    /**
+     * ~xpath_query_units
+     *
+     * Destructor.
+     */
     virtual ~xpath_query_units() {}
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
+    /**
+     * start_output
+     *
+     * Create the output buffer and setup XPath.
+     */
     virtual void start_output() {
 
         buf = xmlOutputBufferCreateFd(fd, NULL);
@@ -76,6 +102,13 @@ public :
 
 #pragma GCC diagnostic push
 
+    /**
+     * apply
+     *
+     * Apply XPath expression, writing results.
+     * 
+     * @returns true on success false on failure.
+     */
     virtual bool apply() {
 
         xmlXPathContextPtr context = xmlXPathNewContext(ctxt->myDoc);
@@ -492,6 +525,11 @@ public :
         return true;
     }
 
+    /**
+     * end_output
+     *
+     * Finish the archive and close buffer.
+     */
     virtual void end_output() {
 
         // finalize results
@@ -546,6 +584,13 @@ public :
         xmlOutputBufferClose(buf);
     }
 
+    /**
+     * xml_output_buffer_write_xml_decl
+     * @param ctxt an xml parser context
+     * @param buf output buffer to write element
+     *
+     * Write the xml declaration to output buffer.
+     */
     static void xml_output_buffer_write_xml_decl(xmlParserCtxtPtr ctxt, xmlOutputBufferPtr buf) {
 
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?xml version=\""));
@@ -557,6 +602,20 @@ public :
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
     }
 
+    /**
+     * xml_output_buffer_write_element_ns
+     * @param buf output buffer to write element
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param nb_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param nb_attributes the number of attributes on the tag
+     * @param nb_defaulted the number of defaulted attributes
+     * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
+     *
+     * Write an element to output buffer.
+     */
     void xml_output_buffer_write_element_ns(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
                                             const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
                                             int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
@@ -603,6 +662,20 @@ public :
         }
     }
 
+    /**
+     * xml_output_buffer_write_element_ns
+     * @param s string to write output
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param nb_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param nb_attributes the number of attributes on the tag
+     * @param nb_defaulted the number of defaulted attributes
+     * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
+     *
+     * Write an element to a string.
+     */
     void xml_output_buffer_write_element_ns(std::string& s, const xmlChar* localname, const xmlChar* prefix,
                                             const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
                                             int nb_attributes, int nb_defaulted, const xmlChar** attributes) {

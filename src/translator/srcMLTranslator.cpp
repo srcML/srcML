@@ -30,8 +30,26 @@
 #include "StreamMLParser.hpp"
 #include "srcMLOutput.hpp"
 #include "srcmlns.hpp"
+
+#include <cstring>
+
 #ifdef _MSC_BUILD
 #define strdup _strdup
+#endif
+
+#ifndef __APPLE__
+
+char * strnstr(const char *s1, const char *s2, size_t n) {
+
+  char save_char = s1[n];
+  ((char *)s1)[n] = 0;
+   char * ret = (char *)strstr(s1, s2);
+  ((char *)s1)[n] = save_char;
+
+  return ret;
+
+}
+
 #endif
 
 /// constructor
@@ -278,31 +296,73 @@ void srcMLTranslator::add_unit(std::string xml, const char * hash) {
 
     first = false;
 
-    if(hash) {
+    char * cxml = (char *)xml.c_str();
 
-        std::string::size_type pos = xml.find('>');
-        if(pos == std::string::npos) return;
+    if(!isoption(options, OPTION_ARCHIVE)) {
 
-        std::string::size_type hash_pos = xml.rfind("hash", pos);
+        char * pos = strchr(cxml, '>');
+        if(pos == 0) return;
 
+        char * src_ns_pos = strnstr(cxml, SRCML_SRC_NS_URI, pos - cxml);
 
-        int offset = 0;
+        if(src_ns_pos == 0) {
 
-        if(hash_pos != std::string::npos) {
+            char * unit_pos = strstr(cxml, "unit");
 
-            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)xml.c_str(), (int)hash_pos + 6);
-            xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)hash);
-            offset = (int)hash_pos + 6;
+            std::string ns = " xmlns";
+
+            if((unit_pos - cxml) != 1) {
+
+                ns += ":";
+                char * colon_pos = strchr(cxml, ':');
+                colon_pos[0] = 0;
+                ns += (cxml + 1);
+                colon_pos[0] = ':';
+
+            }
+
+            ns += "=\"";
+            ns += SRCML_SRC_NS_URI;
+            ns += "\"";
+
+            // write out up to unit
+            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)cxml, (int)((unit_pos + 4) - cxml));
+
+            // write out namespace declaration
+            xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)ns.c_str());
+
+            // update pointer for remaining
+            cxml = unit_pos + 4;
 
         }
 
-        xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml.c_str() + offset);
+    } 
 
-    } else {
+    if(hash) {
 
-        xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml.c_str());
+        char * pos = strchr(cxml, '>');
+        if(pos == 0) return;
 
-    }
+        char * hash_pos = strnstr(cxml, "hash", pos - cxml);
+
+
+        if(hash_pos != 0) {
+
+            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)cxml, (int)((hash_pos + 6) - cxml));
+            xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)hash);
+            cxml = hash_pos + 6;
+
+            // consume hash if already there this is generic may consider using just 20 for standard hash size
+            if(cxml[0] != '"')
+                cxml = strchr(cxml, '"');
+
+        }
+
+
+    } 
+
+    xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)cxml);
+
 
     if ((options & OPTION_ARCHIVE) > 0)
         out.processText("\n\n", 2);

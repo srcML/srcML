@@ -3,7 +3,6 @@
 ./sshall.py --test "bash -c \"date --set \\\"$(date)\\\"\""
 
 ./sshall.py --test 'bash -c "cd /srcML; git pull; cd ..; chown -R srcml:srcml /srcML"'
-ssh root@osx 'bash -c "cd /srcML; git pull; cd ..; chown -R srcml:staff /srcML"'
 
 scp ~/Dropbox/srcML/Unix/Fedora19/srcML.tar.gz fedora19test:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora20/srcML.tar.gz fedora20test:/srcML
@@ -20,14 +19,11 @@ scp ~/Dropbox/srcML/Unix/Ubuntu12.04/srcML.tar.gz ubuntu12test:/srcML
 scp ~/Dropbox/srcML/Unix/Ubuntu10.04-64/srcML.tar.gz ubuntu10test64:/srcML
 scp ~/Dropbox/srcML/Unix/Ubuntu12.04-64/srcML.tar.gz ubuntu12test64:/srcML
 
-scp ~/Dropbox/srcML/Unix/OSX/srcML.tar.gz osx:/srcML
+#scp ~/Dropbox/srcML/Unix/MacLion/srcML.tar.gz macliontest:/srcML
+#scp ~/Dropbox/srcML/Unix/MacMountainLion/srcML.tar.gz macmountainliontest:/srcML
+#scp ~/Dropbox/srcML/Unix/MacMavericks/srcML.tar.gz macmaverickstest:/srcML
 
-./sshall.py --test 'bash -c "cd /srcML; tar xvf srcML.tar.gz; mkdir -p bin; cp srcML/* bin/"'
+./sshall.py --test 'bash -c "cd /srcML; tar xvf srcML.tar.gz; mkdir -p bin; cp srcML/bin/* srcML/lib/* bin/"'
 ./sshall.py --test 'bash -c "cd /srcML/test/; rm -f srcMLTestReport*; make clean; cd suite; make; cd ..; ./testsuite.py"'
 
-ssh root@osx 'bash -c "cd /srcML; tar xvf srcML.tar.gz; mkdir -p bin; cp srcML/* bin/"'
-
-ssh root@osx 'bash -c "cd /srcML/test/; rm -f srcMLTestReport*; make clean; cd suite; make; cd ..; ./testsuite.py"'
-
 ./sshall.py --test 'bash -c "grep -a \"Errors:\" /srcML/test/srcMLTestReport*"'
-ssh root@osx 'bash -c "grep -a "Errors:" /srcML/test/srcMLTestReport*"'

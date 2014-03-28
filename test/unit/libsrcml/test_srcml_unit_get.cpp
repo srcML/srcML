@@ -260,5 +260,7 @@ int main() {
 
     srcml_free_archive(archive);
 
+    srcml_cleanup_globals();
+
     return 0;
 }
