@@ -74,5 +74,6 @@ void srcml_write(WriteQueue* queue) {
         // free the unit
         if (pr.unit)
             srcml_free_unit(pr.unit);
+        pr.unit = 0;
     }
 }

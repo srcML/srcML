@@ -32,17 +32,12 @@
 #include <parse_request.hpp>
 #include <thread_queue.hpp>
 #include <string>
-#include <write_queue.hpp>
-
-class ParseQueue;
-
-void srcml_consume(ParseQueue*, WriteQueue*);
 
 class ParseQueue {
 public:
     typedef ThreadQueue<ParseRequest, 40> Queue_Type;
 
-    ParseQueue(int max_threads);
+    ParseQueue(int max_threads, boost::function<void()>);
 
     /* puts an element in the back of the queue by swapping with parameter */
     void push(ParseRequest& value);
@@ -53,11 +48,11 @@ public:
     void wait();
 
 private:
-    WriteQueue wqueue;
     Queue_Type queue;
     boost::thread_group writers;
     size_t max_threads;
     int counter;
+    boost::function<void()> consume;
 };
 
 #endif

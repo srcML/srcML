@@ -22,7 +22,8 @@
 
 #include <parse_queue.hpp>
 
-ParseQueue::ParseQueue(int max_threads) : max_threads(max_threads), counter(0) {}
+ParseQueue::ParseQueue(int max_threads, boost::function<void()> consumearg)
+    : max_threads(max_threads), counter(0), consume(consumearg) {}
 
 /* puts an element in the back of the queue by swapping with parameter */
 void ParseQueue::push(ParseRequest& value) {
@@ -30,7 +31,7 @@ void ParseQueue::push(ParseRequest& value) {
     // create threads as requests are pushed
     // no more then max threads however
     if (writers.size() < max_threads)
-        writers.create_thread( boost::bind(srcml_consume, this, &wqueue) );
+        writers.create_thread( consume );
 
     ++counter;
     value.position = counter;
@@ -45,6 +46,4 @@ void ParseQueue::pop(ParseRequest& value) {
 void ParseQueue::wait() {
     queue.done();
     writers.join_all();
-
-    wqueue.wait();
 }
