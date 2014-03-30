@@ -34,7 +34,6 @@
 #endif
 #include <srcml_consume.hpp>
 #include <srcml.h>
-#include <thread_queue.hpp>
 #include <parse_request.hpp>
 #include <src_input_libarchive.hpp>
 #include <boost/thread.hpp>
@@ -103,10 +102,10 @@ void srcml_consume(ParseQueue* queue, WriteQueue* wqueue) {
                                     "Wrong size for SHA_DIGEST_LENGTH conversion");
             //            srcml_unit_set_hash(unit, outmd);
 
-            if (pr.disk_filename.empty()) {
+            if (!pr.disk_filename) {
                 pr.status = srcml_parse_unit_memory(unit, &pr.buffer.front(), pr.buffer.size());
             } else {
-                pr.status = srcml_parse_unit_filename(unit, pr.disk_filename.c_str());
+                pr.status = srcml_parse_unit_filename(unit, pr.disk_filename->c_str());
             }
         }
 

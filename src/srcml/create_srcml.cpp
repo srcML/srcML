@@ -154,7 +154,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         create_srcml_handler(parse_queue, srcml_arch, srcml_request, input);
     }
 
-    // wait for the parsing queue to finish
+    // wait for the parsing and writing queues to finish
     parse_queue.join();
     write_queue.join();
 

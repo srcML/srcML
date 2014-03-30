@@ -23,7 +23,7 @@
 #include <parse_queue.hpp>
 
 ParseQueue::ParseQueue(int max_threads, boost::function<void()> consumearg)
-    : max_threads(max_threads), consume(consumearg), counter(0), empty(false) {}
+    : max_threads(max_threads), consume(consumearg), counter(0), qsize(0), back(0), front(0), empty(false) {}
 
 /* puts an element in the back of the queue by swapping with parameter */
 void ParseQueue::push(ParseRequest& value) {
