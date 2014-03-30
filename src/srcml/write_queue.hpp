@@ -62,7 +62,7 @@ public:
         queue.pop(value);
     }
 
-    void wait() {
+    void join() {
         queue.done();
         writers.join_all();
     }

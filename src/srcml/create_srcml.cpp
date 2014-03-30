@@ -156,7 +156,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // wait for the parsing queue to finish
     parse_queue.join();
-    write_queue.wait();
+    write_queue.join();
 
     // close the created srcML archive
     srcml_close_archive(srcml_arch);
