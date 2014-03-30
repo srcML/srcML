@@ -21,9 +21,10 @@
  */
 
 #include <srcml_execute.hpp>
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <boost/thread.hpp>
-#pragma GCC diagnostic warning "-Wshorten-64-to-32"
+#pragma GCC diagnostic pop
 
 void srcml_execute(const srcml_request_t& srcml_request,
                    std::list<command>& commands,

@@ -26,12 +26,13 @@
 #ifndef WRITE_QUEUE_HPP
 #define WRITE_QUEUE_HPP
 
+#include <srcml.h>
+#include <write_request.hpp>
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <boost/thread.hpp>
-#pragma GCC diagnostic warning "-Wshorten-64-to-32"
-#include <write_request.hpp>
+#pragma GCC diagnostic pop
 #include <string>
-#include <srcml.h>
 
 class WriteQueue;
 

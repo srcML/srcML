@@ -36,11 +36,14 @@
 #include <srcml.h>
 #include <parse_request.hpp>
 #include <src_input_libarchive.hpp>
-#include <boost/thread.hpp>
 #include <parse_queue.hpp>
 #include <write_request.hpp>
 #include <write_queue.hpp>
 #include <iomanip>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
+#include <boost/thread.hpp>
+#pragma GCC diagnostic pop
 #include <boost/static_assert.hpp>
 
 // Public consumption thread function

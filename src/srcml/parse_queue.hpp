@@ -26,10 +26,11 @@
 #ifndef PARSE_QUEUE_HPP
 #define PARSE_QUEUE_HPP
 
+#include <parse_request.hpp>
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <boost/thread.hpp>
-#pragma GCC diagnostic warning "-Wshorten-64-to-32"
-#include <parse_request.hpp>
+#pragma GCC diagnostic pop
 #include <string>
 
 class ParseQueue {
