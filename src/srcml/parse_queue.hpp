@@ -30,12 +30,11 @@
 #include <boost/thread.hpp>
 #pragma GCC diagnostic warning "-Wshorten-64-to-32"
 #include <parse_request.hpp>
-#include <thread_queue.hpp>
 #include <string>
 
 class ParseQueue {
 public:
-    typedef ThreadQueue<ParseRequest, 40> Queue_Type;
+    static const int CAPACITY = 40;
 
     ParseQueue(int max_threads, boost::function<void()>);
 
@@ -45,14 +44,22 @@ public:
     /* removes the front element from the queue by swapping with parameter */
     void pop(ParseRequest& value);
 
-    void wait();
+    void join();
 
 private:
-    Queue_Type queue;
     boost::thread_group writers;
     size_t max_threads;
-    int counter;
     boost::function<void()> consume;
+    int counter;
+    ParseRequest buffer[CAPACITY];
+    int qsize;
+    int back;
+    int front;
+    ParseRequest empty_request;
+    bool empty;
+    boost::mutex mutex;
+    boost::condition_variable cond_full;
+    boost::condition_variable cond_empty;
 };
 
 #endif

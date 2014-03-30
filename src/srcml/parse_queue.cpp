@@ -23,27 +23,53 @@
 #include <parse_queue.hpp>
 
 ParseQueue::ParseQueue(int max_threads, boost::function<void()> consumearg)
-    : max_threads(max_threads), counter(0), consume(consumearg) {}
+    : max_threads(max_threads), consume(consumearg), counter(0), empty(false) {}
 
 /* puts an element in the back of the queue by swapping with parameter */
 void ParseQueue::push(ParseRequest& value) {
 
     // create threads as requests are pushed
-    // no more then max threads however
     if (writers.size() < max_threads)
         writers.create_thread( consume );
 
-    ++counter;
-    value.position = counter;
-    queue.push(value);
+    {
+        boost::unique_lock<boost::mutex> lock(mutex);
+        while (qsize == CAPACITY)
+            cond_full.wait(lock);
+
+        buffer[back].swap(value);
+        buffer[back].position = ++counter;
+        ++back %= CAPACITY;
+        ++qsize;
+    }
+    cond_empty.notify_one();
 }
 
 /* removes the front element from the queue by swapping with parameter */
 void ParseQueue::pop(ParseRequest& value) {
-    queue.pop(value);
+    {
+        boost::unique_lock<boost::mutex> lock(mutex);
+        while (qsize == 0 && !empty)
+            cond_empty.wait(lock);
+
+        if (qsize == 0 && empty)
+            value.swap(empty_request);
+
+        else {
+            value.swap(buffer[front]);
+            ++front %= CAPACITY;
+            --qsize;
+        }
+    }
+    cond_full.notify_one();
 }
 
-void ParseQueue::wait() {
-    queue.done();
+void ParseQueue::join() {
+    {
+        boost::unique_lock<boost::mutex> lock(mutex);
+        empty = true;
+    }
+    cond_empty.notify_all();
+
     writers.join_all();
 }

@@ -139,7 +139,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // setup the parsing queue
     WriteQueue wqueue;
-    ParseQueue queue(srcml_request.max_threads, boost::bind(srcml_consume, &queue, &wqueue));
+    ParseQueue parse_queue(srcml_request.max_threads, boost::bind(srcml_consume, &parse_queue, &wqueue));
 
     // process input sources
     BOOST_FOREACH(const srcml_input_src& input, input_sources) {
@@ -151,11 +151,11 @@ void create_srcml(const srcml_request_t& srcml_request,
             return; // stdin was requested, but no data was received
         }
 */
-        create_srcml_handler(queue, srcml_arch, srcml_request, input);
+        create_srcml_handler(parse_queue, srcml_arch, srcml_request, input);
     }
 
     // wait for the parsing queue to finish
-    queue.wait();
+    parse_queue.join();
     wqueue.wait();
 
     // close the created srcML archive
