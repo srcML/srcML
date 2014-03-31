@@ -1639,8 +1639,6 @@ for_initialization_variable_declaration[int type_count] { ENTRY_DEBUG } :
             // start a new mode for the expression which will end
             // inside of the terminate
             startNewMode(MODE_LIST);
-
-            startElement(SDECLARATION);
         }
         variable_declaration[type_count]
 ;
@@ -4962,35 +4960,45 @@ variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
                 // start the declaration statement
                 startElement(SDECLARATION_STATEMENT);
 
-            // declaration
-            startNewMode(MODE_LOCAL);
-
-            if (!inTransparentMode(MODE_INNER_DECL) || inTransparentMode(MODE_CLASS))
-                // start the declaration
-                startElement(SDECLARATION);
         }
+
         variable_declaration[type_count]
 ;
 
 // processing for short variable declaration
 short_variable_declaration[] { ENTRY_DEBUG } :
         {
+            // variable declarations may be in a list
+            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
             // declaration
-            startNewMode(MODE_LOCAL);
+            startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
             // start the declaration
             startElement(SDECLARATION);
-
-            // variable declarations may be in a list
-            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
         }
 ;
 
 // more of the inner part of a declaration
 variable_declaration[int type_count] { ENTRY_DEBUG } :
         {
+
+            bool output_decl = !inTransparentMode(MODE_INNER_DECL) || inTransparentMode(MODE_CLASS);
+
             // variable declarations may be in a list
             startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+            // declaration
+            startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+            if(inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
+                setMode(MODE_LIST);
+
+            if (output_decl)
+
+                // start the declaration
+                startElement(SDECLARATION);
+
         }
         variable_declaration_type[type_count]
 ;
@@ -5015,6 +5023,18 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 // Variable declaration name and optional initialization
 variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
         ENTRY_DEBUG } :
+
+         {
+
+             if(!inMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
+              && inMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
+              && !inTransparentMode(MODE_INNER_DECL)
+              && !inTransparentMode(MODE_USING))
+                // start the declaration
+                startElement(SDECLARATION);
+
+        }
+
         ({ inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[false] | compound_name)
         {
             // expect a possible initialization
@@ -6125,20 +6145,6 @@ enum_definition[] { ENTRY_DEBUG } :
         enum_preprocessing (options { greedy = true; } : specifier)* ENUM (options { greedy = true; } : enum_class_header)*
 ;
 
-// processing for short variable declaration
-enum_short_variable_declaration[] { ENTRY_DEBUG } :
-        {
-            // declaration
-            startNewMode(MODE_LOCAL);
-
-            // start the declaration
-            startElement(SDECLARATION);
-
-            // variable declarations may be in a list
-            startNewMode(MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
-        } variable_declaration_nameinit
-;
-
 // header for enum class
 enum_class_header[] {} :
         (CLASS | STRUCT)* 
@@ -6195,6 +6201,22 @@ enum_block[] { ENTRY_DEBUG } :
             }
         }
 ;
+
+// processing for short variable declaration
+enum_short_variable_declaration[] { ENTRY_DEBUG } :
+        {
+            // variable declarations may be in a list
+            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+            // declaration
+            startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+            // start the declaration
+            startElement(SDECLARATION);
+        }
+        variable_declaration_nameinit
+;
+
 
 /*
   end of file

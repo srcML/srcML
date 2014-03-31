@@ -16,7 +16,7 @@
 
 <unit>
 <function><type><name>int</name></type> <name>f</name><parameter_list>(<param><decl><type><name>a</name></type></decl></param>)</parameter_list>
-     <decl_stmt><decl><type><name>int</name></type> <name>a</name>, <name>b</name></decl>;</decl_stmt>
+     <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>, <decl><name>b</name></decl>;</decl_stmt>
 <block>{}</block></function>
 </unit>
 
@@ -35,7 +35,7 @@
 
 <unit>
 <function><type><name>int</name></type> <name>f</name><parameter_list>(<param><decl><type><name>a</name></type></decl></param>)</parameter_list>
-     <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name>, <name>b</name></decl>;</decl_stmt>
+     <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>, <decl><name>b</name></decl>;</decl_stmt>
 <block>{}</block></function>
 </unit>
 
