@@ -193,7 +193,51 @@ int main() {
         reg_ext.register_standard_file_extensions();
         assert(reg_ext.getLanguageFromFilename("a.h") == Language::LANGUAGE_CXX);
         assert(reg_ext.getLanguageFromFilename("a.c") == Language::LANGUAGE_CXX);
-    }   
+    }
+
+    /*
+        append
+    */
+    {
+
+        LanguageExtensionRegistry reg_ext_one;
+        LanguageExtensionRegistry reg_ext_two;
+        reg_ext_two.registerUserExt("cpp", "C++");
+
+        assert(reg_ext_one.size() == 0);
+
+        reg_ext_one.append(reg_ext_two);
+
+        assert(reg_ext_one.size() == 1);
+        assert(reg_ext_one.at(0).n == Language::LANGUAGE_CXX);
+        assert(reg_ext_one.at(0).s == "cpp");
+    }
+
+    {
+
+        LanguageExtensionRegistry reg_ext_one;
+        reg_ext_one.registerUserExt("cpp", "C++");  
+        LanguageExtensionRegistry reg_ext_two;
+        reg_ext_two.registerUserExt("h", "C");  
+        reg_ext_two.registerUserExt("cs", "C#");  
+        reg_ext_two.registerUserExt("java", "Java");  
+
+        assert(reg_ext_one.size() == 1);
+        assert(reg_ext_one.at(0).n == Language::LANGUAGE_CXX);
+        assert(reg_ext_one.at(0).s == "cpp");
+
+        reg_ext_one.append(reg_ext_two);
+
+        assert(reg_ext_one.size() == 4);
+        assert(reg_ext_one.at(0).n == Language::LANGUAGE_CXX);
+        assert(reg_ext_one.at(0).s == "cpp");
+        assert(reg_ext_one.at(1).n == Language::LANGUAGE_C);
+        assert(reg_ext_one.at(1).s == "h");
+        assert(reg_ext_one.at(2).n == Language::LANGUAGE_CSHARP);
+        assert(reg_ext_one.at(2).s == "cs");
+        assert(reg_ext_one.at(3).n == Language::LANGUAGE_JAVA);
+        assert(reg_ext_one.at(3).s == "java");
+    }
 
     return 0;
 
