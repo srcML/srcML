@@ -71,11 +71,11 @@ struct pair {
 };
 
 /**
-* Language
-*
-* Class representing a source code language.  Also, provides static members
-* for determining a language from an extension.
-*/
+ * Language
+ *
+ * Class representing a source code language.  Also, provides static members
+ * for determining a language from an extension.
+ */
 class Language {
 
 public:
