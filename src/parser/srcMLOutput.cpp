@@ -752,7 +752,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token) {
         if(isoption(OPTION_DEBUG_TIMER)) {
 
             std::string time = to_simple_string(boost::posix_time::microsec_clock::universal_time() - debug_time_start);
-            xmlTextWriterWriteAttribute(xout, BAD_CAST "time", BAD_CAST time.c_str());
+            xmlTextWriterWriteAttribute(xout, BAD_CAST UNIT_ATTRIBUTE_TIMESTAMP, BAD_CAST time.c_str());
 
         }
 
