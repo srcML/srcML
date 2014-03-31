@@ -35,7 +35,7 @@ void src_input_filelist(ParseQueue& queue,
                         const srcml_request_t& srcml_request,
                         const std::string& input) {
 
-    std::ifstream filelist(input);
+    std::ifstream filelist(input.c_str());
     std::string line;
     while (getline(filelist, line)) {
 
