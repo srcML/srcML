@@ -70,6 +70,8 @@ bool getLanguageExtension(const char * const inpath, std::string & extension)
  */
 bool LanguageExtensionRegistry::registerUserExt(const char* ext, int language) {
 
+    if(!language) return false;
+
     pair apair = { ext, language };
     registered_languages.push_back(apair);
 

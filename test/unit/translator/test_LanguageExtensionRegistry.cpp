@@ -31,7 +31,7 @@ int main() {
     */
     {
         LanguageExtensionRegistry reg_ext;
-        assert(reg_ext.registerUserExt("cpp", "C++"));
+        assert(reg_ext.registerUserExt("cpp", Language::LANGUAGE_CXX));
         assert(reg_ext.size() == 1);
         assert(reg_ext.at(0).n == Language::LANGUAGE_CXX);
         assert(reg_ext.at(0).s == "cpp");
@@ -39,7 +39,7 @@ int main() {
 
     {
         LanguageExtensionRegistry reg_ext;
-        assert(!reg_ext.registerUserExt("cpp", "Foo"));
+        assert(!reg_ext.registerUserExt("cpp", Language::LANGUAGE_NONE));
         assert(reg_ext.size() == 0);
     }
 
