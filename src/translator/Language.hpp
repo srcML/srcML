@@ -29,19 +29,37 @@
 #include <string>
 #include <vector>
 
+/**
+ * Namespace for language names
+ */
 namespace LanguageName {
 
+    /** No language is empty string */
     const char* const LANGUAGE_NONE = "";
+
+    /** String constant for C language */
     const char* const LANGUAGE_C = "C";
-    const char* const LANGUAGE_CS = "C#";
-    const char* const LANGUAGE_CXX = "C++";
-    const char* const LANGUAGE_CXX_11 = "C++11";
-    const char* const LANGUAGE_JAVA = "Java";
-    const char* const LANGUAGE_ASPECTJ = "AspectJ";
+
+    /** String constant for C# language */
     const char* const LANGUAGE_CSHARP = "C#";
+
+    /** String constant for C++ language */
+    const char* const LANGUAGE_CXX = "C++";
+
+    /** String constant for Java language */
+    const char* const LANGUAGE_JAVA = "Java";
+
+    /** String constant for AspectJ language */
+    const char* const LANGUAGE_ASPECTJ = "AspectJ";
+
 
 }
 
+/**
+ * pair
+ *
+ * Holds a Language string/numeral pair
+ */
 struct pair {
     std::string s;
     int n;
@@ -57,19 +75,47 @@ class Language {
 
 public:
 
+    /**
+        Languages
+
+        Enum constants for each handled language.
+    */
     enum Languages {
+
+        /** Interger Constant for No language */
         LANGUAGE_NONE = 0,
+
+        /** Interger Constant for C language */
         LANGUAGE_C = 1,
+
+        /** Interger Constant for C++ language */
         LANGUAGE_CXX = 2,
-        LANGUAGE_CXX_11 = 4,
-        LANGUAGE_JAVA = 8,
-        LANGUAGE_ASPECTJ = 16,
-        LANGUAGE_CSHARP = 32,
-        LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CXX_11 | LANGUAGE_CSHARP,
-        LANGUAGE_CXX_ONLY = LANGUAGE_CXX | LANGUAGE_CXX_11,
+
+        /** Interger Constant for Java language */
+        LANGUAGE_JAVA = 4,
+
+        /** Interger Constant for AspectJ language */
+        LANGUAGE_ASPECTJ = 8,
+
+        /** Interger Constant for C# language */
+        LANGUAGE_CSHARP = 16,
+
+        /** Interger Constant for languages in C++ family i.e. C++/C#  */
+        LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP,
+
+        /** Interger Constant for No language */
+        LANGUAGE_CXX_ONLY = LANGUAGE_CXX,
+
+        /** Interger Constant for languages in C family i.e. C/C++/C# */
         LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY,
+
+        /** Interger Constant for languages in Java family i.e. Java/AspectJ */
         LANGUAGE_JAVA_FAMILY = LANGUAGE_JAVA | LANGUAGE_ASPECTJ,
+
+        /** Interger Constant for Object-Oriented languages i.e. C++/C#/Java */
         LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY,
+
+        /** Interger Constant for all languages */
         LANGUAGE_ALL = ~0
     };
 
