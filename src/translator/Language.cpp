@@ -89,6 +89,8 @@ bool Language::registerUserExt(const char* ext, const char* language,
  * getLanguageExtension
  * @param inpath a complete filename with path
  * @param extension the found extension returned passed by reference
+ *
+ * Gets the language extension from a filename with path.
  * 
  * @returns if successsful.
  */
@@ -115,7 +117,15 @@ bool getLanguageExtension(const char * const inpath, std::string & extension)
 
 }
 
-// gets the current language based on the extenstion
+/*
+ * getLanguageFromFilename
+ * @param path filename with complete path
+ * @param registered_languages the currently registered languages
+ *
+ * Gets the current language based on the extenstion.
+ *
+ * @returns the numeric representation of the currently registered language from the given filename.
+ */
 int Language::getLanguageFromFilename(const char* const path, std::vector<pair> & registered_languages) {
 
     // extract the (pure) extension
@@ -134,7 +144,12 @@ int Language::getLanguageFromFilename(const char* const path, std::vector<pair> 
     return 0;
 }
 
-
+/**
+ * register_standar_file_extensions
+ * @param registered_language currently registered languages
+ *
+ * Register the standard file extensions for all languages. 
+ */
 void Language::register_standard_file_extensions(std::vector<pair> & registered_languages)
 {
     Language::registerUserExt("c",    LANGUAGE_C, registered_languages );
@@ -163,6 +178,12 @@ void Language::register_standard_file_extensions(std::vector<pair> & registered_
     Language::registerUserExt("cs",   LANGUAGE_CSHARP, registered_languages );
 }
 
+/**
+ * c_is_cpp
+ * @param use_cpp bool to indicate if to use C++ for C.
+ *
+ * Indictae if to treat C as C++.
+ */
 void Language::c_is_cpp(bool use_cpp) {
 
     Language::use_cpp_for_c = use_cpp;
