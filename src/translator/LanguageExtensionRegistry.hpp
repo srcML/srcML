@@ -55,8 +55,6 @@ public:
 
     int getLanguageFromFilename(const char* const path);
 
-    bool getLanguageExtension(const char * const inpath, std::string & extension);
-
     void register_standard_file_extensions();
 
     void c_is_cpp(bool use_cpp);

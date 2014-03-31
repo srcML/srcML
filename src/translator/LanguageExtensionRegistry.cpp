@@ -27,6 +27,38 @@
 /** regular expression to match extension even if in an archive */
 static const boost::regex extRegEx("(zx\\.|zg\\.|2zb\\.)*([^\\.]*)");
 
+/**
+ * getLanguageExtension
+ * @param inpath a complete filename with path
+ * @param extension the found extension returned passed by reference
+ *
+ * Gets the language extension from a filename with path.
+ * 
+ * @returns if successsful.
+ */
+bool getLanguageExtension(const char * const inpath, std::string & extension)
+{
+
+    // reversed copy of the path
+    std::string path(inpath);
+    std::reverse(path.begin(), path.end());
+
+    std::string::const_iterator start = path.begin();
+    std::string::const_iterator end = path.end();
+    boost::match_results<std::string::const_iterator> what;
+    boost::match_flag_type flags = boost::match_default;
+
+    if(boost::regex_search(start, end, what, extRegEx, flags)) {
+
+        std::string temp = what[2].str();
+        extension.assign(temp.rbegin(), temp.rend());
+        return true;
+
+    } else
+        return false;
+
+}
+
 /** 
  * registerUserExt
  * @param ext the file extension
@@ -63,38 +95,6 @@ bool LanguageExtensionRegistry::registerUserExt(const char* ext, const char* lan
     registerUserExt(ext, nlanguage);
 
     return true;
-}
-
-/**
- * getLanguageExtension
- * @param inpath a complete filename with path
- * @param extension the found extension returned passed by reference
- *
- * Gets the language extension from a filename with path.
- * 
- * @returns if successsful.
- */
-bool LanguageExtensionRegistry::getLanguageExtension(const char * const inpath, std::string & extension)
-{
-
-    // reversed copy of the path
-    std::string path(inpath);
-    std::reverse(path.begin(), path.end());
-
-    std::string::const_iterator start = path.begin();
-    std::string::const_iterator end = path.end();
-    boost::match_results<std::string::const_iterator> what;
-    boost::match_flag_type flags = boost::match_default;
-
-    if(boost::regex_search(start, end, what, extRegEx, flags)) {
-
-        std::string temp = what[2].str();
-        extension.assign(temp.rbegin(), temp.rend());
-        return true;
-
-    } else
-        return false;
-
 }
 
 /**

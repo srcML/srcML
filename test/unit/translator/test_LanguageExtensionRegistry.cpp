@@ -27,7 +27,24 @@
 int main() {
 
     /*
-      registerUserExt()
+      registerUserExt(const char *, int)
+    */
+    {
+        LanguageExtensionRegistry reg_ext;
+        assert(reg_ext.registerUserExt("cpp", "C++"));
+        assert(reg_ext.size() == 1);
+        assert(reg_ext.at(0).n == Language::LANGUAGE_CXX);
+        assert(reg_ext.at(0).s == "cpp");
+    }
+
+    {
+        LanguageExtensionRegistry reg_ext;
+        assert(!reg_ext.registerUserExt("cpp", "Foo"));
+        assert(reg_ext.size() == 0);
+    }
+
+    /*
+      registerUserExt(const char *, int)
     */
     {
         LanguageExtensionRegistry reg_ext;
