@@ -230,8 +230,8 @@ int main() {
 
     {
         srcml_register_file_extension("foo", "C++");
-        dassert(global_archive.registered_languages.back().s, "foo");
-        dassert(global_archive.registered_languages.back().n, 2);
+        dassert(global_archive.registered_languages.last().s, "foo");
+        dassert(global_archive.registered_languages.last().n, 2);
     }
 
     {
