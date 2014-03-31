@@ -36,6 +36,9 @@ if(NOT DYNAMIC_LOAD_ENABLED)
     add_definitions(-DNO_DLLOAD)
 endif()
 
+option(BUILD_TESTS "Dynamically load some libraries such as libxslt and libexslt" OFF)
+option(BUILD_EXAMPLES "Dynamically load some libraries such as libxslt and libexslt" OFF)
+
 # Setting some windows only properties.
 # @todo this breaks mingw32 build.
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")

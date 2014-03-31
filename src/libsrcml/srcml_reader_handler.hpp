@@ -1,6 +1,5 @@
 /**
- * @file srcml_reader_handler
- .cpp
+ * @file srcml_reader_handler.hpp
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
@@ -45,7 +44,6 @@
 
 /**
  * srcml_reader_handler
-
  *
  * Inherits from srcMLHandler to provide hooks into
  * SAX2 parsing. Provides starting and stoping using
@@ -69,7 +67,7 @@ private :
     srcml_unit * unit;
 
     /** output buffer for direct src write */
-    xmlOutputBufferPtr output_handler;
+    xmlOutputBufferPtr output_buffer;
 
     /** has reached end of parsing*/
     bool is_done;
@@ -104,11 +102,10 @@ public :
 
     /**
      * srcml_reader_handler
-
      *
      * Constructor.  Sets up mutex, conditions and state.
      */
-    srcml_reader_handler() : unit(0), output_handler(0), is_done(false), read_root(false),
+    srcml_reader_handler() : unit(0), output_buffer(0), is_done(false), read_root(false),
          collect_unit_attributes(false), collect_srcml(false), collect_src(false),
          terminate(false), is_empty(false), wait_root(true), skip(false) {
 
@@ -123,7 +120,6 @@ public :
 
     /**
      * ~srcml_reader_handler
-
      *
      * Destructor, deletes mutex and conditions.
      */
@@ -203,6 +199,7 @@ public :
      * @param nb_attributes number of attributes
      * @param nb_defaulted number defaulted attributes
      * @param attributes the attributes (name/prefix/uri/value start/value end/)
+     * @param meta_tags vector of elements composed of metage tags defined after root tag
      *
      * Overidden startRoot to handle collection of root attributes. Stop before continue
      */
@@ -670,7 +667,7 @@ public :
 
         if(collect_src) {
 
-            xmlOutputBufferWrite(output_handler, len, (const char *)ch);
+            xmlOutputBufferWrite(output_buffer, len, (const char *)ch);
 
         } else {
 

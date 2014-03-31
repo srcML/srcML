@@ -87,7 +87,7 @@ public :
     int read_srcml(boost::optional<std::string> & unit);
 
     // reads the next unit and returns it in parameter as src
-    int read_src(xmlOutputBufferPtr output_handler);
+    int read_src(xmlOutputBufferPtr output_buffer);
 
 };
 

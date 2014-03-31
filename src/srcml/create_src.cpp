@@ -93,6 +93,8 @@ void create_src(const srcml_request_t& srcml_request,
             srcml_unit* unit = srcml_request.unit == 0 ? srcml_read_unit(arch) : srcml_read_unit_position(arch, srcml_request.unit);
 
             srcml_archive* oarch = srcml_create_archive();
+            srcml_archive_disable_option(oarch, SRCML_OPTION_ARCHIVE);
+
             if (contains<int>(destination))
                 srcml_write_open_fd(oarch, destination);
             else
@@ -127,7 +129,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             srcMLReadArchive arch(input_sources[0]);
 
-            srcml_unit* unit = srcml_read_unit(arch);
+            srcml_unit* unit = srcml_request.unit == 0 ? srcml_read_unit(arch) : srcml_read_unit_position(arch, srcml_request.unit);
 
             srcml_unparse_unit_filename(unit, destination.c_str());
 

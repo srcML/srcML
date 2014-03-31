@@ -1,7 +1,7 @@
 ##
 # @file CMakeLists.txt
 #
-# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+# @copyright Copyright (C) 2014 SDML (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,4 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-
-# Including the unit tests before building the tests in this file.
-add_subdirectory(unit)
-#add_subdirectory(suite)
+ add_subdirectory(libsrcml)

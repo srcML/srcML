@@ -179,7 +179,7 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 /**
  * srcml_archive_set_src_encoding
  * @param archive a srcml_archive
- * @param encoding an encoding
+ * @param src_encoding an src_encoding
  *
  * Set the default source encoding of the srcML Archive.
  *
@@ -554,6 +554,7 @@ int srcml_archive_get_tabstop(const struct srcml_archive* archive) {
 
 /**
  * srcml_archive_get_namespace_size
+ * @param archive a srcml_archive
  *
  * @returns Get the number of currently defined namespaces or -1 if archive is NULL
  */
@@ -565,6 +566,7 @@ int srcml_archive_get_namespace_size(const struct srcml_archive* archive) {
 
 /**
  * srcml_archive_get_namespace_prefix
+ * @param archive a srcml_archive
  * @param pos namespace position
  *
  * @returns Get prefix for the given position on success
@@ -588,6 +590,7 @@ const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archi
 
 /**
  * srcml_archive_get_prefix_from_uri
+ * @param archive a srcml_archive
  * @param namespace_uri an XML namespace
  *
  * @returns Get the registered prefix for the given namespace
@@ -610,6 +613,7 @@ const char* srcml_archive_get_prefix_from_uri(const struct srcml_archive* archiv
 
 /**
  * srcml_archive_get_namespace_uri
+ * @param archive a srcml_archive
  * @param pos position in namespaces
  *
  * @returns Get the namespace at the given pos on succcess
@@ -633,6 +637,7 @@ const char* srcml_archive_get_namespace_uri(const struct srcml_archive* archive,
 
 /**
  * srcml_archive_get_uri_from_prefix
+ * @param archive a srcml_archive
  * @param prefix an XML prefix
  *
  * @returns Get the first namespace for the given prefix on success
@@ -656,6 +661,7 @@ const char* srcml_archive_get_uri_from_prefix(const struct srcml_archive* archiv
 
 /**
  * srcml_archive_get_macro_list_size
+ * @param archive a srcml_archive
  *
  * @returns Get the number of currently defined macros or -1 if archive is NULL
  */
@@ -667,6 +673,7 @@ int srcml_archive_get_macro_list_size(const struct srcml_archive* archive) {
 
 /**
  * srcml_archive_get_macro_token
+ * @param archive a srcml_archive
  * @param pos macro position
  *
  * @returns Get token for the given position on success
@@ -690,6 +697,7 @@ const char* srcml_archive_get_macro_token(const struct srcml_archive* archive, i
 
 /**
  * srcml_archive_get_macro_token_type
+ * @param archive a srcml_archive
  * @param token a macro token
  *
  * @returns Get the registered type for the given token
@@ -713,6 +721,7 @@ const char* srcml_archive_get_macro_token_type(const struct srcml_archive* archi
 
 /**
  * srcml_archive_get_macro_type
+ * @param archive a srcml_archive
  * @param pos position in macro list
  *
  * @returns Get the type at the given pos on succcess
@@ -782,6 +791,7 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
  * srcml_archive_open_memory
  * @param archive a srcml_archive
  * @param buffer location to return output string
+ * @param size the size of the resulting buffer
  *
  * Open up a srcml_archive for writing.  Set the output
  * to be to memory.  Buffer is allocated and set to the location
@@ -1061,6 +1071,7 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
     if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->input = xmlParserInputBufferCreateFd(srcml_fd, XML_CHAR_ENCODING_NONE);
+    archive->input->closecallback = 0;
     try {
 
         archive->reader = new srcml_sax2_reader(archive->input);

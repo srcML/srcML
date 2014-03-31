@@ -28,6 +28,7 @@
 #include <string>
 #include <vector>
 
+/** Properties are pair of strings */
 typedef std::pair<std::string, std::string> PROPERTIES_TYPE[32];
 
 void setPosition(int n);
@@ -40,10 +41,19 @@ void xsltsrcMLRegister();
 
 void xpathsrcMLRegister(xmlXPathContextPtr context);
 
+/**
+ * xpath_ext_function
+ * 
+ * Data class for xpath extention functions.
+ */
 struct xpath_ext_function {
 
+    /** prefix for extension function */
     std::string prefix;
+
+    /** name of extension function */
     std::string name;
+    /** the xpath expression */
     std::string expr;
 };
 

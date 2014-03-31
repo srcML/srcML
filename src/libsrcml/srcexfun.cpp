@@ -46,27 +46,61 @@
 #include <libxslt/extensions.h>
 #endif
 
+/** @todo these might block treading. */
+/** postion */
 static int Position;
+
+/** old attributes */
 static PROPERTIES_TYPE* oldpattributes;
+
+/** root attributes */
 static const xmlChar** pattributes;
+
+/** number of root attributes */
 static int nb_attributes;
 
+/** set of MACRO functions I think */
 static std::vector<struct xpath_ext_function> MACROS;
 
+/**
+ * setPosition
+ * @param n position
+ *
+ * Set position.
+ */
 void setPosition(int n) {
     Position = n;
 }
 
+/**
+ * setRootAttributes
+ * @param attributes the root attributes
+ * @param pnb_attributes number of root attributes
+ * 
+ * Set the root attributes.
+ */
 void setRootAttributes(const xmlChar** attributes, int pnb_attributes) {
     pattributes = attributes;
     nb_attributes = pnb_attributes;
 }
 
+/**
+ * setRootAttributes
+ * @param attributes the root attributes
+ *
+ * Save the root attributes?
+ */
 void setRootAttributes(PROPERTIES_TYPE& attributes) {
     oldpattributes = &attributes;
 }
 
-//
+/**
+ * srcContextFunction
+ * @param ctxt an xml XPath parser context
+ * @param nargs number for arguments
+ *
+ * ???
+ */
 static void srcContextFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
     if (nargs != 0) {
@@ -79,7 +113,15 @@ static void srcContextFunction (xmlXPathParserContextPtr ctxt, int nargs) {
     valuePush(ctxt, xmlXPathNewFloat(Position));
 }
 
-// index of attribute in attributes
+/**
+ * find_attribute_index
+ * @param nb_attributes number of attributes
+ * @param attributes attribute list
+ * @param attribute an individual attribute
+ *
+ * Find the index of attribute in list of attributes.
+ * @returns the position of attribute in attributes array.
+ */
 int find_attribute_index(int nb_attributes, const xmlChar** attributes, const char* attribute) {
 
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
@@ -89,6 +131,13 @@ int find_attribute_index(int nb_attributes, const xmlChar** attributes, const ch
     return -1;
 }
 
+/**
+ * srcRootFunction
+ * @param ctxt an xml XPath parser context
+ * @param nargs number for arguments
+ *
+ * ???
+ */
 static void srcRootFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
     if (nargs != 1) {
@@ -109,6 +158,13 @@ static void srcRootFunction (xmlXPathParserContextPtr ctxt, int nargs) {
     valuePush(ctxt, xmlXPathNewString(BAD_CAST s.c_str()));
 }
 
+/**
+ * srcMacrosFunction
+ * @param ctxt an xml XPath parser context
+ * @param nargs number for arguments
+ *
+ * ???
+ */
 static void srcMacrosFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
     // as of now, all of these have no arguments
@@ -131,6 +187,13 @@ static void srcMacrosFunction (xmlXPathParserContextPtr ctxt, int nargs) {
     }
 }
 
+/**
+ * srcInFunction
+ * @param ctxt an xml XPath parser context
+ * @param nargs number for arguments
+ *
+ * ???
+ */
 static void srcInFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
     // need at least one argument
@@ -160,6 +223,13 @@ static void srcInFunction (xmlXPathParserContextPtr ctxt, int nargs) {
     valuePush(ctxt, xmlXPathNewBoolean(0));
 }
 
+/**
+ * srcPosersetFunction
+ * @param ctxt an xml XPath parser context
+ * @param nargs number for arguments
+ *
+ * XPath extension function to compute powerset.
+ */
 static void srcPowersetFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
     if (nargs != 1) {
@@ -198,6 +268,12 @@ static void srcPowersetFunction (xmlXPathParserContextPtr ctxt, int nargs) {
     }
 }
 
+/**
+ * xpathsrcMLRegister
+ * @param context an xml XPath context
+ *
+ * Register srcML XPath extension functions.
+ */
 void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xmlXPathRegisterFuncNS(context, (const xmlChar *)"unit",
@@ -225,6 +301,11 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
                            srcInFunction);
 }
 
+/**
+ * xsltsrcMLRegister
+ *
+ * Register srcML XSLT extension functions.
+ */
 void xsltsrcMLRegister () {
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
@@ -315,6 +396,14 @@ void xsltsrcMLRegister () {
 #endif
 }
 
+/**
+ * xpathRegisterExtensionFunction
+ * @param prefix a prefix for extension function
+ * @param name a name for extension function
+ * @param xpath the xpath expression
+ *
+ * Save extension functions to MACROS.
+ */
 void xpathRegisterExtensionFunction(const std::string& prefix, const std::string & name, const std::string & xpath) {
 
     xpath_ext_function xpath_function = {prefix, name, xpath};
@@ -322,6 +411,11 @@ void xpathRegisterExtensionFunction(const std::string& prefix, const std::string
     MACROS.push_back(xpath_function);
 }
 
+/**
+ * getXPathExtensionFunctions
+ *
+ * @returns the registered XPath extension function in MACROS.
+ */
 const std::vector<xpath_ext_function> getXPathExtensionFunctions() {
 
     return MACROS;

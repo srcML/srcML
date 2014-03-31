@@ -30,8 +30,26 @@
 #include "StreamMLParser.hpp"
 #include "srcMLOutput.hpp"
 #include "srcmlns.hpp"
+
+#include <cstring>
+
 #ifdef _MSC_BUILD
 #define strdup _strdup
+#endif
+
+#ifndef __APPLE__
+
+char * strnstr(const char *s1, const char *s2, size_t n) {
+
+  char save_char = s1[n];
+  ((char *)s1)[n] = 0;
+   char * ret = (char *)strstr(s1, s2);
+  ((char *)s1)[n] = save_char;
+
+  return ret;
+
+}
+
 #endif
 
 /// constructor

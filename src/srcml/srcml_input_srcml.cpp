@@ -23,7 +23,7 @@
 #include <srcml_input_srcml.hpp>
 #include <parse_queue.hpp>
  
-void srcml_input_srcml(ParseQueue& queue,
+void srcml_input_srcml(ParseQueue&,
                        srcml_archive* srcml_output_archive,
                        const srcml_input_src& srcml_input) {
 

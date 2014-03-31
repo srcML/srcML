@@ -37,10 +37,13 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
 
         // construct the relative directory
         boost::filesystem::path out(prefix);
-        out /= srcml_unit_get_filename(unit);
+        if (const char* directory = srcml_unit_get_directory(unit))
+            out /= directory;
+        if (const char* filename = srcml_unit_get_filename(unit))
+            out /= filename;
 
         // create the path
-        if (!is_directory(out.parent_path()))
+        if (out.has_parent_path() && !is_directory(out.parent_path()))
             boost::filesystem::create_directories(out.parent_path());
 
         // unparse directory to filename
