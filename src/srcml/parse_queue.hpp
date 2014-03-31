@@ -26,23 +26,18 @@
 #ifndef PARSE_QUEUE_HPP
 #define PARSE_QUEUE_HPP
 
+#include <parse_request.hpp>
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <boost/thread.hpp>
-#pragma GCC diagnostic warning "-Wshorten-64-to-32"
-#include <parse_request.hpp>
-#include <thread_queue.hpp>
+#pragma GCC diagnostic pop
 #include <string>
-#include <write_queue.hpp>
-
-class ParseQueue;
-
-void srcml_consume(ParseQueue*, WriteQueue*);
 
 class ParseQueue {
 public:
-    typedef ThreadQueue<ParseRequest, 40> Queue_Type;
+    static const int CAPACITY = 40;
 
-    ParseQueue(int max_threads);
+    ParseQueue(int max_threads, boost::function<void()>);
 
     /* puts an element in the back of the queue by swapping with parameter */
     void push(ParseRequest& value);
@@ -50,14 +45,22 @@ public:
     /* removes the front element from the queue by swapping with parameter */
     void pop(ParseRequest& value);
 
-    void wait();
+    void join();
 
 private:
-    WriteQueue wqueue;
-    Queue_Type queue;
     boost::thread_group writers;
     size_t max_threads;
+    boost::function<void()> consume;
     int counter;
+    ParseRequest buffer[CAPACITY];
+    int qsize;
+    int back;
+    int front;
+    ParseRequest empty_request;
+    bool empty;
+    boost::mutex mutex;
+    boost::condition_variable cond_full;
+    boost::condition_variable cond_empty;
 };
 
 #endif

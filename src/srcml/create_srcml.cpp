@@ -24,6 +24,9 @@
 #include <srcml.h>
 #include <boost/foreach.hpp>
 #include <parse_queue.hpp>
+#include <write_queue.hpp>
+#include <srcml_consume.hpp>
+#include <srcml_write.hpp>
 #include <src_input_libarchive.hpp>
 #include <src_input_file.hpp>
 #include <src_input_filesystem.hpp>
@@ -136,7 +139,8 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_COMPRESS);
 
     // setup the parsing queue
-    ParseQueue queue(srcml_request.max_threads);
+    WriteQueue write_queue(boost::bind(srcml_write, &write_queue), false);
+    ParseQueue parse_queue(srcml_request.max_threads, boost::bind(srcml_consume, &parse_queue, &write_queue));
 
     // process input sources
     BOOST_FOREACH(const srcml_input_src& input, input_sources) {
@@ -148,11 +152,12 @@ void create_srcml(const srcml_request_t& srcml_request,
             return; // stdin was requested, but no data was received
         }
 */
-        create_srcml_handler(queue, srcml_arch, srcml_request, input);
+        create_srcml_handler(parse_queue, srcml_arch, srcml_request, input);
     }
 
-    // wait for the parsing queue to finish
-    queue.wait();
+    // wait for the parsing and writing queues to finish
+    parse_queue.join();
+    write_queue.join();
 
     // close the created srcML archive
     srcml_close_archive(srcml_arch);

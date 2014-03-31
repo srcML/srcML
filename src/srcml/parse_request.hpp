@@ -66,7 +66,7 @@ struct ParseRequest {
     srcml_archive * srcml_arch;
     std::string language;
     int position;
-    std::string disk_filename;
+    boost::optional<std::string> disk_filename;
     int status;
 };
 
