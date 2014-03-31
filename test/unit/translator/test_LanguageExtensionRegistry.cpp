@@ -27,6 +27,34 @@
 int main() {
 
     /*
+        at
+    */
+    {
+        LanguageExtensionRegistry reg_ext;
+        reg_ext.registerUserExt("cpp", "C++");
+        assert(reg_ext.at(0).n == Language::LANGUAGE_CXX);
+        assert(reg_ext.at(0).s == "cpp");
+    }
+
+    {
+        LanguageExtensionRegistry reg_ext;
+        try {
+         reg_ext.at(0);
+         assert(false);
+        } catch(LanguageExtensionRegistryError error) {} 
+    }
+
+
+    {
+        LanguageExtensionRegistry reg_ext;
+        reg_ext.registerUserExt("cpp", "C++");
+        try {
+         reg_ext.at(1);
+         assert(false);
+        } catch(LanguageExtensionRegistryError error) {} 
+    }
+
+    /*
       registerUserExt(const char *, int)
     */
     {
@@ -133,7 +161,6 @@ int main() {
         assert(reg_ext.getLanguageFromFilename("a.h") == Language::LANGUAGE_CXX);
         assert(reg_ext.getLanguageFromFilename("a.c") == Language::LANGUAGE_CXX);
     }   
-        
 
     return 0;
 
