@@ -89,6 +89,35 @@ int main() {
         assert(reg_ext.size() != 0);
     }
 
+    /*
+        c_is_cpp
+    */
+
+    {
+        LanguageExtensionRegistry reg_ext;
+        reg_ext.c_is_cpp(false);
+        reg_ext.register_standard_file_extensions();
+        assert(reg_ext.getLanguageFromFilename("a.h") == Language::LANGUAGE_C);
+        assert(reg_ext.getLanguageFromFilename("a.c") == Language::LANGUAGE_C);
+    }
+
+    {
+        LanguageExtensionRegistry reg_ext;
+        reg_ext.c_is_cpp(false);
+        reg_ext.register_standard_file_extensions();
+        assert(reg_ext.getLanguageFromFilename("a.h") == Language::LANGUAGE_C);
+        assert(reg_ext.getLanguageFromFilename("a.c") == Language::LANGUAGE_C);
+    }
+
+    {
+        LanguageExtensionRegistry reg_ext;
+        reg_ext.c_is_cpp(true);
+        reg_ext.register_standard_file_extensions();
+        assert(reg_ext.getLanguageFromFilename("a.h") == Language::LANGUAGE_CXX);
+        assert(reg_ext.getLanguageFromFilename("a.c") == Language::LANGUAGE_CXX);
+    }   
+        
+
     return 0;
 
 }

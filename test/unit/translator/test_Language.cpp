@@ -36,13 +36,11 @@ int main() {
     /*
       inLanguage()
     */
-    std::cout << "Test 1" << '\n';
     {
         Language l(Language::LANGUAGE_CXX);
         assert(!l.inLanguage(Language::LANGUAGE_C));
     }
 
-    std::cout << "Test 2" << '\n';
     {
         Language l(Language::LANGUAGE_CXX);
         assert(l.inLanguage(Language::LANGUAGE_CXX));
@@ -52,7 +50,6 @@ int main() {
     /*
       getLanguage()
     */
-    std::cout << "Test 3" << '\n';
     {
         Language l(Language::LANGUAGE_CXX);
         assert(l.getLanguage() == Language::LANGUAGE_CXX);
@@ -61,7 +58,6 @@ int main() {
     /*
       getLanguage(const char *)
     */
-    std::cout << "Test 4" << '\n';
     {
         assert(Language::getLanguage("C++") == Language::LANGUAGE_CXX);
     }
@@ -69,7 +65,6 @@ int main() {
     /*
       getLanguageString()
     */
-    std::cout << "Test 5" << '\n';
     {
         Language l(Language::LANGUAGE_CXX);
         assert(Language::getLanguage("C++") == Language::LANGUAGE_CXX);
