@@ -29,7 +29,7 @@
 #include <sstream>
 #include <iomanip>
 
- #include <stdio.h>
+#include <stdio.h>
 
 #ifndef _MSC_BUILD
 #include <unistd.h>
