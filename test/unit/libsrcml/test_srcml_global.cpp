@@ -199,11 +199,11 @@ int main() {
     }
 
     {
-        dassert(srcml_check_language("Java"), 8);
+        dassert(srcml_check_language("Java"), 4);
     }
 
     {
-        dassert(srcml_check_language("C#"), 32);
+        dassert(srcml_check_language("C#"), 16);
     }
 
     /*

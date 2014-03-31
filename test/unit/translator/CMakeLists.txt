@@ -18,6 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 addUnitTest(test_Language test_Language.cpp)
+addUnitTest(test_LanguageExtensionRegistry test_LanguageExtensionRegistry.cpp)
 addUnitTest(test_UTF8CharBuffer test_UTF8CharBuffer.cpp ${LIBXML2_LIBRARIES})
 addUnitTest(test_srcMLTranslator test_srcMLTranslator.cpp ${LIBXML2_LIBRARIES})
 
