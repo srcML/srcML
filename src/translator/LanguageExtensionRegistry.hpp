@@ -61,11 +61,11 @@ public:
 
     void c_is_cpp(bool use_cpp);
 
-    unsigned int size();
+    unsigned int size() const;
 
-    pair last();
+    pair last() const;
 
-    pair at(unsigned int pos);
+    pair at(unsigned int pos) const;
 
     void append(LanguageExtensionRegistry registry);
 

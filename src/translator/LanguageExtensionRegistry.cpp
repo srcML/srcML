@@ -168,8 +168,15 @@ void LanguageExtensionRegistry::c_is_cpp(bool use_cpp) {
 
 }
 
-
-pair LanguageExtensionRegistry::at(unsigned int pos) {
+/**
+ * at
+ * @param pos position to access
+ *
+ * Access the language/extension pair at given position.
+ *
+ * @returns the language/extension pair at given position.
+ */
+pair LanguageExtensionRegistry::at(unsigned int pos) const {
 
     if(pos >= size()) throw LanguageExtensionRegistryError();
 
@@ -177,13 +184,27 @@ pair LanguageExtensionRegistry::at(unsigned int pos) {
 
 }
 
-unsigned int LanguageExtensionRegistry::size() {
+/**
+ * size
+ *
+ * Gets the size of the language extension registry.
+ *
+ * @returns the number of registered language/extension pairs.
+ */
+unsigned int LanguageExtensionRegistry::size() const {
 
     return (unsigned int)registered_languages.size();
 
 }
 
-pair LanguageExtensionRegistry::last() {
+/**
+ * last
+ *
+ * Get the last language/extension pair at given position.
+ * 
+ * @returns the last language/extension pair at given position.
+ */
+pair LanguageExtensionRegistry::last() const {
 
     if(size() == 0) throw LanguageExtensionRegistryError();
 
@@ -191,6 +212,12 @@ pair LanguageExtensionRegistry::last() {
 
 }
 
+/**
+ * append
+ * @param registry another LanguageExtensionRegistry
+ *
+ * Append the contents of registry to this registry.
+ */
 void LanguageExtensionRegistry::append(LanguageExtensionRegistry registry) {
 
     for(std::vector<pair>::const_iterator itr = registry.registered_languages.begin(); itr != registry.registered_languages.end(); ++itr)
