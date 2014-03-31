@@ -54,6 +54,12 @@ public:
 
     void c_is_cpp(bool use_cpp);
 
+    unsigned int size();
+
+    pair last();
+
+    pair at(unsigned int pos);
+
     /**
      * ~LanguageExtensionRegistery
      *

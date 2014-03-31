@@ -166,3 +166,22 @@ void LanguageExtensionRegistry::c_is_cpp(bool use_cpp) {
 
     use_cpp_for_c = use_cpp;
 }
+
+
+pair LanguageExtensionRegistry::at(unsigned int pos) {
+
+    return registered_languages.at(pos);
+
+}
+
+unsigned int LanguageExtensionRegistry::size() {
+
+    return (unsigned int)registered_languages.size();
+
+}
+
+pair LanguageExtensionRegistry::last() {
+
+    return registered_languages.back();
+
+}

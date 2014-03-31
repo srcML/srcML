@@ -75,6 +75,8 @@ int main() {
         assert(Language::getLanguage("C++") == Language::LANGUAGE_CXX);
     }
 
+/** @todo move to own test file */
+#if 0
     /*
       registerUserExt()
     */
@@ -145,6 +147,7 @@ int main() {
         Language::register_standard_file_extensions(reg_ext);
         assert(reg_ext.size() != 0);
     }
+#endif
 
     return 0;
 }
