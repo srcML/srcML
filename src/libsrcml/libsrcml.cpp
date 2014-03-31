@@ -147,25 +147,14 @@ int srcml(const char* input_filename, const char* output_filename) {
     if(first) {
 
         first = false;
-        std::vector<pair> save_ext;
-        /** @todo fixme
-        for(std::vector<pair>::size_type i = 0; i < global_archive.registered_languages.size(); ++i)
-            try {
-                save_ext.push_back(global_archive.registered_languages.at(i));
-            } catch(...) {
-                return SRCML_STATUS_ERROR;
-            }
-        */
+        LanguageExtensionRegistry registry = global_archive.registered_languages;
+
+        global_archive.registered_languages = LanguageExtensionRegistry();
+
         global_archive.registered_languages.register_standard_file_extensions();
 
-        /** @todo fixme
-        for(std::vector<pair>::size_type i = 0; i < save_ext.size(); ++i)
-            try {
-                global_archive.registered_languages.push_back(save_ext.at(i));
-            } catch(...) {
-                return SRCML_STATUS_ERROR;
-            }
-        */
+        global_archive.registered_languages.append(registry);
+
         std::vector<std::string> save_prefix;
         std::vector<std::string> save_ns;
         try {

@@ -60,6 +60,8 @@ public:
 
     pair at(unsigned int pos);
 
+    void append(LanguageExtensionRegistry registry);
+
     /**
      * ~LanguageExtensionRegistery
      *

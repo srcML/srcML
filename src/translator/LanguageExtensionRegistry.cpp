@@ -185,3 +185,10 @@ pair LanguageExtensionRegistry::last() {
     return registered_languages.back();
 
 }
+
+void LanguageExtensionRegistry::append(LanguageExtensionRegistry registry) {
+
+    for(std::vector<pair>::const_iterator itr = registered_languages.begin(); itr != registered_languages.end(); ++itr)
+        registered_languages.push_back(*itr);
+
+}
