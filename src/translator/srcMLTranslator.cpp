@@ -368,6 +368,15 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
 
 }
 
+/**
+ * add_unit
+ * @param xml srcML to add to archive/non-archive
+ * @param hash a possible hash to include with xml output as attribute
+ *
+ * Add a unit as string directly to the archive.  If not an archive
+ * and supplied unit does not have src namespace add it.  Also, write out
+ * a supplied hash as part of output unit if specified.
+ */
 void srcMLTranslator::add_unit(std::string xml, const char * hash) {
 
     if(first) {
@@ -462,7 +471,12 @@ void srcMLTranslator::add_unit(std::string xml, const char * hash) {
 
 }
 
-// destructor
+/**
+ * ~srcMLTranslator
+ *
+ * Destructor.  If output to memory, free xml buffer and assign output to
+ * locations.
+ */
 srcMLTranslator::~srcMLTranslator() {
 
     if(str_buffer && buffer->use) {
