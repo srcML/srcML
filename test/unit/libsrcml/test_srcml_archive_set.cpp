@@ -365,8 +365,8 @@ int main() {
 
         srcml_archive_register_file_extension(archive, "foo", "C++");
 
-        dassert(archive->registered_languages.last().first, "foo");
-        dassert(archive->registered_languages.last().second, 2);
+        dassert(get_language_string(archive->registered_languages.last()), "foo");
+        dassert(get_language_number(archive->registered_languages.last()), 2);
         srcml_free_archive(archive);
     }
 

@@ -131,9 +131,9 @@ int LanguageExtensionRegistry::getLanguageFromFilename(const char* const path) {
 
     // custom extensions
     for (int i = (int)(registered_languages.size() - 1); i >= 0; --i) {
-        if (registered_languages[i].first == extension)
-            return registered_languages[i].second == Language::LANGUAGE_NONE ? 0 :
-                registered_languages[i].second == Language::LANGUAGE_C && use_cpp_for_c ? Language::LANGUAGE_CXX : registered_languages[i].second;
+        if (get_language_string(registered_languages[i]) == extension)
+            return get_language_number(registered_languages[i]) == Language::LANGUAGE_NONE ? 0 :
+                get_language_number(registered_languages[i]) == Language::LANGUAGE_C && use_cpp_for_c ? Language::LANGUAGE_CXX : get_language_number(registered_languages[i]);
     }
 
     return 0;

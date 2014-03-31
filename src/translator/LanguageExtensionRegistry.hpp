@@ -30,6 +30,9 @@
 /** Declarare type language pair as string/int pair */
 typedef std::pair<std::string, int> language_pair;
 
+#define get_language_string(OBJ) OBJ.first
+#define get_language_number(OBJ) OBJ.second
+
  /**
   * LanguageExtensionRegistryError
   *
