@@ -37,28 +37,16 @@ pair Language::lang2int[] = {
     { LanguageName::LANGUAGE_NONE, LANGUAGE_NONE },
 };
 
-static int usercount = 0;
-
-pair Language::userext2int[47];
-
 static const boost::regex extRegEx("(zx\\.|zg\\.|2zb\\.)*([^\\.]*)");
 
 bool Language::registerUserExt(const char* ext, int language,
-                               std::vector<pair> & registered_languages) {
+                              std::vector<pair> & registered_languages) {
 
     pair apair = { ext, language };
     registered_languages.push_back(apair);
 
-    return true;
-}
+ return true;
 
-bool Language::registerUserExt(const char* ext, int language) {
-
-    userext2int[usercount].s = ext;
-    userext2int[usercount].n = language;
-    ++usercount;
-
-    return true;
 }
 
 bool Language::registerUserExt(const char* ext, const char* language,
@@ -71,15 +59,6 @@ bool Language::registerUserExt(const char* ext, const char* language,
     registerUserExt(ext, nlanguage, registered_languages);
 
     return true;
-}
-
-bool Language::registerUserExt(const char* ext, const char* language) {
-
-    int nlanguage = Language::getLanguage(language);
-    if (!nlanguage)
-        return false;
-
-    return registerUserExt(ext, nlanguage);
 }
 
 const char* getLanguageExtension(const char * const inpath, std::string & extension)
@@ -106,26 +85,6 @@ const char* getLanguageExtension(const char * const inpath, std::string & extens
 }
 
 // gets the current language based on the extenstion
-int Language::getLanguageFromFilename(const char* const path) {
-
-    // extract the (pure) extension
-    std::string ext;
-    const char* extension = getLanguageExtension(path, ext);
-
-    if (!extension)
-        return 0;
-
-    // custom extensions
-    for (int i = usercount - 1; i >= 0; --i) {
-        if (strcmp(userext2int[i].s.c_str(), extension) == 0)
-            return userext2int[i].n == LANGUAGE_NONE ? 0 :
-                userext2int[i].n == LANGUAGE_C && use_cpp_for_c ? LANGUAGE_CXX : userext2int[i].n;
-    }
-
-    return 0;
-}
-
-// gets the current language based on the extenstion
 int Language::getLanguageFromFilename(const char* const path, std::vector<pair> & registered_languages) {
 
     // extract the (pure) extension
@@ -145,36 +104,6 @@ int Language::getLanguageFromFilename(const char* const path, std::vector<pair> 
     return 0;
 }
 
-void Language::register_standard_file_extensions()
-{
-    Language::registerUserExt("c",    LANGUAGE_C );
-    Language::registerUserExt("h",    LANGUAGE_C );
-    Language::registerUserExt("i",    LANGUAGE_C );
-
-    //Language::registerUserExt("cs",    LANGUAGE_CS );
-    //Language::registerUserExt("hs",    LANGUAGE_CS );
-
-    Language::registerUserExt("cpp",  LANGUAGE_CXX );
-    Language::registerUserExt("CPP",  LANGUAGE_CXX );
-    Language::registerUserExt("cp",   LANGUAGE_CXX );
-    Language::registerUserExt("hpp",  LANGUAGE_CXX );
-    Language::registerUserExt("cxx",  LANGUAGE_CXX );
-    Language::registerUserExt("hxx",  LANGUAGE_CXX );
-    Language::registerUserExt("cc",   LANGUAGE_CXX );
-    Language::registerUserExt("hh",   LANGUAGE_CXX );
-    Language::registerUserExt("c++",  LANGUAGE_CXX );
-    Language::registerUserExt("h++",  LANGUAGE_CXX );
-    Language::registerUserExt("C",    LANGUAGE_CXX );
-    Language::registerUserExt("H",    LANGUAGE_CXX );
-    Language::registerUserExt("tcc",  LANGUAGE_CXX );
-    Language::registerUserExt("ii",   LANGUAGE_CXX );
-
-    Language::registerUserExt("java", LANGUAGE_JAVA );
-
-    Language::registerUserExt("aj",   LANGUAGE_ASPECTJ );
-
-    Language::registerUserExt("cs",   LANGUAGE_CSHARP );
-}
 
 void Language::register_standard_file_extensions(std::vector<pair> & registered_languages)
 {

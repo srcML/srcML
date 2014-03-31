@@ -47,6 +47,12 @@ struct pair {
     int n;
 };
 
+/**
+* Language
+*
+* Class representing a source code language.  Also, provides static members
+* for determining a language from an extension.
+*/
 class Language {
 
 public:
@@ -104,17 +110,13 @@ public:
         return "";
     }
 
-    static bool registerUserExt(const char* ext, int language);
-    static bool registerUserExt(const char* ext, const char* language);
     static bool registerUserExt(const char* ext, int language, std::vector<pair> & registered_languages);
     static bool registerUserExt(const char* ext, const char* language, std::vector<pair> & registered_languages);
 
     // gets the current language based on the extenstion
-    static int getLanguageFromFilename(const char* const path);
     static int getLanguageFromFilename(const char* const path, std::vector<pair> & registered_languages);
 
     // register the standard language file extensions
-    static void register_standard_file_extensions();
     static void register_standard_file_extensions(std::vector<pair> & registered_languages);
 
     static void c_is_cpp(bool use_cpp);
