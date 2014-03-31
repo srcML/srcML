@@ -1960,7 +1960,7 @@ goto_case[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 
     }
-    CASE (literal | NAME)*
+    CASE (literals | NAME)*
 
 ;
 
