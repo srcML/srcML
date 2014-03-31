@@ -56,21 +56,6 @@ namespace LanguageName {
 }
 
 /**
- * pair
- *
- * Holds a Language string/numeral pair
- */
-struct pair {
-
-    /** string representation of language */
-    std::string s;
-
-    /** numeric representation of language */
-    int n;
-
-};
-
-/**
  * Language
  *
  * Class representing a source code language.  Also, provides static members
@@ -166,8 +151,8 @@ public:
     static int getLanguage(const char* const s) {
 
         for(int i = 0; i < lang2intcount; ++i)
-            if (lang2int[i].s == s)
-                return lang2int[i].n;
+            if (lang2int[i].first == s)
+                return lang2int[i].second;
 
         return 0;
     }
@@ -182,8 +167,8 @@ public:
     const char* getLanguageString() const {
 
         for(int i = 0; i < lang2intcount; ++i)
-            if (lang2int[i].n == language)
-                return lang2int[i].s.c_str();
+            if (lang2int[i].second == language)
+                return lang2int[i].first.c_str();
 
         return "";
     }
@@ -203,7 +188,7 @@ private:
     const int language;
 
     static int lang2intcount;
-    static pair lang2int[];
+    static std::pair<std::string, int> lang2int[];
 };
 
 #endif
