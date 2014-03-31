@@ -41,7 +41,7 @@ void srcml_write(WriteQueue*);
 class WriteQueue {
 public:
 
-    static const int CAPACITY = 100;
+    static const int CAPACITY = 200;
 
     WriteQueue(boost::function<void()> writearg, bool order) : strictordering(order), max_threads(1), write(writearg), empty(false), curpos(1) {}
 
