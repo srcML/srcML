@@ -208,12 +208,8 @@ private:
     /** the current langauge */
     const int language;
 
-    /** static size of lang2int */
     static int lang2intcount;
-    /** static array holding string/numeric language pairs */
     static pair lang2int[];
-
-    /** bool to indicate that c extensions are to be treated as C++ */
     static bool use_cpp_for_c;
 };
 

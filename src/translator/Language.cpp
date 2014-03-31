@@ -24,9 +24,13 @@
 #include <algorithm>
 #include <boost/regex.hpp>
 
+/** bool to indicate that c extensions are to be treated as C++ false by default */
 bool Language::use_cpp_for_c = false;
 
+/** static size of lang2int */
 int Language::lang2intcount = 7;
+
+/** static array holding string/numeric language pairs */
 pair Language::lang2int[] = {
     { LanguageName::LANGUAGE_C, LANGUAGE_C },
     { LanguageName::LANGUAGE_CXX, LANGUAGE_CXX },
@@ -36,8 +40,19 @@ pair Language::lang2int[] = {
     { LanguageName::LANGUAGE_NONE, LANGUAGE_NONE },
 };
 
+/** regular expression to match extension even if in an archive */
 static const boost::regex extRegEx("(zx\\.|zg\\.|2zb\\.)*([^\\.]*)");
 
+/** 
+ * registerUserExt
+ * @param ext the file extension
+ * @param language interger representation of language to associated with extention
+ * @registered_languages structure to hold registered_languages
+ *
+ * Register a user extension overriding defaults.  @todo consider splitting this functionality off.
+ *
+ * @returns a bool indicating success.
+ */
 bool Language::registerUserExt(const char* ext, int language,
                               std::vector<pair> & registered_languages) {
 
@@ -48,6 +63,16 @@ bool Language::registerUserExt(const char* ext, int language,
 
 }
 
+/** 
+ * registerUserExt
+ * @param ext the file extension
+ * @param language string representation of language to associated with extention
+ * @registered_languages structure to hold registered_languages
+ *
+ * Register a user extension overriding defaults.  @todo consider splitting this functionality off.
+ *
+ * @returns a bool indicating success.
+ */
 bool Language::registerUserExt(const char* ext, const char* language,
                                std::vector<pair> & registered_languages) {
 
@@ -60,7 +85,14 @@ bool Language::registerUserExt(const char* ext, const char* language,
     return true;
 }
 
-const char* getLanguageExtension(const char * const inpath, std::string & extension)
+/**
+ * getLanguageExtension
+ * @param inpath a complete filename with path
+ * @param extension the found extension returned passed by reference
+ * 
+ * @returns if successsful.
+ */
+bool getLanguageExtension(const char * const inpath, std::string & extension)
 {
 
     // reversed copy of the path
@@ -76,10 +108,10 @@ const char* getLanguageExtension(const char * const inpath, std::string & extens
 
         std::string temp = what[2].str();
         extension.assign(temp.rbegin(), temp.rend());
-        return extension.c_str();
+        return true;
 
     } else
-        return 0;
+        return false;
 
 }
 
@@ -87,15 +119,14 @@ const char* getLanguageExtension(const char * const inpath, std::string & extens
 int Language::getLanguageFromFilename(const char* const path, std::vector<pair> & registered_languages) {
 
     // extract the (pure) extension
-    std::string ext;
-    const char* extension = getLanguageExtension(path, ext);
+    std::string extension;
+    bool success = getLanguageExtension(path, extension);
 
-    if (!extension)
-        return 0;
+    if (!success) return 0;
 
     // custom extensions
     for (int i = (int)(registered_languages.size() - 1); i >= 0; --i) {
-        if (strcmp(registered_languages[i].s.c_str(), extension) == 0)
+        if (registered_languages[i].s== extension)
             return registered_languages[i].n == LANGUAGE_NONE ? 0 :
                 registered_languages[i].n == LANGUAGE_C && use_cpp_for_c ? LANGUAGE_CXX : registered_languages[i].n;
     }
@@ -109,9 +140,6 @@ void Language::register_standard_file_extensions(std::vector<pair> & registered_
     Language::registerUserExt("c",    LANGUAGE_C, registered_languages );
     Language::registerUserExt("h",    LANGUAGE_C, registered_languages );
     Language::registerUserExt("i",    LANGUAGE_C, registered_languages );
-
-    //Language::registerUserExt("cs",    LANGUAGE_CS, registered_languages );
-    //Language::registerUserExt("hs",    LANGUAGE_CS, registered_languages );
 
     Language::registerUserExt("cpp",  LANGUAGE_CXX, registered_languages );
     Language::registerUserExt("CPP",  LANGUAGE_CXX, registered_languages );
