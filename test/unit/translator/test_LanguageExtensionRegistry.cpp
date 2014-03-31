@@ -55,6 +55,39 @@ int main() {
     }
 
     /*
+        last
+    */
+    {
+        LanguageExtensionRegistry reg_ext;
+        reg_ext.registerUserExt("cpp", "C++");
+        assert(reg_ext.last().n == Language::LANGUAGE_CXX);
+        assert(reg_ext.last().s == "cpp");
+    }
+
+    {
+        LanguageExtensionRegistry reg_ext;
+        try {
+         reg_ext.last();
+         assert(false);
+        } catch(LanguageExtensionRegistryError error) {} 
+    }
+
+
+    /*
+        size
+    */
+    {
+        LanguageExtensionRegistry reg_ext;
+        assert(reg_ext.size() == 0);
+    }
+
+    {
+        LanguageExtensionRegistry reg_ext;
+        reg_ext.registerUserExt("cpp", "C++");
+        assert(reg_ext.size() == 1);
+    }
+
+    /*
       registerUserExt(const char *, int)
     */
     {
