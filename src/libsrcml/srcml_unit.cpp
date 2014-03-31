@@ -322,7 +322,9 @@ const char* srcml_unit_get_xml(struct srcml_unit* unit) {
 /**
  * srcml_parse_unit_internal
  * @param unit a srcml unit
- * @param lang an interger representation of a language.
+ * @param lang an interger representation of a language
+ * @param input the source input to the translator
+ * @param translation_options the options for translation
  *
  * Function for internal use for parsing functions. Creates
  * output buffer, translates a current input and places the

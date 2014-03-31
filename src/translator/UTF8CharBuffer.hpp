@@ -88,7 +88,7 @@ class UTF8FileError {};
 class UTF8CharBuffer : public antlr::CharBuffer {
 public:
 
-    // size of the original character buffer
+    /** size of the original character buffer */
     static const size_t SRCBUFSIZE = 1024;
 
     // Create a character buffer
@@ -110,7 +110,7 @@ private:
     /** xml input handles encodings */
     xmlParserInputBufferPtr input;
 
-    /* position currently at */
+    /* position currently at in input buffer */
     int pos;
 
     /** size of read in buffer */

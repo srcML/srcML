@@ -61,8 +61,13 @@ namespace LanguageName {
  * Holds a Language string/numeral pair
  */
 struct pair {
+
+    /** string representation of language */
     std::string s;
+
+    /** numeric representation of language */
     int n;
+
 };
 
 /**
@@ -127,8 +132,6 @@ public:
         : language(lang) {
 
     }
-
-    static bool filledLang();
 
     /**
      * inLanguage

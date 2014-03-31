@@ -100,7 +100,7 @@ srcMLTranslator::srcMLTranslator(int language,
  * @param language what language to parse in
  * @param src_encoding input source code encoding
  * @param xml_encoding output srcML encoding
- * @param str_buffer buffer to assign output srcML
+ * @param str_buf buffer to assign output srcML
  * @param size integer to assign size of resulting srcML
  * @param op translator options
  * @param directory root unit directory attribute

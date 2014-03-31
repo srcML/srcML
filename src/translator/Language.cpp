@@ -47,7 +47,7 @@ static const boost::regex extRegEx("(zx\\.|zg\\.|2zb\\.)*([^\\.]*)");
  * registerUserExt
  * @param ext the file extension
  * @param language interger representation of language to associated with extention
- * @registered_languages structure to hold registered_languages
+ * @param registered_languages structure to hold registered_languages
  *
  * Register a user extension overriding defaults.  @todo consider splitting this functionality off.
  *
@@ -67,7 +67,7 @@ bool Language::registerUserExt(const char* ext, int language,
  * registerUserExt
  * @param ext the file extension
  * @param language string representation of language to associated with extention
- * @registered_languages structure to hold registered_languages
+ * @param registered_languages structure to hold registered_languages
  *
  * Register a user extension overriding defaults.  @todo consider splitting this functionality off.
  *
@@ -117,7 +117,7 @@ bool getLanguageExtension(const char * const inpath, std::string & extension)
 
 }
 
-/*
+/**
  * getLanguageFromFilename
  * @param path filename with complete path
  * @param registered_languages the currently registered languages
@@ -126,7 +126,7 @@ bool getLanguageExtension(const char * const inpath, std::string & extension)
  *
  * @returns the numeric representation of the currently registered language from the given filename.
  */
-int Language::getLanguageFromFilename(const char* const path, std::vector<pair> & registered_languages) {
+int Language::getLanguageFromFilename(const char* const path, std::vector<pair> & registered_languages) { 
 
     // extract the (pure) extension
     std::string extension;
@@ -146,7 +146,7 @@ int Language::getLanguageFromFilename(const char* const path, std::vector<pair> 
 
 /**
  * register_standar_file_extensions
- * @param registered_language currently registered languages
+ * @param registered_languages currently registered languages
  *
  * Register the standard file extensions for all languages. 
  */
