@@ -1953,6 +1953,17 @@ goto_statement[] { ENTRY_DEBUG } :
         GOTO
 ;
 
+goto_case[] { LightweightElement element(this); ENTRY_DEBUG } :
+    {
+
+        startElement(SNAME);
+
+
+    }
+    CASE (literal | NAME)*
+
+;
+
 // complete assembly declaration statement
 asm_declaration[] { ENTRY_DEBUG } :
         {
@@ -2727,6 +2738,9 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // start of condition for if/while/switch
         { inMode(MODE_PARAMETER | MODE_EXPECT) }?
         parameter |
+
+        { inMode(MODE_VARIABLE_NAME) }?
+        goto_case | 
 
         /*
           Check for MODE_FOR_CONDITION before template stuff, since it can conflict
