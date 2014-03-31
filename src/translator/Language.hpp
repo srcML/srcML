@@ -76,10 +76,11 @@ class Language {
 public:
 
     /**
-        Languages
-
-        Enum constants for each handled language.
-    */
+     * Languages
+     *
+     * Enum constants for each handled language.
+     * Each language is a bit.
+     */
     enum Languages {
 
         /** Interger Constant for No language */
@@ -116,6 +117,12 @@ public:
         LANGUAGE_ALL = ~0
     };
 
+    /**
+     * Language
+     * @param lang numeric represenation to for language object
+     *
+     * Constructor taking int to set language.
+     */
     Language(int lang)
         : language(lang) {
 
@@ -123,17 +130,36 @@ public:
 
     static bool filledLang();
 
-    // gets the current language
+    /**
+     * inLanguage
+     *
+     * Predicate method to test if in a current language
+     *
+     * @returns if in the current language.
+     */
     inline bool inLanguage(int l) const {
         return (l & language) > 0;
     }
 
-    // gets the current language
+    /**
+     * getLanguage
+     *
+     * Accessor method that gets the current language.
+     *
+     * @returns the numberic representation of the language.
+     */
     inline int getLanguage() const {
         return language;
     }
 
-    // gets the current language
+    /**
+     * getLanguage
+     *
+     * Static method to translate a string representation of a language
+     * into numeric version
+     *
+     * @returns the numberic representation of the language.
+     */
     static int getLanguage(const char* const s) {
 
         for(int i = 0; i < lang2intcount; ++i)
@@ -143,7 +169,13 @@ public:
         return 0;
     }
 
-    // gets the current language
+    /**
+     * getLanguageString
+     *
+     * Get the current language as a string.
+     *
+     * @returns the current language as a string.
+     */
     const char* getLanguageString() const {
 
         for(int i = 0; i < lang2intcount; ++i)
@@ -164,17 +196,24 @@ public:
 
     static void c_is_cpp(bool use_cpp);
 
+    /**
+     * ~Language
+     *
+     * Destructor.
+     */
     ~Language() {}
 
 private:
 
+    /** the current langauge */
     const int language;
 
+    /** static size of lang2int */
     static int lang2intcount;
+    /** static array holding string/numeric language pairs */
     static pair lang2int[];
 
-    static pair userext2int[];
-
+    /** bool to indicate that c extensions are to be treated as C++ */
     static bool use_cpp_for_c;
 };
 
