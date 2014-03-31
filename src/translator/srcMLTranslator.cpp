@@ -164,12 +164,23 @@ srcMLTranslator::srcMLTranslator(int language,
       out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, output_buffer), tabsize(tabsize), uri(uri),
       str_buffer(0), size(0) {}
 
+/**
+ * setMacroList
+ * @param list user defined macro list
+ *
+ * Set the user defined macro list to use.
+ */
 void srcMLTranslator::setMacroList(std::vector<std::string> & list) {
     user_macro_list = list;
     out.setMacroList(list);
 }
 
-// translate from input stream to output stream
+/**
+ * setInput
+ * @param path path of input file
+ *
+ * Set the input to the file at given path
+ */
 void srcMLTranslator::setInput(const char* path) {
 
     try {
@@ -187,7 +198,12 @@ void srcMLTranslator::setInput(const char* path) {
     }
 
 }
-// close the output
+
+/**
+ * close
+ *
+ * Close the srcMLTranslator and the srcML.
+ */
 void srcMLTranslator::close() {
 
     if(first && (options & OPTION_ARCHIVE) > 0) {
@@ -205,7 +221,17 @@ void srcMLTranslator::close() {
     out.close();
 }
 
-// translate from input stream to output stream
+/**
+ * translate
+ * @param unit_directory unit directory attribute
+ * @param unit_filename unit directory attribute
+ * @param unit_version unit version attribute
+ * @param unit_timestamp unit timestamp attribute
+ * @param unit_hash unit hash attribute
+ * @param language the language to translate the input
+ *
+ * Translate the supplied input (setInput) with the given arguments.
+ */
 void srcMLTranslator::translate(const char* unit_directory,
                                 const char* unit_filename,
                                 const char* unit_version,
@@ -267,7 +293,21 @@ void srcMLTranslator::translate(const char* unit_directory,
     }
 }
 
-// translate from input stream to output stream separate of current output stream
+/**
+ * translate_separate
+ * @param unit_directory unit directory attribute
+ * @param unit_filename unit directory attribute
+ * @param unit_version unit version attribute
+ * @param unit_timestamp unit timestamp attribute
+ * @param unit_hash unit hash attribute
+ * @param language the language to translate the input
+ * @param parser_input the input source
+ * @param output_buffer the output buffer
+ * @param translation_options the translation options
+ *
+ * Translate the supplied input (parser_input) with the given arguments separately
+ * from translator output and put in supplied output buffer.
+ */
 void srcMLTranslator::translate_separate(const char* unit_directory,
                                          const char* unit_filename,
                                          const char* unit_version,
