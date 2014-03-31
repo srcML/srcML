@@ -1960,7 +1960,7 @@ goto_case[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 
     }
-    CASE /*(literals | NAME)**/ (~TERMINATE)*
+    CASE (literals | ~TERMINATE)*
 
 ;
 
