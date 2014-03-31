@@ -43,22 +43,48 @@
 #include <Wincrypt.h>
 #elif defined(__MACH__)
 #include <CommonCrypto/CommonDigest.h>
+
+/** Use same SHA_CTX symbol for openssl and CommonCrypto  */
 #define SHA_CTX CC_SHA1_CTX
+
+/** Use same SHA1_Init symbol for openssl and CommonCrypto  */
 #define SHA1_Init CC_SHA1_Init
+
+/** Use same SHA1_Update symbol for openssl and CommonCrypto  */
 #define SHA1_Update CC_SHA1_Update
+
+/** Use same SHA1_Final symbol for openssl and CommonCrypto  */
 #define SHA1_Final CC_SHA1_Final
+
+/** Use same LONG symbol for openssl and CommonCrypto  */
 #define LONG CC_LONG
+
+/** Use same SHA_DIGEST_LENGTH symbol for openssl and CommonCrypto  */
 #define SHA_DIGEST_LENGTH CC_SHA1_DIGEST_LENGTH
 #else
 #include <openssl/sha.h>
+
+/** Use same LONG symbol for openssl and CommonCrypto  */
 #define LONG unsigned long
+
 #endif
 
 #include <boost/optional.hpp>
 
+/**
+ * UTF8FileError
+ *
+ * Class for thrown file error.
+ */
 class UTF8FileError {};
 
-
+/**
+ * UTF8CharBuffer
+ *
+ * Inherit form antlr CharBuffer to allow input from required
+ * input sources filename, memory, FILE *, and file descriptor.
+ * Also, calculates hash of input.
+ */
 class UTF8CharBuffer : public antlr::CharBuffer {
 public:
 
@@ -81,15 +107,28 @@ private:
     int growBuffer();
     void init(const char * encoding);
 
+    /** xml input handles encodings */
     xmlParserInputBufferPtr input;
+
+    /* position currently at
     int pos;
+
+    /** size of read in buffer */
     int size;
+
+    /** if last character was carriage return */
     bool lastcr;
+
+    /** where to place computed hash */
     boost::optional<std::string> * hash;
+
 #ifdef _MSC_BUILD
+    /** msvc hash provider object */
     HCRYPTPROV   crypt_provider;
+    /** msvc hash object */
     HCRYPTHASH   crypt_hash;
 #else
+    /** openssl/CommonCrypto hash context */
     SHA_CTX ctx;
 #endif
 
