@@ -34,11 +34,23 @@
 #include <cstring>
 
 #ifdef _MSC_BUILD
+/** correction for Visual Studio not liking POSIX style names */
 #define strdup _strdup
 #endif
 
 #ifndef __APPLE__
 
+/**
+ * strnstr
+ * @param s1 string to search
+ * @param s2 string to search for in s1
+ * @param n number of items to search
+ * 
+ * strnstr is only on BSD by default 
+ * Bounded substring search. Search for s2 in s1 only search first n characters.
+ *
+ * @returns location of first match or NULL.
+ */
 char * strnstr(const char *s1, const char *s2, size_t n) {
 
   char save_char = s1[n];
@@ -52,37 +64,64 @@ char * strnstr(const char *s1, const char *s2, size_t n) {
 
 #endif
 
-/// constructor
-srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
-                                 const char* src_encoding,    // text encoding of source code
-                                 const char* xml_encoding,    // xml encoding of result srcML file
-                                 const char* srcml_filename,  // filename of result srcML file
-                                 OPTION_TYPE& op,             // many and varied options
-                                 const char* directory,       // root unit directory
-                                 const char* filename,        // root unit filename
-                                 const char* version,         // root unit version
-                                 std::string * uri,           // uri prefixes
-                                 int tabsize                  // size of tabs
-                                 )
+/** 
+ * srcMLTranslator
+ * @param language what language to parse in
+ * @param src_encoding input source code encoding
+ * @param xml_encoding output srcML encoding
+ * @param srcml_filename name of resultant srcML file
+ * @param op translator options
+ * @param directory root unit directory attribute
+ * @param filename unit directory attribute
+ * @param version root unit directory attribute
+ * @param uri namespace/prefix pairs array
+ * @param tabsize size of tabstop
+ * 
+ * Constructor for output to a filename.
+ */
+srcMLTranslator::srcMLTranslator(int language,
+                                 const char* src_encoding,
+                                 const char* xml_encoding,
+                                 const char* srcml_filename,
+                                 OPTION_TYPE& op,
+                                 const char* directory,
+                                 const char* filename,
+                                 const char* version,
+                                 std::string * uri,
+                                 int tabsize)
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
       out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri, tabsize, 0), tabsize(tabsize), uri(uri),
       str_buffer(0), size(0) {}
 
-// constructor
-srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
-                                 const char* src_encoding,    // text encoding of source code
-                                 const char* xml_encoding,    // xml encoding of result srcML file
+/** 
+ * srcMLTranslator
+ * @param language what language to parse in
+ * @param src_encoding input source code encoding
+ * @param xml_encoding output srcML encoding
+ * @param str_buffer buffer to assign output srcML
+ * @param size integer to assign size of resulting srcML
+ * @param op translator options
+ * @param directory root unit directory attribute
+ * @param filename unit directory attribute
+ * @param version root unit directory attribute
+ * @param uri namespace/prefix pairs array
+ * @param tabsize size of tabstop
+ * 
+ * Constructor for output to memory.
+ */
+srcMLTranslator::srcMLTranslator(int language,
+                                 const char* src_encoding,
+                                 const char* xml_encoding,
                                  char ** str_buf,
                                  int * size,
-                                 OPTION_TYPE & op,             // many and varied options
-                                 const char* directory,       // root unit directory
-                                 const char* filename,        // root unit filename
-                                 const char* version,         // root unit version
-                                 std::string * uri,           // uri prefixes
-                                 int tabsize                  // size of tabs
-                                 )
+                                 OPTION_TYPE & op,
+                                 const char* directory,
+                                 const char* filename,
+                                 const char* version,
+                                 std::string * uri,
+                                 int tabsize)
     :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
        encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
        out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, 0), tabsize(tabsize),
@@ -94,18 +133,31 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 
 }
 
-// constructor
-srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
-                                 const char* src_encoding,    // text encoding of source code
-                                 const char* xml_encoding,    // xml encoding of result srcML file
+/** 
+ * srcMLTranslator
+ * @param language what language to parse in
+ * @param src_encoding input source code encoding
+ * @param xml_encoding output srcML encoding
+ * @param output_buffer general libxml2 output buffer
+ * @param op translator options
+ * @param directory root unit directory attribute
+ * @param filename unit directory attribute
+ * @param version root unit directory attribute
+ * @param uri namespace/prefix pairs array
+ * @param tabsize size of tabstop
+ * 
+ * Constructor for output to libxml2 output buffer.
+ */
+srcMLTranslator::srcMLTranslator(int language,
+                                 const char* src_encoding,
+                                 const char* xml_encoding,
                                  xmlOutputBuffer * output_buffer,
-                                 OPTION_TYPE& op,             // many and varied options
-                                 const char* directory,       // root unit directory
-                                 const char* filename,        // root unit filename
-                                 const char* version,         // root unit version
-                                 std::string * uri,           // uri prefixes
-                                 int tabsize                  // size of tabs
-                                 )
+                                 OPTION_TYPE& op,
+                                 const char* directory,
+                                 const char* filename,
+                                 const char* version,
+                                 std::string * uri,
+                                 int tabsize)
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
