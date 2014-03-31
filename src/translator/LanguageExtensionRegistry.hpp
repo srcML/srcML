@@ -27,6 +27,9 @@
 #include <string>
 #include <vector>
 
+/** Declarare type language pair as string/int pair */
+typedef std::pair<std::string, int> language_pair;
+
  /**
   * LanguageExtensionRegistryError
   *
@@ -57,16 +60,16 @@ public:
 
     unsigned int size() const;
 
-    pair last() const;
+    language_pair last() const;
 
-    pair at(unsigned int pos) const;
+    language_pair at(unsigned int pos) const;
 
     void append(LanguageExtensionRegistry registry);
 
 private:
 
     /** vector of language/extension pairs */
-    std::vector<pair> registered_languages;
+    std::vector<language_pair> registered_languages;
 
     /** bool to indicate that c extensions are to be treated as C++ false by default */
     bool use_cpp_for_c;

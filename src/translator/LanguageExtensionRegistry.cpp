@@ -86,7 +86,7 @@ bool LanguageExtensionRegistry::registerUserExt(const char* ext, int language) {
 
     if(!language) return false;
 
-    pair apair = { ext, language };
+    language_pair apair = language_pair(ext, language);
     registered_languages.push_back(apair);
 
  return true;
@@ -131,9 +131,9 @@ int LanguageExtensionRegistry::getLanguageFromFilename(const char* const path) {
 
     // custom extensions
     for (int i = (int)(registered_languages.size() - 1); i >= 0; --i) {
-        if (registered_languages[i].s== extension)
-            return registered_languages[i].n == Language::LANGUAGE_NONE ? 0 :
-                registered_languages[i].n == Language::LANGUAGE_C && use_cpp_for_c ? Language::LANGUAGE_CXX : registered_languages[i].n;
+        if (registered_languages[i].first == extension)
+            return registered_languages[i].second == Language::LANGUAGE_NONE ? 0 :
+                registered_languages[i].second == Language::LANGUAGE_C && use_cpp_for_c ? Language::LANGUAGE_CXX : registered_languages[i].second;
     }
 
     return 0;
@@ -192,7 +192,7 @@ void LanguageExtensionRegistry::c_is_cpp(bool use_cpp) {
  *
  * @returns the language/extension pair at given position.
  */
-pair LanguageExtensionRegistry::at(unsigned int pos) const {
+language_pair LanguageExtensionRegistry::at(unsigned int pos) const {
 
     if(pos >= size()) throw LanguageExtensionRegistryError();
 
@@ -220,7 +220,7 @@ unsigned int LanguageExtensionRegistry::size() const {
  * 
  * @returns the last language/extension pair at given position.
  */
-pair LanguageExtensionRegistry::last() const {
+language_pair LanguageExtensionRegistry::last() const {
 
     if(size() == 0) throw LanguageExtensionRegistryError();
 
@@ -236,7 +236,7 @@ pair LanguageExtensionRegistry::last() const {
  */
 void LanguageExtensionRegistry::append(LanguageExtensionRegistry registry) {
 
-    for(std::vector<pair>::const_iterator itr = registry.registered_languages.begin(); itr != registry.registered_languages.end(); ++itr)
+    for(std::vector<language_pair>::const_iterator itr = registry.registered_languages.begin(); itr != registry.registered_languages.end(); ++itr)
         registered_languages.push_back(*itr);
 
 }

@@ -32,8 +32,8 @@ int main() {
     {
         LanguageExtensionRegistry reg_ext;
         reg_ext.registerUserExt("cpp", "C++");
-        assert(reg_ext.at(0).n == Language::LANGUAGE_CXX);
-        assert(reg_ext.at(0).s == "cpp");
+        assert(reg_ext.at(0).second == Language::LANGUAGE_CXX);
+        assert(reg_ext.at(0).first == "cpp");
     }
 
     {
@@ -60,8 +60,8 @@ int main() {
     {
         LanguageExtensionRegistry reg_ext;
         reg_ext.registerUserExt("cpp", "C++");
-        assert(reg_ext.last().n == Language::LANGUAGE_CXX);
-        assert(reg_ext.last().s == "cpp");
+        assert(reg_ext.last().second == Language::LANGUAGE_CXX);
+        assert(reg_ext.last().first == "cpp");
     }
 
     {
@@ -94,8 +94,8 @@ int main() {
         LanguageExtensionRegistry reg_ext;
         assert(reg_ext.registerUserExt("cpp", Language::LANGUAGE_CXX));
         assert(reg_ext.size() == 1);
-        assert(reg_ext.at(0).n == Language::LANGUAGE_CXX);
-        assert(reg_ext.at(0).s == "cpp");
+        assert(reg_ext.at(0).second == Language::LANGUAGE_CXX);
+        assert(reg_ext.at(0).first == "cpp");
     }
 
     {
@@ -111,8 +111,8 @@ int main() {
         LanguageExtensionRegistry reg_ext;
         assert(reg_ext.registerUserExt("cpp", "C++"));
         assert(reg_ext.size() == 1);
-        assert(reg_ext.at(0).n == Language::LANGUAGE_CXX);
-        assert(reg_ext.at(0).s == "cpp");
+        assert(reg_ext.at(0).second == Language::LANGUAGE_CXX);
+        assert(reg_ext.at(0).first == "cpp");
     }
 
     {
@@ -209,8 +209,8 @@ int main() {
         reg_ext_one.append(reg_ext_two);
 
         assert(reg_ext_one.size() == 1);
-        assert(reg_ext_one.at(0).n == Language::LANGUAGE_CXX);
-        assert(reg_ext_one.at(0).s == "cpp");
+        assert(reg_ext_one.at(0).second == Language::LANGUAGE_CXX);
+        assert(reg_ext_one.at(0).first == "cpp");
     }
 
     {
@@ -223,20 +223,20 @@ int main() {
         reg_ext_two.registerUserExt("java", "Java");  
 
         assert(reg_ext_one.size() == 1);
-        assert(reg_ext_one.at(0).n == Language::LANGUAGE_CXX);
-        assert(reg_ext_one.at(0).s == "cpp");
+        assert(reg_ext_one.at(0).second == Language::LANGUAGE_CXX);
+        assert(reg_ext_one.at(0).first == "cpp");
 
         reg_ext_one.append(reg_ext_two);
 
         assert(reg_ext_one.size() == 4);
-        assert(reg_ext_one.at(0).n == Language::LANGUAGE_CXX);
-        assert(reg_ext_one.at(0).s == "cpp");
-        assert(reg_ext_one.at(1).n == Language::LANGUAGE_C);
-        assert(reg_ext_one.at(1).s == "h");
-        assert(reg_ext_one.at(2).n == Language::LANGUAGE_CSHARP);
-        assert(reg_ext_one.at(2).s == "cs");
-        assert(reg_ext_one.at(3).n == Language::LANGUAGE_JAVA);
-        assert(reg_ext_one.at(3).s == "java");
+        assert(reg_ext_one.at(0).second == Language::LANGUAGE_CXX);
+        assert(reg_ext_one.at(0).first == "cpp");
+        assert(reg_ext_one.at(1).second == Language::LANGUAGE_C);
+        assert(reg_ext_one.at(1).first == "h");
+        assert(reg_ext_one.at(2).second == Language::LANGUAGE_CSHARP);
+        assert(reg_ext_one.at(2).first == "cs");
+        assert(reg_ext_one.at(3).second == Language::LANGUAGE_JAVA);
+        assert(reg_ext_one.at(3).first == "java");
     }
 
     return 0;
