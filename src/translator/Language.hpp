@@ -103,9 +103,6 @@ public:
         /** Interger Constant for languages in C++ family i.e. C++/C#  */
         LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP,
 
-        /** Interger Constant for No language */
-        LANGUAGE_CXX_ONLY = LANGUAGE_CXX,
-
         /** Interger Constant for languages in C family i.e. C/C++/C# */
         LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY,
 

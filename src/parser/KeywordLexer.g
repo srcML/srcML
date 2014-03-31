@@ -368,7 +368,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "pragma"       , PRAGMA        , LANGUAGE_C_FAMILY }, 
         { "undef"        , UNDEF         , LANGUAGE_C_FAMILY }, 
 
-        { "union"        , UNION         , LANGUAGE_CXX_ONLY | LANGUAGE_C }, 
+        { "union"        , UNION         , LANGUAGE_CXX | LANGUAGE_C }, 
         { "struct"       , STRUCT        , LANGUAGE_C_FAMILY }, 
         { "void"         , VOID          , LANGUAGE_ALL }, 
 
@@ -398,14 +398,14 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "new"          , NEW           , LANGUAGE_OO }, 
 
         // Qt
-        { "signals"      , SIGNAL        , LANGUAGE_CXX_ONLY }, 
-        { "foreach"      , FOREACH       , LANGUAGE_CXX_ONLY }, 
-        { "forever"      , FOREVER       , LANGUAGE_CXX_ONLY }, 
+        { "signals"      , SIGNAL        , LANGUAGE_CXX }, 
+        { "foreach"      , FOREACH       , LANGUAGE_CXX }, 
+        { "forever"      , FOREVER       , LANGUAGE_CXX }, 
 
         // add all C++ specific keywords to the literals table
         // class
         { "virtual"      , VIRTUAL       , LANGUAGE_CXX_FAMILY }, 
-        { "friend"       , FRIEND        , LANGUAGE_CXX_ONLY }, 
+        { "friend"       , FRIEND        , LANGUAGE_CXX }, 
         { "operator"     , OPERATOR      , LANGUAGE_CXX_FAMILY }, 
         { "explicit"     , EXPLICIT      , LANGUAGE_CXX_FAMILY }, 
         
@@ -416,7 +416,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         // templates
         { "template"     , TEMPLATE      , LANGUAGE_CXX_FAMILY }, 
         
-        { "delete"       , DELETE        , LANGUAGE_CXX_ONLY }, 
+        { "delete"       , DELETE        , LANGUAGE_CXX }, 
         
         // special C++ operators
         { "::"           , DCOLON        , LANGUAGE_CXX_FAMILY }, 
@@ -427,31 +427,31 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "true"         , TRUE          , LANGUAGE_OO }, 
 
         // C++ specifiers
-        { "final"         , FINAL          , LANGUAGE_CXX_ONLY },
-        { "override"      , OVERRIDE       , LANGUAGE_CXX_ONLY },
+        { "final"         , FINAL          , LANGUAGE_CXX },
+        { "override"      , OVERRIDE       , LANGUAGE_CXX },
  
         // add all C++ specific keywords to the literals table
-        { "constexpr"     , CONSTEXPR        , LANGUAGE_CXX_ONLY }, 
-        { "noexcept"      , NOEXCEPT         , LANGUAGE_CXX_ONLY }, 
-        { "thread_local"  , THREADLOCAL      , LANGUAGE_CXX_ONLY }, 
-        { "nullptr"       , NULLPTR          , LANGUAGE_CXX_ONLY }, 
-        { "decltype"      , DECLTYPE         , LANGUAGE_CXX_ONLY }, 
-        { "alignas"       , ALIGNAS          , LANGUAGE_CXX_ONLY }, 
-        { "typename"      , TYPENAME         , LANGUAGE_CXX_ONLY }, 
-        { "alignof"       , ALIGNOF          , LANGUAGE_CXX_ONLY }, 
+        { "constexpr"     , CONSTEXPR        , LANGUAGE_CXX }, 
+        { "noexcept"      , NOEXCEPT         , LANGUAGE_CXX }, 
+        { "thread_local"  , THREADLOCAL      , LANGUAGE_CXX }, 
+        { "nullptr"       , NULLPTR          , LANGUAGE_CXX }, 
+        { "decltype"      , DECLTYPE         , LANGUAGE_CXX }, 
+        { "alignas"       , ALIGNAS          , LANGUAGE_CXX }, 
+        { "typename"      , TYPENAME         , LANGUAGE_CXX }, 
+        { "alignof"       , ALIGNOF          , LANGUAGE_CXX }, 
 
         // Add alternative operators
-        { "and"           , OPERATORS        , LANGUAGE_CXX_ONLY }, 
-        { "and_eq"        , OPERATORS        , LANGUAGE_CXX_ONLY }, 
-        { "bitand"        , OPERATORS        , LANGUAGE_CXX_ONLY }, 
-        { "bitor"         , OPERATORS        , LANGUAGE_CXX_ONLY }, 
-        { "compl"         , OPERATORS        , LANGUAGE_CXX_ONLY }, 
-        { "not"           , OPERATORS        , LANGUAGE_CXX_ONLY }, 
-        { "not_eq"        , OPERATORS        , LANGUAGE_CXX_ONLY }, 
-        { "or"            , OPERATORS        , LANGUAGE_CXX_ONLY }, 
-        { "or_eq"         , OPERATORS        , LANGUAGE_CXX_ONLY }, 
-        { "xor"           , OPERATORS        , LANGUAGE_CXX_ONLY }, 
-        { "xor_eq"        , OPERATORS        , LANGUAGE_CXX_ONLY }, 
+        { "and"           , OPERATORS        , LANGUAGE_CXX }, 
+        { "and_eq"        , OPERATORS        , LANGUAGE_CXX }, 
+        { "bitand"        , OPERATORS        , LANGUAGE_CXX }, 
+        { "bitor"         , OPERATORS        , LANGUAGE_CXX }, 
+        { "compl"         , OPERATORS        , LANGUAGE_CXX }, 
+        { "not"           , OPERATORS        , LANGUAGE_CXX }, 
+        { "not_eq"        , OPERATORS        , LANGUAGE_CXX }, 
+        { "or"            , OPERATORS        , LANGUAGE_CXX }, 
+        { "or_eq"         , OPERATORS        , LANGUAGE_CXX }, 
+        { "xor"           , OPERATORS        , LANGUAGE_CXX }, 
+        { "xor_eq"        , OPERATORS        , LANGUAGE_CXX }, 
 
         // add all Java specific keywords to the literals table
         // exception handling
