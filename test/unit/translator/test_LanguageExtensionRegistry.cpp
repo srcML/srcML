@@ -56,7 +56,7 @@ int main() {
         LanguageExtensionRegistry reg_ext;
         reg_ext.registerUserExt("cpp", "C++");
         int lang = reg_ext.getLanguageFromFilename("a.cpp.gz");
-        // std::cout << reg_ext.LANGUAGE_CXX << '\n';
+
         std::cout << "reg_ext." << lang << '\n';
         assert(reg_ext.getLanguageFromFilename("a.cpp.gz") == Language::LANGUAGE_CXX);
     }

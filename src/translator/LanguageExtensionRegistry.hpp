@@ -27,10 +27,17 @@
 #include <string>
 #include <vector>
 
+ /**
+  * LanguageExtensionRegistryError
+  *
+  * Error class thrown for improper access of LanguageExtensionRegistry.
+  */
+class LanguageExtensionRegistryError {};
+
 /**
  * LanguageExtensionRegistry
  *
- * Data class for language extensions
+ * Data class for language extensions.
  */
 class LanguageExtensionRegistry {
 
@@ -71,6 +78,7 @@ public:
 
 private:
 
+    /** vector of language/extension pairs */
     std::vector<pair> registered_languages;
 
     /** bool to indicate that c extensions are to be treated as C++ false by default */

@@ -1,7 +1,7 @@
 /**
- * @file Language.cpp
+ * @file LanguageExtensionRegistry.cpp
  *
- * @copyright Copyright (C) 2008-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
@@ -165,10 +165,13 @@ void LanguageExtensionRegistry::register_standard_file_extensions()
 void LanguageExtensionRegistry::c_is_cpp(bool use_cpp) {
 
     use_cpp_for_c = use_cpp;
+
 }
 
 
 pair LanguageExtensionRegistry::at(unsigned int pos) {
+
+    if(pos >= size()) throw LanguageExtensionRegistryError();
 
     return registered_languages.at(pos);
 
@@ -181,6 +184,8 @@ unsigned int LanguageExtensionRegistry::size() {
 }
 
 pair LanguageExtensionRegistry::last() {
+
+    if(size() == 0) throw LanguageExtensionRegistryError();
 
     return registered_languages.back();
 
