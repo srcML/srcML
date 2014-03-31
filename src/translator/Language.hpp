@@ -29,62 +29,140 @@
 #include <string>
 #include <vector>
 
+/**
+ * Namespace for language names
+ */
 namespace LanguageName {
 
+    /** No language is empty string */
     const char* const LANGUAGE_NONE = "";
+
+    /** String constant for C language */
     const char* const LANGUAGE_C = "C";
-    const char* const LANGUAGE_CS = "C#";
-    const char* const LANGUAGE_CXX = "C++";
-    const char* const LANGUAGE_CXX_11 = "C++11";
-    const char* const LANGUAGE_JAVA = "Java";
-    const char* const LANGUAGE_ASPECTJ = "AspectJ";
+
+    /** String constant for C# language */
     const char* const LANGUAGE_CSHARP = "C#";
+
+    /** String constant for C++ language */
+    const char* const LANGUAGE_CXX = "C++";
+
+    /** String constant for Java language */
+    const char* const LANGUAGE_JAVA = "Java";
+
+    /** String constant for AspectJ language */
+    const char* const LANGUAGE_ASPECTJ = "AspectJ";
+
 
 }
 
+/**
+ * pair
+ *
+ * Holds a Language string/numeral pair
+ */
 struct pair {
+
+    /** string representation of language */
     std::string s;
+
+    /** numeric representation of language */
     int n;
+
 };
 
+/**
+* Language
+*
+* Class representing a source code language.  Also, provides static members
+* for determining a language from an extension.
+*/
 class Language {
 
 public:
 
+    /**
+     * Languages
+     *
+     * Enum constants for each handled language.
+     * Each language is a bit.
+     */
     enum Languages {
+
+        /** Interger Constant for No language */
         LANGUAGE_NONE = 0,
+
+        /** Interger Constant for C language */
         LANGUAGE_C = 1,
+
+        /** Interger Constant for C++ language */
         LANGUAGE_CXX = 2,
-        LANGUAGE_CXX_11 = 4,
-        LANGUAGE_JAVA = 8,
-        LANGUAGE_ASPECTJ = 16,
-        LANGUAGE_CSHARP = 32,
-        LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CXX_11 | LANGUAGE_CSHARP,
-        LANGUAGE_CXX_ONLY = LANGUAGE_CXX | LANGUAGE_CXX_11,
+
+        /** Interger Constant for Java language */
+        LANGUAGE_JAVA = 4,
+
+        /** Interger Constant for AspectJ language */
+        LANGUAGE_ASPECTJ = 8,
+
+        /** Interger Constant for C# language */
+        LANGUAGE_CSHARP = 16,
+
+        /** Interger Constant for languages in C++ family i.e. C++/C#  */
+        LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP,
+
+        /** Interger Constant for languages in C family i.e. C/C++/C# */
         LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY,
+
+        /** Interger Constant for languages in Java family i.e. Java/AspectJ */
         LANGUAGE_JAVA_FAMILY = LANGUAGE_JAVA | LANGUAGE_ASPECTJ,
+
+        /** Interger Constant for Object-Oriented languages i.e. C++/C#/Java */
         LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY,
+
+        /** Interger Constant for all languages */
         LANGUAGE_ALL = ~0
     };
 
+    /**
+     * Language
+     * @param lang numeric represenation to for language object
+     *
+     * Constructor taking int to set language.
+     */
     Language(int lang)
         : language(lang) {
 
     }
 
-    static bool filledLang();
-
-    // gets the current language
+    /**
+     * inLanguage
+     *
+     * Predicate method to test if in a current language
+     *
+     * @returns if in the current language.
+     */
     inline bool inLanguage(int l) const {
         return (l & language) > 0;
     }
 
-    // gets the current language
+    /**
+     * getLanguage
+     *
+     * Accessor method that gets the current language.
+     *
+     * @returns the numberic representation of the language.
+     */
     inline int getLanguage() const {
         return language;
     }
 
-    // gets the current language
+    /**
+     * getLanguage
+     *
+     * Static method to translate a string representation of a language
+     * into numeric version
+     *
+     * @returns the numberic representation of the language.
+     */
     static int getLanguage(const char* const s) {
 
         for(int i = 0; i < lang2intcount; ++i)
@@ -94,7 +172,13 @@ public:
         return 0;
     }
 
-    // gets the current language
+    /**
+     * getLanguageString
+     *
+     * Get the current language as a string.
+     *
+     * @returns the current language as a string.
+     */
     const char* getLanguageString() const {
 
         for(int i = 0; i < lang2intcount; ++i)
@@ -104,32 +188,31 @@ public:
         return "";
     }
 
-    static bool registerUserExt(const char* ext, int language);
-    static bool registerUserExt(const char* ext, const char* language);
     static bool registerUserExt(const char* ext, int language, std::vector<pair> & registered_languages);
     static bool registerUserExt(const char* ext, const char* language, std::vector<pair> & registered_languages);
 
     // gets the current language based on the extenstion
-    static int getLanguageFromFilename(const char* const path);
     static int getLanguageFromFilename(const char* const path, std::vector<pair> & registered_languages);
 
     // register the standard language file extensions
-    static void register_standard_file_extensions();
     static void register_standard_file_extensions(std::vector<pair> & registered_languages);
 
     static void c_is_cpp(bool use_cpp);
 
+    /**
+     * ~Language
+     *
+     * Destructor.
+     */
     ~Language() {}
 
 private:
 
+    /** the current langauge */
     const int language;
 
     static int lang2intcount;
     static pair lang2int[];
-
-    static pair userext2int[];
-
     static bool use_cpp_for_c;
 };
 

@@ -27,14 +27,28 @@
 #ifndef SRCMLTRANSLATORCORE_HPP
 #define SRCMLTRANSLATORCORE_HPP
 
-#include "Language.hpp"
-#include "srcMLOutput.hpp"
+#include <Language.hpp>
+#include <srcMLOutput.hpp>
 
 #include <string>
 
+/**
+ * FileError
+ *
+ * Type thrown when a file error occurs
+ */
 class FileError {};
+
+/** Forward declaration of input buffer type */
 class UTF8CharBuffer;
 
+/**
+* srcMLTranslator
+*
+* Class for translation of individual files
+* and projects into srcML.  Inherits from Language
+* to set what language to use for parsing.
+*/
 class srcMLTranslator : public Language {
 public:
 
@@ -105,21 +119,49 @@ public:
 
 private:
 
+    /** input source */
     UTF8CharBuffer* pinput;
+
+    /** is this the first unit */
     bool first;
+
+    /** the root unit directory attribute */
     const char* root_directory;
+
+    /** the root unit filename attribute */
     const char* root_filename;
+
+    /** the root unit version attribute */
     const char* root_version;
+
+    /** the input encoding */
     const char* encoding;
+
+    /** the output encoding */
     const char* xml_encoding;
+
+    /** translation options */
     OPTION_TYPE& options;
+
+    /** buffer to hold output to memory */
     xmlBuffer * buffer;
+
+    /** member for handling output */
     srcMLOutput out;
+
+    /** size of tabstop */
     int tabsize;
+
+    /** list of namespace/prefixes */
     std::string * uri;
+
+    /** list of user defined macros */
     std::vector<std::string> user_macro_list;
 
+    /** location to store output when output is to memory */
     char ** str_buffer;
+    
+    /** location to store size of output when output is to memory */
     int * size;
 
 };

@@ -642,7 +642,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { ((inTransparentMode(MODE_CONDITION) ||
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
         && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
-        && (!inLanguage(LANGUAGE_CXX_ONLY) || !inTransparentMode(MODE_INIT | MODE_EXPECT))) || inTransparentMode(MODE_ANONYMOUS) }? lcurly |
+        && (!inLanguage(LANGUAGE_CXX) || !inTransparentMode(MODE_INIT | MODE_EXPECT))) || inTransparentMode(MODE_ANONYMOUS) }? lcurly |
 
         { inMode(MODE_ARGUMENT_LIST) }? call_argument_list |
 
@@ -661,7 +661,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
 
-        { inLanguage(LANGUAGE_CXX_ONLY) && inMode(MODE_USING) }? using_aliasing |
+        { inLanguage(LANGUAGE_CXX) && inMode(MODE_USING) }? using_aliasing |
 
         // statements identified by pattern (i.e., do not start with a keyword)
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL)}? pattern_statements |
@@ -967,7 +967,7 @@ function_tail[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             function_specifier |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            { inLanguage(LANGUAGE_CXX) }?
             ref_qualifier |
 
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
@@ -976,13 +976,13 @@ function_tail[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_OO) }?
             complete_throw_list |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            { inLanguage(LANGUAGE_CXX) }?
             complete_noexcept_list |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}?
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}?
             attribute_cpp |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            { inLanguage(LANGUAGE_CXX) }?
             trailing_return |
 
             { inLanguage(LANGUAGE_JAVA) }?
@@ -1050,7 +1050,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
         { 
 
             decTypeCount();
-            if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY))
+            if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
                 return;
         }
         (options { greedy = true; } : {getTypeCount() > 0}? type_identifier { decTypeCount(); })*
@@ -2063,7 +2063,7 @@ class_declaration[] { ENTRY_DEBUG } :
         }
         ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
         ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
-        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
         (specifier)* CLASS class_post class_header
 ;
@@ -2092,7 +2092,7 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
 class_preamble[] { ENTRY_DEBUG } :
         // suppress warning probably do to only having ()*
         (options { greedy = true; } : { inLanguage(LANGUAGE_JAVA) }? annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
-        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
         (specifier)*
 ;
 
@@ -2103,14 +2103,14 @@ class_definition[] { ENTRY_DEBUG } :
         class_preamble CLASS class_post (class_header lcurly | lcurly)
         {
 
-            if (inLanguage(LANGUAGE_CXX_ONLY))
+            if (inLanguage(LANGUAGE_CXX))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
         }
 ;
 
 // handle stuff after CLASS token
 class_post[] { ENTRY_DEBUG } :
-        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
         (options { greedy = true; } : specifier)*
 ;
 
@@ -2191,7 +2191,7 @@ struct_union_definition[int element_token] { ENTRY_DEBUG } :
 
         class_preamble (STRUCT | UNION) class_post (class_header lcurly | lcurly)
         {
-           if (inLanguage(LANGUAGE_CXX_ONLY))
+           if (inLanguage(LANGUAGE_CXX))
                class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
         }
 ;
@@ -2211,7 +2211,7 @@ union_declaration[] { ENTRY_DEBUG } :
 // default private/public section for C++
 class_default_access_action[int access_token] { ENTRY_DEBUG } :
         {
-            if (inLanguage(LANGUAGE_CXX_ONLY) && (SkipBufferSize() > 0 ||
+            if (inLanguage(LANGUAGE_CXX) && (SkipBufferSize() > 0 ||
                 !(LA(1) == PUBLIC || LA(1) == PRIVATE || LA(1) == PROTECTED || LA(1) == SIGNAL))) {
 
                 // setup block section
@@ -2635,15 +2635,15 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         throw_list |
 
         // throw list at end of function header
-        { (inLanguage(LANGUAGE_CXX_ONLY))&& inTransparentMode(MODE_FUNCTION_TAIL) }?
+        { (inLanguage(LANGUAGE_CXX))&& inTransparentMode(MODE_FUNCTION_TAIL) }?
         noexcept_list |
 
         // throw list at end of function header
-        { (inLanguage(LANGUAGE_CXX_ONLY))&& inTransparentMode(MODE_FUNCTION_TAIL) && next_token() == LBRACKET }?
+        { (inLanguage(LANGUAGE_CXX))&& inTransparentMode(MODE_FUNCTION_TAIL) && next_token() == LBRACKET }?
         attribute_cpp |
 
         // K&R function parameters
-        { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && inMode(MODE_FUNCTION_TAIL) &&
+        { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && inMode(MODE_FUNCTION_TAIL) &&
           pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
         kr_parameter[type_count] |
 
@@ -2652,7 +2652,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         function_specifier |
 
         // function specifier at end of function header
-        { inLanguage(LANGUAGE_CXX_ONLY) && inMode(MODE_FUNCTION_TAIL) }?
+        { inLanguage(LANGUAGE_CXX) && inMode(MODE_FUNCTION_TAIL) }?
         trailing_return |
 
         // start of argument for return or throw statement
@@ -2675,15 +2675,15 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         expression_part_plus_linq |
 
         // call list in member initialization list
-        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
+        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
         call |
 
         // call list in member initialization list
-        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
+        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
         sizeof_call |
 
         // call list in member initialization list
-        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
+        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
         alignof_call |
 
         /*
@@ -2978,7 +2978,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     rewind(start);
 
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
-       && _tokenSet_26.member(LA(1)) && (!inLanguage(LANGUAGE_CXX_ONLY) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
+       && _tokenSet_26.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && save_la == TERMINATE)
         type = VARIABLE;
 
@@ -3051,7 +3051,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
-                { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
+                { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
                 (specifier | { next_token() == COLON }? SIGNAL)
@@ -3077,7 +3077,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 RBRACKET
                 set_int[attribute_count, attribute_count + 1] |
 
-                { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}?
+                { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}?
                 LBRACKET LBRACKET
 
                         //complete_expression
@@ -3098,7 +3098,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  INTERFACE           set_type[type, INTERFACE_DECL] |
                  ATSIGN INTERFACE set_type[type, INTERFACE_DECL])
                 set_bool[lcurly, LA(1) == LCURLY]
-                (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+                (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
                 class_post
                 (class_header | LCURLY)
@@ -3223,7 +3223,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         // we have a declaration, so do we have a function?
         (
             // check for function pointer, which must have a non-specifier part of the type
-            { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && real_type_count > 0 }?
+            { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && real_type_count > 0 }?
             (function_pointer_name_grammar eat_optional_macro_call LPAREN)=>
             function_pointer_name_grammar
 
@@ -3289,7 +3289,7 @@ marker[] { CompleteElement element(this); startNewMode(MODE_LOCAL); startElement
 update_typecount[State::MODE_TYPE mode] {} :
         {
             decTypeCount();
-            if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY))
+            if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
                 return;
 
             if (getTypeCount() <= 0) {
@@ -3358,7 +3358,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
-        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp |
+        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
         pure_lead_type_identifier_no_specifiers
 ;
@@ -3400,7 +3400,7 @@ lead_type_identifier[] { ENTRY_DEBUG } :
 //        (macro_call_paren identifier)=> macro_call |
 
         // typical type name
-        { LA(1) != ASYNC && (inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE)) }?
+        { LA(1) != ASYNC && (inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE)) }?
         compound_name |
 
         pure_lead_type_identifier
@@ -3877,7 +3877,7 @@ typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
 
 function_pointer_name_check[] returns[bool is_fp_name = false] {
 
-    if(LA(1) == LPAREN && (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY))) {
+    if(LA(1) == LPAREN && (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))) {
 
         ++inputState->guessing;
         int start = mark();
@@ -3886,7 +3886,7 @@ function_pointer_name_check[] returns[bool is_fp_name = false] {
 
             function_pointer_name_grammar();
             is_fp_name = LA(1) == PERIOD || LA(1) == TRETURN
-                || (inLanguage(LANGUAGE_CXX_ONLY) && (LA(1) == MPDEREF || LA(1) == DOTDEREF));
+                || (inLanguage(LANGUAGE_CXX) && (LA(1) == MPDEREF || LA(1) == DOTDEREF));
 
         } catch(...) {}
        
@@ -3919,8 +3919,8 @@ function_pointer_name[] { CompleteElement element(this); ENTRY_DEBUG }:
 // Markup names
 compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
         compound_name_inner[true]
-        (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX_ONLY) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound] |
-        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound] |
+        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
 ;
 
@@ -3962,9 +3962,9 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         macro_type_name_call 
         )
 
-        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
-        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) && (!inLanguage(LANGUAGE_CXX_ONLY) || next_token() != LBRACKET)}?
+        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) && (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}?
             variable_identifier_array_grammar_sub[iscompound]
         )*
 
@@ -4161,7 +4161,7 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp |
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
             specifier |
 
@@ -4226,7 +4226,7 @@ destructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp |
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
             specifier |
 
@@ -5350,7 +5350,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         { inLanguage(LANGUAGE_CSHARP) }?
         (lambda_expression_full_csharp) => lambda_expression_csharp |
 
-        { inLanguage(LANGUAGE_CXX_ONLY) }?
+        { inLanguage(LANGUAGE_CXX) }?
         (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_cpp |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
@@ -5949,7 +5949,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(STEMPLATE_ARGUMENT);
 
-            if(inLanguage(LANGUAGE_CXX_ONLY))
+            if(inLanguage(LANGUAGE_CXX))
                startElement(SEXPRESSION);
         }
         (options { greedy = true; } :
@@ -6148,7 +6148,7 @@ enum_definition[] { ENTRY_DEBUG } :
 // header for enum class
 enum_class_header[] {} :
         (CLASS | STRUCT)* 
-        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        ({ inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
         variable_identifier (COLON enum_type)*
 
     ;
