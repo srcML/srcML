@@ -110,7 +110,7 @@ private:
     /** xml input handles encodings */
     xmlParserInputBufferPtr input;
 
-    /* position currently at
+    /* position currently at */
     int pos;
 
     /** size of read in buffer */
