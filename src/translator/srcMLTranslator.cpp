@@ -34,8 +34,10 @@
 #include <cstring>
 
 #ifdef _MSC_BUILD
+
 /** correction for Visual Studio not liking POSIX style names */
 #define strdup _strdup
+
 #endif
 
 #ifndef __APPLE__
