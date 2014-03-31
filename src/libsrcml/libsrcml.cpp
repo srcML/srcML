@@ -28,6 +28,7 @@
 
 #include <srcMLTranslator.hpp>
 #include <Language.hpp>
+#include <LanguageExtensionRegistry.hpp>
 #include <Options.hpp>
 #include <srcmlns.hpp>
 
@@ -58,7 +59,7 @@ std::string srcml_error;
  */
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL,
-                                 8, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
+                                 8, std::vector<std::string>(), std::vector<std::string>(), LanguageExtensionRegistry(),
                                  std::vector<std::string>(), 0, 0, 0, std::vector<transform>() };
 
 /**
@@ -147,22 +148,24 @@ int srcml(const char* input_filename, const char* output_filename) {
 
         first = false;
         std::vector<pair> save_ext;
+        /** @todo fixme
         for(std::vector<pair>::size_type i = 0; i < global_archive.registered_languages.size(); ++i)
             try {
                 save_ext.push_back(global_archive.registered_languages.at(i));
             } catch(...) {
                 return SRCML_STATUS_ERROR;
             }
+        */
+        global_archive.registered_languages.register_standard_file_extensions();
 
-        Language::register_standard_file_extensions(global_archive.registered_languages);
-
+        /** @todo fixme
         for(std::vector<pair>::size_type i = 0; i < save_ext.size(); ++i)
             try {
                 global_archive.registered_languages.push_back(save_ext.at(i));
             } catch(...) {
                 return SRCML_STATUS_ERROR;
             }
-
+        */
         std::vector<std::string> save_prefix;
         std::vector<std::string> save_ns;
         try {
@@ -194,7 +197,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     }
 
-    int lang = global_archive.language ? srcml_check_language(global_archive.language->c_str()) : Language::getLanguageFromFilename(input_filename, global_archive.registered_languages);
+    int lang = global_archive.language ? srcml_check_language(global_archive.language->c_str()) : global_archive.registered_languages.getLanguageFromFilename(input_filename);
 
     if(lang) {
 

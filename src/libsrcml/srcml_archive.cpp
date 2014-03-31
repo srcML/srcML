@@ -38,7 +38,7 @@ const char * srcml_archive_check_extension(srcml_archive * archive, const char* 
 
     if(archive == NULL || filename == NULL) return 0;
 
-    Language language(Language::getLanguageFromFilename(filename, archive->registered_languages));
+    Language language(archive->registered_languages.getLanguageFromFilename(filename));
     const char * lang_string = language.getLanguageString();
     return strcmp(lang_string, "") == 0 ? 0 : lang_string;
 
@@ -85,7 +85,7 @@ srcml_archive* srcml_create_archive()
     srcml_archive_register_namespace(archive, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_URI);
     srcml_archive_register_namespace(archive, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI);
 
-    Language::register_standard_file_extensions(archive->registered_languages);
+    archive->registered_languages.register_standard_file_extensions();
 
     return archive;
 
@@ -151,12 +151,7 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
     }
 
-    try {
-        new_archive->registered_languages.clear();
-        for(std::vector<pair>::size_type i = 0; i < archive->registered_languages.size(); ++i)
-            new_archive->registered_languages.push_back(archive->registered_languages.at(i));
-
-    } catch(...) {}
+    new_archive->registered_languages = archive->registered_languages;
 
     try {
 
@@ -379,7 +374,7 @@ int srcml_archive_register_file_extension(srcml_archive* archive, const char* ex
     if(archive == NULL || extension == NULL || language == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(Language::registerUserExt(extension, language, archive->registered_languages))
+    if(archive->registered_languages.registerUserExt(extension, language))
         return SRCML_STATUS_OK;
     return SRCML_STATUS_INVALID_INPUT;
 }

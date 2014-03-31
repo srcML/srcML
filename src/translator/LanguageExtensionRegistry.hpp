@@ -21,11 +21,9 @@
  */
 
 #ifndef LANGUAGE_EXTENSION_REGISTRY_HPP
-#define LANGUAGE_EXTENSIONS_REGISTRY_HPP
+#define LANGUAGE_EXTENSION_REGISTRY_HPP
 
-//#include <fnmatch.h>
-#include <cstdio>
-#include <cstring>
+#include <Language.hpp>
 #include <string>
 #include <vector>
 
@@ -43,16 +41,18 @@ public:
      *
      * Constructor.
      */
-    LanguageExtensionRegistery() {}
+    LanguageExtensionRegistry() : use_cpp_for_c(false) {}
 
-    static bool registerUserExt(const char* ext, int language, std::vector<pair> & registered_languages);
-    static bool registerUserExt(const char* ext, const char* language, std::vector<pair> & registered_languages);
+    bool registerUserExt(const char* ext, int language);
+    bool registerUserExt(const char* ext, const char* language);
 
-    // gets the current language based on the extenstion
-    static int getLanguageFromFilename(const char* const path, std::vector<pair> & registered_languages);
+    int getLanguageFromFilename(const char* const path);
 
-    // register the standard language file extensions
-    static void register_standard_file_extensions(std::vector<pair> & registered_languages);
+    bool getLanguageExtension(const char * const inpath, std::string & extension);
+
+    void register_standard_file_extensions();
+
+    void c_is_cpp(bool use_cpp);
 
     /**
      * ~LanguageExtensionRegistery
@@ -63,12 +63,11 @@ public:
 
 private:
 
-    /** the current langauge */
-    const int language;
+    std::vector<pair> registered_languages;
 
-    static int lang2intcount;
-    static pair lang2int[];
-    static bool use_cpp_for_c;
+    /** bool to indicate that c extensions are to be treated as C++ false by default */
+    bool use_cpp_for_c;
+
 };
 
 #endif
