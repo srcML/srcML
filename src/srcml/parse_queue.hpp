@@ -32,35 +32,25 @@
 #include <boost/thread.hpp>
 #pragma GCC diagnostic pop
 #include <string>
+#include <boost/asio/io_service.hpp>
+#include <boost/function.hpp>
 
 class ParseQueue {
 public:
-    static const int CAPACITY = 40;
 
-    ParseQueue(int max_threads, boost::function<void()>);
+    ParseQueue(int max_threads, boost::function<void(ParseRequest)>);
 
     /* puts an element in the back of the queue by swapping with parameter */
     void push(ParseRequest& value);
 
-    /* removes the front element from the queue by swapping with parameter */
-    void pop(ParseRequest& value);
-
     void join();
 
 private:
-    boost::thread_group writers;
-    size_t max_threads;
-    boost::function<void()> consume;
+    boost::function<void(ParseRequest)> consume;
+    boost::asio::io_service ioService;
+    boost::thread_group threadpool;
+    boost::asio::io_service::work* pwork;
     int counter;
-    ParseRequest buffer[CAPACITY];
-    int qsize;
-    int back;
-    int front;
-    ParseRequest empty_request;
-    bool empty;
-    boost::mutex mutex;
-    boost::condition_variable cond_full;
-    boost::condition_variable cond_empty;
 };
 
 #endif

@@ -26,10 +26,10 @@
 
 #ifndef SRCML_CONSUME_HPP
 #define SRCML_CONSUME_HPP
-
-class ParseQueue;
+#include <parse_request.hpp>
+  
 class WriteQueue;
 
-void srcml_consume(ParseQueue*, WriteQueue*);
+void srcml_consume(const ParseRequest&, WriteQueue*);
 
 #endif

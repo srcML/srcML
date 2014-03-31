@@ -22,54 +22,29 @@
 
 #include <parse_queue.hpp>
 
-ParseQueue::ParseQueue(int max_threads, boost::function<void()> consumearg)
-    : max_threads(max_threads), consume(consumearg), counter(0), qsize(0), back(0), front(0), empty(false) {}
+ParseQueue::ParseQueue(int max_threads, boost::function<void(ParseRequest)> consumearg)
+    : consume(consumearg), counter(0) {
+
+    pwork = new boost::asio::io_service::work(ioService);
+
+    for (int i = 0; i < max_threads; ++i)
+        threadpool.create_thread( boost::bind(&boost::asio::io_service::run, &ioService));
+}
+
+//ParseQueue::ParseQueue(int max_threads, boost::function<void()> consumearg)
+//    : max_threads(max_threads), consume(consumearg), counter(0), qsize(0), back(0), front(0), empty(false) {}
 
 /* puts an element in the back of the queue by swapping with parameter */
 void ParseQueue::push(ParseRequest& value) {
 
-    // create threads as requests are pushed
-    if (writers.size() < max_threads)
-        writers.create_thread( consume );
+    value.position = ++counter;
 
-    {
-        boost::unique_lock<boost::mutex> lock(mutex);
-        while (qsize == CAPACITY)
-            cond_full.wait(lock);
-
-        buffer[back].swap(value);
-        buffer[back].position = ++counter;
-        ++back %= CAPACITY;
-        ++qsize;
-    }
-    cond_empty.notify_one();
-}
-
-/* removes the front element from the queue by swapping with parameter */
-void ParseQueue::pop(ParseRequest& value) {
-    {
-        boost::unique_lock<boost::mutex> lock(mutex);
-        while (qsize == 0 && !empty)
-            cond_empty.wait(lock);
-
-        if (qsize == 0 && empty)
-            value.swap(empty_request);
-
-        else {
-            value.swap(buffer[front]);
-            ++front %= CAPACITY;
-            --qsize;
-        }
-    }
-    cond_full.notify_one();
+    ioService.post( boost::bind(consume, value));
 }
 
 void ParseQueue::join() {
-    {
-        boost::unique_lock<boost::mutex> lock(mutex);
-        empty = true;
-    }
-    cond_empty.notify_all();
 
-    writers.join_all();
+    delete pwork;
+
+    threadpool.join_all();
 }
