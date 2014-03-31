@@ -43,12 +43,8 @@ class LanguageExtensionRegistry {
 
 public:
 
-     /**
-     * LanguageExtensionRegistry
-     *
-     * Constructor.
-     */
-    LanguageExtensionRegistry() : use_cpp_for_c(false) {}
+    LanguageExtensionRegistry();
+    ~LanguageExtensionRegistry();
 
     bool registerUserExt(const char* ext, int language);
     bool registerUserExt(const char* ext, const char* language);
@@ -66,13 +62,6 @@ public:
     pair at(unsigned int pos) const;
 
     void append(LanguageExtensionRegistry registry);
-
-    /**
-     * ~LanguageExtensionRegistery
-     *
-     * Destructor.
-     */
-    ~LanguageExtensionRegistry() {}
 
 private:
 

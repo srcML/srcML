@@ -28,6 +28,20 @@
 static const boost::regex extRegEx("(zx\\.|zg\\.|2zb\\.)*([^\\.]*)");
 
 /**
+* LanguageExtensionRegistry
+*
+* Constructor.
+*/
+LanguageExtensionRegistry::LanguageExtensionRegistry() : use_cpp_for_c(false) {}
+
+/**
+* ~LanguageExtensionRegistery
+*
+* Destructor.
+*/
+LanguageExtensionRegistry::~LanguageExtensionRegistry() {}
+
+/**
  * getLanguageExtension
  * @param inpath a complete filename with path
  * @param extension the found extension returned passed by reference
