@@ -30,7 +30,10 @@
 /** Declarare type language pair as string/int pair */
 typedef std::pair<std::string, int> language_pair;
 
+/** access the language string from language_pair */
 #define get_language_string(OBJ) OBJ.first
+
+/** access the language number from language_pair */
 #define get_language_number(OBJ) OBJ.second
 
  /**
