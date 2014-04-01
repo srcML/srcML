@@ -45,6 +45,12 @@
 
 #include <libxml/xmlwriter.h>
 
+/**
+ * srcMLOutput
+ *
+ * Class for outputting of srcML. Consumes produced tokens.
+ * progressively running the srcML parser and consuming tokens i.e. like a pull parser.
+ */
 class srcMLOutput : public srcMLParserTokenTypes {
 
 public:
@@ -101,35 +107,72 @@ public:
     ~srcMLOutput();
 
 public:
+    /** token stream inpu */
     TokenStream* input;
 
+    /** output xml writer */
     xmlTextWriter* xout;
 
+    /** output filename if used */
     const char* srcml_filename;
+
+    /** unit attribute language */
     const char* unit_language;
+
+    /** unit attribute directory */
     const char* unit_dir;
+
+    /** unit attribute filename */
     const char* unit_filename;
+
+    /** unit attribute version */
     const char* unit_version;
+
+\    /** unit attribute timestamp */
     const char* unit_timestamp;
+
+    /** unit attribute hash */
     const char* unit_hash;
+
+    /** output options */
     OPTION_TYPE& options;
+
+    /** xml encoding */
     const char* xml_encoding;
+
+    /** array for a number to prefix */
     std::string * num2prefix;
+
+    /** number of open elements */
     int openelementcount;
 
+    /** current line @todo is this used */
     int curline;
+
+    /** current column @todo is this used */
     int curcolumn;
+
+    /** the tabstop size */
     int tabsize;
 
+    /** number of units output or depth into archive */
     int depth;
+
+    /** output buffer if used */
     xmlOutputBuffer * output_buffer;
+
+    /** starting time for debug stopwatch */
     boost::posix_time::ptime debug_time_start;
 
     // output line attribute content
     std::string lineAttribute;
     std::string line2Attribute;
     std::string columnAttribute;
+
+    /** output array for line/column temporary storage */
     char out[21];
+
+    /** user defined macro list */
     std::vector<std::string> user_macro_list;
 
     void processUnit(const antlr::RefToken& token);
@@ -170,7 +213,7 @@ public:
     void processInterface(const antlr::RefToken& token);
     void processEscape(const antlr::RefToken& token);
 
-    // method pointer for token processing dispatch
+    /** method pointer for token processing dispatch */
     typedef void (srcMLOutput::*PROCESS_PTR)(const antlr::RefToken & );
 
 private:
@@ -179,12 +222,16 @@ private:
 
     void outputToken(const antlr::RefToken& token);
 
-    // List of element names
+    /** list of element names */
     static const char* const ElementNames[];
+
+    /** list of element prefixes */
     static int ElementPrefix[];
 
-    // table of method pointers for token processing dispatch
+    /* table of method pointers for token processing dispatch */
     static char process_table[];
+
+    /** table for conversion from number to process */
     static srcMLOutput::PROCESS_PTR num2process[];
 
 };
