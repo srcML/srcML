@@ -23,9 +23,15 @@
 #include "Mode.hpp"
 
 #ifdef __GNUC__
+
+/** size of a Mode literal in GNU */
 #define ull(a) a##ULL
+
 #else
+
+ /** size of a Mode literal in non-GNU */
 #define ull(a) a##i64
+
 #endif
 
 /* Set of mode flags */
@@ -94,7 +100,12 @@ const State::MODE_TYPE Mode::MODE_ENUM                = ull(0x2000000000000000);
 const State::MODE_TYPE Mode::MODE_ANONYMOUS           = ull(0x4000000000000000);
 const State::MODE_TYPE Mode::MODE_END_AT_COMMA        = ull(0x8000000000000000);
 
-// end elements down to a specific mode
+/**
+ * endDownToMode
+ * @param mode mode to end down to
+ *
+ * End elements down to but not including the mode mode.
+ */
 void Mode::endDownToMode(const State::MODE_TYPE& mode) {
 
     if (!statev.inTransparentMode(mode))
@@ -104,7 +115,12 @@ void Mode::endDownToMode(const State::MODE_TYPE& mode) {
         endMode();
 }
 
-// end elements down to a specific mode
+/**
+ * endDownToModeSet
+ * @param mode mode to end down to
+ *
+ * End elements down to but not including the mode mode.
+ */
 void Mode::endDownToModeSet(const State::MODE_TYPE& mode) {
 
     //  if (statev.getTransparentMode() & (mode == 0))
@@ -114,7 +130,12 @@ void Mode::endDownToModeSet(const State::MODE_TYPE& mode) {
         endMode();
 }
 
-// end elements down to a specific mode
+/**
+ * endDownOverMode
+ * @param mode mode to end down to
+ *
+ * End elements down to and including the mode mode.
+ */
 void Mode::endDownOverMode(const State::MODE_TYPE& mode) {
 
     while (statev.size() > 1 && statev.inMode(mode))

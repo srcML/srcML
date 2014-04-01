@@ -25,74 +25,152 @@
 
 #include "State.hpp"
 
+/**
+ * srcMLState
+ *
+ * Class to hold srcML state e.g. parenthesis/curly braces/type counts.
+ * Builds off of state holding a mode.
+ */
 class srcMLState : public State {
 public:
 
+    /** 
+     * srcMLState
+     * @param mode current mode to create
+     * @param transmode the transparent mode
+     * @param prevmode previous mode.
+     *
+     * Constructor.  Create a new mode with the perscribed mode, transparent mode, and previous mode.
+     */
     srcMLState(const State::MODE_TYPE& mode, const State::MODE_TYPE& transmode, const State::MODE_TYPE& prevmode)
         : State(mode, transmode, prevmode), parencount(0), curlycount(0), typecount(0)
     {}
 
+    /**
+     * srcMLState
+     *
+     * Constructor.  Default.
+     */
     srcMLState()
         : State(), parencount(0), curlycount(0), typecount(0)
     {}
 
-    // parentheses count
+    /**
+     * getParen
+     *
+     * Get the open parenthesis count
+     *
+     * @returns the current open parenthesis count.
+     */
     int getParen() const {
         return parencount;
     }
 
-    // increment the parentheses count
+    /**
+     * incParen
+     *
+     * Increment the open parenthesis count
+     */
     void incParen() {
         ++parencount;
     }
 
-    // decrement the parentheses count
+    /**
+     * decParen
+     *
+     * Decrement the open parenthesis count
+     */
     void decParen() {
         --parencount;
     }
 
-    // curly count
+    /**
+     * getCurly
+     *
+     * Get the open curly brace count
+     *
+     * @returns the current open curly brace count.
+     */
     int getCurly() const {
         return curlycount;
     }
 
-    // increment the curly count
+    /**
+     * incCurly
+     *
+     * Increment the open curly brace count
+     */
     void incCurly() {
         ++curlycount;
     }
 
-    // decrement the curly count
+    /**
+     * decCurly
+     *
+     * Decrement the open curly brace count
+     */
     void decCurly() {
         --curlycount;
     }
 
-    // type count
+    /**
+     * getTypeCount
+     *
+     * Get the type count
+     *
+     * @returns the current type count.
+     */
     int getTypeCount() const {
         return typecount;
     }
 
-    // set type count
+    /**
+     * setTypeCount
+     * @param n number of types to set
+     *
+     * Set the type count
+     */
     void setTypeCount(int n) {
         typecount = n;
     }
 
-    // increment the type count
+    /**
+     * incTypeCount
+     *
+     * Increment the type count
+     */
     void incTypeCount() {
         ++typecount;
     }
 
-    // decrement the type count
+    /**
+     * decTypeCount
+     *
+     * Decrement the type count
+     */
     void decTypeCount() {
         --typecount;
     }
 
+    /**
+     * ~srcMLState
+     *
+     * Destructor.
+     */
     ~srcMLState() {
     }
 
 private:
+
+    /** open parenthesis count */
     int parencount;
+
+    /** open curly brace count */
     int curlycount;
+
+    /** current type count */
     int typecount;
+    
 };
 
 #endif

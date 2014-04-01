@@ -30,15 +30,33 @@
 
 #include "State.hpp"
 
+/**
+ * StateStack
+ *
+ * Stack of states (really srcMLStates).
+ * @todo consider removing template and make just for srcMLStates.
+ */
 template <class Base>
 class StateStack {
 public:
 
-    // token parser constructor
+    /**
+     * StateStack
+     * @param ptp token parser
+     *
+     * Constructor.
+     */
     StateStack(TokenParser* ptp)
         : parser(ptp), st()
     {}
 
+    /**
+     * currentState
+     *
+     * Get the current state (const no modification).
+     *
+     * @returns the current state.
+     */
     const Base& currentState() const {
         if (st.empty())
             throw Segmentation_Fault();
@@ -46,6 +64,13 @@ public:
         return st.top();
     }
 
+    /**
+     * currentState
+     *
+     * Delegate to get the current state (allow modification).
+     *
+     * @returns the current state.
+     */
     Base& currentState() {
         if (st.empty())
             throw Segmentation_Fault();
@@ -53,12 +78,23 @@ public:
         return st.top();
     }
 
+    /**
+     * startNewMode
+     * @param m new modes to start
+     *
+     * Delegate to create a new mode and place it on top of stack.
+     */
     void startNewMode(const State::MODE_TYPE& m) {
 
         // prepare for the new stack
         st.push(Base(m, !empty() ? getTransparentMode() : 0, !empty() ? getMode() : 0));
     }
 
+    /**
+     * endCurrentMode
+     *
+     * Delegate to remove the current mode (pop from stack).
+     */
     void endCurrentMode() {
 
         if (st.size() == 1)
@@ -70,6 +106,13 @@ public:
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
+    /**
+     * endCurrentMode
+     * @param m mode to end
+     *
+     * Delegate to remove the current mode m (pop from stack).
+     * Does not actually check or use m.
+     */
     void endCurrentMode(const State::MODE_TYPE& m) {
 
         if (st.size() <= 1)
@@ -80,26 +123,58 @@ public:
 
 #pragma GCC diagnostic pop
 
+    /**
+     * endLastMode
+     *
+     * Delegate to ends a mode (not necessarily last) popping from stack.
+     */
     void endLastMode() {
 
         popMode();
     }
 
+    /**
+     * getMode
+     *
+     * Delegate to get the current mode from stack (top of stack).
+     *
+     * @returns the current mode.
+     */
     State::MODE_TYPE getMode() const {
 
         return !st.empty() ? st.top().getMode() : 0;
     }
 
+    /**
+     * getPrevMode
+     *
+     * Delegate to get the previousmode from stack (top of stack).
+     *
+     * @returns the previous mode.
+     */
     State::MODE_TYPE getPrevMode() const {
 
         return !st.size() > 1 ? st.top().getMode() : 0;
     }
 
+    /**
+     * getTransparentMode
+     *
+     * Delegate to get the transparent mode from stack (top of stack).
+     *
+     * @returns the transparent mode.
+     */
     State::MODE_TYPE getTransparentMode() const {
 
         return !st.empty() ? st.top().getTransparentMode() : 0;
     }
 
+    /**
+     * setMode
+     * @param m modes to add to current mode
+     *
+     * Add the modes m to the current modes.
+     */
     void setMode(const State::MODE_TYPE& m) {
         if (st.empty())
             throw Segmentation_Fault();
@@ -107,13 +182,25 @@ public:
         st.top().setMode(m);
     }
 
-    void clearMode(const State::MODE_TYPE& m) {
+    /**
+     * clearMode
+     * @param m modes to remove modes from current mode
+     *
+     * Delegate to removes the modes m from the current modes.
+     */
+     void clearMode(const State::MODE_TYPE& m) {
         if (st.empty())
             throw Segmentation_Fault();
 
         st.top().clearMode(m);
     }
 
+    /**
+     * push
+     * @param id of open element to add to current mode open element stack
+     *
+     * Delegate to add the open element id to the top of the open element of the current mode.
+     */
     void push(const State::MODE_TYPE& id) {
         if (st.empty())
             throw Segmentation_Fault();
@@ -121,46 +208,97 @@ public:
         st.top().push((int) id);
     }
 
-    void pop() {
+    /**
+     * pop
+     *
+     * Delegate to remove the top open element form the current mode.
+     */
+     void pop() {
         if (st.empty())
             throw Segmentation_Fault();
 
         st.top().pop();
     }
 
-    // stack size
+    /**
+     * size
+     *
+     * Delegate to get the current modes number of open elements
+     *
+     * @returns the number of open element in current mode.
+     */
     int size() const {
 
         return (int)st.size();
     }
 
-    // stack empty
+    /**
+     * empty
+     *
+     * Delegate Predicte method to test if state stack is empty
+     *
+     * @returns if states in stack.
+     */
     bool empty() const {
 
         return st.empty();
     }
 
+   /**
+     * inMode
+     * @param m mode to test if currently in
+     *
+     * Delegate predicte method to test if currently in mode m.
+     *
+     * @returns if in mode m.
+     */
     bool inMode(const State::MODE_TYPE& m) const {
 
         return !st.empty() ? st.top().inMode(m) : false;
     }
 
+    /**
+     * inPrevMode
+     * @param m mode to test if previously in
+     *
+     * Delegate predicte method to test if previously in mode m.
+     *
+     * @returns if in previous mode m.
+     */
     bool inPrevMode(const State::MODE_TYPE& m) const {
 
         return st.size() > 1 ? st.top().inPrevMode(m) : false;
     }
 
+     /**
+     * inTransparentMode
+     * @param m mode to test if transaprently in
+     *
+     * Delegate predicte method to test if transparently in mode m.
+     *
+     * @returns if in transparent mode m.
+     */
     bool inTransparentMode(const State::MODE_TYPE& m) const {
 
         return !st.empty() ? st.top().inTransparentMode(m) : false;
     }
 
-    // parentheses count
+    /**
+     * getParen
+     *
+     * Delegate to get the open parenthesis in current mode.
+     *
+     * @returns number of open parethesis in current mode
+     */
     int getParen() const {
         return !st.empty() ? st.top().getParen() : 0;
     }
 
-    // increment the parentheses count
+    /**
+     * incParen
+     *
+     * Delegate to increment the number of open parenthesis.
+     */
     void incParen() {
         if (st.empty())
             throw Segmentation_Fault();
@@ -168,7 +306,11 @@ public:
         st.top().incParen();
     }
 
-    // decrement the parentheses count
+    /**
+     * decParen
+     *
+     * Delegate to decrement the number of open parenthesis.
+     */
     void decParen() {
         if (st.empty())
             throw Segmentation_Fault();
@@ -176,12 +318,22 @@ public:
         st.top().decParen();
     }
 
-    // curly count
+    /**
+     * getCurly
+     *
+     * Delegate to get the open curly braces in current mode.
+     *
+     * @returns number of open curly braces in current mode
+     */
     int getCurly() const {
         return !st.empty() ? st.top().getCurly() : 0;
     }
 
-    // increment the curly count
+    /**
+     * incCurly
+     *
+     * Delegate to increment the number of open curly braces.
+     */
     void incCurly() {
         if (st.empty())
             throw Segmentation_Fault();
@@ -189,7 +341,11 @@ public:
         st.top().incCurly();
     }
 
-    // decrement the curly count
+    /**
+     * decCurly
+     *
+     * Delegate to decrement the number of open curly braces.
+     */
     void decCurly() {
         if (st.empty())
             throw Segmentation_Fault();
@@ -197,12 +353,23 @@ public:
         st.top().decCurly();
     }
 
-    // type count
+    /**
+     * getTypeCount count
+     *
+     * Delegate to get the types in current mode.
+     *
+     * @returns number of types in current mode
+     */
     int getTypeCount() const {
         return !st.empty() ? st.top().getTypeCount() : 0;
     }
 
-    // set type count
+    /**
+     * setTypeCount count
+     * @param n the number of types to set to
+     *
+     * Delegate to set the types in current mode.
+     */
     void setTypeCount(int n) {
         if (st.empty())
             throw Segmentation_Fault();
@@ -210,7 +377,11 @@ public:
         st.top().setTypeCount(n);
     }
 
-    // increment the type count
+    /**
+     * incTypeCount
+     *
+     * Delegate to increment the number of types.
+     */
     void incTypeCount() {
         if (st.empty())
             throw Segmentation_Fault();
@@ -218,7 +389,11 @@ public:
         st.top().incTypeCount();
     }
 
-    // decrement the type count
+    /**
+     * decTypeCount
+     *
+     * Delegate to decrement the number of types.
+     */
     void decTypeCount() {
         if (st.empty())
             throw Segmentation_Fault();
@@ -226,7 +401,11 @@ public:
         st.top().decTypeCount();
     }
 
-    // destructor
+    /**
+     * ~srcMLStack
+     *
+     * Destructor.  Ends all open modes/states.
+     */
     ~StateStack() {
 
         // end all modes
@@ -235,7 +414,11 @@ public:
 
 protected:
 
-    // destructor
+    /**
+     * endAllModes
+     *
+     * End all modes/states on stack.
+     */
     void endAllModes() {
 
         // end all modes
@@ -244,6 +427,11 @@ protected:
         }
     }
 
+    /**
+     * popMode
+     *
+     * Delegate to remove the current mode/state from stack.
+     */
     void popMode() {
         if (st.empty())
             throw Segmentation_Fault();
@@ -258,10 +446,15 @@ protected:
 
 private:
 
+    /** Mode is a friend class */
     friend class Mode;
 
+    /** token parser */
     TokenParser* parser;
+
+    /** stack of states/modes */
     std::stack<Base> st;
+    
 };
 
 #endif

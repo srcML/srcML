@@ -39,6 +39,9 @@
 #define snprintf _snprintf
 #endif
 
+/** 
+ * anonymous enum for prefix positions
+ */
 enum { SRCML_SRC_NS_URI_POS,
        SRCML_CPP_NS_URI_POS,
        SRCML_ERR_NS_URI_POS,
@@ -48,16 +51,27 @@ enum { SRCML_SRC_NS_URI_POS,
        SRCML_EXT_POSITION_NS_URI_POS
 };
 
+/** name of element call map */
 #define ELEMENT_MAP_CALL_NAME element_name
+
+/** element map first type */
 #define ELEMENT_MAP_FIRST_TYPE int
+
+/** element map second type */
 #define ELEMENT_MAP_SECOND_TYPE const char*
+
+/** element map default operation */
 #define ELEMENT_MAP_DEFAULT(s) template <ELEMENT_MAP_FIRST_TYPE n> inline ELEMENT_MAP_SECOND_TYPE \
     ELEMENT_MAP_CALL_NAME() { s }
 
+/** element map call */
 #define ELEMENT_MAP_CALL(t) ELEMENT_MAP_CALL_NAME <srcMLParserTokenTypes::t>()
+
+/** element map */
 #define ELEMENT_MAP(t, s) template <> inline ELEMENT_MAP_SECOND_TYPE ELEMENT_MAP_CALL(t) { return s; }
 
 // map the token types to specific strings
+/** namespace surrounding element mappings */
 namespace {
 
     // base member
@@ -280,24 +294,39 @@ namespace {
 #undef ELEMENT_MAP_FIRST_TYPE
 #undef ELEMENT_MAP_SECOND_TYPE
 
+/** element call name */
 #define ELEMENT_MAP_CALL_NAME element_prefix
+
+/** element map first type */
 #define ELEMENT_MAP_FIRST_TYPE int
+
+/** element map second type */
 #define ELEMENT_MAP_SECOND_TYPE int
+
+/** element map default operation */
 #define ELEMENT_MAP_DEFAULT(s) template <ELEMENT_MAP_FIRST_TYPE n> inline ELEMENT_MAP_SECOND_TYPE \
     ELEMENT_MAP_CALL_NAME() { s }
 
+/** element map call */
 #define ELEMENT_MAP_CALL(t) ELEMENT_MAP_CALL_NAME <srcMLParserTokenTypes::t>()
+
+/** element map */
 #define ELEMENT_MAP(t, s) template <> inline ELEMENT_MAP_SECOND_TYPE ELEMENT_MAP_CALL(t) { return s; }
 
+/** namespace containing prefix mappings */
 namespace {
 
     // default is the srcML namespace
     ELEMENT_MAP_DEFAULT(return SRCML_SRC_NS_URI_POS;)
 
     // cpp namespace
+/** set Boost local macro */
 #define BOOST_PP_LOCAL_MACRO(n) template<> inline int element_prefix<n + TOKEN_SCPP_DIRECTIVE>() { return SRCML_CPP_NS_URI_POS; }
+
     //  #define BOOST_PP_LOCAL_MACRO(n) ELEMENT_MAP(n, SRCML_CPP_NS_URI_POS),
+/** set Boost macro limits */
 #define BOOST_PP_LOCAL_LIMITS (0, TOKEN_SCPP_ENDIF - TOKEN_SCPP_DIRECTIVE)
+
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS
@@ -317,12 +346,31 @@ namespace {
     ELEMENT_MAP(SMODIFIER, SRCML_EXT_MODIFIER_NS_URI_POS)
 }
 
-// check if encoding is supported
+/**
+ * checkEncoding
+ * @param encoding encoding to check
+ *
+ * Predicate to check if encoding is supported.  @todo check if needed or used.
+ * @return if encoding is supporting
+ */
 bool srcMLOutput::checkEncoding(const char* encoding) {
 
     return xmlFindCharEncodingHandler(encoding) != 0;
 }
 
+/**
+ * srcMLOutput
+ * @param ints a token stream
+ * @param filename if output to a file
+ * @param language the unit language
+ * @param xml_enc output encoding
+ * @param op output operations
+ * @param uri namespaces
+ * @param ts tabstop size
+ * @param output_buffer if output is to a output buffer
+ *
+ * Constructor. Handles all outputs.
+ */
 srcMLOutput::srcMLOutput(TokenStream* ints,
                          const char* filename,
                          const char* language,
@@ -330,8 +378,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          OPTION_TYPE& op,
                          std::string * uri,
                          int ts,
-                         xmlOutputBuffer * output_buffer
-                         )
+                         xmlOutputBuffer * output_buffer)
     : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
       unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(uri)
     , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), output_buffer(output_buffer),
@@ -353,6 +400,11 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 
 }
 
+/**
+ * initWriter
+ *
+ * Initializes output xmlWriter.  Supports delayed initialization.
+ */
 void srcMLOutput::initWriter() {
 
     // open the output text writer stream
@@ -374,11 +426,21 @@ void srcMLOutput::initWriter() {
 
 }
 
+/**
+ * ~srcMLOutput
+ *
+ * Destructor.  Closes output.
+ */
 srcMLOutput::~srcMLOutput() {
 
     close();
 }
 
+/**
+ * close
+ *
+ * Close/finish the output.
+ */
 void srcMLOutput::close() {
 
     if (xout) {
@@ -388,26 +450,64 @@ void srcMLOutput::close() {
     }
 }
 
+/**
+ * isoption
+ * @param flag flags to check if set
+ *
+ * Predicate to check if options in flag are set.
+ *
+ * @returns if options in flag are set.
+ */
 bool srcMLOutput::isoption(const OPTION_TYPE& flag) const {
     return (flag & options) > 0;
 }
 
+/**
+ * isoption
+ * @param flag flags to check if set
+ * @param options flags to check if set in
+ *
+ * Predicate to check if options in flag are set in options.
+ *
+ * @returns if options in flag are set.
+ */
 bool srcMLOutput::isoption(const OPTION_TYPE& flag, const OPTION_TYPE& options) {
     return (flag & options) > 0;
 }
 
+/**
+ * srcMLTextWriterStartElement
+ * @param xout xml writer
+ * @param s name of element to start
+ *
+ * Start output of element s in writer xout.
+ */
 void srcMLOutput::srcMLTextWriterStartElement(xmlTextWriter* xout, const xmlChar* s) {
 
     xmlTextWriterStartElement(xout, s);
     ++openelementcount;
 }
 
+/**
+ * srcMLTextWriterEndElement
+ * @param xout xml writer
+ *
+ * End element in writer xout.
+ */
 void srcMLOutput::srcMLTextWriterEndElement(xmlTextWriter* xout) {
 
     xmlTextWriterEndElement(xout);
     --openelementcount;
 }
 
+/**
+ * lineAttributeValue
+ * @param token the token to output
+ *
+ * Convert the current tokens line to string attribute. @todo check/make thread safe
+ *
+ * @returns the line as a string.
+ */
 const char * srcMLOutput::lineAttributeValue(const antlr::RefToken& token) {
 
     snprintf(out, 20, "%d", token->getLine());
@@ -415,6 +515,14 @@ const char * srcMLOutput::lineAttributeValue(const antlr::RefToken& token) {
     return out;
 }
 
+/**
+ * columnAttributeValue
+ * @param token the token to output
+ *
+ * Convert the current tokens column to string attribute.  @todo check/make thread safe
+ *
+ * @returns the column as a string.
+  */
 const char * srcMLOutput::columnAttributeValue(const antlr::RefToken& token) {
 
     snprintf(out, 20, "%d", token->getColumn());
@@ -422,6 +530,14 @@ const char * srcMLOutput::columnAttributeValue(const antlr::RefToken& token) {
     return out;
 }
 
+/**
+ * lineAttributeValue
+ * @param aline to convert to string
+ *
+ * Convert the line to string attribute. @todo check/make thread safe
+ *
+ * @returns the line as a string.
+ */
 const char * srcMLOutput::lineAttributeValue(int aline) {
 
     snprintf(out, 20, "%d", aline);
@@ -429,11 +545,28 @@ const char * srcMLOutput::lineAttributeValue(int aline) {
     return out;
 }
 
+/**
+ * setTokenStream
+ * @param ints token stream to set to.
+ *
+ * Set the token stream.
+ */
 void srcMLOutput::setTokenStream(TokenStream& ints) {
 
     input = &ints;
 }
 
+/**
+ * consume
+ * @param language unit language attribute
+ * @param directory unit directory attribute
+ * @param filename unit filename attribute
+ * @param version unit version attribute
+ * @param timestamp unit timestamp attribute
+ * @param hash unit hash attribute
+ *
+ * Start consumption of tokens/parsing of source code with unit attributes.
+ */
 void srcMLOutput::consume(const char* language, const char* directory, const char* filename,
                           const char* version, const char* timestamp, const char* hash) {
 
@@ -459,7 +592,13 @@ void srcMLOutput::consume(const char* language, const char* directory, const cha
     }
 }
 
-
+/**
+ * consume_next
+ *
+ * Consume/get and output the next token.
+ *
+ * @returns the time of consumed token
+ */
 int srcMLOutput::consume_next() {
 
     const antlr::RefToken& token = input->nextToken();
@@ -469,6 +608,12 @@ int srcMLOutput::consume_next() {
     return token->getType();
 }
 
+/**
+ * processEscape
+ * @param token escape the token in srcML escape tag
+ *
+ * Outputs the token in a srcML escape tag.
+ */
 void srcMLOutput::processEscape(const antlr::RefToken& token) {
 
     const char* localname = ElementNames[token->getType()];
@@ -492,6 +637,11 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
     --openelementcount;
 }
 
+/**
+ * outputXMLDecl
+ *
+ * Output the starting xml declaration.
+ */
 void srcMLOutput::outputXMLDecl() {
 
     // issue the xml declaration, but only if we want to
@@ -499,6 +649,15 @@ void srcMLOutput::outputXMLDecl() {
 
 }
 
+/**
+ * outputNamesapces
+ * @param xout the xml writer to write namespaces
+ * @param options the current set options
+ * @param depth the depth in the archive number of output units
+ * @param outer is this an outer unit or inner unit
+ *
+ * Output the namespaces on the units.
+ */
 void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer) {
 
     // figure out which namespaces are needed
@@ -544,6 +703,18 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
     }
 }
 
+/**
+ * startUnit
+ * @param language the language attribute
+ * @param dir the directory attribute
+ * @param filename the filename attribute
+ * @param version the version attribute
+ * @param timestamp the timestamp attribute
+ * @param hash the hash attribute
+ * @param outer is this an outer or inner unit
+ *
+ * Output the start of a unit tag.
+ */
 void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename,
                             const char* version, const char* timestamp,
                             const char* hash,
@@ -632,10 +803,21 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     ++depth;
 }
 
+/**
+ * setMacroList
+ * @param list the user defined macro list
+ *
+ * Set the macro list to use for output.
+ */
 void srcMLOutput::setMacroList(std::vector<std::string> & list) {
     user_macro_list = list;
 }
 
+/**
+ * outputMacroList
+ *
+ * Output the stored user defined macro list meta data.
+ */
 void srcMLOutput::outputMacroList() {
 
     if(!isoption(OPTION_MACRO_LIST)) return;
@@ -651,6 +833,12 @@ void srcMLOutput::outputMacroList() {
 
 }
 
+/**
+ * processUnit
+ * @param token token to output
+ *
+ * Callback to process/output unit token.
+ */
 void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
     if (isstart(token)) {
@@ -671,22 +859,46 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
     }
 }
 
-// output text
+/**
+ * processText
+ * @param str text to output
+ *
+ * Callback to process/output text.
+ */
 void srcMLOutput::processText(const std::string& str) {
 
     xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.data(), (int)str.size());
 }
 
+/**
+ * processText
+ * @param s string to output
+ * @param size of bytes to output
+ *
+ * Callback to process/output text outputting size bytes.
+ */
 void srcMLOutput::processText(const char* s, int size) {
 
     xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) s, size);
 }
 
+/**
+ * processText
+ * @param token token to output as text
+ *
+ * Callback to process/output token as text.
+ */
 void srcMLOutput::processText(const antlr::RefToken& token) {
 
     processText(token->getText());
 }
 
+/**
+ * processTextPosition
+ * @param token token to output as text
+ *
+ * Callback to process/output token as text with position information.
+ */
 void srcMLOutput::processTextPosition(const antlr::RefToken& token) {
 
     xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token));
@@ -696,6 +908,12 @@ void srcMLOutput::processTextPosition(const antlr::RefToken& token) {
     processText(token->getText());
 }
 
+/**
+ * processTextPositionLine
+ * @param token token to output as text
+ *
+ * Callback to process/output token as text with position information using @code#line@endcode embedded in half of set line.
+ */
 void srcMLOutput::processTextPositionLine(const antlr::RefToken& token) {
 
     xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token->getLine() & 0xFFFF));
@@ -706,6 +924,12 @@ void srcMLOutput::processTextPositionLine(const antlr::RefToken& token) {
     processText(token->getText());
 }
 
+/**
+ * processAccess
+ * @param token token to output
+ *
+ * Callback to process/output token for access region.
+ */
 void srcMLOutput::processAccess(const antlr::RefToken& token) {
     static const char* type_default = "default";
 
@@ -734,6 +958,12 @@ void srcMLOutput::processAccess(const antlr::RefToken& token) {
     }
 }
 
+/**
+ * processToken
+ * @param token token to output
+ *
+ * Callback to process/output generic token.
+ */
 void srcMLOutput::processToken(const antlr::RefToken& token) {
 
     const char* localname = ElementNames[token->getType()];
@@ -764,6 +994,12 @@ void srcMLOutput::processToken(const antlr::RefToken& token) {
     }
 }
 
+/**
+ * processJavadocCommentStart
+ * @param token token to output as Javadoc comment
+ *
+ * Callback to process/output token as Javadoc comment.
+ */
 void srcMLOutput::processJavadocCommentStart(const antlr::RefToken& token) {
     static const char* BLOCK_COMMENT_ATTR = "block";
     static const char* JAVADOC_COMMENT_ATTR = "javadoc";
@@ -784,6 +1020,12 @@ void srcMLOutput::processJavadocCommentStart(const antlr::RefToken& token) {
     ((*this).*num2process[2])(token);
 }
 
+/**
+ * processDoxygenCommentStart
+ * @param token token to output as Doxygen comment
+ *
+ * Callback to process/output token as Doxygen comment (block).
+ */
 void srcMLOutput::processDoxygenCommentStart(const antlr::RefToken& token) {
     static const char* BLOCK_COMMENT_ATTR = "block";
     static const char* DOXYGEN_COMMENT_ATTR = "doxygen";
@@ -804,6 +1046,12 @@ void srcMLOutput::processDoxygenCommentStart(const antlr::RefToken& token) {
     ((*this).*num2process[2])(token);
 }
 
+/**
+ * processDoxygenLineCommentStart
+ * @param token token to output as Doxygen comment
+ *
+ * Callback to process/output token as Doxygen comment (line).
+ */
 void srcMLOutput::processLineDoxygenCommentStart(const antlr::RefToken& token) {
     static const char* LINE_COMMENT_ATTR = "line";
     static const char* DOXYGEN_COMMENT_ATTR = "doxygen";
@@ -824,6 +1072,12 @@ void srcMLOutput::processLineDoxygenCommentStart(const antlr::RefToken& token) {
     ((*this).*num2process[2])(token);
 }
 
+/**
+ * processCommentStart
+ * @param token token to output as comment
+ *
+ * Callback to process/output token as block comment.
+ */
 void srcMLOutput::processBlockCommentStart(const antlr::RefToken& token) {
     static const char* BLOCK_COMMENT_ATTR = "block";
 
@@ -842,6 +1096,12 @@ void srcMLOutput::processBlockCommentStart(const antlr::RefToken& token) {
     ((*this).*num2process[2])(token);
 }
 
+/**
+ * processLineCommentStart
+ * @param token token to output as comment
+ *
+ * Callback to process/output token as line comment.
+ */
 void srcMLOutput::processLineCommentStart(const antlr::RefToken& token) {
     static const char* const LINE_COMMENT_ATTR = "line";
 
@@ -860,6 +1120,12 @@ void srcMLOutput::processLineCommentStart(const antlr::RefToken& token) {
     ((*this).*num2process[2])(token);
 }
 
+/**
+ * processEndLineToken
+ * @param token token to output as end of line
+ *
+ * Callback to process/output token as end of line (think ends tag that end at end of line).
+ */
 void srcMLOutput::processEndLineToken(const antlr::RefToken& token) {
 
     std::string::size_type size = token->getText().size();
@@ -878,6 +1144,12 @@ void srcMLOutput::processEndLineToken(const antlr::RefToken& token) {
         processText(token);
 }
 
+/**
+ * processEndBlockToken
+ * @param token token to output as end of block
+ *
+ * Callback to process/output token as end of block (also seems to end the block tag).
+ */
 void srcMLOutput::processEndBlockToken(const antlr::RefToken& token) {
 
     processText(token);
@@ -886,6 +1158,14 @@ void srcMLOutput::processEndBlockToken(const antlr::RefToken& token) {
     --openelementcount;
 }
 
+/**
+ * processOptional
+ * @param token token to output optional markup
+ * @param attr_name name of attribute
+ * @param attr_value value of attribute
+ *
+ * Callback to process/output token as for optional markup
+ */
 void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr_name, const char* attr_value) {
 
     const char* localname = ElementNames[token->getType()];
@@ -905,39 +1185,80 @@ void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr
     }
 }
 
+/**
+ * processString
+ * @param token token to output as string literal
+ *
+ * Callback to process/output token as string literal.
+ */
 void srcMLOutput::processString(const antlr::RefToken& token) {
 
     processOptional(token, "type", "string");
 }
 
-void srcMLOutput::processChar(const antlr::RefToken& token) {
+/**
+ * processChar
+ * @param token token to output as char` literal
+ *
+ * Callback to process/output token as char literal.
+ */
+ void srcMLOutput::processChar(const antlr::RefToken& token) {
 
     processOptional(token, "type", "char");
 }
 
+/**
+ * processLiteral
+ * @param token token to output as number literal
+ *
+ * Callback to process/output token as number literal.
+ */
 void srcMLOutput::processLiteral(const antlr::RefToken& token) {
 
     processOptional(token, "type", "number");
 }
 
+/**
+ * processBoolean
+ * @param token token to output as boolean literal
+ *
+ * Callback to process/output token as boolean literal.
+ */
 void srcMLOutput::processBoolean(const antlr::RefToken& token) {
 
     processOptional(token, "type", "boolean");
 }
 
+/**
+ * processNull
+ * @param token token to output as null literal
+ *
+ * Callback to process/output token as null literal.
+ */
 void srcMLOutput::processNull(const antlr::RefToken& token) {
 
     processOptional(token, "type", "null");
 }
 
-
-
+/**
+ * processComplex
+ * @param token token to output as complex number literal
+ *
+ * Callback to process/output token as complex number literal.
+ */
 void srcMLOutput::processComplex(const antlr::RefToken& token) {
 
     processOptional(token, "type", "complex");
 }
 
 #if DEBUG
+
+/**
+ * processMarker
+ * @param token token to output as marker
+ *
+ * Callback to process/output token as debug marker.
+ */
 void srcMLOutput::processMarker(const antlr::RefToken& token) {
 
     const char* localname = ElementNames[token->getType()];
@@ -958,66 +1279,113 @@ void srcMLOutput::processMarker(const antlr::RefToken& token) {
     xmlTextWriterEndElement(xout);
     --openelementcount;
 }
+
 #endif
 
+/**
+ * processInterface
+ * @param token token to output as class interface
+ *
+ * Callback to process/output token as class interface.
+ */
 void srcMLOutput::processInterface(const antlr::RefToken& token) {
 
     processOptional(token, "type", "interface");
 }
 
+/**
+ * outputToken
+ * @param token token to output
+ *
+ * Get callback that output token and output.
+ */
 inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 
     // use the array of pointers to methods to call the correct output routine
     ((*this).*(num2process[(int)process_table[token->getType()]]))(token);
 }
 
-// element names array
+/** element names array */
 const char* const srcMLOutput::ElementNames[] = {
 
     // fill the array in order of token numbers
+/** set boost macro */
 #define BOOST_PP_LOCAL_MACRO(n)   element_name<n>(),
+
+/** set boost macro limits */
 #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
+
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS
 
     // fill the array in order of token numbers
+/** set boost macro */
 #define BOOST_PP_LOCAL_MACRO(n)   element_name<256 + 1 + n>(),
+
+/** set boost macro limits */
 #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 256)
+
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS
 };
 
-// element prefix number
+/** element prefix number */
 int srcMLOutput::ElementPrefix[] = {
 
     // fill the array with the prefixes
+/** set boost macro */
 #define BOOST_PP_LOCAL_MACRO(n)   element_prefix<n>(),
+
+/** set boost macro limits */
 #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
+
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS
 
     // fill the array in order of token numbers
+/** set boost macro */
 #define BOOST_PP_LOCAL_MACRO(n)   element_prefix<256 + 1 + n>(),
+
+/** set boost macro limits */
 #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 256)
+
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS
 };
 
+/**
+ * setOutputBuffer
+ * @param output_buffer an output buffer
+ *
+ * Set to output to output_buffer.  Should be called before initWriter.
+ * @todo see if still needed.
+ */
 void srcMLOutput::setOutputBuffer(xmlOutputBufferPtr output_buffer) {
 
     this->output_buffer = output_buffer;
 
 }
 
+/**
+ * getWriter
+ *
+ * Get the current writer. @todo see if still needed.
+ */
 xmlTextWriter * srcMLOutput::getWriter() {
 
     return xout;
 }
 
+/**
+ * setDepth
+ * @param thedepth depth to set to
+ *
+ * Set the current depth to thedepth @todo see if still needed.
+ */
 void srcMLOutput::setDepth(int thedepth) {
 
     depth = thedepth;
