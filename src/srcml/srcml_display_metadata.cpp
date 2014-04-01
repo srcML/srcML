@@ -140,8 +140,12 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         // srcml->src src version
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION){
             const char* archive_info = srcml_archive_get_version(srcml_arch);
-            if (archive_info)
-                std::cout << "version=\"" << archive_info << "\"\n";
+            if (archive_info) {
+                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION)
+                    std::cout << archive_info << "\n";
+                else
+                    std::cout << "version=\"" << archive_info << "\"\n";
+            }
         }
         // srcml->src encoding
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING){
