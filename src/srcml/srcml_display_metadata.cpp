@@ -110,11 +110,12 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         // srcml->src language
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE){
             const char* archive_info = srcml_archive_get_language(srcml_arch);
-            if (archive_info)
+            if (archive_info) {
                 if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)
                     std::cout << archive_info << "\n";
                 else
                     std::cout << "language=\"" << archive_info << "\"\n";
+            }
         }
         // srcml->src filename
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME){
