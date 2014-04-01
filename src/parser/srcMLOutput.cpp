@@ -320,9 +320,13 @@ namespace {
     ELEMENT_MAP_DEFAULT(return SRCML_SRC_NS_URI_POS;)
 
     // cpp namespace
+/** set Boost local macro */
 #define BOOST_PP_LOCAL_MACRO(n) template<> inline int element_prefix<n + TOKEN_SCPP_DIRECTIVE>() { return SRCML_CPP_NS_URI_POS; }
+
     //  #define BOOST_PP_LOCAL_MACRO(n) ELEMENT_MAP(n, SRCML_CPP_NS_URI_POS),
+/** set Boost macro limits */
 #define BOOST_PP_LOCAL_LIMITS (0, TOKEN_SCPP_ENDIF - TOKEN_SCPP_DIRECTIVE)
+
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS
@@ -392,7 +396,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 
         columnAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
         columnAttribute += ":column";
-    }
+    }q
 
 }
 
@@ -606,7 +610,7 @@ int srcMLOutput::consume_next() {
 
 /**
  * processEscape
- * @pram token escape the token in srcML escape tag
+ * @param token escape the token in srcML escape tag
  *
  * Outputs the token in a srcML escape tag.
  */
@@ -650,7 +654,7 @@ void srcMLOutput::outputXMLDecl() {
  * @param xout the xml writer to write namespaces
  * @param options the current set options
  * @param depth the depth in the archive number of output units
- * @param is this an outer unit or inner unit
+ * @param outer is this an outer unit or inner unit
  *
  * Output the namespaces on the units.
  */
@@ -801,7 +805,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
 /**
  * setMacroList
- * #param list the user defined macro list
+ * @param list the user defined macro list
  *
  * Set the macro list to use for output.
  */
@@ -868,8 +872,8 @@ void srcMLOutput::processText(const std::string& str) {
 
 /**
  * processText
- * @param token token to output
- * @param number of bytes to output
+ * @param s string to output
+ * @param size of bytes to output
  *
  * Callback to process/output text outputting size bytes.
  */
@@ -1157,6 +1161,8 @@ void srcMLOutput::processEndBlockToken(const antlr::RefToken& token) {
 /**
  * processOptional
  * @param token token to output optional markup
+ * @param attr_name name of attribute
+ * @param attr_value value of attribute
  *
  * Callback to process/output token as for optional markup
  */
@@ -1303,15 +1309,23 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 const char* const srcMLOutput::ElementNames[] = {
 
     // fill the array in order of token numbers
+/** set boost macro */
 #define BOOST_PP_LOCAL_MACRO(n)   element_name<n>(),
+
+/** set boost macro limits */
 #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
+
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS
 
     // fill the array in order of token numbers
+/** set boost macro */
 #define BOOST_PP_LOCAL_MACRO(n)   element_name<256 + 1 + n>(),
+
+/** set boost macro limits */
 #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 256)
+
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS
@@ -1321,15 +1335,23 @@ const char* const srcMLOutput::ElementNames[] = {
 int srcMLOutput::ElementPrefix[] = {
 
     // fill the array with the prefixes
+/** set boost macro */
 #define BOOST_PP_LOCAL_MACRO(n)   element_prefix<n>(),
+
+/** set boost macro limits */
 #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
+
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS
 
     // fill the array in order of token numbers
+/** set boost macro */
 #define BOOST_PP_LOCAL_MACRO(n)   element_prefix<256 + 1 + n>(),
+
+/** set boost macro limits */
 #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 256)
+
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS

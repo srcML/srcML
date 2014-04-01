@@ -164,9 +164,13 @@ public:
     /** starting time for debug stopwatch */
     boost::posix_time::ptime debug_time_start;
 
-    // output line attribute content
+    /** line attribute content */
     std::string lineAttribute;
+
+    /** line attribute content for second line */
     std::string line2Attribute;
+
+    /** column attribute content */
     std::string columnAttribute;
 
     /** output array for line/column temporary storage */
