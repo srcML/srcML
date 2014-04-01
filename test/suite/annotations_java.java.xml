@@ -57,4 +57,16 @@ class <name>Person</name> <super><implements>implements <name>Serializable</name
 }</block></class>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><annotation>@<name>a</name><argument_list>(<argument><expr><name>b</name> = <block>{}</block></expr></argument>)</argument_list></annotation></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><annotation>@<name>a</name><argument_list>(<argument><expr><name>b</name> = <block>{<annotation>@<name>c</name></annotation>}</block></expr></argument>)</argument_list></annotation></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><annotation>@<name>a</name><argument_list>(<argument><expr><name>b</name> = <block>{<annotation>@<name>c</name></annotation>, <argument><annotation>@<name>d</name></annotation></argument>}</block></expr></argument>)</argument_list></annotation></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
 </unit>

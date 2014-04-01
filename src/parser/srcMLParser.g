@@ -5706,8 +5706,6 @@ annotation_argument[] { ENTRY_DEBUG } :
             startElement(SARGUMENT);
         }
 
-        ({ next_token() == EQUAL}? type_identifier variable_declaration_initialization)?
-
         // suppress warning of ()*
         (options { greedy = true; } :
         { inputState->guessing }? RCURLY | 
