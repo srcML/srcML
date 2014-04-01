@@ -396,7 +396,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 
         columnAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
         columnAttribute += ":column";
-    }q
+    }
 
 }
 
