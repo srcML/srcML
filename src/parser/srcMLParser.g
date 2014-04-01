@@ -5705,12 +5705,12 @@ annotation_argument[] { ENTRY_DEBUG } :
             // start the argument
             startElement(SARGUMENT);
         }
+
         // suppress warning of ()*
         (options { greedy = true; } :
-        { !(LA(1) == RPAREN) }? expression |
+        { inputState->guessing }? RCURLY | 
+        { !(LA(1) == RPAREN) }? expression | type_identifier)*
 
-        type_identifier
-        )*
 ;
 
 // a parameter
