@@ -85,7 +85,7 @@ public:
     /** blocks that are not necessarily statements */
     const static State::MODE_TYPE MODE_BLOCK;
 
-    /** mode for inititialization typically =<init>...</init> */
+    /** mode for inititialization typically @code=<init>...</init>@endcode */
     const static State::MODE_TYPE MODE_INIT;
 
     /** 
@@ -159,7 +159,7 @@ public:
     /** mode to end at right curly */
     const static State::MODE_TYPE MODE_INTERNAL_END_CURLY;
 
-    /* mode for a class */
+    /** mode for a class */
     const static State::MODE_TYPE MODE_CLASS;
     
     /** mode to end at block */
@@ -493,7 +493,7 @@ protected:
      *
      * Delegate to predicate to check if the previous mode before current has m (not exact mode, but at least m).
      *
-     * @param if in the previous mode m.
+     * @returns if in the previous mode m.
      */
     bool inPrevMode(const State::MODE_TYPE& m) const {
 
@@ -506,7 +506,7 @@ protected:
      *
      * Delegate to predicate to check if in the current mode m (not exact mode, but at least m).
      *
-     * @param if in the previous mode m.
+     * @returns if in the previous mode m.
      */
     bool inMode(const State::MODE_TYPE& m) const {
 
@@ -519,7 +519,7 @@ protected:
      *
      * Delegate to predicate to check if any mode on entire stack has m (not extact mode, but at least m).
      *
-     * @param if in the previous mode m.
+     * @returns if in the previous mode m.
      */
     bool inTransparentMode(const State::MODE_TYPE& m) const {
 
@@ -528,7 +528,7 @@ protected:
 
     /**
      * dupDownOverMode
-     * @param mode to stop on
+     * @param m mode to stop on
      *
      * Duplicate modes on stack down to and including m.
      */
