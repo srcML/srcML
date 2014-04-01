@@ -4040,7 +4040,7 @@ compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
 
         template_argument_list |
         simple_name_optional_template
-        (options { greedy = true; } : (period { iscompound = true; } simple_name_optional_template))*
+        (options { greedy = true; } : (period { iscompound = true; } (CLASS | simple_name_optional_template)))*
 ;
 
 // Specifier for a function
