@@ -78,6 +78,12 @@ void srcml_display_info(srcml_archive* srcml_arch) {
 }
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
+    int display_commands = SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE |
+                            SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
+                            SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY |
+                            SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
+                            SRCML_COMMAND_DISPLAY_SRCML_ENCODING;
+
     BOOST_FOREACH(const srcml_input_src& input, src_input) {
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_create_archive();
@@ -105,7 +111,10 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE){
             const char* archive_info = srcml_archive_get_language(srcml_arch);
             if (archive_info)
-                std::cout << "language=\"" << archive_info << "\"\n";
+                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)
+                    std::cout << archive_info << "\n";
+                else
+                    std::cout << "language=\"" << archive_info << "\"\n";
         }
         // srcml->src filename
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME){
