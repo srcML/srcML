@@ -130,8 +130,12 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         // srcml->src directory
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY){
             const char* archive_info = srcml_archive_get_directory(srcml_arch);
-            if (archive_info)
-                std::cout << "directory=\"" << archive_info << "\"\n";
+            if (archive_info) {
+                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY)
+                    std::cout << archive_info << "\n";
+                else
+                    std::cout << "directory=\"" << archive_info << "\"\n";
+            }
         }
         // srcml->src src version
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION){
