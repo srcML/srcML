@@ -347,18 +347,6 @@ namespace {
 }
 
 /**
- * checkEncoding
- * @param encoding encoding to check
- *
- * Predicate to check if encoding is supported.  @todo check if needed or used.
- * @return if encoding is supporting
- */
-bool srcMLOutput::checkEncoding(const char* encoding) {
-
-    return xmlFindCharEncodingHandler(encoding) != 0;
-}
-
-/**
  * srcMLOutput
  * @param ints a token stream
  * @param filename if output to a file
@@ -504,7 +492,7 @@ void srcMLOutput::srcMLTextWriterEndElement(xmlTextWriter* xout) {
  * lineAttributeValue
  * @param token the token to output
  *
- * Convert the current tokens line to string attribute. @todo check/make thread safe
+ * Convert the current tokens line to string attribute.
  *
  * @returns the line as a string.
  */
@@ -519,7 +507,7 @@ const char * srcMLOutput::lineAttributeValue(const antlr::RefToken& token) {
  * columnAttributeValue
  * @param token the token to output
  *
- * Convert the current tokens column to string attribute.  @todo check/make thread safe
+ * Convert the current tokens column to string attribute.
  *
  * @returns the column as a string.
   */
@@ -534,7 +522,7 @@ const char * srcMLOutput::columnAttributeValue(const antlr::RefToken& token) {
  * lineAttributeValue
  * @param aline to convert to string
  *
- * Convert the line to string attribute. @todo check/make thread safe
+ * Convert the line to string attribute.
  *
  * @returns the line as a string.
  */
