@@ -29,6 +29,7 @@
 #include "srcMLState.hpp"
 #include "TokenParser.hpp"
 
+/** srcMLStateStack is a StateStack of srcMLState */
 typedef StateStack<srcMLState> srcMLStateStack;
 
 #endif
