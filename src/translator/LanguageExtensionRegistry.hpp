@@ -27,14 +27,14 @@
 #include <string>
 #include <vector>
 
-/** Declarare type language pair as string/int pair */
-typedef std::pair<std::string, int> language_pair;
+/** Declarare type extension_pair as string/int pair */
+typedef std::pair<std::string, int> extension_pair;
 
-/** access the language string from language_pair */
-#define get_language_string(OBJ) OBJ.first
+/** access the extension from extension_pair */
+#define get_extension(OBJ) OBJ.first
 
-/** access the language number from language_pair */
-#define get_language_number(OBJ) OBJ.second
+/** access the language from extension_pair */
+#define get_language(OBJ) OBJ.second
 
  /**
   * LanguageExtensionRegistryError
@@ -66,16 +66,16 @@ public:
 
     unsigned int size() const;
 
-    language_pair last() const;
+    extension_pair last() const;
 
-    language_pair at(unsigned int pos) const;
+    extension_pair at(unsigned int pos) const;
 
     void append(LanguageExtensionRegistry registry);
 
 private:
 
     /** vector of language/extension pairs */
-    std::vector<language_pair> registered_languages;
+    std::vector<extension_pair> registered_languages;
 
     /** bool to indicate that c extensions are to be treated as C++ false by default */
     bool use_cpp_for_c;
