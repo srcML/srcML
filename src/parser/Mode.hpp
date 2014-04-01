@@ -27,275 +27,511 @@
 #include "Language.hpp"
 #include "srcMLStateStack.hpp"
 
+/**
+ * Mode
+ *
+ * Class representing a stack of modes that direct parsing.
+ * Modes also keep state such as open parethesis/curly braces/tags
+ * in the underlying structures in which it delegates.
+ */
 class Mode : public TokenParser, public Language {
 
 public:
 
     /* Set of mode flags */
 
-    // any statement (broad definition includes declarations, etc.)
+    /** any statement (broad definition includes declarations, etc.) */
     const static State::MODE_TYPE MODE_STATEMENT;
 
-    // list used for comma and right parentheses
+    /** list used for comma and right parentheses */
     const static State::MODE_TYPE MODE_LIST;
 
-    // a particular mode is expected in the next start
+    /** a particular mode is expected in the next start */
     const static State::MODE_TYPE MODE_EXPECT;
 
-    // statement may be nested inside of the current
+    /** statement may be nested inside of the current */
     const static State::MODE_TYPE MODE_DETECT_COLON;
 
-    //
+    /** mode for within a templare */
     const static State::MODE_TYPE MODE_TEMPLATE;
+
+    /** mode for within a template parameter list */
     const static State::MODE_TYPE MODE_TEMPLATE_PARAMETER_LIST;
 
-    // an argument to a call
+    /** an argument to a call */
     const static State::MODE_TYPE MODE_ARGUMENT;
+
+    /** mode for a namespace */
     const static State::MODE_TYPE MODE_NAMESPACE;
 
-    // a parameter for a declaration/definition
+    /** a parameter for a declaration/definition */
     const static State::MODE_TYPE MODE_PARAMETER;
 
-    // expressions
+    /** expressions */
     const static State::MODE_TYPE MODE_EXPRESSION;
 
-    // expecting a call (member initialization list)
+    /** expecting a call (member initialization list) */
     const static State::MODE_TYPE MODE_CALL;
 
-    // setup for expecting a condition and detection of the end
-    // of a condition at a left parentheses of the correct count
+    /** 
+     * setup for expecting a condition and detection of the end
+     * of a condition at a left parentheses of the correct count 
+     */
     const static State::MODE_TYPE MODE_CONDITION;
 
+    /** marks top of some sequence of operations mostly to stop ending modes */
     const static State::MODE_TYPE MODE_TOP;
 
-    // blocks that are not necessarily statements
+    /** blocks that are not necessarily statements */
     const static State::MODE_TYPE MODE_BLOCK;
+
+    /** mode for inititialization typically =<init>...</init> */
     const static State::MODE_TYPE MODE_INIT;
 
-    // block tags from being issued.  Should be moved to
-    // output handling
+    /** 
+     * block tags from being issued.  Should be moved to
+     * output handling 
+     */
     const static State::MODE_TYPE MODE_FUNCTION_TAIL;
 
-    // whether to parse the end of line character
-    // used with preprocessor directives
+    /** 
+     * whether to parse the end of line character
+     * used with preprocessor directives 
+     */
     const static State::MODE_TYPE MODE_PARSE_EOL;
 
-    // local mode only used within a grammar rule
+    /** local mode only used within a grammar rule */
     const static State::MODE_TYPE MODE_LOCAL;
 
+    /** Mode for a variable name */
     const static State::MODE_TYPE MODE_VARIABLE_NAME;
 
-    // the if statement includes some special processing
-    // including starting a THEN element after the condition
-    // and stopping the ending of statements at the IF when
-    // an ELSE is matched
+    /** 
+     * the if statement includes some special processing
+     * including starting a THEN element after the condition
+     * and stopping the ending of statements at the IF when
+     * an ELSE is matched 
+     */
     const static State::MODE_TYPE MODE_IF;
 
-    // for special sections inside of mode such as in
-    // classes and switch statement blocks
+    /**
+     * for special sections inside of mode such as in
+     *  classes and switch statement blocks
+     */
     const static State::MODE_TYPE MODE_TOP_SECTION;
 
-    // for flags
-    const static State::MODE_TYPE MODE_FOR_GROUP;          // in a for heading group
-    const static State::MODE_TYPE MODE_FOR_INITIALIZATION; // for initialization (in header)
-    const static State::MODE_TYPE MODE_FOR_CONDITION;      // for condition (in header)
-    const static State::MODE_TYPE MODE_FOR_INCREMENT;      // for increment (in header)
+    /** in a for heading group i.e. for init/condition/increment */
+    const static State::MODE_TYPE MODE_FOR_GROUP;
 
+    /** for initialization (in header) */
+    const static State::MODE_TYPE MODE_FOR_INITIALIZATION;
+
+    /** for condition (in header) */
+    const static State::MODE_TYPE MODE_FOR_CONDITION;
+
+    /** for increment (in header) */
+    const static State::MODE_TYPE MODE_FOR_INCREMENT;
+
+    /** preprocessor mode */
     const static State::MODE_TYPE MODE_PREPROC;
-    const static State::MODE_TYPE MODE_NEST;
-    const static State::MODE_TYPE MODE_EXPRESSION_BLOCK;
-    const static State::MODE_TYPE MODE_INTERNAL_END_PAREN; // remove
 
-    // access regions in classes used for matching of
+    /** mode for nesting statements */
+    const static State::MODE_TYPE MODE_NEST;
+
+    /** mode fore expression block */
+    const static State::MODE_TYPE MODE_EXPRESSION_BLOCK;
+
+    /** mode marking to end at right parenthesis @todo remove */
+    const static State::MODE_TYPE MODE_INTERNAL_END_PAREN;
+
+    /** access regions in classes used for matching of */
     const static State::MODE_TYPE MODE_ACCESS_REGION;
+
+    /** mode for a do while statement */
     const static State::MODE_TYPE MODE_DO_STATEMENT;
+    
+    /** mode to ignore ; */
     const static State::MODE_TYPE MODE_IGNORE_TERMINATE;
 
+    /** mode for extern */
     const static State::MODE_TYPE MODE_EXTERN;
+    
+    /** mode to end at right curly */
     const static State::MODE_TYPE MODE_INTERNAL_END_CURLY;
 
+    /* mode for a class */
     const static State::MODE_TYPE MODE_CLASS;
+    
+    /** mode to end at block */
     const static State::MODE_TYPE MODE_END_AT_BLOCK;
 
+    /** mode to only end at right parentesis */
     const static State::MODE_TYPE MODE_END_ONLY_AT_RPAREN;
 
+    /** mode to end at a block and not expect ; after */
     const static State::MODE_TYPE MODE_END_AT_BLOCK_NO_TERMINATE;
 
+    /** mode for a function name */
     const static State::MODE_TYPE MODE_FUNCTION_NAME;
 
+    /** mode for a if then */
     const static State::MODE_TYPE MODE_THEN;
+
+    /** mode for an else */    
     const static State::MODE_TYPE MODE_ELSE;
 
+    /** mode for a typdef */
     const static State::MODE_TYPE MODE_TYPEDEF;
 
+    /** mode for a declaration of some type */
     const static State::MODE_TYPE MODE_DECL;
 
+    /** mode to consume the type names */
     const static State::MODE_TYPE MODE_EAT_TYPE;
 
+    /** mode for funciton parameter */
     const static State::MODE_TYPE MODE_FUNCTION_PARAMETER;
 
+    /** mode for an internal decl */
     const static State::MODE_TYPE MODE_INNER_DECL;
 
+    /** mode to mark in an init */
     const static State::MODE_TYPE MODE_IN_INIT;
 
+    /** mode for a try */
     const static State::MODE_TYPE MODE_TRY;
 
+    /** mode to end a list at a block */
     const static State::MODE_TYPE MODE_END_LIST_AT_BLOCK;
 
+    /** mode to end at ; */
     const static State::MODE_TYPE MODE_ONLY_END_TERMINATE;
 
+    /** mode for enum */
     const static State::MODE_TYPE MODE_ENUM;
 
+    /** mode for anonymous item e.g. anonymous class */
     const static State::MODE_TYPE MODE_ANONYMOUS;
 
+    /** mode to end at a comma */
     const static State::MODE_TYPE MODE_END_AT_COMMA;
 
+    /** mode for in a using */
     const static State::MODE_TYPE MODE_USING;
 
+    /** mode for function trailing return */
     const static State::MODE_TYPE MODE_TRAILING_RETURN;
 
+    /** mode to issue an empty element at pop */
     const static State::MODE_TYPE MODE_ISSUE_EMPTY_AT_POP;
 
+    /** mode to end at preprocessor endif */
     const static State::MODE_TYPE MODE_END_AT_ENDIF;
 
+    /** mode for an argument list */
     const static State::MODE_TYPE MODE_ARGUMENT_LIST;
 
 public:
 
+    /**
+     * Mode
+     * @param ptp the token parser
+     * @param lang the current language
+     *
+     * Constructor.  Create mode stack from TokenParser and current language.
+     */
     Mode(TokenParser* ptp, int lang)
         : Language(lang), statev(ptp)
     {}
 
+    /**
+     * ~Mode
+     * 
+     * Destructor.
+     */
     ~Mode() {}
 
+    /** internal storage of srcML states (modes) and other information */
     srcMLStateStack statev;
 
 protected:
 
-    // flush any skipped tokens to the output token stream
-    // overridden in StreamParser
-    //  void flushSkip() {}
-
+    /**
+     * size
+     *
+     * Delegate to return the size of state stack.
+     *
+     * @returns the size of the state stack.
+     */
     int size() const {
         return (int)statev.size();
     }
 
+     /**
+     * currentState
+     *
+     * Delegate to return the current state.
+     *
+     * @returns the curent state.
+     */
     srcMLState& currentState() {
 
         return statev.currentState();
     }
 
+     /**
+     * getParen
+     *
+     * Delegate to get the number of open parenthesis in current state.
+     *
+     * @returns the number of open parthesis.
+     */
     int getParen() const {
 
         return statev.getParen();
     }
 
+    /**
+     * incParen
+     *
+     * Delegate to increment the number of open parenthesis in currrent state.
+     */
     void incParen() {
 
         statev.incParen();
     }
 
+    /**
+     * decParen
+     *
+     * Delegate to decrement the number of open parenthesis in currrent state.
+     */
     void decParen() {
 
         statev.decParen();
     }
 
+    /**
+     * getCurly
+     *
+     * Delegate to get the number of open curly braces in current state.
+     *
+     * @returns the number of open curly braces.
+     */
     int getCurly() const {
 
         return statev.getCurly();
     }
 
+    /**
+     * incCurly
+     *
+     * Delegate to increment the number of open curly braces in currrent state.
+     */
     void incCurly() {
 
         statev.incCurly();
     }
 
+    /**
+     * decCurly
+     *
+     * Delegate to decrement the number of open curly braces in currrent state.
+     */
     void decCurly() {
 
         statev.decCurly();
     }
 
+    /**
+     * getTypecount
+     *
+     * Delegate to get the number of types.
+     *
+     * @returns the number of types.
+     */
     int getTypeCount() const {
 
         return statev.getTypeCount();
     }
 
+    /**
+     * setTypecount
+     *
+     * Delegate to set the number of types.
+     */
     void setTypeCount(int n) {
 
         statev.setTypeCount(n);
     }
 
+    /**
+     * incTypecount
+     *
+     * Delegate to increment the number of types.
+     */
     void incTypeCount() {
 
         statev.incTypeCount();
     }
 
+    /**
+     * decTypecount
+     *
+     * Delegate to decrement the number of types.
+     */
     void decTypeCount() {
 
         statev.decTypeCount();
     }
 
+    /**
+     * startNewMode
+     * @param m a new mode
+     *
+     * Delegate to create/push a new mode m onto the stack.
+     */
     void startNewMode(const State::MODE_TYPE& m) {
 
         statev.startNewMode(m);
     }
 
+    /**
+     * endMode
+     *
+     * Delegate to remove/pop the mode on the top of the stack.
+     */
     void endMode() {
 
         statev.endCurrentMode();
     }
 
+    /**
+     * endMode
+     * @param m mode to take off
+     *
+     * Delegate to remove/pop the mode m off the top of stack.
+     * No checking is done to see if m is on the top of the stack.
+     * Same as endMode().
+     */
     void endMode(const State::MODE_TYPE& m) {
 
         statev.endCurrentMode(m);
     }
 
+    /**
+     * endLastMode
+     *
+     * Delegate to remove/pop the last mode on the stack.
+     * No actual checking is done to see if last mode.
+     * Actually, less strict version of endMode.
+     */
     void endLastMode() {
 
         statev.endLastMode();
     }
 
+    /**
+     * endTopMode
+     *
+     * Delegate to remove/pop the mode on the top of the stack.
+     * Equivalent to endMode.
+     */
     void endTopMode() {
 
         statev.endCurrentMode();
     }
 
+    /**
+     * setMode
+     * @param m modes to set
+     *
+     * Delegate to add the modes m to the top of the stack.
+     * Does not overide modes but adds them to current mode.
+     */
     void setMode(const State::MODE_TYPE& m) {
 
         statev.setMode(m);
     }
-
+    /**
+     * getMode
+     *
+     * Delegate to get the current mode on top of the stack.
+     */
     State::MODE_TYPE getMode() {
 
         return statev.getMode();
     }
 
+    /**
+     * clearMode
+     * @param m modes to clear
+     *
+     * Delegate to clear/unset the modes m in the current mode.
+     */
     void clearMode(const State::MODE_TYPE& m) {
 
         statev.clearMode(m);
     }
 
+    /**
+     * replaceMode
+     * @param oldm modes to clear
+     * @param newm modes to set
+     *
+     * Clear the current modes oldm, and sets then sets the modes new.
+     */
     void replaceMode(const State::MODE_TYPE& oldm, const State::MODE_TYPE& newm) {
 
         statev.clearMode(oldm);
         statev.setMode(newm);
     }
 
+    /**
+     * inPrevMode
+     * @param m modes to check if in
+     *
+     * Delegate to predicate to check if the previous mode before current has m (not exact mode, but at least m).
+     *
+     * @param if in the previous mode m.
+     */
     bool inPrevMode(const State::MODE_TYPE& m) const {
 
         return statev.inPrevMode(m);
     }
 
+    /**
+     * inMode
+     * @param m modes to check if in
+     *
+     * Delegate to predicate to check if in the current mode m (not exact mode, but at least m).
+     *
+     * @param if in the previous mode m.
+     */
     bool inMode(const State::MODE_TYPE& m) const {
 
         return statev.inMode(m);
     }
 
+    /**
+     * inTransparentMode
+     * @param m modes to check if in
+     *
+     * Delegate to predicate to check if any mode on entire stack has m (not extact mode, but at least m).
+     *
+     * @param if in the previous mode m.
+     */
     bool inTransparentMode(const State::MODE_TYPE& m) const {
 
         return statev.inTransparentMode(m);
     }
 
+    /**
+     * dupDownOverMode
+     * @param mode to stop on
+     *
+     * Duplicate modes on stack down to and including m.
+     */
     void dupDownOverMode(const State::MODE_TYPE& m) {
 
         std::list<srcMLState> alist;
