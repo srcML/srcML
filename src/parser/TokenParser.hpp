@@ -29,7 +29,7 @@
  *
  * In order to use:
  *
- * Put a #include "tokenparser.h" in your grammar file
+ * Put a @code#include "tokenparser.h"@endcode in your grammar file
  *
  * Define a symbol(?) start.  Include in it all the cases
  * that you want to use:
@@ -51,30 +51,46 @@
 #include <antlr/TokenStream.hpp>
 #include <list>
 
+/**
+ * TokenParser
+ *
+ * Interface for token parsing.
+ */
 class TokenParser {
 
 public:
-    // starts an element
+
+    /** abstract method for starting an element */
     virtual void startElement(int) = 0;
 
-    // starts an element that starts before skipped tokens
+    /** abstract method for starting an element that starts before skipped tokens */
     virtual void startNoSkipElement(int) = 0;
 
-    // ends an element
+    /** abstract method for ending an element */
     virtual void endElement(int) = 0;
 
-    // starts an element
+    /** abstract method for starting an empty element */
     virtual void emptyElement(int) = 0;
 
+    /** abstract method for starting adding an element */
     virtual void addElement(int) = 0;
 
+    /** abstract method for flushing skipped */
     virtual void flushSkip() = 0;
 
+    /** abstract method for SkipBufferSize */
     virtual int SkipBufferSize() = 0;
 
+    /** abstract method for Current token */
     virtual antlr::RefToken* CurrentToken() = 0;
 
+    /**
+     * ~TokenParser
+     *
+     * Destructor.
+     */
     virtual ~TokenParser() {}
+
 };
 
 #endif

@@ -53,6 +53,9 @@ public:
 
     /**
      * StreamMLParser
+     * @param lexer token stream lexer
+     * @param language parsing language
+     * @param parsing_options the parsing options
      *
      * Constructor.  Set up parser and start unit.
      */
@@ -551,7 +554,7 @@ private:
 
     /** current skipped token buffer */
     std::list<antlr::RefToken>* pskiptb;
-    
+
 };
 
 #endif
