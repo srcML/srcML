@@ -70,8 +70,6 @@ public:
     xmlTextWriter * getWriter();
     void setDepth(int thedepth);
 
-    static bool checkEncoding(const char* encoding);
-
     // same srcml file can be generated from multiple input token streams
     void setTokenStream(TokenStream& ints);
 

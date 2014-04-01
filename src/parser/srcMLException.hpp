@@ -32,20 +32,4 @@
  */
 class Segmentation_Fault : public std::exception {};
 
-/**
- * srcEncodingException
- *
- * Class for srcEncodingException exception.
- * @todo check if used.
- */
-class srcEncodingException : public std::exception {};
-
-/**
- * xmlEncodingException
- *
- * Class for xmlEncodingException fault exception.
- * @todo check if used.
- */
-class xmlEncodingException : public std::exception {};
-
 #endif
