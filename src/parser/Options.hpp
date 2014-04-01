@@ -135,76 +135,8 @@ const OPTION_TYPE OPTION_TIMESTAMP  = ull(1) << __COUNTER__; /* 15 */
 // end SRCML_OPTIONS
 
 // @src2srcml
-// @srcml2src
-/** option to output path? @todo check if used */
-const OPTION_TYPE OPTION_PATH        = ull(1) << __COUNTER__;
-
-// @src2srcml
-// @srcml2src
-/** language @todo check if used */
-const OPTION_TYPE OPTION_LANGUAGE    = ull(1) << __COUNTER__;
-
-// @src2srcml
-// @srcml2src
-/** xml encoding @todo check if used */
-const OPTION_TYPE OPTION_XML_ENCODING= ull(1) << __COUNTER__;
-
-// @src2srcml
 /** output is OPTION_TYPEeractive (good for editing applications) */
 const OPTION_TYPE OPTION_INTERACTIVE = ull(1) << __COUNTER__;
-
-// @src2srcml
-/** input filenames is a file list */
-const OPTION_TYPE OPTION_FILELIST    = ull(1) << __COUNTER__;
-
-// @src2srcml
-// @srcml2src
-/** declared filename @todo check if used */
-const OPTION_TYPE OPTION_FILENAME    = ull(1) << __COUNTER__;
-
-// @src2srcml
-// @srcml2src
-/** declared directory @todo check if used */
-const OPTION_TYPE OPTION_DIRECTORY   = ull(1) << __COUNTER__;
-
-// @src2srcml
-// @srcml2src
-/** declared version @todo check if used */
-const OPTION_TYPE OPTION_VERSION     = ull(1) << __COUNTER__;
-
-// @src2srcml
-// @srcml2src
-/** verbose */
-const OPTION_TYPE OPTION_VERBOSE     = ull(1) << __COUNTER__;
-
-// @src2srcml
-// @srcml2src
-/** source encoding @todo check if used */
-const OPTION_TYPE OPTION_SRC_ENCODING= ull(1) << __COUNTER__;
-
-// @srcml2src
-/** text extraction */
-const OPTION_TYPE OPTION_TEXT         = ull(1) << __COUNTER__;
-
-// @srcml2src
-/** select a unit */
-const OPTION_TYPE OPTION_UNIT         = OPTION_OPERATOR;
-
-// @srcml2src
-/** expand nested units OPTION_TYPEo separate files */
-const OPTION_TYPE OPTION_TO_DIR       = OPTION_MODIFIER;
-
-// @srcml2src
-/** output is xml */
-const OPTION_TYPE OPTION_XML          = ull(1) << __COUNTER__;
-
-// @srcml2src
-/** info */
-const OPTION_TYPE OPTION_INFO         = ull(1) << __COUNTER__;
-
-// @srcml2src
-/** long info */
-const OPTION_TYPE OPTION_LONG_INFO    = ull(1) << __COUNTER__;
 
 /** ??? @todo check if used */
 const OPTION_TYPE OPTION_XPATH_TOTAL = OPTION_CPP_TEXT_ELSE;
@@ -223,53 +155,6 @@ const OPTION_TYPE OPTION_EXPRESSION = ull(1) << __COUNTER__;
 /** namespace mode */
 const OPTION_TYPE OPTION_NAMESPACE = ull(1) << __COUNTER__;
 
-// @srcml2src
-/** omit namespaces */
-const OPTION_TYPE OPTION_OMIT = ull(1) << __COUNTER__;
-
-// @src2srcml
-/** xmlns mode */
-const OPTION_TYPE OPTION_XMLNS = OPTION_APPLY_ROOT;
-
-// @srcml2src
-/** xpath evaluation */
-const OPTION_TYPE OPTION_XPATH        = OPTION_LITERAL;
-
-// @srcml2src
-/** xslt evaluation */
-const OPTION_TYPE OPTION_XSLT         = OPTION_CPP;
-
-// @srcml2src
-/** relaxng evaluation */
-const OPTION_TYPE OPTION_RELAXNG      = OPTION_EXPRESSION;
-
-// @src2srcml
-// @srcml2src
-/** use old filename behavior, where it was just the base filename @todo check if used  */
-const OPTION_TYPE OPTION_OLD_FILENAME  = ull(1) << __COUNTER__;
-
-// @src2srcml
-// @srcml2src
-/** specify input format */
-const OPTION_TYPE OPTION_INPUT_FORMAT  = ull(1) << __COUNTER__;
-
-// @src2srcml
-// @srcml2src
-/** specify ouput format */
-const OPTION_TYPE OPTION_OUTPUT_FORMAT  = ull(1) << __COUNTER__;
-
-// @srcml2src
-/** list option */
-const OPTION_TYPE OPTION_LIST  = ull(1) << __COUNTER__;
-
-// @src2srcml
-/** skip default language option */
-const OPTION_TYPE OPTION_RECURSIVE  = ull(1) << __COUNTER__;
-
-// @src2srcml
-// @srcml2src
-/** skip output of notification messages */
-const OPTION_TYPE OPTION_QUIET  = ull(1) << __COUNTER__;
 
 // @srcml2src
 /** option diff @todo check if used and think about adding if not */
@@ -282,15 +167,6 @@ const OPTION_TYPE OPTION_PRESERVE  = ull(1) << __COUNTER__;
 // @src2srcml
 /** @todo Not used but may be.  */
 const OPTION_TYPE OPTION_REVISION  = ull(1) << __COUNTER__;
-
-// @src2srcml
-// @srcml2src
-/** output units separated with null @todo check if needed */
-const OPTION_TYPE OPTION_NULL  = ull(1) << __COUNTER__;
-
-// @src2srcml
-/** input from svn */
-const OPTION_TYPE OPTION_SVN  = ull(1) << __COUNTER__;
 
 // @src2srcml
 /** think use @code#line@endcode info */
