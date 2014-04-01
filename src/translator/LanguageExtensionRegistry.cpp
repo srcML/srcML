@@ -86,7 +86,7 @@ bool LanguageExtensionRegistry::registerUserExt(const char* ext, int language) {
 
     if(!language) return false;
 
-    extension_pair apair = extension_pair(ext, language);
+    language_extension apair = language_extension(ext, language);
     registered_languages.push_back(apair);
 
  return true;
@@ -192,7 +192,7 @@ void LanguageExtensionRegistry::c_is_cpp(bool use_cpp) {
  *
  * @returns the language/extension pair at given position.
  */
-extension_pair LanguageExtensionRegistry::at(unsigned int pos) const {
+language_extension LanguageExtensionRegistry::at(unsigned int pos) const {
 
     if(pos >= size()) throw LanguageExtensionRegistryError();
 
@@ -220,7 +220,7 @@ unsigned int LanguageExtensionRegistry::size() const {
  * 
  * @returns the last language/extension pair at given position.
  */
-extension_pair LanguageExtensionRegistry::last() const {
+language_extension LanguageExtensionRegistry::last() const {
 
     if(size() == 0) throw LanguageExtensionRegistryError();
 
@@ -236,7 +236,7 @@ extension_pair LanguageExtensionRegistry::last() const {
  */
 void LanguageExtensionRegistry::append(LanguageExtensionRegistry registry) {
 
-    for(std::vector<extension_pair>::const_iterator itr = registry.registered_languages.begin(); itr != registry.registered_languages.end(); ++itr)
+    for(std::vector<language_extension>::const_iterator itr = registry.registered_languages.begin(); itr != registry.registered_languages.end(); ++itr)
         registered_languages.push_back(*itr);
 
 }
