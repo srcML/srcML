@@ -2930,7 +2930,8 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         if (type == VARIABLE && type_count == 0) {
             type_count = 1;
         }
-
+        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, type);
+        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, type_count);
     }
 
     // may just have an expression
@@ -5705,12 +5706,14 @@ annotation_argument[] { ENTRY_DEBUG } :
             // start the argument
             startElement(SARGUMENT);
         }
+
+        ({ next_token() == EQUAL}? type_identifier variable_declaration_initialization)?
+
         // suppress warning of ()*
         (options { greedy = true; } :
-        { !(LA(1) == RPAREN) }? expression |
+        { inputState->guessing }? RCURLY | 
+        { !(LA(1) == RPAREN) }? expression | type_identifier)*
 
-        type_identifier
-        )*
 ;
 
 // a parameter
