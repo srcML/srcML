@@ -3286,7 +3286,7 @@ marker[] { CompleteElement element(this); startNewMode(MODE_LOCAL); startElement
 */
 
 // update type count
-update_typecount[State::MODE_TYPE mode] {} :
+update_typecount[srcMLState::MODE_TYPE mode] {} :
         {
             decTypeCount();
             if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
@@ -6561,7 +6561,7 @@ eol_post[int directive_token, bool markblockzero] {
                 if(isoption(parseoptions, OPTION_CPPIF_CHECK) && !inputState->guessing) {
 
                     std::list<int> end_order = cppif_end_count_check();
-                    State::MODE_TYPE current_mode = getMode();
+                    srcMLState::MODE_TYPE current_mode = getMode();
                     // @todo When C++11 is default, switch to ranged for or at least auto keyword.
                     for(std::list<int>::iterator pos = end_order.begin(); pos != end_order.end(); ++pos) {
 

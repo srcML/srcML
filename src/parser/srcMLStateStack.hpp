@@ -20,16 +20,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef srcMLSTATESTACK_HPP
-#define srcMLSTATESTACK_HPP
+#ifndef SRCMLSTATESTACK_HPP
+#define SRCMLSTATESTACK_HPP
 
 #include <list>
 #include <stack>
-#include <srcMLstate.hpp>
+#include <srcMLState.hpp>
 #include "TokenParser.hpp"
 #include "srcMLException.hpp"
-
-#include "State.hpp"
 
 /**
  * srcMLStateStack
@@ -83,7 +81,7 @@ public:
      *
      * Delegate to create a new mode and place it on top of stack.
      */
-    void startNewMode(const State::MODE_TYPE& m) {
+    void startNewMode(const srcMLState::MODE_TYPE& m) {
 
         // prepare for the new stack
         st.push(srcMLState(m, !empty() ? getTransparentMode() : 0, !empty() ? getMode() : 0));
@@ -112,7 +110,7 @@ public:
      * Delegate to remove the current mode m (pop from stack).
      * Does not actually check or use m.
      */
-    void endCurrentMode(const State::MODE_TYPE& m) {
+    void endCurrentMode(const srcMLState::MODE_TYPE& m) {
 
         if (st.size() <= 1)
             throw Segmentation_Fault();
@@ -139,7 +137,7 @@ public:
      *
      * @returns the current mode.
      */
-    State::MODE_TYPE getMode() const {
+    srcMLState::MODE_TYPE getMode() const {
 
         return !st.empty() ? st.top().getMode() : 0;
     }
@@ -151,7 +149,7 @@ public:
      *
      * @returns the previous mode.
      */
-    State::MODE_TYPE getPrevMode() const {
+    srcMLState::MODE_TYPE getPrevMode() const {
 
         return !st.empty() ? st.top().getMode() : 0;
     }
@@ -163,7 +161,7 @@ public:
      *
      * @returns the transparent mode.
      */
-    State::MODE_TYPE getTransparentMode() const {
+    srcMLState::MODE_TYPE getTransparentMode() const {
 
         return !st.empty() ? st.top().getTransparentMode() : 0;
     }
@@ -174,7 +172,7 @@ public:
      *
      * Add the modes m to the current modes.
      */
-    void setMode(const State::MODE_TYPE& m) {
+    void setMode(const srcMLState::MODE_TYPE& m) {
         if (st.empty())
             throw Segmentation_Fault();
 
@@ -187,7 +185,7 @@ public:
      *
      * Delegate to removes the modes m from the current modes.
      */
-     void clearMode(const State::MODE_TYPE& m) {
+     void clearMode(const srcMLState::MODE_TYPE& m) {
         if (st.empty())
             throw Segmentation_Fault();
 
@@ -200,7 +198,7 @@ public:
      *
      * Delegate to add the open element id to the top of the open element of the current mode.
      */
-    void push(const State::MODE_TYPE& id) {
+    void push(const srcMLState::MODE_TYPE& id) {
         if (st.empty())
             throw Segmentation_Fault();
 
@@ -251,7 +249,7 @@ public:
      *
      * @returns if in mode m.
      */
-    bool inMode(const State::MODE_TYPE& m) const {
+    bool inMode(const srcMLState::MODE_TYPE& m) const {
 
         return !st.empty() ? st.top().inMode(m) : false;
     }
@@ -264,7 +262,7 @@ public:
      *
      * @returns if in previous mode m.
      */
-    bool inPrevMode(const State::MODE_TYPE& m) const {
+    bool inPrevMode(const srcMLState::MODE_TYPE& m) const {
 
         return st.size() > 1 ? st.top().inPrevMode(m) : false;
     }
@@ -277,7 +275,7 @@ public:
      *
      * @returns if in transparent mode m.
      */
-    bool inTransparentMode(const State::MODE_TYPE& m) const {
+    bool inTransparentMode(const srcMLState::MODE_TYPE& m) const {
 
         return !st.empty() ? st.top().inTransparentMode(m) : false;
     }
