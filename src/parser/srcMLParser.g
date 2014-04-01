@@ -2930,8 +2930,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         if (type == VARIABLE && type_count == 0) {
             type_count = 1;
         }
-        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, type);
-        fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, type_count);
+
     }
 
     // may just have an expression
