@@ -39,6 +39,9 @@
 #define snprintf _snprintf
 #endif
 
+/** 
+ * anonymous enum for prefix positions
+ */
 enum { SRCML_SRC_NS_URI_POS,
        SRCML_CPP_NS_URI_POS,
        SRCML_ERR_NS_URI_POS,
@@ -48,16 +51,27 @@ enum { SRCML_SRC_NS_URI_POS,
        SRCML_EXT_POSITION_NS_URI_POS
 };
 
+/** name of element call map */
 #define ELEMENT_MAP_CALL_NAME element_name
+
+/** element map first type */
 #define ELEMENT_MAP_FIRST_TYPE int
+
+/** element map second type */
 #define ELEMENT_MAP_SECOND_TYPE const char*
+
+/** element map default operation */
 #define ELEMENT_MAP_DEFAULT(s) template <ELEMENT_MAP_FIRST_TYPE n> inline ELEMENT_MAP_SECOND_TYPE \
     ELEMENT_MAP_CALL_NAME() { s }
 
+/** element map call */
 #define ELEMENT_MAP_CALL(t) ELEMENT_MAP_CALL_NAME <srcMLParserTokenTypes::t>()
+
+/** element map */
 #define ELEMENT_MAP(t, s) template <> inline ELEMENT_MAP_SECOND_TYPE ELEMENT_MAP_CALL(t) { return s; }
 
 // map the token types to specific strings
+/** namespace surrounding element mappings */
 namespace {
 
     // base member
@@ -280,15 +294,26 @@ namespace {
 #undef ELEMENT_MAP_FIRST_TYPE
 #undef ELEMENT_MAP_SECOND_TYPE
 
+/** element call name */
 #define ELEMENT_MAP_CALL_NAME element_prefix
+
+/** element map first type */
 #define ELEMENT_MAP_FIRST_TYPE int
+
+/** element map second type */
 #define ELEMENT_MAP_SECOND_TYPE int
+
+/** element map default operation */
 #define ELEMENT_MAP_DEFAULT(s) template <ELEMENT_MAP_FIRST_TYPE n> inline ELEMENT_MAP_SECOND_TYPE \
     ELEMENT_MAP_CALL_NAME() { s }
 
+/** element map call */
 #define ELEMENT_MAP_CALL(t) ELEMENT_MAP_CALL_NAME <srcMLParserTokenTypes::t>()
+
+/** element map */
 #define ELEMENT_MAP(t, s) template <> inline ELEMENT_MAP_SECOND_TYPE ELEMENT_MAP_CALL(t) { return s; }
 
+/** namespace containing prefix mappings */
 namespace {
 
     // default is the srcML namespace
@@ -317,12 +342,31 @@ namespace {
     ELEMENT_MAP(SMODIFIER, SRCML_EXT_MODIFIER_NS_URI_POS)
 }
 
-// check if encoding is supported
+/**
+ * checkEncoding
+ * @param encoding encoding to check
+ *
+ * Predicate to check if encoding is supported.  @todo check if needed or used.
+ * @return if encoding is supporting
+ */
 bool srcMLOutput::checkEncoding(const char* encoding) {
 
     return xmlFindCharEncodingHandler(encoding) != 0;
 }
 
+/**
+ * srcMLOutput
+ * @param ints a token stream
+ * @param filename if output to a file
+ * @param language the unit language
+ * @param xml_enc output encoding
+ * @param op output operations
+ * @param uri namespaces
+ * @param ts tabstop size
+ * @param output_buffer if output is to a output buffer
+ *
+ * Constructor. Handles all outputs.
+ */
 srcMLOutput::srcMLOutput(TokenStream* ints,
                          const char* filename,
                          const char* language,
@@ -330,8 +374,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          OPTION_TYPE& op,
                          std::string * uri,
                          int ts,
-                         xmlOutputBuffer * output_buffer
-                         )
+                         xmlOutputBuffer * output_buffer)
     : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
       unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(uri)
     , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), output_buffer(output_buffer),
@@ -353,6 +396,11 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 
 }
 
+/**
+ * initWriter
+ *
+ * Initializes output xmlWriter.  Supports delayed initialization.
+ */
 void srcMLOutput::initWriter() {
 
     // open the output text writer stream
@@ -374,11 +422,21 @@ void srcMLOutput::initWriter() {
 
 }
 
+/**
+ * ~srcMLOutput
+ *
+ * Destructor.  Closes output.
+ */
 srcMLOutput::~srcMLOutput() {
 
     close();
 }
 
+/**
+ * close
+ *
+ * Close/finish the output.
+ */
 void srcMLOutput::close() {
 
     if (xout) {
@@ -388,10 +446,27 @@ void srcMLOutput::close() {
     }
 }
 
+/**
+ * isoption
+ * @param flag flags to check if set
+ *
+ * Predicate to check if options in flag are set.
+ *
+ * @returns if options in flag are set.
+ */
 bool srcMLOutput::isoption(const OPTION_TYPE& flag) const {
     return (flag & options) > 0;
 }
 
+/**
+ * isoption
+ * @param flag flags to check if set
+ * @param options flags to check if set in
+ *
+ * Predicate to check if options in flag are set in options.
+ *
+ * @returns if options in flag are set.
+ */
 bool srcMLOutput::isoption(const OPTION_TYPE& flag, const OPTION_TYPE& options) {
     return (flag & options) > 0;
 }
