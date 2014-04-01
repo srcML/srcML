@@ -41,13 +41,25 @@
 
 #include <antlr/TokenStream.hpp>
 
+/**
+ * TokenStream
+ *
+ * Class for a token stream.
+ */
 class TokenStream {
 
 public:
 
+    /** abstract method for getting next token */
     virtual const antlr::RefToken& nextToken() = 0;
 
+    /**
+     * ~TokenStream
+     *
+     * Destructor.
+     */
     virtual ~TokenStream() {}
+
 };
 
 #endif
