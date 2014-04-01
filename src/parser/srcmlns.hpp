@@ -117,16 +117,4 @@ const char* const UNIT_ATTRIBUTE_ITEM = "item";
 /** item (XPath) attribute */
 const char* const UNIT_ATTRIBUTE_PATH = "item";
 
-/** Default prefix array @todo see if still needed */
-const char* const DEFAULT_URI_PREFIX[] = {
-
-    SRCML_SRC_NS_PREFIX_DEFAULT,
-    SRCML_CPP_NS_PREFIX_DEFAULT,
-    SRCML_ERR_NS_PREFIX_DEFAULT,
-    SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
-    SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
-    SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
-    SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
-};
-
 #endif
