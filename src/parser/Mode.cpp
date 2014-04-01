@@ -24,12 +24,12 @@
 
 #ifdef __GNUC__
 
-/** size of a Mode in GNU */
+/** size of a Mode literal in GNU */
 #define ull(a) a##ULL
 
 #else
 
- /** size of a Mode in non-GNU */
+ /** size of a Mode literal in non-GNU */
 #define ull(a) a##i64
 
 #endif
