@@ -128,7 +128,7 @@ public:
     /** unit attribute version */
     const char* unit_version;
 
-\    /** unit attribute timestamp */
+    /** unit attribute timestamp */
     const char* unit_timestamp;
 
     /** unit attribute hash */
