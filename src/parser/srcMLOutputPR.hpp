@@ -284,15 +284,17 @@ namespace {
 #undef ELEMENT_MAP_CALL
 #undef ELEMENT_MAP
 
-char srcMLOutput::process_table[] = {
-
-    // fill the array with the prefixes
+/** This was moved to fix doxygen problems.  However, may want to move back */
 /** boost local macro */
 #define BOOST_PP_LOCAL_MACRO(n)   element_process<n>(),
 
 /** boost macro limits */
 #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
 
+/** the process table */
+char srcMLOutput::process_table[] = {
+
+    // fill the array with the prefixes
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS
@@ -307,4 +309,5 @@ char srcMLOutput::process_table[] = {
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS
+
 };

@@ -1,5 +1,5 @@
 /**
- * @file srcMLTokenStream.hpp
+ * @file TokenStream.hpp
  *
  * @copyright Copyright (C) 2004-2010 SDML (www.srcML.org)
  *

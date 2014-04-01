@@ -20,7 +20,7 @@
 # This tag specifies the encoding used for all characters in the config file
 # that follow. The default is UTF-8 which is also the encoding used for all text
 # before the first occurrence of this tag. Doxygen uses libiconv (or the iconv
-# built into libc) for the transcoding. See http://www.gnu.org/software/libiconv
+# built into libc) for the transcoding. See http:www.gnu.org/software/libiconv
 # for the list of possible encodings.
 # The default value is: UTF-8.
 
@@ -733,7 +733,7 @@ WARN_LOGFILE           =
 # spaces.
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ../src/libsrcml ../src/translator
+INPUT                  = ../src/libsrcml ../src/translator ../src/parser
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
