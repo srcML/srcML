@@ -29,6 +29,15 @@
 #include <string>
 #include <vector>
 
+/** set language_pair as type that is a pair of string/int */
+typedef std::pair<std::string, int> language_pair;
+
+/** get the string representation of a language from a language pair */
+#define get_language_string(OBJ) OBJ.first
+
+/** get the number representation of a language from a language pair */
+#define get_language_number(OBJ) OBJ.second
+
 /**
  * Namespace for language names
  */
@@ -151,8 +160,8 @@ public:
     static int getLanguage(const char* const s) {
 
         for(int i = 0; i < lang2intcount; ++i)
-            if (lang2int[i].first == s)
-                return lang2int[i].second;
+            if (get_language_string(lang2int[i]) == s)
+                return get_language_number(lang2int[i]);
 
         return 0;
     }
@@ -167,8 +176,8 @@ public:
     const char* getLanguageString() const {
 
         for(int i = 0; i < lang2intcount; ++i)
-            if (lang2int[i].second == language)
-                return lang2int[i].first.c_str();
+            if (get_language_number(lang2int[i]) == language)
+                return get_language_string(lang2int[i]).c_str();
 
         return "";
     }
@@ -188,7 +197,7 @@ private:
     const int language;
 
     static int lang2intcount;
-    static std::pair<std::string, int> lang2int[];
+    static language_pair lang2int[];
 };
 
 #endif
