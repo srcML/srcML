@@ -1,7 +1,7 @@
 /**
- * @file srcMLStateStack.hpp
+ * @file ModeStack.hpp
  *
- * @copyright Copyright (C) 2004-2010 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2004-2014 SDML (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
@@ -20,32 +20,56 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef SRCMLSTATESTACK_HPP
-#define SRCMLSTATESTACK_HPP
+#ifndef MODE_STACK_HPP
+#define MODE_STACK_HPP
 
-#include <list>
-#include <stack>
-#include <srcMLState.hpp>
 #include "TokenParser.hpp"
-#include "srcMLException.hpp"
+#include "Language.hpp"
+#include "srcMLState.hpp"
 
 /**
- * srcMLStateStack
+ * ModeStack
  *
- * Stack of srcMLStates.
+ * Class representing a stack of modes that direct parsing.
+ * Modes also keep srcMLstate such as open parethesis/curly braces/tags
+ * in the underlying structures in which it delegates.
  */
-class srcMLStateStack {
+class ModeStack : public TokenParser, public Language {
+
 public:
 
-    /**
-     * srcMLsrcMLStateStack
-     * @param ptp token parser
+    #include "Mode.hpp"
+
+   /**
+     * ModeStack
+     * @param ptp the token parser
+     * @param lang the current language
      *
-     * Constructor.
+     * Constructor.  Create mode stack from TokenParser and current language.
      */
-    srcMLStateStack(TokenParser* ptp)
-        : parser(ptp), st()
+    ModeStack(TokenParser* ptp, int lang)
+        : Language(lang), parser(ptp)
     {}
+
+    /**
+     * ~ModeStack
+     *
+     * Destructor.  Ends all open modes/states.
+     */
+    ~ModeStack() {
+
+        // end all modes
+        endAllModes();
+
+    }
+
+     /** token parser */
+    TokenParser* parser;
+
+    /** stack of states/modes */
+    std::stack<srcMLState> st;
+
+protected:
 
     /**
      * currentState
@@ -88,11 +112,11 @@ public:
     }
 
     /**
-     * endCurrentMode
+     * endMode
      *
      * Delegate to remove the current mode (pop from stack).
      */
-    void endCurrentMode() {
+    void endMode() {
 
         if (st.size() == 1)
             throw Segmentation_Fault();
@@ -104,13 +128,13 @@ public:
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
     /**
-     * endCurrentMode
+     * endMode
      * @param m mode to end
      *
      * Delegate to remove the current mode m (pop from stack).
      * Does not actually check or use m.
      */
-    void endCurrentMode(const srcMLState::MODE_TYPE& m) {
+    void endMode(const srcMLState::MODE_TYPE& m) {
 
         if (st.size() <= 1)
             throw Segmentation_Fault();
@@ -399,19 +423,6 @@ public:
     }
 
     /**
-     * ~srcMLStack
-     *
-     * Destructor.  Ends all open modes/states.
-     */
-    ~srcMLStateStack() {
-
-        // end all modes
-        endAllModes();
-    }
-
-protected:
-
-    /**
      * endAllModes
      *
      * End all modes/states on stack.
@@ -420,7 +431,7 @@ protected:
 
         // end all modes
         while (!st.empty()) {
-            endCurrentMode(getMode());
+            endMode(getMode());
         }
     }
 
@@ -441,17 +452,108 @@ protected:
         st.pop();
     }
 
-private:
+    /**
+     * endTopMode
+     *
+     * Delegate to remove/pop the mode on the top of the stack.
+     * Equivalent to endMode.
+     */
+    void endTopMode() {
 
-    /** Mode is a friend class */
-    friend class Mode;
+        endMode();
+    }
 
-    /** token parser */
-    TokenParser* parser;
+    /**
+     * replaceMode
+     * @param oldm modes to clear
+     * @param newm modes to set
+     *
+     * Clear the current modes oldm, and sets then sets the modes new.
+     */
+    void replaceMode(const srcMLState::MODE_TYPE& oldm, const srcMLState::MODE_TYPE& newm) {
 
-    /** stack of states/modes */
-    std::stack<srcMLState> st;
-    
+        clearMode(oldm);
+        setMode(newm);
+    }
+
+    /**
+     * dupDownOverMode
+     * @param m mode to stop on
+     *
+     * Duplicate modes on stack down to and including m.
+     */
+    void dupDownOverMode(const srcMLState::MODE_TYPE& m) {
+
+        std::list<srcMLState> alist;
+        while(!(st.top().getMode() & m)) {
+
+            alist.push_front(st.top());
+            st.pop();
+
+        }
+
+        alist.push_front(st.top());
+        st.pop();
+
+
+        alist.front().setMode(MODE_TOP | MODE_END_AT_ENDIF);
+        for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i) {
+            i->setMode(MODE_END_AT_ENDIF);
+            st.push(*i);
+        }
+
+        alist.front().openelements = std::stack<int>();
+        for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i) {
+            i->setMode(MODE_ISSUE_EMPTY_AT_POP);
+            st.push(*i);
+
+        }
+
+
+    }
+
+    /**
+    * endDownToMode
+    * @param mode mode to end down to
+    *
+    * End elements down to but not including the mode mode.
+    */
+    void endDownToMode(const srcMLState::MODE_TYPE& mode) {
+
+        if (!inTransparentMode(mode))
+            return;
+
+        while (size() > 1 && !inMode(mode))
+            endMode();
+    }
+
+    /**
+     * endDownToModeSet
+     * @param mode mode to end down to
+     *
+     * End elements down to but not including the mode mode.
+     */
+     void endDownToModeSet(const srcMLState::MODE_TYPE& mode) {
+
+        //  if (getTransparentMode() & (mode == 0))
+        //      return;
+
+        while (size() > 1 && (getMode() & mode) == 0)
+            endMode();
+    }
+
+    /**
+     * endDownOverMode
+     * @param mode mode to end down to
+     *
+     * End elements down to and including the mode mode.
+     */
+     void endDownOverMode(const srcMLState::MODE_TYPE& mode) {
+
+        while (size() > 1 && inMode(mode))
+            endMode();
+    }
+
 };
 
 #endif

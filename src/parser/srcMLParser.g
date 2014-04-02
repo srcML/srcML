@@ -131,7 +131,7 @@ header "post_include_hpp" {
 #include <string>
 #include <deque>
 #include <stack>
-#include "Mode.hpp"
+#include "ModeStack.hpp"
 #include "Options.hpp"
 
 // Macros to introduce trace statements
@@ -213,7 +213,7 @@ public:
         // only run if not guessing
         if (parent->inputState->guessing) return;
 
-        start_size = parent->statev.currentState().size();
+        start_size = parent->currentState().size();
     }
 
     ~LightweightElement() {
@@ -222,8 +222,8 @@ public:
         if (parent->inputState->guessing) return;
 
         // Close all elements opened by the rule in this mode.
-        while (start_size < parent->statev.currentState().size())
-            parent->endElement(parent->statev.currentState().openelements.top());
+        while (start_size < parent->currentState().size())
+            parent->endElement(parent->currentState().openelements.top());
     }
 
 private:
@@ -243,7 +243,7 @@ public:
         if (parent->inputState->guessing) return;
 
         // end last opened element.
-        parent->endElement(parent->statev.currentState().openelements.top());
+        parent->endElement(parent->currentState().openelements.top());
     }
 
 private:
@@ -265,7 +265,7 @@ private:
 
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
-   : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
+   : antlr::LLkParser(lexer,1), ModeStack(this, lang), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
     parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0)
 {
     // make sure we have the correct token set
@@ -326,7 +326,7 @@ options {
 class srcMLParser extends Parser;
 
 options {
-    classHeaderSuffix="public Mode";
+    classHeaderSuffix="public ModeStack";
 	k=1;
     importVocab=KeywordLexer;
     defaultErrorHandler=false;

@@ -35,7 +35,7 @@
 
 #include "srcMLToken.hpp"
 #include "Options.hpp"
-#include "Mode.hpp"
+#include "ModeStack.hpp"
 
 /**
  * StreamMLParser
