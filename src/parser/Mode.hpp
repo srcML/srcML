@@ -305,11 +305,11 @@ protected:
     }
 
     /**
-     * endCurrentMode
+     * endMode
      *
      * Delegate to remove the current mode (pop from stack).
      */
-    void endCurrentMode() {
+    void endMode() {
 
         if (st.size() == 1)
             throw Segmentation_Fault();
@@ -321,13 +321,13 @@ protected:
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
     /**
-     * endCurrentMode
+     * endMode
      * @param m mode to end
      *
      * Delegate to remove the current mode m (pop from stack).
      * Does not actually check or use m.
      */
-    void endCurrentMode(const srcMLState::MODE_TYPE& m) {
+    void endMode(const srcMLState::MODE_TYPE& m) {
 
         if (st.size() <= 1)
             throw Segmentation_Fault();
@@ -624,7 +624,7 @@ protected:
 
         // end all modes
         while (!st.empty()) {
-            endCurrentMode(getMode());
+            endMode(getMode());
         }
     }
 
@@ -645,31 +645,6 @@ protected:
         st.pop();
     }
 
-protected:
-
-    /**
-     * endMode
-     *
-     * Delegate to remove/pop the mode on the top of the stack.
-     */
-    void endMode() {
-
-        endCurrentMode();
-    }
-
-    /**
-     * endMode
-     * @param m mode to take off
-     *
-     * Delegate to remove/pop the mode m off the top of stack.
-     * No checking is done to see if m is on the top of the stack.
-     * Same as endMode().
-     */
-    void endMode(const srcMLState::MODE_TYPE& m) {
-
-        endCurrentMode(m);
-    }
-
     /**
      * endTopMode
      *
@@ -678,7 +653,7 @@ protected:
      */
     void endTopMode() {
 
-        endCurrentMode();
+        endMode();
     }
 
     /**
