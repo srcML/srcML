@@ -131,6 +131,7 @@ header "post_include_hpp" {
 #include <string>
 #include <deque>
 #include <stack>
+#include "Language.hpp"
 #include "ModeStack.hpp"
 #include "Options.hpp"
 
@@ -265,7 +266,7 @@ private:
 
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
-   : antlr::LLkParser(lexer,1), ModeStack(this, lang), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
+   : antlr::LLkParser(lexer,1), Language(lang), ModeStack(this), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
     parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0)
 {
     // make sure we have the correct token set
@@ -326,7 +327,7 @@ options {
 class srcMLParser extends Parser;
 
 options {
-    classHeaderSuffix="public ModeStack";
+    classHeaderSuffix="public Language, public ModeStack";
 	k=1;
     importVocab=KeywordLexer;
     defaultErrorHandler=false;

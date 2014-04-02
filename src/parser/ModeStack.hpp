@@ -24,7 +24,6 @@
 #define MODE_STACK_HPP
 
 #include "TokenParser.hpp"
-#include "Language.hpp"
 #include "srcMLState.hpp"
 
 /**
@@ -34,7 +33,7 @@
  * Modes also keep srcMLstate such as open parethesis/curly braces/tags
  * in the underlying structures in which it delegates.
  */
-class ModeStack : public TokenParser, public Language {
+class ModeStack : public TokenParser {
 
 public:
 
@@ -47,8 +46,8 @@ public:
      *
      * Constructor.  Create mode stack from TokenParser and current language.
      */
-    ModeStack(TokenParser* ptp, int lang)
-        : Language(lang), parser(ptp)
+    ModeStack(TokenParser* ptp)
+        : parser(ptp)
     {}
 
     /**
