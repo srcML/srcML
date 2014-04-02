@@ -32,6 +32,15 @@
 #include <boost/foreach.hpp>
 #include <iomanip>
 
+int srcml_unit_count(srcml_archive* srcml_arch) {
+    int numUnits = 0;
+    while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
+        ++numUnits;
+        srcml_free_unit(unit);
+    }
+    return numUnits;   
+}
+
 // display all files in srcml archive
 void srcml_list_unit_files(srcml_archive* srcml_arch) {
 
@@ -171,7 +180,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         }
         // units
         if (srcml_request.command & SRCML_COMMAND_UNITS) {
-            // DO MORE THINGS HERE!
+            std::cout << srcml_unit_count(srcml_arch) << "\n";
         }
 
         srcml_close_archive(srcml_arch);
