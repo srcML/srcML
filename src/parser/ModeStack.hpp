@@ -20,21 +20,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef MODE_HPP
-#define MODE_HPP
+#ifndef MODE_STACK_HPP
+#define MODE_STACK_HPP
 
 #include "TokenParser.hpp"
 #include "Language.hpp"
 #include "srcMLState.hpp"
 
 /**
- * Mode
+ * ModeStack
  *
  * Class representing a stack of modes that direct parsing.
  * Modes also keep srcMLstate such as open parethesis/curly braces/tags
  * in the underlying structures in which it delegates.
  */
-class Mode : public TokenParser, public Language {
+class ModeStack : public TokenParser, public Language {
 
 public:
 
@@ -234,22 +234,22 @@ public:
 public:
 
    /**
-     * Mode
+     * ModeStack
      * @param ptp the token parser
      * @param lang the current language
      *
      * Constructor.  Create mode stack from TokenParser and current language.
      */
-    Mode(TokenParser* ptp, int lang)
+    ModeStack(TokenParser* ptp, int lang)
         : Language(lang), parser(ptp)
     {}
 
     /**
-     * ~Mode
+     * ~ModeStack
      *
      * Destructor.  Ends all open modes/states.
      */
-    ~Mode() {
+    ~ModeStack() {
 
         // end all modes
         endAllModes();
