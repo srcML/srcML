@@ -165,6 +165,14 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         if (srcml_request.command & SRCML_COMMAND_LIST) {
             srcml_list_unit_files(srcml_arch);
         }
+        // get specific unit
+        if (srcml_request.unit > 0) {
+            // DO THINGS HERE!
+        }
+        // units
+        if (srcml_request.command & SRCML_COMMAND_UNITS) {
+            // DO MORE THINGS HERE!
+        }
 
         srcml_close_archive(srcml_arch);
         srcml_free_archive(srcml_arch);
