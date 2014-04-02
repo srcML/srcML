@@ -78,7 +78,7 @@ bool getLanguageExtension(const char * const inpath, std::string & extension)
  * @param ext the file extension
  * @param language interger representation of language to associated with extention
  *
- * Register a user extension overriding defaults.  @todo consider splitting this functionality off.
+ * Register a user extension overriding defaults.
  *
  * @returns a bool indicating success.
  */
