@@ -108,10 +108,10 @@ const srcMLState::MODE_TYPE Mode::MODE_END_AT_COMMA        = ull(0x8000000000000
  */
 void Mode::endDownToMode(const srcMLState::MODE_TYPE& mode) {
 
-    if (!statev.inTransparentMode(mode))
+    if (!inTransparentMode(mode))
         return;
 
-    while (statev.size() > 1 && !statev.inMode(mode))
+    while (size() > 1 && !inMode(mode))
         endMode();
 }
 
@@ -123,10 +123,10 @@ void Mode::endDownToMode(const srcMLState::MODE_TYPE& mode) {
  */
 void Mode::endDownToModeSet(const srcMLState::MODE_TYPE& mode) {
 
-    //  if (statev.getTransparentMode() & (mode == 0))
+    //  if (getTransparentMode() & (mode == 0))
     //      return;
 
-    while (statev.size() > 1 && (statev.getMode() & mode) == 0)
+    while (size() > 1 && (getMode() & mode) == 0)
         endMode();
 }
 
@@ -138,6 +138,6 @@ void Mode::endDownToModeSet(const srcMLState::MODE_TYPE& mode) {
  */
 void Mode::endDownOverMode(const srcMLState::MODE_TYPE& mode) {
 
-    while (statev.size() > 1 && statev.inMode(mode))
+    while (size() > 1 && inMode(mode))
         endMode();
 }
