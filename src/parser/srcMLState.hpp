@@ -31,7 +31,7 @@
  * srcMLState
  *
  * Class to hold srcML state e.g. parenthesis/curly braces/type counts.
- * Builds off of state holding a mode.
+ * Also, holds modes.
  */
 class srcMLState {
 
