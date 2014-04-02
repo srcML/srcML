@@ -18,25 +18,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
-  The srcml functions available in libsrcml for the purposes of:
-
-  * Converting source code to the srcML format
-  * Converting the srcML format back to source code
-  * Querying and transformation in the srcML format
-
-  The general categories:
-
-  * The srcML convenience function srcml() for conversion of
-  individual source files to srcML, and back. Includes helper
-  functions to set options in the form srcml_set_*() and srcml_get_*()
-
-  * Query functions of the form srcml_check_*() to see the
-  capabilities of the library. E.g., what languages are supported
-
-  * API for full control over the construction of srcML archives
-  from multiple input source-code files, srcml_archive_*() and srcml_unit_*()
-*/
+/**
+ * @mainpage libsrcml
+ *
+ * The srcml functions available in libsrcml for the purposes of:
+ *
+ * * Converting source code to the srcML format
+ * * Converting the srcML format back to source code
+ * * Querying and transformation in the srcML format
+ * 
+ * The general categories:
+ * 
+ * * The srcML convenience function srcml() for conversion of
+ *   individual source files to srcML, and back. Includes helper
+ *   functions to set options in the form srcml_set_*() and srcml_get_*()
+ * 
+ * * Query functions of the form srcml_check_*() to see the
+ *   capabilities of the library. E.g., what languages are supported
+ * 
+ * * API for full control over the construction of srcML archives
+ *   from multiple input source-code files, srcml_archive_*() and srcml_unit_*()
+ */
 
 #ifndef INCLUDED_SRCML_H
 #define INCLUDED_SRCML_H
