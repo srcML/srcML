@@ -112,7 +112,7 @@ int main(int argc, char * argv[]) {
     }
 
     // metadata(srcml) based on command
-    if (!terminate && (srcml_request.command & SRCML_COMMAND_INSRCML)) {
+    if (!terminate && ((srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0)) {
         commands.push_back(srcml_display_metadata);
         terminate = true;
     }

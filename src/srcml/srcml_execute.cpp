@@ -25,42 +25,41 @@
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <boost/thread.hpp>
 #pragma GCC diagnostic pop
+#include <boost/foreach.hpp>
+#include <boost/range.hpp>
 
 void srcml_execute(const srcml_request_t& srcml_request,
                    std::list<command>& commands,
                    const srcml_input_t& input_sources,
                    const srcml_output_dest& destination) {
 
-    // execute all but the last command in the sequence
     boost::thread_group command_processing_threads;
 
-    int prevpipe = 0;
-    while (commands.size() > 1) {
+    // create a thread for each command, creating pipes between adjoining commands
+    int fds[2];
+    BOOST_FOREACH(command curcommand, commands) {
 
-        // create a pipe for output
-        int fds[2];
-        pipe(fds);
+        // special handling for first and last command_processing_threads
+        bool first = curcommand == commands.front();
+        bool last  = curcommand == commands.back();
 
-        // run the front command in the sequence with possible input from previous pipe, and output to a new pipe
-        command_processing_threads.create_thread( boost::bind(commands.front(),
-            srcml_request,
-            prevpipe ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevpipe)),
-            srcml_output_dest("-", fds[1])));
+        // pipe between each command
+        int prevoutfd = fds[0];
+        if (!first)
+            pipe(fds);
 
-        // will become input on next command
-        prevpipe = fds[0];
+        /* run this command in the sequence */
+        command_processing_threads.create_thread(
+            boost::bind(
+                curcommand,
+                srcml_request,
+                /* first command uses input_source, rest input from previous output pipe */
+                first ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevoutfd)),
+                /* last command uses destination, rest output to pipe */                
+                last  ? destination   : srcml_output_dest("-", fds[1])
+            )
+        );
 
-        commands.pop_front();
+        command_processing_threads.join_all();
     }
-
-    // execute the last command in the sequence
-    commands.front()(srcml_request,
-                     !prevpipe ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevpipe)),
-                     destination);
-
-    // for normal processing, should not be needed. Basically for safety with error handling
-    command_processing_threads.join_all();
 }
-
-
-

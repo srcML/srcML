@@ -32,6 +32,15 @@
 #include <boost/foreach.hpp>
 #include <iomanip>
 
+int srcml_unit_count(srcml_archive* srcml_arch) {
+    int numUnits = 0;
+    while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
+        ++numUnits;
+        srcml_free_unit(unit);
+    }
+    return numUnits;   
+}
+
 // display all files in srcml archive
 void srcml_list_unit_files(srcml_archive* srcml_arch) {
 
@@ -78,6 +87,12 @@ void srcml_display_info(srcml_archive* srcml_arch) {
 }
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
+    int display_commands = SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE |
+                            SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
+                            SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY |
+                            SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
+                            SRCML_COMMAND_DISPLAY_SRCML_ENCODING;
+
     BOOST_FOREACH(const srcml_input_src& input, src_input) {
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_create_archive();
@@ -104,26 +119,42 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         // srcml->src language
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE){
             const char* archive_info = srcml_archive_get_language(srcml_arch);
-            if (archive_info)
-                std::cout << "language=\"" << archive_info << "\"\n";
+            if (archive_info) {
+                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)
+                    std::cout << archive_info << "\n";
+                else
+                    std::cout << "language=\"" << archive_info << "\"\n";
+            }
         }
         // srcml->src filename
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME){
             const char* archive_info = srcml_archive_get_filename(srcml_arch);
-            if (archive_info)
-                std::cout << "filename=\"" << archive_info << "\"\n";
+            if (archive_info) {
+                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_FILENAME)
+                    std::cout << archive_info << "\n";
+                else
+                    std::cout << "filename=\"" << archive_info << "\"\n";
+            }
         }
         // srcml->src directory
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY){
             const char* archive_info = srcml_archive_get_directory(srcml_arch);
-            if (archive_info)
-                std::cout << "directory=\"" << archive_info << "\"\n";
+            if (archive_info) {
+                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY)
+                    std::cout << archive_info << "\n";
+                else
+                    std::cout << "directory=\"" << archive_info << "\"\n";
+            }
         }
         // srcml->src src version
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION){
             const char* archive_info = srcml_archive_get_version(srcml_arch);
-            if (archive_info)
-                std::cout << "version=\"" << archive_info << "\"\n";
+            if (archive_info) {
+                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION)
+                    std::cout << archive_info << "\n";
+                else
+                    std::cout << "version=\"" << archive_info << "\"\n";
+            }
         }
         // srcml->src encoding
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING){
@@ -142,6 +173,14 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         // list filenames in srcml archive
         if (srcml_request.command & SRCML_COMMAND_LIST) {
             srcml_list_unit_files(srcml_arch);
+        }
+        // get specific unit
+        if (srcml_request.unit > 0) {
+            // DO THINGS HERE!
+        }
+        // units
+        if (srcml_request.command & SRCML_COMMAND_UNITS) {
+            std::cout << srcml_unit_count(srcml_arch) << "\n";
         }
 
         srcml_close_archive(srcml_arch);
