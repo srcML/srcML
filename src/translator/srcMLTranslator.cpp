@@ -275,7 +275,7 @@ void srcMLTranslator::translate(const char* unit_directory,
         selector.select(&lexer);
 
         // base stream parser srcML connected to lexical analyzer
-        StreamMLParser<srcMLParser> parser(selector, language, options);
+        StreamMLParser parser(selector, language, options);
 
         // connect local parser to attribute for output
         out.setTokenStream(parser);
@@ -347,7 +347,7 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
         selector.select(&lexer);
 
         // base stream parser srcML connected to lexical analyzer
-        StreamMLParser<srcMLParser> parser(selector, language, translation_options);
+        StreamMLParser parser(selector, language, translation_options);
 
         // connect local parser to attribute for output
         sep_out.setTokenStream(parser);
