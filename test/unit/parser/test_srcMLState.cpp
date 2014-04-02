@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <cassert>
+#include <dassert.hpp>
 
 int main() {
 
@@ -93,7 +94,7 @@ int main() {
 
     {
         srcMLState s(1);
-        assert(s.getMode() == 1);
+        dassert(s.getMode(), 1);
     }
 
     /*
@@ -102,7 +103,7 @@ int main() {
 
     {
         srcMLState s(1, 2);
-        assert(s.getTransparentMode() == 3);
+        dassert(s.getTransparentMode(), 3);
     }
 
     /*
@@ -112,8 +113,8 @@ int main() {
     {
         srcMLState s(1, 2);
         s.setMode(4);
-        assert(s.getMode() == 5);
-        assert(s.getTransparentMode() == 7);
+        dassert(s.getMode(), 5);
+        dassert(s.getTransparentMode(), 7);
     }
 
     /*
@@ -124,8 +125,8 @@ int main() {
         srcMLState s(1 | 4, 2 | 8);
         s.clearMode(4);
         s.clearMode(8);
-        assert(s.getMode() == 1);
-        assert(s.getTransparentMode() == 3);
+        dassert(s.getMode(), 1);
+        dassert(s.getTransparentMode(), 3);
     }
 
     /*
@@ -134,7 +135,7 @@ int main() {
 
     {
         srcMLState s;
-        assert(s.getParen() == 0);
+        dassert(s.getParen(), 0);
     }
 
     /*
@@ -144,7 +145,7 @@ int main() {
     {
         srcMLState s;
         s.incParen();
-        assert(s.getParen() == 1);
+        dassert(s.getParen(), 1);
     }
 
     /*
@@ -156,7 +157,7 @@ int main() {
         s.incParen();
         s.incParen();
         s.decParen();
-        assert(s.getParen() == 1);
+        dassert(s.getParen(), 1);
     }
 
     /*
@@ -165,7 +166,7 @@ int main() {
 
     {
         srcMLState s;
-        assert(s.getTypeCount() == 0);
+        dassert(s.getTypeCount(), 0);
     }
 
     /*
@@ -175,7 +176,7 @@ int main() {
     {
         srcMLState s;
         s.incTypeCount();
-        assert(s.getTypeCount() == 1);
+        dassert(s.getTypeCount(), 1);
     }
 
     /*
@@ -187,7 +188,7 @@ int main() {
         s.incTypeCount();
         s.incTypeCount();
         s.decTypeCount();
-        assert(s.getTypeCount() == 1);
+        dassert(s.getTypeCount(), 1);
     }
 
 
@@ -198,7 +199,7 @@ int main() {
     {
         srcMLState s;
         s.setTypeCount(4);
-        assert(s.getTypeCount() == 4);
+        dassert(s.getTypeCount(), 4);
     }
 
     return 0;
