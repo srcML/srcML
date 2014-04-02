@@ -19,8 +19,10 @@
  */
 
 /**
- * @mainpage libsrcml
+ * @mainpage srcML Project
  *
+ * @section libsrcml
+ * 
  * The srcml functions available in libsrcml for the purposes of:
  *
  * * Converting source code to the srcML format
