@@ -38,15 +38,15 @@
 class ParseQueue {
 public:
 
-    ParseQueue(int max_threads, boost::function<void(ParseRequest)>);
+    ParseQueue(int max_threads, boost::function<void(ParseRequest*)>);
 
     /* puts an element in the back of the queue by swapping with parameter */
-    void push(ParseRequest& value);
+    void push(ParseRequest* value);
 
     void join();
 
 private:
-    boost::function<void(ParseRequest)> consume;
+    boost::function<void(ParseRequest*)> consume;
     boost::asio::io_service ioService;
     boost::thread_group threadpool;
     boost::asio::io_service::work* pwork;

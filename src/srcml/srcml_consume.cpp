@@ -47,27 +47,27 @@
 #include <boost/static_assert.hpp>
 
 // Public consumption thread function
-void srcml_consume(const ParseRequest& pr, WriteQueue* wqueue) {
+void srcml_consume(ParseRequest* ppr, WriteQueue* wqueue) {
 
         // build and parse
     srcml_unit* unit = 0;
 
-    int status = pr.status;
-    if (!pr.status) {
+    int status = ppr->status;
+    if (!ppr->status) {
 
-        unit = srcml_create_unit(pr.srcml_arch);
-        if (pr.filename)
-            srcml_unit_set_filename(unit, pr.filename->c_str());
-        if (pr.directory)
-            srcml_unit_set_directory(unit, pr.directory->c_str());
-        if (pr.version)
-            srcml_unit_set_version(unit, pr.version->c_str());
-        srcml_unit_set_language(unit, pr.language.c_str());
+        unit = srcml_create_unit(ppr->srcml_arch);
+        if (ppr->filename)
+            srcml_unit_set_filename(unit, ppr->filename->c_str());
+        if (ppr->directory)
+            srcml_unit_set_directory(unit, ppr->directory->c_str());
+        if (ppr->version)
+            srcml_unit_set_version(unit, ppr->version->c_str());
+        srcml_unit_set_language(unit, ppr->language.c_str());
 
             // compute the SHA1 has for this unit
             // based on the code as encoding in the original file
         unsigned char md[SHA_DIGEST_LENGTH];
-        SHA1((const unsigned char*)&pr.buffer.front(), (SHA_LONG)pr.buffer.size(), md);
+        SHA1((const unsigned char*)&ppr->buffer.front(), (SHA_LONG)ppr->buffer.size(), md);
 
             // convert to hex ascii string
         static const char hexchar[] = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
@@ -99,19 +99,22 @@ void srcml_consume(const ParseRequest& pr, WriteQueue* wqueue) {
             "Wrong size for SHA_DIGEST_LENGTH conversion");
             //            srcml_unit_set_hash(unit, outmd);
 
-        if (!pr.disk_filename) {
-            status = srcml_parse_unit_memory(unit, &pr.buffer.front(), pr.buffer.size());
+        if (!ppr->disk_filename) {
+            status = srcml_parse_unit_memory(unit, &ppr->buffer.front(), ppr->buffer.size());
         } else {
-            status = srcml_parse_unit_filename(unit, pr.disk_filename->c_str());
+            status = srcml_parse_unit_filename(unit, ppr->disk_filename->c_str());
         }
     }
 
     // write unit
     WriteRequest wr;
-    wr.srcml_arch = pr.srcml_arch;
+    wr.srcml_arch = ppr->srcml_arch;
     wr.unit = unit;
-    wr.position = pr.position;
-    wr.filename = pr.filename;
+    wr.position = ppr->position;
+    wr.filename = ppr->filename;
     wr.status = status;
     wqueue->push(wr);
+
+    delete ppr;
+    ppr = 0;
 }

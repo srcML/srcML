@@ -38,7 +38,22 @@
 #include <boost/optional.hpp>
 
 struct ParseRequest {
-    ParseRequest() : buffer(0), srcml_arch(0), position(0), status(0) {}
+    ParseRequest() : buffer(0), srcml_arch(0), position(0), status(0) {
+
+    //	fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+    }
+
+    ParseRequest(const ParseRequest& other) {
+
+	//fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+
+    	*this = other;
+    }
+
+    ~ParseRequest() {
+
+    //	fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+    }
 
     void swap(ParseRequest& other) {
 

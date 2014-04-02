@@ -21,8 +21,9 @@
  */
 
 #include <parse_queue.hpp>
+#include <boost/ref.hpp>
 
-ParseQueue::ParseQueue(int max_threads, boost::function<void(ParseRequest)> consumearg)
+ParseQueue::ParseQueue(int max_threads, boost::function<void(ParseRequest*)> consumearg)
     : consume(consumearg), counter(0) {
 
     pwork = new boost::asio::io_service::work(ioService);
@@ -35,11 +36,11 @@ ParseQueue::ParseQueue(int max_threads, boost::function<void(ParseRequest)> cons
 //    : max_threads(max_threads), consume(consumearg), counter(0), qsize(0), back(0), front(0), empty(false) {}
 
 /* puts an element in the back of the queue by swapping with parameter */
-void ParseQueue::push(ParseRequest& value) {
+void ParseQueue::push(ParseRequest* pvalue) {
 
-    value.position = ++counter;
+    pvalue->position = ++counter;
 
-    ioService.post( boost::bind(consume, value));
+    ioService.post( boost::bind(consume, pvalue));
 }
 
 void ParseQueue::join() {

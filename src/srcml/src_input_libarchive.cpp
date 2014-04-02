@@ -147,17 +147,17 @@ void src_input_libarchive(ParseQueue& queue,
                     language = l;
 
             // form the parsing request
-            ParseRequest request;
+            ParseRequest* prequest = new ParseRequest;
             if (srcml_request.att_filename || (filename != "-"))
-                request.filename = filename;
-            request.directory = srcml_request.att_directory;
-            request.version = srcml_request.att_version;
-            request.srcml_arch = srcml_arch;
-            request.language = language;
-            request.status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
+                prequest->filename = filename;
+            prequest->directory = srcml_request.att_directory;
+            prequest->version = srcml_request.att_version;
+            prequest->srcml_arch = srcml_arch;
+            prequest->language = language;
+            prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
             // fill up the parse request buffer
-            request.buffer.clear();
+            prequest->buffer.clear();
             if (!status) {
                 const char* buffer;
                 size_t size;
@@ -167,11 +167,11 @@ void src_input_libarchive(ParseQueue& queue,
                 int64_t offset;
 #endif
                 while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
-                    request.buffer.insert(request.buffer.end(), buffer, buffer + size);
+                    prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
             }
 
             // Hand request off to the processing queue
-            queue.push(request);
+            queue.push(prequest);
 
             ++count;
         }
