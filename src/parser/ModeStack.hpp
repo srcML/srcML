@@ -41,7 +41,6 @@ public:
    /**
      * ModeStack
      * @param ptp the token parser
-     * @param lang the current language
      *
      * Constructor.  Create mode stack from TokenParser and current language.
      */
