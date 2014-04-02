@@ -1,197 +1,219 @@
-   #ifndef MODE_HPP
-   #define MODE_HPP
+/**
+ * @file Mode.hpp
+ *
+ * @copyright Copyright (C) 2004-2014 SDML (www.srcML.org)
+ *
+ * This file is part of the srcML Toolkit.
+ *
+ * The srcML Toolkit is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML Toolkit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML Toolkit; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
-   /* Set of mode flags */
+#ifndef MODE_HPP
+#define MODE_HPP
 
-    /** any srcMLstatement (broad definition includes declarations, etc.) */
-    const static srcMLState::MODE_TYPE MODE_STATEMENT;
+/* Set of mode flags */
 
-    /** list used for comma and right parentheses */
-    const static srcMLState::MODE_TYPE MODE_LIST;
+/** any srcMLstatement (broad definition includes declarations, etc.) */
+const static srcMLState::MODE_TYPE MODE_STATEMENT;
 
-    /** a particular mode is expected in the next start */
-    const static srcMLState::MODE_TYPE MODE_EXPECT;
+/** list used for comma and right parentheses */
+const static srcMLState::MODE_TYPE MODE_LIST;
 
-    /** srcMLstatement may be nested inside of the current */
-    const static srcMLState::MODE_TYPE MODE_DETECT_COLON;
+/** a particular mode is expected in the next start */
+const static srcMLState::MODE_TYPE MODE_EXPECT;
 
-    /** mode for within a templare */
-    const static srcMLState::MODE_TYPE MODE_TEMPLATE;
+/** srcMLstatement may be nested inside of the current */
+const static srcMLState::MODE_TYPE MODE_DETECT_COLON;
 
-    /** mode for within a template parameter list */
-    const static srcMLState::MODE_TYPE MODE_TEMPLATE_PARAMETER_LIST;
+/** mode for within a templare */
+const static srcMLState::MODE_TYPE MODE_TEMPLATE;
 
-    /** an argument to a call */
-    const static srcMLState::MODE_TYPE MODE_ARGUMENT;
+/** mode for within a template parameter list */
+const static srcMLState::MODE_TYPE MODE_TEMPLATE_PARAMETER_LIST;
 
-    /** mode for a namespace */
-    const static srcMLState::MODE_TYPE MODE_NAMESPACE;
+/** an argument to a call */
+const static srcMLState::MODE_TYPE MODE_ARGUMENT;
 
-    /** a parameter for a declaration/definition */
-    const static srcMLState::MODE_TYPE MODE_PARAMETER;
+/** mode for a namespace */
+const static srcMLState::MODE_TYPE MODE_NAMESPACE;
 
-    /** expressions */
-    const static srcMLState::MODE_TYPE MODE_EXPRESSION;
+/** a parameter for a declaration/definition */
+const static srcMLState::MODE_TYPE MODE_PARAMETER;
 
-    /** expecting a call (member initialization list) */
-    const static srcMLState::MODE_TYPE MODE_CALL;
+/** expressions */
+const static srcMLState::MODE_TYPE MODE_EXPRESSION;
 
-    /** 
-     * setup for expecting a condition and detection of the end
-     * of a condition at a left parentheses of the correct count 
-     */
-    const static srcMLState::MODE_TYPE MODE_CONDITION;
+/** expecting a call (member initialization list) */
+const static srcMLState::MODE_TYPE MODE_CALL;
 
-    /** marks top of some sequence of operations mostly to stop ending modes */
-    const static srcMLState::MODE_TYPE MODE_TOP;
+/** 
+ * setup for expecting a condition and detection of the end
+ * of a condition at a left parentheses of the correct count 
+ */
+ const static srcMLState::MODE_TYPE MODE_CONDITION;
 
-    /** blocks that are not necessarily srcMLstatements */
-    const static srcMLState::MODE_TYPE MODE_BLOCK;
+/** marks top of some sequence of operations mostly to stop ending modes */
+ const static srcMLState::MODE_TYPE MODE_TOP;
 
-    /** mode for inititialization typically @code=<init>...</init>@endcode */
-    const static srcMLState::MODE_TYPE MODE_INIT;
+/** blocks that are not necessarily srcMLstatements */
+ const static srcMLState::MODE_TYPE MODE_BLOCK;
 
-    /** 
-     * block tags from being issued.  Should be moved to
-     * output handling 
-     */
-    const static srcMLState::MODE_TYPE MODE_FUNCTION_TAIL;
+/** mode for inititialization typically @code=<init>...</init>@endcode */
+ const static srcMLState::MODE_TYPE MODE_INIT;
 
-    /** 
-     * whether to parse the end of line character
-     * used with preprocessor directives 
-     */
-    const static srcMLState::MODE_TYPE MODE_PARSE_EOL;
+/** 
+ * block tags from being issued.  Should be moved to
+ * output handling 
+ */
+ const static srcMLState::MODE_TYPE MODE_FUNCTION_TAIL;
 
-    /** local mode only used within a grammar rule */
-    const static srcMLState::MODE_TYPE MODE_LOCAL;
+/** 
+ * whether to parse the end of line character
+ * used with preprocessor directives 
+ */
+ const static srcMLState::MODE_TYPE MODE_PARSE_EOL;
 
-    /** Mode for a variable name */
-    const static srcMLState::MODE_TYPE MODE_VARIABLE_NAME;
+/** local mode only used within a grammar rule */
+ const static srcMLState::MODE_TYPE MODE_LOCAL;
 
-    /** 
-     * the if srcMLstatement includes some special processing
-     * including starting a THEN element after the condition
-     * and stopping the ending of srcMLstatements at the IF when
-     * an ELSE is matched 
-     */
-    const static srcMLState::MODE_TYPE MODE_IF;
+/** Mode for a variable name */
+ const static srcMLState::MODE_TYPE MODE_VARIABLE_NAME;
 
-    /**
-     * for special sections inside of mode such as in
-     *  classes and switch srcMLstatement blocks
-     */
-    const static srcMLState::MODE_TYPE MODE_TOP_SECTION;
+/** 
+ * the if srcMLstatement includes some special processing
+ * including starting a THEN element after the condition
+ * and stopping the ending of srcMLstatements at the IF when
+ * an ELSE is matched 
+ */
+ const static srcMLState::MODE_TYPE MODE_IF;
 
-    /** in a for heading group i.e. for init/condition/increment */
-    const static srcMLState::MODE_TYPE MODE_FOR_GROUP;
+/**
+ * for special sections inside of mode such as in
+ *  classes and switch srcMLstatement blocks
+ */
+ const static srcMLState::MODE_TYPE MODE_TOP_SECTION;
 
-    /** for initialization (in header) */
-    const static srcMLState::MODE_TYPE MODE_FOR_INITIALIZATION;
+/** in a for heading group i.e. for init/condition/increment */
+ const static srcMLState::MODE_TYPE MODE_FOR_GROUP;
 
-    /** for condition (in header) */
-    const static srcMLState::MODE_TYPE MODE_FOR_CONDITION;
+/** for initialization (in header) */
+ const static srcMLState::MODE_TYPE MODE_FOR_INITIALIZATION;
 
-    /** for increment (in header) */
-    const static srcMLState::MODE_TYPE MODE_FOR_INCREMENT;
+/** for condition (in header) */
+ const static srcMLState::MODE_TYPE MODE_FOR_CONDITION;
 
-    /** preprocessor mode */
-    const static srcMLState::MODE_TYPE MODE_PREPROC;
+/** for increment (in header) */
+ const static srcMLState::MODE_TYPE MODE_FOR_INCREMENT;
 
-    /** mode for nesting srcMLstatements */
-    const static srcMLState::MODE_TYPE MODE_NEST;
+/** preprocessor mode */
+ const static srcMLState::MODE_TYPE MODE_PREPROC;
 
-    /** mode fore expression block */
-    const static srcMLState::MODE_TYPE MODE_EXPRESSION_BLOCK;
+/** mode for nesting srcMLstatements */
+ const static srcMLState::MODE_TYPE MODE_NEST;
 
-    /** mode marking to end at right parenthesis @todo remove */
-    const static srcMLState::MODE_TYPE MODE_INTERNAL_END_PAREN;
+/** mode fore expression block */
+ const static srcMLState::MODE_TYPE MODE_EXPRESSION_BLOCK;
 
-    /** access regions in classes used for matching of */
-    const static srcMLState::MODE_TYPE MODE_ACCESS_REGION;
+/** mode marking to end at right parenthesis @todo remove */
+ const static srcMLState::MODE_TYPE MODE_INTERNAL_END_PAREN;
 
-    /** mode for a do while srcMLstatement */
-    const static srcMLState::MODE_TYPE MODE_DO_STATEMENT;
-    
-    /** mode to ignore ; */
-    const static srcMLState::MODE_TYPE MODE_IGNORE_TERMINATE;
+/** access regions in classes used for matching of */
+ const static srcMLState::MODE_TYPE MODE_ACCESS_REGION;
 
-    /** mode for extern */
-    const static srcMLState::MODE_TYPE MODE_EXTERN;
-    
-    /** mode to end at right curly */
-    const static srcMLState::MODE_TYPE MODE_INTERNAL_END_CURLY;
+/** mode for a do while srcMLstatement */
+ const static srcMLState::MODE_TYPE MODE_DO_STATEMENT;
 
-    /** mode for a class */
-    const static srcMLState::MODE_TYPE MODE_CLASS;
-    
-    /** mode to end at block */
-    const static srcMLState::MODE_TYPE MODE_END_AT_BLOCK;
+/** mode to ignore ; */
+ const static srcMLState::MODE_TYPE MODE_IGNORE_TERMINATE;
 
-    /** mode to only end at right parentesis */
-    const static srcMLState::MODE_TYPE MODE_END_ONLY_AT_RPAREN;
+/** mode for extern */
+ const static srcMLState::MODE_TYPE MODE_EXTERN;
 
-    /** mode to end at a block and not expect ; after */
-    const static srcMLState::MODE_TYPE MODE_END_AT_BLOCK_NO_TERMINATE;
+/** mode to end at right curly */
+ const static srcMLState::MODE_TYPE MODE_INTERNAL_END_CURLY;
 
-    /** mode for a function name */
-    const static srcMLState::MODE_TYPE MODE_FUNCTION_NAME;
+/** mode for a class */
+ const static srcMLState::MODE_TYPE MODE_CLASS;
 
-    /** mode for a if then */
-    const static srcMLState::MODE_TYPE MODE_THEN;
+/** mode to end at block */
+ const static srcMLState::MODE_TYPE MODE_END_AT_BLOCK;
 
-    /** mode for an else */    
-    const static srcMLState::MODE_TYPE MODE_ELSE;
+/** mode to only end at right parentesis */
+ const static srcMLState::MODE_TYPE MODE_END_ONLY_AT_RPAREN;
 
-    /** mode for a typdef */
-    const static srcMLState::MODE_TYPE MODE_TYPEDEF;
+/** mode to end at a block and not expect ; after */
+ const static srcMLState::MODE_TYPE MODE_END_AT_BLOCK_NO_TERMINATE;
 
-    /** mode for a declaration of some type */
-    const static srcMLState::MODE_TYPE MODE_DECL;
+/** mode for a function name */
+ const static srcMLState::MODE_TYPE MODE_FUNCTION_NAME;
 
-    /** mode to consume the type names */
-    const static srcMLState::MODE_TYPE MODE_EAT_TYPE;
+/** mode for a if then */
+ const static srcMLState::MODE_TYPE MODE_THEN;
 
-    /** mode for funciton parameter */
-    const static srcMLState::MODE_TYPE MODE_FUNCTION_PARAMETER;
+/** mode for an else */    
+ const static srcMLState::MODE_TYPE MODE_ELSE;
 
-    /** mode for an internal decl */
-    const static srcMLState::MODE_TYPE MODE_INNER_DECL;
+/** mode for a typdef */
+ const static srcMLState::MODE_TYPE MODE_TYPEDEF;
 
-    /** mode to mark in an init */
-    const static srcMLState::MODE_TYPE MODE_IN_INIT;
+/** mode for a declaration of some type */
+ const static srcMLState::MODE_TYPE MODE_DECL;
 
-    /** mode for a try */
-    const static srcMLState::MODE_TYPE MODE_TRY;
+/** mode to consume the type names */
+ const static srcMLState::MODE_TYPE MODE_EAT_TYPE;
 
-    /** mode to end a list at a block */
-    const static srcMLState::MODE_TYPE MODE_END_LIST_AT_BLOCK;
+/** mode for funciton parameter */
+ const static srcMLState::MODE_TYPE MODE_FUNCTION_PARAMETER;
 
-    /** mode to end at ; */
-    const static srcMLState::MODE_TYPE MODE_ONLY_END_TERMINATE;
+/** mode for an internal decl */
+ const static srcMLState::MODE_TYPE MODE_INNER_DECL;
 
-    /** mode for enum */
-    const static srcMLState::MODE_TYPE MODE_ENUM;
+/** mode to mark in an init */
+ const static srcMLState::MODE_TYPE MODE_IN_INIT;
 
-    /** mode for anonymous item e.g. anonymous class */
-    const static srcMLState::MODE_TYPE MODE_ANONYMOUS;
+/** mode for a try */
+ const static srcMLState::MODE_TYPE MODE_TRY;
 
-    /** mode to end at a comma */
-    const static srcMLState::MODE_TYPE MODE_END_AT_COMMA;
+/** mode to end a list at a block */
+ const static srcMLState::MODE_TYPE MODE_END_LIST_AT_BLOCK;
 
-    /** mode for in a using */
-    const static srcMLState::MODE_TYPE MODE_USING;
+/** mode to end at ; */
+ const static srcMLState::MODE_TYPE MODE_ONLY_END_TERMINATE;
 
-    /** mode for function trailing return */
-    const static srcMLState::MODE_TYPE MODE_TRAILING_RETURN;
+/** mode for enum */
+ const static srcMLState::MODE_TYPE MODE_ENUM;
 
-    /** mode to issue an empty element at pop */
-    const static srcMLState::MODE_TYPE MODE_ISSUE_EMPTY_AT_POP;
+/** mode for anonymous item e.g. anonymous class */
+ const static srcMLState::MODE_TYPE MODE_ANONYMOUS;
 
-    /** mode to end at preprocessor endif */
-    const static srcMLState::MODE_TYPE MODE_END_AT_ENDIF;
+/** mode to end at a comma */
+ const static srcMLState::MODE_TYPE MODE_END_AT_COMMA;
 
-    /** mode for an argument list */
-    const static srcMLState::MODE_TYPE MODE_ARGUMENT_LIST;
+/** mode for in a using */
+ const static srcMLState::MODE_TYPE MODE_USING;
+
+/** mode for function trailing return */
+ const static srcMLState::MODE_TYPE MODE_TRAILING_RETURN;
+
+/** mode to issue an empty element at pop */
+ const static srcMLState::MODE_TYPE MODE_ISSUE_EMPTY_AT_POP;
+
+/** mode to end at preprocessor endif */
+ const static srcMLState::MODE_TYPE MODE_END_AT_ENDIF;
+
+/** mode for an argument list */
+ const static srcMLState::MODE_TYPE MODE_ARGUMENT_LIST;
 
 #endif
