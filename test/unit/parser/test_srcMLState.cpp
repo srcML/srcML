@@ -32,6 +32,102 @@
 
 int main() {
 
+
+    /*
+      pop
+    */
+
+    {
+        srcMLState s(1);
+        try{
+            s.pop();
+            assert(false);
+        } catch(...) {}
+    }
+
+    /*
+      inMode
+    */
+
+    {
+        srcMLState s(1, 2, 4);
+        assert(s.inMode(1));
+    }
+
+    {
+        srcMLState s(1, 2, 4);
+        assert(!s.inMode(2));
+    }
+
+    /*
+      inPrevMode
+    */
+
+    {
+        srcMLState s(1, 2, 4);
+        assert(s.inPrevMode(4));
+    }
+
+    {
+        srcMLState s(1, 2, 4);
+        assert(!s.inPrevMode(1));
+    }
+
+    /*
+      inTransparentMode
+    */
+
+    {
+        srcMLState s(1, 2, 4);
+        assert(s.inTransparentMode(3));
+    }
+
+    {
+        srcMLState s(1, 2, 4);
+        assert(!s.inTransparentMode(4));
+    }
+
+    /*
+      getMode
+    */
+
+    {
+        srcMLState s(1);
+        assert(s.getMode() == 1);
+    }
+
+    /*
+      getTransparentMode
+    */
+
+    {
+        srcMLState s(1, 2);
+        assert(s.getTransparentMode() == 3);
+    }
+
+    /*
+      setMode
+    */
+
+    {
+        srcMLState s(1, 2);
+        s.setMode(4);
+        assert(s.getMode() == 5);
+        assert(s.getTransparentMode() == 7);
+    }
+
+    /*
+      setMode
+    */
+
+    {
+        srcMLState s(1 | 4, 2 | 8);
+        s.clearMode(4);
+        s.clearMode(8);
+        assert(s.getMode() == 1);
+        assert(s.getTransparentMode() == 3);
+    }
+
     /*
       getParen
     */
