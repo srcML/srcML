@@ -512,14 +512,48 @@ protected:
 
     }
 
-    // End elements down to a mode
-    void endDownToMode(const srcMLState::MODE_TYPE& ele);
+    /**
+    * endDownToMode
+    * @param mode mode to end down to
+    *
+    * End elements down to but not including the mode mode.
+    */
+    void endDownToMode(const srcMLState::MODE_TYPE& mode) {
 
-    // End elements down to one of a set of modes
-    void endDownToModeSet(const srcMLState::MODE_TYPE& ele);
+        if (!inTransparentMode(mode))
+            return;
 
-    // End elements down to a mode, then consume it
-    void endDownOverMode(const srcMLState::MODE_TYPE& ele);
+        while (size() > 1 && !inMode(mode))
+            endMode();
+    }
+
+    /**
+     * endDownToModeSet
+     * @param mode mode to end down to
+     *
+     * End elements down to but not including the mode mode.
+     */
+     void endDownToModeSet(const srcMLState::MODE_TYPE& mode) {
+
+        //  if (getTransparentMode() & (mode == 0))
+        //      return;
+
+        while (size() > 1 && (getMode() & mode) == 0)
+            endMode();
+    }
+
+    /**
+     * endDownOverMode
+     * @param mode mode to end down to
+     *
+     * End elements down to and including the mode mode.
+     */
+     void endDownOverMode(const srcMLState::MODE_TYPE& mode) {
+
+        while (size() > 1 && inMode(mode))
+            endMode();
+    }
+
 };
 
 #endif
