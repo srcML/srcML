@@ -984,6 +984,34 @@ void srcMLOutput::processToken(const antlr::RefToken& token) {
 }
 
 /**
+ * processTypePrevious
+ * @param token type token with previous reference.
+ *
+ * Callback to process/output generic token.
+ */
+void srcMLOutput::processTypePrevious(const antlr::RefToken& token) {
+
+    const char* localname = ElementNames[token->getType()];
+    const char* prefix = num2prefix[(int)ElementPrefix[token->getType()]].c_str();
+
+    if (prefix[0] == 0)
+        xmlTextWriterStartElement(xout, BAD_CAST localname);
+    else
+        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
+
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "ref", BAD_CAST "prev");
+
+    if(isoption(OPTION_DEBUG_TIMER)) {
+
+        std::string time = to_simple_string(boost::posix_time::microsec_clock::universal_time() - debug_time_start);
+        xmlTextWriterWriteAttribute(xout, BAD_CAST UNIT_ATTRIBUTE_TIMESTAMP, BAD_CAST time.c_str());
+
+    }
+    xmlTextWriterEndElement(xout);
+
+}
+
+/**
  * processJavadocCommentStart
  * @param token token to output as Javadoc comment
  *

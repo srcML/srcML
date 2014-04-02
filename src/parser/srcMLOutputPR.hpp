@@ -51,7 +51,8 @@ enum {
     PROCESSNULL,
     PROCESSCOMPLEX,
     PROCESSINTERFACE,
-    PROCESSESCAPE
+    PROCESSESCAPE,
+    PROCESSTYPEPREV
 };
 
 /** for conversion of process numbers to callbacks */
@@ -77,7 +78,8 @@ srcMLOutput::PROCESS_PTR srcMLOutput::num2process[] = {
     &srcMLOutput::processNull,
     &srcMLOutput::processComplex,
     &srcMLOutput::processInterface,
-    &srcMLOutput::processEscape
+    &srcMLOutput::processEscape,
+    &srcMLOutput::processTypePrevious
 };
 
 /** element map call name */
@@ -137,7 +139,7 @@ namespace {
     ELEMENT_MAP(SONAME, PROCESSTOKEN)
     ELEMENT_MAP(SCNAME, PROCESSTOKEN)
     ELEMENT_MAP(STYPE, PROCESSTOKEN)
-    ELEMENT_MAP(STYPEPREV, PROCESSTOKEN)
+    ELEMENT_MAP(STYPEPREV, PROCESSTYPEPREV)
     ELEMENT_MAP(SCONDITION, PROCESSTOKEN)
     ELEMENT_MAP(SBLOCK, PROCESSTOKEN)
     ELEMENT_MAP(SINDEX, PROCESSTOKEN)
