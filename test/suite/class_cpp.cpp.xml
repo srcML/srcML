@@ -39,4 +39,8 @@
 </private>}</block>;</class></template>
 </unit>
 
+<unit>
+<class>class <block>{<private type="default"> <typedef>typedef <type><name>a</name></type> <name>b</name>;</typedef> </private>}</block>;</class>
+</unit>
+
 </unit>

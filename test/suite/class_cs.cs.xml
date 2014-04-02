@@ -21,4 +21,8 @@
 }</block></class>
 </unit>
 
+<unit>
+<class>class <block>{ <typedef>typedef <type><name>a</name></type> <name>b</name>;</typedef> }</block></class>
+</unit>
+
 </unit>

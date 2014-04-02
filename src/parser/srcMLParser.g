@@ -2073,11 +2073,14 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
         {
             bool intypedef = inMode(MODE_TYPEDEF);
 
-            if (intypedef)
+            if(intypedef)
                 startElement(STYPE);
 
             // statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS | MODE_DECL);
+
+            if(intypedef)
+                setMode(MODE_INNER_DECL);
 
             // start the class definition
             startElement(token);
@@ -4956,7 +4959,7 @@ variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
             // statement
             startNewMode(MODE_STATEMENT);
 
-            if (!inTransparentMode(MODE_INNER_DECL) || inTransparentMode(MODE_CLASS))
+            if(!inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_CLASS | MODE_INNER_DECL))
                 // start the declaration statement
                 startElement(SDECLARATION_STATEMENT);
 
@@ -4983,7 +4986,7 @@ short_variable_declaration[] { ENTRY_DEBUG } :
 variable_declaration[int type_count] { ENTRY_DEBUG } :
         {
 
-            bool output_decl = !inTransparentMode(MODE_INNER_DECL) || inTransparentMode(MODE_CLASS);
+            bool output_decl = !inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_CLASS | MODE_INNER_DECL);
 
             // variable declarations may be in a list
             startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
@@ -4994,7 +4997,7 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
             if(inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
                 setMode(MODE_LIST);
 
-            if (output_decl)
+            if(output_decl)
 
                 // start the declaration
                 startElement(SDECLARATION);
@@ -5028,7 +5031,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 
              if(!inMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
               && inMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
-              && !inTransparentMode(MODE_INNER_DECL)
+              && !inTransparentMode(MODE_TYPEDEF)
               && !inTransparentMode(MODE_USING))
                 // start the declaration
                 startElement(SDECLARATION);
@@ -6070,7 +6073,7 @@ typedef_statement[] { ENTRY_DEBUG } :
             // start the typedef element
             startElement(STYPEDEF);
 
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_INNER_DECL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
         }
         TYPEDEF
 ;
