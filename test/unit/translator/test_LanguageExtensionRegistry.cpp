@@ -23,6 +23,7 @@
 #include <string.h>
 #include <cassert>
 #include <iostream>
+#include <dassert.hpp>
 
 int main() {
 
@@ -32,8 +33,8 @@ int main() {
     {
         LanguageExtensionRegistry reg_ext;
         reg_ext.registerUserExt("cpp", "C++");
-        assert(get_language(reg_ext.at(0)) == Language::LANGUAGE_CXX);
-        assert(get_extension(reg_ext.at(0)) == "cpp");
+        dassert(get_language(reg_ext.at(0)), Language::LANGUAGE_CXX);
+        dassert(get_extension(reg_ext.at(0)), "cpp");
     }
 
     {
@@ -60,8 +61,8 @@ int main() {
     {
         LanguageExtensionRegistry reg_ext;
         reg_ext.registerUserExt("cpp", "C++");
-        assert(get_language(reg_ext.last()) == Language::LANGUAGE_CXX);
-        assert(get_extension(reg_ext.last()) == "cpp");
+        dassert(get_language(reg_ext.last()), Language::LANGUAGE_CXX);
+        dassert(get_extension(reg_ext.last()), "cpp");
     }
 
     {
@@ -78,13 +79,13 @@ int main() {
     */
     {
         LanguageExtensionRegistry reg_ext;
-        assert(reg_ext.size() == 0);
+        dassert(reg_ext.size(), 0);
     }
 
     {
         LanguageExtensionRegistry reg_ext;
         reg_ext.registerUserExt("cpp", "C++");
-        assert(reg_ext.size() == 1);
+        dassert(reg_ext.size(), 1);
     }
 
     /*
@@ -93,15 +94,15 @@ int main() {
     {
         LanguageExtensionRegistry reg_ext;
         assert(reg_ext.registerUserExt("cpp", Language::LANGUAGE_CXX));
-        assert(reg_ext.size() == 1);
-        assert(get_language(reg_ext.at(0)) == Language::LANGUAGE_CXX);
-        assert(get_extension(reg_ext.at(0)) == "cpp");
+        dassert(reg_ext.size(), 1);
+        dassert(get_language(reg_ext.at(0)), Language::LANGUAGE_CXX);
+        dassert(get_extension(reg_ext.at(0)), "cpp");
     }
 
     {
         LanguageExtensionRegistry reg_ext;
         assert(!reg_ext.registerUserExt("cpp", Language::LANGUAGE_NONE));
-        assert(reg_ext.size() == 0);
+        dassert(reg_ext.size(), 0);
     }
 
     /*
@@ -110,15 +111,15 @@ int main() {
     {
         LanguageExtensionRegistry reg_ext;
         assert(reg_ext.registerUserExt("cpp", "C++"));
-        assert(reg_ext.size() == 1);
-        assert(get_language(reg_ext.at(0)) == Language::LANGUAGE_CXX);
-        assert(get_extension(reg_ext.at(0)) == "cpp");
+        dassert(reg_ext.size(), 1);
+        dassert(get_language(reg_ext.at(0)), Language::LANGUAGE_CXX);
+        dassert(get_extension(reg_ext.at(0)), "cpp");
     }
 
     {
         LanguageExtensionRegistry reg_ext;
         assert(!reg_ext.registerUserExt("cpp", "Foo"));
-        assert(reg_ext.size() == 0);
+        dassert(reg_ext.size(), 0);
     }
 
     /*
@@ -127,7 +128,7 @@ int main() {
     {
         LanguageExtensionRegistry reg_ext;
         reg_ext.registerUserExt("cpp", "C++");
-        assert(reg_ext.getLanguageFromFilename("a.cpp") == Language::LANGUAGE_CXX);
+        dassert(reg_ext.getLanguageFromFilename("a.cpp"), Language::LANGUAGE_CXX);
     }
 
     {
@@ -136,26 +137,26 @@ int main() {
         int lang = reg_ext.getLanguageFromFilename("a.cpp.gz");
 
         std::cout << "reg_ext." << lang << '\n';
-        assert(reg_ext.getLanguageFromFilename("a.cpp.gz") == Language::LANGUAGE_CXX);
+        dassert(reg_ext.getLanguageFromFilename("a.cpp.gz"), Language::LANGUAGE_CXX);
     }
 
     {
         LanguageExtensionRegistry reg_ext;
         reg_ext.registerUserExt("cpp", "C++");
-        assert(reg_ext.getLanguageFromFilename("a.cpp.bz2") == Language::LANGUAGE_CXX);
+        dassert(reg_ext.getLanguageFromFilename("a.cpp.bz2"), Language::LANGUAGE_CXX);
     }
 
 
     {
         LanguageExtensionRegistry reg_ext;
         reg_ext.registerUserExt("cpp", "C++");
-        assert(reg_ext.getLanguageFromFilename("a.cpp.xz") == Language::LANGUAGE_CXX);
+        dassert(reg_ext.getLanguageFromFilename("a.cpp.xz"), Language::LANGUAGE_CXX);
     }
 
     {
         LanguageExtensionRegistry reg_ext;
         reg_ext.registerUserExt("cpp", "C++");
-        assert(reg_ext.getLanguageFromFilename("a.foo") == 0);
+        dassert(reg_ext.getLanguageFromFilename("a.foo"), 0);
     }
 
     /*
@@ -164,7 +165,7 @@ int main() {
     {
         LanguageExtensionRegistry reg_ext;
         reg_ext.register_standard_file_extensions();
-        assert(reg_ext.size() != 0);
+        dassert(!reg_ext.size(), 0);
     }
 
     /*
@@ -175,24 +176,24 @@ int main() {
         LanguageExtensionRegistry reg_ext;
         reg_ext.c_is_cpp(false);
         reg_ext.register_standard_file_extensions();
-        assert(reg_ext.getLanguageFromFilename("a.h") == Language::LANGUAGE_C);
-        assert(reg_ext.getLanguageFromFilename("a.c") == Language::LANGUAGE_C);
+        dassert(reg_ext.getLanguageFromFilename("a.h"), Language::LANGUAGE_C);
+        dassert(reg_ext.getLanguageFromFilename("a.c"), Language::LANGUAGE_C);
     }
 
     {
         LanguageExtensionRegistry reg_ext;
         reg_ext.c_is_cpp(false);
         reg_ext.register_standard_file_extensions();
-        assert(reg_ext.getLanguageFromFilename("a.h") == Language::LANGUAGE_C);
-        assert(reg_ext.getLanguageFromFilename("a.c") == Language::LANGUAGE_C);
+        dassert(reg_ext.getLanguageFromFilename("a.h"), Language::LANGUAGE_C);
+        dassert(reg_ext.getLanguageFromFilename("a.c"), Language::LANGUAGE_C);
     }
 
     {
         LanguageExtensionRegistry reg_ext;
         reg_ext.c_is_cpp(true);
         reg_ext.register_standard_file_extensions();
-        assert(reg_ext.getLanguageFromFilename("a.h") == Language::LANGUAGE_CXX);
-        assert(reg_ext.getLanguageFromFilename("a.c") == Language::LANGUAGE_CXX);
+        dassert(reg_ext.getLanguageFromFilename("a.h"), Language::LANGUAGE_CXX);
+        dassert(reg_ext.getLanguageFromFilename("a.c"), Language::LANGUAGE_CXX);
     }
 
     /*
@@ -204,13 +205,13 @@ int main() {
         LanguageExtensionRegistry reg_ext_two;
         reg_ext_two.registerUserExt("cpp", "C++");
 
-        assert(reg_ext_one.size() == 0);
+        dassert(reg_ext_one.size(), 0);
 
         reg_ext_one.append(reg_ext_two);
 
-        assert(reg_ext_one.size() == 1);
-        assert(get_language(reg_ext_one.at(0)) == Language::LANGUAGE_CXX);
-        assert(get_extension(reg_ext_one.at(0)) == "cpp");
+        dassert(reg_ext_one.size(), 1);
+        dassert(get_language(reg_ext_one.at(0)), Language::LANGUAGE_CXX);
+        dassert(get_extension(reg_ext_one.at(0)), "cpp");
     }
 
     {
@@ -222,21 +223,21 @@ int main() {
         reg_ext_two.registerUserExt("cs", "C#");  
         reg_ext_two.registerUserExt("java", "Java");  
 
-        assert(reg_ext_one.size() == 1);
-        assert(get_language(reg_ext_one.at(0)) == Language::LANGUAGE_CXX);
-        assert(get_extension(reg_ext_one.at(0)) == "cpp");
+        dassert(reg_ext_one.size(), 1);
+        dassert(get_language(reg_ext_one.at(0)), Language::LANGUAGE_CXX);
+        dassert(get_extension(reg_ext_one.at(0)), "cpp");
 
         reg_ext_one.append(reg_ext_two);
 
-        assert(reg_ext_one.size() == 4);
-        assert(get_language(reg_ext_one.at(0)) == Language::LANGUAGE_CXX);
-        assert(get_extension(reg_ext_one.at(0)) == "cpp");
-        assert(get_language(reg_ext_one.at(1)) == Language::LANGUAGE_C);
-        assert(get_extension(reg_ext_one.at(1)) == "h");
-        assert(get_language(reg_ext_one.at(2)) == Language::LANGUAGE_CSHARP);
-        assert(get_extension(reg_ext_one.at(2)) == "cs");
-        assert(get_language(reg_ext_one.at(3)) == Language::LANGUAGE_JAVA);
-        assert(get_extension(reg_ext_one.at(3)) == "java");
+        dassert(reg_ext_one.size(), 4);
+        dassert(get_language(reg_ext_one.at(0)), Language::LANGUAGE_CXX);
+        dassert(get_extension(reg_ext_one.at(0)), "cpp");
+        dassert(get_language(reg_ext_one.at(1)), Language::LANGUAGE_C);
+        dassert(get_extension(reg_ext_one.at(1)), "h");
+        dassert(get_language(reg_ext_one.at(2)), Language::LANGUAGE_CSHARP);
+        dassert(get_extension(reg_ext_one.at(2)), "cs");
+        dassert(get_language(reg_ext_one.at(3)), Language::LANGUAGE_JAVA);
+        dassert(get_extension(reg_ext_one.at(3)), "java");
     }
 
     return 0;

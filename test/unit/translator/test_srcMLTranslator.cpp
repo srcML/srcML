@@ -36,6 +36,8 @@
 #include <UTF8CharBuffer.hpp>
 #include <Language.hpp>
 #include <srcmlns.hpp>
+#include <cassert>
+#include <dassert.hpp>
 
 int main() {
 
@@ -156,7 +158,7 @@ int main() {
 
         xmlBufferPtr output = xmlBufferCreate();
         translator.translate_separate(0, 0, 0, 0, 0, Language::LANGUAGE_CXX, input, output, op);
-        assert((char *)output->content == std::string("<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>\n"));
+        dassert((char *)output->content, std::string("<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>\n"));
 
         xmlBufferFree(output);
         translator.close();
@@ -185,7 +187,7 @@ int main() {
         translator.add_unit(s.c_str(), 0);
         translator.close();
         std::string result = (const char *)buffer->content;
-        assert(result == decl + "\n" + s + "\n");
+        dassert(result, decl + "\n" + s + "\n");
 
         xmlBufferFree(buffer);
 
@@ -207,7 +209,7 @@ int main() {
         translator.add_unit(s.c_str(), 0);
         translator.close();
         std::string result = (const char *)buffer->content;
-        assert(result == decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
         xmlBufferFree(buffer);
 
@@ -233,7 +235,7 @@ int main() {
         translator.add_unit(s_before.c_str(), "0123456789abcdef");
         translator.close();
         std::string result = (const char *)buffer->content;
-        assert(result == decl + "\n" + s + "\n");
+        dassert(result, decl + "\n" + s + "\n");
 
         xmlBufferFree(buffer);
 
@@ -255,7 +257,7 @@ int main() {
         translator.add_unit(s_before.c_str(), "0123456789abcdef");
         translator.close();
         std::string result = (const char *)buffer->content;
-        assert(result == decl + "\n" + s + "\n");
+        dassert(result, decl + "\n" + s + "\n");
 
         xmlBufferFree(buffer);
 
@@ -277,7 +279,7 @@ int main() {
         translator.add_unit(s_before.c_str(), "0123456789abcdef");
         translator.close();
         std::string result = (const char *)buffer->content;
-        assert(result == decl + "\n" + s + "\n");
+        dassert(result, decl + "\n" + s + "\n");
 
         xmlBufferFree(buffer);
 
@@ -299,7 +301,7 @@ int main() {
         translator.add_unit(s_before.c_str(), "0123456789abcdef");
         translator.close();
         std::string result = (const char *)buffer->content;
-        assert(result == decl + "\n" + s + "\n");
+        dassert(result, decl + "\n" + s + "\n");
 
         xmlBufferFree(buffer);
 
@@ -322,7 +324,7 @@ int main() {
         translator.add_unit(s_before.c_str(), "0123456789abcdef");
         translator.close();
         std::string result = (const char *)buffer->content;
-        assert(result == decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
         xmlBufferFree(buffer);
 
@@ -343,7 +345,7 @@ int main() {
         translator.add_unit(s.c_str(), "0123456789abcdef");
         translator.close();
         std::string result = (const char *)buffer->content;
-        assert(result == decl + "\n" + s + "\n");
+        dassert(result, decl + "\n" + s + "\n");
 
         xmlBufferFree(buffer);
 
@@ -365,7 +367,7 @@ int main() {
         translator.add_unit(s_before.c_str(), "0123456789abcdef");
         translator.close();
         std::string result = (const char *)buffer->content;
-        assert(result == decl + "\n" + s + "\n");
+        dassert(result, decl + "\n" + s + "\n");
 
         xmlBufferFree(buffer);
 
@@ -387,7 +389,7 @@ int main() {
         translator.add_unit(s.c_str(), "0123456789abcdef");
         translator.close();
         std::string result = (const char *)buffer->content;
-        assert(result == decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
         xmlBufferFree(buffer);
 
@@ -407,7 +409,7 @@ int main() {
         translator.add_unit(s.c_str(), "0123456789abcdef");
         translator.close();
         std::string result = (const char *)buffer->content;
-        assert(result == decl + "\n\n");
+        dassert(result, decl + "\n\n");
 
         xmlBufferFree(buffer);
 
@@ -429,7 +431,7 @@ int main() {
         translator.add_unit(s.c_str(), "0123456789abcdef");
         translator.close();
         std::string result = (const char *)buffer->content;
-        assert(result == decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + "</unit>\n");
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + "</unit>\n");
 
         xmlBufferFree(buffer);
 

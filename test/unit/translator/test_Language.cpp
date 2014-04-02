@@ -30,6 +30,7 @@
 #include <string.h>
 #include <cassert>
 #include <iostream>
+#include <dassert.hpp>
 
 int main() {
 
@@ -52,14 +53,14 @@ int main() {
     */
     {
         Language l(Language::LANGUAGE_CXX);
-        assert(l.getLanguage() == Language::LANGUAGE_CXX);
+        dassert(l.getLanguage(), Language::LANGUAGE_CXX);
     }
 
     /*
       getLanguage(const char *)
     */
     {
-        assert(Language::getLanguage("C++") == Language::LANGUAGE_CXX);
+        dassert(Language::getLanguage("C++"), Language::LANGUAGE_CXX);
     }
 
     /*
@@ -67,7 +68,7 @@ int main() {
     */
     {
         Language l(Language::LANGUAGE_CXX);
-        assert(Language::getLanguage("C++") == Language::LANGUAGE_CXX);
+        dassert(Language::getLanguage("C++"), Language::LANGUAGE_CXX);
     }
 
     return 0;
