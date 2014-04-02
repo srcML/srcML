@@ -136,7 +136,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -367,6 +367,7 @@ tokens {
     SONAME;
     SCNAME;
     STYPE;
+    STYPEPREV;
 	SCONDITION;
 	SBLOCK;
     SINDEX;
@@ -5033,9 +5034,14 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
              if(!inMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
               && inMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
               && !inTransparentMode(MODE_TYPEDEF)
-              && !inTransparentMode(MODE_USING))
+              && !inTransparentMode(MODE_USING)) {
+
+
                 // start the declaration
                 startElement(SDECLARATION);
+                emptyElement(STYPEPREV);
+
+            }
 
         }
 

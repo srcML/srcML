@@ -110,6 +110,7 @@ namespace {
     ELEMENT_MAP(SONAME, "")
     ELEMENT_MAP(SCNAME, "name")
     ELEMENT_MAP(STYPE, "type")
+    ELEMENT_MAP(STYPEPREV, "type")
     ELEMENT_MAP(SCONDITION, "condition")
     ELEMENT_MAP(SBLOCK, "block")
     ELEMENT_MAP(SINDEX, "index")
