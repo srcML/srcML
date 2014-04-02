@@ -191,7 +191,7 @@ public:
 
 private:
 
-    friend class LangaugeExtensionRegistry;;
+    friend class LangaugeExtensionRegistry;
 
     /** the current langauge */
     const int language;
