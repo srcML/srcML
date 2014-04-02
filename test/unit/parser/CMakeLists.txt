@@ -18,8 +18,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 addUnitTest(test_Options test_Options.cpp)
-addUnitTest(test_State test_State.cpp)
 addUnitTest(test_srcMLState test_srcMLState.cpp)
-addUnitTest(test_srcMLStateStack test_srcMLStateStack.cpp)
 
 
