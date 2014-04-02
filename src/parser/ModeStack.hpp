@@ -30,8 +30,7 @@
  * ModeStack
  *
  * Class representing a stack of modes that direct parsing.
- * Modes also keep srcMLstate such as open parethesis/curly braces/tags
- * in the underlying structures in which it delegates.
+ * Modes also keep srcMLState such as open parethesis/curly braces/tags.
  */
 class ModeStack : public TokenParser {
 
