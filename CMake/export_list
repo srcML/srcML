@@ -130,3 +130,5 @@ _srcml_write_open_filename
 _srcml_write_open_memory
 _srcml_write_open_FILE
 _srcml_write_unit
+_srcml_write_raw
+_srcml_write_raw_len

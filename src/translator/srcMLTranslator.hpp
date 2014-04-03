@@ -116,6 +116,7 @@ public:
                             OPTION_TYPE translation_options);
 
     void add_unit(std::string xml, const char * hash);
+    void add_raw_len(const char * content, size_t length);
 
     // destructor
     ~srcMLTranslator();

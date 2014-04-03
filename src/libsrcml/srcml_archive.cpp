@@ -1125,6 +1125,49 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
 }
 
 /**
+ * srcml_write_raw
+ * @param archive a srcml archive opened for writing
+ * @param content the srcML text to write
+ *
+ * Append content to the srcML archive.  No validation on correct
+ * format of content is done.  No escaping is performed.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_raw(srcml_archive* archive, const char * content) {
+
+    if(archive == NULL || content == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    archive->translator->add_raw_len(content, strlen(content));
+
+    return SRCML_STATUS_OK;
+}
+
+/**
+ * srcml_write_raw_len
+ * @param archive a srcml archive opened for writing
+ * @param content the srcML text to write
+ * @param length how many bytes to write
+ *
+ * Append length bytes of content to the srcML archive.  No validation on correct
+ * format of content is done.  No escaping is performed.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_raw_len(srcml_archive* archive, const char * content, size_t length) {
+
+    if(archive == NULL || content == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    archive->translator->add_raw_len(content, length);
+
+    return SRCML_STATUS_OK;
+}
+
+/**
  * srcml_read_unit_header
  * @param archive a srcml archive open for reading
  *
