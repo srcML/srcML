@@ -30,94 +30,39 @@
 #include <write_request.hpp>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/thread.hpp>
+#include <boost/thread/xtime.hpp>
+#include <threadpool.hpp>
 #pragma GCC diagnostic pop
-#include <string>
-
-class WriteQueue;
-
-void srcml_write(WriteQueue*);
+#include <prio_scheduler_strict.hpp>
 
 class WriteQueue {
 public:
 
-    static const int CAPACITY = 200;
-
-    WriteQueue(boost::function<void()> writearg, bool order) : strictordering(order), max_threads(1), write(writearg), empty(false), curpos(1) {}
+    WriteQueue(boost::function<void(WriteRequest*)> writearg, bool order)
+        : write(writearg), pool(1), poolstrict(1), strict(order) {}
 
     /* puts an element in the back of the queue by swapping with parameter */
-    void push(WriteRequest& value) {
+    void push(WriteRequest* pvalue) {
 
-        // create threads as requests are pushed
-        // no more then max threads however
-        if (writers.size() < max_threads)
-            writers.create_thread( boost::bind(srcml_write, this) );
-
-        {
-            boost::unique_lock<boost::mutex> lock(mutex);
-            while ((strictordering && (queue.size() == (CAPACITY - 1) || value.position != curpos)) ||
-                   (queue.size() == CAPACITY))
-                cond_full.wait(lock);
-
-            /* Need to avoid a copy of the write request */
-
-            // get a temporary element with the same position as the one to be inserted into the queue
-            WriteRequest t;
-            t.position = value.position;
-            queue.push_back(t);
-
-            // swap the value to be inserted with the temporary
-            queue.back().swap(value);
-
-            // push the new value into the heap properly
-            std::push_heap(queue.begin(), queue.end());
-        }
-        cond_empty.notify_one();
-    }
-
-    /* removes the front element from the queue by swapping with parameter */
-    void pop(WriteRequest& value) {
-        {
-            boost::unique_lock<boost::mutex> lock(mutex);
-            while ((strictordering && (!empty && (queue.empty() || (queue.front().position != curpos && queue.front().position != 0)))) ||
-                   (!empty && queue.empty()))
-                cond_empty.wait(lock);
-
-            if (queue.size() == 0 && empty) {
-                WriteRequest t;
-                value.swap(t);
-            } else {
-                value.swap(queue.front());
-                std::pop_heap(queue.begin(), queue.end());
-                queue.pop_back();
-            }
-            ++curpos;
-        }
-        cond_full.notify_all();
+        if (strict)
+            poolstrict.schedule(prio_strict_task_func(pvalue->position, boost::bind(write, pvalue)));
+        else
+            pool.schedule(boost::threadpool::prio_task_func(pvalue->position, boost::bind(write, pvalue)));
     }
 
     void join() {
-        {
-            boost::unique_lock<boost::mutex> lock(mutex);
-            empty = true;
-        }
-        cond_empty.notify_all();
-        cond_full.notify_all();
 
-        writers.join_all();
+        if (strict)
+            poolstrict.wait();
+        else
+            pool.wait();
     }
 
 private:
-    bool strictordering;
-    boost::thread_group writers;
-    size_t max_threads;
-    std::vector<WriteRequest> queue;
-    boost::function<void()> write;
-    bool empty;
-    boost::mutex mutex;
-    boost::condition_variable cond_full;
-    boost::condition_variable cond_empty;
-    int curpos;
+    boost::function<void(WriteRequest*)> write;
+    boost::threadpool::prio_pool pool;
+    prio_strict_pool poolstrict;
+    bool strict;
 };
 
 #endif

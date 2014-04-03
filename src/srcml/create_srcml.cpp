@@ -139,7 +139,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_COMPRESS);
 
     // setup the parsing queue
-    WriteQueue write_queue(boost::bind(srcml_write, &write_queue), false);
+    WriteQueue write_queue(srcml_write_request, true);
     ParseQueue parse_queue(srcml_request.max_threads, boost::bind(srcml_consume, _1, &write_queue));
 
     // process input sources

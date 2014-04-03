@@ -27,13 +27,11 @@
 #define PARSE_QUEUE_HPP
 
 #include <parse_request.hpp>
+#include <boost/function.hpp>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/thread.hpp>
+#include <threadpool.hpp>
 #pragma GCC diagnostic pop
-#include <string>
-#include <boost/asio/io_service.hpp>
-#include <boost/function.hpp>
 
 class ParseQueue {
 public:
@@ -47,9 +45,7 @@ public:
 
 private:
     boost::function<void(ParseRequest*)> consume;
-    boost::asio::io_service ioService;
-    boost::thread_group threadpool;
-    boost::asio::io_service::work* pwork;
+    boost::threadpool::pool pool;
     int counter;
 };
 

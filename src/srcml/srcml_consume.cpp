@@ -35,15 +35,10 @@
 #include <srcml_consume.hpp>
 #include <srcml.h>
 #include <parse_request.hpp>
-#include <src_input_libarchive.hpp>
 #include <parse_queue.hpp>
 #include <write_request.hpp>
 #include <write_queue.hpp>
 #include <iomanip>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/thread.hpp>
-#pragma GCC diagnostic pop
 #include <boost/static_assert.hpp>
 
 // Public consumption thread function
@@ -107,13 +102,13 @@ void srcml_consume(ParseRequest* ppr, WriteQueue* wqueue) {
     }
 
     // write unit
-    WriteRequest wr;
-    wr.srcml_arch = ppr->srcml_arch;
-    wr.unit = unit;
-    wr.position = ppr->position;
-    wr.filename = ppr->filename;
-    wr.status = status;
-    wqueue->push(wr);
+    WriteRequest* pwr = new WriteRequest;
+    pwr->srcml_arch = ppr->srcml_arch;
+    pwr->unit = unit;
+    pwr->position = ppr->position;
+    pwr->filename = ppr->filename;
+    pwr->status = status;
+    wqueue->push(pwr);
 
     delete ppr;
     ppr = 0;
