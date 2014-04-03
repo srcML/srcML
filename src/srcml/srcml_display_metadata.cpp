@@ -32,9 +32,18 @@
 #include <boost/foreach.hpp>
 #include <iomanip>
 
+void srcml_aquire_unit_xml(srcml_archive* srcml_arch, int unit_index) {
+    if (srcml_unit* unit = srcml_read_unit_position(srcml_arch, unit_index)) {
+        std::cout << srcml_unit_get_xml(unit) << "\n";
+        srcml_free_unit(unit);
+    }
+    // Problem getting the XML
+}
+
 int srcml_unit_count(srcml_archive* srcml_arch) {
     int numUnits = 0;
     while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
+        std::cerr << "test\n";
         ++numUnits;
         srcml_free_unit(unit);
     }
@@ -175,8 +184,8 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             srcml_list_unit_files(srcml_arch);
         }
         // get specific unit
-        if (srcml_request.unit > 0) {
-            // DO THINGS HERE!
+        if (srcml_request.unit > 0 && (srcml_request.command & SRCML_COMMAND_XML)) {
+            srcml_aquire_unit_xml(srcml_arch, srcml_request.unit);
         }
         // units
         if (srcml_request.command & SRCML_COMMAND_UNITS) {
