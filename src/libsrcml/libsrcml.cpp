@@ -68,6 +68,13 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
  * global unit for use with srcml() function.  Defaulted values.
  */
 srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+/**
+ * @var register_languages
+ *
+ * Global variable tracking if need to register default languages.
+ */
+bool register_languages = true;
 /******************************************************************************
  *                                                                            *
  *                           Global Cleanup function                          *
@@ -143,10 +150,9 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     }
 
-    static bool first = true;
-    if(first) {
+    if(register_languages) {
 
-        first = false;
+        register_languages = false;
         LanguageExtensionRegistry registry = global_archive.registered_languages;
 
         global_archive.registered_languages = LanguageExtensionRegistry();
@@ -769,6 +775,32 @@ const char * srcml_get_language_list(int pos) {
  * @returns Returns language on success and NULL on failure.
  */
 const char * srcml_check_extension(const char* filename) {
+
+    if(register_languages) {
+
+        register_languages = false;
+        LanguageExtensionRegistry registry = global_archive.registered_languages;
+
+        global_archive.registered_languages = LanguageExtensionRegistry();
+
+        global_archive.registered_languages.register_standard_file_extensions();
+
+        global_archive.registered_languages.append(registry);
+
+        std::vector<std::string> save_prefix;
+        std::vector<std::string> save_ns;
+        try {
+            for(std::vector<std::string>::size_type i = 0; i < global_archive.prefixes.size(); ++i) {
+                save_prefix.push_back(global_archive.prefixes.at(i));
+                save_ns.push_back(global_archive.namespaces.at(i));
+
+            }
+
+        } catch(...) {
+            return 0;
+        }
+
+    }
 
     return srcml_archive_check_extension(&global_archive, filename);
 
