@@ -499,9 +499,6 @@ void srcMLTranslator::add_raw_len(const char * content, size_t length) {
         if((options & OPTION_ARCHIVE) > 0)
             out.startUnit(0, root_directory, root_filename, root_version, 0, 0, true);
 
-        if ((options & OPTION_ARCHIVE) > 0)
-            out.processText("\n\n", 2);
-
     }
 
     first = false;
