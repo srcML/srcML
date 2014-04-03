@@ -60,6 +60,7 @@ public:
                 const char* language,
                 const char* encoding,
                 OPTION_TYPE& option,
+                std::vector<std::string> & prefix,
                 std::vector<std::string> & uri,
                 int tabsize,
                 xmlOutputBuffer * output_buffer = 0
@@ -140,6 +141,9 @@ public:
 
     /** array for a number to prefix */
     std::vector<std::string> & num2prefix;
+
+    /** array for a number to uri */
+    std::vector<std::string> & num2uri;
 
     /** number of open elements */
     int openelementcount;

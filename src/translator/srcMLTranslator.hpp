@@ -60,6 +60,7 @@ public:
                     const char* directory,
                     const char* filename,
                     const char* version,
+                    std::vector<std::string> & prefix,
                     std::vector<std::string> & uri,
                     int tabsize
                     );
@@ -74,6 +75,7 @@ public:
                     const char* directory,
                     const char* filename,
                     const char* version,
+                    std::vector<std::string> & prefix,
                     std::vector<std::string> & uri,
                     int tabsize
                     );
@@ -87,6 +89,7 @@ public:
                     const char* directory,
                     const char* filename,
                     const char* version,
+                    std::vector<std::string> & prefix,
                     std::vector<std::string> & uri,
                     int tabsize
                     );
@@ -152,7 +155,10 @@ private:
     /** size of tabstop */
     int tabsize;
 
-    /** list of namespace/prefixes */
+    /** list of namespace prefixes */
+    std::vector<std::string> & prefix;
+
+    /** list of namespace uris */
     std::vector<std::string> & uri;
 
     /** list of user defined macros */

@@ -208,6 +208,7 @@ int srcml(const char* input_filename, const char* output_filename) {
                                    0,
                                    0,
                                    global_archive.prefixes,
+                                   global_archive.namespaces,
                                    global_archive.tabstop);
 
         int error = 0;

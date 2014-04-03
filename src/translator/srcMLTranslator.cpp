@@ -76,7 +76,8 @@ char * strnstr(const char *s1, const char *s2, size_t n) {
  * @param directory root unit directory attribute
  * @param filename unit directory attribute
  * @param version root unit directory attribute
- * @param uri namespace/prefix pairs array
+ * @param prefix namespace prefix array
+ * @param uri namespace uri array
  * @param tabsize size of tabstop
  * 
  * Constructor for output to a filename.
@@ -89,12 +90,13 @@ srcMLTranslator::srcMLTranslator(int language,
                                  const char* directory,
                                  const char* filename,
                                  const char* version,
+                                 std::vector<std::string> & prefix,
                                  std::vector<std::string> & uri,
                                  int tabsize)
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
-      out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri, tabsize, 0), tabsize(tabsize), uri(uri),
+      out(0, srcml_filename, getLanguageString(), xml_encoding, options, prefix, uri, tabsize, 0), tabsize(tabsize), prefix(prefix), uri(uri),
       str_buffer(0), size(0) {}
 
 /** 
@@ -108,7 +110,8 @@ srcMLTranslator::srcMLTranslator(int language,
  * @param directory root unit directory attribute
  * @param filename unit directory attribute
  * @param version root unit directory attribute
- * @param uri namespace/prefix pairs array
+ * @param prefix namespace prefix array
+ * @param uri namespace uri array
  * @param tabsize size of tabstop
  * 
  * Constructor for output to memory.
@@ -122,12 +125,13 @@ srcMLTranslator::srcMLTranslator(int language,
                                  const char* directory,
                                  const char* filename,
                                  const char* version,
+                                 std::vector<std::string> & prefix,
                                  std::vector<std::string> & uri,
                                  int tabsize)
     :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
        encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
-       out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, 0), tabsize(tabsize),
-       uri(uri), str_buffer(str_buf), size(size) {
+       out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize, 0), tabsize(tabsize),
+       prefix(prefix), uri(uri), str_buffer(str_buf), size(size) {
 
     buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
@@ -145,7 +149,8 @@ srcMLTranslator::srcMLTranslator(int language,
  * @param directory root unit directory attribute
  * @param filename unit directory attribute
  * @param version root unit directory attribute
- * @param uri namespace/prefix pairs array
+ * @param prefix namespace prefix array
+ * @param uri namespace uri array
  * @param tabsize size of tabstop
  * 
  * Constructor for output to libxml2 output buffer.
@@ -158,12 +163,13 @@ srcMLTranslator::srcMLTranslator(int language,
                                  const char* directory,
                                  const char* filename,
                                  const char* version,
+                                 std::vector<std::string> & prefix,
                                  std::vector<std::string> & uri,
                                  int tabsize)
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
-      out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, output_buffer), tabsize(tabsize), uri(uri),
+      out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize, output_buffer), tabsize(tabsize), prefix(prefix), uri(uri),
       str_buffer(0), size(0) {}
 
 /**
@@ -319,7 +325,7 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
                                          OPTION_TYPE translation_options) {
 
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler("UTF-8"));
-    srcMLOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, uri, tabsize, obuffer);
+    srcMLOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, prefix, uri, tabsize, obuffer);
     sep_out.initWriter();
     sep_out.setMacroList(user_macro_list);
 

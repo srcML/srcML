@@ -773,6 +773,7 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
                                                   archive->filename ? archive->filename->c_str() : 0,
                                                   archive->version ? archive->version->c_str() : 0,
                                                   archive->prefixes,
+                                                  archive->namespaces,
                                                   archive->tabstop);
         archive->translator->setMacroList(archive->user_macro_list);
 
@@ -814,6 +815,7 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
                                                   archive->filename ? archive->filename->c_str() : 0,
                                                   archive->version ? archive->version->c_str() : 0,
                                                   archive->prefixes,
+                                                  archive->namespaces,
                                                   archive->tabstop);
 
         archive->translator->setMacroList(archive->user_macro_list);
@@ -856,6 +858,7 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
                                                   archive->filename ? archive->filename->c_str() : 0,
                                                   archive->version ? archive->version->c_str() : 0,
                                                   archive->prefixes,
+                                                  archive->namespaces,
                                                   archive->tabstop);
 
         archive->translator->setMacroList(archive->user_macro_list);
@@ -903,6 +906,7 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
                                                   archive->filename ? archive->filename->c_str() : 0,
                                                   archive->version ? archive->version->c_str() : 0,
                                                   archive->prefixes,
+                                                  archive->namespaces,
                                                   archive->tabstop);
 
         archive->translator->setMacroList(archive->user_macro_list);

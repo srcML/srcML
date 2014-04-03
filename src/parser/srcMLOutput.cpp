@@ -354,7 +354,8 @@ namespace {
  * @param language the unit language
  * @param xml_enc output encoding
  * @param op output operations
- * @param uri namespaces
+ * @param prefix namespaces prefixes
+ * @param uri namespaces uris
  * @param ts tabstop size
  * @param output_buffer if output is to a output buffer
  *
@@ -365,11 +366,12 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          const char* language,
                          const char* xml_enc,
                          OPTION_TYPE& op,
+                         std::vector<std::string> & prefix,
                          std::vector<std::string> & uri,
                          int ts,
                          xmlOutputBuffer * output_buffer)
     : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
-      unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(uri)
+      unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(prefix), num2uri(uri)
     , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), output_buffer(output_buffer),
       debug_time_start(boost::posix_time::microsec_clock::universal_time())
 {
