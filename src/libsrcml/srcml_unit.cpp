@@ -174,6 +174,26 @@ int srcml_unit_set_hash(srcml_unit* unit, const char* hash) {
 
 }
 
+/**
+ * srcml_unit_set_xml
+ * @param unit a srcml unit
+ * @param xml srcML to set unit to contain.
+ *
+ * Set the unit to contain the srcML in xml.  No validation of underlying unit is done.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
+ * on failure.
+ */
+int srcml_unit_set_xml(srcml_unit* unit, const char* xml) {
+
+    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    unit->unit = xml ? std::string(xml) : boost::optional<std::string>();
+
+    return SRCML_STATUS_OK;
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                           Accessor functions                               *

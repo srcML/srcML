@@ -118,6 +118,7 @@ _srcml_unit_set_language
 _srcml_unit_set_version
 _srcml_unit_set_timestamp
 _srcml_unit_set_hash
+_srcml_unit_set_xml
 _srcml_unparse_unit_fd
 _srcml_unparse_unit_filename
 _srcml_unparse_unit_memory
@@ -129,3 +130,5 @@ _srcml_write_open_filename
 _srcml_write_open_memory
 _srcml_write_open_FILE
 _srcml_write_unit
+_srcml_write_raw
+_srcml_write_raw_len
