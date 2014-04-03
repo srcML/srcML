@@ -64,6 +64,8 @@ const int SRCML_COMMAND_DISPLAY_SRCML_FILENAME    = 1<<24;
 const int SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION = 1<<25;
 const int SRCML_COMMAND_DISPLAY_SRCML_ENCODING    = 1<<26;
 
+const int SRCML_COMMAND_OUTPUT_ORDERED = 1<<27;
+
 // commands that are simple queries on srcml
 const int SRCML_COMMAND_INSRCML =
     SRCML_COMMAND_LONGINFO |
