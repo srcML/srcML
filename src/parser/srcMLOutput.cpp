@@ -365,7 +365,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          const char* language,
                          const char* xml_enc,
                          OPTION_TYPE& op,
-                         std::string * uri,
+                         std::vector<std::string> & uri,
                          int ts,
                          xmlOutputBuffer * output_buffer)
     : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),

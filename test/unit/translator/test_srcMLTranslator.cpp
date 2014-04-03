@@ -44,17 +44,14 @@ int main() {
     std::ofstream file("a.cpp");
     file << "a;";
     file.close();
-
-    std::string urisprefix[] = {
-
-        SRCML_SRC_NS_PREFIX_DEFAULT,
-        SRCML_CPP_NS_PREFIX_DEFAULT,
-        SRCML_ERR_NS_PREFIX_DEFAULT,
-        SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
-        SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
-        SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
-        SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
-    };
+    std::vector<std::string> urisprefix;
+    urisprefix.push_back(SRCML_SRC_NS_PREFIX_DEFAULT);
+    urisprefix.push_back(SRCML_CPP_NS_PREFIX_DEFAULT);
+    urisprefix.push_back(SRCML_ERR_NS_PREFIX_DEFAULT);
+    urisprefix.push_back(SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
+    urisprefix.push_back(SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
+    urisprefix.push_back(SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
+    urisprefix.push_back(SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
 
     /*
 

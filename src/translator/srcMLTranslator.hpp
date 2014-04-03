@@ -60,7 +60,7 @@ public:
                     const char* directory,
                     const char* filename,
                     const char* version,
-                    std::string * uri,
+                    std::vector<std::string> & uri,
                     int tabsize
                     );
 
@@ -74,7 +74,7 @@ public:
                     const char* directory,
                     const char* filename,
                     const char* version,
-                    std::string * uri,
+                    std::vector<std::string> & uri,
                     int tabsize
                     );
 
@@ -87,7 +87,7 @@ public:
                     const char* directory,
                     const char* filename,
                     const char* version,
-                    std::string * uri,
+                    std::vector<std::string> & uri,
                     int tabsize
                     );
 
@@ -153,7 +153,7 @@ private:
     int tabsize;
 
     /** list of namespace/prefixes */
-    std::string * uri;
+    std::vector<std::string> & uri;
 
     /** list of user defined macros */
     std::vector<std::string> user_macro_list;
