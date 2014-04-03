@@ -444,6 +444,262 @@ int main() {
 
     }
 
+    /*
+        add_raw_len
+    */
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+        std::string srcml_unit = "<unit/>";
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "UTF-8", "UTF-8",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        translator.add_raw_len(srcml_unit.c_str(), srcml_unit.size());
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + srcml_unit + "\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+        std::string srcml_unit = "<unit/>";
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "UTF-8", "UTF-8",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        translator.add_raw_len(srcml_unit.c_str(), 1);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "<\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+        std::string srcml_unit = "<unit/>";
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "UTF-8", "UTF-8",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        translator.add_raw_len(srcml_unit.c_str(), 0);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+        std::string srcml_unit = "<unit/>";
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "UTF-8", "UTF-8",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        translator.add_raw_len(srcml_unit.c_str(), srcml_unit.size());
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "<unit xmlns=\"http://www.sdml.info/srcML/src\">" + srcml_unit + "</unit>\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+        std::string srcml_unit = "<unit/>";
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "UTF-8", "UTF-8",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        translator.add_raw_len(srcml_unit.c_str(), 1);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "<unit xmlns=\"http://www.sdml.info/srcML/src\"><</unit>\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+        std::string srcml_unit = "<unit/>";
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "UTF-8", "UTF-8",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        translator.add_raw_len(srcml_unit.c_str(), 0);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "<unit xmlns=\"http://www.sdml.info/srcML/src\"/>\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+        std::string srcml_unit = "srcML";
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "UTF-8", "UTF-8",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        translator.add_raw_len(srcml_unit.c_str(), srcml_unit.size());
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + srcml_unit + "\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+        std::string srcml_unit = "srcML";
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "UTF-8", "UTF-8",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        translator.add_raw_len(srcml_unit.c_str(), 1);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "s\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+        std::string srcml_unit = "srcML";
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "UTF-8", "UTF-8",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        translator.add_raw_len(srcml_unit.c_str(), 0);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+        std::string srcml_unit = "srcML";
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "UTF-8", "UTF-8",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        translator.add_raw_len(srcml_unit.c_str(), srcml_unit.size());
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "<unit xmlns=\"http://www.sdml.info/srcML/src\">" + srcml_unit + "</unit>\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+        std::string srcml_unit = "srcML";
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "UTF-8", "UTF-8",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        translator.add_raw_len(srcml_unit.c_str(), 1);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "<unit xmlns=\"http://www.sdml.info/srcML/src\">s</unit>\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+        std::string srcml_unit = "srcML";
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "UTF-8", "UTF-8",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        translator.add_raw_len(srcml_unit.c_str(), 0);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "<unit xmlns=\"http://www.sdml.info/srcML/src\"/>\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
     unlink("a.cpp");
 
     return 0;
