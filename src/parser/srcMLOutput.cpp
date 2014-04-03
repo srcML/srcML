@@ -692,6 +692,19 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 
         xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
     }
+
+    for(std::vector<std::string>::size_type pos =  SRCML_EXT_POSITION_NS_URI_POS + 1; pos < num2prefix.size(); ++pos) {
+
+        std::string prefix = "xmlns";
+        if (num2prefix[pos][0] != '\0') {
+            prefix += ':';
+            prefix += num2prefix[pos];
+        }
+        
+        xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST num2uri[pos].c_str());
+            
+    }
+
 }
 
 /**
