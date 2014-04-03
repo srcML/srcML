@@ -41,7 +41,7 @@ public:
     /* puts an element in the back of the queue by swapping with parameter */
     void push(ParseRequest* value);
 
-    void join();
+    void wait();
 
 private:
     boost::function<void(ParseRequest*)> consume;

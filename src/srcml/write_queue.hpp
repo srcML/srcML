@@ -39,30 +39,25 @@ class WriteQueue {
 public:
 
     WriteQueue(boost::function<void(WriteRequest*)> writearg, bool order)
-        : write(writearg), pool(1), poolstrict(1), strict(order) {}
+        : write(writearg), pool(1) {
+
+        set_ordering(order);
+    }
 
     /* puts an element in the back of the queue by swapping with parameter */
     void push(WriteRequest* pvalue) {
 
-        if (strict)
-            poolstrict.schedule(prio_strict_task_func(pvalue->position, boost::bind(write, pvalue)));
-        else
-            pool.schedule(boost::threadpool::prio_task_func(pvalue->position, boost::bind(write, pvalue)));
+        pool.schedule(prio_strict_task_func(pvalue->position, boost::bind(write, pvalue)));
     }
 
-    void join() {
+    void wait() {
 
-        if (strict)
-            poolstrict.wait();
-        else
-            pool.wait();
+        pool.wait();
     }
 
 private:
     boost::function<void(WriteRequest*)> write;
-    boost::threadpool::prio_pool pool;
-    prio_strict_pool poolstrict;
-    bool strict;
+    prio_strict_pool pool;
 };
 
 #endif

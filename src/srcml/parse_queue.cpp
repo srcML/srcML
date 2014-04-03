@@ -33,7 +33,7 @@ void ParseQueue::push(ParseRequest* pvalue) {
     pool.schedule( boost::bind(consume, pvalue));
 }
 
-void ParseQueue::join() {
+void ParseQueue::wait() {
 
 	pool.wait();
 }
