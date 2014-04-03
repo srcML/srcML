@@ -261,7 +261,7 @@ int main() {
         int size;
         srcml_archive * archive = srcml_create_archive();
         srcml_write_open_memory(archive, &s, &size);
-        srcml_write_raw_len(archive, srcml_text.c_str(), 1);
+        srcml_write_raw_len(archive, srcml_text.c_str(), 0);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
 

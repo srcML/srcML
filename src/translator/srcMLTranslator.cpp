@@ -503,7 +503,8 @@ void srcMLTranslator::add_raw_len(const char * content, size_t length) {
 
     first = false;
 
-    xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)content, (int)length);
+    if(length > 0)
+      xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)content, (int)length);
 
 }
 
