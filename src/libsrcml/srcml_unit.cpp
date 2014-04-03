@@ -179,7 +179,7 @@ int srcml_unit_set_hash(srcml_unit* unit, const char* hash) {
  * @param unit a srcml unit
  * @param xml srcML to set unit to contain.
  *
- * Set the unit to contain the srcML in xml.
+ * Set the unit to contain the srcML in xml.  No validation of underlying unit is done.
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
