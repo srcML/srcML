@@ -38,7 +38,7 @@ public:
 
     ParseQueue(int max_threads, boost::function<void(ParseRequest*)>);
 
-    void push(ParseRequest* value);
+    void schedule(ParseRequest* value);
 
     void wait();
 

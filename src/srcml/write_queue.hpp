@@ -45,7 +45,7 @@ public:
     }
 
     /* puts an element in the back of the queue by swapping with parameter */
-    void push(ParseRequest* pvalue) {
+    void schedule(ParseRequest* pvalue) {
 
         pool.schedule(prio_strict_task_func(pvalue->position, boost::bind(write, pvalue)));
     }

@@ -102,5 +102,5 @@ void srcml_consume(ParseRequest* ppr, WriteQueue* wqueue) {
 
     // convert the parse request to a write request
     ppr->unit = unit;
-    wqueue->push(ppr);
+    wqueue->schedule(ppr);
 }

@@ -26,7 +26,7 @@ ParseQueue::ParseQueue(int max_threads, boost::function<void(ParseRequest*)> con
     : consume(consumearg), pool(max_threads), counter(0) {
 }
 
-void ParseQueue::push(ParseRequest* pvalue) {
+void ParseQueue::schedule(ParseRequest* pvalue) {
 
     pvalue->position = ++counter;
 

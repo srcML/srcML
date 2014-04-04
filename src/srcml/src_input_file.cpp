@@ -41,5 +41,5 @@ void src_input_file(ParseQueue& queue,
     prequest->disk_filename = input_file;
 
     // Hand request off to the processing queue
-    queue.push(prequest);
+    queue.schedule(prequest);
 }
