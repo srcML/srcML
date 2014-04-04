@@ -25,9 +25,8 @@
 
 #include <srcml.h>
 #include <string>
-#include <vector>
+#include <list>
 #include <boost/optional.hpp>
-#include <iostream>
 #include <src_prefix.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/logic/tribool.hpp>
@@ -148,8 +147,8 @@ public:
     boost::optional<FILE*> fileptr;
     boost::optional<int> fd;
     enum STATES state;
-    std::vector<std::string> compressions;
-    std::vector<std::string> archives;
+    std::list<std::string> compressions;
+    std::list<std::string> archives;
 };
 
 template <typename T>

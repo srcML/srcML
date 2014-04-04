@@ -100,7 +100,7 @@ void create_src(const srcml_request_t& srcml_request,
             else
                 srcml_write_open_filename(oarch, destination.c_str());
 
-            if (!destination.compressions.empty() && destination.compressions[0] == ".gz")
+            if (!destination.compressions.empty() && destination.compressions.front() == ".gz")
                 srcml_archive_enable_option(oarch, SRCML_OPTION_COMPRESS);
 
             srcml_write_unit(oarch, unit);
