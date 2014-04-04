@@ -159,6 +159,10 @@ void src_input_libarchive(ParseQueue& queue,
             // fill up the parse request buffer
             prequest->buffer.clear();
             if (!status) {
+                // if we know the size, create the right sized buffer
+                if (archive_entry_size_is_set(entry))
+                    prequest->buffer.reserve(archive_entry_size(entry));
+
                 const char* buffer;
                 size_t size;
 #if ARCHIVE_VERSION_NUMBER < 3000000
