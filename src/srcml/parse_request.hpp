@@ -38,40 +38,7 @@
 #include <boost/optional.hpp>
 
 struct ParseRequest {
-    ParseRequest() : buffer(0), srcml_arch(0), position(0), status(0) {
-
-    //	fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-    }
-
-    ParseRequest(const ParseRequest& other) {
-
-	//fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-
-    	*this = other;
-    }
-
-    ~ParseRequest() {
-
-    //	fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-    }
-
-    void swap(ParseRequest& other) {
-
-        std::swap(filename, other.filename);
-        std::swap(directory, other.directory);
-        std::swap(version, other.version);
-        std::swap(buffer, other.buffer);
-        std::swap(srcml_arch, other.srcml_arch);
-        std::swap(language, other.language);
-        std::swap(position, other.position);
-        std::swap(disk_filename, other.disk_filename);
-        std::swap(status, other.status);
-    }
-
-    // empty ParseRequests indicate termination
-    bool empty() const {
-        return filename && buffer.empty() && language.empty();
-    }
+    ParseRequest() : buffer(0), srcml_arch(0), position(0), status(0) {}
 
     // Fields required by thread to process a unit
     boost::optional<std::string> filename;

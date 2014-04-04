@@ -37,20 +37,6 @@
 struct WriteRequest {
     WriteRequest() : srcml_arch(0), unit(0), position(0), status(0) {}
 
-    void swap(WriteRequest& other) {
-
-        std::swap(srcml_arch, other.srcml_arch);
-        std::swap(unit, other.unit);
-        std::swap(position, other.position);
-        std::swap(filename, other.filename);
-        std::swap(status, other.status);
-    }
-
-    // empty WriteRequests indicate termination
-    bool empty() const {
-        return srcml_arch == 0 && unit == 0;
-    }
-
     // Fields required by thread to process a unit
     srcml_archive* srcml_arch;
     srcml_unit* unit;
