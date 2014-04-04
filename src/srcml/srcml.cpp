@@ -53,6 +53,10 @@ int main(int argc, char * argv[]) {
     // convert the list of input filenames to actual input sources
     srcml_input_t input_sources(srcml_request.input.begin(), srcml_request.input.end());
 
+    if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
+        srcml_request.att_filename = input_sources[0].filename;
+    }
+
     // input source that is stdin, if it exists
     srcml_input_src* pstdin = srcml_request.stdindex ? &input_sources[*srcml_request.stdindex] : 0;
 
