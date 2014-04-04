@@ -162,4 +162,8 @@
 <if>if<condition>(<decl><type><name>int</name></type> <name>a</name> =<init> <expr>0</expr></init></decl>)</condition><then> <block>{}</block></then></if>
 </unit>
 
+<unit>
+<if>if<condition>(<expr><name>a</name>&amp;1</expr>)</condition><then> <expr_stmt><expr><name>b</name></expr>;</expr_stmt></then></if>
+</unit>
+
 </unit>
