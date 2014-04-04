@@ -5246,7 +5246,8 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
             if(isempty) {
 
                 // additional right parentheses indicates end of non-list modes
-                endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE | MODE_INTERNAL_END_CURLY);
+                if(inTransparentMode(MODE_LIST))
+                    endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE | MODE_INTERNAL_END_CURLY);
             }
 
         }
@@ -5258,8 +5259,8 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
             if (isempty && inMode(MODE_LIST))
                 endDownOverMode(MODE_LIST);
             
-            else if(inTransparentMode(MODE_EXPRESSION | MODE_LIST))
-                endDownOverMode(MODE_EXPRESSION | MODE_LIST);
+            else if(inTransparentMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP))
+                endDownOverMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
 
             if(!isempty)
                 decCurly();
@@ -5428,7 +5429,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
 
         // left curly brace
         {
-            startNewMode(MODE_EXPRESSION | MODE_LIST);
+            startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
 
             startElement(SBLOCK);
         }
@@ -5441,11 +5442,13 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         {
 
             if(!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT)) {
+
                 endDownToMode(MODE_INTERNAL_END_CURLY);
 
                 endMode(MODE_INTERNAL_END_CURLY);
 
             }
+
         }
         rcurly_argument |
 
