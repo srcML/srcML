@@ -27,7 +27,7 @@
 #define WRITE_QUEUE_HPP
 
 #include <srcml.h>
-#include <write_request.hpp>
+#include <parse_request.hpp>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <boost/thread/xtime.hpp>
@@ -38,14 +38,14 @@
 class WriteQueue {
 public:
 
-    WriteQueue(boost::function<void(WriteRequest*)> writearg, bool order)
+    WriteQueue(boost::function<void(ParseRequest*)> writearg, bool order)
         : write(writearg), pool(1) {
 
         set_ordering(order);
     }
 
     /* puts an element in the back of the queue by swapping with parameter */
-    void push(WriteRequest* pvalue) {
+    void push(ParseRequest* pvalue) {
 
         pool.schedule(prio_strict_task_func(pvalue->position, boost::bind(write, pvalue)));
     }
@@ -56,7 +56,7 @@ public:
     }
 
 private:
-    boost::function<void(WriteRequest*)> write;
+    boost::function<void(ParseRequest*)> write;
     prio_strict_pool pool;
 };
 

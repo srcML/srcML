@@ -33,9 +33,8 @@ void srcml_execute(const srcml_request_t& srcml_request,
                    const srcml_input_t& input_sources,
                    const srcml_output_dest& destination) {
 
-    boost::thread_group command_processing_threads;
-
     // create a thread for each command, creating pipes between adjoining commands
+    boost::thread_group command_processing_threads;
     int fds[2];
     BOOST_FOREACH(command curcommand, commands) {
 

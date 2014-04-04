@@ -28,8 +28,6 @@
 #ifndef PARSE_REQUEST_HPP
 #define PARSE_REQUEST_HPP
 
-#include <algorithm>
-#include <archive.h>
 #include <srcml.h>
 
 #include <string>
@@ -38,17 +36,18 @@
 #include <boost/optional.hpp>
 
 struct ParseRequest {
-    ParseRequest() : buffer(0), srcml_arch(0), position(0), status(0) {}
+    ParseRequest(int size = 0) : buffer(size), srcml_arch(0), unit(0), position(0), status(0) {}
 
     // Fields required by thread to process a unit
+    std::string language;
     boost::optional<std::string> filename;
     boost::optional<std::string> directory;
     boost::optional<std::string> version;
     std::vector<char> buffer;
-    srcml_archive * srcml_arch;
-    std::string language;
-    int position;
+    srcml_archive* srcml_arch;
+    srcml_unit* unit;
     boost::optional<std::string> disk_filename;
+    int position;
     int status;
 };
 

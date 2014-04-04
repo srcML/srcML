@@ -157,9 +157,8 @@ void src_input_libarchive(ParseQueue& queue,
             prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
             // fill up the parse request buffer
-            prequest->buffer.clear();
             if (!status) {
-                // if we know the size, create the right sized buffer
+                // if we know the size, create the right sized data_buffer
                 if (archive_entry_size_is_set(entry))
                     prequest->buffer.reserve(archive_entry_size(entry));
 

@@ -38,7 +38,6 @@ public:
 
     ParseQueue(int max_threads, boost::function<void(ParseRequest*)>);
 
-    /* puts an element in the back of the queue by swapping with parameter */
     void push(ParseRequest* value);
 
     void wait();

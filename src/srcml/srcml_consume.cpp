@@ -36,7 +36,6 @@
 #include <srcml.h>
 #include <parse_request.hpp>
 #include <parse_queue.hpp>
-#include <write_request.hpp>
 #include <write_queue.hpp>
 #include <iomanip>
 #include <boost/static_assert.hpp>
@@ -101,15 +100,7 @@ void srcml_consume(ParseRequest* ppr, WriteQueue* wqueue) {
         }
     }
 
-    // write unit
-    WriteRequest* pwr = new WriteRequest;
-    pwr->srcml_arch = ppr->srcml_arch;
-    pwr->unit = unit;
-    pwr->position = ppr->position;
-    pwr->filename = ppr->filename;
-    pwr->status = status;
-    wqueue->push(pwr);
-
-    delete ppr;
-    ppr = 0;
+    // convert the parse request to a write request
+    ppr->unit = unit;
+    wqueue->push(ppr);
 }

@@ -27,13 +27,13 @@
 
 #include <srcml_write.hpp>
 #include <srcml.h>
-#include <write_queue.hpp>
+#include <parse_request.hpp>
 #include <iostream>
 #include <srcml_options.hpp>
 #include <trace_log.hpp>
 
 // Public consumption thread function
-void srcml_write_request(WriteRequest* ppr) {
+void srcml_write_request(ParseRequest* ppr) {
 
     boost::optional<bool> isarchive;
 
