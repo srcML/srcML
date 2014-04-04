@@ -63,20 +63,12 @@ public:
         boost::filesystem::path rpath(resource.c_str());
 
         // collect compressions
-        while (rpath.has_extension() && is_compressed(rpath.extension().string())) {
-
+        for ( ; rpath.has_extension() && is_compressed(rpath.extension().string()); rpath = rpath.stem())
             compressions.push_back(rpath.extension().string());
 
-            rpath = rpath.stem();
-        }
-
         // collect archives
-        while (rpath.has_extension() && is_archive(rpath.extension().string())) {
-
+        for ( ; rpath.has_extension() && is_archive(rpath.extension().string()); rpath = rpath.stem())
             archives.push_back(rpath.extension().string());
-
-            rpath = rpath.stem();
-        }
 
         // collect real extension
         extension = rpath.has_extension() ? rpath.extension().string() : (!archives.empty() ? archives.back() : "");
