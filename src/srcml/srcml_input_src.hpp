@@ -64,31 +64,25 @@ public:
         boost::filesystem::path rpath(resource.c_str());
 
         // collect compressions
-        while (rpath.has_extension()) {
-            std::string ext = rpath.extension().string();
-            if (!is_compressed(ext))
-                break;
-            compressions.push_back(ext);
-            rpath = rpath.stem().string();
+        while (rpath.has_extension() && is_compressed(rpath.extension().string())) {
+
+            compressions.push_back(rpath.extension().string());
+
+            rpath = rpath.stem();
         }
 
         // collect archives
-        while (rpath.has_extension()) {
-            std::string ext = rpath.extension().string();
-            if (!is_archive(ext))
-                break;
-            archives.push_back(ext);
-            plainfile = rpath.string();
-            extension = ext;
+        while (rpath.has_extension() && is_archive(rpath.extension().string())) {
 
-            rpath = rpath.stem().string();
+            archives.push_back(rpath.extension().string());
+
+            rpath = rpath.stem();
         }
 
         // collect real extension
-        if (rpath.has_extension()) {
-            extension = rpath.extension().string();
-            plainfile = rpath.string();
-        }
+        extension = rpath.has_extension() ? rpath.extension().string() : (!archives.empty() ? archives.back() : "");
+
+        plainfile = rpath.string();
 
         if (resource != "-")
             state = extension == ".xml" ? SRCML : SRC;
