@@ -454,12 +454,13 @@ void srcMLTranslator::add_unit(std::string xml, const char * hash) {
 
         char * hash_pos = strnstr(cxml, "hash", pos - cxml);
 
-
         if(hash_pos != 0) {
 
-            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)cxml, (int)((hash_pos + 6) - cxml));
+            char * start_value = strchr(hash_pos, '"');
+
+            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)cxml, (int)((start_value + 1) - cxml));
             xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)hash);
-            cxml = hash_pos + 6;
+            cxml = start_value + 1;
 
             // consume hash if already there this is generic may consider using just 20 for standard hash size
             if(cxml[0] != '"')
