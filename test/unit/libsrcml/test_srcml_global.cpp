@@ -98,7 +98,6 @@ int main() {
     */
 
     {
-        srcml_register_file_extension("cpp", "C++");
         dassert(srcml_check_extension("a.cpp"), std::string("C++"));
     }
 
@@ -107,7 +106,16 @@ int main() {
     }
 
     {
-        dassert(srcml_check_extension("a.foo"), 0);
+        srcml_register_file_extension("foo", "C++");
+        dassert(srcml_check_extension("a.foo"), std::string("C++"));
+    }
+
+    {
+        dassert(srcml_check_extension("a.foo.gz"), std::string("C++"));
+    }
+
+    {
+        dassert(srcml_check_extension("a.bar"), 0);
     }
 
     {
