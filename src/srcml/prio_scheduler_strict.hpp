@@ -7,7 +7,6 @@ inline void set_ordering(bool strict) {
     strict_ordering = strict;
 }
 
-#include <queue>
 #include <threadpool/task_adaptors.hpp>
 
 class prio_strict_task_func {
@@ -42,7 +41,8 @@ public:
     void pop() {
 
         // update where we are in the ordered output
-        current = boost::threadpool::prio_scheduler<Task>::top().m_priority + 1;
+        if (strict_ordering)
+            current = boost::threadpool::prio_scheduler<Task>::top().m_priority + 1;
 
         boost::threadpool::prio_scheduler<Task>::pop();
     }
