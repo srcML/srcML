@@ -173,7 +173,7 @@ void src_input_libarchive(ParseQueue& queue,
                     prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
             }
 
-            // Hand request off to the processing queue
+            // schedule for parsing
             queue.schedule(prequest);
 
             ++count;
