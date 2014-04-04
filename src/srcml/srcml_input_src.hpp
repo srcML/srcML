@@ -25,9 +25,8 @@
 
 #include <srcml.h>
 #include <string>
-#include <vector>
+#include <list>
 #include <boost/optional.hpp>
-#include <iostream>
 #include <src_prefix.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/logic/tribool.hpp>
@@ -64,31 +63,17 @@ public:
         boost::filesystem::path rpath(resource.c_str());
 
         // collect compressions
-        while (rpath.has_extension()) {
-            std::string ext = rpath.extension().string();
-            if (!is_compressed(ext))
-                break;
-            compressions.push_back(ext);
-            rpath = rpath.stem().string();
-        }
+        for ( ; rpath.has_extension() && is_compressed(rpath.extension().string()); rpath = rpath.stem())
+            compressions.push_back(rpath.extension().string());
 
         // collect archives
-        while (rpath.has_extension()) {
-            std::string ext = rpath.extension().string();
-            if (!is_archive(ext))
-                break;
-            archives.push_back(ext);
-            plainfile = rpath.string();
-            extension = ext;
-
-            rpath = rpath.stem().string();
-        }
+        for ( ; rpath.has_extension() && is_archive(rpath.extension().string()); rpath = rpath.stem())
+            archives.push_back(rpath.extension().string());
 
         // collect real extension
-        if (rpath.has_extension()) {
-            extension = rpath.extension().string();
-            plainfile = rpath.string();
-        }
+        extension = rpath.has_extension() ? rpath.extension().string() : (!archives.empty() ? archives.back() : "");
+
+        plainfile = rpath.string();
 
         if (resource != "-")
             state = extension == ".xml" ? SRCML : SRC;
@@ -154,8 +139,8 @@ public:
     boost::optional<FILE*> fileptr;
     boost::optional<int> fd;
     enum STATES state;
-    std::vector<std::string> compressions;
-    std::vector<std::string> archives;
+    std::list<std::string> compressions;
+    std::list<std::string> archives;
 };
 
 template <typename T>

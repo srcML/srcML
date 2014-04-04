@@ -288,6 +288,8 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "display version number and exit")
             ("src", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRC>), "explicitly declare src->srcml mode")
             ("srcml", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRCML>), "explicitly declare srcml->src mode")
+            ("ordered", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OUTPUT_ORDERED>), "enable strict output ordering")
+
             ;
 
         src2srcml_options.add_options()

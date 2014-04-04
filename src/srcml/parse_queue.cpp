@@ -22,29 +22,18 @@
 
 #include <parse_queue.hpp>
 
-ParseQueue::ParseQueue(int max_threads, boost::function<void(ParseRequest)> consumearg)
-    : consume(consumearg), counter(0) {
-
-    pwork = new boost::asio::io_service::work(ioService);
-
-    for (int i = 0; i < max_threads; ++i)
-        threadpool.create_thread( boost::bind(&boost::asio::io_service::run, &ioService));
+ParseQueue::ParseQueue(int max_threads, boost::function<void(ParseRequest*)> consumearg)
+    : consume(consumearg), pool(max_threads), counter(0) {
 }
 
-//ParseQueue::ParseQueue(int max_threads, boost::function<void()> consumearg)
-//    : max_threads(max_threads), consume(consumearg), counter(0), qsize(0), back(0), front(0), empty(false) {}
+void ParseQueue::schedule(ParseRequest* pvalue) {
 
-/* puts an element in the back of the queue by swapping with parameter */
-void ParseQueue::push(ParseRequest& value) {
+    pvalue->position = ++counter;
 
-    value.position = ++counter;
-
-    ioService.post( boost::bind(consume, value));
+    pool.schedule( boost::bind(consume, pvalue));
 }
 
-void ParseQueue::join() {
+void ParseQueue::wait() {
 
-    delete pwork;
-
-    threadpool.join_all();
+	pool.wait();
 }

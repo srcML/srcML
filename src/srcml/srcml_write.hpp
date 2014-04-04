@@ -28,8 +28,8 @@
 #ifndef SRCML_WRITE_HPP
 #define SRCML_WRITE_HPP
 
-class WriteQueue;
+#include <parse_request.hpp>
 
-void srcml_write(WriteQueue* queue);
+void srcml_write_request(ParseRequest*);
 
 #endif

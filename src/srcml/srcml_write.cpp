@@ -27,53 +27,45 @@
 
 #include <srcml_write.hpp>
 #include <srcml.h>
-#include <write_queue.hpp>
+#include <parse_request.hpp>
 #include <iostream>
 #include <srcml_options.hpp>
 #include <trace_log.hpp>
 
 // Public consumption thread function
-void srcml_write(WriteQueue* queue) {
+void srcml_write_request(ParseRequest* ppr) {
 
     boost::optional<bool> isarchive;
 
     TraceLog log(std::cerr, SRCMLOptions::get());
 
-    WriteRequest pr;
-    while (true) {
-
-        // write request in the queue
-        queue->pop(pr);
-
-        // check if done
-        if (!pr.position)
-            break;
-
         // first time through need to set if this is an archive or not
-        if (!isarchive)
-            isarchive = (srcml_archive_get_options(pr.srcml_arch) & SRCML_OPTION_ARCHIVE) > 0;
+    if (!isarchive)
+        isarchive = (srcml_archive_get_options(ppr->srcml_arch) & SRCML_OPTION_ARCHIVE) > 0;
 
         // write the unit
-        if (pr.status == SRCML_STATUS_OK) {
-            srcml_write_unit(pr.srcml_arch, pr.unit);
+    if (ppr->status == SRCML_STATUS_OK) {
 
-            if (*isarchive)
-                log << 'a' << *pr.filename;
+        srcml_write_unit(ppr->srcml_arch, ppr->unit);
 
-        } else if (pr.status == SRCML_STATUS_UNSET_LANGUAGE) {
+        if (*isarchive)
+            log << 'a' << *ppr->filename;
 
-            if (*isarchive)
-                log << '-' << *pr.filename;
-            else
-                std::cerr << "Extension not supported\n";
+    } else if (ppr->status == SRCML_STATUS_UNSET_LANGUAGE) {
 
-        } else {
-            std::cerr << "Internal eror " << pr.status << "\n";
-        }
+        if (*isarchive)
+            log << '-' << *ppr->filename;
+        else
+            std::cerr << "Extension not supported\n";
 
-        // free the unit
-        if (pr.unit)
-            srcml_free_unit(pr.unit);
-        pr.unit = 0;
+    } else {
+        std::cerr << "Internal eror " << ppr->status << "\n";
     }
+
+    // free the unit
+    if (ppr->unit)
+        srcml_free_unit(ppr->unit);
+    ppr->unit = 0;
+
+    delete ppr;
 }

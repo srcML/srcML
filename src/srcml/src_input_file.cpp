@@ -29,17 +29,17 @@ void src_input_file(ParseQueue& queue,
                     const std::string& input_file) {
 
     // form the parsing request
-    ParseRequest request;
+    ParseRequest* prequest = new ParseRequest;
     if (srcml_request.att_filename)
-        request.filename = *srcml_request.att_filename;
+        prequest->filename = *srcml_request.att_filename;
     else if (input_file != "_")
-        request.filename = input_file;
-    request.directory = srcml_request.att_directory;
-    request.version = srcml_request.att_version;
-    request.srcml_arch = srcml_arch;
-    request.language = srcml_request.att_language ? *srcml_request.att_language : "";
-    request.disk_filename = input_file;
+        prequest->filename = input_file;
+    prequest->directory = srcml_request.att_directory;
+    prequest->version = srcml_request.att_version;
+    prequest->srcml_arch = srcml_arch;
+    prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
+    prequest->disk_filename = input_file;
 
     // Hand request off to the processing queue
-    queue.push(request);
+    queue.schedule(prequest);
 }

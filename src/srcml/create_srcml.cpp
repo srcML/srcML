@@ -34,32 +34,32 @@
 #include <src_input_stdin.hpp>
 #include <srcml_input_srcml.hpp>
 
-void create_srcml_handler(ParseQueue& queue, 
+void create_srcml_handler(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
                           const srcml_input_src& input) {
 
-        // call appropriate handler
-        if (input.state == SRCML) {
+    // call appropriate handler
+    if (input.state == SRCML) {
 
-            srcml_input_srcml(queue, srcml_arch, input);
+        srcml_input_srcml(queue, srcml_arch, input);
 
-        } else if (input.protocol == "filelist") {
+    } else if (input.protocol == "filelist") {
 
-            src_input_filelist(queue, srcml_arch, srcml_request, input);
+        src_input_filelist(queue, srcml_arch, srcml_request, input);
 
-        } else if (input.protocol == "file" && boost::filesystem::is_directory(input.resource)) {
+    } else if (input.protocol == "file" && boost::filesystem::is_directory(input.resource)) {
 
-            src_input_filesystem(queue, srcml_arch, srcml_request, input);
+        src_input_filesystem(queue, srcml_arch, srcml_request, input);
 
-        } else if (input.protocol == "file" && input.compressions.empty() && input.archives.empty()) {
+    } else if (input.protocol == "file" && input.compressions.empty() && input.archives.empty()) {
 
-            src_input_file(queue, srcml_arch, srcml_request, input);
+        src_input_file(queue, srcml_arch, srcml_request, input);
 
-        } else {
+    } else {
 
-            src_input_libarchive(queue, srcml_arch, srcml_request, input);
-        }
+        src_input_libarchive(queue, srcml_arch, srcml_request, input);
+    }
 }
 
 // create srcml from the current request
@@ -67,7 +67,7 @@ void create_srcml(const srcml_request_t& srcml_request,
                   const srcml_input_t& input_sources,
                   const srcml_output_dest& destination) {
 
-     // create the output srcml archive
+    // create the output srcml archive
     srcml_archive* srcml_arch = srcml_create_archive();
 
     // set options for the output srcml archive
@@ -139,25 +139,25 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_COMPRESS);
 
     // setup the parsing queue
-    WriteQueue write_queue(boost::bind(srcml_write, &write_queue), false);
+    WriteQueue write_queue(srcml_write_request, srcml_request.command & SRCML_COMMAND_OUTPUT_ORDERED);
     ParseQueue parse_queue(srcml_request.max_threads, boost::bind(srcml_consume, _1, &write_queue));
 
     // process input sources
     BOOST_FOREACH(const srcml_input_src& input, input_sources) {
 /*
-        // if stdin, then there has to be data
-        // TODO: Safe to remove this? We already read data.
-        if (!contains<FILE*>(input) && (input.protocol == "stdin") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) &&
-            !src_input_stdin()) {
-            return; // stdin was requested, but no data was received
-        }
+// if stdin, then there has to be data
+// TODO: Safe to remove this? We already read data.
+if (!contains<FILE*>(input) && (input.protocol == "stdin") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) &&
+!src_input_stdin()) {
+return; // stdin was requested, but no data was received
+}
 */
         create_srcml_handler(parse_queue, srcml_arch, srcml_request, input);
     }
 
     // wait for the parsing and writing queues to finish
-    parse_queue.join();
-    write_queue.join();
+    parse_queue.wait();
+    write_queue.wait();
 
     // close the created srcML archive
     srcml_close_archive(srcml_arch);
