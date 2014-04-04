@@ -65,6 +65,7 @@ const int SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION = 1<<25;
 const int SRCML_COMMAND_DISPLAY_SRCML_ENCODING    = 1<<26;
 
 const int SRCML_COMMAND_OUTPUT_ORDERED = 1<<27;
+const int SRCML_COMMAND_UPDATE = 1<<28;
 
 // commands that are simple queries on srcml
 const int SRCML_COMMAND_INSRCML =
