@@ -46,12 +46,12 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
         srcml_write_unit(request->srcml_arch, request->unit);
 
         if (isarchive)
-            log << 'a' << *request->filename;
+            log << 'a' << (request->filename ? *request->filename : "");
 
     } else if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
 
         if (isarchive)
-            log << '-' << *request->filename;
+            log << '-' << (request->filename ? *request->filename : "");
         else
             std::cerr << "Extension not supported\n";
 
