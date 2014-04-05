@@ -21,8 +21,10 @@
  */
 
 #include <archivecomp.hpp>
+#include <archive.h>
 #include <string.h>
 #include <errno.h>
+#include <string>
 
 // Extension that map to archive types
 static struct { const char *name; int (*setter)(struct archive *); } format_calls[] = {

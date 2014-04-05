@@ -25,8 +25,8 @@
 #ifndef ARCHIVECOMP_HPP
 #define ARCHIVECOMP_HPP
 
-#include <archive.h>
 #include <string>
+struct archive;
 
 int archive_write_set_format_by_extension(struct archive*, const char* extension);
 int archive_write_set_compression_by_extension(struct archive*, const char* extension);

@@ -1,13 +1,13 @@
 #ifndef PRIO_ORDER_STRIC_HPP
 #define PRIO_ORDER_STRIC_HPP
 
+#include <threadpool/task_adaptors.hpp>
+
 static bool strict_ordering;
 inline void set_ordering(bool strict) {
 
     strict_ordering = strict;
 }
-
-#include <threadpool/task_adaptors.hpp>
 
 class prio_strict_task_func {
 public:

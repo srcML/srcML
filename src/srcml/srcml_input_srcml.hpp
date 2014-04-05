@@ -24,9 +24,9 @@
 #ifndef SRCML_INPUT_SRCML_HPP
 #define SRCML_INPUT_SRCML_HPP
 
-#include <srcml.h>
-#include <srcml_input_src.hpp>
-#include <parse_queue.hpp>
+class ParseQueue;
+class srcml_input_src;
+struct srcml_archive;
 
 void srcml_input_srcml(ParseQueue& queue,
 					   srcml_archive* srcml_output_archive,

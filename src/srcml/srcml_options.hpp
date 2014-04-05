@@ -23,8 +23,6 @@
 #ifndef SRCML_OPTIONS_HPP
 #define SRCML_OPTIONS_HPP
 
-#include <srcml_cli.hpp>
-
 class SRCMLOptions {
 public:
     static void set(int options) { 

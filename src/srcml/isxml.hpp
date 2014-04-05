@@ -23,7 +23,6 @@
 #ifndef INCLUDED_IS_XML_HPP
 #define INCLUDED_IS_XML_HPP
 
-#include <stdio.h>
 #include <unistd.h>
 
 // determine if XML from first four bytes in almost any encoding

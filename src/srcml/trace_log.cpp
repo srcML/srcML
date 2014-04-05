@@ -21,7 +21,9 @@
  */
 
 #include <trace_log.hpp>
-
+#include <srcml_cli.hpp>
+#include <iomanip>
+ 
 TraceLog::TraceLog(std::ostream& out, int options)
     : out(out), count(0), overallcount(0) {
 

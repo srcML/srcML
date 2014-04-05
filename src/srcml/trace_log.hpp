@@ -24,8 +24,7 @@
 #define INCLUDED_TRACE_LOG_HPP
 
 #include <iostream>
-#include <iomanip>
-#include <srcml_cli.hpp>
+#include <string>
 
 class TraceLog {
 public:
