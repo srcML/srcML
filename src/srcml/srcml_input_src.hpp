@@ -77,10 +77,6 @@ public:
         if (resource != "-")
             state = extension == ".xml" ? SRCML : SRC;
 
-//        fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, resource.c_str());
-//        fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, plainfile.c_str());
-//        fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, extension.c_str());
-
         if (protocol == "stdin")
             fd = STDIN_FILENO;
         if (protocol == "stdout")
