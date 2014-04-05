@@ -124,14 +124,14 @@ void src_input_libarchive(ParseQueue& queue,
             // default is filename from archive entry (if not empty)
             std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(entry) : "";
 
-            if (count && filename != "data")
+            if (count == 0 && filename != "data")
                 srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
 
             // archive entry filename for non-archive input is "data"
             if (filename.empty() || filename == "data")
                 filename = input_file.resource;
 
-            if (srcml_request.att_filename)
+            if (srcml_request.att_filename && !(srcml_archive_get_options(srcml_arch) & SRCML_OPTION_ARCHIVE))
                 filename = *srcml_request.att_filename;
 
             // language may have been explicitly set
@@ -141,7 +141,7 @@ void src_input_libarchive(ParseQueue& queue,
                 language = *srcml_request.att_language;
 
             // if not explicitly set, language comes from extension
-            // we have to do this ourselves, since libsrcml won't for memory
+            // we have to do this ourselves, since libsrcml can't for memory
             if (language.empty())
                 if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
                     language = l;

@@ -35,6 +35,9 @@
 // Public consumption thread function
 void srcml_write_request(ParseRequest* ppr) {
 
+    if (!ppr)
+        return;
+
     boost::optional<bool> isarchive;
 
     TraceLog log(std::cerr, SRCMLOptions::get());
@@ -67,5 +70,6 @@ void srcml_write_request(ParseRequest* ppr) {
         srcml_free_unit(ppr->unit);
     ppr->unit = 0;
 
-    delete ppr;
+    if (ppr)
+        delete ppr;
 }
