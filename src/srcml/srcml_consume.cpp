@@ -23,22 +23,12 @@
  * Output is schedule for writing on the write queue
  */
 
-#ifdef __MACH__
-#include <CommonCrypto/CommonDigest.h>
-#define SHA1(a,b,c) CC_SHA1(a,b,c)
-#define SHA_DIGEST_LENGTH CC_SHA1_DIGEST_LENGTH
-#define SHA_LONG CC_LONG
-#else
-#include <openssl/sha.h>
-#endif
 #include <srcml_consume.hpp>
 #include <srcml.h>
 #include <parse_request.hpp>
 #include <write_queue.hpp>
-#include <iomanip>
 #include <boost/static_assert.hpp>
 #include <sha1utilities.hpp>
-#include <unistd.h>
 
 // creates initial unit, parses, and then sends unit to write queue
  void srcml_consume(ParseRequest* ppr, WriteQueue* wqueue) {
