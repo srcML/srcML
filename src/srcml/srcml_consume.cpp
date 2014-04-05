@@ -55,7 +55,7 @@
             throw status;
 
         // (optional) directory attribute
-        if (request->directory && ((status = srcml_unit_set_directory(unit, request->filename->c_str())) != SRCML_STATUS_OK))
+        if (request->directory && ((status = srcml_unit_set_directory(unit, request->directory->c_str())) != SRCML_STATUS_OK))
             throw status;
 
         // (optional) filename attribute
@@ -63,7 +63,7 @@
             throw status;
 
         // (optional) version attribute
-        if (request->version && ((status = srcml_unit_set_version(unit, request->filename->c_str())) != SRCML_STATUS_OK))
+        if (request->version && ((status = srcml_unit_set_version(unit, request->version->c_str())) != SRCML_STATUS_OK))
             throw status;
 
         // sha1 attribute, if archive or if option on
