@@ -40,6 +40,17 @@ void srcml_aquire_unit_xml(srcml_archive* srcml_arch, int unit_index) {
     // Problem getting the XML
 }
 
+void srcml_aquire_unit(srcml_archive* srcml_arch, int unit_index) {
+    if (srcml_unit* unit = srcml_read_unit_position(srcml_arch, unit_index)) {
+        char* unit_buffer = 0;
+        int buffer_size = 0;
+        srcml_unparse_unit_memory(unit, &unit_buffer, &buffer_size);
+        std::cout << unit_buffer;
+        srcml_free_unit(unit);
+    }
+    // Problem getting the unit
+}
+
 int srcml_unit_count(srcml_archive* srcml_arch) {
     int numUnits = 0;
     while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
@@ -183,9 +194,13 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         if (srcml_request.command & SRCML_COMMAND_LIST) {
             srcml_list_unit_files(srcml_arch);
         }
-        // get specific unit
+        // get specific unit xml
         if (srcml_request.unit > 0 && (srcml_request.command & SRCML_COMMAND_XML)) {
             srcml_aquire_unit_xml(srcml_arch, srcml_request.unit);
+        }
+        // get specific unit
+        if (srcml_request.unit > 0 && !(srcml_request.command & SRCML_COMMAND_XML)) {
+            srcml_aquire_unit(srcml_arch, srcml_request.unit);
         }
         // units
         if (srcml_request.command & SRCML_COMMAND_UNITS) {
