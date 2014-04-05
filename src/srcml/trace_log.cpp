@@ -33,10 +33,7 @@ TraceLog& operator<<(TraceLog& tlog, char c) {
     if (!tlog.enabled)
         return tlog;
 
-    if (c != '-')
-        ++tlog.count;
-
-    tlog.out << std::setw(5) << tlog.count;
+    tlog.out << std::setw(5) << (c != '-' ? ++tlog.count : c);
 
     return tlog;
 }
@@ -46,7 +43,7 @@ TraceLog& operator<<(TraceLog& tlog, const std::string& s) {
     if (!tlog.enabled)
         return tlog;
 
-    tlog.out << s << '\n';
+    tlog.out << ' ' << s << '\n';
 
     return tlog;
 }

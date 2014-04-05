@@ -25,13 +25,20 @@
 
 #include <srcml_cli.hpp>
 
-static int opt;
-
 class SRCMLOptions {
 public:
-    static void set(int options) { opt = options; }
+    static void set(int options) { 
 
-    static int get()  { return opt; }
+    	opt = options; 
+    }
+
+    static int get()  { 
+
+    	return opt; 
+    }
+
+ private:
+ 	static int opt;
 };
 
 #endif
