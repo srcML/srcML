@@ -31,12 +31,12 @@
 #include <sha1utilities.hpp>
 
 // creates initial unit, parses, and then sends unit to write queue
- void srcml_consume(ParseRequest* ppr, WriteQueue* wqueue) {
+ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
     // error passthrough to output for proper output in trace
-    if (ppr->status) {
-        ppr->unit = 0;
-        wqueue->schedule(ppr);
+    if (request->status) {
+        request->unit = 0;
+        write_queue->schedule(request);
         return;
     }
 
@@ -47,29 +47,29 @@
     int status = SRCML_STATUS_OK;
     try {
         // create the unit start tag
-        if (!(unit = srcml_create_unit(ppr->srcml_arch)))
+        if (!(unit = srcml_create_unit(request->srcml_arch)))
             throw SRCML_STATUS_ERROR;
 
         // language attribute, required if from memory
-        if ((status = srcml_unit_set_language(unit, ppr->language.c_str())) != SRCML_STATUS_OK)
+        if ((status = srcml_unit_set_language(unit, request->language.c_str())) != SRCML_STATUS_OK)
             throw status;
 
         // (optional) directory attribute
-        if (ppr->directory && ((status = srcml_unit_set_directory(unit, ppr->filename->c_str())) != SRCML_STATUS_OK))
+        if (request->directory && ((status = srcml_unit_set_directory(unit, request->filename->c_str())) != SRCML_STATUS_OK))
             throw status;
 
         // (optional) filename attribute
-        if (ppr->filename && ((status = srcml_unit_set_filename(unit, ppr->filename->c_str())) != SRCML_STATUS_OK))
+        if (request->filename && ((status = srcml_unit_set_filename(unit, request->filename->c_str())) != SRCML_STATUS_OK))
             throw status;
 
         // (optional) version attribute
-        if (ppr->version && ((status = srcml_unit_set_version(unit, ppr->filename->c_str())) != SRCML_STATUS_OK))
+        if (request->version && ((status = srcml_unit_set_version(unit, request->filename->c_str())) != SRCML_STATUS_OK))
             throw status;
 
         // sha1 attribute, if archive or if option on
         // sha1 value based on the code as encoded (source text encoding) in the original file
         unsigned char md[SHA_DIGEST_LENGTH];
-        if (SHA1((const unsigned char*)&ppr->buffer.front(), (SHA_LONG)ppr->buffer.size(), md) == 0)
+        if (SHA1((const unsigned char*)&request->buffer.front(), (SHA_LONG)request->buffer.size(), md) == 0)
             throw SRCML_STATUS_ERROR;
         const char outmd[] = { HEXCHARASCII(md), '\0' };
         BOOST_STATIC_ASSERT_MSG(sizeof(outmd)/sizeof(outmd[0]) == (SHA_DIGEST_LENGTH * 2 + 1),
@@ -77,8 +77,9 @@
         //srcml_unit_set_hash(unit, outmd);
 
         // parse the buffer/file
-        status = ppr->disk_filename ? srcml_parse_unit_filename(unit, ppr->disk_filename->c_str()) :
-                                      srcml_parse_unit_memory(unit, &ppr->buffer.front(), ppr->buffer.size());
+        status = request->disk_filename ?
+                                    srcml_parse_unit_filename(unit, request->disk_filename->c_str()) :
+                                    srcml_parse_unit_memory(unit, &request->buffer.front(), request->buffer.size());
         if (status != SRCML_STATUS_OK)
             throw status;
 
@@ -86,13 +87,15 @@
         std::cerr << "Error in constructing srcml\n";
         if (unit)
             srcml_free_unit(unit);
-        if (ppr)
-            delete ppr;        
+        unit = 0;
+        if (request)
+            delete request;
+        request = 0;
         return;
     }
 
     // schedule unit for output
-    ppr->unit = unit;
-    ppr->status = status;
-    wqueue->schedule(ppr);
+    request->unit = unit;
+    request->status = status;
+    write_queue->schedule(request);
 }

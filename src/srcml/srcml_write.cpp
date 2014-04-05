@@ -21,7 +21,7 @@
  */
 
 /*
-  srcml_write calls appropriate libsrcml functions for processing srcml
+  srcml_write calls arequestopriate libsrcml functions for processing srcml
   or source file data respectively
 */
 
@@ -33,43 +33,37 @@
 #include <trace_log.hpp>
 
 // Public consumption thread function
-void srcml_write_request(ParseRequest* ppr) {
+void srcml_write_request(ParseRequest* request, TraceLog& log) {
 
-    if (!ppr)
+    if (!request)
         return;
 
-    boost::optional<bool> isarchive;
+    bool isarchive = (srcml_archive_get_options(request->srcml_arch) & SRCML_OPTION_ARCHIVE) > 0;
 
-    TraceLog log(std::cerr, SRCMLOptions::get());
+    // write the unit
+    if (request->status == SRCML_STATUS_OK) {
 
-        // first time through need to set if this is an archive or not
-    if (!isarchive)
-        isarchive = (srcml_archive_get_options(ppr->srcml_arch) & SRCML_OPTION_ARCHIVE) > 0;
+        srcml_write_unit(request->srcml_arch, request->unit);
 
-        // write the unit
-    if (ppr->status == SRCML_STATUS_OK) {
+        if (isarchive)
+            log << 'a' << *request->filename;
 
-        srcml_write_unit(ppr->srcml_arch, ppr->unit);
+    } else if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
 
-        if (*isarchive)
-            log << 'a' << *ppr->filename;
-
-    } else if (ppr->status == SRCML_STATUS_UNSET_LANGUAGE) {
-
-        if (*isarchive)
-            log << '-' << *ppr->filename;
+        if (isarchive)
+            log << '-' << *request->filename;
         else
             std::cerr << "Extension not supported\n";
 
     } else {
-        std::cerr << "Internal eror " << ppr->status << "\n";
+        std::cerr << "Internal eror " << request->status << "\n";
     }
 
     // free the unit
-    if (ppr->unit)
-        srcml_free_unit(ppr->unit);
-    ppr->unit = 0;
+    if (request->unit)
+        srcml_free_unit(request->unit);
+    request->unit = 0;
 
-    if (ppr)
-        delete ppr;
+    delete request;
+    request = 0;
 }

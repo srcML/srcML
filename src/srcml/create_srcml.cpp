@@ -33,6 +33,8 @@
 #include <src_input_filelist.hpp>
 #include <src_input_stdin.hpp>
 #include <srcml_input_srcml.hpp>
+#include <trace_log.hpp>
+#include <srcml_options.hpp>
 
 void create_srcml_handler(ParseQueue& queue,
                           srcml_archive* srcml_arch,
@@ -139,7 +141,8 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_COMPRESS);
 
     // setup the parsing queue
-    WriteQueue write_queue(srcml_write_request, srcml_request.command & SRCML_COMMAND_OUTPUT_ORDERED);
+    TraceLog log(std::cerr, SRCMLOptions::get());
+    WriteQueue write_queue(boost::bind(srcml_write_request, _1, boost::ref(log)), srcml_request.command & SRCML_COMMAND_OUTPUT_ORDERED);
     ParseQueue parse_queue(srcml_request.max_threads, boost::bind(srcml_consume, _1, &write_queue));
 
     // process input sources

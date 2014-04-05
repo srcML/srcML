@@ -29,7 +29,8 @@
 #define SRCML_WRITE_HPP
 
 #include <parse_request.hpp>
+#include <trace_log.hpp>
 
-void srcml_write_request(ParseRequest*);
+void srcml_write_request(ParseRequest*, TraceLog&);
 
 #endif
