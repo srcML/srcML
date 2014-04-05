@@ -29,7 +29,6 @@
 #include <boost/optional.hpp>
 #include <src_prefix.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/logic/tribool.hpp>
 #include <algorithm>
 #include <archivecomp.hpp>
 
