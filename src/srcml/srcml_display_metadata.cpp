@@ -33,7 +33,14 @@
 #include <iomanip>
 
 void srcml_aquire_unit_xml(srcml_archive* srcml_arch, int unit_index) {
-    if (srcml_unit* unit = srcml_read_unit_position(srcml_arch, unit_index)) {
+
+    // move to the correct unit
+    for (int i = 1; i < unit_index; ++i) {
+        srcml_unit* unit = srcml_read_unit_header(srcml_arch);
+        srcml_free_unit(unit);
+    }
+
+    if (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
         std::cout << srcml_unit_get_xml(unit) << "\n";
         srcml_free_unit(unit);
     }
@@ -79,10 +86,7 @@ void srcml_display_info(srcml_archive* srcml_arch) {
 
     int numUnits = 0;
 
-    while (true) {
-        srcml_unit* unit = srcml_read_unit(srcml_arch);
-        if (unit == 0)
-            break;
+    while (srcml_unit* unit = srcml_read_unit(srcml_arch)) {
 
         ++numUnits;
 
