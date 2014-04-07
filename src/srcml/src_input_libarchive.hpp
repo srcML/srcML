@@ -30,7 +30,7 @@
 #include <string>
 #include <parse_queue.hpp>
 #include <srcml_input_src.hpp>
-#include <archivecomp.hpp>
+#include <src_archive.hpp>
 
 void src_input_libarchive(ParseQueue& queue,
                           srcml_archive* srcml_arch,

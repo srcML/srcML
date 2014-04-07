@@ -30,7 +30,7 @@
 #include <src_prefix.hpp>
 #include <boost/filesystem.hpp>
 #include <algorithm>
-#include <archivecomp.hpp>
+#include <src_archive.hpp>
 
 #ifdef WIN32
 #include <io.h>
