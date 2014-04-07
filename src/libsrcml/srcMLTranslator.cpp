@@ -407,11 +407,21 @@ void srcMLTranslator::add_unit(const srcml_unit * unit, const char * xml, const 
 
     first = false;
 
-    out.startUnit(unit->language ? unit->language->c_str() : 0, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
+    char * end_start_unit = strchr(xml, '>');
+
+    /** extract language */
+    char * language_start_name = strnstr(xml, "language", end_start_unit - xml);
+    char * language_start_value = strchr(language_start_name, '"');
+    char * language_end_value = strchr(language_start_value + 1, '"');
+    (*language_end_value) = '\0';
+
+
+    out.startUnit(language_start_value + 1, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
                           unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0,
                           !isoption(options, OPTION_ARCHIVE));
 
-    char * end_start_unit = strchr(xml, '>');
+    (*language_end_value) = '"';
+
 
     if(!end_start_unit) return;
 
