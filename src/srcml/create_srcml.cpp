@@ -46,17 +46,17 @@ void create_srcml_handler(ParseQueue& queue,
 
         srcml_input_srcml(queue, srcml_arch, input);
 
-    } else if (input.protocol == "filelist") {
+    } else if (input.protocol == "file" && input.archives.empty() && input.compressions.empty()) {
 
-        src_input_filelist(queue, srcml_arch, srcml_request, input);
+        src_input_file(queue, srcml_arch, srcml_request, input);
 
     } else if (input.protocol == "file" && boost::filesystem::is_directory(input.resource)) {
 
         src_input_filesystem(queue, srcml_arch, srcml_request, input);
 
-    } else if (input.protocol == "file" && input.compressions.empty() && input.archives.empty()) {
+    } else if (input.protocol == "filelist") {
 
-        src_input_file(queue, srcml_arch, srcml_request, input);
+        src_input_filelist(queue, srcml_arch, srcml_request, input);
 
     } else {
 
