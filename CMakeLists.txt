@@ -29,7 +29,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 include (srcml)
 
 # Setting up source include directories.
-include_directories(src/srcml src/libsrcml src/parser src/translator src/SAX2Framework)
+include_directories(src/srcml src/libsrcml src/parser src/SAX2Framework)
 
 # Setting major and minor version numbers (TODO fix this so that it is set using something
 # more correct that being input from within the build system).
