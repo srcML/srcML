@@ -20,6 +20,5 @@
 include_directories(.)
 
 add_subdirectory(parser)
-add_subdirectory(translator)
 add_subdirectory(libsrcml)
 

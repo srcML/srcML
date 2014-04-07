@@ -44,6 +44,8 @@ addUnitTest(test_srcml_write_unit test_srcml_write_unit.cpp)
 addUnitTest(test_srcml_write_other test_srcml_write_other.cpp)
 addUnitTest(test_srcml_xpath test_srcml_xpath.cpp ${LIBXML2_LIBRARIES})
 addUnitTest(test_srcml_xslt test_srcml_xslt.cpp ${LIBXML2_LIBRARIES})
+addUnitTest(test_LanguageExtensionRegistry test_LanguageExtensionRegistry.cpp)
+addUnitTest(test_srcMLTranslator test_srcMLTranslator.cpp ${LIBXML2_LIBRARIES})
 
 if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
     copyDependentFile(copy.xsl)

@@ -1258,54 +1258,6 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
     return unit;
 }
 
-/**
- * srcml_skip_unit
- * @param archive a srcml archive to read from
- *
- *  Read over (skipping) the next unit from the archive
- *
- *  @returns Returns 0 if no unit to skip, 1 otherwise
- */
-int srcml_skip_unit(srcml_archive* archive) {
-
-    if(archive == NULL) return 0;
-
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
-
-    srcml_unit * unit = srcml_read_unit_header(archive);
-    if(unit == 0) return 0;
-
-    srcml_free_unit(unit);
-
-    return 1;
-}
-
-/**
- * srcml_read_unit_position
- * @param archive a srcml_archive
- * @param pos a relative position in archive
- *
- * Read a unit at a specific relative position in an archive
- * Unit numbers are positive and start at 1.  srcml_read_unit_position(archive, 1)
- * is equivalent to srcml_read_unit.
- *
- * @returns Returns 0 if pos unit does not exist and the read unit otherwise.
- */
-srcml_unit* srcml_read_unit_position(srcml_archive* archive, int pos) {
-
-    if(archive == NULL || pos <= 0) return 0;
-
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
-
-    for(; pos != 1 && srcml_skip_unit(archive); --pos)
-        ;
-
-    if(pos != 1) return 0;
-
-    return srcml_read_unit(archive);
-
-}
-
 /******************************************************************************
  *                                                                            *
  *                       Archive close function                               *

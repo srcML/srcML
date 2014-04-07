@@ -350,15 +350,6 @@ __LIBSRCML_DECL struct srcml_unit* srcml_read_unit_header(struct srcml_archive*)
 __LIBSRCML_DECL struct srcml_unit* srcml_read_unit_xml(struct srcml_archive*);
 __LIBSRCML_DECL struct srcml_unit* srcml_read_unit(struct srcml_archive*);
 
-/* Read over the next unit from the archive
-   Returns 0 if no unit to skip */
-__LIBSRCML_DECL int srcml_skip_unit(struct srcml_archive*);
-
-/* Read a unit at a specific position in an archive
-   Unit numbers start at 1
-   Returns 0 if pos unit does not exist */
-__LIBSRCML_DECL struct srcml_unit* srcml_read_unit_position(struct srcml_archive*, int pos);
-
 /* Query options of srcml unit */
 __LIBSRCML_DECL const char* srcml_unit_get_encoding (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_language (const struct srcml_unit*);
