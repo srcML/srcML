@@ -227,6 +227,58 @@ int main() {
     }
 
     /*
+        add_unit (namespace/attribute add)
+    */
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_XMLDECL | OPTION_NAMESPACEDECL | OPTION_LITERAL;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_unit * unit = srcml_create_unit(archive);
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+        std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:lit=\"http://www.sdml.info/srcML/literal\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+
+        translator.add_unit(unit, s_before.c_str(), 0);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "\n" + s + "\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL | OPTION_LITERAL;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_unit * unit = srcml_create_unit(archive);
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+        std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+
+        translator.add_unit(unit, s.c_str(), 0);
+        translator.add_unit(unit, s.c_str(), 0);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:lit=\"http://www.sdml.info/srcML/literal\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    /*
       add_unit hash
     */
 
