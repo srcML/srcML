@@ -73,39 +73,6 @@ char * strnstr(const char *s1, const char *s2, size_t n) {
  * @param language what language to parse in
  * @param src_encoding input source code encoding
  * @param xml_encoding output srcML encoding
- * @param srcml_filename name of resultant srcML file
- * @param op translator options
- * @param directory root unit directory attribute
- * @param filename unit directory attribute
- * @param version root unit directory attribute
- * @param prefix namespace prefix array
- * @param uri namespace uri array
- * @param tabsize size of tabstop
- * 
- * Constructor for output to a filename.
- */
-srcMLTranslator::srcMLTranslator(int language,
-                                 const char* src_encoding,
-                                 const char* xml_encoding,
-                                 const char* srcml_filename,
-                                 OPTION_TYPE& op,
-                                 const char* directory,
-                                 const char* filename,
-                                 const char* version,
-                                 std::vector<std::string> & prefix,
-                                 std::vector<std::string> & uri,
-                                 int tabsize)
-    : Language(language), pinput(0), first(true),
-      root_directory(directory), root_filename(filename), root_version(version),
-      encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
-      out(0, srcml_filename, getLanguageString(), xml_encoding, options, prefix, uri, tabsize, 0), tabsize(tabsize), prefix(prefix), uri(uri),
-      str_buffer(0), size(0) {}
-
-/** 
- * srcMLTranslator
- * @param language what language to parse in
- * @param src_encoding input source code encoding
- * @param xml_encoding output srcML encoding
  * @param str_buf buffer to assign output srcML
  * @param size integer to assign size of resulting srcML
  * @param op translator options
