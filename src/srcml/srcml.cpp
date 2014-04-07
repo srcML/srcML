@@ -83,7 +83,7 @@ int main(int argc, char * argv[]) {
     // Determine what processing needs to occur based on the inputs, outputs, and commands
 
     // setup the processing steps
-    processing_steps_t procesing_steps;
+    processing_steps_t processing_steps;
     bool last_command = false;
 
     bool src_input = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
@@ -97,37 +97,37 @@ int main(int argc, char * argv[]) {
                 exit(1);
         }
 
-        procesing_steps.push_back(create_srcml);
+        processing_steps.push_back(create_srcml);
 
         // libsrcml can apply gz compression
         // all other compressions require an additional compression stage
         if (!destination.compressions.empty() && destination.compressions.front() != ".gz") 
-            procesing_steps.push_back(compress_srcml);
+            processing_steps.push_back(compress_srcml);
     }
 
     // XPath and XSLT processing
     if (!srcml_request.xpath.empty() || !srcml_request.xslt.empty() || !srcml_request.relaxng.empty()) {
-        procesing_steps.push_back(transform_srcml);
+        processing_steps.push_back(transform_srcml);
     }
 
     // metadata(srcml) based on command
     if (!last_command && ((srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0)) {
-        procesing_steps.push_back(srcml_display_metadata);
+        processing_steps.push_back(srcml_display_metadata);
         last_command = true;
     }
 
     // srcml->src, based on the destination
     if (!last_command && !src_input && destination.state != SRCML) {
 
-        procesing_steps.push_back(create_src);
+        processing_steps.push_back(create_src);
         last_command = true;
     }
 
-    assert(!procesing_steps.empty());
-    assert(procesing_steps.size() <= 3);
+    assert(!processing_steps.empty());
+    assert(processing_steps.size() <= 3);
 
     // execute the steps in order
-    srcml_execute(srcml_request, procesing_steps, input_sources, destination);
+    srcml_execute(srcml_request, processing_steps, input_sources, destination);
 
     srcml_cleanup_globals();
 
