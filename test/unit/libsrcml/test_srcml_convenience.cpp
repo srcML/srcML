@@ -183,7 +183,7 @@ int main() {
     }
 
     {
-        dassert(srcml("foo.c", "foo.xml"), SRCML_STATUS_INVALID_INPUT);
+        dassert(srcml("foo.c", "foo.xml"), SRCML_STATUS_IO_ERROR);
     }
 
     srcml_cleanup_globals();

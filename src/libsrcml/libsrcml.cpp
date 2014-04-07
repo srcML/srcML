@@ -192,50 +192,41 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     }
 
-    int lang = global_archive.language ? srcml_check_language(global_archive.language->c_str()) : global_archive.registered_languages.getLanguageFromFilename(input_filename);
+    if(srcml_check_extension(input_filename)) {
 
-    if(lang) {
+        srcml_write_open_filename(&global_archive, output_filename);
+        srcml_unit * unit = srcml_create_unit(&global_archive);
 
-        OPTION_TYPE & options = global_archive.options;
-        options |= lang == Language::LANGUAGE_JAVA ? 0 : SRCML_OPTION_CPP;
+        int status = srcml_unit_set_language(unit, srcml_archive_get_language(&global_archive));
+        if(status != SRCML_STATUS_OK) {
 
-        srcMLTranslator translator(lang,
-                                   global_archive.src_encoding ? global_archive.src_encoding->c_str() : "ISO-8859-1",
-                                   global_archive.encoding ? global_archive.encoding->c_str() : "UTF-8",
-                                   output_filename,
-                                   options,
-                                   0,
-                                   0,
-                                   0,
-                                   global_archive.prefixes,
-                                   global_archive.namespaces,
-                                   global_archive.tabstop);
-
-        int error = 0;
-        try {
-
-            translator.setInput(input_filename);
-            translator.translate(global_archive.directory ? global_archive.directory->c_str() : 0,
-                                 global_archive.filename ? global_archive.filename->c_str() : input_filename,
-                                 global_archive.version ? global_archive.version->c_str() : 0,
-                                 global_unit.timestamp ? global_unit.timestamp->c_str() : 0,
-                                 global_unit.hash ? global_unit.hash->c_str() : 0,
-                                 lang);
-            options &= ~SRCML_OPTION_CPP;
-
-        } catch (FileError) {
-
-            error = 1;
-            srcml_error = "Error converting '";
-            srcml_error += input_filename;
-            srcml_error += "' to srcML.";
+            srcml_free_unit(unit);
+            return status;
 
         }
 
-        translator.close();
+        if(srcml_archive_get_filename(&global_archive))
+            srcml_unit_set_filename(unit, srcml_archive_get_filename(&global_archive));
+        else
+            srcml_unit_set_filename(unit, input_filename);
 
-        if(error)
-            return  SRCML_STATUS_INVALID_INPUT;
+        srcml_unit_set_directory(unit, srcml_archive_get_directory(&global_archive));
+        srcml_unit_set_version(unit, srcml_archive_get_version(&global_archive));
+        srcml_unit_set_timestamp(unit, srcml_unit_get_timestamp(&global_unit));
+        srcml_unit_set_hash(unit, srcml_unit_get_hash(&global_unit));
+
+        status = srcml_parse_unit_filename(unit, input_filename);
+        if(status != SRCML_STATUS_OK) {
+
+            srcml_free_unit(unit);
+            return status;
+
+        }
+
+        srcml_write_unit(&global_archive, unit);
+
+        srcml_free_unit(unit);
+        srcml_close_archive(&global_archive);
 
     } else {
 
