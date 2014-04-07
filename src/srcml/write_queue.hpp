@@ -30,9 +30,9 @@
 #include <parse_request.hpp>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/thread/xtime.hpp>
 #include <threadpool.hpp>
 #pragma GCC diagnostic pop
+#include <boost/function.hpp>
 #include <prio_scheduler_strict.hpp>
 
 class WriteQueue {

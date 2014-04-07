@@ -27,11 +27,11 @@
 #define PARSE_QUEUE_HPP
 
 #include <parse_request.hpp>
-#include <boost/function.hpp>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <threadpool.hpp>
 #pragma GCC diagnostic pop
+#include <boost/function.hpp>
 
 class ParseQueue {
 public:
