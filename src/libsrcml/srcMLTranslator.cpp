@@ -31,6 +31,7 @@
 #include "StreamMLParser.hpp"
 #include "srcMLOutput.hpp"
 #include "srcmlns.hpp"
+#include <srcml_types.hpp>
 
 #include <cstring>
 
@@ -379,14 +380,14 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
 
 /**
  * add_unit
- * @param xml srcML to add to archive/non-archive
+ * @param unit srcML to add to archive/non-archive with configuration options
  * @param hash a possible hash to include with xml output as attribute
  *
  * Add a unit as string directly to the archive.  If not an archive
  * and supplied unit does not have src namespace add it.  Also, write out
  * a supplied hash as part of output unit if specified.
  */
-void srcMLTranslator::add_unit(std::string xml, const char * hash) {
+void srcMLTranslator::add_unit(const srcml_unit * unit, const char * xml, const char * hash) {
 
     if(first) {
 
@@ -406,73 +407,17 @@ void srcMLTranslator::add_unit(std::string xml, const char * hash) {
 
     first = false;
 
-    char * cxml = (char *)xml.c_str();
+    out.startUnit(unit->language ? unit->language->c_str() : 0, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
+                          unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0,
+                          !isoption(options, OPTION_ARCHIVE));
 
-    if(!isoption(options, OPTION_ARCHIVE)) {
+    char * end_start_unit = strchr(xml, '>');
 
-        char * pos = strchr(cxml, '>');
-        if(pos == 0) return;
+    if(!end_start_unit) return;
 
-        char * src_ns_pos = strnstr(cxml, SRCML_SRC_NS_URI, pos - cxml);
+    xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)end_start_unit + 1);
 
-        if(src_ns_pos == 0) {
-
-            char * unit_pos = strstr(cxml, "unit");
-
-            std::string ns = " xmlns";
-
-            if((unit_pos - cxml) != 1) {
-
-                ns += ":";
-                char * colon_pos = strchr(cxml, ':');
-                colon_pos[0] = 0;
-                ns += (cxml + 1);
-                colon_pos[0] = ':';
-
-            }
-
-            ns += "=\"";
-            ns += SRCML_SRC_NS_URI;
-            ns += "\"";
-
-            // write out up to unit
-            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)cxml, (int)((unit_pos + 4) - cxml));
-
-            // write out namespace declaration
-            xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)ns.c_str());
-
-            // update pointer for remaining
-            cxml = unit_pos + 4;
-
-        }
-
-    } 
-
-    if(hash) {
-
-        char * pos = strchr(cxml, '>');
-        if(pos == 0) return;
-
-        char * hash_pos = strnstr(cxml, "hash", pos - cxml);
-
-        if(hash_pos != 0) {
-
-            char * start_value = strchr(hash_pos, '"');
-
-            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)cxml, (int)((start_value + 1) - cxml));
-            xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)hash);
-            cxml = start_value + 1;
-
-            // consume hash if already there this is generic may consider using just 20 for standard hash size
-            if(cxml[0] != '"')
-                cxml = strchr(cxml, '"');
-
-        }
-
-
-    } 
-
-    xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)cxml);
+    out.srcMLTextWriterEndElement(out.getWriter());
 
 
     if ((options & OPTION_ARCHIVE) > 0)
