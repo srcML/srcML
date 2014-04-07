@@ -25,7 +25,7 @@
 #include <srcml_options.hpp>
 #include <create_srcml.hpp>
 #include <create_src.hpp>
-#include <process_srcml.hpp>
+#include <transform_srcml.hpp>
 #include <srcml_display_metadata.hpp>
 #include <srcml_execute.hpp>
 #include <isxml.hpp>
@@ -79,24 +79,13 @@ int main(int argc, char * argv[]) {
     // output destination setup just like an input source
     srcml_output_dest destination(srcml_request.output_filename);
 
-/*
-    // adjust if explicitly told differently via command line options
-    // TODO: may warn/error on some inconsistencies here
-    if (!createsrc && srcml_request.command & SRCML_COMMAND_SRC) {
-        createsrc = true;
-    } else if (!createsrcml && srcml_request.command & SRCML_COMMAND_SRCML) {
-        createsrcml = true;
-    } else if (!createsrcml && !srcml_request.files_from.empty()) {
-        createsrcml = true;
-    }
-*/
     // Determine what processing needs to occur based on the inputs, outputs, and commands
 
     // setup the commands
     std::list<command> commands;
-    bool terminate = false;
+    bool last_command = false;
 
-    bool src_input = std::count_if(input_sources.begin(), input_sources.end(), is_src) > 0;
+    bool src_input = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
    
     // src->srcml when there is any src input, or multiple srcml input with output to srcml (merge)
     if (src_input || (input_sources.size() > 1 && destination.state == SRCML)) {
@@ -112,20 +101,20 @@ int main(int argc, char * argv[]) {
 
     // XPath and XSLT processing
     if (!srcml_request.xpath.empty() || !srcml_request.xslt.empty() || !srcml_request.relaxng.empty()) {
-        commands.push_back(process_srcml);
+        commands.push_back(transform_srcml);
     }
 
     // metadata(srcml) based on command
-    if (!terminate && ((srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0)) {
+    if (!last_command && ((srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0)) {
         commands.push_back(srcml_display_metadata);
-        terminate = true;
+        last_command = true;
     }
 
     // srcml->src, based on the destination
-    if (!terminate && !src_input && destination.state != SRCML) {
+    if (!last_command && !src_input && destination.state != SRCML) {
 
         commands.push_back(create_src);
-        terminate = true;
+        last_command = true;
     }
 
     assert(!commands.empty());
