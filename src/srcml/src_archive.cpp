@@ -77,7 +77,7 @@ static archive_calls_t compression_calls[] = {
     { ".gz"  , archive_write_set_compression_gzip },
     { ".lz"  , 0 },
     { ".lzma", archive_write_set_compression_lzma },
-    { ".xz " , archive_write_set_compression_xz },
+    { ".xz"  , archive_write_set_compression_xz },
     { ".z"   , archive_write_set_compression_compress }
 };
 
