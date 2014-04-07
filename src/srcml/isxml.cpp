@@ -43,8 +43,6 @@ bool isxml(unsigned char ar[], ssize_t size) {
 
     // determine if XML by looking for xml declaration (i.e., '<?xm')
     // in first four bytes in almost any encoding
-    // TODO: Look at '<uni' encoded also for xml without xml declarations
-
 //    fprintf(stderr, "DEBUG:  %s %s %d DATA: %x\n", __FILE__,  __FUNCTION__, __LINE__, data.i);
 
     return
