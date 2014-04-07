@@ -22,6 +22,7 @@
 
 /*
   Class for straightforward translation from source code to srcML
+  @todo since now in libsrcml change from camel case to underscore.
 */
 
 #include "srcMLTranslator.hpp"

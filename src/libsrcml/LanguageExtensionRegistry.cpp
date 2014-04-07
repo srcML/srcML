@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <boost/regex.hpp>
 
+/**  @todo since now in libsrcml change from camel case to underscore. */
 /** regular expression to match extension even if in an archive */
 static const boost::regex extRegEx("(zx\\.|zg\\.|2zb\\.)*([^\\.]*)");
 

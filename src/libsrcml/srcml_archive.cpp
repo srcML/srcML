@@ -141,6 +141,8 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
     new_archive->tabstop = archive->tabstop;
 
     // clear out those added by srcml_create_archive
+    new_archive->prefixes.clear();
+    new_archive->namespaces.clear();
     for(std::vector<std::string>::size_type pos = 0; pos < archive->namespaces.size(); ++pos) {
 
         try {
