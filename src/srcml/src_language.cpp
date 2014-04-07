@@ -20,10 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
-  src_language.cpp functions for determining the language of a given input file
-*/
-
 #include <src_language.hpp>
 #include <boost/filesystem.hpp>
 
