@@ -408,6 +408,7 @@ void srcMLTranslator::add_unit(const srcml_unit * unit, const char * xml, const 
     first = false;
 
     char * end_start_unit = strchr(xml, '>');
+    if(!end_start_unit) return;
 
     /** extract language */
     char * language_start_name = strnstr(xml, "language", end_start_unit - xml);
@@ -415,20 +416,30 @@ void srcMLTranslator::add_unit(const srcml_unit * unit, const char * xml, const 
     char * language_end_value = strchr(language_start_value + 1, '"');
     (*language_end_value) = '\0';
 
+    /** is there a cpp namespace */
+    bool is_cpp = strnstr(xml, SRCML_CPP_NS_URI, end_start_unit - xml) != 0;
+
+    OPTION_TYPE save_options = options;
+    if(is_cpp) options |= SRCML_OPTION_CPP;
 
     out.startUnit(language_start_value + 1, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
                           unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0,
                           !isoption(options, OPTION_ARCHIVE));
 
+    options = save_options;
     (*language_end_value) = '"';
 
+    size_t size = strlen(end_start_unit);
 
-    if(!end_start_unit) return;
+    while(end_start_unit[--size] != '/')
+  ;
 
-    xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)end_start_unit + 1);
+    if(end_start_unit[size - 1] == '<')
+      --size;
+
+    xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)end_start_unit + 1, (int)size - 1);
 
     out.srcMLTextWriterEndElement(out.getWriter());
-
 
     if ((options & OPTION_ARCHIVE) > 0)
         out.processText("\n\n", 2);
