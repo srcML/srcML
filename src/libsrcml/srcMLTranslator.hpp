@@ -29,6 +29,7 @@
 
 #include <Language.hpp>
 #include <srcMLOutput.hpp>
+#include <srcml.h>
 
 #include <string>
 
@@ -115,7 +116,7 @@ public:
                             int language, UTF8CharBuffer * parser_input, xmlBuffer* output_buffer,
                             OPTION_TYPE translation_options);
 
-    void add_unit(std::string xml, const char * hash);
+    void add_unit(const srcml_unit * unit, const char * xml, const char * hash);
     void add_raw_len(const char * content, size_t length);
 
     // destructor
