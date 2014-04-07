@@ -362,17 +362,16 @@ namespace {
  * Constructor. Handles all outputs.
  */
 srcMLOutput::srcMLOutput(TokenStream* ints,
-                         const char* filename,
+                         xmlOutputBuffer * output_buffer,
                          const char* language,
                          const char* xml_enc,
                          OPTION_TYPE& op,
                          std::vector<std::string> & prefix,
                          std::vector<std::string> & uri,
-                         int ts,
-                         xmlOutputBuffer * output_buffer)
-    : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
+                         int ts)
+    : input(ints), xout(0), output_buffer(output_buffer), unit_language(language), unit_dir(0), unit_filename(0),
       unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(prefix), num2uri(uri)
-    , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), output_buffer(output_buffer),
+    , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0),
       debug_time_start(boost::posix_time::microsec_clock::universal_time())
 {
 
@@ -399,20 +398,10 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 void srcMLOutput::initWriter() {
 
     // open the output text writer stream
-    // "-" filename is standard output
-    if (output_buffer == 0) {
-        xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
-        if (!xout) {
-            fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
-            exit(2);
-        }
-    } else {
-
-        xout = xmlNewTextWriter(output_buffer);
-        if (!xout) {
-            fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
-            exit(2);
-        }
+    xout = xmlNewTextWriter(output_buffer);
+    if (!xout) {
+        fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
+        exit(2);
     }
 
 }
