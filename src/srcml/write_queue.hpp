@@ -45,12 +45,12 @@ public:
     }
 
     /* puts an element in the back of the queue by swapping with parameter */
-    void schedule(ParseRequest* pvalue) {
+    inline void schedule(ParseRequest* pvalue) {
 
         pool.schedule(prio_strict_task_func(pvalue->position, boost::bind(write, pvalue)));
     }
 
-    void wait() {
+    inline void wait() {
 
         pool.wait();
     }

@@ -36,11 +36,20 @@
 class ParseQueue {
 public:
 
-    ParseQueue(int max_threads, boost::function<void(ParseRequest*)>);
+	ParseQueue(int max_threads, boost::function<void(ParseRequest*)> consumearg)
+	    : consume(consumearg), pool(max_threads), counter(0) {}
 
-    void schedule(ParseRequest* value);
+	inline void schedule(ParseRequest* pvalue) {
 
-    void wait();
+	    pvalue->position = ++counter;
+
+	    pool.schedule( boost::bind(consume, pvalue));
+	}
+
+	inline void wait() {
+
+		pool.wait();
+	}
 
 private:
     boost::function<void(ParseRequest*)> consume;
