@@ -81,7 +81,7 @@ public:
                    const char* unit_directory, const char* unit_filename,
                    const char* unit_version, const char* unit_timestamp,
                    const char* unit_hash,
-                   bool outer);
+                   bool output_macrolist);
 
     // consume the entire tokenstream with output of srcml
     void consume(const char* language, const char* unit_directory, const char* unit_filename,
@@ -183,7 +183,7 @@ public:
 
     void processUnit(const antlr::RefToken& token);
 
-    void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer);
+    void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth);
 
     void setMacroList(std::vector<std::string> & list);
     void outputMacroList();

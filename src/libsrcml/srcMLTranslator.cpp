@@ -423,8 +423,7 @@ void srcMLTranslator::add_unit(const srcml_unit * unit, const char * xml, const 
     if(is_cpp) options |= SRCML_OPTION_CPP;
 
     out.startUnit(language_start_value + 1, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
-                          unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0,
-                          !isoption(options, OPTION_ARCHIVE));
+                          unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, false);
 
     options = save_options;
     (*language_end_value) = '"';

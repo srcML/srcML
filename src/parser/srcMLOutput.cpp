@@ -649,7 +649,7 @@ void srcMLOutput::outputXMLDecl() {
  *
  * Output the namespaces on the units.
  */
-void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer) {
+void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth) {
 
     // figure out which namespaces are needed
     char const * const ns[] = {
@@ -658,7 +658,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
         (depth == 0) ? SRCML_SRC_NS_URI : 0,
 
         // main cpp namespace declaration
-        isoption(OPTION_CPP, options) && (isoption(OPTION_ARCHIVE, options) == !outer) ? SRCML_CPP_NS_URI : 0,
+        isoption(OPTION_CPP, options) && (isoption(OPTION_ARCHIVE, options) == !(depth == 0)) ? SRCML_CPP_NS_URI : 0,
 
         // optional debugging xml namespace
         (depth == 0) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
@@ -726,7 +726,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename,
                             const char* version, const char* timestamp,
                             const char* hash,
-                            bool outer) {
+                            bool output_macrolist) {
 
     const char * prefix = num2prefix[0].c_str();
     std::string maintag = prefix ? prefix : "";
@@ -739,7 +739,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
     // outer units have namespaces
     if (/* outer && */ isoption(OPTION_NAMESPACEDECL)) {
-        outputNamespaces(xout, options, depth, outer);
+        outputNamespaces(xout, options, depth);
     }
 
     // setting up for tabs, even if not used
@@ -806,7 +806,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
         xmlTextWriterWriteAttribute(xout, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
     }
 
-    if(outer) outputMacroList();
+    if(output_macrolist) outputMacroList();
 
     ++depth;
 }
