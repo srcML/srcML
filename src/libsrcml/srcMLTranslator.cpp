@@ -354,7 +354,7 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
  * and supplied unit does not have src namespace add it.  Also, write out
  * a supplied hash as part of output unit if specified.
  */
-void srcMLTranslator::add_unit(const srcml_unit * unit, const char * xml, const char * hash) {
+void srcMLTranslator::add_unit(const srcml_unit * unit, const char * xml) {
 
     if(first) {
 

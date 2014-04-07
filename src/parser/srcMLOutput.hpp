@@ -109,6 +109,9 @@ public:
 
     /** output xml writer */
     xmlTextWriter* xout;
+    
+    /** output buffer */
+    xmlOutputBuffer * output_buffer;
 
     /** unit attribute language */
     const char* unit_language;
@@ -154,9 +157,6 @@ public:
 
     /** number of units output or depth into archive */
     int depth;
-
-    /** output buffer */
-    xmlOutputBuffer * output_buffer;
 
     /** starting time for debug stopwatch */
     boost::posix_time::ptime debug_time_start;
