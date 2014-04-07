@@ -25,6 +25,7 @@
 #include <srcml_options.hpp>
 #include <create_srcml.hpp>
 #include <compress_srcml.hpp>
+#include <decompress_srcml.hpp>
 #include <create_src.hpp>
 #include <transform_srcml.hpp>
 #include <srcml_display_metadata.hpp>
@@ -87,7 +88,7 @@ int main(int argc, char * argv[]) {
     bool last_command = false;
 
     bool src_input = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
-   
+
     // src->srcml when there is any src input, or multiple srcml input with output to srcml (merge)
     if (src_input || (input_sources.size() > 1 && destination.state == SRCML)) {
 
@@ -103,6 +104,14 @@ int main(int argc, char * argv[]) {
         // all other compressions require an additional compression stage
         if (!destination.compressions.empty() && destination.compressions.front() != ".gz") 
             processing_steps.push_back(compress_srcml);
+
+    }
+
+    if (!src_input && !input_sources[0].compressions.empty() && input_sources[0].compressions.front() != ".gz") {
+
+        // libsrcml can apply gz decompression
+        // all other compressions require an additional compression stage
+        processing_steps.push_back(decompress_srcml);
     }
 
     // XPath and XSLT processing

@@ -35,7 +35,7 @@ void srcml_execute(const srcml_request_t& srcml_request,
 
     // create a thread for each step, creating pipes between adjoining steps
     boost::thread_group process_srcml_threads;
-    int fds[2];
+    int fds[2] = { -1, -1 };
     BOOST_FOREACH(process_srcml command, processing_steps) {
 
         // special handling for first and last steps
@@ -44,7 +44,8 @@ void srcml_execute(const srcml_request_t& srcml_request,
 
         // pipe between each step
         int prevoutfd = fds[0];
-        if (!first)
+        fds[0] = fds[1] = -1;
+        if (processing_steps.size() > 1 && !last)
             pipe(fds);
 
         /* run this step in the sequence */
