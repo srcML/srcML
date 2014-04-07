@@ -1128,8 +1128,7 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
     if(!unit->unit && !read_unit) return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
-    archive->translator->add_unit(unit, read_unit ? read_unit->c_str() : unit->unit->c_str(),
-                                  unit->output_hash && unit->hash ? unit->hash->c_str() : 0);
+    archive->translator->add_unit(unit, read_unit ? read_unit->c_str() : unit->unit->c_str());
 
     return SRCML_STATUS_OK;
 }

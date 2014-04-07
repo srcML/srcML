@@ -195,7 +195,7 @@ int main() {
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s.c_str(), 0);
+        translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
@@ -218,8 +218,8 @@ int main() {
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s.c_str(), 0);
-        translator.add_unit(unit, s.c_str(), 0);
+        translator.add_unit(unit, s.c_str());
+        translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
@@ -248,7 +248,7 @@ int main() {
         std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s_before.c_str(), 0);
+        translator.add_unit(unit, s_before.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
@@ -271,8 +271,8 @@ int main() {
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s.c_str(), 0);
-        translator.add_unit(unit, s.c_str(), 0);
+        translator.add_unit(unit, s.c_str());
+        translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
@@ -296,7 +296,7 @@ int main() {
         std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:lit=\"http://www.sdml.info/srcML/literal\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s_before.c_str(), 0);
+        translator.add_unit(unit, s_before.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
@@ -319,8 +319,8 @@ int main() {
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s.c_str(), 0);
-        translator.add_unit(unit, s.c_str(), 0);
+        translator.add_unit(unit, s.c_str());
+        translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:lit=\"http://www.sdml.info/srcML/literal\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
@@ -344,7 +344,7 @@ int main() {
         std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:op=\"http://www.sdml.info/srcML/operator\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s_before.c_str(), 0);
+        translator.add_unit(unit, s_before.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
@@ -367,8 +367,8 @@ int main() {
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s.c_str(), 0);
-        translator.add_unit(unit, s.c_str(), 0);
+        translator.add_unit(unit, s.c_str());
+        translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:op=\"http://www.sdml.info/srcML/operator\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
@@ -392,7 +392,7 @@ int main() {
         std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:type=\"http://www.sdml.info/srcML/modifier\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s_before.c_str(), 0);
+        translator.add_unit(unit, s_before.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
@@ -415,8 +415,8 @@ int main() {
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s.c_str(), 0);
-        translator.add_unit(unit, s.c_str(), 0);
+        translator.add_unit(unit, s.c_str());
+        translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:type=\"http://www.sdml.info/srcML/modifier\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
@@ -440,7 +440,7 @@ int main() {
         std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:pos=\"http://www.sdml.info/srcML/position\" language=\"C++\" pos:tabs=\"4\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s_before.c_str(), 0);
+        translator.add_unit(unit, s_before.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
@@ -463,8 +463,8 @@ int main() {
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s = "<unit language=\"C++\" pos:tabs=\"4\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s.c_str(), 0);
-        translator.add_unit(unit, s.c_str(), 0);
+        translator.add_unit(unit, s.c_str());
+        translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:pos=\"http://www.sdml.info/srcML/position\" pos:tabs=\"4\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
@@ -489,7 +489,7 @@ int main() {
         std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:foo=\"bar\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s_before.c_str(), 0);
+        translator.add_unit(unit, s_before.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
@@ -513,8 +513,8 @@ int main() {
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s.c_str(), 0);
-        translator.add_unit(unit, s.c_str(), 0);
+        translator.add_unit(unit, s.c_str());
+        translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
@@ -539,7 +539,7 @@ int main() {
         std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" xmlns:lit=\"http://www.sdml.info/srcML/literal\" xmlns:op=\"http://www.sdml.info/srcML/operator\" xmlns:type=\"http://www.sdml.info/srcML/modifier\" xmlns:pos=\"http://www.sdml.info/srcML/position\" xmlns:foo=\"bar\" language=\"C++\" pos:tabs=\"4\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s_before.c_str(), 0);
+        translator.add_unit(unit, s_before.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
@@ -563,8 +563,8 @@ int main() {
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" pos:tabs=\"4\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s.c_str(), 0);
-        translator.add_unit(unit, s.c_str(), 0);
+        translator.add_unit(unit, s.c_str());
+        translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:lit=\"http://www.sdml.info/srcML/literal\" xmlns:op=\"http://www.sdml.info/srcML/operator\" xmlns:type=\"http://www.sdml.info/srcML/modifier\" xmlns:pos=\"http://www.sdml.info/srcML/position\" xmlns:foo=\"bar\" pos:tabs=\"4\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
@@ -594,7 +594,7 @@ int main() {
         std::string s_before = "<unit xmlns=\"http://www.sdml.info/srcML/src\" hash=\"\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" hash=\"0123456789abcdef\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s_before.c_str(), "0123456789abcdef");
+        translator.add_unit(unit, s_before.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
@@ -619,7 +619,7 @@ int main() {
         std::string s_before = "<unit xmlns=\"http://www.sdml.info/srcML/src\" hash=\"foobar\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" hash=\"0123456789abcdef\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s_before.c_str(), "0123456789abcdef");
+        translator.add_unit(unit, s_before.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
@@ -644,7 +644,7 @@ int main() {
         std::string s_before = "<unit hash=\"\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" hash=\"0123456789abcdef\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s_before.c_str(), "0123456789abcdef");
+        translator.add_unit(unit, s_before.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
@@ -669,7 +669,7 @@ int main() {
         std::string s_before = "<unit hash=\"foobar\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" hash=\"0123456789abcdef\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s_before.c_str(), "0123456789abcdef");
+        translator.add_unit(unit, s_before.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
@@ -694,8 +694,8 @@ int main() {
         std::string s_before = "<unit hash=\"\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit hash=\"0123456789abcdef\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
-        translator.add_unit(unit, s_before.c_str(), "0123456789abcdef");
-        translator.add_unit(unit, s_before.c_str(), "0123456789abcdef");
+        translator.add_unit(unit, s_before.c_str());
+        translator.add_unit(unit, s_before.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
@@ -718,7 +718,7 @@ int main() {
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s = "<unit";
 
-        translator.add_unit(unit, s.c_str(), "0123456789abcdef");
+        translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n\n");
@@ -742,8 +742,8 @@ int main() {
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s = "<unit";
 
-        translator.add_unit(unit, s.c_str(), "0123456789abcdef");
-        translator.add_unit(unit, s.c_str(), "0123456789abcdef");
+        translator.add_unit(unit, s.c_str());
+        translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + "</unit>\n");
