@@ -52,14 +52,14 @@ bool isxml(unsigned char ar[], ssize_t size) {
         (data.i == 0x0075003C) || // '<uni' UTF-16LE
         (data.i == 0x3F003C00) || // '<?xm' UTF-16BE
         (data.i == 0x75003C00) || // '<uni' UTF-16BE
-        (data.i == 0x3C000000) || // '<?xm' UCS-4BE
-        (data.i == 0x3C000000) || // '<uni' UCS-4BE
+        (data.i == 0x3C000000) || // <?xm' UCS-4BE
+//        (data.i == 0x3C000000) || // '<uni' UCS-4BE
         (data.i == 0x0000003C) || // '<?xm' UCS-4LE
-        (data.i == 0x0000003C) || // '<uni' UCS-4LE
+//        (data.i == 0x0000003C) || // '<uni' UCS-4LE
         (data.i == 0x003C0000) || // '<?xm' UCS-4_2143
-        (data.i == 0x003C0000) || // '<uni' UCS-4_2143
+//        (data.i == 0x003C0000) || // '<uni' UCS-4_2143
         (data.i == 0x00003C00) || // '<?xm' UCS-4_3412
-        (data.i == 0x00003C00) || // '<uni' UCS-4_3412
+//        (data.i == 0x00003C00) || // '<uni' UCS-4_3412
         (data.i == 0x94A76F4C) || // '<?xm' EBCDIC
 //        (data.i == 0x94A76F4C) || // '<uni' EBCDIC
         false;
