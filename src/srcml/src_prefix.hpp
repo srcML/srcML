@@ -20,10 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
-  src_prefix.hpp functions for adding/splitting assigned prefixes from input sources
-*/
-
 #ifndef SRC_PREFIX_HPP
 #define SRC_PREFIX_HPP
 

@@ -20,10 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
-  srcml_consume calls appropriate libsrcml functions for processing source file data
-*/
-
 #ifndef SRCML_CONSUME_HPP
 #define SRCML_CONSUME_HPP
 #include <parse_request.hpp>

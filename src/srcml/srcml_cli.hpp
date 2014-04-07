@@ -20,10 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
-  srcml_cli handles parsing for CLI options for srcml
-*/
-
 #ifndef SRCML_CLI_HPP
 #define SRCML_CLI_HPP
 

@@ -20,10 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
-  srcml_display_info.hpp display info about a given srcml input file.
-*/
-
 #ifndef SRCML_DISPLAY_METADATA_HPP
 #define SRCML_DISPLAY_METADATA_HPP
 

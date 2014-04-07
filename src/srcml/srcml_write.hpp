@@ -20,11 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
-  srcml_write calls appropriate libsrcml functions for processing srcml
-  or source file data respectively
-*/
-
 #ifndef SRCML_WRITE_HPP
 #define SRCML_WRITE_HPP
 

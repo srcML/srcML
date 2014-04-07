@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * Source input from local files, stdin, and source archives for srcml parsing queue
  */
 
 #ifndef SRC_ARCHIVE_HPP

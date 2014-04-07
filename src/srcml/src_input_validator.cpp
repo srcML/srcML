@@ -20,10 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
-  src_input_validator is used to check input sources to determine if they are accessible.
-*/
-
 #include <src_input_validator.hpp>
 #include <src_prefix.hpp>
 #include <boost/filesystem.hpp>

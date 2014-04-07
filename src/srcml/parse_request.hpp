@@ -20,11 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
-  parseRequest contains a collection of information and raw data to be
-  queued up for libsrcml processing
-*/
-
 #ifndef PARSE_REQUEST_HPP
 #define PARSE_REQUEST_HPP
 
