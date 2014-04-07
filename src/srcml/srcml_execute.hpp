@@ -31,10 +31,12 @@
 #include <srcml_input_src.hpp>
 #include <list>
 
-typedef void (*command)(const srcml_request_t& srcml_request, const srcml_input_t& input_sources, const srcml_output_dest& destination);
+typedef void (*process_srcml)(const srcml_request_t& srcml_request, const srcml_input_t& input_sources, const srcml_output_dest& destination);
+
+typedef std::list<process_srcml> processing_steps_t;
 
 void srcml_execute(const srcml_request_t& srcml_request,
-				   std::list<command>& commands,
+				   std::list<process_srcml>& processing_steps,
 				   const srcml_input_t& input_sources,
                    const srcml_output_dest& output);
 

@@ -29,36 +29,36 @@
 #include <boost/range.hpp>
 
 void srcml_execute(const srcml_request_t& srcml_request,
-                   std::list<command>& commands,
+                   std::list<process_srcml>& processing_steps,
                    const srcml_input_t& input_sources,
                    const srcml_output_dest& destination) {
 
-    // create a thread for each command, creating pipes between adjoining commands
-    boost::thread_group command_processing_threads;
+    // create a thread for each step, creating pipes between adjoining steps
+    boost::thread_group process_srcml_threads;
     int fds[2];
-    BOOST_FOREACH(command curcommand, commands) {
+    BOOST_FOREACH(process_srcml command, processing_steps) {
 
-        // special handling for first and last command_processing_threads
-        bool first = curcommand == commands.front();
-        bool last  = curcommand == commands.back();
+        // special handling for first and last steps
+        bool first = command == processing_steps.front();
+        bool last  = command == processing_steps.back();
 
-        // pipe between each command
+        // pipe between each step
         int prevoutfd = fds[0];
         if (!first)
             pipe(fds);
 
-        /* run this command in the sequence */
-        command_processing_threads.create_thread(
+        /* run this step in the sequence */
+        process_srcml_threads.create_thread(
             boost::bind(
-                curcommand,
+                command,
                 srcml_request,
-                /* first command uses input_source, rest input from previous output pipe */
+                /* first process_srcml uses input_source, rest input from previous output pipe */
                 first ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevoutfd)),
-                /* last command uses destination, rest output to pipe */                
+                /* last process_srcml uses destination, rest output to pipe */                
                 last  ? destination   : srcml_output_dest("-", fds[1])
             )
         );
 
-        command_processing_threads.join_all();
+        process_srcml_threads.join_all();
     }
 }

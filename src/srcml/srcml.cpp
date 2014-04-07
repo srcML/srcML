@@ -81,8 +81,8 @@ int main(int argc, char * argv[]) {
 
     // Determine what processing needs to occur based on the inputs, outputs, and commands
 
-    // setup the commands
-    std::list<command> commands;
+    // setup the processing steps
+    processing_steps_t procesing_steps;
     bool last_command = false;
 
     bool src_input = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
@@ -96,32 +96,32 @@ int main(int argc, char * argv[]) {
                 exit(1);
         }
 
-        commands.push_back(create_srcml);
+        procesing_steps.push_back(create_srcml);
     }
 
     // XPath and XSLT processing
     if (!srcml_request.xpath.empty() || !srcml_request.xslt.empty() || !srcml_request.relaxng.empty()) {
-        commands.push_back(transform_srcml);
+        procesing_steps.push_back(transform_srcml);
     }
 
     // metadata(srcml) based on command
     if (!last_command && ((srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0)) {
-        commands.push_back(srcml_display_metadata);
+        procesing_steps.push_back(srcml_display_metadata);
         last_command = true;
     }
 
     // srcml->src, based on the destination
     if (!last_command && !src_input && destination.state != SRCML) {
 
-        commands.push_back(create_src);
+        procesing_steps.push_back(create_src);
         last_command = true;
     }
 
-    assert(!commands.empty());
-    assert(commands.size() <= 3);
+    assert(!procesing_steps.empty());
+    assert(procesing_steps.size() <= 3);
 
-    // execute the commands in the sequence
-    srcml_execute(srcml_request, commands, input_sources, destination);
+    // execute the steps in order
+    srcml_execute(srcml_request, procesing_steps, input_sources, destination);
 
     srcml_cleanup_globals();
 
