@@ -99,7 +99,7 @@ srcMLTranslator::srcMLTranslator(int language,
                                  int tabsize)
     :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
        encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
-       out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize, 0), tabsize(tabsize),
+       out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
        prefix(prefix), uri(uri), str_buffer(str_buf), size(size) {
 
     buffer = xmlBufferCreate();
@@ -138,7 +138,7 @@ srcMLTranslator::srcMLTranslator(int language,
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
-      out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize, output_buffer), tabsize(tabsize), prefix(prefix), uri(uri),
+      out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize), prefix(prefix), uri(uri),
       str_buffer(0), size(0) {}
 
 /**
@@ -294,7 +294,7 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
                                          OPTION_TYPE translation_options) {
 
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler("UTF-8"));
-    srcMLOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, prefix, uri, tabsize, obuffer);
+    srcMLOutput sep_out(0, obuffer, getLanguageString(), xml_encoding, translation_options, prefix, uri, tabsize);
     sep_out.initWriter();
     sep_out.setMacroList(user_macro_list);
 
