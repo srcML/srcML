@@ -45,7 +45,7 @@ bool isxml(unsigned char ar[], ssize_t size) {
     // in first four bytes in almost any encoding
     // TODO: Look at '<uni' encoded also for xml without xml declarations
 
-    fprintf(stderr, "DEBUG:  %s %s %d DATA: %x\n", __FILE__,  __FUNCTION__, __LINE__, data.i);
+//    fprintf(stderr, "DEBUG:  %s %s %d DATA: %x\n", __FILE__,  __FUNCTION__, __LINE__, data.i);
 
     return
         (data.i == 0x6D783F3C) || // '<?xm' UTF-8
