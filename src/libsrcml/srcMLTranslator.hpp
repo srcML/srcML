@@ -104,7 +104,6 @@ public:
                             OPTION_TYPE translation_options);
 
     void add_unit(const srcml_unit * unit, const char * xml);
-    void add_raw_len(const char * content, size_t length);
 
     // destructor
     ~srcMLTranslator();

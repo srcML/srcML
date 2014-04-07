@@ -410,36 +410,6 @@ void srcMLTranslator::add_unit(const srcml_unit * unit, const char * xml) {
     if ((options & OPTION_ARCHIVE) > 0)
         out.processText("\n\n", 2);
 
-
-}
-
-/**
- * add_raw_len
- * @param content srcML text to add to archive
- * @param length number of bytes to write to archive
- *
- * Add the srcML text as string directly to the archive.
- */
-void srcMLTranslator::add_raw_len(const char * content, size_t length) {
-
-    if(first) {
-
-        // Open for write;
-        out.initWriter();
-
-        out.outputXMLDecl();
-
-        // root unit for compound srcML documents
-        if((options & OPTION_ARCHIVE) > 0)
-            out.startUnit(0, root_directory, root_filename, root_version, 0, 0, true);
-
-    }
-
-    first = false;
-
-    if(length > 0)
-      xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)content, (int)length);
-
 }
 
 /**
