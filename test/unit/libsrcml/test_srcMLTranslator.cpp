@@ -278,6 +278,150 @@ int main() {
 
     }
 
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_XMLDECL | OPTION_NAMESPACEDECL | OPTION_OPERATOR;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_unit * unit = srcml_create_unit(archive);
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+        std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:op=\"http://www.sdml.info/srcML/operator\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+
+        translator.add_unit(unit, s_before.c_str(), 0);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "\n" + s + "\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL | OPTION_OPERATOR;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_unit * unit = srcml_create_unit(archive);
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+        std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+
+        translator.add_unit(unit, s.c_str(), 0);
+        translator.add_unit(unit, s.c_str(), 0);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:op=\"http://www.sdml.info/srcML/operator\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_XMLDECL | OPTION_NAMESPACEDECL | OPTION_MODIFIER;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_unit * unit = srcml_create_unit(archive);
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+        std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:type=\"http://www.sdml.info/srcML/modifier\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+
+        translator.add_unit(unit, s_before.c_str(), 0);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "\n" + s + "\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL | OPTION_MODIFIER;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_unit * unit = srcml_create_unit(archive);
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+        std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+
+        translator.add_unit(unit, s.c_str(), 0);
+        translator.add_unit(unit, s.c_str(), 0);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:type=\"http://www.sdml.info/srcML/modifier\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_XMLDECL | OPTION_NAMESPACEDECL | OPTION_POSITION;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_unit * unit = srcml_create_unit(archive);
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+        std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:pos=\"http://www.sdml.info/srcML/position\" language=\"C++\" pos:tabs=\"4\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+
+        translator.add_unit(unit, s_before.c_str(), 0);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "\n" + s + "\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = OPTION_ARCHIVE | OPTION_XMLDECL | OPTION_NAMESPACEDECL | OPTION_POSITION;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_unit * unit = srcml_create_unit(archive);
+
+        srcMLTranslator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
+                                   output_buffer, op, 0, 0, 0, namespace_prefix, namespace_uri, 4);
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+        std::string s = "<unit language=\"C++\" pos:tabs=\"4\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+
+        translator.add_unit(unit, s.c_str(), 0);
+        translator.add_unit(unit, s.c_str(), 0);
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:pos=\"http://www.sdml.info/srcML/position\" pos:tabs=\"4\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
     /*
       add_unit hash
     */
