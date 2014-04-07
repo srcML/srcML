@@ -22,7 +22,6 @@
 
 #include <peek4char.hpp>
 
-
 void peek4char(FILE* fp, unsigned char data[], ssize_t* psize) {
     *psize = 0;
     int c;
@@ -38,11 +37,12 @@ void peek4char(FILE* fp, unsigned char data[], ssize_t* psize) {
                 if ((c = getc(fp)) != EOF) {
                     data[3] = c;
                     ++(*psize);
+                    ungetc(data[3], fp);
                 }
+                ungetc(data[2], fp);
             }
+            ungetc(data[1], fp);
         }
+        ungetc(data[0], fp);
     }
-
-    for (ssize_t i = (*psize) - 1; i >= 0; --i)
-        ungetc(data[i], fp);
 }
