@@ -29,23 +29,23 @@
 #include <boost/range.hpp>
 
 void srcml_execute(const srcml_request_t& srcml_request,
-                   std::list<process_srcml>& processing_steps,
+                   std::list<process_srcml>& pipeline,
                    const srcml_input_t& input_sources,
                    const srcml_output_dest& destination) {
 
     // create a thread for each step, creating pipes between adjoining steps
     boost::thread_group process_srcml_threads;
     int fds[2] = { -1, -1 };
-    BOOST_FOREACH(process_srcml command, processing_steps) {
+    BOOST_FOREACH(process_srcml command, pipeline) {
 
         // special handling for first and last steps
-        bool first = command == processing_steps.front();
-        bool last  = command == processing_steps.back();
+        bool first = command == pipeline.front();
+        bool last  = command == pipeline.back();
 
         // pipe between each step
         int prevoutfd = fds[0];
         fds[0] = fds[1] = -1;
-        if (processing_steps.size() > 1 && !last)
+        if (pipeline.size() > 1 && !last)
             pipe(fds);
 
         /* run this step in the sequence */
