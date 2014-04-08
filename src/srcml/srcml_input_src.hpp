@@ -39,18 +39,18 @@
 #define STDERR_FILENO   2       /* standard error file descriptor */
 #endif
 
-class srcml_input_src;
+ class srcml_input_src;
 
-typedef std::vector<srcml_input_src> srcml_input_t;
-typedef srcml_input_src srcml_output_dest;
+ typedef std::vector<srcml_input_src> srcml_input_t;
+ typedef srcml_input_src srcml_output_dest;
 
-enum STATES { INDETERMINATE, SRC, SRCML };
+ enum STATES { INDETERMINATE, SRC, SRCML };
 
-class srcml_input_src {
-public:
+ class srcml_input_src {
+ public:
 
     srcml_input_src() {}
-    srcml_input_src(const std::string& other) : state(INDETERMINATE) { 
+    srcml_input_src(const std::string& other) : state(INDETERMINATE), isdirectory(false) { 
 
         filename = src_prefix_add_uri(other);
 
@@ -61,16 +61,22 @@ public:
         // so extract
         boost::filesystem::path rpath(resource.c_str());
 
-        // collect compressions
-        for ( ; rpath.has_extension() && is_compressed(rpath.extension().string()); rpath = rpath.stem())
-            compressions.push_back(rpath.extension().string());
+        if (protocol == "file")
+            isdirectory = boost::filesystem::is_directory(rpath);
 
-        // collect archives
-        for ( ; rpath.has_extension() && is_archive(rpath.extension().string()); rpath = rpath.stem())
-            archives.push_back(rpath.extension().string());
+        if (!isdirectory) {
 
-        // collect real extension
-        extension = rpath.has_extension() ? rpath.extension().string() : (!archives.empty() ? archives.back() : "");
+            // collect compressions
+            for ( ; rpath.has_extension() && is_compressed(rpath.extension().string()); rpath = rpath.stem())
+                compressions.push_back(rpath.extension().string());
+
+            // collect archives
+            for ( ; rpath.has_extension() && is_archive(rpath.extension().string()); rpath = rpath.stem())
+                archives.push_back(rpath.extension().string());
+
+            // collect real extension
+            extension = rpath.has_extension() ? rpath.extension().string() : (!archives.empty() ? archives.back() : "");
+        }
 
         plainfile = rpath.string();
 

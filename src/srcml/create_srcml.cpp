@@ -50,7 +50,7 @@ void create_srcml_handler(ParseQueue& queue,
 
         src_input_filelist(queue, srcml_arch, srcml_request, input);
 
-    } else if (input.protocol == "file" && boost::filesystem::is_directory(input.resource)) {
+    } else if (input.protocol == "file" && input.isdirectory) {
 
         src_input_filesystem(queue, srcml_arch, srcml_request, input);
 
@@ -105,7 +105,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     // TODO: check if a plain file. Source archives, i.e., .tar.gz, always produce srcml archives
     if (input_sources.size() == 1 && input_sources[0].protocol != "filelist" &&
         !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) &&
-        !boost::filesystem::is_directory(input_sources[0].resource)) {
+        !input_sources[0].isdirectory) {
 
         srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
     } else {
