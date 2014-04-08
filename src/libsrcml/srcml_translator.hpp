@@ -128,12 +128,6 @@ private:
     /** size of tabstop */
     int tabsize;
 
-    /** list of namespace prefixes */
-    std::vector<std::string> & prefix;
-
-    /** list of namespace uris */
-    std::vector<std::string> & uri;
-
     /** list of user defined macros */
     std::vector<std::string> user_macro_list;
 

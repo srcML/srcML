@@ -101,7 +101,7 @@ srcml_translator::srcml_translator(int language,
     :  Language(language), first(true), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
        options(op), buffer(0),
        out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
-       prefix(prefix), uri(uri), str_buffer(str_buf), size(size) {
+       str_buffer(str_buf), size(size) {
 
     buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
@@ -135,13 +135,13 @@ srcml_translator::srcml_translator(int language,
                                  const char* version,
                                  const char* timestamp, 
                                  const char* hash, 
-                                std::vector<std::string> & prefix,
+                                 std::vector<std::string> & prefix,
                                  std::vector<std::string> & uri,
                                  int tabsize)
     : Language(language), first(true),
       directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
       options(op), buffer(0),
-      out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize), prefix(prefix), uri(uri),
+      out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
       str_buffer(0), size(0) {}
 
 /**
@@ -151,8 +151,10 @@ srcml_translator::srcml_translator(int language,
  * Set the user defined macro list to use.
  */
 void srcml_translator::set_macro_list(std::vector<std::string> & list) {
-    user_macro_list = list;
-    out.setMacroList(list);
+
+  user_macro_list = list;
+  out.setMacroList(list);
+
 }
 
 /**
