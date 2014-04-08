@@ -1,5 +1,5 @@
 /**
- * @file LanguageExtensionRegistry.cpp
+ * @file language_extension_registry.cpp
  *
  * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <LanguageExtensionRegistry.hpp>
+#include <language_extension_registry.hpp>
 #include <algorithm>
 #include <boost/regex.hpp>
 
@@ -29,21 +29,21 @@
 static const boost::regex extRegEx("(zx\\.|zg\\.|2zb\\.)*([^\\.]*)");
 
 /**
-* LanguageExtensionRegistry
+* language_extension_registry
 *
 * Constructor.
 */
-LanguageExtensionRegistry::LanguageExtensionRegistry() : use_cpp_for_c(false) {}
+language_extension_registry::language_extension_registry() : use_cpp_for_c(false) {}
 
 /**
 * ~LanguageExtensionRegistery
 *
 * Destructor.
 */
-LanguageExtensionRegistry::~LanguageExtensionRegistry() {}
+language_extension_registry::~language_extension_registry() {}
 
 /**
- * getLanguageExtension
+ * get_language_extension
  * @param inpath a complete filename with path
  * @param extension the found extension returned passed by reference
  *
@@ -51,7 +51,7 @@ LanguageExtensionRegistry::~LanguageExtensionRegistry() {}
  * 
  * @returns if successsful.
  */
-bool getLanguageExtension(const char * const inpath, std::string & extension)
+bool get_language_extension(const char * const inpath, std::string & extension)
 {
 
     // reversed copy of the path
@@ -75,7 +75,7 @@ bool getLanguageExtension(const char * const inpath, std::string & extension)
 }
 
 /** 
- * registerUserExt
+ * register_user_ext
  * @param ext the file extension
  * @param language interger representation of language to associated with extention
  *
@@ -83,7 +83,7 @@ bool getLanguageExtension(const char * const inpath, std::string & extension)
  *
  * @returns a bool indicating success.
  */
-bool LanguageExtensionRegistry::registerUserExt(const char* ext, int language) {
+bool language_extension_registry::register_user_ext(const char* ext, int language) {
 
     if(!language) return false;
 
@@ -95,7 +95,7 @@ bool LanguageExtensionRegistry::registerUserExt(const char* ext, int language) {
 }
 
 /** 
- * registerUserExt
+ * register_user_ext
  * @param ext the file extension
  * @param language string representation of language to associated with extention
  *
@@ -103,30 +103,30 @@ bool LanguageExtensionRegistry::registerUserExt(const char* ext, int language) {
  *
  * @returns a bool indicating success.
  */
-bool LanguageExtensionRegistry::registerUserExt(const char* ext, const char* language) {
+bool language_extension_registry::register_user_ext(const char* ext, const char* language) {
 
     int nlanguage = Language::getLanguage(language);
     if (!nlanguage)
         return false;
 
-    registerUserExt(ext, nlanguage);
+    register_user_ext(ext, nlanguage);
 
     return true;
 }
 
 /**
- * getLanguageFromFilename
+ * get_language_from_filename
  * @param path filename with complete path
  *
  * Gets the current language based on the extenstion.
  *
  * @returns the numeric representation of the currently registered language from the given filename.
  */
-int LanguageExtensionRegistry::getLanguageFromFilename(const char* const path) { 
+int language_extension_registry::get_language_from_filename(const char* const path) { 
 
     // extract the (pure) extension
     std::string extension;
-    bool success = getLanguageExtension(path, extension);
+    bool success = get_language_extension(path, extension);
 
     if (!success) return 0;
 
@@ -145,32 +145,32 @@ int LanguageExtensionRegistry::getLanguageFromFilename(const char* const path) {
   *
  * Register the standard file extensions for all languages. 
  */
-void LanguageExtensionRegistry::register_standard_file_extensions()
+void language_extension_registry::register_standard_file_extensions()
 {
-    registerUserExt("c",    Language::LANGUAGE_C);
-    registerUserExt("h",    Language::LANGUAGE_C);
-    registerUserExt("i",    Language::LANGUAGE_C);
+    register_user_ext("c",    Language::LANGUAGE_C);
+    register_user_ext("h",    Language::LANGUAGE_C);
+    register_user_ext("i",    Language::LANGUAGE_C);
 
-    registerUserExt("cpp",  Language::LANGUAGE_CXX);
-    registerUserExt("CPP",  Language::LANGUAGE_CXX);
-    registerUserExt("cp",   Language::LANGUAGE_CXX);
-    registerUserExt("hpp",  Language::LANGUAGE_CXX);
-    registerUserExt("cxx",  Language::LANGUAGE_CXX);
-    registerUserExt("hxx",  Language::LANGUAGE_CXX);
-    registerUserExt("cc",   Language::LANGUAGE_CXX);
-    registerUserExt("hh",   Language::LANGUAGE_CXX);
-    registerUserExt("c++",  Language::LANGUAGE_CXX);
-    registerUserExt("h++",  Language::LANGUAGE_CXX);
-    registerUserExt("C",    Language::LANGUAGE_CXX);
-    registerUserExt("H",    Language::LANGUAGE_CXX);
-    registerUserExt("tcc",  Language::LANGUAGE_CXX);
-    registerUserExt("ii",   Language::LANGUAGE_CXX);
+    register_user_ext("cpp",  Language::LANGUAGE_CXX);
+    register_user_ext("CPP",  Language::LANGUAGE_CXX);
+    register_user_ext("cp",   Language::LANGUAGE_CXX);
+    register_user_ext("hpp",  Language::LANGUAGE_CXX);
+    register_user_ext("cxx",  Language::LANGUAGE_CXX);
+    register_user_ext("hxx",  Language::LANGUAGE_CXX);
+    register_user_ext("cc",   Language::LANGUAGE_CXX);
+    register_user_ext("hh",   Language::LANGUAGE_CXX);
+    register_user_ext("c++",  Language::LANGUAGE_CXX);
+    register_user_ext("h++",  Language::LANGUAGE_CXX);
+    register_user_ext("C",    Language::LANGUAGE_CXX);
+    register_user_ext("H",    Language::LANGUAGE_CXX);
+    register_user_ext("tcc",  Language::LANGUAGE_CXX);
+    register_user_ext("ii",   Language::LANGUAGE_CXX);
 
-    registerUserExt("java", Language::LANGUAGE_JAVA);
+    register_user_ext("java", Language::LANGUAGE_JAVA);
 
-    registerUserExt("aj",   Language::LANGUAGE_ASPECTJ);
+    register_user_ext("aj",   Language::LANGUAGE_ASPECTJ);
 
-    registerUserExt("cs",   Language::LANGUAGE_CSHARP);
+    register_user_ext("cs",   Language::LANGUAGE_CSHARP);
 }
 
 /**
@@ -179,7 +179,7 @@ void LanguageExtensionRegistry::register_standard_file_extensions()
  *
  * Indictae if to treat C as C++.
  */
-void LanguageExtensionRegistry::c_is_cpp(bool use_cpp) {
+void language_extension_registry::c_is_cpp(bool use_cpp) {
 
     use_cpp_for_c = use_cpp;
 
@@ -193,9 +193,9 @@ void LanguageExtensionRegistry::c_is_cpp(bool use_cpp) {
  *
  * @returns the language/extension pair at given position.
  */
-language_extension LanguageExtensionRegistry::at(unsigned int pos) const {
+language_extension language_extension_registry::at(unsigned int pos) const {
 
-    if(pos >= size()) throw LanguageExtensionRegistryError();
+    if(pos >= size()) throw language_extension_registry_error();
 
     return registered_languages.at(pos);
 
@@ -208,7 +208,7 @@ language_extension LanguageExtensionRegistry::at(unsigned int pos) const {
  *
  * @returns the number of registered language/extension pairs.
  */
-unsigned int LanguageExtensionRegistry::size() const {
+unsigned int language_extension_registry::size() const {
 
     return (unsigned int)registered_languages.size();
 
@@ -221,9 +221,9 @@ unsigned int LanguageExtensionRegistry::size() const {
  * 
  * @returns the last language/extension pair at given position.
  */
-language_extension LanguageExtensionRegistry::last() const {
+language_extension language_extension_registry::last() const {
 
-    if(size() == 0) throw LanguageExtensionRegistryError();
+    if(size() == 0) throw language_extension_registry_error();
 
     return registered_languages.back();
 
@@ -231,11 +231,11 @@ language_extension LanguageExtensionRegistry::last() const {
 
 /**
  * append
- * @param registry another LanguageExtensionRegistry
+ * @param registry another language_extension_registry
  *
  * Append the contents of registry to this registry.
  */
-void LanguageExtensionRegistry::append(LanguageExtensionRegistry registry) {
+void language_extension_registry::append(language_extension_registry registry) {
 
     for(std::vector<language_extension>::const_iterator itr = registry.registered_languages.begin(); itr != registry.registered_languages.end(); ++itr)
         registered_languages.push_back(*itr);

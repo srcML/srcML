@@ -1,5 +1,5 @@
 /**
- * @file test_LanguageExtensionRegistry.cpp
+ * @file test_language_extension_registry.cpp
  *
  * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <LanguageExtensionRegistry.hpp>
+#include <language_extension_registry.hpp>
 #include <stdio.h>
 #include <string.h>
 #include <cassert>
@@ -31,46 +31,46 @@ int main() {
         at
     */
     {
-        LanguageExtensionRegistry reg_ext;
-        reg_ext.registerUserExt("cpp", "C++");
+        language_extension_registry reg_ext;
+        reg_ext.register_user_ext("cpp", "C++");
         dassert(get_language(reg_ext.at(0)), Language::LANGUAGE_CXX);
         dassert(get_extension(reg_ext.at(0)), "cpp");
     }
 
     {
-        LanguageExtensionRegistry reg_ext;
+        language_extension_registry reg_ext;
         try {
          reg_ext.at(0);
          assert(false);
-        } catch(LanguageExtensionRegistryError error) {} 
+        } catch(language_extension_registry_error error) {} 
     }
 
 
     {
-        LanguageExtensionRegistry reg_ext;
-        reg_ext.registerUserExt("cpp", "C++");
+        language_extension_registry reg_ext;
+        reg_ext.register_user_ext("cpp", "C++");
         try {
          reg_ext.at(1);
          assert(false);
-        } catch(LanguageExtensionRegistryError error) {} 
+        } catch(language_extension_registry_error error) {} 
     }
 
     /*
         last
     */
     {
-        LanguageExtensionRegistry reg_ext;
-        reg_ext.registerUserExt("cpp", "C++");
+        language_extension_registry reg_ext;
+        reg_ext.register_user_ext("cpp", "C++");
         dassert(get_language(reg_ext.last()), Language::LANGUAGE_CXX);
         dassert(get_extension(reg_ext.last()), "cpp");
     }
 
     {
-        LanguageExtensionRegistry reg_ext;
+        language_extension_registry reg_ext;
         try {
          reg_ext.last();
          assert(false);
-        } catch(LanguageExtensionRegistryError error) {} 
+        } catch(language_extension_registry_error error) {} 
     }
 
 
@@ -78,92 +78,92 @@ int main() {
         size
     */
     {
-        LanguageExtensionRegistry reg_ext;
+        language_extension_registry reg_ext;
         dassert(reg_ext.size(), 0);
     }
 
     {
-        LanguageExtensionRegistry reg_ext;
-        reg_ext.registerUserExt("cpp", "C++");
+        language_extension_registry reg_ext;
+        reg_ext.register_user_ext("cpp", "C++");
         dassert(reg_ext.size(), 1);
     }
 
     /*
-      registerUserExt(const char *, int)
+      register_user_ext(const char *, int)
     */
     {
-        LanguageExtensionRegistry reg_ext;
-        assert(reg_ext.registerUserExt("cpp", Language::LANGUAGE_CXX));
-        dassert(reg_ext.size(), 1);
-        dassert(get_language(reg_ext.at(0)), Language::LANGUAGE_CXX);
-        dassert(get_extension(reg_ext.at(0)), "cpp");
-    }
-
-    {
-        LanguageExtensionRegistry reg_ext;
-        assert(!reg_ext.registerUserExt("cpp", Language::LANGUAGE_NONE));
-        dassert(reg_ext.size(), 0);
-    }
-
-    /*
-      registerUserExt(const char *, int)
-    */
-    {
-        LanguageExtensionRegistry reg_ext;
-        assert(reg_ext.registerUserExt("cpp", "C++"));
+        language_extension_registry reg_ext;
+        assert(reg_ext.register_user_ext("cpp", Language::LANGUAGE_CXX));
         dassert(reg_ext.size(), 1);
         dassert(get_language(reg_ext.at(0)), Language::LANGUAGE_CXX);
         dassert(get_extension(reg_ext.at(0)), "cpp");
     }
 
     {
-        LanguageExtensionRegistry reg_ext;
-        assert(!reg_ext.registerUserExt("cpp", "Foo"));
+        language_extension_registry reg_ext;
+        assert(!reg_ext.register_user_ext("cpp", Language::LANGUAGE_NONE));
         dassert(reg_ext.size(), 0);
     }
 
     /*
-      getLanguageFromFilename
+      register_user_ext(const char *, int)
     */
     {
-        LanguageExtensionRegistry reg_ext;
-        reg_ext.registerUserExt("cpp", "C++");
-        dassert(reg_ext.getLanguageFromFilename("a.cpp"), Language::LANGUAGE_CXX);
+        language_extension_registry reg_ext;
+        assert(reg_ext.register_user_ext("cpp", "C++"));
+        dassert(reg_ext.size(), 1);
+        dassert(get_language(reg_ext.at(0)), Language::LANGUAGE_CXX);
+        dassert(get_extension(reg_ext.at(0)), "cpp");
     }
 
     {
-        LanguageExtensionRegistry reg_ext;
-        reg_ext.registerUserExt("cpp", "C++");
-        int lang = reg_ext.getLanguageFromFilename("a.cpp.gz");
+        language_extension_registry reg_ext;
+        assert(!reg_ext.register_user_ext("cpp", "Foo"));
+        dassert(reg_ext.size(), 0);
+    }
+
+    /*
+      get_language_from_filename
+    */
+    {
+        language_extension_registry reg_ext;
+        reg_ext.register_user_ext("cpp", "C++");
+        dassert(reg_ext.get_language_from_filename("a.cpp"), Language::LANGUAGE_CXX);
+    }
+
+    {
+        language_extension_registry reg_ext;
+        reg_ext.register_user_ext("cpp", "C++");
+        int lang = reg_ext.get_language_from_filename("a.cpp.gz");
 
         std::cout << "reg_ext." << lang << '\n';
-        dassert(reg_ext.getLanguageFromFilename("a.cpp.gz"), Language::LANGUAGE_CXX);
+        dassert(reg_ext.get_language_from_filename("a.cpp.gz"), Language::LANGUAGE_CXX);
     }
 
     {
-        LanguageExtensionRegistry reg_ext;
-        reg_ext.registerUserExt("cpp", "C++");
-        dassert(reg_ext.getLanguageFromFilename("a.cpp.bz2"), Language::LANGUAGE_CXX);
+        language_extension_registry reg_ext;
+        reg_ext.register_user_ext("cpp", "C++");
+        dassert(reg_ext.get_language_from_filename("a.cpp.bz2"), Language::LANGUAGE_CXX);
     }
 
 
     {
-        LanguageExtensionRegistry reg_ext;
-        reg_ext.registerUserExt("cpp", "C++");
-        dassert(reg_ext.getLanguageFromFilename("a.cpp.xz"), Language::LANGUAGE_CXX);
+        language_extension_registry reg_ext;
+        reg_ext.register_user_ext("cpp", "C++");
+        dassert(reg_ext.get_language_from_filename("a.cpp.xz"), Language::LANGUAGE_CXX);
     }
 
     {
-        LanguageExtensionRegistry reg_ext;
-        reg_ext.registerUserExt("cpp", "C++");
-        dassert(reg_ext.getLanguageFromFilename("a.foo"), 0);
+        language_extension_registry reg_ext;
+        reg_ext.register_user_ext("cpp", "C++");
+        dassert(reg_ext.get_language_from_filename("a.foo"), 0);
     }
 
     /*
       register_standard_file_extensions()
     */
     {
-        LanguageExtensionRegistry reg_ext;
+        language_extension_registry reg_ext;
         reg_ext.register_standard_file_extensions();
         dassert(!reg_ext.size(), 0);
     }
@@ -173,27 +173,27 @@ int main() {
     */
 
     {
-        LanguageExtensionRegistry reg_ext;
+        language_extension_registry reg_ext;
         reg_ext.c_is_cpp(false);
         reg_ext.register_standard_file_extensions();
-        dassert(reg_ext.getLanguageFromFilename("a.h"), Language::LANGUAGE_C);
-        dassert(reg_ext.getLanguageFromFilename("a.c"), Language::LANGUAGE_C);
+        dassert(reg_ext.get_language_from_filename("a.h"), Language::LANGUAGE_C);
+        dassert(reg_ext.get_language_from_filename("a.c"), Language::LANGUAGE_C);
     }
 
     {
-        LanguageExtensionRegistry reg_ext;
+        language_extension_registry reg_ext;
         reg_ext.c_is_cpp(false);
         reg_ext.register_standard_file_extensions();
-        dassert(reg_ext.getLanguageFromFilename("a.h"), Language::LANGUAGE_C);
-        dassert(reg_ext.getLanguageFromFilename("a.c"), Language::LANGUAGE_C);
+        dassert(reg_ext.get_language_from_filename("a.h"), Language::LANGUAGE_C);
+        dassert(reg_ext.get_language_from_filename("a.c"), Language::LANGUAGE_C);
     }
 
     {
-        LanguageExtensionRegistry reg_ext;
+        language_extension_registry reg_ext;
         reg_ext.c_is_cpp(true);
         reg_ext.register_standard_file_extensions();
-        dassert(reg_ext.getLanguageFromFilename("a.h"), Language::LANGUAGE_CXX);
-        dassert(reg_ext.getLanguageFromFilename("a.c"), Language::LANGUAGE_CXX);
+        dassert(reg_ext.get_language_from_filename("a.h"), Language::LANGUAGE_CXX);
+        dassert(reg_ext.get_language_from_filename("a.c"), Language::LANGUAGE_CXX);
     }
 
     /*
@@ -201,9 +201,9 @@ int main() {
     */
     {
 
-        LanguageExtensionRegistry reg_ext_one;
-        LanguageExtensionRegistry reg_ext_two;
-        reg_ext_two.registerUserExt("cpp", "C++");
+        language_extension_registry reg_ext_one;
+        language_extension_registry reg_ext_two;
+        reg_ext_two.register_user_ext("cpp", "C++");
 
         dassert(reg_ext_one.size(), 0);
 
@@ -216,12 +216,12 @@ int main() {
 
     {
 
-        LanguageExtensionRegistry reg_ext_one;
-        reg_ext_one.registerUserExt("cpp", "C++");  
-        LanguageExtensionRegistry reg_ext_two;
-        reg_ext_two.registerUserExt("h", "C");  
-        reg_ext_two.registerUserExt("cs", "C#");  
-        reg_ext_two.registerUserExt("java", "Java");  
+        language_extension_registry reg_ext_one;
+        reg_ext_one.register_user_ext("cpp", "C++");  
+        language_extension_registry reg_ext_two;
+        reg_ext_two.register_user_ext("h", "C");  
+        reg_ext_two.register_user_ext("cs", "C#");  
+        reg_ext_two.register_user_ext("java", "Java");  
 
         dassert(reg_ext_one.size(), 1);
         dassert(get_language(reg_ext_one.at(0)), Language::LANGUAGE_CXX);

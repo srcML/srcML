@@ -118,10 +118,8 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_COMPRESS          1<<13
     /** Nest if in else if intead of elseif tag */
 #define SRCML_OPTION_NESTIF            1<<14
-    /** Output timestamp attribute on each unit (default: on) */
-#define SRCML_OPTION_TIMESTAMP         1<<15
     /** Output hash attribute on each unit (default: on) */
-#define SRCML_OPTION_HASH              1<<16
+#define SRCML_OPTION_HASH              1<<15
 
     /* srcml status messages */
     /** Return status indicating no errors */

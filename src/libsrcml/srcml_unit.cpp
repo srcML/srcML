@@ -25,8 +25,6 @@
 
 #include <UTF8CharBuffer.hpp>
 
-#include <boost/date_time/posix_time/posix_time.hpp>
-
 /******************************************************************************
  *                                                                            *
  *                           Set up functions                                 *
@@ -334,20 +332,29 @@ const char* srcml_unit_get_xml(struct srcml_unit* unit) {
  */
 static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer * input, OPTION_TYPE translation_options) {
 
-    boost::optional<std::string> timestamp = !unit->timestamp
-        &&  (translation_options & SRCML_OPTION_TIMESTAMP) ?
-        boost::posix_time::to_simple_string(boost::posix_time::second_clock::universal_time()) : unit->timestamp;
-
     xmlBuffer * output_buffer = xmlBufferCreate();
+    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler("UTF-8"));
+
     try {
 
-        unit->archive->translator->translate_separate(unit->directory ? unit->directory->c_str() : 0,
-                                                      unit->filename ? unit->filename->c_str() : 0,
-                                                      unit->version ? unit->version->c_str() : 0,
-                                                      timestamp ? timestamp->c_str() : 0,
-                                                      unit->hash ? unit->hash->c_str() : (translation_options & SRCML_OPTION_HASH ? "" : 0),
-                                                      lang, input, output_buffer,
-                                                      translation_options);
+        srcml_translator translator(
+            obuffer,
+            unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8",
+            translation_options,
+            unit->archive->prefixes,
+            unit->archive->namespaces,
+            unit->archive->tabstop,
+            lang,
+            unit->directory ? unit->directory->c_str() : 0,
+            unit->filename ? unit->filename->c_str() : 0,
+            unit->version ? unit->version->c_str() : 0,
+            unit->timestamp ? unit->timestamp->c_str() : 0,
+            unit->hash ? unit->hash->c_str() : (translation_options & SRCML_OPTION_HASH ? "" : 0));
+
+        translator.set_macro_list(unit->archive->user_macro_list);
+
+        translator.translate(input);
+
     } catch(...) {
 
         xmlBufferFree(output_buffer);
@@ -389,7 +396,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
         : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
 
-    if(lang == SRCML_LANGUAGE_NONE) lang = unit->archive->registered_languages.getLanguageFromFilename(src_filename);
+    if(lang == SRCML_LANGUAGE_NONE) lang = unit->archive->registered_languages.get_language_from_filename(src_filename);
 
     if(lang == SRCML_LANGUAGE_NONE) return SRCML_STATUS_UNSET_LANGUAGE;
 

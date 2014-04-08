@@ -38,7 +38,7 @@ const char * srcml_archive_check_extension(srcml_archive * archive, const char* 
 
     if(archive == NULL || filename == NULL) return 0;
 
-    Language language(archive->registered_languages.getLanguageFromFilename(filename));
+    Language language(archive->registered_languages.get_language_from_filename(filename));
     const char * lang_string = language.getLanguageString();
     return strcmp(lang_string, "") == 0 ? 0 : lang_string;
 
@@ -69,8 +69,7 @@ srcml_archive* srcml_create_archive()
     } catch(...) { return 0; }
 
     archive->type = SRCML_ARCHIVE_INVALID;
-    archive->options = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
-        | SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH;
+    archive->options = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH;
     archive->tabstop = 8;
     archive->translator = 0;
     archive->reader = 0;
@@ -376,7 +375,7 @@ int srcml_archive_register_file_extension(srcml_archive* archive, const char* ex
     if(archive == NULL || extension == NULL || language == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(archive->registered_languages.registerUserExt(extension, language))
+    if(archive->registered_languages.register_user_ext(extension, language))
         return SRCML_STATUS_OK;
     return SRCML_STATUS_INVALID_INPUT;
 }
@@ -769,18 +768,18 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
 
     try {
 
-        archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
-                                                  archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                                  output_buffer,
-                                                  archive->options,
-                                                  archive->directory ? archive->directory->c_str() : 0,
-                                                  archive->filename ? archive->filename->c_str() : 0,
-                                                  archive->version ? archive->version->c_str() : 0,
-                                                  archive->prefixes,
-                                                  archive->namespaces,
-                                                  archive->tabstop);
-        archive->translator->setMacroList(archive->user_macro_list);
+        archive->translator = new srcml_translator(
+                                                output_buffer,
+                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                                archive->options,
+                                                archive->prefixes,
+                                                archive->namespaces,
+                                                archive->tabstop,
+                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                                archive->directory ? archive->directory->c_str() : 0,
+                                                archive->filename ? archive->filename->c_str() : 0,
+                                                archive->version ? archive->version->c_str() : 0);
+        archive->translator->set_macro_list(archive->user_macro_list);
 
     } catch(...) { 
 
@@ -815,20 +814,20 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
 
     try {
 
-        archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
-                                                  archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                                  buffer,
-                                                  size,
-                                                  archive->options,
-                                                  archive->directory ? archive->directory->c_str() : 0,
-                                                  archive->filename ? archive->filename->c_str() : 0,
-                                                  archive->version ? archive->version->c_str() : 0,
-                                                  archive->prefixes,
-                                                  archive->namespaces,
-                                                  archive->tabstop);
+        archive->translator = new srcml_translator(
+                                                buffer,
+                                                size,
+                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                                archive->options,
+                                                archive->prefixes,
+                                                archive->namespaces,
+                                                archive->tabstop,
+                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                                archive->directory ? archive->directory->c_str() : 0,
+                                                archive->filename ? archive->filename->c_str() : 0,
+                                                archive->version ? archive->version->c_str() : 0);
 
-        archive->translator->setMacroList(archive->user_macro_list);
+        archive->translator->set_macro_list(archive->user_macro_list);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
@@ -859,19 +858,19 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
     try {
 
-        archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
-                                                  archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                                  output_buffer,
-                                                  archive->options,
-                                                  archive->directory ? archive->directory->c_str() : 0,
-                                                  archive->filename ? archive->filename->c_str() : 0,
-                                                  archive->version ? archive->version->c_str() : 0,
-                                                  archive->prefixes,
-                                                  archive->namespaces,
-                                                  archive->tabstop);
+        archive->translator = new srcml_translator(
+                                                output_buffer,
+                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                                archive->options,
+                                                archive->prefixes,
+                                                archive->namespaces,
+                                                archive->tabstop,
+                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                                archive->directory ? archive->directory->c_str() : 0,
+                                                archive->filename ? archive->filename->c_str() : 0,
+                                                archive->version ? archive->version->c_str() : 0);
 
-        archive->translator->setMacroList(archive->user_macro_list);
+        archive->translator->set_macro_list(archive->user_macro_list);
 
     } catch(...) {
 
@@ -907,19 +906,19 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
 
     try {
 
-        archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
-                                                  archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                                  output_buffer,
-                                                  archive->options,
-                                                  archive->directory ? archive->directory->c_str() : 0,
-                                                  archive->filename ? archive->filename->c_str() : 0,
-                                                  archive->version ? archive->version->c_str() : 0,
-                                                  archive->prefixes,
-                                                  archive->namespaces,
-                                                  archive->tabstop);
+        archive->translator = new srcml_translator(
+                                                output_buffer,
+                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                                archive->options,
+                                                archive->prefixes,
+                                                archive->namespaces,
+                                                archive->tabstop,
+                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                                archive->directory ? archive->directory->c_str() : 0,
+                                                archive->filename ? archive->filename->c_str() : 0,
+                                                archive->version ? archive->version->c_str() : 0);
 
-        archive->translator->setMacroList(archive->user_macro_list);
+        archive->translator->set_macro_list(archive->user_macro_list);
 
     } catch(...) {
 

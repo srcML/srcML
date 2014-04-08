@@ -53,7 +53,7 @@ int main() {
         archive->user_macro_list.push_back("foo");
         archive->user_macro_list.push_back("bar");
         srcml_archive_register_file_extension(archive, "foo", "bar");
-        archive->translator = (srcMLTranslator *)1;
+        archive->translator = (srcml_translator *)1;
         archive->reader = (srcml_sax2_reader *)1;
         archive->input = (xmlParserInputBufferPtr)1;
         transform trans;
