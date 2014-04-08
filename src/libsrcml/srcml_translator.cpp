@@ -271,13 +271,13 @@ void srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
     first = false;
 
-    char * end_start_unit = strchr(xml, '>');
+    const char * end_start_unit = (char *)strchr(xml, '>');
     if(!end_start_unit) return;
 
     /** extract language */
     char * language_start_name = strnstr(xml, "language", end_start_unit - xml);
-    char * language_start_value = strchr(language_start_name, '"');
-    char * language_end_value = strchr(language_start_value + 1, '"');
+    char * language_start_value = (char *)strchr(language_start_name, '"');
+    char * language_end_value = (char *)strchr(language_start_value + 1, '"');
     (*language_end_value) = '\0';
 
     /** is there a cpp namespace */
