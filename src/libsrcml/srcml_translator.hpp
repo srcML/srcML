@@ -54,53 +54,39 @@ class srcml_translator : public Language {
 public:
 
     // constructor
-    srcml_translator(int language,
-                    const char* src_encoding,
-                    const char* xml_encoding,
-                    char** str_buf,
-                    int * size,
-                    OPTION_TYPE& options,
-                    const char* directory,
-                    const char* filename,
-                    const char* version,
-                    std::vector<std::string> & prefix,
-                    std::vector<std::string> & uri,
-                    int tabsize
-                    );
+    srcml_translator(char ** str_buf,
+                     int * size,
+                     const char* xml_encoding,
+                     OPTION_TYPE & op,
+                     std::vector<std::string> & prefix,
+                     std::vector<std::string> & uri,
+                     int tabsize,
+                     int language,
+                     const char* directory,
+                     const char* filename,
+                     const char* version,
+                     const char* timestamp = 0,
+                     const char* hash = 0);
 
     // constructor
-    srcml_translator(int language,
-                    const char* src_encoding,
-                    const char* xml_encoding,
-                    xmlOutputBuffer * output_buffer,
-                    OPTION_TYPE& options,
-                    const char* directory,
-                    const char* filename,
-                    const char* version,
-                    std::vector<std::string> & prefix,
-                    std::vector<std::string> & uri,
-                    int tabsize
-                    );
+    srcml_translator(xmlOutputBuffer * output_buffer,
+                     const char* xml_encoding,
+                     OPTION_TYPE& op,
+                     std::vector<std::string> & prefix,
+                     std::vector<std::string> & uri,
+                     int tabsize,
+                     int language,
+                     const char* directory,
+                     const char* filename,
+                     const char* version,
+                     const char* timestamp = 0, 
+                     const char* hash = 0);
 
     void set_macro_list(std::vector<std::string> & list);
 
     void close();
 
-    // translate from input stream to output stream
-    void translate(const char* unit_directory = 0,
-                   const char* unit_filename = 0,
-                   const char* unit_version = 0,
-                   const char* unit_timestamp = 0,
-                   const char* unit_hash = 0,
-                   int language = 0);
-
-    void translate_separate(const char* unit_directory,
-                            const char* unit_filename,
-                            const char* unit_version,
-                            const char* unit_timestamp,
-                            const char* unit_hash,
-                            int language, UTF8CharBuffer * parser_input, xmlBuffer* output_buffer,
-                            OPTION_TYPE translation_options);
+    void translate(UTF8CharBuffer* parser_input);
 
     void add_unit(const srcml_unit * unit, const char * xml);
     void add_raw_len(const char * content, size_t length);
@@ -110,23 +96,23 @@ public:
 
 private:
 
-    /** input source */
-    UTF8CharBuffer* pinput;
-
     /** is this the first unit */
     bool first;
 
-    /** the root unit directory attribute */
-    const char* root_directory;
+    /** the unit directory attribute */
+    const char* directory;
 
-    /** the root unit filename attribute */
-    const char* root_filename;
+    /** the unit filename attribute */
+    const char* filename;
 
-    /** the root unit version attribute */
-    const char* root_version;
+    /** the unit version attribute */
+    const char* version;
 
-    /** the output encoding */
-    const char* xml_encoding;
+    /** the unit timestamp attribute */
+    const char* timestamp;
+
+    /** the unit hash attribute */
+    const char* hash;
 
     /** translation options */
     OPTION_TYPE& options;
@@ -139,12 +125,6 @@ private:
 
     /** size of tabstop */
     int tabsize;
-
-    /** list of namespace prefixes */
-    std::vector<std::string> & prefix;
-
-    /** list of namespace uris */
-    std::vector<std::string> & uri;
 
     /** list of user defined macros */
     std::vector<std::string> user_macro_list;

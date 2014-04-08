@@ -69,37 +69,39 @@ char * strnstr(const char *s1, const char *s2, size_t n) {
 
 /** 
  * srcml_translator
- * @param language what language to parse in
- * @param src_encoding input source code encoding
- * @param xml_encoding output srcML encoding
  * @param str_buf buffer to assign output srcML
  * @param size integer to assign size of resulting srcML
+ * @param xml_encoding output srcML encoding
  * @param op translator options
- * @param directory root unit directory attribute
- * @param filename unit directory attribute
- * @param version root unit directory attribute
  * @param prefix namespace prefix array
  * @param uri namespace uri array
  * @param tabsize size of tabstop
+ * @param language what language to parse in
+ * @param directory unit directory attribute
+ * @param filename unit directory attribute
+ * @param version unit directory attribute
+ * @param timestamp unit timestamp attribute
+ * @param hash unit hash attribute
  * 
  * Constructor for output to memory.
  */
-srcml_translator::srcml_translator(int language,
-                                 const char* src_encoding,
-                                 const char* xml_encoding,
-                                 char ** str_buf,
+srcml_translator::srcml_translator(char ** str_buf,
                                  int * size,
+                                 const char* xml_encoding,
                                  OPTION_TYPE & op,
+                                 std::vector<std::string> & prefix,
+                                 std::vector<std::string> & uri,
+                                 int tabsize,
+                                 int language,
                                  const char* directory,
                                  const char* filename,
                                  const char* version,
-                                 std::vector<std::string> & prefix,
-                                 std::vector<std::string> & uri,
-                                 int tabsize)
-    :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
-       xml_encoding(xml_encoding), options(op), buffer(0),
+                                 const char* timestamp,
+                                 const char* hash)
+    :  Language(language), first(true), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
+       options(op), buffer(0),
        out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
-       prefix(prefix), uri(uri), str_buffer(str_buf), size(size) {
+       str_buffer(str_buf), size(size) {
 
     buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
@@ -109,35 +111,38 @@ srcml_translator::srcml_translator(int language,
 
 /** 
  * srcml_translator
- * @param language what language to parse in
- * @param src_encoding input source code encoding
- * @param xml_encoding output srcML encoding
  * @param output_buffer general libxml2 output buffer
+ * @param xml_encoding output srcML encoding
  * @param op translator options
- * @param directory root unit directory attribute
- * @param filename unit directory attribute
- * @param version root unit directory attribute
  * @param prefix namespace prefix array
  * @param uri namespace uri array
  * @param tabsize size of tabstop
+ * @param language what language to parse in
+ * @param directory unit directory attribute
+ * @param filename unit directory attribute
+ * @param version unit directory attribute
+ * @param timestamp unit timestamp attribute
+ * @param hash unit hash attribute
  * 
  * Constructor for output to libxml2 output buffer.
  */
-srcml_translator::srcml_translator(int language,
-                                 const char* src_encoding,
+srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* xml_encoding,
-                                 xmlOutputBuffer * output_buffer,
                                  OPTION_TYPE& op,
+
+                                 std::vector<std::string> & prefix,
+                                 std::vector<std::string> & uri,
+                                 int tabsize,
+                                 int language,
                                  const char* directory,
                                  const char* filename,
                                  const char* version,
-                                 std::vector<std::string> & prefix,
-                                 std::vector<std::string> & uri,
-                                 int tabsize)
-    : Language(language), pinput(0), first(true),
-      root_directory(directory), root_filename(filename), root_version(version),
-      xml_encoding(xml_encoding), options(op), buffer(0),
-      out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize), prefix(prefix), uri(uri),
+                                 const char* timestamp, 
+                                 const char* hash)
+    : Language(language), first(true),
+      directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
+      options(op), buffer(0),
+      out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
       str_buffer(0), size(0) {}
 
 /**
@@ -147,8 +152,10 @@ srcml_translator::srcml_translator(int language,
  * Set the user defined macro list to use.
  */
 void srcml_translator::set_macro_list(std::vector<std::string> & list) {
-    user_macro_list = list;
-    out.setMacroList(list);
+
+  user_macro_list = list;
+  out.setMacroList(list);
+
 }
 
 /**
@@ -166,7 +173,7 @@ void srcml_translator::close() {
         out.outputXMLDecl();
 
         // root unit for compound srcML documents
-        out.startUnit(0, root_directory, root_filename, root_version, 0, 0, true);
+        out.startUnit(0, directory, filename, version, 0, 0, true);
 
     }
 
@@ -175,35 +182,22 @@ void srcml_translator::close() {
 
 /**
  * translate
- * @param unit_directory unit directory attribute
- * @param unit_filename unit directory attribute
- * @param unit_version unit version attribute
- * @param unit_timestamp unit timestamp attribute
- * @param unit_hash unit hash attribute
- * @param language the language to translate the input
  *
- * Translate the supplied input (setInput) with the given arguments.
+ * Translate a single unit and output.  No xml declaration is added.
  */
-void srcml_translator::translate(const char* unit_directory,
-                                const char* unit_filename,
-                                const char* unit_version,
-                                const char* unit_timestamp,
-                                const char* unit_hash,
-                                int language) {
+void srcml_translator::translate(UTF8CharBuffer * parser_input) {
 
-    if(first) {
-
+    if(first)
+        // Open for write;
         out.initWriter();
 
-        out.outputXMLDecl();
-
-        // root unit for compound srcML documents
-        if((options & OPTION_ARCHIVE) > 0)
-            out.startUnit(0, root_directory, root_filename, root_version, 0, 0, true);
-
-    }
-
     first = false;
+
+    // output as inner unit
+    if(isoption(options, SRCML_OPTION_ARCHIVE))
+      out.setDepth(1);
+
+    //options |= SRCML_OPTION_ARCHIVE;
 
     try {
 
@@ -211,7 +205,7 @@ void srcml_translator::translate(const char* unit_directory,
         antlr::TokenStreamSelector selector;
 
         // srcML lexical analyzer from standard input
-        KeywordLexer lexer(pinput, language, options, user_macro_list);
+        KeywordLexer lexer(parser_input, getLanguage(), options, user_macro_list);
         lexer.setSelector(&selector);
         lexer.setTabsize(tabsize);
 
@@ -225,86 +219,13 @@ void srcml_translator::translate(const char* unit_directory,
         selector.select(&lexer);
 
         // base stream parser srcML connected to lexical analyzer
-        StreamMLParser parser(selector, language, options);
+        StreamMLParser parser(selector,  getLanguage(), options);
 
         // connect local parser to attribute for output
         out.setTokenStream(parser);
 
         // parse and form srcML output with unit attributes
-        Language l(language);
-        out.consume(l.getLanguageString(), unit_directory, unit_filename, unit_version, unit_timestamp, unit_hash);
-
-    } catch (const std::exception& e) {
-        fprintf(stderr, "SRCML Exception: %s\n", e.what());
-    }
-    catch (UTF8FileError) {
-        throw FileError();
-    }
-    catch (...) {
-        fprintf(stderr, "ERROR\n");
-    }
-}
-
-/**
- * translate_separate
- * @param unit_directory unit directory attribute
- * @param unit_filename unit directory attribute
- * @param unit_version unit version attribute
- * @param unit_timestamp unit timestamp attribute
- * @param unit_hash unit hash attribute
- * @param language the language to translate the input
- * @param parser_input the input source
- * @param output_buffer the output buffer
- * @param translation_options the translation options
- *
- * Translate the supplied input (parser_input) with the given arguments separately
- * from translator output and put in supplied output buffer.
- */
-void srcml_translator::translate_separate(const char* unit_directory,
-                                         const char* unit_filename,
-                                         const char* unit_version,
-                                         const char* unit_timestamp,
-                                         const char* unit_hash,
-                                         int language, UTF8CharBuffer * parser_input, xmlBuffer* output_buffer,
-                                         OPTION_TYPE translation_options) {
-
-    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler("UTF-8"));
-    srcMLOutput sep_out(0, obuffer, getLanguageString(), xml_encoding, translation_options, prefix, uri, tabsize);
-    sep_out.initWriter();
-    sep_out.setMacroList(user_macro_list);
-
-    // save old output
-    if(isoption(translation_options, OPTION_ARCHIVE))
-        sep_out.setDepth(1);
-
-    try {
-
-        // master lexer with multiple streams
-        antlr::TokenStreamSelector selector;
-
-        // srcML lexical analyzer from standard input
-        KeywordLexer lexer(parser_input, language, translation_options, user_macro_list);
-        lexer.setSelector(&selector);
-        lexer.setTabsize(tabsize);
-
-        // pure block comment lexer
-        CommentTextLexer textlexer(lexer.getInputState());
-        textlexer.setSelector(&selector);
-
-        // switching between lexers
-        selector.addInputStream(&lexer, "main");
-        selector.addInputStream(&textlexer, "text");
-        selector.select(&lexer);
-
-        // base stream parser srcML connected to lexical analyzer
-        StreamMLParser parser(selector, language, translation_options);
-
-        // connect local parser to attribute for output
-        sep_out.setTokenStream(parser);
-
-        // parse and form srcML output with unit attributes
-        Language l(language);
-        sep_out.consume(l.getLanguageString(), unit_directory, unit_filename, unit_version, unit_timestamp, unit_hash);
+        out.consume(getLanguageString(), directory, filename, version, timestamp, hash);
 
     } catch (const std::exception& e) {
         fprintf(stderr, "SRCML Exception: %s\n", e.what());
@@ -316,7 +237,8 @@ void srcml_translator::translate_separate(const char* unit_directory,
         fprintf(stderr, "ERROR\n");
     }
 
-    sep_out.setDepth(0);
+    // set back to root
+    out.setDepth(0);
 
 }
 
@@ -340,7 +262,7 @@ void srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
         // root unit for compound srcML documents
         if((options & OPTION_ARCHIVE) > 0)
-            out.startUnit(0, root_directory, root_filename, root_version, 0, 0, true);
+            out.startUnit(0, directory, filename, version, 0, 0, true);
 
         if ((options & OPTION_ARCHIVE) > 0)
             out.processText("\n\n", 2);
@@ -406,7 +328,7 @@ void srcml_translator::add_raw_len(const char * content, size_t length) {
 
         // root unit for compound srcML documents
         if((options & OPTION_ARCHIVE) > 0)
-            out.startUnit(0, root_directory, root_filename, root_version, 0, 0, true);
+            out.startUnit(0, directory, filename, version, 0, 0, true);
 
     }
 
