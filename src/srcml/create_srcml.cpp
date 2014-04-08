@@ -155,8 +155,7 @@ if (!contains<FILE*>(input) && (input.protocol == "stdin") && (srcml_request.com
 return; // stdin was requested, but no data was received
 }
 */
-        srcml_handler_dispatch
-    (parse_queue, srcml_arch, srcml_request, input);
+        srcml_handler_dispatch(parse_queue, srcml_arch, srcml_request, input);
     }
 
     // wait for the parsing and writing queues to finish
