@@ -124,6 +124,7 @@ public:
         std::swap(state, other.state);
         std::swap(compressions, other.compressions);
         std::swap(archives, other.archives);
+        std::swap(isdirectory, other.isdirectory);
     }
 
     std::string filename;
@@ -136,6 +137,7 @@ public:
     enum STATES state;
     std::list<std::string> compressions;
     std::list<std::string> archives;
+    bool isdirectory;
 };
 
 template <typename T>
