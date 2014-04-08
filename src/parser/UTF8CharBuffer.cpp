@@ -24,6 +24,7 @@
 #include "UTF8CharBuffer.hpp"
 
 #include <srcml_macros.hpp>
+#include <sha1utilities.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -537,11 +538,8 @@ UTF8CharBuffer::~UTF8CharBuffer() {
         SHA1_Final(md, &ctx);
 #endif
 
-        std::ostringstream hash_stream;
-        for(unsigned int i = 0; i < SHA_DIGEST_LENGTH; ++i)
-            hash_stream << std::setw(2) << std::setfill('0') << std::right << std::hex << (unsigned int)md[i];
-
-        *hash = hash_stream.str();
+        const char outmd[] = { HEXCHARASCII(md), '\0'};
+        *hash = outmd;
 
     }
 
