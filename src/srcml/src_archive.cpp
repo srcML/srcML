@@ -60,7 +60,13 @@ constexpr bool isordered(const archive_calls_t* p) {
 
 // map from file extension to libarchive write format calls
 // Note: Must be ordered
-static constexpr archive_calls_t format_calls[] = {
+static 
+#if __has_feature(cxx_constexpr)
+constexpr 
+#else
+const
+#endif
+archive_calls_t format_calls[] = {
 #if ARCHIVE_VERSION_NUMBER >= 3000000
     { ".7z", 0 },
 #endif
@@ -105,7 +111,13 @@ BOOST_STATIC_ASSERT(isordered(format_calls));
 
 // map from file extension to libarchive write compression calls
 // Note: Must be ordered
-static constexpr archive_calls_t compression_calls[] = {
+static 
+#if __has_feature(cxx_constexpr)
+constexpr 
+#else
+const
+#endif
+archive_calls_t compression_calls[] = {
     { ".bz"  , 0 },
     { ".bz2" , archive_write_set_compression_bzip2 },
     { ".gz"  , archive_write_set_compression_gzip },
