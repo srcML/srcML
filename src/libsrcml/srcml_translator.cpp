@@ -1,5 +1,5 @@
 /**
- * @file srcMLTranslator.cpp
+ * @file srcml_translator.cpp
  *
  * @copyright Copyright (C) 2003-2014 SDML (www.srcML.org)
  *
@@ -21,11 +21,10 @@
  */
 
 /*
-  Class for straightforward translation from source code to srcML
-  @todo since now in libsrcml change from camel case to underscore.
+  Class for straight forward translation from source code to srcML
 */
 
-#include "srcMLTranslator.hpp"
+#include "srcml_translator.hpp"
 #include "KeywordLexer.hpp"
 #include "srcMLParser.hpp"
 #include "StreamMLParser.hpp"
@@ -69,7 +68,7 @@ char * strnstr(const char *s1, const char *s2, size_t n) {
 #endif
 
 /** 
- * srcMLTranslator
+ * srcml_translator
  * @param language what language to parse in
  * @param src_encoding input source code encoding
  * @param xml_encoding output srcML encoding
@@ -85,7 +84,7 @@ char * strnstr(const char *s1, const char *s2, size_t n) {
  * 
  * Constructor for output to memory.
  */
-srcMLTranslator::srcMLTranslator(int language,
+srcml_translator::srcml_translator(int language,
                                  const char* src_encoding,
                                  const char* xml_encoding,
                                  char ** str_buf,
@@ -109,7 +108,7 @@ srcMLTranslator::srcMLTranslator(int language,
 }
 
 /** 
- * srcMLTranslator
+ * srcml_translator
  * @param language what language to parse in
  * @param src_encoding input source code encoding
  * @param xml_encoding output srcML encoding
@@ -124,7 +123,7 @@ srcMLTranslator::srcMLTranslator(int language,
  * 
  * Constructor for output to libxml2 output buffer.
  */
-srcMLTranslator::srcMLTranslator(int language,
+srcml_translator::srcml_translator(int language,
                                  const char* src_encoding,
                                  const char* xml_encoding,
                                  xmlOutputBuffer * output_buffer,
@@ -142,23 +141,23 @@ srcMLTranslator::srcMLTranslator(int language,
       str_buffer(0), size(0) {}
 
 /**
- * setMacroList
+ * set_macro_list
  * @param list user defined macro list
  *
  * Set the user defined macro list to use.
  */
-void srcMLTranslator::setMacroList(std::vector<std::string> & list) {
+void srcml_translator::set_macro_list(std::vector<std::string> & list) {
     user_macro_list = list;
     out.setMacroList(list);
 }
 
 /**
- * setInput
+ * set_input
  * @param path path of input file
  *
  * Set the input to the file at given path
  */
-void srcMLTranslator::setInput(const char* path) {
+void srcml_translator::set_input(const char* path) {
 
     try {
 
@@ -179,9 +178,9 @@ void srcMLTranslator::setInput(const char* path) {
 /**
  * close
  *
- * Close the srcMLTranslator and the srcML.
+ * Close the srcml_translator and the srcML.
  */
-void srcMLTranslator::close() {
+void srcml_translator::close() {
 
     if(first && (options & OPTION_ARCHIVE) > 0) {
 
@@ -209,7 +208,7 @@ void srcMLTranslator::close() {
  *
  * Translate the supplied input (setInput) with the given arguments.
  */
-void srcMLTranslator::translate(const char* unit_directory,
+void srcml_translator::translate(const char* unit_directory,
                                 const char* unit_filename,
                                 const char* unit_version,
                                 const char* unit_timestamp,
@@ -285,7 +284,7 @@ void srcMLTranslator::translate(const char* unit_directory,
  * Translate the supplied input (parser_input) with the given arguments separately
  * from translator output and put in supplied output buffer.
  */
-void srcMLTranslator::translate_separate(const char* unit_directory,
+void srcml_translator::translate_separate(const char* unit_directory,
                                          const char* unit_filename,
                                          const char* unit_version,
                                          const char* unit_timestamp,
@@ -354,7 +353,7 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
  * and supplied unit does not have src namespace add it.  Also, write out
  * a supplied hash as part of output unit if specified.
  */
-void srcMLTranslator::add_unit(const srcml_unit * unit, const char * xml) {
+void srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
     if(first) {
 
@@ -420,7 +419,7 @@ void srcMLTranslator::add_unit(const srcml_unit * unit, const char * xml) {
  *
  * Add the srcML text as string directly to the archive.
  */
-void srcMLTranslator::add_raw_len(const char * content, size_t length) {
+void srcml_translator::add_raw_len(const char * content, size_t length) {
 
     if(first) {
 
@@ -443,12 +442,12 @@ void srcMLTranslator::add_raw_len(const char * content, size_t length) {
 }
 
 /**
- * ~srcMLTranslator
+ * ~srcml_translator
  *
  * Destructor.  If output to memory, free xml buffer and assign output to
  * locations.
  */
-srcMLTranslator::~srcMLTranslator() {
+srcml_translator::~srcml_translator() {
 
     if(str_buffer && buffer->use) {
 

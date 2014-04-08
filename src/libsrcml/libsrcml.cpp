@@ -26,7 +26,6 @@
 #include <srcml_types.hpp>
 #include <srcml_sax2_utilities.hpp>
 
-#include <srcMLTranslator.hpp>
 #include <Language.hpp>
 #include <LanguageExtensionRegistry.hpp>
 #include <Options.hpp>

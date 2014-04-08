@@ -1,5 +1,5 @@
 /**
- * @file srcMLTranslator.hpp
+ * @file srcml_translator.hpp
  *
  * @copyright Copyright (C) 2003-2014 SDML (www.srcML.org)
  *
@@ -21,11 +21,11 @@
  */
 
 /*
-  Class for straightforward source code to srcML translation
+  Class for straight forward source code to srcML translation
 */
 
-#ifndef SRCMLTRANSLATORCORE_HPP
-#define SRCMLTRANSLATORCORE_HPP
+#ifndef SRCML_TRANSLATOR_HPP
+#define SRCML_TRANSLATOR_HPP
 
 #include <Language.hpp>
 #include <srcMLOutput.hpp>
@@ -44,17 +44,17 @@ class FileError {};
 class UTF8CharBuffer;
 
 /**
-* srcMLTranslator
+* srcml_translator
 *
 * Class for translation of individual files
 * and projects into srcML.  Inherits from Language
 * to set what language to use for parsing.
 */
-class srcMLTranslator : public Language {
+class srcml_translator : public Language {
 public:
 
     // constructor
-    srcMLTranslator(int language,
+    srcml_translator(int language,
                     const char* src_encoding,
                     const char* xml_encoding,
                     char** str_buf,
@@ -69,7 +69,7 @@ public:
                     );
 
     // constructor
-    srcMLTranslator(int language,
+    srcml_translator(int language,
                     const char* src_encoding,
                     const char* xml_encoding,
                     xmlOutputBuffer * output_buffer,
@@ -82,8 +82,8 @@ public:
                     int tabsize
                     );
 
-    void setMacroList(std::vector<std::string> & list);
-    void setInput(const char* path);
+    void set_macro_list(std::vector<std::string> & list);
+    void set_input(const char* path);
 
     void close();
 
@@ -107,7 +107,7 @@ public:
     void add_raw_len(const char * content, size_t length);
 
     // destructor
-    ~srcMLTranslator();
+    ~srcml_translator();
 
 private:
 
