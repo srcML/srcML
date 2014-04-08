@@ -370,6 +370,9 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
             unit->archive->prefixes,
             unit->archive->namespaces,
             unit->archive->tabstop);
+
+        translator.set_macro_list(unit->archive->user_macro_list);
+
         translator.translate(input);
 
     } catch(...) {
