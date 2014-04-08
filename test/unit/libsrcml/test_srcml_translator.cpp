@@ -124,9 +124,10 @@ int main() {
         UTF8CharBuffer * input = new UTF8CharBuffer("a;", 2, "UTF-8", 0);
 
         translator.translate(input);
+        translator.close();
+
         dassert((char *)buffer->content, std::string("<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>\n"));
 
-        translator.close();
         xmlBufferFree(buffer);
 
     }
