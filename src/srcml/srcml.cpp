@@ -83,7 +83,7 @@ int main(int argc, char * argv[]) {
 
     // Determine what processing needs to occur based on the inputs, outputs, and commands
 
-    // setup the processing steps
+    // setup the commands in the pipeline
     processing_steps_t processing_steps;
     bool last_command = false;
 
