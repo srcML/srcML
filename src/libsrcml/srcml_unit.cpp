@@ -25,8 +25,6 @@
 
 #include <UTF8CharBuffer.hpp>
 
-#include <boost/date_time/posix_time/posix_time.hpp>
-
 /******************************************************************************
  *                                                                            *
  *                           Set up functions                                 *
