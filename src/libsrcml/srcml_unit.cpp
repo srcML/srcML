@@ -25,8 +25,6 @@
 
 #include <UTF8CharBuffer.hpp>
 
-#include <boost/date_time/posix_time/posix_time.hpp>
-
 /******************************************************************************
  *                                                                            *
  *                           Set up functions                                 *
@@ -354,17 +352,13 @@ const char* srcml_unit_get_xml(struct srcml_unit* unit) {
  */
 static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer * input, OPTION_TYPE translation_options) {
 
-    boost::optional<std::string> timestamp = !unit->timestamp
-        &&  (translation_options & SRCML_OPTION_TIMESTAMP) ?
-        boost::posix_time::to_simple_string(boost::posix_time::second_clock::universal_time()) : unit->timestamp;
-
     xmlBuffer * output_buffer = xmlBufferCreate();
     try {
 
         unit->archive->translator->translate_separate(unit->directory ? unit->directory->c_str() : 0,
                                                       unit->filename ? unit->filename->c_str() : 0,
                                                       unit->version ? unit->version->c_str() : 0,
-                                                      timestamp ? timestamp->c_str() : 0,
+                                                      unit->timestamp ? unit->timestamp->c_str() : 0,
                                                       unit->hash ? unit->hash->c_str() : (translation_options & SRCML_OPTION_HASH ? "" : 0),
                                                       lang, input, output_buffer,
                                                       translation_options);

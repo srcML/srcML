@@ -129,8 +129,8 @@ const OPTION_TYPE OPTION_COMPRESSED  = ull(1) << __COUNTER__; /* 13 */
 const OPTION_TYPE OPTION_NESTIF  = ull(1) << __COUNTER__; /* 14 */
 
 // @src2srcml
-/** option to output a timestamp attribute */
-const OPTION_TYPE OPTION_TIMESTAMP  = ull(1) << __COUNTER__; /* 15 */
+/** option to output a hash attribute */
+const OPTION_TYPE OPTION_HASH  = ull(1) << __COUNTER__; /* 15 */
 
 // end SRCML_OPTIONS
 
