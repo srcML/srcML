@@ -769,7 +769,6 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
     try {
 
         archive->translator = new srcml_translator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
                                                   archive->encoding ? archive->encoding->c_str() : "UTF-8",
                                                   output_buffer,
                                                   archive->options,
@@ -817,7 +816,6 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
     try {
 
         archive->translator = new srcml_translator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
                                                   archive->encoding ? archive->encoding->c_str() : "UTF-8",
                                                   buffer,
                                                   size,
@@ -863,7 +861,6 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
     try {
 
         archive->translator = new srcml_translator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
                                                   archive->encoding ? archive->encoding->c_str() : "UTF-8",
                                                   output_buffer,
                                                   archive->options,
@@ -913,7 +910,6 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
     try {
 
         archive->translator = new srcml_translator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
                                                   archive->encoding ? archive->encoding->c_str() : "UTF-8",
                                                   output_buffer,
                                                   archive->options,

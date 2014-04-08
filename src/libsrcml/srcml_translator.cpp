@@ -70,7 +70,6 @@ char * strnstr(const char *s1, const char *s2, size_t n) {
 /** 
  * srcml_translator
  * @param language what language to parse in
- * @param src_encoding input source code encoding
  * @param xml_encoding output srcML encoding
  * @param str_buf buffer to assign output srcML
  * @param size integer to assign size of resulting srcML
@@ -87,7 +86,6 @@ char * strnstr(const char *s1, const char *s2, size_t n) {
  * Constructor for output to memory.
  */
 srcml_translator::srcml_translator(int language,
-                                 const char* src_encoding,
                                  const char* xml_encoding,
                                  char ** str_buf,
                                  int * size,
@@ -101,7 +99,7 @@ srcml_translator::srcml_translator(int language,
                                  std::vector<std::string> & uri,
                                  int tabsize)
     :  Language(language), first(true), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
-       xml_encoding(xml_encoding), options(op), buffer(0),
+       options(op), buffer(0),
        out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
        prefix(prefix), uri(uri), str_buffer(str_buf), size(size) {
 
@@ -114,7 +112,6 @@ srcml_translator::srcml_translator(int language,
 /** 
  * srcml_translator
  * @param language what language to parse in
- * @param src_encoding input source code encoding
  * @param xml_encoding output srcML encoding
  * @param output_buffer general libxml2 output buffer
  * @param op translator options
@@ -130,7 +127,6 @@ srcml_translator::srcml_translator(int language,
  * Constructor for output to libxml2 output buffer.
  */
 srcml_translator::srcml_translator(int language,
-                                 const char* src_encoding,
                                  const char* xml_encoding,
                                  xmlOutputBuffer * output_buffer,
                                  OPTION_TYPE& op,
@@ -144,7 +140,7 @@ srcml_translator::srcml_translator(int language,
                                  int tabsize)
     : Language(language), first(true),
       directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
-      xml_encoding(xml_encoding), options(op), buffer(0),
+      options(op), buffer(0),
       out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize), prefix(prefix), uri(uri),
       str_buffer(0), size(0) {}
 

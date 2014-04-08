@@ -55,7 +55,6 @@ public:
 
     // constructor
     srcml_translator(int language,
-                    const char* src_encoding,
                     const char* xml_encoding,
                     char** str_buf,
                     int * size,
@@ -72,7 +71,6 @@ public:
 
     // constructor
     srcml_translator(int language,
-                    const char* src_encoding,
                     const char* xml_encoding,
                     xmlOutputBuffer * output_buffer,
                     OPTION_TYPE& options,
@@ -117,9 +115,6 @@ private:
 
     /** the unit hash attribute */
     const char* hash;
-
-    /** the output encoding */
-    const char* xml_encoding;
 
     /** translation options */
     OPTION_TYPE& options;

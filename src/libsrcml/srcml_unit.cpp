@@ -358,7 +358,6 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
     try {
 
         srcml_translator translator(lang,
-            unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1",
             unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8",
             obuffer,
             translation_options,
