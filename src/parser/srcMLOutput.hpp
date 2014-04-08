@@ -56,15 +56,13 @@ class srcMLOutput : public srcMLParserTokenTypes {
 public:
     // constructor
     srcMLOutput(TokenStream* ints,
-                const char* srcml_filename,
+                xmlOutputBuffer * output_buffer,
                 const char* language,
                 const char* encoding,
                 OPTION_TYPE& option,
                 std::vector<std::string> & prefix,
                 std::vector<std::string> & uri,
-                int tabsize,
-                xmlOutputBuffer * output_buffer = 0
-                );
+                int tabsize);
 
     void setOutputBuffer(xmlOutputBufferPtr output_buffer);
     void initWriter();
@@ -81,7 +79,7 @@ public:
                    const char* unit_directory, const char* unit_filename,
                    const char* unit_version, const char* unit_timestamp,
                    const char* unit_hash,
-                   bool outer);
+                   bool output_macrolist);
 
     // consume the entire tokenstream with output of srcml
     void consume(const char* language, const char* unit_directory, const char* unit_filename,
@@ -106,14 +104,14 @@ public:
     ~srcMLOutput();
 
 public:
-    /** token stream inpu */
+    /** token stream input */
     TokenStream* input;
 
     /** output xml writer */
     xmlTextWriter* xout;
-
-    /** output filename if used */
-    const char* srcml_filename;
+    
+    /** output buffer */
+    xmlOutputBuffer * output_buffer;
 
     /** unit attribute language */
     const char* unit_language;
@@ -160,9 +158,6 @@ public:
     /** number of units output or depth into archive */
     int depth;
 
-    /** output buffer if used */
-    xmlOutputBuffer * output_buffer;
-
     /** starting time for debug stopwatch */
     boost::posix_time::ptime debug_time_start;
 
@@ -183,7 +178,7 @@ public:
 
     void processUnit(const antlr::RefToken& token);
 
-    void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer);
+    void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth);
 
     void setMacroList(std::vector<std::string> & list);
     void outputMacroList();

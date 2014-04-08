@@ -151,8 +151,6 @@ struct srcml_unit {
 
     /** store if attributes have been read */
     bool read_header;
-    /** indicate if hash needs added to output */
-    bool output_hash;
     /** a buffer to store srcml from read and after parsing */
     boost::optional<std::string> unit;
 };

@@ -29,6 +29,7 @@
 
 #include <Language.hpp>
 #include <srcMLOutput.hpp>
+#include <srcml.h>
 
 #include <string>
 
@@ -51,19 +52,6 @@ class UTF8CharBuffer;
 */
 class srcMLTranslator : public Language {
 public:
-
-    srcMLTranslator(int language,
-                    const char* src_encoding,
-                    const char* xml_encoding,
-                    const char* srcml_filename,
-                    OPTION_TYPE& options,
-                    const char* directory,
-                    const char* filename,
-                    const char* version,
-                    std::vector<std::string> & prefix,
-                    std::vector<std::string> & uri,
-                    int tabsize
-                    );
 
     // constructor
     srcMLTranslator(int language,
@@ -115,7 +103,7 @@ public:
                             int language, UTF8CharBuffer * parser_input, xmlBuffer* output_buffer,
                             OPTION_TYPE translation_options);
 
-    void add_unit(std::string xml, const char * hash);
+    void add_unit(const srcml_unit * unit, const char * xml);
     void add_raw_len(const char * content, size_t length);
 
     // destructor

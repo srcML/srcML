@@ -31,6 +31,7 @@
 #include "StreamMLParser.hpp"
 #include "srcMLOutput.hpp"
 #include "srcmlns.hpp"
+#include <srcml_types.hpp>
 
 #include <cstring>
 
@@ -72,39 +73,6 @@ char * strnstr(const char *s1, const char *s2, size_t n) {
  * @param language what language to parse in
  * @param src_encoding input source code encoding
  * @param xml_encoding output srcML encoding
- * @param srcml_filename name of resultant srcML file
- * @param op translator options
- * @param directory root unit directory attribute
- * @param filename unit directory attribute
- * @param version root unit directory attribute
- * @param prefix namespace prefix array
- * @param uri namespace uri array
- * @param tabsize size of tabstop
- * 
- * Constructor for output to a filename.
- */
-srcMLTranslator::srcMLTranslator(int language,
-                                 const char* src_encoding,
-                                 const char* xml_encoding,
-                                 const char* srcml_filename,
-                                 OPTION_TYPE& op,
-                                 const char* directory,
-                                 const char* filename,
-                                 const char* version,
-                                 std::vector<std::string> & prefix,
-                                 std::vector<std::string> & uri,
-                                 int tabsize)
-    : Language(language), pinput(0), first(true),
-      root_directory(directory), root_filename(filename), root_version(version),
-      encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
-      out(0, srcml_filename, getLanguageString(), xml_encoding, options, prefix, uri, tabsize, 0), tabsize(tabsize), prefix(prefix), uri(uri),
-      str_buffer(0), size(0) {}
-
-/** 
- * srcMLTranslator
- * @param language what language to parse in
- * @param src_encoding input source code encoding
- * @param xml_encoding output srcML encoding
  * @param str_buf buffer to assign output srcML
  * @param size integer to assign size of resulting srcML
  * @param op translator options
@@ -131,7 +99,7 @@ srcMLTranslator::srcMLTranslator(int language,
                                  int tabsize)
     :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
        encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
-       out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize, 0), tabsize(tabsize),
+       out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
        prefix(prefix), uri(uri), str_buffer(str_buf), size(size) {
 
     buffer = xmlBufferCreate();
@@ -170,7 +138,7 @@ srcMLTranslator::srcMLTranslator(int language,
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
       encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
-      out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize, output_buffer), tabsize(tabsize), prefix(prefix), uri(uri),
+      out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize), prefix(prefix), uri(uri),
       str_buffer(0), size(0) {}
 
 /**
@@ -326,7 +294,7 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
                                          OPTION_TYPE translation_options) {
 
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler("UTF-8"));
-    srcMLOutput sep_out(0, 0, getLanguageString(), xml_encoding, translation_options, prefix, uri, tabsize, obuffer);
+    srcMLOutput sep_out(0, obuffer, getLanguageString(), xml_encoding, translation_options, prefix, uri, tabsize);
     sep_out.initWriter();
     sep_out.setMacroList(user_macro_list);
 
@@ -379,14 +347,14 @@ void srcMLTranslator::translate_separate(const char* unit_directory,
 
 /**
  * add_unit
- * @param xml srcML to add to archive/non-archive
+ * @param unit srcML to add to archive/non-archive with configuration options
  * @param hash a possible hash to include with xml output as attribute
  *
  * Add a unit as string directly to the archive.  If not an archive
  * and supplied unit does not have src namespace add it.  Also, write out
  * a supplied hash as part of output unit if specified.
  */
-void srcMLTranslator::add_unit(std::string xml, const char * hash) {
+void srcMLTranslator::add_unit(const srcml_unit * unit, const char * xml) {
 
     if(first) {
 
@@ -406,74 +374,38 @@ void srcMLTranslator::add_unit(std::string xml, const char * hash) {
 
     first = false;
 
-    char * cxml = (char *)xml.c_str();
+    char * end_start_unit = strchr(xml, '>');
+    if(!end_start_unit) return;
 
-    if(!isoption(options, OPTION_ARCHIVE)) {
+    /** extract language */
+    char * language_start_name = strnstr(xml, "language", end_start_unit - xml);
+    char * language_start_value = strchr(language_start_name, '"');
+    char * language_end_value = strchr(language_start_value + 1, '"');
+    (*language_end_value) = '\0';
 
-        char * pos = strchr(cxml, '>');
-        if(pos == 0) return;
+    /** is there a cpp namespace */
+    bool is_cpp = strnstr(xml, SRCML_CPP_NS_URI, end_start_unit - xml) != 0;
 
-        char * src_ns_pos = strnstr(cxml, SRCML_SRC_NS_URI, pos - cxml);
+    OPTION_TYPE save_options = options;
+    if(is_cpp) options |= SRCML_OPTION_CPP;
 
-        if(src_ns_pos == 0) {
+    out.startUnit(language_start_value + 1, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
+                          unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, false);
 
-            char * unit_pos = strstr(cxml, "unit");
+    options = save_options;
+    (*language_end_value) = '"';
 
-            std::string ns = " xmlns";
+    size_t size = strlen(end_start_unit);
 
-            if((unit_pos - cxml) != 1) {
+    while(end_start_unit[--size] != '/')
+  ;
 
-                ns += ":";
-                char * colon_pos = strchr(cxml, ':');
-                colon_pos[0] = 0;
-                ns += (cxml + 1);
-                colon_pos[0] = ':';
+    if(end_start_unit[size - 1] == '<')
+      --size;
 
-            }
+    xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)end_start_unit + 1, (int)size - 1);
 
-            ns += "=\"";
-            ns += SRCML_SRC_NS_URI;
-            ns += "\"";
-
-            // write out up to unit
-            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)cxml, (int)((unit_pos + 4) - cxml));
-
-            // write out namespace declaration
-            xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)ns.c_str());
-
-            // update pointer for remaining
-            cxml = unit_pos + 4;
-
-        }
-
-    } 
-
-    if(hash) {
-
-        char * pos = strchr(cxml, '>');
-        if(pos == 0) return;
-
-        char * hash_pos = strnstr(cxml, "hash", pos - cxml);
-
-        if(hash_pos != 0) {
-
-            char * start_value = strchr(hash_pos, '"');
-
-            xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)cxml, (int)((start_value + 1) - cxml));
-            xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)hash);
-            cxml = start_value + 1;
-
-            // consume hash if already there this is generic may consider using just 20 for standard hash size
-            if(cxml[0] != '"')
-                cxml = strchr(cxml, '"');
-
-        }
-
-
-    } 
-
-    xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)cxml);
-
+    out.srcMLTextWriterEndElement(out.getWriter());
 
     if ((options & OPTION_ARCHIVE) > 0)
         out.processText("\n\n", 2);

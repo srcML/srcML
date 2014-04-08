@@ -760,6 +760,9 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
 
     if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(srcml_filename, 0, archive->options & SRCML_OPTION_COMPRESS);
+    if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
+
     archive->type = SRCML_ARCHIVE_WRITE;
 
     if(archive->user_macro_list.size()) archive->options |= OPTION_MACRO_LIST;
@@ -769,7 +772,7 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
         archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
                                                   archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
                                                   archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                                  srcml_filename,
+                                                  output_buffer,
                                                   archive->options,
                                                   archive->directory ? archive->directory->c_str() : 0,
                                                   archive->filename ? archive->filename->c_str() : 0,
@@ -779,7 +782,12 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
                                                   archive->tabstop);
         archive->translator->setMacroList(archive->user_macro_list);
 
-    } catch(...) { return SRCML_STATUS_IO_ERROR; }
+    } catch(...) { 
+
+        xmlOutputBufferClose(output_buffer);
+        return SRCML_STATUS_IO_ERROR; 
+
+    }
 
     return SRCML_STATUS_OK;
 
@@ -1120,8 +1128,7 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
     if(!unit->unit && !read_unit) return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
-    archive->translator->add_unit(read_unit ? read_unit->c_str() : *unit->unit,
-                                  unit->output_hash && unit->hash ? unit->hash->c_str() : 0);
+    archive->translator->add_unit(unit, read_unit ? read_unit->c_str() : unit->unit->c_str());
 
     return SRCML_STATUS_OK;
 }

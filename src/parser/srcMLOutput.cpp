@@ -362,17 +362,16 @@ namespace {
  * Constructor. Handles all outputs.
  */
 srcMLOutput::srcMLOutput(TokenStream* ints,
-                         const char* filename,
+                         xmlOutputBuffer * output_buffer,
                          const char* language,
                          const char* xml_enc,
                          OPTION_TYPE& op,
                          std::vector<std::string> & prefix,
                          std::vector<std::string> & uri,
-                         int ts,
-                         xmlOutputBuffer * output_buffer)
-    : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
+                         int ts)
+    : input(ints), xout(0), output_buffer(output_buffer), unit_language(language), unit_dir(0), unit_filename(0),
       unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(prefix), num2uri(uri)
-    , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), output_buffer(output_buffer),
+    , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0),
       debug_time_start(boost::posix_time::microsec_clock::universal_time())
 {
 
@@ -399,20 +398,10 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 void srcMLOutput::initWriter() {
 
     // open the output text writer stream
-    // "-" filename is standard output
-    if (output_buffer == 0) {
-        xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
-        if (!xout) {
-            fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
-            exit(2);
-        }
-    } else {
-
-        xout = xmlNewTextWriter(output_buffer);
-        if (!xout) {
-            fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
-            exit(2);
-        }
+    xout = xmlNewTextWriter(output_buffer);
+    if (!xout) {
+        fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
+        exit(2);
     }
 
 }
@@ -649,7 +638,7 @@ void srcMLOutput::outputXMLDecl() {
  *
  * Output the namespaces on the units.
  */
-void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer) {
+void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth) {
 
     // figure out which namespaces are needed
     char const * const ns[] = {
@@ -658,7 +647,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
         (depth == 0) ? SRCML_SRC_NS_URI : 0,
 
         // main cpp namespace declaration
-        isoption(OPTION_CPP, options) && (isoption(OPTION_ARCHIVE, options) == !outer) ? SRCML_CPP_NS_URI : 0,
+        isoption(OPTION_CPP, options) && (isoption(OPTION_ARCHIVE, options) == !(depth == 0)) ? SRCML_CPP_NS_URI : 0,
 
         // optional debugging xml namespace
         (depth == 0) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
@@ -693,16 +682,20 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
         xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
     }
 
-    for(std::vector<std::string>::size_type pos =  SRCML_EXT_POSITION_NS_URI_POS + 1; pos < num2prefix.size(); ++pos) {
+    if(depth == 0) {
 
-        std::string prefix = "xmlns";
-        if (num2prefix[pos][0] != '\0') {
-            prefix += ':';
-            prefix += num2prefix[pos];
-        }
+        for(std::vector<std::string>::size_type pos =  SRCML_EXT_POSITION_NS_URI_POS + 1; pos < num2prefix.size(); ++pos) {
+
+            std::string prefix = "xmlns";
+            if (num2prefix[pos][0] != '\0') {
+                prefix += ':';
+                prefix += num2prefix[pos];
+         }
         
-        xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST num2uri[pos].c_str());
+            xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST num2uri[pos].c_str());
             
+        }
+
     }
 
 }
@@ -722,7 +715,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename,
                             const char* version, const char* timestamp,
                             const char* hash,
-                            bool outer) {
+                            bool output_macrolist) {
 
     const char * prefix = num2prefix[0].c_str();
     std::string maintag = prefix ? prefix : "";
@@ -735,7 +728,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
     // outer units have namespaces
     if (/* outer && */ isoption(OPTION_NAMESPACEDECL)) {
-        outputNamespaces(xout, options, depth, outer);
+        outputNamespaces(xout, options, depth);
     }
 
     // setting up for tabs, even if not used
@@ -802,7 +795,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
         xmlTextWriterWriteAttribute(xout, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
     }
 
-    if(outer) outputMacroList();
+    if(output_macrolist) outputMacroList();
 
     ++depth;
 }

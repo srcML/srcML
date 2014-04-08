@@ -365,7 +365,7 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
                                                       unit->filename ? unit->filename->c_str() : 0,
                                                       unit->version ? unit->version->c_str() : 0,
                                                       timestamp ? timestamp->c_str() : 0,
-                                                      unit->hash ? unit->hash->c_str() : (unit->output_hash ? "" : 0),
+                                                      unit->hash ? unit->hash->c_str() : (translation_options & SRCML_OPTION_HASH ? "" : 0),
                                                       lang, input, output_buffer,
                                                       translation_options);
     } catch(...) {
@@ -421,12 +421,12 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
     UTF8CharBuffer * input = 0;
-    unit->output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
+    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
         input = new UTF8CharBuffer(src_filename, unit->encoding ? unit->encoding->c_str()
                                    : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"),
-                                   unit->output_hash ? &unit->hash : 0);
+                                   output_hash ? &unit->hash : 0);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
@@ -468,12 +468,12 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
     UTF8CharBuffer * input = 0;
-    unit->output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
+    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
         input = new UTF8CharBuffer(src_buffer ? src_buffer : "", buffer_size, unit->encoding ? unit->encoding->c_str()
                                    : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"),
-                                   unit->output_hash ? &unit->hash : 0);
+                                   output_hash ? &unit->hash : 0);
 
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
@@ -514,12 +514,12 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
     UTF8CharBuffer * input = 0;
-    unit->output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
+    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
         input = new UTF8CharBuffer(src_file, unit->encoding ? unit->encoding->c_str()
                                    : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"),
-                                   unit->output_hash ? &unit->hash : 0);
+                                   output_hash ? &unit->hash : 0);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
@@ -560,12 +560,12 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
     UTF8CharBuffer * input = 0;
-    unit->output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
+    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
         input = new UTF8CharBuffer(src_fd, unit->encoding ? unit->encoding->c_str()
                                    : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"),
-                                   unit->output_hash ? &unit->hash : 0);
+                                   output_hash ? &unit->hash : 0);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
@@ -831,7 +831,6 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
     } catch(...) { return 0; }
     unit->archive = archive;
     unit->read_header = false;
-    unit->output_hash = false;
 
     return unit;
 
