@@ -54,35 +54,33 @@ class srcml_translator : public Language {
 public:
 
     // constructor
-    srcml_translator(int language,
-                    const char* xml_encoding,
-                    char** str_buf,
-                    int * size,
-                    OPTION_TYPE& options,
-                    const char* directory,
-                    const char* filename,
-                    const char* version,
-                    const char* timestamp,
-                    const char* hash,
-                    std::vector<std::string> & prefix,
-                    std::vector<std::string> & uri,
-                    int tabsize
-                    );
+    srcml_translator(char ** str_buf,
+                     int * size,
+                     const char* xml_encoding,
+                     OPTION_TYPE & op,
+                     std::vector<std::string> & prefix,
+                     std::vector<std::string> & uri,
+                     int tabsize,
+                     int language,
+                     const char* directory,
+                     const char* filename,
+                     const char* version,
+                     const char* timestamp = 0,
+                     const char* hash = 0);
 
     // constructor
-    srcml_translator(int language,
-                    const char* xml_encoding,
-                    xmlOutputBuffer * output_buffer,
-                    OPTION_TYPE& options,
-                    const char* directory,
-                    const char* filename,
-                    const char* version,
-                    const char* timestamp,
-                    const char* hash,
-                    std::vector<std::string> & prefix,
-                    std::vector<std::string> & uri,
-                    int tabsize
-                    );
+    srcml_translator(xmlOutputBuffer * output_buffer,
+                     const char* xml_encoding,
+                     OPTION_TYPE& op,
+                     std::vector<std::string> & prefix,
+                     std::vector<std::string> & uri,
+                     int tabsize,
+                     int language,
+                     const char* directory,
+                     const char* filename,
+                     const char* version,
+                     const char* timestamp = 0, 
+                     const char* hash = 0);
 
     void set_macro_list(std::vector<std::string> & list);
 

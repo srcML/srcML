@@ -768,18 +768,17 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
 
     try {
 
-        archive->translator = new srcml_translator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                                  output_buffer,
-                                                  archive->options,
-                                                  archive->directory ? archive->directory->c_str() : 0,
-                                                  archive->filename ? archive->filename->c_str() : 0,
-                                                  archive->version ? archive->version->c_str() : 0,
-                                                  0,
-                                                  0,
-                                                  archive->prefixes,
-                                                  archive->namespaces,
-                                                  archive->tabstop);
+        archive->translator = new srcml_translator(
+                                                output_buffer,
+                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                                archive->options,
+                                                archive->prefixes,
+                                                archive->namespaces,
+                                                archive->tabstop,
+                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                                archive->directory ? archive->directory->c_str() : 0,
+                                                archive->filename ? archive->filename->c_str() : 0,
+                                                archive->version ? archive->version->c_str() : 0);
         archive->translator->set_macro_list(archive->user_macro_list);
 
     } catch(...) { 
@@ -815,19 +814,18 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
 
     try {
 
-        archive->translator = new srcml_translator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                                  buffer,
-                                                  size,
-                                                  archive->options,
-                                                  archive->directory ? archive->directory->c_str() : 0,
-                                                  archive->filename ? archive->filename->c_str() : 0,
-                                                  archive->version ? archive->version->c_str() : 0,
-                                                  0,
-                                                  0,
-                                                  archive->prefixes,
-                                                  archive->namespaces,
-                                                  archive->tabstop);
+        archive->translator = new srcml_translator(
+                                                buffer,
+                                                size,
+                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                                archive->options,
+                                                archive->prefixes,
+                                                archive->namespaces,
+                                                archive->tabstop,
+                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                                archive->directory ? archive->directory->c_str() : 0,
+                                                archive->filename ? archive->filename->c_str() : 0,
+                                                archive->version ? archive->version->c_str() : 0);
 
         archive->translator->set_macro_list(archive->user_macro_list);
 
@@ -860,18 +858,17 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
     try {
 
-        archive->translator = new srcml_translator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                                  output_buffer,
-                                                  archive->options,
-                                                  archive->directory ? archive->directory->c_str() : 0,
-                                                  archive->filename ? archive->filename->c_str() : 0,
-                                                  archive->version ? archive->version->c_str() : 0,
-                                                  0,
-                                                  0,
-                                                  archive->prefixes,
-                                                  archive->namespaces,
-                                                  archive->tabstop);
+        archive->translator = new srcml_translator(
+                                                output_buffer,
+                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                                archive->options,
+                                                archive->prefixes,
+                                                archive->namespaces,
+                                                archive->tabstop,
+                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                                archive->directory ? archive->directory->c_str() : 0,
+                                                archive->filename ? archive->filename->c_str() : 0,
+                                                archive->version ? archive->version->c_str() : 0);
 
         archive->translator->set_macro_list(archive->user_macro_list);
 
@@ -909,18 +906,17 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
 
     try {
 
-        archive->translator = new srcml_translator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                                  output_buffer,
-                                                  archive->options,
-                                                  archive->directory ? archive->directory->c_str() : 0,
-                                                  archive->filename ? archive->filename->c_str() : 0,
-                                                  archive->version ? archive->version->c_str() : 0,
-                                                  0,
-                                                  0,
-                                                  archive->prefixes,
-                                                  archive->namespaces,
-                                                  archive->tabstop);
+        archive->translator = new srcml_translator(
+                                                output_buffer,
+                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                                archive->options,
+                                                archive->prefixes,
+                                                archive->namespaces,
+                                                archive->tabstop,
+                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                                archive->directory ? archive->directory->c_str() : 0,
+                                                archive->filename ? archive->filename->c_str() : 0,
+                                                archive->version ? archive->version->c_str() : 0);
 
         archive->translator->set_macro_list(archive->user_macro_list);
 

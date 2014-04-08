@@ -69,35 +69,35 @@ char * strnstr(const char *s1, const char *s2, size_t n) {
 
 /** 
  * srcml_translator
- * @param language what language to parse in
- * @param xml_encoding output srcML encoding
  * @param str_buf buffer to assign output srcML
  * @param size integer to assign size of resulting srcML
+ * @param xml_encoding output srcML encoding
  * @param op translator options
+ * @param prefix namespace prefix array
+ * @param uri namespace uri array
+ * @param tabsize size of tabstop
+ * @param language what language to parse in
  * @param directory unit directory attribute
  * @param filename unit directory attribute
  * @param version unit directory attribute
  * @param timestamp unit timestamp attribute
  * @param hash unit hash attribute
- * @param prefix namespace prefix array
- * @param uri namespace uri array
- * @param tabsize size of tabstop
  * 
  * Constructor for output to memory.
  */
-srcml_translator::srcml_translator(int language,
-                                 const char* xml_encoding,
-                                 char ** str_buf,
+srcml_translator::srcml_translator(char ** str_buf,
                                  int * size,
+                                 const char* xml_encoding,
                                  OPTION_TYPE & op,
+                                 std::vector<std::string> & prefix,
+                                 std::vector<std::string> & uri,
+                                 int tabsize,
+                                 int language,
                                  const char* directory,
                                  const char* filename,
                                  const char* version,
                                  const char* timestamp,
-                                 const char* hash,
-                                 std::vector<std::string> & prefix,
-                                 std::vector<std::string> & uri,
-                                 int tabsize)
+                                 const char* hash)
     :  Language(language), first(true), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
        options(op), buffer(0),
        out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
@@ -111,33 +111,34 @@ srcml_translator::srcml_translator(int language,
 
 /** 
  * srcml_translator
- * @param language what language to parse in
- * @param xml_encoding output srcML encoding
  * @param output_buffer general libxml2 output buffer
+ * @param xml_encoding output srcML encoding
  * @param op translator options
+ * @param prefix namespace prefix array
+ * @param uri namespace uri array
+ * @param tabsize size of tabstop
+ * @param language what language to parse in
  * @param directory unit directory attribute
  * @param filename unit directory attribute
  * @param version unit directory attribute
  * @param timestamp unit timestamp attribute
  * @param hash unit hash attribute
- * @param prefix namespace prefix array
- * @param uri namespace uri array
- * @param tabsize size of tabstop
  * 
  * Constructor for output to libxml2 output buffer.
  */
-srcml_translator::srcml_translator(int language,
+srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* xml_encoding,
-                                 xmlOutputBuffer * output_buffer,
                                  OPTION_TYPE& op,
+
+                                 std::vector<std::string> & prefix,
+                                 std::vector<std::string> & uri,
+                                 int tabsize,
+                                 int language,
                                  const char* directory,
                                  const char* filename,
                                  const char* version,
                                  const char* timestamp, 
-                                 const char* hash, 
-                                 std::vector<std::string> & prefix,
-                                 std::vector<std::string> & uri,
-                                 int tabsize)
+                                 const char* hash)
     : Language(language), first(true),
       directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
       options(op), buffer(0),
