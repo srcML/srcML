@@ -174,7 +174,7 @@ void srcml_translator::close() {
 }
 
 /**
- * translate_separate
+ * translate
  * @param unit_directory unit directory attribute
  * @param unit_filename unit directory attribute
  * @param unit_version unit version attribute
@@ -188,7 +188,7 @@ void srcml_translator::close() {
  * Translate the supplied input (parser_input) with the given arguments separately
  * from translator output and put in supplied output buffer.
  */
-void srcml_translator::translate_separate(const char* unit_directory,
+void srcml_translator::translate(const char* unit_directory,
                                          const char* unit_filename,
                                          const char* unit_version,
                                          const char* unit_timestamp,
