@@ -353,15 +353,25 @@ const char* srcml_unit_get_xml(struct srcml_unit* unit) {
 static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer * input, OPTION_TYPE translation_options) {
 
     xmlBuffer * output_buffer = xmlBufferCreate();
+    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler("UTF-8"));
+
     try {
 
-        unit->archive->translator->translate(unit->directory ? unit->directory->c_str() : 0,
-                                                      unit->filename ? unit->filename->c_str() : 0,
-                                                      unit->version ? unit->version->c_str() : 0,
-                                                      unit->timestamp ? unit->timestamp->c_str() : 0,
-                                                      unit->hash ? unit->hash->c_str() : (translation_options & SRCML_OPTION_HASH ? "" : 0),
-                                                      lang, input, output_buffer,
-                                                      translation_options);
+        srcml_translator translator(lang,
+            unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1",
+            unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8",
+            obuffer,
+            translation_options,
+            unit->directory ? unit->directory->c_str() : 0,
+            unit->filename ? unit->filename->c_str() : 0,
+            unit->version ? unit->version->c_str() : 0,
+            unit->timestamp ? unit->timestamp->c_str() : 0,
+            unit->hash ? unit->hash->c_str() : (translation_options & SRCML_OPTION_HASH ? "" : 0),
+            unit->archive->prefixes,
+            unit->archive->namespaces,
+            unit->archive->tabstop);
+        translator.translate(input);
+
     } catch(...) {
 
         xmlBufferFree(output_buffer);

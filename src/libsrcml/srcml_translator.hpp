@@ -63,6 +63,8 @@ public:
                     const char* directory,
                     const char* filename,
                     const char* version,
+                    const char* timestamp,
+                    const char* hash,
                     std::vector<std::string> & prefix,
                     std::vector<std::string> & uri,
                     int tabsize
@@ -77,6 +79,8 @@ public:
                     const char* directory,
                     const char* filename,
                     const char* version,
+                    const char* timestamp,
+                    const char* hash,
                     std::vector<std::string> & prefix,
                     std::vector<std::string> & uri,
                     int tabsize
@@ -86,13 +90,7 @@ public:
 
     void close();
 
-    void translate(const char* unit_directory,
-                            const char* unit_filename,
-                            const char* unit_version,
-                            const char* unit_timestamp,
-                            const char* unit_hash,
-                            int language, UTF8CharBuffer * parser_input, xmlBuffer* output_buffer,
-                            OPTION_TYPE translation_options);
+    void translate(UTF8CharBuffer* parser_input);
 
     void add_unit(const srcml_unit * unit, const char * xml);
     void add_raw_len(const char * content, size_t length);
@@ -102,20 +100,23 @@ public:
 
 private:
 
-    /** input source */
-    UTF8CharBuffer* pinput;
-
     /** is this the first unit */
     bool first;
 
-    /** the root unit directory attribute */
-    const char* root_directory;
+    /** the unit directory attribute */
+    const char* directory;
 
-    /** the root unit filename attribute */
-    const char* root_filename;
+    /** the unit filename attribute */
+    const char* filename;
 
-    /** the root unit version attribute */
-    const char* root_version;
+    /** the unit version attribute */
+    const char* version;
+
+    /** the unit timestamp attribute */
+    const char* timestamp;
+
+    /** the unit hash attribute */
+    const char* hash;
 
     /** the output encoding */
     const char* xml_encoding;
