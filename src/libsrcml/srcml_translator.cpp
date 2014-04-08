@@ -192,8 +192,13 @@ void srcml_translator::translate(UTF8CharBuffer * parser_input) {
         // Open for write;
         out.initWriter();
 
+    first = false;
+
     // output as inner unit
-    out.setDepth(1);
+    if(isoption(options, SRCML_OPTION_ARCHIVE))
+      out.setDepth(1);
+
+    //options |= SRCML_OPTION_ARCHIVE;
 
     try {
 
