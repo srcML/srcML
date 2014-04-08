@@ -23,7 +23,7 @@
 
 #include <Options.hpp>
 #include <Language.hpp>
-#include <LanguageExtensionRegistry.hpp>
+#include <language_extension_registry.hpp>
 #include <srcml_translator.hpp>
 
 #include <boost/optional.hpp>
@@ -106,7 +106,7 @@ struct srcml_archive {
     std::vector<std::string> namespaces;
 
     /** an array of registered extension language pairs */
-    LanguageExtensionRegistry registered_languages;
+    language_extension_registry registered_languages;
 
     /** an array of user defined macros and their types */
     std::vector<std::string> user_macro_list;

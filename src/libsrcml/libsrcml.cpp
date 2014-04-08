@@ -27,7 +27,7 @@
 #include <srcml_sax2_utilities.hpp>
 
 #include <Language.hpp>
-#include <LanguageExtensionRegistry.hpp>
+#include <language_extension_registry.hpp>
 #include <Options.hpp>
 #include <srcmlns.hpp>
 
@@ -58,7 +58,7 @@ std::string srcml_error;
  */
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL,
-                                 8, std::vector<std::string>(), std::vector<std::string>(), LanguageExtensionRegistry(),
+                                 8, std::vector<std::string>(), std::vector<std::string>(), language_extension_registry(),
                                  std::vector<std::string>(), 0, 0, 0, std::vector<transform>() };
 
 /**
@@ -152,9 +152,9 @@ int srcml(const char* input_filename, const char* output_filename) {
     if(register_languages) {
 
         register_languages = false;
-        LanguageExtensionRegistry registry = global_archive.registered_languages;
+        language_extension_registry registry = global_archive.registered_languages;
 
-        global_archive.registered_languages = LanguageExtensionRegistry();
+        global_archive.registered_languages = language_extension_registry();
 
         global_archive.registered_languages.register_standard_file_extensions();
 
@@ -770,9 +770,9 @@ const char * srcml_check_extension(const char* filename) {
     if(register_languages) {
 
         register_languages = false;
-        LanguageExtensionRegistry registry = global_archive.registered_languages;
+        language_extension_registry registry = global_archive.registered_languages;
 
-        global_archive.registered_languages = LanguageExtensionRegistry();
+        global_archive.registered_languages = language_extension_registry();
 
         global_archive.registered_languages.register_standard_file_extensions();
 

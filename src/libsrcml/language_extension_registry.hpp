@@ -1,5 +1,5 @@
 /**
- * @file LanguageExtensionRegistry.hpp
+ * @file language_extension_registry.hpp
  *
  * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -37,23 +37,23 @@ typedef std::pair<std::string, int> language_extension;
 #define get_language(OBJ) OBJ.second
 
  /**
-  * LanguageExtensionRegistryError
+  * language_extension_registry_error
   *
-  * Error class thrown for improper access of LanguageExtensionRegistry.
+  * Error class thrown for improper access of language_extension_registry.
   */
-class LanguageExtensionRegistryError {};
+class language_extension_registry_error {};
 
 /**
- * LanguageExtensionRegistry
+ * language_extension_registry
  *
  * Data class for language extensions.
  */
-class LanguageExtensionRegistry {
+class language_extension_registry {
 
 public:
 
-    LanguageExtensionRegistry();
-    ~LanguageExtensionRegistry();
+    language_extension_registry();
+    ~language_extension_registry();
 
     bool registerUserExt(const char* ext, int language);
     bool registerUserExt(const char* ext, const char* language);
@@ -70,7 +70,7 @@ public:
 
     language_extension at(unsigned int pos) const;
 
-    void append(LanguageExtensionRegistry registry);
+    void append(language_extension_registry registry);
 
 private:
 
