@@ -27,11 +27,40 @@
 #include <string>
 #include <algorithm>
 #include <boost/bind.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/lambda/lambda.hpp>
 
 // Extension that map to archive types
-struct archive_calls_t { const char *name; int (*setter)(struct archive *); };
+struct archive_calls_t { char const * const name; int (*setter)(struct archive *); };
 
-static archive_calls_t format_calls[] = {
+// TEMP_NOTE: To turn this feature on, enable "-std=c++11" by setting line 160
+// to: set(CMAKE_CXX_FLAGS "-fPIC -O3 -std=c++11 ${CLANG_WARNINGS}")
+// in srcML/CMake/config.cmake
+#if __has_feature(cxx_constexpr)
+
+constexpr bool isequal(char const* s1, char const* s2) {
+  return *s1 && *s2 ? *s1 == *s2 && isequal(s1 + 1, s2 + 1) : !*s1 && !*s2;
+}
+
+constexpr bool islessthanorequal(char const* s1, char const* s2) {
+  return *s1 && *s2 ? (*s1 != *s2 ? *s1 < *s2 : islessthanorequal(s1 + 1, s2 + 1)) : !*s1;
+}
+BOOST_STATIC_ASSERT(islessthanorequal("a", "a"));
+BOOST_STATIC_ASSERT(islessthanorequal("a", "b"));
+BOOST_STATIC_ASSERT(!islessthanorequal("b", "a"));
+BOOST_STATIC_ASSERT(islessthanorequal("aa", "aa"));
+BOOST_STATIC_ASSERT(islessthanorequal("aa", "ab"));
+BOOST_STATIC_ASSERT(!islessthanorequal("ab", "aa"));
+
+constexpr bool isordered(const archive_calls_t* p) {
+    return !(p->name) || !((p + 1)->name) ? true : islessthanorequal(p->name, (p+1)->name) && isordered(p + 1);
+}
+
+#endif
+
+// map from file extension to libarchive write format calls
+// Note: Must be ordered
+static constexpr archive_calls_t format_calls[] = {
 #if ARCHIVE_VERSION_NUMBER >= 3000000
     { ".7z", 0 },
 #endif
@@ -67,29 +96,43 @@ static archive_calls_t format_calls[] = {
     { ".tlz", 0 },  // (archive w/ compression)
     { ".txz", 0 },  // (archive w/ compression)
     { ".xar", 0 },
-    { ".zip", archive_write_set_format_zip }  // (archive w/ compression)
+    { ".zip", archive_write_set_format_zip },  // (archive w/ compression)
+    { NULL, NULL }
 };
+#if __has_feature(cxx_constexpr)
+BOOST_STATIC_ASSERT(isordered(format_calls));
+#endif
 
-// Extension that map to compression types
-static archive_calls_t compression_calls[] = {
+// map from file extension to libarchive write compression calls
+// Note: Must be ordered
+static constexpr archive_calls_t compression_calls[] = {
     { ".bz"  , 0 },
     { ".bz2" , archive_write_set_compression_bzip2 },
     { ".gz"  , archive_write_set_compression_gzip },
     { ".lz"  , 0 },
     { ".lzma", archive_write_set_compression_lzma },
     { ".xz"  , archive_write_set_compression_xz },
-    { ".z"   , archive_write_set_compression_compress }
+    { ".z"   , archive_write_set_compression_compress },
+    { NULL, NULL }
 };
+#if __has_feature(cxx_constexpr)
+BOOST_STATIC_ASSERT(isordered(compression_calls));
+#endif
 
 bool compare(const archive_calls_t& call, const char* extension) {
 
     return strcmp(extension, call.name) == 0;
 }
 
+bool comparenames(const archive_calls_t& call, const archive_calls_t& call2) {
+
+    return strcmp(call.name, call2.name) == 0;
+}
+
 int archive_write_set_format_by_extension(struct archive* ar, const char* extension) {
 
-    archive_calls_t* end = format_calls + sizeof(format_calls) / sizeof(format_calls[0]);
-    archive_calls_t* p = std::find_if(format_calls, end, boost::bind(compare, _1, extension));
+    const archive_calls_t* end = format_calls + sizeof(format_calls) / sizeof(format_calls[0]) - 1;
+    const archive_calls_t* p = std::find_if(format_calls, end, boost::bind(compare, _1, extension));
     if (p != end && p->setter)
         return (p->setter)(ar);
 
@@ -99,8 +142,8 @@ int archive_write_set_format_by_extension(struct archive* ar, const char* extens
 
 int archive_write_set_compression_by_extension(struct archive* ar, const char* extension) {
 
-    archive_calls_t* end = compression_calls + sizeof(compression_calls) / sizeof(compression_calls[0]);
-    archive_calls_t* p = std::find_if(compression_calls, end, boost::bind(compare, _1, extension));
+    const archive_calls_t* end = compression_calls + sizeof(compression_calls) / sizeof(compression_calls[0]) - 1;
+    const archive_calls_t* p = std::find_if(compression_calls, end, boost::bind(compare, _1, extension));
     if (p != end && p->setter)
         return (p->setter)(ar);
 
@@ -108,17 +151,18 @@ int archive_write_set_compression_by_extension(struct archive* ar, const char* e
     return ARCHIVE_FATAL;
 }
 
-
 bool is_archive(const std::string& extension) {
 
-    archive_calls_t* end = format_calls + sizeof(format_calls) / sizeof(format_calls[0]);
+    const archive_calls_t* end = format_calls + sizeof(format_calls) / sizeof(format_calls[0]) - 1;
+    archive_calls_t searchvalue = { extension.c_str(), 0 };
 
-    return std::find_if(format_calls, end, boost::bind(compare, _1, extension.c_str())) != end;
+    return std::binary_search(format_calls, end, searchvalue, comparenames);
 }
 
 bool is_compressed(const std::string& extension) {
 
-    archive_calls_t* end = compression_calls + sizeof(compression_calls) / sizeof(compression_calls[0]);
+    const archive_calls_t* end = compression_calls + sizeof(compression_calls) / sizeof(compression_calls[0]) - 1;
+    archive_calls_t searchvalue = { extension.c_str(), 0 };
 
-    return std::find_if(compression_calls, end, boost::bind(compare, _1, extension.c_str())) != end;
+    return std::binary_search(compression_calls, end, searchvalue, comparenames);
 }
