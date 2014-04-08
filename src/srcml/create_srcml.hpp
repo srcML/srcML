@@ -32,7 +32,8 @@ void create_srcml(const srcml_request_t& srcml_request,
                   const srcml_input_t& input_sources,
                   const srcml_output_dest& destination);
 
-void create_srcml_handler(ParseQueue& queue, 
+// call appropriate handler based on input source
+void srcml_handler_dispatch(ParseQueue& queue, 
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
                           const srcml_input_src& input);

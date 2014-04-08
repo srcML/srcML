@@ -44,6 +44,6 @@ void src_input_filelist(ParseQueue& queue,
 		if (line[0] == '#')
 			continue;
 
-        create_srcml_handler(queue, srcml_arch, srcml_request, line);
+        srcml_handler_dispatch(queue, srcml_arch, srcml_request, line);
     }
 }

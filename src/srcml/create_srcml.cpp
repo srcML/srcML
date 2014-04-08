@@ -36,7 +36,7 @@
 #include <trace_log.hpp>
 #include <srcml_options.hpp>
 
-void create_srcml_handler(ParseQueue& queue,
+void srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
                           const srcml_input_src& input) {
@@ -136,7 +136,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         status = srcml_write_open_filename(srcml_arch, destination.c_str());
     }
 
-    // gzip compression available from libsrcml
+    // gzip compression available directly from libsrcml
     if (destination.extension == ".gz")
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_COMPRESS);
 
@@ -155,7 +155,8 @@ if (!contains<FILE*>(input) && (input.protocol == "stdin") && (srcml_request.com
 return; // stdin was requested, but no data was received
 }
 */
-        create_srcml_handler(parse_queue, srcml_arch, srcml_request, input);
+        srcml_handler_dispatch
+    (parse_queue, srcml_arch, srcml_request, input);
     }
 
     // wait for the parsing and writing queues to finish

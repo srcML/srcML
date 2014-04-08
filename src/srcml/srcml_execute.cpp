@@ -26,7 +26,6 @@
 #include <boost/thread.hpp>
 #pragma GCC diagnostic pop
 #include <boost/foreach.hpp>
-#include <boost/range.hpp>
 
 void srcml_execute(const srcml_request_t& srcml_request,
                    std::list<process_srcml>& pipeline,
