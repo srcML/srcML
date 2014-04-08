@@ -38,7 +38,7 @@ const char * srcml_archive_check_extension(srcml_archive * archive, const char* 
 
     if(archive == NULL || filename == NULL) return 0;
 
-    Language language(archive->registered_languages.getLanguageFromFilename(filename));
+    Language language(archive->registered_languages.get_language_from_filename(filename));
     const char * lang_string = language.getLanguageString();
     return strcmp(lang_string, "") == 0 ? 0 : lang_string;
 
@@ -375,7 +375,7 @@ int srcml_archive_register_file_extension(srcml_archive* archive, const char* ex
     if(archive == NULL || extension == NULL || language == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(archive->registered_languages.registerUserExt(extension, language))
+    if(archive->registered_languages.register_user_ext(extension, language))
         return SRCML_STATUS_OK;
     return SRCML_STATUS_INVALID_INPUT;
 }

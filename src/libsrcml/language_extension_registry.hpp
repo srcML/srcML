@@ -55,10 +55,10 @@ public:
     language_extension_registry();
     ~language_extension_registry();
 
-    bool registerUserExt(const char* ext, int language);
-    bool registerUserExt(const char* ext, const char* language);
+    bool register_user_ext(const char* ext, int language);
+    bool register_user_ext(const char* ext, const char* language);
 
-    int getLanguageFromFilename(const char* const path);
+    int get_language_from_filename(const char* const path);
 
     void register_standard_file_extensions();
 
