@@ -97,7 +97,7 @@ srcml_translator::srcml_translator(int language,
                                  std::vector<std::string> & uri,
                                  int tabsize)
     :  Language(language), pinput(0), first(true), root_directory(directory), root_filename(filename), root_version(version),
-       encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
+       xml_encoding(xml_encoding), options(op), buffer(0),
        out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
        prefix(prefix), uri(uri), str_buffer(str_buf), size(size) {
 
@@ -136,7 +136,7 @@ srcml_translator::srcml_translator(int language,
                                  int tabsize)
     : Language(language), pinput(0), first(true),
       root_directory(directory), root_filename(filename), root_version(version),
-      encoding(src_encoding), xml_encoding(xml_encoding), options(op), buffer(0),
+      xml_encoding(xml_encoding), options(op), buffer(0),
       out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize), prefix(prefix), uri(uri),
       str_buffer(0), size(0) {}
 
@@ -149,30 +149,6 @@ srcml_translator::srcml_translator(int language,
 void srcml_translator::set_macro_list(std::vector<std::string> & list) {
     user_macro_list = list;
     out.setMacroList(list);
-}
-
-/**
- * set_input
- * @param path path of input file
- *
- * Set the input to the file at given path
- */
-void srcml_translator::set_input(const char* path) {
-
-    try {
-
-        pinput = new UTF8CharBuffer(path, encoding, 0);
-
-    } catch (const std::exception& e) {
-        fprintf(stderr, "SRCML Exception: %s\n", e.what());
-    }
-    catch (UTF8FileError) {
-        throw FileError();
-    }
-    catch (...) {
-        fprintf(stderr, "ERROR\n");
-    }
-
 }
 
 /**

@@ -108,48 +108,6 @@ int main() {
 
     /*
 
-      set_input
-
-    */
-
-    {
-
-        xmlBufferPtr buffer = xmlBufferCreate();
-        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-        OPTION_TYPE op = 0;
-
-        srcml_translator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
-                                   output_buffer, op, "", "", "", namespace_prefix, namespace_uri, 4);
-
-        try {
-            translator.set_input("a.cpp");
-        } catch(...) { assert(false); }
-        translator.close();
-        xmlBufferFree(buffer);
-
-    }
-
-    {
-
-        xmlBufferPtr buffer = xmlBufferCreate();
-        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-        OPTION_TYPE op = 0;
-
-        srcml_translator translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1",
-                                   output_buffer, op, "", "", "", namespace_prefix, namespace_uri, 4);
-
-        try {
-            translator.set_input(NULL);
-            assert(false);
-        } catch(...) {}
-
-        translator.close();
-        xmlBufferFree(buffer);
-
-    }
-
-    /*
-
       translate_separate
 
     */

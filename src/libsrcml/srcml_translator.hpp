@@ -83,7 +83,6 @@ public:
                     );
 
     void set_macro_list(std::vector<std::string> & list);
-    void set_input(const char* path);
 
     void close();
 
@@ -125,9 +124,6 @@ private:
 
     /** the root unit version attribute */
     const char* root_version;
-
-    /** the input encoding */
-    const char* encoding;
 
     /** the output encoding */
     const char* xml_encoding;
