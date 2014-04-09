@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * Adds markup language capabilities and stream parsing to a Parser
- * class.  The stream parsing is added by the base class, StreamParser.
+ * class.  The stream parsing is added by the srcMLParser class, StreamParser.
  */
 
 #ifndef INCLUDED_STREAM_MLPARSER_HPP
@@ -34,79 +34,133 @@
 #include <cassert>
 
 #include "srcMLToken.hpp"
+#include "srcMLParser.hpp"
 #include "Options.hpp"
-#include "Mode.hpp"
+#include "ModeStack.hpp"
 
-template <typename Base>
-class StreamMLParser : public Base, public TokenStream {
+/**
+ * StreamMLParser
+ *
+ * Parses source code file in a stream fashion.
+ *
+ * srcMLOutput pull(requests tokens) which progressively parses/translates
+ * source code.
+ */
+class StreamMLParser : public srcMLParser, public TokenStream {
 
     // Follow example of ANTLR generated parsers
 public:
 
+    /**
+     * StreamMLParser
+     * @param lexer token stream lexer
+     * @param language parsing language
+     * @param parsing_options the parsing options
+     *
+     * Constructor.  Set up parser and start unit.
+     */
     StreamMLParser(antlr::TokenStream& lexer, int language, OPTION_TYPE & parsing_options)
-        : Base(lexer, language, parsing_options), options(parsing_options),
-          inskip(false), _lexer(lexer) {
+        : srcMLParser(lexer, language, parsing_options), options(parsing_options),
+          inskip(false) {
 
         pouttb = &tb;
         pskiptb = &skiptb;
 
-        Base::startUnit();
+        srcMLParser::startUnit();
     }
 
+    /**
+     * ~StreamMLParser
+     *
+     * Destructor.
+     */
     ~StreamMLParser() {}
 
-    // starts an element
+    /**
+     * startElement
+     * @param id element to start
+     *
+     * Starts an element id (xml tag).
+    */
     void startElement(int id) {
 
-        Base::currentState().push(id);
+        srcMLParser::currentState().push(id);
         pushSToken(id, true);
     }
 
-    // starts an element
+    /**
+     * startNoSkipElement
+     * @param id element to start
+     *
+     * Starts an element id (xml tag).  Do not output after skip tokens
+     * (usually whitespace).
+     */
     void startNoSkipElement(int id) {
 
-        Base::currentState().push(id);
+        srcMLParser::currentState().push(id);
         pushSToken(id, false);
     }
 
-    // ends an element
+    /**
+     * endElement
+     * @param id element to end
+     *
+     * End an element id (xml tag).
+     */
     void endElement(int id) {
-        if(Base::getMode() & Base::MODE_ISSUE_EMPTY_AT_POP)
+        if(srcMLParser::getMode() & srcMLParser::MODE_ISSUE_EMPTY_AT_POP)
             pushSToken(id, false);
 
         pushEToken(id);
-        Base::currentState().pop();
+        srcMLParser::currentState().pop();
     }
 
-    // starts an element
+    /**
+     * emptyElement
+     * @param id issue empty element
+     *
+     * Issue an empty element id (xml tag).
+     */
     void emptyElement(int id) {
 
         // push a empty element token
         pushToken(antlr::RefToken(EmptyTokenFactory(id)));
     }
 
-    // starts an element that is output when mode ends
+    /**
+     * addElement
+     * @param id element to add
+     *
+     * Starts an element id that is output when mode ends.
+     */
     void addElement(int id) {
 
-        Base::currentState().push(id);
+        srcMLParser::currentState().push(id);
     }
 
 private:
 
-    // token skipped during parsing
+    /**
+     * isSkipToken
+     * @param token_type token type to test if is a skip token
+     *
+     * Predictate testing if token should be skipped during parsing (e.g. whitespace/comments/preprocessor).
+     *
+     * @returns if the token should be skipped.
+     */
     bool isSkipToken(int token_type) const {
 
         switch (token_type) {
 
             // Always handled as white space and hidden from
             // parsing
-        case Base::WS:
-        case Base::CONTROL_CHAR:
-        case Base::EOL_BACKSLASH:
-        case Base::COMMENT_START:
-        case Base::COMMENT_END:
-        case Base::LINECOMMENT_END:
-        case Base::COMMENT_TEXT:
+        case srcMLParser::WS:
+        case srcMLParser::CONTROL_CHAR:
+        case srcMLParser::EOL_BACKSLASH:
+        case srcMLParser::COMMENT_START:
+        case srcMLParser::COMMENT_END:
+        case srcMLParser::LINECOMMENT_END:
+        case srcMLParser::COMMENT_TEXT:
             return true;
             break;
 
@@ -115,11 +169,11 @@ private:
             // where the detection of the end of the preprocessing line
             // is needed (preprocessing lines end at EOL, or the start of
             // a line comment)
-        case Base::LINECOMMENT_START:
-        case Base::JAVADOC_COMMENT_START:
-        case Base::DOXYGEN_COMMENT_START:
-        case Base::LINE_DOXYGEN_COMMENT_START:
-        case Base::EOL:
+        case srcMLParser::LINECOMMENT_START:
+        case srcMLParser::JAVADOC_COMMENT_START:
+        case srcMLParser::DOXYGEN_COMMENT_START:
+        case srcMLParser::LINE_DOXYGEN_COMMENT_START:
+        case srcMLParser::EOL:
 
             return !inskip;
             break;
@@ -132,7 +186,12 @@ private:
         }
     }
 
-    // fills the token buffer with new tokens
+    /**
+     * fillTokenBuffer
+     *
+     * Fills the token buffer with new tokens.
+     * Invokes parser.
+     */
     void fillTokenBuffer() {
 
         try {
@@ -143,12 +202,12 @@ private:
             }
 
             // more partial parsing to do
-            Base::start();
+            srcMLParser::start();
 
         } catch (const std::exception&) {
 
             // when an error occurs just insert an error element
-            emptyElement(Base::SERROR_PARSE);
+            emptyElement(srcMLParser::SERROR_PARSE);
         }
     }
 
@@ -156,39 +215,62 @@ private:
       Provide markup tag specific pushToken methods
     */
 
-    // push the start token onto the output token stream
+    /**
+     * pushSToken
+     * @param token token to push
+     * @param flush do we flush output
+     *
+     * Push the start token token onto the output token stream flushing skipped tokens before output
+     * if requested.
+     */
     void pushSToken(int token, bool flush = true) {
 
         // push a new start token
         pushToken(antlr::RefToken(StartTokenFactory(token)), flush);
     }
 
-    // push the end token with this number onto the output token stream
+    /**
+     * pushEToken
+     * @param token token to push
+     * @param flush do we flush output
+     *
+     * Push the end token token onto the output token stream no flushing skipped tokens before output.
+     */
     void pushEToken(int token) {
 
         // push a new end token
         pushToken(antlr::RefToken(EndTokenFactory(token)), false);
     }
 
-    // consume the current token
+    /**
+     * consume
+     *
+     * Consume the current token.
+     */
     void consume() {
 
         // push the token onto the correct output stream
         pushCorrectToken();
 
         // rest of consume process
-        Base::consume();
+        srcMLParser::consume();
 
         // consume any skipped tokens
         while (consumeSkippedToken())
             ;
     }
 
-    // consume a current token
+    /**
+     * consumeSkippedTokens
+     *
+     * Consume skip tokens if any and indicate if any where consumed.
+     *
+     * @returns if consumed any skip tokens.
+     */
     bool consumeSkippedToken() {
 
         // preprocessor (unless we already are in one)
-        if (isoption(options, OPTION_CPP) && !inskip && Base::LA(1) == Base::PREPROC) {
+        if (isoption(options, OPTION_CPP) && !inskip && srcMLParser::LA(1) == srcMLParser::PREPROC) {
 
             // start preprocessor handling
             inskip = true;
@@ -200,7 +282,7 @@ private:
             // parse preprocessor statement stopping at EOL
             try {
 
-                Base::preprocessor();
+                srcMLParser::preprocessor();
 
             } catch(...) {}
 
@@ -221,7 +303,7 @@ private:
         }
 
         // macro call
-        if (Base::LA(1) == Base::MACRO_NAME && !inskip) {
+        if (srcMLParser::LA(1) == srcMLParser::MACRO_NAME && !inskip) {
 
             inskip = true;
 
@@ -230,7 +312,7 @@ private:
             pskiptb = &skippretb;
 
             // parse macro_call
-            Base::macro_pattern_call();
+            srcMLParser::macro_pattern_call();
 
             // flush remaining whitespace from preprocessor handling onto preprocessor buffer
             pretb.splice(pretb.end(), skippretb);
@@ -247,12 +329,12 @@ private:
 
         }
 
-        if (isSkipToken(Base::LA(1))) {
+        if (isSkipToken(srcMLParser::LA(1))) {
             // skipped tokens are put on a special buffer
             pushSkipToken();
 
             // rest of consume process
-            Base::consume();
+            srcMLParser::consume();
 
             return true;
         }
@@ -261,16 +343,32 @@ private:
         return false;
     }
 
-    // flush any skipped tokens to the output token stream
+    /**
+     * flushSkip
+     *
+     * Flush any skipped tokens to the output token stream.
+     */
     void flushSkip() {
         flushSkip(output());
     }
 
+    /**
+     * SkipBufferSize
+     *
+     * Delegate to get the number of the skipped elements.
+     *
+     * @returns the number of skipped elements 
+     */
     int SkipBufferSize() {
         return (int)skiptb.size();
     }
 
-    // flush any skipped tokens to the output token stream
+    /**
+     * flushSkip
+     * @param rf list of antlr tokens
+     *
+     * Flush any skipped tokens to the output token stream.
+     */
     void flushSkip(std::list<antlr::RefToken>& rf) {
 
         rf.splice(rf.end(), skip());
@@ -280,7 +378,13 @@ private:
       Provide TokenStream interface
     */
 
-    // returns the next token in the output token stream
+    /**
+     * nextToken
+     * 
+     * Get the next token in the output token stream.
+     *
+     * @returns the next token in the output token stream.
+     */
     const antlr::RefToken& nextToken() {
 
         // assume primed
@@ -296,11 +400,17 @@ private:
         return tok;
     }
 
-    // push the token onto the output token stream
+    /**
+     * pushToken
+     * @param rtoken token to push onto output stream
+     * @param flush do we flush output (skip tokens) before rtoken
+     *
+     * Push the token onto the output token stream flushing skip tokens if requested (default yes).
+     */
     void pushToken(const antlr::RefToken& rtoken, bool flush = true) {
 
         // don't push any tokens during guessing stage
-        if (Base::inputState->guessing)
+        if (srcMLParser::inputState->guessing)
             return;
 
         // if it isn't an end token flush whitespace tokens
@@ -312,36 +422,66 @@ private:
         output().push_back(rtoken);
     }
 
+    /**
+     * output
+     *
+     * Get output buffer list.
+     *
+     * @returns the output buffer.
+     */
     std::list<antlr::RefToken>& output() {
         return *pouttb;
     }
 
+    /**
+     * skip
+     *
+     * Get the skip buffer.
+     *
+     * @returns the skip buffer.
+     */
     std::list<antlr::RefToken>& skip() {
         return *pskiptb;
     }
 
-    // push the skipped token onto the output token stream
+    /**
+     * pushSkipToken
+     * @param rtoken a skip token to push
+     *
+     * Push the skipped token onto the output token stream
+     */
     void pushSkipToken(const antlr::RefToken& rtoken) {
 
         // don't push any tokens during guessing stage
-        if (Base::inputState->guessing)
+        if (srcMLParser::inputState->guessing)
             return;
 
         // push the new token into the token buffer
         skip().push_back(rtoken);
     }
 
+    /**
+     * pushCorrectToken
+     *
+     * Push the current token to correct buffer.
+     */
     inline void pushCorrectToken() {
 
-        pushCorrectToken(Base::LT(1));
+        pushCorrectToken(srcMLParser::LT(1));
     }
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
+    /**
+     * pushCorrecToken
+     * @param rtoken a token to push (not used)
+     *
+     * Push the a token onto the correct buffer.
+     */
     inline void pushCorrectToken(const antlr::RefToken& rtoken) {
 
-        if (isSkipToken(Base::LA(1)))
+        if (isSkipToken(srcMLParser::LA(1)))
 
             // push the token
             pushSkipToken();
@@ -354,45 +494,64 @@ private:
 
 #pragma GCC diagnostic pop
 
-    // push the token onto the output token stream
+    /**
+     * pushToken
+     *
+     * Push the current token onto the output token stream.
+     */
     void pushToken() {
 
-        pushToken(Base::LT(1));
+        pushToken(srcMLParser::LT(1));
     }
 
-    // push the skipped token onto the output token stream
+    /**
+     * pushSkipToken
+     *
+     * Push the current skip token onto the output token stream.
+     */
     void pushSkipToken() {
 
-        pushSkipToken(Base::LT(1));
+        pushSkipToken(srcMLParser::LT(1));
     }
 
+    /**
+     * CurrentToken
+     *
+     * Get the current token (last added).
+     *
+     * @returns the current token (last added).
+     */
     antlr::RefToken* CurrentToken() {
 
         return &(output().back());
     }
 
 private:
-    OPTION_TYPE & options;
-    bool inskip;
-    antlr::TokenStream& _lexer;
 
-    // token buffer
+    /** parser options */
+    OPTION_TYPE & options;
+
+    /** if in a skip */
+    bool inskip;
+
+    /** token buffer */
     std::list<antlr::RefToken> tb;
 
-    // skipped token buffer
+    /** skipped token buffer */
     std::list<antlr::RefToken> skiptb;
 
-    // preprocessor buffer
+    /** preprocessor buffer */
     std::list<antlr::RefToken> pretb;
 
-    // preprocessor skipped token buffer
+    /** preprocessor skipped token buffer */
     std::list<antlr::RefToken> skippretb;
 
-    // current token buffer
+    /** current token buffer */
     std::list<antlr::RefToken>* pouttb;
 
-    // current skipped token buffer
+    /** current skipped token buffer */
     std::list<antlr::RefToken>* pskiptb;
+
 };
 
 #endif

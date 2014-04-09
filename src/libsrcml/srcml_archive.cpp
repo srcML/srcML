@@ -38,7 +38,7 @@ const char * srcml_archive_check_extension(srcml_archive * archive, const char* 
 
     if(archive == NULL || filename == NULL) return 0;
 
-    Language language(Language::getLanguageFromFilename(filename, archive->registered_languages));
+    Language language(archive->registered_languages.get_language_from_filename(filename));
     const char * lang_string = language.getLanguageString();
     return strcmp(lang_string, "") == 0 ? 0 : lang_string;
 
@@ -69,8 +69,7 @@ srcml_archive* srcml_create_archive()
     } catch(...) { return 0; }
 
     archive->type = SRCML_ARCHIVE_INVALID;
-    archive->options = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TIMESTAMP
-        | SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH;
+    archive->options = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH;
     archive->tabstop = 8;
     archive->translator = 0;
     archive->reader = 0;
@@ -85,7 +84,7 @@ srcml_archive* srcml_create_archive()
     srcml_archive_register_namespace(archive, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_URI);
     srcml_archive_register_namespace(archive, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI);
 
-    Language::register_standard_file_extensions(archive->registered_languages);
+    archive->registered_languages.register_standard_file_extensions();
 
     return archive;
 
@@ -141,6 +140,8 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
     new_archive->tabstop = archive->tabstop;
 
     // clear out those added by srcml_create_archive
+    new_archive->prefixes.clear();
+    new_archive->namespaces.clear();
     for(std::vector<std::string>::size_type pos = 0; pos < archive->namespaces.size(); ++pos) {
 
         try {
@@ -151,12 +152,7 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
     }
 
-    try {
-        new_archive->registered_languages.clear();
-        for(std::vector<pair>::size_type i = 0; i < archive->registered_languages.size(); ++i)
-            new_archive->registered_languages.push_back(archive->registered_languages.at(i));
-
-    } catch(...) {}
+    new_archive->registered_languages = archive->registered_languages;
 
     try {
 
@@ -379,7 +375,7 @@ int srcml_archive_register_file_extension(srcml_archive* archive, const char* ex
     if(archive == NULL || extension == NULL || language == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(Language::registerUserExt(extension, language, archive->registered_languages))
+    if(archive->registered_languages.register_user_ext(extension, language))
         return SRCML_STATUS_OK;
     return SRCML_STATUS_INVALID_INPUT;
 }
@@ -763,25 +759,34 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
 
     if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(srcml_filename, 0, archive->options & SRCML_OPTION_COMPRESS);
+    if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
+
     archive->type = SRCML_ARCHIVE_WRITE;
 
     if(archive->user_macro_list.size()) archive->options |= OPTION_MACRO_LIST;
 
     try {
 
-        archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
-                                                  archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                                  srcml_filename,
-                                                  archive->options,
-                                                  archive->directory ? archive->directory->c_str() : 0,
-                                                  archive->filename ? archive->filename->c_str() : 0,
-                                                  archive->version ? archive->version->c_str() : 0,
-                                                  &archive->prefixes.front(),
-                                                  archive->tabstop);
-        archive->translator->setMacroList(archive->user_macro_list);
+        archive->translator = new srcml_translator(
+                                                output_buffer,
+                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                                archive->options,
+                                                archive->prefixes,
+                                                archive->namespaces,
+                                                archive->tabstop,
+                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                                archive->directory ? archive->directory->c_str() : 0,
+                                                archive->filename ? archive->filename->c_str() : 0,
+                                                archive->version ? archive->version->c_str() : 0);
+        archive->translator->set_macro_list(archive->user_macro_list);
 
-    } catch(...) { return SRCML_STATUS_IO_ERROR; }
+    } catch(...) { 
+
+        xmlOutputBufferClose(output_buffer);
+        return SRCML_STATUS_IO_ERROR; 
+
+    }
 
     return SRCML_STATUS_OK;
 
@@ -809,19 +814,20 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
 
     try {
 
-        archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
-                                                  archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                                  buffer,
-                                                  size,
-                                                  archive->options,
-                                                  archive->directory ? archive->directory->c_str() : 0,
-                                                  archive->filename ? archive->filename->c_str() : 0,
-                                                  archive->version ? archive->version->c_str() : 0,
-                                                  &archive->prefixes.front(),
-                                                  archive->tabstop);
+        archive->translator = new srcml_translator(
+                                                buffer,
+                                                size,
+                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                                archive->options,
+                                                archive->prefixes,
+                                                archive->namespaces,
+                                                archive->tabstop,
+                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                                archive->directory ? archive->directory->c_str() : 0,
+                                                archive->filename ? archive->filename->c_str() : 0,
+                                                archive->version ? archive->version->c_str() : 0);
 
-        archive->translator->setMacroList(archive->user_macro_list);
+        archive->translator->set_macro_list(archive->user_macro_list);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
@@ -852,18 +858,19 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
     try {
 
-        archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
-                                                  archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                                  output_buffer,
-                                                  archive->options,
-                                                  archive->directory ? archive->directory->c_str() : 0,
-                                                  archive->filename ? archive->filename->c_str() : 0,
-                                                  archive->version ? archive->version->c_str() : 0,
-                                                  &archive->prefixes.front(),
-                                                  archive->tabstop);
+        archive->translator = new srcml_translator(
+                                                output_buffer,
+                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                                archive->options,
+                                                archive->prefixes,
+                                                archive->namespaces,
+                                                archive->tabstop,
+                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                                archive->directory ? archive->directory->c_str() : 0,
+                                                archive->filename ? archive->filename->c_str() : 0,
+                                                archive->version ? archive->version->c_str() : 0);
 
-        archive->translator->setMacroList(archive->user_macro_list);
+        archive->translator->set_macro_list(archive->user_macro_list);
 
     } catch(...) {
 
@@ -899,18 +906,19 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
 
     try {
 
-        archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                  archive->src_encoding ? archive->src_encoding->c_str() : "ISO-8859-1",
-                                                  archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                                  output_buffer,
-                                                  archive->options,
-                                                  archive->directory ? archive->directory->c_str() : 0,
-                                                  archive->filename ? archive->filename->c_str() : 0,
-                                                  archive->version ? archive->version->c_str() : 0,
-                                                  &archive->prefixes.front(),
-                                                  archive->tabstop);
+        archive->translator = new srcml_translator(
+                                                output_buffer,
+                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                                archive->options,
+                                                archive->prefixes,
+                                                archive->namespaces,
+                                                archive->tabstop,
+                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                                archive->directory ? archive->directory->c_str() : 0,
+                                                archive->filename ? archive->filename->c_str() : 0,
+                                                archive->version ? archive->version->c_str() : 0);
 
-        archive->translator->setMacroList(archive->user_macro_list);
+        archive->translator->set_macro_list(archive->user_macro_list);
 
     } catch(...) {
 
@@ -1119,8 +1127,50 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
     if(!unit->unit && !read_unit) return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
-    archive->translator->add_unit(read_unit ? read_unit->c_str() : *unit->unit,
-                                  unit->output_hash && unit->hash ? unit->hash->c_str() : 0);
+    archive->translator->add_unit(unit, read_unit ? read_unit->c_str() : unit->unit->c_str());
+
+    return SRCML_STATUS_OK;
+}
+
+/**
+ * srcml_write_raw
+ * @param archive a srcml archive opened for writing
+ * @param content the srcML text to write
+ *
+ * Append content to the srcML archive.  No validation on correct
+ * format of content is done.  No escaping is performed.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_raw(srcml_archive* archive, const char * content) {
+
+    if(archive == NULL || content == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    archive->translator->add_raw_len(content, strlen(content));
+
+    return SRCML_STATUS_OK;
+}
+
+/**
+ * srcml_write_raw_len
+ * @param archive a srcml archive opened for writing
+ * @param content the srcML text to write
+ * @param length how many bytes to write
+ *
+ * Append length bytes of content to the srcML archive.  No validation on correct
+ * format of content is done.  No escaping is performed.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_raw_len(srcml_archive* archive, const char * content, size_t length) {
+
+    if(archive == NULL || content == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    archive->translator->add_raw_len(content, length);
 
     return SRCML_STATUS_OK;
 }
@@ -1214,54 +1264,6 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
     }
 
     return unit;
-}
-
-/**
- * srcml_skip_unit
- * @param archive a srcml archive to read from
- *
- *  Read over (skipping) the next unit from the archive
- *
- *  @returns Returns 0 if no unit to skip, 1 otherwise
- */
-int srcml_skip_unit(srcml_archive* archive) {
-
-    if(archive == NULL) return 0;
-
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
-
-    srcml_unit * unit = srcml_read_unit_header(archive);
-    if(unit == 0) return 0;
-
-    srcml_free_unit(unit);
-
-    return 1;
-}
-
-/**
- * srcml_read_unit_position
- * @param archive a srcml_archive
- * @param pos a relative position in archive
- *
- * Read a unit at a specific relative position in an archive
- * Unit numbers are positive and start at 1.  srcml_read_unit_position(archive, 1)
- * is equivalent to srcml_read_unit.
- *
- * @returns Returns 0 if pos unit does not exist and the read unit otherwise.
- */
-srcml_unit* srcml_read_unit_position(srcml_archive* archive, int pos) {
-
-    if(archive == NULL || pos <= 0) return 0;
-
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
-
-    for(; pos != 1 && srcml_skip_unit(archive); --pos)
-        ;
-
-    if(pos != 1) return 0;
-
-    return srcml_read_unit(archive);
-
 }
 
 /******************************************************************************

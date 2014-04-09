@@ -5,4 +5,16 @@
 <goto>goto <name>label</name>;</goto>
 </unit>
 
+<unit>
+<goto>goto <name>case 1</name>;</goto>
+</unit>
+
+<unit>
+<goto>goto <name>case 'a'</name>;</goto>
+</unit>
+
+<unit>
+<goto>goto <name>case b</name>;</goto>
+</unit>
+
 </unit>

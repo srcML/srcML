@@ -4,7 +4,7 @@
 
 ./sshall.py --build 'bash -c "cd /srcML; git checkout master; git pull"'
 
-./sshall.py --build 'bash -c "cd /srcML/; git clean -fdx; cmake .; make; cpack"'
+./sshall.py --build 'bash -c "cd /srcML/; git clean -fdx; cmake .; make -j2; cpack"'
 ./sshall.py --fedora --build 'bash -c "cd /srcML/; cpack -G RPM"'
 ./sshall.py --suse --build 'bash -c "cd /srcML/; cpack -G RPM"'
 ./sshall.py --ubuntu --build 'bash -c "cd /srcML/; cpack -G DEB"'
@@ -43,7 +43,7 @@ scp ubuntu12build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu12.04-64
 #scp macmavericksbuild:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/MacMavericks/
 #scp macmavericksbuild:/srcML/dist/srcML*.dmg ~/Dropbox/srcML/Unix/MacMavericks/
 
-./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML; git clean -fdx; cp -r ~/dlls .; mingw32-cmake .; make; cpack"'
+./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML; git clean -fdx; cp -r ~/dlls .; mingw32-cmake .; make -j2; cpack"'
 ./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML/; cpack -G NSIS"'
 ./sshall.py --fedora --build --20 --~64 'bash -c "chown -R srcml:srcml /srcML"'
 scp fedora20build:/srcML/dist/srcML*.zip ~/Dropbox/srcML/Windows

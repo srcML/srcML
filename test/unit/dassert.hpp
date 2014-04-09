@@ -23,10 +23,12 @@
 
 #include <iostream>
 #include <cassert>
-#define dassert(LEFT, RIGHT) if(!(LEFT == RIGHT)) {     \
+
+ /** Wrap C assertion to print out difference @todo use auto keyword so only run left/righthand side once and avoid side affects. */
+#define dassert(LEFT, RIGHT) if(!((LEFT) == (RIGHT))) { \
         std::cerr << "'" << LEFT << "'" << "\n";        \
         std::cerr << "'" << RIGHT << "'" << "\n";       \
-        assert(LEFT == RIGHT);                          \
+        assert((LEFT) == (RIGHT));                      \
     }
 
 #endif

@@ -131,7 +131,8 @@ header "post_include_hpp" {
 #include <string>
 #include <deque>
 #include <stack>
-#include "Mode.hpp"
+#include "Language.hpp"
+#include "ModeStack.hpp"
 #include "Options.hpp"
 
 // Macros to introduce trace statements
@@ -213,7 +214,7 @@ public:
         // only run if not guessing
         if (parent->inputState->guessing) return;
 
-        start_size = parent->statev.currentState().size();
+        start_size = parent->currentState().size();
     }
 
     ~LightweightElement() {
@@ -222,8 +223,8 @@ public:
         if (parent->inputState->guessing) return;
 
         // Close all elements opened by the rule in this mode.
-        while (start_size < parent->statev.currentState().size())
-            parent->endElement(parent->statev.currentState().openelements.top());
+        while (start_size < parent->currentState().size())
+            parent->endElement(parent->currentState().openelements.top());
     }
 
 private:
@@ -243,7 +244,7 @@ public:
         if (parent->inputState->guessing) return;
 
         // end last opened element.
-        parent->endElement(parent->statev.currentState().openelements.top());
+        parent->endElement(parent->currentState().openelements.top());
     }
 
 private:
@@ -265,7 +266,7 @@ private:
 
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
-   : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
+   : antlr::LLkParser(lexer,1), Language(lang), ModeStack(this), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
     parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0)
 {
     // make sure we have the correct token set
@@ -326,7 +327,7 @@ options {
 class srcMLParser extends Parser;
 
 options {
-    classHeaderSuffix="public Mode";
+    classHeaderSuffix="public Language, public ModeStack";
 	k=1;
     importVocab=KeywordLexer;
     defaultErrorHandler=false;
@@ -366,6 +367,7 @@ tokens {
     SONAME;
     SCNAME;
     STYPE;
+    STYPEPREV;
 	SCONDITION;
 	SBLOCK;
     SINDEX;
@@ -642,7 +644,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { ((inTransparentMode(MODE_CONDITION) ||
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
         && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
-        && (!inLanguage(LANGUAGE_CXX_ONLY) || !inTransparentMode(MODE_INIT | MODE_EXPECT))) || inTransparentMode(MODE_ANONYMOUS) }? lcurly |
+        && (!inLanguage(LANGUAGE_CXX) || !inTransparentMode(MODE_INIT | MODE_EXPECT))) || inTransparentMode(MODE_ANONYMOUS) }? lcurly |
 
         { inMode(MODE_ARGUMENT_LIST) }? call_argument_list |
 
@@ -661,7 +663,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
 
-        { inLanguage(LANGUAGE_CXX_ONLY) && inMode(MODE_USING) }? using_aliasing |
+        { inLanguage(LANGUAGE_CXX) && inMode(MODE_USING) }? using_aliasing |
 
         // statements identified by pattern (i.e., do not start with a keyword)
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL)}? pattern_statements |
@@ -967,7 +969,7 @@ function_tail[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             function_specifier |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            { inLanguage(LANGUAGE_CXX) }?
             ref_qualifier |
 
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
@@ -976,13 +978,13 @@ function_tail[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_OO) }?
             complete_throw_list |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            { inLanguage(LANGUAGE_CXX) }?
             complete_noexcept_list |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}?
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}?
             attribute_cpp |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) }?
+            { inLanguage(LANGUAGE_CXX) }?
             trailing_return |
 
             { inLanguage(LANGUAGE_JAVA) }?
@@ -1050,7 +1052,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
         { 
 
             decTypeCount();
-            if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY))
+            if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
                 return;
         }
         (options { greedy = true; } : {getTypeCount() > 0}? type_identifier { decTypeCount(); })*
@@ -1639,8 +1641,6 @@ for_initialization_variable_declaration[int type_count] { ENTRY_DEBUG } :
             // start a new mode for the expression which will end
             // inside of the terminate
             startNewMode(MODE_LIST);
-
-            startElement(SDECLARATION);
         }
         variable_declaration[type_count]
 ;
@@ -1953,6 +1953,17 @@ goto_statement[] { ENTRY_DEBUG } :
         GOTO
 ;
 
+goto_case[] { LightweightElement element(this); ENTRY_DEBUG } :
+    {
+
+        startElement(SNAME);
+
+
+    }
+    CASE (literals | ~TERMINATE)*
+
+;
+
 // complete assembly declaration statement
 asm_declaration[] { ENTRY_DEBUG } :
         {
@@ -2054,7 +2065,7 @@ class_declaration[] { ENTRY_DEBUG } :
         }
         ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
         ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
-        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
         (specifier)* CLASS class_post class_header
 ;
@@ -2064,11 +2075,14 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
         {
             bool intypedef = inMode(MODE_TYPEDEF);
 
-            if (intypedef)
+            if(intypedef)
                 startElement(STYPE);
 
             // statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS | MODE_DECL);
+
+            if(intypedef)
+                setMode(MODE_INNER_DECL);
 
             // start the class definition
             startElement(token);
@@ -2083,7 +2097,7 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
 class_preamble[] { ENTRY_DEBUG } :
         // suppress warning probably do to only having ()*
         (options { greedy = true; } : { inLanguage(LANGUAGE_JAVA) }? annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
-        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
         (specifier)*
 ;
 
@@ -2094,14 +2108,14 @@ class_definition[] { ENTRY_DEBUG } :
         class_preamble CLASS class_post (class_header lcurly | lcurly)
         {
 
-            if (inLanguage(LANGUAGE_CXX_ONLY))
+            if (inLanguage(LANGUAGE_CXX))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
         }
 ;
 
 // handle stuff after CLASS token
 class_post[] { ENTRY_DEBUG } :
-        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
         (options { greedy = true; } : specifier)*
 ;
 
@@ -2182,7 +2196,7 @@ struct_union_definition[int element_token] { ENTRY_DEBUG } :
 
         class_preamble (STRUCT | UNION) class_post (class_header lcurly | lcurly)
         {
-           if (inLanguage(LANGUAGE_CXX_ONLY))
+           if (inLanguage(LANGUAGE_CXX))
                class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
         }
 ;
@@ -2202,7 +2216,7 @@ union_declaration[] { ENTRY_DEBUG } :
 // default private/public section for C++
 class_default_access_action[int access_token] { ENTRY_DEBUG } :
         {
-            if (inLanguage(LANGUAGE_CXX_ONLY) && (SkipBufferSize() > 0 ||
+            if (inLanguage(LANGUAGE_CXX) && (SkipBufferSize() > 0 ||
                 !(LA(1) == PUBLIC || LA(1) == PRIVATE || LA(1) == PROTECTED || LA(1) == SIGNAL))) {
 
                 // setup block section
@@ -2626,15 +2640,15 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         throw_list |
 
         // throw list at end of function header
-        { (inLanguage(LANGUAGE_CXX_ONLY))&& inTransparentMode(MODE_FUNCTION_TAIL) }?
+        { (inLanguage(LANGUAGE_CXX))&& inTransparentMode(MODE_FUNCTION_TAIL) }?
         noexcept_list |
 
         // throw list at end of function header
-        { (inLanguage(LANGUAGE_CXX_ONLY))&& inTransparentMode(MODE_FUNCTION_TAIL) && next_token() == LBRACKET }?
+        { (inLanguage(LANGUAGE_CXX))&& inTransparentMode(MODE_FUNCTION_TAIL) && next_token() == LBRACKET }?
         attribute_cpp |
 
         // K&R function parameters
-        { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && inMode(MODE_FUNCTION_TAIL) &&
+        { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && inMode(MODE_FUNCTION_TAIL) &&
           pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
         kr_parameter[type_count] |
 
@@ -2643,7 +2657,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         function_specifier |
 
         // function specifier at end of function header
-        { inLanguage(LANGUAGE_CXX_ONLY) && inMode(MODE_FUNCTION_TAIL) }?
+        { inLanguage(LANGUAGE_CXX) && inMode(MODE_FUNCTION_TAIL) }?
         trailing_return |
 
         // start of argument for return or throw statement
@@ -2666,15 +2680,15 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         expression_part_plus_linq |
 
         // call list in member initialization list
-        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
+        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
         call |
 
         // call list in member initialization list
-        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
+        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
         sizeof_call |
 
         // call list in member initialization list
-        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX_ONLY)) }?
+        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
         alignof_call |
 
         /*
@@ -2727,6 +2741,9 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // start of condition for if/while/switch
         { inMode(MODE_PARAMETER | MODE_EXPECT) }?
         parameter |
+
+        { inMode(MODE_VARIABLE_NAME) }?
+        goto_case | 
 
         /*
           Check for MODE_FOR_CONDITION before template stuff, since it can conflict
@@ -2921,6 +2938,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 
     }
 
+    if(type == VARIABLE && inTransparentMode(MODE_CONDITION) && LA(1) != EQUAL)
+        type = NONE;
+    
+
     // may just have an expression
     if (type == VARIABLE && posin)
         type_count = posin - 1;
@@ -2966,7 +2987,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     rewind(start);
 
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
-       && _tokenSet_26.member(LA(1)) && (!inLanguage(LANGUAGE_CXX_ONLY) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
+       && _tokenSet_26.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && save_la == TERMINATE)
         type = VARIABLE;
 
@@ -3039,7 +3060,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
-                { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
+                { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
                 (specifier | { next_token() == COLON }? SIGNAL)
@@ -3065,7 +3086,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 RBRACKET
                 set_int[attribute_count, attribute_count + 1] |
 
-                { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}?
+                { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}?
                 LBRACKET LBRACKET
 
                         //complete_expression
@@ -3086,7 +3107,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  INTERFACE           set_type[type, INTERFACE_DECL] |
                  ATSIGN INTERFACE set_type[type, INTERFACE_DECL])
                 set_bool[lcurly, LA(1) == LCURLY]
-                (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+                (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
                 class_post
                 (class_header | LCURLY)
@@ -3211,7 +3232,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         // we have a declaration, so do we have a function?
         (
             // check for function pointer, which must have a non-specifier part of the type
-            { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && real_type_count > 0 }?
+            { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && real_type_count > 0 }?
             (function_pointer_name_grammar eat_optional_macro_call LPAREN)=>
             function_pointer_name_grammar
 
@@ -3274,10 +3295,10 @@ marker[] { CompleteElement element(this); startNewMode(MODE_LOCAL); startElement
 */
 
 // update type count
-update_typecount[State::MODE_TYPE mode] {} :
+update_typecount[srcMLState::MODE_TYPE mode] {} :
         {
             decTypeCount();
-            if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX_ONLY))
+            if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
                 return;
 
             if (getTypeCount() <= 0) {
@@ -3346,7 +3367,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
-        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp |
+        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
         pure_lead_type_identifier_no_specifiers
 ;
@@ -3388,7 +3409,7 @@ lead_type_identifier[] { ENTRY_DEBUG } :
 //        (macro_call_paren identifier)=> macro_call |
 
         // typical type name
-        { LA(1) != ASYNC && (inLanguage(LANGUAGE_CXX_ONLY) || (LA(1) != FINAL && LA(1) != OVERRIDE)) }?
+        { LA(1) != ASYNC && (inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE)) }?
         compound_name |
 
         pure_lead_type_identifier
@@ -3865,7 +3886,7 @@ typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
 
 function_pointer_name_check[] returns[bool is_fp_name = false] {
 
-    if(LA(1) == LPAREN && (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY))) {
+    if(LA(1) == LPAREN && (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))) {
 
         ++inputState->guessing;
         int start = mark();
@@ -3874,7 +3895,7 @@ function_pointer_name_check[] returns[bool is_fp_name = false] {
 
             function_pointer_name_grammar();
             is_fp_name = LA(1) == PERIOD || LA(1) == TRETURN
-                || (inLanguage(LANGUAGE_CXX_ONLY) && (LA(1) == MPDEREF || LA(1) == DOTDEREF));
+                || (inLanguage(LANGUAGE_CXX) && (LA(1) == MPDEREF || LA(1) == DOTDEREF));
 
         } catch(...) {}
        
@@ -3907,8 +3928,8 @@ function_pointer_name[] { CompleteElement element(this); ENTRY_DEBUG }:
 // Markup names
 compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
         compound_name_inner[true]
-        (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX_ONLY) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound] |
-        { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound] |
+        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
 ;
 
@@ -3950,9 +3971,9 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         macro_type_name_call 
         )
 
-        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
-        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) && (!inLanguage(LANGUAGE_CXX_ONLY) || next_token() != LBRACKET)}?
+        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) && (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}?
             variable_identifier_array_grammar_sub[iscompound]
         )*
 
@@ -4028,7 +4049,20 @@ compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
 
         template_argument_list |
         simple_name_optional_template
-        (options { greedy = true; } : (period { iscompound = true; } simple_name_optional_template))*
+        (options { greedy = true; } : (period { iscompound = true; } (keyword_name | simple_name_optional_template)))*
+;
+
+keyword_name[] { SingleElement element(this); ENTRY_DEBUG } :
+
+        {
+
+            // start outer name
+            startElement(SNAME);
+
+        }
+
+        CLASS
+
 ;
 
 // Specifier for a function
@@ -4149,7 +4183,7 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp |
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
             specifier |
 
@@ -4214,7 +4248,7 @@ destructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp |
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
             specifier |
 
@@ -4944,39 +4978,49 @@ variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
             // statement
             startNewMode(MODE_STATEMENT);
 
-            if (!inTransparentMode(MODE_INNER_DECL) || inTransparentMode(MODE_CLASS))
+            if(!inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_CLASS | MODE_INNER_DECL))
                 // start the declaration statement
                 startElement(SDECLARATION_STATEMENT);
 
-            // declaration
-            startNewMode(MODE_LOCAL);
-
-            if (!inTransparentMode(MODE_INNER_DECL) || inTransparentMode(MODE_CLASS))
-                // start the declaration
-                startElement(SDECLARATION);
         }
+
         variable_declaration[type_count]
 ;
 
 // processing for short variable declaration
 short_variable_declaration[] { ENTRY_DEBUG } :
         {
+            // variable declarations may be in a list
+            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
             // declaration
-            startNewMode(MODE_LOCAL);
+            startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
             // start the declaration
             startElement(SDECLARATION);
-
-            // variable declarations may be in a list
-            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
         }
 ;
 
 // more of the inner part of a declaration
 variable_declaration[int type_count] { ENTRY_DEBUG } :
         {
+
+            bool output_decl = !inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_CLASS | MODE_INNER_DECL);
+
             // variable declarations may be in a list
             startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+            // declaration
+            startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+            if(inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
+                setMode(MODE_LIST);
+
+            if(output_decl)
+
+                // start the declaration
+                startElement(SDECLARATION);
+
         }
         variable_declaration_type[type_count]
 ;
@@ -5001,6 +5045,23 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 // Variable declaration name and optional initialization
 variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
         ENTRY_DEBUG } :
+
+         {
+
+             if(!inMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
+              && inMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
+              && !inTransparentMode(MODE_TYPEDEF)
+              && !inTransparentMode(MODE_USING)) {
+
+
+                // start the declaration
+                startElement(SDECLARATION);
+                emptyElement(STYPEPREV);
+
+            }
+
+        }
+
         ({ inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[false] | compound_name)
         {
             // expect a possible initialization
@@ -5189,7 +5250,8 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
             if(isempty) {
 
                 // additional right parentheses indicates end of non-list modes
-                endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE | MODE_INTERNAL_END_CURLY);
+                if(inTransparentMode(MODE_LIST))
+                    endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE | MODE_INTERNAL_END_CURLY);
             }
 
         }
@@ -5201,8 +5263,8 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
             if (isempty && inMode(MODE_LIST))
                 endDownOverMode(MODE_LIST);
             
-            else if(inTransparentMode(MODE_EXPRESSION | MODE_LIST))
-                endDownOverMode(MODE_EXPRESSION | MODE_LIST);
+            else if(inTransparentMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP))
+                endDownOverMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
 
             if(!isempty)
                 decCurly();
@@ -5316,7 +5378,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         { inLanguage(LANGUAGE_CSHARP) }?
         (lambda_expression_full_csharp) => lambda_expression_csharp |
 
-        { inLanguage(LANGUAGE_CXX_ONLY) }?
+        { inLanguage(LANGUAGE_CXX) }?
         (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_cpp |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
@@ -5371,7 +5433,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
 
         // left curly brace
         {
-            startNewMode(MODE_EXPRESSION | MODE_LIST);
+            startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
 
             startElement(SBLOCK);
         }
@@ -5384,11 +5446,13 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         {
 
             if(!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT)) {
+
                 endDownToMode(MODE_INTERNAL_END_CURLY);
 
                 endMode(MODE_INTERNAL_END_CURLY);
 
             }
+
         }
         rcurly_argument |
 
@@ -5671,12 +5735,12 @@ annotation_argument[] { ENTRY_DEBUG } :
             // start the argument
             startElement(SARGUMENT);
         }
+
         // suppress warning of ()*
         (options { greedy = true; } :
-        { !(LA(1) == RPAREN) }? expression |
+        { inputState->guessing }? RCURLY | 
+        { !(LA(1) == RPAREN) }? expression | type_identifier)*
 
-        type_identifier
-        )*
 ;
 
 // a parameter
@@ -5915,7 +5979,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(STEMPLATE_ARGUMENT);
 
-            if(inLanguage(LANGUAGE_CXX_ONLY))
+            if(inLanguage(LANGUAGE_CXX))
                startElement(SEXPRESSION);
         }
         (options { greedy = true; } :
@@ -6036,7 +6100,7 @@ typedef_statement[] { ENTRY_DEBUG } :
             // start the typedef element
             startElement(STYPEDEF);
 
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_INNER_DECL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
         }
         TYPEDEF
 ;
@@ -6111,24 +6175,10 @@ enum_definition[] { ENTRY_DEBUG } :
         enum_preprocessing (options { greedy = true; } : specifier)* ENUM (options { greedy = true; } : enum_class_header)*
 ;
 
-// processing for short variable declaration
-enum_short_variable_declaration[] { ENTRY_DEBUG } :
-        {
-            // declaration
-            startNewMode(MODE_LOCAL);
-
-            // start the declaration
-            startElement(SDECLARATION);
-
-            // variable declarations may be in a list
-            startNewMode(MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
-        } variable_declaration_nameinit
-;
-
 // header for enum class
 enum_class_header[] {} :
         (CLASS | STRUCT)* 
-        ({ inLanguage(LANGUAGE_CXX_ONLY) && next_token() == LBRACKET}? attribute_cpp)*
+        ({ inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
         variable_identifier (COLON enum_type)*
 
     ;
@@ -6181,6 +6231,22 @@ enum_block[] { ENTRY_DEBUG } :
             }
         }
 ;
+
+// processing for short variable declaration
+enum_short_variable_declaration[] { ENTRY_DEBUG } :
+        {
+            // variable declarations may be in a list
+            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+            // declaration
+            startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+            // start the declaration
+            startElement(SDECLARATION);
+        }
+        variable_declaration_nameinit
+;
+
 
 /*
   end of file
@@ -6525,7 +6591,7 @@ eol_post[int directive_token, bool markblockzero] {
                 if(isoption(parseoptions, OPTION_CPPIF_CHECK) && !inputState->guessing) {
 
                     std::list<int> end_order = cppif_end_count_check();
-                    State::MODE_TYPE current_mode = getMode();
+                    srcMLState::MODE_TYPE current_mode = getMode();
                     // @todo When C++11 is default, switch to ranged for or at least auto keyword.
                     for(std::list<int>::iterator pos = end_order.begin(); pos != end_order.end(); ++pos) {
 

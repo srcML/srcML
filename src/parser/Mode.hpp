@@ -23,317 +23,197 @@
 #ifndef MODE_HPP
 #define MODE_HPP
 
-#include "TokenParser.hpp"
-#include "Language.hpp"
-#include "srcMLStateStack.hpp"
+/* Set of mode flags */
 
-class Mode : public TokenParser, public Language {
+/** any srcMLstatement (broad definition includes declarations, etc.) */
+const static srcMLState::MODE_TYPE MODE_STATEMENT;
 
-public:
+/** list used for comma and right parentheses */
+const static srcMLState::MODE_TYPE MODE_LIST;
 
-    /* Set of mode flags */
+/** a particular mode is expected in the next start */
+const static srcMLState::MODE_TYPE MODE_EXPECT;
 
-    // any statement (broad definition includes declarations, etc.)
-    const static State::MODE_TYPE MODE_STATEMENT;
+/** srcMLstatement may be nested inside of the current */
+const static srcMLState::MODE_TYPE MODE_DETECT_COLON;
 
-    // list used for comma and right parentheses
-    const static State::MODE_TYPE MODE_LIST;
+/** mode for within a templare */
+const static srcMLState::MODE_TYPE MODE_TEMPLATE;
 
-    // a particular mode is expected in the next start
-    const static State::MODE_TYPE MODE_EXPECT;
+/** mode for within a template parameter list */
+const static srcMLState::MODE_TYPE MODE_TEMPLATE_PARAMETER_LIST;
 
-    // statement may be nested inside of the current
-    const static State::MODE_TYPE MODE_DETECT_COLON;
+/** an argument to a call */
+const static srcMLState::MODE_TYPE MODE_ARGUMENT;
 
-    //
-    const static State::MODE_TYPE MODE_TEMPLATE;
-    const static State::MODE_TYPE MODE_TEMPLATE_PARAMETER_LIST;
+/** mode for a namespace */
+const static srcMLState::MODE_TYPE MODE_NAMESPACE;
 
-    // an argument to a call
-    const static State::MODE_TYPE MODE_ARGUMENT;
-    const static State::MODE_TYPE MODE_NAMESPACE;
+/** a parameter for a declaration/definition */
+const static srcMLState::MODE_TYPE MODE_PARAMETER;
 
-    // a parameter for a declaration/definition
-    const static State::MODE_TYPE MODE_PARAMETER;
+/** expressions */
+const static srcMLState::MODE_TYPE MODE_EXPRESSION;
 
-    // expressions
-    const static State::MODE_TYPE MODE_EXPRESSION;
+/** expecting a call (member initialization list) */
+const static srcMLState::MODE_TYPE MODE_CALL;
 
-    // expecting a call (member initialization list)
-    const static State::MODE_TYPE MODE_CALL;
+/** 
+ * setup for expecting a condition and detection of the end
+ * of a condition at a left parentheses of the correct count 
+ */
+ const static srcMLState::MODE_TYPE MODE_CONDITION;
 
-    // setup for expecting a condition and detection of the end
-    // of a condition at a left parentheses of the correct count
-    const static State::MODE_TYPE MODE_CONDITION;
+/** marks top of some sequence of operations mostly to stop ending modes */
+ const static srcMLState::MODE_TYPE MODE_TOP;
 
-    const static State::MODE_TYPE MODE_TOP;
+/** blocks that are not necessarily srcMLstatements */
+ const static srcMLState::MODE_TYPE MODE_BLOCK;
 
-    // blocks that are not necessarily statements
-    const static State::MODE_TYPE MODE_BLOCK;
-    const static State::MODE_TYPE MODE_INIT;
+/** mode for inititialization typically @code=<init>...</init>@endcode */
+ const static srcMLState::MODE_TYPE MODE_INIT;
 
-    // block tags from being issued.  Should be moved to
-    // output handling
-    const static State::MODE_TYPE MODE_FUNCTION_TAIL;
+/** 
+ * block tags from being issued.  Should be moved to
+ * output handling 
+ */
+ const static srcMLState::MODE_TYPE MODE_FUNCTION_TAIL;
 
-    // whether to parse the end of line character
-    // used with preprocessor directives
-    const static State::MODE_TYPE MODE_PARSE_EOL;
+/** 
+ * whether to parse the end of line character
+ * used with preprocessor directives 
+ */
+ const static srcMLState::MODE_TYPE MODE_PARSE_EOL;
 
-    // local mode only used within a grammar rule
-    const static State::MODE_TYPE MODE_LOCAL;
+/** local mode only used within a grammar rule */
+ const static srcMLState::MODE_TYPE MODE_LOCAL;
 
-    const static State::MODE_TYPE MODE_VARIABLE_NAME;
+/** Mode for a variable name */
+ const static srcMLState::MODE_TYPE MODE_VARIABLE_NAME;
 
-    // the if statement includes some special processing
-    // including starting a THEN element after the condition
-    // and stopping the ending of statements at the IF when
-    // an ELSE is matched
-    const static State::MODE_TYPE MODE_IF;
+/** 
+ * the if srcMLstatement includes some special processing
+ * including starting a THEN element after the condition
+ * and stopping the ending of srcMLstatements at the IF when
+ * an ELSE is matched 
+ */
+ const static srcMLState::MODE_TYPE MODE_IF;
 
-    // for special sections inside of mode such as in
-    // classes and switch statement blocks
-    const static State::MODE_TYPE MODE_TOP_SECTION;
+/**
+ * for special sections inside of mode such as in
+ *  classes and switch srcMLstatement blocks
+ */
+ const static srcMLState::MODE_TYPE MODE_TOP_SECTION;
 
-    // for flags
-    const static State::MODE_TYPE MODE_FOR_GROUP;          // in a for heading group
-    const static State::MODE_TYPE MODE_FOR_INITIALIZATION; // for initialization (in header)
-    const static State::MODE_TYPE MODE_FOR_CONDITION;      // for condition (in header)
-    const static State::MODE_TYPE MODE_FOR_INCREMENT;      // for increment (in header)
+/** in a for heading group i.e. for init/condition/increment */
+ const static srcMLState::MODE_TYPE MODE_FOR_GROUP;
 
-    const static State::MODE_TYPE MODE_PREPROC;
-    const static State::MODE_TYPE MODE_NEST;
-    const static State::MODE_TYPE MODE_EXPRESSION_BLOCK;
-    const static State::MODE_TYPE MODE_INTERNAL_END_PAREN; // remove
+/** for initialization (in header) */
+ const static srcMLState::MODE_TYPE MODE_FOR_INITIALIZATION;
 
-    // access regions in classes used for matching of
-    const static State::MODE_TYPE MODE_ACCESS_REGION;
-    const static State::MODE_TYPE MODE_DO_STATEMENT;
-    const static State::MODE_TYPE MODE_IGNORE_TERMINATE;
+/** for condition (in header) */
+ const static srcMLState::MODE_TYPE MODE_FOR_CONDITION;
 
-    const static State::MODE_TYPE MODE_EXTERN;
-    const static State::MODE_TYPE MODE_INTERNAL_END_CURLY;
+/** for increment (in header) */
+ const static srcMLState::MODE_TYPE MODE_FOR_INCREMENT;
 
-    const static State::MODE_TYPE MODE_CLASS;
-    const static State::MODE_TYPE MODE_END_AT_BLOCK;
+/** preprocessor mode */
+ const static srcMLState::MODE_TYPE MODE_PREPROC;
 
-    const static State::MODE_TYPE MODE_END_ONLY_AT_RPAREN;
+/** mode for nesting srcMLstatements */
+ const static srcMLState::MODE_TYPE MODE_NEST;
 
-    const static State::MODE_TYPE MODE_END_AT_BLOCK_NO_TERMINATE;
+/** mode fore expression block */
+ const static srcMLState::MODE_TYPE MODE_EXPRESSION_BLOCK;
 
-    const static State::MODE_TYPE MODE_FUNCTION_NAME;
+/** mode marking to end at right parenthesis @todo remove */
+ const static srcMLState::MODE_TYPE MODE_INTERNAL_END_PAREN;
 
-    const static State::MODE_TYPE MODE_THEN;
-    const static State::MODE_TYPE MODE_ELSE;
+/** access regions in classes used for matching of */
+ const static srcMLState::MODE_TYPE MODE_ACCESS_REGION;
 
-    const static State::MODE_TYPE MODE_TYPEDEF;
+/** mode for a do while srcMLstatement */
+ const static srcMLState::MODE_TYPE MODE_DO_STATEMENT;
 
-    const static State::MODE_TYPE MODE_DECL;
+/** mode to ignore ; */
+ const static srcMLState::MODE_TYPE MODE_IGNORE_TERMINATE;
 
-    const static State::MODE_TYPE MODE_EAT_TYPE;
+/** mode for extern */
+ const static srcMLState::MODE_TYPE MODE_EXTERN;
 
-    const static State::MODE_TYPE MODE_FUNCTION_PARAMETER;
+/** mode to end at right curly */
+ const static srcMLState::MODE_TYPE MODE_INTERNAL_END_CURLY;
 
-    const static State::MODE_TYPE MODE_INNER_DECL;
+/** mode for a class */
+ const static srcMLState::MODE_TYPE MODE_CLASS;
 
-    const static State::MODE_TYPE MODE_IN_INIT;
+/** mode to end at block */
+ const static srcMLState::MODE_TYPE MODE_END_AT_BLOCK;
 
-    const static State::MODE_TYPE MODE_TRY;
+/** mode to only end at right parentesis */
+ const static srcMLState::MODE_TYPE MODE_END_ONLY_AT_RPAREN;
 
-    const static State::MODE_TYPE MODE_END_LIST_AT_BLOCK;
+/** mode to end at a block and not expect ; after */
+ const static srcMLState::MODE_TYPE MODE_END_AT_BLOCK_NO_TERMINATE;
 
-    const static State::MODE_TYPE MODE_ONLY_END_TERMINATE;
+/** mode for a function name */
+ const static srcMLState::MODE_TYPE MODE_FUNCTION_NAME;
 
-    const static State::MODE_TYPE MODE_ENUM;
+/** mode for a if then */
+ const static srcMLState::MODE_TYPE MODE_THEN;
 
-    const static State::MODE_TYPE MODE_ANONYMOUS;
+/** mode for an else */    
+ const static srcMLState::MODE_TYPE MODE_ELSE;
 
-    const static State::MODE_TYPE MODE_END_AT_COMMA;
+/** mode for a typdef */
+ const static srcMLState::MODE_TYPE MODE_TYPEDEF;
 
-    const static State::MODE_TYPE MODE_USING;
+/** mode for a declaration of some type */
+ const static srcMLState::MODE_TYPE MODE_DECL;
 
-    const static State::MODE_TYPE MODE_TRAILING_RETURN;
+/** mode to consume the type names */
+ const static srcMLState::MODE_TYPE MODE_EAT_TYPE;
 
-    const static State::MODE_TYPE MODE_ISSUE_EMPTY_AT_POP;
+/** mode for funciton parameter */
+ const static srcMLState::MODE_TYPE MODE_FUNCTION_PARAMETER;
 
-    const static State::MODE_TYPE MODE_END_AT_ENDIF;
+/** mode for an internal decl */
+ const static srcMLState::MODE_TYPE MODE_INNER_DECL;
 
-    const static State::MODE_TYPE MODE_ARGUMENT_LIST;
+/** mode to mark in an init */
+ const static srcMLState::MODE_TYPE MODE_IN_INIT;
 
-public:
+/** mode for a try */
+ const static srcMLState::MODE_TYPE MODE_TRY;
 
-    Mode(TokenParser* ptp, int lang)
-        : Language(lang), statev(ptp)
-    {}
+/** mode to end a list at a block */
+ const static srcMLState::MODE_TYPE MODE_END_LIST_AT_BLOCK;
 
-    ~Mode() {}
+/** mode to end at ; */
+ const static srcMLState::MODE_TYPE MODE_ONLY_END_TERMINATE;
 
-    srcMLStateStack statev;
+/** mode for enum */
+ const static srcMLState::MODE_TYPE MODE_ENUM;
 
-protected:
+/** mode for anonymous item e.g. anonymous class */
+ const static srcMLState::MODE_TYPE MODE_ANONYMOUS;
 
-    // flush any skipped tokens to the output token stream
-    // overridden in StreamParser
-    //  void flushSkip() {}
+/** mode to end at a comma */
+ const static srcMLState::MODE_TYPE MODE_END_AT_COMMA;
 
-    int size() const {
-        return (int)statev.size();
-    }
+/** mode for in a using */
+ const static srcMLState::MODE_TYPE MODE_USING;
 
-    srcMLState& currentState() {
+/** mode for function trailing return */
+ const static srcMLState::MODE_TYPE MODE_TRAILING_RETURN;
 
-        return statev.currentState();
-    }
+/** mode to issue an empty element at pop */
+ const static srcMLState::MODE_TYPE MODE_ISSUE_EMPTY_AT_POP;
 
-    int getParen() const {
+/** mode to end at preprocessor endif */
+ const static srcMLState::MODE_TYPE MODE_END_AT_ENDIF;
 
-        return statev.getParen();
-    }
-
-    void incParen() {
-
-        statev.incParen();
-    }
-
-    void decParen() {
-
-        statev.decParen();
-    }
-
-    int getCurly() const {
-
-        return statev.getCurly();
-    }
-
-    void incCurly() {
-
-        statev.incCurly();
-    }
-
-    void decCurly() {
-
-        statev.decCurly();
-    }
-
-    int getTypeCount() const {
-
-        return statev.getTypeCount();
-    }
-
-    void setTypeCount(int n) {
-
-        statev.setTypeCount(n);
-    }
-
-    void incTypeCount() {
-
-        statev.incTypeCount();
-    }
-
-    void decTypeCount() {
-
-        statev.decTypeCount();
-    }
-
-    void startNewMode(const State::MODE_TYPE& m) {
-
-        statev.startNewMode(m);
-    }
-
-    void endMode() {
-
-        statev.endCurrentMode();
-    }
-
-    void endMode(const State::MODE_TYPE& m) {
-
-        statev.endCurrentMode(m);
-    }
-
-    void endLastMode() {
-
-        statev.endLastMode();
-    }
-
-    void endTopMode() {
-
-        statev.endCurrentMode();
-    }
-
-    void setMode(const State::MODE_TYPE& m) {
-
-        statev.setMode(m);
-    }
-
-    State::MODE_TYPE getMode() {
-
-        return statev.getMode();
-    }
-
-    void clearMode(const State::MODE_TYPE& m) {
-
-        statev.clearMode(m);
-    }
-
-    void replaceMode(const State::MODE_TYPE& oldm, const State::MODE_TYPE& newm) {
-
-        statev.clearMode(oldm);
-        statev.setMode(newm);
-    }
-
-    bool inPrevMode(const State::MODE_TYPE& m) const {
-
-        return statev.inPrevMode(m);
-    }
-
-    bool inMode(const State::MODE_TYPE& m) const {
-
-        return statev.inMode(m);
-    }
-
-    bool inTransparentMode(const State::MODE_TYPE& m) const {
-
-        return statev.inTransparentMode(m);
-    }
-
-    void dupDownOverMode(const State::MODE_TYPE& m) {
-
-        std::list<srcMLState> alist;
-        while(!(statev.st.top().getMode() & m)) {
-
-            alist.push_front(statev.st.top());
-            statev.st.pop();
-
-        }
-
-        alist.push_front(statev.st.top());
-        statev.st.pop();
-
-
-        alist.front().setMode(MODE_TOP | MODE_END_AT_ENDIF);
-        for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i) {
-            i->setMode(MODE_END_AT_ENDIF);
-            statev.st.push(*i);
-        }
-
-        alist.front().openelements = std::stack<int>();
-        for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i) {
-            i->setMode(MODE_ISSUE_EMPTY_AT_POP);
-            statev.st.push(*i);
-
-        }
-
-
-    }
-
-    // End elements down to a mode
-    void endDownToMode(const State::MODE_TYPE& ele);
-
-    // End elements down to one of a set of modes
-    void endDownToModeSet(const State::MODE_TYPE& ele);
-
-    // End elements down to a mode, then consume it
-    void endDownOverMode(const State::MODE_TYPE& ele);
-};
+/** mode for an argument list */
+ const static srcMLState::MODE_TYPE MODE_ARGUMENT_LIST;
 
 #endif

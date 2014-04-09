@@ -25,10 +25,11 @@
 #ifndef SRCMLEXCEPTION_HPP
 #define SRCMLEXCEPTION_HPP
 
+/**
+ * Segmentation_Fault
+ *
+ * Class for segmentation fault exception.
+ */
 class Segmentation_Fault : public std::exception {};
-
-class srcEncodingException : public std::exception {};
-
-class xmlEncodingException : public std::exception {};
 
 #endif

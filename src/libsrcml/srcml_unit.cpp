@@ -25,8 +25,6 @@
 
 #include <UTF8CharBuffer.hpp>
 
-#include <boost/date_time/posix_time/posix_time.hpp>
-
 /******************************************************************************
  *                                                                            *
  *                           Set up functions                                 *
@@ -169,6 +167,26 @@ int srcml_unit_set_hash(srcml_unit* unit, const char* hash) {
     if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     unit->hash = hash ? std::string(hash) : boost::optional<std::string>();
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_unit_set_xml
+ * @param unit a srcml unit
+ * @param xml srcML to set unit to contain.
+ *
+ * Set the unit to contain the srcML in xml.  No validation of underlying unit is done.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
+ * on failure.
+ */
+int srcml_unit_set_xml(srcml_unit* unit, const char* xml) {
+
+    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    unit->unit = xml ? std::string(xml) : boost::optional<std::string>();
 
     return SRCML_STATUS_OK;
 
@@ -322,7 +340,9 @@ const char* srcml_unit_get_xml(struct srcml_unit* unit) {
 /**
  * srcml_parse_unit_internal
  * @param unit a srcml unit
- * @param lang an interger representation of a language.
+ * @param lang an interger representation of a language
+ * @param input the source input to the translator
+ * @param translation_options the options for translation
  *
  * Function for internal use for parsing functions. Creates
  * output buffer, translates a current input and places the
@@ -332,20 +352,29 @@ const char* srcml_unit_get_xml(struct srcml_unit* unit) {
  */
 static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer * input, OPTION_TYPE translation_options) {
 
-    boost::optional<std::string> timestamp = !unit->timestamp
-        &&  (translation_options & SRCML_OPTION_TIMESTAMP) ?
-        boost::posix_time::to_simple_string(boost::posix_time::second_clock::universal_time()) : unit->timestamp;
-
     xmlBuffer * output_buffer = xmlBufferCreate();
+    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler("UTF-8"));
+
     try {
 
-        unit->archive->translator->translate_separate(unit->directory ? unit->directory->c_str() : 0,
-                                                      unit->filename ? unit->filename->c_str() : 0,
-                                                      unit->version ? unit->version->c_str() : 0,
-                                                      timestamp ? timestamp->c_str() : 0,
-                                                      unit->hash ? unit->hash->c_str() : (unit->output_hash ? "" : 0),
-                                                      lang, input, output_buffer,
-                                                      translation_options);
+        srcml_translator translator(
+            obuffer,
+            unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8",
+            translation_options,
+            unit->archive->prefixes,
+            unit->archive->namespaces,
+            unit->archive->tabstop,
+            lang,
+            unit->directory ? unit->directory->c_str() : 0,
+            unit->filename ? unit->filename->c_str() : 0,
+            unit->version ? unit->version->c_str() : 0,
+            unit->timestamp ? unit->timestamp->c_str() : 0,
+            unit->hash ? unit->hash->c_str() : (translation_options & SRCML_OPTION_HASH ? "" : 0));
+
+        translator.set_macro_list(unit->archive->user_macro_list);
+
+        translator.translate(input);
+
     } catch(...) {
 
         xmlBufferFree(output_buffer);
@@ -387,7 +416,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
         : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
 
-    if(lang == SRCML_LANGUAGE_NONE) lang = Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
+    if(lang == SRCML_LANGUAGE_NONE) lang = unit->archive->registered_languages.get_language_from_filename(src_filename);
 
     if(lang == SRCML_LANGUAGE_NONE) return SRCML_STATUS_UNSET_LANGUAGE;
 
@@ -399,12 +428,12 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
     UTF8CharBuffer * input = 0;
-    unit->output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
+    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
         input = new UTF8CharBuffer(src_filename, unit->encoding ? unit->encoding->c_str()
                                    : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"),
-                                   unit->output_hash ? &unit->hash : 0);
+                                   output_hash ? &unit->hash : 0);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
@@ -446,12 +475,12 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
     UTF8CharBuffer * input = 0;
-    unit->output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
+    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
         input = new UTF8CharBuffer(src_buffer ? src_buffer : "", buffer_size, unit->encoding ? unit->encoding->c_str()
                                    : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"),
-                                   unit->output_hash ? &unit->hash : 0);
+                                   output_hash ? &unit->hash : 0);
 
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
@@ -492,12 +521,12 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
     UTF8CharBuffer * input = 0;
-    unit->output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
+    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
         input = new UTF8CharBuffer(src_file, unit->encoding ? unit->encoding->c_str()
                                    : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"),
-                                   unit->output_hash ? &unit->hash : 0);
+                                   output_hash ? &unit->hash : 0);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
@@ -538,12 +567,12 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
     UTF8CharBuffer * input = 0;
-    unit->output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
+    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
         input = new UTF8CharBuffer(src_fd, unit->encoding ? unit->encoding->c_str()
                                    : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"),
-                                   unit->output_hash ? &unit->hash : 0);
+                                   output_hash ? &unit->hash : 0);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
@@ -809,7 +838,6 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
     } catch(...) { return 0; }
     unit->archive = archive;
     unit->read_header = false;
-    unit->output_hash = false;
 
     return unit;
 

@@ -26,8 +26,8 @@
 #include <srcml_types.hpp>
 #include <srcml_sax2_utilities.hpp>
 
-#include <srcMLTranslator.hpp>
 #include <Language.hpp>
+#include <language_extension_registry.hpp>
 #include <Options.hpp>
 #include <srcmlns.hpp>
 
@@ -58,7 +58,7 @@ std::string srcml_error;
  */
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL,
-                                 8, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
+                                 8, std::vector<std::string>(), std::vector<std::string>(), language_extension_registry(),
                                  std::vector<std::string>(), 0, 0, 0, std::vector<transform>() };
 
 /**
@@ -66,7 +66,14 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
  *
  * global unit for use with srcml() function.  Defaulted values.
  */
-srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+/**
+ * @var register_languages
+ *
+ * Global variable tracking if need to register default languages.
+ */
+bool register_languages = true;
 /******************************************************************************
  *                                                                            *
  *                           Global Cleanup function                          *
@@ -142,26 +149,16 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     }
 
-    static bool first = true;
-    if(first) {
+    if(register_languages) {
 
-        first = false;
-        std::vector<pair> save_ext;
-        for(std::vector<pair>::size_type i = 0; i < global_archive.registered_languages.size(); ++i)
-            try {
-                save_ext.push_back(global_archive.registered_languages.at(i));
-            } catch(...) {
-                return SRCML_STATUS_ERROR;
-            }
+        register_languages = false;
+        language_extension_registry registry = global_archive.registered_languages;
 
-        Language::register_standard_file_extensions(global_archive.registered_languages);
+        global_archive.registered_languages = language_extension_registry();
 
-        for(std::vector<pair>::size_type i = 0; i < save_ext.size(); ++i)
-            try {
-                global_archive.registered_languages.push_back(save_ext.at(i));
-            } catch(...) {
-                return SRCML_STATUS_ERROR;
-            }
+        global_archive.registered_languages.register_standard_file_extensions();
+
+        global_archive.registered_languages.append(registry);
 
         std::vector<std::string> save_prefix;
         std::vector<std::string> save_ns;
@@ -194,49 +191,41 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     }
 
-    int lang = global_archive.language ? srcml_check_language(global_archive.language->c_str()) : Language::getLanguageFromFilename(input_filename, global_archive.registered_languages);
+    if(srcml_check_extension(input_filename)) {
 
-    if(lang) {
+        srcml_write_open_filename(&global_archive, output_filename);
+        srcml_unit * unit = srcml_create_unit(&global_archive);
 
-        OPTION_TYPE & options = global_archive.options;
-        options |= lang == Language::LANGUAGE_JAVA ? 0 : SRCML_OPTION_CPP;
+        int status = srcml_unit_set_language(unit, srcml_archive_get_language(&global_archive));
+        if(status != SRCML_STATUS_OK) {
 
-        srcMLTranslator translator(lang,
-                                   global_archive.src_encoding ? global_archive.src_encoding->c_str() : "ISO-8859-1",
-                                   global_archive.encoding ? global_archive.encoding->c_str() : "UTF-8",
-                                   output_filename,
-                                   options,
-                                   0,
-                                   0,
-                                   0,
-                                   &global_archive.prefixes.front(),
-                                   global_archive.tabstop);
-
-        int error = 0;
-        try {
-
-            translator.setInput(input_filename);
-            translator.translate(global_archive.directory ? global_archive.directory->c_str() : 0,
-                                 global_archive.filename ? global_archive.filename->c_str() : input_filename,
-                                 global_archive.version ? global_archive.version->c_str() : 0,
-                                 global_unit.timestamp ? global_unit.timestamp->c_str() : 0,
-                                 global_unit.hash ? global_unit.hash->c_str() : 0,
-                                 lang);
-            options &= ~SRCML_OPTION_CPP;
-
-        } catch (FileError) {
-
-            error = 1;
-            srcml_error = "Error converting '";
-            srcml_error += input_filename;
-            srcml_error += "' to srcML.";
+            srcml_free_unit(unit);
+            return status;
 
         }
 
-        translator.close();
+        if(srcml_archive_get_filename(&global_archive))
+            srcml_unit_set_filename(unit, srcml_archive_get_filename(&global_archive));
+        else
+            srcml_unit_set_filename(unit, input_filename);
 
-        if(error)
-            return  SRCML_STATUS_INVALID_INPUT;
+        srcml_unit_set_directory(unit, srcml_archive_get_directory(&global_archive));
+        srcml_unit_set_version(unit, srcml_archive_get_version(&global_archive));
+        srcml_unit_set_timestamp(unit, srcml_unit_get_timestamp(&global_unit));
+        srcml_unit_set_hash(unit, srcml_unit_get_hash(&global_unit));
+
+        status = srcml_parse_unit_filename(unit, input_filename);
+        if(status != SRCML_STATUS_OK) {
+
+            srcml_free_unit(unit);
+            return status;
+
+        }
+
+        srcml_write_unit(&global_archive, unit);
+
+        srcml_free_unit(unit);
+        srcml_close_archive(&global_archive);
 
     } else {
 
@@ -777,6 +766,32 @@ const char * srcml_get_language_list(int pos) {
  * @returns Returns language on success and NULL on failure.
  */
 const char * srcml_check_extension(const char* filename) {
+
+    if(register_languages) {
+
+        register_languages = false;
+        language_extension_registry registry = global_archive.registered_languages;
+
+        global_archive.registered_languages = language_extension_registry();
+
+        global_archive.registered_languages.register_standard_file_extensions();
+
+        global_archive.registered_languages.append(registry);
+
+        std::vector<std::string> save_prefix;
+        std::vector<std::string> save_ns;
+        try {
+            for(std::vector<std::string>::size_type i = 0; i < global_archive.prefixes.size(); ++i) {
+                save_prefix.push_back(global_archive.prefixes.at(i));
+                save_ns.push_back(global_archive.namespaces.at(i));
+
+            }
+
+        } catch(...) {
+            return 0;
+        }
+
+    }
 
     return srcml_archive_check_extension(&global_archive, filename);
 

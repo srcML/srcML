@@ -1,7 +1,7 @@
 /**
- * @file srcMLStateStack.hpp
+ * @file Language.cpp
  *
- * @copyright Copyright (C) 2004-2010 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2008-2014 SDML (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
@@ -20,15 +20,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef SRCMLSTATESTACK_HPP
-#define SRCMLSTATESTACK_HPP
+#include "Language.hpp"
+#include <algorithm>
+#include <boost/regex.hpp>
 
-#include "srcMLState.hpp"
-#include "StateStack.hpp"
-#include "State.hpp"
-#include "srcMLState.hpp"
-#include "TokenParser.hpp"
+/** static size of lang2int */
+int Language::lang2intcount = 7;
 
-typedef StateStack<srcMLState> srcMLStateStack;
-
-#endif
+/** static array holding string/numeric language pairs */
+language_pair Language::lang2int[] = {
+    language_pair( LanguageName::LANGUAGE_C, LANGUAGE_C ),
+    language_pair( LanguageName::LANGUAGE_CXX, LANGUAGE_CXX ),
+    language_pair( LanguageName::LANGUAGE_JAVA, LANGUAGE_JAVA ),
+    language_pair( LanguageName::LANGUAGE_ASPECTJ, LANGUAGE_ASPECTJ ),
+    language_pair( LanguageName::LANGUAGE_CSHARP, LANGUAGE_CSHARP ),
+    language_pair( LanguageName::LANGUAGE_NONE, LANGUAGE_NONE ),
+};

@@ -1,7 +1,7 @@
 /*!
  * @file TextLexer.g
  *
- * @copyright Copyright (C) 2002-2010  SDML (www.srcML.org)
+ * @copyright Copyright (C) 2002-2014  SDML (www.srcML.org)
  *
  * This file is part of the srcML translator.
  *
@@ -129,16 +129,16 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); bool ismacrochar 
             { lastchar == 'L' || lastchar == 'U' || lastchar == 'u' }?
             { $setType(STRING_START); } STRING_START |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) && lastchar == 'R' }?
+            { inLanguage(LANGUAGE_CXX) && lastchar == 'R' }?
             { $setType(STRING_START); rawstring = true; } STRING_START |
 
             { lastchar == 'u' }? ('8' '"')=> '8'
             { $setType(STRING_START); } STRING_START |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) && lastchar == 'u' }? ('8' 'R' '"')=> '8' 'R'
+            { inLanguage(LANGUAGE_CXX) && lastchar == 'u' }? ('8' 'R' '"')=> '8' 'R'
             { $setType(STRING_START); rawstring = true; } STRING_START |
 
-            { inLanguage(LANGUAGE_CXX_ONLY) && (lastchar == 'L' || lastchar == 'U' || lastchar == 'u')}? ('R' '"')=> 'R'
+            { inLanguage(LANGUAGE_CXX) && (lastchar == 'L' || lastchar == 'U' || lastchar == 'u')}? ('R' '"')=> 'R'
             { $setType(STRING_START); rawstring = true; } STRING_START |
 
             ((options { greedy = true; } : '0'..'9' | 'a'..'z' { ismacrochar = false; } | 'A'..'Z' | '_' |

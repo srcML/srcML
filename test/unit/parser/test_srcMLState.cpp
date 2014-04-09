@@ -29,8 +29,105 @@
 #include <stdio.h>
 #include <string.h>
 #include <cassert>
+#include <dassert.hpp>
 
 int main() {
+
+
+    /*
+      pop
+    */
+
+    {
+        srcMLState s(1);
+        try{
+            s.pop();
+            assert(false);
+        } catch(...) {}
+    }
+
+    /*
+      inMode
+    */
+
+    {
+        srcMLState s(1, 2, 4);
+        assert(s.inMode(1));
+    }
+
+    {
+        srcMLState s(1, 2, 4);
+        assert(!s.inMode(2));
+    }
+
+    /*
+      inPrevMode
+    */
+
+    {
+        srcMLState s(1, 2, 4);
+        assert(s.inPrevMode(4));
+    }
+
+    {
+        srcMLState s(1, 2, 4);
+        assert(!s.inPrevMode(1));
+    }
+
+    /*
+      inTransparentMode
+    */
+
+    {
+        srcMLState s(1, 2, 4);
+        assert(s.inTransparentMode(3));
+    }
+
+    {
+        srcMLState s(1, 2, 4);
+        assert(!s.inTransparentMode(4));
+    }
+
+    /*
+      getMode
+    */
+
+    {
+        srcMLState s(1);
+        dassert(s.getMode(), 1);
+    }
+
+    /*
+      getTransparentMode
+    */
+
+    {
+        srcMLState s(1, 2);
+        dassert(s.getTransparentMode(), 3);
+    }
+
+    /*
+      setMode
+    */
+
+    {
+        srcMLState s(1, 2);
+        s.setMode(4);
+        dassert(s.getMode(), 5);
+        dassert(s.getTransparentMode(), 7);
+    }
+
+    /*
+      setMode
+    */
+
+    {
+        srcMLState s(1 | 4, 2 | 8);
+        s.clearMode(4);
+        s.clearMode(8);
+        dassert(s.getMode(), 1);
+        dassert(s.getTransparentMode(), 3);
+    }
 
     /*
       getParen
@@ -38,7 +135,7 @@ int main() {
 
     {
         srcMLState s;
-        assert(s.getParen() == 0);
+        dassert(s.getParen(), 0);
     }
 
     /*
@@ -48,7 +145,7 @@ int main() {
     {
         srcMLState s;
         s.incParen();
-        assert(s.getParen() == 1);
+        dassert(s.getParen(), 1);
     }
 
     /*
@@ -60,7 +157,7 @@ int main() {
         s.incParen();
         s.incParen();
         s.decParen();
-        assert(s.getParen() == 1);
+        dassert(s.getParen(), 1);
     }
 
     /*
@@ -69,7 +166,7 @@ int main() {
 
     {
         srcMLState s;
-        assert(s.getTypeCount() == 0);
+        dassert(s.getTypeCount(), 0);
     }
 
     /*
@@ -79,7 +176,7 @@ int main() {
     {
         srcMLState s;
         s.incTypeCount();
-        assert(s.getTypeCount() == 1);
+        dassert(s.getTypeCount(), 1);
     }
 
     /*
@@ -91,7 +188,7 @@ int main() {
         s.incTypeCount();
         s.incTypeCount();
         s.decTypeCount();
-        assert(s.getTypeCount() == 1);
+        dassert(s.getTypeCount(), 1);
     }
 
 
@@ -102,7 +199,7 @@ int main() {
     {
         srcMLState s;
         s.setTypeCount(4);
-        assert(s.getTypeCount() == 4);
+        dassert(s.getTypeCount(), 4);
     }
 
     return 0;

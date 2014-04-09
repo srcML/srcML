@@ -30,52 +30,91 @@
 #include <vector>
 #include <string>
 
+/** xml declaration standalone attribute */
 const char* const XML_DECLARATION_STANDALONE = "yes";
+
+/** xml declaration version attribute= */
 const char* const XML_VERSION = "1.0";
 
 // srcML namespace URIs
+/** Default srcML namespace uri */
 const char* const SRCML_SRC_NS_URI = "http://www.sdml.info/srcML/src";
+
+/** srcML preprocessor namespace uri */
 const char* const SRCML_CPP_NS_URI = "http://www.sdml.info/srcML/cpp";
+
+/** srcML error namespace uri */
 const char* const SRCML_ERR_NS_URI = "http://www.sdml.info/srcML/srcerr";
+
+/** srcDiff namespace uri */
 const char* const SRCML_DIFF_NS_URI = "http://www.sdml.info/srcDiff";
 
+/** Default srcML namespace prefix */
 const char* const SRCML_SRC_NS_PREFIX_DEFAULT = "";
+
+/** srcML preprocessor namespace prefix */
 const char* const SRCML_CPP_NS_PREFIX_DEFAULT = "cpp";
+
+/** srcML error namespace prefix */
 const char* const SRCML_ERR_NS_PREFIX_DEFAULT = "err";
+
+/** srcDiff namespace prefix */
 const char* const SRCML_DIFF_NS_PREFIX_DEFAULT = "diff";
 
 // srcML extension namespace URI's
+/** srcML literal namespace uri */
 const char* const SRCML_EXT_LITERAL_NS_URI = "http://www.sdml.info/srcML/literal";
+
+/** srcML operator namespace uri */
 const char* const SRCML_EXT_OPERATOR_NS_URI = "http://www.sdml.info/srcML/operator";
+
+/** srcML modifier namespace uri */
 const char* const SRCML_EXT_MODIFIER_NS_URI = "http://www.sdml.info/srcML/modifier";
+
+/** srcML position namespace uri */
 const char* const SRCML_EXT_POSITION_NS_URI = "http://www.sdml.info/srcML/position";
 
+/** srcML literal namespace prefix */
 const char* const SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT = "lit";
+
+/** srcML operator namespace prefix */
 const char* const SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT = "op";
+
+/** srcML operator namespace prefix */
 const char* const SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT = "type";
+
+/** srcML operator namespace prefix */
 const char* const SRCML_EXT_POSITION_NS_PREFIX_DEFAULT = "pos";
 
 // srcML standard attributes
+/** language attribute */
 const char* const UNIT_ATTRIBUTE_LANGUAGE = "language";
+
+/** directory attribute */
 const char* const UNIT_ATTRIBUTE_DIRECTORY = "dir";
+
+/** filename attribute */
 const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
+
+/** version attribute */
 const char* const UNIT_ATTRIBUTE_VERSION = "version";
+
+/** srcml-revision attribute @todo see if still needed */
 const char* const UNIT_ATTRIBUTE_REVISION = "srcml-revision";
+
+/** options attribute */
 const char* const UNIT_ATTRIBUTE_OPTIONS = "options";
+
+/** timestamp attribute */
 const char* const UNIT_ATTRIBUTE_TIMESTAMP = "timestamp";
+
+/** hash checksum attribute */
 const char* const UNIT_ATTRIBUTE_HASH = "hash";
+
+/** item (XPath) attribute */
 const char* const UNIT_ATTRIBUTE_ITEM = "item";
+
+/** item (XPath) attribute */
 const char* const UNIT_ATTRIBUTE_PATH = "item";
-
-const char* const DEFAULT_URI_PREFIX[] = {
-
-    SRCML_SRC_NS_PREFIX_DEFAULT,
-    SRCML_CPP_NS_PREFIX_DEFAULT,
-    SRCML_ERR_NS_PREFIX_DEFAULT,
-    SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
-    SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
-    SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
-    SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
-};
 
 #endif

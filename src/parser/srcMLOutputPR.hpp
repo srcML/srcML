@@ -26,6 +26,9 @@
 
 #include "srcMLParserTokenTypesMacro.hpp"
 
+/**
+ * Anonymous enum for process callback positions.
+ */
 enum {
     PROCESSTOKEN,
     PROCESSUNIT,
@@ -48,9 +51,11 @@ enum {
     PROCESSNULL,
     PROCESSCOMPLEX,
     PROCESSINTERFACE,
-    PROCESSESCAPE
+    PROCESSESCAPE,
+    PROCESSTYPEPREV
 };
 
+/** for conversion of process numbers to callbacks */
 srcMLOutput::PROCESS_PTR srcMLOutput::num2process[] = {
     &srcMLOutput::processToken,
     &srcMLOutput::processUnit,
@@ -73,19 +78,30 @@ srcMLOutput::PROCESS_PTR srcMLOutput::num2process[] = {
     &srcMLOutput::processNull,
     &srcMLOutput::processComplex,
     &srcMLOutput::processInterface,
-    &srcMLOutput::processEscape
+    &srcMLOutput::processEscape,
+    &srcMLOutput::processTypePrevious
 };
 
+/** element map call name */
 #define ELEMENT_MAP_CALL_NAME element_process
+
+/** element map first type */
 #define ELEMENT_MAP_FIRST_TYPE int
+
+/** element map second type */
 #define ELEMENT_MAP_SECOND_TYPE char
+
+/** element map default operation */
 #define ELEMENT_MAP_DEFAULT(s) template <ELEMENT_MAP_FIRST_TYPE n> inline ELEMENT_MAP_SECOND_TYPE \
     ELEMENT_MAP_CALL_NAME() { s }
 
+/** element map call */
 #define ELEMENT_MAP_CALL(t) ELEMENT_MAP_CALL_NAME <srcMLParserTokenTypes::t>()
+
+/** element map */
 #define ELEMENT_MAP(t, s) template <> inline ELEMENT_MAP_SECOND_TYPE ELEMENT_MAP_CALL(t) /* stuff */ { return s; }
 
-// map the token types to specific strings
+/** map the token types to specific strings */
 namespace {
 
     // base member
@@ -123,6 +139,7 @@ namespace {
     ELEMENT_MAP(SONAME, PROCESSTOKEN)
     ELEMENT_MAP(SCNAME, PROCESSTOKEN)
     ELEMENT_MAP(STYPE, PROCESSTOKEN)
+    ELEMENT_MAP(STYPEPREV, PROCESSTYPEPREV)
     ELEMENT_MAP(SCONDITION, PROCESSTOKEN)
     ELEMENT_MAP(SBLOCK, PROCESSTOKEN)
     ELEMENT_MAP(SINDEX, PROCESSTOKEN)
@@ -270,19 +287,30 @@ namespace {
 #undef ELEMENT_MAP_CALL
 #undef ELEMENT_MAP
 
+/** This was moved to fix doxygen problems.  However, may want to move back */
+/** boost local macro */
+#define BOOST_PP_LOCAL_MACRO(n)   element_process<n>(),
+
+/** boost macro limits */
+#define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
+
+/** the process table */
 char srcMLOutput::process_table[] = {
 
     // fill the array with the prefixes
-#define BOOST_PP_LOCAL_MACRO(n)   element_process<n>(),
-#define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS
 
     // fill the array in order of token numbers
+/** boost local macro */
 #define BOOST_PP_LOCAL_MACRO(n)   element_process<256 + 1 + n>(),
+
+/** boost macro limits */
 #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 256)
+
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS
+
 };

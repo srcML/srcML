@@ -87,7 +87,6 @@ _srcml_read_open_memory
 _srcml_read_open_FILE
 _srcml_read_unit
 _srcml_read_unit_header
-_srcml_read_unit_position
 _srcml_read_unit_xml
 _srcml_register_file_extension
 _srcml_register_macro
@@ -102,7 +101,6 @@ _srcml_set_tabstop
 _srcml_set_version
 _srcml_set_timestamp
 _srcml_set_hash
-_srcml_skip_unit
 _srcml_unit_get_directory
 _srcml_unit_get_encoding
 _srcml_unit_get_filename
@@ -118,6 +116,7 @@ _srcml_unit_set_language
 _srcml_unit_set_version
 _srcml_unit_set_timestamp
 _srcml_unit_set_hash
+_srcml_unit_set_xml
 _srcml_unparse_unit_fd
 _srcml_unparse_unit_filename
 _srcml_unparse_unit_memory
@@ -129,3 +128,5 @@ _srcml_write_open_filename
 _srcml_write_open_memory
 _srcml_write_open_FILE
 _srcml_write_unit
+_srcml_write_raw
+_srcml_write_raw_len

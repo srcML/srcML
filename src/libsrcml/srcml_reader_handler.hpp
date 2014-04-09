@@ -111,7 +111,7 @@ public :
 
         archive = srcml_create_archive();
 
-        srcml_archive_disable_option(archive, SRCML_OPTION_TIMESTAMP | SRCML_OPTION_HASH);
+        srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
 
         archive->prefixes.clear();
         archive->namespaces.clear();
@@ -220,9 +220,7 @@ public :
             std::string value = "";
             value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
 
-            if(attribute == "timestamp")
-                srcml_archive_enable_option(archive, SRCML_OPTION_TIMESTAMP);
-            else if(attribute == "language")
+            if(attribute == "language")
                 srcml_archive_set_language(archive, value.c_str());
             else if(attribute == "filename")
                 srcml_archive_set_filename(archive, value.c_str());
@@ -413,10 +411,9 @@ public :
             std::string value = "";
             value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
 
-            if(attribute == "timestamp") {
-                srcml_archive_enable_option(archive, SRCML_OPTION_TIMESTAMP);
+            if(attribute == "timestamp")
                 srcml_unit_set_timestamp(unit, value.c_str());
-            } else if(attribute == "hash")
+            else if(attribute == "hash")
                 srcml_unit_set_hash(unit, value.c_str());
             else if(attribute == "language")
                 srcml_unit_set_language(unit, value.c_str());

@@ -23,76 +23,294 @@
 #ifndef SRCMLSTATE_HPP
 #define SRCMLSTATE_HPP
 
-#include "State.hpp"
+#include <stack>
 
-class srcMLState : public State {
+#include "srcMLException.hpp"
+
+/**
+ * srcMLState
+ *
+ * Class to hold srcML state e.g. parenthesis/curly braces/type counts.
+ * Also, holds modes.
+ */
+class srcMLState {
+
 public:
 
-    srcMLState(const State::MODE_TYPE& mode, const State::MODE_TYPE& transmode, const State::MODE_TYPE& prevmode)
-        : State(mode, transmode, prevmode), parencount(0), curlycount(0), typecount(0)
+#ifdef __GNUC__
+
+    /** type of mode for GNU */
+    typedef unsigned long long MODE_TYPE;
+
+#else
+
+    /** type of mode for non-GNU */
+    typedef unsigned __int64 MODE_TYPE;
+
+#endif
+
+    /** 
+     * srcMLState
+     * @param mode current mode to create
+     * @param transmode the transparent mode
+     * @param prevmode previous mode.
+     *
+     * Constructor.  Create a new mode with the perscribed mode, transparent mode, and previous mode.
+     */
+    srcMLState(const MODE_TYPE& mode = 0, const MODE_TYPE& transmode = 0, const MODE_TYPE& prevmode = 0)
+        : flags(mode), flags_prev(prevmode), flags_all(transmode | mode), parencount(0), curlycount(0), typecount(0)
     {}
 
-    srcMLState()
-        : State(), parencount(0), curlycount(0), typecount(0)
-    {}
+    /**
+     * size
+     *
+     * Get number of open elements.
+     *
+     * @returns the number of open elements.
+     */
+    int size() const {
+        return (int)openelements.size();
+    }
 
-    // parentheses count
+    /**
+     * push
+     * @param id number of tag to add to open elements
+     *
+     * Add open element to stack.
+     */
+    void push(int id) {
+        openelements.push(id);
+    }
+
+    /**
+     * pop
+     *
+     * Remove an open element from stack.
+     */
+    void pop() {
+        if (openelements.empty())
+            throw Segmentation_Fault();
+
+        openelements.pop();
+    }
+
+    // mode methods
+
+    /**
+     * inMode
+     * @param m a mode to test if in
+     *
+     * Predicate to test if in modes m.
+     *
+     * @returns if in modes m.
+     */
+    bool inMode(const MODE_TYPE& m) const {
+
+        return (flags & m) == m;
+    }
+
+    /**
+     * inPrevMode
+     * @param m a mode to test if in
+     *
+     * Predicate to test if in the previous modes m.
+     *
+     * @returns if in previous modes m.
+     */
+     bool inPrevMode(const MODE_TYPE& m) const {
+
+        return (flags_prev & m) == m;
+    }
+    /**
+     * inTransaprentMode
+     * @param m a mode to test if in
+     *
+     * Predicate to test if in transparent modes m.
+     *
+     * @returns if in transparent modes m.
+     */
+    bool inTransparentMode(const MODE_TYPE& m) const {
+
+        return (flags_all & m) == m;
+    }
+
+    /**
+     * getMode
+     *
+     * Get the current mode.
+     *
+     * @returns the current mode.
+     */
+    const MODE_TYPE& getMode() const {
+        return flags;
+    }
+
+    /**
+     * getTransparentMode
+     *
+     * Get the current transparent mode.
+     *
+     * @returns the current transparent mode.
+     */
+    const MODE_TYPE& getTransparentMode() const {
+        return flags_all;
+    }
+
+    /**
+     * setMode
+     * @param m1 mode to set in addition to current mdoes
+     *
+     * Set the mode and transparent mode to have m1 modes in addition
+     * to the modes they already have.
+     */
+    void setMode(const MODE_TYPE& m1) {
+
+        flags |= m1;
+        flags_all |= m1;
+    }
+
+    /**
+     * clearMode
+     * @param m modes to clear/unset
+     *
+     * Clear/unset only the modes m from mode and transparent mode.
+     */
+     void clearMode(const MODE_TYPE& m) {
+
+        flags &= ~m;
+        flags_all &= ~m;
+    }
+
+    /**
+     * getParen
+     *
+     * Get the open parenthesis count
+     *
+     * @returns the current open parenthesis count.
+     */
     int getParen() const {
         return parencount;
     }
 
-    // increment the parentheses count
+    /**
+     * incParen
+     *
+     * Increment the open parenthesis count
+     */
     void incParen() {
         ++parencount;
     }
 
-    // decrement the parentheses count
+    /**
+     * decParen
+     *
+     * Decrement the open parenthesis count
+     */
     void decParen() {
         --parencount;
     }
 
-    // curly count
+    /**
+     * getCurly
+     *
+     * Get the open curly brace count
+     *
+     * @returns the current open curly brace count.
+     */
     int getCurly() const {
         return curlycount;
     }
 
-    // increment the curly count
+    /**
+     * incCurly
+     *
+     * Increment the open curly brace count
+     */
     void incCurly() {
         ++curlycount;
     }
 
-    // decrement the curly count
+    /**
+     * decCurly
+     *
+     * Decrement the open curly brace count
+     */
     void decCurly() {
         --curlycount;
     }
 
-    // type count
+    /**
+     * getTypeCount
+     *
+     * Get the type count
+     *
+     * @returns the current type count.
+     */
     int getTypeCount() const {
         return typecount;
     }
 
-    // set type count
+    /**
+     * setTypeCount
+     * @param n number of types to set
+     *
+     * Set the type count
+     */
     void setTypeCount(int n) {
         typecount = n;
     }
 
-    // increment the type count
+    /**
+     * incTypeCount
+     *
+     * Increment the type count
+     */
     void incTypeCount() {
         ++typecount;
     }
 
-    // decrement the type count
+    /**
+     * decTypeCount
+     *
+     * Decrement the type count
+     */
     void decTypeCount() {
         --typecount;
     }
 
+    /**
+     * ~srcMLState
+     *
+     * Destructor.
+     */
     ~srcMLState() {
     }
 
+public:
+
+    /** current mode */
+    MODE_TYPE flags;
+
+    /** previous mode */
+    MODE_TYPE flags_prev;
+
+    /** transparent (all) modes */
+    MODE_TYPE flags_all;
+
+    /** stack of open elements */
+    std::stack<int> openelements;
+
 private:
+
+    /** open parenthesis count */
     int parencount;
+
+    /** open curly brace count */
     int curlycount;
+
+    /** current type count */
     int typecount;
+    
 };
 
 #endif

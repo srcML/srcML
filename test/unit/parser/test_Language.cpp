@@ -1,5 +1,5 @@
 /**
- * @file test_srcMLStateStack.cpp
+ * @file test_Language.cpp
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
@@ -19,46 +19,56 @@
  */
 
 /*
-  test_Mode.cpp
+  test_Language.cpp
 
-  Unit tests for Mode.
+  Unit tests for Language.
 
 */
 
-#include <srcMLStateStack.hpp>
+#include <Language.hpp>
 #include <stdio.h>
 #include <string.h>
 #include <cassert>
-#include <TokenParser.hpp>
+#include <iostream>
+#include <dassert.hpp>
 
-class TP : public TokenParser {
-
-public:
-    TP() {}
-
-    virtual void startElement(int) {}
-    virtual void startNoSkipElement(int) {}
-    virtual void endElement(int) {}
-    virtual void emptyElement(int) {}
-    virtual void flushSkip() {}
-    virtual int SkipBufferSize() { return 0; }
-    virtual antlr::RefToken* CurrentToken() { return 0; }
-    virtual void addElement(int) { }
-    virtual ~TP() {}
-};
-
-int main(/*int argc, char * argv[]*/) {
+int main() {
 
     /*
-      size
-
-      anything above zero causes exception on Destructor.
+      inLanguage()
     */
+    {
+        Language l(Language::LANGUAGE_CXX);
+        assert(!l.inLanguage(Language::LANGUAGE_C));
+    }
 
     {
-        TP tp;
-        srcMLStateStack s(&tp);
-        assert(s.size() == 0);
+        Language l(Language::LANGUAGE_CXX);
+        assert(l.inLanguage(Language::LANGUAGE_CXX));
+    }
+
+
+    /*
+      getLanguage()
+    */
+    {
+        Language l(Language::LANGUAGE_CXX);
+        dassert(l.getLanguage(), Language::LANGUAGE_CXX);
+    }
+
+    /*
+      getLanguage(const char *)
+    */
+    {
+        dassert(Language::getLanguage("C++"), Language::LANGUAGE_CXX);
+    }
+
+    /*
+      getLanguageString()
+    */
+    {
+        Language l(Language::LANGUAGE_CXX);
+        dassert(Language::getLanguage("C++"), Language::LANGUAGE_CXX);
     }
 
     return 0;
