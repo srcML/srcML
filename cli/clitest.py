@@ -5,15 +5,6 @@
 # Michael L. Collard
 # collard@cs.kent.edu
 
-import sys
-import os.path
-import subprocess
-import platform
-import string
-
-import option
-import status
-
 from testcli import *
 
 test_count = 0
