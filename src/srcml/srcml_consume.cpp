@@ -80,7 +80,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             /** msvc hash object */
             HCRYPTHASH   crypt_hash;
             CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-            CryptHashData(*sfd->ctx, (BYTE *)&request->buffer.front(), request->buffer.size(), 0);
+            CryptHashData(crypt_hash, (BYTE *)&request->buffer.front(), request->buffer.size(), 0);
             DWORD        SHA_DIGEST_LENGTH;
             DWORD        hash_length_size = sizeof(DWORD);
             CryptGetHashParam(crypt_hash, HP_HASHSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
