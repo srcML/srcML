@@ -7,7 +7,7 @@
 </unit>
 
 <unit>
-<lock>lock (<decl><type><name>Object</name></type> <name>thisLock</name> =<init> <expr>new <call><name>Object</name><argument_list>()</argument_list></call></expr></init></decl>)
+<lock>lock (<decl><type><name>Object</name></type> <name>thisLock</name> <init>= <expr>new <call><name>Object</name><argument_list>()</argument_list></call></expr></init></decl>)
 <block>{}</block></lock>
 </unit>
 

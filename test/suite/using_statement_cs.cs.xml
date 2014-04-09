@@ -7,15 +7,15 @@
 </unit>
 
 <unit>
-<using>using (<decl><type><name>Font</name></type> <name>font1</name> =<init> <expr>new <call><name>Font</name><argument_list>(<argument><expr><name>Arial</name></expr></argument>, <argument><expr>10.0f</expr></argument>)</argument_list></call></expr></init></decl>)
+<using>using (<decl><type><name>Font</name></type> <name>font1</name> <init>= <expr>new <call><name>Font</name><argument_list>(<argument><expr><name>Arial</name></expr></argument>, <argument><expr>10.0f</expr></argument>)</argument_list></call></expr></init></decl>)
 <block>{}</block></using>
 </unit>
 
 <unit>
-<using>using (<decl><type><name>Font</name></type> <name>font1</name> =<init> <expr>new <call><name>Font</name><argument_list>(<argument><expr><name>Arial</name></expr></argument>, <argument><expr>10.0f</expr></argument>)</argument_list></call></expr></init></decl>)
+<using>using (<decl><type><name>Font</name></type> <name>font1</name> <init>= <expr>new <call><name>Font</name><argument_list>(<argument><expr><name>Arial</name></expr></argument>, <argument><expr>10.0f</expr></argument>)</argument_list></call></expr></init></decl>)
 <block>{
 
-  <decl_stmt><decl><type><name>byte</name></type> <name>charset</name> =<init> <expr><name><name>font1</name>.<name>GdiCharSet</name></name></expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>byte</name></type> <name>charset</name> <init>= <expr><name><name>font1</name>.<name>GdiCharSet</name></name></expr></init></decl>;</decl_stmt>
 
 }</block></using>
 </unit>
