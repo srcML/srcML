@@ -533,9 +533,9 @@ UTF8CharBuffer::~UTF8CharBuffer() {
         DWORD        hash_length_size = sizeof(DWORD);
         CryptGetHashParam(crypt_hash, HP_HASHSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
         CryptGetHashParam(crypt_hash, HP_HASHVAL, (BYTE *)md, &SHA_DIGEST_LENGTH, 0);
-        /** @todo cleanup hash */
+        CryptDestroyHash(crypt_hash);
+        CryptReleaseContext(crypt_provider);
 #else
-
         SHA1_Final(md, &ctx);
 #endif
 
