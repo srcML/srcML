@@ -66,15 +66,18 @@
         if (request->version && ((status = srcml_unit_set_version(unit, request->version->c_str())) != SRCML_STATUS_OK))
             throw status;
 
-        // sha1 attribute, if archive or if option on
+        // sha1 attribute, if hash is on
         // sha1 value based on the code as encoded (source text encoding) in the original file
-        unsigned char md[SHA_DIGEST_LENGTH];
-        if (SHA1((const unsigned char*)&request->buffer.front(), (SHA_LONG)request->buffer.size(), md) == 0)
-            throw SRCML_STATUS_ERROR;
-        const char outmd[] = { HEXCHARASCII(md), '\0' };
-        BOOST_STATIC_ASSERT_MSG(sizeof(outmd)/sizeof(outmd[0]) == (SHA_DIGEST_LENGTH * 2 + 1),
-            "Wrong size for SHA_DIGEST_LENGTH conversion");
-        //srcml_unit_set_hash(unit, outmd);
+        if (srcml_archive_get_options(request->srcml_arch) & SRCML_OPTION_HASH) {
+
+            unsigned char md[SHA_DIGEST_LENGTH];
+            if (SHA1((const unsigned char*)&request->buffer.front(), (SHA_LONG)request->buffer.size(), md) == 0)
+                throw SRCML_STATUS_ERROR;
+            const char outmd[] = { HEXCHARASCII(md), '\0' };
+            BOOST_STATIC_ASSERT_MSG(sizeof(outmd)/sizeof(outmd[0]) == (SHA_DIGEST_LENGTH * 2 + 1),
+                "Wrong size for SHA_DIGEST_LENGTH conversion");
+            srcml_unit_set_hash(unit, outmd);
+        }
 
         // parse the buffer/file
         status = request->disk_filename ?

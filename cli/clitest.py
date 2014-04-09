@@ -367,7 +367,7 @@ check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "-", "-o", "sub/b.cpp.xml"]
 nestedfile1 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6" language="C++" filename="sub/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
@@ -377,11 +377,11 @@ nestedfile1 = xml_declaration + """
 nestedfile = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6" language="C++" filename="sub/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" hash="aecf18b52d520ab280119febd8ff6c803135ddfc" language="C++" filename="sub/b.cpp">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 

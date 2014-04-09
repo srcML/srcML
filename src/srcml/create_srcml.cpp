@@ -108,12 +108,13 @@ void create_srcml(const srcml_request_t& srcml_request,
         !input_sources[0].isdirectory) {
 
         srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+        srcml_archive_disable_option(srcml_arch, SRCML_OPTION_HASH);
     } else {
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+        srcml_archive_enable_option(srcml_arch, SRCML_OPTION_HASH);
     }
 
     // turned off for now due to cli testing
-    srcml_archive_disable_option(srcml_arch, SRCML_OPTION_HASH);
     srcml_archive_disable_option(srcml_arch, SRCML_OPTION_TIMESTAMP);
 
     // register file extensions
