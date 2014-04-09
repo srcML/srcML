@@ -102,7 +102,7 @@
 </unit>
 
 <unit>
-<typedef>typedef <type><enum>enum <block>{ <decl><name>a</name></decl>, <decl><name>b</name> =<init> <expr><name>c</name></expr></init></decl> }</block></enum></type> <name>a</name>;</typedef>
+<typedef>typedef <type><enum>enum <block>{ <decl><name>a</name></decl>, <decl><name>b</name> <init>= <expr><name>c</name></expr></init></decl> }</block></enum></type> <name>a</name>;</typedef>
 </unit>
 
 <unit>
