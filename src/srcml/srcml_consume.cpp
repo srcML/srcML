@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * Thread-designed function to parse and create a unit.
- * Output is schedule for writing on the write queue
+ * Output is scheduled for writing on the write queue
  */
 
 #include <srcml_consume.hpp>
@@ -31,7 +31,7 @@
 #include <sha1utilities.hpp>
 
 // creates initial unit, parses, and then sends unit to write queue
- void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
+void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
     // error passthrough to output for proper output in trace
     if (request->status) {
@@ -86,7 +86,7 @@
         if (status != SRCML_STATUS_OK)
             throw status;
 
-    } catch (int status) {
+    } catch (...) {
         std::cerr << "Error in constructing srcml\n";
         if (unit)
             srcml_free_unit(unit);

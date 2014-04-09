@@ -44,14 +44,12 @@ void srcml_aquire_unit_xml(srcml_archive* srcml_arch, int unit_index) {
 }
 
 void srcml_aquire_unit(srcml_archive* srcml_arch, int unit_index) {
-    if (srcml_unit* unit = srcml_read_unit_position(srcml_arch, unit_index)) {
-        char* unit_buffer = 0;
-        int buffer_size = 0;
-        srcml_unparse_unit_memory(unit, &unit_buffer, &buffer_size);
-        std::cout << unit_buffer;
+
+    // move to the correct unit
+    for (int i = 1; i < unit_index; ++i) {
+        srcml_unit* unit = srcml_read_unit_header(srcml_arch);
         srcml_free_unit(unit);
     }
-    // Problem getting the unit
 }
 
 int srcml_unit_count(srcml_archive* srcml_arch) {

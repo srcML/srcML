@@ -114,9 +114,6 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_HASH);
     }
 
-    // turned off for now due to cli testing
-    srcml_archive_disable_option(srcml_arch, SRCML_OPTION_TIMESTAMP);
-
     // register file extensions
     BOOST_FOREACH(const std::string& ext, srcml_request.language_ext) {
         size_t pos = ext.find('=');
