@@ -136,11 +136,6 @@ bool compare(const archive_calls_t& call, const char* extension) {
     return strcmp(extension, call.name) == 0;
 }
 
-bool comparenames(const archive_calls_t& call, const archive_calls_t& call2) {
-
-    return strcmp(call.name, call2.name) == 0;
-}
-
 int archive_write_set_format_by_extension(struct archive* ar, const char* extension) {
 
     const archive_calls_t* end = format_calls + sizeof(format_calls) / sizeof(format_calls[0]) - 1;
@@ -163,12 +158,17 @@ int archive_write_set_compression_by_extension(struct archive* ar, const char* e
     return ARCHIVE_FATAL;
 }
 
+bool operator<(const archive_calls_t& call, const archive_calls_t& call2) {
+
+    return strcmp(call.name, call2.name) < 0;
+}
+
 bool is_archive(const std::string& extension) {
 
     const archive_calls_t* end = format_calls + sizeof(format_calls) / sizeof(format_calls[0]) - 1;
     archive_calls_t searchvalue = { extension.c_str(), 0 };
 
-    return std::binary_search(format_calls, end, searchvalue, comparenames);
+    return std::binary_search(format_calls, end, searchvalue);
 }
 
 bool is_compressed(const std::string& extension) {
@@ -176,5 +176,5 @@ bool is_compressed(const std::string& extension) {
     const archive_calls_t* end = compression_calls + sizeof(compression_calls) / sizeof(compression_calls[0]) - 1;
     archive_calls_t searchvalue = { extension.c_str(), 0 };
 
-    return std::binary_search(compression_calls, end, searchvalue, comparenames);
+    return std::binary_search(compression_calls, end, searchvalue);
 }
