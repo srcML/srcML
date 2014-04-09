@@ -297,23 +297,6 @@ asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </unit>
 """
 
-# skip_unit
-archive = srcml.srcml_archive()
-archive.read_open_memory(asrcml)
-archive.skip_unit()
-unit = archive.read_unit()
-unit.unparse_memory()
-archive.close()
-verify_test(src, unit.src())
-
-# read_unit_position
-archive = srcml.srcml_archive()
-archive.read_open_memory(asrcml)
-unit = archive.read_unit_position(2)
-unit.unparse_memory()
-archive.close()
-verify_test(src, unit.src())
-
 # clone
 archive = srcml.srcml_archive()
 archive.set_language("C++")
@@ -581,7 +564,7 @@ file.close()
 os.remove("a.foo")
 
 asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" timestamp="timestamp" hash="hash" language="C++" filename="a.foo"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
+<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.foo" timestamp="timestamp" hash="hash"><macro-list token="MACRO" type="src:macro"/><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
 </s:unit>
 """
 
