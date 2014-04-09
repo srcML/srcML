@@ -5088,7 +5088,7 @@ function_pointer_initialization[] { ENTRY_DEBUG } :
             setMode(MODE_EXPRESSION | MODE_EXPECT);
 
             // start the initialization element
-            startNoSkipElement(SDECLARATION_INITIALIZATION);
+            startElement(SDECLARATION_INITIALIZATION);
         }
         EQUAL
         (options { greedy = true; } : expression)*
@@ -5101,7 +5101,7 @@ variable_declaration_initialization[] { ENTRY_DEBUG } :
             startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
 
             // start the initialization element
-            startNoSkipElement(SDECLARATION_INITIALIZATION);
+            startElement(SDECLARATION_INITIALIZATION);
         }
         EQUAL |
         {
@@ -5131,7 +5131,7 @@ parameter_declaration_initialization[] { ENTRY_DEBUG } :
             setMode(MODE_EXPRESSION | MODE_EXPECT);
 
             // start the initialization element
-            startNoSkipElement(SDECLARATION_INITIALIZATION);
+            startElement(SDECLARATION_INITIALIZATION);
         }
         EQUAL
 ;
@@ -5929,7 +5929,7 @@ template_declaration_initialization[] { ENTRY_DEBUG } :
             setMode(MODE_EXPRESSION | MODE_EXPECT);
 
             // start the initialization element
-            startNoSkipElement(SDECLARATION_INITIALIZATION);
+            startElement(SDECLARATION_INITIALIZATION);
         }
         EQUAL compound_name
 
