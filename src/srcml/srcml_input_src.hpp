@@ -31,6 +31,7 @@
 #include <boost/filesystem.hpp>
 #include <algorithm>
 #include <src_archive.hpp>
+#include <boost/foreach.hpp>
 
 #ifdef WIN32
 #include <io.h>
@@ -156,5 +157,26 @@ template <>
 inline bool contains<int>(const srcml_input_src& input) { return input.fd; }
 
 inline bool is_src(const srcml_input_src& input) { return input.state == SRC; }
+
+inline std::ostream& operator<<(std::ostream& out, const srcml_input_src& input) {
+
+    out << "filename:" << input.filename << '\n';
+    out << "protocol:" << input.protocol << '\n';
+    out << "resource:" << input.resource << '\n';
+    out << "plainfile:" << input.plainfile << '\n';
+    out << "extension:" << input.extension << '\n';
+    if (input.fileptr)
+        out << "fileptr:" << *input.fileptr << '\n';
+    if (input.fd)
+        out << "fd:" << *input.fd << '\n';
+    out << "state:" << input.state << '\n';
+    BOOST_FOREACH(const std::string& compression, input.compressions)
+        out << "compression:" << compression << '\n';
+    BOOST_FOREACH(const std::string& archive, input.archives)
+        out << "archive:" << archive << '\n';
+    out << "isdirectory:" << input.isdirectory << '\n';
+
+    return out;
+}
 
 #endif
