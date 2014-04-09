@@ -7,15 +7,6 @@
 
 from testcli import *
 
-test_count = 0
-error_count = 0
-eol_error_count = 0
-exception_count = 0
-error_list = []
-eol_error_list = []
-test_line = ""
-error_lines = []
-
 limit = 0
 if len(sys.argv) > 1:
         globals()["limit"] = int(sys.argv[1])
