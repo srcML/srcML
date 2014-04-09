@@ -71,8 +71,21 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         if (srcml_archive_get_options(request->srcml_arch) & SRCML_OPTION_HASH) {
 
             unsigned char md[SHA_DIGEST_LENGTH];
+#ifdef _MSC_BUILD
+            BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
+            if(! success && GetLastError() == NTE_BAD_KEYSET)
+                success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
+            CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
+            CryptHashData(*sfd->ctx, (BYTE *)&request->buffer.front(), request->buffer.size(), 0);
+            DWORD        SHA_DIGEST_LENGTH;
+            DWORD        hash_length_size = sizeof(DWORD);
+            CryptGetHashParam(crypt_hash, HP_HASHSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
+            CryptGetHashParam(crypt_hash, HP_HASHVAL, (BYTE *)md, &SHA_DIGEST_LENGTH, 0);
+            /** @todo cleanup hash */
+#else
             if (SHA1((const unsigned char*)&request->buffer.front(), (SHA_LONG)request->buffer.size(), md) == 0)
                 throw SRCML_STATUS_ERROR;
+#endif
             const char outmd[] = { HEXCHARASCII(md), '\0' };
             BOOST_STATIC_ASSERT_MSG(sizeof(outmd)/sizeof(outmd[0]) == (SHA_DIGEST_LENGTH * 2 + 1),
                 "Wrong size for SHA_DIGEST_LENGTH conversion");
