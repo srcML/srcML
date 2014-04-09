@@ -762,12 +762,6 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
         // version attribute
         { UNIT_ATTRIBUTE_REVISION, isoption(OPTION_REVISION) ? srcml_version_string() : 0 },
 
-        // timestamp attribute
-        { UNIT_ATTRIBUTE_TIMESTAMP, timestamp },
-
-        // timestamp attribute
-        { UNIT_ATTRIBUTE_HASH, hash },
-
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },
 
@@ -782,6 +776,12 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
         // position tab setting
         { tabattribute.c_str(), isoption(OPTION_POSITION) ? stab.c_str() : 0 },
+
+        // timestamp attribute
+        { UNIT_ATTRIBUTE_TIMESTAMP, timestamp },
+
+        // timestamp attribute
+        { UNIT_ATTRIBUTE_HASH, hash },
 
         { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.c_str() : 0 },
 
