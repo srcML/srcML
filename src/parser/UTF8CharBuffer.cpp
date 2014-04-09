@@ -109,7 +109,7 @@ int srcMLFileRead(void * context,  char * buffer, int len) {
 #ifdef _MSC_BUILD
         CryptHashData(*sfile->ctx, (BYTE *)buffer, num_read, 0);
 #else
-        SHA1_Update(sfile->ctx, buffer, (LONG)num_read);
+        SHA1_Update(sfile->ctx, buffer, (SHA_LONG)num_read);
 #endif
 
     return (int)num_read;
@@ -152,7 +152,7 @@ int srcMLFdRead(void * context,  char * buffer, int len) {
 #ifdef _MSC_BUILD
         CryptHashData(*sfd->ctx, (BYTE *)buffer, num_read, 0);
 #else
-        SHA1_Update(sfd->ctx, buffer, (LONG)num_read);
+        SHA1_Update(sfd->ctx, buffer, (SHA_LONG)num_read);
 #endif
 
     return (int)num_read;
@@ -243,7 +243,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
         CryptHashData(crypt_hash, (BYTE *)c_buffer, buffer_size, 0);
 #else
         SHA1_Init(&ctx);
-        SHA1_Update(&ctx, c_buffer, (LONG)buffer_size);
+        SHA1_Update(&ctx, c_buffer, (SHA_LONG)buffer_size);
 #endif
 
     }
