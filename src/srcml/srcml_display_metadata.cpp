@@ -50,6 +50,15 @@ void srcml_aquire_unit(srcml_archive* srcml_arch, int unit_index) {
         srcml_unit* unit = srcml_read_unit_header(srcml_arch);
         srcml_free_unit(unit);
     }
+
+    if (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
+        char* unit_buffer = 0;
+        int buffer_size = 0;
+        srcml_unparse_unit_memory(unit, &unit_buffer, &buffer_size);
+        std::cout << unit_buffer;
+        srcml_free_unit(unit);
+    }
+
 }
 
 int srcml_unit_count(srcml_archive* srcml_arch) {
