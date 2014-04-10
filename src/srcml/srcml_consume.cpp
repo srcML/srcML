@@ -92,8 +92,10 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
                 throw SRCML_STATUS_ERROR;
 #endif
             const char outmd[] = { HEXCHARASCII(md), '\0' };
+#ifndef _MSC_BUILD
             BOOST_STATIC_ASSERT_MSG(sizeof(outmd)/sizeof(outmd[0]) == (SHA_DIGEST_LENGTH * 2 + 1),
                 "Wrong size for SHA_DIGEST_LENGTH conversion");
+#endif
             srcml_unit_set_hash(unit, outmd);
         }
 
