@@ -86,7 +86,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             CryptGetHashParam(crypt_hash, HP_HASHSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
             CryptGetHashParam(crypt_hash, HP_HASHVAL, (BYTE *)md, &SHA_DIGEST_LENGTH, 0);
             CryptDestroyHash(crypt_hash);
-            CryptReleaseContext(crypt_provider);
+            CryptReleaseContext(crypt_provider, 0);
 #else
             if (SHA1((const unsigned char*)&request->buffer.front(), (SHA_LONG)request->buffer.size(), md) == 0)
                 throw SRCML_STATUS_ERROR;
