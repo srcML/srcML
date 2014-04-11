@@ -95,6 +95,7 @@ public:
     bool add_end_element();
     bool add_namespace(const char * prefix, const char * uri);
     bool add_attribute(const char * prefix, const char * name, const char * uri, const char * content);
+    bool add_string(const char * content);
 
     // destructor
     ~srcml_translator();

@@ -456,6 +456,13 @@ bool srcml_translator::add_attribute(const char * prefix, const char * name, con
 
 }
 
+bool srcml_translator::add_string(const char * content) {
+
+    if(!is_outputting_unit && output_unit_depth) return false;
+
+    xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)content);
+
+}
 /**
  * ~srcml_translator
  *
