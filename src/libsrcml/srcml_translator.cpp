@@ -456,6 +456,16 @@ bool srcml_translator::add_attribute(const char * prefix, const char * name, con
 
 }
 
+/**
+ * add_string.
+ * @param content the string to write out
+ *
+ * Write the string/text to a started unit.
+ * i.e being added to start tag.
+ * add_start_unit must be called first.
+ *
+ * @returns if succesfully added.
+ */
 bool srcml_translator::add_string(const char * content) {
 
     if(!is_outputting_unit && output_unit_depth) return false;
