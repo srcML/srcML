@@ -1134,11 +1134,19 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
 
 int srcml_write_start_unit(struct srcml_archive * archive, const struct srcml_unit * unit) {
 
+    if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    if(!archive->translator->add_start_unit(unit)) return SRCML_STATUS_INVALID_INPUT;
+
     return SRCML_STATUS_OK;
 
 }
 
 int srcml_write_end_unit(struct srcml_archive * archive) {
+
+    if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    if(!archive->translator->add_end_unit()) return SRCML_STATUS_INVALID_INPUT;
 
     return SRCML_STATUS_OK;
 
@@ -1146,11 +1154,19 @@ int srcml_write_end_unit(struct srcml_archive * archive) {
 
 int srcml_write_start_element(struct srcml_archive * archive, const char * prefix, const char * name, const char * uri) {
 
+    if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    if(!archive->translator->add_start_element(prefix, name, uri)) return SRCML_STATUS_INVALID_INPUT;
+
     return SRCML_STATUS_OK;
 
 }
 
 int srcml_write_end_element(struct srcml_archive * archive) {
+
+    if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    if(!archive->translator->add_end_element()) return SRCML_STATUS_INVALID_INPUT;
 
     return SRCML_STATUS_OK;
 
@@ -1158,16 +1174,23 @@ int srcml_write_end_element(struct srcml_archive * archive) {
 
 int srcml_write_namespace(struct srcml_archive * archive, const char * prefix, const char * uri) {
 
+    if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    if(!archive->translator->add_namespace(prefix, uri)) return SRCML_STATUS_INVALID_INPUT;
+
     return SRCML_STATUS_OK;
 
 }
 
 int srcml_write_attribute(struct srcml_archive * archive, const char * prefix, const char * name, const char * uri, const char * content) {
 
+    if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    if(!archive->translator->add_attribute(prefix, name, uri, content)) return SRCML_STATUS_INVALID_INPUT;
+
     return SRCML_STATUS_OK;
 
 }
-
 
 /**
  * srcml_read_unit_header

@@ -375,7 +375,7 @@ bool srcml_translator::add_end_element() {
 
 }
 
-bool srcml_translator::add_write_namespace(const char * prefix, const char * uri) {
+bool srcml_translator::add_namespace(const char * prefix, const char * uri) {
 
     if(!is_outputting_unit && output_unit_depth) return false;
 
@@ -391,7 +391,7 @@ bool srcml_translator::add_write_namespace(const char * prefix, const char * uri
 
 }
 
-bool srcml_translator::add_write_attribute(const char * prefix, const char * name, const char * uri, const char * content) {
+bool srcml_translator::add_attribute(const char * prefix, const char * name, const char * uri, const char * content) {
 
     if(!is_outputting_unit && output_unit_depth) return false;
 

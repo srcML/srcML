@@ -93,8 +93,8 @@ public:
     bool add_end_unit();
     bool add_start_element(const char * prefix, const char * name, const char * uri);
     bool add_end_element();
-    bool add_write_namespace(const char * prefix, const char * uri);
-    bool add_write_attribute(const char * prefix, const char * name, const char * uri, const char * content);
+    bool add_namespace(const char * prefix, const char * uri);
+    bool add_attribute(const char * prefix, const char * name, const char * uri, const char * content);
 
     // destructor
     ~srcml_translator();
