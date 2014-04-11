@@ -463,6 +463,7 @@ bool srcml_translator::add_string(const char * content) {
     xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)content);
 
 }
+
 /**
  * ~srcml_translator
  *

@@ -141,8 +141,10 @@ private:
     /** location to store size of output when output is to memory */
     int * size;
 
+    /** mark if have outputted starting unit tag for by element writing */
     bool is_outputting_unit;
 
+    /** track depth for by element writing */
     int output_unit_depth;
 
 };
