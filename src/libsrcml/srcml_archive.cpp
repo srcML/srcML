@@ -1192,6 +1192,17 @@ int srcml_write_attribute(struct srcml_archive * archive, const char * prefix, c
 
 }
 
+
+int srcml_write_string(struct srcml_archive * archive, const char * content) {
+
+    if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    if(!archive->translator->add_string(content)) return SRCML_STATUS_INVALID_INPUT;
+
+    return SRCML_STATUS_OK;
+
+}
+
 /**
  * srcml_read_unit_header
  * @param archive a srcml archive open for reading
