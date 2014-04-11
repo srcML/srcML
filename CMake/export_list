@@ -133,3 +133,4 @@ _srcml_write_start_element
 _srcml_write_end_element
 _srcml_write_namespace
 _srcml_write_attribute
+_srcml_write_string
