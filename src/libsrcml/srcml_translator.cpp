@@ -367,8 +367,13 @@ bool srcml_translator::add_end_unit() {
 
     is_outputting_unit = false;
 
-    return xmlTextWriterEndElement(out.getWriter()) != -1;
+    bool success = xmlTextWriterEndElement(out.getWriter()) != -1;
 
+    if ((options & OPTION_ARCHIVE) > 0)
+        out.processText("\n\n", 2);
+
+    return success;
+    
 }
 
 /**
