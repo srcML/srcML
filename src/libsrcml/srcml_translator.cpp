@@ -245,7 +245,7 @@ void srcml_translator::translate(UTF8CharBuffer * parser_input) {
 /**
  * add_unit
  * @param unit srcML to add to archive/non-archive with configuration options
- * @param hash a possible hash to include with xml output as attribute
+ * @param xml the xml to output
  *
  * Add a unit as string directly to the archive.  If not an archive
  * and supplied unit does not have src namespace add it.  Also, write out
@@ -313,6 +313,14 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
 }
 
+/**
+ * add_start_unit
+ * @param unit srcML to add to archive/non-archive with configuration options
+ *
+ * Add the start tag of a unit and set up for the remainder of unit output.
+ *
+ * @returns if succesfully added.
+ */
 bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     if(first) {
@@ -343,6 +351,14 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
 }
 
+/**
+ * add_end_unit
+ *
+ * Add the end tag of a unit disable worther element processing.
+ * Outputs all ending tags that are currently open within the unit first.
+ *
+ * @returns if succesfully added.
+ */
 bool srcml_translator::add_end_unit() {
 
     if(!is_outputting_unit) return false;
@@ -355,6 +371,17 @@ bool srcml_translator::add_end_unit() {
 
 }
 
+/**
+ * add_start_element
+ * @param prefix the namespace prefix for element
+ * @param name the name of the tag/element
+ * @param uri the namespace uri for element
+ *
+ * Add the start element to a started unit.
+ * add_start_unit most be called first.
+ *
+ * @returns if succesfully added.
+ */
 bool srcml_translator::add_start_element(const char * prefix, const char * name, const char * uri) {
 
     if(!is_outputting_unit) return false;
@@ -365,6 +392,14 @@ bool srcml_translator::add_start_element(const char * prefix, const char * name,
 
 }
 
+/**
+ * add_end_element
+ *
+ * Add the end element to a started unit.
+ * add_start_unit most be called first.
+ *
+ * @returns if succesfully added.
+ */
 bool srcml_translator::add_end_element() {
 
     if(!is_outputting_unit) return false;
@@ -375,6 +410,16 @@ bool srcml_translator::add_end_element() {
 
 }
 
+/**
+ * add_namespace
+ * @param prefix the prefix for the namespace
+ * @param uri the namespace uri
+ *
+ * Add the namespace to a started element.
+ * add_start_unit most be called first.
+ *
+ * @returns if succesfully added.
+ */
 bool srcml_translator::add_namespace(const char * prefix, const char * uri) {
 
     if(!is_outputting_unit && output_unit_depth) return false;
@@ -391,6 +436,18 @@ bool srcml_translator::add_namespace(const char * prefix, const char * uri) {
 
 }
 
+/**
+ * add_start_element
+ * @param prefix the namespace prefix for attribute
+ * @param name the name of the attribute
+ * @param uri the namespace uri for attriubute
+ * @param content the contents/value of the attribute
+ *
+ * Add the attribute to a start element.
+ * add_start_unit most be called first.
+ *
+ * @returns if succesfully added.
+ */
 bool srcml_translator::add_attribute(const char * prefix, const char * name, const char * uri, const char * content) {
 
     if(!is_outputting_unit && output_unit_depth) return false;
