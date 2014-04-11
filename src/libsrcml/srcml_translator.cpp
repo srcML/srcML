@@ -422,7 +422,7 @@ bool srcml_translator::add_end_element() {
  */
 bool srcml_translator::add_namespace(const char * prefix, const char * uri) {
 
-    if(!is_outputting_unit && output_unit_depth) return false;
+    if(!is_outputting_unit) return false;
 
     std::string name = "xmlns";
     if(prefix) {
@@ -450,7 +450,7 @@ bool srcml_translator::add_namespace(const char * prefix, const char * uri) {
  */
 bool srcml_translator::add_attribute(const char * prefix, const char * name, const char * uri, const char * content) {
 
-    if(!is_outputting_unit && output_unit_depth) return false;
+    if(!is_outputting_unit) return false;
 
     return xmlTextWriterWriteAttributeNS(out.getWriter(), (const xmlChar *)prefix, (const xmlChar *)name, (const xmlChar *)uri, (const xmlChar *)content) != -1;
 
@@ -468,7 +468,7 @@ bool srcml_translator::add_attribute(const char * prefix, const char * name, con
  */
 bool srcml_translator::add_string(const char * content) {
 
-    if(!is_outputting_unit && output_unit_depth) return false;
+    if(!is_outputting_unit) return false;
 
     xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)content);
 
