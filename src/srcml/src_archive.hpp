@@ -1,9 +1,9 @@
 /**
- * @file archivecomp.hpp
+ * @file src_archive.hpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,15 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * Source input from local files, stdin, and source archives for srcml parsing queue
  */
 
-#ifndef ARCHIVECOMP_HPP
-#define ARCHIVECOMP_HPP
+#ifndef SRC_ARCHIVE_HPP
+#define SRC_ARCHIVE_HPP
 
-#include <archive.h>
 #include <string>
+struct archive;
 
 int archive_write_set_format_by_extension(struct archive*, const char* extension);
 int archive_write_set_compression_by_extension(struct archive*, const char* extension);

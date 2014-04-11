@@ -1,9 +1,9 @@
 /**
  * @file src_input_libarchive.cpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -124,14 +124,14 @@ void src_input_libarchive(ParseQueue& queue,
             // default is filename from archive entry (if not empty)
             std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(entry) : "";
 
-            if (count && filename != "data")
+            if (count == 0 && filename != "data" && status != ARCHIVE_EOF)
                 srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
 
             // archive entry filename for non-archive input is "data"
             if (filename.empty() || filename == "data")
                 filename = input_file.resource;
 
-            if (srcml_request.att_filename)
+            if (srcml_request.att_filename && !(srcml_archive_get_options(srcml_arch) & SRCML_OPTION_ARCHIVE))
                 filename = *srcml_request.att_filename;
 
             // language may have been explicitly set
@@ -141,7 +141,7 @@ void src_input_libarchive(ParseQueue& queue,
                 language = *srcml_request.att_language;
 
             // if not explicitly set, language comes from extension
-            // we have to do this ourselves, since libsrcml won't for memory
+            // we have to do this ourselves, since libsrcml can't for memory
             if (language.empty())
                 if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
                     language = l;

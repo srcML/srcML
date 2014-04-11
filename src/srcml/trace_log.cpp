@@ -1,9 +1,9 @@
 /**
  * @file trace_log.cpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #include <trace_log.hpp>
-
+#include <srcml_cli.hpp>
+#include <iomanip>
+ 
 TraceLog::TraceLog(std::ostream& out, int options)
     : out(out), count(0), overallcount(0) {
 
@@ -33,10 +35,7 @@ TraceLog& operator<<(TraceLog& tlog, char c) {
     if (!tlog.enabled)
         return tlog;
 
-    if (c != '-')
-        ++tlog.count;
-
-    tlog.out << std::setw(5) << tlog.count;
+    tlog.out << std::setw(5) << (c != '-' ? ++tlog.count : c);
 
     return tlog;
 }
@@ -46,7 +45,7 @@ TraceLog& operator<<(TraceLog& tlog, const std::string& s) {
     if (!tlog.enabled)
         return tlog;
 
-    tlog.out << s << '\n';
+    tlog.out << ' ' << s << '\n';
 
     return tlog;
 }

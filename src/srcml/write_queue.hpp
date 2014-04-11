@@ -1,9 +1,9 @@
 /**
  * @file write_queue.hpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
-/*
  */
 
 #ifndef WRITE_QUEUE_HPP
@@ -30,9 +27,9 @@
 #include <parse_request.hpp>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/thread/xtime.hpp>
 #include <threadpool.hpp>
 #pragma GCC diagnostic pop
+#include <boost/function.hpp>
 #include <prio_scheduler_strict.hpp>
 
 class WriteQueue {
@@ -45,12 +42,12 @@ public:
     }
 
     /* puts an element in the back of the queue by swapping with parameter */
-    void schedule(ParseRequest* pvalue) {
+    inline void schedule(ParseRequest* pvalue) {
 
         pool.schedule(prio_strict_task_func(pvalue->position, boost::bind(write, pvalue)));
     }
 
-    void wait() {
+    inline void wait() {
 
         pool.wait();
     }

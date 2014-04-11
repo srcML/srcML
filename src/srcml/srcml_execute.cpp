@@ -1,9 +1,9 @@
 /**
  * @file srcml_execute.cpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -26,39 +26,39 @@
 #include <boost/thread.hpp>
 #pragma GCC diagnostic pop
 #include <boost/foreach.hpp>
-#include <boost/range.hpp>
 
 void srcml_execute(const srcml_request_t& srcml_request,
-                   std::list<command>& commands,
+                   std::list<process_srcml>& pipeline,
                    const srcml_input_t& input_sources,
                    const srcml_output_dest& destination) {
 
-    // create a thread for each command, creating pipes between adjoining commands
-    boost::thread_group command_processing_threads;
-    int fds[2];
-    BOOST_FOREACH(command curcommand, commands) {
+    // create a thread for each step, creating pipes between adjoining steps
+    boost::thread_group pipeline_threads;
+    int fds[2] = { -1, -1 };
+    BOOST_FOREACH(process_srcml command, pipeline) {
 
-        // special handling for first and last command_processing_threads
-        bool first = curcommand == commands.front();
-        bool last  = curcommand == commands.back();
+        // special handling for first and last steps
+        bool first = command == pipeline.front();
+        bool last  = command == pipeline.back();
 
-        // pipe between each command
+        // pipe between each step
         int prevoutfd = fds[0];
-        if (!first)
+        fds[0] = fds[1] = -1;
+        if (pipeline.size() > 1 && !last)
             pipe(fds);
 
-        /* run this command in the sequence */
-        command_processing_threads.create_thread(
+        /* run this step in the sequence */
+        pipeline_threads.create_thread(
             boost::bind(
-                curcommand,
+                command,
                 srcml_request,
-                /* first command uses input_source, rest input from previous output pipe */
+                /* first process_srcml uses input_source, rest input from previous output pipe */
                 first ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevoutfd)),
-                /* last command uses destination, rest output to pipe */                
+                /* last process_srcml uses destination, rest output to pipe */                
                 last  ? destination   : srcml_output_dest("-", fds[1])
             )
         );
 
-        command_processing_threads.join_all();
+        pipeline_threads.join_all();
     }
 }

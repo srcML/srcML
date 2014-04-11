@@ -1,9 +1,9 @@
 /**
  * @file peek4char.cpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,11 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #include <peek4char.hpp>
-
 
 void peek4char(FILE* fp, unsigned char data[], ssize_t* psize) {
     *psize = 0;
@@ -38,11 +37,12 @@ void peek4char(FILE* fp, unsigned char data[], ssize_t* psize) {
                 if ((c = getc(fp)) != EOF) {
                     data[3] = c;
                     ++(*psize);
+                    ungetc(data[3], fp);
                 }
+                ungetc(data[2], fp);
             }
+            ungetc(data[1], fp);
         }
+        ungetc(data[0], fp);
     }
-
-    for (ssize_t i = (*psize) - 1; i >= 0; --i)
-        ungetc(data[i], fp);
 }

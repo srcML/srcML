@@ -1,9 +1,9 @@
 /**
  * @file srcml.cpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -24,8 +24,10 @@
 #include <srcml_cli.hpp>
 #include <srcml_options.hpp>
 #include <create_srcml.hpp>
+#include <compress_srcml.hpp>
+#include <decompress_srcml.hpp>
 #include <create_src.hpp>
-#include <process_srcml.hpp>
+#include <transform_srcml.hpp>
 #include <srcml_display_metadata.hpp>
 #include <srcml_execute.hpp>
 #include <isxml.hpp>
@@ -53,6 +55,10 @@ int main(int argc, char * argv[]) {
     // convert the list of input filenames to actual input sources
     srcml_input_t input_sources(srcml_request.input.begin(), srcml_request.input.end());
 
+    if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
+        srcml_request.att_filename = input_sources[0].filename;
+    }
+
     // input source that is stdin, if it exists
     srcml_input_src* pstdin = srcml_request.stdindex ? &input_sources[*srcml_request.stdindex] : 0;
 
@@ -75,25 +81,14 @@ int main(int argc, char * argv[]) {
     // output destination setup just like an input source
     srcml_output_dest destination(srcml_request.output_filename);
 
-/*
-    // adjust if explicitly told differently via command line options
-    // TODO: may warn/error on some inconsistencies here
-    if (!createsrc && srcml_request.command & SRCML_COMMAND_SRC) {
-        createsrc = true;
-    } else if (!createsrcml && srcml_request.command & SRCML_COMMAND_SRCML) {
-        createsrcml = true;
-    } else if (!createsrcml && !srcml_request.files_from.empty()) {
-        createsrcml = true;
-    }
-*/
     // Determine what processing needs to occur based on the inputs, outputs, and commands
 
-    // setup the commands
-    std::list<command> commands;
-    bool terminate = false;
+    // setup the commands in the pipeline
+    processing_steps_t processing_steps;
+    bool last_command = false;
 
-    bool src_input = std::count_if(input_sources.begin(), input_sources.end(), is_src) > 0;
-   
+    bool src_input = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
+
     // src->srcml when there is any src input, or multiple srcml input with output to srcml (merge)
     if (src_input || (input_sources.size() > 1 && destination.state == SRCML)) {
 
@@ -103,32 +98,45 @@ int main(int argc, char * argv[]) {
                 exit(1);
         }
 
-        commands.push_back(create_srcml);
+        processing_steps.push_back(create_srcml);
+
+        // libsrcml can apply gz compression
+        // all other compressions require an additional compression stage
+        if (!destination.compressions.empty() && destination.compressions.front() != ".gz") 
+            processing_steps.push_back(compress_srcml);
+
+    }
+
+    if (!src_input && !input_sources[0].compressions.empty() && input_sources[0].compressions.front() != ".gz") {
+
+        // libsrcml can apply gz decompression
+        // all other compressions require an additional compression stage
+        processing_steps.push_back(decompress_srcml);
     }
 
     // XPath and XSLT processing
     if (!srcml_request.xpath.empty() || !srcml_request.xslt.empty() || !srcml_request.relaxng.empty()) {
-        commands.push_back(process_srcml);
+        processing_steps.push_back(transform_srcml);
     }
 
     // metadata(srcml) based on command
-    if (!terminate && ((srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0)) {
-        commands.push_back(srcml_display_metadata);
-        terminate = true;
+    if (!last_command && ((srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0)) {
+        processing_steps.push_back(srcml_display_metadata);
+        last_command = true;
     }
 
     // srcml->src, based on the destination
-    if (!terminate && !src_input && destination.state != SRCML) {
+    if (!last_command && !src_input && destination.state != SRCML) {
 
-        commands.push_back(create_src);
-        terminate = true;
+        processing_steps.push_back(create_src);
+        last_command = true;
     }
 
-    assert(!commands.empty());
-    assert(commands.size() <= 3);
+    assert(!processing_steps.empty());
+    assert(processing_steps.size() <= 3);
 
-    // execute the commands in the sequence
-    srcml_execute(srcml_request, commands, input_sources, destination);
+    // execute the steps in order
+    srcml_execute(srcml_request, processing_steps, input_sources, destination);
 
     srcml_cleanup_globals();
 

@@ -1,9 +1,9 @@
 /**
  * @file create_src.hpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -90,7 +90,12 @@ void create_src(const srcml_request_t& srcml_request,
 
             srcMLReadArchive arch(input_sources[0]);
 
-            srcml_unit* unit = srcml_request.unit == 0 ? srcml_read_unit(arch) : srcml_read_unit_position(arch, srcml_request.unit);
+            // move to the correct unit
+            for (int i = 1; i < srcml_request.unit; ++i) {
+                srcml_unit* unit = srcml_read_unit_header(arch);
+                srcml_free_unit(unit);
+            }
+            srcml_unit* unit = srcml_read_unit_header(arch);
 
             srcml_archive* oarch = srcml_create_archive();
             srcml_archive_disable_option(oarch, SRCML_OPTION_ARCHIVE);
@@ -117,7 +122,12 @@ void create_src(const srcml_request_t& srcml_request,
 
             srcMLReadArchive arch(input_sources[0]);
 
-            srcml_unit* unit = srcml_request.unit == 0 ? srcml_read_unit(arch) : srcml_read_unit_position(arch, srcml_request.unit);
+            // move to the correct unit
+            for (int i = 1; i < srcml_request.unit; ++i) {
+                srcml_unit* unit = srcml_read_unit_header(arch);
+                srcml_free_unit(unit);
+            }
+            srcml_unit* unit = srcml_read_unit_header(arch);
 
             srcml_unparse_unit_fd(unit, destination);
 
@@ -129,7 +139,12 @@ void create_src(const srcml_request_t& srcml_request,
 
             srcMLReadArchive arch(input_sources[0]);
 
-            srcml_unit* unit = srcml_request.unit == 0 ? srcml_read_unit(arch) : srcml_read_unit_position(arch, srcml_request.unit);
+            // move to the correct unit
+            for (int i = 1; i < srcml_request.unit; ++i) {
+                srcml_unit* unit = srcml_read_unit_header(arch);
+                srcml_free_unit(unit);
+            }
+            srcml_unit* unit = srcml_read_unit_header(arch);
 
             srcml_unparse_unit_filename(unit, destination.c_str());
 

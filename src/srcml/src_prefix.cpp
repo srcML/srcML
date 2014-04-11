@@ -1,9 +1,9 @@
 /**
  * @file src_prefix.cpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-/*
-  src_prefix.cpp functions for adding/splitting assigned prefixes from input sources
-*/
 
 #include <src_prefix.hpp>
 
@@ -31,27 +28,23 @@
 const char* PROTOCOL_SEPARATOR = "://";
 
 std::string src_prefix_add_uri(const std::string& input_file) {
-    size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
-    std::string uri = "";
 
     // Only add a prefix if the input doesn't have one already (IE. http://)
+    size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
     if (prefixPos == std::string::npos) {
 
-        if (input_file.compare("/dev/stdin") == 0 || input_file.compare("-") == 0) {
-            uri = "-";
-            uri.insert(0, "stdin://");
-            return uri;
-        }
+        if (input_file.compare("/dev/stdin") == 0 || input_file.compare("-") == 0)
+            return "stdin://-";
 
         // Check for local file
         if (input_file.find("http:") == std::string::npos || input_file.find("https:") == std::string::npos) {
-            uri = input_file;
-            uri.insert(0, "file://");
+            std::string uri = "file://";
+            uri += input_file;
             return uri;
         }
     }
-    uri = input_file;
-    return uri;
+
+    return input_file;
 }
 
 void src_prefix_split_uri(const std::string& input_file, std::string& protocol, std::string& resource){

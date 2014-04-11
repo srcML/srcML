@@ -6,7 +6,7 @@
 </unit>
 
 <unit>
-<using>using <name>Project</name> =<init> <expr><name><name>PC</name>.<name>MyCompony</name>.<name>Project</name></name></expr></init>;</using>
+<using>using <name>Project</name> <init>= <expr><name><name>PC</name>.<name>MyCompony</name>.<name>Project</name></name></expr></init>;</using>
 </unit>
 
 </unit>

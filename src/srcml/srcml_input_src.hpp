@@ -1,9 +1,9 @@
 /**
  * @file srcml_input_src.hpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -29,9 +29,9 @@
 #include <boost/optional.hpp>
 #include <src_prefix.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/logic/tribool.hpp>
 #include <algorithm>
-#include <archivecomp.hpp>
+#include <src_archive.hpp>
+#include <boost/foreach.hpp>
 
 #ifdef WIN32
 #include <io.h>
@@ -40,18 +40,18 @@
 #define STDERR_FILENO   2       /* standard error file descriptor */
 #endif
 
-class srcml_input_src;
+ class srcml_input_src;
 
-typedef std::vector<srcml_input_src> srcml_input_t;
-typedef srcml_input_src srcml_output_dest;
+ typedef std::vector<srcml_input_src> srcml_input_t;
+ typedef srcml_input_src srcml_output_dest;
 
-enum STATES { INDETERMINATE, SRC, SRCML };
+ enum STATES { INDETERMINATE, SRC, SRCML };
 
-class srcml_input_src {
-public:
+ class srcml_input_src {
+ public:
 
     srcml_input_src() {}
-    srcml_input_src(const std::string& other) : state(INDETERMINATE) { 
+    srcml_input_src(const std::string& other) : state(INDETERMINATE), isdirectory(false) { 
 
         filename = src_prefix_add_uri(other);
 
@@ -62,25 +62,27 @@ public:
         // so extract
         boost::filesystem::path rpath(resource.c_str());
 
-        // collect compressions
-        for ( ; rpath.has_extension() && is_compressed(rpath.extension().string()); rpath = rpath.stem())
-            compressions.push_back(rpath.extension().string());
+        if (protocol == "file")
+            isdirectory = boost::filesystem::is_directory(rpath);
 
-        // collect archives
-        for ( ; rpath.has_extension() && is_archive(rpath.extension().string()); rpath = rpath.stem())
-            archives.push_back(rpath.extension().string());
+        if (!isdirectory) {
 
-        // collect real extension
-        extension = rpath.has_extension() ? rpath.extension().string() : (!archives.empty() ? archives.back() : "");
+            // collect compressions
+            for ( ; rpath.has_extension() && is_compressed(rpath.extension().string()); rpath = rpath.stem())
+                compressions.push_back(rpath.extension().string());
+
+            // collect archives
+            for ( ; rpath.has_extension() && is_archive(rpath.extension().string()); rpath = rpath.stem())
+                archives.push_back(rpath.extension().string());
+
+            // collect real extension
+            extension = rpath.has_extension() ? rpath.extension().string() : (!archives.empty() ? archives.back() : "");
+        }
 
         plainfile = rpath.string();
 
         if (resource != "-")
             state = extension == ".xml" ? SRCML : SRC;
-
-//        fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, resource.c_str());
-//        fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, plainfile.c_str());
-//        fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, extension.c_str());
 
         if (protocol == "stdin")
             fd = STDIN_FILENO;
@@ -129,6 +131,7 @@ public:
         std::swap(state, other.state);
         std::swap(compressions, other.compressions);
         std::swap(archives, other.archives);
+        std::swap(isdirectory, other.isdirectory);
     }
 
     std::string filename;
@@ -141,6 +144,7 @@ public:
     enum STATES state;
     std::list<std::string> compressions;
     std::list<std::string> archives;
+    bool isdirectory;
 };
 
 template <typename T>
@@ -153,5 +157,26 @@ template <>
 inline bool contains<int>(const srcml_input_src& input) { return input.fd; }
 
 inline bool is_src(const srcml_input_src& input) { return input.state == SRC; }
+
+inline std::ostream& operator<<(std::ostream& out, const srcml_input_src& input) {
+
+    out << "filename:" << input.filename << '\n';
+    out << "protocol:" << input.protocol << '\n';
+    out << "resource:" << input.resource << '\n';
+    out << "plainfile:" << input.plainfile << '\n';
+    out << "extension:" << input.extension << '\n';
+    if (input.fileptr)
+        out << "fileptr:" << *input.fileptr << '\n';
+    if (input.fd)
+        out << "fd:" << *input.fd << '\n';
+    out << "state:" << input.state << '\n';
+    BOOST_FOREACH(const std::string& compression, input.compressions)
+        out << "compression:" << compression << '\n';
+    BOOST_FOREACH(const std::string& archive, input.archives)
+        out << "archive:" << archive << '\n';
+    out << "isdirectory:" << input.isdirectory << '\n';
+
+    return out;
+}
 
 #endif

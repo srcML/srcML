@@ -57,16 +57,12 @@
 #define SHA1_Final CC_SHA1_Final
 
 /** Use same LONG symbol for openssl and CommonCrypto  */
-#define LONG CC_LONG
+#define SHA_LONG CC_LONG
 
 /** Use same SHA_DIGEST_LENGTH symbol for openssl and CommonCrypto  */
 #define SHA_DIGEST_LENGTH CC_SHA1_DIGEST_LENGTH
 #else
 #include <openssl/sha.h>
-
-/** Use same LONG symbol for openssl and CommonCrypto  */
-#define LONG unsigned long
-
 #endif
 
 #include <boost/optional.hpp>

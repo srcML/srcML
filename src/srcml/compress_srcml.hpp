@@ -1,5 +1,5 @@
 /**
- * @file isxml.hpp
+ * @file compress_srcml.hpp
  *
  * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -20,12 +20,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_IS_XML_HPP
-#define INCLUDED_IS_XML_HPP
+#ifndef COMPRESS_SRCML_HPP
+#define COMPRESS_SRCML_HPP
 
-#include <unistd.h>
+#include <srcml_cli.hpp>
+#include <srcml_input_src.hpp>
 
-// determine if XML from first four bytes in almost any encoding
-bool isxml(unsigned char ar[], ssize_t size);
+// compress srcml from the current request
+void compress_srcml(const srcml_request_t& srcml_request,
+		        const srcml_input_t& input_sources,
+                const srcml_output_dest& output);
 
 #endif
+

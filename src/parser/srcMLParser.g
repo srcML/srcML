@@ -5083,27 +5083,27 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 
 // initializtion of a function pointer.
 function_pointer_initialization[] { ENTRY_DEBUG } :
-        EQUAL
         {
             // end the init correctly
             setMode(MODE_EXPRESSION | MODE_EXPECT);
 
             // start the initialization element
-            startNoSkipElement(SDECLARATION_INITIALIZATION);
+            startElement(SDECLARATION_INITIALIZATION);
         }
+        EQUAL
         (options { greedy = true; } : expression)*
 ;
 
 // initialization of a declared variable
 variable_declaration_initialization[] { ENTRY_DEBUG } :
-        EQUAL
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
 
             // start the initialization element
-            startNoSkipElement(SDECLARATION_INITIALIZATION);
-        } |
+            startElement(SDECLARATION_INITIALIZATION);
+        }
+        EQUAL |
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST);
@@ -5126,14 +5126,14 @@ variable_declaration_range[] { ENTRY_DEBUG } :
 
 // parameter variable initialization
 parameter_declaration_initialization[] { ENTRY_DEBUG } :
-        EQUAL
         {
             // end the init correctly
             setMode(MODE_EXPRESSION | MODE_EXPECT);
 
             // start the initialization element
-            startNoSkipElement(SDECLARATION_INITIALIZATION);
+            startElement(SDECLARATION_INITIALIZATION);
         }
+        EQUAL
 ;
 
 // expression block beginning and setup
@@ -5924,14 +5924,14 @@ template_parameter_list_full[] { ENTRY_DEBUG } :
 
 // template initialization
 template_declaration_initialization[] { ENTRY_DEBUG } :
-        EQUAL
         {
             // end the init correctly
             setMode(MODE_EXPRESSION | MODE_EXPECT);
 
             // start the initialization element
-            startNoSkipElement(SDECLARATION_INITIALIZATION);
-        } compound_name
+            startElement(SDECLARATION_INITIALIZATION);
+        }
+        EQUAL compound_name
 
 ;
 

@@ -5,245 +5,11 @@
 # Michael L. Collard
 # collard@cs.kent.edu
 
-import sys
-import os.path
-import subprocess
-import platform
-import string
-
-import option
-import status
-
-test_count = 0
-error_count = 0
-eol_error_count = 0
-exception_count = 0
-error_list = []
-eol_error_list = []
-test_line = ""
-error_lines = []
+from testcli import *
 
 limit = 0
-
-def check(command, input, output):
-
-        if sys.platform == 'cygwin' and input != "" :
-                return
-
-        globals()["test_count"] += 1
-        if globals()["limit"] != 0 and globals()["test_count"] > globals()["limit"]:
-                exit(0)
-
-        globals()["test_line"] = os.path.basename(command[0]) + ' ' + ' '.join(command[1:])
-        print test_count, os.path.basename(command[0]), ' '.join(command[1:])
-        
-        line = execute(command, input)
-
-        return validateWithInput(input, line, output)
-        #return validate(output.strip(), line.strip())
-
-def checkNoOutput(command, input):
-
-        globals()["test_count"] += 1
-        globals()["test_line"] = os.path.basename(command[0]) + ' ' + ' '.join(command[1:])
-        print test_count, os.path.basename(command[0]), ' '.join(command[1:])
-        
-        executeNoOutput(command, input)
-
-
-def checkError(command, input, error) :
-
-        globals()["test_count"] += 1
-        globals()["test_line"] = os.path.basename(command[0]) + ' ' + ' '.join(command[1:])
-        print test_count, os.path.basename(command[0]), ' '.join(command[1:])
-
-        line = executeWithError(command, input)
-
-        return validateWithInput(input, line, error)
-        
-def validateWithInput(input, gen, expected):
-        gen = str(gen)
-        expected = str(expected)
-
-        if (platform.system() == "Windows" or platform.system() == "CYGWIN_NT-6.1" or sys.platform == 'cygwin') and string.find(gen, "\r\n") != -1:
-                expected = string.replace(expected, "\n", "\r\n")
-
-        if (platform.system() != "Windows" and platform.system() != "CYGWIN_NT-6.1" and sys.platform != 'cygwin') and string.find(gen, "\r\n") != -1:
-                globals()["eol_error_count"] += 1
-                globals()["eol_error_list"].append(globals()["test_count"])
-
-        if gen != expected:
-                globals()["error_count"] = globals()["error_count"] + 1
-                globals()["error_list"].append(globals()["test_count"])
-                globals()["error_lines"].append(globals()["test_line"])
-                print "ERROR"
-                print "input|" + input + "|"
-                print "expected|" + expected + "|"
-                print "gen|" + gen + "|"
-        return
-
-def validate(gen, expected):
-        gen = str(gen)
-        expected = str(expected)
-
-        if (platform.system() == "Windows" or platform.system() == "CYGWIN_NT-6.1" or sys.platform == 'cygwin') and string.find(gen, "\r\n") != -1:
-                expected = string.replace(expected, "\n", "\r\n")
-
-        if (platform.system() != "Windows" and platform.system() != "CYGWIN_NT-6.1" and sys.platform != 'cygwin') and string.find(gen, "\r\n") != -1:
-                globals()["eol_error_count"] += 1
-                globals()["eol_error_list"].append(globals()["test_count"])
-
-        if gen != expected:
-                globals()["error_count"] = globals()["error_count"] + 1
-                globals()["error_list"].append(globals()["test_count"])
-                globals()["error_lines"].append(globals()["test_line"])
-                print "ERROR"
-                print "expected|" + expected + "|"
-                print "gen|" + gen + "|"
-        return
-
-def execute(command, input):
-        p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        last_line = p.communicate(input)[0]
-
-        if p.returncode != 0:
-                globals()["error_count"] = globals()["error_count"] + 1
-                globals()["error_list"].append(globals()["test_count"])
-                globals()["error_lines"].append(globals()["test_line"])
-                print "Status error:  ", p.returncode, command
-
-        return last_line
-
-def executeNoOutput(command, input) :
-        p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=None, stderr=subprocess.PIPE)
-        p.communicate(input)[0]
-
-        if p.returncode != 0:
-                globals()["error_count"] = globals()["error_count"] + 1
-                globals()["error_list"].append(globals()["test_count"])
-                globals()["error_lines"].append(globals()["test_line"])
-                print "Status error:  ", p.returncode, command
-        
-def executeWithError(command, input):
-        p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        last_line = p.communicate(input)[0]
-
-        if p.returncode == 0:
-                globals()["error_count"] = globals()["error_count"] + 1
-                globals()["error_list"].append(globals()["test_count"])
-                globals()["error_lines"].append(globals()["test_line"])
-                print "Status error:  ", p.returncode, command
-
-        return last_line
-
-def getreturn(command, input):
-        global exception_count
-        p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        try:
-                p.communicate(input)
-        except OSError, (errornum, strerror):
-                try:
-                        p.communicate(input)
-                except OSError, (errornum, strerror):
-                        exception_count += 1
-                        
-
-        globals()["test_count"] += 1
-        globals()["test_line"] = os.path.basename(command[0]) + ' ' + ' '.join(command[1:])
-        print test_count, "Status: ", p.returncode, "\t", os.path.basename(command[0]), ' '.join(command[1:])
-        return p.returncode
-
-
-
-def checkallforms(base, shortflag, longflag, optionvalue, progin, progout):
-        if base == src2srcml and not(shortflag == option.LANGUAGE_FLAG_SHORT or longflag == option.LANGUAGE_FLAG_FULL) :
-                if optionvalue != "":
-                        if shortflag != "":
-                                check([base, option.LANGUAGE_FLAG_SHORT, 'C++', shortflag, optionvalue], progin, progout)
-                        check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag, optionvalue], progin, progout)
-                        check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag + "=" + optionvalue], progin, progout)
-                else:
-                        if shortflag != "":
-                                check([base, option.LANGUAGE_FLAG_SHORT, 'C++', shortflag], progin, progout)
-                        check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag], progin, progout)
-
-        else :
-                if optionvalue != "":
-                        if shortflag != "":
-                                check([base, shortflag, optionvalue], progin, progout)
-                        check([base, longflag, optionvalue], progin, progout)
-                        check([base, longflag + "=" + optionvalue], progin, progout)
-                else:
-                        if shortflag != "":
-                                check([base, shortflag], progin, progout)
-                        check([base, longflag], progin, progout)
-
-        return
-
-def checkallformsfile(base, inputfile, shortflag, longflag, optionvalue, progin, progout):
-        if optionvalue != "":
-                check([base, inputfile, shortflag, optionvalue], progin, progout)
-                check([base, inputfile, longflag, optionvalue], progin, progout)
-                check([base, inputfile, longflag + "=" + optionvalue], progin, progout)
-        else:
-                check([base, inputfile, shortflag], progin, progout)
-                check([base, inputfile, longflag], progin, progout)
-
-        return
-        
-def checkallformsext(base, shortflag, longflag, optionvalue, other, progin, progout):
-        if optionvalue != "":
-                check([base, shortflag, optionvalue, other], progin, progout)
-                check([base, longflag, optionvalue, other], progin, progout)
-                check([base, longflag + "=" + optionvalue, other], progin, progout)
-        else:
-                check([base, shortflag, other], progin, progout)
-                check([base, longflag, other], progin, progout)
-
-        return
-        
-# version of src2srcml
-def src2srcmlversion():
-
-        last_line = subprocess.Popen([src2srcml, "-V"],
-                                     stdout=subprocess.PIPE).communicate()[0]
-
-        return last_line.strip()
-
-# version of srcml2src
-def srcml2srcversion():
-
-        last_line = subprocess.Popen([srcml2src, "-V"],
-                                     stdout=subprocess.PIPE).communicate()[0]
-
-        return last_line.strip()
-
 if len(sys.argv) > 1:
         globals()["limit"] = int(sys.argv[1])
-
-src2srcml = os.environ.get("SRC2SRCML")
-if src2srcml == "" or src2srcml == None:
-        if sys.platform == 'cygwin' :
-                src2srcml = "../bin/srcml.exe"
-        elif os.path.exists('../bin/srcml') :
-                src2srcml = "../bin/srcml"
-        elif os.path.exists('../bin/srcml.exe') :
-                src2srcml = "../bin/srcml.exe"
-        else :
-                print "src2srcml Not found"
-                exit
-        
-srcml2src = os.environ.get("SRCML2SRC")
-if srcml2src == "" or srcml2src == None:
-        if sys.platform == 'cygwin' :
-                srcml2src = "../bin/srcml.exe"
-        elif os.path.exists('../bin/srcml') :
-                srcml2src = "../bin/srcml"
-        elif os.path.exists('../bin/srcml.exe') :
-                srcml2src = "../bin/srcml.exe"
-        else :
-                print "srcml2src Not found"
-                exit
 
 default_src2srcml_encoding = "UTF-8"
 default_srcml2src_encoding = "UTF-8"
@@ -257,11 +23,13 @@ bad_language = "Python++"
 
 ##
 # empty default
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++'], "", srcml)
 
+# test
 ##
 # empty with debug
 srcml = xml_declaration + """
@@ -269,6 +37,7 @@ srcml = xml_declaration + """
 """
 checkallforms(src2srcml, option.DEBUG_FLAG_SHORT, option.DEBUG_FLAG, "", "", srcml)
 
+# test
 ##
 # language flag
 srcml = xml_declaration + """
@@ -276,17 +45,20 @@ srcml = xml_declaration + """
 """
 checkallforms(src2srcml, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C++", "", srcml)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C"/>
 """
 checkallforms(src2srcml, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C", "", srcml)
 
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java"/>
 """
 checkallforms(src2srcml, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "Java", "", srcml)
 
+# test
 ##
 # filename flag
 srcml = xml_declaration + """
@@ -294,23 +66,27 @@ srcml = xml_declaration + """
 """
 checkallforms(src2srcml, option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "foo", "", srcml)
 
+# test
 # filenames are not expanded if specified (unlike when extracted from name)
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="bar/foo"/>
 """
 checkallforms(src2srcml, option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "bar/foo", "", srcml)
 
+# test
 # filename and directory specified
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="foo"/>
 """
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.FILENAME_FLAG_SHORT, "foo", option.DIRECTORY_FLAG_SHORT, "bar"], "", srcml)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="foo"/>
 """
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.DIRECTORY_FLAG_SHORT, "bar", option.FILENAME_FLAG_SHORT, "foo"], "", srcml)
 
+# test
 ##
 # directory flag
 srcml = xml_declaration + """
@@ -319,6 +95,7 @@ srcml = xml_declaration + """
 checkallforms(src2srcml, option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "bar", "", srcml)
 
 
+# test
 ##
 # version flag
 srcml = xml_declaration + """
@@ -326,6 +103,7 @@ srcml = xml_declaration + """
 """
 checkallforms(src2srcml, option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "1.0", "", srcml)
 
+# test
 ##
 # xml encoding flag
 srcml = """<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
@@ -333,6 +111,7 @@ srcml = """<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 """
 checkallforms(src2srcml, option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "ISO-8859-1", "", srcml)
 
+# test
 ##
 # create testing files
 if not os.path.exists("sub"):
@@ -348,7 +127,10 @@ sxmlfile1 = xml_declaration + """
 </unit>
 """
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++'], sfile1, sxmlfile1)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "-", "-o", "sub/a.cpp.xml"], sfile1, "")
 
+
+# test
 sfile2 = """
 b;
 """
@@ -360,14 +142,13 @@ sxmlfile2 = xml_declaration + """
 """
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++'], sfile2, sxmlfile2)
 
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "-", "-o", "sub/a.cpp.xml"], sfile1, "")
-
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "-", "-o", "sub/b.cpp.xml"], sfile2, "")
+
 
 nestedfile1 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6" language="C++" filename="sub/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
@@ -377,11 +158,11 @@ nestedfile1 = xml_declaration + """
 nestedfile = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6" language="C++" filename="sub/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" hash="aecf18b52d520ab280119febd8ff6c803135ddfc" language="C++" filename="sub/b.cpp">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -437,6 +218,7 @@ src = """
 a;
 """
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -450,6 +232,7 @@ f.close()
 check([srcml2src], srcml, src)
 check([srcml2src, 'sub/a.cpp.xml'], "", src)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="foo" version="1.2"/>
 """
@@ -460,6 +243,7 @@ checkallforms(srcml2src, "", option.FILENAME_DISPLAY_FLAG, "", srcml, "foo\n")
 checkallforms(srcml2src, "", option.SRCVERSION_DISPLAY_FLAG, "", srcml, "1.2\n")
 checkallforms(srcml2src, "", option.ENCODING_DISPLAY_FLAG, "", srcml, default_srcml2src_encoding + "\n")
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="" dir="" filename="" version=""/>
 """
@@ -469,6 +253,7 @@ checkallforms(srcml2src, "", option.DIRECTORY_DISPLAY_FLAG, "", srcml, "\n")
 checkallforms(srcml2src, "", option.FILENAME_DISPLAY_FLAG, "", srcml, "\n")
 checkallforms(srcml2src, "", option.SRCVERSION_DISPLAY_FLAG, "", srcml, "\n")
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp"/>
 """
@@ -762,6 +547,7 @@ validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_TEX
 ##
 # xmlns options
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
@@ -773,6 +559,7 @@ check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--xmlns:cpp=http://www.sdm
 # multiple
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp"], "", srcml)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++"/>
 """
@@ -787,10 +574,12 @@ check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--debug", "--xmlns=http://
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--debug", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr"], "", srcml)
 
+# test
 srcml = xml_declaration + """
 <src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 
+# test
 srcml = xml_declaration + """
 <src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
@@ -798,6 +587,7 @@ check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--xmlns:src=http://www.sdm
 
 ##
 # prefix extraction
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp"/>
 """
@@ -812,6 +602,7 @@ checkallforms(srcml2src, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "ht
 
 checkallforms(srcml2src, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.cs.uakron.edu/~collard/foo", srcml, "")
 
+# test
 srcml = xml_declaration + """
 <unit xmlns:cpp="http://www.sdml.info/srcML/src" xmlns="http://www.sdml.info/srcML/cpp"/>
 """
@@ -824,6 +615,7 @@ checkallforms(srcml2src, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "ht
 
 ##
 # no xml declaration
+# test
 srcml = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 
@@ -831,6 +623,7 @@ check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.NO_XML_DECLARATION_F
 
 ##
 # no namespace declaration
+# test
 srcml = xml_declaration + """
 <unit language="C++"/>
 """
@@ -839,14 +632,17 @@ check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.NO_NAMESPACE_DECLARA
 
 ##
 # check missingfile
+# test
 srcml = "src2srcml: Unable to open file foo.c\n"
 
 checkError([src2srcml, 'foo.c'], "", srcml)
 
+# test
 srcml = "src2srcml: Unable to open file abc.c\n"
 
 checkError([src2srcml, 'abc.c'], "", srcml)
 
+# test
 srcml = "src2srcml: Unable to open file ../src/foo.c\n"
 
 checkError([src2srcml, '../src/foo.c'], "", srcml)
@@ -987,6 +783,7 @@ f.close()
 
 ##
 # empty with debug
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++"/>
 """
@@ -1002,6 +799,7 @@ validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 ##
 # language flag
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
@@ -1015,6 +813,7 @@ validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', 'sub/a.cpp','-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C"/>
 """
@@ -1028,6 +827,7 @@ validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C', 'sub/a.cpp','-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java"/>
 """
@@ -1043,6 +843,7 @@ validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 ##
 # filename flag
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo.cpp"/>
 """
@@ -1058,6 +859,7 @@ validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 ##
 # directory flag
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar"/>
 """
@@ -1073,6 +875,7 @@ validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 ##
 # version flag
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" version="1.0"/>
 """
@@ -1088,6 +891,7 @@ validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 ##
 # xml encoding flag
+# test
 srcml = """<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
@@ -1103,6 +907,7 @@ validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 ##
 # text encoding flag
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
@@ -1219,6 +1024,7 @@ sfile2 = """
 b;
 """
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
@@ -1250,6 +1056,7 @@ validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++"/>
 """
@@ -1284,6 +1091,7 @@ validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, "--debug", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
+# test
 srcml = xml_declaration + """
 <src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
@@ -1299,6 +1107,7 @@ validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 ##
 # no xml declaration
+# test
 srcml = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 
@@ -1313,6 +1122,7 @@ validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 ##
 # no namespace declaration
+# test
 srcml = xml_declaration + """
 <unit language="C++"/>
 """
@@ -1789,6 +1599,7 @@ f = open('sub/a.cpp', 'w')
 f.write(sfile)
 f.close()
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" language="C++"/>
 """
@@ -1805,6 +1616,7 @@ if sys.platform != 'cygwin' :
 check([src2srcml, option.LITERAL_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++"/>
 """
@@ -1821,6 +1633,7 @@ if sys.platform != 'cygwin' :
 check([src2srcml, option.OPERATOR_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++"/>
 """
@@ -1837,6 +1650,7 @@ if sys.platform != 'cygwin' :
 check([src2srcml, option.MODIFIER_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" language="C++"/>
 """
@@ -1861,6 +1675,7 @@ if sys.platform != 'cygwin' :
 check([src2srcml, option.OPERATOR_FLAG, option.LITERAL_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++"/>
 """
@@ -1885,6 +1700,7 @@ if sys.platform != 'cygwin' :
 check([src2srcml, option.MODIFIER_FLAG, option.LITERAL_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++"/>
 """
@@ -1909,6 +1725,7 @@ if sys.platform != 'cygwin' :
 check([src2srcml, option.MODIFIER_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++"/>
 """
@@ -2035,6 +1852,7 @@ sfile2 = """
 b;
 """
 
+# test
 srcml = xml_declaration + """ 
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -2094,6 +1912,7 @@ if platform.system() != "Windows" and sys.platform != 'cygwin':
 ##
 # xml flag
 
+# test
 srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 </unit>
@@ -2114,10 +1933,12 @@ validate(open('sub/b.cpp.xml').read(), srcml)
 ##
 # no xml declaration srcml2src
 
+# test
 srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 
+# test
 srcmlout = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 
@@ -2149,11 +1970,13 @@ if sys.platform != 'cygwin' :
 check([srcml2src, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
+# test
 srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 </unit>
 """
 
+# test
 srcmlout = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 </unit>
 """
@@ -2189,10 +2012,12 @@ validate(open('sub/b.cpp.xml').read(), srcmlout)
 ##
 # no namespace declaration
 
+# test
 srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 
+# test
 srcmlout = xml_declaration + """
 <unit language="C++"/>
 """
@@ -2225,11 +2050,13 @@ if sys.platform != 'cygwin' :
 check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
+# test
 srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 </unit>
 """
 
+# test
 srcmlout = xml_declaration + """
 <unit language="C++">
 </unit>
@@ -2300,6 +2127,7 @@ if platform.system() != "Windows" :
 ##
 # Test order of metadata option order
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp" version="1.0"/>
 """
@@ -2417,6 +2245,7 @@ file.close()
 
 # xpath
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
@@ -2479,6 +2308,7 @@ validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_E
 
 # xpath apply root
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
@@ -2539,6 +2369,7 @@ validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
 
+# test
 srcml_nested = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
@@ -2643,6 +2474,7 @@ if sys.platform != 'cygwin' :
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:expr_stmt', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_expr_stmt)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -2698,6 +2530,7 @@ validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo">
 
@@ -2763,6 +2596,7 @@ validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo">
 
@@ -2818,6 +2652,7 @@ validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo">
 
@@ -2875,6 +2710,7 @@ validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_E
 
 # xslt and param
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
@@ -2978,6 +2814,7 @@ validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.STRING_PAR
 
 # empty test
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" filename="a.cpp" language="C++"/>
 """
@@ -3003,6 +2840,7 @@ validate(getreturn([srcml2src, option.XSLT_FLAG + '='], srcml), status.STATUS_ER
 
 # single file test
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" filename="a.cpp" language="C++">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -3030,6 +2868,7 @@ validate(getreturn([srcml2src, option.XSLT_FLAG + '='], srcml), status.STATUS_ER
 
 # archive test
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
@@ -3063,6 +2902,7 @@ validate(getreturn([srcml2src, option.XSLT_FLAG + '='], srcml), status.STATUS_ER
 
 # relaxng
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
@@ -3232,6 +3072,7 @@ validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.REGISTE
 ##
 # directory input
 
+# test
 srcmlstart = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 """
@@ -3260,6 +3101,7 @@ java = """
 </unit>
 """
 
+# test
 srcmlend = """
 </unit>
 """
@@ -3269,6 +3111,7 @@ if platform.system() != "Windows" :
 else :
 	dir = os.listdir('dir')
 
+# test
 srcml = srcmlstart
 
 for file in dir :
@@ -3281,6 +3124,7 @@ for file in dir :
         if file == 'file.java' :
                 srcml += java
 
+# test
 srcml += srcmlend
 
 if platform.system() == "Windows" or sys.platform == 'cygwin' :
@@ -3306,6 +3150,7 @@ src = """
 a;
 """
 
+# test
 srcmlstart = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 """
@@ -3330,6 +3175,7 @@ javaempty = """
 <unit language="Java" filename="sub/a.java"/>
 """
 
+# test
 srcmlend = """
 </unit>
 """
@@ -3494,6 +3340,7 @@ src_no_bom = """a;
 src_bom = """\xef\xbb\xbfa;
 """
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
@@ -3506,11 +3353,13 @@ check([src2srcml, option.LANGUAGE_FLAG, 'C'], src_bom, srcml)
 
 # attribute
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
 
+# test
 srcml_nested = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
@@ -3560,12 +3409,14 @@ check([srcml2src, option.XPATH_FLAG, xpath_attribute_string], srcml_nested, xpat
 
 # comment
 
+# test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <!-- Comment -->
 </unit>
 """
 
+# test
 srcml_nested = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
@@ -3626,6 +3477,7 @@ src_old = f.read()
 f.close()
 
 f = open('diff/a.cpp.xml', 'r')
+# test
 srcml_old = f.read()
 f.close()
 
@@ -3634,6 +3486,7 @@ src_new = f.read()
 f.close()
 
 f = open('diff/b.cpp.xml', 'r')
+# test
 srcml_new = f.read()
 f.close()
 
@@ -3673,6 +3526,7 @@ f = open('sub/a.java', 'w')
 f.write(sfile1)
 f.close()
 
+# test
 ##
 # empty with debug
 srcml = xml_declaration + """

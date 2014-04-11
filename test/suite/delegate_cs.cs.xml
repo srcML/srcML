@@ -15,13 +15,13 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>Del</name></type> <name>d</name> =<init> <expr><lambda><name>delegate</name><parameter_list>(<param><decl><type><name>int</name></type> <name>k</name></decl></param>)</parameter_list> <block>{ <comment type="block">/* ... */</comment> }</block></lambda></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>Del</name></type> <name>d</name> <init>= <expr><lambda><name>delegate</name><parameter_list>(<param><decl><type><name>int</name></type> <name>k</name></decl></param>)</parameter_list> <block>{ <comment type="block">/* ... */</comment> }</block></lambda></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
 <function><type><name>void</name></type> <name>StartThread</name><parameter_list>()</parameter_list>
 <block>{
-    <decl_stmt><decl><type><name><name>System</name>.<name>Threading</name>.<name>Thread</name></name></type> <name>t1</name> =<init> <expr>new <call><name><name>System</name>.<name>Threading</name>.<name>Thread</name></name>
+    <decl_stmt><decl><type><name><name>System</name>.<name>Threading</name>.<name>Thread</name></name></type> <name>t1</name> <init>= <expr>new <call><name><name>System</name>.<name>Threading</name>.<name>Thread</name></name>
       <argument_list>(<argument><expr><lambda><name>delegate</name><parameter_list>()</parameter_list>
             <block>{
                 <expr_stmt><expr><call><name><name>System</name>.<name>Console</name>.<name>Write</name></name><argument_list>(<argument><expr>"Hello,"</expr></argument>)</argument_list></call></expr>;</expr_stmt>

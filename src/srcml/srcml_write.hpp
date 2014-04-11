@@ -1,9 +1,9 @@
 /**
  * @file srcml_write.hpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,16 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-/*
-  srcml_write calls appropriate libsrcml functions for processing srcml
-  or source file data respectively
-*/
 
 #ifndef SRCML_WRITE_HPP
 #define SRCML_WRITE_HPP
 
-#include <parse_request.hpp>
+struct ParseRequest;
+class TraceLog;
 
-void srcml_write_request(ParseRequest*);
+void srcml_write_request(ParseRequest*, TraceLog&);
 
 #endif

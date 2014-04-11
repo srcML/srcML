@@ -1,9 +1,9 @@
 /**
  * @file srcml_display_info.cpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-/*
-  srcml_display_info.cpp display info about a given srcml input file.
-*/
 
 #include <srcml_display_metadata.hpp>
 #include <src_prefix.hpp>
@@ -33,11 +29,27 @@
 #include <iomanip>
 
 void srcml_aquire_unit_xml(srcml_archive* srcml_arch, int unit_index) {
-    if (srcml_unit* unit = srcml_read_unit_position(srcml_arch, unit_index)) {
+
+    // move to the correct unit
+    for (int i = 1; i < unit_index; ++i) {
+        srcml_unit* unit = srcml_read_unit_header(srcml_arch);
+        srcml_free_unit(unit);
+    }
+
+    if (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
         std::cout << srcml_unit_get_xml(unit) << "\n";
         srcml_free_unit(unit);
     }
     // Problem getting the XML
+}
+
+void srcml_aquire_unit(srcml_archive* srcml_arch, int unit_index) {
+
+    // move to the correct unit
+    for (int i = 1; i < unit_index; ++i) {
+        srcml_unit* unit = srcml_read_unit_header(srcml_arch);
+        srcml_free_unit(unit);
+    }
 }
 
 int srcml_unit_count(srcml_archive* srcml_arch) {
@@ -68,10 +80,7 @@ void srcml_display_info(srcml_archive* srcml_arch) {
 
     int numUnits = 0;
 
-    while (true) {
-        srcml_unit* unit = srcml_read_unit(srcml_arch);
-        if (unit == 0)
-            break;
+    while (srcml_unit* unit = srcml_read_unit(srcml_arch)) {
 
         ++numUnits;
 
@@ -183,9 +192,13 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         if (srcml_request.command & SRCML_COMMAND_LIST) {
             srcml_list_unit_files(srcml_arch);
         }
-        // get specific unit
+        // get specific unit xml
         if (srcml_request.unit > 0 && (srcml_request.command & SRCML_COMMAND_XML)) {
             srcml_aquire_unit_xml(srcml_arch, srcml_request.unit);
+        }
+        // get specific unit
+        if (srcml_request.unit > 0 && !(srcml_request.command & SRCML_COMMAND_XML)) {
+            srcml_aquire_unit(srcml_arch, srcml_request.unit);
         }
         // units
         if (srcml_request.command & SRCML_COMMAND_UNITS) {

@@ -1,9 +1,9 @@
 /**
  * @file create_srcml.hpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -33,8 +33,10 @@
 #include <src_input_filelist.hpp>
 #include <src_input_stdin.hpp>
 #include <srcml_input_srcml.hpp>
+#include <trace_log.hpp>
+#include <srcml_options.hpp>
 
-void create_srcml_handler(ParseQueue& queue,
+void srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
                           const srcml_input_src& input) {
@@ -48,11 +50,11 @@ void create_srcml_handler(ParseQueue& queue,
 
         src_input_filelist(queue, srcml_arch, srcml_request, input);
 
-    } else if (input.protocol == "file" && boost::filesystem::is_directory(input.resource)) {
+    } else if (input.protocol == "file" && input.isdirectory) {
 
         src_input_filesystem(queue, srcml_arch, srcml_request, input);
 
-    } else if (input.protocol == "file" && input.compressions.empty() && input.archives.empty()) {
+    } else if (input.protocol == "file" && input.archives.empty() && input.compressions.empty()) {
 
         src_input_file(queue, srcml_arch, srcml_request, input);
 
@@ -103,16 +105,14 @@ void create_srcml(const srcml_request_t& srcml_request,
     // TODO: check if a plain file. Source archives, i.e., .tar.gz, always produce srcml archives
     if (input_sources.size() == 1 && input_sources[0].protocol != "filelist" &&
         !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) &&
-        !boost::filesystem::is_directory(input_sources[0].resource)) {
+        !input_sources[0].isdirectory) {
 
         srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+        srcml_archive_disable_option(srcml_arch, SRCML_OPTION_HASH);
     } else {
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+        srcml_archive_enable_option(srcml_arch, SRCML_OPTION_HASH);
     }
-
-    // turned off for now due to cli testing
-    srcml_archive_disable_option(srcml_arch, SRCML_OPTION_HASH);
-    srcml_archive_disable_option(srcml_arch, SRCML_OPTION_TIMESTAMP);
 
     // register file extensions
     BOOST_FOREACH(const std::string& ext, srcml_request.language_ext) {
@@ -134,12 +134,13 @@ void create_srcml(const srcml_request_t& srcml_request,
         status = srcml_write_open_filename(srcml_arch, destination.c_str());
     }
 
-    // gzip compression available from libsrcml
+    // gzip compression available directly from libsrcml
     if (destination.extension == ".gz")
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_COMPRESS);
 
     // setup the parsing queue
-    WriteQueue write_queue(srcml_write_request, srcml_request.command & SRCML_COMMAND_OUTPUT_ORDERED);
+    TraceLog log(std::cerr, SRCMLOptions::get());
+    WriteQueue write_queue(boost::bind(srcml_write_request, _1, boost::ref(log)), srcml_request.command & SRCML_COMMAND_OUTPUT_ORDERED);
     ParseQueue parse_queue(srcml_request.max_threads, boost::bind(srcml_consume, _1, &write_queue));
 
     // process input sources
@@ -152,7 +153,7 @@ if (!contains<FILE*>(input) && (input.protocol == "stdin") && (srcml_request.com
 return; // stdin was requested, but no data was received
 }
 */
-        create_srcml_handler(parse_queue, srcml_arch, srcml_request, input);
+        srcml_handler_dispatch(parse_queue, srcml_arch, srcml_request, input);
     }
 
     // wait for the parsing and writing queues to finish

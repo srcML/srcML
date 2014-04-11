@@ -1,9 +1,9 @@
 /**
  * @file srcml_write.cpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-/*
-  srcml_write calls appropriate libsrcml functions for processing srcml
-  or source file data respectively
-*/
 
 #include <srcml_write.hpp>
 #include <srcml.h>
@@ -33,39 +28,37 @@
 #include <trace_log.hpp>
 
 // Public consumption thread function
-void srcml_write_request(ParseRequest* ppr) {
+void srcml_write_request(ParseRequest* request, TraceLog& log) {
 
-    boost::optional<bool> isarchive;
+    if (!request)
+        return;
 
-    TraceLog log(std::cerr, SRCMLOptions::get());
+    bool isarchive = (srcml_archive_get_options(request->srcml_arch) & SRCML_OPTION_ARCHIVE) != 0;
 
-        // first time through need to set if this is an archive or not
-    if (!isarchive)
-        isarchive = (srcml_archive_get_options(ppr->srcml_arch) & SRCML_OPTION_ARCHIVE) > 0;
+    // write the unit
+    if (request->status == SRCML_STATUS_OK) {
 
-        // write the unit
-    if (ppr->status == SRCML_STATUS_OK) {
+        srcml_write_unit(request->srcml_arch, request->unit);
 
-        srcml_write_unit(ppr->srcml_arch, ppr->unit);
+        if (isarchive)
+            log << 'a' << (request->filename ? *request->filename : "");
 
-        if (*isarchive)
-            log << 'a' << *ppr->filename;
+    } else if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
 
-    } else if (ppr->status == SRCML_STATUS_UNSET_LANGUAGE) {
-
-        if (*isarchive)
-            log << '-' << *ppr->filename;
+        if (isarchive)
+            log << '-' << (request->filename ? *request->filename : "");
         else
             std::cerr << "Extension not supported\n";
 
     } else {
-        std::cerr << "Internal eror " << ppr->status << "\n";
+        std::cerr << "Internal eror " << request->status << "\n";
     }
 
     // free the unit
-    if (ppr->unit)
-        srcml_free_unit(ppr->unit);
-    ppr->unit = 0;
+    if (request->unit)
+        srcml_free_unit(request->unit);
+    request->unit = 0;
 
-    delete ppr;
+    delete request;
+    request = 0;
 }

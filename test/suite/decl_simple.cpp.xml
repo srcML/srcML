@@ -72,23 +72,23 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr>1</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr>1</expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr><name>a</name></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><name>a</name></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr><block>{ <expr><name>a</name></expr> }</block></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><block>{ <expr><name>a</name></expr> }</block></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr><block>{<expr><block>{ <expr><name>a</name></expr> }</block></expr>, <expr><name>b</name></expr>}</block></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><block>{<expr><block>{ <expr><name>a</name></expr> }</block></expr>, <expr><name>b</name></expr>}</block></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr>(<block>{<expr><block>{ <expr><name>a</name></expr> }</block></expr>, <expr><name>b</name></expr>}</block>)</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr>(<block>{<expr><block>{ <expr><name>a</name></expr> }</block></expr>, <expr><name>b</name></expr>}</block>)</expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -178,7 +178,7 @@
 
 <!--
 <unit>
-<decl_stmt><decl><type><name>int</name></type></name> <name><name>sign</name> =<init> <expr>( <name>m_oldParameters[ <expr><name>paramindex</name></expr> ]</name> &lt; 0 )? -1:1</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type></name> <name><name>sign</name> <init>= <expr>( <name>m_oldParameters[ <expr><name>paramindex</name></expr> ]</name> &lt; 0 )? -1:1</expr></init></decl>;</decl_stmt>
 </unit>
 -->
 
@@ -235,7 +235,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr>1</expr></init>, <name>b</name> =<init> <expr>2</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr>1</expr></init>, <name>b</name> <init>= <expr>2</expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>

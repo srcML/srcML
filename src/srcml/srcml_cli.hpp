@@ -1,9 +1,9 @@
 /**
  * @file srcml_cli.hpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-/*
-  srcml_cli handles parsing for CLI options for srcml
-*/
 
 #ifndef SRCML_CLI_HPP
 #define SRCML_CLI_HPP
@@ -65,6 +61,7 @@ const int SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION = 1<<25;
 const int SRCML_COMMAND_DISPLAY_SRCML_ENCODING    = 1<<26;
 
 const int SRCML_COMMAND_OUTPUT_ORDERED = 1<<27;
+const int SRCML_COMMAND_UPDATE = 1<<28;
 
 // commands that are simple queries on srcml
 const int SRCML_COMMAND_INSRCML =

@@ -203,14 +203,6 @@ libsrcml.srcml_write_unit.argtypes = [c_void_p, c_void_p]
 libsrcml.srcml_read_unit.restype = c_void_p
 libsrcml.srcml_read_unit.argtypes = [c_void_p]
 
-# int srcml_skip_unit(struct srcml_archive*);
-libsrcml.srcml_skip_unit.restype = c_int
-libsrcml.srcml_skip_unit.argtypes = [c_void_p]
-
-# struct srcml_unit* srcml_read_unit_position(struct srcml_archive*, int pos);
-libsrcml.srcml_read_unit_position.restype = c_void_p
-libsrcml.srcml_read_unit_position.argtypes = [c_void_p, c_int]
-
 # int srcml_clear_transforms(struct srcml_archive*);
 libsrcml.srcml_clear_transforms.restype = c_int
 libsrcml.srcml_clear_transforms.argtypes = [c_void_p]
@@ -397,16 +389,6 @@ class srcml_archive :
         if unit != None :
             return srcml_unit(0, unit)
         return None
-
-    def skip_unit(self) :
-        return libsrcml.srcml_skip_unit(self.archive)
-
-    def read_unit_position(self, pos) :
-         unit = libsrcml.srcml_read_unit_position(self.archive, pos)
-
-         if unit != None :
-             return srcml_unit(0, unit)
-         return None
 
     def clear_transforms(self) :
         check_return(libsrcml.srcml_clear_transforms(self.archive))

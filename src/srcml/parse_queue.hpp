@@ -1,9 +1,9 @@
 /**
  * @file parse_queue.hpp
  *
- * @copyright @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
- * This file is part of the srcML Toolkit.
+ * This file is part of the srcml command-line client.
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,31 +16,37 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
+ * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
-/*
  */
 
 #ifndef PARSE_QUEUE_HPP
 #define PARSE_QUEUE_HPP
 
 #include <parse_request.hpp>
-#include <boost/function.hpp>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <threadpool.hpp>
 #pragma GCC diagnostic pop
+#include <boost/function.hpp>
 
 class ParseQueue {
 public:
 
-    ParseQueue(int max_threads, boost::function<void(ParseRequest*)>);
+	ParseQueue(int max_threads, boost::function<void(ParseRequest*)> consumearg)
+	    : consume(consumearg), pool(max_threads), counter(0) {}
 
-    void schedule(ParseRequest* value);
+	inline void schedule(ParseRequest* pvalue) {
 
-    void wait();
+	    pvalue->position = ++counter;
+
+	    pool.schedule( boost::bind(consume, pvalue));
+	}
+
+	inline void wait() {
+
+		pool.wait();
+	}
 
 private:
     boost::function<void(ParseRequest*)> consume;
