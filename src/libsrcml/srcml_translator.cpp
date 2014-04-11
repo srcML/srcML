@@ -250,10 +250,13 @@ void srcml_translator::translate(UTF8CharBuffer * parser_input) {
  * Add a unit as string directly to the archive.  If not an archive
  * and supplied unit does not have src namespace add it.  Also, write out
  * a supplied hash as part of output unit if specified.
+ * Can not be in by element mode.
  *
  * @returns if succesfully added.
  */
 bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
+
+  if(is_outputting_unit) return false;
 
     if(first) {
 
@@ -318,6 +321,8 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
  * @param unit srcML to add to archive/non-archive with configuration options
  *
  * Add the start tag of a unit and set up for the remainder of unit output.
+ *
+ * Can not use add_unit while outputtting by element.
  *
  * @returns if succesfully added.
  */
@@ -385,11 +390,15 @@ bool srcml_translator::add_end_unit() {
  * Add the start element to a started unit.
  * add_start_unit most be called first.
  *
+ * Can not output a unit tag.
+ *
  * @returns if succesfully added.
  */
 bool srcml_translator::add_start_element(const char * prefix, const char * name, const char * uri) {
 
     if(!is_outputting_unit) return false;
+
+    if(strcmp(name, "unit") == 0) return false;
 
     ++output_unit_depth;
 

@@ -1112,6 +1112,8 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
  * If copying from a read and only the attributes have been read
  * read in the xml and output.
  *
+ * Can not mix with by element mode.
+ *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
@@ -1139,6 +1141,8 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
  *
  * Begin by element output and output the start tag unit to the srcml_archive archive
  * using attributes in srcml_unit.
+ *
+ * Can not usage with add_unit call srcml_write_end_unit, to end element mode.
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
@@ -1180,6 +1184,7 @@ int srcml_write_end_unit(struct srcml_archive * archive) {
  *
  * Start an element and write to the srcml_archive archive.
  * srcml_write_start_unit must be called first.
+ * A unit tag may not be written.
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
