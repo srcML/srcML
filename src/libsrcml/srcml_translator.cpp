@@ -310,12 +310,6 @@ void srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
 }
 
-void srcml_translator::add_start_element(const char * prefix, const char * name, const char * uri) {
-
-    xmlTextWriterStartElementNS(out.getWriter(), (const xmlChar *)prefix, (const xmlChar *)name, (const xmlChar *)uri);
-
-}
-
 
 void srcml_translator::add_start_unit(const srcml_unit * unit){
 
@@ -325,17 +319,36 @@ void srcml_translator::add_end_unit() {
 
 }
 
+void srcml_translator::add_start_element(const char * prefix, const char * name, const char * uri) {
+
+    xmlTextWriterStartElementNS(out.getWriter(), (const xmlChar *)prefix, (const xmlChar *)name, (const xmlChar *)uri);
+
+}
+
 void srcml_translator::add_end_element() {
+
+    xmlTextWriterEndElement(out.getWriter());
 
 }
 
 void srcml_translator::add_write_namespace(const char * prefix, const char * uri) {
 
+    std::string name = "xmlns";
+    if(prefix) {
+
+        name += ":";
+        name += prefix;
+
+    }
+
+    xmlTextWriterWriteAttributeNS(out.getWriter(), 0, (const xmlChar *)name.c_str(), 0, (const xmlChar *)uri);
+
 }
 
 void srcml_translator::add_write_attribute(const char * prefix, const char * name, const char * uri, const char * content) {
 
-    
+    xmlTextWriterWriteAttributeNS(out.getWriter(), (const xmlChar *)prefix, (const xmlChar *)name, (const xmlChar *)uri, (const xmlChar *)content);
+
 }
 
 /**
