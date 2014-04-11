@@ -177,7 +177,7 @@ void srcml_translator::close() {
 
     }
 
-    if(output_unit_depth) add_end_unit();
+    if(is_outputting_unit) add_end_unit();
 
     out.close();
 }
@@ -345,6 +345,8 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
             out.processText("\n\n", 2);
 
     }
+
+    first = false;
 
     if(is_outputting_unit) return false;
 
