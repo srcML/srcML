@@ -135,8 +135,6 @@ int main() {
     }
 
     {
-        char * s = 0;
-        int size;
         srcml_archive * archive = srcml_create_archive();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_unit * unit = srcml_create_unit(archive);
@@ -148,6 +146,29 @@ int main() {
         srcml_unit_set_hash(unit, "0123456789abcdef");
         dassert(srcml_write_start_unit(archive, unit), SRCML_STATUS_INVALID_IO_OPERATION);
         srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+    }
+
+    {
+        srcml_unit * unit = srcml_create_unit(0);
+        srcml_unit_set_language(unit, "C++");
+        srcml_unit_set_filename(unit, "a.cpp");
+        srcml_unit_set_directory(unit, "dir");
+        srcml_unit_set_version(unit, "1");
+        srcml_unit_set_timestamp(unit, "today");
+        srcml_unit_set_hash(unit, "0123456789abcdef");
+        dassert(srcml_write_start_unit(0, unit), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_free_unit(unit);
+     }
+
+    {
+        char * s = 0;
+        int size;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_write_open_memory(archive, &s, &size);
+        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        dassert(srcml_write_start_unit(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
     }

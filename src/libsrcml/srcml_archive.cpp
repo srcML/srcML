@@ -1148,6 +1148,8 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
  */
 int srcml_write_start_unit(struct srcml_archive * archive, const struct srcml_unit * unit) {
 
+    if(archive == NULL || unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
     if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
     if(!archive->translator->add_start_unit(unit)) return SRCML_STATUS_INVALID_INPUT;
