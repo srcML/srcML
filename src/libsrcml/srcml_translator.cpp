@@ -177,6 +177,8 @@ void srcml_translator::close() {
 
     }
 
+    if(output_unit_depth) add_end_unit();
+
     out.close();
 }
 

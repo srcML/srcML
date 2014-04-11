@@ -65,6 +65,28 @@ int main() {
         free(s);
     }
 
+    {
+        char * s = 0;
+        int size;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit_set_language(unit, "C++");
+        srcml_unit_set_filename(unit, "a.cpp");
+        srcml_unit_set_directory(unit, "dir");
+        srcml_unit_set_version(unit, "1");
+        srcml_unit_set_timestamp(unit, "today");
+        srcml_unit_set_hash(unit, "0123456789abcdef");
+        srcml_write_start_unit(archive, unit);
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+
+        dassert(s, xml_decl + empty_unit);
+        free(s);
+    }
+
     srcml_cleanup_globals();
 
     return 0;
