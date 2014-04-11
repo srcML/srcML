@@ -310,7 +310,6 @@ __LIBSRCML_DECL int srcml_unit_set_directory(struct srcml_unit*, const char* dir
 __LIBSRCML_DECL int srcml_unit_set_version  (struct srcml_unit*, const char* version);
 __LIBSRCML_DECL int srcml_unit_set_timestamp(struct srcml_unit*, const char* timestamp);
 __LIBSRCML_DECL int srcml_unit_set_hash     (struct srcml_unit*, const char* hash);
-__LIBSRCML_DECL int srcml_unit_set_xml      (struct srcml_unit*, const char* xml);
 
 /* Convert to srcml.  Files/buffer can be compressed, but not a
    source archive format (e.g., not .tar) */
@@ -321,12 +320,14 @@ __LIBSRCML_DECL int srcml_parse_unit_fd      (struct srcml_unit*, int src_fd);
 
 /* Append unit to an archive */
 __LIBSRCML_DECL int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*);
-
-
-__LIBSRCML_DECL int srcml_write_raw(struct srcml_archive*, const char * content);
-__LIBSRCML_DECL int srcml_write_raw_len(struct srcml_archive*, const char * content, size_t length);
-
-
+__LIBSRCML_DECL int srcml_write_start_unit(struct srcml_archive*, const struct srcml_unit*);
+__LIBSRCML_DECL int srcml_write_end_unit(struct srcml_archive*);
+__LIBSRCML_DECL int srcml_write_start_element(struct srcml_archive*, const char * prefix, const char * name, const char * uri);
+__LIBSRCML_DECL int srcml_write_end_element(struct srcml_archive*);
+__LIBSRCML_DECL int srcml_write_namespace(struct srcml_archive*, const char * prefix, const char * uri);
+__LIBSRCML_DECL int srcml_write_attribute(struct srcml_archive*, const char * prefix, const char * name, const char * uri, const char * content);
+__LIBSRCML_DECL int srcml_write_string(struct srcml_archive*, const char * content);
+ 
 /* Free allocated unit */
 __LIBSRCML_DECL void srcml_free_unit(struct srcml_unit*);
 
