@@ -88,13 +88,13 @@ public:
 
     void translate(UTF8CharBuffer* parser_input);
 
-    void add_unit(const srcml_unit * unit, const char * xml);
-    void add_start_unit(const srcml_unit * unit);
-    void add_end_unit();
-    void add_start_element(const char * prefix, const char * name, const char * uri);
-    void add_end_element();
-    void add_write_namespace(const char * prefix, const char * uri);
-    void add_write_attribute(const char * prefix, const char * name, const char * uri, const char * content);
+    bool add_unit(const srcml_unit * unit, const char * xml);
+    bool add_start_unit(const srcml_unit * unit);
+    bool add_end_unit();
+    bool add_start_element(const char * prefix, const char * name, const char * uri);
+    bool add_end_element();
+    bool add_write_namespace(const char * prefix, const char * uri);
+    bool add_write_attribute(const char * prefix, const char * name, const char * uri, const char * content);
 
     // destructor
     ~srcml_translator();
