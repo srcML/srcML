@@ -101,7 +101,7 @@ srcml_translator::srcml_translator(char ** str_buf,
     :  Language(language), first(true), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
        options(op), buffer(0),
        out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
-       str_buffer(str_buf), size(size) {
+       str_buffer(str_buf), size(size), is_outputting_unit(false), output_unit_depth(0) {
 
     buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
@@ -143,7 +143,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
       directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
       options(op), buffer(0),
       out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
-      str_buffer(0), size(0) {}
+      str_buffer(0), size(0), is_outputting_unit(false), output_unit_depth(0) {}
 
 /**
  * set_macro_list
@@ -331,12 +331,25 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     }
 
+    if(is_outputting_unit) return false;
+
+    is_outputting_unit = true;
+
     out.startUnit(unit->language ? unit->language->c_str() : (unit->archive->language ? unit->archive->language->c_str() : 0), unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
                           unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, false);
+
+
+    return true;
 
 }
 
 bool srcml_translator::add_end_unit() {
+
+    if(!is_outputting_unit) return false;
+
+    while(output_unit_depth--) xmlTextWriterEndElement(out.getWriter()) != -1;
+
+    is_outputting_unit = false;
 
     return xmlTextWriterEndElement(out.getWriter()) != -1;
 
@@ -344,17 +357,27 @@ bool srcml_translator::add_end_unit() {
 
 bool srcml_translator::add_start_element(const char * prefix, const char * name, const char * uri) {
 
+    if(!is_outputting_unit) return false;
+
+    ++output_unit_depth;
+
     return xmlTextWriterStartElementNS(out.getWriter(), (const xmlChar *)prefix, (const xmlChar *)name, (const xmlChar *)uri) != -1;
 
 }
 
 bool srcml_translator::add_end_element() {
 
+    if(!is_outputting_unit) return false;
+
+    --output_unit_depth;
+
     return xmlTextWriterEndElement(out.getWriter()) != -1;
 
 }
 
 bool srcml_translator::add_write_namespace(const char * prefix, const char * uri) {
+
+    if(!is_outputting_unit && output_unit_depth) return false;
 
     std::string name = "xmlns";
     if(prefix) {
@@ -369,6 +392,8 @@ bool srcml_translator::add_write_namespace(const char * prefix, const char * uri
 }
 
 bool srcml_translator::add_write_attribute(const char * prefix, const char * name, const char * uri, const char * content) {
+
+    if(!is_outputting_unit && output_unit_depth) return false;
 
     return xmlTextWriterWriteAttributeNS(out.getWriter(), (const xmlChar *)prefix, (const xmlChar *)name, (const xmlChar *)uri, (const xmlChar *)content) != -1;
 

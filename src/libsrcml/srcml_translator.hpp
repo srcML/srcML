@@ -140,6 +140,10 @@ private:
     /** location to store size of output when output is to memory */
     int * size;
 
+    bool is_outputting_unit;
+
+    int output_unit_depth;
+
 };
 
 #endif
