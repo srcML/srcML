@@ -127,3 +127,9 @@ _srcml_write_open_filename
 _srcml_write_open_memory
 _srcml_write_open_FILE
 _srcml_write_unit
+_srcml_write_start_unit
+_srcml_write_end_unit
+_srcml_write_start_element
+_srcml_write_end_element
+_srcml_write_namespace
+_srcml_write_attribute
