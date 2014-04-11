@@ -1132,6 +1132,43 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
     return SRCML_STATUS_OK;
 }
 
+int srcml_write_start_unit(struct srcml_archive * archive, const struct srcml_unit * unit) {
+
+    return SRCML_STATUS_OK;
+
+}
+
+int srcml_write_end_unit(struct srcml_archive * archive) {
+
+    return SRCML_STATUS_OK;
+
+}
+
+int srcml_write_start_element(struct srcml_archive * archive, const char * prefix, const char * name, const char * uri) {
+
+    return SRCML_STATUS_OK;
+
+}
+
+int srcml_write_end_element(struct srcml_archive * archive) {
+
+    return SRCML_STATUS_OK;
+
+}
+
+int srcml_write_namespace(struct srcml_archive * archive, const char * prefix, const char * uri) {
+
+    return SRCML_STATUS_OK;
+
+}
+
+int srcml_write_attribute(struct srcml_archive * archive, const char * prefix, const char * name, const char * uri, const char * content) {
+
+    return SRCML_STATUS_OK;
+
+}
+
+
 /**
  * srcml_read_unit_header
  * @param archive a srcml archive open for reading
