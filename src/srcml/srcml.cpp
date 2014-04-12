@@ -24,8 +24,8 @@
 #include <srcml_cli.hpp>
 #include <srcml_options.hpp>
 #include <create_srcml.hpp>
-#include <compress_srcml.hpp>
 #include <decompress_srcml.hpp>
+#include <compress_srcml.hpp>
 #include <create_src.hpp>
 #include <transform_srcml.hpp>
 #include <srcml_display_metadata.hpp>
@@ -103,15 +103,16 @@ int main(int argc, char * argv[]) {
 #if ARCHIVE_VERSION_NUMBER > 3001002
         // libsrcml can apply gz compression
         // all other compressions require an additional compression stage
-        if (!destination.compressions.empty() && destination.compressions.front() != ".gz") 
+        if (!destination.compressions.empty() && (destination.compressions.size() > 1 || destination.compressions.front() != ".gz")) 
             processing_steps.push_back(compress_srcml);
 #endif
     }
 
-    if (!src_input && !input_sources[0].compressions.empty() && input_sources[0].compressions.front() != ".gz") {
+    // libsrcml can apply gz decompression
+    // all other compressions require an additional compression stage
+    // NOTE: assumes only one input file
+    if (!src_input && !input_sources[0].compressions.empty() && (input_sources[0].compressions.size() > 1 || input_sources[0].compressions.front() != ".gz")) {
 
-        // libsrcml can apply gz decompression
-        // all other compressions require an additional compression stage
         processing_steps.push_back(decompress_srcml);
     }
 
