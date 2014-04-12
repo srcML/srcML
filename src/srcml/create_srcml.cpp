@@ -126,8 +126,6 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_register_namespace(srcml_arch, ns.substr(0,pos).c_str(), ns.substr(pos+1).c_str());
     }
 
-std::cerr << destination;
-
     // create the srcML output file
     int status = 0;
     if (contains<int>(destination)) {

@@ -87,7 +87,7 @@ int main(int argc, char * argv[]) {
     processing_steps_t pipeline;
     bool last_command = false;
 
-    bool src_input = std::any_of(input_sources.begin(), input_sources.end(), is_src) != in;
+    bool src_input = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
 
     // src->srcml when there is any src input, or multiple srcml input with output to srcml (merge)
     if (src_input || (input_sources.size() > 1 && destination.state == SRCML)) {
@@ -112,7 +112,6 @@ int main(int argc, char * argv[]) {
     // all other compressions require an additional compression stage
     // NOTE: assumes only one input file
     if (!src_input && !input_sources[0].compressions.empty() && (input_sources[0].compressions.size() > 1 || input_sources[0].compressions.front() != ".gz")) {
-
         pipeline.push_back(decompress_srcml);
     }
 
