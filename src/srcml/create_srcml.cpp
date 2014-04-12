@@ -126,10 +126,12 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_register_namespace(srcml_arch, ns.substr(0,pos).c_str(), ns.substr(pos+1).c_str());
     }
 
+std::cerr << destination;
+
     // create the srcML output file
     int status = 0;
     if (contains<int>(destination)) {
-        status = srcml_write_open_fd(srcml_arch, destination);
+        status = srcml_write_open_fd(srcml_arch, *destination.fd);
     } else {
         status = srcml_write_open_filename(srcml_arch, destination.c_str());
     }
@@ -166,5 +168,5 @@ return; // stdin was requested, but no data was received
 
     // if we were writing to a file descriptor, then close it
     if (contains<int>(destination))
-        close(destination);
+        close(*destination.fd);
 }

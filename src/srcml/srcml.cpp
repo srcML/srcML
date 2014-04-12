@@ -100,11 +100,12 @@ int main(int argc, char * argv[]) {
 
         processing_steps.push_back(create_srcml);
 
+#if ARCHIVE_VERSION_NUMBER > 3001002
         // libsrcml can apply gz compression
         // all other compressions require an additional compression stage
         if (!destination.compressions.empty() && destination.compressions.front() != ".gz") 
             processing_steps.push_back(compress_srcml);
-
+#endif
     }
 
     if (!src_input && !input_sources[0].compressions.empty() && input_sources[0].compressions.front() != ".gz") {
@@ -129,7 +130,6 @@ int main(int argc, char * argv[]) {
     if (!last_command && !src_input && destination.state != SRCML) {
 
         processing_steps.push_back(create_src);
-        last_command = true;
     }
 
     assert(!processing_steps.empty());

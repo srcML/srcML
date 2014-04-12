@@ -22,19 +22,17 @@
 
 #include <compress_srcml.hpp>
 #include <archive.h>
+#include <archive_entry.h>
 #include <boost/foreach.hpp>
 
-void compress_srcml(const srcml_request_t& srcml_request,
+#if ARCHIVE_VERSION_NUMBER > 3001002
+void compress_srcml(const srcml_request_t& /* srcml_request */,
                     const srcml_input_t& input_sources,
                     const srcml_output_dest& destination) {
 
-    return;
-
     archive* ar = archive_write_new();
 
-    // setup format
-    BOOST_FOREACH(const std::string& ext, destination.archives)
-        archive_write_set_format_by_extension(ar, ext.c_str());
+    archive_write_set_format_raw(ar);
 
     // setup compressions
     BOOST_FOREACH(const std::string& ext, destination.compressions)
@@ -50,7 +48,27 @@ void compress_srcml(const srcml_request_t& srcml_request,
         std::cerr << status;
         exit(1);
     }
-    
+
+    archive_entry* entry = archive_entry_new();
+
+    archive_entry_set_pathname(entry, "test");
+    archive_entry_set_filetype(entry, AE_IFREG);
+
+    if ((status = archive_write_header(ar, entry)) != ARCHIVE_OK) {
+        std::cerr << status;
+        exit(1);
+    }
+
+    // write the data into the archive
+    std::vector<char> buffer(4092);
+    while (ssize_t s = read(*input_sources[0].fd, &buffer.front(), buffer.size())) {
+
+        ssize_t status = archive_write_data(ar, &buffer.front(), s);
+        if (status == 0)
+            break;
+    }
+
     archive_write_close(ar);
-    archive_write_finish(ar);
+    archive_write_free(ar);
 }
+#endif
