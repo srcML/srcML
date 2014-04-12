@@ -134,7 +134,6 @@ int main(int argc, char * argv[]) {
     }
 
     assert(!processing_steps.empty());
-    assert(processing_steps.size() <= 3);
 
     // execute the steps in order
     srcml_execute(srcml_request, processing_steps, input_sources, destination);
