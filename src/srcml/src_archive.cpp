@@ -83,7 +83,7 @@ archive_calls_t format_calls[] = {
     { ".lzh", 0 },
 #endif
 
-    { ".mtree", 0 },
+    { ".mtree", archive_write_set_format_mtree },
     { ".pax", 0 },
 
 #if ARCHIVE_VERSION_NUMBER >= 3000000
