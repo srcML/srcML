@@ -73,7 +73,10 @@ archive_calls_t format_calls[] = {
 
     { ".ar", archive_write_set_format_ar_bsd },
     { ".cpio", archive_write_set_format_cpio },
-    { ".iso", 0 },
+
+#if ARCHIVE_VERSION_NUMBER >= 3000000
+    { ".iso", archive_write_set_format_iso9660 },
+#endif
 
 #if ARCHIVE_VERSION_NUMBER >= 3000000
     { ".lha", 0 },
