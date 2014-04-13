@@ -84,13 +84,13 @@ archive_calls_t format_calls[] = {
 #endif
 
     { ".mtree", archive_write_set_format_mtree },
-    { ".pax", 0 },
+    { ".pax", archive_write_set_format_pax },
 
 #if ARCHIVE_VERSION_NUMBER >= 3000000
     { ".rar", 0 },
 #endif
 
-    { ".shar", 0 },
+    { ".shar", archive_write_set_format_shar },
     { ".tar", archive_write_set_format_pax_restricted },
     { ".taz", 0 },  // (archive w/ compression)
     { ".tb2", 0 },  // (archive w/ compression)
