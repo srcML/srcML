@@ -68,7 +68,7 @@ const
 #endif
 archive_calls_t format_calls[] = {
 #if ARCHIVE_VERSION_NUMBER >= 3000000
-    { ".7z", 0 },
+    { ".7z", archive_write_set_format_7zip },
 #endif
 
     { ".ar", 0 },
