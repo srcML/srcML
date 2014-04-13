@@ -68,31 +68,29 @@ const
 #endif
 archive_calls_t format_calls[] = {
 #if ARCHIVE_VERSION_NUMBER >= 3000000
-    { ".7z", 0 },
+    { ".7z", archive_write_set_format_7zip },
 #endif
 
-    { ".ar", 0 },
+    { ".ar", archive_write_set_format_ar_bsd },
+    { ".cpio", archive_write_set_format_cpio },
 
 #if ARCHIVE_VERSION_NUMBER >= 3000000
-    { ".cab", 0 },
+    { ".iso", archive_write_set_format_iso9660 },
 #endif
-
-    { ".cpio", 0 },
-    { ".iso", 0 },
 
 #if ARCHIVE_VERSION_NUMBER >= 3000000
     { ".lha", 0 },
     { ".lzh", 0 },
 #endif
 
-    { ".mtree", 0 },
-    { ".pax", 0 },
+    { ".mtree", archive_write_set_format_mtree },
+    { ".pax", archive_write_set_format_pax },
 
 #if ARCHIVE_VERSION_NUMBER >= 3000000
     { ".rar", 0 },
 #endif
 
-    { ".shar", 0 },
+    { ".shar", archive_write_set_format_shar },
     { ".tar", archive_write_set_format_pax_restricted },
     { ".taz", 0 },  // (archive w/ compression)
     { ".tb2", 0 },  // (archive w/ compression)
