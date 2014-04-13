@@ -71,7 +71,7 @@ archive_calls_t format_calls[] = {
     { ".7z", archive_write_set_format_7zip },
 #endif
 
-    { ".ar", 0 },
+    { ".ar", archive_write_set_format_ar_bsd },
 
 #if ARCHIVE_VERSION_NUMBER >= 3000000
     { ".cab", 0 },
