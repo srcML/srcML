@@ -72,7 +72,7 @@ archive_calls_t format_calls[] = {
 #endif
 
     { ".ar", archive_write_set_format_ar_bsd },
-    { ".cpio", 0 },
+    { ".cpio", archive_write_set_format_cpio },
     { ".iso", 0 },
 
 #if ARCHIVE_VERSION_NUMBER >= 3000000
