@@ -101,7 +101,7 @@ srcml_translator::srcml_translator(char ** str_buf,
     :  Language(language), first(true), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
        options(op), buffer(0),
        out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
-       str_buffer(str_buf), size(size) {
+       str_buffer(str_buf), size(size), is_outputting_unit(false), output_unit_depth(0) {
 
     buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
@@ -143,7 +143,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
       directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
       options(op), buffer(0),
       out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
-      str_buffer(0), size(0) {}
+      str_buffer(0), size(0), is_outputting_unit(false), output_unit_depth(0) {}
 
 /**
  * set_macro_list
@@ -176,6 +176,8 @@ void srcml_translator::close() {
         out.startUnit(0, directory, filename, version, 0, 0, true);
 
     }
+
+    if(is_outputting_unit) add_end_unit();
 
     out.close();
 }
@@ -245,13 +247,18 @@ void srcml_translator::translate(UTF8CharBuffer * parser_input) {
 /**
  * add_unit
  * @param unit srcML to add to archive/non-archive with configuration options
- * @param hash a possible hash to include with xml output as attribute
+ * @param xml the xml to output
  *
  * Add a unit as string directly to the archive.  If not an archive
  * and supplied unit does not have src namespace add it.  Also, write out
  * a supplied hash as part of output unit if specified.
+ * Can not be in by element mode.
+ *
+ * @returns if succesfully added.
  */
-void srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
+bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
+
+  if(is_outputting_unit) return false;
 
     if(first) {
 
@@ -272,7 +279,7 @@ void srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
     first = false;
 
     const char * end_start_unit = (char *)strchr(xml, '>');
-    if(!end_start_unit) return;
+    if(!end_start_unit) return false;
 
     /** extract language */
     char * language_start_name = strnstr(xml, "language", end_start_unit - xml);
@@ -307,17 +314,21 @@ void srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
     if ((options & OPTION_ARCHIVE) > 0)
         out.processText("\n\n", 2);
 
+    return true;
 
 }
 
 /**
- * add_raw_len
- * @param content srcML text to add to archive
- * @param length number of bytes to write to archive
+ * add_start_unit
+ * @param unit srcML to add to archive/non-archive with configuration options
  *
- * Add the srcML text as string directly to the archive.
+ * Add the start tag of a unit and set up for the remainder of unit output.
+ *
+ * Can not use add_unit while outputtting by element.
+ *
+ * @returns if succesfully added.
  */
-void srcml_translator::add_raw_len(const char * content, size_t length) {
+bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     if(first) {
 
@@ -330,12 +341,155 @@ void srcml_translator::add_raw_len(const char * content, size_t length) {
         if((options & OPTION_ARCHIVE) > 0)
             out.startUnit(0, directory, filename, version, 0, 0, true);
 
+        if ((options & OPTION_ARCHIVE) > 0)
+            out.processText("\n\n", 2);
+
     }
 
     first = false;
 
-    if(length > 0)
-      xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)content, (int)length);
+    if(is_outputting_unit) return false;
+
+    is_outputting_unit = true;
+
+    out.startUnit(unit->language ? unit->language->c_str() : (unit->archive->language ? unit->archive->language->c_str() : 0), unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
+                          unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, false);
+
+
+    return true;
+
+}
+
+/**
+ * add_end_unit
+ *
+ * Add the end tag of a unit disable worther element processing.
+ * Outputs all ending tags that are currently open within the unit first.
+ *
+ * @returns if succesfully added.
+ */
+bool srcml_translator::add_end_unit() {
+
+    if(!is_outputting_unit) return false;
+
+    while(output_unit_depth--) xmlTextWriterEndElement(out.getWriter());
+
+    output_unit_depth = 0;
+    is_outputting_unit = false;
+
+    bool success = xmlTextWriterEndElement(out.getWriter()) != -1;
+
+    if ((options & OPTION_ARCHIVE) > 0)
+        out.processText("\n\n", 2);
+
+    return success;
+    
+}
+
+/**
+ * add_start_element
+ * @param prefix the namespace prefix for element
+ * @param name the name of the tag/element
+ * @param uri the namespace uri for element
+ *
+ * Add the start element to a started unit.
+ * add_start_unit most be called first.
+ *
+ * Can not output a unit tag.
+ *
+ * @returns if succesfully added.
+ */
+bool srcml_translator::add_start_element(const char * prefix, const char * name, const char * uri) {
+
+    if(!is_outputting_unit || name == 0) return false;
+
+    if(strcmp(name, "unit") == 0) return false;
+
+    ++output_unit_depth;
+
+    return xmlTextWriterStartElementNS(out.getWriter(), (const xmlChar *)prefix, (const xmlChar *)name, (const xmlChar *)uri) != -1;
+
+}
+
+/**
+ * add_end_element
+ *
+ * Add the end element to a started unit.
+ * add_start_unit most be called first.
+ *
+ * @returns if succesfully added.
+ */
+bool srcml_translator::add_end_element() {
+
+    if(!is_outputting_unit) return false;
+
+    --output_unit_depth;
+
+    return xmlTextWriterEndElement(out.getWriter()) != -1;
+
+}
+
+/**
+ * add_namespace
+ * @param prefix the prefix for the namespace
+ * @param uri the namespace uri
+ *
+ * Add the namespace to a started element.
+ * add_start_unit most be called first.
+ *
+ * @returns if succesfully added.
+ */
+bool srcml_translator::add_namespace(const char * prefix, const char * uri) {
+
+    if(!is_outputting_unit || uri == 0) return false;
+
+    std::string name = "xmlns";
+    if(prefix) {
+
+        name += ":";
+        name += prefix;
+
+    }
+
+    return xmlTextWriterWriteAttributeNS(out.getWriter(), 0, (const xmlChar *)name.c_str(), 0, (const xmlChar *)uri) != -1;
+
+}
+
+/**
+ * add_start_element
+ * @param prefix the namespace prefix for attribute
+ * @param name the name of the attribute
+ * @param uri the namespace uri for attriubute
+ * @param content the contents/value of the attribute
+ *
+ * Add the attribute to a start element.
+ * add_start_unit most be called first.
+ *
+ * @returns if succesfully added.
+ */
+bool srcml_translator::add_attribute(const char * prefix, const char * name, const char * uri, const char * content) {
+
+    if(!is_outputting_unit || name == 0) return false;
+
+    return xmlTextWriterWriteAttributeNS(out.getWriter(), (const xmlChar *)prefix, (const xmlChar *)name, (const xmlChar *)uri, (const xmlChar *)content) != -1;
+
+}
+
+/**
+ * add_string.
+ * @param content the string to write out
+ *
+ * Write the string/text to a started unit.
+ * i.e being added to start tag.
+ * add_start_unit must be called first.
+ *
+ * @returns if succesfully added.
+ */
+bool srcml_translator::add_string(const char * content) {
+
+    if(!is_outputting_unit || content == 0) return false;
+
+    xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)content);
 
 }
 

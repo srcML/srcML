@@ -70,12 +70,36 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         // sha1 value based on the code as encoded (source text encoding) in the original file
         if (srcml_archive_get_options(request->srcml_arch) & SRCML_OPTION_HASH) {
 
+#ifdef _MSC_BUILD
+            unsigned char md[20];
+            /** msvc hash provider object */
+            HCRYPTPROV   crypt_provider;
+            BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
+            if(! success && GetLastError() == NTE_BAD_KEYSET)
+                success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
+            /** msvc hash object */
+            HCRYPTHASH   crypt_hash;
+            CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
+            CryptHashData(crypt_hash, (BYTE *)&request->buffer.front(), request->buffer.size(), 0);
+            DWORD        SHA_DIGEST_LENGTH;
+            DWORD        hash_length_size = sizeof(DWORD);
+            CryptGetHashParam(crypt_hash, HP_HASHSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
+            CryptGetHashParam(crypt_hash, HP_HASHVAL, (BYTE *)md, &SHA_DIGEST_LENGTH, 0);
+            CryptDestroyHash(crypt_hash);
+            CryptReleaseContext(crypt_provider, 0);
+#else
             unsigned char md[SHA_DIGEST_LENGTH];
             if (SHA1((const unsigned char*)&request->buffer.front(), (SHA_LONG)request->buffer.size(), md) == 0)
                 throw SRCML_STATUS_ERROR;
+#endif
+
             const char outmd[] = { HEXCHARASCII(md), '\0' };
+
+#ifndef _MSC_BUILD
             BOOST_STATIC_ASSERT_MSG(sizeof(outmd)/sizeof(outmd[0]) == (SHA_DIGEST_LENGTH * 2 + 1),
                 "Wrong size for SHA_DIGEST_LENGTH conversion");
+#endif
+            
             srcml_unit_set_hash(unit, outmd);
         }
 

@@ -23,7 +23,10 @@
 #ifndef SHA1_UTILITIES_HPP
 #define SHA1_UTILITIES_HPP
 
-#ifdef __MACH__
+#ifdef _MSC_BUILD
+#include <windows.h>
+#include <Wincrypt.h>
+#elif defined(__MACH__)
 #include <CommonCrypto/CommonDigest.h>
 #define SHA1(a,b,c) CC_SHA1(a,b,c)
 #define SHA_DIGEST_LENGTH CC_SHA1_DIGEST_LENGTH

@@ -88,8 +88,14 @@ public:
 
     void translate(UTF8CharBuffer* parser_input);
 
-    void add_unit(const srcml_unit * unit, const char * xml);
-    void add_raw_len(const char * content, size_t length);
+    bool add_unit(const srcml_unit * unit, const char * xml);
+    bool add_start_unit(const srcml_unit * unit);
+    bool add_end_unit();
+    bool add_start_element(const char * prefix, const char * name, const char * uri);
+    bool add_end_element();
+    bool add_namespace(const char * prefix, const char * uri);
+    bool add_attribute(const char * prefix, const char * name, const char * uri, const char * content);
+    bool add_string(const char * content);
 
     // destructor
     ~srcml_translator();
@@ -134,6 +140,12 @@ private:
     
     /** location to store size of output when output is to memory */
     int * size;
+
+    /** mark if have outputted starting unit tag for by element writing */
+    bool is_outputting_unit;
+
+    /** track depth for by element writing */
+    int output_unit_depth;
 
 };
 
