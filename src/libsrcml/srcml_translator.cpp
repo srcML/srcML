@@ -374,6 +374,7 @@ bool srcml_translator::add_end_unit() {
 
     while(output_unit_depth--) xmlTextWriterEndElement(out.getWriter());
 
+    output_unit_depth = 0;
     is_outputting_unit = false;
 
     bool success = xmlTextWriterEndElement(out.getWriter()) != -1;
