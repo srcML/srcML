@@ -418,6 +418,40 @@ int main() {
         free(s);
     }
 
+    {
+        char * s = 0;
+        int size;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_write_start_unit(archive, unit);
+        dassert(srcml_write_start_element(archive, 0, 0, 0), SRCML_STATUS_INVALID_INPUT);
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+        free(s);
+    }
+
+    {
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        dassert(srcml_write_start_element(archive, 0, "element", 0), SRCML_STATUS_INVALID_IO_OPERATION);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+    }
+
+    {
+        char * s = 0;
+        int size;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_write_open_memory(archive, &s, &size);
+        dassert(srcml_write_start_element(archive, 0, "element", 0), SRCML_STATUS_INVALID_INPUT);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+    }
+
     srcml_cleanup_globals();
 
     return 0;
