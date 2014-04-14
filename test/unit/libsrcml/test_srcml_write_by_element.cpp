@@ -452,6 +452,29 @@ int main() {
         srcml_free_archive(archive);
     }
 
+    /*
+        srcml_write_end_element
+    */
+
+    {
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        dassert(srcml_write_end_element(archive), SRCML_STATUS_INVALID_IO_OPERATION);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+    }
+
+    {
+        char * s = 0;
+        int size;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_write_open_memory(archive, &s, &size);
+        dassert(srcml_write_end_element(archive), SRCML_STATUS_INVALID_INPUT);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+    }
+
     srcml_cleanup_globals();
 
     return 0;
