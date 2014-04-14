@@ -1194,7 +1194,7 @@ int srcml_write_end_unit(struct srcml_archive * archive) {
  */
 int srcml_write_start_element(struct srcml_archive * archive, const char * prefix, const char * name, const char * uri) {
 
-    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive == NULL || name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
     if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
@@ -1240,7 +1240,7 @@ int srcml_write_end_element(struct srcml_archive * archive) {
 
 int srcml_write_namespace(struct srcml_archive * archive, const char * prefix, const char * uri) {
 
-    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive == NULL || uri == 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
     if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
@@ -1265,7 +1265,7 @@ int srcml_write_namespace(struct srcml_archive * archive, const char * prefix, c
  */
 int srcml_write_attribute(struct srcml_archive * archive, const char * prefix, const char * name, const char * uri, const char * content) {
 
-    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive == NULL || name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
     if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
@@ -1287,7 +1287,7 @@ int srcml_write_attribute(struct srcml_archive * archive, const char * prefix, c
  */
 int srcml_write_string(struct srcml_archive * archive, const char * content) {
 
-    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive == NULL || content == 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
     if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 

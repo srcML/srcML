@@ -487,7 +487,7 @@ bool srcml_translator::add_attribute(const char * prefix, const char * name, con
  */
 bool srcml_translator::add_string(const char * content) {
 
-    if(!is_outputting_unit) return false;
+    if(!is_outputting_unit || content == 0) return false;
 
     xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)content);
 
