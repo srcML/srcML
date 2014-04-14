@@ -238,6 +238,10 @@ int main() {
         srcml_free_archive(archive);
     }
 
+    {
+        dassert(srcml_write_end_unit(0), SRCML_STATUS_INVALID_ARGUMENT);
+    }
+
     /*
         srcml_write_start_element
     */
@@ -452,6 +456,11 @@ int main() {
         srcml_free_archive(archive);
     }
 
+    
+    {
+        dassert(srcml_write_start_element(0, "foo", "element", "bar"), SRCML_STATUS_INVALID_ARGUMENT);
+    }
+
     /*
         srcml_write_end_element
     */
@@ -473,6 +482,10 @@ int main() {
         dassert(srcml_write_end_element(archive), SRCML_STATUS_INVALID_INPUT);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
+    }
+    
+    {
+        dassert(srcml_write_end_element(0), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -551,7 +564,10 @@ int main() {
         dassert(srcml_write_namespace(archive, "foo", "bar"), SRCML_STATUS_INVALID_INPUT);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-    }free_archive(archive);
+    }
+    
+    {
+        dassert(srcml_write_namespace(0, "foo", "bar"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -574,7 +590,67 @@ int main() {
         srcml_close_archive(archive);
         srcml_free_archive(archive);
 
-        dassert(s, xml_decl + start_unit + "<element xmlns:foo=\"bar\"/>" + end_unit);
+        dassert(s, xml_decl + start_unit + "<element foo=\"bar\"/>" + end_unit);
+        free(s);
+    }
+
+    {
+        char * s = 0;
+        int size;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_write_start_unit(archive, unit);
+        srcml_write_start_element(archive, 0, "element", 0);
+        srcml_write_attribute(archive, "f", "foo", 0, "bar");
+        srcml_write_end_element(archive);
+        srcml_write_end_unit(archive);
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+
+        dassert(s, xml_decl + start_unit + "<element f:foo=\"bar\"/>" + end_unit);
+        free(s);
+    }
+
+    {
+        char * s = 0;
+        int size;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_write_start_unit(archive, unit);
+        srcml_write_start_element(archive, 0, "element", 0);
+        srcml_write_attribute(archive, 0, "foo", "b", "bar");
+        srcml_write_end_element(archive);
+        srcml_write_end_unit(archive);
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+
+        dassert(s, xml_decl + start_unit + "<element foo=\"bar\" xmlns=\"b\"/>" + end_unit);
+        free(s);
+    }
+
+    {
+        char * s = 0;
+        int size;
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_write_start_unit(archive, unit);
+        srcml_write_start_element(archive, 0, "element", 0);
+        srcml_write_attribute(archive, "f", "foo", "b", "bar");
+        srcml_write_end_element(archive);
+        srcml_write_end_unit(archive);
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+
+        dassert(s, xml_decl + start_unit + "<element f:foo=\"bar\" xmlns:f=\"b\"/>" + end_unit);
         free(s);
     }
 
@@ -594,7 +670,7 @@ int main() {
         srcml_close_archive(archive);
         srcml_free_archive(archive);
 
-        dassert(s, xml_decl + start_unit + "<element xmlns=\"bar\"/>" + end_unit);
+        dassert(s, xml_decl + start_unit + "<element foo=\"bar\"/>" + end_unit);
         free(s);
     }
 
@@ -630,6 +706,10 @@ int main() {
         dassert(srcml_write_attribute(archive, 0, "foo", 0, "bar"), SRCML_STATUS_INVALID_INPUT);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
+    }
+    
+    {
+        dassert(srcml_write_attribute(0, "f", "foo", "b", "bar"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     srcml_cleanup_globals();

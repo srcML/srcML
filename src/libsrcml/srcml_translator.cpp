@@ -469,7 +469,7 @@ bool srcml_translator::add_namespace(const char * prefix, const char * uri) {
  */
 bool srcml_translator::add_attribute(const char * prefix, const char * name, const char * uri, const char * content) {
 
-    if(!is_outputting_unit) return false;
+    if(!is_outputting_unit || name == 0) return false;
 
     return xmlTextWriterWriteAttributeNS(out.getWriter(), (const xmlChar *)prefix, (const xmlChar *)name, (const xmlChar *)uri, (const xmlChar *)content) != -1;
 
