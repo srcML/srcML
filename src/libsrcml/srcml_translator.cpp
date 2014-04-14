@@ -441,7 +441,7 @@ bool srcml_translator::add_end_element() {
  */
 bool srcml_translator::add_namespace(const char * prefix, const char * uri) {
 
-    if(!is_outputting_unit) return false;
+    if(!is_outputting_unit || uri == 0) return false;
 
     std::string name = "xmlns";
     if(prefix) {
