@@ -177,6 +177,8 @@ void srcml_translator::close() {
 
     }
 
+    if(is_outputting_unit) add_end_unit();
+
     out.close();
 }
 
@@ -344,6 +346,8 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     }
 
+    first = false;
+
     if(is_outputting_unit) return false;
 
     is_outputting_unit = true;
@@ -370,6 +374,7 @@ bool srcml_translator::add_end_unit() {
 
     while(output_unit_depth--) xmlTextWriterEndElement(out.getWriter());
 
+    output_unit_depth = 0;
     is_outputting_unit = false;
 
     bool success = xmlTextWriterEndElement(out.getWriter()) != -1;
@@ -396,7 +401,7 @@ bool srcml_translator::add_end_unit() {
  */
 bool srcml_translator::add_start_element(const char * prefix, const char * name, const char * uri) {
 
-    if(!is_outputting_unit) return false;
+    if(!is_outputting_unit || name == 0) return false;
 
     if(strcmp(name, "unit") == 0) return false;
 
@@ -436,7 +441,7 @@ bool srcml_translator::add_end_element() {
  */
 bool srcml_translator::add_namespace(const char * prefix, const char * uri) {
 
-    if(!is_outputting_unit) return false;
+    if(!is_outputting_unit || uri == 0) return false;
 
     std::string name = "xmlns";
     if(prefix) {
@@ -464,7 +469,7 @@ bool srcml_translator::add_namespace(const char * prefix, const char * uri) {
  */
 bool srcml_translator::add_attribute(const char * prefix, const char * name, const char * uri, const char * content) {
 
-    if(!is_outputting_unit) return false;
+    if(!is_outputting_unit || name == 0) return false;
 
     return xmlTextWriterWriteAttributeNS(out.getWriter(), (const xmlChar *)prefix, (const xmlChar *)name, (const xmlChar *)uri, (const xmlChar *)content) != -1;
 
@@ -482,7 +487,7 @@ bool srcml_translator::add_attribute(const char * prefix, const char * name, con
  */
 bool srcml_translator::add_string(const char * content) {
 
-    if(!is_outputting_unit) return false;
+    if(!is_outputting_unit || content == 0) return false;
 
     xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)content);
 
