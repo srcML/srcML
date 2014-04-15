@@ -4850,16 +4850,7 @@ catch_statement[] { ENTRY_DEBUG } :
             // start of the catch statement
             startElement(SCATCH_BLOCK);
         }
-        CATCH
-        {
-            // parameter list is unmarked with a single parameter
-            if (LA(1) == LPAREN) {
-                match(LPAREN);
-
-                // expect a parameter list
-                startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
-            }
-        }
+        CATCH (parameter_list)*
 ;
 
 // finally statement
