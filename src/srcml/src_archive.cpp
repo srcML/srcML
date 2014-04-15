@@ -90,16 +90,16 @@ static constexpr archive_calls_t format_calls[] = {
 #endif
 
     { ".shar", archive_write_set_format_shar },
-    { ".tar", archive_write_set_format_pax_restricted },
-    { ".taz", 0 },  // (archive w/ compression)
-    { ".tb2", 0 },  // (archive w/ compression)
-    { ".tbz", 0 },  // (archive w/ compression)
-    { ".tbz2", 0 }, // (archive w/ compression)
-    { ".tgz", 0 },  // (archive w/ compression)
-    { ".tlz", 0 },  // (archive w/ compression)
-    { ".txz", 0 },  // (archive w/ compression)
-    { ".xar", 0 },
-    { ".zip", archive_write_set_format_zip },  // (archive w/ compression)
+    { ".tar",  archive_write_set_format_pax_restricted },
+    { ".taz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
+    { ".tb2",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
+    { ".tbz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
+    { ".tbz2", archive_write_set_format_pax_restricted }, // (archive w/ compression)
+    { ".tgz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
+    { ".tlz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
+    { ".txz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
+    { ".xar",  archive_write_set_format_pax_restricted },
+    { ".zip",  archive_write_set_format_zip },  // (archive w/ compression)
     { NULL, NULL }
 };
 #if __has_feature(cxx_constexpr)
@@ -112,8 +112,16 @@ static constexpr archive_calls_t compression_calls[] = {
     { ".bz"  , 0 },
     { ".bz2" , archive_write_set_compression_bzip2 },
     { ".gz"  , archive_write_set_compression_gzip },
-    { ".lz"  , 0 },
+    { ".lz"  , archive_write_set_compression_lzma },
     { ".lzma", archive_write_set_compression_lzma },
+    { ".taz",  archive_write_set_compression_compress },  // (archive w/ compression)
+    { ".tb2",  archive_write_set_compression_bzip2 },  // (archive w/ compression)
+    { ".tbz",  archive_write_set_compression_bzip },  // (archive w/ compression)
+    { ".tbz2", archive_write_set_compression_bzip2 }, // (archive w/ compression)
+    { ".tgz",  archive_write_set_compression_gzip },  // (archive w/ compression)
+    { ".tlz",  archive_write_set_compression_lzma },  // (archive w/ compression)
+    { ".txz",  archive_write_set_compression_xz },  // (archive w/ compression)
+    { ".xar",  archive_write_set_compression_xz },
     { ".xz"  , archive_write_set_compression_xz },
     { ".z"   , archive_write_set_compression_compress },
     { NULL, NULL }
