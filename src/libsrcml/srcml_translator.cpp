@@ -489,7 +489,7 @@ bool srcml_translator::add_string(const char * content) {
 
     if(!is_outputting_unit || content == 0) return false;
 
-    xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)content);
+    return xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)content) != -1;
 
 }
 
