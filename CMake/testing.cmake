@@ -50,7 +50,7 @@ endmacro()
 #
 macro(addCLITest TEST_NAME)
 
-    add_test(NAME ${TEST_NAME} COMMAND python ${TEST_NAME})
+    add_test(NAME ${TEST_NAME} COMMAND ${PYTHON_EXECUTABLE} ${TEST_NAME})
 
 if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
 
