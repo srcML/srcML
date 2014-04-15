@@ -27,11 +27,16 @@
 #include <string>
 #include <algorithm>
 #include <boost/bind.hpp>
+#include <boost/foreach.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/lambda/lambda.hpp>
 
 // Extension that map to archive types
 struct archive_calls_t { char const * const name; int (*setter)(struct archive *); };
+
+#if !__has_feature(cxx_constexpr)
+#define constexpr const
+#endif
 
 // TEMP_NOTE: To turn this feature on, enable "-std=c++11" by setting line 160
 // to: set(CMAKE_CXX_FLAGS "-fPIC -O3 -std=c++11 ${CLANG_WARNINGS}")
@@ -60,39 +65,31 @@ constexpr bool isordered(const archive_calls_t* p) {
 
 // map from file extension to libarchive write format calls
 // Note: Must be ordered
-static 
-#if __has_feature(cxx_constexpr)
-constexpr 
-#else
-const
-#endif
-archive_calls_t format_calls[] = {
+static constexpr archive_calls_t format_calls[] = {
 #if ARCHIVE_VERSION_NUMBER >= 3000000
-    { ".7z", 0 },
+    { ".7z", archive_write_set_format_7zip },
 #endif
 
-    { ".ar", 0 },
+    { ".ar", archive_write_set_format_ar_bsd },
+    { ".cpio", archive_write_set_format_cpio },
 
 #if ARCHIVE_VERSION_NUMBER >= 3000000
-    { ".cab", 0 },
+    { ".iso", archive_write_set_format_iso9660 },
 #endif
-
-    { ".cpio", 0 },
-    { ".iso", 0 },
 
 #if ARCHIVE_VERSION_NUMBER >= 3000000
     { ".lha", 0 },
     { ".lzh", 0 },
 #endif
 
-    { ".mtree", 0 },
-    { ".pax", 0 },
+    { ".mtree", archive_write_set_format_mtree },
+    { ".pax", archive_write_set_format_pax },
 
 #if ARCHIVE_VERSION_NUMBER >= 3000000
     { ".rar", 0 },
 #endif
 
-    { ".shar", 0 },
+    { ".shar", archive_write_set_format_shar },
     { ".tar", archive_write_set_format_pax_restricted },
     { ".taz", 0 },  // (archive w/ compression)
     { ".tb2", 0 },  // (archive w/ compression)
@@ -111,13 +108,7 @@ BOOST_STATIC_ASSERT(isordered(format_calls));
 
 // map from file extension to libarchive write compression calls
 // Note: Must be ordered
-static 
-#if __has_feature(cxx_constexpr)
-constexpr 
-#else
-const
-#endif
-archive_calls_t compression_calls[] = {
+static constexpr archive_calls_t compression_calls[] = {
     { ".bz"  , 0 },
     { ".bz2" , archive_write_set_compression_bzip2 },
     { ".gz"  , archive_write_set_compression_gzip },
@@ -139,9 +130,11 @@ bool compare(const archive_calls_t& call, const char* extension) {
 int archive_write_set_format_by_extension(struct archive* ar, const char* extension) {
 
     const archive_calls_t* end = format_calls + sizeof(format_calls) / sizeof(format_calls[0]) - 1;
-    const archive_calls_t* p = std::find_if(format_calls, end, boost::bind(compare, _1, extension));
-    if (p != end && p->setter)
-        return (p->setter)(ar);
+    archive_calls_t searchvalue = { extension, 0 };
+
+    const archive_calls_t* extcall = std::lower_bound(format_calls, end, searchvalue);
+    if (extcall != end && extcall->setter)
+        return (extcall->setter)(ar);
 
     archive_set_error(ar, EINVAL, "No such format for this extension '%s'", extension);
     return ARCHIVE_FATAL;
@@ -150,9 +143,11 @@ int archive_write_set_format_by_extension(struct archive* ar, const char* extens
 int archive_write_set_compression_by_extension(struct archive* ar, const char* extension) {
 
     const archive_calls_t* end = compression_calls + sizeof(compression_calls) / sizeof(compression_calls[0]) - 1;
-    const archive_calls_t* p = std::find_if(compression_calls, end, boost::bind(compare, _1, extension));
-    if (p != end && p->setter)
-        return (p->setter)(ar);
+    archive_calls_t searchvalue = { extension, 0 };
+
+    const archive_calls_t* extcall = std::lower_bound(compression_calls, end, searchvalue);
+    if (extcall != end && extcall->setter)
+        return (extcall->setter)(ar);
 
     archive_set_error(ar, EINVAL, "No such compression for this extension '%s'", extension);
     return ARCHIVE_FATAL;

@@ -22,33 +22,32 @@
 
 #include <decompress_srcml.hpp>
 #include <archive.h>
-#include <boost/foreach.hpp>
 
- void decompress_srcml(const srcml_request_t& srcml_request,
+void decompress_srcml(const srcml_request_t& /* srcml_request */,
     const srcml_input_t& input_sources,
     const srcml_output_dest& destination) {
 
-    archive* ar = archive_read_new();
+    archive* libarchive_srcml = archive_read_new();
 
     // just a bunch of bytes
-    archive_read_support_format_raw(ar);
+    archive_read_support_format_raw(libarchive_srcml);
 
     /* Check libarchive version enable version specific features/syntax */
 #if ARCHIVE_VERSION_NUMBER < 3000000
     // V2 Only Settings
     // Compressions
-    archive_read_support_compression_all(ar);
+    archive_read_support_compression_all(libarchive_srcml);
 
 #else
     // V3 Only Settings
     // File Formats
-    archive_read_support_format_7zip(ar);
-    archive_read_support_format_cab(ar);
-    archive_read_support_format_lha(ar);
-    archive_read_support_format_rar(ar);
+    archive_read_support_format_7zip(libarchive_srcml);
+    archive_read_support_format_cab(libarchive_srcml);
+    archive_read_support_format_lha(libarchive_srcml);
+    archive_read_support_format_rar(libarchive_srcml);
 
     // Compressions
-    archive_read_support_filter_all(ar);
+    archive_read_support_filter_all(libarchive_srcml);
 #endif    // setup decompressions
 
 //    BOOST_FOREACH(const std::string& ext, input_sources[0].compressions)
@@ -56,17 +55,19 @@
 
     int status = ARCHIVE_OK;
     if (contains<int>(input_sources[0])) {
-        status = archive_read_open_fd(ar, input_sources[0], 16384);
+        status = archive_read_open_fd(libarchive_srcml, input_sources[0], 16384);
     } else {
-        status = archive_read_open_filename(ar, input_sources[0].resource.c_str(), 16384);
+        status = archive_read_open_filename(libarchive_srcml, input_sources[0].resource.c_str(), 16384);
     }
     if (status != ARCHIVE_OK) {
         std::cerr << status;
         exit(1);
     }
     archive_entry *entry;
-    status = archive_read_next_header(ar, &entry);
+    status = archive_read_next_header(libarchive_srcml, &entry);
 
+    // copy from the libarchive decompressed data into the destination file descriptor
+    // for the next stage in the pipeline
     const char* buffer;
     size_t size;
 #if ARCHIVE_VERSION_NUMBER < 3000000
@@ -74,11 +75,12 @@
 #else
     int64_t offset;
 #endif
-    while (archive_read_data_block(ar, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
+    while (archive_read_data_block(libarchive_srcml, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
         write(*destination.fd, buffer, size);
 
+    // important to close, since this is how the file descriptor reader get an EOF
     close(*destination.fd);
 
-    archive_read_close(ar);
-    archive_read_finish(ar);
+    archive_read_close(libarchive_srcml);
+    archive_read_finish(libarchive_srcml);
 }

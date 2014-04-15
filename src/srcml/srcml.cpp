@@ -24,8 +24,8 @@
 #include <srcml_cli.hpp>
 #include <srcml_options.hpp>
 #include <create_srcml.hpp>
-#include <compress_srcml.hpp>
 #include <decompress_srcml.hpp>
+#include <compress_srcml.hpp>
 #include <create_src.hpp>
 #include <transform_srcml.hpp>
 #include <srcml_display_metadata.hpp>
@@ -84,7 +84,7 @@ int main(int argc, char * argv[]) {
     // Determine what processing needs to occur based on the inputs, outputs, and commands
 
     // setup the commands in the pipeline
-    processing_steps_t processing_steps;
+    processing_steps_t pipeline;
     bool last_command = false;
 
     bool src_input = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
@@ -98,45 +98,43 @@ int main(int argc, char * argv[]) {
                 exit(1);
         }
 
-        processing_steps.push_back(create_srcml);
+        pipeline.push_back(create_srcml);
 
+#if ARCHIVE_VERSION_NUMBER > 3001002
         // libsrcml can apply gz compression
         // all other compressions require an additional compression stage
-        if (!destination.compressions.empty() && destination.compressions.front() != ".gz") 
-            processing_steps.push_back(compress_srcml);
-
+        if (!destination.compressions.empty() && (destination.compressions.size() > 1 || destination.compressions.front() != ".gz")) 
+            pipeline.push_back(compress_srcml);
+#endif
     }
 
-    if (!src_input && !input_sources[0].compressions.empty() && input_sources[0].compressions.front() != ".gz") {
-
-        // libsrcml can apply gz decompression
-        // all other compressions require an additional compression stage
-        processing_steps.push_back(decompress_srcml);
+    // libsrcml can apply gz decompression
+    // all other compressions require an additional compression stage
+    // NOTE: assumes only one input file
+    if (!src_input && !input_sources[0].compressions.empty() && (input_sources[0].compressions.size() > 1 || input_sources[0].compressions.front() != ".gz")) {
+        pipeline.push_back(decompress_srcml);
     }
 
     // XPath and XSLT processing
     if (!srcml_request.xpath.empty() || !srcml_request.xslt.empty() || !srcml_request.relaxng.empty()) {
-        processing_steps.push_back(transform_srcml);
+        pipeline.push_back(transform_srcml);
     }
 
     // metadata(srcml) based on command
     if (!last_command && ((srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0)) {
-        processing_steps.push_back(srcml_display_metadata);
+        pipeline.push_back(srcml_display_metadata);
         last_command = true;
     }
 
     // srcml->src, based on the destination
     if (!last_command && !src_input && destination.state != SRCML) {
-
-        processing_steps.push_back(create_src);
-        last_command = true;
+        pipeline.push_back(create_src);
     }
 
-    assert(!processing_steps.empty());
-    assert(processing_steps.size() <= 3);
+    assert(!pipeline.empty());
 
     // execute the steps in order
-    srcml_execute(srcml_request, processing_steps, input_sources, destination);
+    srcml_execute(srcml_request, pipeline, input_sources, destination);
 
     srcml_cleanup_globals();
 
