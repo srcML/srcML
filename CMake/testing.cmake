@@ -40,15 +40,13 @@ macro(addUnitTest TEST_NAME FILE_NAME)
 endmacro()
 
 #
-# addCLITest
-# Creates a unit test from a given file with a given name.
-# - TEST_NAME the name of the test.
-# - FILE_NAME the name of the unit test file.
-# All arguments after the file name are considered to be linker arguments.
-# By default all tests are linked against the srcml_static library.
+# addPythonTest
+# - TEST_NAME the name of the python file.
+# Adds a test that executes the given python file.
+# additional arguments are dependent files that need to be copied.
 #
 #
-macro(addCLITest TEST_NAME)
+macro(addPythonTest TEST_NAME)
 
     add_test(NAME ${TEST_NAME} COMMAND ${PYTHON_EXECUTABLE} ${TEST_NAME})
 
@@ -66,6 +64,30 @@ endif()
 
 endmacro()
 
+#
+# addBashTest
+# - TEST_NAME the name of the bash file.
+# Adds a test that executes the given bash file.
+# additional arguments are dependent files that need to be copied.
+#
+#
+macro(addBashTest TEST_NAME)
+
+    add_test(NAME ${TEST_NAME} COMMAND bash ${TEST_NAME})
+
+if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
+
+    copyDependentFile(${TEST_NAME})
+
+foreach(FILE ${ARGN})
+
+    copyDependentFile(${FILE})
+
+endforeach()
+
+endif()
+
+endmacro()
 # 
 # copyDependentFile 
 # This copies a file given as TARGET_NAME to the current bunary directory

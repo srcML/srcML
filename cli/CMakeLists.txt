@@ -18,4 +18,5 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # Add tests
-addCLITest(clitest.py testcli.py option.py status.py)
+addBashTest(framework_test.sh)
+addBashTest(test_language_flag_short_blank.sh)
