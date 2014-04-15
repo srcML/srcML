@@ -50,7 +50,7 @@ endif()
 # Including extra directories.
 add_subdirectory(src)
 
-if(BUILD__UNIT_TESTS)
+if(BUILD_UNIT_TESTS)
     add_subdirectory(test)
 endif()
 
