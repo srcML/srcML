@@ -1,5 +1,7 @@
 # 
 
+PATH=$PATH:../bin/
+
 # output files for standard output and error
 STDERR=.stderr_$(BASENAME $0)
 STDOUT=.stdout_$(BASENAME $0)
