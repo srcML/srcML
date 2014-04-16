@@ -3184,7 +3184,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
         // special case for what looks like a destructor declaration
         // @todo need a case where == 1 then , merge it with > 1
-        throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attribute_count - template_count) > 1 || ((type_count - specifier_count - attribute_count) == 1))]
+        throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attribute_count - template_count) > 1 || ((type_count - specifier_count - attribute_count - template_count) == 1))]
 
         /*
           We have a declaration (at this point a variable) if we have:
@@ -4187,7 +4187,7 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
-            specifier |
+            specifier | template_parameter_list_full |
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }? template_argument_list
         )*
@@ -4252,7 +4252,7 @@ destructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
-            specifier |
+            specifier | template_parameter_list_full | 
 
             { LA(1) == VOID }? simple_identifier
         )*
