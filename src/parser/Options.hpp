@@ -132,6 +132,10 @@ const OPTION_TYPE OPTION_NESTIF  = ull(1) << __COUNTER__; /* 14 */
 /** option to output a hash attribute */
 const OPTION_TYPE OPTION_HASH  = ull(1) << __COUNTER__; /* 15 */
 
+// @src2srcml
+/** option to output a hash attribute */
+const OPTION_TYPE OPTION_WRAP_TEMPLATE  = ull(1) << __COUNTER__; /* 15 */
+
 // end SRCML_OPTIONS
 
 // @src2srcml
