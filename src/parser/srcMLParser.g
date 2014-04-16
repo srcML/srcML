@@ -136,7 +136,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -956,7 +956,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         // no return value functions:  casting operator method and main
         { type_count == 0 }? function_identifier
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
-        (template_declaration)*
+        (template_parameter_list_full)*
         function_type[type_count]
 ;
 
@@ -2067,7 +2067,7 @@ class_declaration[] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
-        (specifier)* CLASS class_post class_header
+        class_preamble CLASS class_post class_header
 ;
 
 // class preprocessing items
@@ -2098,7 +2098,7 @@ class_preamble[] { ENTRY_DEBUG } :
         // suppress warning probably do to only having ()*
         (options { greedy = true; } : { inLanguage(LANGUAGE_JAVA) }? annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-        (specifier)*
+        (specifier | template_parameter_list_full)*
 ;
 
 // a class definition
@@ -3069,7 +3069,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_type[type, ACCESS_REGION,
                         inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
                 throw_exception[type == ACCESS_REGION] |
-                template_declaration set_int[template_count, template_count + 1] | 
+                template_parameter_list_full set_int[template_count, template_count + 1] | 
 
                 { inLanguage(LANGUAGE_CSHARP) }?
                 LBRACKET
@@ -5911,7 +5911,7 @@ template_parameter_list_full[] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
 
-        template_declaration template_param_list template_param (template_declaration_initialization)* tempope { if(inMode(MODE_TEMPLATE)) endMode();}
+        template_declaration template_param_list (template_param)* (template_declaration_initialization)* tempope { if(inMode(MODE_TEMPLATE)) endMode();}
 
 ;
 
