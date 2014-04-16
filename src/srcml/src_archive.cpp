@@ -38,6 +38,8 @@ struct archive_calls_t { char const * const name; int (*setter)(struct archive *
 #if !__has_feature(cxx_constexpr)
 #define constexpr const
 #endif
+#else
+#define constexpr const
 #endif
 
 // TEMP_NOTE: To turn this feature on, enable "-std=c++11" by setting line 160
