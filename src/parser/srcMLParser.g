@@ -957,7 +957,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         // no return value functions:  casting operator method and main
         { type_count == 0 }? function_identifier
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
-        (options { greedy = true; } : { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) && (LA(1) != EXTERN || next_token() == TEMPLATE) }? template_parameter_list_full)*
+        (options { greedy = true; } : { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) && (LA(1) != EXTERN || next_token() == TEMPLATE) }? template_declaration_full)*
         function_type[type_count]
 ;
 
@@ -2096,7 +2096,7 @@ class_preamble[] { ENTRY_DEBUG } :
         // suppress warning probably do to only having ()*
         (options { greedy = true; } : { inLanguage(LANGUAGE_JAVA) }? annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-        ( { LA(1) != EXTERN || next_token() != TEMPLATE }? specifier | { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? template_parameter_list_full)*
+        ( { LA(1) != EXTERN || next_token() != TEMPLATE }? specifier | { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? template_declaration_full)*
 ;
 
 // a class definition
@@ -3067,7 +3067,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_type[type, ACCESS_REGION,
                         inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
                 throw_exception[type == ACCESS_REGION] |
-                { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? template_parameter_list_full set_int[template_count, template_count + 1] | 
+                { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? template_declaration_full set_int[template_count, template_count + 1] | 
 
                 { inLanguage(LANGUAGE_CSHARP) }?
                 LBRACKET
@@ -4185,7 +4185,7 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
-            { LA(1) != EXTERN || next_token() != TEMPLATE }? specifier | template_parameter_list_full |
+            { LA(1) != EXTERN || next_token() != TEMPLATE }? specifier | template_declaration_full |
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }? template_argument_list
         )*
@@ -4250,7 +4250,7 @@ destructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
-             { LA(1) != EXTERN || next_token() != TEMPLATE }? specifier | template_parameter_list_full | 
+             { LA(1) != EXTERN || next_token() != TEMPLATE }? specifier | template_declaration_full | 
 
             { LA(1) == VOID }? simple_identifier
         )*
@@ -5886,7 +5886,7 @@ template_param[] { ENTRY_DEBUG } :
 // complete inner full for template
 template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; } :
 
-        template_parameter_list_full
+        template_in_parameter_list_full
         { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : (type_count = 1))}?
         eat_type[type_count]
         {
@@ -5899,7 +5899,7 @@ template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STM
 ;
 
 // entire template parameter list
-template_parameter_list_full[] { ENTRY_DEBUG } :
+template_in_parameter_list_full[] { ENTRY_DEBUG } :
 
         {
             // local mode so start element will end correctly
@@ -5909,7 +5909,13 @@ template_parameter_list_full[] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
 
-        template_declaration template_param_list (template_param)* (template_declaration_initialization)* tempope { if(inMode(MODE_TEMPLATE)) endMode();}
+        template_declaration_full
+
+;
+
+template_declaration_full[] { ENTRY_DEBUG } :
+
+    template_declaration template_param_list (template_param)* (template_declaration_initialization)* tempope { if(inMode(MODE_TEMPLATE)) endMode();}
 
 ;
 
