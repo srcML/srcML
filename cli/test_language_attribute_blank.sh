@@ -3,7 +3,7 @@
 # empty_language_flag_short
 
 # test framework
-source framework_test.sh
+source /Users/collard/srcML/cli/framework_test.sh
 
 srcml -l C++ << 'STDIN'
  
