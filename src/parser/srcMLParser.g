@@ -956,7 +956,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         // no return value functions:  casting operator method and main
         { type_count == 0 }? function_identifier
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
-        (template_parameter_list_full)*
+        ({ !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? template_parameter_list_full)*
         function_type[type_count]
 ;
 
@@ -2098,7 +2098,7 @@ class_preamble[] { ENTRY_DEBUG } :
         // suppress warning probably do to only having ()*
         (options { greedy = true; } : { inLanguage(LANGUAGE_JAVA) }? annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-        (specifier | template_parameter_list_full)*
+        (specifier | { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? template_parameter_list_full)*
 ;
 
 // a class definition
@@ -3069,7 +3069,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_type[type, ACCESS_REGION,
                         inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
                 throw_exception[type == ACCESS_REGION] |
-                template_parameter_list_full set_int[template_count, template_count + 1] | 
+                { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? template_parameter_list_full set_int[template_count, template_count + 1] | 
 
                 { inLanguage(LANGUAGE_CSHARP) }?
                 LBRACKET
@@ -5875,7 +5875,7 @@ template_param[] { ENTRY_DEBUG } :
 
         // Both can contain extern however an extern template should not be a template param so should not be a problem
         (options { generateAmbigWarnings = false; } :
-        parameter_type
+        { LA(1) != TEMPLATE }? parameter_type
         {
             // expect a name initialization
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
