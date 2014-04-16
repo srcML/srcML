@@ -659,7 +659,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
 
         // statements that clearly start with a keyword
-        { (isoption(parseoptions, OPTION_WRAP_TEMPLATE) || (LA(1) != TEMPLATE && (LA(1) != EXTERN) || next_token() != TEMPLATE))
+        { (isoption(parseoptions, OPTION_WRAP_TEMPLATE) || (LA(1) != TEMPLATE && (LA(1) != EXTERN || next_token() != TEMPLATE)))
          && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != EXTERN || next_token() == TEMPLATE)}? keyword_statements |
 
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
@@ -957,7 +957,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         // no return value functions:  casting operator method and main
         { type_count == 0 }? function_identifier
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
-        ({ !isoption(parseoptions, OPTION_WRAP_TEMPLATE) && (LA(1) != EXTERN || next_token() == TEMPLATE) }? template_parameter_list_full)*
+        (options { greedy = true; } : { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) && (LA(1) != EXTERN || next_token() == TEMPLATE) }? template_parameter_list_full)*
         function_type[type_count]
 ;
 
@@ -2064,9 +2064,6 @@ class_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SCLASS_DECLARATION);
         }
-        ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
-        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
         class_preamble CLASS class_post class_header
 ;
@@ -2099,7 +2096,7 @@ class_preamble[] { ENTRY_DEBUG } :
         // suppress warning probably do to only having ()*
         (options { greedy = true; } : { inLanguage(LANGUAGE_JAVA) }? annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-        (specifier | { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? template_parameter_list_full)*
+        ( { LA(1) != EXTERN || next_token() != TEMPLATE }? specifier | { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? template_parameter_list_full)*
 ;
 
 // a class definition
@@ -4188,7 +4185,7 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
-            specifier | template_parameter_list_full |
+            { LA(1) != EXTERN || next_token() != TEMPLATE }? specifier | template_parameter_list_full |
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }? template_argument_list
         )*
@@ -4253,7 +4250,7 @@ destructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
-            specifier | template_parameter_list_full | 
+             { LA(1) != EXTERN || next_token() != TEMPLATE }? specifier | template_parameter_list_full | 
 
             { LA(1) == VOID }? simple_identifier
         )*
