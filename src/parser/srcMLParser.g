@@ -956,7 +956,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         // no return value functions:  casting operator method and main
         { type_count == 0 }? function_identifier
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
-        ({ !isoption(parseoptions, OPTION_WRAP_TEMPLATE) && LA(1) != EXTERN }? template_parameter_list_full)*
+        ({ !isoption(parseoptions, OPTION_WRAP_TEMPLATE) && (LA(1) != EXTERN || next_token() == TEMPLATE) }? template_parameter_list_full)*
         function_type[type_count]
 ;
 
