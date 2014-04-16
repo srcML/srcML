@@ -1,10 +1,10 @@
 # 
 
-PATH=$PATH:../bin/
+export PATH=$PATH:bin/
 
 # output files for standard output and error
-STDERR=.stderr_$(BASENAME $0)
-STDOUT=.stdout_$(BASENAME $0)
+STDERR=.stderr_$(basename $0)
+STDOUT=.stdout_$(basename $0)
 
 # log stdout and stderr to files
 exec 6>&1 7>&2 1>$STDOUT 2>$STDERR
@@ -12,7 +12,7 @@ exec 6>&1 7>&2 1>$STDOUT 2>$STDERR
 check() {
 
    # log stdout and stderr to standard streams
-   exec 1>&6 #2>&7
+   exec 1>&6 2>&7
 
    # verify stdout of command (stdin to this check) agrees with STDOUT
    if [ $# -eq 1 ]; then
