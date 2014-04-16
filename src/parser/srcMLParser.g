@@ -659,7 +659,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
 
         // statements that clearly start with a keyword
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != EXTERN || next_token() == TEMPLATE)}? keyword_statements |
+        { LA(1) != TEMPLATE && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != EXTERN || next_token() == TEMPLATE)}? keyword_statements |
 
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
 
@@ -956,7 +956,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         // no return value functions:  casting operator method and main
         { type_count == 0 }? function_identifier
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
-
+        (template_declaration)*
         function_type[type_count]
 ;
 
@@ -3016,6 +3016,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             isdestructor = false;           // global flag detected during name matching
             int attribute_count = 0;
             int specifier_count = 0;
+            int template_count = 0;
             bool foundpure = false;
             bool isoperator = false;
             bool isconstructor = false;
@@ -3068,6 +3069,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_type[type, ACCESS_REGION,
                         inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
                 throw_exception[type == ACCESS_REGION] |
+                template_declaration set_int[template_count, template_count + 1] | 
 
                 { inLanguage(LANGUAGE_CSHARP) }?
                 LBRACKET
@@ -3098,7 +3100,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 property_method_name
                 set_type[type, PROPERTY_ACCESSOR, true] |
 
-                { type_count == attribute_count + specifier_count  && (!inLanguage(LANGUAGE_JAVA) 
+                { type_count == attribute_count + specifier_count + template_count  && (!inLanguage(LANGUAGE_JAVA) 
             || (inLanguage(LANGUAGE_JAVA) && (LA(1) != ATSIGN 
                                              || (LA(1) == ATSIGN && next_token() == INTERFACE)))) }?
                 (CLASS               set_type[type, CLASS_DECL]     |
@@ -3182,7 +3184,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
         // special case for what looks like a destructor declaration
         // @todo need a case where == 1 then , merge it with > 1
-        throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attribute_count) > 1 || ((type_count - specifier_count - attribute_count) == 1))]
+        throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attribute_count - template_count) > 1 || ((type_count - specifier_count - attribute_count) == 1))]
 
         /*
           We have a declaration (at this point a variable) if we have:
@@ -3206,7 +3208,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  !isdestructor &&
 
                  // entire type is specifiers
-                 (type_count == (specifier_count + attribute_count)) &&
+                 (type_count == (specifier_count + attribute_count + template_count)) &&
 
                  (
                     // inside of a C++ class definition
@@ -3246,7 +3248,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             // POF (Plain Old Function)
             // need at least one non-specifier in the type (not including the name)
-            { (type_count - specifier_count > 0) || isoperator || saveisdestructor || isconstructor}?
+            { (type_count - specifier_count - attribute_count - template_count > 0) || isoperator || saveisdestructor || isconstructor}?
             function_rest[fla]
         )
 
