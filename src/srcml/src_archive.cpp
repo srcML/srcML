@@ -34,7 +34,7 @@
 // Extension that map to archive types
 struct archive_calls_t { char const * const name; int (*setter)(struct archive *); };
 
-#if !__has_feature(cxx_constexpr)
+#if defined(__has__feature) && !__has_feature(cxx_constexpr)
 #define constexpr const
 #endif
 
