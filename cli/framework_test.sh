@@ -1,7 +1,26 @@
 ##
 # framework_test.sh
 #
-# Test framework utilities for cli testing
+# Test framework for cli testing
+#
+# * Always source this file before any test cli commands are given
+#   source $(dirname "$0")/framework_test.sh
+#
+# * Perform cli command
+#
+# * Call function check to verify the command, in the form:
+#   check 3<< 'STDOUT'
+#   <unit/>
+#   STDOUT
+#
+# * Optionally also give expected stderr of command
+#   check 3<< 'STDOUT' 4<< 'STDERR'
+#   <unit/>
+#   STDOUT
+#   STDERR
+#
+# * Multiple tests of cli command followed by call to function check
+#   can be made
 
 # always exit whenever a command or comparison fails
 set -e
