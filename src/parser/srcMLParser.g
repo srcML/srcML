@@ -957,7 +957,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         // no return value functions:  casting operator method and main
         { type_count == 0 }? function_identifier
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
-        (options { greedy = true; } : { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) && (LA(1) != EXTERN || next_token() == TEMPLATE) }? template_declaration_full)*
+        (options { greedy = true; } : { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) && (LA(1) != EXTERN || next_token() == TEMPLATE) }? template_declaration_full set_int[type_count, type_count - 1])*
         function_type[type_count]
 ;
 
