@@ -5,8 +5,12 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-rm -f a.cpp
+# setup
+trap "rm -f a.cpp" EXIT
+
 echo "" > a.cpp
+
+# test case
 srcml -l C++ --filename="foo.cpp" a.cpp
 
 check 3<< 'STDOUT'
@@ -15,8 +19,7 @@ check 3<< 'STDOUT'
 </unit>
 STDOUT
 
-rm -f a.cpp
-echo "" > a.cpp
+# test case
 srcml -l C++ a.cpp
 
 check 3<< 'STDOUT'
