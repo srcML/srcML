@@ -34,13 +34,18 @@
 // Extension that map to archive types
 struct archive_calls_t { char const * const name; int (*setter)(struct archive *); };
 
+#ifdef __clang__
 #if !__has_feature(cxx_constexpr)
+#define constexpr const
+#endif
+#else
 #define constexpr const
 #endif
 
 // TEMP_NOTE: To turn this feature on, enable "-std=c++11" by setting line 160
 // to: set(CMAKE_CXX_FLAGS "-fPIC -O3 -std=c++11 ${CLANG_WARNINGS}")
 // in srcML/CMake/config.cmake
+#ifdef __clang__
 #if __has_feature(cxx_constexpr)
 
 constexpr bool isequal(char const* s1, char const* s2) {
@@ -61,6 +66,7 @@ constexpr bool isordered(const archive_calls_t* p) {
     return !(p->name) || !((p + 1)->name) ? true : islessthanorequal(p->name, (p+1)->name) && isordered(p + 1);
 }
 
+#endif
 #endif
 
 // map from file extension to libarchive write format calls
@@ -102,8 +108,10 @@ static constexpr archive_calls_t format_calls[] = {
     { ".zip",  archive_write_set_format_zip },  // (archive w/ compression)
     { NULL, NULL }
 };
+#ifdef __clang__
 #if __has_feature(cxx_constexpr)
 BOOST_STATIC_ASSERT(isordered(format_calls));
+#endif
 #endif
 
 // map from file extension to libarchive write compression calls
@@ -126,8 +134,10 @@ static constexpr archive_calls_t compression_calls[] = {
     { ".z"   , archive_write_set_compression_compress },
     { NULL, NULL }
 };
+#ifdef __clang__
 #if __has_feature(cxx_constexpr)
 BOOST_STATIC_ASSERT(isordered(compression_calls));
+#endif
 #endif
 
 bool compare(const archive_calls_t& call, const char* extension) {
