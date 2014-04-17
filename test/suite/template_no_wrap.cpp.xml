@@ -123,7 +123,7 @@ struct <name><name>CTest1</name><argument_list>&lt;<argument><expr><name>at_Type
 </unit>
 
 <unit>
-<class_decl><template>template <parameter_list>&lt;<param><type><template>template <parameter_list>&lt;<param><type><name>class</name></type> <init>= <name>float</name></init></param>&gt;</parameter_list></template> <name>class</name></type> <name>T</name></param>&gt;</parameter_list></template> class <name>A</name>;</class_decl>
+<class_decl><template>template <parameter_list>&lt;<param><type><template>template <parameter_list>&lt;<param><type><name>class</name></type> <init>= <expr><name>float</name></expr></init></param>&gt;</parameter_list></template> <name>class</name></type> <name>T</name></param>&gt;</parameter_list></template> class <name>A</name>;</class_decl>
 </unit>
 
 <unit>
