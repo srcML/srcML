@@ -41,6 +41,11 @@ if(${SVN_ENABLED})
     add_definitions(-DSVN)
 endif()
 
+# setup tests for cli
+file(GLOB TESTFILES "${CMAKE_SOURCE_DIR}/cli/test_*.sh")
+foreach(TESTFILE ${TESTFILES})
+  add_test(${TESTFILE} ${TESTFILE})
+endforeach()
 
 get_property(SAX2_ENABLED GLOBAL PROPERTY SAX2_ENABLED)
 if(${SAX2_ENABLED})
