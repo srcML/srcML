@@ -5879,7 +5879,7 @@ template_param[] { ENTRY_DEBUG } :
 
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         }  
-        ({ !isoption(parseoptions, OPTION_WRAP_TEMPLATE) && inMode(MODE_VARIABLE_NAME | MODE_INIT) }? variable_declaration_nameinit)* |
+        ({ !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? variable_declaration_nameinit)* |
 
         template_inner_full
     )
@@ -5897,7 +5897,8 @@ template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STM
             // expect a name initialization
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         }
-
+        ({ !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? variable_declaration_nameinit)*
+        
 ;
 
 // entire template parameter list
