@@ -251,8 +251,6 @@ public :
                         archive->options |= OPTION_CPP_MARKUP_IF0;
                     if(option == "EXPRESSION")
                         archive->options |= OPTION_EXPRESSION;
-                    if(option == "NAMESPACE")
-                        archive->options |= OPTION_NAMESPACE;
                     if(option == "LINE")
                         archive->options |= OPTION_LINE;
                     if(option == "MACRO_PATTERN")
