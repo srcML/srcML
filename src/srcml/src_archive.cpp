@@ -124,7 +124,7 @@ static constexpr archive_calls_t compression_calls[] = {
     { ".lzma", archive_write_set_compression_lzma },
     { ".taz",  archive_write_set_compression_compress },  // (archive w/ compression)
     { ".tb2",  archive_write_set_compression_bzip2 },  // (archive w/ compression)
-    { ".tbz",  archive_write_set_compression_bzip },  // (archive w/ compression)
+    //{ ".tbz",  archive_write_set_compression_bzip },  // (archive w/ compression)
     { ".tbz2", archive_write_set_compression_bzip2 }, // (archive w/ compression)
     { ".tgz",  archive_write_set_compression_gzip },  // (archive w/ compression)
     { ".tlz",  archive_write_set_compression_lzma },  // (archive w/ compression)
