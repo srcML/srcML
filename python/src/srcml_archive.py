@@ -199,6 +199,34 @@ libsrcml.srcml_archive_check_extension.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_write_unit.restype = c_int
 libsrcml.srcml_write_unit.argtypes = [c_void_p, c_void_p]
 
+# int srcml_write_start_unit(struct srcml_archive*, const struct srcml_unit*);
+libsrcml.srcml_write_start_unit.restype = c_int
+libsrcml.srcml_write_start_unit.argtypes = [c_void_p, c_void_p]
+
+# int srcml_write_end_unit(struct srcml_archive*);
+libsrcml.srcml_write_end_unit.restype = c_int
+libsrcml.srcml_write_end_unit.argtypes = [c_void_p]
+
+# int srcml_write_start_element(struct srcml_archive*, const char * prefix, const char * name, const char * uri);
+libsrcml.srcml_write_start_element.restype = c_int
+libsrcml.srcml_write_start_element.argtypes = [c_void_p, c_char_p, c_char_p, c_char_p]
+
+# int srcml_write_end_element(struct srcml_archive*);
+libsrcml.srcml_write_end_element.restype = c_int
+libsrcml.srcml_write_end_element.argtypes = [c_void_p]
+
+# int srcml_write_namespace(struct srcml_archive*, const char * prefix, const char * uri);
+libsrcml.srcml_write_namespace.restype = c_int
+libsrcml.srcml_write_namespace.argtypes = [c_void_p, c_char_p, c_char_p]
+
+# int srcml_write_attribute(struct srcml_archive*, const char * prefix, const char * name, const char * uri, const char * content);
+libsrcml.srcml_write_attribute.restype = c_int
+libsrcml.srcml_write_attribute.argtypes = [c_void_p, c_char_p, c_char_p, c_char_p, c_char_p]
+
+# int srcml_write_string(struct srcml_archive*, const char * content);
+libsrcml.srcml_write_string.restype = c_int
+libsrcml.srcml_write_string.argtypes = [c_void_p, c_char_p]
+
 # struct srcml_unit* srcml_read_unit(struct srcml_archive*);
 libsrcml.srcml_read_unit.restype = c_void_p
 libsrcml.srcml_read_unit.argtypes = [c_void_p]
