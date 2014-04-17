@@ -1,32 +1,44 @@
-# 
+##
+# framework_test.sh
+#
+# Test framework utilities for cli testing
 
+# always exit whenever a command or comparison fails
+set -e
+
+# make sure to find the srcml executable
 export PATH=$PATH:bin/
 
-# output files for standard output and error
+# output files for standard output and error from the command
 STDERR=.stderr_$(basename $0)
 STDOUT=.stdout_$(basename $0)
 
-# log stdout and stderr to files
+# save stdout and stderr to our files
 exec 6>&1 7>&2 1>$STDOUT 2>$STDERR
 
 check() {
 
-   # log stdout and stderr to standard streams
+   # return stdout and stderr to standard streams
    exec 1>&6 2>&7
 
-   # verify stdout of command (stdin to this check) agrees with STDOUT
+   # verify stdout of command (stdin to this check)
    if [ $# -eq 1 ]; then
+       # compare the file whose filename was passed as a parameter to the required output
        diff $1 <(cat <&3)
-       [ "$?" != "0" ] && exit 1
    else
+       # compare the captured stdout to the required output
        diff $STDOUT <(cat <&3)
-       [ "$?" != "0" ] && exit 1
    fi
 
    # verify stderr of command agrees with caught stderr
-   diff $STDERR <(cat <&4)
-   [ "$?" != "0" ] && exit 1
+   if [ -e /dev/fd/4 ]; then
+       # compare the captured stderr to the required stderr
+       diff $STDERR <(cat <&4)
+   else
+       # make sure the captured stderr is blank
+       [ ! -s $STDERR ]
+   fi
 
-   # log stdout and stderr back to files
+   # return to saving stdout and stderr to our files
    exec 6>&- 7>&- 6>&1 7>&2 1>$STDOUT 2>$STDERR
 }

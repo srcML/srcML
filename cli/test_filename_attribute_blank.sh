@@ -9,20 +9,18 @@ rm -f a.cpp
 echo "" > a.cpp
 srcml -l C++ --filename="foo.cpp" a.cpp
 
-check 3<< 'STDOUT' 4<< 'STDERR'
+check 3<< 'STDOUT'
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo.cpp">
 </unit>
 STDOUT
-STDERR
 
 rm -f a.cpp
 echo "" > a.cpp
 srcml -l C++ a.cpp
 
-check 3<< 'STDOUT' 4<< 'STDERR'
+check 3<< 'STDOUT'
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp">
 </unit>
 STDOUT
-STDERR
