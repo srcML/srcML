@@ -1367,7 +1367,7 @@ property_method[int element] { ENTRY_DEBUG } :
             // start the function definition element
             startElement(element);
         }
-        (attribute_csharp)*
+        (attribute_csharp | specifier)*
         property_method_name
 ;
 
@@ -3094,7 +3094,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 RBRACKET RBRACKET
                 set_int[attribute_count, attribute_count + 1] |
 
-                { type_count == attribute_count }?
+                { type_count == (attribute_count + specifier_count) }?
                 property_method_name
                 set_type[type, PROPERTY_ACCESSOR, true] |
 
@@ -3158,9 +3158,9 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         )*
 
         // special case for property attributes as names, e.g., get, set, etc.
-        throw_exception[type == PROPERTY_ACCESSOR && (type_count == attribute_count + 1) && LA(1) == LCURLY]
+        throw_exception[type == PROPERTY_ACCESSOR && (type_count == attribute_count + specifier_count + 1) && LA(1) == LCURLY]
         set_type[type, PROPERTY_ACCESSOR_DECL, type == PROPERTY_ACCESSOR]
-        throw_exception[type == PROPERTY_ACCESSOR_DECL && (type_count == attribute_count + 1) && LA(1) == TERMINATE]
+        throw_exception[type == PROPERTY_ACCESSOR_DECL && (type_count == attribute_count + specifier_count + 1) && LA(1) == TERMINATE]
         set_type[type, NONE, type == PROPERTY_ACCESSOR_DECL]
 
         set_int[real_type_count, type_count]
@@ -4850,16 +4850,7 @@ catch_statement[] { ENTRY_DEBUG } :
             // start of the catch statement
             startElement(SCATCH_BLOCK);
         }
-        CATCH
-        {
-            // parameter list is unmarked with a single parameter
-            if (LA(1) == LPAREN) {
-                match(LPAREN);
-
-                // expect a parameter list
-                startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
-            }
-        }
+        CATCH (parameter_list)*
 ;
 
 // finally statement

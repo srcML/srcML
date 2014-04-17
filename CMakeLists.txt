@@ -55,8 +55,12 @@ endif()
 # Including extra directories.
 add_subdirectory(src)
 
-if(BUILD_TESTS)
+if(BUILD_UNIT_TESTS)
     add_subdirectory(test)
+endif()
+
+if(BUILD_CLI_TESTS)
+    add_subdirectory(cli)
 endif()
 
 if(BUILD_EXAMPLES)
