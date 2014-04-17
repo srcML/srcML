@@ -5922,7 +5922,7 @@ template_declaration_full[] { ENTRY_DEBUG } :
 ;
 
 // template initialization
-template_declaration_initialization[] { ENTRY_DEBUG } :
+template_declaration_initialization[] { int secondtoken = 0; CALL_TYPE type = NOCALL;  bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
         {
             // end the init correctly
             setMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -5930,8 +5930,9 @@ template_declaration_initialization[] { ENTRY_DEBUG } :
             // start the initialization element
             startElement(SDECLARATION_INITIALIZATION);
         }
-        EQUAL compound_name
-
+        EQUAL 
+        ({ inMode(MODE_EXPRESSION | MODE_EXPECT) && perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO }?
+        expression[type, call_count])*
 ;
 
 // template argument list
