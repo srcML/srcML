@@ -2,23 +2,23 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="template">
 
 <unit>
-<template>template <parameter_list>&lt;<param><type><name>int</name></type> <name>n</name></param>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+<function_decl><template>template <parameter_list>&lt;<param><type><name>int</name></type> <name>n</name></param>&gt;</parameter_list></template> <type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<param><type><name>class</name></type> <name>n</name></param>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+<function_decl><template>template <parameter_list>&lt;<param><type><name>class</name></type> <name>n</name></param>&gt;</parameter_list></template> <type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<param><type><typename>typename</typename></type> <name>n</name></param>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+<function_decl><template>template <parameter_list>&lt;<param><type><typename>typename</typename></type> <name>n</name></param>&gt;</parameter_list></template> <type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<param><type><name>int</name></type> <name>n</name></param>, <param><type><name>double</name></type> <name>m</name></param>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+<function_decl><template>template <parameter_list>&lt;<param><type><name>int</name></type> <name>n</name></param>, <param><type><name>double</name></type> <name>m</name></param>&gt;</parameter_list></template> <type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<param><type><name>int</name></type> <name>n</name> <init>= <expr><name>b</name></expr></init></param>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+<function_decl><template>template <parameter_list>&lt;<param><type><name>int</name></type> <name>n</name> <init>= <expr><name>b</name></expr></init></param>&gt;</parameter_list></template> <type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
