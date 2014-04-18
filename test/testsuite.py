@@ -550,7 +550,6 @@ try:
 						# find the difference
 						result = xmldiff(unitxml, unitsrcml)
 
-
 						if count > 0 and line_count >= 75:
 							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_DIRECTORY), " ",
 							line_count = 0
