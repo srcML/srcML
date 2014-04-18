@@ -19,11 +19,22 @@
 #   STDOUT
 #   STDERR
 #
+# * If a comparison pipe is not open, then it assumes blank
+#   I.e., the following check assumes that both stdout and stderr are empty
+#   check
+#
+# * Instead of pipe 3 being the expected contents of stdout of the command, it can be file
+#   check foo.xml
+#
 # * Multiple tests of cli command followed by call to function check
 #   can be made
 
+#trap 'exec 1>&6 2>&7; OIFS="$IFS"; IFS=$'\n'; array=($(<commands)); IFS="$OIFS"; echo "HI"' EXIT
+#trap 'exec 1>&6 2>&7; OIFS="$IFS"; IFS=$'\n'; array=($(<commands)); IFS="$OIFS"; echo "HI"; echo ${#array}; echo ${array[${#array[@]} - 1]}' EXIT
+
 # always exit whenever a command or comparison fails
 set -e
+set -o history
 
 # make sure to find the srcml executable
 export PATH=$PATH:bin/
@@ -33,18 +44,25 @@ STDERR=.stderr_$(basename $0)
 STDOUT=.stdout_$(basename $0)
 
 # save stdout and stderr to our files
-exec 6>&1 7>&2 1>$STDOUT 2>$STDERR
+exec 6>&1 1>$STDOUT
+exec 7>&2 2>$STDERR
+
+trap "echo $BASH_COMMAND >> commands " DEBUG
 
 check() {
 
    # return stdout and stderr to standard streams
    exec 1>&6 2>&7
 
-   # verify stdout of command (stdin to this check)
+   # trace the command
+   var=$(history 2 | head -1 | cut -c8-);
+   echo "$var"
+
+  # verify stdout of command (stdin to this check)
    if [ $# -eq 1 ]; then
        # compare the file whose filename was passed as a parameter to the required output
        diff $1 <(cat <&3)
-   else
+   elif [ -e /dev/fd/3 ]; then
        # compare the captured stdout to the required output
        diff $STDOUT <(cat <&3)
    fi
@@ -59,5 +77,6 @@ check() {
    fi
 
    # return to saving stdout and stderr to our files
-   exec 6>&- 7>&- 6>&1 7>&2 1>$STDOUT 2>$STDERR
+   exec 6>&1 1>$STDOUT
+   exec 7>&2 2>$STDERR
 }
