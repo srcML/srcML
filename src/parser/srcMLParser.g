@@ -1255,8 +1255,9 @@ lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SARGUMENT);
         }
+
         // suppress warning of another case where REFOPS or something is in both alts.
-        (options { warnWhenFollowAmbig = false; } : lambda_capture_modifiers | complete_parameter)*
+        (options { warnWhenFollowAmbig = false; } : lambda_capture_modifiers | { LA(1) != RBRACKET }? expression | type_identifier)*
 ;
 
 // check and see if the lambda is directly used as a call.
