@@ -272,9 +272,9 @@ public :
         for(int i = 0, pos = 0; i < nb_namespaces; ++i, pos += 2) {
 
             std::string prefix = namespaces[pos] ? (const char *)namespaces[pos] : "";
-            std::string ns = namespaces[pos + 1] ? (const char *)namespaces[pos + 1] : "";
+            std::string uri = namespaces[pos + 1] ? (const char *)namespaces[pos + 1] : "";
 
-            if(ns == SRCML_CPP_NS_URI) {
+            if(uri == SRCML_CPP_NS_URI) {
 
                 if(archive->language != 0) {
 
@@ -282,38 +282,21 @@ public :
                         archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
                     else if(*archive->language == "C#")
                         archive->options |= SRCML_OPTION_CPP_NOMACRO;
-                    //else
-                    //options |= SRCML_OPTION_CPP;
+
                 }
 
-            } else if(ns == SRCML_ERR_NS_URI)
+            } else if(uri == SRCML_ERR_NS_URI)
                 archive->options |= SRCML_OPTION_DEBUG;
-            else if(ns == SRCML_EXT_LITERAL_NS_URI)
+            else if(uri == SRCML_EXT_LITERAL_NS_URI)
                 archive->options |= SRCML_OPTION_LITERAL;
-            else if(ns == SRCML_EXT_OPERATOR_NS_URI)
+            else if(uri == SRCML_EXT_OPERATOR_NS_URI)
                 archive->options |= SRCML_OPTION_OPERATOR;
-            else if(ns == SRCML_EXT_MODIFIER_NS_URI)
+            else if(uri == SRCML_EXT_MODIFIER_NS_URI)
                 archive->options |= SRCML_OPTION_MODIFIER;
-            else if(ns == SRCML_EXT_POSITION_NS_URI)
+            else if(uri == SRCML_EXT_POSITION_NS_URI)
                 archive->options |= SRCML_OPTION_POSITION;
 
-            std::vector<std::string>::size_type index;
-            try {
-
-                for(index = 0; index < archive->prefixes.size(); ++index)
-
-                    if(archive->namespaces.at(index) == ns) {
-
-                        archive->prefixes.at(index) = prefix;
-                        break;
-                    }
-
-            } catch(...) {}
-
-            if(index == archive->prefixes.size()) {
-                archive->prefixes.push_back(prefix);
-                archive->namespaces.push_back(ns);
-            }
+            srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
 
 
         }
