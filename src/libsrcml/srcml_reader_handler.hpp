@@ -113,9 +113,6 @@ public :
 
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
 
-        archive->prefixes.clear();
-        archive->namespaces.clear();
-
     }
 
     /**
