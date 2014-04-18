@@ -229,8 +229,8 @@ def src2srcML(text_file, encoding, language, directory, filename, read_archive):
                 unit.set_directory(directory)
 
         unit.parse_memory(text_file)
-        archive.close()
         srcml = unit.get_xml()
+        archive.close()
         if is_all == -1 and is_unicode == -1:
                 srcml = "<unit>" + srcml[srcml.find(">") + 1:]
 
