@@ -298,7 +298,6 @@ public :
 
             srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
 
-
         }
 
         this->meta_tags = meta_tags;
