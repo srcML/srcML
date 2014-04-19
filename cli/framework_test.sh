@@ -9,15 +9,15 @@
 # * Perform cli command
 #
 # * Call function check to verify the command, in the form:
-#   check 3<< 'STDOUT'
-#   <unit/>
-#   STDOUT
+#   check 3<<- 'STDOUT'
+#     <unit/>
+#     STDOUT
 #
 # * Optionally also give expected stderr of command
-#   check 3<< 'STDOUT' 4<< 'STDERR'
-#   <unit/>
-#   STDOUT
-#   STDERR
+#   check 3<<- 'STDOUT' 4<<- 'STDERR'
+#     <unit/>
+#     STDOUT
+#     STDERR
 #
 # * If a comparison pipe is not open, then it assumes blank
 #   I.e., the following check assumes that both stdout and stderr are empty
@@ -39,30 +39,32 @@ set -e
 
 # turn history on so we can output the command issued
 set -o history
+HISTIGNORE=check
+HISTSIZE=2
 
 # output filenames for capturing stdout and stderr from the command
 typeset STDERR=.stderr_$(basename $0)
 typeset STDOUT=.stdout_$(basename $0)
 
 # save stdout and stderr to our files
-exec 6>&1 1>$STDOUT
-exec 7>&2 2>$STDERR
+exec 5>&1 1>$STDOUT
+exec 6>&2 2>$STDERR
 
 ##
 # checks the result of a command
 #   $1 (optional) file of expected stdout
 #   $2 (optional) file of expected stderr
-#   $STDOUT - filename of captured stdout, file descriptor 6
-#   $STDERR - filename of captured stderr, file descriptor 7
+#   $STDOUT - filename of captured stdout
+#   $STDERR - filename of captured stderr
 #
 check() {
 
     # return stdout and stderr to standard streams
-    exec 1>&6
-    exec 2>&7
+    exec 1>&5
+    exec 2>&6
 
     # trace the command
-    echo $(history 2 | head -1 | cut -c8-)
+    echo $(history | head -n 1 | cut -c 8-)
 
     # verify expected stderr to the captured stdout
     if [ $# -ge 1 ]; then
@@ -91,6 +93,6 @@ check() {
     fi
 
     # return to capturing stdout and stderr
-    exec 6>&1 1>$STDOUT
-    exec 7>&2 2>$STDERR
+    exec 5>&1 1>$STDOUT
+    exec 6>&2 2>$STDERR
 }
