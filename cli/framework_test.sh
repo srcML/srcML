@@ -8,12 +8,12 @@
 #
 # * Perform cli command
 #
-# * Call function check to verify the command, in the form:
+# * Call function check to verify the command, e.g.,
 #   check 3<<- 'STDOUT'
 #     <unit/>
 #     STDOUT
 #
-# * Optionally also give expected stderr of command
+# * Optionally also specify expected stderr of command, e.g.,
 #   check 3<<- 'STDOUT' 4<<- 'STDERR'
 #     <unit/>
 #     STDOUT
@@ -23,13 +23,11 @@
 #   I.e., the following check assumes that both stdout and stderr are empty
 #   check
 #
-# * Instead of pipe 3 being the expected contents of stdout of the command, it can be file
+# * Instead of pipe 3 being the expected contents of stdout of the command, it can be file, i.e.
 #   check foo.xml
 #
 # * Multiple tests of cli command followed by call to function check
 #   can be made
-
-trap "rm -f $pstdout $pstderr" EXIT
 
 # make sure to find the srcml executable
 export PATH=$PATH:bin/
