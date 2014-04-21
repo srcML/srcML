@@ -1048,7 +1048,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier) | template_specifier)*  lead_type_identifier
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))*  lead_type_identifier
 
         { 
 
@@ -3364,7 +3364,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         // specifiers that occur in a type
 		{ _tokenSet_22.member(LA(1)) }?
-        specifier |
+        specifier | template_specifier |
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
         LBRACKET (COMMA)* RBRACKET |
@@ -5035,9 +5035,9 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
 
-        (lead_type_identifier | template_specifier) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+        lead_type_identifier { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
-        type_identifier | template_specifier { decTypeCount(); })* 
+        type_identifier { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 

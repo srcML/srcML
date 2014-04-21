@@ -60,7 +60,35 @@
 </unit>
 
 <unit>
-<class_decl><specifier>extern</specifier> <specifier>template</specifier> class <name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr><name>MyClass</name></expr></argument>&gt;</argument_list></name></name>;</class_decl>
+<decl_stmt><decl><type><specifier>template</specifier></type> <name><name>a</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>extern</specifier> <specifier>template</specifier></type> <name><name>a</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<function_decl><type><specifier>template</specifier> <name>void</name></type> <name><name>f</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><specifier>extern</specifier> <specifier>template</specifier> <name>void</name></type> <name><name>f</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<constructor_decl><specifier>template</specifier> <name><name>A</name>::<name><name>A</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></name><parameter_list>()</parameter_list>;</constructor_decl>
+</unit>
+
+<unit>
+<constructor_decl><specifier>extern</specifier> <specifier>template</specifier> <name><name>A</name>::<name><name>A</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></name><parameter_list>()</parameter_list>;</constructor_decl>
+</unit>
+
+<unit>
+<class>class <block>{<private type="default"> <destructor_decl><specifier>template</specifier> <name><name>A</name>::~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl> </private>}</block>;</class>
+</unit>
+
+<unit>
+<class>class <block>{<private type="default"> <destructor_decl><specifier>extern</specifier> <specifier>template</specifier> <name><name>A</name>::~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl> </private>}</block>;</class>
 </unit>
 
 <unit>
