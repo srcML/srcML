@@ -241,21 +241,21 @@ public :
                     if(option == "XMLDECL")
                         archive->options |= SRCML_OPTION_XML_DECL;
                     if(option == "NAMESPACEDECL")
-                        archive->options |= OPTION_NAMESPACEDECL;
+                        archive->options |= SRCML_OPTION_NAMESPACE_DECL;
                     if(option == "CPP_TEXT_ELSE")
-                        archive->options |= OPTION_CPP_TEXT_ELSE;
+                        archive->options |= SRCML_OPTION_CPP_TEXT_ELSE;
                     if(option == "CPP_MARKUP_IF0")
-                        archive->options |= OPTION_CPP_MARKUP_IF0;
+                        archive->options |= SRCML_OPTION_CPP_MARKUP_IF0;
                     if(option == "EXPRESSION")
-                        archive->options |= OPTION_EXPRESSION;
+                        archive->options |= SRCML_OPTION_EXPRESSION;
                     if(option == "LINE")
-                        archive->options |= OPTION_LINE;
+                        archive->options |= SRCML_OPTION_LINE;
                     if(option == "NESTIF")
-                        archive->options |= OPTION_NESTIF;
+                        archive->options |= SRCML_OPTION_NESTIF;
                     if(option == "CPPIF_CHECK")
-                        archive->options |= OPTION_CPPIF_CHECK;
+                        archive->options |= SRCML_OPTION_CPPIF_CHECK;
                     if(option == "WRAP_TEMPLATE")
-                        archive->options |= OPTION_WRAP_TEMPLATE;
+                        archive->options |= SRCML_OPTION_WRAP_TEMPLATE;
 
                 }
 
