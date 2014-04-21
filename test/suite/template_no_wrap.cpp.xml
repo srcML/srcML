@@ -52,11 +52,11 @@ struct <name><name>CTest1</name><argument_list>&lt;<argument><expr><name>at_Type
 </unit>
 
 <unit>
-<template>template <class_decl>class <name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr><name>MyClass</name></expr></argument>&gt;</argument_list></name></name>;</class_decl></template>
+<class_decl><specifier>template</specifier> class <name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr><name>MyClass</name></expr></argument>&gt;</argument_list></name></name>;</class_decl>
 </unit>
 
 <unit>
-<template><specifier>extern</specifier> template <class_decl>class <name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr><name>MyClass</name></expr></argument>&gt;</argument_list></name></name>;</class_decl></template>
+<class_decl><specifier>extern</specifier> <specifier>template</specifier> class <name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr><name>MyClass</name></expr></argument>&gt;</argument_list></name></name>;</class_decl>
 </unit>
 
 <unit>
