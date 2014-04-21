@@ -155,24 +155,6 @@ const OPTION_TYPE OPTION_TERMINATE = ull(1) << __COUNTER__;
 const OPTION_TYPE OPTION_EXPRESSION = ull(1) << __COUNTER__;
 
 // @src2srcml
-// @srcml2src
-/** namespace mode */
-const OPTION_TYPE OPTION_NAMESPACE = ull(1) << __COUNTER__;
-
-
-// @srcml2src
-/** option diff @todo check if used and think about adding if not */
-const OPTION_TYPE OPTION_DIFF  = ull(1) << __COUNTER__;
-
-// @srcml2src
-/** ??? @todo check if used */
-const OPTION_TYPE OPTION_PRESERVE  = ull(1) << __COUNTER__;
-
-// @src2srcml
-/** @todo Not used but may be.  */
-const OPTION_TYPE OPTION_REVISION  = ull(1) << __COUNTER__;
-
-// @src2srcml
 /** think use @code#line@endcode info */
 const OPTION_TYPE OPTION_LINE  = ull(1) << __COUNTER__;
 

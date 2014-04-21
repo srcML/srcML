@@ -1256,8 +1256,9 @@ lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SARGUMENT);
         }
+
         // suppress warning of another case where REFOPS or something is in both alts.
-        (options { warnWhenFollowAmbig = false; } : lambda_capture_modifiers | compound_name)*
+        (options { warnWhenFollowAmbig = false; } : lambda_capture_modifiers | { LA(1) != RBRACKET }? expression | type_identifier)*
 ;
 
 // check and see if the lambda is directly used as a call.
@@ -5370,7 +5371,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         (lambda_expression_full_csharp) => lambda_expression_csharp |
 
         { inLanguage(LANGUAGE_CXX) }?
-        (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_cpp |
+        (bracket_pair (LPAREN | LCURLY)) => lambda_expression_cpp |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
@@ -6112,6 +6113,11 @@ paren_pair[] :
 // matching set of curly braces
 curly_pair[] :
         LCURLY (curly_pair | ~(LCURLY | RCURLY))* RCURLY
+;
+
+// matching set of curly braces
+bracket_pair[] :
+        LBRACKET (bracket_pair | ~(LBRACKET | RBRACKET))* RBRACKET
 ;
 
 // See if there is a semicolon terminating a statement inside a block at the top level

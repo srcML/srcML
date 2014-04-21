@@ -664,8 +664,6 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
         // optional position xml namespace
         (depth == 0) && isoption(OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
 
-        // optional diff xml namespace
-        (depth == 0) && isoption(OPTION_DIFF, options)     ? SRCML_DIFF_NS_URI : 0,
     };
 
     // output the namespaces
@@ -747,7 +745,6 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     if(isoption(OPTION_CPP_TEXT_ELSE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_TEXT_ELSE"; }
     if(isoption(OPTION_CPP_MARKUP_IF0)) { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_MARKUP_IF0"; }
     if(isoption(OPTION_EXPRESSION))     { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "EXPRESSION"; }
-    if(isoption(OPTION_NAMESPACE))      { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NAMESPACE"; }
     if(isoption(OPTION_LINE))           { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "LINE"; }
     if(isoption(OPTION_MACRO_PATTERN))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "MACRO_PATTERN"; }
     if(isoption(OPTION_MACRO_LIST))     { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "MACRO_LIST"; }
@@ -759,9 +756,6 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
     // list of attributes
     const char* const attrs[][2] = {
-
-        // version attribute
-        { UNIT_ATTRIBUTE_REVISION, isoption(OPTION_REVISION) ? srcml_version_string() : 0 },
 
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },

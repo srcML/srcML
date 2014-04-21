@@ -73,4 +73,16 @@
 <expr_stmt><expr><lambda><capture>[<argument>=</argument>]</capture><parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name> + 1</expr>;</return>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>auto</name></type> <name>lambda</name> <init>= <expr><lambda><capture>[<argument><name>value</name> = 1</argument>]</capture> <block>{<return>return <expr><name>value</name></expr>;</return>}</block></lambda></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>auto</name></type> <name>lambda</name> <init>= <expr><lambda><capture>[<argument><name>ptr</name> = <call><name><name>std</name>::<name>move</name></name><argument_list>(<argument><expr><name>ptr</name></expr></argument>)</argument_list></call></argument>]</capture> <block>{<return>return <expr>*<name>ptr</name></expr>;</return>}</block></lambda></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>auto</name></type> <name>lambda</name> <init>= <expr><lambda><capture>[<argument><name>a</name> = <name><name>b</name><index>[<expr>0</expr>]</index></name></argument>]</capture> <block>{ <return>return <expr><name>a</name></expr>;</return> }</block></lambda></expr></init></decl>;</decl_stmt>
+</unit>
+
 </unit>
