@@ -15,9 +15,11 @@ scp  ~/Dropbox/srcML/Unix/openSUSE13.1-64/srcML.tar.gz suse13test64:/srcML
 
 scp ~/Dropbox/srcML/Unix/Ubuntu10.04/srcML.tar.gz ubuntu10test:/srcML
 scp ~/Dropbox/srcML/Unix/Ubuntu12.04/srcML.tar.gz ubuntu12test:/srcML
+scp ~/Dropbox/srcML/Unix/Ubuntu14.04/srcML.tar.gz ubuntu14test:/srcML
 
 scp ~/Dropbox/srcML/Unix/Ubuntu10.04-64/srcML.tar.gz ubuntu10test64:/srcML
 scp ~/Dropbox/srcML/Unix/Ubuntu12.04-64/srcML.tar.gz ubuntu12test64:/srcML
+scp ~/Dropbox/srcML/Unix/Ubuntu14.04-64/srcML.tar.gz ubuntu14test64:/srcML
 
 #scp ~/Dropbox/srcML/Unix/MacLion/srcML.tar.gz macliontest:/srcML
 #scp ~/Dropbox/srcML/Unix/MacMountainLion/srcML.tar.gz macmountainliontest:/srcML
