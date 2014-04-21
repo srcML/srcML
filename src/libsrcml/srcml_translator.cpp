@@ -165,7 +165,7 @@ void srcml_translator::set_macro_list(std::vector<std::string> & list) {
  */
 void srcml_translator::close() {
 
-    if(first && (options & OPTION_ARCHIVE) > 0) {
+    if(first && (options & SRCML_OPTION_ARCHIVE) > 0) {
 
         // Open for write;
         out.initWriter();
@@ -268,10 +268,10 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
         out.outputXMLDecl();
 
         // root unit for compound srcML documents
-        if((options & OPTION_ARCHIVE) > 0)
+        if((options & SRCML_OPTION_ARCHIVE) > 0)
             out.startUnit(0, directory, filename, version, 0, 0, true);
 
-        if ((options & OPTION_ARCHIVE) > 0)
+        if ((options & SRCML_OPTION_ARCHIVE) > 0)
             out.processText("\n\n", 2);
 
     }
@@ -311,7 +311,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
     out.srcMLTextWriterEndElement(out.getWriter());
 
-    if ((options & OPTION_ARCHIVE) > 0)
+    if ((options & SRCML_OPTION_ARCHIVE) > 0)
         out.processText("\n\n", 2);
 
     return true;
@@ -338,10 +338,10 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
         out.outputXMLDecl();
 
         // root unit for compound srcML documents
-        if((options & OPTION_ARCHIVE) > 0)
+        if((options & SRCML_OPTION_ARCHIVE) > 0)
             out.startUnit(0, directory, filename, version, 0, 0, true);
 
-        if ((options & OPTION_ARCHIVE) > 0)
+        if ((options & SRCML_OPTION_ARCHIVE) > 0)
             out.processText("\n\n", 2);
 
     }
@@ -387,7 +387,7 @@ bool srcml_translator::add_end_unit() {
 
     bool success = xmlTextWriterEndElement(out.getWriter()) != -1;
 
-    if ((options & OPTION_ARCHIVE) > 0)
+    if ((options & SRCML_OPTION_ARCHIVE) > 0)
         out.processText("\n\n", 2);
 
     return success;
