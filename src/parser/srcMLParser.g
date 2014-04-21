@@ -2939,8 +2939,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 
     if(type == VARIABLE && inTransparentMode(MODE_CONDITION) && LA(1) != EQUAL)
         type = NONE;
-    
 
+    if(type == NONE && (LA(1) == TEMPLATE || next_token() == TEMPLATE))
+        type = VARIABLE;
+    
     // may just have an expression
     if (type == VARIABLE && posin)
         type_count = posin - 1;
@@ -3193,7 +3195,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             - There is nothing in the type (what was the name is the type)
               and it is part of a parameter list
         */
-        set_type[type, VARIABLE, (((type_count - specifier_count > 0 && (!inMode(MODE_ACCESS_REGION) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET ||
+        set_type[type, VARIABLE, ((((type_count - specifier_count - attribute_count - template_count) > 0 && (!inMode(MODE_ACCESS_REGION) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET ||
                                               ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && LA(1) == EQUAL)))) ||
                                  (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET ||
 
