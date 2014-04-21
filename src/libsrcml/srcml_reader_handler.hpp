@@ -239,7 +239,7 @@ public :
                         value = value.substr(value.find(",") + 1);
 
                     if(option == "XMLDECL")
-                        archive->options |= OPTION_XMLDECL;
+                        archive->options |= SRCML_OPTION_XML_DECL;
                     if(option == "NAMESPACEDECL")
                         archive->options |= OPTION_NAMESPACEDECL;
                     if(option == "CPP_TEXT_ELSE")

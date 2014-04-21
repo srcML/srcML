@@ -125,7 +125,7 @@ public :
      * @param meta_tags vector of elements composed of metage tags defined after root tag
      *
      * SAX handler function for start of the root element.
-     * Collect namespaces from root unit.  Start to build the tree if OPTION_APPLY_ROOT.
+     * Collect namespaces from root unit.  Start to build the tree if SRCML_OPTION_APPLY_ROOT.
      */
     virtual void startRoot(const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                            int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
@@ -145,7 +145,7 @@ public :
         rootsize = data.size();
 
         // if we are building the entire tree, start now
-        if (isoption(options, OPTION_APPLY_ROOT)) {
+        if (isoption(options, SRCML_OPTION_APPLY_ROOT)) {
 
             xmlSAX2StartElementNs(ctxt, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
                                   nb_defaulted, attributes);
@@ -198,7 +198,7 @@ public :
 
           This should not be needed since start root should always be called.
           // if applying to entire archive, then just build this node
-          if (isoption(options, OPTION_APPLY_ROOT)) {
+          if (isoption(options, SRCML_OPTION_APPLY_ROOT)) {
 
           // if apply root and not archive then startRootUnit may not have been called
           static bool started = false;
@@ -278,7 +278,7 @@ public :
      */
     virtual void charactersRoot(const xmlChar* ch, int len) {
 
-        if(isoption(options, OPTION_APPLY_ROOT))
+        if(isoption(options, SRCML_OPTION_APPLY_ROOT))
             xmlSAX2Characters(ctxt, ch, len);
     }
 
@@ -322,7 +322,7 @@ public :
         xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
 
         // End the document and free it if applied to unit individually
-        if(!isoption(options, OPTION_APPLY_ROOT)) {
+        if(!isoption(options, SRCML_OPTION_APPLY_ROOT)) {
             xmlSAX2EndDocument(ctxt);
 
             // apply the necessary processing
@@ -350,7 +350,7 @@ public :
      */
     virtual void endRoot(const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-        if(isoption(options, OPTION_APPLY_ROOT)) {
+        if(isoption(options, SRCML_OPTION_APPLY_ROOT)) {
 
             // finish building the unit tree
             xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
@@ -384,7 +384,7 @@ public :
             return;
         /*
         // end the entire input document and run apply if applied to root.
-        if (isoption(options, OPTION_APPLY_ROOT)) {
+        if (isoption(options, SRCML_OPTION_APPLY_ROOT)) {
         xmlSAX2EndDocument(ctxt);
 
         if ((error = !apply()))
