@@ -1289,15 +1289,17 @@ f.close()
 output=$(cat << 'STDOUT'
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++"/>
-INPUT
+STDOUT)
 
 output=$(cat << 'STDOUT'
-f<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++" filename="sub/a.cpp"/>
-INPUT
-checkallformsfile(src2srcml sub/a.cpp' -g --debug fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -g --debug fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -g --debug fsrcml)
+STDOUT)
+
+src2srcml sub/a.cpp -g fsrcml
+
+src2srcml sub/a.cpp --debug fsrcml
+
 src2srcml -l C++ -g '-o' 'sub/a.cpp.xml' sfile1
 validate(open('sub/a.cpp.xml' 'r').read() srcml)
 src2srcml -g 'sub/a.cpp''-o' 'sub/a.cpp.xml' ""
@@ -1315,9 +1317,9 @@ output=$(cat << 'STDOUT'
 f<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
 INPUT
-checkallformsfile(src2srcml sub/a.cpp' -l --language "C++" "" fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -l --language "C++" "" fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -l --language "C++" "" fsrcml)
+src2srcml sub/a.cpp' -l --language "C++" "" fsrcml)
+src2srcml sub/a.cpp' -l --language "C++" "" fsrcml)
+src2srcml sub/a.cpp' -l --language "C++" "" fsrcml)
 src2srcml -l C++ '-o' 'sub/a.cpp.xml' sfile1
 validate(open('sub/a.cpp.xml' 'r').read() srcml)
 src2srcml -l C++ 'sub/a.cpp''-o' 'sub/a.cpp.xml' ""
@@ -1333,9 +1335,9 @@ output=$(cat << 'STDOUT'
 f<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="sub/a.cpp"/>
 INPUT
-checkallformsfile(src2srcml sub/a.cpp' -l --language "C" "" fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -l --language "C" "" fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -l --language "C" "" fsrcml)
+src2srcml sub/a.cpp' -l --language "C" "" fsrcml)
+src2srcml sub/a.cpp' -l --language "C" "" fsrcml)
+src2srcml sub/a.cpp' -l --language "C" "" fsrcml)
 src2srcml -l 'C' '-o' 'sub/a.cpp.xml' sfile1
 validate(open('sub/a.cpp.xml' 'r').read() srcml)
 src2srcml -l 'C' 'sub/a.cpp''-o' 'sub/a.cpp.xml' ""
@@ -1352,8 +1354,8 @@ f<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" filename="sub/a.cpp"/>
 STDOUT
 INPUT
-checkallformsfile(src2srcml sub/a.cpp' -l --language "Java" "" fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -l --language "Java" "" fsrcml)
+src2srcml sub/a.cpp' -l --language "Java" "" fsrcml)
+src2srcml sub/a.cpp' -l --language "Java" "" fsrcml)
 src2srcml -l 'Java' '-o' 'sub/a.cpp.xml' sfile1
 validate(open('sub/a.cpp.xml' 'r').read() srcml)
 src2srcml -l 'Java' 'sub/a.cpp''-o' 'sub/a.cpp.xml' ""
@@ -1371,9 +1373,9 @@ output=$(cat << 'STDOUT'
 f<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo.cpp"/>
 INPUT
-checkallformsfile(src2srcml sub/a.cpp' -f --filename "foo.cpp" "" fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -f --filename "foo.cpp" "" fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -f --filename "foo.cpp" "" fsrcml)
+src2srcml sub/a.cpp' -f --filename "foo.cpp" "" fsrcml)
+src2srcml sub/a.cpp' -f --filename "foo.cpp" "" fsrcml)
+src2srcml sub/a.cpp' -f --filename "foo.cpp" "" fsrcml)
 src2srcml -l C++ -f 'foo.cpp' '-o' 'sub/a.cpp.xml' sfile1
 validate(open('sub/a.cpp.xml' 'r').read() srcml)
 src2srcml -f 'foo.cpp' 'sub/a.cpp''-o' 'sub/a.cpp.xml' ""
@@ -1391,9 +1393,9 @@ output=$(cat << 'STDOUT'
 f<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="sub/a.cpp"/>
 INPUT
-checkallformsfile(src2srcml sub/a.cpp' -d --directory "bar" "" fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -d --directory "bar" "" fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -d --directory "bar" "" fsrcml)
+src2srcml sub/a.cpp' -d --directory "bar" "" fsrcml)
+src2srcml sub/a.cpp' -d --directory "bar" "" fsrcml)
+src2srcml sub/a.cpp' -d --directory "bar" "" fsrcml)
 src2srcml -l C++ -d 'bar' '-o' 'sub/a.cpp.xml' sfile1
 validate(open('sub/a.cpp.xml' 'r').read() srcml)
 src2srcml -d 'bar' 'sub/a.cpp''-o' 'sub/a.cpp.xml' ""
@@ -1405,15 +1407,15 @@ validate(open('sub/a.cpp.xml' 'r').read() fsrcml)
 output=$(cat << 'STDOUT'
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" version="1.0"/>
-INPUT
+STDOUT
 
 output=$(cat << 'STDOUT'
 f<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp" version="1.0"/>
 INPUT
-checkallformsfile(src2srcml sub/a.cpp' -s --src-version "1.0" "" fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -s --src-version "1.0" "" fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -s --src-version "1.0" "" fsrcml)
+src2srcml sub/a.cpp' -s --src-version "1.0" "" fsrcml)
+src2srcml sub/a.cpp' -s --src-version "1.0" "" fsrcml)
+src2srcml sub/a.cpp' -s --src-version "1.0" "" fsrcml)
 src2srcml -l C++ -s '1.0' '-o' 'sub/a.cpp.xml' sfile1
 validate(open('sub/a.cpp.xml' 'r').read() srcml)
 src2srcml -s '1.0' 'sub/a.cpp''-o' 'sub/a.cpp.xml' ""
@@ -1429,9 +1431,9 @@ STDOUT
 f<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
 STDOUT
-checkallformsfile(src2srcml sub/a.cpp' -x --encoding "ISO-8859-1" "" fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -x --encoding "ISO-8859-1" "" fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -x --encoding "ISO-8859-1" "" fsrcml)
+src2srcml sub/a.cpp' -x --encoding "ISO-8859-1" "" fsrcml)
+src2srcml sub/a.cpp' -x --encoding "ISO-8859-1" "" fsrcml)
+src2srcml sub/a.cpp' -x --encoding "ISO-8859-1" "" fsrcml)
 src2srcml -l C++ -x 'ISO-8859-1' '-o' 'sub/a.cpp.xml' sfile1
 validate(open('sub/a.cpp.xml' 'r').read() srcml)
 src2srcml -x 'ISO-8859-1' 'sub/a.cpp''-o' 'sub/a.cpp.xml' ""
@@ -1452,9 +1454,9 @@ INPUT
 src2srcml -t --src-encoding "ISO-8859-1" sfile1 srcml)
 src2srcml -t --src-encoding "ISO-8859-1" sfile1 srcml)
 src2srcml -t --src-encoding "ISO-8859-1" sfile1 srcml)
-checkallformsfile(src2srcml sub/a.cpp' -t --src-encoding "ISO-8859-1" "" fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -t --src-encoding "ISO-8859-1" "" fsrcml)
-checkallformsfile(src2srcml sub/a.cpp' -t --src-encoding "ISO-8859-1" "" fsrcml)
+src2srcml sub/a.cpp' -t --src-encoding "ISO-8859-1" "" fsrcml)
+src2srcml sub/a.cpp' -t --src-encoding "ISO-8859-1" "" fsrcml)
+src2srcml sub/a.cpp' -t --src-encoding "ISO-8859-1" "" fsrcml)
 src2srcml --src-encoding "ISO-8859-1" 'sub/a.cpp' "" fsrcml)
 src2srcml -l C++ --src-encoding "ISO-8859-1" '-o' 'sub/a.cpp.xml' sfile1
 validate(open('sub/a.cpp.xml' 'r').read() srcml)
@@ -1922,21 +1924,21 @@ f = open('sub/a.cpp.xml' 'w')
 f.write(sxmlfile1)
 f.close()
 # check metadata options
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -l --language "C++\n")
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -l --language "C++\n")
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -l --language "C++\n")
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -d --directory "sub\n")
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -d --directory "sub\n")
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -d --directory "sub\n")
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -f --filename "a.cpp\n")
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -f --filename "a.cpp\n")
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -f --filename "a.cpp\n")
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -s --src-version "1.2\n")
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -s --src-version "1.2\n")
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -s --src-version "1.2\n")
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -x --encoding dUTF-8\n")
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -x --encoding dUTF-8\n")
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -x --encoding dUTF-8\n")
+srcml2src 'sub/a.cpp.xml' -l --language "C++\n")
+srcml2src 'sub/a.cpp.xml' -l --language "C++\n")
+srcml2src 'sub/a.cpp.xml' -l --language "C++\n")
+srcml2src 'sub/a.cpp.xml' -d --directory "sub\n")
+srcml2src 'sub/a.cpp.xml' -d --directory "sub\n")
+srcml2src 'sub/a.cpp.xml' -d --directory "sub\n")
+srcml2src 'sub/a.cpp.xml' -f --filename "a.cpp\n")
+srcml2src 'sub/a.cpp.xml' -f --filename "a.cpp\n")
+srcml2src 'sub/a.cpp.xml' -f --filename "a.cpp\n")
+srcml2src 'sub/a.cpp.xml' -s --src-version "1.2\n")
+srcml2src 'sub/a.cpp.xml' -s --src-version "1.2\n")
+srcml2src 'sub/a.cpp.xml' -s --src-version "1.2\n")
+srcml2src 'sub/a.cpp.xml' -x --encoding dUTF-8\n")
+srcml2src 'sub/a.cpp.xml' -x --encoding dUTF-8\n")
+srcml2src 'sub/a.cpp.xml' -x --encoding dUTF-8\n")
 
 srcml2src --units 'sub/a.cpp.xml' "" "1\n")
 
@@ -1998,15 +2000,15 @@ f = open('sub/a.cpp.xml' 'w')
 f.write(<<< "$nestedfile)"
 f.close()
 
-checkallformsfile(srcml2src 'sub/a.cpp.xml' "-U" --unit "1" ""
+srcml2src 'sub/a.cpp.xml' "-U" --unit "1" ""
 
 check 3<<< "$sfile1"
 
-checkallformsfile(srcml2src 'sub/a.cpp.xml' "-U" --unit "1" ""
+srcml2src 'sub/a.cpp.xml' "-U" --unit "1" ""
 
 check 3<<< "$sfile1"
 
-checkallformsfile(srcml2src 'sub/a.cpp.xml' "-U" --unit "1" ""
+srcml2src 'sub/a.cpp.xml' "-U" --unit "1" ""
 
 check 3<<< "$sfile1"
 
@@ -2022,9 +2024,9 @@ validate(open('sub/a.cpp' 'r').read()
 check 3<<< "$sfile1"
 
 
-checkallformsfile(srcml2src 'sub/a.cpp.xml' "-U" --unit "2" "" <<< "b;"
-checkallformsfile(srcml2src 'sub/a.cpp.xml' "-U" --unit "2" "" <<< "b;"
-checkallformsfile(srcml2src 'sub/a.cpp.xml' "-U" --unit "2" "" <<< "b;"
+srcml2src 'sub/a.cpp.xml' "-U" --unit "2" "" <<< "b;"
+srcml2src 'sub/a.cpp.xml' "-U" --unit "2" "" <<< "b;"
+srcml2src 'sub/a.cpp.xml' "-U" --unit "2" "" <<< "b;"
 if sys.platform != 'cygwin' :
         srcml2src --unit "2" '-o' "sub/b.cpp" <<< "$nestedfile"
         validate(open('sub/b.cpp' 'r').read() <<< "b;"
@@ -2089,23 +2091,23 @@ f = open('sub/a.cpp.xml' 'w')
 f.write(sxmlfile1)
 f.close()
 execute([src2srcml sub/a.cpp' '-o' 'sub/a.cpp.xml'
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/src" "" STDOUT
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/src" "" STDOUT
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/src" "" STDOUT
+srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/src" "" STDOUT
+srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/src" "" STDOUT
+srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/src" "" STDOUT
 STDOUT)
 
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/cpp" "" STDOUTcpp
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/cpp" "" STDOUTcpp
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/cpp" "" STDOUTcpp
+srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/cpp" "" STDOUTcpp
+srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/cpp" "" STDOUTcpp
+srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/cpp" "" STDOUTcpp
 STDOUT)
 
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/literal" ""
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/literal" ""
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/literal" ""
+srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/literal" ""
+srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/literal" ""
+srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.sdml.info/srcML/literal" ""
 
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.cs.uakron.edu/~collard/foo" ""
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.cs.uakron.edu/~collard/foo" ""
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.cs.uakron.edu/~collard/foo" ""
+srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.cs.uakron.edu/~collard/foo" ""
+srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.cs.uakron.edu/~collard/foo" ""
+srcml2src 'sub/a.cpp.xml' -p --prefix "http://www.cs.uakron.edu/~collard/foo" ""
 
 ##
 # text encoding flag
@@ -2136,15 +2138,15 @@ srcml2src --get-src-encoding "ISO-8859-1" sxmlfile1
 
 check 3<<< "$sfile1"
 
-checkallformsfile(srcml2src 'sub/a.cpp.xml' "" --get-src-encoding "ISO-8859-1" ""
+srcml2src 'sub/a.cpp.xml' "" --get-src-encoding "ISO-8859-1" ""
 
 check 3<<< "$sfile1"
 
-checkallformsfile(srcml2src 'sub/a.cpp.xml' "" --get-src-encoding "ISO-8859-1" ""
+srcml2src 'sub/a.cpp.xml' "" --get-src-encoding "ISO-8859-1" ""
 
 check 3<<< "$sfile1"
 
-checkallformsfile(srcml2src 'sub/a.cpp.xml' "" --get-src-encoding "ISO-8859-1" ""
+srcml2src 'sub/a.cpp.xml' "" --get-src-encoding "ISO-8859-1" ""
 
 check 3<<< "$sfile1"
 
@@ -2520,15 +2522,15 @@ f.close()
 srcml2src --info_SHORT --info "" sxmlfile info)
 srcml2src --info_SHORT --info "" sxmlfile info)
 srcml2src --info_SHORT --info "" sxmlfile info)
-checkallformsfile(srcml2src 'sub/a.cpp.xml' --info_SHORT --info info)
-checkallformsfile(srcml2src 'sub/a.cpp.xml' --info_SHORT --info info)
-checkallformsfile(srcml2src 'sub/a.cpp.xml' --info_SHORT --info info)
+srcml2src 'sub/a.cpp.xml' --info_SHORT --info info)
+srcml2src 'sub/a.cpp.xml' --info_SHORT --info info)
+srcml2src 'sub/a.cpp.xml' --info_SHORT --info info)
 srcml2src -i --longinfo "" sxmlfile longinfo)
 srcml2src -i --longinfo "" sxmlfile longinfo)
 srcml2src -i --longinfo "" sxmlfile longinfo)
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -i --longinfo longinfo)
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -i --longinfo longinfo)
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -i --longinfo longinfo)
+srcml2src 'sub/a.cpp.xml' -i --longinfo longinfo)
+srcml2src 'sub/a.cpp.xml' -i --longinfo longinfo)
+srcml2src 'sub/a.cpp.xml' -i --longinfo longinfo)
 
 f = open('sub/a.cpp.xml' 'w')
 f.write(<<< "$nestedfile)"
@@ -2536,9 +2538,9 @@ f.close()
 srcml2src -i --longinfo <<< "$nestedfile longinfonested)"
 srcml2src -i --longinfo <<< "$nestedfile longinfonested)"
 srcml2src -i --longinfo <<< "$nestedfile longinfonested)"
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -i --longinfo longinfonested)
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -i --longinfo longinfonested)
-checkallformsfile(srcml2src 'sub/a.cpp.xml' -i --longinfo longinfonested)
+srcml2src 'sub/a.cpp.xml' -i --longinfo longinfonested)
+srcml2src 'sub/a.cpp.xml' -i --longinfo longinfonested)
+srcml2src 'sub/a.cpp.xml' -i --longinfo longinfonested)
 
 # test
 ##
@@ -4431,9 +4433,9 @@ output=$(cat << 'STDOUT'
 f<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" filename="sub/a.java"/>
 INPUT
-checkallformsfile(src2srcml sub/a.java' --cpp fsrcml)
-checkallformsfile(src2srcml sub/a.java' --cpp fsrcml)
-checkallformsfile(src2srcml sub/a.java' --cpp fsrcml)
+src2srcml sub/a.java' --cpp fsrcml)
+src2srcml sub/a.java' --cpp fsrcml)
+src2srcml sub/a.java' --cpp fsrcml)
 if sys.platform != 'cygwin' :
         src2srcml -l 'Java' --cpp '-o' 'sub/a.java.xml' sfile1
         validate(open('sub/a.java.xml' 'r').read() srcml)
