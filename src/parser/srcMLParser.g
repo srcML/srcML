@@ -4190,7 +4190,7 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
-            { LA(1) != EXTERN || next_token() != TEMPLATE }? specifier | template_declaration_full |
+            specifier | { next_token() != TEMPOPS }? template_specifier | template_declaration_full |
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }? template_argument_list
         )*
@@ -4255,7 +4255,7 @@ destructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
-             { LA(1) != EXTERN || next_token() != TEMPLATE }? specifier | template_declaration_full | 
+             specifier | { next_token() != TEMPOPS }? template_specifier | template_declaration_full | 
 
             { LA(1) == VOID }? simple_identifier
         )*
@@ -5035,9 +5035,9 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
 
-        lead_type_identifier { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+        (lead_type_identifier | template_specifier) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
-        type_identifier { decTypeCount(); })* 
+        type_identifier | template_specifier { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
