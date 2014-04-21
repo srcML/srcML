@@ -659,7 +659,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
 
         // statements that clearly start with a keyword
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != EXTERN || next_token() == TEMPLATE)}? keyword_statements |
+        { (isoption(parseoptions, OPTION_WRAP_TEMPLATE) || (LA(1) != TEMPLATE || next_token() != TEMPOPS))
+         && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS) }? keyword_statements |
 
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
 
@@ -956,7 +957,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         // no return value functions:  casting operator method and main
         { type_count == 0 }? function_identifier
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
-
+        (options { greedy = true; } : { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
         function_type[type_count]
 ;
 
@@ -2064,11 +2065,8 @@ class_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SCLASS_DECLARATION);
         }
-        ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
-        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
-        (specifier)* CLASS class_post class_header
+        class_preamble CLASS class_post class_header
 ;
 
 // class preprocessing items
@@ -2099,7 +2097,7 @@ class_preamble[] { ENTRY_DEBUG } :
         // suppress warning probably do to only having ()*
         (options { greedy = true; } : { inLanguage(LANGUAGE_JAVA) }? annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-        (specifier)*
+        (specifier | { LA(1) != TEMPLATE || next_token() != TEMPOPS }? template_specifier | { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? template_declaration_full)*
 ;
 
 // a class definition
@@ -2924,12 +2922,13 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     inputState->guessing++;
 
     bool sawenum;
+    bool sawtemplate;
     int posin = 0;
     int fla = 0;
 
     try {
 
-        pattern_check_core(token, fla, type_count, type, inparam, sawenum, posin);
+        pattern_check_core(token, fla, type_count, type, inparam, sawenum, sawtemplate, posin);
 
     } catch (...) {
 
@@ -2941,8 +2940,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 
     if(type == VARIABLE && inTransparentMode(MODE_CONDITION) && LA(1) != EQUAL)
         type = NONE;
-    
 
+    if(type == NONE && sawtemplate)
+        type = VARIABLE;
+    
     // may just have an expression
     if (type == VARIABLE && posin)
         type_count = posin - 1;
@@ -3006,6 +3007,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
               STMT_TYPE& type,      /* type discovered */
               bool inparam,         /* are we in a parameter */
               bool& sawenum,        /* have we seen an enum */
+              bool& sawtemplate,    /* have we seen a template */
               int& posin            /* */
         ] {
             token = 0;
@@ -3013,10 +3015,12 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             type_count = 0;
             type = NONE;
             sawenum = false;
+            sawtemplate = false;
             posin = 0;
             isdestructor = false;           // global flag detected during name matching
             int attribute_count = 0;
             int specifier_count = 0;
+            int template_count = 0;
             bool foundpure = false;
             bool isoperator = false;
             bool isconstructor = false;
@@ -3061,14 +3065,16 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
-                { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
+                { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
+                     && (LA(1) != TEMPLATE || next_token() != TEMPOPS) }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
-                (specifier | { next_token() == COLON }? SIGNAL)
+                (specifier | template_specifier set_bool[sawtemplate, true] | { next_token() == COLON }? SIGNAL)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
                         inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
                 throw_exception[type == ACCESS_REGION] |
+                { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? template_declaration_full set_int[template_count, template_count + 1] | 
 
                 { inLanguage(LANGUAGE_CSHARP) }?
                 LBRACKET
@@ -3099,7 +3105,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 property_method_name
                 set_type[type, PROPERTY_ACCESSOR, true] |
 
-                { type_count == attribute_count + specifier_count  && (!inLanguage(LANGUAGE_JAVA) 
+                { type_count == attribute_count + specifier_count + template_count  && (!inLanguage(LANGUAGE_JAVA) 
             || (inLanguage(LANGUAGE_JAVA) && (LA(1) != ATSIGN 
                                              || (LA(1) == ATSIGN && next_token() == INTERFACE)))) }?
                 (CLASS               set_type[type, CLASS_DECL]     |
@@ -3183,7 +3189,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
         // special case for what looks like a destructor declaration
         // @todo need a case where == 1 then , merge it with > 1
-        throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attribute_count) > 1 || ((type_count - specifier_count - attribute_count) == 1))]
+        throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attribute_count - template_count) > 1 || ((type_count - specifier_count - attribute_count - template_count) == 1))]
 
         /*
           We have a declaration (at this point a variable) if we have:
@@ -3191,8 +3197,10 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             - At least one non-specifier in the type
             - There is nothing in the type (what was the name is the type)
               and it is part of a parameter list
+
+            For now attribute and template counts are left out on purpose.
         */
-        set_type[type, VARIABLE, (((type_count - specifier_count > 0 && (!inMode(MODE_ACCESS_REGION) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET ||
+        set_type[type, VARIABLE, ((((type_count - specifier_count) > 0 && (!inMode(MODE_ACCESS_REGION) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET ||
                                               ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && LA(1) == EQUAL)))) ||
                                  (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET ||
 
@@ -3207,7 +3215,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  !isdestructor &&
 
                  // entire type is specifiers
-                 (type_count == (specifier_count + attribute_count)) &&
+                 (type_count == (specifier_count + attribute_count + template_count)) &&
 
                  (
                     // inside of a C++ class definition
@@ -3247,7 +3255,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             // POF (Plain Old Function)
             // need at least one non-specifier in the type (not including the name)
-            { (type_count - specifier_count > 0) || isoperator || saveisdestructor || isconstructor}?
+            { (type_count - specifier_count - attribute_count - template_count > 0) || isoperator || saveisdestructor || isconstructor}?
             function_rest[fla]
         )
 
@@ -3359,7 +3367,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         // specifiers that occur in a type
 		{ _tokenSet_22.member(LA(1)) }?
-        specifier |
+        specifier | template_specifier |
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
         LBRACKET (COMMA)* RBRACKET |
@@ -4000,7 +4008,6 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
-//            (template_specifier { iscompound = true; })*
             (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main)
             (options { greedy = true; } : { look_past_three(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
         )*
@@ -4186,7 +4193,7 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
-            specifier |
+            specifier | { next_token() != TEMPOPS }? template_specifier | template_declaration_full |
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }? template_argument_list
         )*
@@ -4251,7 +4258,7 @@ destructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
-            specifier |
+             specifier | { next_token() != TEMPOPS }? template_specifier | template_declaration_full | 
 
             { LA(1) == VOID }? simple_identifier
         )*
@@ -5014,6 +5021,8 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
                 startElement(SDECLARATION);
 
         }
+
+        (options { greedy = true; } : { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
         variable_declaration_type[type_count]
 ;
 
@@ -5028,6 +5037,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
+
         lead_type_identifier { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
         type_identifier { decTypeCount(); })* 
@@ -5833,7 +5843,7 @@ template_declaration[] { ENTRY_DEBUG } :
             // start the template
             startElement(STEMPLATE);
         }
-        (template_extern_specifier)* TEMPLATE
+        TEMPLATE
         {
             if(LA(1) == CLASS)
                 startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
@@ -5841,15 +5851,6 @@ template_declaration[] { ENTRY_DEBUG } :
                 startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT | MODE_TEMPLATE_PARAMETER_LIST);
         }
 ;
-
-// template specifiers
-template_extern_specifier{ SingleElement element(this); ENTRY_DEBUG } :
-        {
-            startElement(SFUNCTION_SPECIFIER);
-        }
-
-        EXTERN
-    ;
 
 // start parameter list for templates
 template_param_list[] { ENTRY_DEBUG } :
@@ -5874,11 +5875,13 @@ template_param[] { ENTRY_DEBUG } :
 
         // Both can contain extern however an extern template should not be a template param so should not be a problem
         (options { generateAmbigWarnings = false; } :
-        parameter_type
+        { LA(1) != TEMPLATE }? parameter_type
         {
             // expect a name initialization
+
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
-        } |
+        }  
+        (options { greedy = true; } : { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? variable_declaration_nameinit)* |
 
         template_inner_full
     )
@@ -5887,7 +5890,7 @@ template_param[] { ENTRY_DEBUG } :
 // complete inner full for template
 template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; } :
 
-        template_parameter_list_full
+        template_in_parameter_list_full
         { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : (type_count = 1))}?
         eat_type[type_count]
         {
@@ -5896,11 +5899,12 @@ template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STM
             // expect a name initialization
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         }
+        (options { greedy = true; } : { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? variable_declaration_nameinit)*
 
 ;
 
 // entire template parameter list
-template_parameter_list_full[] { ENTRY_DEBUG } :
+template_in_parameter_list_full[] { ENTRY_DEBUG } :
 
         {
             // local mode so start element will end correctly
@@ -5910,7 +5914,13 @@ template_parameter_list_full[] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
 
-        template_declaration template_param_list template_param (template_declaration_initialization)* tempope { if(inMode(MODE_TEMPLATE)) endMode();}
+        template_declaration_full
+
+;
+
+template_declaration_full[] { ENTRY_DEBUG } :
+
+    template_declaration template_param_list (template_param (template_declaration_initialization)* (comma)*)* tempope { if(inMode(MODE_TEMPLATE)) endMode();}
 
 ;
 
@@ -5923,8 +5933,7 @@ template_declaration_initialization[] { ENTRY_DEBUG } :
             // start the initialization element
             startElement(SDECLARATION_INITIALIZATION);
         }
-        EQUAL compound_name
-
+        EQUAL expression
 ;
 
 // template argument list

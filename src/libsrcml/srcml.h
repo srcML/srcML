@@ -120,6 +120,8 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_NESTIF            1<<14
     /** Output hash attribute on each unit (default: on) */
 #define SRCML_OPTION_HASH              1<<15
+    /** Wrap function/classes/etc with templates (default: on) */
+#define SRCML_OPTION_WRAP_TEMPLATE     1<<16
 
     /* srcml status messages */
     /** Return status indicating no errors */

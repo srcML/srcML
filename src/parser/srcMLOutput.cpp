@@ -750,6 +750,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     if(isoption(OPTION_MACRO_LIST))     { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "MACRO_LIST"; }
     if(isoption(OPTION_NESTIF))         { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NESTIF"; }
     if(isoption(OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
+    if(isoption(OPTION_WRAP_TEMPLATE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "WRAP_TEMPLATE"; }
 
     std::string stab = stabs.str();
 
@@ -777,7 +778,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
         // timestamp attribute
         { UNIT_ATTRIBUTE_HASH, hash },
 
-        { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK)) ? soptions.c_str() : 0 },
+        { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && (isoption(OPTION_NESTIF) || isoption(OPTION_CPPIF_CHECK) || isoption(OPTION_WRAP_TEMPLATE)) ? soptions.c_str() : 0 },
 
     };
 

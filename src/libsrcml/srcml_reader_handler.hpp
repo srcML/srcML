@@ -258,6 +258,8 @@ public :
                         archive->options |= OPTION_NESTIF;
                     if(option == "CPPIF_CHECK")
                         archive->options |= OPTION_CPPIF_CHECK;
+                    if(option == "WRAP_TEMPLATE")
+                        archive->options |= OPTION_WRAP_TEMPLATE;
 
                 }
 
