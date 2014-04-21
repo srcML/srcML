@@ -227,7 +227,7 @@ EOL :
 
             // record to new lines for optional positions
             newline();
-            if(isoption(options, OPTION_LINE))
+            if(isoption(options, SRCML_OPTION_LINE))
                 setLine(getLine() + (1 << 16));
             if(isline && line_number > -1) setLine((int)(line_number << 16 | (getLine() & 0xFFFF)));
             isline = false;

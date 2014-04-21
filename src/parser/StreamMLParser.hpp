@@ -270,7 +270,7 @@ private:
     bool consumeSkippedToken() {
 
         // preprocessor (unless we already are in one)
-        if (isoption(options, OPTION_CPP) && !inskip && srcMLParser::LA(1) == srcMLParser::PREPROC) {
+        if (isoption(options, SRCML_OPTION_CPP) && !inskip && srcMLParser::LA(1) == srcMLParser::PREPROC) {
 
             // start preprocessor handling
             inskip = true;
