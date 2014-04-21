@@ -2922,12 +2922,13 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     inputState->guessing++;
 
     bool sawenum;
+    bool sawtemplate;
     int posin = 0;
     int fla = 0;
 
     try {
 
-        pattern_check_core(token, fla, type_count, type, inparam, sawenum, posin);
+        pattern_check_core(token, fla, type_count, type, inparam, sawenum, sawtemplate, posin);
 
     } catch (...) {
 
@@ -2940,7 +2941,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     if(type == VARIABLE && inTransparentMode(MODE_CONDITION) && LA(1) != EQUAL)
         type = NONE;
 
-    if(type == NONE && (LA(1) == TEMPLATE || next_token() == TEMPLATE))
+    if(type == NONE && sawtemplate)
         type = VARIABLE;
     
     // may just have an expression
@@ -3006,6 +3007,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
               STMT_TYPE& type,      /* type discovered */
               bool inparam,         /* are we in a parameter */
               bool& sawenum,        /* have we seen an enum */
+              bool& sawtemplate,    /* have we seen a template */
               int& posin            /* */
         ] {
             token = 0;
@@ -3066,7 +3068,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                      && (LA(1) != TEMPLATE || next_token() != TEMPOPS) }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
-                (specifier | template_specifier | { next_token() == COLON }? SIGNAL)
+                (specifier | template_specifier set_bool[sawtemplate, true] | { next_token() == COLON }? SIGNAL)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
                         inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
