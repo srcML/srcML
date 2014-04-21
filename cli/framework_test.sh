@@ -8,56 +8,89 @@
 #
 # * Perform cli command
 #
-# * Call function check to verify the command, in the form:
-#   check 3<< 'STDOUT'
-#   <unit/>
-#   STDOUT
+# * Call function check to verify the command, e.g.,
+#   check 3<<- 'STDOUT'
+#     <unit/>
+#     STDOUT
 #
-# * Optionally also give expected stderr of command
-#   check 3<< 'STDOUT' 4<< 'STDERR'
-#   <unit/>
-#   STDOUT
-#   STDERR
+# * Optionally also specify expected stderr of command, e.g.,
+#   check 3<<- 'STDOUT' 4<<- 'STDERR'
+#     <unit/>
+#     STDOUT
+#     STDERR
+#
+# * If a comparison pipe is not open, then it assumes blank
+#   I.e., the following check assumes that both stdout and stderr are empty
+#   check
+#
+# * Instead of pipe 3 being the expected contents of stdout of the command, it can be file, i.e.
+#   check foo.xml
 #
 # * Multiple tests of cli command followed by call to function check
 #   can be made
 
-# always exit whenever a command or comparison fails
-set -e
-
 # make sure to find the srcml executable
 export PATH=$PATH:bin/
 
-# output files for standard output and error from the command
-STDERR=.stderr_$(basename $0)
-STDOUT=.stdout_$(basename $0)
+# always exit whenever a command or comparison fails
+set -e
+
+# turn history on so we can output the command issued
+set -o history
+HISTIGNORE=check
+HISTSIZE=2
+
+# output filenames for capturing stdout and stderr from the command
+typeset STDERR=.stderr_$(basename $0)
+typeset STDOUT=.stdout_$(basename $0)
 
 # save stdout and stderr to our files
-exec 6>&1 7>&2 1>$STDOUT 2>$STDERR
+exec 5>&1 1>$STDOUT
+exec 6>&2 2>$STDERR
 
+##
+# checks the result of a command
+#   $1 (optional) file of expected stdout
+#   $2 (optional) file of expected stderr
+#   $STDOUT - filename of captured stdout
+#   $STDERR - filename of captured stderr
+#
 check() {
 
-   # return stdout and stderr to standard streams
-   exec 1>&6 2>&7
+    # return stdout and stderr to standard streams
+    exec 1>&5
+    exec 2>&6
 
-   # verify stdout of command (stdin to this check)
-   if [ $# -eq 1 ]; then
-       # compare the file whose filename was passed as a parameter to the required output
-       diff $1 <(cat <&3)
-   else
-       # compare the captured stdout to the required output
-       diff $STDOUT <(cat <&3)
-   fi
+    # trace the command
+    echo $(history | head -n 1 | cut -c 8-)
 
-   # verify stderr of command agrees with caught stderr
-   if [ -e /dev/fd/4 ]; then
-       # compare the captured stderr to the required stderr
-       diff $STDERR <(cat <&4)
-   else
-       # make sure the captured stderr is blank
-       [ ! -s $STDERR ]
-   fi
+    # verify expected stderr to the captured stdout
+    if [ $# -ge 1 ]; then
+        # compare the parameter file to the expected output
+        diff $STDOUT $1
 
-   # return to saving stdout and stderr to our files
-   exec 6>&- 7>&- 6>&1 7>&2 1>$STDOUT 2>$STDERR
+    elif [ -e /dev/fd/3 ]; then
+        diff $STDOUT /dev/fd/3
+
+    else
+        # check that the captured stdout is empty
+        [ ! -s $STDOUT ]
+    fi
+
+    # verify expected stderr to the captured stderr
+    if [ $# -ge 2 ]; then
+        # compare the captured stderr to the required stderr
+        diff $STDERR $2
+
+    elif [ -e /dev/fd/4 ]; then
+        diff $STDOUT /dev/fd/4
+
+    else
+        # check that the captured stderr is empty
+        [ ! -s $STDERR ]
+    fi
+
+    # return to capturing stdout and stderr
+    exec 5>&1 1>$STDOUT
+    exec 6>&2 2>$STDERR
 }

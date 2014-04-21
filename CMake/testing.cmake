@@ -39,7 +39,55 @@ macro(addUnitTest TEST_NAME FILE_NAME)
     set_target_properties(${TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endmacro()
 
+#
+# addPythonTest
+# - TEST_NAME the name of the python file.
+# Adds a test that executes the given python file.
+# additional arguments are dependent files that need to be copied.
+#
+#
+macro(addPythonTest TEST_NAME)
 
+    add_test(NAME ${TEST_NAME} COMMAND ${PYTHON_EXECUTABLE} ${TEST_NAME})
+
+if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
+
+    copyDependentFile(${TEST_NAME})
+
+foreach(FILE ${ARGN})
+
+    copyDependentFile(${FILE})
+
+endforeach()
+
+endif()
+
+endmacro()
+
+#
+# addBashTest
+# - TEST_NAME the name of the bash file.
+# Adds a test that executes the given bash file.
+# additional arguments are dependent files that need to be copied.
+#
+#
+macro(addBashTest TEST_NAME)
+
+    add_test(NAME ${TEST_NAME} COMMAND bash ${TEST_NAME})
+
+if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
+
+    copyDependentFile(${TEST_NAME})
+
+foreach(FILE ${ARGN})
+
+    copyDependentFile(${FILE})
+
+endforeach()
+
+endif()
+
+endmacro()
 # 
 # copyDependentFile 
 # This copies a file given as TARGET_NAME to the current bunary directory

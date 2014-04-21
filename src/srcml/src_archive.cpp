@@ -26,10 +26,6 @@
 #include <errno.h>
 #include <string>
 #include <algorithm>
-#include <boost/bind.hpp>
-#include <boost/foreach.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/lambda/lambda.hpp>
 
 // Extension that map to archive types
 struct archive_calls_t { char const * const name; int (*setter)(struct archive *); };
@@ -55,12 +51,12 @@ constexpr bool isequal(char const* s1, char const* s2) {
 constexpr bool islessthanorequal(char const* s1, char const* s2) {
   return *s1 && *s2 ? (*s1 != *s2 ? *s1 < *s2 : islessthanorequal(s1 + 1, s2 + 1)) : !*s1;
 }
-BOOST_STATIC_ASSERT(islessthanorequal("a", "a"));
-BOOST_STATIC_ASSERT(islessthanorequal("a", "b"));
-BOOST_STATIC_ASSERT(!islessthanorequal("b", "a"));
-BOOST_STATIC_ASSERT(islessthanorequal("aa", "aa"));
-BOOST_STATIC_ASSERT(islessthanorequal("aa", "ab"));
-BOOST_STATIC_ASSERT(!islessthanorequal("ab", "aa"));
+static_assert(islessthanorequal("a", "a"), "islessthanorequal failure");
+static_assert(islessthanorequal("a", "b"), "islessthanorequal failure");
+static_assert(!islessthanorequal("b", "a"), "islessthanorequal failure");
+static_assert(islessthanorequal("aa", "aa"), "islessthanorequal failure");
+static_assert(islessthanorequal("aa", "ab"), "islessthanorequal failure");
+static_assert(!islessthanorequal("ab", "aa"), "islessthanorequal failure");
 
 constexpr bool isordered(const archive_calls_t* p) {
     return !(p->name) || !((p + 1)->name) ? true : islessthanorequal(p->name, (p+1)->name) && isordered(p + 1);
@@ -96,21 +92,21 @@ static constexpr archive_calls_t format_calls[] = {
 #endif
 
     { ".shar", archive_write_set_format_shar },
-    { ".tar", archive_write_set_format_pax_restricted },
-    { ".taz", 0 },  // (archive w/ compression)
-    { ".tb2", 0 },  // (archive w/ compression)
-    { ".tbz", 0 },  // (archive w/ compression)
-    { ".tbz2", 0 }, // (archive w/ compression)
-    { ".tgz", 0 },  // (archive w/ compression)
-    { ".tlz", 0 },  // (archive w/ compression)
-    { ".txz", 0 },  // (archive w/ compression)
-    { ".xar", 0 },
-    { ".zip", archive_write_set_format_zip },  // (archive w/ compression)
+    { ".tar",  archive_write_set_format_pax_restricted },
+    { ".taz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
+    { ".tb2",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
+    { ".tbz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
+    { ".tbz2", archive_write_set_format_pax_restricted }, // (archive w/ compression)
+    { ".tgz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
+    { ".tlz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
+    { ".txz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
+    { ".xar",  archive_write_set_format_pax_restricted },
+    { ".zip",  archive_write_set_format_zip },  // (archive w/ compression)
     { NULL, NULL }
 };
 #ifdef __clang__
 #if __has_feature(cxx_constexpr)
-BOOST_STATIC_ASSERT(isordered(format_calls));
+static_assert(isordered(format_calls), "format_calls is not ordered");
 #endif
 #endif
 
@@ -120,15 +116,23 @@ static constexpr archive_calls_t compression_calls[] = {
     { ".bz"  , 0 },
     { ".bz2" , archive_write_set_compression_bzip2 },
     { ".gz"  , archive_write_set_compression_gzip },
-    { ".lz"  , 0 },
+    { ".lz"  , archive_write_set_compression_lzma },
     { ".lzma", archive_write_set_compression_lzma },
+    { ".taz",  archive_write_set_compression_compress },  // (archive w/ compression)
+    { ".tb2",  archive_write_set_compression_bzip2 },  // (archive w/ compression)
+    //{ ".tbz",  archive_write_set_compression_bzip },  // (archive w/ compression)
+    { ".tbz2", archive_write_set_compression_bzip2 }, // (archive w/ compression)
+    { ".tgz",  archive_write_set_compression_gzip },  // (archive w/ compression)
+    { ".tlz",  archive_write_set_compression_lzma },  // (archive w/ compression)
+    { ".txz",  archive_write_set_compression_xz },  // (archive w/ compression)
+    { ".xar",  archive_write_set_compression_xz },
     { ".xz"  , archive_write_set_compression_xz },
     { ".z"   , archive_write_set_compression_compress },
     { NULL, NULL }
 };
 #ifdef __clang__
 #if __has_feature(cxx_constexpr)
-BOOST_STATIC_ASSERT(isordered(compression_calls));
+static_assert(isordered(compression_calls), "compression_calls is not ordered");
 #endif
 #endif
 

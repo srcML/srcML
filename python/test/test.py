@@ -215,7 +215,44 @@ verify_test(asrcml, gen)
 os.remove("a.cpp")
 os.remove("project.xml")
 
+
+asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><f:foo xmlns:s="srcML" s:src="ML" xmlns:f="bar">source</f:foo>
+</unit>
+
+</unit>
+"""
+
+# write by element
+archive = srcml.srcml_archive()
+archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP | srcml.SRCML_OPTION_HASH)
+archive.write_open_memory()
+unit = srcml.srcml_unit(archive)
+unit.set_language("C++")
+archive.write_start_unit(unit);
+archive.write_start_element("f","foo", "bar");
+archive.write_namespace("s", "srcML");
+archive.write_attribute("s", "src", None, "ML");
+archive.write_string("source")
+archive.write_end_element();
+archive.write_string("\n")
+archive.write_end_unit();
+archive.close()
+
+verify_test(asrcml, archive.srcML())
+
 # read/unparse
+
+asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
 
 # filename
 file = open("project.xml", "w")

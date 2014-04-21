@@ -16,7 +16,7 @@
 <unit>
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
     <constructor><name>Class</name><parameter_list>()</parameter_list> <block>{
-        <try>try <block>{}</block> <catch>catch()<block>{}</block></catch></try>
+        <try>try <block>{}</block> <catch>catch<parameter_list>()</parameter_list><block>{}</block></catch></try>
     }</block></constructor>
 }</block></class>
 </unit>
@@ -24,7 +24,7 @@
 <unit>
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
     <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
-        <try>try <block>{}</block><catch>catch()<block>{}</block></catch></try>
+        <try>try <block>{}</block><catch>catch<parameter_list>()</parameter_list><block>{}</block></catch></try>
     }</block></constructor>
 }</block></class>
 </unit>
@@ -32,7 +32,7 @@
 <unit>
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
     <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
-        <try>try <block>{}</block> <catch>catch()<block>{}</block></catch> <finally>finally <block>{}</block></finally></try>
+        <try>try <block>{}</block> <catch>catch<parameter_list>()</parameter_list><block>{}</block></catch> <finally>finally <block>{}</block></finally></try>
     }</block></constructor>
 }</block></class>
 </unit>
@@ -42,7 +42,7 @@
     <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
         <try>try <block>{
             <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-        }</block> <catch>catch()<block>{
+        }</block> <catch>catch<parameter_list>()</parameter_list><block>{
             <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
         }</block></catch> <finally>finally <block>{
             <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
@@ -58,7 +58,7 @@
         <for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>)
           <try>try <block>{
               <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-          }</block> <catch>catch()<block>{
+          }</block> <catch>catch<parameter_list>()</parameter_list><block>{
               <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
           }</block></catch> <finally>finally <block>{
               <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
@@ -73,7 +73,7 @@
         <while>while<condition>(<expr>1</expr>)</condition>
           <try>try <block>{
               <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-          }</block> <catch>catch()<block>{
+          }</block> <catch>catch<parameter_list>()</parameter_list><block>{
               <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
           }</block></catch> <finally>finally <block>{
               <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
@@ -88,7 +88,7 @@
         <if>if<condition>(<expr>1</expr>)</condition><then>
           <try>try <block>{
               <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-          }</block> <catch>catch()<block>{
+          }</block> <catch>catch<parameter_list>()</parameter_list><block>{
               <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
           }</block></catch> <finally>finally <block>{
               <expr_stmt><expr><name>c</name></expr>;</expr_stmt>

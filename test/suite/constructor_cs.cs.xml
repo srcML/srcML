@@ -10,7 +10,7 @@
 <unit>
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
     <constructor><name>Class</name><parameter_list>()</parameter_list> <block>{
-        <try>try <block>{}</block> <catch>catch()<block>{}</block></catch></try>
+        <try>try <block>{}</block> <catch>catch<parameter_list>()</parameter_list><block>{}</block></catch></try>
     }</block></constructor>
 }</block></class>
 </unit>
