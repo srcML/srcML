@@ -136,7 +136,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -5014,6 +5014,8 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
                 startElement(SDECLARATION);
 
         }
+
+        (options { greedy = true; } : { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) && (LA(1) != EXTERN || next_token() == TEMPLATE) }? template_declaration_full set_int[type_count, type_count - 1])*
         variable_declaration_type[type_count]
 ;
 
