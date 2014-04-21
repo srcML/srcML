@@ -659,7 +659,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
 
         // statements that clearly start with a keyword
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != EXTERN || next_token() == TEMPLATE)}? keyword_statements |
+        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS) }? keyword_statements |
 
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
 
@@ -1047,7 +1047,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))*  lead_type_identifier
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier) | template_specifier)*  lead_type_identifier
 
         { 
 
@@ -2068,7 +2068,7 @@ class_declaration[] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
-        (specifier)* CLASS class_post class_header
+        (specifier | template_specifier)* CLASS class_post class_header
 ;
 
 // class preprocessing items
@@ -2099,7 +2099,7 @@ class_preamble[] { ENTRY_DEBUG } :
         // suppress warning probably do to only having ()*
         (options { greedy = true; } : { inLanguage(LANGUAGE_JAVA) }? annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-        (specifier)*
+        (specifier | template_specifier)*
 ;
 
 // a class definition
@@ -3064,7 +3064,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))}?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
-                (specifier | { next_token() == COLON }? SIGNAL)
+                (specifier | template_specifier | { next_token() == COLON }? SIGNAL)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
                         inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
@@ -4000,7 +4000,6 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
-//            (template_specifier { iscompound = true; })*
             (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main)
             (options { greedy = true; } : { look_past_three(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
         )*
@@ -5833,7 +5832,7 @@ template_declaration[] { ENTRY_DEBUG } :
             // start the template
             startElement(STEMPLATE);
         }
-        (template_extern_specifier)* TEMPLATE
+        TEMPLATE
         {
             if(LA(1) == CLASS)
                 startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
@@ -5841,15 +5840,6 @@ template_declaration[] { ENTRY_DEBUG } :
                 startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT | MODE_TEMPLATE_PARAMETER_LIST);
         }
 ;
-
-// template specifiers
-template_extern_specifier{ SingleElement element(this); ENTRY_DEBUG } :
-        {
-            startElement(SFUNCTION_SPECIFIER);
-        }
-
-        EXTERN
-    ;
 
 // start parameter list for templates
 template_param_list[] { ENTRY_DEBUG } :
