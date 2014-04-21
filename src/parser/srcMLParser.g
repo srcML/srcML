@@ -3015,6 +3015,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             type_count = 0;
             type = NONE;
             sawenum = false;
+            sawtemplate = false;
             posin = 0;
             isdestructor = false;           // global flag detected during name matching
             int attribute_count = 0;
