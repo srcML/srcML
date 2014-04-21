@@ -136,19 +136,12 @@ const OPTION_TYPE OPTION_HASH  = ull(1) << __COUNTER__; /* 15 */
 /** option to output a hash attribute */
 const OPTION_TYPE OPTION_WRAP_TEMPLATE  = ull(1) << __COUNTER__; /* 15 */
 
-// end SRCML_OPTIONS
-
 // @src2srcml
 /** output is OPTION_TYPEeractive (good for editing applications) */
 const OPTION_TYPE OPTION_INTERACTIVE = ull(1) << __COUNTER__;
 
 /** ??? @todo check if used */
 const OPTION_TYPE OPTION_XPATH_TOTAL = OPTION_CPP_TEXT_ELSE;
-
-// @src2srcml
-// @srcml2src
-/** terminate after this file */
-const OPTION_TYPE OPTION_TERMINATE = ull(1) << __COUNTER__;
 
 // @src2srcml
 /** expression mode */
@@ -159,19 +152,13 @@ const OPTION_TYPE OPTION_EXPRESSION = ull(1) << __COUNTER__;
 const OPTION_TYPE OPTION_LINE  = ull(1) << __COUNTER__;
 
 // @src2srcml
-/** specify pattern to treat as macro */
-const OPTION_TYPE OPTION_MACRO_PATTERN  = ull(1) << __COUNTER__;
-
-// @src2srcml
-/** input of macro list */
-const OPTION_TYPE OPTION_MACRO_LIST  = ull(1) << __COUNTER__;
-
-// @src2srcml
 /** additional cpp:if/cpp:endif checking */
 const OPTION_TYPE OPTION_CPPIF_CHECK  = ull(1) << __COUNTER__;
 
 // @src2srcml
 /** debug time attribute */
 const OPTION_TYPE OPTION_DEBUG_TIMER  = ull(1) << __COUNTER__;
+
+// end SRCML_OPTIONS
 
 #endif

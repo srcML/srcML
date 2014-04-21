@@ -565,7 +565,7 @@ void srcMLOutput::consume(const char* language, const char* directory, const cha
         if (isoption(OPTION_INTERACTIVE)) {
             xmlTextWriterFlush(xout);
 
-            if(isoption(OPTION_TERMINATE)) break;
+            //if(isoption(OPTION_TERMINATE)) break;
 
         }
 
@@ -746,8 +746,6 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     if(isoption(OPTION_CPP_MARKUP_IF0)) { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_MARKUP_IF0"; }
     if(isoption(OPTION_EXPRESSION))     { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "EXPRESSION"; }
     if(isoption(OPTION_LINE))           { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "LINE"; }
-    if(isoption(OPTION_MACRO_PATTERN))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "MACRO_PATTERN"; }
-    if(isoption(OPTION_MACRO_LIST))     { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "MACRO_LIST"; }
     if(isoption(OPTION_NESTIF))         { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NESTIF"; }
     if(isoption(OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
     if(isoption(OPTION_WRAP_TEMPLATE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "WRAP_TEMPLATE"; }
@@ -811,8 +809,6 @@ void srcMLOutput::setMacroList(std::vector<std::string> & list) {
  * Output the stored user defined macro list meta data.
  */
 void srcMLOutput::outputMacroList() {
-
-    if(!isoption(OPTION_MACRO_LIST)) return;
 
     for(std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); i += 2) {
 

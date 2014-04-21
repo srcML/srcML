@@ -250,10 +250,6 @@ public :
                         archive->options |= OPTION_EXPRESSION;
                     if(option == "LINE")
                         archive->options |= OPTION_LINE;
-                    if(option == "MACRO_PATTERN")
-                        archive->options |= OPTION_MACRO_PATTERN;
-                    if(option == "MACRO_LIST")
-                        archive->options |= OPTION_MACRO_LIST;
                     if(option == "NESTIF")
                         archive->options |= OPTION_NESTIF;
                     if(option == "CPPIF_CHECK")
