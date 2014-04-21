@@ -1258,7 +1258,7 @@ lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         // suppress warning of another case where REFOPS or something is in both alts.
-        (options { warnWhenFollowAmbig = false; } : lambda_capture_modifiers | { LA(1) != RBRACKET }? expression | type_identifier)*
+        (options { generateAmbigWarnings = false;  } : lambda_capture_modifiers | { LA(1) != RBRACKET }? expression | type_identifier)*
 ;
 
 // check and see if the lambda is directly used as a call.
@@ -3365,8 +3365,10 @@ eat_type[int & count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
 // type identifier
 pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
+        // ambigous on template keyword from template specifier and probably class_preamble template
+        (options { generateAmbigWarnings = false; } : 
         // specifiers that occur in a type
-		{ _tokenSet_22.member(LA(1)) }?
+        { _tokenSet_22.member(LA(1)) }?
         specifier | template_specifier |
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
@@ -3379,6 +3381,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
         pure_lead_type_identifier_no_specifiers
+        )
 ;
 
 // type identifier
