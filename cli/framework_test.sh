@@ -86,7 +86,7 @@ check() {
         diff $STDERR $2
 
     elif [ -e /dev/fd/4 ]; then
-        diff $STDOUT /dev/fd/4
+        diff $STDERR /dev/fd/4
 
     else
         # check that the captured stderr is empty
