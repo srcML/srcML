@@ -134,13 +134,13 @@ struct <name><name>CTest1</name><argument_list>&lt;<argument><expr><name>at_Type
 </unit>
 
 <unit>
-
 <decl_stmt><decl><template>template<parameter_list>&lt;<param><type><typename>typename</typename></type> <name>T</name></param>&gt;</parameter_list></template>
-<type><name>T</name></type> <name>pi</name></decl>;</decl_stmt></template>
+<type><name>T</name></type> <name>pi</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
 <decl_stmt><decl><template>template<parameter_list>&lt;<param><type><typename>typename</typename></type> <name>T</name></param>&gt;</parameter_list></template>
 <type><specifier>constexpr</specifier> <name>T</name></type> <name>pi</name> <init>= <expr><call><name>T</name><argument_list>(<argument><expr>3.1415926535897932385</expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
 
 </unit>
