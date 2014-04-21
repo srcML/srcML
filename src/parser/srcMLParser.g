@@ -2097,7 +2097,7 @@ class_preamble[] { ENTRY_DEBUG } :
         // suppress warning probably do to only having ()*
         (options { greedy = true; } : { inLanguage(LANGUAGE_JAVA) }? annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-        ( { LA(1) != TEMPLATE || next_token() != TEMPOPS }? specifier | { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? template_declaration_full)*
+        (specifier | { LA(1) != TEMPLATE || next_token() != TEMPOPS }? template_specifier | { !isoption(parseoptions, OPTION_WRAP_TEMPLATE) }? template_declaration_full)*
 ;
 
 // a class definition
