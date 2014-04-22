@@ -28,14 +28,18 @@
 
 #include <antlr/TokenStream.hpp>
 #include "TokenStream.hpp"
-#include <Options.hpp>
 
+/*
+#include <srcml_types.hpp>
+#include <srcml_macros.hpp>
+#include <srcml.h>
+*/
+ 
 #include <list>
 #include <cassert>
 
 #include "srcMLToken.hpp"
 #include "srcMLParser.hpp"
-#include "Options.hpp"
 #include "ModeStack.hpp"
 
 /**

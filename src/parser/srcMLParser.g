@@ -133,7 +133,8 @@ header "post_include_hpp" {
 #include <stack>
 #include "Language.hpp"
 #include "ModeStack.hpp"
-#include "Options.hpp"
+#include <srcml_types.hpp>
+#include <srcml_macros.hpp>
 #include <srcml.h>
 
 // Macros to introduce trace statements

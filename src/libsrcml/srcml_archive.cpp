@@ -21,6 +21,7 @@
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcml_sax2_reader.hpp>
+#include <srcml_translator.hpp>
 
 #include <srcmlns.hpp>
 

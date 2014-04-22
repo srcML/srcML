@@ -29,6 +29,8 @@
 
 #include <Language.hpp>
 #include <srcMLOutput.hpp>
+#include <srcml_types.hpp>
+#include <srcml_macros.hpp>
 #include <srcml.h>
 
 #include <string>

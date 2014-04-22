@@ -21,17 +21,42 @@
 #ifndef INCLUDED_SRCML_TYPES_HPP
 #define INCLUDED_SRCML_TYPES_HPP
 
-#include <Options.hpp>
+#include <libxml/xmlwriter.h>
+
 #include <Language.hpp>
 #include <language_extension_registry.hpp>
-#include <srcml_translator.hpp>
 
 #include <boost/optional.hpp>
 
 #include <string>
 #include <vector>
 
+#ifdef __GNUC__
+
+/** size of option type in GNU */
+typedef unsigned long long OPTION_TYPE;
+
+#else
+
+/** size of option type in non-GNU */
+typedef unsigned __int64 OPTION_TYPE;
+
+#endif
+
+#ifdef __GNUC__
+
+/** size of options literal in GNU */
+#define ull(a) a##ULL
+
+#else
+
+/** size of options literal in non-GNU */
+#define ull(a) a##i64
+
+#endif
+
 class srcml_sax2_reader;
+class srcml_translator;
 
 /**
  * SRCML_TRANSORM_TYPE
