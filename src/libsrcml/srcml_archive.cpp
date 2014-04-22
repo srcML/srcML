@@ -21,6 +21,7 @@
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcml_sax2_reader.hpp>
+#include <srcml_translator.hpp>
 
 #include <srcmlns.hpp>
 
@@ -764,8 +765,6 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
 
     archive->type = SRCML_ARCHIVE_WRITE;
 
-    if(archive->user_macro_list.size()) archive->options |= OPTION_MACRO_LIST;
-
     try {
 
         archive->translator = new srcml_translator(
@@ -810,8 +809,6 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
 
     archive->type = SRCML_ARCHIVE_WRITE;
 
-    if(archive->user_macro_list.size()) archive->options |= OPTION_MACRO_LIST;
-
     try {
 
         archive->translator = new srcml_translator(
@@ -853,8 +850,6 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
     if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
 
     archive->type = SRCML_ARCHIVE_WRITE;
-
-    if(archive->user_macro_list.size()) archive->options |= OPTION_MACRO_LIST;
 
     try {
 
@@ -901,8 +896,6 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
     if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
 
     archive->type = SRCML_ARCHIVE_WRITE;
-
-    if(archive->user_macro_list.size()) archive->options |= OPTION_MACRO_LIST;
 
     try {
 

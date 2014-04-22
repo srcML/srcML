@@ -21,7 +21,9 @@
 #ifndef INCLUDDED_SRCML_SAX2_UTILITIES_HPP
 #define INCLUDDED_SRCML_SAX2_UTILITIES_HPP
 
-#include <Options.hpp>
+#include <srcml_types.hpp>
+#include <srcml_macros.hpp>
+#include <srcml.h>
 
 #include <libxml/parserInternals.h>
 

@@ -174,13 +174,13 @@ public :
                 result_type = res->children->type;
 
             // output the xml declaration, if needed
-            if (result_type == XML_ELEMENT_NODE && !found && isoption(options, OPTION_XMLDECL))
+            if (result_type == XML_ELEMENT_NODE && !found && isoption(options, SRCML_OPTION_XML_DECL))
                 xml_output_buffer_write_xml_decl(ctxt, buf);
 
             // output the root unit start tag
             // this is only if in per-unit mode and this is the first result found
             // have to do so here because it may be empty
-            if (result_type == XML_ELEMENT_NODE && is_archive && !found && !isoption(options, OPTION_APPLY_ROOT)) {
+            if (result_type == XML_ELEMENT_NODE && is_archive && !found && !isoption(options, SRCML_OPTION_APPLY_ROOT)) {
 
                 // output a root element, just like the one read in
                 // note that this has to be ended somewhere
@@ -207,7 +207,7 @@ public :
             // save the result, but temporarily hide the namespaces since we only want them on the root element
             xmlNodePtr resroot = xmlDocGetRootElement(res);
             xmlNsPtr savens = resroot ? resroot->nsDef : 0;
-            bool turnoff_namespaces = savens && is_archive && !isoption(options, OPTION_APPLY_ROOT);
+            bool turnoff_namespaces = savens && is_archive && !isoption(options, SRCML_OPTION_APPLY_ROOT);
             if (turnoff_namespaces) {
                 xmlNsPtr cur = savens;
                 xmlNsPtr ret = NULL;
@@ -248,7 +248,7 @@ public :
             }
 
             // put some space between this unit and the next one if compound
-            if (result_type == XML_ELEMENT_NODE && is_archive && !isoption(options, OPTION_APPLY_ROOT))
+            if (result_type == XML_ELEMENT_NODE && is_archive && !isoption(options, SRCML_OPTION_APPLY_ROOT))
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
             // finished with the result of the transformation
@@ -268,7 +268,7 @@ public :
     virtual void end_output() {
 
         // root unit end tag
-        if (result_type == XML_ELEMENT_NODE && found && is_archive && !isoption(options, OPTION_APPLY_ROOT)) {
+        if (result_type == XML_ELEMENT_NODE && found && is_archive && !isoption(options, SRCML_OPTION_APPLY_ROOT)) {
 
             std::string end_unit = "</";
             if(root_prefix) {
@@ -282,7 +282,7 @@ public :
 
         } else if (result_type == XML_ELEMENT_NODE && found && !is_archive) {
             xmlOutputBufferWriteString(buf, "\n");
-        }else if (result_type == XML_ELEMENT_NODE && found && isoption(options, OPTION_APPLY_ROOT)) {
+        }else if (result_type == XML_ELEMENT_NODE && found && isoption(options, SRCML_OPTION_APPLY_ROOT)) {
             xmlOutputBufferWriteString(buf, "\n");
         }
 

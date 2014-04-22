@@ -218,10 +218,10 @@ public :
             // node set result
         case XPATH_NODESET:
 
-            if (needroot /*&& !isoption(options, OPTION_APPLY_ROOT)*/) {
+            if (needroot /*&& !isoption(options, SRCML_OPTION_APPLY_ROOT)*/) {
 
                 // xml declaration
-                if (isoption(options, OPTION_XMLDECL))
+                if (isoption(options, SRCML_OPTION_XML_DECL))
                     xml_output_buffer_write_xml_decl(ctxt, buf);
 
                 // output a root element, just like the one read in
@@ -252,7 +252,7 @@ public :
 
             // may not have any values or results
             result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
-            if (isoption(options, OPTION_APPLY_ROOT) && result_size == 0) {
+            if (isoption(options, SRCML_OPTION_APPLY_ROOT) && result_size == 0) {
 
                 if(meta_tags->size())
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
@@ -350,7 +350,7 @@ public :
                     // create a new list of namespaces
                     // skip over the namespaces on the root
                     xmlNsPtr savens = onode->nsDef;
-                    if(!isoption(options, OPTION_APPLY_ROOT)) {
+                    if(!isoption(options, SRCML_OPTION_APPLY_ROOT)) {
                         onode->nsDef = savens;
                         for (std::vector<const xmlChar*>::size_type i = 0; i < unit_dom::rootsize / 2; ++i)
                             onode->nsDef = onode->nsDef->next;
@@ -369,7 +369,7 @@ public :
                     // input was not an archive, xpath result is a unit
 
                     // namespace list only need the cpp namespace, if it exists
-                    if(!isoption(options, OPTION_APPLY_ROOT)) {
+                    if(!isoption(options, SRCML_OPTION_APPLY_ROOT)) {
                         xmlNsPtr savens = onode->nsDef;
                         for (onode->nsDef = savens; onode->nsDef; onode->nsDef = onode->nsDef->next)
                             if (strcmp((const char*) onode->nsDef->href, SRCML_CPP_NS_URI) == 0)
@@ -430,7 +430,7 @@ public :
 
             // numeric result
         case XPATH_NUMBER:
-            if (!isoption(options, OPTION_XPATH_TOTAL)) {
+            if (!isoption(options, SRCML_OPTION_XPATH_TOTAL)) {
                 std::ostringstream out;
                 if ((int)result_nodes->floatval == result_nodes->floatval)
                     out << (int)result_nodes->floatval;
@@ -445,7 +445,7 @@ public :
 
             // boolean result
         case XPATH_BOOLEAN:
-            if (!isoption(options, OPTION_XPATH_TOTAL))
+            if (!isoption(options, SRCML_OPTION_XPATH_TOTAL))
                 xmlOutputBufferWriteString(buf, result_nodes->boolval ? "true\n" : "false\n");
 
             result_bool |= (result_nodes->boolval != 0);
@@ -546,7 +546,7 @@ public :
                 full_unit += "unit>\n";
 
                 // root unit end tag
-                if (!isoption(options, OPTION_APPLY_ROOT))
+                if (!isoption(options, SRCML_OPTION_APPLY_ROOT))
                     xmlOutputBufferWriteString(buf, found || meta_tags->size() ? full_unit.c_str() : "/>\n");
                 else if(found)
                     xmlOutputBufferWriteString(buf, full_unit.c_str());
@@ -558,7 +558,7 @@ public :
             }
 
         case XPATH_NUMBER:
-            if (isoption(options, OPTION_XPATH_TOTAL)) {
+            if (isoption(options, SRCML_OPTION_XPATH_TOTAL)) {
                 std::ostringstream out;
                 if ((int)total == total)
                     out << (int)total;
@@ -572,7 +572,7 @@ public :
 
             // boolean result
         case XPATH_BOOLEAN:
-            if (isoption(options, OPTION_XPATH_TOTAL))
+            if (isoption(options, SRCML_OPTION_XPATH_TOTAL))
                 xmlOutputBufferWriteString(buf, result_bool ? "true\n" : "false\n");
             break;
 

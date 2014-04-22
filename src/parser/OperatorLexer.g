@@ -107,7 +107,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
                 // a preprocessor line will end at the right spot
                 onpreprocline = true; 
 
-                if(isoption(options, OPTION_LINE)) {
+                if(isoption(options, SRCML_OPTION_LINE)) {
                     int start = mark();
                     ++inputState->guessing;
                     if(LA(1) == 'l') {

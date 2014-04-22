@@ -1,6 +1,17 @@
 #ifndef INCLUDED_SRCML_MACROS_HPP
 #define INCLUDED_SRCML_MACROS_HPP
 
+/**
+ * isoption
+ * @param options the set options
+ * @param flag options to query if set
+ *
+ * Predicate to query if options flag are set in options.
+ *
+ * @returns if options flag are set in options.
+ */
+#define isoption(options, flag) (((options) & (flag)) > 0)
+
 #ifndef _MSC_BUILD
 
 #define OPEN(FILE, ACCESS, PERM) open(FILE, ACCESS, PERM)

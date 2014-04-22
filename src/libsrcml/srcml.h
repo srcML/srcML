@@ -100,10 +100,10 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_DEBUG             1<<4
     /** Include line/column position attributes */
 #define SRCML_OPTION_POSITION          1<<5
-    /** Markup preprocessor elements (default for C, C++) */
-#define SRCML_OPTION_CPP               1<<6
     /** Markup preprocessor elements (default for C, C++, C#) */
-#define SRCML_OPTION_CPP_NOMACRO       1<<7
+#define SRCML_OPTION_CPP_NOMACRO       1<<6
+    /** Markup preprocessor elements (default for C, C++) */
+#define SRCML_OPTION_CPP               1 << 6 | 1<<7 
     /** Issue an XML declaration */
 #define SRCML_OPTION_XML_DECL          1<<8
     /** Include any XML namespace declarations */
@@ -122,6 +122,18 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_HASH              1<<15
     /** Wrap function/classes/etc with templates (default: on) */
 #define SRCML_OPTION_WRAP_TEMPLATE     1<<16
+    /** output is interactive (good for editing applications) */
+#define SRCML_OPTION_INTERACTIVE       1<<17
+    /** Not sure what this used for */
+#define SRCML_OPTION_XPATH_TOTAL       1<<18
+    /** expression mode */
+#define SRCML_OPTION_EXPRESSION        1<<19
+    /** Extra processing of @code#line@endcode for position information */
+#define SRCML_OPTION_LINE              1<<20
+/** additional cpp:if/cpp:endif checking */
+#define SRCML_OPTION_CPPIF_CHECK       1<<21
+/** debug time attribute */
+#define SRCML_OPTION_DEBUG_TIMER       1<<22
 
     /* srcml status messages */
     /** Return status indicating no errors */
