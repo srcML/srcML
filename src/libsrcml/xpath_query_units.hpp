@@ -140,7 +140,7 @@ public :
 
         /** create a variable for dynamically load from library */
         typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
-        #define dlsymvar(type, name) type name;  *(void **)(&name) = dlsym(handle, #name)
+        #define dlsymvar(type, name) type name;  *(VOIDPTR *)(&name) = dlsym(handle, #name)
 
 
         void* handle = dlopen("libexslt.so", RTLD_LAZY);
