@@ -309,6 +309,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 void xsltsrcMLRegister () {
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+    typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
     typedef int (*xsltRegisterExtModuleFunction_function) (const xmlChar *, const xmlChar *, xmlXPathFunction);
     void* handle = dlopen("libexslt.so", RTLD_LAZY);
     if (!handle) {
@@ -324,7 +325,7 @@ void xsltsrcMLRegister () {
 
     dlerror();
     xsltRegisterExtModuleFunction_function xsltRegisterExtModuleFunction;
-    *(void **)(&xsltRegisterExtModuleFunction) = dlsym(handle, "xsltRegisterExtModuleFunction");
+    *(VOIDPTR *)(&xsltRegisterExtModuleFunction) = dlsym(handle, "xsltRegisterExtModuleFunction");
     char* error;
     if ((error = dlerror()) != NULL) {
         dlclose(handle);
