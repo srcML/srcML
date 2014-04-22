@@ -11,7 +11,7 @@ scp ~/Dropbox/srcML/Unix/Fedora19-64/srcML.tar.gz fedora19test64:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora20-64/srcML.tar.gz fedora20test64:/srcML
 
 scp ~/Dropbox/srcML/Unix/openSUSE13.1/srcML.tar.gz suse13test:/srcML
-scp  ~/Dropbox/srcML/Unix/openSUSE13.1-64/srcML.tar.gz suse13test64:/srcML
+scp ~/Dropbox/srcML/Unix/openSUSE13.1-64/srcML.tar.gz suse13test64:/srcML
 
 scp ~/Dropbox/srcML/Unix/Ubuntu10.04/srcML.tar.gz ubuntu10test:/srcML
 scp ~/Dropbox/srcML/Unix/Ubuntu12.04/srcML.tar.gz ubuntu12test:/srcML
@@ -24,6 +24,9 @@ scp ~/Dropbox/srcML/Unix/Ubuntu14.04-64/srcML.tar.gz ubuntu14test64:/srcML
 #scp ~/Dropbox/srcML/Unix/MacLion/srcML.tar.gz macliontest:/srcML
 #scp ~/Dropbox/srcML/Unix/MacMountainLion/srcML.tar.gz macmountainliontest:/srcML
 #scp ~/Dropbox/srcML/Unix/MacMavericks/srcML.tar.gz macmaverickstest:/srcML
+
+scp ~/Dropbox/srcML/Unix/Mint16/srcML.tar.gz mint16test:/srcML
+scp ~/Dropbox/srcML/Unix/Mint16-64/srcML.tar.gz mint16test64:/srcML
 
 ./sshall.py --test 'bash -c "cd /srcML; tar xvf srcML.tar.gz; mkdir -p bin; cp srcML/bin/* srcML/lib/* bin/"'
 ./sshall.py --test 'bash -c "cd /srcML/test/; rm -f srcMLTestReport*; make clean; cd suite; make; cd ..; ./testsuite.py"'

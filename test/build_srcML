@@ -47,6 +47,11 @@ scp ubuntu14build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu14.04-64
 #scp macmavericksbuild:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/MacMavericks/
 #scp macmavericksbuild:/srcML/dist/srcML*.dmg ~/Dropbox/srcML/Unix/MacMavericks/
 
+scp mint16build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Mint16
+scp mint16build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Mint16
+scp mint16build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Mint16-64
+scp mint16build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Mint16-64
+
 ./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML; git clean -fdx; cp -r ~/dlls .; mingw32-cmake .; make -j2; cpack"'
 ./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML/; cpack -G NSIS"'
 ./sshall.py --fedora --build --20 --~64 'bash -c "chown -R srcml:srcml /srcML"'
