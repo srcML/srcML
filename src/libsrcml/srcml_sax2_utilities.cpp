@@ -149,11 +149,11 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
 void dlexsltRegisterAll(void * handle) {
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+    typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
     typedef void (*exsltRegisterAll_function)();
-
     dlerror();
     exsltRegisterAll_function exsltRegisterAll;
-    *(void **)(&exsltRegisterAll) = dlsym(handle, "exsltRegisterAll");
+    *(VOIDPTR *)(&exsltRegisterAll) = dlsym(handle, "exsltRegisterAll");
     char* error;
     if ((error = dlerror()) != NULL) {
         dlclose(handle);
