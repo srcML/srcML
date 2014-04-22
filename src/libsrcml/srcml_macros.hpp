@@ -10,7 +10,7 @@
  *
  * @returns if options flag are set in options.
  */
-#define isoption(options, flag) ((flag & options) > 0)
+#define isoption(options, flag) (((options) & (flag)) > 0)
 
 #ifndef _MSC_BUILD
 
