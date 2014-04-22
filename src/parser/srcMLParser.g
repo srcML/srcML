@@ -2974,7 +2974,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         type = DESTRUCTOR_DECL;
 
     // declaration form
-    else if (type == FUNCTION && fla == TERMINATE)
+    else if (type == FUNCTION && (fla == TERMINATE || fla == COMMA))
         type = FUNCTION_DECL;
 
     // we actually have a macro and then a constructor
@@ -5761,7 +5761,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
         }
         (
 
-            { pattern_check(stmt_type, secondtoken, type_count, true) && stmt_type == FUNCTION }?
+            { pattern_check(stmt_type, secondtoken, type_count, true) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION) }?
             function_declaration[type_count]
 
             function_identifier // pointer_name_grammar
