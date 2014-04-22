@@ -23,6 +23,7 @@ add_subdirectory(srcml)
 
 file(GLOB SAX2FRAMEWORK_HEADERS SAX2Framework/*.hpp)
 file(GLOB SAX2FRAMEWORK_SOURCE SAX2Framework/*.cpp)
+add_library(sax2framework OBJECT ${SAX2FRAMEWORK_SOURCE} ${SAX2FRAMEWORK_HEADERS})
 
 # buildLib
 #  Used to help with the creation of the srcML library.
@@ -31,8 +32,7 @@ file(GLOB SAX2FRAMEWORK_SOURCE SAX2Framework/*.cpp)
 # 
 macro(buildLib LIB_NAME LIB_TYPE)
 
-    add_library(${LIB_NAME} ${LIB_TYPE} $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml>
-     ${SAX2FRAMEWORK_SOURCE} ${SAX2FRAMEWORK_HEADERS})
+    add_library(${LIB_NAME} ${LIB_TYPE} $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:sax2framework>)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_DEBUG "/SAFESEH:NO")
