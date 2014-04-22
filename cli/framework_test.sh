@@ -48,6 +48,8 @@ typeset STDOUT=.stdout_$(basename $0)
 exec 5>&1 1>$STDOUT
 exec 6>&2 2>$STDERR
 
+define() { IFS= read -r -d '' ${1} || true; }
+
 ##
 # checks the result of a command
 #   $1 (optional) file of expected stdout
@@ -70,7 +72,8 @@ check() {
         diff $STDOUT $1
 
     elif [ -e /dev/fd/3 ]; then
-        diff $STDOUT /dev/fd/3
+        # redirection using immediate here document (<<) adds newline
+        diff $STDOUT <(perl -0 -pe 's/\n\n$/\n/m' /dev/fd/3)
 
     else
         # check that the captured stdout is empty
@@ -83,7 +86,7 @@ check() {
         diff $STDERR $2
 
     elif [ -e /dev/fd/4 ]; then
-        diff $STDOUT /dev/fd/4
+        diff $STDERR /dev/fd/4
 
     else
         # check that the captured stderr is empty

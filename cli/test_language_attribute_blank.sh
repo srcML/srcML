@@ -3,11 +3,11 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-output=$(cat << 'STDOUT'
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
-</unit>
-STDOUT)
+define output <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+	</unit>
+	STDOUT
 
 # test case
 srcml -l C++ <<< ""
@@ -34,11 +34,11 @@ srcml --language='C++' <<< ""
 
 check 3<<< "$output"
 
-output=$(cat << 'STDOUT'
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C">
-</unit>
-STDOUT)
+define output <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C">
+	</unit>
+	STDOUT
 
 # test case
 srcml --language='C' <<< ""

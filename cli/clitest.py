@@ -1747,7 +1747,7 @@ check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, optio
 check([src2srcml, option.OPERATOR_FLAG, option.LITERAL_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp'], "", fsrcml)
 if sys.platform != 'cygwin' :
         check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.LITERAL_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-         validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.LITERAL_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
