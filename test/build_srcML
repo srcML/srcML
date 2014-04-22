@@ -8,6 +8,7 @@
 ./sshall.py --fedora --build 'bash -c "cd /srcML/; cpack -G RPM"'
 ./sshall.py --suse --build 'bash -c "cd /srcML/; cpack -G RPM"'
 ./sshall.py --ubuntu --build 'bash -c "cd /srcML/; cpack -G DEB"'
+./sshall.py --mint --build 'bash -c "cd /srcML/; cpack -G DEB"'
 #./sshall.py --mac --build 'bash -c "cd /srcML/; cpack -G PackageMaker"'
 ./sshall.py --build 'bash -c "chown -R srcml:srcml /srcML"'
 
