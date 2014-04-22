@@ -36,6 +36,8 @@
 #include <unit_dom.hpp>
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
+typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
+
 typedef xmlDocPtr (*xsltApplyStylesheetUser_function) (xsltStylesheetPtr,xmlDocPtr,const char **,const char *, FILE *,
                                                        xsltTransformContextPtr);
 typedef xmlDocPtr (*xsltApplyStylesheet_function) (xsltStylesheetPtr,xmlDocPtr,const char **);
@@ -92,14 +94,14 @@ public :
         }
 
         dlerror();
-        *(void **)(&xsltApplyStylesheetUserDynamic) = dlsym(handle, "xsltApplyStylesheetUser");
+        *(VOIDPTR *)(&xsltApplyStylesheetUserDynamic) = dlsym(handle, "xsltApplyStylesheetUser");
         char* error;
         if ((error = dlerror()) != NULL) {
             dlclose(handle);
             return;
         }
         dlerror();
-        *(void **)(&xsltApplyStylesheetDynamic) = dlsym(handle, "xsltApplyStylesheet");
+        *(VOIDPTR *)(&xsltApplyStylesheetDynamic) = dlsym(handle, "xsltApplyStylesheet");
         if ((error = dlerror()) != NULL) {
             dlclose(handle);
             return;

@@ -44,9 +44,6 @@
 #include <dlfcn.h>
 #endif
 
-/** create a variable for dynamically load from library */
-#define dlsymvar(type, name) type name;  *(void **)(&name) = dlsym(handle, #name)
-
 #ifdef WIN32
 #include <io.h>
 #define snprintf _snprintf
@@ -141,6 +138,11 @@ public :
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
         typedef int (*exsltXpathCtxtRegister)(xmlXPathContextPtr, const xmlChar*);
 
+        /** create a variable for dynamically load from library */
+        typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
+        #define dlsymvar(type, name) type name;  *(void **)(&name) = dlsym(handle, #name)
+
+
         void* handle = dlopen("libexslt.so", RTLD_LAZY);
         if (!handle) {
             handle = dlopen("libexslt.so.0", RTLD_LAZY);
@@ -195,6 +197,8 @@ public :
 
             }
         }
+
+        #undef dlsymvar
 #endif
 #endif
 

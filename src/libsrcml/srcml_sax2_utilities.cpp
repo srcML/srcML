@@ -189,6 +189,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     xmlInitParser();
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+    typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
     typedef xsltStylesheetPtr (*xsltParseStylesheetDoc_function) (xmlDocPtr);
     typedef void (*xsltCleanupGlobals_function)();
     typedef void (*xsltFreeStylesheet_function)(xsltStylesheetPtr);
@@ -210,7 +211,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 
     dlerror();
     xsltParseStylesheetDoc_function xsltParseStylesheetDoc;
-    *(void **)(&xsltParseStylesheetDoc) = dlsym(handle, "xsltParseStylesheetDoc");
+    *(VOIDPTR *)(&xsltParseStylesheetDoc) = dlsym(handle, "xsltParseStylesheetDoc");
     char* error;
     if ((error = dlerror()) != NULL) {
         dlclose(handle);
@@ -219,7 +220,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 
     dlerror();
     xsltCleanupGlobals_function xsltCleanupGlobals;
-    *(void **)(&xsltCleanupGlobals) = dlsym(handle, "xsltCleanupGlobals");
+    *(VOIDPTR *)(&xsltCleanupGlobals) = dlsym(handle, "xsltCleanupGlobals");
     if ((error = dlerror()) != NULL) {
         dlclose(handle);
         return SRCML_STATUS_ERROR;
@@ -227,7 +228,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 
     dlerror();
     xsltFreeStylesheet_function xsltFreeStylesheet;
-    *(void **)(&xsltFreeStylesheet) = dlsym(handle, "xsltFreeStylesheet");
+    *(VOIDPTR *)(&xsltFreeStylesheet) = dlsym(handle, "xsltFreeStylesheet");
     if ((error = dlerror()) != NULL) {
         dlclose(handle);
         return SRCML_STATUS_ERROR;
