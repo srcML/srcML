@@ -100,10 +100,10 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_DEBUG             1<<4
     /** Include line/column position attributes */
 #define SRCML_OPTION_POSITION          1<<5
-    /** Markup preprocessor elements (default for C, C++) */
-#define SRCML_OPTION_CPP               1<<6
     /** Markup preprocessor elements (default for C, C++, C#) */
-#define SRCML_OPTION_CPP_NOMACRO       1<<7
+#define SRCML_OPTION_CPP_NOMACRO       1<<6
+    /** Markup preprocessor elements (default for C, C++) */
+#define SRCML_OPTION_CPP               1 << 6 | 1<<7 
     /** Issue an XML declaration */
 #define SRCML_OPTION_XML_DECL          1<<8
     /** Include any XML namespace declarations */

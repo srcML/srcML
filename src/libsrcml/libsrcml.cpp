@@ -24,11 +24,11 @@
 
 #include <srcml.h>
 #include <srcml_types.hpp>
+#include <srcml_macros.hpp>
 #include <srcml_sax2_utilities.hpp>
 
 #include <Language.hpp>
 #include <language_extension_registry.hpp>
-#include <Options.hpp>
 #include <srcmlns.hpp>
 
 #include <cstring>

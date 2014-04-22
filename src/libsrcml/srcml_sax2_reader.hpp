@@ -25,7 +25,9 @@
 
 #include <srcMLControlHandler.hpp>
 
-#include <Options.hpp>
+#include <srcml_types.hpp>
+#include <srcml_macros.hpp>
+#include <srcml.h>
 
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>

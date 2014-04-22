@@ -23,12 +23,13 @@
 
 #include <srcMLHandler.hpp>
 #include <srcml_types.hpp>
+#include <srcml_macros.hpp>
+#include <srcml.h>
 
 #include <libxml/parser.h>
 #include <stdio.h>
-#include <Options.hpp>
 #include <srcmlns.hpp>
-#include <srcml.h>
+
 
 #include <string>
 #include <vector>
