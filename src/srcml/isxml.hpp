@@ -26,6 +26,7 @@
 #ifndef _MSC_BUILD 
 #include <unistd.h>
 #else
+#define ssize_t int
 #include <io.h>
 #endif
 
