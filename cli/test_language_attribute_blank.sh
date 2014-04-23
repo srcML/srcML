@@ -17,6 +17,8 @@ check 3<<< "$output"
 # test case
 srcml --language C++ <<< ""
 
+exit
+
 check 3<<< "$output"
 
 # test case
