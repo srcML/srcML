@@ -27,6 +27,12 @@
 #pragma GCC diagnostic pop
 #include <boost/foreach.hpp>
 
+#ifdef _MSC_BUILD  
+#include <io.h>
+#include <fcntl.h>
+#include <windows.h>
+#endif
+
 void srcml_execute(const srcml_request_t& srcml_request,
                    std::list<process_srcml>& pipeline,
                    const srcml_input_t& input_sources,
