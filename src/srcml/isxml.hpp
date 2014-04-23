@@ -23,7 +23,11 @@
 #ifndef INCLUDED_IS_XML_HPP
 #define INCLUDED_IS_XML_HPP
 
+#ifndef _MSC_BUILD 
 #include <unistd.h>
+#else
+#include <io.h>
+#endif
 
 // determine if XML from first four bytes in almost any encoding
 bool isxml(unsigned char ar[], ssize_t size);
