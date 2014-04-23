@@ -34,7 +34,7 @@
 #define READ(FILE, BUF, NUM) _read(FILE, BUF, NUM)
 #define WRITE(FILE, BUF, NUM) _write(FILE, BUF, NUM)
 
-#define UNLINK(FILE) _unlink
+#define UNLINK(FILE) _unlink(FILE)
 
 #define STRDUP _strdup
 
