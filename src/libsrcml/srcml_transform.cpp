@@ -327,7 +327,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
         int transform_fd = mkstemp(transform_filename);
 #else
         MKTEMP(transform_filename);
-        int transform_fd = OPEN(transform_filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+        int transform_fd = OPEN(transform_filename, O_WRONLY | O_CREAT | O_TRUNC, _S_IREAD | _S_IWRITE);
 #endif
 
         xmlParserInputBufferPtr pinput = 0;
