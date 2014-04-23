@@ -1,0 +1,2053 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+1 src2srcml -l C++
+2 src2srcml -l C++ -g
+3 src2srcml -l C++ --debug
+4 src2srcml -l C++ -l C++
+5 src2srcml -l C++ --language C++
+6 src2srcml -l C++ --language=C++
+7 src2srcml -l C++ -l C
+8 src2srcml -l C++ --language C
+9 src2srcml -l C++ --language=C
+10 src2srcml -l C++ -l Java
+11 src2srcml -l C++ --language Java
+12 src2srcml -l C++ --language=Java
+13 src2srcml -l C++ -f foo
+14 src2srcml -l C++ --filename foo
+15 src2srcml -l C++ --filename=foo
+16 src2srcml -l C++ -f bar/foo
+17 src2srcml -l C++ --filename bar/foo
+18 src2srcml -l C++ --filename=bar/foo
+19 src2srcml -l C++ -f foo -d bar
+20 src2srcml -l C++ -d bar -f foo
+21 src2srcml -l C++ -d bar
+22 src2srcml -l C++ --directory bar
+23 src2srcml -l C++ --directory=bar
+24 src2srcml -l C++ -s 1.0
+25 src2srcml -l C++ --src-version 1.0
+26 src2srcml -l C++ --src-version=1.0
+27 src2srcml -l C++ -x ISO-8859-1
+28 src2srcml -l C++ --encoding ISO-8859-1
+29 src2srcml -l C++ --encoding=ISO-8859-1
+30 src2srcml -l C++
+31 src2srcml -l C++
+32 src2srcml -l C++ - -o sub/a.cpp.xml
+33 src2srcml -l C++ - -o sub/b.cpp.xml
+34 src2srcml sub/a.cpp sub/b.cpp -o -
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+35 src2srcml --archive sub/a.cpp -o -
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+36 src2srcml --files-from filelistab
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+37 srcml2src 
+38 srcml2src sub/a.cpp.xml
+39 srcml2src -l
+40 srcml2src --language
+41 srcml2src -d
+42 srcml2src --directory
+43 srcml2src -f
+44 srcml2src --filename
+45 srcml2src -s
+46 srcml2src --src-version
+47 srcml2src -x
+48 srcml2src --encoding
+49 srcml2src -l
+50 srcml2src --language
+51 srcml2src -d
+52 srcml2src --directory
+53 srcml2src -f
+54 srcml2src --filename
+55 srcml2src -s
+56 srcml2src --src-version
+57 srcml2src -l
+58 srcml2src --language
+59 srcml2src -d
+60 srcml2src --directory
+61 srcml2src -f
+62 srcml2src --filename
+63 srcml2src -s
+64 srcml2src --src-version
+65 srcml2src --units
+66 srcml2src --units
+67 srcml2src --units
+68 srcml2src -U 1
+69 srcml2src --unit 1
+70 srcml2src --unit=1
+71 srcml2src --unit 1 -
+72 srcml2src -U 2
+73 srcml2src --unit 2
+74 srcml2src --unit=2
+75 srcml2src --unit 2
+76 srcml2src --xml --unit 1 -
+77 srcml2src --xml --unit 1
+78 srcml2src --xml --unit 2 -
+79 srcml2src --xml --unit 2
+80 srcml2src --to-dir=.
+Status error:   1 ['../../bin/srcml2src', '--to-dir=.']
+81 srcml2src --to-dir=.
+Status error:   1 ['../../bin/srcml2src', '--to-dir=.']
+82 srcml2src --xml --unit 1 -
+83 srcml2src --xml --unit 1
+84 srcml2src --xml --unit 1 --filename
+85 srcml2src --xml --unit 2 --filename
+86 srcml2src --xml --unit 1 --directory
+87 srcml2src --xml --unit 2 --directory
+88 srcml2src --xml --unit 1 --language
+89 srcml2src --xml --unit 2 --language
+90 srcml2src --xml --unit 1 -
+91 srcml2src --xml --unit 1
+92 srcml2src --xml --unit 2 -
+93 srcml2src --xml --unit 2
+94 srcml2src --xml --unit 3 -
+95 srcml2src --xml --unit 3
+96 srcml2src --xml --unit 1 --filename
+97 srcml2src --xml --unit 2 --filename
+98 srcml2src --xml --unit 1 --directory
+99 srcml2src --xml --unit 2 --directory
+100 srcml2src --xml --unit 1 --language
+101 srcml2src --xml --unit 2 --language
+102 Status:  4 	src2srcml -l C++ --src-encoding=ISO foobar
+103 Status:  4 	src2srcml -l C++ --encoding=ISO foobar
+104 Status:  6 	src2srcml --language Python++ foobar
+105 Status:  7 	src2srcml --language
+106 Status:  8 	src2srcml -l C++ --filename
+107 Status:  9 	src2srcml -l C++ --directory
+108 Status:  10 	src2srcml -l C++ --src-version
+109 Status:  11 	src2srcml -l C++ --src-encoding
+110 Status:  12 	src2srcml -l C++ --encoding
+111 Status:  2 	srcml2src foobar
+112 Status:  3 	srcml2src --strip foobar
+113 Status:  4 	srcml2src --src-encoding=ISO
+114 Status:  11 	srcml2src --src-encoding
+115 Status:  13 	srcml2src --unit
+116 Status:  14 	srcml2src --unit 3
+117 Status:  14 	srcml2src --unit 3 --xml
+118 Status:  14 	srcml2src --unit 3 --filename
+119 Status:  14 	srcml2src --unit 3 --directory
+120 Status:  14 	srcml2src --unit 3 --src-version
+121 Status:  15 	srcml2src --xml --src-encoding UTF-8 foobar
+122 src2srcml -l C++
+ERROR
+input|
+#if A
+break;
+#else
+return;
+#endif
+|
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<return>return;</return>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<Jš>#<Jš>if</Jš> <expr><name>A</name></expr></Jš>
+<break>break;</break>
+<Jš>#<Jš>else</Jš></Jš>
+<return>return;</return>
+<Jš>#<Jš>endif</Jš></Jš>
+</unit>
+|
+123 src2srcml -l C++ --cpp-markup-else
+ERROR
+input|
+#if A
+break;
+#else
+return;
+#endif
+|
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<return>return;</return>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<ú}>#<ú}>if</ú}> <expr><name>A</name></expr></ú}>
+<break>break;</break>
+<ú}>#<ú}>else</ú}></ú}>
+<return>return;</return>
+<ú}>#<ú}>endif</ú}></ú}>
+</unit>
+|
+124 src2srcml -l C++ --cpp-text-else
+ERROR
+input|
+#if A
+break;
+#else
+return;
+#endif
+|
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+return;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<z¸>#<z¸>if</z¸> <expr><name>A</name></expr></z¸>
+<break>break;</break>
+<z¸>#<z¸>else</z¸></z¸>
+return;
+<z¸>#<z¸>endif</z¸></z¸>
+</unit>
+|
+125 Status:  15 	src2srcml -l C++ --cpp-markup-else --cpp-text-else foobar
+126 Status:  15 	src2srcml -l C++ --cpp-text-else --cpp-markup-else foobar
+127 src2srcml -l C++
+ERROR
+input|
+#if 0
+break;
+#endif
+|
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+break;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<ªÝ>#<ªÝ>if</ªÝ> <expr>0</expr></ªÝ>
+break;
+<ªÝ>#<ªÝ>endif</ªÝ></ªÝ>
+</unit>
+|
+128 src2srcml -l C++ --cpp-text-if0
+ERROR
+input|
+#if 0
+break;
+#endif
+|
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+break;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<Ú0>#<Ú0>if</Ú0> <expr>0</expr></Ú0>
+break;
+<Ú0>#<Ú0>endif</Ú0></Ú0>
+</unit>
+|
+129 src2srcml -l C++ --cpp-markup-if0
+ERROR
+input|
+#if 0
+break;
+#endif
+|
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+<break>break;</break>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<ª™>#<ª™>if</ª™> <expr>0</expr></ª™>
+<break>break;</break>
+<ª™>#<ª™>endif</ª™></ª™>
+</unit>
+|
+130 Status:  15 	src2srcml -l C++ --cpp-markup-if0 --cpp-text-if0 foobar
+131 Status:  15 	src2srcml -l C++ --cpp-text-if0 --cpp-markup-if0 foobar
+132 src2srcml -l C++ --xmlns=http://www.sdml.info/srcML/src
+133 src2srcml -l C++ --xmlns:cpp=http://www.sdml.info/srcML/cpp
+134 src2srcml -l C++ --xmlns=http://www.sdml.info/srcML/src --xmlns:cpp=http://www.sdml.info/srcML/cpp
+135 src2srcml -l C++ --debug --xmlns=http://www.sdml.info/srcML/src --xmlns:cpp=http://www.sdml.info/srcML/cpp --xmlns:err=http://www.sdml.info/srcML/srcerr
+136 src2srcml -l C++ --debug --xmlns=http://www.sdml.info/srcML/src --xmlns:cpp=http://www.sdml.info/srcML/cpp
+137 src2srcml -l C++ --debug --xmlns=http://www.sdml.info/srcML/src --xmlns:err=http://www.sdml.info/srcML/srcerr
+138 src2srcml -l C++ --debug --xmlns:cpp=http://www.sdml.info/srcML/cpp --xmlns:err=http://www.sdml.info/srcML/srcerr
+139 src2srcml -l C++ --xmlns:src=http://www.sdml.info/srcML/src --xmlns=http://www.sdml.info/srcML/cpp
+140 srcml2src -p http://www.sdml.info/srcML/src
+141 srcml2src --prefix http://www.sdml.info/srcML/src
+142 srcml2src --prefix=http://www.sdml.info/srcML/src
+143 srcml2src -p http://www.sdml.info/srcML/cpp
+144 srcml2src --prefix http://www.sdml.info/srcML/cpp
+145 srcml2src --prefix=http://www.sdml.info/srcML/cpp
+146 srcml2src -p http://www.sdml.info/srcML/literal
+147 srcml2src --prefix http://www.sdml.info/srcML/literal
+148 srcml2src --prefix=http://www.sdml.info/srcML/literal
+149 srcml2src -p http://www.cs.uakron.edu/~collard/foo
+150 srcml2src --prefix http://www.cs.uakron.edu/~collard/foo
+151 srcml2src --prefix=http://www.cs.uakron.edu/~collard/foo
+152 srcml2src -p http://www.sdml.info/srcML/src
+153 srcml2src --prefix http://www.sdml.info/srcML/src
+154 srcml2src --prefix=http://www.sdml.info/srcML/src
+155 srcml2src -p http://www.sdml.info/srcML/cpp
+156 srcml2src --prefix http://www.sdml.info/srcML/cpp
+157 srcml2src --prefix=http://www.sdml.info/srcML/cpp
+158 src2srcml -l C++ --no-xml-declaration
+159 src2srcml -l C++ --no-namespace-decl
+160 src2srcml foo.c
+161 src2srcml abc.c
+162 src2srcml ../src/foo.c
+163 src2srcml emptysrc/empty.c
+164 src2srcml emptysrc/empty.h
+165 src2srcml emptysrc/empty.c.gz
+166 src2srcml emptysrc/empty.h.gz
+167 src2srcml emptysrc/empty.cpp
+168 src2srcml emptysrc/empty.cc
+169 src2srcml emptysrc/empty.cxx
+170 src2srcml emptysrc/empty.c++
+171 src2srcml emptysrc/empty.hpp
+172 src2srcml emptysrc/empty.hh
+173 src2srcml emptysrc/empty.hxx
+174 src2srcml emptysrc/empty.h++
+175 src2srcml emptysrc/empty.tcc
+176 src2srcml emptysrc/empty.cpp.gz
+177 src2srcml emptysrc/empty.cc.gz
+178 src2srcml emptysrc/empty.cxx.gz
+179 src2srcml emptysrc/empty.c++.gz
+180 src2srcml emptysrc/empty.hpp.gz
+181 src2srcml emptysrc/empty.hh.gz
+182 src2srcml emptysrc/empty.hxx.gz
+183 src2srcml emptysrc/empty.h++.gz
+184 src2srcml emptysrc/empty.tcc.gz
+185 src2srcml emptysrc/empty.java
+186 src2srcml emptysrc/empty.java.gz
+187 src2srcml emptysrc/empty.aj
+188 src2srcml emptysrc/empty.aj.gz
+189 src2srcml sub/a.cpp --output sub/a.cpp.xml
+190 src2srcml sub/a.cpp --output=sub/a.cpp.xml
+191 src2srcml sub/a.cpp -o sub/a.cpp.xml
+192 src2srcml -l C++ - -o sub/a.cpp.xml
+193 src2srcml -l C++ -o sub/a.cpp.xml
+194 src2srcml -l C++ - --output /dev/stdout
+195 src2srcml -l C++ - --output=/dev/stdout
+196 src2srcml -l C++ - -o /dev/stdout
+197 srcml2src sub/a.cpp.xml --output sub/a.cpp
+198 srcml2src sub/a.cpp.xml --output=sub/a.cpp
+199 srcml2src sub/a.cpp.xml -o sub/a.cpp
+200 srcml2src - -o sub/a.cpp
+201 srcml2src -o sub/a.cpp
+202 srcml2src - --output /dev/stdout
+203 srcml2src - --output=/dev/stdout
+204 srcml2src - -o /dev/stdout
+205 src2srcml sub/a.cpp -g
+206 src2srcml sub/a.cpp --debug
+207 src2srcml -l C++ -g -o sub/a.cpp.xml
+208 src2srcml -g sub/a.cpp -o sub/a.cpp.xml
+209 src2srcml sub/a.cpp -l C++
+210 src2srcml sub/a.cpp --language C++
+211 src2srcml sub/a.cpp --language=C++
+212 src2srcml -l C++ -o sub/a.cpp.xml
+213 src2srcml -l C++ sub/a.cpp -o sub/a.cpp.xml
+214 src2srcml sub/a.cpp -l C
+215 src2srcml sub/a.cpp --language C
+216 src2srcml sub/a.cpp --language=C
+217 src2srcml -l C -o sub/a.cpp.xml
+218 src2srcml -l C sub/a.cpp -o sub/a.cpp.xml
+219 src2srcml sub/a.cpp -l Java
+220 src2srcml sub/a.cpp --language Java
+221 src2srcml sub/a.cpp --language=Java
+222 src2srcml -l Java -o sub/a.cpp.xml
+223 src2srcml -l Java sub/a.cpp -o sub/a.cpp.xml
+224 src2srcml sub/a.cpp -f foo.cpp
+225 src2srcml sub/a.cpp --filename foo.cpp
+226 src2srcml sub/a.cpp --filename=foo.cpp
+227 src2srcml -l C++ -f foo.cpp -o sub/a.cpp.xml
+228 src2srcml -f foo.cpp sub/a.cpp -o sub/a.cpp.xml
+229 src2srcml sub/a.cpp -d bar
+230 src2srcml sub/a.cpp --directory bar
+231 src2srcml sub/a.cpp --directory=bar
+232 src2srcml -l C++ -d bar -o sub/a.cpp.xml
+233 src2srcml -d bar sub/a.cpp -o sub/a.cpp.xml
+234 src2srcml sub/a.cpp -s 1.0
+235 src2srcml sub/a.cpp --src-version 1.0
+236 src2srcml sub/a.cpp --src-version=1.0
+237 src2srcml -l C++ -s 1.0 -o sub/a.cpp.xml
+238 src2srcml -s 1.0 sub/a.cpp -o sub/a.cpp.xml
+239 src2srcml sub/a.cpp -x ISO-8859-1
+240 src2srcml sub/a.cpp --encoding ISO-8859-1
+241 src2srcml sub/a.cpp --encoding=ISO-8859-1
+242 src2srcml -l C++ -x ISO-8859-1 -o sub/a.cpp.xml
+243 src2srcml -x ISO-8859-1 sub/a.cpp -o sub/a.cpp.xml
+244 src2srcml -l C++ -t ISO-8859-1
+245 src2srcml -l C++ --src-encoding ISO-8859-1
+246 src2srcml -l C++ --src-encoding=ISO-8859-1
+247 src2srcml sub/a.cpp -t ISO-8859-1
+248 src2srcml sub/a.cpp --src-encoding ISO-8859-1
+249 src2srcml sub/a.cpp --src-encoding=ISO-8859-1
+250 src2srcml --src-encoding ISO-8859-1 sub/a.cpp
+251 src2srcml -l C++ --src-encoding ISO-8859-1 -o sub/a.cpp.xml
+252 src2srcml --src-encoding ISO-8859-1 sub/a.cpp -o sub/a.cpp.xml
+253 src2srcml --archive sub/a.cpp -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+254 src2srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+255 src2srcml --xmlns:src=http://www.sdml.info/srcML/src sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<src:unit xmlns:src="http://www.sdml.info/srcML/src">
+
+<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt>
+</src:unit>
+
+<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<src:expr_stmt><src:expr><src:name>b</src:name></src:expr>;</src:expr_stmt>
+</src:unit>
+
+</src:unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<src:unit xmlns:src="http://www.sdml.info/srcML/src">
+
+<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<ú><ú><ú>a</ú></ú>;</ú>
+</src:unit>
+
+<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<ú><ú><ú>b</ú></ú>;</ú>
+</src:unit>
+
+</src:unit>
+|
+256 src2srcml --files-from filelistab -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+257 src2srcml --xmlns=http://www.sdml.info/srcML/src sub/a.cpp
+258 src2srcml -l C++ --xmlns=http://www.sdml.info/srcML/src -o sub/a.cpp.xml
+259 src2srcml --xmlns=http://www.sdml.info/srcML/src sub/a.cpp -o sub/a.cpp.xml
+260 src2srcml --xmlns:cpp=http://www.sdml.info/srcML/cpp sub/a.cpp
+261 src2srcml -l C++ --xmlns:cpp=http://www.sdml.info/srcML/cpp -o sub/a.cpp.xml
+262 src2srcml --xmlns:cpp=http://www.sdml.info/srcML/cpp sub/a.cpp -o sub/a.cpp.xml
+263 src2srcml --xmlns=http://www.sdml.info/srcML/src --xmlns:cpp=http://www.sdml.info/srcML/cpp sub/a.cpp
+264 src2srcml -l C++ --xmlns=http://www.sdml.info/srcML/src --xmlns:cpp=http://www.sdml.info/srcML/cpp -o sub/a.cpp.xml
+265 src2srcml --xmlns=http://www.sdml.info/srcML/src --xmlns:cpp=http://www.sdml.info/srcML/cpp sub/a.cpp -o sub/a.cpp.xml
+266 src2srcml --debug --xmlns=http://www.sdml.info/srcML/src --xmlns:cpp=http://www.sdml.info/srcML/cpp --xmlns:err=http://www.sdml.info/srcML/srcerr sub/a.cpp
+267 src2srcml -l C++ --debug --xmlns=http://www.sdml.info/srcML/src --xmlns:cpp=http://www.sdml.info/srcML/cpp --xmlns:err=http://www.sdml.info/srcML/srcerr -o sub/a.cpp.xml
+268 src2srcml --debug --xmlns=http://www.sdml.info/srcML/src --xmlns:cpp=http://www.sdml.info/srcML/cpp --xmlns:err=http://www.sdml.info/srcML/srcerr sub/a.cpp -o sub/a.cpp.xml
+269 src2srcml --debug --xmlns=http://www.sdml.info/srcML/src --xmlns:cpp=http://www.sdml.info/srcML/cpp sub/a.cpp
+270 src2srcml -l C++ --debug --xmlns=http://www.sdml.info/srcML/src --xmlns:cpp=http://www.sdml.info/srcML/cpp -o sub/a.cpp.xml
+271 src2srcml --debug --xmlns=http://www.sdml.info/srcML/src --xmlns:cpp=http://www.sdml.info/srcML/cpp sub/a.cpp -o sub/a.cpp.xml
+272 src2srcml --debug --xmlns=http://www.sdml.info/srcML/src --xmlns:err=http://www.sdml.info/srcML/srcerr sub/a.cpp
+273 src2srcml -l C++ --debug --xmlns=http://www.sdml.info/srcML/src --xmlns:err=http://www.sdml.info/srcML/srcerr -o sub/a.cpp.xml
+274 src2srcml --debug --xmlns=http://www.sdml.info/srcML/src --xmlns:err=http://www.sdml.info/srcML/srcerr sub/a.cpp -o sub/a.cpp.xml
+275 src2srcml --debug --xmlns:cpp=http://www.sdml.info/srcML/cpp --xmlns:err=http://www.sdml.info/srcML/srcerr sub/a.cpp
+276 src2srcml -l C++ --debug --xmlns:cpp=http://www.sdml.info/srcML/cpp --xmlns:err=http://www.sdml.info/srcML/srcerr -o sub/a.cpp.xml
+277 src2srcml --debug --xmlns:cpp=http://www.sdml.info/srcML/cpp --xmlns:err=http://www.sdml.info/srcML/srcerr sub/a.cpp -o sub/a.cpp.xml
+278 src2srcml --xmlns:src=http://www.sdml.info/srcML/src --xmlns=http://www.sdml.info/srcML/cpp sub/a.cpp
+279 src2srcml -l C++ --xmlns:src=http://www.sdml.info/srcML/src --xmlns=http://www.sdml.info/srcML/cpp -o sub/a.cpp.xml
+280 src2srcml --xmlns:src=http://www.sdml.info/srcML/src --xmlns=http://www.sdml.info/srcML/cpp sub/a.cpp -o sub/a.cpp.xml
+281 src2srcml --no-xml-declaration sub/a.cpp
+282 src2srcml -l C++ --no-xml-declaration -o sub/a.cpp.xml
+283 src2srcml --no-xml-declaration sub/a.cpp -o sub/a.cpp.xml
+284 src2srcml --no-namespace-decl sub/a.cpp
+285 src2srcml -l C++ --no-namespace-decl -o sub/a.cpp.xml
+286 src2srcml --no-namespace-decl sub/a.cpp -o sub/a.cpp.xml
+287 src2srcml sub/a.cpp
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<return>return;</return>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<Š5>#<Š5>if</Š5> <expr><name>A</name></expr></Š5>
+<break>break;</break>
+<Š5>#<Š5>else</Š5></Š5>
+<return>return;</return>
+<Š5>#<Š5>endif</Š5></Š5>
+</unit>
+|
+288 src2srcml -l C++ -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<return>return;</return>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<êª>#<êª>if</êª> <expr><name>A</name></expr></êª>
+<break>break;</break>
+<êª>#<êª>else</êª></êª>
+<return>return;</return>
+<êª>#<êª>endif</êª></êª>
+</unit>
+|
+289 src2srcml sub/a.cpp -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<return>return;</return>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<úp>#<úp>if</úp> <expr><name>A</name></expr></úp>
+<break>break;</break>
+<úp>#<úp>else</úp></úp>
+<return>return;</return>
+<úp>#<úp>endif</úp></úp>
+</unit>
+|
+290 src2srcml --cpp-markup-else sub/a.cpp
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<return>return;</return>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<:#>#<:#>if</:#> <expr><name>A</name></expr></:#>
+<break>break;</break>
+<:#>#<:#>else</:#></:#>
+<return>return;</return>
+<:#>#<:#>endif</:#></:#>
+</unit>
+|
+291 src2srcml -l C++ --cpp-markup-else -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<return>return;</return>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<ZZ>#<ZZ>if</ZZ> <expr><name>A</name></expr></ZZ>
+<break>break;</break>
+<ZZ>#<ZZ>else</ZZ></ZZ>
+<return>return;</return>
+<ZZ>#<ZZ>endif</ZZ></ZZ>
+</unit>
+|
+292 src2srcml --cpp-markup-else sub/a.cpp -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<return>return;</return>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<J¿>#<J¿>if</J¿> <expr><name>A</name></expr></J¿>
+<break>break;</break>
+<J¿>#<J¿>else</J¿></J¿>
+<return>return;</return>
+<J¿>#<J¿>endif</J¿></J¿>
+</unit>
+|
+293 src2srcml --cpp-text-else sub/a.cpp
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+return;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<j>#<j>if</j> <expr><name>A</name></expr></j>
+<break>break;</break>
+<j>#<j>else</j></j>
+return;
+<j>#<j>endif</j></j>
+</unit>
+|
+294 src2srcml -l C++ --cpp-text-else -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+return;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<*^>#<*^>if</*^> <expr><name>A</name></expr></*^>
+<break>break;</break>
+<*^>#<*^>else</*^></*^>
+return;
+<*^>#<*^>endif</*^></*^>
+</unit>
+|
+295 src2srcml --cpp-text-else sub/a.cpp -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+return;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<ŠŠ>#<ŠŠ>if</ŠŠ> <expr><name>A</name></expr></ŠŠ>
+<break>break;</break>
+<ŠŠ>#<ŠŠ>else</ŠŠ></ŠŠ>
+return;
+<ŠŠ>#<ŠŠ>endif</ŠŠ></ŠŠ>
+</unit>
+|
+296 src2srcml sub/a.cpp
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+break;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<
+g>#<
+g>if</
+g> <expr>0</expr></
+g>
+break;
+<
+g>#<
+g>endif</
+g></
+g>
+</unit>
+|
+297 src2srcml -l C++ -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+break;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<ª5>#<ª5>if</ª5> <expr>0</expr></ª5>
+break;
+<ª5>#<ª5>endif</ª5></ª5>
+</unit>
+|
+298 src2srcml sub/a.cpp -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+break;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<Ê>#<Ê>if</Ê> <expr>0</expr></Ê>
+break;
+<Ê>#<Ê>endif</Ê></Ê>
+</unit>
+|
+299 src2srcml --cpp-text-if0 sub/a.cpp
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+break;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<:>#<:>if</:> <expr>0</expr></:>
+break;
+<:>#<:>endif</:></:>
+</unit>
+|
+300 src2srcml -l C++ --cpp-text-if0 -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+break;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<ê9>#<ê9>if</ê9> <expr>0</expr></ê9>
+break;
+<ê9>#<ê9>endif</ê9></ê9>
+</unit>
+|
+301 src2srcml --cpp-text-if0 sub/a.cpp -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+break;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<ê*>#<ê*>if</ê*> <expr>0</expr></ê*>
+break;
+<ê*>#<ê*>endif</ê*></ê*>
+</unit>
+|
+302 src2srcml --cpp-markup-if0 sub/a.cpp
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+<break>break;</break>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<z>#<z>if</z> <expr>0</expr></z>
+<break>break;</break>
+<z>#<z>endif</z></z>
+</unit>
+|
+303 src2srcml -l C++ --cpp-markup-if0 -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+<break>break;</break>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<úü>#<úü>if</úü> <expr>0</expr></úü>
+<break>break;</break>
+<úü>#<úü>endif</úü></úü>
+</unit>
+|
+304 src2srcml --cpp-markup-if0 sub/a.cpp -o sub/a.cpp.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+<break>break;</break>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<j¡	>#<j¡	>if</j¡	> <expr>0</expr></j¡	>
+<break>break;</break>
+<j¡	>#<j¡	>endif</j¡	></j¡	>
+</unit>
+|
+305 srcml2src sub/a.cpp.xml -l
+306 srcml2src sub/a.cpp.xml --language
+307 srcml2src sub/a.cpp.xml -d
+308 srcml2src sub/a.cpp.xml --directory
+309 srcml2src sub/a.cpp.xml -f
+310 srcml2src sub/a.cpp.xml --filename
+311 srcml2src sub/a.cpp.xml -s
+312 srcml2src sub/a.cpp.xml --src-version
+313 srcml2src sub/a.cpp.xml -x
+314 srcml2src sub/a.cpp.xml --encoding
+315 srcml2src --units sub/a.cpp.xml
+316 srcml2src --units sub/a.cpp.xml
+317 srcml2src --units sub/a.cpp.xml
+318 srcml2src --units sub/a.cpp.xml
+319 srcml2src sub/a.cpp.xml -U 1
+320 srcml2src sub/a.cpp.xml --unit 1
+321 srcml2src sub/a.cpp.xml --unit=1
+322 srcml2src --unit 1 -o sub/a.cpp
+323 srcml2src --unit 1 sub/a.cpp.xml -o sub/a.cpp
+324 srcml2src sub/a.cpp.xml -U 2
+325 srcml2src sub/a.cpp.xml --unit 2
+326 srcml2src sub/a.cpp.xml --unit=2
+327 srcml2src --unit 2 -o sub/b.cpp
+328 srcml2src --unit 2 sub/a.cpp.xml -o sub/b.cpp
+329 srcml2src --xml --unit 1 sub/a.cpp.xml
+330 srcml2src --xml --unit 1 -o sub/b.cpp.xml
+331 srcml2src --xml --unit 1 sub/a.cpp.xml -o sub/b.cpp.xml
+332 srcml2src --xml --unit 2 sub/a.cpp.xml
+333 srcml2src --xml --unit 2 -o sub/b.cpp.xml
+334 srcml2src --xml --unit 2 sub/a.cpp.xml -o sub/b.cpp.xml
+335 srcml2src --xml --unit 1 --language sub/a.cpp.xml
+336 srcml2src --xml --unit 1 --directory sub/a.cpp.xml
+337 srcml2src --xml --unit 1 --filename sub/a.cpp.xml
+338 srcml2src --xml --unit 2 --language sub/a.cpp.xml
+339 srcml2src --xml --unit 2 --directory sub/a.cpp.xml
+340 srcml2src --xml --unit 2 --filename sub/a.cpp.xml
+341 srcml2src sub/a.cpp.xml -p http://www.sdml.info/srcML/src
+342 srcml2src sub/a.cpp.xml --prefix http://www.sdml.info/srcML/src
+343 srcml2src sub/a.cpp.xml --prefix=http://www.sdml.info/srcML/src
+344 srcml2src sub/a.cpp.xml -p http://www.sdml.info/srcML/cpp
+345 srcml2src sub/a.cpp.xml --prefix http://www.sdml.info/srcML/cpp
+346 srcml2src sub/a.cpp.xml --prefix=http://www.sdml.info/srcML/cpp
+347 srcml2src sub/a.cpp.xml -p http://www.sdml.info/srcML/literal
+348 srcml2src sub/a.cpp.xml --prefix http://www.sdml.info/srcML/literal
+349 srcml2src sub/a.cpp.xml --prefix=http://www.sdml.info/srcML/literal
+350 srcml2src sub/a.cpp.xml -p http://www.cs.uakron.edu/~collard/foo
+351 srcml2src sub/a.cpp.xml --prefix http://www.cs.uakron.edu/~collard/foo
+352 srcml2src sub/a.cpp.xml --prefix=http://www.cs.uakron.edu/~collard/foo
+353 srcml2src -t ISO-8859-1
+354 srcml2src --src-encoding ISO-8859-1
+355 srcml2src --src-encoding=ISO-8859-1
+356 srcml2src sub/a.cpp.xml -t ISO-8859-1
+357 srcml2src sub/a.cpp.xml --src-encoding ISO-8859-1
+358 srcml2src sub/a.cpp.xml --src-encoding=ISO-8859-1
+359 srcml2src --src-encoding ISO-8859-1 sub/a.cpp.xml
+360 srcml2src --src-encoding ISO-8859-1 -o sub/a.cpp
+361 srcml2src --src-encoding ISO-8859-1 sub/a.cpp.xml -o sub/a.cpp
+362 src2srcml -z sub/a.cpp -o sub/a.cpp.xml.gz
+363 gunzip -c sub/a.cpp.xml.gz
+364 src2srcml --compress sub/a.cpp -o sub/a.cpp.xml.gz
+365 gunzip -c sub/a.cpp.xml.gz
+366 src2srcml -l C++ -z -o sub/a.cpp.xml.gz
+367 gunzip -c sub/a.cpp.xml.gz
+368 srcml2src -z sub/a.cpp.xml -o sub/a.cpp.gz
+369 gunzip -c sub/a.cpp.gz
+370 srcml2src --compress sub/a.cpp.xml -o sub/a.cpp.gz
+371 gunzip -c sub/a.cpp.gz
+372 srcml2src -z -o sub/a.cpp.gz
+373 gunzip -c sub/a.cpp.gz
+374 src2srcml -l C++
+375 src2srcml sub/a.cpp.gz
+376 src2srcml -l C++ -o sub/a.cpp.xml
+377 src2srcml sub/a.cpp.gz -o sub/a.cpp.xml
+378 srcml2src 
+379 srcml2src sub/a.cpp.xml.gz
+380 srcml2src -o sub/a.cpp
+381 srcml2src sub/a.cpp.xml.gz -o sub/a.cpp
+382 src2srcml -l C++ --literal
+383 src2srcml --literal sub/a.cpp
+384 src2srcml -l C++ --literal -o sub/a.cpp.xml
+385 src2srcml --literal sub/a.cpp -o sub/a.cpp.xml
+386 src2srcml -l C++ --operator
+387 src2srcml --operator sub/a.cpp
+388 src2srcml -l C++ --operator -o sub/a.cpp.xml
+389 src2srcml --operator sub/a.cpp -o sub/a.cpp.xml
+390 src2srcml -l C++ --modifier
+391 src2srcml --modifier sub/a.cpp
+392 src2srcml -l C++ --modifier -o sub/a.cpp.xml
+393 src2srcml --modifier sub/a.cpp -o sub/a.cpp.xml
+394 src2srcml -l C++ --literal --operator
+395 src2srcml --literal --operator sub/a.cpp
+396 src2srcml -l C++ --literal --operator -o sub/a.cpp.xml
+397 src2srcml --literal --operator sub/a.cpp -o sub/a.cpp.xml
+398 src2srcml -l C++ --operator --literal
+399 src2srcml --operator --literal sub/a.cpp
+400 src2srcml -l C++ --operator --literal -o sub/a.cpp.xml
+401 src2srcml --operator --literal sub/a.cpp -o sub/a.cpp.xml
+402 src2srcml -l C++ --literal --modifier
+403 src2srcml --literal --modifier sub/a.cpp
+404 src2srcml -l C++ --literal --modifier -o sub/a.cpp.xml
+405 src2srcml --literal --modifier sub/a.cpp -o sub/a.cpp.xml
+406 src2srcml -l C++ --modifier --literal
+407 src2srcml --modifier --literal sub/a.cpp
+408 src2srcml -l C++ --modifier --literal -o sub/a.cpp.xml
+409 src2srcml --modifier --literal sub/a.cpp -o sub/a.cpp.xml
+410 src2srcml -l C++ --operator --modifier
+411 src2srcml --operator --modifier sub/a.cpp
+412 src2srcml -l C++ --operator --modifier -o sub/a.cpp.xml
+413 src2srcml --operator --modifier sub/a.cpp -o sub/a.cpp.xml
+414 src2srcml -l C++ --modifier --operator
+415 src2srcml --modifier --operator sub/a.cpp
+416 src2srcml -l C++ --modifier --operator -o sub/a.cpp.xml
+417 src2srcml --modifier --operator sub/a.cpp -o sub/a.cpp.xml
+418 src2srcml -l C++ --literal --operator --modifier
+419 src2srcml --literal --operator --modifier sub/a.cpp
+420 src2srcml -l C++ --literal --operator --modifier -o sub/a.cpp.xml
+421 src2srcml --literal --operator --modifier sub/a.cpp -o sub/a.cpp.xml
+422 src2srcml -l C++ --literal --modifier --operator
+423 src2srcml --literal --modifier --operator sub/a.cpp
+424 src2srcml -l C++ --literal --modifier --operator -o sub/a.cpp.xml
+425 src2srcml --literal --modifier --operator sub/a.cpp -o sub/a.cpp.xml
+426 src2srcml -l C++ --operator --literal --modifier
+427 src2srcml --operator --literal --modifier sub/a.cpp
+428 src2srcml -l C++ --operator --literal --modifier -o sub/a.cpp.xml
+429 src2srcml --operator --literal --modifier sub/a.cpp -o sub/a.cpp.xml
+430 src2srcml -l C++ --operator --modifier --literal
+431 src2srcml --operator --modifier --literal sub/a.cpp
+432 src2srcml -l C++ --operator --modifier --literal -o sub/a.cpp.xml
+433 src2srcml --operator --modifier --literal sub/a.cpp -o sub/a.cpp.xml
+434 src2srcml -l C++ --modifier --literal --operator
+435 src2srcml --modifier --literal --operator sub/a.cpp
+436 src2srcml -l C++ --modifier --literal --operator -o sub/a.cpp.xml
+437 src2srcml --modifier --literal --operator sub/a.cpp -o sub/a.cpp.xml
+438 src2srcml -l C++ --modifier --operator --literal
+439 src2srcml --modifier --operator --literal sub/a.cpp
+440 src2srcml -l C++ --modifier --operator --literal -o sub/a.cpp.xml
+441 src2srcml --modifier --operator --literal sub/a.cpp -o sub/a.cpp.xml
+442 srcml2src -i
+443 srcml2src --info
+444 srcml2src sub/a.cpp.xml -i
+445 srcml2src sub/a.cpp.xml --info
+446 srcml2src -L
+447 srcml2src --longinfo
+448 srcml2src sub/a.cpp.xml -L
+449 srcml2src sub/a.cpp.xml --longinfo
+450 srcml2src -L
+451 srcml2src --longinfo
+452 srcml2src sub/a.cpp.xml -L
+453 srcml2src sub/a.cpp.xml --longinfo
+454 srcml2src --to-dir=. sub/a.cpp.xml
+Status error:   1 ['../../bin/srcml2src', '--to-dir=.', 'sub/a.cpp.xml']
+455 srcml2src --to-dir=. sub/a.cpp.xml
+Status error:   1 ['../../bin/srcml2src', '--to-dir=.', 'sub/a.cpp.xml']
+456 srcml2src -a . sub/a.cpp.xml
+Status error:   1 ['../../bin/srcml2src', '-a', '.', 'sub/a.cpp.xml']
+457 srcml2src --xml
+458 srcml2src --xml sub/a.cpp.xml
+459 srcml2src --xml -o sub/a.cpp.xml
+460 srcml2src --xml sub/a.cpp.xml -o sub/b.cpp.xml
+461 srcml2src --xml --no-xml-declaration
+462 srcml2src --xml --no-xml-declaration sub/a.cpp.xml
+463 srcml2src --xml --no-xml-declaration -o sub/a.cpp.xml
+464 srcml2src --xml --no-xml-declaration sub/a.cpp.xml -o sub/b.cpp.xml
+465 srcml2src --no-xml-declaration --xml
+466 srcml2src --no-xml-declaration --xml sub/a.cpp.xml
+467 srcml2src --no-xml-declaration --xml -o sub/a.cpp.xml
+468 srcml2src --no-xml-declaration --xml sub/a.cpp.xml -o sub/b.cpp.xml
+469 srcml2src --no-xml-declaration
+470 srcml2src --no-xml-declaration sub/a.cpp.xml
+471 srcml2src --no-xml-declaration -o sub/a.cpp.xml
+472 srcml2src --no-xml-declaration sub/a.cpp.xml -o sub/b.cpp.xml
+473 srcml2src --xml --no-xml-declaration
+474 srcml2src --xml --no-xml-declaration sub/a.cpp.xml
+475 srcml2src --xml --no-xml-declaration -o sub/a.cpp.xml
+476 srcml2src --xml --no-xml-declaration sub/a.cpp.xml -o sub/b.cpp.xml
+477 srcml2src --no-xml-declaration --xml
+478 srcml2src --no-xml-declaration --xml sub/a.cpp.xml
+479 srcml2src --no-xml-declaration --xml -o sub/a.cpp.xml
+480 srcml2src --no-xml-declaration --xml sub/a.cpp.xml -o sub/b.cpp.xml
+481 srcml2src --no-xml-declaration
+482 srcml2src --no-xml-declaration sub/a.cpp.xml
+483 srcml2src --no-xml-declaration -o sub/a.cpp.xml
+484 srcml2src --no-xml-declaration sub/a.cpp.xml -o sub/b.cpp.xml
+485 srcml2src --xml --no-namespace-decl
+486 srcml2src --xml --no-namespace-decl sub/a.cpp.xml
+487 srcml2src --xml --no-namespace-decl -o sub/b.cpp.xml
+488 srcml2src --xml --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml
+489 srcml2src --no-namespace-decl --xml
+490 srcml2src --no-namespace-decl --xml sub/a.cpp.xml
+491 srcml2src --no-namespace-decl --xml -o sub/b.cpp.xml
+492 srcml2src --no-namespace-decl --xml sub/a.cpp.xml -o sub/b.cpp.xml
+493 srcml2src --no-namespace-decl
+494 srcml2src --no-namespace-decl sub/a.cpp.xml
+495 srcml2src --no-namespace-decl -o sub/b.cpp.xml
+496 srcml2src --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml
+497 srcml2src --xml --no-namespace-decl
+498 srcml2src --xml --no-namespace-decl sub/a.cpp.xml
+499 srcml2src --xml --no-namespace-decl -o sub/b.cpp.xml
+500 srcml2src --xml --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml
+501 srcml2src --no-namespace-decl --xml
+502 srcml2src --no-namespace-decl --xml sub/a.cpp.xml
+503 srcml2src --no-namespace-decl --xml -o sub/b.cpp.xml
+504 srcml2src --no-namespace-decl --xml sub/a.cpp.xml -o sub/b.cpp.xml
+505 srcml2src --no-namespace-decl
+506 srcml2src --no-namespace-decl sub/a.cpp.xml
+507 srcml2src --no-namespace-decl -o sub/b.cpp.xml
+508 srcml2src --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml
+509 src2srcml --help
+510 src2srcml --version
+511 srcml2src --help
+512 srcml2src --version
+513 srcml2src -ldfsx
+514 srcml2src -dfsxl
+515 srcml2src -fsxld
+516 srcml2src -sxldf
+517 srcml2src -xldfs
+518 src2srcml --verbose
+519 src2srcml --verbose sub/a.cpp
+520 srcml2src --verbose
+521 srcml2src --verbose sub/a.cpp.xml
+522 srcml2src --xpath=/src:unit
+523 Status:  2 	srcml2src --xpath=/src:unit
+524 srcml2src --xpath=/src:unit
+525 srcml2src --xpath=/src:unit sub/a.cpp.xml
+526 srcml2src --xpath=/src:unit -o sub/b.cpp.xml
+527 srcml2src --xpath=/src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+528 Status:  1 	srcml2src --xpath
+529 Status:  1 	srcml2src --xpath=
+530 srcml2src --xpath=//src:unit
+531 srcml2src --xpath=//src:unit sub/a.cpp.xml
+532 srcml2src --xpath=//src:unit -o sub/b.cpp.xml
+533 srcml2src --xpath=//src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+534 Status:  1 	srcml2src --xpath
+535 Status:  1 	srcml2src --xpath=
+536 srcml2src --xpath=src:unit
+537 srcml2src --xpath=src:unit sub/a.cpp.xml
+538 srcml2src --xpath=src:unit -o sub/b.cpp.xml
+539 srcml2src --xpath=src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+540 Status:  1 	srcml2src --xpath
+541 Status:  1 	srcml2src --xpath=
+542 srcml2src --apply-root --xpath=/src:unit
+543 Status:  2 	srcml2src --apply-root --xpath=/src:unit
+544 srcml2src --apply-root --xpath=/src:unit
+545 srcml2src --apply-root --xpath=/src:unit sub/a.cpp.xml
+546 srcml2src --apply-root --xpath=/src:unit -o sub/b.cpp.xml
+547 srcml2src --apply-root --xpath=/src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+548 Status:  1 	srcml2src --apply-root --xpath
+549 Status:  1 	srcml2src --apply-root --xpath=
+550 srcml2src --apply-root --xpath=//src:unit
+551 srcml2src --apply-root --xpath=//src:unit sub/a.cpp.xml
+552 srcml2src --apply-root --xpath=//src:unit -o sub/b.cpp.xml
+553 srcml2src --apply-root --xpath=//src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+554 Status:  1 	srcml2src --apply-root --xpath
+555 Status:  1 	srcml2src --apply-root --xpath=
+556 srcml2src --apply-root --xpath=src:unit
+557 srcml2src --apply-root --xpath=src:unit sub/a.cpp.xml
+558 srcml2src --apply-root --xpath=src:unit -o sub/b.cpp.xml
+559 srcml2src --apply-root --xpath=src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+560 Status:  1 	srcml2src --apply-root --xpath
+561 Status:  1 	srcml2src --apply-root --xpath=
+562 srcml2src --apply-root --xpath=/src:unit
+563 srcml2src --apply-root --xpath=/src:unit sub/a.cpp.xml
+564 srcml2src --apply-root --xpath=/src:unit -o sub/b.cpp.xml
+565 srcml2src --apply-root --xpath=/src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+566 srcml2src --apply-root --xpath=//src:unit
+567 srcml2src --apply-root --xpath=//src:unit sub/a.cpp.xml
+568 srcml2src --apply-root --xpath=//src:unit -o sub/b.cpp.xml
+569 srcml2src --apply-root --xpath=//src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+570 srcml2src --apply-root --xpath=/src:unit/src:unit[1]/src:expr_stmt
+571 srcml2src --apply-root --xpath=/src:unit/src:unit[1]/src:expr_stmt sub/a.cpp.xml
+572 srcml2src --apply-root --xpath=/src:unit/src:unit[1]/src:expr_stmt -o sub/b.cpp.xml
+573 srcml2src --apply-root --xpath=/src:unit/src:unit[1]/src:expr_stmt sub/a.cpp.xml -o sub/b.cpp.xml
+574 srcml2src --apply-root --xpath=//src:expr_stmt
+575 srcml2src --apply-root --xpath=//src:expr_stmt sub/a.cpp.xml
+576 srcml2src --apply-root --xpath=//src:expr_stmt -o sub/b.cpp.xml
+577 srcml2src --apply-root --xpath=//src:expr_stmt sub/a.cpp.xml -o sub/b.cpp.xml
+578 srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name
+579 srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name sub/a.cpp.xml
+580 srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name -o sub/b.cpp.xml
+581 srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name sub/a.cpp.xml -o sub/b.cpp.xml
+582 Status:  1 	srcml2src --xpath
+583 Status:  1 	srcml2src --xpath=
+584 srcml2src --xpath=//src:name
+585 srcml2src --xpath=//src:name sub/a.cpp.xml
+586 srcml2src --xpath=//src:name -o sub/b.cpp.xml
+587 srcml2src --xpath=//src:name sub/a.cpp.xml -o sub/b.cpp.xml
+588 Status:  1 	srcml2src --xpath
+589 Status:  1 	srcml2src --xpath=
+590 srcml2src --xpath=src:name
+591 srcml2src --xpath=src:name sub/a.cpp.xml
+592 srcml2src --xpath=src:name -o sub/b.cpp.xml
+593 srcml2src --xpath=src:name sub/a.cpp.xml -o sub/b.cpp.xml
+594 Status:  1 	srcml2src --xpath
+595 Status:  1 	srcml2src --xpath=
+596 srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name
+597 srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name sub/a.cpp.xml
+598 srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name -o sub/b.cpp.xml
+599 srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name sub/a.cpp.xml -o sub/b.cpp.xml
+600 Status:  1 	srcml2src --xpath
+601 Status:  1 	srcml2src --xpath=
+602 srcml2src --xpath=//src:name
+603 srcml2src --xpath=//src:name sub/a.cpp.xml
+604 srcml2src --xpath=//src:name -o sub/b.cpp.xml
+605 srcml2src --xpath=//src:name sub/a.cpp.xml -o sub/b.cpp.xml
+606 Status:  1 	srcml2src --xpath
+607 Status:  1 	srcml2src --xpath=
+608 srcml2src --xpath=src:name
+609 srcml2src --xpath=src:name sub/a.cpp.xml
+610 srcml2src --xpath=src:name -o sub/b.cpp.xml
+611 srcml2src --xpath=src:name sub/a.cpp.xml -o sub/b.cpp.xml
+612 Status:  1 	srcml2src --xpath
+613 Status:  1 	srcml2src --xpath=
+614 srcml2src --xpath=/src:unit
+615 srcml2src --xpath=/src:unit sub/a.cpp.xml
+616 srcml2src --xpath=/src:unit -o sub/b.cpp.xml
+617 srcml2src --xpath=/src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+618 Status:  1 	srcml2src --xpath
+619 Status:  1 	srcml2src --xpath=
+620 srcml2src --xpath=//src:unit
+621 srcml2src --xpath=//src:unit sub/a.cpp.xml
+622 srcml2src --xpath=//src:unit -o sub/b.cpp.xml
+623 srcml2src --xpath=//src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+624 Status:  1 	srcml2src --xpath
+625 Status:  1 	srcml2src --xpath=
+626 srcml2src --xpath=src:unit
+627 srcml2src --xpath=src:unit sub/a.cpp.xml
+628 srcml2src --xpath=src:unit -o sub/b.cpp.xml
+629 srcml2src --xpath=src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+630 Status:  1 	srcml2src --xpath
+631 Status:  1 	srcml2src --xpath=
+632 srcml2src --xpath=/src:unit
+633 srcml2src --xpath=/src:unit sub/a.cpp.xml
+634 srcml2src --xpath=/src:unit -o sub/b.cpp.xml
+635 srcml2src --xpath=/src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+636 Status:  1 	srcml2src --xpath
+637 Status:  1 	srcml2src --xpath=
+638 srcml2src --xpath=//src:unit
+639 srcml2src --xpath=//src:unit sub/a.cpp.xml
+640 srcml2src --xpath=//src:unit -o sub/b.cpp.xml
+641 srcml2src --xpath=//src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+642 Status:  1 	srcml2src --xpath
+643 Status:  1 	srcml2src --xpath=
+644 srcml2src --xpath=src:unit
+645 srcml2src --xpath=src:unit sub/a.cpp.xml
+646 srcml2src --xpath=src:unit -o sub/b.cpp.xml
+647 srcml2src --xpath=src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+648 Status:  1 	srcml2src --xpath
+649 Status:  1 	srcml2src --xpath=
+650 srcml2src --xslt=copy.xsl
+651 Status:  2 	srcml2src --xslt=copy.xsl
+652 srcml2src --xslt=copy.xsl
+653 srcml2src --xslt=copy.xsl sub/a.cpp.xml
+654 srcml2src --xslt=copy.xsl -o sub/b.cpp.xml
+655 srcml2src --xslt=copy.xsl sub/a.cpp.xml -o sub/b.cpp.xml
+656 Status:  1 	srcml2src --xslt
+657 Status:  1 	srcml2src --xslt=
+658 srcml2src --apply-root --xslt=copy.xsl
+659 Status:  2 	srcml2src --apply-root --xslt=copy.xsl
+660 srcml2src --apply-root --xslt=copy.xsl
+661 srcml2src --apply-root --xslt=copy.xsl sub/a.cpp.xml
+662 srcml2src --apply-root --xslt=copy.xsl -o sub/b.cpp.xml
+663 srcml2src --apply-root --xslt=copy.xsl sub/a.cpp.xml -o sub/b.cpp.xml
+664 Status:  1 	srcml2src --apply-root --xslt
+665 Status:  1 	srcml2src --apply-root --xslt=
+666 srcml2src --xslt=copy.xsl --xpathparam NAME=VALUE
+667 srcml2src --xslt=copy.xsl --xpathparam NAME=VALUE sub/a.cpp.xml
+668 srcml2src --xslt=copy.xsl --xpathparam NAME=VALUE -o sub/b.cpp.xml
+669 srcml2src --xslt=copy.xsl --xpathparam NAME=VALUE sub/a.cpp.xml -o sub/b.cpp.xml
+670 Status:  1 	srcml2src --xslt=copy.xsl --xpathparam
+671 Status:  1 	srcml2src --xslt=copy.xsl --xpathparam NAME
+672 srcml2src --xslt=param.xsl --xpathparam name="a"
+673 srcml2src --xslt=param.xsl --xpathparam name="a" sub/a.cpp.xml
+674 srcml2src --xslt=param.xsl --xpathparam name="a" -o sub/b.cpp.xml
+675 srcml2src --xslt=param.xsl --xpathparam name="a" sub/a.cpp.xml -o sub/b.cpp.xml
+676 Status:  1 	srcml2src --xslt=copy.xsl --xpathparam
+677 Status:  1 	srcml2src --xslt=copy.xsl --xpathparam name
+678 srcml2src --xslt=copy.xsl --param NAME=VALUE
+679 srcml2src --xslt=copy.xsl --param NAME=VALUE sub/a.cpp.xml
+680 srcml2src --xslt=copy.xsl --param NAME=VALUE -o sub/b.cpp.xml
+681 srcml2src --xslt=copy.xsl --param NAME=VALUE sub/a.cpp.xml -o sub/b.cpp.xml
+682 Status:  1 	srcml2src --xslt=copy.xsl --param
+683 Status:  1 	srcml2src --xslt=copy.xsl --param NAME
+684 srcml2src --xslt=param.xsl --param name=a
+685 srcml2src --xslt=param.xsl --param name=a sub/a.cpp.xml
+686 srcml2src --xslt=param.xsl --param name=a -o sub/b.cpp.xml
+687 srcml2src --xslt=param.xsl --param name=a sub/a.cpp.xml -o sub/b.cpp.xml
+688 Status:  1 	srcml2src --xslt=copy.xsl --param
+689 Status:  1 	srcml2src --xslt=copy.xsl --param name
+690 srcml2src --xslt=archive.xsl
+691 srcml2src --xslt=archive.xsl sub/a.cpp.xml
+692 srcml2src --xslt=archive.xsl -o sub/b.cpp.xml
+693 srcml2src --xslt=archive.xsl sub/a.cpp.xml -o sub/b.cpp.xml
+694 Status:  1 	srcml2src --xslt
+695 Status:  1 	srcml2src --xslt=
+696 srcml2src --xslt=archive.xsl
+697 srcml2src --xslt=archive.xsl sub/a.cpp.xml
+698 srcml2src --xslt=archive.xsl -o sub/b.cpp.xml
+699 srcml2src --xslt=archive.xsl sub/a.cpp.xml -o sub/b.cpp.xml
+700 Status:  1 	srcml2src --xslt
+701 Status:  1 	srcml2src --xslt=
+702 srcml2src --xslt=archive.xsl
+703 srcml2src --xslt=archive.xsl sub/a.cpp.xml
+704 srcml2src --xslt=archive.xsl -o sub/b.cpp.xml
+705 srcml2src --xslt=archive.xsl sub/a.cpp.xml -o sub/b.cpp.xml
+706 Status:  1 	srcml2src --xslt
+707 Status:  1 	srcml2src --xslt=
+708 srcml2src --relaxng=schema.rng
+709 Status:  2 	srcml2src --relaxng=schema.rng
+710 srcml2src --relaxng=schema.rng
+711 srcml2src --relaxng=schema.rng sub/a.cpp.xml
+712 srcml2src --relaxng=schema.rng -o sub/b.cpp.xml
+713 srcml2src --relaxng=schema.rng sub/a.cpp.xml -o sub/b.cpp.xml
+714 Status:  0 	srcml2src --relaxng
+715 Status:  0 	srcml2src --relaxng=
+716 srcml2src --apply-root --relaxng=schema.rng
+717 Status:  2 	srcml2src --apply-root --relaxng=schema.rng
+718 srcml2src --apply-root --relaxng=schema.rng
+719 srcml2src --apply-root --relaxng=schema.rng sub/a.cpp.xml
+720 srcml2src --apply-root --relaxng=schema.rng -o sub/b.cpp.xml
+721 srcml2src --apply-root --relaxng=schema.rng sub/a.cpp.xml -o sub/b.cpp.xml
+722 Status:  0 	srcml2src --apply-root --relaxng
+723 Status:  0 	srcml2src --apply-root --relaxng=
+724 src2srcml -l C++ --position
+725 src2srcml --position sub/a.cpp
+726 src2srcml -l C++ --position -o sub/a.cpp.xml
+727 src2srcml --position sub/a.cpp -o sub/a.cpp.xml
+728 src2srcml -l C++ --tabs 4
+729 src2srcml --tabs 4 sub/a.cpp
+730 src2srcml -l C++ --tabs 4 -o sub/a.cpp.xml
+731 src2srcml --tabs 4 sub/a.cpp -o sub/a.cpp.xml
+732 Status:  1 	src2srcml -l C++ --tabs
+733 Status:  14 	src2srcml -l C++ --tabs a
+734 src2srcml -l C++ --position --tabs 2
+735 src2srcml --position --tabs 2 sub/a.cpp
+736 src2srcml -l C++ --position --tabs 2 -o sub/a.cpp.xml
+737 src2srcml --position --tabs 2 sub/a.cpp -o sub/a.cpp.xml
+738 Status:  1 	src2srcml -l C++ --position --tabs
+739 Status:  14 	src2srcml -l C++ --position --tabs a
+740 src2srcml -l C++ --tabs 2 --position
+741 src2srcml --tabs 2 --position sub/a.cpp
+742 src2srcml -l C++ --tabs 2 --position -o sub/a.cpp.xml
+743 src2srcml --tabs 2 --position sub/a.cpp -o sub/a.cpp.xml
+744 Status:  14 	src2srcml -l C++ --tabs --position
+745 Status:  14 	src2srcml -l C++ --tabs a --position
+746 src2srcml --register-ext cpp=Java sub/a.cpp
+747 src2srcml --register-ext=cpp=Java sub/a.cpp
+748 src2srcml --register-ext cpp=Java sub/a.cpp -o sub/a.cpp.xml
+749 Status:  1 	src2srcml -l C++ --register-ext
+750 Status:  1 	src2srcml -l C++ --register-ext cpp=Jawa
+751 src2srcml --register-ext xml=Java sub/a.xml
+752 src2srcml --register-ext=xml=Java sub/a.xml
+753 src2srcml --register-ext xml=Java sub/a.xml -o sub/a.cpp.xml
+754 Status:  1 	src2srcml -l C++ --register-ext xml=Jawa
+755 src2srcml dir
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="AspectJ" filename="dir/file.aj">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="dir/file.c">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="dir/file.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="dir/file.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="AspectJ" filename="dir/file.aj">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="dir/file.c">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="dir/file.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="dir/file.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+756 src2srcml dir -o dir/dir.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="AspectJ" filename="dir/file.aj">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="dir/file.c">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="dir/file.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="dir/file.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="AspectJ" filename="dir/file.aj">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="dir/file.c">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="dir/file.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="dir/file.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+757 src2srcml dir
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="AspectJ" filename="dir/file.aj">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="dir/file.c">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="dir/file.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="dir/file.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="AspectJ" filename="dir/file.aj">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="dir/file.c">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="dir/file.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="dir/file.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+758 src2srcml dir -o dir/dir.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="AspectJ" filename="dir/file.aj">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="dir/file.c">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="dir/file.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="dir/file.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="AspectJ" filename="dir/file.aj">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="dir/file.c">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="dir/file.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="dir/file.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+759 src2srcml sub/a.cpp sub/a.java
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+<unit language="Java" filename="sub/a.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+<unit language="Java" filename="sub/a.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+760 src2srcml sub/a.cpp sub/a.java -o sub/all.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+<unit language="Java" filename="sub/a.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+<unit language="Java" filename="sub/a.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+761 src2srcml sub/a.java sub/a.cpp
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/a.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/a.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+</:unit>
+|
+762 src2srcml sub/a.java sub/a.cpp -o sub/all.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/a.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/a.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+</:unit>
+|
+763 src2srcml sub/a.cpp sub/a.java
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="sub/a.java"/>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="sub/a.java"/>
+
+</:unit>
+|
+764 src2srcml sub/a.cpp sub/a.java -o sub/all.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="sub/a.java"/>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="sub/a.java"/>
+
+</:unit>
+|
+765 src2srcml sub/a.java sub/a.cpp
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/a.java"/>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/a.java"/>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+766 src2srcml sub/a.java sub/a.cpp -o sub/all.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/a.java"/>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/a.java"/>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+767 src2srcml sub/a.cpp sub/b.cpp
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+768 src2srcml sub/a.cpp sub/b.cpp -o sub/all.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+769 src2srcml sub/b.cpp sub/a.cpp
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+</:unit>
+|
+770 src2srcml sub/b.cpp sub/a.cpp -o sub/all.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+
+</:unit>
+|
+771 src2srcml sub/a.java sub/b.java
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/a.java"/>
+
+<unit language="Java" filename="sub/b.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/a.java"/>
+
+<unit language="Java" filename="sub/b.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+772 src2srcml sub/a.java sub/b.java -o sub/all.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/a.java"/>
+
+<unit language="Java" filename="sub/b.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/a.java"/>
+
+<unit language="Java" filename="sub/b.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</:unit>
+|
+773 src2srcml sub/b.java sub/a.java
+ERROR
+input||
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/b.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="sub/a.java"/>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/b.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="sub/a.java"/>
+
+</:unit>
+|
+774 src2srcml sub/b.java sub/a.java -o sub/all.xml
+ERROR
+expected|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/b.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="sub/a.java"/>
+
+</unit>
+|
+gen|<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<:unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit language="Java" filename="sub/b.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="sub/a.java"/>
+
+</:unit>
+|
+775 srcml2src --info xml_error/illformed.xml
+776 srcml2src --info xml_error/illformedarchive.xml
+777 srcml2src xml_error/illformed.xml
+778 srcml2src --units xml_error/illformedarchive.xml
+779 srcml2src --xpath concat('&lt;', string(//src:decl[string(src:name)='TO_DIR_FLAG']/src:name), '&gt;') extract_options/extract_options_test.cpp.xml
+780 srcml2src --xpath concat('&lt;&#33;ENTITY ', string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:name), ' "--', substring(string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:init/src:expr), 2, string-length(string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:init/src:expr)) - 2), '"&gt;') extract_options/extract_options_test.cpp.xml
+781 srcml2src --xslt extract_options/extract_options.xsl extract_options/extract_options_test.cpp.xml
+782 src2srcml --language C
+783 src2srcml --language C
+784 srcml2src --xpath //src:unit/@filename
+785 srcml2src --xpath string(//src:unit/@filename)
+786 srcml2src --xpath //src:unit/@filename
+787 srcml2src --xpath string(//src:unit/@filename)
+788 srcml2src --xpath //comment()
+789 srcml2src --xpath string(//comment())
+790 srcml2src --xpath //comment()
+791 srcml2src --xpath string(//comment())
+792 src2srcml sub/a.java --cpp
+793 src2srcml sub/a.java --cpp
+794 src2srcml -l Java --cpp -o sub/a.java.xml
+795 src2srcml --cpp sub/a.java -o sub/a.java.xml
+
+Error count:		56 	[34, 35, 36, 80, 81, 122, 123, 124, 127, 128, 129, 253, 254, 255, 256, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 454, 455, 456, 755, 756, 757, 758, 759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774]
+EOL Error count:	0 	[]
+Exception count:	0
+
+34	src2srcml sub/a.cpp sub/b.cpp -o -
+35	src2srcml --archive sub/a.cpp -o -
+36	src2srcml --files-from filelistab
+80	srcml2src --to-dir=.
+81	srcml2src --to-dir=.
+122	src2srcml -l C++
+123	src2srcml -l C++ --cpp-markup-else
+124	src2srcml -l C++ --cpp-text-else
+127	src2srcml -l C++
+128	src2srcml -l C++ --cpp-text-if0
+129	src2srcml -l C++ --cpp-markup-if0
+253	src2srcml --archive sub/a.cpp -o sub/a.cpp.xml
+254	src2srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
+255	src2srcml --xmlns:src=http://www.sdml.info/srcML/src sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
+256	src2srcml --files-from filelistab -o sub/a.cpp.xml
+287	src2srcml sub/a.cpp
+288	src2srcml -l C++ -o sub/a.cpp.xml
+289	src2srcml sub/a.cpp -o sub/a.cpp.xml
+290	src2srcml --cpp-markup-else sub/a.cpp
+291	src2srcml -l C++ --cpp-markup-else -o sub/a.cpp.xml
+292	src2srcml --cpp-markup-else sub/a.cpp -o sub/a.cpp.xml
+293	src2srcml --cpp-text-else sub/a.cpp
+294	src2srcml -l C++ --cpp-text-else -o sub/a.cpp.xml
+295	src2srcml --cpp-text-else sub/a.cpp -o sub/a.cpp.xml
+296	src2srcml sub/a.cpp
+297	src2srcml -l C++ -o sub/a.cpp.xml
+298	src2srcml sub/a.cpp -o sub/a.cpp.xml
+299	src2srcml --cpp-text-if0 sub/a.cpp
+300	src2srcml -l C++ --cpp-text-if0 -o sub/a.cpp.xml
+301	src2srcml --cpp-text-if0 sub/a.cpp -o sub/a.cpp.xml
+302	src2srcml --cpp-markup-if0 sub/a.cpp
+303	src2srcml -l C++ --cpp-markup-if0 -o sub/a.cpp.xml
+304	src2srcml --cpp-markup-if0 sub/a.cpp -o sub/a.cpp.xml
+454	srcml2src --to-dir=. sub/a.cpp.xml
+455	srcml2src --to-dir=. sub/a.cpp.xml
+456	srcml2src -a . sub/a.cpp.xml
+755	src2srcml dir
+756	src2srcml dir -o dir/dir.xml
+757	src2srcml dir
+758	src2srcml dir -o dir/dir.xml
+759	src2srcml sub/a.cpp sub/a.java
+760	src2srcml sub/a.cpp sub/a.java -o sub/all.xml
+761	src2srcml sub/a.java sub/a.cpp
+762	src2srcml sub/a.java sub/a.cpp -o sub/all.xml
+763	src2srcml sub/a.cpp sub/a.java
+764	src2srcml sub/a.cpp sub/a.java -o sub/all.xml
+765	src2srcml sub/a.java sub/a.cpp
+766	src2srcml sub/a.java sub/a.cpp -o sub/all.xml
+767	src2srcml sub/a.cpp sub/b.cpp
+768	src2srcml sub/a.cpp sub/b.cpp -o sub/all.xml
+769	src2srcml sub/b.cpp sub/a.cpp
+770	src2srcml sub/b.cpp sub/a.cpp -o sub/all.xml
+771	src2srcml sub/a.java sub/b.java
+772	src2srcml sub/a.java sub/b.java -o sub/all.xml
+773	src2srcml sub/b.java sub/a.java
+774	src2srcml sub/b.java sub/a.java -o sub/all.xml
+
+src2srcml Version 
+Copyright (C) 2013 SDML
+Using: libxml 20900, libarchive 2008003 (Compiled 2008005)
+srcml2src Version 
+Copyright (C) 2013 SDML
+Using: libxml 20900, libxslt 10128, libexslt 817, libexslt(libxslt) 10128, libarchive 2008005

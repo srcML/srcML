@@ -307,7 +307,9 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
     if(end_start_unit[size - 1] == '<')
       --size;
 
-    xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)end_start_unit + 1, (int)size - 1);
+    // FIXME: This check prevents a stderr msg when size is -1, which happens with empty input
+    if (size != -1)
+        xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)end_start_unit + 1, (int)size - 1);
 
     out.srcMLTextWriterEndElement(out.getWriter());
 
