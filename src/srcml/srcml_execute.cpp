@@ -44,8 +44,18 @@ void srcml_execute(const srcml_request_t& srcml_request,
         // pipe between each step
         int prevoutfd = fds[0];
         fds[0] = fds[1] = -1;
-        if (pipeline.size() > 1 && !last)
+        if (pipeline.size() > 1 && !last) {
+#ifndef _MSC_BUILD            
             pipe(fds);
+#else
+            HANDLE read_pipe;
+            HANDLE write_pipe;
+            CreatePipe(&read_pipe,&write_pipe, NULL, 0);
+
+            fds[1]= _open_osfhandle((intptr_t)write_pipe, 0);
+            fds[0] = _open_osfhandle((intptr_t)read_pipe, _O_RDONLY);
+#endif
+        }
 
         /* run this step in the sequence */
         pipeline_threads.create_thread(
