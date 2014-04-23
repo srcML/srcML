@@ -19,11 +19,11 @@
 #define READ(FILE, BUF, NUM) read(FILE, BUF, NUM)
 #define WRITE(FILE, BUF, NUM) write(FILE, BUF, NUM)
 
+#define UNLINK(FILE) unlink(FILE)
+
 #define STRDUP strdup
 
 #define MKTEMP mktemp
-
-#define UNLINK unlink
 
 #else
 
@@ -34,11 +34,11 @@
 #define READ(FILE, BUF, NUM) _read(FILE, BUF, NUM)
 #define WRITE(FILE, BUF, NUM) _write(FILE, BUF, NUM)
 
+#define UNLINK(FILE) _unlink
+
 #define STRDUP _strdup
 
 #define MKTEMP _mktemp
-
-#define UNLINK(FILE) _unlink(FILE)
 
 #endif
 
