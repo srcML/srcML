@@ -27,7 +27,9 @@
 
 #else
 
-#define OPEN(FILE, ACCESS, PERM) _open(FILE, ACCESS)
+#define S_IRUSR _S_IREAD
+#define S_IWUSR _S_IWRITE
+#define OPEN(FILE, ACCESS, PERM) _open(FILE, ACCESS, PERM)
 #define CLOSE(FILE) _close(FILE)
 #define READ(FILE, BUF, NUM) _read(FILE, BUF, NUM)
 #define WRITE(FILE, BUF, NUM) _write(FILE, BUF, NUM)
