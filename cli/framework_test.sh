@@ -30,25 +30,51 @@
 #   can be made
 
 # make sure to find the srcml executable
-export PATH=$PATH:bin/
+export PATH=../bin/:$PATH
 
-# always exit whenever a command or comparison fails
+# always exit when a command exits with a non-zero status
 set -e
 
 # turn history on so we can output the command issued
 set -o history
-HISTIGNORE=check
+export HISTIGNORE=check:\#
 HISTSIZE=2
+
+CAPTURE_STDOUT=true
+CAPTURE_STDERR=true
+
+# variable $1 is set to the contents of stdin
+define() { IFS= read -r -d '' ${1} || true; }
+
+# variable $1 is set to the contents of file $2
+readfile() { ${1}="$(cat $2)"; }
+
+# file with name $1 is created from the contents of string variable $2
+createfile() { echo -ne "${2}" > ${1}; }
+
+rmfile() { rm -f ${1}; }
+
+message() {
+    # return stdout and stderr to standard streams
+    [ "$CAPTURE_STDOUT" = true ] && exec 1>&5
+    [ "$CAPTURE_STDERR" = true ] && exec 2>&6
+
+    # trace the command
+    echo "$1" >&2
+
+    [ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
+    [ "$CAPTURE_STDERR" = true ] && exec 6>&2 2>$STDERR
+
+    true
+}
 
 # output filenames for capturing stdout and stderr from the command
 typeset STDERR=.stderr_$(basename $0)
 typeset STDOUT=.stdout_$(basename $0)
 
 # save stdout and stderr to our files
-exec 5>&1 1>$STDOUT
-exec 6>&2 2>$STDERR
-
-define() { IFS= read -r -d '' ${1} || true; }
+[ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
+[ "$CAPTURE_STDERR" = true ] && exec 6>&2 2>$STDERR
 
 ##
 # checks the result of a command
@@ -60,8 +86,8 @@ define() { IFS= read -r -d '' ${1} || true; }
 check() {
 
     # return stdout and stderr to standard streams
-    exec 1>&5
-    exec 2>&6
+    [ "$CAPTURE_STDOUT" = true ] && exec 1>&5
+    [ "$CAPTURE_STDERR" = true ] && exec 2>&6
 
     # trace the command
     echo $(history | head -n 1 | cut -c 8-)
@@ -93,7 +119,9 @@ check() {
         [ ! -s $STDERR ]
     fi
 
-    # return to capturing stdout and stderr
-    exec 5>&1 1>$STDOUT
-    exec 6>&2 2>$STDERR
+    # # return to capturing stdout and stderr
+    [ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
+    [ "$CAPTURE_STDERR" = true ] && exec 6>&2 2>$STDERR
+
+    true
 }
