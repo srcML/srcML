@@ -151,9 +151,6 @@ void option_field(const std::string& value) { srcml_request.*pfield = value; }
 template <std::vector<std::string> srcml_request_t::*pfield>
 void option_field(const std::vector<std::string>& value) { srcml_request.*pfield = value; }
 
-template <std::string srcml_request_t::*pfield>
-void option_field(const std::string& value) { srcml_request.*pfield = value; }
-
 template <int srcml_request_t::*pfield>
 void option_field(int value) { srcml_request.*pfield = value; }
 

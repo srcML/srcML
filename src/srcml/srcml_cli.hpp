@@ -102,7 +102,7 @@ struct srcml_request_t {
 
     boost::optional<std::string> src_encoding;
 
-    std::string output_filename;
+    boost::optional<std::string> output_filename;
 
     //filelist:// prefix
     std::vector<std::string> files_from;
