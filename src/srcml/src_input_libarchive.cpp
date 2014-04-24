@@ -21,7 +21,7 @@
  */
 
 #ifdef _MSC_BUILD 
-#define ssize_t int
+#define ssize_t __int64
 #endif
 
 #include <src_input_libarchive.hpp>
