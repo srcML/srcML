@@ -62,11 +62,11 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
     //    writers.create_thread( boost::bind(src_output_file, unit, out.string()));
 
         // trace
-        log << "a" << out.c_str();
+        log << "a" << (const char *)out.c_str();
 
         std::cerr << ++count << " " << out.c_str() << '\n';
 
-        srcml_unparse_unit_filename(unit, out.c_str());
+        srcml_unparse_unit_filename(unit, (const char *)out.c_str());
 
         srcml_free_unit(unit);
 
