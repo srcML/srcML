@@ -301,13 +301,14 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
     size_t size = strlen(end_start_unit);
 
-    while(end_start_unit[--size] != '/')
-  ;
+    if(size > 1) {
 
-    if(end_start_unit[size - 1] == '<')
-      --size;
+      while(end_start_unit[--size] != '<')
+        ;
 
-    xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)end_start_unit + 1, (int)size - 1);
+      xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)end_start_unit + 1, (int)size - 1);
+
+    }
 
     out.srcMLTextWriterEndElement(out.getWriter());
 
