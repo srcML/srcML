@@ -20,6 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef _MSC_BUILD 
+#define ssize_t int
+#endif
+
 #include <src_input_libarchive.hpp>
 #include <curl/curl.h>
 #include <archive.h>
@@ -94,7 +98,7 @@ void src_input_libarchive(ParseQueue& queue,
     } else if (input_file.protocol == "http") {
 
         curling.source = input_file.filename;
-        open_status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
+        open_status = archive_read_open(arch, &curling, archive_curl_open, (archive_read_callback *)archive_curl_read, archive_curl_close);
 
     } else {
 
