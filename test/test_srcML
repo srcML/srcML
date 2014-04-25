@@ -34,7 +34,7 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
         scp ~/Dropbox/srcML/Unix/openSUSE13.1-64/srcML.tar.gz suse13test64:/srcML
     fi
 
-    if [[ $OS = "suse" || $OS = "" ]]; then
+    if [[ $OS = "ubuntu" || $OS = "" ]]; then
         scp ~/Dropbox/srcML/Unix/Ubuntu10.04/srcML.tar.gz ubuntu10test:/srcML
         scp ~/Dropbox/srcML/Unix/Ubuntu12.04/srcML.tar.gz ubuntu12test:/srcML
         scp ~/Dropbox/srcML/Unix/Ubuntu14.04/srcML.tar.gz ubuntu14test:/srcML
@@ -43,14 +43,14 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
         scp ~/Dropbox/srcML/Unix/Ubuntu14.04-64/srcML.tar.gz ubuntu14test64:/srcML
     fi
 
-    if [[ $OS = "suse" || $OS = "" ]]; then
+    if [[ $OS = "mac" || $OS = "" ]]; then
         sleep 1;
         #scp ~/Dropbox/srcML/Unix/MacLion/srcML.tar.gz macliontest:/srcML
         #scp ~/Dropbox/srcML/Unix/MacMountainLion/srcML.tar.gz macmountainliontest:/srcML
         #scp ~/Dropbox/srcML/Unix/MacMavericks/srcML.tar.gz macmaverickstest:/srcML
     fi
 
-    if [[ $OS = "suse" || $OS = "" ]]; then
+    if [[ $OS = "mint" || $OS = "" ]]; then
         scp ~/Dropbox/srcML/Unix/Mint16/srcML.tar.gz mint16test:/srcML
         scp ~/Dropbox/srcML/Unix/Mint16-64/srcML.tar.gz mint16test64:/srcML
     fi
