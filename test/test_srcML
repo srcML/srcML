@@ -10,13 +10,13 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
 
     if [[ $OS = "" ]]; then
 
-        ./sshall.py --test "bash -c \"date -ud \\\"$(date -u)\\\"\""
+        ./sshall.py --test "bash -c \"date \\\"$(date "+%m%d%H%M%Y.%S")\\\"\""
 
         ./sshall.py --test 'bash -c "cd /srcML; git pull; git checkout issue321b; git pull; cd ..; chown -R srcml:srcml /srcML"'
 
     else
 
-        ./sshall.py --test --$OS "bash -c \"date -ud \\\"$(date -u)\\\"\""
+        ./sshall.py --test --$OS "bash -c \"date \\\"$(date "+%m%d%H%M%Y.%S")\\\"\""
 
         ./sshall.py --test --$OS 'bash -c "cd /srcML; git pull; git checkout issue321b; git pull; cd ..; chown -R srcml:srcml /srcML"'
 
