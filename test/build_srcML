@@ -1,106 +1,115 @@
 #!/bin/bash
 
-OS=$1
+FIRST=1 
 
-if [[ $OS = "" ]]; then
+while [[ FIRST -eq 1 || $1 != "" ]]; do
 
-    ./sshall.py --build "bash -c \"date --set \\\"$(date)\\\"\""
+    FIRST=0
+    OS=$1 
 
-    ./sshall.py --build 'bash -c "cd /srcML; git checkout master; git pull"'
+    if [[ $OS = "" ]]; then
 
-    ./sshall.py --build 'bash -c "cd /srcML/; git clean -fdx; cmake .; make -j2; cpack"'
+        ./sshall.py --build "bash -c \"date --set \\\"$(date)\\\"\""
 
-else
+        ./sshall.py --build 'bash -c "cd /srcML; git checkout master; git pull"'
 
-    ./sshall.py --build --$OS "bash -c \"date --set \\\"$(date)\\\"\""
+        ./sshall.py --build 'bash -c "cd /srcML/; git clean -fdx; cmake .; make -j2; cpack"'
 
-    ./sshall.py --build --$OS 'bash -c "cd /srcML; git checkout master; git pull"'
+    else
 
-    ./sshall.py --build --$OS 'bash -c "cd /srcML/; git clean -fdx; cmake .; make -j2; cpack"'
+        ./sshall.py --build --$OS "bash -c \"date --set \\\"$(date)\\\"\""
 
-fi
+        ./sshall.py --build --$OS 'bash -c "cd /srcML; git checkout master; git pull"'
 
-if [[ $OS = "fedora" || $OS = ""]]; then
-    ./sshall.py --fedora --build 'bash -c "cd /srcML/; cpack -G RPM"'
-fi
+        ./sshall.py --build --$OS 'bash -c "cd /srcML/; git clean -fdx; cmake .; make -j2; cpack"'
 
-if [[ $OS = "suse" || $OS = "" ]]; then
-    ./sshall.py --suse --build 'bash -c "cd /srcML/; cpack -G RPM"'
-fi
+    fi
 
-if [[ $OS = "ubuntu" || $OS = "" ]]; then
-    ./sshall.py --ubuntu --build 'bash -c "cd /srcML/; cpack -G DEB"'
-fi
+    if [[ $OS = "fedora" || $OS = "" ]]; then
+        ./sshall.py --fedora --build 'bash -c "cd /srcML/; cpack -G RPM"'
+    fi
 
-if [[ $OS = "mint" || $OS = "" ]]; then
-    ./sshall.py --mint --build 'bash -c "cd /srcML/; cpack -G DEB"'
-fi
+    if [[ $OS = "suse" || $OS = "" ]]; then
+        ./sshall.py --suse --build 'bash -c "cd /srcML/; cpack -G RPM"'
+    fi
 
-if [[ $OS = "mac" || $OS = "" ]]; then
-    #./sshall.py --mac --build 'bash -c "cd /srcML/; cpack -G PackageMaker"'
-fi
+    if [[ $OS = "ubuntu" || $OS = "" ]]; then
+        ./sshall.py --ubuntu --build 'bash -c "cd /srcML/; cpack -G DEB"'
+    fi
 
-if [[ $OS = "" ]]; then
-    ./sshall.py --build 'bash -c "chown -R srcml:srcml /srcML"'
-else
-    ./sshall.py --build --$OS 'bash -c "chown -R srcml:srcml /srcML"'
-fi
+    if [[ $OS = "mint" || $OS = "" ]]; then
+        ./sshall.py --mint --build 'bash -c "cd /srcML/; cpack -G DEB"'
+    fi
 
-if [[ $OS = "fedora" || $OS = ""]]; then
-    scp fedora19build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora19
-    scp fedora19build:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora19
-    scp fedora20build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora20
-    scp fedora20build:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora20
-    scp fedora19build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora19-64
-    scp fedora19build64:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora19-64
-    scp fedora20build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora20-64
-    scp fedora20build64:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora20-64
-fi
+    if [[ $OS = "mac" || $OS = "" ]]; then
+        #./sshall.py --mac --build 'bash -c "cd /srcML/; cpack -G PackageMaker"'
+    fi
 
-if [[ $OS = "suse" || $OS = ""]]; then
-    scp suse13build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/openSUSE13.1
-    scp suse13build:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/openSUSE13.1
-    scp suse13build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/openSUSE13.1-64
-    scp suse13build64:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/openSUSE13.1-64
-fi
+    if [[ $OS = "" ]]; then
+        ./sshall.py --build 'bash -c "chown -R srcml:srcml /srcML"'
+    else
+        ./sshall.py --build --$OS 'bash -c "chown -R srcml:srcml /srcML"'
+    fi
 
-if [[ $OS = "ubuntu" || $OS = ""]]; then
-    scp ubuntu10build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu10.04
-    scp ubuntu10build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu10.04
-    scp ubuntu12build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04
-    scp ubuntu12build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu12.04
-    scp ubuntu14build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu14.04
-    scp ubuntu14build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu14.04
-    scp ubuntu10build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu10.04-64
-    scp ubuntu10build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu10.04-64
-    scp ubuntu12build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04-64
-    scp ubuntu12build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu12.04-64
-    scp ubuntu14build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu14.04-64
-    scp ubuntu14build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu14.04-64
-fi
+    if [[ $OS = "fedora" || $OS = "" ]]; then
+        scp fedora19build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora19
+        scp fedora19build:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora19
+        scp fedora20build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora20
+        scp fedora20build:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora20
+        scp fedora19build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora19-64
+        scp fedora19build64:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora19-64
+        scp fedora20build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora20-64
+        scp fedora20build64:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora20-64
+    fi
 
-if [[ $OS = "mac" || $OS = ""]]; then
-    #scp maclionbuild:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/MacLion/
-    #scp maclionbuild:/srcML/dist/srcML*.dmg ~/Dropbox/srcML/Unix/MacLion/
-    #scp macmountainlionbuild:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/MacMountainLion/
-    #scp macmountainlionbuild:/srcML/dist/srcML*.dmg ~/Dropbox/srcML/Unix/MacMountainLion/
-    #scp macmavericksbuild:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/MacMavericks/
-    #scp macmavericksbuild:/srcML/dist/srcML*.dmg ~/Dropbox/srcML/Unix/MacMavericks/
-fi
+    if [[ $OS = "suse" || $OS = "" ]]; then
+        scp suse13build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/openSUSE13.1
+        scp suse13build:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/openSUSE13.1
+        scp suse13build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/openSUSE13.1-64
+        scp suse13build64:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/openSUSE13.1-64
+    fi
 
-if [[ $OS = "mint" || $OS = ""]]; then
-    scp mint16build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Mint16
-    scp mint16build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Mint16
-    scp mint16build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Mint16-64
-    scp mint16build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Mint16-64
-fi
+    if [[ $OS = "ubuntu" || $OS = "" ]]; then
+        scp ubuntu10build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu10.04
+        scp ubuntu10build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu10.04
+        scp ubuntu12build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04
+        scp ubuntu12build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu12.04
+        scp ubuntu14build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu14.04
+        scp ubuntu14build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu14.04
+        scp ubuntu10build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu10.04-64
+        scp ubuntu10build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu10.04-64
+        scp ubuntu12build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04-64
+        scp ubuntu12build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu12.04-64
+        scp ubuntu14build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu14.04-64
+        scp ubuntu14build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu14.04-64
+    fi
 
-if [[ $OS = "fedora" || $OS = ""]]; then
-    ./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML; git clean -fdx; cp -r ~/dlls .; mingw32-cmake .; make -j2; cpack"'
-    ./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML/; cpack -G NSIS"'
-    ./sshall.py --fedora --build --20 --~64 'bash -c "chown -R srcml:srcml /srcML"'
-    scp fedora20build:/srcML/dist/srcML*.zip ~/Dropbox/srcML/Windows
-    scp fedora20build:/srcML/dist/srcML*.exe ~/Dropbox/srcML/Windows
+    if [[ $OS = "mac" || $OS = "" ]]; then
+        #scp maclionbuild:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/MacLion/
+        #scp maclionbuild:/srcML/dist/srcML*.dmg ~/Dropbox/srcML/Unix/MacLion/
+        #scp macmountainlionbuild:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/MacMountainLion/
+        #scp macmountainlionbuild:/srcML/dist/srcML*.dmg ~/Dropbox/srcML/Unix/MacMountainLion/
+        #scp macmavericksbuild:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/MacMavericks/
+        #scp macmavericksbuild:/srcML/dist/srcML*.dmg ~/Dropbox/srcML/Unix/MacMavericks/
+    fi
 
-    bash -c "cd ~/Dropbox/srcML/Windows; unzip -ouq srcML-Win.zip;"
-fi
+    if [[ $OS = "mint" || $OS = "" ]]; then
+        scp mint16build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Mint16
+        scp mint16build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Mint16
+        scp mint16build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Mint16-64
+        scp mint16build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Mint16-64
+    fi
+
+    if [[ $OS = "fedora" || $OS = "" ]]; then
+        ./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML; git clean -fdx; cp -r ~/dlls .; mingw32-cmake .; make -j2; cpack"'
+        ./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML/; cpack -G NSIS"'
+        ./sshall.py --fedora --build --20 --~64 'bash -c "chown -R srcml:srcml /srcML"'
+        scp fedora20build:/srcML/dist/srcML*.zip ~/Dropbox/srcML/Windows
+        scp fedora20build:/srcML/dist/srcML*.exe ~/Dropbox/srcML/Windows
+
+        bash -c "cd ~/Dropbox/srcML/Windows; unzip -ouq srcML-Win.zip;"
+    fi
+
+    shift 1
+
+done
