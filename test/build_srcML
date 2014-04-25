@@ -42,7 +42,7 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
     fi
 
     if [[ $OS = "mac" || $OS = "" ]]; then
-        #./sshall.py --mac --build 'bash -c "cd /srcML/; cpack -G PackageMaker"'
+        sleep 1; #./sshall.py --mac --build 'bash -c "cd /srcML/; cpack -G PackageMaker"'
     fi
 
     if [[ $OS = "" ]]; then
@@ -85,6 +85,7 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
     fi
 
     if [[ $OS = "mac" || $OS = "" ]]; then
+        sleep 1;
         #scp maclionbuild:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/MacLion/
         #scp maclionbuild:/srcML/dist/srcML*.dmg ~/Dropbox/srcML/Unix/MacLion/
         #scp macmountainlionbuild:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/MacMountainLion/
