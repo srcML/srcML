@@ -10,13 +10,13 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
 
     if [[ $OS = "" ]]; then
 
-        ./sshall.py --test "bash -c \"date --set \\\"$(date)\\\"\""
+        ./sshall.py --test "bash -c \"date -ud \\\"$(date -u)\\\"\""
 
         ./sshall.py --test 'bash -c "cd /srcML; git pull; git checkout issue321b; git pull; cd ..; chown -R srcml:srcml /srcML"'
 
     else
 
-        ./sshall.py --test --$OS "bash -c \"date --set \\\"$(date)\\\"\""
+        ./sshall.py --test --$OS "bash -c \"date -ud \\\"$(date -u)\\\"\""
 
         ./sshall.py --test --$OS 'bash -c "cd /srcML; git pull; git checkout issue321b; git pull; cd ..; chown -R srcml:srcml /srcML"'
 
@@ -44,7 +44,6 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
     fi
 
     if [[ $OS = "mac" || $OS = "" ]]; then
-        sleep 1;
         scp ~/Dropbox/srcML/Unix/MacLion/srcML.tar.gz macliontest:/srcML
         scp ~/Dropbox/srcML/Unix/MacMountainLion/srcML.tar.gz macmountainliontest:/srcML
         scp ~/Dropbox/srcML/Unix/MacMavericks/srcML.tar.gz macmaverickstest:/srcML
