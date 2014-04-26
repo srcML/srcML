@@ -117,23 +117,34 @@ static constexpr archive_calls_t compression_calls[] = {
     
     #if ARCHIVE_VERSION_NUMBER >= 3000000
         { ".bz2" , archive_write_add_filter_bzip2 },
+        { ".gz"  , archive_write_add_filter_gzip },
+        { ".lz"  , archive_write_add_filter_lzma },
+        { ".lzma", archive_write_add_filter_lzma },
+        { ".taz",  archive_write_add_filter_compress },  // (archive w/ compression)
+        { ".tb2",  archive_write_add_filter_bzip2 },  // (archive w/ compression)
+        { ".tbz2", archive_write_add_filter_bzip2 }, // (archive w/ compression)
+        { ".tgz",  archive_write_add_filter_gzip },  // (archive w/ compression)
+        { ".tlz",  archive_write_add_filter_lzma },  // (archive w/ compression)
+        { ".txz",  archive_write_add_filter_xz },  // (archive w/ compression)
+        { ".xar",  archive_write_add_filter_xz },
+        { ".xz"  , archive_write_add_filter_xz },
+        { ".z"   , archive_write_add_filter_compress },
     #else
         { ".bz2" , archive_write_set_compression_bzip2 },
-    #endif    
-        
-    { ".gz"  , archive_write_set_compression_gzip },
-    { ".lz"  , archive_write_set_compression_lzma },
-    { ".lzma", archive_write_set_compression_lzma },
-    { ".taz",  archive_write_set_compression_compress },  // (archive w/ compression)
-    { ".tb2",  archive_write_set_compression_bzip2 },  // (archive w/ compression)
-    //{ ".tbz",  archive_write_set_compression_bzip },  // (archive w/ compression)
-    { ".tbz2", archive_write_set_compression_bzip2 }, // (archive w/ compression)
-    { ".tgz",  archive_write_set_compression_gzip },  // (archive w/ compression)
-    { ".tlz",  archive_write_set_compression_lzma },  // (archive w/ compression)
-    { ".txz",  archive_write_set_compression_xz },  // (archive w/ compression)
-    { ".xar",  archive_write_set_compression_xz },
-    { ".xz"  , archive_write_set_compression_xz },
-    { ".z"   , archive_write_set_compression_compress },
+        { ".gz"  , archive_write_set_compression_gzip },
+        { ".lz"  , archive_write_set_compression_lzma },
+        { ".lzma", archive_write_set_compression_lzma },
+        { ".taz",  archive_write_set_compression_compress },  // (archive w/ compression)
+        { ".tb2",  archive_write_set_compression_bzip2 },  // (archive w/ compression)
+        { ".tbz2", archive_write_set_compression_bzip2 }, // (archive w/ compression)
+        { ".tgz",  archive_write_set_compression_gzip },  // (archive w/ compression)
+        { ".tlz",  archive_write_set_compression_lzma },  // (archive w/ compression)
+        { ".txz",  archive_write_set_compression_xz },  // (archive w/ compression)
+        { ".xar",  archive_write_set_compression_xz },
+        { ".xz"  , archive_write_set_compression_xz },
+        { ".z"   , archive_write_set_compression_compress },
+    #endif
+
     { NULL, NULL }
 };
 #ifdef __clang__
