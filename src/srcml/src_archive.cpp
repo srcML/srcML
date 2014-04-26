@@ -114,7 +114,13 @@ static_assert(isordered(format_calls), "format_calls is not ordered");
 // Note: Must be ordered
 static constexpr archive_calls_t compression_calls[] = {
     { ".bz"  , 0 },
-    { ".bz2" , archive_write_set_compression_bzip2 },
+    
+    #if ARCHIVE_VERSION_NUMBER >= 3000000
+        { ".bz2" , archive_write_add_filter_bzip2 },
+    #else
+        { ".bz2" , archive_write_set_compression_bzip2 },
+    #endif    
+        
     { ".gz"  , archive_write_set_compression_gzip },
     { ".lz"  , archive_write_set_compression_lzma },
     { ".lzma", archive_write_set_compression_lzma },
