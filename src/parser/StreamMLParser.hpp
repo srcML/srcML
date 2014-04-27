@@ -28,14 +28,18 @@
 
 #include <antlr/TokenStream.hpp>
 #include "TokenStream.hpp"
-#include <Options.hpp>
 
+/*
+#include <srcml_types.hpp>
+#include <srcml_macros.hpp>
+#include <srcml.h>
+*/
+ 
 #include <list>
 #include <cassert>
 
 #include "srcMLToken.hpp"
 #include "srcMLParser.hpp"
-#include "Options.hpp"
 #include "ModeStack.hpp"
 
 /**
@@ -270,7 +274,7 @@ private:
     bool consumeSkippedToken() {
 
         // preprocessor (unless we already are in one)
-        if (isoption(options, OPTION_CPP) && !inskip && srcMLParser::LA(1) == srcMLParser::PREPROC) {
+        if (isoption(options, SRCML_OPTION_CPP) && !inskip && srcMLParser::LA(1) == srcMLParser::PREPROC) {
 
             // start preprocessor handling
             inskip = true;

@@ -33,10 +33,12 @@
 #include <antlr/TokenStream.hpp>
 #include "StreamMLParser.hpp"
 #include "TokenStream.hpp"
-#include "Options.hpp"
 #include "srcMLException.hpp"
 #include <string>
 #include <vector>
+#include <srcml_types.hpp>
+#include <srcml_macros.hpp>
+#include <srcml.h>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
@@ -182,9 +184,6 @@ public:
 
     void setMacroList(std::vector<std::string> & list);
     void outputMacroList();
-
-    bool isoption(const OPTION_TYPE& options) const;
-    static bool isoption(const OPTION_TYPE& flag, const OPTION_TYPE& options);
 
     void srcMLTextWriterStartElement(xmlTextWriter*, const xmlChar* s);
     void srcMLTextWriterEndElement(xmlTextWriter*);

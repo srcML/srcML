@@ -229,8 +229,8 @@ def src2srcML(text_file, encoding, language, directory, filename, read_archive):
                 unit.set_directory(directory)
 
         unit.parse_memory(text_file)
-        archive.close()
         srcml = unit.get_xml()
+        archive.close()
         if is_all == -1 and is_unicode == -1:
                 srcml = "<unit>" + srcml[srcml.find(">") + 1:]
 
@@ -549,17 +549,19 @@ try:
 						
 						# find the difference
 						result = xmldiff(unitxml, unitsrcml)
+
+						if count > 0 and line_count >= 75:
+							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_DIRECTORY), " ",
+							line_count = 0
+
 						if count > 99 :
 							line_count += 3
 						elif count > 9 :
 							line_count += 2
 						else :
 							line_count += 1
-						line_count += 1
 
-						if count > 0 and line_count >= 75:
-							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_DIRECTORY), " ",
-							line_count = 0
+						line_count += 1
 
 						if result != "":
 							error_count += 1

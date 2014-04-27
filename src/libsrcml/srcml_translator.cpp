@@ -165,7 +165,7 @@ void srcml_translator::set_macro_list(std::vector<std::string> & list) {
  */
 void srcml_translator::close() {
 
-    if(first && (options & OPTION_ARCHIVE) > 0) {
+    if(first && (options & SRCML_OPTION_ARCHIVE) > 0) {
 
         // Open for write;
         out.initWriter();
@@ -268,10 +268,10 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
         out.outputXMLDecl();
 
         // root unit for compound srcML documents
-        if((options & OPTION_ARCHIVE) > 0)
+        if((options & SRCML_OPTION_ARCHIVE) > 0)
             out.startUnit(0, directory, filename, version, 0, 0, true);
 
-        if ((options & OPTION_ARCHIVE) > 0)
+        if ((options & SRCML_OPTION_ARCHIVE) > 0)
             out.processText("\n\n", 2);
 
     }
@@ -301,19 +301,18 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
     size_t size = strlen(end_start_unit);
 
-    while(end_start_unit[--size] != '/')
-  ;
+    if(size > 1) {
 
-    if(end_start_unit[size - 1] == '<')
-      --size;
+      while(end_start_unit[--size] != '<')
+        ;
 
-    // FIXME: This check prevents a stderr msg when size is -1, which happens with empty input
-    if (size != -1)
-        xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)end_start_unit + 1, (int)size - 1);
+      xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)end_start_unit + 1, (int)size - 1);
+
+    }
 
     out.srcMLTextWriterEndElement(out.getWriter());
 
-    if ((options & OPTION_ARCHIVE) > 0)
+    if ((options & SRCML_OPTION_ARCHIVE) > 0)
         out.processText("\n\n", 2);
 
     return true;
@@ -340,10 +339,10 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
         out.outputXMLDecl();
 
         // root unit for compound srcML documents
-        if((options & OPTION_ARCHIVE) > 0)
+        if((options & SRCML_OPTION_ARCHIVE) > 0)
             out.startUnit(0, directory, filename, version, 0, 0, true);
 
-        if ((options & OPTION_ARCHIVE) > 0)
+        if ((options & SRCML_OPTION_ARCHIVE) > 0)
             out.processText("\n\n", 2);
 
     }
@@ -354,9 +353,17 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     is_outputting_unit = true;
 
+    OPTION_TYPE save_options = options;
+
+    int lang = unit->language ? srcml_check_language(unit->language->c_str())
+        : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
+    if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP)
+        options |= SRCML_OPTION_CPP;
+
     out.startUnit(unit->language ? unit->language->c_str() : (unit->archive->language ? unit->archive->language->c_str() : 0), unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
                           unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, false);
 
+    options = save_options;
 
     return true;
 
@@ -381,7 +388,7 @@ bool srcml_translator::add_end_unit() {
 
     bool success = xmlTextWriterEndElement(out.getWriter()) != -1;
 
-    if ((options & OPTION_ARCHIVE) > 0)
+    if ((options & SRCML_OPTION_ARCHIVE) > 0)
         out.processText("\n\n", 2);
 
     return success;

@@ -1,29 +1,74 @@
 #!/bin/bash
 
-./sshall.py --test "bash -c \"date --set \\\"$(date)\\\"\""
 
-./sshall.py --test 'bash -c "cd /srcML; git pull; cd ..; chown -R srcml:srcml /srcML"'
+FIRST=1 
 
-scp ~/Dropbox/srcML/Unix/Fedora19/srcML.tar.gz fedora19test:/srcML
-scp ~/Dropbox/srcML/Unix/Fedora20/srcML.tar.gz fedora20test:/srcML
+while [[ FIRST -eq 1 || $1 != "" ]]; do
 
-scp ~/Dropbox/srcML/Unix/Fedora19-64/srcML.tar.gz fedora19test64:/srcML
-scp ~/Dropbox/srcML/Unix/Fedora20-64/srcML.tar.gz fedora20test64:/srcML
+    FIRST=0
+    OS=$1 
 
-scp ~/Dropbox/srcML/Unix/openSUSE13.1/srcML.tar.gz suse13test:/srcML
-scp  ~/Dropbox/srcML/Unix/openSUSE13.1-64/srcML.tar.gz suse13test64:/srcML
+    if [[ $OS = "" ]]; then
 
-scp ~/Dropbox/srcML/Unix/Ubuntu10.04/srcML.tar.gz ubuntu10test:/srcML
-scp ~/Dropbox/srcML/Unix/Ubuntu12.04/srcML.tar.gz ubuntu12test:/srcML
+        ./sshall.py --test "bash -c \"date \\\"$(date "+%m%d%H%M%Y.%S")\\\"\""
 
-scp ~/Dropbox/srcML/Unix/Ubuntu10.04-64/srcML.tar.gz ubuntu10test64:/srcML
-scp ~/Dropbox/srcML/Unix/Ubuntu12.04-64/srcML.tar.gz ubuntu12test64:/srcML
+        ./sshall.py --test 'bash -c "cd /srcML; git pull; git checkout issue321b; git pull; cd ..; chown -R srcml:srcml /srcML"'
 
-#scp ~/Dropbox/srcML/Unix/MacLion/srcML.tar.gz macliontest:/srcML
-#scp ~/Dropbox/srcML/Unix/MacMountainLion/srcML.tar.gz macmountainliontest:/srcML
-#scp ~/Dropbox/srcML/Unix/MacMavericks/srcML.tar.gz macmaverickstest:/srcML
+    else
 
-./sshall.py --test 'bash -c "cd /srcML; tar xvf srcML.tar.gz; mkdir -p bin; cp srcML/bin/* srcML/lib/* bin/"'
-./sshall.py --test 'bash -c "cd /srcML/test/; rm -f srcMLTestReport*; make clean; cd suite; make; cd ..; ./testsuite.py"'
+        ./sshall.py --test --$OS "bash -c \"date \\\"$(date "+%m%d%H%M%Y.%S")\\\"\""
 
-./sshall.py --test 'bash -c "grep -a \"Errors:\" /srcML/test/srcMLTestReport*"'
+        ./sshall.py --test --$OS 'bash -c "cd /srcML; git pull; git checkout issue321b; git pull; cd ..; chown -R srcml:srcml /srcML"'
+
+    fi
+
+    if [[ $OS = "fedora" || $OS = "" ]]; then
+        scp ~/Dropbox/srcML/Unix/Fedora19/srcML.tar.gz fedora19test:/srcML
+        scp ~/Dropbox/srcML/Unix/Fedora20/srcML.tar.gz fedora20test:/srcML
+        scp ~/Dropbox/srcML/Unix/Fedora19-64/srcML.tar.gz fedora19test64:/srcML
+        scp ~/Dropbox/srcML/Unix/Fedora20-64/srcML.tar.gz fedora20test64:/srcML
+    fi
+
+    if [[ $OS = "suse" || $OS = "" ]]; then
+        scp ~/Dropbox/srcML/Unix/openSUSE13.1/srcML.tar.gz suse13test:/srcML
+        scp ~/Dropbox/srcML/Unix/openSUSE13.1-64/srcML.tar.gz suse13test64:/srcML
+    fi
+
+    if [[ $OS = "ubuntu" || $OS = "" ]]; then
+        scp ~/Dropbox/srcML/Unix/Ubuntu10.04/srcML.tar.gz ubuntu10test:/srcML
+        scp ~/Dropbox/srcML/Unix/Ubuntu12.04/srcML.tar.gz ubuntu12test:/srcML
+        scp ~/Dropbox/srcML/Unix/Ubuntu14.04/srcML.tar.gz ubuntu14test:/srcML
+        scp ~/Dropbox/srcML/Unix/Ubuntu10.04-64/srcML.tar.gz ubuntu10test64:/srcML
+        scp ~/Dropbox/srcML/Unix/Ubuntu12.04-64/srcML.tar.gz ubuntu12test64:/srcML
+        scp ~/Dropbox/srcML/Unix/Ubuntu14.04-64/srcML.tar.gz ubuntu14test64:/srcML
+    fi
+
+    if [[ $OS = "mac" || $OS = "" ]]; then
+        scp ~/Dropbox/srcML/Unix/MacLion/srcML.tar.gz macliontest:/srcML
+        scp ~/Dropbox/srcML/Unix/MacMountainLion/srcML.tar.gz macmountainliontest:/srcML
+        scp ~/Dropbox/srcML/Unix/MacMavericks/srcML.tar.gz macmaverickstest:/srcML
+    fi
+
+    if [[ $OS = "mint" || $OS = "" ]]; then
+        scp ~/Dropbox/srcML/Unix/Mint16/srcML.tar.gz mint16test:/srcML
+        scp ~/Dropbox/srcML/Unix/Mint16-64/srcML.tar.gz mint16test64:/srcML
+    fi
+
+    if [[ $OS = "" ]]; then
+        ./sshall.py --test 'bash -c "cd /srcML; tar xvf srcML.tar.gz; mkdir -p bin; cp srcML/* bin/"'
+        ./sshall.py --test 'bash -c "cd /srcML/test/; rm -f srcMLTestReport*; make clean; cd suite; make; cd ..; ./testsuite.py"'
+
+        ./sshall.py --test 'bash -c "grep -a \"Errors:\" /srcML/test/srcMLTestReport*"' > tmp_srcml_test_reports
+    else
+        ./sshall.py --test --$OS 'bash -c "cd /srcML; tar xvf srcML.tar.gz; mkdir -p bin; cp srcML/* bin/"'
+        ./sshall.py --test --$OS 'bash -c "cd /srcML/test/; rm -f srcMLTestReport*; make clean; cd suite; make; cd ..; ./testsuite.py"'
+
+        ./sshall.py --test --$OS 'bash -c "grep -a \"Errors:\" /srcML/test/srcMLTestReport*"' >> tmp_srcml_test_reports
+    fi
+
+    shift 1
+
+done
+
+cat tmp_srcml_test_reports
+rm -f tmp_srcml_test_reports

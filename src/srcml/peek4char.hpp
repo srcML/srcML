@@ -24,7 +24,13 @@
 #define INCLUDED_PEEK_4_CHAR_HPP
 
 #include <stdio.h>
+ 
+#ifndef _MSC_BUILD 
 #include <unistd.h>
+#else
+#define ssize_t int
+#include <io.h>
+#endif
 
 // determine if XML from first four bytes in almost any encoding
 void peek4char(FILE* fp, unsigned char data[], ssize_t* psize);

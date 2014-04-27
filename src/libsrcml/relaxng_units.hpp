@@ -98,13 +98,13 @@ public :
         if (n == 0) {
 
             // output the xml declaration, if needed
-            if (!found && isoption(options, OPTION_XMLDECL))
+            if (!found && isoption(options, SRCML_OPTION_XML_DECL))
                 xml_output_buffer_write_xml_decl(ctxt, buf);
 
             // output the root unit start tag
             // this is only if in per-unit mode and this is the first result found
             // have to do so here because it may be empty
-            if (is_archive && !found && !isoption(options, OPTION_APPLY_ROOT)) {
+            if (is_archive && !found && !isoption(options, SRCML_OPTION_APPLY_ROOT)) {
 
                 // output a root element, just like the one read in
                 // note that this has to be ended somewhere
@@ -171,7 +171,7 @@ public :
     virtual void end_output() {
 
         // root unit end tag
-        if (is_archive && !isoption(options, OPTION_APPLY_ROOT)) {
+        if (is_archive && !isoption(options, SRCML_OPTION_APPLY_ROOT)) {
             std::string end_unit = "</";
             if(root_prefix) {
                 end_unit += (const char *)root_prefix;

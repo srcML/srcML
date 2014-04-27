@@ -79,7 +79,7 @@ int main(int argc, char * argv[]) {
     }
 
     // output destination setup just like an input source
-    srcml_output_dest destination(srcml_request.output_filename);
+    srcml_output_dest destination(srcml_request.output_filename ? *srcml_request.output_filename : "");
 
     // Determine what processing needs to occur based on the inputs, outputs, and commands
 
