@@ -3049,7 +3049,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         */
         { next_token_check(LPAREN, LCURLY) }? DELEGATE set_type[type, DELEGATE_FUNCTION] |
         (
-        ({ inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0) || LA(1) != LBRACKET || (LA(1) == LBRACKET && next_token() == LBRACKET) }?
+        ({ ((inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0)) || (LA(1) != LBRACKET || next_token() == LBRACKET))
+         && (LA(1) != IN || !inTransparentMode(MODE_FOR_CONDITION)) }?
 
             set_bool[qmark, (qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
 
