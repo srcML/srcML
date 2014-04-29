@@ -1,6 +1,12 @@
 #!/bin/bash
 
-FIRST=1 
+FIRST=1
+RELEASE=""
+
+if [[ $1 = "--release" ]]; then
+    RELEASE="-DCMAKE_BUILD_TYPE=Release"
+    shift 1
+fi
 
 while [[ FIRST -eq 1 || $1 != "" ]]; do
 
@@ -13,7 +19,7 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
 
         ./sshall.py --build 'bash -c "cd /srcML; git checkout master; git pull"'
 
-        ./sshall.py --build 'bash -c "cd /srcML/; git clean -fdx; cmake .; make -j2; cpack"'
+        ./sshall.py --build "bash -c \"cd /srcML/; git clean -fdx; cmake $RELEASE .; make -j2; cpack\""
 
     else
 
@@ -21,7 +27,7 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
 
         ./sshall.py --build --$OS 'bash -c "cd /srcML; git checkout master; git pull"'
 
-        ./sshall.py --build --$OS 'bash -c "cd /srcML/; git clean -fdx; cmake .; make -j2; cpack"'
+        ./sshall.py --build --$OS "bash -c \"cd /srcML/; git clean -fdx; cmake $RELEASE .; make -j2; cpack\""
 
     fi
 
@@ -101,7 +107,7 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
     fi
 
     if [[ $OS = "fedora" || $OS = "" ]]; then
-        ./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML; git clean -fdx; cp -r ~/dlls .; mingw32-cmake .; make -j2; cpack"'
+        ./sshall.py --fedora --build --20 --~64 "bash -c \"cd /srcML; git clean -fdx; cp -r ~/dlls .; mingw32-cmake $RELEASE .; make -j2; cpack\""
         ./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML/; cpack -G NSIS"'
         ./sshall.py --fedora --build --20 --~64 'bash -c "chown -R srcml:srcml /srcML"'
         scp fedora20build:/srcML/dist/srcML*.zip ~/Dropbox/srcML/Windows
