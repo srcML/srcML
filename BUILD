@@ -33,7 +33,7 @@ antlr 2
 boost
 cmake
 
-# for srcML documentation
+# for srcML documentation generation
 man2html
 docbook
 docbook2x
@@ -71,7 +71,7 @@ libcurl-devel
 openssl-devel
 antlr-C++
 
-# for srcML documentation
+# for srcML documentation generation
 man2html
 docbook2X
 
@@ -99,6 +99,34 @@ First fnmatch.h needs copied over into mingw includes.
 
 cp /usr/include/fnmatch.h /usr/i686-w64-mingw32/sys-root/mingw/include/
 
+openSUSE:
+
+Packages Required:
+
+gcc
+gcc-c++
+antlr
+antlr-devel
+libxml2-devel
+libxslt-deve
+libxslt-toolsl
+libarchive-devel
+libcurl-devel
+libopenssl-devel
+docbook2X
+
+See 64-bit Linux for installing boost.
+
+Building srcML requires a version of cmake greater that what is typically supported.
+Visit http://www.cmake.org to download and install the lastest version of cmake.
+
+There is no man2html package on OpenSUSE for srcML documentation generation. The url is:
+http://www.oit.uci.edu/indiv/ehood/tar/man2html3.0.1.tar.gz
+
+Use the following to install as ./install.me does not appear to use the right location
+
+perl install.me
+
 Ubuntu (and Linux Mint):
 
 gcc
@@ -111,18 +139,18 @@ libantlr-dev
 libcurl4-openssl-dev
 libssl-dev
 
-# for srcML documentation
+# for srcML documentation generation
 man2html
 docbook2X
 
 
 Currently, Ubuntu versions before 14.04 (possibly before 13) do not provide a recent enough version of cmake. 
-Visit http://www.cmake.org. To download install the lastest version of cmake.
+Visit http://www.cmake.org to download abd install the lastest version of cmake.
 
-boost also needs to be installed separately see 64-bit Linux and Ubuntu.
+boost also needs to be installed separately see 64-bit Linux.
 
 
-64-bit Linux and Ubuntu:
+64-bit Linux:
 
 The boost libraries are statically compiled in, 64-bit machines do not provide adequate libraries for static compilation (require compilation with -fPIC)
 
