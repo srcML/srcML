@@ -47,6 +47,9 @@
  *
  * Global structure to hold error string.
  */
+#ifndef TEST
+static
+#endif
 std::string srcml_error;
 
 /**
@@ -56,6 +59,9 @@ std::string srcml_error;
  * Archive is used for both read and write first call to srcml()
  * initializes other parameters.
  */
+#ifndef TEST
+static
+#endif
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL,
                                  8, std::vector<std::string>(), std::vector<std::string>(), language_extension_registry(),
@@ -66,6 +72,9 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
  *
  * global unit for use with srcml() function.  Defaulted values.
  */
+#ifndef TEST
+static
+#endif
 srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 /**
@@ -73,7 +82,7 @@ srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
  *
  * Global variable tracking if need to register default languages.
  */
-bool register_languages = true;
+static bool register_languages = true;
 /******************************************************************************
  *                                                                            *
  *                           Global Cleanup function                          *
