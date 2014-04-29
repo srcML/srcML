@@ -25,9 +25,36 @@ make tests
 
 Unix distro specifics:
 
+OSX:
+
+Packages Required:
+
+antlr 2 
+boost
+cmake
+
+# for srcML documentation
+man2html
+docbook
+docbook2x
+
+# additional packages that may not needed, but are recommended (for timing etc.)
+coreutils
+gnu-sed
+gnu-time
+
+# for dmg/pkg distruction
+PackageMaker
+
+OSX does not provide headers for libarchive visit http://www.libarchive.org and 
+download 2.8.5 for headers that are close to the versions distributed on OSX.
+The files needed are archive.h and archive_entry.h.
+
+PackageMaker is part of the auxiliary tools (late July 2012 for Mountain Lion or February 2012 for Lion)
+that are not distributed by default and needs to be gotten from the following URL:
+https://developer.apple.com/downloads/index.action
 
 Fedora:
-
 
 Packages required:
 
