@@ -3424,7 +3424,7 @@ lead_type_identifier[] { ENTRY_DEBUG } :
 //        (macro_call_paren identifier)=> macro_call |
 
         // typical type name
-        { LA(1) != ASYNC && (inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE)) }?
+        { LA(1) != ASYNC && (inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE)) && LA(1) != CRESTRICT }?
         compound_name |
 
         pure_lead_type_identifier
