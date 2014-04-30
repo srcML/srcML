@@ -3879,7 +3879,10 @@ identifier_list[] { ENTRY_DEBUG } :
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
-            INTO | THIS
+            INTO | THIS |
+
+            // C
+            CRESTRICT
 ;
 
 // most basic name
@@ -4126,6 +4129,9 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // C
             RESTRICT | 
+
+            // C/C++ mode
+            CRESTRICT | 
 
             // C# & Java
             INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
