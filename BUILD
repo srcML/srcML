@@ -8,6 +8,8 @@
 	builds (builds outside the source directory) are supported.  However,
 	the use of out of source build are usually recommended.
 
+---
+
 * ## Unix ##
 
 	To generate a simple make file in the current directory run:
@@ -181,6 +183,8 @@ with -fPIC).  Download boost at `http://www.boost.org`.  The commands to build b
 			`./bootstrap.sh --without-libraries=atomic,chrono,context,coroutine,exception,graph,graph_parallel,iostreams,locale,log,math,mpi,python,random,serialization,signals,test,timer,wave`
 			`./b2 link=static cxxflags="-fPIC -static -Wl,--whole-archive"
 threading=multi install`
+
+---
 
 * ## Windows Visual Studio ##
  
