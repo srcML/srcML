@@ -977,7 +977,7 @@ function_tail[] { ENTRY_DEBUG } :
             ref_qualifier |
 
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
-            TRY |
+            (TRY | CXX_TRY)
 
             { inLanguage(LANGUAGE_OO) }?
             complete_throw_list |
@@ -2538,7 +2538,7 @@ else_handling[] { ENTRY_DEBUG } :
             // catch and finally statements are nested inside of a try, if at that level
             // so if no CATCH or FINALLY, then end now
             bool intry = inMode(MODE_TRY);
-            bool restoftry = LA(1) == CATCH || LA(1) == FINALLY;
+            bool restoftry = LA(1) == CATCH || LA(1) == CXX_CATCH || LA(1) == FINALLY;
             if (intry && !restoftry) {
                 endMode(MODE_TRY);
                 endDownToMode(MODE_TOP);
@@ -3888,7 +3888,7 @@ identifier_list[] { ENTRY_DEBUG } :
             INTO | THIS |
 
             // C
-            CRESTRICT | MUTABLE | TRY | CATCH /*| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
+            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH /*| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
             SIGNALS | FOREACH | FOREVER | VIRTUAL | FRIEND | OPERATOR | EXPLICIT | NAMESPACE | USING |
             DELETE | FALSE | TRUE | FINAL | OVERRIDE | CONSTEXPR | NOEXCEPT | THREADLOCAL | NULLPTR |
             DECLTYPE | ALIGNAS | TYPENAME | ALIGNOF*/
@@ -4693,7 +4693,7 @@ try_statement[] { ENTRY_DEBUG } :
             // start of the try statement
             startElement(STRY_BLOCK);
         }
-        TRY
+        (TRY | CXX_TRY)
 ;
 
 // try statement with resources
@@ -4879,7 +4879,7 @@ catch_statement[] { ENTRY_DEBUG } :
             // start of the catch statement
             startElement(SCATCH_BLOCK);
         }
-        CATCH (parameter_list)*
+        (CATCH | CXX_CATCH) (parameter_list)*
 ;
 
 // finally statement

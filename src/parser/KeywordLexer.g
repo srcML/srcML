@@ -109,6 +109,8 @@ tokens {
 
     // Combined C/C++
     CRESTRICT;
+    CXX_TRY;
+    CXX_CATCH;
 
     // C++
     CONSTEXPR;
@@ -388,7 +390,6 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "mutable"      , MUTABLE       , LANGUAGE_CXX }, 
         { "volatile"     , VOLATILE      , LANGUAGE_ALL }, 
         { "restrict"     , RESTRICT      , LANGUAGE_C }, 
-        { "restrict"     , CRESTRICT     , LANGUAGE_CXX }, 
 
         // exception handling
         { "try"          , TRY           , LANGUAGE_OO }, 
@@ -532,7 +533,14 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "join"          , JOIN          , LANGUAGE_CSHARP }, 
         { "on"            , ON            , LANGUAGE_CSHARP }, 
         { "equals"        , EQUALS        , LANGUAGE_CSHARP }, 
-        { "into"          , INTO          , LANGUAGE_CSHARP }, 
+        { "into"          , INTO          , LANGUAGE_CSHARP },
+
+
+        // Combined C/C++ Mode  at end so overrides defaults
+        { "restrict"     , CRESTRICT         , LANGUAGE_CXX }, 
+        { "try"          , CXX_TRY           , LANGUAGE_CXX }, 
+        { "catch"        , CXX_CATCH         , LANGUAGE_CXX }, 
+
    };
 
     // fill up the literals for the language that we are parsing
