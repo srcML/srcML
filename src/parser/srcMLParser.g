@@ -977,7 +977,7 @@ function_tail[] { ENTRY_DEBUG } :
             ref_qualifier |
 
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
-            (TRY | CXX_TRY)
+            (TRY | CXX_TRY) | 
 
             { inLanguage(LANGUAGE_OO) }?
             complete_throw_list |
