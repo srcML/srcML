@@ -1,12 +1,10 @@
 Building srcML
 
-srcML is built using cmake www.cmake.org (version 2.8.12 or above) and supports builds for OSX, Fedora, Ubuntu, Linux Mint, and Windows Visual Studio.
+srcML is built using cmake www.cmake.org (version 2.8.12 or above) and supports builds for OSX, Fedora, Ubuntu, Linux Mint,
+and Windows Visual Studio (except clients src2srcml and srcml2src).
 
 In source (builds within the source directory) and out of source builds (builds outside the source directory) are supported.
 However, the use of out of source build are usually recommended.
-
-
-
 
 Unix:
 
@@ -159,4 +157,62 @@ Download boost at http://www.boost.org, the commands to build boost (written for
 ./bootstrap.sh --without-libraries=atomic,chrono,context,coroutine,exception,graph,graph_parallel,iostreams,locale,log,math,mpi,python,random,serialization,signals,test,timer,wave
 ./b2 link=static cxxflags="-fPIC -static -Wl,--whole-archive" threading=multi install
 
-Windows Visual Studio:
+Windows Visual Studio (clients src2srcml and srcml2src not supported):
+
+Installing for Windows Visual Studio, requires a far larger amount of preporation, in summary you will need:
+
+cmake (GUI from http://www.cmake.org)
+
+# some GNU command line utilies (from cygwin or other sources)
+grep
+sed
+
+# required libraries (can be gotten from http://xmlsoft.org/sources/win32/)
+iconv
+libxml2
+libxslt
+zlib
+
+antlr 2 (http://www.antlr2.org/download/antlr-2.7.7.msi and http://www.antlr2.org/download/antlr-2.7.7.tar.gz)
+boost
+
+For the required libraries, you will need to create a folder dep
+in the top level directory of srcML project.  It needs to have the following structure..
+dep/
+    include/
+    bin/
+    lib/
+Copy the contents of the required libraries into the correct locations.  If the includes are a directory,
+copy the entire directory and not the source within the directory e.g. copy entire libxml subdirectory.
+Note:  There may be some runtime problems with these libraries and the ones installed on your Windows machine,
+in which case, a Windows Visual Studio build of each may be required.
+
+
+For antlr 2 you will need the installer and the source code.  The .lib file provided with antlr 2 does not 
+seem to work.  So, a Windows Visual Studio build will need to be done to generate a correct copy of the .lib.
+When cmake is configuring the project, it will ask for the correct location of antlr and the library.
+Note: Create a empty project in Visual Studio, set it to generate a static library and turn of clr,
+and add all the source from (lib/antlr/cpp/src) to "Source Files".  Then, set lib/antlr/cpp/antlr as an
+include directory.
+
+boost will need to be compiled.  The zip file is large, and can take a large amount of time on Windows.  Then, run:
+
+./bootstrap.sh
+
+This will create a project-config.jam file copy the following contents replacing everything (Using boostrap.sh
+to configure does not seem to work correctly on Windows):
+
+import option ; 
+
+using msvc ; 
+
+libraries =  --without-atomic --without-chrono --without-context --without-coroutine --without-exception --without-graph --without-graph_parallel --without-iostreams --without-locale --without-log --without-math --without-mpi --without-python --without-random --without-serialization --without-signals --without-test --without-timer --without-wave ;
+
+option.set keep-going : false ; 
+
+Then, run:
+
+./b2.exe link=static threading=multi
+
+Currently, cmake uses an environment variable for the location of boost.
+Create/set an envionment variable BOOST_ROOT to have the path to the boost source.
