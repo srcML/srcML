@@ -2925,12 +2925,13 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 
     bool sawenum;
     bool sawtemplate;
+    bool sawcontextual;
     int posin = 0;
     int fla = 0;
 
     try {
 
-        pattern_check_core(token, fla, type_count, type, inparam, sawenum, sawtemplate, posin);
+        pattern_check_core(token, fla, type_count, type, inparam, sawenum, sawtemplate, sawcontextual, posin);
 
     } catch (...) {
 
@@ -2943,7 +2944,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     if(type == VARIABLE && inTransparentMode(MODE_CONDITION) && LA(1) != EQUAL)
         type = NONE;
 
-    if(type == NONE && sawtemplate)
+    if(type == NONE && (sawtemplate || (sawcontextual && type_count > 0)))
         type = VARIABLE;
     
     // may just have an expression
@@ -3010,6 +3011,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
               bool inparam,         /* are we in a parameter */
               bool& sawenum,        /* have we seen an enum */
               bool& sawtemplate,    /* have we seen a template */
+              bool& sawcontextual,  /* have we seen a contextual keyword */
               int& posin            /* */
         ] {
             token = 0;
@@ -3018,6 +3020,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             type = NONE;
             sawenum = false;
             sawtemplate = false;
+            sawcontextual= false;
             posin = 0;
             isdestructor = false;           // global flag detected during name matching
             int attribute_count = 0;
@@ -3067,6 +3070,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS || LA(1) == QMARK]
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
+            set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT]
             (
                 { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
                      && (LA(1) != TEMPLATE || next_token() != TEMPOPS) }?
@@ -3424,7 +3428,7 @@ lead_type_identifier[] { ENTRY_DEBUG } :
 //        (macro_call_paren identifier)=> macro_call |
 
         // typical type name
-        { LA(1) != ASYNC && (inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE)) }?
+        { LA(1) != ASYNC && (inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE)) && LA(1) != CRESTRICT }?
         compound_name |
 
         pure_lead_type_identifier
@@ -3879,7 +3883,10 @@ identifier_list[] { ENTRY_DEBUG } :
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
-            INTO | THIS
+            INTO | THIS |
+
+            // C
+            CRESTRICT
 ;
 
 // most basic name
@@ -4126,6 +4133,9 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // C
             RESTRICT | 
+
+            // C/C++ mode
+            CRESTRICT | 
 
             // C# & Java
             INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
