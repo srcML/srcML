@@ -232,12 +232,7 @@ import option ;
 
 using msvc ; 
 
-libraries = --without-atomic --without-chrono --without-context
---without-coroutine --without-exception --without-graph
---without-graph_parallel --without-iostreams --without-locale
---without-log --without-math --without-mpi --without-python
---without-random --without-serialization --without-signals
---without-test --without-timer --without-wave ;
+libraries =  --without-atomic --without-chrono --without-context --without-coroutine --without-exception --without-graph --without-graph_parallel --without-iostreams --without-locale --without-log --without-math --without-mpi --without-python --without-random --without-serialization --without-signals --without-test --without-timer --without-wave ;
 
 option.set keep-going : false ; 
 
