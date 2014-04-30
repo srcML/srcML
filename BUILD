@@ -1,60 +1,62 @@
-Building srcML
+* # Building srcML #
 
-srcML is built using cmake www.cmake.org (version 2.8.12 or above) and
-supports builds for OSX, Fedora, Ubuntu, Linux Mint, and Windows
-Visual Studio (except clients src2srcml and srcml2src).
+	srcML is built using cmake www.cmake.org (version 2.8.12 or above) and
+	supports builds for OSX, Fedora, Ubuntu, Linux Mint, and Windows
+	Visual Studio (except clients src2srcml and srcml2src).
 
-In source (builds within the source directory) and out of source
-builds (builds outside the source directory) are supported.  However,
-the use of out of source build are usually recommended.
+	In source (builds within the source directory) and out of source
+	builds (builds outside the source directory) are supported.  However,
+	the use of out of source build are usually recommended.
 
-Unix:
+* ## Unix ##
 
-To generate a simple make file in the current directory run:
+	To generate a simple make file in the current directory run:
 
-For in source builds:
-cmake .
+	For in source builds:  
+	`cmake .`  
 
-For out of source builds:
-cmake path_to_srcml
+	For out of source builds:  
+	`cmake path_to_srcml`  
 
-The following make commands are supported with their usual meaning
-make
-make clean
-make tests
+	The following make commands are supported with their usual meaning
+	`make`  
+	`make clean`  
+	`make tests`  
 
-Unix distro specifics:
+* ### Unix distro specifics: ###
 
-OSX:
+* #### OSX ####
 
-Packages Required:
+	* #####Packages Required#####
 
-antlr 2 
-boost
-cmake
+		antlr 2  
+		boost  
+		cmake  
 
-# for srcML documentation generation
-man2html
-docbook
-docbook2x
+		*# for srcML documentation generation*  
+		man2html  
+		docbook  
+		docbook2x  
 
-# additional packages that may not needed, but are recommended (for timing etc.)
-coreutils
-gnu-sed
-gnu-time
+		*# additional packages that may not needed, but are recommended (for timing etc.)*  
+		coreutils  
+		gnu-sed  
+		gnu-time  
 
-# for dmg/pkg distruction
-PackageMaker
+		*# for dmg/pkg distruction*  
+		PackageMaker  
 
-OSX does not provide headers for libarchive visit
-http://www.libarchive.org and download 2.8.5 for headers that are
-close to the versions distributed on OSX.  The files needed are
-archive.h and archive_entry.h.
+	* #####Notes#####
 
-PackageMaker is part of the auxiliary tools (late July 2012 for
-Mountain Lion or February 2012 for Lion) that are not distributed by
-default and needs to be gotten from the following URL:
-https://developer.apple.com/downloads/index.action
+		* OSX does not provide headers for libarchive visit
+		http://www.libarchive.org and download 2.8.5 for headers that are
+		close to the versions distributed on OSX.  The files needed are
+		archive.h and archive_entry.h.
+
+		* PackageMaker is part of the auxiliary tools (late July 2012 for
+		Mountain Lion or February 2012 for Lion) that are not distributed by
+		default and needs to be gotten from the following URL:
+		https://developer.apple.com/downloads/index.action
 
 Fedora:
 
