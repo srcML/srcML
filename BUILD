@@ -104,70 +104,75 @@ needed:
 
 		* First fnmatch.h needs copied over into mingw includes (something like):
 
-			`cp /usr/include/fnmatch.h /usr/i686-w64-mingw32/sys-root/mingw/include/`  
+				`cp /usr/include/fnmatch.h /usr/i686-w64-mingw32/sys-root/mingw/include/`  
 
 		* To actually run the compiled srcML, the dlls provided by mingw will
 need to be copied along with the source to the intended Windows
 machine.
 
-openSUSE:
+* #### openSUSE ####
 
-* #####Packages Required#####
+	* #####Packages Required#####
 
-gcc
-gcc-c++
-antlr
-antlr-devel
-libxml2-devel
-libxslt-deve
-libxslt-toolsl
-libarchive-devel
-libcurl-devel
-libopenssl-devel
-docbook2X
+		gcc  
+		gcc-c++  
+		antlr  
+		antlr-devel  
+		libxml2-devel  
+		libxslt-devel
+		libxslt-tools  
+		libarchive-devel  
+		libcurl-devel  
+		libopenssl-devel  
+		docbook2X  
 
-See 64-bit Linux for installing boost.
+	* #####Notes#####
 
-Building srcML requires a version of cmake greater that what is
-typically supported.  Visit http://www.cmake.org to download and
-install the lastest version of cmake.
+		* See 64-bit Linux for installing boost.
 
-There is no man2html package on OpenSUSE for srcML documentation
-generation. The url is:
-http://www.oit.uci.edu/indiv/ehood/tar/man2html3.0.1.tar.gz
+		* Building srcML requires a version of cmake greater that what is
+		typically supported.  Visit http://www.cmake.org to download and
+		install the lastest version of cmake.
 
-Use the following to install as ./install.me does not appear to use
-the right location
+		* There is no man2html package on OpenSUSE for srcML documentation
+		generation. The url is:
+			`http://www.oit.uci.edu/indiv/ehood/tar/man2html3.0.1.tar.gz`
 
-perl install.me
+		* Use the following to install as ./install.me does not appear to use
+		the right location
 
-Ubuntu (and Linux Mint):
+			`perl install.me`  
 
-* #####Packages Required#####
+* #### Ubuntu (and Linux Mint) ####
 
-gcc
-g++
-libxml2-dev
-libxslt1-dev
-libarchive-dev
-antlr
-libantlr-dev
-libcurl4-openssl-dev
-libssl-dev
+	* #####Packages Required#####
 
-# for srcML documentation generation
-man2html
-docbook2X
+		gcc  
+		g++  
+		libxml2-dev  
+		libxslt1-dev  
+		libarchive-dev  
+		antlr  
+		libantlr-dev  
+		libcurl4-openssl-dev  
+		libssl-dev  
 
+		*# for srcML documentation generation*
+		man2html  
+		docbook2X  
 
-Currently, Ubuntu versions before 14.04 (possibly before 13) do not
-provide a recent enough version of cmake.  Visit http://www.cmake.org
-to download abd install the lastest version of cmake.
+	* #####Notes#####
 
-boost also needs to be installed separately see 64-bit Linux.
+		* Currently, Ubuntu versions before 14.04 (possibly before 13) do not
+		provide a recent enough version of cmake.  Visit `http://www.cmake.org`
+		to download and install the lastest version of cmake.
+
+		* boost also needs to be installed separately see 64-bit Linux.
 
 
 64-bit Linux:
+
+	* #####Notes#####
 
 The boost libraries are statically compiled in, 64-bit machines do not
 provide adequate libraries for static compilation (require compilation
@@ -199,6 +204,8 @@ zlib
 
 antlr 2 (http://www.antlr2.org/download/antlr-2.7.7.msi and http://www.antlr2.org/download/antlr-2.7.7.tar.gz)
 boost
+
+	* #####Notes#####
 
 For the required libraries, you will need to create a folder dep
 in the top level directory of srcML project.  It needs to have the
