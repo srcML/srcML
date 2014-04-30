@@ -58,59 +58,61 @@
 		default and needs to be gotten from the following URL:
 		https://developer.apple.com/downloads/index.action
 
-Fedora:
+* #### Fedora ####
 
-Packages required:
+	* #####Packages Required#####
 
-gcc
-gcc-c++
-antlr
-libxml2-devel
-libxslt-devel
-cmake
-libarchive-devel
-boost-devel
-boost
-libcurl-devel
-openssl-devel
-antlr-C++
+		gcc  
+		gcc-c++  
+		antlr  
+		libxml2-devel  
+		libxslt-devel  
+		cmake  
+		libarchive-devel  
+		boost-devel  
+		boost  
+		libcurl-devel  
+		openssl-devel  
+		antlr-C++  
 
-# for srcML documentation generation
-man2html
-docbook2X
+		*# for srcML documentation generation*  
+		man2html  
+		docbook2X  
 
-# for rpm generation
-@development-tools
-fedora-packager
+		*# for rpm generation*  
+		@development-tools  
+		fedora-packager  
 
-# for mingw cross compilation for Windows
-dos2unix
-mingw32-gcc-c++
-mingw32-antlr
-mingw32-libarchive
-mingw32-libxml2
-mingw32-libxslt
-mingw32-boost-static
-mingw32-pthreads
-mingw32-libgnurx
-mingw32-curl
-mingw32-openssl
-mingw32-nsis
+        *# for mingw cross compilation for Windows*  
+		dos2unix  
+		mingw32-gcc-c++  
+		mingw32-antlr  
+		mingw32-libarchive    
+		mingw32-libxml2  
+		mingw32-libxslt  
+		mingw32-boost-static  
+		mingw32-pthreads  
+		mingw32-libgnurx  
+		mingw32-curl  
+		mingw32-openssl  
+		mingw32-nsis  
 
-For Fedora and Windows Cross compiling a few addition things are
+	* #####Notes#####
+
+		* For Fedora and Windows Cross compiling a few addition things are
 needed:
 
-First fnmatch.h needs copied over into mingw includes.
+		* First fnmatch.h needs copied over into mingw includes (something like):
 
-cp /usr/include/fnmatch.h /usr/i686-w64-mingw32/sys-root/mingw/include/
+			`cp /usr/include/fnmatch.h /usr/i686-w64-mingw32/sys-root/mingw/include/`  
 
-To actually run the compiled srcML, the dlls provided by mingw will
+		* To actually run the compiled srcML, the dlls provided by mingw will
 need to be copied along with the source to the intended Windows
 machine.
 
 openSUSE:
 
-Packages Required:
+* #####Packages Required#####
 
 gcc
 gcc-c++
@@ -140,6 +142,8 @@ the right location
 perl install.me
 
 Ubuntu (and Linux Mint):
+
+* #####Packages Required#####
 
 gcc
 g++
