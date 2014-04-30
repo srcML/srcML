@@ -77,7 +77,7 @@ docbook2X
 @development-tools
 fedora-packager
 
-# for mingw cross compilation
+# for mingw cross compilation for Windows
 dos2unix
 mingw32-gcc-c++
 mingw32-antlr
@@ -96,6 +96,9 @@ For Fedora and Windows Cross compiling a few addition things are needed:
 First fnmatch.h needs copied over into mingw includes.
 
 cp /usr/include/fnmatch.h /usr/i686-w64-mingw32/sys-root/mingw/include/
+
+To actually run the compiled srcML, the dlls provided by mingw will need to be copied
+along with the source to the intended Windows machine.
 
 openSUSE:
 
