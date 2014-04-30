@@ -3070,7 +3070,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS || LA(1) == QMARK]
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
-            set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT]
+            set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT || LA(1) == MUTEABLE || LA(1) == TRY || LA(1) == CATCH]
             (
                 { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
                      && (LA(1) != TEMPLATE || next_token() != TEMPOPS) }?
