@@ -1245,6 +1245,7 @@ int srcml_write_namespace(struct srcml_archive * archive, const char * prefix, c
 
 /**
  * srcml_write_attribute
+ * @param archive a srcml archive opened for writing
  * @param prefix the namespace prefix for attribute
  * @param name the name of the attribute
  * @param uri the namespace uri for attriubute
@@ -1270,6 +1271,7 @@ int srcml_write_attribute(struct srcml_archive * archive, const char * prefix, c
 
 /**
  * srcml_write_string.
+ * @param archive a srcml archive opened for writing
  * @param content the string to write out
  *
  * Write the string/text to a started unit.
