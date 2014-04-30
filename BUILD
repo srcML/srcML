@@ -170,8 +170,7 @@ with -fPIC)
 Download boost at http://www.boost.org, the commands to build boost
 (written for boost 1.55.0) are:
 
-./bootstrap.sh
---without-libraries=atomic,chrono,context,coroutine,exception,graph,graph_parallel,iostreams,locale,log,math,mpi,python,random,serialization,signals,test,timer,wave
+./bootstrap.sh --without-libraries=atomic,chrono,context,coroutine,exception,graph,graph_parallel,iostreams,locale,log,math,mpi,python,random,serialization,signals,test,timer,wave
 ./b2 link=static cxxflags="-fPIC -static -Wl,--whole-archive"
 threading=multi install
 
