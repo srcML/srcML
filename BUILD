@@ -255,5 +255,5 @@ following structure:
 			`./b2.exe link=static threading=multi`
 
 			Currently, cmake uses an environment variable for the location of
-			boost.  Create/set an envionment variable BOOST_ROOT to have the
+			boost.  Create/set an envionment variable `BOOST_ROOT` to have the
 			path to the boost source.
