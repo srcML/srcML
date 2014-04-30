@@ -3886,7 +3886,10 @@ identifier_list[] { ENTRY_DEBUG } :
             INTO | THIS |
 
             // C
-            CRESTRICT
+            CRESTRICT | MUTEABLE | TRY | CATCH | THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
+            SIGNALS | FOREACH | FOREVER | VIRTUAL | FRIEND | OPERATOR | EXPLICIT | NAMESPACE | USING |
+            DELETE | FALSE | TRUE | FINAL | OVERRIDE | CONSTEXPR | NOEXCEPT | THREADLOCAL | NULLPTR |
+            DECLTYPE | ALIGNAS | TYPENAME | ALIGNOF
 ;
 
 // most basic name
