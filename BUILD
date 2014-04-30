@@ -51,14 +51,14 @@
 	* #####Notes#####
 
 		* OSX does not provide headers for libarchive visit
-		http://www.libarchive.org and download 2.8.5 for headers that are
+		`http://www.libarchive.org` and download 2.8.5 for headers that are
 		close to the versions distributed on OSX.  The files needed are
-		archive.h and archive_entry.h.
+		`archive.h` and `archive_entry.h`.
 
 		* PackageMaker is part of the auxiliary tools (late July 2012 for
 		Mountain Lion or February 2012 for Lion) that are not distributed by
 		default and needs to be gotten from the following URL:
-		https://developer.apple.com/downloads/index.action
+			`https://developer.apple.com/downloads/index.action`.
 
 * #### Fedora ####
 
