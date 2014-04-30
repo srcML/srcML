@@ -2945,7 +2945,7 @@ fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, type_co
     if(type == VARIABLE && inTransparentMode(MODE_CONDITION) && LA(1) != EQUAL)
         type = NONE;
 
-    if(type == NONE && (sawtemplate || sawcontextual))
+    if(type == NONE && (sawtemplate || (sawcontextual && type_count > 0)))
         type = VARIABLE;
     
     // may just have an expression
