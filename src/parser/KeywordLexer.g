@@ -384,7 +384,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         { "mutable"      , MUTABLE       , LANGUAGE_CXX }, 
         { "volatile"     , VOLATILE      , LANGUAGE_ALL }, 
-        { "restrict"     , RESTRICT      , LANGUAGE_C }, 
+        { "restrict"     , RESTRICT      , LANGUAGE_CXX | LANGUAGE_C }, 
 
         // exception handling
         { "try"          , TRY           , LANGUAGE_OO }, 
