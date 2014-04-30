@@ -662,7 +662,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         // statements that clearly start with a keyword
         { (isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) || (LA(1) != TEMPLATE || next_token() != TEMPOPS))
-         && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS) }? keyword_statements |
+         && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS) 
+         && (LA(1) == DEFAULT || next_token() != COLON) }? keyword_statements |
 
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
 
