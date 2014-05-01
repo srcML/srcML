@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="static_assert" filename="static_assert_c">
+
+<unit>
+<assert type="static">_Static_assert<argument_list>(<argument><expr>0</expr></argument>, <argument><expr>"Message"</expr></argument>)</argument_list>;</assert>
+</unit>
+
+<unit>
+<assert type="static">_Static_assert<argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr>"Message"</expr></argument>)</argument_list>;</assert>
+</unit>
+
+<unit>
+<assert type="static">_Static_assert<argument_list>(<argument><expr><name>a</name> + 0</expr></argument>, <argument><expr>"Message"</expr></argument>)</argument_list>;</assert>
+</unit>
+
+<unit>
+<assert type="static">_Static_assert<argument_list>(<argument><expr>0 + <name>a</name></expr></argument>, <argument><expr>"Message"</expr></argument>)</argument_list>;</assert>
+</unit>
+
+</unit>
