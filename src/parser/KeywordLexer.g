@@ -106,6 +106,13 @@ tokens {
 
     // C
     RESTRICT;
+    ATOMIC;
+    COMPLEX;
+    GENERIC;
+    IMAGINARY;
+    NORETURN;
+    STATIC_ASSERT;
+    THREAD_LOCAL;
 
     // Combined C/C++
     CRESTRICT;
@@ -113,7 +120,7 @@ tokens {
     // C++
     CONSTEXPR;
     NOEXCEPT;
-    THREADLOCAL;
+    THREAD_LOCAL;
     NULLPTR;
     DECLTYPE;
     ALIGNAS;
@@ -386,8 +393,21 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "sizeof"       , SIZEOF        , LANGUAGE_C_FAMILY }, 
 
         { "mutable"      , MUTABLE       , LANGUAGE_CXX }, 
-        { "volatile"     , VOLATILE      , LANGUAGE_ALL }, 
-        { "restrict"     , RESTRICT      , LANGUAGE_C }, 
+        { "volatile"     , VOLATILE      , LANGUAGE_ALL },
+
+        // C keywords
+        { "restrict"       , RESTRICT      , LANGUAGE_C },
+        { "_Alignas"       , ALIGNAS       , LANGUAGE_C },
+        { "_Alignof"       , ALIGNOF       , LANGUAGE_C },
+        { "_Atomic"        , ATOMIC        , LANGUAGE_C },
+        { "_Complex"       , COMPLEX       , LANGUAGE_C },
+        { "_Generic"       , GENERIC       , LANGUAGE_C },
+        { "_Imaginary"     , IMAGINARY     , LANGUAGE_C },
+        { "_Noreturn"      , NORETURN      , LANGUAGE_C },
+        { "_Static_assert" , STATIC_ASSERT , LANGUAGE_C },
+        { "_Thread_local"  , THREAD_LOCAL  , LANGUAGE_C },
+
+
         { "restrict"     , CRESTRICT     , LANGUAGE_CXX }, 
 
         // exception handling
@@ -439,7 +459,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         // add all C++ specific keywords to the literals table
         { "constexpr"     , CONSTEXPR        , LANGUAGE_CXX }, 
         { "noexcept"      , NOEXCEPT         , LANGUAGE_CXX }, 
-        { "thread_local"  , THREADLOCAL      , LANGUAGE_CXX }, 
+        { "thread_local"  , THREAD_LOCAL      , LANGUAGE_CXX }, 
         { "nullptr"       , NULLPTR          , LANGUAGE_CXX }, 
         { "decltype"      , DECLTYPE         , LANGUAGE_CXX }, 
         { "alignas"       , ALIGNAS          , LANGUAGE_CXX }, 
