@@ -5024,8 +5024,28 @@ generic_selection[] { ENTRY_DEBUG } :
             startElement(SGENERIC);
         }
 
-        GENERIC call_argument_list
+        GENERIC call_argument_list argument (comma generic_association)*
 ;
+
+// a generic-association
+generic_association[] { ENTRY_DEBUG } :
+        { getParen() == 0 }? rparen[false] |
+        { getCurly() == 0 }? rcurly_argument |
+        {
+            // argument with nested expression
+            startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the argument
+            startElement(SARGUMENT);
+        }
+        (
+        { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }? expression |
+
+        type_identifier
+        )
+
+;
+
 
 // an expression statement pre processing
 expression_statement_process[] { ENTRY_DEBUG } :
