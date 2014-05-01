@@ -470,6 +470,7 @@ tokens {
     // C
     SATOMIC;
     SSTATIC_ASSERT_STATEMENT;
+    SGENERIC;
 
     // C++
     SALIGNAS;
@@ -5020,7 +5021,7 @@ generic_selection[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
 
             // start the return statement
-            startElement(SFUNCTION_CALL);
+            startElement(SGENERIC);
         }
 
         GENERIC call_argument_list
