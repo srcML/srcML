@@ -467,6 +467,9 @@ tokens {
 	SNAMESPACE;
 	SUSING_DIRECTIVE;
 
+    // C
+    SATOMIC;
+
     // C++
     SALIGNAS;
     SDECLTYPE;
@@ -3474,6 +3477,27 @@ decltype_call[] { int save_type_count = getTypeCount(); ENTRY_DEBUG } :
 // C++ completely match without markup decltype
 decltype_full[] { ENTRY_DEBUG } :
         DECLTYPE paren_pair
+;
+
+
+// C11 markup _Atomic 
+atomic_call[] { int save_type_count = getTypeCount(); ENTRY_DEBUG } :
+        {
+
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the macro call element
+            startElement(SATOMIC);
+         
+        }
+        ATOMIC complete_argument_list
+        { setTypeCount(save_type_count); }
+;
+
+// C++ completely match without markup _Atomic
+atomic_full[] { ENTRY_DEBUG } :
+        ATOMIC paren_pair
 ;
 
 // qmark
