@@ -469,6 +469,7 @@ tokens {
 
     // C
     SATOMIC;
+    SSTATIC_ASSERT_STATEMENT;
 
     // C++
     SALIGNAS;
@@ -715,6 +716,9 @@ keyword_statements[] { ENTRY_DEBUG } :
 
         // C/C++
         typedef_statement |
+
+        // C
+        static_assert_statement |
 
         // Java - keyword only detected for Java
         import_statement | package_statement | assert_statement | 
@@ -1867,6 +1871,21 @@ assert_statement[] { ENTRY_DEBUG } :
             startElement(SASSERT_STATEMENT);
         }
         ASSERT
+;
+
+// C _Static_assert statement
+static_assert_statement[] { ENTRY_DEBUG } :
+        {
+            // statement with a possible expression
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the return statement
+            startElement(SSTATIC_ASSERT_STATEMENT);
+
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+        }
+
+        STATIC_ASSERT call_argument_list
 ;
 
 // return statement

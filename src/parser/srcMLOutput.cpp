@@ -117,6 +117,7 @@ namespace {
     ELEMENT_MAP(SDECLTYPE, "decltype")
     ELEMENT_MAP(STYPENAME, "typename")
     ELEMENT_MAP(SATOMIC, "atomic")
+    ELEMENT_MAP(SSTATIC_ASSERT_STATEMENT,       "assert")
 
     ELEMENT_MAP(SEXPRESSION_STATEMENT, "expr_stmt")
     ELEMENT_MAP(SEXPRESSION, "expr")
@@ -592,6 +593,18 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
     xmlTextWriterEndElement(xout);
     --openelementcount;
 }
+
+/**
+ * processStaticAssert
+ * @param token escape the token in srcML escape tag
+ *
+ * Outputs a assert tag with static attribute.
+ */
+ void srcMLOutput::processStaticAssert(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "static");
+
+ }
 
 /**
  * outputXMLDecl

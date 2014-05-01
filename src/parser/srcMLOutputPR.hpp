@@ -52,7 +52,8 @@ enum {
     PROCESSCOMPLEX,
     PROCESSINTERFACE,
     PROCESSESCAPE,
-    PROCESSTYPEPREV
+    PROCESSTYPEPREV,
+    PROCESSSTATICASSERT
 };
 
 /** for conversion of process numbers to callbacks */
@@ -79,7 +80,8 @@ srcMLOutput::PROCESS_PTR srcMLOutput::num2process[] = {
     &srcMLOutput::processComplex,
     &srcMLOutput::processInterface,
     &srcMLOutput::processEscape,
-    &srcMLOutput::processTypePrevious
+    &srcMLOutput::processTypePrevious,
+    &srcMLOutput::processStaticAssert
 };
 
 /** element map call name */
@@ -145,6 +147,7 @@ namespace {
     ELEMENT_MAP(SINDEX, PROCESSTOKEN)
     ELEMENT_MAP(SDECLTYPE, PROCESSTOKEN)
     ELEMENT_MAP(SATOMIC, PROCESSTOKEN)
+    ELEMENT_MAP(SSTATIC_ASSERT_STATEMENT, PROCESSSTATICASSERT)
     ELEMENT_MAP(STYPENAME, PROCESSTOKEN)
     ELEMENT_MAP(STYPEDEF, PROCESSTOKEN)
     ELEMENT_MAP(SENUM, PROCESSTOKEN)
