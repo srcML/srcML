@@ -471,6 +471,8 @@ tokens {
     SATOMIC;
     SSTATIC_ASSERT_STATEMENT;
     SGENERIC;
+    SGENERIC_ASSOCIATION_LIST;
+    SGENERIC_ASSOCIATION;
 
     // C++
     SALIGNAS;
@@ -2762,6 +2764,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { inMode(MODE_ARGUMENT | MODE_LIST) }?
         argument |
 
+        // in an argument list expecting an argument
+        { inMode(MODE_ASSOCIATION_LIST) }?
+        generic_association |
+
         // start of condition for if/while/switch
         { inMode(MODE_PARAMETER | MODE_EXPECT) }?
         parameter |
@@ -5018,25 +5024,36 @@ throw_statement[] { ENTRY_DEBUG } :
 generic_selection[] { ENTRY_DEBUG } :
         {
             // statement with a possible expression
-            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+            startNewMode(MODE_LIST | MODE_ASSOCIATION_LIST);
 
             // start the return statement
             startElement(SGENERIC);
         }
 
-        GENERIC call_argument_list argument (comma generic_association)*
+        GENERIC generic_association_list ({LA(1) != COMMA }? expression)* (comma generic_association)*
+;
+// generic selection association list
+generic_association_list[] { ENTRY_DEBUG } :
+        {
+            // list of parameters
+            setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN);
+
+            // start the argument list
+            startElement(SGENERIC_ASSOCIATION_LIST);
+        }
+        (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
-// a generic-association
+// a generic selection association
 generic_association[] { ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false] |
         { getCurly() == 0 }? rcurly_argument |
         {
             // argument with nested expression
-            startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
 
             // start the argument
-            startElement(SARGUMENT);
+            startElement(SGENERIC_ASSOCIATION);
         }
         (
         { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }? expression |

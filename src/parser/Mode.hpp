@@ -216,4 +216,7 @@ const static srcMLState::MODE_TYPE MODE_CALL;
 /** mode for an argument list */
  const static srcMLState::MODE_TYPE MODE_ARGUMENT_LIST;
 
+/** mode for an argument list */
+ const static srcMLState::MODE_TYPE MODE_ASSOCIATION_LIST;
+
 #endif
