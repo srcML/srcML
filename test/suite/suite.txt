@@ -51,6 +51,8 @@ LANGUAGE_C_ONLY union_c
 LANGUAGE_C_ONLY specifier_c
 LANGUAGE_C_ONLY call_c
 LANGUAGE_C_ONLY expression_c
+LANGUAGE_C_ONLY decl_simple_c
+LANGUAGE_C_ONLY atomic_c
 
 LANGUAGE_CXX friend
 LANGUAGE_CXX namespace

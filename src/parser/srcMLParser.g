@@ -467,6 +467,9 @@ tokens {
 	SNAMESPACE;
 	SUSING_DIRECTIVE;
 
+    // C
+    SATOMIC;
+
     // C++
     SALIGNAS;
     SDECLTYPE;
@@ -3158,7 +3161,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // if elaborated type specifier should also be handled above. Reached here because 
                 // non-specifier then class/struct/union.
                 { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != STRUCT && LA(1) != UNION)}?
-        ({LA(1) == DECLTYPE }? decltype_full | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
+                (type_specifier_call | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
                 non_lead_type_identifier throw_exception[!foundpure]
@@ -3405,7 +3408,7 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         enum_definition_complete |
 
-        {inputState->guessing}? decltype_full | decltype_call
+        type_specifier_call
 
 ;
 
@@ -3456,8 +3459,14 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
         variable_identifier_array_grammar_sub[iscomplex]
 ;
 
+type_specifier_call[] {} :
+
+    {inputState->guessing }? (decltype_call_full | atomic_call_full) | decltype_call | atomic_call
+
+;
+
 // C++11 markup decltype 
-decltype_call[] { int save_type_count = getTypeCount(); ENTRY_DEBUG } :
+decltype_call[] { CompleteElement element(this); int save_type_count = getTypeCount(); ENTRY_DEBUG } :
         {
 
             // start a mode for the macro that will end after the argument list
@@ -3472,8 +3481,29 @@ decltype_call[] { int save_type_count = getTypeCount(); ENTRY_DEBUG } :
 ;
 
 // C++ completely match without markup decltype
-decltype_full[] { ENTRY_DEBUG } :
+decltype_call_full[] { ENTRY_DEBUG } :
         DECLTYPE paren_pair
+;
+
+
+// C11 markup _Atomic 
+atomic_call[] { CompleteElement element(this);  int save_type_count = getTypeCount(); ENTRY_DEBUG } :
+        {
+
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the macro call element
+            startElement(SATOMIC);
+         
+        }
+        ATOMIC (complete_argument_list)?
+        { setTypeCount(save_type_count); }
+;
+
+// C++ completely match without markup _Atomic
+atomic_call_full[] { ENTRY_DEBUG } :
+        ATOMIC (paren_pair)?
 ;
 
 // qmark
