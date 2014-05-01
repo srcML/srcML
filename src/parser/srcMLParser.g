@@ -2118,7 +2118,7 @@ class_definition[] { ENTRY_DEBUG } :
 // handle stuff after CLASS token
 class_post[] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-        (options { greedy = true; } : specifier)*
+        (options { greedy = true; } : { LA(1) != CRESTRICT && LA(1) != MUTABLE }? specifier)*
 ;
 
 // Handle an enum class
