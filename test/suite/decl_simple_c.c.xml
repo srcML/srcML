@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="decl_simple" filename="decl_simple_c">
+
+<unit>
+<decl_stmt><decl><type><alignas>_Alignas<argument_list>(<argument><expr><name>float</name></expr></argument>)</argument_list></alignas> <name>unsigned</name> <name>char</name></type> <name><name>c</name><index>[]</index></name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><alignas>_Alignas<argument_list>(<argument><expr>(<name>float</name>)</expr></argument>)</argument_list></alignas> <name>unsigned</name> <name>char</name></type> <name><name>c</name><index>[]</index></name></decl>;</decl_stmt>
+</unit>
+
+<!-- Incorrect with C/C++ mode
+<unit>
+<decl_stmt><decl><type><name>restrict</name></type> <name>restrict</name></decl>;</decl_stmt>
+</unit>
+-->
+
+</unit>
