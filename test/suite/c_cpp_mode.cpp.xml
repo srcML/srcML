@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="c_cpp_mode">
+
+<unit>
+<decl_stmt><decl><type><specifier>restrict</specifier></type></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>restrict</specifier></type> <name>restrict</name></decl>;</decl_stmt>
+</unit>
+
+
+<unit>
+<decl_stmt><decl><type><specifier>restrict</specifier> <specifier>restrict</specifier></type> <name>restrict</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>restrict</specifier> <specifier>restrict</specifier> <specifier>restrict</specifier></type> <name>restrict</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>restrict</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+</unit>
