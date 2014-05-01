@@ -469,6 +469,7 @@ tokens {
 
     // C
     SATOMIC;
+    SSTATIC_ASSERT_STATEMENT;
 
     // C++
     SALIGNAS;
@@ -1879,8 +1880,8 @@ static_assert_statement[] { ENTRY_DEBUG } :
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
 
             // start the return statement
-            startElement(SASSERT_STATEMENT);
-            
+            startElement(SSTATIC_ASSERT_STATEMENT);
+
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
         }
 
