@@ -5030,8 +5030,10 @@ generic_selection[] { ENTRY_DEBUG } :
             startElement(SGENERIC);
         }
 
-        GENERIC generic_association_list ({LA(1) != COMMA }? expression)* (comma generic_association)*
+        GENERIC generic_association_list generic_complete_expression
+
 ;
+
 // generic selection association list
 generic_association_list[] { ENTRY_DEBUG } :
         {
@@ -5042,6 +5044,31 @@ generic_association_list[] { ENTRY_DEBUG } :
             startElement(SGENERIC_ASSOCIATION_LIST);
         }
         (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
+;
+
+generic_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION | MODE_END_AT_COMMA);
+        }
+
+        (options { greedy = true; } :
+
+        // commas as in a list
+        //{ !inMode(MODE_END_AT_COMMA)}?
+        //comma |
+
+        // right parentheses, unless we are in a pair of parentheses in an expression
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
+
+        // argument mode (as part of call)
+        { inMode(MODE_ARGUMENT) }? argument |
+
+        // expression with right parentheses if a previous match is in one
+        { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
+
+        COLON)*
+
 ;
 
 // a generic selection association
