@@ -1966,19 +1966,6 @@ continue_statement[] { ENTRY_DEBUG } :
         CONTINUE
 ;
 
-// C _Generic (generic selection)
-generic_selection[] { ENTRY_DEBUG } :
-        {
-            // statement with a possible expression
-            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
-
-            // start the return statement
-            startElement(SFUNCTION_CALL);
-        }
-
-        GENERIC call_argument_list
-;
-
 // start of goto statement
 goto_statement[] { ENTRY_DEBUG } :
         {
@@ -5024,6 +5011,19 @@ throw_statement[] { ENTRY_DEBUG } :
             startElement(STHROW_STATEMENT);
         }
         THROW
+;
+
+// C _Generic (generic selection)
+generic_selection[] { ENTRY_DEBUG } :
+        {
+            // statement with a possible expression
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+
+            // start the return statement
+            startElement(SFUNCTION_CALL);
+        }
+
+        GENERIC call_argument_list
 ;
 
 // an expression statement pre processing
