@@ -5049,14 +5049,16 @@ generic_association_list[] { ENTRY_DEBUG } :
 generic_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
-            startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION | MODE_END_AT_COMMA);
+            startNewMode(MODE_TOP | MODE_END_AT_COMMA);
+
+            // start the argument list
+            startElement(SEXPRESSION);
         }
 
         (options { greedy = true; } :
 
         // commas as in a list
-        //{ !inMode(MODE_END_AT_COMMA)}?
-        //comma |
+        { !inMode(MODE_END_AT_COMMA)}? comma |
 
         // right parentheses, unless we are in a pair of parentheses in an expression
         { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
