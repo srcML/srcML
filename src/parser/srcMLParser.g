@@ -5075,8 +5075,7 @@ generic_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 // a generic selection association
 generic_association[] { ENTRY_DEBUG } :
-        { getParen() == 0 }? rparen[false] |
-        { getCurly() == 0 }? rcurly_argument |
+
         {
             // argument with nested expression
             startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -5084,11 +5083,30 @@ generic_association[] { ENTRY_DEBUG } :
             // start the argument
             startElement(SGENERIC_ASSOCIATION);
         }
-        (
-        { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }? expression |
 
-        type_identifier
-        )
+        generic_association_type COLON generic_complete_expression
+
+;
+
+generic_association_type[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+
+    { pattern_check(stmt_type, secondtoken, type_count, true) }?
+    variable_declaration_type[type_count + 1] | generic_association_default
+
+;
+
+generic_association_default[] { SingleElement element(this); ENTRY_DEBUG} :
+
+    {
+
+            startNewMode(MODE_LOCAL);
+
+            startElement(STYPE);
+
+    }
+    DEFAULT
+
+
 
 ;
 
