@@ -1966,6 +1966,19 @@ continue_statement[] { ENTRY_DEBUG } :
         CONTINUE
 ;
 
+// C _Generic (generic selection)
+generic_selection[] { ENTRY_DEBUG } :
+        {
+            // statement with a possible expression
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+
+            // start the return statement
+            startElement(SFUNCTION_CALL);
+        }
+
+        GENERIC call_argument_list
+;
+
 // start of goto statement
 goto_statement[] { ENTRY_DEBUG } :
         {
@@ -5455,6 +5468,8 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
 
         { notdestructor }? sole_destop { notdestructor = false; } |
+
+        generic_selection |
 
         // call
         // distinguish between a call and a macro
