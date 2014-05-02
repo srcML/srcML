@@ -2034,7 +2034,7 @@ visual_cxx_block_inner[] { CompleteElement element(this);  ENTRY_DEBUG } :
             // start the asm statement
             startElement(SASM);
         }
-        visual_cxx_asm_inner (visual_cxx_asm_inner)* (TERMINATE)*
+        (visual_cxx_asm_declaration_curly_pair | (visual_cxx_asm_inner (visual_cxx_asm_inner)*)) (TERMINATE)*
 
 ;
 
