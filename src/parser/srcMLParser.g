@@ -2017,12 +2017,18 @@ visual_cxx_asm_declaration[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the asm statement
             startElement(SASM);
         }
-        VISUAL_CXX_ASM (visual_cxx_asm_declaration_curly_pair | ~(EOL | TERMINATE))* (TERMINATE)*
+        VISUAL_CXX_ASM (visual_cxx_asm_declaration_curly_pair | (visual_cxx_asm_inner)*) (TERMINATE)*
 ;
 
 visual_cxx_asm_declaration_curly_pair[] { ENTRY_DEBUG } :
 
-    LCURLY (visual_cxx_asm_declaration | ~(RCURLY))* RCURLY
+    LCURLY (visual_cxx_asm_declaration | visual_cxx_asm_inner)* RCURLY
+
+;
+
+visual_cxx_asm_inner[] { ENTRY_DEBUG } :
+
+     (~(EOL | TERMINATE | RCURLY | VISUAL_CXX_ASM))
 
 ;
 
