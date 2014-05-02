@@ -215,20 +215,20 @@ threading=multi install`
 		grep  
 		sed  
 
-		*# required libraries (can be gotten from http://xmlsoft.org/sources/win32/)*  
+		*# required libraries (most can be gotten from http://xmlsoft.org/sources/win32/)*  
 		iconv  
 		libxml2  
 		libxslt  
-		zlib  
-
+		zlib 
+		libcurl `http://curl.haxx.se/download.html`
 		antlr 2 `http://www.antlr2.org/download/antlr-2.7.7.msi` and `http://www.antlr2.org/download/antlr-2.7.7.tar.gz`
 		boost
 
 	* #####Notes#####
 
 		* For the required libraries, you will need to create a folder dep
-in the top level directory of srcML project.  It needs to have the
-following structure:
+		in the top level directory of srcML project.  It needs to have the
+		following structure:
 
 				dep/
    			 		include/
@@ -241,6 +241,9 @@ following structure:
 		subdirectory.  Note: There may be some runtime problems with these
 		libraries and the ones installed on your Windows machine, in which
 		case, a Windows Visual Studio build of each may be required.
+
+		* For libcurl make sure to git one of the MVSC builds.  Version 7.19.3
+		devel with CSS seems to support compilation.
 
 		* For antlr 2 you will need the installer and the source code.  The .lib
 		file provided with antlr 2 does not seem to work.  So, a Windows
