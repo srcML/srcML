@@ -5076,6 +5076,9 @@ generic_selection_complete_expression[] { CompleteElement element(this); int cou
             (
             { !inMode(MODE_END_AT_COMMA) }? comma |
 
+            // argument mode (as part of call)
+            { inMode(MODE_ARGUMENT) && LA(1) != RPAREN && LA(1) != RCURLY }? complete_arguments |
+
             { LA(1) == LPAREN }? expression { ++count_paren; } |
 
             { LA(1) == RPAREN }? expression { --count_paren; } |
