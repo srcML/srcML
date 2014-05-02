@@ -2285,7 +2285,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
         // move suppressed ()* warning to begin
-        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_type_constraint)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_selection_type_constraint)*
 
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } 
             (extends_list | implements_list) (options { greedy = true; } : extends_list | implements_list)*))*
@@ -4141,7 +4141,7 @@ keyword_name[] { SingleElement element(this); ENTRY_DEBUG } :
 
 // Specifier for a function
 function_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
-        { LA(1) == WHERE }? generic_type_constraint |
+        { LA(1) == WHERE }? generic_selection_type_constraint |
 
         ({ LA(1) != ASYNC }? specifier |
 
@@ -5030,11 +5030,11 @@ generic_selection[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         }
 
-        GENERIC LPAREN generic_selector comma generic_association_list
+        GENERIC LPAREN generic_selection_selector comma generic_selection_association_list
 
 ;
 
-generic_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
+generic_selection_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     {
         startNewMode(MODE_LOCAL);
@@ -5042,24 +5042,25 @@ generic_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
         startElement(SGENERIC_SELECTOR);
 
     }
-    generic_complete_expression
+    generic_selection_complete_expression
 
 ;
 
 // generic selection association list
-generic_association_list[] { CompleteElement element(this);  ENTRY_DEBUG } :
+generic_selection_association_list[] { CompleteElement element(this);  ENTRY_DEBUG } :
         {
             // list of parameters
-            setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN | MODE_ASSOCIATION_LIST);
+            setMode(MODE_EXPECT | MODE_LIST | MODE_END_ONLY_AT_RPAREN | MODE_ASSOCIATION_LIST);
 
             // start the argument list
             startElement(SGENERIC_ASSOCIATION_LIST);
         }
-        (comma | generic_association)*
+        (comma | generic_selection_association)*
         //(LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
-generic_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
+generic_selection_complete_expression[] { CompleteElement element(this); int count_paren = 1; CALL_TYPE type = NOCALL; 
+    bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_END_AT_COMMA);
@@ -5068,26 +5069,24 @@ generic_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
             startElement(SEXPRESSION);
         }
 
-        (options { greedy = true; } :
+        (options {warnWhenFollowAmbig = false; } : { count_paren > 0 && (LA(1) != COMMA || !inMode(MODE_END_AT_COMMA)) }?
 
-        // commas as in a list
-        { !inMode(MODE_END_AT_COMMA)}? comma |
+            (
+            { !inMode(MODE_END_AT_COMMA) }? comma |
 
-        // right parentheses, unless we are in a pair of parentheses in an expression
-        { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
+            { LA(1) == LPAREN }? expression { ++count_paren; } |
 
-        // argument mode (as part of call)
-        { inMode(MODE_ARGUMENT) }? argument |
+            { LA(1) == RPAREN }? expression { --count_paren; } |
 
-        // expression with right parentheses if a previous match is in one
-        { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
+            { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression |
 
-        COLON)*
-
+            expression
+            )
+        )*
 ;
 
 // a generic selection association
-generic_association[] { CompleteElement element(this); ENTRY_DEBUG } :
+generic_selection_association[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         {
             // argument with nested expression
@@ -5097,18 +5096,18 @@ generic_association[] { CompleteElement element(this); ENTRY_DEBUG } :
             startElement(SGENERIC_ASSOCIATION);
         }
 
-        generic_association_type COLON generic_complete_expression
+        generic_selection_association_type COLON generic_selection_complete_expression
 
 ;
 
-generic_association_type[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+generic_selection_association_type[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
 
     { pattern_check(stmt_type, secondtoken, type_count, true) }?
-    variable_declaration_type[type_count + 1] | generic_association_default
+    variable_declaration_type[type_count + 1] | generic_selection_association_default
 
 ;
 
-generic_association_default[] { SingleElement element(this); ENTRY_DEBUG} :
+generic_selection_association_default[] { SingleElement element(this); ENTRY_DEBUG} :
 
     {
 
@@ -6130,13 +6129,13 @@ template_argument_list[] { CompleteElement element(this); std::string namestack_
 
         tempops (options { generateAmbigWarnings = false; } : COMMA | template_argument)* tempope
 
-        (options { greedy = true; } : generic_type_constraint)*
+        (options { greedy = true; } : generic_selection_type_constraint)*
 
         restorenamestack[namestack_save]
 ;
 
 // generic type constraint
-generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
+generic_selection_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
