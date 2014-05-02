@@ -1454,7 +1454,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty, int & call_count] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF | generic_selection)
+        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -1485,7 +1485,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
 
             // special case for something that looks like a declaration
             { !name || (depth > 0) }?
-            identifier set_bool[name, true] |
+            (identifier | generic_selection) set_bool[name, true] |
 
             // special case for something that looks like a declaration
             { LA(1) == DELEGATE /* eliminates ANTRL warning, will be nop */ }? delegate_anonymous |
@@ -1498,7 +1498,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             // found two names in a row, so this is not an expression
             // cause this to fail by explicitly throwing exception
             { depth == 0 }?
-            identifier throw_exception[true] |
+            (identifier | generic_selection) throw_exception[true] |
 
             // forbid parentheses (handled recursively) and cfg tokens
             { !_tokenSet_1.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
