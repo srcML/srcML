@@ -732,7 +732,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
 
         // C/C++ assembly block
-        asm_declaration
+        asm_declaration | visual_cxx_asm_declaration
 ;
 
 /*

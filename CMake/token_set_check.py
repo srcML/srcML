@@ -21,13 +21,13 @@
 
 import sys
 
-token_sets = ['_tokenSet_1_data_', '_tokenSet_13_data_', '_tokenSet_22_data_', '_tokenSet_27_data_']
+token_sets = ['_tokenSet_1_data_', '_tokenSet_13_data_', '_tokenSet_22_data_', '_tokenSet_28_data_']
 token_sets_data = [
 
 set(['DO', 'RETURN', 'DEFAULT', 'UNSAFE', 'WHILE', 'CASE', 'SWITCH', 'CATCH', 'IMPORT', 'ASM',
     'TYPEDEF', 'CHECKED', 'GOTO', 'FOR', 'PACKAGE', 'LOCK', 'NAMESPACE', 'YIELD', 'ELSE', 'TRY',
     'FINALLY', 'FOREACH', 'FIXED', 'IF', 'UNCHECKED', 'BREAK', 'CONTINUE', 'TEMPLATE', 'USING',
-    'THROW', 'ASSERT', 'MACRO_CASE', 'FOREVER', 'STATIC_ASSERT']),
+    'THROW', 'ASSERT', 'MACRO_CASE', 'FOREVER', 'STATIC_ASSERT', 'VISUAL_CXX_ASM']),
 
 set(['ELIF', 'GROUP', 'JOIN', 'REGION', 'LINE', 'FINAL', 'SELECT', 'SET', 'GET', 'ASCENDING', 'OVERRIDE',
     'BY', 'DEFINE', 'ORDERBY', 'UNDEF', 'CHECKED', 'INTO', 'EQUALS', 'YIELD', 'ADD', 'DESCENDING', 'PRAGMA',
