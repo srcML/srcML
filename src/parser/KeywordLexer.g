@@ -112,7 +112,6 @@ tokens {
     IMAGINARY;
     NORETURN;
     STATIC_ASSERT;
-    THREAD_LOCAL;
 
     // Combined C/C++
     CRESTRICT;

@@ -3184,7 +3184,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // if elaborated type specifier should also be handled above. Reached here because 
                 // non-specifier then class/struct/union.
                 { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != STRUCT && LA(1) != UNION)}?
-                (type_specifier_call | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
+                ({ LA(1) == DECLTYPE || LA(1) == ATOMIC }? type_specifier_call | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
                 non_lead_type_identifier throw_exception[!foundpure]
@@ -3520,13 +3520,13 @@ atomic_call[] { CompleteElement element(this);  int save_type_count = getTypeCou
             startElement(SATOMIC);
          
         }
-        ATOMIC (complete_argument_list)?
+        ATOMIC (options { greedy = true; } : complete_argument_list)?
         { setTypeCount(save_type_count); }
 ;
 
 // C++ completely match without markup _Atomic
 atomic_call_full[] { ENTRY_DEBUG } :
-        ATOMIC (paren_pair)?
+        ATOMIC (options { greedy = true; } : paren_pair)?
 ;
 
 // qmark
@@ -3753,7 +3753,7 @@ attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 // Do a complete argument list
 complete_argument_list[] { ENTRY_DEBUG } :
-        call_argument_list ({ LA(1) != RPAREN && LA(1) != RCURLY }? complete_arguments)* rparen[false]
+        call_argument_list (options { greedy = true; } : { LA(1) != RPAREN && LA(1) != RCURLY }? complete_arguments)* rparen[false]
 ;
 
 // Full, complete expression matched all at once (no stream).
@@ -4185,7 +4185,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             CONSTEXPR | THREAD_LOCAL |
 
             // C
-            RESTRICT | NORETURN | COMPLEX | IMAGINARY | THREAD_LOCAL | 
+            RESTRICT | NORETURN | COMPLEX | IMAGINARY |
 
             // C/C++ mode
             CRESTRICT | 
