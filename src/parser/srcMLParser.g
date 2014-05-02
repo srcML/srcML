@@ -2008,6 +2008,18 @@ asm_declaration[] { ENTRY_DEBUG } :
         ({ true }? paren_pair | ~(LCURLY | RCURLY | TERMINATE))*
 ;
 
+// complete assembly declaration statement
+visual_cxx_asm_declaration[] { ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT);
+
+            // start the asm statement
+            startElement(SASM);
+        }
+        VISUAL_CXX_ASM (curly_pair | ~(EOL | TERMINATE))*
+;
+
 // extern definition
 extern_definition[] { ENTRY_DEBUG } :
         {
