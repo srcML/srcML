@@ -1454,7 +1454,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty, int & call_count] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF/* | generic_selection*/)
+        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF | generic_selection)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -4109,7 +4109,7 @@ catch[antlr::RecognitionException] {
 // compound name for C
 compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        identifier (options { greedy = true; }: { LA(1) == MULTOPS }? multops)*
+        (identifier | generic_selection) (options { greedy = true; }: { LA(1) == MULTOPS }? multops)*
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
@@ -4289,7 +4289,7 @@ push_namestack[] { namestack[1].swap(namestack[0]); namestack[0] = LT(1)->getTex
 
 // identifier stack
 identifier_stack[std::string s[]] { s[1].swap(s[0]); s[0] = LT(1)->getText(); ENTRY_DEBUG } :
-        identifier/* | generic_selection*/
+        identifier
 ;
 
 // destructor definition
@@ -5029,8 +5029,10 @@ generic_selection[] { CompleteElement element(this); ENTRY_DEBUG } :
             startNewMode(MODE_LIST);
 
         }
-
-        GENERIC LPAREN generic_selection_selector comma generic_selection_association_list
+        (
+            { inputState->guessing }? GENERIC paren_pair | 
+            GENERIC LPAREN generic_selection_selector comma generic_selection_association_list
+        )
 
 ;
 
