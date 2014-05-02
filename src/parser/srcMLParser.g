@@ -732,7 +732,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
 
         // C/C++ assembly block
-        asm_declaration | visual_cxx_asm_declaration
+        asm_declaration
 ;
 
 /*
@@ -2009,15 +2009,15 @@ asm_declaration[] { ENTRY_DEBUG } :
 ;
 
 // complete assembly declaration statement
-visual_cxx_asm_declaration[] { ENTRY_DEBUG } :
+visual_cxx_asm_declaration[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT);
+            startNewMode(MODE_LOCAL);
 
             // start the asm statement
             startElement(SASM);
         }
-        VISUAL_CXX_ASM (curly_pair | ~(EOL | TERMINATE))*
+        VISUAL_CXX_ASM (curly_pair | ~(EOL | TERMINATE))* (TERMINATE)*
 ;
 
 // extern definition
