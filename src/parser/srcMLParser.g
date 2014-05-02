@@ -2017,7 +2017,13 @@ visual_cxx_asm_declaration[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the asm statement
             startElement(SASM);
         }
-        VISUAL_CXX_ASM (curly_pair | ~(EOL | TERMINATE))* (TERMINATE)*
+        VISUAL_CXX_ASM (visual_cxx_asm_declaration_curly_pair | ~(EOL | TERMINATE))* (TERMINATE)*
+;
+
+visual_cxx_asm_declaration_curly_pair[] { ENTRY_DEBUG } :
+
+    LCURLY (visual_cxx_asm_declaration | ~(RCURLY))* RCURLY
+
 ;
 
 // extern definition
