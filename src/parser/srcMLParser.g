@@ -138,7 +138,7 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -3753,7 +3753,7 @@ attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 // Do a complete argument list
 complete_argument_list[] { ENTRY_DEBUG } :
-        call_argument_list complete_arguments
+        call_argument_list ({ LA(1) != RPAREN && LA(1) != RCURLY }? complete_arguments)* rparen[false]
 ;
 
 // Full, complete expression matched all at once (no stream).
@@ -3768,7 +3768,7 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
             // start the argument
             startElement(SARGUMENT);
         }
-        (options {warnWhenFollowAmbig = false; } : { count_paren > 0 }?
+        (options {warnWhenFollowAmbig = false; } : { count_paren > 0 && (count_paren != 1 || LA(1) != RPAREN) }?
 
         ({ LA(1) == LPAREN }? expression { ++count_paren; } |
 
