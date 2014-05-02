@@ -2,6 +2,42 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="asm">
 
 <unit>
+<expr_stmt><expr><name>asm</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>asm</name> <specifier>volatile</specifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>asm</name> <specifier>__volatile__</specifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>__asm</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>__asm</name> <specifier>volatile</specifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>__asm</name> <specifier>__volatile__</specifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>__asm__</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>__asm__</name> <specifier>volatile</specifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>__asm__</name> <specifier>__volatile__</specifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
 <asm>asm ();</asm>
 </unit>
 
