@@ -470,7 +470,7 @@ tokens {
     // C
     SATOMIC;
     SSTATIC_ASSERT_STATEMENT;
-    SGENERIC;
+    SGENERIC_SELECTION;
     SGENERIC_ASSOCIATION_LIST;
     SGENERIC_ASSOCIATION;
 
@@ -5027,7 +5027,7 @@ generic_selection[] { ENTRY_DEBUG } :
             startNewMode(MODE_LIST);
 
             // start the generic
-            startElement(SGENERIC);
+            startElement(SGENERIC_SELECTION);
 
             startNewMode(MODE_LIST | MODE_ASSOCIATION_LIST);
         }
