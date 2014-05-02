@@ -2005,7 +2005,7 @@ asm_declaration[] { ENTRY_DEBUG } :
             // start the asm statement
             startElement(SASM);
         }
-        ASM ({ LA(1) == VOLATILE }? specifier)*
+        ASM (options { greedy = true; } : { LA(1) == VOLATILE }? specifier)*
         ({ true }? paren_pair | ~(LCURLY | RCURLY | TERMINATE))*
 ;
 
