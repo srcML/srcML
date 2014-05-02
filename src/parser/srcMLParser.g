@@ -2003,7 +2003,7 @@ asm_declaration[] { ENTRY_DEBUG } :
             // start the asm statement
             startElement(SASM);
         }
-        ASM
+        ASM (VOLATILE)*
         ({ true }? paren_pair | ~(LCURLY | RCURLY | TERMINATE))*
 ;
 
