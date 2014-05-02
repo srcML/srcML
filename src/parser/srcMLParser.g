@@ -5030,8 +5030,8 @@ generic_selection[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         }
         (
-            { inputState->guessing }? GENERIC paren_pair | 
-            GENERIC LPAREN generic_selection_selector comma generic_selection_association_list rparen[false]
+            { inputState->guessing }? GENERIC_SELECTION paren_pair | 
+            GENERIC_SELECTION LPAREN generic_selection_selector comma generic_selection_association_list rparen[false]
         )
 
 ;

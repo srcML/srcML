@@ -108,7 +108,7 @@ tokens {
     RESTRICT;
     ATOMIC;
     COMPLEX;
-    GENERIC;
+    GENERIC_SELECTION;
     IMAGINARY;
     NORETURN;
     STATIC_ASSERT;
@@ -401,7 +401,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "_Alignof"       , ALIGNOF       , LANGUAGE_C },
         { "_Atomic"        , ATOMIC        , LANGUAGE_C },
         { "_Complex"       , COMPLEX       , LANGUAGE_C },
-        { "_Generic"       , GENERIC       , LANGUAGE_C },
+        { "_Generic"       , GENERIC_SELECTION       , LANGUAGE_C },
         { "_Imaginary"     , IMAGINARY     , LANGUAGE_C },
         { "_Noreturn"      , NORETURN      , LANGUAGE_C },
         { "_Static_assert" , STATIC_ASSERT , LANGUAGE_C },
