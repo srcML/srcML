@@ -138,7 +138,7 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -1454,7 +1454,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty, int & call_count] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF)
+        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF/* | generic_selection*/)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -2764,10 +2764,6 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // in an argument list expecting an argument
         { inMode(MODE_ARGUMENT | MODE_LIST) }?
         argument |
-
-        // in an argument list expecting an argument
-        { inMode(MODE_ASSOCIATION_LIST) }?
-        generic_association |
 
         // start of condition for if/while/switch
         { inMode(MODE_PARAMETER | MODE_EXPECT) }?
@@ -4293,7 +4289,7 @@ push_namestack[] { namestack[1].swap(namestack[0]); namestack[0] = LT(1)->getTex
 
 // identifier stack
 identifier_stack[std::string s[]] { s[1].swap(s[0]); s[0] = LT(1)->getText(); ENTRY_DEBUG } :
-        identifier
+        identifier/* | generic_selection*/
 ;
 
 // destructor definition
@@ -5030,10 +5026,10 @@ generic_selection[] { ENTRY_DEBUG } :
             // start the generic
             startElement(SGENERIC_SELECTION);
 
-            startNewMode(MODE_LIST | MODE_ASSOCIATION_LIST);
+            startNewMode(MODE_LIST);
         }
 
-        GENERIC LPAREN generic_selector generic_association_list
+        GENERIC LPAREN generic_selector generic_association_list (comma | generic_association)* { endMode(); } rparen
 
 ;
 
@@ -5397,9 +5393,6 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
             } else
 
                 decParen();
-
-                if(inMode(MODE_ASSOCIATION_LIST))
-                    endMode(MODE_ASSOCIATION_LIST);
 
         }
         rparen_operator[markup]
