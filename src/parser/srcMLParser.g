@@ -2022,7 +2022,7 @@ visual_cxx_asm_declaration[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 visual_cxx_asm_declaration_curly_pair[] { ENTRY_DEBUG } :
 
-    LCURLY (visual_cxx_asm_declaration | visual_cxx_asm_inner)* RCURLY
+    LCURLY (visual_cxx_asm_declaration | (visual_cxx_asm_inner (visual_cxx_asm_inner)*))* RCURLY
 
 ;
 
