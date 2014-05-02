@@ -5023,19 +5023,22 @@ throw_statement[] { ENTRY_DEBUG } :
 // C _Generic (generic selection)
 generic_selection[] { ENTRY_DEBUG } :
         {
-            // statement with a possible expression
-            startNewMode(MODE_LIST | MODE_ASSOCIATION_LIST);
+            // statement 
+            startNewMode(MODE_LIST);
 
-            // start the return statement
+            // start the generic
             startElement(SGENERIC);
+
+            startNewMode(MODE_LIST | MODE_ASSOCIATION_LIST);
         }
 
-        GENERIC generic_association_list generic_complete_expression
+        GENERIC LPAREN generic_complete_expression generic_association_list
 
 ;
 
 // generic selection association list
 generic_association_list[] { ENTRY_DEBUG } :
+        comma
         {
             // list of parameters
             setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN);
@@ -5043,7 +5046,7 @@ generic_association_list[] { ENTRY_DEBUG } :
             // start the argument list
             startElement(SGENERIC_ASSOCIATION_LIST);
         }
-        (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
+        //(LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
 generic_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -5381,6 +5384,10 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
             } else
 
                 decParen();
+
+                if(inMode(MODE_ASSOCIATION_LIST))
+                    endMode(MODE_ASSOCIATION_LIST);
+
         }
         rparen_operator[markup]
         {
