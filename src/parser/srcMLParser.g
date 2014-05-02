@@ -5049,7 +5049,7 @@ generic_selection_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // generic selection association list
-generic_selection_association_list[] { CompleteElement element(this);  ENTRY_DEBUG } :
+generic_selection_association_list[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
         {
             // list of parameters
             setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN |  MODE_END_ONLY_AT_RPAREN | MODE_ASSOCIATION_LIST);
@@ -5057,7 +5057,7 @@ generic_selection_association_list[] { CompleteElement element(this);  ENTRY_DEB
             // start the argument list
             startElement(SGENERIC_ASSOCIATION_LIST);
         }
-        (comma | generic_selection_association)*
+        ({ first }? generic_selection_association set_bool[first, false] |  comma generic_selection_association)*
         //(LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
