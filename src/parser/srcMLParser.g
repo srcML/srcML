@@ -2285,7 +2285,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
         // move suppressed ()* warning to begin
-        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_selection_type_constraint)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_type_constraint)*
 
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } 
             (extends_list | implements_list) (options { greedy = true; } : extends_list | implements_list)*))*
@@ -4141,7 +4141,7 @@ keyword_name[] { SingleElement element(this); ENTRY_DEBUG } :
 
 // Specifier for a function
 function_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
-        { LA(1) == WHERE }? generic_selection_type_constraint |
+        { LA(1) == WHERE }? generic_type_constraint |
 
         ({ LA(1) != ASYNC }? specifier |
 
@@ -5050,7 +5050,7 @@ generic_selection_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
 generic_selection_association_list[] { CompleteElement element(this);  ENTRY_DEBUG } :
         {
             // list of parameters
-            setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN | MODE_ASSOCIATION_LIST);
+            setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN |  MODE_END_ONLY_AT_RPAREN | MODE_ASSOCIATION_LIST);
 
             // start the argument list
             startElement(SGENERIC_ASSOCIATION_LIST);
@@ -5570,7 +5570,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
 
         { notdestructor }? sole_destop { notdestructor = false; } |
 
-        generic_selection |
+//        generic_selection |
 
         // call
         // distinguish between a call and a macro
@@ -6129,13 +6129,13 @@ template_argument_list[] { CompleteElement element(this); std::string namestack_
 
         tempops (options { generateAmbigWarnings = false; } : COMMA | template_argument)* tempope
 
-        (options { greedy = true; } : generic_selection_type_constraint)*
+        (options { greedy = true; } : generic_type_constraint)*
 
         restorenamestack[namestack_save]
 ;
 
 // generic type constraint
-generic_selection_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
+generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
