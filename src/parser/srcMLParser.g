@@ -670,7 +670,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         // statements that clearly start with a keyword
         { (isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) || (LA(1) != TEMPLATE || next_token() != TEMPOPS))
-         && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS) }? keyword_statements |
+         && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS)
+         && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }? keyword_statements |
 
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
 
@@ -3932,7 +3933,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
-            SIGNAL | FINAL | OVERRIDE | VOID |
+            SIGNAL | FINAL | OVERRIDE | VOID | ASM |
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
