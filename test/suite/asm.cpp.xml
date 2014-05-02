@@ -2,6 +2,42 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="asm">
 
 <unit>
+<expr_stmt><expr><name>asm</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>asm</name> <specifier>volatile</specifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>asm</name> <specifier>__volatile__</specifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>__asm</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>__asm</name> <specifier>volatile</specifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>__asm</name> <specifier>__volatile__</specifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>__asm__</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>__asm__</name> <specifier>volatile</specifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>__asm__</name> <specifier>__volatile__</specifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
 <asm>asm ();</asm>
 </unit>
 
@@ -10,18 +46,224 @@
 </unit>
 
 <unit>
-       <asm>asm volatile("  movl    %%esp,%%edi     \n"
-                    "  andl    %0,%%edi        \n"
-                    "  addl    %1,%%edi        \n"
-                    "  movl    %%esp,%%ecx     \n"
-                    "  subl    %%edi,%%ecx     \n"
-                    "  shrl    $2,%%ecx        \n"
-                    "  movl    $0xedededed,%%eax     \n"
-                    "  rep stosl               \n"
-                    :
-                    : "i"(~(THREAD_SIZE-1)), "i"(sizeof(struct thread_info))
-                    : "eax", "ecx", "edi", "memory", "cc"
-                    );</asm>
+<asm>asm ("  movl    %%esp,%%edi     \n"
+"  andl    %0,%%edi        \n"
+"  addl    %1,%%edi        \n"
+"  movl    %%esp,%%ecx     \n"
+"  subl    %%edi,%%ecx     \n"
+"  shrl    $2,%%ecx        \n"
+"  movl    $0xedededed,%%eax     \n"
+"  rep stosl               \n"
+:
+: "i"(~(THREAD_SIZE-1)), "i"(sizeof(struct thread_info))
+: "eax", "ecx", "edi", "memory", "cc"
+);</asm>
+</unit>
+
+<unit>
+<asm>__asm ();</asm>
+</unit>
+
+<unit>
+<asm>__asm ("abc");</asm>
+</unit>
+
+<unit>
+<asm>__asm ("  movl    %%esp,%%edi     \n"
+"  andl    %0,%%edi        \n"
+"  addl    %1,%%edi        \n"
+"  movl    %%esp,%%ecx     \n"
+"  subl    %%edi,%%ecx     \n"
+"  shrl    $2,%%ecx        \n"
+"  movl    $0xedededed,%%eax     \n"
+"  rep stosl               \n"
+:
+: "i"(~(THREAD_SIZE-1)), "i"(sizeof(struct thread_info))
+: "eax", "ecx", "edi", "memory", "cc"
+);</asm>
+</unit>
+
+<unit>
+<asm>__asm__ ();</asm>
+</unit>
+
+<unit>
+<asm>__asm__ ("abc");</asm>
+</unit>
+
+<unit>
+<asm>__asm__ ("  movl    %%esp,%%edi     \n"
+"  andl    %0,%%edi        \n"
+"  addl    %1,%%edi        \n"
+"  movl    %%esp,%%ecx     \n"
+"  subl    %%edi,%%ecx     \n"
+"  shrl    $2,%%ecx        \n"
+"  movl    $0xedededed,%%eax     \n"
+"  rep stosl               \n"
+:
+: "i"(~(THREAD_SIZE-1)), "i"(sizeof(struct thread_info))
+: "eax", "ecx", "edi", "memory", "cc"
+);</asm>
+</unit>
+
+<unit>
+<asm>asm <specifier>volatile</specifier> ();</asm>
+</unit>
+
+<unit>
+<asm>asm <specifier>volatile</specifier> ("abc");</asm>
+</unit>
+
+<unit>
+<asm>asm <specifier>volatile</specifier> ("  movl    %%esp,%%edi     \n"
+"  andl    %0,%%edi        \n"
+"  addl    %1,%%edi        \n"
+"  movl    %%esp,%%ecx     \n"
+"  subl    %%edi,%%ecx     \n"
+"  shrl    $2,%%ecx        \n"
+"  movl    $0xedededed,%%eax     \n"
+"  rep stosl               \n"
+:
+: "i"(~(THREAD_SIZE-1)), "i"(sizeof(struct thread_info))
+: "eax", "ecx", "edi", "memory", "cc"
+);</asm>
+</unit>
+
+<unit>
+<asm>__asm <specifier>volatile</specifier> ();</asm>
+</unit>
+
+<unit>
+<asm>__asm <specifier>volatile</specifier> ("abc");</asm>
+</unit>
+
+<unit>
+<asm>__asm <specifier>volatile</specifier> ("  movl    %%esp,%%edi     \n"
+"  andl    %0,%%edi        \n"
+"  addl    %1,%%edi        \n"
+"  movl    %%esp,%%ecx     \n"
+"  subl    %%edi,%%ecx     \n"
+"  shrl    $2,%%ecx        \n"
+"  movl    $0xedededed,%%eax     \n"
+"  rep stosl               \n"
+:
+: "i"(~(THREAD_SIZE-1)), "i"(sizeof(struct thread_info))
+: "eax", "ecx", "edi", "memory", "cc"
+);</asm>
+</unit>
+
+<unit>
+<asm>__asm__ <specifier>volatile</specifier> ();</asm>
+</unit>
+
+<unit>
+<asm>__asm__ <specifier>volatile</specifier> ("abc");</asm>
+</unit>
+
+<unit>
+<asm>__asm__ <specifier>volatile</specifier> ("  movl    %%esp,%%edi     \n"
+"  andl    %0,%%edi        \n"
+"  addl    %1,%%edi        \n"
+"  movl    %%esp,%%ecx     \n"
+"  subl    %%edi,%%ecx     \n"
+"  shrl    $2,%%ecx        \n"
+"  movl    $0xedededed,%%eax     \n"
+"  rep stosl               \n"
+:
+: "i"(~(THREAD_SIZE-1)), "i"(sizeof(struct thread_info))
+: "eax", "ecx", "edi", "memory", "cc"
+);</asm>
+</unit>
+
+<unit>
+<asm>asm <specifier>__volatile__</specifier> ();</asm>
+</unit>
+
+<unit>
+<asm>asm <specifier>__volatile__</specifier> ("abc");</asm>
+</unit>
+
+<unit>
+<asm>asm <specifier>__volatile__</specifier> ("  movl    %%esp,%%edi     \n"
+"  andl    %0,%%edi        \n"
+"  addl    %1,%%edi        \n"
+"  movl    %%esp,%%ecx     \n"
+"  subl    %%edi,%%ecx     \n"
+"  shrl    $2,%%ecx        \n"
+"  movl    $0xedededed,%%eax     \n"
+"  rep stosl               \n"
+:
+: "i"(~(THREAD_SIZE-1)), "i"(sizeof(struct thread_info))
+: "eax", "ecx", "edi", "memory", "cc"
+);</asm>
+</unit>
+
+<unit>
+<asm>__asm <specifier>__volatile__</specifier> ();</asm>
+</unit>
+
+<unit>
+<asm>__asm <specifier>__volatile__</specifier> ("abc");</asm>
+</unit>
+
+<unit>
+<asm>__asm <specifier>__volatile__</specifier> ("  movl    %%esp,%%edi     \n"
+"  andl    %0,%%edi        \n"
+"  addl    %1,%%edi        \n"
+"  movl    %%esp,%%ecx     \n"
+"  subl    %%edi,%%ecx     \n"
+"  shrl    $2,%%ecx        \n"
+"  movl    $0xedededed,%%eax     \n"
+"  rep stosl               \n"
+:
+: "i"(~(THREAD_SIZE-1)), "i"(sizeof(struct thread_info))
+: "eax", "ecx", "edi", "memory", "cc"
+);</asm>
+</unit>
+
+<unit>
+<asm>__asm__ <specifier>__volatile__</specifier> ();</asm>
+</unit>
+
+<unit>
+<asm>__asm__ <specifier>__volatile__</specifier> ("abc");</asm>
+</unit>
+
+<unit>
+<asm>__asm__ <specifier>__volatile__</specifier> ("  movl    %%esp,%%edi     \n"
+"  andl    %0,%%edi        \n"
+"  addl    %1,%%edi        \n"
+"  movl    %%esp,%%ecx     \n"
+"  subl    %%edi,%%ecx     \n"
+"  shrl    $2,%%ecx        \n"
+"  movl    $0xedededed,%%eax     \n"
+"  rep stosl               \n"
+:
+: "i"(~(THREAD_SIZE-1)), "i"(sizeof(struct thread_info))
+: "eax", "ecx", "edi", "memory", "cc"
+);</asm>
+</unit>
+
+<unit>
+<asm>__asm__ <specifier>__volatile__</specifier> (
+";; CHECK IPICRi == 0           \n\t"
+".fillinsn                      \n"
+"1:                             \n\t"
+"ld     %0, @%1                 \n\t"
+"and    %0, %4                  \n\t"
+"beqz   %0, 2f                  \n\t"
+"bnez   %3, 3f                  \n\t"
+"bra    1b                      \n\t"
+";; WRITE IPICRi (send IPIi)    \n\t"
+".fillinsn                      \n"
+"2:                             \n\t"
+"st     %2, @%1                 \n\t"
+".fillinsn                      \n"
+"3:                             \n\t"
+: "=&amp;r"(ipicr_val)
+: "r"(ipicr_addr), "r"(mask), "r"(try), "r"(my_physid_mask)
+: "memory"
+);</asm>
 </unit>
 
 </unit>

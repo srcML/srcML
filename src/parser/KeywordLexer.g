@@ -106,6 +106,12 @@ tokens {
 
     // C
     RESTRICT;
+    ATOMIC;
+    COMPLEX;
+    GENERIC_SELECTION;
+    IMAGINARY;
+    NORETURN;
+    STATIC_ASSERT;
 
     // Combined C/C++
     CRESTRICT;
@@ -115,7 +121,7 @@ tokens {
     // C++
     CONSTEXPR;
     NOEXCEPT;
-    THREADLOCAL;
+    THREAD_LOCAL;
     NULLPTR;
     DECLTYPE;
     ALIGNAS;
@@ -383,13 +389,27 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "extern"       , EXTERN        , LANGUAGE_C_FAMILY }, 
 
         { "asm"          , ASM           , LANGUAGE_C_FAMILY }, 
+        { "__asm"        , ASM           , LANGUAGE_C_FAMILY }, 
+        { "__asm__"      , ASM           , LANGUAGE_C_FAMILY }, 
 
         { "goto"         , GOTO          , LANGUAGE_ALL }, 
         { "sizeof"       , SIZEOF        , LANGUAGE_C_FAMILY }, 
 
         { "mutable"      , MUTABLE       , LANGUAGE_CXX }, 
         { "volatile"     , VOLATILE      , LANGUAGE_ALL }, 
-        { "restrict"     , RESTRICT      , LANGUAGE_C }, 
+        { "__volatile__" , VOLATILE      , LANGUAGE_C_FAMILY  },
+
+        // C keywords
+        { "restrict"       , RESTRICT          , LANGUAGE_C },
+        { "_Alignas"       , ALIGNAS           , LANGUAGE_C },
+        { "_Alignof"       , ALIGNOF           , LANGUAGE_C },
+        { "_Atomic"        , ATOMIC            , LANGUAGE_C },
+        { "_Complex"       , COMPLEX           , LANGUAGE_C },
+        { "_Generic"       , GENERIC_SELECTION , LANGUAGE_C },
+        { "_Imaginary"     , IMAGINARY         , LANGUAGE_C },
+        { "_Noreturn"      , NORETURN          , LANGUAGE_C },
+        { "_Static_assert" , STATIC_ASSERT     , LANGUAGE_C },
+        { "_Thread_local"  , THREAD_LOCAL      , LANGUAGE_C },
 
         // exception handling
         { "try"          , TRY           , LANGUAGE_OO }, 
@@ -440,7 +460,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         // add all C++ specific keywords to the literals table
         { "constexpr"     , CONSTEXPR        , LANGUAGE_CXX }, 
         { "noexcept"      , NOEXCEPT         , LANGUAGE_CXX }, 
-        { "thread_local"  , THREADLOCAL      , LANGUAGE_CXX }, 
+        { "thread_local"  , THREAD_LOCAL      , LANGUAGE_CXX }, 
         { "nullptr"       , NULLPTR          , LANGUAGE_CXX }, 
         { "decltype"      , DECLTYPE         , LANGUAGE_CXX }, 
         { "alignas"       , ALIGNAS          , LANGUAGE_CXX }, 

@@ -278,10 +278,10 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
     if (!_tokenSet_13.member(INCLUDE))
         fprintf(stderr, "src2srcml:  Incorrect token set B\n");
 
-    if (!_tokenSet_22.member(CLASS))
+    if (!_tokenSet_23.member(CLASS))
         fprintf(stderr, "src2srcml:  Incorrect token set C\n");
 
-    if (!_tokenSet_26.member(EXTERN))
+    if (!_tokenSet_27.member(EXTERN))
         fprintf(stderr, "src2srcml:  Incorrect token set D\n");
 
     // root, single mode
@@ -466,6 +466,14 @@ tokens {
     SEXTERN;
 	SNAMESPACE;
 	SUSING_DIRECTIVE;
+
+    // C
+    SATOMIC;
+    SSTATIC_ASSERT_STATEMENT;
+    SGENERIC_SELECTION;
+    SGENERIC_SELECTOR;
+    SGENERIC_ASSOCIATION_LIST;
+    SGENERIC_ASSOCIATION;
 
     // C++
     SALIGNAS;
@@ -663,7 +671,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         // statements that clearly start with a keyword
         { (isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) || (LA(1) != TEMPLATE || next_token() != TEMPOPS))
          && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS) 
-         && (LA(1) == DEFAULT || next_token() != COLON) }? keyword_statements |
+         && (LA(1) == DEFAULT || next_token() != COLON)
+         && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }? keyword_statements |
 
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
 
@@ -713,6 +722,9 @@ keyword_statements[] { ENTRY_DEBUG } :
 
         // C/C++
         typedef_statement |
+
+        // C
+        static_assert_statement |
 
         // Java - keyword only detected for Java
         import_statement | package_statement | assert_statement | 
@@ -1475,7 +1487,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
 
             // special case for something that looks like a declaration
             { !name || (depth > 0) }?
-            identifier set_bool[name, true] |
+            (identifier | generic_selection) set_bool[name, true] |
 
             // special case for something that looks like a declaration
             { LA(1) == DELEGATE /* eliminates ANTRL warning, will be nop */ }? delegate_anonymous |
@@ -1488,7 +1500,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             // found two names in a row, so this is not an expression
             // cause this to fail by explicitly throwing exception
             { depth == 0 }?
-            identifier throw_exception[true] |
+            (identifier | generic_selection) throw_exception[true] |
 
             // forbid parentheses (handled recursively) and cfg tokens
             { !_tokenSet_1.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
@@ -1867,6 +1879,21 @@ assert_statement[] { ENTRY_DEBUG } :
         ASSERT
 ;
 
+// C _Static_assert statement
+static_assert_statement[] { ENTRY_DEBUG } :
+        {
+            // statement with a possible expression
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the return statement
+            startElement(SSTATIC_ASSERT_STATEMENT);
+
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+        }
+
+        STATIC_ASSERT call_argument_list
+;
+
 // return statement
 return_statement[] { ENTRY_DEBUG } :
         {
@@ -1978,7 +2005,7 @@ asm_declaration[] { ENTRY_DEBUG } :
             // start the asm statement
             startElement(SASM);
         }
-        ASM
+        ASM ({ LA(1) == VOLATILE }? specifier)*
         ({ true }? paren_pair | ~(LCURLY | RCURLY | TERMINATE))*
 ;
 
@@ -2993,7 +3020,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     rewind(start);
 
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
-       && _tokenSet_26.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
+       && _tokenSet_27.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && save_la == TERMINATE)
         type = VARIABLE;
 
@@ -3073,7 +3100,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT || LA(1) == MUTABLE]
             (
-                { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
+                { _tokenSet_23.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
                      && (LA(1) != TEMPLATE || next_token() != TEMPOPS) }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
@@ -3159,7 +3186,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // if elaborated type specifier should also be handled above. Reached here because 
                 // non-specifier then class/struct/union.
                 { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != STRUCT && LA(1) != UNION)}?
-        ({LA(1) == DECLTYPE }? decltype_full | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
+                ({ LA(1) == DECLTYPE || LA(1) == ATOMIC }? type_specifier_call | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
                 non_lead_type_identifier throw_exception[!foundpure]
@@ -3376,7 +3403,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         // ambigous on template keyword from template specifier and probably class_preamble template
         (options { generateAmbigWarnings = false; } : 
         // specifiers that occur in a type
-        { _tokenSet_22.member(LA(1)) }?
+        { _tokenSet_23.member(LA(1)) }?
         specifier | template_specifier |
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
@@ -3406,7 +3433,7 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         enum_definition_complete |
 
-        {inputState->guessing}? decltype_full | decltype_call
+        type_specifier_call
 
 ;
 
@@ -3458,8 +3485,14 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
         variable_identifier_array_grammar_sub[iscomplex]
 ;
 
+type_specifier_call[] {} :
+
+    {inputState->guessing }? (decltype_call_full | atomic_call_full) | decltype_call | atomic_call
+
+;
+
 // C++11 markup decltype 
-decltype_call[] { int save_type_count = getTypeCount(); ENTRY_DEBUG } :
+decltype_call[] { CompleteElement element(this); int save_type_count = getTypeCount(); ENTRY_DEBUG } :
         {
 
             // start a mode for the macro that will end after the argument list
@@ -3474,8 +3507,29 @@ decltype_call[] { int save_type_count = getTypeCount(); ENTRY_DEBUG } :
 ;
 
 // C++ completely match without markup decltype
-decltype_full[] { ENTRY_DEBUG } :
+decltype_call_full[] { ENTRY_DEBUG } :
         DECLTYPE paren_pair
+;
+
+
+// C11 markup _Atomic 
+atomic_call[] { CompleteElement element(this);  int save_type_count = getTypeCount(); ENTRY_DEBUG } :
+        {
+
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the macro call element
+            startElement(SATOMIC);
+         
+        }
+        ATOMIC (options { greedy = true; } : complete_argument_list)?
+        { setTypeCount(save_type_count); }
+;
+
+// C++ completely match without markup _Atomic
+atomic_call_full[] { ENTRY_DEBUG } :
+        ATOMIC (options { greedy = true; } : paren_pair)?
 ;
 
 // qmark
@@ -3702,7 +3756,7 @@ attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 // Do a complete argument list
 complete_argument_list[] { ENTRY_DEBUG } :
-        call_argument_list complete_arguments
+        call_argument_list (options { greedy = true; } : { LA(1) != RPAREN && LA(1) != RCURLY }? complete_arguments)* rparen[false]
 ;
 
 // Full, complete expression matched all at once (no stream).
@@ -3717,7 +3771,7 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
             // start the argument
             startElement(SARGUMENT);
         }
-        (options {warnWhenFollowAmbig = false; } : { count_paren > 0 }?
+        (options {warnWhenFollowAmbig = false; } : { count_paren > 0 && (count_paren != 1 || LA(1) != RPAREN) }?
 
         ({ LA(1) == LPAREN }? expression { ++count_paren; } |
 
@@ -3881,7 +3935,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
-            SIGNAL | FINAL | OVERRIDE | VOID |
+            SIGNAL | FINAL | OVERRIDE | VOID | ASM |
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
@@ -4061,7 +4115,7 @@ catch[antlr::RecognitionException] {
 // compound name for C
 compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        identifier (options { greedy = true; }: { LA(1) == MULTOPS }? multops)*
+        (identifier | generic_selection) (options { greedy = true; }: { LA(1) == MULTOPS }? multops)*
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
@@ -4134,10 +4188,10 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // C++
             FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
-            CONSTEXPR | THREADLOCAL |
+            CONSTEXPR | THREAD_LOCAL |
 
             // C
-            RESTRICT | 
+            RESTRICT | NORETURN | COMPLEX | IMAGINARY |
 
             // C/C++ mode
             CRESTRICT | 
@@ -4969,6 +5023,114 @@ throw_statement[] { ENTRY_DEBUG } :
         THROW
 ;
 
+// C _Generic (generic selection)
+generic_selection[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // statement 
+            startNewMode(MODE_LOCAL);
+
+            // start the generic
+            startElement(SGENERIC_SELECTION);
+
+            startNewMode(MODE_LIST);
+
+        }
+        (
+            { inputState->guessing }? GENERIC_SELECTION paren_pair | 
+            GENERIC_SELECTION LPAREN generic_selection_selector comma generic_selection_association_list rparen[false]
+        )
+
+;
+
+generic_selection_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
+
+    {
+        startNewMode(MODE_LOCAL);
+
+        startElement(SGENERIC_SELECTOR);
+
+    }
+    generic_selection_complete_expression
+
+;
+
+// generic selection association list
+generic_selection_association_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // list of parameters
+            setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN |  MODE_END_ONLY_AT_RPAREN | MODE_ASSOCIATION_LIST);
+
+            // start the argument list
+            startElement(SGENERIC_ASSOCIATION_LIST);
+        }
+        (comma | { LA(1) != RPAREN }? generic_selection_association)*
+        //(LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
+;
+
+generic_selection_complete_expression[] { CompleteElement element(this); int count_paren = 1; CALL_TYPE type = NOCALL; 
+    bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_TOP | MODE_END_AT_COMMA);
+
+            // start the argument list
+            startElement(SEXPRESSION);
+        }
+
+        (options {warnWhenFollowAmbig = false; } : { count_paren > 0 && (LA(1) != COMMA || !inMode(MODE_END_AT_COMMA)) && (count_paren != 1 || LA(1) != RPAREN) }?
+
+            (
+            { !inMode(MODE_END_AT_COMMA) }? comma |
+
+            { LA(1) == LPAREN }? expression { ++count_paren; } |
+
+            { LA(1) == RPAREN }? expression { --count_paren; } |
+
+            { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression |
+
+            expression
+            )
+        )*
+;
+
+// a generic selection association
+generic_selection_association[] { CompleteElement element(this); ENTRY_DEBUG } :
+
+        {
+            // argument with nested expression
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the argument
+            startElement(SGENERIC_ASSOCIATION);
+        }
+
+        generic_selection_association_type COLON generic_selection_complete_expression
+
+;
+
+generic_selection_association_type[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+
+    { pattern_check(stmt_type, secondtoken, type_count, true) }?
+    variable_declaration_type[type_count + 1] | generic_selection_association_default
+
+;
+
+generic_selection_association_default[] { SingleElement element(this); ENTRY_DEBUG} :
+
+    {
+
+            startNewMode(MODE_LOCAL);
+
+            startElement(STYPE);
+
+    }
+    DEFAULT
+
+
+
+;
+
+
 // an expression statement pre processing
 expression_statement_process[] { ENTRY_DEBUG } :
         {
@@ -5239,6 +5401,10 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
             } else
 
                 decParen();
+
+            if(inMode(MODE_ASSOCIATION_LIST))
+                endMode(MODE_ASSOCIATION_LIST);
+
         }
         rparen_operator[markup]
         {
@@ -5411,6 +5577,8 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
 
         { notdestructor }? sole_destop { notdestructor = false; } |
+
+//        generic_selection |
 
         // call
         // distinguish between a call and a macro
