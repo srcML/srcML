@@ -387,24 +387,27 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "extern"       , EXTERN        , LANGUAGE_C_FAMILY }, 
 
         { "asm"          , ASM           , LANGUAGE_C_FAMILY }, 
+        { "__asm"        , ASM           , LANGUAGE_C_FAMILY }, 
+        { "__asm__"      , ASM           , LANGUAGE_C_FAMILY }, 
 
         { "goto"         , GOTO          , LANGUAGE_ALL }, 
         { "sizeof"       , SIZEOF        , LANGUAGE_C_FAMILY }, 
 
         { "mutable"      , MUTABLE       , LANGUAGE_CXX }, 
         { "volatile"     , VOLATILE      , LANGUAGE_ALL },
+        { "__volatile__" , VOLATILE      , LANGUAGE_C_FAMILY  },
 
         // C keywords
-        { "restrict"       , RESTRICT      , LANGUAGE_C },
-        { "_Alignas"       , ALIGNAS       , LANGUAGE_C },
-        { "_Alignof"       , ALIGNOF       , LANGUAGE_C },
-        { "_Atomic"        , ATOMIC        , LANGUAGE_C },
-        { "_Complex"       , COMPLEX       , LANGUAGE_C },
-        { "_Generic"       , GENERIC_SELECTION       , LANGUAGE_C },
-        { "_Imaginary"     , IMAGINARY     , LANGUAGE_C },
-        { "_Noreturn"      , NORETURN      , LANGUAGE_C },
-        { "_Static_assert" , STATIC_ASSERT , LANGUAGE_C },
-        { "_Thread_local"  , THREAD_LOCAL  , LANGUAGE_C },
+        { "restrict"       , RESTRICT          , LANGUAGE_C },
+        { "_Alignas"       , ALIGNAS           , LANGUAGE_C },
+        { "_Alignof"       , ALIGNOF           , LANGUAGE_C },
+        { "_Atomic"        , ATOMIC            , LANGUAGE_C },
+        { "_Complex"       , COMPLEX           , LANGUAGE_C },
+        { "_Generic"       , GENERIC_SELECTION , LANGUAGE_C },
+        { "_Imaginary"     , IMAGINARY         , LANGUAGE_C },
+        { "_Noreturn"      , NORETURN          , LANGUAGE_C },
+        { "_Static_assert" , STATIC_ASSERT     , LANGUAGE_C },
+        { "_Thread_local"  , THREAD_LOCAL      , LANGUAGE_C },
 
 
         { "restrict"     , CRESTRICT     , LANGUAGE_CXX }, 
