@@ -5021,15 +5021,16 @@ throw_statement[] { ENTRY_DEBUG } :
 generic_selection[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // statement 
-            startNewMode(MODE_LOCAL | MODE_LIST);
+            startNewMode(MODE_LOCAL);
 
             // start the generic
             startElement(SGENERIC_SELECTION);
 
-            startNewMode(MODE_LIST | MODE_ASSOCIATION_LIST);
+            startNewMode(MODE_LIST);
+
         }
 
-        GENERIC LPAREN generic_selector comma generic_association_list rparen[false]
+        GENERIC LPAREN generic_selector comma generic_association_list
 
 ;
 
@@ -5039,9 +5040,9 @@ generic_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
         startNewMode(MODE_LOCAL);
 
         startElement(SGENERIC_SELECTOR);
+
     }
     generic_complete_expression
-
 
 ;
 
@@ -5049,7 +5050,7 @@ generic_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
 generic_association_list[] { CompleteElement element(this);  ENTRY_DEBUG } :
         {
             // list of parameters
-            setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN);
+            setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN | MODE_ASSOCIATION_LIST);
 
             // start the argument list
             startElement(SGENERIC_ASSOCIATION_LIST);
@@ -5393,6 +5394,9 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
             } else
 
                 decParen();
+
+            if(inMode(MODE_ASSOCIATION_LIST))
+                endMode(MODE_ASSOCIATION_LIST);
 
         }
         rparen_operator[markup]
