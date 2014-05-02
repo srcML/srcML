@@ -278,10 +278,10 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
     if (!_tokenSet_13.member(INCLUDE))
         fprintf(stderr, "src2srcml:  Incorrect token set B\n");
 
-    if (!_tokenSet_22.member(CLASS))
+    if (!_tokenSet_23.member(CLASS))
         fprintf(stderr, "src2srcml:  Incorrect token set C\n");
 
-    if (!_tokenSet_26.member(EXTERN))
+    if (!_tokenSet_27.member(EXTERN))
         fprintf(stderr, "src2srcml:  Incorrect token set D\n");
 
     // root, single mode
@@ -470,6 +470,10 @@ tokens {
     // C
     SATOMIC;
     SSTATIC_ASSERT_STATEMENT;
+    SGENERIC_SELECTION;
+    SGENERIC_SELECTOR;
+    SGENERIC_ASSOCIATION_LIST;
+    SGENERIC_ASSOCIATION;
 
     // C++
     SALIGNAS;
@@ -1481,7 +1485,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
 
             // special case for something that looks like a declaration
             { !name || (depth > 0) }?
-            identifier set_bool[name, true] |
+            (identifier | generic_selection) set_bool[name, true] |
 
             // special case for something that looks like a declaration
             { LA(1) == DELEGATE /* eliminates ANTRL warning, will be nop */ }? delegate_anonymous |
@@ -1494,7 +1498,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             // found two names in a row, so this is not an expression
             // cause this to fail by explicitly throwing exception
             { depth == 0 }?
-            identifier throw_exception[true] |
+            (identifier | generic_selection) throw_exception[true] |
 
             // forbid parentheses (handled recursively) and cfg tokens
             { !_tokenSet_1.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
@@ -3014,7 +3018,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     rewind(start);
 
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
-       && _tokenSet_26.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
+       && _tokenSet_27.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && save_la == TERMINATE)
         type = VARIABLE;
 
@@ -3094,7 +3098,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT]
             (
-                { _tokenSet_22.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
+                { _tokenSet_23.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
                      && (LA(1) != TEMPLATE || next_token() != TEMPOPS) }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
@@ -3397,7 +3401,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         // ambigous on template keyword from template specifier and probably class_preamble template
         (options { generateAmbigWarnings = false; } : 
         // specifiers that occur in a type
-        { _tokenSet_22.member(LA(1)) }?
+        { _tokenSet_23.member(LA(1)) }?
         specifier | template_specifier |
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
@@ -3749,7 +3753,7 @@ attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 // Do a complete argument list
 complete_argument_list[] { ENTRY_DEBUG } :
-        call_argument_list complete_arguments
+        call_argument_list ({ LA(1) != RPAREN && LA(1) != RCURLY }? complete_arguments)* rparen[false]
 ;
 
 // Full, complete expression matched all at once (no stream).
@@ -3764,7 +3768,7 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
             // start the argument
             startElement(SARGUMENT);
         }
-        (options {warnWhenFollowAmbig = false; } : { count_paren > 0 }?
+        (options {warnWhenFollowAmbig = false; } : { count_paren > 0 && (count_paren != 1 || LA(1) != RPAREN) }?
 
         ({ LA(1) == LPAREN }? expression { ++count_paren; } |
 
@@ -4105,7 +4109,7 @@ catch[antlr::RecognitionException] {
 // compound name for C
 compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        identifier (options { greedy = true; }: { LA(1) == MULTOPS }? multops)*
+        (identifier | generic_selection) (options { greedy = true; }: { LA(1) == MULTOPS }? multops)*
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
@@ -5013,6 +5017,114 @@ throw_statement[] { ENTRY_DEBUG } :
         THROW
 ;
 
+// C _Generic (generic selection)
+generic_selection[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // statement 
+            startNewMode(MODE_LOCAL);
+
+            // start the generic
+            startElement(SGENERIC_SELECTION);
+
+            startNewMode(MODE_LIST);
+
+        }
+        (
+            { inputState->guessing }? GENERIC_SELECTION paren_pair | 
+            GENERIC_SELECTION LPAREN generic_selection_selector comma generic_selection_association_list rparen[false]
+        )
+
+;
+
+generic_selection_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
+
+    {
+        startNewMode(MODE_LOCAL);
+
+        startElement(SGENERIC_SELECTOR);
+
+    }
+    generic_selection_complete_expression
+
+;
+
+// generic selection association list
+generic_selection_association_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // list of parameters
+            setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN |  MODE_END_ONLY_AT_RPAREN | MODE_ASSOCIATION_LIST);
+
+            // start the argument list
+            startElement(SGENERIC_ASSOCIATION_LIST);
+        }
+        (comma | { LA(1) != RPAREN }? generic_selection_association)*
+        //(LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
+;
+
+generic_selection_complete_expression[] { CompleteElement element(this); int count_paren = 1; CALL_TYPE type = NOCALL; 
+    bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_TOP | MODE_END_AT_COMMA);
+
+            // start the argument list
+            startElement(SEXPRESSION);
+        }
+
+        (options {warnWhenFollowAmbig = false; } : { count_paren > 0 && (LA(1) != COMMA || !inMode(MODE_END_AT_COMMA)) && (count_paren != 1 || LA(1) != RPAREN) }?
+
+            (
+            { !inMode(MODE_END_AT_COMMA) }? comma |
+
+            { LA(1) == LPAREN }? expression { ++count_paren; } |
+
+            { LA(1) == RPAREN }? expression { --count_paren; } |
+
+            { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression |
+
+            expression
+            )
+        )*
+;
+
+// a generic selection association
+generic_selection_association[] { CompleteElement element(this); ENTRY_DEBUG } :
+
+        {
+            // argument with nested expression
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the argument
+            startElement(SGENERIC_ASSOCIATION);
+        }
+
+        generic_selection_association_type COLON generic_selection_complete_expression
+
+;
+
+generic_selection_association_type[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+
+    { pattern_check(stmt_type, secondtoken, type_count, true) }?
+    variable_declaration_type[type_count + 1] | generic_selection_association_default
+
+;
+
+generic_selection_association_default[] { SingleElement element(this); ENTRY_DEBUG} :
+
+    {
+
+            startNewMode(MODE_LOCAL);
+
+            startElement(STYPE);
+
+    }
+    DEFAULT
+
+
+
+;
+
+
 // an expression statement pre processing
 expression_statement_process[] { ENTRY_DEBUG } :
         {
@@ -5283,6 +5395,10 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
             } else
 
                 decParen();
+
+            if(inMode(MODE_ASSOCIATION_LIST))
+                endMode(MODE_ASSOCIATION_LIST);
+
         }
         rparen_operator[markup]
         {
@@ -5455,6 +5571,8 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
 
         { notdestructor }? sole_destop { notdestructor = false; } |
+
+//        generic_selection |
 
         // call
         // distinguish between a call and a macro
