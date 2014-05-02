@@ -5018,18 +5018,18 @@ throw_statement[] { ENTRY_DEBUG } :
 ;
 
 // C _Generic (generic selection)
-generic_selection[] { ENTRY_DEBUG } :
+generic_selection[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // statement 
-            startNewMode(MODE_LIST);
+            startNewMode(MODE_LOCAL | MODE_LIST);
 
             // start the generic
             startElement(SGENERIC_SELECTION);
 
-            startNewMode(MODE_LIST);
+            startNewMode(MODE_LIST | MODE_ASSOCIATION_LIST);
         }
 
-        GENERIC LPAREN generic_selector generic_association_list (comma | generic_association)* { endMode(); } rparen
+        GENERIC LPAREN generic_selector comma generic_association_list rparen[false]
 
 ;
 
@@ -5046,8 +5046,7 @@ generic_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // generic selection association list
-generic_association_list[] { ENTRY_DEBUG } :
-        comma
+generic_association_list[] { CompleteElement element(this);  ENTRY_DEBUG } :
         {
             // list of parameters
             setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN);
@@ -5055,6 +5054,7 @@ generic_association_list[] { ENTRY_DEBUG } :
             // start the argument list
             startElement(SGENERIC_ASSOCIATION_LIST);
         }
+        (comma | generic_association)*
         //(LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
@@ -5086,7 +5086,7 @@ generic_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // a generic selection association
-generic_association[] { ENTRY_DEBUG } :
+generic_association[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         {
             // argument with nested expression
