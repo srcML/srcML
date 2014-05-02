@@ -5031,7 +5031,7 @@ generic_selection[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         (
             { inputState->guessing }? GENERIC paren_pair | 
-            GENERIC LPAREN generic_selection_selector comma generic_selection_association_list
+            GENERIC LPAREN generic_selection_selector comma generic_selection_association_list rparen[false]
         )
 
 ;
@@ -5049,7 +5049,7 @@ generic_selection_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // generic selection association list
-generic_selection_association_list[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
+generic_selection_association_list[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // list of parameters
             setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN |  MODE_END_ONLY_AT_RPAREN | MODE_ASSOCIATION_LIST);
@@ -5057,7 +5057,7 @@ generic_selection_association_list[] { CompleteElement element(this); bool first
             // start the argument list
             startElement(SGENERIC_ASSOCIATION_LIST);
         }
-        ({ first }? generic_selection_association set_bool[first, false] |  comma generic_selection_association)*
+        (comma | { LA(1) != RPAREN }? generic_selection_association)*
         //(LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
@@ -5071,7 +5071,7 @@ generic_selection_complete_expression[] { CompleteElement element(this); int cou
             startElement(SEXPRESSION);
         }
 
-        (options {warnWhenFollowAmbig = false; } : { count_paren > 0 && (LA(1) != COMMA || !inMode(MODE_END_AT_COMMA)) }?
+        (options {warnWhenFollowAmbig = false; } : { count_paren > 0 && (LA(1) != COMMA || !inMode(MODE_END_AT_COMMA)) && (count_paren != 1 || LA(1) != RPAREN) }?
 
             (
             { !inMode(MODE_END_AT_COMMA) }? comma |
