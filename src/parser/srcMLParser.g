@@ -471,6 +471,7 @@ tokens {
     SATOMIC;
     SSTATIC_ASSERT_STATEMENT;
     SGENERIC_SELECTION;
+    SGENERIC_SELECTOR;
     SGENERIC_ASSOCIATION_LIST;
     SGENERIC_ASSOCIATION;
 
@@ -5032,7 +5033,19 @@ generic_selection[] { ENTRY_DEBUG } :
             startNewMode(MODE_LIST | MODE_ASSOCIATION_LIST);
         }
 
-        GENERIC LPAREN generic_complete_expression generic_association_list
+        GENERIC LPAREN generic_selector generic_association_list
+
+;
+
+generic_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
+
+    {
+        startNewMode(MODE_LOCAL);
+
+        startElement(SGENERIC_SELECTOR);
+    }
+    generic_complete_expression
+
 
 ;
 

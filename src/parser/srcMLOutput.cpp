@@ -119,6 +119,7 @@ namespace {
     ELEMENT_MAP(SATOMIC, "atomic")
     ELEMENT_MAP(SSTATIC_ASSERT_STATEMENT, "assert")
     ELEMENT_MAP(SGENERIC_SELECTION, "generic_selection")
+    ELEMENT_MAP(SGENERIC_SELECTOR, "selector")
     ELEMENT_MAP(SGENERIC_ASSOCIATION_LIST, "association_list")
     ELEMENT_MAP(SGENERIC_ASSOCIATION, "association")
 
