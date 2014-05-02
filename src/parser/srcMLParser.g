@@ -5050,7 +5050,7 @@ generic_selection_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
 generic_selection_association_list[] { CompleteElement element(this);  ENTRY_DEBUG } :
         {
             // list of parameters
-            setMode(MODE_EXPECT | MODE_LIST | MODE_END_ONLY_AT_RPAREN | MODE_ASSOCIATION_LIST);
+            setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN | MODE_ASSOCIATION_LIST);
 
             // start the argument list
             startElement(SGENERIC_ASSOCIATION_LIST);
