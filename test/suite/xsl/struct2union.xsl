@@ -51,8 +51,15 @@
 	</union>
 </xsl:template>
 
+<!-- change the if element to a while element -->
+<xsl:template match="src:struct_decl">
+	<union_decl>
+		<xsl:apply-templates/> <!-- select="*|@*|text()"/> -->
+	</union_decl>
+</xsl:template>
+
 <!-- change the struct keyword to a union keyword -->
-<xsl:template match="src:struct/text()[1]">
+<xsl:template match="text()[contains(., 'struct')]">
 	<xsl:value-of select="str:replace(., 'struct', 'union')"/>
 </xsl:template>
 
