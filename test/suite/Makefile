@@ -608,16 +608,23 @@ interface_java.java.xml : class_java.java.xml ${XSLT_CLASS2INTERFACE_XSL}
 ifblock.cpp.xml : if.cpp.xml ${XSLT_IF2IFBLOCK_XSL}
 	${XSLT_IF2IFBLOCK} $< > $@
 
-c_cpp_mode.restrict.cpp.xml : xsl/c_cpp_mode_basic_template.cpp.xml
+c_cpp_mode.restrict.cpp.xml : xsl/c_cpp_mode_basic_template
 	${XSLT} --stringparam new_name restrict ${XSLT_RENAME_XSL} $< > $@
 
-c_cpp_mode.mutable.cpp.xml : xsl/c_cpp_mode_basic_template.cpp.xml
+
+c_cpp_mode_specifier.restrict.cpp.xml : xsl/c_cpp_mode_specifier_template
+	${XSLT} --stringparam new_name restrict ${XSLT_RENAME_XSL} $< > $@
+
+c_cpp_mode.mutable.cpp.xml : xsl/c_cpp_mode_basic_template
 	${XSLT} --stringparam new_name mutable ${XSLT_RENAME_XSL} $< > $@
 
-c_cpp_mode.try.cpp.xml : xsl/c_cpp_mode_basic_template.cpp.xml
+c_cpp_mode_specifier.mutable.cpp.xml : xsl/c_cpp_mode_specifier_template
+	${XSLT} --stringparam new_name mutable ${XSLT_RENAME_XSL} $< > $@
+
+c_cpp_mode.try.cpp.xml : xsl/c_cpp_mode_basic_template
 	${XSLT} --stringparam new_name try ${XSLT_RENAME_XSL} $< > $@
 
-c_cpp_mode.catch.cpp.xml : xsl/c_cpp_mode_basic_template.cpp.xml
+c_cpp_mode.catch.cpp.xml : xsl/c_cpp_mode_basic_template
 	${XSLT} --stringparam new_name catch ${XSLT_RENAME_XSL} $< > $@
 
 clean :

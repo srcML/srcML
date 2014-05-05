@@ -97,8 +97,10 @@ LANGUAGE_CXX modifier_cpp
 LANGUAGE_CXX function_pointer_cpp
 LANGUAGE_CXX forever
 LANGUAGE_CXX qt_foreach
+LANGUAGE_CXX c_cpp_mode_specifier.restrict
 LANGUAGE_CXX c_cpp_mode.restrict
 LANGUAGE_CXX c_cpp_mode.mutable
+LANGUAGE_CXX c_cpp_mode_specifier.mutable
 LANGUAGE_CXX c_cpp_mode.try
 LANGUAGE_CXX c_cpp_mode.catch
 

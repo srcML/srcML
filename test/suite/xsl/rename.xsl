@@ -31,8 +31,13 @@
 	</xsl:attribute>
 </xsl:template>
 
-<!-- change the if keyword to a while keyword -->
+<!-- put in text identifier name -->
 <xsl:template match="src:name/text()[1]">
+	<xsl:value-of select="str:replace(., 'NAME', $new_name)"/>
+</xsl:template>
+
+<!-- put in text specifier name -->
+<xsl:template match="src:specifier/text()[1]">
 	<xsl:value-of select="str:replace(., 'NAME', $new_name)"/>
 </xsl:template>
 
