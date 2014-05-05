@@ -670,7 +670,9 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         // statements that clearly start with a keyword
         { (isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) || (LA(1) != TEMPLATE || next_token() != TEMPOPS))
-         && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS)
+         && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS) 
+         && (LA(1) == DEFAULT || next_token() != COLON)
+         && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }? keyword_statements |
 
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
@@ -988,7 +990,7 @@ function_tail[] { ENTRY_DEBUG } :
             ref_qualifier |
 
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
-            TRY |
+            (TRY | CXX_TRY) | 
 
             { inLanguage(LANGUAGE_OO) }?
             complete_throw_list |
@@ -2564,7 +2566,7 @@ else_handling[] { ENTRY_DEBUG } :
             // catch and finally statements are nested inside of a try, if at that level
             // so if no CATCH or FINALLY, then end now
             bool intry = inMode(MODE_TRY);
-            bool restoftry = LA(1) == CATCH || LA(1) == FINALLY;
+            bool restoftry = LA(1) == CATCH || LA(1) == CXX_CATCH || LA(1) == FINALLY;
             if (intry && !restoftry) {
                 endMode(MODE_TRY);
                 endDownToMode(MODE_TOP);
@@ -2698,7 +2700,9 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // already in an expression, and run into a keyword
         // so stop the expression, and markup the keyword statement
-        { inMode(MODE_EXPRESSION) }?
+        { inMode(MODE_EXPRESSION) && (LA(1) == DEFAULT || next_token() != COLON)
+         && (LA(1) != CXX_TRY || next_token() == LCURLY)
+         && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }?
         terminate_pre
         terminate_post
         keyword_statements |
@@ -3097,7 +3101,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS || LA(1) == QMARK]
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
-            set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT]
+            set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT || LA(1) == MUTABLE]
             (
                 { _tokenSet_23.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
                      && (LA(1) != TEMPLATE || next_token() != TEMPOPS) }?
@@ -3455,7 +3459,8 @@ lead_type_identifier[] { ENTRY_DEBUG } :
 //        (macro_call_paren identifier)=> macro_call |
 
         // typical type name
-        { LA(1) != ASYNC && (inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE)) && LA(1) != CRESTRICT }?
+        { LA(1) != ASYNC && (inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE)) && 
+            LA(1) != CRESTRICT && LA(1) != MUTABLE }?
         compound_name |
 
         pure_lead_type_identifier
@@ -3940,7 +3945,10 @@ identifier_list[] { ENTRY_DEBUG } :
             INTO | THIS |
 
             // C
-            CRESTRICT
+            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH /*| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
+            SIGNALS | FOREACH | FOREVER | VIRTUAL | FRIEND | OPERATOR | EXPLICIT | NAMESPACE | USING |
+            DELETE | FALSE | TRUE | FINAL | OVERRIDE | CONSTEXPR | NOEXCEPT | THREADLOCAL | NULLPTR |
+            DECLTYPE | ALIGNAS | TYPENAME | ALIGNOF*/
 ;
 
 // most basic name
@@ -4742,7 +4750,7 @@ try_statement[] { ENTRY_DEBUG } :
             // start of the try statement
             startElement(STRY_BLOCK);
         }
-        TRY
+        (TRY | CXX_TRY)
 ;
 
 // try statement with resources
@@ -4928,7 +4936,7 @@ catch_statement[] { ENTRY_DEBUG } :
             // start of the catch statement
             startElement(SCATCH_BLOCK);
         }
-        CATCH (parameter_list)*
+        (CATCH | CXX_CATCH) (parameter_list)*
 ;
 
 // finally statement
