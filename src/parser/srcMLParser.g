@@ -3185,7 +3185,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // special function name
                 MAIN set_bool[isoperator, type_count == 0] |
 
-                { is_c_class_identifier }?
+                { is_c_class_identifier || (type_count > 0 && (next_token() == TERMINATE || next_token() == OPERATORS)) }?
                 CXX_CLASS |
 
         { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
