@@ -3174,7 +3174,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                                               && next_token() != LPAREN
                                               && next_token() != RPAREN
                                               && next_token() != RCURLY
-                                              && (next_token() != LBRACKET || next_token_two() == LBRACKET)
+                                              && (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET || next_token_two() == LBRACKET)
                                               && next_token() != RBRACKET
                                               && next_token() != TERMINATE }?
                 (CLASS               set_type[type, CLASS_DECL]     |
