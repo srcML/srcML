@@ -608,16 +608,24 @@ ifblock.cpp.xml : if.cpp.xml ${XSLT_IF2IFBLOCK_XSL}
 	${XSLT_IF2IFBLOCK} $< > $@
 
 c_cpp_mode.restrict.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_specifier_template xsl/c_cpp_mode_call_template
-	cat xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer | ${XSLT} --stringparam new_name restrict ${XSLT_RENAME_XSL} /dev/stdin > $@
+	cat xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
+	${XSLT} --stringparam new_name restrict ${XSLT_RENAME_XSL} $@.temp > $@
+	rm -f $@.temp
 
 c_cpp_mode.mutable.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_specifier_template xsl/c_cpp_mode_call_template
-	cat xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer | ${XSLT} --stringparam new_name mutable ${XSLT_RENAME_XSL} /dev/stdin > $@
+	cat xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
+	${XSLT} --stringparam new_name mutable ${XSLT_RENAME_XSL} $@.temp > $@
+	rm -f $@.temp
 
 c_cpp_mode.try.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_call_template
-	cat xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer | ${XSLT} --stringparam new_name try ${XSLT_RENAME_XSL} /dev/stdin > $@
+	cat xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
+	${XSLT} --stringparam new_name try ${XSLT_RENAME_XSL} $@.temp > $@
+	rm -f $@.temp
 
 c_cpp_mode.catch.cpp.xml : xsl/c_cpp_mode_basic_template
-	cat xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer | ${XSLT} --stringparam new_name catch ${XSLT_RENAME_XSL} /dev/stdin > $@
+	cat xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
+	${XSLT} --stringparam new_name catch ${XSLT_RENAME_XSL} $@.temp > $@
+	rm -f $@.temp
 
 clean :
 	rm -f ${GEN_FILES}
