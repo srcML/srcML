@@ -118,6 +118,8 @@ XSLT_CLASS2INTERFACE=${XSLT} ${XSLT_CLASS2INTERFACE_XSL}
 XSLT_IF2IFBLOCK_XSL=xsl/if2ifblock.xsl
 XSLT_IF2IFBLOCK=${XSLT} ${XSLT_IF2IFBLOCK_XSL}
 
+XSLT_RENAME_XSL=xsl/rename.xsl
+
 ##
 # Comments and preprocessor statements are handled out of the normal grammar rules
 # in src2srcml.  In order to test the handling of these tokens, special cases are
@@ -605,6 +607,18 @@ interface_java.java.xml : class_java.java.xml ${XSLT_CLASS2INTERFACE_XSL}
 # if with blocks from if
 ifblock.cpp.xml : if.cpp.xml ${XSLT_IF2IFBLOCK_XSL}
 	${XSLT_IF2IFBLOCK} $< > $@
+
+c_cpp_mode.restrict.cpp.xml : xsl/c_cpp_mode_basic_template.cpp.xml
+	${XSLT} --stringparam new_name restrict ${XSLT_RENAME_XSL} $< > $@
+
+c_cpp_mode.mutable.cpp.xml : xsl/c_cpp_mode_basic_template.cpp.xml
+	${XSLT} --stringparam new_name mutable ${XSLT_RENAME_XSL} $< > $@
+
+c_cpp_mode.try.cpp.xml : xsl/c_cpp_mode_basic_template.cpp.xml
+	${XSLT} --stringparam new_name try ${XSLT_RENAME_XSL} $< > $@
+
+c_cpp_mode.catch.cpp.xml : xsl/c_cpp_mode_basic_template.cpp.xml
+	${XSLT} --stringparam new_name catch ${XSLT_RENAME_XSL} $< > $@
 
 clean :
 	rm -f ${GEN_FILES}
