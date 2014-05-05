@@ -865,6 +865,22 @@ next_token[] returns [int token] {
     rewind(place);
 } :;
 
+// efficient way to view the token after the current next_token
+next_token_two[] returns [int token] {
+
+    int place = mark();
+    inputState->guessing++;
+
+    // consume current token
+    consume();
+    consume();
+
+    token = LA(1);
+
+    inputState->guessing--;
+    rewind(place);
+} :;
+
 // eficient way of getting the next token string value.
 next_token_string[] returns [std::string token] {
 
@@ -3157,6 +3173,9 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                                               && next_token() != MPDEREF
                                               && next_token() != LPAREN
                                               && next_token() != RPAREN
+                                              && next_token() != RCURLY
+                                              && (next_token() != LBRACKET || next_token_two() == LBRACKET)
+                                              && next_token() != RBRACKET
                                               && next_token() != TERMINATE }?
                 (CLASS               set_type[type, CLASS_DECL]     |
                  CXX_CLASS           set_type[type, CLASS_DECL]     |
