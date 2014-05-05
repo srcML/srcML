@@ -2147,6 +2147,7 @@ class_definition[] { ENTRY_DEBUG } :
 class_post[] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
         (options { greedy = true; } : { LA(1) != CRESTRICT && LA(1) != MUTABLE }? specifier)*
+
 ;
 
 // Handle an enum class
@@ -3153,6 +3154,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  INTERFACE           set_type[type, INTERFACE_DECL] |
                  ATSIGN INTERFACE set_type[type, INTERFACE_DECL])
                 set_bool[lcurly, LA(1) == LCURLY]
+                set_type[type, VARIABLE, LA(1) == CXX_CLASS]
                 (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
                 class_post
