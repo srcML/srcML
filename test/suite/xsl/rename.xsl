@@ -34,7 +34,7 @@
 <!-- change the directory attribute on any unit from "if" to "while" -->
 <xsl:template match="src:unit/@dir">
 	<xsl:attribute name="dir">
-		<xsl:value-of select="str:replace(., '', '')"/>
+		<xsl:value-of select="concat(., '.', $new_name)"/>
 	</xsl:attribute>
 </xsl:template>
 
@@ -47,7 +47,7 @@
 <!-- change the filename attribute on the unit from "if" to "while" -->
 <xsl:template match="src:unit/@filename">
 	<xsl:attribute name="filename">
-		<xsl:value-of select="str:replace(., '', '')"/>
+		<xsl:value-of select="concat(., '.', $new_name)"/>
 	</xsl:attribute>
 </xsl:template>
 
