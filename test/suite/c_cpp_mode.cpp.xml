@@ -9,7 +9,6 @@
 <decl_stmt><decl><type><specifier>restrict</specifier></type> <name>restrict</name></decl>;</decl_stmt>
 </unit>
 
-
 <unit>
 <decl_stmt><decl><type><specifier>restrict</specifier> <specifier>restrict</specifier></type> <name>restrict</name></decl>;</decl_stmt>
 </unit>
