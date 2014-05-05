@@ -3151,6 +3151,10 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             || (inLanguage(LANGUAGE_JAVA) && (LA(1) != ATSIGN 
                                              || (LA(1) == ATSIGN && next_token() == INTERFACE))))
                                               && next_token() != OPERATORS
+                                              && next_token() != PERIOD
+                                              && next_token() != DOTDEREF
+                                              && next_token() != TRETURN
+                                              && next_token() != MPDEREF
                                               && next_token() != LPAREN
                                               && next_token() != RPAREN
                                               && next_token() != TERMINATE }?
@@ -3191,8 +3195,9 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // special function name
                 MAIN set_bool[isoperator, type_count == 0] |
 
-                { is_c_class_identifier || (type_count > 0 && (next_token() == TERMINATE || next_token() == LPAREN || next_token() == RPAREN || next_token() == OPERATORS)) }?
-                CXX_CLASS |
+                { is_c_class_identifier || (type_count > 0 && (next_token() == TERMINATE || next_token() == LPAREN || next_token() == RPAREN || next_token() == OPERATORS
+                    || next_token() == PERIOD || next_token() == DOTDEREF || next_token() == TRETURN || next_token() == MPDEREF || next_token() == LPAREN)) }?
+                     CXX_CLASS |
 
         { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
 
