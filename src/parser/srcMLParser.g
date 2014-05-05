@@ -1092,6 +1092,8 @@ function_identifier[] { ENTRY_DEBUG } :
         // typical name  
         compound_name_inner[false] |
 
+        keyword_name | 
+
         { function_pointer_name_check() }? 
         function_pointer_name |
 
@@ -3147,7 +3149,11 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                 { type_count == attribute_count + specifier_count + template_count  && (!inLanguage(LANGUAGE_JAVA) 
             || (inLanguage(LANGUAGE_JAVA) && (LA(1) != ATSIGN 
-                                             || (LA(1) == ATSIGN && next_token() == INTERFACE)))) }?
+                                             || (LA(1) == ATSIGN && next_token() == INTERFACE))))
+                                              && next_token() != OPERATORS
+                                              && next_token() != LPAREN
+                                              && next_token() != RPAREN
+                                              && next_token() != TERMINATE }?
                 (CLASS               set_type[type, CLASS_DECL]     |
                  CXX_CLASS           set_type[type, CLASS_DECL]     |
                  STRUCT              set_type[type, STRUCT_DECL]    |
@@ -3185,7 +3191,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // special function name
                 MAIN set_bool[isoperator, type_count == 0] |
 
-                { is_c_class_identifier || (type_count > 0 && (next_token() == TERMINATE || next_token() == OPERATORS)) }?
+                { is_c_class_identifier || (type_count > 0 && (next_token() == TERMINATE || next_token() == LPAREN || next_token() == RPAREN || next_token() == OPERATORS)) }?
                 CXX_CLASS |
 
         { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
@@ -5657,7 +5663,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         rcurly_argument |
 
         // variable or literal
-        variable_identifier) | literals | noexcept_list | 
+        variable_identifier | keyword_name) | literals | noexcept_list | 
 
         variable_identifier_array_grammar_sub[flag]
 ;
