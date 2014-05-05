@@ -1422,7 +1422,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
         if (isoption(parseoptions, SRCML_OPTION_CPP) &&
                (_tokenSet_1.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
-            || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS
+            || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS || postcalltoken == CXX_CLASS
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
             || postcalltoken == 1 /* EOF ? */
             || postcalltoken == TEMPLATE
@@ -2097,7 +2097,7 @@ class_declaration[] { ENTRY_DEBUG } :
             startElement(SCLASS_DECLARATION);
         }
 
-        class_preamble CLASS class_post class_header
+        class_preamble (CLASS | CXX_CLASS) class_post class_header
 ;
 
 // class preprocessing items
@@ -2135,7 +2135,7 @@ class_preamble[] { ENTRY_DEBUG } :
 class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SCLASS]
 
-        class_preamble CLASS class_post (class_header lcurly | lcurly)
+        class_preamble (CLASS | CXX_CLASS) class_post (class_header lcurly | lcurly)
         {
 
             if (inLanguage(LANGUAGE_CXX))
@@ -2990,7 +2990,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     else if (type == 0 && type_count == 0 && _tokenSet_1.member(LA(1)))
         type = SINGLE_MACRO;
 
-    else if(type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == STRUCT || LA(1) == UNION))
+    else if(type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == CXX_CLASS || LA(1) == STRUCT || LA(1) == UNION))
         type = SINGLE_MACRO;
 
     // may just have an expression
@@ -3147,6 +3147,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             || (inLanguage(LANGUAGE_JAVA) && (LA(1) != ATSIGN 
                                              || (LA(1) == ATSIGN && next_token() == INTERFACE)))) }?
                 (CLASS               set_type[type, CLASS_DECL]     |
+                 CXX_CLASS           set_type[type, CLASS_DECL]     |
                  STRUCT              set_type[type, STRUCT_DECL]    |
                  UNION               set_type[type, UNION_DECL]     |
                  INTERFACE           set_type[type, INTERFACE_DECL] |
@@ -3188,7 +3189,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // do not match a struct class or union.  If was class/struct/union decl will not reach here.
                 // if elaborated type specifier should also be handled above. Reached here because 
                 // non-specifier then class/struct/union.
-                { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != STRUCT && LA(1) != UNION)}?
+                { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != CXX_CLASS && LA(1) != STRUCT && LA(1) != UNION)}?
                 ({ LA(1) == DECLTYPE || LA(1) == ATOMIC }? type_specifier_call | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
@@ -3448,7 +3449,7 @@ class_lead_type_identifier[]  { SingleElement element(this); ENTRY_DEBUG } :
             else
                 startElement(SNOP);
         }
-        (CLASS | STRUCT | UNION)
+        (CLASS | CXX_CLASS | STRUCT | UNION)
 ;
 
 // type identifier
@@ -3945,7 +3946,7 @@ identifier_list[] { ENTRY_DEBUG } :
             INTO | THIS |
 
             // C
-            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH /*| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
+            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH /*| CXX_CLASS| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
             SIGNALS | FOREACH | FOREVER | VIRTUAL | FRIEND | OPERATOR | EXPLICIT | NAMESPACE | USING |
             DELETE | FALSE | TRUE | FINAL | OVERRIDE | CONSTEXPR | NOEXCEPT | THREADLOCAL | NULLPTR |
             DECLTYPE | ALIGNAS | TYPENAME | ALIGNOF*/
@@ -4144,7 +4145,7 @@ keyword_name[] { SingleElement element(this); ENTRY_DEBUG } :
 
         }
 
-        CLASS
+        (CLASS | CXX_CLASS)
 
 ;
 
@@ -5559,7 +5560,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
 
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
-        CLASS |
+        (CLASS | CXX_CLASS) |
 
         { next_token() == LPAREN }?
         delegate_anonymous |
@@ -6037,7 +6038,7 @@ template_declaration[] { ENTRY_DEBUG } :
         }
         TEMPLATE
         {
-            if(LA(1) == CLASS)
+            if(LA(1) == CLASS || LA(1) == CXX_CLASS)
                 startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
             else
                 startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT | MODE_TEMPLATE_PARAMETER_LIST);
@@ -6154,8 +6155,8 @@ generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
             startElement(SWHERE);
         }
         WHERE compound_name_inner[false] COLON
-        (compound_name_inner[false] | CLASS | STRUCT | NEW LPAREN RPAREN)
-        (options { greedy = true; } : COMMA (compound_name_inner[false] | CLASS | STRUCT | NEW LPAREN RPAREN))*
+        (compound_name_inner[false] | CLASS | CXX_CLASS | STRUCT | NEW LPAREN RPAREN)
+        (options { greedy = true; } : COMMA (compound_name_inner[false] | CLASS | CXX_CLASS | STRUCT | NEW LPAREN RPAREN))*
 ;
 
 // save the namestack
@@ -6375,7 +6376,7 @@ enum_definition[] { ENTRY_DEBUG } :
 
 // header for enum class
 enum_class_header[] {} :
-        (CLASS | STRUCT)* 
+        (CLASS | CXX_CLASS | STRUCT)* 
         ({ inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
         variable_identifier (COLON enum_type)*
 
