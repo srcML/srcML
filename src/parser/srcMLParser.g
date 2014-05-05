@@ -138,7 +138,7 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG  RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -3064,6 +3064,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             bool saveisdestructor = false;
             bool endbracket = false;
             bool modifieroperator = false;
+            bool is_c_class_identifier = false;
             qmark = false;
             int real_type_count = 0;
             bool lcurly = false;
@@ -3157,7 +3158,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
                 class_post
-                (class_header | (keyword_name (multops)*) | LCURLY)
+                (class_header | (CXX_CLASS set_bool[is_c_class_identifier] (multops)*) | LCURLY)
                 set_type[type, CLASS_DEFN,     type == CLASS_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
                 set_type[type, UNION_DEFN,     type == UNION_DECL     && (LA(1) == LCURLY || lcurly)]
@@ -3183,6 +3184,9 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                 // special function name
                 MAIN set_bool[isoperator, type_count == 0] |
+
+                { is_c_class_identifier }?
+                CXX_CLASS |
 
         { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
 
