@@ -1,6 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="c_cpp_mode" filename="c_cpp_mode">
-
 <unit>
 <label><name>NAME</name>:</label>
 </unit>
@@ -35,6 +32,4 @@
 
 <unit>
 <enum>enum <name>NAME</name> <block>{}</block>;</enum>
-</unit>
-
 </unit>

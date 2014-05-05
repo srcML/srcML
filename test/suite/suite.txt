@@ -99,13 +99,8 @@ LANGUAGE_CXX forever
 LANGUAGE_CXX qt_foreach
 
 LANGUAGE_CXX_GEN c_cpp_mode.restrict
-LANGUAGE_CXX_GEN c_cpp_mode_specifier.restrict
-LANGUAGE_CXX_GEN c_cpp_mode_call.restrict
 LANGUAGE_CXX_GEN c_cpp_mode.mutable
-LANGUAGE_CXX_GEN c_cpp_mode_specifier.mutable
-LANGUAGE_CXX_GEN c_cpp_mode_call.mutable
 LANGUAGE_CXX_GEN c_cpp_mode.try
-LANGUAGE_CXX_GEN c_cpp_mode_call.try
 LANGUAGE_CXX_GEN c_cpp_mode.catch
 
 LANGUAGE_CSHARP_GEN asm

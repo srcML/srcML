@@ -1,8 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="c_cpp_mode_call" filename="c_cpp_mode_call">
-
 <unit>
 <expr_stmt><expr><call><name>NAME</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-</unit>
-
 </unit>
