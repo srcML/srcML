@@ -24,13 +24,6 @@
 
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
 
-<func:function name="src:ifwithelse">
-	<xsl:param name="context"/>
-
-	<func:result select="boolean($context[src:if//src:else])"/>
-
-</func:function>
-
 <!-- change the directory attribute on any unit from "if" to "while" -->
 <xsl:template match="src:unit/@dir">
 	<xsl:attribute name="dir">
@@ -38,10 +31,9 @@
 	</xsl:attribute>
 </xsl:template>
 
-
 <!-- change the if keyword to a while keyword -->
 <xsl:template match="src:name/text()[1]">
-	<xsl:value-of select="str:replace(., 'restrict', $new_name)"/>
+	<xsl:value-of select="str:replace(., 'NAME', $new_name)"/>
 </xsl:template>
 
 <!-- change the filename attribute on the unit from "if" to "while" -->
