@@ -3214,7 +3214,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // special function name
                 MAIN set_bool[isoperator, type_count == 0] |
 
-                { is_c_class_identifier || (type_count > 0 && (next_token() == TERMINATE || next_token() == LPAREN || next_token() == RPAREN || next_token() == OPERATORS
+                { is_c_class_identifier || (type_count > 0 && (next_token() == TERMINATE || next_token() == LPAREN || next_token() == RPAREN
+                    || next_token() == RCURLY || next_token() == LBRACKET || next_token() == RBRACKET || next_token() == OPERATORS
                     || next_token() == PERIOD || next_token() == DOTDEREF || next_token() == TRETURN || next_token() == MPDEREF || next_token() == LPAREN)) }?
                      CXX_CLASS |
 
