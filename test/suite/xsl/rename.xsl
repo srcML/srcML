@@ -11,12 +11,14 @@
 	version="1.0">
 
 <!--
-	for2while.xsl
+	rename.xsl
 
-	Converts srcML if statement test cases to while statement test cases
+	Rename a default variable NAME to a given passed in name.
 
-	Michael L. Collard
-	collard@mcs.kent.edu
+	Michael John Decker
+	mdecker6@kent.edu
+
+	Adapted from Michael L. Collard's for2while.xsl
 -->
 
 
