@@ -281,7 +281,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
     if (!_tokenSet_23.member(CLASS))
         fprintf(stderr, "src2srcml:  Incorrect token set C\n");
 
-    if (!_tokenSet_27.member(EXTERN))
+    if (!_tokenSet_28.member(EXTERN))
         fprintf(stderr, "src2srcml:  Incorrect token set D\n");
 
     // root, single mode
@@ -3024,7 +3024,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     rewind(start);
 
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
-       && _tokenSet_27.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
+       && _tokenSet_28.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && save_la == TERMINATE)
         type = VARIABLE;
 
@@ -5229,7 +5229,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 
         lead_type_identifier { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
-        type_identifier { decTypeCount(); })* 
+        (keyword_name | type_identifier) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
@@ -5253,7 +5253,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 
         }
 
-        ({ inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[false] | compound_name)
+        ({ inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[false] | compound_name | keyword_name)
         {
             // expect a possible initialization
             setMode(MODE_INIT | MODE_EXPECT);
