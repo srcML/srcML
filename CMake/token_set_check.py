@@ -21,7 +21,7 @@
 
 import sys
 
-token_sets = ['_tokenSet_1_data_', '_tokenSet_13_data_', '_tokenSet_24_data_', '_tokenSet_30_data_']
+token_sets = ['_tokenSet_1_data_', '_tokenSet_13_data_', '_tokenSet_24_data_', '_tokenSet_29_data_']
 token_sets_data = [
 
 set(['DO', 'RETURN', 'DEFAULT', 'UNSAFE', 'WHILE', 'CASE', 'SWITCH', 'CATCH', 'IMPORT', 'ASM',
@@ -34,7 +34,7 @@ set(['ELIF', 'GROUP', 'JOIN', 'REGION', 'LINE', 'FINAL', 'SELECT', 'SET', 'GET',
     'ENDIF', 'ASYNC', 'INCLUDE', 'WHERE', 'NAME', 'ON', 'FROM', 'ERRORPREC', 'ENDREGION', 'THIS', 'SIGNAL',
     'REMOVE', 'LET', 'IFDEF', 'IFNDEF', 'SUPER', 'UNCHECKED', 'VOID', 'CRESTRICT', 'ASM', 'MUTABLE',
     'REMOVE', 'LET', 'IFDEF', 'IFNDEF', 'SUPER', 'UNCHECKED', 'VOID', 'CRESTRICT', 'ASM', 'MUTABLE',
-    'CXX_CATCH', 'CXX_TRY']),
+    'CXX_CATCH', 'CXX_TRY', 'CXX_CLASS']),
 
 set(['VOLATILE', 'LBRACKET', 'PROTECTED', 'LINE', 'BY', 'DEFINE', 'CHECKED', 'ENUM', 'ENDIF', 'WHERE', 'ON',
     'PARTIAL', 'ENDREGION', 'THIS', 'REGION', 'THREAD_LOCAL', 'TRANSIENT', 'MAIN', 'GROUP', 'SYNCHRONIZED',

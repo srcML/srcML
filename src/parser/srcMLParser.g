@@ -281,7 +281,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
     if (!_tokenSet_24.member(CLASS))
         fprintf(stderr, "src2srcml:  Incorrect token set C\n");
 
-    if (!_tokenSet_30.member(EXTERN))
+    if (!_tokenSet_29.member(EXTERN))
         fprintf(stderr, "src2srcml:  Incorrect token set D\n");
 
     // root, single mode
@@ -2338,7 +2338,7 @@ class_header[] { ENTRY_DEBUG } :
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         // suppress ()* warning
-        ({ LA(1) != FINAL }? compound_name_inner[false] | keyword_identifier (options { greedy = true; } : specifier)*
+        ({ LA(1) != FINAL }? compound_name_inner[false] | keyword_identifier) (options { greedy = true; } : specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
@@ -3078,7 +3078,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     rewind(start);
 
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
-       && _tokenSet_30.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
+       && _tokenSet_29.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && save_la == TERMINATE)
         type = VARIABLE;
 
