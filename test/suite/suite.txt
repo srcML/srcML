@@ -103,6 +103,7 @@ LANGUAGE_CXX_GEN c_cpp_mode.restrict
 LANGUAGE_CXX_GEN c_cpp_mode.mutable
 LANGUAGE_CXX_GEN c_cpp_mode.try
 LANGUAGE_CXX_GEN c_cpp_mode.catch
+LANGUAGE_CXX_GEN c_cpp_mode.class
 
 LANGUAGE_CSHARP_GEN asm
 LANGUAGE_CSHARP_GEN extern

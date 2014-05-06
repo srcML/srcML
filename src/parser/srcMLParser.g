@@ -278,10 +278,10 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
     if (!_tokenSet_13.member(INCLUDE))
         fprintf(stderr, "src2srcml:  Incorrect token set B\n");
 
-    if (!_tokenSet_23.member(CLASS))
+    if (!_tokenSet_24.member(CLASS))
         fprintf(stderr, "src2srcml:  Incorrect token set C\n");
 
-    if (!_tokenSet_27.member(EXTERN))
+    if (!_tokenSet_29.member(EXTERN))
         fprintf(stderr, "src2srcml:  Incorrect token set D\n");
 
     // root, single mode
@@ -865,6 +865,22 @@ next_token[] returns [int token] {
     rewind(place);
 } :;
 
+// efficient way to view the token after the current next_token
+next_token_two[] returns [int token] {
+
+    int place = mark();
+    inputState->guessing++;
+
+    // consume current token
+    consume();
+    consume();
+
+    token = LA(1);
+
+    inputState->guessing--;
+    rewind(place);
+} :;
+
 // eficient way of getting the next token string value.
 next_token_string[] returns [std::string token] {
 
@@ -1091,6 +1107,8 @@ function_identifier[] { ENTRY_DEBUG } :
 
         // typical name  
         compound_name_inner[false] |
+
+        keyword_name | 
 
         { function_pointer_name_check() }? 
         function_pointer_name |
@@ -1422,7 +1440,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
         if (isoption(parseoptions, SRCML_OPTION_CPP) &&
                (_tokenSet_1.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
-            || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS
+            || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS || postcalltoken == CXX_CLASS
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
             || postcalltoken == 1 /* EOF ? */
             || postcalltoken == TEMPLATE
@@ -2133,7 +2151,7 @@ class_declaration[] { ENTRY_DEBUG } :
             startElement(SCLASS_DECLARATION);
         }
 
-        class_preamble CLASS class_post class_header
+        class_preamble (CLASS | CXX_CLASS) class_post class_header
 ;
 
 // class preprocessing items
@@ -2171,7 +2189,7 @@ class_preamble[] { ENTRY_DEBUG } :
 class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SCLASS]
 
-        class_preamble CLASS class_post (class_header lcurly | lcurly)
+        class_preamble (CLASS | CXX_CLASS) class_post (class_header lcurly | lcurly)
         {
 
             if (inLanguage(LANGUAGE_CXX))
@@ -2183,6 +2201,7 @@ class_definition[] { ENTRY_DEBUG } :
 class_post[] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
         (options { greedy = true; } : { LA(1) != CRESTRICT && LA(1) != MUTABLE }? specifier)*
+
 ;
 
 // Handle an enum class
@@ -2319,7 +2338,7 @@ class_header[] { ENTRY_DEBUG } :
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         // suppress ()* warning
-        { LA(1) != FINAL }? compound_name_inner[false] (options { greedy = true; } : specifier)*
+        ({ LA(1) != FINAL }? compound_name_inner[false] | keyword_identifier) (options { greedy = true; } : specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
@@ -3026,7 +3045,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     else if (type == 0 && type_count == 0 && _tokenSet_1.member(LA(1)))
         type = SINGLE_MACRO;
 
-    else if(type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == STRUCT || LA(1) == UNION))
+    else if(type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == CXX_CLASS || LA(1) == STRUCT || LA(1) == UNION))
         type = SINGLE_MACRO;
 
     // may just have an expression
@@ -3059,7 +3078,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     rewind(start);
 
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
-       && _tokenSet_27.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
+       && _tokenSet_29.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && save_la == TERMINATE)
         type = VARIABLE;
 
@@ -3099,6 +3118,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             bool saveisdestructor = false;
             bool endbracket = false;
             bool modifieroperator = false;
+            bool is_c_class_identifier = false;
             qmark = false;
             int real_type_count = 0;
             bool lcurly = false;
@@ -3139,7 +3159,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT || LA(1) == MUTABLE]
             (
-                { _tokenSet_23.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
+                { _tokenSet_24.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
                      && (LA(1) != TEMPLATE || next_token() != TEMPOPS) }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
@@ -3181,8 +3201,21 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                 { type_count == attribute_count + specifier_count + template_count  && (!inLanguage(LANGUAGE_JAVA) 
             || (inLanguage(LANGUAGE_JAVA) && (LA(1) != ATSIGN 
-                                             || (LA(1) == ATSIGN && next_token() == INTERFACE)))) }?
+                                             || (LA(1) == ATSIGN && next_token() == INTERFACE))))
+                                              && next_token() != OPERATORS
+                                              && next_token() != PERIOD
+                                              && next_token() != DOTDEREF
+                                              && next_token() != TRETURN
+                                              && next_token() != MPDEREF
+                                              && next_token() != LPAREN
+                                              && next_token() != RPAREN
+                                              && next_token() != RCURLY
+                                              && (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET || next_token_two() == LBRACKET)
+                                              && next_token() != RBRACKET
+                                              && next_token() != TERMINATE
+                                              && next_token() != COLON }?
                 (CLASS               set_type[type, CLASS_DECL]     |
+                 CXX_CLASS           set_type[type, CLASS_DECL]     |
                  STRUCT              set_type[type, STRUCT_DECL]    |
                  UNION               set_type[type, UNION_DECL]     |
                  INTERFACE           set_type[type, INTERFACE_DECL] |
@@ -3218,13 +3251,19 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // special function name
                 MAIN set_bool[isoperator, type_count == 0] |
 
+                { is_c_class_identifier || next_token() == TERMINATE || next_token() == LPAREN || next_token() == RPAREN
+                    || next_token() == RCURLY || next_token() == LBRACKET || next_token() == RBRACKET || next_token() == OPERATORS
+                    || next_token() == PERIOD || next_token() == DOTDEREF || next_token() == TRETURN || next_token() == MPDEREF || next_token() == LPAREN
+                    || next_token() == COLON }?
+                     keyword_name |
+
         { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
 
                 // type parts that can occur before other type parts (excluding specifiers)
                 // do not match a struct class or union.  If was class/struct/union decl will not reach here.
                 // if elaborated type specifier should also be handled above. Reached here because 
                 // non-specifier then class/struct/union.
-                { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != STRUCT && LA(1) != UNION)}?
+                { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != CXX_CLASS && LA(1) != STRUCT && LA(1) != UNION)}?
                 ({ LA(1) == DECLTYPE || LA(1) == ATOMIC }? type_specifier_call | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
@@ -3442,7 +3481,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         // ambigous on template keyword from template specifier and probably class_preamble template
         (options { generateAmbigWarnings = false; } : 
         // specifiers that occur in a type
-        { _tokenSet_23.member(LA(1)) }?
+        { _tokenSet_24.member(LA(1)) }?
         specifier | template_specifier |
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
@@ -3484,7 +3523,7 @@ class_lead_type_identifier[]  { SingleElement element(this); ENTRY_DEBUG } :
             else
                 startElement(SNOP);
         }
-        (CLASS | STRUCT | UNION)
+        (CLASS | CXX_CLASS | STRUCT | UNION)
 ;
 
 // type identifier
@@ -3982,7 +4021,7 @@ identifier_list[] { ENTRY_DEBUG } :
             INTO | THIS |
 
             // C
-            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH /*| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
+            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH /*| CXX_CLASS| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
             SIGNALS | FOREACH | FOREVER | VIRTUAL | FRIEND | OPERATOR | EXPLICIT | NAMESPACE | USING |
             DELETE | FALSE | TRUE | FINAL | OVERRIDE | CONSTEXPR | NOEXCEPT | THREADLOCAL | NULLPTR |
             DECLTYPE | ALIGNAS | TYPENAME | ALIGNOF*/
@@ -4172,17 +4211,44 @@ compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
         (options { greedy = true; } : (period { iscompound = true; } (keyword_name | simple_name_optional_template)))*
 ;
 
-keyword_name[] { SingleElement element(this); ENTRY_DEBUG } :
 
+keyword_name { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
         {
+            // local mode that is automatically ended by leaving this function
+            startNewMode(MODE_LOCAL);
 
             // start outer name
-            startElement(SNAME);
+            startElement(SONAME);
 
+            // start inner name
+            startElement(SCNAME);
+
+            // record the name token so we can replace it if necessary
+            setTokenPosition(tp);
         }
 
-        CLASS
+       keyword_identifier
 
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
+
+        (options { greedy = true; } : { !inTransparentMode(MODE_EAT_TYPE) && (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}?
+            variable_identifier_array_grammar_sub[iscompound]
+        )*
+
+        {
+            // if it isn't a compound name, nop the element
+            if (!iscompound)
+                // set the token to NOP
+                tp.setType(SNOP);
+        }
+;
+
+// an identifier
+keyword_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+                startElement(SNAME);
+        }
+        (CLASS | CXX_CLASS)
 ;
 
 // Specifier for a function
@@ -4532,7 +4598,7 @@ macro_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEB
             // start the macro call element
             startElement(SMACRO_CALL);
         }
-        identifier
+        (identifier | CXX_CLASS)
         (options { greedy = true; } : { first }?
         {
             // start a mode for the macro argument list
@@ -5266,7 +5332,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 
         lead_type_identifier { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
-        type_identifier { decTypeCount(); })* 
+        (options { generateAmbigWarnings = false; } : keyword_identifier | type_identifier) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
@@ -5290,7 +5356,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 
         }
 
-        ({ inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[false] | compound_name)
+        ({ inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[false] | compound_name | keyword_name)
         {
             // expect a possible initialization
             setMode(MODE_INIT | MODE_EXPECT);
@@ -5599,7 +5665,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
 
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
-        CLASS |
+        (CLASS | CXX_CLASS) |
 
         { next_token() == LPAREN }?
         delegate_anonymous |
@@ -5691,7 +5757,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         rcurly_argument |
 
         // variable or literal
-        variable_identifier) | literals | noexcept_list | 
+        variable_identifier | keyword_name) | literals | noexcept_list | 
 
         variable_identifier_array_grammar_sub[flag]
 ;
@@ -6077,7 +6143,7 @@ template_declaration[] { ENTRY_DEBUG } :
         }
         TEMPLATE
         {
-            if(LA(1) == CLASS)
+            if(LA(1) == CLASS || LA(1) == CXX_CLASS)
                 startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
             else
                 startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT | MODE_TEMPLATE_PARAMETER_LIST);
@@ -6194,8 +6260,8 @@ generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
             startElement(SWHERE);
         }
         WHERE compound_name_inner[false] COLON
-        (compound_name_inner[false] | CLASS | STRUCT | NEW LPAREN RPAREN)
-        (options { greedy = true; } : COMMA (compound_name_inner[false] | CLASS | STRUCT | NEW LPAREN RPAREN))*
+        (compound_name_inner[false] | CLASS | CXX_CLASS | STRUCT | NEW LPAREN RPAREN)
+        (options { greedy = true; } : COMMA (compound_name_inner[false] | CLASS | CXX_CLASS | STRUCT | NEW LPAREN RPAREN))*
 ;
 
 // save the namestack
@@ -6309,7 +6375,7 @@ label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the label element
             startElement(SLABEL_STATEMENT);
         }
-        identifier COLON
+        (identifier | keyword_identifier) COLON
 ;
 
 // a label
@@ -6415,7 +6481,7 @@ enum_definition[] { ENTRY_DEBUG } :
 
 // header for enum class
 enum_class_header[] {} :
-        (CLASS | STRUCT)* 
+        (CLASS | CXX_CLASS | STRUCT)* 
         ({ inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
         variable_identifier (COLON enum_type)*
 

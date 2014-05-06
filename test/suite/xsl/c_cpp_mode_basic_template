@@ -13,10 +13,6 @@
 <unit>
 <union_decl>union <name>NAME</name>;</union_decl>
 </unit>
-
-<unit>
-<enum>enum <name>NAME</name>;</enum>
-</unit>
  
 <unit>
 <struct>struct <name>NAME</name> <block>{<public type="default"/>}</block>;</struct>
@@ -28,8 +24,4 @@
 
 <unit>
 <union>union <name>NAME</name> <block>{<public type="default"/>}</block>;</union>
-</unit>
-
-<unit>
-<enum>enum <name>NAME</name> <block>{}</block>;</enum>
 </unit>

@@ -118,6 +118,7 @@ tokens {
     CRESTRICT;
     CXX_TRY;
     CXX_CATCH;
+    CXX_CLASS;
 
     // C++
     CONSTEXPR;
@@ -558,9 +559,10 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
 
         // Combined C/C++ Mode  at end so overrides defaults
-        { "restrict"     , CRESTRICT         , LANGUAGE_CXX }, 
-        { "try"          , CXX_TRY           , LANGUAGE_CXX }, 
-        { "catch"        , CXX_CATCH         , LANGUAGE_CXX }, 
+        { "restrict"     , CRESTRICT         , LANGUAGE_CXX },
+        { "try"          , CXX_TRY           , LANGUAGE_CXX },
+        { "catch"        , CXX_CATCH         , LANGUAGE_CXX },
+        { "class"        , CXX_CLASS         , LANGUAGE_CXX },
 
    };
 

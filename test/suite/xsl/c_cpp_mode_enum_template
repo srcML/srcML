@@ -1,0 +1,8 @@
+
+<unit>
+<enum>enum <name>NAME</name>;</enum>
+</unit>
+
+<unit>
+<enum>enum <name>NAME</name> <block>{}</block>;</enum>
+</unit>
