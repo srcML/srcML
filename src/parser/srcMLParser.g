@@ -3213,7 +3213,10 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                                               && (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET || next_token_two() == LBRACKET)
                                               && next_token() != RBRACKET
                                               && next_token() != TERMINATE
-                                              && next_token() != COLON }?
+                                              && next_token() != COLON
+                                              && next_token() != EQUAL
+                                              && next_token() != COMMA
+                                               }?
                 (CLASS               set_type[type, CLASS_DECL]     |
                  CXX_CLASS           set_type[type, CLASS_DECL]     |
                  STRUCT              set_type[type, STRUCT_DECL]    |
@@ -3254,7 +3257,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 { is_c_class_identifier || next_token() == TERMINATE || next_token() == LPAREN || next_token() == RPAREN
                     || next_token() == RCURLY || next_token() == LBRACKET || next_token() == RBRACKET || next_token() == OPERATORS
                     || next_token() == PERIOD || next_token() == DOTDEREF || next_token() == TRETURN || next_token() == MPDEREF || next_token() == LPAREN
-                    || next_token() == COLON }?
+                    || next_token() == COLON || next_token() == EQUAL || next_token() == COMMA }?
                      keyword_name |
 
         { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
