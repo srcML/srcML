@@ -318,6 +318,15 @@ void srcMLParser::endAllModes() {
          endLastMode();
 }
 
+const unsigned long class_identifier_token_set_data [] = {  1UL << srcMLParser::LPAREN            | 1UL << srcMLParser::RCURLY          | 1UL << srcMLParser::EQUAL,
+                                                            1UL << (srcMLParser::OPERATORS - 32)  | 1UL << (srcMLParser::PERIOD - 32)   | 1UL << (srcMLParser::DOTDEREF - 32)
+                                                            | 1UL << (srcMLParser::TRETURN - 32)  | 1UL << (srcMLParser::MPDEREF - 32)  | 1UL << (srcMLParser::RPAREN - 32)
+                                                            | 1UL << (srcMLParser::LBRACKET - 32) | 1UL << (srcMLParser::RBRACKET - 32) | 1UL << (srcMLParser::TERMINATE - 32)
+                                                            | 1UL << (srcMLParser::COLON - 32)    | 1UL << (srcMLParser::COMMA - 32),
+                                                            0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL,
+                                                            0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
+const antlr::BitSet srcMLParser::class_identifier_token_set(class_identifier_token_set_data, 24);
+
 } /* end include */
 
 options {
@@ -585,6 +594,7 @@ public:
     bool notdestructor;
     bool operatorname;
     int curly_count;
+    static const antlr::BitSet class_identifier_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -3202,20 +3212,9 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 { type_count == attribute_count + specifier_count + template_count  && (!inLanguage(LANGUAGE_JAVA) 
             || (inLanguage(LANGUAGE_JAVA) && (LA(1) != ATSIGN 
                                              || (LA(1) == ATSIGN && next_token() == INTERFACE))))
-                                              && next_token() != OPERATORS
-                                              && next_token() != PERIOD
-                                              && next_token() != DOTDEREF
-                                              && next_token() != TRETURN
-                                              && next_token() != MPDEREF
-                                              && next_token() != LPAREN
-                                              && next_token() != RPAREN
-                                              && next_token() != RCURLY
-                                              && (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET || next_token_two() == LBRACKET)
-                                              && next_token() != RBRACKET
-                                              && next_token() != TERMINATE
-                                              && next_token() != COLON
-                                              && next_token() != EQUAL
-                                              && next_token() != COMMA
+                                              && (!inLanguage(LANGUAGE_CXX)
+                                               || (!class_identifier_token_set.member(next_token())
+                                                && (next_token() != LBRACKET || next_token_two() == LBRACKET)))
                                                }?
                 (CLASS               set_type[type, CLASS_DECL]     |
                  CXX_CLASS           set_type[type, CLASS_DECL]     |
@@ -3254,10 +3253,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // special function name
                 MAIN set_bool[isoperator, type_count == 0] |
 
-                { is_c_class_identifier || next_token() == TERMINATE || next_token() == LPAREN || next_token() == RPAREN
-                    || next_token() == RCURLY || next_token() == LBRACKET || next_token() == RBRACKET || next_token() == OPERATORS
-                    || next_token() == PERIOD || next_token() == DOTDEREF || next_token() == TRETURN || next_token() == MPDEREF || next_token() == LPAREN
-                    || next_token() == COLON || next_token() == EQUAL || next_token() == COMMA }?
+                { is_c_class_identifier || class_identifier_token_set.member(next_token()) }?
                      keyword_name |
 
         { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
