@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="generic_selection" filename="generic_selection_c">
+
+<unit>
+<expr_stmt><expr><call><generic_selection>_Generic(<selector><expr>(<name>X</name>)</expr></selector>, <association_list><association><type><name>long</name> <name>double</name></type>: <expr><name>cbrtl</name></expr></association>, <association><type>default</type>: <expr><name>cbrt</name></expr></association>, <association><type><name>float</name></type>: <expr><name>cbrtf</name></expr></association></association_list>)</generic_selection><argument_list>(<argument><expr><name>X</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><generic_selection>_Generic(<selector><expr>(<name>X</name>)</expr></selector>, <association_list><association><type><name>long</name> <name>double</name></type>: <expr><name>s</name> = "double"</expr></association>, <association><type>default</type>: <expr><name>s</name> = "int"</expr></association>, <association><type><name>float</name></type>: <expr><name>s</name> = "float"</expr></association></association_list>)</generic_selection></expr>;</expr_stmt>
+</unit>
+
+</unit>
