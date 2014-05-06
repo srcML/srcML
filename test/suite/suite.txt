@@ -54,6 +54,7 @@ LANGUAGE_C_ONLY expression_c
 LANGUAGE_C_ONLY decl_simple_c
 LANGUAGE_C_ONLY atomic_c
 LANGUAGE_C_ONLY static_assert_c
+LANGUAGE_C_ONLY generic_selection_c
 
 LANGUAGE_CXX friend
 LANGUAGE_CXX namespace
@@ -97,7 +98,11 @@ LANGUAGE_CXX modifier_cpp
 LANGUAGE_CXX function_pointer_cpp
 LANGUAGE_CXX forever
 LANGUAGE_CXX qt_foreach
-LANGUAGE_CXX c_cpp_mode
+
+LANGUAGE_CXX_GEN c_cpp_mode.restrict
+LANGUAGE_CXX_GEN c_cpp_mode.mutable
+LANGUAGE_CXX_GEN c_cpp_mode.try
+LANGUAGE_CXX_GEN c_cpp_mode.catch
 
 LANGUAGE_CSHARP_GEN asm
 LANGUAGE_CSHARP_GEN extern

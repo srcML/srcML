@@ -32,7 +32,7 @@ error_filename = "srcMLTestReport"
 error_filename_extension = ".txt"
 
 FIELD_WIDTH_LANGUAGE = 5
-FIELD_WIDTH_DIRECTORY = 27
+FIELD_WIDTH_DIRECTORY = 40
 MAX_COUNT = 29
 sperrorlist = []
 xml_filename = ""

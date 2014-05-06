@@ -16,6 +16,16 @@ define language
 ${shell grep '$1 ' suite.txt | grep -v '^#' | cut -d' ' -f2- | tr -s '\n' ' '}
 endef
 
+UNAME=$(firstword $(wildcard /usr/bin/uname /bin/uname))
+
+CAT=cat
+RM=rm
+ifeq (${UNAME},"")
+CAT=type
+RM=del
+endif
+
+
 ##
 # General lists of test cases
 
@@ -42,6 +52,9 @@ BASE_OO=${call language,'LANGUAGE_OO'}
 
 # base for C++ only
 BASE_CXX=${call language,'LANGUAGE_CXX'}
+
+# base for C++ only
+BASE_CXX_GEN=${call language,'LANGUAGE_CXX_GEN'}
 
 # base for C# only
 BASE_CS=${call language,'LANGUAGE_CSHARP'}
@@ -117,6 +130,8 @@ XSLT_CLASS2INTERFACE=${XSLT} ${XSLT_CLASS2INTERFACE_XSL}
 
 XSLT_IF2IFBLOCK_XSL=xsl/if2ifblock.xsl
 XSLT_IF2IFBLOCK=${XSLT} ${XSLT_IF2IFBLOCK_XSL}
+
+XSLT_RENAME_XSL=xsl/rename.xsl
 
 ##
 # Comments and preprocessor statements are handled out of the normal grammar rules
@@ -206,11 +221,8 @@ GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL_GEN), $(nm).java.xml}
 
 #GEN_ASPECTJ= ${foreach nm, $(BASE_ASPECTJ_ALL_GEN), $(nm).aj.xml}
 
-#BASE_CXX_11_ALL_GEN = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
-
-#BASE_CXX_11_ALL = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
-
-#GEN_CXX_11= ${foreach nm, $(BASE_CXX_11_ALL_GEN), $(nm).cpp11.xml}
+BASE_CXX_ALL_GEN = $(BASE_CXX_GEN)
+GEN_CXX= ${foreach nm, $(BASE_CXX_ALL_GEN), $(nm).cpp.xml}
 
 BASE_C_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_C_FAMILY)
 BASE_C_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_C_FAMILY) $(BASE_C)
@@ -230,7 +242,6 @@ SEP_STRUCT = function function_const function_cpp function_decl function_ns func
 GEN_ALL= ${foreach nm, $(SEP_PLUS), $(nm).all.cpp.xml} extra_cpp.all.cpp.xml \
 	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).all.java.xml} \
 	       ${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).all.aj.xml} \
-	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).all.cpp11.xml} \
 	       ${foreach nm, $(BASE_C_ALL), $(nm).all.c.xml} \
 	       ${foreach nm, $(BASE_CS_ALL), $(nm).all.cs.xml} \
 		extra_c.all.c.xml extra_cpp.all.cpp.xml
@@ -518,7 +529,7 @@ problem.formfeed.aj.xml : problem.aj.xml
 %.cpp11.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_CXX_11} $< > $@
 
-GEN_FILES= $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_CXX_11) $(GEN_ASPECTJ) ${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_IFTHENELSE} ${GEN_FORMFEED} ${GEN_STRUCT}
+GEN_FILES= $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_CXX) $(GEN_ASPECTJ) ${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_IFTHENELSE} ${GEN_FORMFEED} ${GEN_STRUCT}
 
 GEN_CPP_BASE=${GEN_SEP} ${foreach nm, $(SEP_PLUS), $(nm).all} ${foreach nm, $(SEP_PLUS), $(nm).block} ${foreach nm, $(SEP_PLUS), $(nm).comment} ${foreach nm, $(SEP_PLUS), $(nm).preproc} ${foreach nm, $(SEP_PLUS), $(nm).struct}
 
@@ -605,6 +616,26 @@ interface_java.java.xml : class_java.java.xml ${XSLT_CLASS2INTERFACE_XSL}
 # if with blocks from if
 ifblock.cpp.xml : if.cpp.xml ${XSLT_IF2IFBLOCK_XSL}
 	${XSLT_IF2IFBLOCK} $< > $@
+
+c_cpp_mode.restrict.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_specifier_template xsl/c_cpp_mode_call_template
+	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
+	${XSLT} --stringparam new_name restrict ${XSLT_RENAME_XSL} $@.temp > $@
+	${RM} $@.temp
+
+c_cpp_mode.mutable.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_specifier_template xsl/c_cpp_mode_call_template
+	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
+	${XSLT} --stringparam new_name mutable ${XSLT_RENAME_XSL} $@.temp > $@
+	${RM} $@.temp
+
+c_cpp_mode.try.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_call_template
+	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
+	${XSLT} --stringparam new_name try ${XSLT_RENAME_XSL} $@.temp > $@
+	${RM} $@.temp
+
+c_cpp_mode.catch.cpp.xml : xsl/c_cpp_mode_basic_template
+	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
+	${XSLT} --stringparam new_name catch ${XSLT_RENAME_XSL} $@.temp > $@
+	${RM} $@.temp
 
 clean :
 	rm -f ${GEN_FILES}

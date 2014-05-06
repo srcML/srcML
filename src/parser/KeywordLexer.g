@@ -116,6 +116,8 @@ tokens {
 
     // Combined C/C++
     CRESTRICT;
+    CXX_TRY;
+    CXX_CATCH;
 
     // C++
     CONSTEXPR;
@@ -365,38 +367,38 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "*"            , MULTOPS       , LANGUAGE_ALL }, 
 
         // C and C++ specific keywords
-        { "main"         , MAIN           , LANGUAGE_C_FAMILY }, 
+        { "main"         , MAIN          , LANGUAGE_C_FAMILY }, 
 
-        { "typedef"      , TYPEDEF        , LANGUAGE_C_FAMILY }, 
+        { "typedef"      , TYPEDEF       , LANGUAGE_C_FAMILY }, 
 
-        { "include"      , INCLUDE        , LANGUAGE_C_FAMILY }, 
-        { "define"       , DEFINE         , LANGUAGE_C_FAMILY }, 
-        { "elif"         , ELIF           , LANGUAGE_C_FAMILY }, 
-        { "endif"        , ENDIF          , LANGUAGE_C_FAMILY }, 
-        { "error"        , ERRORPREC      , LANGUAGE_C_FAMILY }, 
-        { "ifdef"        , IFDEF          , LANGUAGE_C_FAMILY }, 
-        { "ifndef"       , IFNDEF         , LANGUAGE_C_FAMILY }, 
-        { "line"         , LINE           , LANGUAGE_C_FAMILY }, 
-        { "pragma"       , PRAGMA         , LANGUAGE_C_FAMILY }, 
-        { "undef"        , UNDEF          , LANGUAGE_C_FAMILY }, 
+        { "include"      , INCLUDE       , LANGUAGE_C_FAMILY }, 
+        { "define"       , DEFINE        , LANGUAGE_C_FAMILY }, 
+        { "elif"         , ELIF          , LANGUAGE_C_FAMILY }, 
+        { "endif"        , ENDIF         , LANGUAGE_C_FAMILY }, 
+        { "error"        , ERRORPREC     , LANGUAGE_C_FAMILY }, 
+        { "ifdef"        , IFDEF         , LANGUAGE_C_FAMILY }, 
+        { "ifndef"       , IFNDEF        , LANGUAGE_C_FAMILY }, 
+        { "line"         , LINE          , LANGUAGE_C_FAMILY }, 
+        { "pragma"       , PRAGMA        , LANGUAGE_C_FAMILY }, 
+        { "undef"        , UNDEF         , LANGUAGE_C_FAMILY }, 
 
-        { "union"        , UNION          , LANGUAGE_CXX | LANGUAGE_C }, 
-        { "struct"       , STRUCT         , LANGUAGE_C_FAMILY }, 
-        { "void"         , VOID           , LANGUAGE_ALL }, 
+        { "union"        , UNION         , LANGUAGE_CXX | LANGUAGE_C }, 
+        { "struct"       , STRUCT        , LANGUAGE_C_FAMILY }, 
+        { "void"         , VOID          , LANGUAGE_ALL }, 
 
-        { "inline"       , INLINE         , LANGUAGE_C_FAMILY }, 
-        { "extern"       , EXTERN         , LANGUAGE_C_FAMILY }, 
+        { "inline"       , INLINE        , LANGUAGE_C_FAMILY }, 
+        { "extern"       , EXTERN        , LANGUAGE_C_FAMILY }, 
 
-        { "asm"          , ASM            , LANGUAGE_C_FAMILY }, 
-        { "__asm__"      , ASM            , LANGUAGE_C_FAMILY },
-        { "__asm"        , VISUAL_CXX_ASM , LANGUAGE_C_FAMILY }, 
+        { "asm"          , ASM           , LANGUAGE_C_FAMILY }, 
+        { "__asm"        , ASM           , LANGUAGE_C_FAMILY }, 
+        { "__asm__"      , ASM           , LANGUAGE_C_FAMILY }, 
 
-        { "goto"         , GOTO           , LANGUAGE_ALL }, 
-        { "sizeof"       , SIZEOF         , LANGUAGE_C_FAMILY }, 
+        { "goto"         , GOTO          , LANGUAGE_ALL }, 
+        { "sizeof"       , SIZEOF        , LANGUAGE_C_FAMILY }, 
 
-        { "mutable"      , MUTABLE        , LANGUAGE_CXX }, 
-        { "volatile"     , VOLATILE       , LANGUAGE_ALL },
-        { "__volatile__" , VOLATILE       , LANGUAGE_C_FAMILY  },
+        { "mutable"      , MUTABLE       , LANGUAGE_CXX }, 
+        { "volatile"     , VOLATILE      , LANGUAGE_ALL }, 
+        { "__volatile__" , VOLATILE      , LANGUAGE_C_FAMILY  },
 
         // C keywords
         { "restrict"       , RESTRICT          , LANGUAGE_C },
@@ -409,9 +411,6 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "_Noreturn"      , NORETURN          , LANGUAGE_C },
         { "_Static_assert" , STATIC_ASSERT     , LANGUAGE_C },
         { "_Thread_local"  , THREAD_LOCAL      , LANGUAGE_C },
-
-
-        { "restrict"     , CRESTRICT     , LANGUAGE_CXX }, 
 
         // exception handling
         { "try"          , TRY           , LANGUAGE_OO }, 
@@ -555,7 +554,14 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "join"          , JOIN          , LANGUAGE_CSHARP }, 
         { "on"            , ON            , LANGUAGE_CSHARP }, 
         { "equals"        , EQUALS        , LANGUAGE_CSHARP }, 
-        { "into"          , INTO          , LANGUAGE_CSHARP }, 
+        { "into"          , INTO          , LANGUAGE_CSHARP },
+
+
+        // Combined C/C++ Mode  at end so overrides defaults
+        { "restrict"     , CRESTRICT         , LANGUAGE_CXX }, 
+        { "try"          , CXX_TRY           , LANGUAGE_CXX }, 
+        { "catch"        , CXX_CATCH         , LANGUAGE_CXX }, 
+
    };
 
     // fill up the literals for the language that we are parsing
