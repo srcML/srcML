@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="generic_selection" filename="generic_selection_c">
 
 <unit>
-<generic_selection>_Generic(<selector><expr/></selector>,<association_list/>)</generic_selection></expr>;</expr_stmt>
+<expr_stmt><expr><generic_selection>_Generic(<selector><expr/></selector>,<association_list/>)</generic_selection></expr>;</expr_stmt>
 </unit>
 
 <unit>
