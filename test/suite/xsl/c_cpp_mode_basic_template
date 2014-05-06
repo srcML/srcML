@@ -4,10 +4,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>NAME</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name><name>a</name>.<name>NAME</name></name></expr>;</expr_stmt>
 </unit>
 

@@ -682,6 +682,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
          && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS) 
          && (LA(1) == DEFAULT || next_token() != COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
+         && (LA(1) != CXX_CATCH || next_token() == LPAREN)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }? keyword_statements |
 
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
@@ -2766,6 +2767,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // so stop the expression, and markup the keyword statement
         { inMode(MODE_EXPRESSION) && (LA(1) == DEFAULT || next_token() != COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
+         && (LA(1) != CXX_CATCH || next_token() == LPAREN)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }?
         terminate_pre
         terminate_post
