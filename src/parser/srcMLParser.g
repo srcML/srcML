@@ -278,10 +278,10 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
     if (!_tokenSet_13.member(INCLUDE))
         fprintf(stderr, "src2srcml:  Incorrect token set B\n");
 
-    if (!_tokenSet_23.member(CLASS))
+    if (!_tokenSet_24.member(CLASS))
         fprintf(stderr, "src2srcml:  Incorrect token set C\n");
 
-    if (!_tokenSet_28.member(EXTERN))
+    if (!_tokenSet_30.member(EXTERN))
         fprintf(stderr, "src2srcml:  Incorrect token set D\n");
 
     // root, single mode
@@ -3042,7 +3042,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     rewind(start);
 
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
-       && _tokenSet_28.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
+       && _tokenSet_30.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && save_la == TERMINATE)
         type = VARIABLE;
 
@@ -3086,6 +3086,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             qmark = false;
             int real_type_count = 0;
             bool lcurly = false;
+            bool iscompound = false; 
         ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
@@ -3123,7 +3124,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT || LA(1) == MUTABLE]
             (
-                { _tokenSet_23.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
+                { _tokenSet_24.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
                      && (LA(1) != TEMPLATE || next_token() != TEMPOPS) }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
@@ -3214,10 +3215,10 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // special function name
                 MAIN set_bool[isoperator, type_count == 0] |
 
-                { is_c_class_identifier || (type_count > 0 && (next_token() == TERMINATE || next_token() == LPAREN || next_token() == RPAREN
+                { is_c_class_identifier || next_token() == TERMINATE || next_token() == LPAREN || next_token() == RPAREN
                     || next_token() == RCURLY || next_token() == LBRACKET || next_token() == RBRACKET || next_token() == OPERATORS
-                    || next_token() == PERIOD || next_token() == DOTDEREF || next_token() == TRETURN || next_token() == MPDEREF || next_token() == LPAREN)) }?
-                     CXX_CLASS |
+                    || next_token() == PERIOD || next_token() == DOTDEREF || next_token() == TRETURN || next_token() == MPDEREF || next_token() == LPAREN }?
+                     CXX_CLASS (variable_identifier_array_grammar_sub[iscompound])* |
 
         { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
 
@@ -3443,7 +3444,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         // ambigous on template keyword from template specifier and probably class_preamble template
         (options { generateAmbigWarnings = false; } : 
         // specifiers that occur in a type
-        { _tokenSet_23.member(LA(1)) }?
+        { _tokenSet_24.member(LA(1)) }?
         specifier | template_specifier |
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
@@ -4532,7 +4533,7 @@ macro_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEB
             // start the macro call element
             startElement(SMACRO_CALL);
         }
-        identifier
+        (identifier | CXX_CLASS)
         (options { greedy = true; } : { first }?
         {
             // start a mode for the macro argument list

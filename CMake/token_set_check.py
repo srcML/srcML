@@ -21,7 +21,7 @@
 
 import sys
 
-token_sets = ['_tokenSet_1_data_', '_tokenSet_13_data_', '_tokenSet_23_data_', '_tokenSet_28_data_']
+token_sets = ['_tokenSet_1_data_', '_tokenSet_13_data_', '_tokenSet_24_data_', '_tokenSet_30_data_']
 token_sets_data = [
 
 set(['DO', 'RETURN', 'DEFAULT', 'UNSAFE', 'WHILE', 'CASE', 'SWITCH', 'CATCH', 'IMPORT', 'ASM',
