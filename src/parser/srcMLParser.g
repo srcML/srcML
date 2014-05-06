@@ -3213,7 +3213,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                                               && next_token() != RCURLY
                                               && (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET || next_token_two() == LBRACKET)
                                               && next_token() != RBRACKET
-                                              && next_token() != TERMINATE }?
+                                              && next_token() != TERMINATE
+                                              && next_token() != COLON }?
                 (CLASS               set_type[type, CLASS_DECL]     |
                  CXX_CLASS           set_type[type, CLASS_DECL]     |
                  STRUCT              set_type[type, STRUCT_DECL]    |
@@ -3253,7 +3254,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                 { is_c_class_identifier || next_token() == TERMINATE || next_token() == LPAREN || next_token() == RPAREN
                     || next_token() == RCURLY || next_token() == LBRACKET || next_token() == RBRACKET || next_token() == OPERATORS
-                    || next_token() == PERIOD || next_token() == DOTDEREF || next_token() == TRETURN || next_token() == MPDEREF || next_token() == LPAREN }?
+                    || next_token() == PERIOD || next_token() == DOTDEREF || next_token() == TRETURN || next_token() == MPDEREF || next_token() == LPAREN
+                    || next_token() == COLON }?
                      keyword_name |
 
         { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
@@ -6374,7 +6376,7 @@ label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the label element
             startElement(SLABEL_STATEMENT);
         }
-        identifier COLON
+        (identifier | keyword_identifier) COLON
 ;
 
 // a label

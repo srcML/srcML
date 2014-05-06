@@ -637,5 +637,11 @@ c_cpp_mode.catch.cpp.xml : xsl/c_cpp_mode_basic_template
 	${XSLT} --stringparam new_name catch ${XSLT_RENAME_XSL} $@.temp > $@
 	${RM} $@.temp
 
+
+c_cpp_mode.class.cpp.xml : xsl/c_cpp_mode_basic_template
+	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
+	${XSLT} --stringparam new_name class ${XSLT_RENAME_XSL} $@.temp > $@
+	${RM} $@.temp
+
 clean :
 	rm -f ${GEN_FILES}
