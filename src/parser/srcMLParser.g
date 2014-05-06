@@ -5334,7 +5334,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 
         lead_type_identifier { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
-        (options { generateAmbigWarnings = false; } : keyword_identifier | type_identifier) { decTypeCount(); })* 
+        (options { generateAmbigWarnings = false; } : keyword_name | type_identifier) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
