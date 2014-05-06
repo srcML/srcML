@@ -3776,24 +3776,25 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
         }
         (options {warnWhenFollowAmbig = false; } : { count_paren > 0 && (count_paren != 1 || LA(1) != RPAREN) }?
 
-        ({ LA(1) == LPAREN }? expression { ++count_paren; } |
+            (
+                { LA(1) == LPAREN }? expression { ++count_paren; } |
 
-         { LA(1) == RPAREN }? expression { --count_paren; } |
+                { LA(1) == RPAREN }? expression { --count_paren; } |
 
-         { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression |
+                { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression_process (call[call_count] | sizeof_call | alignof_call) complete_arguments |
 
-         expression |
+                expression |
 
-         comma
-         {
-            // argument with nested expression
-            startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
+                comma
+                {
+                    // argument with nested expression
+                    startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
 
-            // start the argument
-            startElement(SARGUMENT);
-         }
-
-        ))*
+                    // start the argument
+                    startElement(SARGUMENT);
+                }
+            )
+        )*
 
 ;
 
@@ -5085,11 +5086,14 @@ generic_selection_complete_expression[] { CompleteElement element(this); int cou
             (
             { !inMode(MODE_END_AT_COMMA) }? comma |
 
+            // argument mode (as part of call)
+            { inMode(MODE_ARGUMENT) && LA(1) != RPAREN && LA(1) != RCURLY }? complete_arguments |
+
             { LA(1) == LPAREN }? expression { ++count_paren; } |
 
             { LA(1) == RPAREN }? expression { --count_paren; } |
 
-            { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression |
+            { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression_process (call[call_count] | sizeof_call | alignof_call) complete_arguments  |
 
             expression
             )
