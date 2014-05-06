@@ -2338,7 +2338,7 @@ class_header[] { ENTRY_DEBUG } :
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         // suppress ()* warning
-        { LA(1) != FINAL }? compound_name_inner[false] (options { greedy = true; } : specifier)*
+        ({ LA(1) != FINAL }? compound_name_inner[false] | keyword_identifier (options { greedy = true; } : specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
