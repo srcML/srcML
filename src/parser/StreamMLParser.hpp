@@ -333,6 +333,38 @@ private:
 
         }
 
+        if (!inskip && srcMLParser::LA(1) == srcMLParser::VISUAL_CXX_ASM) {
+
+            // start preprocessor handling
+            inskip = true;
+
+            // use preprocessor token buffers
+            pouttb = &pretb;
+            pskiptb = &skippretb;
+
+            // parse preprocessor statement stopping at EOL
+            try {
+
+                srcMLParser::visual_cxx_asm_declaration();
+
+            } catch(...) {}
+
+            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
+            pretb.splice(pretb.end(), skippretb);
+
+            // move back to normal buffer
+            pskiptb = &skiptb;
+            pouttb = &tb;
+
+            // put preprocessor buffer into skipped buffer
+            skiptb.splice(skiptb.end(), pretb);
+
+            // stop preprocessor handling
+            inskip = false;
+
+            return true;
+        }
+
         if (isSkipToken(srcMLParser::LA(1))) {
             // skipped tokens are put on a special buffer
             pushSkipToken();
