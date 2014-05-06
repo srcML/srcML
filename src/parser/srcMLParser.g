@@ -319,11 +319,14 @@ void srcMLParser::endAllModes() {
 }
 
 const int num_token_longs = 24;
-const unsigned long class_identifier_token_set_data [num_token_longs] = { 1UL <<  srcMLParser::LPAREN           | 1UL <<  srcMLParser::RCURLY         | 1UL <<  srcMLParser::EQUAL,
+const unsigned long class_identifier_token_set_data [num_token_longs] = { 1UL <<  srcMLParser::LPAREN           | 1UL <<  srcMLParser::RCURLY         | 1UL <<  srcMLParser::EQUAL
+                                                                        | 1UL <<  srcMLParser::TEMPOPS          | 1UL <<  srcMLParser::TEMPOPE        | 1UL <<  srcMLParser::DESTOP,
                                                                           1UL << (srcMLParser::OPERATORS - 32)  | 1UL << (srcMLParser::PERIOD - 32)   | 1UL << (srcMLParser::DOTDEREF - 32)
                                                                         | 1UL << (srcMLParser::TRETURN - 32)    | 1UL << (srcMLParser::MPDEREF - 32)  | 1UL << (srcMLParser::RPAREN - 32)
                                                                         | 1UL << (srcMLParser::LBRACKET - 32)   | 1UL << (srcMLParser::RBRACKET - 32) | 1UL << (srcMLParser::TERMINATE - 32)
                                                                         | 1UL << (srcMLParser::COLON - 32)      | 1UL << (srcMLParser::COMMA - 32)    | 1UL << (srcMLParser::MULTOPS - 32)
+                                                                        | 1UL << (srcMLParser::QMARK - 32)      | 1UL << (srcMLParser::BAR - 32)      | 1UL << (srcMLParser::REFOPS - 32)
+                                                                        | 1UL << (srcMLParser::RVALUEREF - 32)
                                                                         };
 const antlr::BitSet srcMLParser::class_identifier_token_set(class_identifier_token_set_data, num_token_longs);
 
