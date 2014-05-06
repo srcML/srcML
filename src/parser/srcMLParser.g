@@ -318,14 +318,13 @@ void srcMLParser::endAllModes() {
          endLastMode();
 }
 
-const unsigned long class_identifier_token_set_data [] = {  1UL << srcMLParser::LPAREN            | 1UL << srcMLParser::RCURLY          | 1UL << srcMLParser::EQUAL,
-                                                            1UL << (srcMLParser::OPERATORS - 32)  | 1UL << (srcMLParser::PERIOD - 32)   | 1UL << (srcMLParser::DOTDEREF - 32)
-                                                            | 1UL << (srcMLParser::TRETURN - 32)  | 1UL << (srcMLParser::MPDEREF - 32)  | 1UL << (srcMLParser::RPAREN - 32)
-                                                            | 1UL << (srcMLParser::LBRACKET - 32) | 1UL << (srcMLParser::RBRACKET - 32) | 1UL << (srcMLParser::TERMINATE - 32)
-                                                            | 1UL << (srcMLParser::COLON - 32)    | 1UL << (srcMLParser::COMMA - 32),
-                                                            0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL,
-                                                            0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
-const antlr::BitSet srcMLParser::class_identifier_token_set(class_identifier_token_set_data, 24);
+const int num_token_longs = 24;
+const unsigned long class_identifier_token_set_data [num_token_longs] = { 1UL << srcMLParser::LPAREN            | 1UL << srcMLParser::RCURLY          | 1UL << srcMLParser::EQUAL,
+                                                                          1UL << (srcMLParser::OPERATORS - 32)  | 1UL << (srcMLParser::PERIOD - 32)   | 1UL << (srcMLParser::DOTDEREF - 32)
+                                                                        | 1UL << (srcMLParser::TRETURN - 32)    | 1UL << (srcMLParser::MPDEREF - 32)  | 1UL << (srcMLParser::RPAREN - 32)
+                                                                        | 1UL << (srcMLParser::LBRACKET - 32)   | 1UL << (srcMLParser::RBRACKET - 32) | 1UL << (srcMLParser::TERMINATE - 32)
+                                                                        | 1UL << (srcMLParser::COLON - 32)      | 1UL << (srcMLParser::COMMA - 32) };
+const antlr::BitSet srcMLParser::class_identifier_token_set(class_identifier_token_set_data, num_token_longs);
 
 } /* end include */
 
