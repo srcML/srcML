@@ -5,6 +5,7 @@
 *.formfeed.*.xml
 *.ifthenelse.*.xml
 *.preproc.*.xml
+c_cpp_mode*.cpp.xml
 
 asm.c.xml
 asm.cs.xml

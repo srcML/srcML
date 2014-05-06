@@ -1,0 +1,15 @@
+<unit>
+<decl_stmt><decl><type><specifier>NAME</specifier></type></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>NAME</specifier></type> <name>NAME</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>NAME</specifier> <specifier>NAME</specifier></type> <name>NAME</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>NAME</specifier> <specifier>NAME</specifier> <specifier>NAME</specifier></type> <name>NAME</name></decl>;</decl_stmt>
+</unit>
