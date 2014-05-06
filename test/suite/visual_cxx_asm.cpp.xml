@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="visual_cxx_asm" filename="visual_cxx_asm">
+
+<unit>
+<asm>__asm int 3</asm>
+</unit>
+
+<unit>
+<asm>__asm int 3;</asm>
+</unit>
+
+<unit>
+<asm>__asm int 3</asm> <asm>__asm int 3</asm>
+</unit>
+
+<unit>
+<asm>__asm int 3;</asm> <asm>__asm int 3</asm>
+</unit>
+
+<unit>
+<asm>__asm { <asm>int 3</asm> }</asm>
+</unit>
+
+<unit>
+<asm>__asm {
+<asm>int 3</asm>
+}</asm>
+</unit>
+
+<unit>
+<asm>__asm {
+<asm>int 3</asm>
+};</asm>
+</unit>
+
+<unit>
+<asm>__asm {
+<asm>int 3</asm>
+<asm>int 3;</asm>
+<asm>__asm int 3</asm>
+<asm>__asm int 3;</asm>
+<asm>{
+<asm>int 3</asm>
+}</asm>
+<asm>{
+<asm>int 3</asm>
+};</asm>
+<asm>__asm {
+<asm>int 3</asm>
+}</asm>
+<asm>__asm {
+<asm>int 3</asm>
+};</asm>
+}</asm>
+</unit>
+
+<unit>
+<asm>__asm { <asm>int 3;</asm> <asm>__asm int 3</asm> <asm>__asm int 3;</asm> }</asm>
+</unit>
+
+<unit>
+<asm>__asm  {
+<asm>int 3;</asm> <asm>__asm int 3</asm> <asm>__asm int 3;</asm>
+}</asm>
+</unit>
+
+</unit>
