@@ -2338,7 +2338,7 @@ class_header[] { ENTRY_DEBUG } :
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         // suppress ()* warning
-        ({ LA(1) != FINAL }? compound_name_inner[false] | keyword_identifier) (options { greedy = true; } : specifier)*
+        ({ LA(1) != FINAL }? compound_name_inner[false] | keyword_name) (options { greedy = true; } : specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
@@ -4227,7 +4227,9 @@ keyword_name { CompleteElement element(this); TokenPosition tp; bool iscompound 
             setTokenPosition(tp);
         }
 
-       keyword_identifier
+        keyword_identifier 
+
+        (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
