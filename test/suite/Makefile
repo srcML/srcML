@@ -627,18 +627,18 @@ c_cpp_mode.mutable.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_enum_t
 	${XSLT} --stringparam new_name mutable ${XSLT_RENAME_XSL} $@.temp > $@
 	${RM} $@.temp
 
-c_cpp_mode.try.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_decl_template xsl/c_cpp_mode_single_template xsl/c_cpp_mode_enum_template xsl/c_cpp_mode_call_template
+c_cpp_mode.try.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_simple_decl_template xsl/c_cpp_mode_decl_template xsl/c_cpp_mode_single_template xsl/c_cpp_mode_enum_template xsl/c_cpp_mode_call_template
 	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
 	${XSLT} --stringparam new_name try ${XSLT_RENAME_XSL} $@.temp > $@
 	${RM} $@.temp
 
-c_cpp_mode.catch.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_decl_template xsl/c_cpp_mode_single_template xsl/c_cpp_mode_enum_template
+c_cpp_mode.catch.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_simple_decl_template xsl/c_cpp_mode_decl_template xsl/c_cpp_mode_single_template xsl/c_cpp_mode_enum_template
 	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
 	${XSLT} --stringparam new_name catch ${XSLT_RENAME_XSL} $@.temp > $@
 	${RM} $@.temp
 
 
-c_cpp_mode.class.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_single_template xsl/c_cpp_mode_call_template
+c_cpp_mode.class.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_decl_template xsl/c_cpp_mode_single_template xsl/c_cpp_mode_call_template
 	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
 	${XSLT} --stringparam new_name class ${XSLT_RENAME_XSL} $@.temp > $@
 	${RM} $@.temp

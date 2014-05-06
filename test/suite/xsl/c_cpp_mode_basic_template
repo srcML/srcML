@@ -126,18 +126,6 @@
 <expr_stmt><expr><call><call><name>foo</name><argument_list>(<argument><expr><name>NAME</name></expr></argument>, <argument><expr><name>NAME</name></expr></argument>)</argument_list></call><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit> 
-<decl_stmt><decl><type><name>NAME</name> *</type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-<unit> 
-<decl_stmt><decl><type><name>a</name> *</type> <name>NAME</name></decl>;</decl_stmt>
-</unit>
-
-<unit> 
-<decl_stmt><decl><type><name>NAME</name> *</type> <name>NAME</name></decl>;</decl_stmt>
-</unit>
-
 <unit>
 <struct_decl>struct <name>NAME</name>;</struct_decl>
 </unit>
@@ -160,77 +148,5 @@
 
 <unit>
 <union>union <name>NAME</name> <block>{<public type="default"/>}</block>;</union>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>struct <name>NAME</name></type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>struct <name>NAME</name> *</type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>struct <name>a</name></type> <name>NAME</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>struct <name>a</name> *</type> <name>NAME</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>struct <name>NAME</name></type> <name>NAME</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>struct <name>NAME</name> *</type> <name>NAME</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>class <name>NAME</name></type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>class <name>NAME</name> *</type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>class <name>a</name></type> <name>NAME</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>class <name>a</name> *</type> <name>NAME</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>class <name>NAME</name></type> <name>NAME</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>class <name>NAME</name> *</type> <name>NAME</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>union <name>NAME</name></type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>union <name>NAME</name> *</type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>union <name>a</name></type> <name>NAME</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>union <name>a</name> *</type> <name>NAME</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>union <name>NAME</name></type> <name>NAME</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type>union <name>NAME</name> *</type> <name>NAME</name></decl>;</decl_stmt>
 </unit>
 
