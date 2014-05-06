@@ -1,5 +1,122 @@
+
 <unit>
 <label><name>NAME</name>:</label>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>NAME</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name>.<name>NAME</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>NAME</name>.<name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>NAME</name>.<name>NAME</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>NAME</name>.<name>NAME</name></name> + <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> + <name><name>NAME</name>.<name>NAME</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name>.*<name>NAME</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>NAME</name>.*<name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>NAME</name>.*<name>NAME</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>NAME</name>.*<name>NAME</name></name> + <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> + <name><name>NAME</name>.*<name>NAME</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name>-&gt;<name>NAME</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>NAME</name>-&gt;<name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>NAME</name>-&gt;<name>NAME</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>NAME</name>-&gt;<name>NAME</name></name> + <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> + <name><name>NAME</name>-&gt;<name>NAME</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name>-&gt;*<name>NAME</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>NAME</name>-&gt;*<name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>NAME</name>-&gt;*<name>NAME</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>NAME</name>-&gt;*<name>NAME</name></name> + <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> + <name><name>NAME</name>-&gt;*<name>NAME</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> + <name>NAME</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>NAME</name> + <name>NAME</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>NAME</name> = 0</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> = <name>NAME</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>NAME</name> = <name>NAME</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>NAME</name><index>[<expr>0</expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name><index>[<expr><name>NAME</name></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>NAME</name><index>[<expr><name>NAME</name></expr>]</index></name></expr>;</expr_stmt>
 </unit>
  
 <unit>
