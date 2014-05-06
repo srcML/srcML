@@ -3781,7 +3781,7 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
 
                 { LA(1) == RPAREN }? expression { --count_paren; } |
 
-                { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression |
+                { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; }  (call[call_count] | sizeof_call | alignof_call) complete_arguments |
 
                 expression |
 
@@ -5093,7 +5093,7 @@ generic_selection_complete_expression[] { CompleteElement element(this); int cou
 
             { LA(1) == RPAREN }? expression { --count_paren; } |
 
-            { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression |
+            { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } (call[call_count] | sizeof_call | alignof_call) complete_arguments  |
 
             expression
             )
