@@ -3218,7 +3218,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 { is_c_class_identifier || next_token() == TERMINATE || next_token() == LPAREN || next_token() == RPAREN
                     || next_token() == RCURLY || next_token() == LBRACKET || next_token() == RBRACKET || next_token() == OPERATORS
                     || next_token() == PERIOD || next_token() == DOTDEREF || next_token() == TRETURN || next_token() == MPDEREF || next_token() == LPAREN }?
-                     CXX_CLASS (variable_identifier_array_grammar_sub[iscompound])* |
+                     keyword_name |
 
         { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
 
@@ -4173,17 +4173,44 @@ compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
         (options { greedy = true; } : (period { iscompound = true; } (keyword_name | simple_name_optional_template)))*
 ;
 
-keyword_name[] { SingleElement element(this); ENTRY_DEBUG } :
 
+keyword_name { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
         {
+            // local mode that is automatically ended by leaving this function
+            startNewMode(MODE_LOCAL);
 
             // start outer name
-            startElement(SNAME);
+            startElement(SONAME);
 
+            // start inner name
+            startElement(SCNAME);
+
+            // record the name token so we can replace it if necessary
+            setTokenPosition(tp);
         }
 
-        (CLASS | CXX_CLASS)
+       keyword_identifier
 
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
+
+        (options { greedy = true; } : { !inTransparentMode(MODE_EAT_TYPE) && (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}?
+            variable_identifier_array_grammar_sub[iscompound]
+        )*
+
+        {
+            // if it isn't a compound name, nop the element
+            if (!iscompound)
+                // set the token to NOP
+                tp.setType(SNOP);
+        }
+;
+
+// an identifier
+keyword_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+                startElement(SNAME);
+        }
+        (CLASS | CXX_CLASS)
 ;
 
 // Specifier for a function
