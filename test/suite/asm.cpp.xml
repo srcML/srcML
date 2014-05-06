@@ -14,18 +14,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>__asm</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><name>__asm</name> <specifier>volatile</specifier></type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><name>__asm</name> <specifier>__volatile__</specifier></type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>__asm__</name></expr>;</expr_stmt>
 </unit>
 
@@ -47,29 +35,6 @@
 
 <unit>
 <asm>asm ("  movl    %%esp,%%edi     \n"
-"  andl    %0,%%edi        \n"
-"  addl    %1,%%edi        \n"
-"  movl    %%esp,%%ecx     \n"
-"  subl    %%edi,%%ecx     \n"
-"  shrl    $2,%%ecx        \n"
-"  movl    $0xedededed,%%eax     \n"
-"  rep stosl               \n"
-:
-: "i"(~(THREAD_SIZE-1)), "i"(sizeof(struct thread_info))
-: "eax", "ecx", "edi", "memory", "cc"
-);</asm>
-</unit>
-
-<unit>
-<asm>__asm ();</asm>
-</unit>
-
-<unit>
-<asm>__asm ("abc");</asm>
-</unit>
-
-<unit>
-<asm>__asm ("  movl    %%esp,%%edi     \n"
 "  andl    %0,%%edi        \n"
 "  addl    %1,%%edi        \n"
 "  movl    %%esp,%%ecx     \n"
@@ -130,29 +95,6 @@
 </unit>
 
 <unit>
-<asm>__asm <specifier>volatile</specifier> ();</asm>
-</unit>
-
-<unit>
-<asm>__asm <specifier>volatile</specifier> ("abc");</asm>
-</unit>
-
-<unit>
-<asm>__asm <specifier>volatile</specifier> ("  movl    %%esp,%%edi     \n"
-"  andl    %0,%%edi        \n"
-"  addl    %1,%%edi        \n"
-"  movl    %%esp,%%ecx     \n"
-"  subl    %%edi,%%ecx     \n"
-"  shrl    $2,%%ecx        \n"
-"  movl    $0xedededed,%%eax     \n"
-"  rep stosl               \n"
-:
-: "i"(~(THREAD_SIZE-1)), "i"(sizeof(struct thread_info))
-: "eax", "ecx", "edi", "memory", "cc"
-);</asm>
-</unit>
-
-<unit>
 <asm>__asm__ <specifier>volatile</specifier> ();</asm>
 </unit>
 
@@ -185,29 +127,6 @@
 
 <unit>
 <asm>asm <specifier>__volatile__</specifier> ("  movl    %%esp,%%edi     \n"
-"  andl    %0,%%edi        \n"
-"  addl    %1,%%edi        \n"
-"  movl    %%esp,%%ecx     \n"
-"  subl    %%edi,%%ecx     \n"
-"  shrl    $2,%%ecx        \n"
-"  movl    $0xedededed,%%eax     \n"
-"  rep stosl               \n"
-:
-: "i"(~(THREAD_SIZE-1)), "i"(sizeof(struct thread_info))
-: "eax", "ecx", "edi", "memory", "cc"
-);</asm>
-</unit>
-
-<unit>
-<asm>__asm <specifier>__volatile__</specifier> ();</asm>
-</unit>
-
-<unit>
-<asm>__asm <specifier>__volatile__</specifier> ("abc");</asm>
-</unit>
-
-<unit>
-<asm>__asm <specifier>__volatile__</specifier> ("  movl    %%esp,%%edi     \n"
 "  andl    %0,%%edi        \n"
 "  addl    %1,%%edi        \n"
 "  movl    %%esp,%%ecx     \n"

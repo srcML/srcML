@@ -2010,6 +2010,42 @@ asm_declaration[] { ENTRY_DEBUG } :
         ({ true }? paren_pair | ~(LCURLY | RCURLY | TERMINATE))*
 ;
 
+// complete assembly declaration statement
+visual_cxx_asm_declaration[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_LOCAL);
+
+            // start the asm statement
+            startElement(SASM);
+        }
+        VISUAL_CXX_ASM ({ LA(1) == LCURLY}? visual_cxx_asm_declaration_curly_pair | (options { greedy = true; } : visual_cxx_asm_inner)*) (options { greedy = true; } : TERMINATE)*
+;
+
+visual_cxx_asm_declaration_curly_pair[] { ENTRY_DEBUG } :
+
+    LCURLY (options { generateAmbigWarnings = false; } : visual_cxx_asm_declaration | visual_cxx_block_inner | ~(RCURLY))* RCURLY
+
+;
+
+visual_cxx_block_inner[] { CompleteElement element(this);  ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_LOCAL);
+
+            // start the asm statement
+            startElement(SASM);
+        }
+        ({ LA(1) == LCURLY}? visual_cxx_asm_declaration_curly_pair | (visual_cxx_asm_inner (options { greedy = true; } : visual_cxx_asm_inner)*)) (options { greedy = true; } : TERMINATE)*
+
+;
+
+visual_cxx_asm_inner[] { ENTRY_DEBUG } :
+
+     (~(EOL | TERMINATE | RCURLY | VISUAL_CXX_ASM))
+
+;
+
 // extern definition
 extern_definition[] { ENTRY_DEBUG } :
         {
