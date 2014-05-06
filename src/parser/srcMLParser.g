@@ -323,7 +323,8 @@ const unsigned long class_identifier_token_set_data [num_token_longs] = { 1UL <<
                                                                           1UL << (srcMLParser::OPERATORS - 32)  | 1UL << (srcMLParser::PERIOD - 32)   | 1UL << (srcMLParser::DOTDEREF - 32)
                                                                         | 1UL << (srcMLParser::TRETURN - 32)    | 1UL << (srcMLParser::MPDEREF - 32)  | 1UL << (srcMLParser::RPAREN - 32)
                                                                         | 1UL << (srcMLParser::LBRACKET - 32)   | 1UL << (srcMLParser::RBRACKET - 32) | 1UL << (srcMLParser::TERMINATE - 32)
-                                                                        | 1UL << (srcMLParser::COLON - 32)      | 1UL << (srcMLParser::COMMA - 32) };
+                                                                        | 1UL << (srcMLParser::COLON - 32)      | 1UL << (srcMLParser::COMMA - 32)    | 1UL << (srcMLParser::MULTOPS - 32)
+                                                                        };
 const antlr::BitSet srcMLParser::class_identifier_token_set(class_identifier_token_set_data, num_token_longs);
 
 } /* end include */
@@ -682,7 +683,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
          && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS) 
          && (LA(1) == DEFAULT || next_token() != COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
-         && (LA(1) != CXX_CATCH || next_token() == LPAREN)
+         && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }? keyword_statements |
 
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
@@ -2348,7 +2349,7 @@ class_header[] { ENTRY_DEBUG } :
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         // suppress ()* warning
-        ({ LA(1) != FINAL }? compound_name_inner[false] | keyword_identifier) (options { greedy = true; } : specifier)*
+        ({ LA(1) != FINAL }? compound_name_inner[false] | keyword_name) (options { greedy = true; } : specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
@@ -2767,7 +2768,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // so stop the expression, and markup the keyword statement
         { inMode(MODE_EXPRESSION) && (LA(1) == DEFAULT || next_token() != COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
-         && (LA(1) != CXX_CATCH || next_token() == LPAREN)
+         && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }?
         terminate_pre
         terminate_post
@@ -3215,7 +3216,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                                              || (LA(1) == ATSIGN && next_token() == INTERFACE))))
                                               && (!inLanguage(LANGUAGE_CXX)
                                                || (!class_identifier_token_set.member(next_token())
-                                                && (next_token() != LBRACKET || next_token_two() == LBRACKET)))
+                                                || (next_token() == LBRACKET && next_token_two() == LBRACKET)))
                                                }?
                 (CLASS               set_type[type, CLASS_DECL]     |
                  CXX_CLASS           set_type[type, CLASS_DECL]     |
@@ -5354,9 +5355,9 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
 
-        lead_type_identifier { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+        ({ LA(1) == CXX_CLASS && class_identifier_token_set.member(next_token()) }? keyword_name | lead_type_identifier) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
-        (options { generateAmbigWarnings = false; } : keyword_identifier | type_identifier) { decTypeCount(); })* 
+        (options { generateAmbigWarnings = false; } : keyword_name | type_identifier) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
