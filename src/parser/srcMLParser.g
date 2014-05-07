@@ -1132,7 +1132,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
             if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
                 return;
         }
-        (options { greedy = true; } : {getTypeCount() > 0}? type_identifier { decTypeCount(); })*
+        (options { greedy = true; } : {getTypeCount() > 0}? (keyword_name | type_identifier) { decTypeCount(); })*
         {
             endMode(MODE_EAT_TYPE);
             setMode(MODE_FUNCTION_NAME);

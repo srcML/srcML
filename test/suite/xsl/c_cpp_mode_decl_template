@@ -154,3 +154,75 @@
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>union <name>NAME</name> *</type> <name>NAME</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
+<unit>
+<function_decl><type>struct <name>NAME</name></type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>struct <name>NAME</name> *</type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>struct <name>a</name></type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>struct <name>a</name> *</type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>struct <name>NAME</name></type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>struct <name>NAME</name> *</type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>class <name>NAME</name></type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>class <name>NAME</name> *</type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>class <name>a</name></type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>class <name>a</name> *</type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>class <name>NAME</name></type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>class <name>NAME</name> *</type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>union <name>NAME</name></type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>union <name>NAME</name> *</type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>union <name>a</name></type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>union <name>a</name> *</type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>union <name>NAME</name></type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type>union <name>NAME</name> *</type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
