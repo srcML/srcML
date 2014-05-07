@@ -1132,7 +1132,11 @@ function_type[int type_count] { ENTRY_DEBUG } :
             if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
                 return;
         }
-        (options { greedy = true; } : {getTypeCount() > 0}? (keyword_name | type_identifier) { decTypeCount(); })*
+
+        (options { greedy = true; } : {getTypeCount() > 0}? 
+            // Mark as name before mark without name
+            (options { generateAmbigWarnings = false;} :  keyword_name | type_identifier) { decTypeCount(); })*
+
         {
             endMode(MODE_EAT_TYPE);
             setMode(MODE_FUNCTION_NAME);
@@ -1149,21 +1153,24 @@ function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
 // match a function identifier
 function_identifier[] { ENTRY_DEBUG } :
 
-        // typical name  
-        compound_name_inner[false] |
+        // Mark as name before mark without name
+        (options { generateAmbigWarnings = false; } :  
+            // typical name  
+            compound_name_inner[false] |
 
-        keyword_name | 
+            keyword_name | 
 
-        { function_pointer_name_check() }? 
-        function_pointer_name |
+            { function_pointer_name_check() }? 
+            function_pointer_name |
 
-        function_identifier_main |
+            function_identifier_main |
 
-        { inLanguage(LANGUAGE_CSHARP) }?
-        function_identifier_default |
+            { inLanguage(LANGUAGE_CSHARP) }?
+            function_identifier_default |
 
-        // function pointer identifier with name marked separately
-        function_pointer_name_grammar eat_optional_macro_call
+            // function pointer identifier with name marked separately
+            function_pointer_name_grammar eat_optional_macro_call
+        )
 ;
 
 // default function name
@@ -3503,7 +3510,8 @@ deduct[int& type_count] { --type_count; } :;
 // consume a type
 eat_type[int & count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
 
-        (keyword_name | type_identifier)
+        // Mark as name before mark without name
+        (options { generateAmbigWarnings = false;} :  keyword_name | type_identifier)
 
         set_int[count, count - 1]
         eat_type[count]
@@ -5415,7 +5423,8 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 
         }
 
-        ({ inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[false] | compound_name | keyword_name)
+        // Mark as name before mark without name
+        (options { generateAmbigWarnings = false;} :  { inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[false] | compound_name | keyword_name)
         {
             // expect a possible initialization
             setMode(MODE_INIT | MODE_EXPECT);
@@ -6151,7 +6160,7 @@ parameter_type_count[int & type_count] { CompleteElement element(this); ENTRY_DE
             // start of type
             startElement(STYPE);
         }
-        (type_identifier set_int[type_count, type_count - 1] (eat_type[type_count])?)
+        (type_identifier set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 
         // sometimes there is no parameter name.  if so, we need to eat it
         ( options { greedy = true; } : multops | tripledotop | LBRACKET RBRACKET)*
@@ -6187,7 +6196,7 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
             startElement(STYPE);
         }
         { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : (type_count = 1))}?
-        (type_identifier set_int[type_count, type_count - 1] (eat_type[type_count])?)
+        (type_identifier set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 ;
 
 // Template
