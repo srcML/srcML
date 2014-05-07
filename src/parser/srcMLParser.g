@@ -3473,7 +3473,7 @@ deduct[int& type_count] { --type_count; } :;
 // consume a type
 eat_type[int & count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
 
-        type_identifier
+        (keyword_name | type_identifier)
 
         set_int[count, count - 1]
         eat_type[count]
@@ -6121,7 +6121,7 @@ parameter_type_count[int & type_count] { CompleteElement element(this); ENTRY_DE
             // start of type
             startElement(STYPE);
         }
-        eat_type[type_count]
+        (type_identifier set_int[type_count, type_count - 1] (eat_type[type_count])?)
 
         // sometimes there is no parameter name.  if so, we need to eat it
         ( options { greedy = true; } : multops | tripledotop | LBRACKET RBRACKET)*
@@ -6157,7 +6157,7 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
             startElement(STYPE);
         }
         { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : (type_count = 1))}?
-        eat_type[type_count]
+        (type_identifier set_int[type_count, type_count - 1] (eat_type[type_count])?)
 ;
 
 // Template
