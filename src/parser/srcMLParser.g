@@ -5692,7 +5692,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         UNION |
 
         // cast
-        { inTransparentMode(MODE_INTERNAL_END_PAREN) && (LA(1) != CXX_CLASS || !inTransparentMode(MODE_ARGUMENT)) }?
+        { inTransparentMode(MODE_INTERNAL_END_PAREN) && (LA(1) != CXX_CLASS || !class_identifier_token_set.member(next_token())) }?
         (CLASS | CXX_CLASS) |
 
         { next_token() == LPAREN }?
