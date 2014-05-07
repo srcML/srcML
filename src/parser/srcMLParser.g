@@ -351,7 +351,13 @@ typedef typename boost::mpl::accumulate<token_set, boost::mpl::int_<0>,
 };
 
 const int num_token_longs = 24;
-const unsigned long class_identifier_token_set_data [num_token_longs] = { bucket<0>::type::value, bucket<1>::type::value };
+const unsigned long class_identifier_token_set_data [num_token_longs] = { bucket<0>::type::value, bucket<1>::type::value, bucket<2>::type::value, bucket<3>::type::value,
+                                                                        //, bucket<4>::type::value, bucket<5>::type::value, bucket<6>::type::value, bucket<7>::type::value
+                                                                        //, bucket<8>::type::value, bucket<9>::type::value, bucket<10>::type::value, bucket<11>::type::value
+                                                                        //, bucket<12>::type::value, bucket<13>::type::value, bucket<14>::type::value, bucket<15>::type::value
+                                                                        //, bucket<16>::type::value, bucket<17>::type::value, bucket<18>::type::value, bucket<19>::type::value
+                                                                        //, bucket<20>::type::value, bucket<21>::type::value, bucket<22>::type::value, bucket<23>::type::value
+                                                                           };
 const antlr::BitSet srcMLParser::class_identifier_token_set(class_identifier_token_set_data, num_token_longs);
 
 } /* end include */
