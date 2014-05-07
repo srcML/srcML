@@ -332,10 +332,12 @@ typedef boost::mpl::vector30_c<unsigned long, srcMLParser::LPAREN, srcMLParser::
                                   srcMLParser::OPERATORS, srcMLParser::PERIOD, srcMLParser::DOTDEREF, srcMLParser::TRETURN, srcMLParser::MPDEREF, srcMLParser::RPAREN,
                                   srcMLParser::LBRACKET, srcMLParser::RBRACKET, srcMLParser::TERMINATE, srcMLParser::COLON, srcMLParser::COMMA, srcMLParser::MULTOPS,
                                   srcMLParser::QMARK, srcMLParser::BAR, srcMLParser::REFOPS, srcMLParser::RVALUEREF,
+
+                                  // place holders since only does not seem to be specific from vectorN_c between 20 and 30
                                   srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF,
                                   srcMLParser::RVALUEREF, srcMLParser::RVALUEREF
                                 > token_set;
-                                
+
 template<int bucket_number>
 struct bucket {
 typedef typename boost::mpl::accumulate<token_set, boost::mpl::int_<0>,
