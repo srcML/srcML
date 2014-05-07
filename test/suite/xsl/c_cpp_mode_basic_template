@@ -127,6 +127,86 @@
 </unit>
 
 <unit>
+<expr_stmt><expr><name>a</name> &lt; <name>NAME</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>NAME</name> &lt; <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>NAME</name> &lt; <name>NAME</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> &gt; <name>NAME</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>NAME</name> &gt; <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>NAME</name> &gt; <name>NAME</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>~<name>NAME</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>NAME</name> ? <name>a</name> : <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> ? <name>NAME</name> : <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> ? <name>b</name> : <name>NAME</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>NAME</name> ? <name>NAME</name> : <name>NAME</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> | <name>NAME</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>NAME</name> | <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>NAME</name> | <name>NAME</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>(<name>a</name> &amp; <name>NAME</name>)</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>(<name>NAME</name> &amp; <name>a</name>)</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>(<name>NAME</name> &amp; <name>NAME</name>)</expr></expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>(<name>a</name> &amp;&amp; <name>NAME</name>)</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>(<name>NAME</name> &amp;&amp; <name>a</name>)</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>(<name>NAME</name> &amp;&amp; <name>NAME</name>)</expr>;</expr_stmt>
+</unit>
+
+<unit>
 <struct_decl>struct <name>NAME</name>;</struct_decl>
 </unit>
  
