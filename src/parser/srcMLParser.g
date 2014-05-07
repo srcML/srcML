@@ -137,6 +137,16 @@ header "post_include_hpp" {
 #include <srcml_macros.hpp>
 #include <srcml.h>
 
+#include <boost/mpl/vector/vector30_c.hpp>
+#include <boost/mpl/accumulate.hpp>
+#include <boost/mpl/long.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/equal_to.hpp>
+#include <boost/mpl/shift_left.hpp>
+#include <boost/mpl/shift_right.hpp>
+#include <boost/mpl/bitor.hpp>
+#include <boost/mpl/modulus.hpp>
+
 // Macros to introduce trace statements
 #define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
@@ -317,6 +327,38 @@ void srcMLParser::endAllModes() {
      if (size() == 1)
          endLastMode();
 }
+
+typedef boost::mpl::vector30_c<unsigned long, srcMLParser::LPAREN, srcMLParser::RCURLY, srcMLParser::EQUAL, srcMLParser::TEMPOPS, srcMLParser::TEMPOPE, srcMLParser::DESTOP,
+                                  srcMLParser::OPERATORS, srcMLParser::PERIOD, srcMLParser::DOTDEREF, srcMLParser::TRETURN, srcMLParser::MPDEREF, srcMLParser::RPAREN,
+                                  srcMLParser::LBRACKET, srcMLParser::RBRACKET, srcMLParser::TERMINATE, srcMLParser::COLON, srcMLParser::COMMA, srcMLParser::MULTOPS,
+                                  srcMLParser::QMARK, srcMLParser::BAR, srcMLParser::REFOPS, srcMLParser::RVALUEREF,
+
+                                  // place holders since only does not seem to be specific from vectorN_c between 20 and 30
+                                  srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF,
+                                  srcMLParser::RVALUEREF, srcMLParser::RVALUEREF
+                                > token_set;
+
+template<int bucket_number>
+struct bucket {
+typedef typename boost::mpl::accumulate<token_set, boost::mpl::int_<0>,
+
+    boost::mpl::if_<
+        boost::mpl::equal_to<boost::mpl::shift_right<boost::mpl::_2, boost::mpl::long_<5> >, boost::mpl::long_<bucket_number> >,
+        boost::mpl::bitor_<boost::mpl::_1, boost::mpl::shift_left<boost::mpl::long_<1>, boost::mpl::modulus<boost::mpl::_2, boost::mpl::long_<32> > > >,
+        boost::mpl::_1 >
+        >::type type;
+
+};
+
+const int num_token_longs = 24;
+const unsigned long class_identifier_token_set_data [num_token_longs] = { bucket<0>::type::value, bucket<1>::type::value, bucket<2>::type::value, bucket<3>::type::value,
+                                                                        //, bucket<4>::type::value, bucket<5>::type::value, bucket<6>::type::value, bucket<7>::type::value
+                                                                        //, bucket<8>::type::value, bucket<9>::type::value, bucket<10>::type::value, bucket<11>::type::value
+                                                                        //, bucket<12>::type::value, bucket<13>::type::value, bucket<14>::type::value, bucket<15>::type::value
+                                                                        //, bucket<16>::type::value, bucket<17>::type::value, bucket<18>::type::value, bucket<19>::type::value
+                                                                        //, bucket<20>::type::value, bucket<21>::type::value, bucket<22>::type::value, bucket<23>::type::value
+                                                                           };
+const antlr::BitSet srcMLParser::class_identifier_token_set(class_identifier_token_set_data, num_token_longs);
 
 } /* end include */
 
@@ -585,6 +627,7 @@ public:
     bool notdestructor;
     bool operatorname;
     int curly_count;
+    static const antlr::BitSet class_identifier_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -673,6 +716,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
          && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS) 
          && (LA(1) == DEFAULT || next_token() != COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
+         && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }? keyword_statements |
 
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
@@ -1088,7 +1132,11 @@ function_type[int type_count] { ENTRY_DEBUG } :
             if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
                 return;
         }
-        (options { greedy = true; } : {getTypeCount() > 0}? type_identifier { decTypeCount(); })*
+
+        (options { greedy = true; } : {getTypeCount() > 0}? 
+            // Mark as name before mark without name
+            (options { generateAmbigWarnings = false;} :  keyword_name | type_identifier) { decTypeCount(); })*
+
         {
             endMode(MODE_EAT_TYPE);
             setMode(MODE_FUNCTION_NAME);
@@ -1105,21 +1153,24 @@ function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
 // match a function identifier
 function_identifier[] { ENTRY_DEBUG } :
 
-        // typical name  
-        compound_name_inner[false] |
+        // Mark as name before mark without name
+        (options { generateAmbigWarnings = false; } :  
+            // typical name  
+            compound_name_inner[false] |
 
-        keyword_name | 
+            keyword_name | 
 
-        { function_pointer_name_check() }? 
-        function_pointer_name |
+            { function_pointer_name_check() }? 
+            function_pointer_name |
 
-        function_identifier_main |
+            function_identifier_main |
 
-        { inLanguage(LANGUAGE_CSHARP) }?
-        function_identifier_default |
+            { inLanguage(LANGUAGE_CSHARP) }?
+            function_identifier_default |
 
-        // function pointer identifier with name marked separately
-        function_pointer_name_grammar eat_optional_macro_call
+            // function pointer identifier with name marked separately
+            function_pointer_name_grammar eat_optional_macro_call
+        )
 ;
 
 // default function name
@@ -2757,6 +2808,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // so stop the expression, and markup the keyword statement
         { inMode(MODE_EXPRESSION) && (LA(1) == DEFAULT || next_token() != COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
+         && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }?
         terminate_pre
         terminate_post
@@ -3030,7 +3082,8 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     if(type == VARIABLE && inTransparentMode(MODE_CONDITION) && LA(1) != EQUAL)
         type = NONE;
 
-    if(type == NONE && (sawtemplate || (sawcontextual && type_count > 0)))
+    if(type == NONE && (sawtemplate || (sawcontextual && type_count > 0))
+     && (!class_identifier_token_set.member(LA(1)) || LA(1) == MULTOPS || LA(1) == REFOPS || LA(1) == RVALUEREF || LA(1) == TERMINATE))
         type = VARIABLE;
     
     // may just have an expression
@@ -3202,18 +3255,10 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 { type_count == attribute_count + specifier_count + template_count  && (!inLanguage(LANGUAGE_JAVA) 
             || (inLanguage(LANGUAGE_JAVA) && (LA(1) != ATSIGN 
                                              || (LA(1) == ATSIGN && next_token() == INTERFACE))))
-                                              && next_token() != OPERATORS
-                                              && next_token() != PERIOD
-                                              && next_token() != DOTDEREF
-                                              && next_token() != TRETURN
-                                              && next_token() != MPDEREF
-                                              && next_token() != LPAREN
-                                              && next_token() != RPAREN
-                                              && next_token() != RCURLY
-                                              && (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET || next_token_two() == LBRACKET)
-                                              && next_token() != RBRACKET
-                                              && next_token() != TERMINATE
-                                              && next_token() != COLON }?
+                                              && (!inLanguage(LANGUAGE_CXX)
+                                               || (!class_identifier_token_set.member(next_token())
+                                                || (next_token() == LBRACKET && next_token_two() == LBRACKET)))
+                                               }?
                 (CLASS               set_type[type, CLASS_DECL]     |
                  CXX_CLASS           set_type[type, CLASS_DECL]     |
                  STRUCT              set_type[type, STRUCT_DECL]    |
@@ -3251,10 +3296,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // special function name
                 MAIN set_bool[isoperator, type_count == 0] |
 
-                { is_c_class_identifier || next_token() == TERMINATE || next_token() == LPAREN || next_token() == RPAREN
-                    || next_token() == RCURLY || next_token() == LBRACKET || next_token() == RBRACKET || next_token() == OPERATORS
-                    || next_token() == PERIOD || next_token() == DOTDEREF || next_token() == TRETURN || next_token() == MPDEREF || next_token() == LPAREN
-                    || next_token() == COLON }?
+                { is_c_class_identifier || class_identifier_token_set.member(next_token()) }?
                      keyword_name |
 
         { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
@@ -3468,7 +3510,8 @@ deduct[int& type_count] { --type_count; } :;
 // consume a type
 eat_type[int & count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
 
-        type_identifier
+        // Mark as name before mark without name
+        (options { generateAmbigWarnings = false;} :  keyword_name | type_identifier)
 
         set_int[count, count - 1]
         eat_type[count]
@@ -4159,7 +4202,7 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
-            (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main)
+            (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main | keyword_identifier)
             (options { greedy = true; } : { look_past_three(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
         )*
 
@@ -4227,9 +4270,7 @@ keyword_name { CompleteElement element(this); TokenPosition tp; bool iscompound 
             setTokenPosition(tp);
         }
 
-        keyword_identifier 
-
-        (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
+        keyword_name_inner[iscompound]
 
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
@@ -4244,6 +4285,30 @@ keyword_name { CompleteElement element(this); TokenPosition tp; bool iscompound 
                 tp.setType(SNOP);
         }
 ;
+
+// C++ compound name handling
+keyword_name_inner[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+
+        (dcolon { iscompound = true; })*
+        (DESTOP set_bool[isdestructor] { iscompound = true; })*
+        keyword_identifier
+        (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
+
+        // "a::" causes an exception to be thrown
+        ( options { greedy = true; } :
+            (dcolon { iscompound = true; } | (period | member_pointer | member_pointer_dereference | dot_dereference) { iscompound = true; })
+            ( options { greedy = true; } : dcolon)*
+            (DESTOP set_bool[isdestructor])*
+            (multops)*
+            (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main | keyword_identifier)
+            (options { greedy = true; } : { look_past_three(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
+        )*
+
+        { notdestructor = LA(1) == DESTOP; }
+;
+exception
+catch[antlr::RecognitionException] {
+}
 
 // an identifier
 keyword_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
@@ -5332,7 +5397,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
 
-        lead_type_identifier { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+        ({ LA(1) == CXX_CLASS && class_identifier_token_set.member(next_token()) }? keyword_name | lead_type_identifier) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
         (options { generateAmbigWarnings = false; } : keyword_name | type_identifier) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
@@ -5358,7 +5423,8 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 
         }
 
-        ({ inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[false] | compound_name | keyword_name)
+        // Mark as name before mark without name
+        (options { generateAmbigWarnings = false;} :  { inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[false] | compound_name | keyword_name)
         {
             // expect a possible initialization
             setMode(MODE_INIT | MODE_EXPECT);
@@ -5666,7 +5732,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         UNION |
 
         // cast
-        { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+        { inTransparentMode(MODE_INTERNAL_END_PAREN) && (LA(1) != CXX_CLASS || !class_identifier_token_set.member(next_token())) }?
         (CLASS | CXX_CLASS) |
 
         { next_token() == LPAREN }?
@@ -6094,7 +6160,7 @@ parameter_type_count[int & type_count] { CompleteElement element(this); ENTRY_DE
             // start of type
             startElement(STYPE);
         }
-        eat_type[type_count]
+        (type_identifier set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 
         // sometimes there is no parameter name.  if so, we need to eat it
         ( options { greedy = true; } : multops | tripledotop | LBRACKET RBRACKET)*
@@ -6130,7 +6196,7 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
             startElement(STYPE);
         }
         { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : (type_count = 1))}?
-        eat_type[type_count]
+        (type_identifier set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 ;
 
 // Template
