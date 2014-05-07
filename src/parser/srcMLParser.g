@@ -137,6 +137,16 @@ header "post_include_hpp" {
 #include <srcml_macros.hpp>
 #include <srcml.h>
 
+#include <boost/mpl/vector/vector30_c.hpp>
+#include <boost/mpl/accumulate.hpp>
+#include <boost/mpl/long.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/equal_to.hpp>
+#include <boost/mpl/shift_left.hpp>
+#include <boost/mpl/shift_right.hpp>
+#include <boost/mpl/bitor.hpp>
+#include <boost/mpl/modulus.hpp>
+
 // Macros to introduce trace statements
 #define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
@@ -318,16 +328,28 @@ void srcMLParser::endAllModes() {
          endLastMode();
 }
 
+typedef boost::mpl::vector30_c<unsigned long, srcMLParser::LPAREN, srcMLParser::RCURLY, srcMLParser::EQUAL, srcMLParser::TEMPOPS, srcMLParser::TEMPOPE, srcMLParser::DESTOP,
+                                  srcMLParser::OPERATORS, srcMLParser::PERIOD, srcMLParser::DOTDEREF, srcMLParser::TRETURN, srcMLParser::MPDEREF, srcMLParser::RPAREN,
+                                  srcMLParser::LBRACKET, srcMLParser::RBRACKET, srcMLParser::TERMINATE, srcMLParser::COLON, srcMLParser::COMMA, srcMLParser::MULTOPS,
+                                  srcMLParser::QMARK, srcMLParser::BAR, srcMLParser::REFOPS, srcMLParser::RVALUEREF,
+                                  srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF,
+                                  srcMLParser::RVALUEREF, srcMLParser::RVALUEREF
+                                > token_set;
+                                
+template<int bucket_number>
+struct bucket {
+typedef typename boost::mpl::accumulate<token_set, boost::mpl::int_<0>,
+
+    boost::mpl::if_<
+        boost::mpl::equal_to<boost::mpl::shift_right<boost::mpl::_2, boost::mpl::long_<5> >, boost::mpl::long_<bucket_number> >,
+        boost::mpl::bitor_<boost::mpl::_1, boost::mpl::shift_left<boost::mpl::long_<1>, boost::mpl::modulus<boost::mpl::_2, boost::mpl::long_<32> > > >,
+        boost::mpl::_1 >
+        >::type type;
+
+};
+
 const int num_token_longs = 24;
-const unsigned long class_identifier_token_set_data [num_token_longs] = { 1UL <<  srcMLParser::LPAREN           | 1UL <<  srcMLParser::RCURLY         | 1UL <<  srcMLParser::EQUAL
-                                                                        | 1UL <<  srcMLParser::TEMPOPS          | 1UL <<  srcMLParser::TEMPOPE        | 1UL <<  srcMLParser::DESTOP,
-                                                                          1UL << (srcMLParser::OPERATORS - 32)  | 1UL << (srcMLParser::PERIOD - 32)   | 1UL << (srcMLParser::DOTDEREF - 32)
-                                                                        | 1UL << (srcMLParser::TRETURN - 32)    | 1UL << (srcMLParser::MPDEREF - 32)  | 1UL << (srcMLParser::RPAREN - 32)
-                                                                        | 1UL << (srcMLParser::LBRACKET - 32)   | 1UL << (srcMLParser::RBRACKET - 32) | 1UL << (srcMLParser::TERMINATE - 32)
-                                                                        | 1UL << (srcMLParser::COLON - 32)      | 1UL << (srcMLParser::COMMA - 32)    | 1UL << (srcMLParser::MULTOPS - 32)
-                                                                        | 1UL << (srcMLParser::QMARK - 32)      | 1UL << (srcMLParser::BAR - 32)      | 1UL << (srcMLParser::REFOPS - 32)
-                                                                        | 1UL << (srcMLParser::RVALUEREF - 32)
-                                                                        };
+const unsigned long class_identifier_token_set_data [num_token_longs] = { bucket<0>::type::value, bucket<1>::type::value };
 const antlr::BitSet srcMLParser::class_identifier_token_set(class_identifier_token_set_data, num_token_longs);
 
 } /* end include */
