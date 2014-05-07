@@ -3046,7 +3046,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         type = NONE;
 
     if(type == NONE && (sawtemplate || (sawcontextual && type_count > 0))
-     && (!class_identifier_token_set.member(LA(1)) || LA(1) == MULTOPS || LA(1) == REFOPS || LA(1) == RVALUEREF))
+     && (!class_identifier_token_set.member(LA(1)) || LA(1) == MULTOPS || LA(1) == REFOPS || LA(1) == RVALUEREF || LA(1) == TERMINATE))
         type = VARIABLE;
     
     // may just have an expression
