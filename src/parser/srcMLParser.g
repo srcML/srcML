@@ -347,6 +347,28 @@ struct replace_pos {
 
 };
 
+// mutli-pass bucket sort
+/*
+template<typename token_set>
+struct bitset_buckets {
+
+    static const int num_token_longs = 24;
+    static const unsigned long data[num_token_longs];
+
+};
+
+
+template<typename token_set>
+const unsigned long bitset_buckets<token_set>::data[bitset_buckets<token_set>::num_token_longs] = 
+        { bitset_bucket<token_set, 0>::type::value, bitset_bucket<token_set, 1>::type::value, bitset_bucket<token_set, 2>::type::value, bitset_bucket<token_set, 3>::type::value
+        , bitset_bucket<token_set, 4>::type::value, bitset_bucket<token_set, 5>::type::value, bitset_bucket<token_set, 6>::type::value, bitset_bucket<token_set, 7>::type::value
+        , bitset_bucket<token_set, 8>::type::value, bitset_bucket<token_set, 9>::type::value, bitset_bucket<token_set, 10>::type::value, bitset_bucket<token_set, 11>::type::value
+        , bitset_bucket<token_set, 12>::type::value, bitset_bucket<token_set, 13>::type::value, bitset_bucket<token_set, 14>::type::value, bitset_bucket<token_set, 15>::type::value
+        , bitset_bucket<token_set, 16>::type::value, bitset_bucket<token_set, 17>::type::value, bitset_bucket<token_set, 18>::type::value, bitset_bucket<token_set, 19>::type::value
+        , bitset_bucket<token_set, 20>::type::value, bitset_bucket<token_set, 21>::type::value, bitset_bucket<token_set, 22>::type::value, bitset_bucket<token_set, 23>::type::value
+};
+*/
+
 template<typename token_set>
 struct bitset_bucket_sorter {
 
