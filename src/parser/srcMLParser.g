@@ -348,6 +348,20 @@ struct replace_pos {
 };
 
 // mutli-pass bucket sort
+template<typename token_set, int bucket_number>
+struct bitset_bucket {
+
+    typedef typename boost::mpl::if_<boost::mpl::less<boost::mpl::times<boost::mpl::long_<bucket_number>, boost::mpl::int_<32> >, boost::mpl::long_<srcMLParser::START_ELEMENT_TOKEN> >,
+            typename boost::mpl::accumulate<token_set, boost::mpl::long_<0>,
+                boost::mpl::if_<
+                    boost::mpl::equal_to<boost::mpl::shift_right<boost::mpl::_2, boost::mpl::long_<5> >, boost::mpl::long_<bucket_number> >,
+                    boost::mpl::bitor_<boost::mpl::_1, boost::mpl::shift_left<boost::mpl::long_<1>, boost::mpl::modulus<boost::mpl::_2, boost::mpl::long_<32> > > >,
+                    boost::mpl::_1 >
+                >::type,
+            boost::mpl::long_<0> >::type type;
+
+};
+
 /*
 template<typename token_set>
 struct bitset_buckets {
