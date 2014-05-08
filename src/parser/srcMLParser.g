@@ -328,6 +328,36 @@ void srcMLParser::endAllModes() {
          endLastMode();
 }
 
+template<typename token_set, int bucket_number>
+struct bitset_bucket {
+
+    typedef typename boost::mpl::accumulate<token_set, boost::mpl::int_<0>,
+
+        boost::mpl::if_<
+            boost::mpl::equal_to<boost::mpl::shift_right<boost::mpl::_2, boost::mpl::long_<5> >, boost::mpl::long_<bucket_number> >,
+            boost::mpl::bitor_<boost::mpl::_1, boost::mpl::shift_left<boost::mpl::long_<1>, boost::mpl::modulus<boost::mpl::_2, boost::mpl::long_<32> > > >,
+            boost::mpl::_1 >
+        >::type type;
+
+};
+
+/*
+template<typename token_set>
+struct bitset_buckets {
+
+    static const int num_token_longs = 24;
+    static const constexpr unsigned long data [num_token_longs] = 
+        { bitset_bucket<token_set, 0>::type::value, bitset_bucket<token_set, 1>::type::value, bitset_bucket<token_set, 2>::type::value, bitset_bucket<token_set, 3>::type::value,
+        //, bitset_bucket<token_set, 4>::type::value, bitset_bucket<token_set, 5>::type::value, bitset_bucket<token_set, 6>::type::value, bitset_bucket<token_set, 7>::type::value
+        //, bitset_bucket<token_set, 8>::type::value, bitset_bucket<token_set, 9>::type::value, bitset_bucket<token_set, 10>::type::value, bitset_bucket<token_set, 11>::type::value
+        //, bitset_bucket<token_set, 12>::type::value, bitset_bucket<token_set, 13>::type::value, bitset_bucket<token_set, 14>::type::value, bitset_bucket<token_set, 15>::type::value
+        //, bitset_bucket<token_set, 16>::type::value, bitset_bucket<token_set, 17>::type::value, bitset_bucket<token_set, 18>::type::value, bitset_bucket<token_set, 19>::type::value
+        //, bitset_bucket<token_set, 20>::type::value, bitset_bucket<token_set, 21>::type::value, bitset_bucket<token_set, 22>::type::value, bitset_bucket<token_set, 23>::type::value
+        };
+
+};*/
+
+
 typedef boost::mpl::vector30_c<unsigned long, srcMLParser::LPAREN, srcMLParser::RCURLY, srcMLParser::EQUAL, srcMLParser::TEMPOPS, srcMLParser::TEMPOPE, srcMLParser::DESTOP,
                                   srcMLParser::OPERATORS, srcMLParser::PERIOD, srcMLParser::DOTDEREF, srcMLParser::TRETURN, srcMLParser::MPDEREF, srcMLParser::RPAREN,
                                   srcMLParser::LBRACKET, srcMLParser::RBRACKET, srcMLParser::TERMINATE, srcMLParser::COLON, srcMLParser::COMMA, srcMLParser::MULTOPS,
@@ -336,28 +366,19 @@ typedef boost::mpl::vector30_c<unsigned long, srcMLParser::LPAREN, srcMLParser::
                                   // place holders since only does not seem to be specific from vectorN_c between 20 and 30
                                   srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF,
                                   srcMLParser::RVALUEREF, srcMLParser::RVALUEREF
-                                > token_set;
-
-template<int bucket_number>
-struct bucket {
-typedef typename boost::mpl::accumulate<token_set, boost::mpl::int_<0>,
-
-    boost::mpl::if_<
-        boost::mpl::equal_to<boost::mpl::shift_right<boost::mpl::_2, boost::mpl::long_<5> >, boost::mpl::long_<bucket_number> >,
-        boost::mpl::bitor_<boost::mpl::_1, boost::mpl::shift_left<boost::mpl::long_<1>, boost::mpl::modulus<boost::mpl::_2, boost::mpl::long_<32> > > >,
-        boost::mpl::_1 >
-        >::type type;
-
-};
+                                > class_identifier_tokens;
 
 const int num_token_longs = 24;
-const unsigned long class_identifier_token_set_data [num_token_longs] = { bucket<0>::type::value, bucket<1>::type::value, bucket<2>::type::value, bucket<3>::type::value,
-                                                                        //, bucket<4>::type::value, bucket<5>::type::value, bucket<6>::type::value, bucket<7>::type::value
-                                                                        //, bucket<8>::type::value, bucket<9>::type::value, bucket<10>::type::value, bucket<11>::type::value
-                                                                        //, bucket<12>::type::value, bucket<13>::type::value, bucket<14>::type::value, bucket<15>::type::value
-                                                                        //, bucket<16>::type::value, bucket<17>::type::value, bucket<18>::type::value, bucket<19>::type::value
-                                                                        //, bucket<20>::type::value, bucket<21>::type::value, bucket<22>::type::value, bucket<23>::type::value
-                                                                           };
+const unsigned long class_identifier_token_set_data [num_token_longs] = 
+    { bitset_bucket<class_identifier_tokens, 0>::type::value, bitset_bucket<class_identifier_tokens, 1>::type::value, bitset_bucket<class_identifier_tokens, 2>::type::value, bitset_bucket<class_identifier_tokens, 3>::type::value,
+    //, bitset_bucket<class_identifier_tokens, 4>::type::value, bitset_bucket<class_identifier_tokens, 5>::type::value, bitset_bucket<class_identifier_tokens, 6>::type::value, bitset_bucket<class_identifier_tokens, 7>::type::value
+    //, bitset_bucket<class_identifier_tokens, 8>::type::value, bitset_bucket<class_identifier_tokens, 9>::type::value, bitset_bucket<class_identifier_tokens, 10>::type::value, bitset_bucket<class_identifier_tokens, 11>::type::value
+    //, bitset_bucket<class_identifier_tokens, 12>::type::value, bitset_bucket<class_identifier_tokens, 13>::type::value, bitset_bucket<class_identifier_tokens, 14>::type::value, bitset_bucket<class_identifier_tokens, 15>::type::value
+    //, bitset_bucket<class_identifier_tokens, 16>::type::value, bitset_bucket<class_identifier_tokens, 17>::type::value, bitset_bucket<class_identifier_tokens, 18>::type::value, bitset_bucket<class_identifier_tokens, 19>::type::value
+    //, bitset_bucket<class_identifier_tokens, 20>::type::value, bitset_bucket<class_identifier_tokens, 21>::type::value, bitset_bucket<class_identifier_tokens, 22>::type::value, bitset_bucket<class_identifier_tokens, 23>::type::value
+    };
+
+//bitset_buckets<class_identifier_tokens> class_buckets;
 const antlr::BitSet srcMLParser::class_identifier_token_set(class_identifier_token_set_data, num_token_longs);
 
 } /* end include */
