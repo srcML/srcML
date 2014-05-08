@@ -370,9 +370,9 @@ typedef boost::mpl::vector_c<unsigned long, srcMLParser::LPAREN, srcMLParser::RC
                                   srcMLParser::OPERATORS, srcMLParser::PERIOD, srcMLParser::DOTDEREF, srcMLParser::TRETURN, srcMLParser::MPDEREF, srcMLParser::RPAREN,
                                   srcMLParser::LBRACKET, srcMLParser::RBRACKET, srcMLParser::TERMINATE, srcMLParser::COLON, srcMLParser::COMMA, srcMLParser::MULTOPS,
                                   srcMLParser::QMARK, srcMLParser::BAR, srcMLParser::REFOPS, srcMLParser::RVALUEREF
-                                > class_identifier_tokens;
+                                > keyword_name_tokens;
 
-const antlr::BitSet srcMLParser::class_identifier_token_set(bitset_buckets<class_identifier_tokens>::data, bitset_buckets<class_identifier_tokens>::num_token_longs);
+const antlr::BitSet srcMLParser::keyword_name_token_set(bitset_buckets<keyword_name_tokens>::data, bitset_buckets<keyword_name_tokens>::num_token_longs);
 
 } /* end include */
 
@@ -641,7 +641,7 @@ public:
     bool notdestructor;
     bool operatorname;
     int curly_count;
-    static const antlr::BitSet class_identifier_token_set;
+    static const antlr::BitSet keyword_name_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -3097,7 +3097,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         type = NONE;
 
     if(type == NONE && (sawtemplate || (sawcontextual && type_count > 0))
-     && (!class_identifier_token_set.member(LA(1)) || LA(1) == MULTOPS || LA(1) == REFOPS || LA(1) == RVALUEREF || LA(1) == TERMINATE))
+     && (!keyword_name_token_set.member(LA(1)) || LA(1) == MULTOPS || LA(1) == REFOPS || LA(1) == RVALUEREF || LA(1) == TERMINATE))
         type = VARIABLE;
     
     // may just have an expression
@@ -3270,7 +3270,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             || (inLanguage(LANGUAGE_JAVA) && (LA(1) != ATSIGN 
                                              || (LA(1) == ATSIGN && next_token() == INTERFACE))))
                                               && (!inLanguage(LANGUAGE_CXX)
-                                               || (!class_identifier_token_set.member(next_token())
+                                               || (!keyword_name_token_set.member(next_token())
                                                 || (next_token() == LBRACKET && next_token_two() == LBRACKET)))
                                                }?
                 (CLASS               set_type[type, CLASS_DECL]     |
@@ -3310,7 +3310,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // special function name
                 MAIN set_bool[isoperator, type_count == 0] |
 
-                { is_c_class_identifier || class_identifier_token_set.member(next_token()) }?
+                { is_c_class_identifier || keyword_name_token_set.member(next_token()) }?
                      keyword_name |
 
         { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
@@ -5411,7 +5411,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
 
-        ({ LA(1) == CXX_CLASS && class_identifier_token_set.member(next_token()) }? keyword_name | lead_type_identifier) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+        ({ LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | lead_type_identifier) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
         (options { generateAmbigWarnings = false; } : keyword_name | type_identifier) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
@@ -5746,7 +5746,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         UNION |
 
         // cast
-        { inTransparentMode(MODE_INTERNAL_END_PAREN) && (LA(1) != CXX_CLASS || !class_identifier_token_set.member(next_token())) }?
+        { inTransparentMode(MODE_INTERNAL_END_PAREN) && (LA(1) != CXX_CLASS || !keyword_name_token_set.member(next_token())) }?
         (CLASS | CXX_CLASS) |
 
         { next_token() == LPAREN }?
