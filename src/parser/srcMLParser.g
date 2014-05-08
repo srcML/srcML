@@ -273,9 +273,6 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
     parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0)
 {
     // make sure we have the correct token set
-    if (!_tokenSet_1.member(IF))
-        fprintf(stderr, "src2srcml:  Incorrect token set A\n");
-
     if (!_tokenSet_13.member(INCLUDE))
         fprintf(stderr, "src2srcml:  Incorrect token set B\n");
 
@@ -292,6 +289,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
     else
        // root, single mode that allows statements to be nested
        startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
+
 }
 
 // ends all currently open modes
@@ -326,6 +324,17 @@ typedef boost::mpl::vector_c<unsigned long, srcMLParser::LPAREN, srcMLParser::RC
                                 > keyword_name_tokens;
 
 const antlr::BitSet srcMLParser::keyword_name_token_set(bitset_buckets<keyword_name_tokens>::data, bitset_buckets<keyword_name_tokens>::num_token_longs);
+
+typedef boost::mpl::vector_c<unsigned long, srcMLParser::DO, srcMLParser::RETURN, srcMLParser::DEFAULT, srcMLParser::UNSAFE, srcMLParser::WHILE, srcMLParser::CASE,
+                                            srcMLParser::SWITCH, srcMLParser::CATCH, srcMLParser::IMPORT, srcMLParser::ASM, srcMLParser::TYPEDEF, srcMLParser::CHECKED,
+                                            srcMLParser::GOTO, srcMLParser::FOR, srcMLParser::PACKAGE, srcMLParser::LOCK, srcMLParser::NAMESPACE, srcMLParser::YIELD,
+                                            srcMLParser::ELSE, srcMLParser::TRY, srcMLParser::FINALLY, srcMLParser::FOREACH, srcMLParser::FIXED, srcMLParser::IF,
+                                            srcMLParser::UNCHECKED, srcMLParser::BREAK, srcMLParser::CONTINUE, srcMLParser::TEMPLATE, srcMLParser::USING,
+                                            srcMLParser::THROW, srcMLParser::ASSERT, srcMLParser::MACRO_CASE, srcMLParser::FOREVER, srcMLParser::STATIC_ASSERT,
+                                            srcMLParser::CXX_CATCH, srcMLParser::CXX_TRY
+                                            > keyword_tokens;
+
+const antlr::BitSet srcMLParser::keyword_token_set(bitset_buckets<keyword_tokens>::data, bitset_buckets<keyword_name_tokens>::num_token_longs);
 
 } /* end include */
 
@@ -595,6 +604,7 @@ public:
     bool operatorname;
     int curly_count;
     static const antlr::BitSet keyword_name_token_set;
+    static const antlr::BitSet keyword_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -1456,7 +1466,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 
         // call syntax succeeded, however post call token is not legitimate
         if (isoption(parseoptions, SRCML_OPTION_CPP) &&
-               (_tokenSet_1.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID
+               (keyword_token_set.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS || postcalltoken == CXX_CLASS
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
@@ -1478,7 +1488,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 
         // single macro call followed by statement_cfg
         else if (isoption(parseoptions, SRCML_OPTION_CPP) && secondtoken != -1
-                 && (_tokenSet_1.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
+                 && (keyword_token_set.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
                      || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED))
 
             type = MACRO;
@@ -1540,7 +1550,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             (identifier | generic_selection) throw_exception[true] |
 
             // forbid parentheses (handled recursively) and cfg tokens
-            { !_tokenSet_1.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
+            { !keyword_token_set.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
         )*
 
         RPAREN
@@ -3062,7 +3072,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         type = ENUM_DECL;
 
     // may just have a single macro (no parens possibly) before a statement
-    else if (type == 0 && type_count == 0 && _tokenSet_1.member(LA(1)))
+    else if (type == 0 && type_count == 0 && keyword_token_set.member(LA(1)))
         type = SINGLE_MACRO;
 
     else if(type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == CXX_CLASS || LA(1) == STRUCT || LA(1) == UNION))

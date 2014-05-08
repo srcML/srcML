@@ -2,7 +2,7 @@
 #define BITSET_BUCKET_SORTER
 
 #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-#define BOOST_MPL_LIMIT_VECTOR_SIZE 30
+#define BOOST_MPL_LIMIT_VECTOR_SIZE 50
 #include <boost/mpl/vector_c.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/accumulate.hpp>
