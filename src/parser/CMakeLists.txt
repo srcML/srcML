@@ -98,10 +98,6 @@ else()
         DEPENDS srcMLParserTokenTypes.hpp
         COMMAND ${GREP_EXE} '=' ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypes.hpp | ${SED_EXE} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e "s/^/\#define TOKEN_/g" > ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp)
 
-    add_custom_target(token_set_check DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.cpp
-	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        COMMAND ${CMAKE_SOURCE_DIR}/CMake/token_set_check.py ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.cpp)
-
 endif()
 
 
@@ -134,5 +130,4 @@ add_library(parser OBJECT
     ${PARSER_HEADERS}
     ${PARSER_SOURCE}
 )
-add_dependencies(parser token_set_check)
 endif()
