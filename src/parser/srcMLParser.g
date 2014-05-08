@@ -148,6 +148,8 @@ header "post_include_hpp" {
 #include <boost/mpl/shift_right.hpp>
 #include <boost/mpl/bitor.hpp>
 #include <boost/mpl/modulus.hpp>
+#include <boost/mpl/less.hpp>
+#include <boost/mpl/times.hpp>
 
 // Macros to introduce trace statements
 #define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
@@ -333,13 +335,14 @@ void srcMLParser::endAllModes() {
 template<typename token_set, int bucket_number>
 struct bitset_bucket {
 
-    typedef typename boost::mpl::accumulate<token_set, boost::mpl::int_<0>,
-
-        boost::mpl::if_<
-            boost::mpl::equal_to<boost::mpl::shift_right<boost::mpl::_2, boost::mpl::long_<5> >, boost::mpl::long_<bucket_number> >,
-            boost::mpl::bitor_<boost::mpl::_1, boost::mpl::shift_left<boost::mpl::long_<1>, boost::mpl::modulus<boost::mpl::_2, boost::mpl::long_<32> > > >,
-            boost::mpl::_1 >
-        >::type type;
+    typedef typename boost::mpl::if_<boost::mpl::less<boost::mpl::times<boost::mpl::long_<bucket_number>, boost::mpl::int_<32> >, boost::mpl::long_<srcMLParser::START_ELEMENT_TOKEN> >,
+            typename boost::mpl::accumulate<token_set, boost::mpl::long_<0>,
+                boost::mpl::if_<
+                    boost::mpl::equal_to<boost::mpl::shift_right<boost::mpl::_2, boost::mpl::long_<5> >, boost::mpl::long_<bucket_number> >,
+                    boost::mpl::bitor_<boost::mpl::_1, boost::mpl::shift_left<boost::mpl::long_<1>, boost::mpl::modulus<boost::mpl::_2, boost::mpl::long_<32> > > >,
+                    boost::mpl::_1 >
+                >::type,
+            boost::mpl::long_<0> >::type type;
 
 };
 
