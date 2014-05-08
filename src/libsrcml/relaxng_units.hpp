@@ -35,7 +35,7 @@
 
 #include <unit_dom.hpp>
 
-#ifdef WIN32
+#ifdef _MSC_BUILD
 #include <io.h>
 #endif
 
@@ -76,7 +76,7 @@ public :
         buf = xmlOutputBufferCreateFd(fd, NULL);
         // TODO:  Detect error
 
-#ifdef LIBSRCML_COMPILER_IS_MSVC
+#ifdef _MSC_BUILD
         buf->writecallback = (xmlOutputWriteCallback)_write;
 #endif
 

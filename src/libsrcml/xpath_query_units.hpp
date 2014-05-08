@@ -44,7 +44,7 @@
 #include <dlfcn.h>
 #endif
 
-#ifdef WIN32
+#ifdef _MSC_BUILD
 #include <io.h>
 #define snprintf _snprintf
 #endif
@@ -91,7 +91,7 @@ public :
 
         // TODO:  Detect error
 
-#ifdef LIBSRCML_COMPILER_IS_MSVC
+#ifdef _MSC_BUILD
         buf->writecallback = (xmlOutputWriteCallback)_write;
 #endif
 

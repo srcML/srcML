@@ -170,7 +170,6 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
     
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    add_definitions(/DLIBSRCML_COMPILER_IS_MSVC)
     # message(STATUS "MSVC Compiler not completely configured yet")
     set(MSVC_WARNINGS "/W3 /wd4068 /wd4101 /D_CRT_SECURE_NO_WARNINGS")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} ${MSVC_WARNINGS} /DSTATIC_GLOBALS  /Od /ZI /MDd")

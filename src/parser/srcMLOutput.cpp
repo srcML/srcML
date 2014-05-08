@@ -34,7 +34,7 @@
 
 #include <cstring>
 #include <sstream>
-#ifdef LIBSRCML_COMPILER_IS_MSVC
+#ifdef _MSC_BUILD
 #include <io.h>
 #define snprintf _snprintf
 #endif
