@@ -136,26 +136,7 @@ header "post_include_hpp" {
 #include <srcml_types.hpp>
 #include <srcml_macros.hpp>
 #include <srcml.h>
-
-#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-#define BOOST_MPL_LIMIT_VECTOR_SIZE 30
-#include <boost/mpl/vector_c.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/accumulate.hpp>
-#include <boost/mpl/long.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/equal_to.hpp>
-#include <boost/mpl/shift_left.hpp>
-#include <boost/mpl/shift_right.hpp>
-#include <boost/mpl/bitor.hpp>
-#include <boost/mpl/modulus.hpp>
-#include <boost/mpl/less.hpp>
-#include <boost/mpl/times.hpp>
-#include <boost/mpl/erase.hpp>
-#include <boost/mpl/insert.hpp>
-#include <boost/mpl/advance.hpp>
-#include <boost/mpl/begin.hpp>
-#include <boost/mpl/at.hpp>
+#include <bitset_bucket_sorter.hpp>
 
 // Macros to introduce trace statements
 #define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
@@ -291,18 +272,6 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
    : antlr::LLkParser(lexer,1), Language(lang), ModeStack(this), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
     parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0)
 {
-    // make sure we have the correct token set
-    if (!_tokenSet_1.member(IF))
-        fprintf(stderr, "src2srcml:  Incorrect token set A\n");
-
-    if (!_tokenSet_13.member(INCLUDE))
-        fprintf(stderr, "src2srcml:  Incorrect token set B\n");
-
-    if (!_tokenSet_24.member(CLASS))
-        fprintf(stderr, "src2srcml:  Incorrect token set C\n");
-
-    if (!_tokenSet_29.member(EXTERN))
-        fprintf(stderr, "src2srcml:  Incorrect token set D\n");
 
     // root, single mode
     if (isoption(parseoptions, SRCML_OPTION_EXPRESSION))
@@ -311,6 +280,15 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
     else
        // root, single mode that allows statements to be nested
        startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
+
+    // for(int i = 0; i < int(_tokenSet_1.toArray().size()); ++i)
+    //     std::cout << _tokenSet_1.toArray().at(i) << ' ';
+    // std::cout << '\n';
+
+    // for(int i = 0; i < int(keyword_token_set.toArray().size()); ++i)
+    //     std::cout << keyword_token_set.toArray().at(i) << ' ';
+    // std::cout << '\n';
+
 }
 
 // ends all currently open modes
@@ -338,110 +316,6 @@ void srcMLParser::endAllModes() {
          endLastMode();
 }
 
-template<typename seq, typename pos, typename item>
-struct replace_pos {
-
-
-    typedef typename boost::mpl::erase<seq, typename boost::mpl::advance<typename boost::mpl::begin<seq>::type, pos>::type>::type temp;
-    typedef typename boost::mpl::insert<temp, typename boost::mpl::advance<typename boost::mpl::begin<temp>::type, pos>::type, item >::type type;
-
-};
-
-// mutli-pass bucket sort
-template<typename token_set, int bucket_number>
-struct bitset_bucket {
-
-    typedef typename boost::mpl::if_<boost::mpl::less<boost::mpl::times<boost::mpl::long_<bucket_number>, boost::mpl::int_<32> >, boost::mpl::long_<srcMLParser::START_ELEMENT_TOKEN> >,
-            typename boost::mpl::accumulate<token_set, boost::mpl::long_<0>,
-                boost::mpl::if_<
-                    boost::mpl::equal_to<boost::mpl::shift_right<boost::mpl::_2, boost::mpl::long_<5> >, boost::mpl::long_<bucket_number> >,
-                    boost::mpl::bitor_<boost::mpl::_1, boost::mpl::shift_left<boost::mpl::long_<1>, boost::mpl::modulus<boost::mpl::_2, boost::mpl::long_<32> > > >,
-                    boost::mpl::_1 >
-                >::type,
-            boost::mpl::long_<0> >::type type;
-
-};
-
-/*
-template<typename token_set>
-struct bitset_buckets {
-
-    static const int num_token_longs = 24;
-    static const unsigned long data[num_token_longs];
-
-};
-
-
-template<typename token_set>
-const unsigned long bitset_buckets<token_set>::data[bitset_buckets<token_set>::num_token_longs] = 
-        { bitset_bucket<token_set, 0>::type::value, bitset_bucket<token_set, 1>::type::value, bitset_bucket<token_set, 2>::type::value, bitset_bucket<token_set, 3>::type::value
-        , bitset_bucket<token_set, 4>::type::value, bitset_bucket<token_set, 5>::type::value, bitset_bucket<token_set, 6>::type::value, bitset_bucket<token_set, 7>::type::value
-        , bitset_bucket<token_set, 8>::type::value, bitset_bucket<token_set, 9>::type::value, bitset_bucket<token_set, 10>::type::value, bitset_bucket<token_set, 11>::type::value
-        , bitset_bucket<token_set, 12>::type::value, bitset_bucket<token_set, 13>::type::value, bitset_bucket<token_set, 14>::type::value, bitset_bucket<token_set, 15>::type::value
-        , bitset_bucket<token_set, 16>::type::value, bitset_bucket<token_set, 17>::type::value, bitset_bucket<token_set, 18>::type::value, bitset_bucket<token_set, 19>::type::value
-        , bitset_bucket<token_set, 20>::type::value, bitset_bucket<token_set, 21>::type::value, bitset_bucket<token_set, 22>::type::value, bitset_bucket<token_set, 23>::type::value
-};
-*/
-
-template<typename token_set>
-struct bitset_bucket_sorter {
-
-    typedef typename boost::mpl::accumulate<token_set, boost::mpl::vector_c<unsigned long,
-                                            0, 0, 0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0, 0, 0>,
-
-        replace_pos<boost::mpl::_1, boost::mpl::shift_right<boost::mpl::_2, boost::mpl::long_<5> >,
-                boost::mpl::bitor_<
-                boost::mpl::at<boost::mpl::_1, boost::mpl::shift_right<boost::mpl::_2, boost::mpl::long_<5> > >,
-                boost::mpl::shift_left<boost::mpl::long_<1>, boost::mpl::modulus<boost::mpl::_2, boost::mpl::long_<32> > > 
-            >
-        >
-    >::type type;
-
-};
-
-
-template<typename token_set>
-struct bitset_buckets {
-
-    typedef typename bitset_bucket_sorter<token_set>::type buckets;
-
-    static const int num_token_longs = 24;
-    static const unsigned long data[num_token_longs];
-
-};
-
-template<typename token_set>
-const unsigned long bitset_buckets<token_set>::data[bitset_buckets<token_set>::num_token_longs] = 
-{ 
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<0> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<1> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<2> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<3> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<4> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<5> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<6> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<7> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<8> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<9> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<10> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<11> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<12> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<13> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<14> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<15> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<16> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<17> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<18> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<19> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<20> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<21> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<22> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<23> >::type::type::value
-
-};
-
 typedef boost::mpl::vector_c<unsigned long, srcMLParser::LPAREN, srcMLParser::RCURLY, srcMLParser::EQUAL, srcMLParser::TEMPOPS, srcMLParser::TEMPOPE, srcMLParser::DESTOP,
                                   srcMLParser::OPERATORS, srcMLParser::PERIOD, srcMLParser::DOTDEREF, srcMLParser::TRETURN, srcMLParser::MPDEREF, srcMLParser::RPAREN,
                                   srcMLParser::LBRACKET, srcMLParser::RBRACKET, srcMLParser::TERMINATE, srcMLParser::COLON, srcMLParser::COMMA, srcMLParser::MULTOPS,
@@ -449,6 +323,68 @@ typedef boost::mpl::vector_c<unsigned long, srcMLParser::LPAREN, srcMLParser::RC
                                 > keyword_name_tokens;
 
 const antlr::BitSet srcMLParser::keyword_name_token_set(bitset_buckets<keyword_name_tokens>::data, bitset_buckets<keyword_name_tokens>::num_token_longs);
+
+typedef boost::mpl::vector_c<unsigned long, srcMLParser::DO, srcMLParser::RETURN, srcMLParser::DEFAULT, srcMLParser::UNSAFE, srcMLParser::WHILE, srcMLParser::CASE,
+                                            srcMLParser::SWITCH, srcMLParser::CATCH, srcMLParser::IMPORT, srcMLParser::ASM, srcMLParser::TYPEDEF, srcMLParser::CHECKED,
+                                            srcMLParser::GOTO, srcMLParser::FOR, srcMLParser::PACKAGE, srcMLParser::LOCK, srcMLParser::NAMESPACE, srcMLParser::YIELD,
+                                            srcMLParser::ELSE, srcMLParser::TRY, srcMLParser::FINALLY, srcMLParser::FOREACH, srcMLParser::FIXED, srcMLParser::IF,
+                                            srcMLParser::UNCHECKED, srcMLParser::BREAK, srcMLParser::CONTINUE, srcMLParser::TEMPLATE, srcMLParser::USING,
+                                            srcMLParser::THROW, srcMLParser::ASSERT, srcMLParser::MACRO_CASE, srcMLParser::FOREVER, srcMLParser::STATIC_ASSERT,
+                                            srcMLParser::CXX_CATCH, srcMLParser::CXX_TRY
+                                            > keyword_tokens;
+
+const antlr::BitSet srcMLParser::keyword_token_set(bitset_buckets<keyword_tokens>::data, bitset_buckets<keyword_tokens>::num_token_longs);
+
+typedef boost::mpl::vector_c<unsigned long, srcMLParser::ELIF, srcMLParser::GROUP, srcMLParser::JOIN, srcMLParser::REGION, srcMLParser::LINE, srcMLParser::FINAL,
+                                            srcMLParser::SELECT, srcMLParser::SET, srcMLParser::GET, srcMLParser::ASCENDING, srcMLParser::OVERRIDE, srcMLParser::BY,
+                                            srcMLParser::DEFINE, srcMLParser::ORDERBY, srcMLParser::UNDEF, srcMLParser::CHECKED, srcMLParser::INTO, srcMLParser::EQUALS,
+                                            srcMLParser::YIELD, srcMLParser::ADD, srcMLParser::DESCENDING, srcMLParser::PRAGMA, srcMLParser::ENDIF, srcMLParser::ASYNC,
+                                            srcMLParser::INCLUDE, srcMLParser::WHERE, srcMLParser::NAME, srcMLParser::ON, srcMLParser::FROM, srcMLParser::ERRORPREC,
+                                            srcMLParser::ENDREGION, srcMLParser::THIS, srcMLParser::SIGNAL, srcMLParser::REMOVE, srcMLParser::LET, srcMLParser::IFDEF,
+                                            srcMLParser::IFNDEF, srcMLParser::SUPER, srcMLParser::UNCHECKED, srcMLParser::VOID, srcMLParser::CRESTRICT, srcMLParser::ASM,
+                                            srcMLParser::MUTABLE, srcMLParser::CXX_CATCH, srcMLParser::CXX_TRY, srcMLParser::CXX_CLASS> macro_call_tokens;
+
+const antlr::BitSet srcMLParser::macro_call_token_set(bitset_buckets<macro_call_tokens>::data, bitset_buckets<macro_call_tokens>::num_token_longs);
+
+typedef boost::mpl::vector_c<unsigned long, srcMLParser::VOLATILE, srcMLParser::LBRACKET, srcMLParser::PROTECTED, srcMLParser::LINE, srcMLParser::BY, srcMLParser::DEFINE,
+                                            srcMLParser::CHECKED, srcMLParser::ENUM, srcMLParser::ENDIF, srcMLParser::WHERE, srcMLParser::ON, srcMLParser::PARTIAL,
+                                            srcMLParser::ENDREGION, srcMLParser::THIS, srcMLParser::REGION, srcMLParser::THREAD_LOCAL, srcMLParser::TRANSIENT, srcMLParser::MAIN,
+                                            srcMLParser::GROUP, srcMLParser::SYNCHRONIZED, srcMLParser::UNSAFE, srcMLParser::STATIC, srcMLParser::MUTABLE, srcMLParser::DCOLON,
+                                            srcMLParser::FINAL, srcMLParser::SELECT, srcMLParser::GET, srcMLParser::EXPLICIT, srcMLParser::READONLY, srcMLParser::LET,
+                                            srcMLParser::ORDERBY, srcMLParser::RVALUEREF, srcMLParser::UNDEF, srcMLParser::UNION, srcMLParser::EQUALS, srcMLParser::VIRTUAL,
+                                            srcMLParser::OPERATOR, srcMLParser::INCLUDE, srcMLParser::ERRORPREC, srcMLParser::DOTDOTDOT, srcMLParser::REMOVE, srcMLParser::PUBLIC,
+                                            srcMLParser::DELEGATE, srcMLParser::IFNDEF, srcMLParser::UNCHECKED, srcMLParser::LPAREN, srcMLParser::DEFAULT, srcMLParser::DESTOP,
+                                            srcMLParser::EXTERN, srcMLParser::NEW> argument_tokens_one;
+
+const antlr::BitSet srcMLParser::argument_token_set_one(bitset_buckets<argument_tokens_one>::data, bitset_buckets<argument_tokens_one>::num_token_longs);
+
+typedef boost::mpl::vector_c<unsigned long, srcMLParser::REF, srcMLParser::NATIVE, srcMLParser::SET, srcMLParser::ASCENDING, srcMLParser::STRICTFP, srcMLParser::FRIEND,
+                                            srcMLParser::OUT, srcMLParser::ADD, srcMLParser::DESCENDING, srcMLParser::ASYNC, srcMLParser::JOIN, srcMLParser::NAME,
+                                            srcMLParser::QMARK, srcMLParser::INTERNAL, srcMLParser::PARAMS, srcMLParser::INLINE, srcMLParser::EVENT, srcMLParser::ELIF,
+                                            srcMLParser::CONST, srcMLParser::ABSTRACT, srcMLParser::REFOPS, srcMLParser::MULTOPS, srcMLParser::PRIVATE, srcMLParser::OVERRIDE,
+                                            srcMLParser::ATSIGN, srcMLParser::CLASS, srcMLParser::INTO, srcMLParser::YIELD, srcMLParser::TEMPOPS, srcMLParser::PRAGMA, 
+                                            srcMLParser::IN, srcMLParser::IMPLICIT, srcMLParser::FROM, srcMLParser::STRUCT, srcMLParser::SIGNAL, srcMLParser::CONSTEXPR,
+                                            srcMLParser::SEALED, srcMLParser::IFDEF, srcMLParser::SUPER, srcMLParser::RESTRICT, srcMLParser::ALIGNAS, srcMLParser::VOID,
+                                            srcMLParser::DECLTYPE, srcMLParser::TYPENAME, srcMLParser::MACRO_TYPE_NAME, srcMLParser::MACRO_SPECIFIER, srcMLParser::TEMPLATE, srcMLParser::CRESTRICT,
+                                            srcMLParser::COMPLEX, srcMLParser::ATOMIC>  argument_tokens_two;
+
+const antlr::BitSet srcMLParser::argument_token_set_two(bitset_buckets<argument_tokens_two>::data, bitset_buckets<argument_tokens_two>::num_token_longs);
+
+typedef boost::mpl::vector_c<unsigned long, srcMLParser::NORETURN, srcMLParser::IMAGINARY, srcMLParser::GENERIC_SELECTION, srcMLParser::ASM,
+                                            srcMLParser::CXX_TRY, srcMLParser::CXX_CATCH, srcMLParser::CXX_CLASS> argument_tokens_three;
+
+const antlr::BitSet srcMLParser::argument_token_set_three(bitset_buckets<argument_tokens_three>::data, bitset_buckets<argument_tokens_three>::num_token_longs);
+
+typedef boost::mpl::vector_c<unsigned long, srcMLParser::EXTERN, srcMLParser::RESTRICT, srcMLParser::CONSTEXPR, srcMLParser::THREAD_LOCAL, srcMLParser::ALIGNAS,
+                                            srcMLParser::INLINE, srcMLParser::MACRO_SPECIFIER, srcMLParser::PUBLIC, srcMLParser::PRIVATE, srcMLParser::PROTECTED,
+                                            srcMLParser::VIRTUAL, srcMLParser::FRIEND, srcMLParser::EXPLICIT, srcMLParser::NEW, srcMLParser::STATIC, srcMLParser::CONST,
+                                            srcMLParser::MUTABLE, srcMLParser::VOLATILE, srcMLParser::TRANSIENT, srcMLParser::FINAL, srcMLParser::ABSTRACT, srcMLParser::SYNCHRONIZED,
+                                            srcMLParser::NATIVE, srcMLParser::STRICTFP, srcMLParser::REF, srcMLParser::OUT, srcMLParser::IN, srcMLParser::INTERNAL, srcMLParser::SEALED,
+                                            srcMLParser::OVERRIDE, srcMLParser::IMPLICIT, srcMLParser::DELEGATE, srcMLParser::UNSAFE, srcMLParser::READONLY, srcMLParser::PARTIAL,
+                                            srcMLParser::EVENT, srcMLParser::ASYNC, srcMLParser::PARAMS, srcMLParser::CRESTRICT, srcMLParser::COMPLEX, srcMLParser::NORETURN,
+                                            srcMLParser::IMAGINARY, srcMLParser::ENUM> enum_preprocessing_tokens;
+
+const antlr::BitSet srcMLParser::enum_preprocessing_token_set(bitset_buckets<enum_preprocessing_tokens>::data, bitset_buckets<enum_preprocessing_tokens>::num_token_longs);
 
 } /* end include */
 
@@ -718,6 +654,12 @@ public:
     bool operatorname;
     int curly_count;
     static const antlr::BitSet keyword_name_token_set;
+    static const antlr::BitSet keyword_token_set;
+    static const antlr::BitSet macro_call_token_set;
+    static const antlr::BitSet argument_token_set_one;
+    static const antlr::BitSet argument_token_set_two;
+    static const antlr::BitSet argument_token_set_three;
+    static const antlr::BitSet enum_preprocessing_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -1104,7 +1046,7 @@ function_pointer_name_grammar[] { ENTRY_DEBUG } :
 function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
 
         // special case for function pointer names that don't have '*'
-        { _tokenSet_13.member(LA(1)) }?
+        { macro_call_token_set.member(LA(1)) }?
         (compound_name_inner[false])* |
 
         // special name prefix of namespace or class
@@ -1579,7 +1521,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 
         // call syntax succeeded, however post call token is not legitimate
         if (isoption(parseoptions, SRCML_OPTION_CPP) &&
-               (_tokenSet_1.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID
+               (keyword_token_set.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS || postcalltoken == CXX_CLASS
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
@@ -1601,7 +1543,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 
         // single macro call followed by statement_cfg
         else if (isoption(parseoptions, SRCML_OPTION_CPP) && secondtoken != -1
-                 && (_tokenSet_1.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
+                 && (keyword_token_set.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
                      || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED))
 
             type = MACRO;
@@ -1663,7 +1605,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             (identifier | generic_selection) throw_exception[true] |
 
             // forbid parentheses (handled recursively) and cfg tokens
-            { !_tokenSet_1.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
+            { !keyword_token_set.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
         )*
 
         RPAREN
@@ -3185,7 +3127,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         type = ENUM_DECL;
 
     // may just have a single macro (no parens possibly) before a statement
-    else if (type == 0 && type_count == 0 && _tokenSet_1.member(LA(1)))
+    else if (type == 0 && type_count == 0 && keyword_token_set.member(LA(1)))
         type = SINGLE_MACRO;
 
     else if(type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == CXX_CLASS || LA(1) == STRUCT || LA(1) == UNION))
@@ -3221,7 +3163,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     rewind(start);
 
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
-       && _tokenSet_29.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
+       && enum_preprocessing_token_set.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && save_la == TERMINATE)
         type = VARIABLE;
 
@@ -3302,7 +3244,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT || LA(1) == MUTABLE]
             (
-                { _tokenSet_24.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
+                { (argument_token_set_one.member(LA(1)) || argument_token_set_two.member(LA(1)) || argument_token_set_three.member(LA(1))) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
                      && (LA(1) != TEMPLATE || next_token() != TEMPOPS) }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
@@ -3614,7 +3556,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         // ambigous on template keyword from template specifier and probably class_preamble template
         (options { generateAmbigWarnings = false; } : 
         // specifiers that occur in a type
-        { _tokenSet_24.member(LA(1)) }?
+        { argument_token_set_one.member(LA(1)) || argument_token_set_two.member(LA(1)) || argument_token_set_three.member(LA(1)) }?
         specifier | template_specifier |
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
