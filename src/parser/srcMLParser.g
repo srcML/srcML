@@ -364,7 +364,7 @@ const unsigned long bitset_buckets<token_set>::data[bitset_buckets<token_set>::n
         , bitset_bucket<token_set, 12>::type::value, bitset_bucket<token_set, 13>::type::value, bitset_bucket<token_set, 14>::type::value, bitset_bucket<token_set, 15>::type::value
         , bitset_bucket<token_set, 16>::type::value, bitset_bucket<token_set, 17>::type::value, bitset_bucket<token_set, 18>::type::value, bitset_bucket<token_set, 19>::type::value
         , bitset_bucket<token_set, 20>::type::value, bitset_bucket<token_set, 21>::type::value, bitset_bucket<token_set, 22>::type::value, bitset_bucket<token_set, 23>::type::value
-        };
+};
 
 typedef boost::mpl::vector_c<unsigned long, srcMLParser::LPAREN, srcMLParser::RCURLY, srcMLParser::EQUAL, srcMLParser::TEMPOPS, srcMLParser::TEMPOPE, srcMLParser::DESTOP,
                                   srcMLParser::OPERATORS, srcMLParser::PERIOD, srcMLParser::DOTDEREF, srcMLParser::TRETURN, srcMLParser::MPDEREF, srcMLParser::RPAREN,
