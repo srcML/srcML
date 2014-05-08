@@ -276,9 +276,6 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
     if (!_tokenSet_24.member(CLASS))
         fprintf(stderr, "src2srcml:  Incorrect token set C\n");
 
-    if (!_tokenSet_29.member(EXTERN))
-        fprintf(stderr, "src2srcml:  Incorrect token set D\n");
-
     // root, single mode
     if (isoption(parseoptions, SRCML_OPTION_EXPRESSION))
         // root, single mode to allows for an expression without a statement
@@ -339,7 +336,7 @@ typedef boost::mpl::vector_c<unsigned long, srcMLParser::DO, srcMLParser::RETURN
                                             srcMLParser::CXX_CATCH, srcMLParser::CXX_TRY
                                             > keyword_tokens;
 
-const antlr::BitSet srcMLParser::keyword_token_set(bitset_buckets<keyword_tokens>::data, bitset_buckets<keyword_name_tokens>::num_token_longs);
+const antlr::BitSet srcMLParser::keyword_token_set(bitset_buckets<keyword_tokens>::data, bitset_buckets<keyword_tokens>::num_token_longs);
 
 typedef boost::mpl::vector_c<unsigned long, srcMLParser::ELIF, srcMLParser::GROUP, srcMLParser::JOIN, srcMLParser::REGION, srcMLParser::LINE, srcMLParser::FINAL,
                                             srcMLParser::SELECT, srcMLParser::SET, srcMLParser::GET, srcMLParser::ASCENDING, srcMLParser::OVERRIDE, srcMLParser::BY,
@@ -350,7 +347,18 @@ typedef boost::mpl::vector_c<unsigned long, srcMLParser::ELIF, srcMLParser::GROU
                                             srcMLParser::IFNDEF, srcMLParser::SUPER, srcMLParser::UNCHECKED, srcMLParser::VOID, srcMLParser::CRESTRICT, srcMLParser::ASM,
                                             srcMLParser::MUTABLE, srcMLParser::CXX_CATCH, srcMLParser::CXX_TRY, srcMLParser::CXX_CLASS> macro_call_tokens;
 
-const antlr::BitSet srcMLParser::macro_call_token_set(bitset_buckets<macro_call_tokens>::data, bitset_buckets<keyword_name_tokens>::num_token_longs);
+const antlr::BitSet srcMLParser::macro_call_token_set(bitset_buckets<macro_call_tokens>::data, bitset_buckets<macro_call_tokens>::num_token_longs);
+
+typedef boost::mpl::vector_c<unsigned long, srcMLParser::EXTERN, srcMLParser::RESTRICT, srcMLParser::CONSTEXPR, srcMLParser::THREAD_LOCAL, srcMLParser::ALIGNAS,
+                                            srcMLParser::INLINE, srcMLParser::MACRO_SPECIFIER, srcMLParser::PUBLIC, srcMLParser::PRIVATE, srcMLParser::PROTECTED,
+                                            srcMLParser::VIRTUAL, srcMLParser::FRIEND, srcMLParser::EXPLICIT, srcMLParser::NEW, srcMLParser::STATIC, srcMLParser::CONST,
+                                            srcMLParser::MUTABLE, srcMLParser::VOLATILE, srcMLParser::TRANSIENT, srcMLParser::FINAL, srcMLParser::ABSTRACT, srcMLParser::SYNCHRONIZED,
+                                            srcMLParser::NATIVE, srcMLParser::STRICTFP, srcMLParser::REF, srcMLParser::OUT, srcMLParser::IN, srcMLParser::INTERNAL, srcMLParser::SEALED,
+                                            srcMLParser::OVERRIDE, srcMLParser::IMPLICIT, srcMLParser::DELEGATE, srcMLParser::UNSAFE, srcMLParser::READONLY, srcMLParser::PARTIAL,
+                                            srcMLParser::EVENT, srcMLParser::ASYNC, srcMLParser::PARAMS, srcMLParser::CRESTRICT, srcMLParser::COMPLEX, srcMLParser::NORETURN,
+                                            srcMLParser::IMAGINARY, srcMLParser::ENUM> enum_preprocessing_tokens;
+
+const antlr::BitSet srcMLParser::enum_preprocessing_token_set(bitset_buckets<enum_preprocessing_tokens>::data, bitset_buckets<enum_preprocessing_tokens>::num_token_longs);
 
 } /* end include */
 
@@ -622,6 +630,7 @@ public:
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
     static const antlr::BitSet macro_call_token_set;
+    static const antlr::BitSet enum_preprocessing_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -3125,7 +3134,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     rewind(start);
 
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
-       && _tokenSet_29.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
+       && enum_preprocessing_token_set.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && save_la == TERMINATE)
         type = VARIABLE;
 
