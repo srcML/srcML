@@ -273,9 +273,6 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
     parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0)
 {
     // make sure we have the correct token set
-    if (!_tokenSet_13.member(INCLUDE))
-        fprintf(stderr, "src2srcml:  Incorrect token set B\n");
-
     if (!_tokenSet_24.member(CLASS))
         fprintf(stderr, "src2srcml:  Incorrect token set C\n");
 
@@ -289,6 +286,14 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
     else
        // root, single mode that allows statements to be nested
        startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
+
+    // for(int i = 0; i < int(_tokenSet_1.toArray().size()); ++i)
+    //     std::cout << _tokenSet_1.toArray().at(i) << ' ';
+    // std::cout << '\n';
+
+    // for(int i = 0; i < int(keyword_token_set.toArray().size()); ++i)
+    //     std::cout << keyword_token_set.toArray().at(i) << ' ';
+    // std::cout << '\n';
 
 }
 
@@ -335,6 +340,17 @@ typedef boost::mpl::vector_c<unsigned long, srcMLParser::DO, srcMLParser::RETURN
                                             > keyword_tokens;
 
 const antlr::BitSet srcMLParser::keyword_token_set(bitset_buckets<keyword_tokens>::data, bitset_buckets<keyword_name_tokens>::num_token_longs);
+
+typedef boost::mpl::vector_c<unsigned long, srcMLParser::ELIF, srcMLParser::GROUP, srcMLParser::JOIN, srcMLParser::REGION, srcMLParser::LINE, srcMLParser::FINAL,
+                                            srcMLParser::SELECT, srcMLParser::SET, srcMLParser::GET, srcMLParser::ASCENDING, srcMLParser::OVERRIDE, srcMLParser::BY,
+                                            srcMLParser::DEFINE, srcMLParser::ORDERBY, srcMLParser::UNDEF, srcMLParser::CHECKED, srcMLParser::INTO, srcMLParser::EQUALS,
+                                            srcMLParser::YIELD, srcMLParser::ADD, srcMLParser::DESCENDING, srcMLParser::PRAGMA, srcMLParser::ENDIF, srcMLParser::ASYNC,
+                                            srcMLParser::INCLUDE, srcMLParser::WHERE, srcMLParser::NAME, srcMLParser::ON, srcMLParser::FROM, srcMLParser::ERRORPREC,
+                                            srcMLParser::ENDREGION, srcMLParser::THIS, srcMLParser::SIGNAL, srcMLParser::REMOVE, srcMLParser::LET, srcMLParser::IFDEF,
+                                            srcMLParser::IFNDEF, srcMLParser::SUPER, srcMLParser::UNCHECKED, srcMLParser::VOID, srcMLParser::CRESTRICT, srcMLParser::ASM,
+                                            srcMLParser::MUTABLE, srcMLParser::CXX_CATCH, srcMLParser::CXX_TRY, srcMLParser::CXX_CLASS> macro_call_tokens;
+
+const antlr::BitSet srcMLParser::macro_call_token_set(bitset_buckets<macro_call_tokens>::data, bitset_buckets<keyword_name_tokens>::num_token_longs);
 
 } /* end include */
 
@@ -605,6 +621,7 @@ public:
     int curly_count;
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
+    static const antlr::BitSet macro_call_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -991,7 +1008,7 @@ function_pointer_name_grammar[] { ENTRY_DEBUG } :
 function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
 
         // special case for function pointer names that don't have '*'
-        { _tokenSet_13.member(LA(1)) }?
+        { macro_call_token_set.member(LA(1)) }?
         (compound_name_inner[false])* |
 
         // special name prefix of namespace or class
