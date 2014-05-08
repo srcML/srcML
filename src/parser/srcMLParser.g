@@ -338,13 +338,6 @@ void srcMLParser::endAllModes() {
          endLastMode();
 }
 
-template<typename token_set, int bucket_number, typename value>
-struct bitset_bucket {
-
-    typedef typename value::type type;
-
-};
-
 template<typename seq, typename pos, typename item>
 struct replace_pos {
 
@@ -355,14 +348,12 @@ struct replace_pos {
 };
 
 template<typename token_set>
-struct bitset_bucket_sort {
+struct bitset_bucket_sorter {
 
-    typedef typename boost::mpl::accumulate<token_set, 
-        boost::mpl::vector< bitset_bucket<token_set, 0, boost::mpl::int_<0> >, bitset_bucket<token_set, 1, boost::mpl::int_<0> >, bitset_bucket<token_set, 2, boost::mpl::int_<0> >, bitset_bucket<token_set, 3, boost::mpl::int_<0> >, bitset_bucket<token_set, 4, boost::mpl::int_<0> >,
-                            bitset_bucket<token_set, 5, boost::mpl::int_<0> >, bitset_bucket<token_set, 6, boost::mpl::int_<0> >, bitset_bucket<token_set, 7, boost::mpl::int_<0> >, bitset_bucket<token_set, 8, boost::mpl::int_<0> >, bitset_bucket<token_set, 9, boost::mpl::int_<0> >,
-                            bitset_bucket<token_set, 10, boost::mpl::int_<0> >, bitset_bucket<token_set, 11, boost::mpl::int_<0> >, bitset_bucket<token_set, 12, boost::mpl::int_<0> >, bitset_bucket<token_set, 13, boost::mpl::int_<0> >, bitset_bucket<token_set, 14, boost::mpl::int_<0> >,
-                            bitset_bucket<token_set, 15, boost::mpl::int_<0> >, bitset_bucket<token_set, 16, boost::mpl::int_<0> >, bitset_bucket<token_set, 17, boost::mpl::int_<0> >, bitset_bucket<token_set, 18, boost::mpl::int_<0> >, bitset_bucket<token_set, 19, boost::mpl::int_<0> >,
-                            bitset_bucket<token_set, 20, boost::mpl::int_<0> >, bitset_bucket<token_set, 21, boost::mpl::int_<0> > ,bitset_bucket<token_set, 22, boost::mpl::int_<0> >, bitset_bucket<token_set, 23, boost::mpl::int_<0> > >,   
+    typedef typename boost::mpl::accumulate<token_set, boost::mpl::vector_c<unsigned long,
+                                            0, 0, 0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0, 0, 0,
+                                            0, 0, 0, 0, 0, 0, 0, 0>,
 
         replace_pos<boost::mpl::_1, boost::mpl::shift_right<boost::mpl::_2, boost::mpl::long_<5> >,
                 boost::mpl::bitor_<
@@ -378,19 +369,40 @@ struct bitset_bucket_sort {
 template<typename token_set>
 struct bitset_buckets {
 
-
-    typedef typename bbitset_bucket_sort<token_set>::type buckets;
+    typedef typename bitset_bucket_sorter<token_set>::type buckets;
 
     static const int num_token_longs = 24;
     static const unsigned long data[num_token_longs];
 
 };
 
-
-
 template<typename token_set>
 const unsigned long bitset_buckets<token_set>::data[bitset_buckets<token_set>::num_token_longs] = 
 { 
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<0> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<1> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<2> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<3> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<4> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<5> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<6> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<7> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<8> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<9> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<10> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<11> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<12> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<13> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<14> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<15> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<16> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<17> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<18> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<19> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<20> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<21> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<22> >::type::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<23> >::type::type::value
 
 };
 
