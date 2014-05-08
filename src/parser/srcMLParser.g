@@ -137,7 +137,9 @@ header "post_include_hpp" {
 #include <srcml_macros.hpp>
 #include <srcml.h>
 
-#include <boost/mpl/vector/vector30_c.hpp>
+#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+#define BOOST_MPL_LIMIT_VECTOR_SIZE 30
+#include <boost/mpl/vector_c.hpp>
 #include <boost/mpl/accumulate.hpp>
 #include <boost/mpl/long.hpp>
 #include <boost/mpl/if.hpp>
@@ -346,7 +348,7 @@ template<typename token_set>
 struct bitset_buckets {
 
     static const int num_token_longs = 24;
-    static const constexpr unsigned long data [num_token_longs] = 
+    typedef unsigned long data[num_token_longs] = 
         { bitset_bucket<token_set, 0>::type::value, bitset_bucket<token_set, 1>::type::value, bitset_bucket<token_set, 2>::type::value, bitset_bucket<token_set, 3>::type::value,
         //, bitset_bucket<token_set, 4>::type::value, bitset_bucket<token_set, 5>::type::value, bitset_bucket<token_set, 6>::type::value, bitset_bucket<token_set, 7>::type::value
         //, bitset_bucket<token_set, 8>::type::value, bitset_bucket<token_set, 9>::type::value, bitset_bucket<token_set, 10>::type::value, bitset_bucket<token_set, 11>::type::value
@@ -355,17 +357,13 @@ struct bitset_buckets {
         //, bitset_bucket<token_set, 20>::type::value, bitset_bucket<token_set, 21>::type::value, bitset_bucket<token_set, 22>::type::value, bitset_bucket<token_set, 23>::type::value
         };
 
-};*/
+};
+*/
 
-
-typedef boost::mpl::vector30_c<unsigned long, srcMLParser::LPAREN, srcMLParser::RCURLY, srcMLParser::EQUAL, srcMLParser::TEMPOPS, srcMLParser::TEMPOPE, srcMLParser::DESTOP,
+typedef boost::mpl::vector_c<unsigned long, srcMLParser::LPAREN, srcMLParser::RCURLY, srcMLParser::EQUAL, srcMLParser::TEMPOPS, srcMLParser::TEMPOPE, srcMLParser::DESTOP,
                                   srcMLParser::OPERATORS, srcMLParser::PERIOD, srcMLParser::DOTDEREF, srcMLParser::TRETURN, srcMLParser::MPDEREF, srcMLParser::RPAREN,
                                   srcMLParser::LBRACKET, srcMLParser::RBRACKET, srcMLParser::TERMINATE, srcMLParser::COLON, srcMLParser::COMMA, srcMLParser::MULTOPS,
-                                  srcMLParser::QMARK, srcMLParser::BAR, srcMLParser::REFOPS, srcMLParser::RVALUEREF,
-
-                                  // place holders since only does not seem to be specific from vectorN_c between 20 and 30
-                                  srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF, srcMLParser::RVALUEREF,
-                                  srcMLParser::RVALUEREF, srcMLParser::RVALUEREF
+                                  srcMLParser::QMARK, srcMLParser::BAR, srcMLParser::REFOPS, srcMLParser::RVALUEREF
                                 > class_identifier_tokens;
 
 const int num_token_longs = 24;
