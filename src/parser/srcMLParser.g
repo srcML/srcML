@@ -343,12 +343,18 @@ struct bitset_bucket {
 
 };
 
-/*
+
 template<typename token_set>
 struct bitset_buckets {
 
     static const int num_token_longs = 24;
-    typedef unsigned long data[num_token_longs] = 
+    static const unsigned long data[num_token_longs];
+
+};
+
+
+template<typename token_set>
+const unsigned long bitset_buckets<token_set>::data[bitset_buckets<token_set>::num_token_longs] = 
         { bitset_bucket<token_set, 0>::type::value, bitset_bucket<token_set, 1>::type::value, bitset_bucket<token_set, 2>::type::value, bitset_bucket<token_set, 3>::type::value,
         //, bitset_bucket<token_set, 4>::type::value, bitset_bucket<token_set, 5>::type::value, bitset_bucket<token_set, 6>::type::value, bitset_bucket<token_set, 7>::type::value
         //, bitset_bucket<token_set, 8>::type::value, bitset_bucket<token_set, 9>::type::value, bitset_bucket<token_set, 10>::type::value, bitset_bucket<token_set, 11>::type::value
@@ -357,27 +363,15 @@ struct bitset_buckets {
         //, bitset_bucket<token_set, 20>::type::value, bitset_bucket<token_set, 21>::type::value, bitset_bucket<token_set, 22>::type::value, bitset_bucket<token_set, 23>::type::value
         };
 
-};
-*/
-
 typedef boost::mpl::vector_c<unsigned long, srcMLParser::LPAREN, srcMLParser::RCURLY, srcMLParser::EQUAL, srcMLParser::TEMPOPS, srcMLParser::TEMPOPE, srcMLParser::DESTOP,
                                   srcMLParser::OPERATORS, srcMLParser::PERIOD, srcMLParser::DOTDEREF, srcMLParser::TRETURN, srcMLParser::MPDEREF, srcMLParser::RPAREN,
                                   srcMLParser::LBRACKET, srcMLParser::RBRACKET, srcMLParser::TERMINATE, srcMLParser::COLON, srcMLParser::COMMA, srcMLParser::MULTOPS,
                                   srcMLParser::QMARK, srcMLParser::BAR, srcMLParser::REFOPS, srcMLParser::RVALUEREF
                                 > class_identifier_tokens;
 
-const int num_token_longs = 24;
-const unsigned long class_identifier_token_set_data [num_token_longs] = 
-    { bitset_bucket<class_identifier_tokens, 0>::type::value, bitset_bucket<class_identifier_tokens, 1>::type::value, bitset_bucket<class_identifier_tokens, 2>::type::value, bitset_bucket<class_identifier_tokens, 3>::type::value,
-    //, bitset_bucket<class_identifier_tokens, 4>::type::value, bitset_bucket<class_identifier_tokens, 5>::type::value, bitset_bucket<class_identifier_tokens, 6>::type::value, bitset_bucket<class_identifier_tokens, 7>::type::value
-    //, bitset_bucket<class_identifier_tokens, 8>::type::value, bitset_bucket<class_identifier_tokens, 9>::type::value, bitset_bucket<class_identifier_tokens, 10>::type::value, bitset_bucket<class_identifier_tokens, 11>::type::value
-    //, bitset_bucket<class_identifier_tokens, 12>::type::value, bitset_bucket<class_identifier_tokens, 13>::type::value, bitset_bucket<class_identifier_tokens, 14>::type::value, bitset_bucket<class_identifier_tokens, 15>::type::value
-    //, bitset_bucket<class_identifier_tokens, 16>::type::value, bitset_bucket<class_identifier_tokens, 17>::type::value, bitset_bucket<class_identifier_tokens, 18>::type::value, bitset_bucket<class_identifier_tokens, 19>::type::value
-    //, bitset_bucket<class_identifier_tokens, 20>::type::value, bitset_bucket<class_identifier_tokens, 21>::type::value, bitset_bucket<class_identifier_tokens, 22>::type::value, bitset_bucket<class_identifier_tokens, 23>::type::value
-    };
 
 //bitset_buckets<class_identifier_tokens> class_buckets;
-const antlr::BitSet srcMLParser::class_identifier_token_set(class_identifier_token_set_data, num_token_longs);
+const antlr::BitSet srcMLParser::class_identifier_token_set(bitset_buckets<class_identifier_tokens>::data, bitset_buckets<class_identifier_tokens>::num_token_longs);
 
 } /* end include */
 
