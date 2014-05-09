@@ -395,13 +395,13 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         const prog_opts::basic_parsed_options< char >& cliopts = prog_opts::command_line_parser(argc, argv).options(all).
                          positional(input_file).extra_parser(custom_parser).run();
 
-        std::vector< prog_opts::basic_option< char > > orderedOpts = cliopts.options;
+        std::vector< prog_opts::basic_option< char > > parsedOptions = cliopts.options;
 
         // LOOP THE CLI OPTS IN ORDER
-        BOOST_FOREACH(const prog_opts::basic_option< char >& iname, orderedOpts) {
-          if (iname.string_key == "relaxng" || iname.string_key == "xpath" || iname.string_key == "xslt" || iname.string_key == "xpathparam") {
-            BOOST_FOREACH(const std::basic_string< char >& vals, iname.value) {
-              srcml_request.transformations.push_back(src_prefix_add_uri(iname.string_key, vals));
+        BOOST_FOREACH(const prog_opts::basic_option< char >& option, parsedOptions) {
+          if (option.string_key == "relaxng" || option.string_key == "xpath" || option.string_key == "xslt" || option.string_key == "xpathparam") {
+            BOOST_FOREACH(const std::basic_string< char >& vals, option.value) {
+              srcml_request.transformations.push_back(src_prefix_add_uri(option.string_key, vals));
             }
           }
         }
