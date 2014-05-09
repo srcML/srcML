@@ -160,7 +160,7 @@ void option_field<&srcml_request_t::files_from>(const std::vector<std::string>& 
 
     srcml_request.files_from = value;
     BOOST_FOREACH(const std::string& inputFile, value) {
-        srcml_request.input.push_back(src_prefix_add_uri("filelist", inputFile);
+        srcml_request.input.push_back(src_prefix_add_uri("filelist", inputFile));
     }
 }
 
