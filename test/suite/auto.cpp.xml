@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="auto" filename="auto">
+
+<unit>
+<decl_stmt><decl><type><name>auto</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>auto</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>const</specifier> <specifier>auto</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>auto</specifier> <specifier>auto</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>auto</specifier> <specifier>auto</specifier></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><specifier>auto</specifier> <name>a</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><specifier>const</specifier> <specifier>auto</specifier> <name>a</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><specifier>auto</specifier> <specifier>auto</specifier> <name>a</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><specifier>auto</specifier> <specifier>auto</specifier></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<param><decl><type><name>auto</name></type></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<param><decl><type><name>auto</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+
+<unit>
+<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<param><decl><type><specifier>auto</specifier> <name>a</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<param><decl><type><specifier>const</specifier> <specifier>auto</specifier> <name>a</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<param><decl><type><specifier>auto</specifier> <specifier>auto</specifier> <name>a</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<param><decl><type><specifier>auto</specifier> <specifier>auto</specifier></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+</unit>
