@@ -3078,6 +3078,7 @@ colon[] { ENTRY_DEBUG } :
 
             if(inTransparentMode(MODE_TERNARY | MODE_THEN)) {
 
+                flushSkip();
                 endDownOverMode(MODE_THEN);
                 startNewMode(MODE_ELSE | MODE_EXPECT);
                 startElement(SELSE);
