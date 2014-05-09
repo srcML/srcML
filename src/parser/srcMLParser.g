@@ -649,7 +649,7 @@ public:
 #ifdef ENTRY_DEBUG
     int ruledepth;
 #endif
-    bool qmark;
+    bool is_qmark;
     bool notdestructor;
     bool operatorname;
     int curly_count;
@@ -3246,7 +3246,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             bool endbracket = false;
             bool modifieroperator = false;
             bool is_c_class_identifier = false;
-            qmark = false;
+            is_qmark = false;
             int real_type_count = 0;
             bool lcurly = false;
         ENTRY_DEBUG } :
@@ -3269,7 +3269,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         ({ ((inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0)) || (LA(1) != LBRACKET || next_token() == LBRACKET))
          && (LA(1) != IN || !inTransparentMode(MODE_FOR_CONDITION)) }?
 
-            set_bool[qmark, (qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
+            set_bool[is_qmark, (is_qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
 
             set_int[posin, LA(1) == IN ? posin = type_count : posin]
 
@@ -3405,7 +3405,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_int[real_type_count, type_count]
 
         // special case for ternary operator on its own
-        throw_exception[LA(1) == COLON && qmark]
+        throw_exception[LA(1) == COLON && is_qmark]
 
         // adjust specifier tokens to account for keyword async used as name (only for C#)
         set_int[specifier_count, token == ASYNC ? specifier_count - 1 : specifier_count]
@@ -3745,6 +3745,11 @@ qmark_marked[] { SingleElement element(this); ENTRY_DEBUG } :
         }
         QMARK ({ SkipBufferSize() == 0 }? QMARK)?
 
+;
+
+qmark[] { ENTRY_DEBUG } :
+
+        qmark_marked
         {
             if(inTransparentMode(MODE_TERNARY | MODE_CONDITION)) {
 
@@ -5891,7 +5896,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
             if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
                 general_operators();
         }
-        | qmark_marked | /* newop | */ period | member_pointer | member_pointer_dereference | dot_dereference |
+        | qmark | /* newop | */ period | member_pointer | member_pointer_dereference | dot_dereference |
 
         // left parentheses
         { function_pointer_name_check() }?
@@ -6288,7 +6293,7 @@ multops[] { LightweightElement element(this); ENTRY_DEBUG } :
             if (isoption(parseoptions, SRCML_OPTION_MODIFIER))
                 startElement(SMODIFIER);
         }
-        (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[qmark, true])
+        (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[is_qmark, true])
 ;
 
 // ...
@@ -6485,7 +6490,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 template_argument_expression[] { ENTRY_DEBUG } :
 
         lparen_marked
-        ({ LA(1) != RPAREN }? ({ true }? general_operators | qmark_marked | (variable_identifier)=>variable_identifier | literals | type_identifier | template_argument_expression))*
+        ({ LA(1) != RPAREN }? ({ true }? general_operators | qmark | (variable_identifier)=>variable_identifier | literals | type_identifier | template_argument_expression))*
        rparen_operator[true]
 
 ;
