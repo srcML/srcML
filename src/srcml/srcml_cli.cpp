@@ -397,7 +397,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         std::vector< prog_opts::basic_option< char > > parsedOptions = cliopts.options;
 
-        // LOOP THE CLI OPTS IN ORDER
+        // loop the cli options in the order they were processed/received
         BOOST_FOREACH(const prog_opts::basic_option< char >& option, parsedOptions) {
           if (option.string_key == "relaxng" || option.string_key == "xpath" || option.string_key == "xslt" || option.string_key == "xpathparam") {
             BOOST_FOREACH(const std::basic_string< char >& vals, option.value) {
