@@ -99,6 +99,7 @@ LANGUAGE_CXX modifier_cpp
 LANGUAGE_CXX function_pointer_cpp
 LANGUAGE_CXX forever
 LANGUAGE_CXX qt_foreach
+LANGUAGE_CXX auto_cpp
 
 LANGUAGE_CXX_GEN c_cpp_mode.restrict
 LANGUAGE_CXX_GEN c_cpp_mode.mutable
