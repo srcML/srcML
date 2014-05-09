@@ -119,10 +119,10 @@ struct srcml_request_t {
     
     // These are now a part of transformations
     //  to be removed later.
-    std::vector<std::string> xpath;
-    std::vector<std::string> xslt;
-    std::vector<std::string> relaxng;
-    std::vector<std::string> xpathparam;
+    //std::vector<std::string> xpath;
+    //std::vector<std::string> xslt;
+    //std::vector<std::string> relaxng;
+    //std::vector<std::string> xpathparam;
 
     int unit;
     int max_threads;

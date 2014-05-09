@@ -355,10 +355,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         query_transform.add_options()
             ("apply-root", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_APPLY_ROOT>), "apply an xslt program or xpath query to the root element")
-            ("relaxng", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::relaxng>), "output individual units that match RELAXNG_FILE (FILE or URI) arg")
-            ("xpath", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::xpath>), "apply XPATH expression arg to each individual unit")
-            ("xpathparam", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::xpathparam>), "passes a parameter NAME and VAL arg to the XSLT program. arg format NAME=VAL")
-            ("xslt", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::xslt>), "apply XSLT_FILE (FILE or URI) arg transformation to each individual unit")
+            ("relaxng", prog_opts::value< std::vector<std::string> >(), "output individual units that match RELAXNG_FILE (FILE or URI) arg")
+            ("xpath", prog_opts::value< std::vector<std::string> >(), "apply XPATH expression arg to each individual unit")
+            ("xpathparam", prog_opts::value< std::vector<std::string> >(), "passes a parameter NAME and VAL arg to the XSLT program. arg format NAME=VAL")
+            ("xslt", prog_opts::value< std::vector<std::string> >(), "apply XSLT_FILE (FILE or URI) arg transformation to each individual unit")
             ;
 
         srcml_archive_options.add_options()
