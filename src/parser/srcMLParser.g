@@ -1634,7 +1634,7 @@ perform_ternary_check[] returns [bool is_ternary] {
 
 ternary_check[] { ENTRY_DEBUG } :
 
-    (paren_pair | ~(QMARK | TERMINATE | COLON)) (paren_pair | ~(QMARK | TERMINATE | COLON))* 
+    (paren_pair | ~(QMARK | TERMINATE | COLON | RPAREN)) (paren_pair | ~(QMARK | TERMINATE | COLON | RPAREN))* 
 
 ;
 
@@ -4703,6 +4703,11 @@ ternary_expression[] { ENTRY_DEBUG } :
         startElement(SCONDITION);
         startNewMode(MODE_EXPRESSION | MODE_EXPECT);
     }
+    { LA(1) == LPAREN }? (expression_process lparen_marked
+        {
+            startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
+        } 
+     ({ perform_ternary_check() }? ternary_expression)?)?
 
 ;
 
