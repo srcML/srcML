@@ -22,6 +22,8 @@
 #include <boost/mpl/begin.hpp>
 #include <boost/mpl/at.hpp>
 
+#define create_token_set(NAME, ...) typedef boost::mpl::vector_c<long, __VA_ARGS__> NAME
+
 template<typename seq, typename key, typename item>
 struct replace_pos {
 
