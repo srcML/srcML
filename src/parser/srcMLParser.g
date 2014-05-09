@@ -4675,8 +4675,9 @@ ternary_expression[] { ENTRY_DEBUG } :
         startNewMode(MODE_CONDITION);
         startElement(SCONDITION);
     }
-    ({ LA(1) != QMARK }? (type_identifier | literals | general_operators))* { endMode(MODE_CONDITION); } QMARK 
+    ({ LA(1) != QMARK }? (type_identifier | literals | general_operators))* QMARK 
     {
+        endMode(MODE_CONDITION);
         startNewMode(MODE_THEN);
         startNoSkipElement(STHEN);
         startNewMode(MODE_EXPRESSION | MODE_EXPECT);
