@@ -3324,6 +3324,9 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                              operatorname && type_count == specifier_count)] 
                 set_bool[operatorname, false] |
 
+                // always count as a name for now since is always used as a type or type modifier
+                auto_keyword[false] | 
+
                 // special function name
                 MAIN set_bool[isoperator, type_count == 0] |
 
@@ -3556,7 +3559,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         (options { generateAmbigWarnings = false; } : 
         // specifiers that occur in a type
         { argument_token_set_one.member(LA(1)) || argument_token_set_two.member(LA(1)) || argument_token_set_three.member(LA(1)) }?
-        specifier | template_specifier |
+        specifier | template_specifier | auto_keyword[true] | 
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
         LBRACKET (COMMA)* RBRACKET |
@@ -3575,7 +3578,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         // class/struct/union before a name in a type, e.g., class A f();
-        class_lead_type_identifier | typename_keyword | 
+        class_lead_type_identifier | typename_keyword |
 
         // enum use in a type
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
@@ -4088,7 +4091,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
-            SIGNAL | FINAL | OVERRIDE | VOID | ASM | AUTO | 
+            SIGNAL | FINAL | OVERRIDE | VOID | ASM |
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
@@ -4407,6 +4410,16 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             CONST
         )
+;
+
+auto_keyword[bool is_specifier] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            if(is_specifier)
+                startElement(SFUNCTION_SPECIFIER);
+            else
+                startElement(SNAME);
+        }
+        AUTO
 ;
 
 // match a single word specifier
@@ -5428,7 +5441,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
 
-        ({ LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | lead_type_identifier) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+        ({ LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count != 1] | lead_type_identifier) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
         (options { generateAmbigWarnings = false; } : keyword_name | type_identifier) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
