@@ -3063,9 +3063,22 @@ comma_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 // mark COLON
 colon_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
+
+            if(inTransparentMode(MODE_TERNARY | MODE_THEN)) {
+
+                endDownToMode(MODE_THEN);
+                flushSkip();
+                endMode(MODE_THEN);
+                startNewMode(MODE_ELSE | MODE_EXPRESSION | MODE_EXPECT);
+                startElement(SELSE);
+
+            }
+
             if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
+
         }
+
         COLON
 ;
 
@@ -3075,15 +3088,6 @@ colon[] { ENTRY_DEBUG } :
             // colon ends the current item in a list
             if (inTransparentMode(MODE_TOP_SECTION))
                 endDownToMode(MODE_TOP_SECTION);
-
-            if(inTransparentMode(MODE_TERNARY | MODE_THEN)) {
-
-                flushSkip();
-                endDownOverMode(MODE_THEN);
-                startNewMode(MODE_ELSE | MODE_EXPECT);
-                startElement(SELSE);
-
-            }
 
         }
         COLON
@@ -4673,8 +4677,9 @@ ternary_expression[] { ENTRY_DEBUG } :
     }
     ({ LA(1) != QMARK }? (type_identifier | literals | general_operators))* { endMode(MODE_CONDITION); } QMARK 
     {
-        startNewMode(MODE_THEN | MODE_EXPECT);
+        startNewMode(MODE_THEN);
         startNoSkipElement(STHEN);
+        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
     }
 
 ;
@@ -5854,7 +5859,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
 
         { notdestructor }? sole_destop { notdestructor = false; } |
 
-        { !inMode(MODE_CONDITION) && perform_ternary_check() }? ternary_expression |
+        { perform_ternary_check() }? ternary_expression |
 
 //        generic_selection |
 
