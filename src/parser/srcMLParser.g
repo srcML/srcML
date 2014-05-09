@@ -2944,9 +2944,6 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { inMode(MODE_VARIABLE_NAME) }?
         goto_case | 
 
-        { inTransparentMode(MODE_TERNARY) && inMode(MODE_CONDITION | MODE_EXPECT) }?
-        ternary_condition |
-
         /*
           Check for MODE_FOR_CONDITION before template stuff, since it can conflict
         */
@@ -3734,11 +3731,27 @@ atomic_call_full[] { ENTRY_DEBUG } :
 ;
 
 // qmark
-qmark_marked[] { SingleElement element(this); ENTRY_DEBUG } :
+qmark_name[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
         QMARK
+;
+
+qmark_marked[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+                startElement(SOPERATOR);
+        }
+        QMARK ({ SkipBufferSize() == 0 }? QMARK)?
+
+        {
+            if(inTransparentMode(MODE_TERNARY | MODE_CONDITION)) {
+
+                endDownToMode(MODE_CONDITION);
+                endMode(MODE_CONDITION);
+            }
+        }
 ;
 
 /* linq expressions */
@@ -4674,25 +4687,9 @@ ternary_expression[] { ENTRY_DEBUG } :
     {
         startNewMode(MODE_TERNARY);
         startElement(STERNARY);
-    }
-    ternary_condition
 
-;
-
-ternary_condition[] { ENTRY_DEBUG } :
-
-    {
-        startNewMode(MODE_CONDITION);
+        startNewMode(MODE_CONDITION | MODE_EXPRESSION | MODE_EXPECT);
         startElement(SCONDITION);
-    }
-    ({ LA(1) != QMARK }? (type_identifier | literals | general_operators))* QMARK 
-    //({ LA(1) != QMARK }? expression)* QMARK 
-
-    {
-        endMode(MODE_CONDITION);
-        startNewMode(MODE_THEN);
-        startNoSkipElement(STHEN);
-        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
     }
 
 ;
@@ -5636,8 +5633,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         (
             OPERATORS | TEMPOPS |
             TEMPOPE ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? EQUAL)? |
-            EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF |
-            QMARK ({ SkipBufferSize() == 0 }? QMARK)? | { inLanguage(LANGUAGE_JAVA) }? BAR |
+            EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
             NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
@@ -5662,7 +5658,7 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
         DESTOP
 ;
 
-// list of operators
+/** list of operators @todo is this still needed */
 general_operators_list[] { ENTRY_DEBUG } :
         OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
         DOTDOT | RVALUEREF | QMARK
@@ -5872,7 +5868,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
 
         { notdestructor }? sole_destop { notdestructor = false; } |
 
-        { perform_ternary_check() }? ternary_expression |
+        { !inTransparentMode(MODE_TERNARY) && perform_ternary_check() }? ternary_expression |
 
 //        generic_selection |
 
@@ -5895,7 +5891,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
             if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
                 general_operators();
         }
-        | /* newop | */ period | member_pointer | member_pointer_dereference | dot_dereference |
+        | qmark_marked | /* newop | */ period | member_pointer | member_pointer_dereference | dot_dereference |
 
         // left parentheses
         { function_pointer_name_check() }?
@@ -6479,7 +6475,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             template_extends_java |
 
-            template_super_java | qmark_marked |
+            template_super_java | qmark_name |
             template_argument_expression
         )+ 
 ;
@@ -6489,7 +6485,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 template_argument_expression[] { ENTRY_DEBUG } :
 
         lparen_marked
-        ({ LA(1) != RPAREN }? ({ true }? general_operators | (variable_identifier)=>variable_identifier | literals | type_identifier | template_argument_expression))*
+        ({ LA(1) != RPAREN }? ({ true }? general_operators | qmark_marked | (variable_identifier)=>variable_identifier | literals | type_identifier | template_argument_expression))*
        rparen_operator[true]
 
 ;
