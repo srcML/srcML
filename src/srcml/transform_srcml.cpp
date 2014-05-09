@@ -25,9 +25,9 @@
 #include <boost/foreach.hpp>
 
 // transform srcml with query or transformation
-void transform_srcml(const srcml_request_t& srcml_request,
-			         const srcml_input_t& input_sources,
-                     const srcml_output_dest& output) {
+void transform_srcml(const srcml_request_t& /*srcml_request*/,
+                     const srcml_input_t& /*input_sources*/,
+                     const srcml_output_dest& /* output*/) {
 
 
 }
