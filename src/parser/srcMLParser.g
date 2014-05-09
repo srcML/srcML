@@ -1155,7 +1155,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))*  lead_type_identifier
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))*  (auto_keyword[type_count != 1] | lead_type_identifier)
 
         { 
 
