@@ -1634,7 +1634,7 @@ perform_ternary_check[] returns [bool is_ternary] {
 
 ternary_check[] { ENTRY_DEBUG } :
 
-    (paren_pair | ~(QMARK | TERMINATE)) (paren_pair | ~(QMARK | TERMINATE))* 
+    (paren_pair | ~(QMARK | TERMINATE | COLON)) (paren_pair | ~(QMARK | TERMINATE | COLON))* 
 
 ;
 
