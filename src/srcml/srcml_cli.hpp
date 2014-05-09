@@ -115,6 +115,10 @@ struct srcml_request_t {
     std::vector<std::string> xmlns_prefix;
 
     // srcml transformation
+    std::vector<std::string> transformations;
+    
+    // These are now a part of transformations
+    //  to be removed later.
     std::vector<std::string> xpath;
     std::vector<std::string> xslt;
     std::vector<std::string> relaxng;

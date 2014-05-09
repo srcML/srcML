@@ -22,12 +22,16 @@
 
 #include <transform_srcml.hpp>
 #include <srcml.h>
+#include <string>
 #include <boost/foreach.hpp>
 
 // transform srcml with query or transformation
-void transform_srcml(const srcml_request_t& /*srcml_request*/,
+void transform_srcml(const srcml_request_t& srcml_request,
                      const srcml_input_t& /*input_sources*/,
                      const srcml_output_dest& /* output*/) {
 
-
+	// iterate through all transformations added during cli parsing
+	BOOST_FOREACH(const std::string& trans, srcml_request.transformations) {
+		std::cerr << trans << "\n"; // output the transformations for debugging
+	}
 }
