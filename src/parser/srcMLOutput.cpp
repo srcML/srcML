@@ -142,6 +142,7 @@ namespace {
     ELEMENT_MAP(SENUM, "enum")
 
     ELEMENT_MAP(SIF_STATEMENT, "if")
+    ELEMENT_MAP(STERNARY, "ternary")
     ELEMENT_MAP(STHEN, "then")
     ELEMENT_MAP(SELSE, "else")
     ELEMENT_MAP(SELSEIF, "elseif")

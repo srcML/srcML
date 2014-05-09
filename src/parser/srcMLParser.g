@@ -445,6 +445,7 @@ tokens {
 	SENUM;
 
 	SIF_STATEMENT;
+    STERNARY;
 	STHEN;
 	SELSE;
 	SELSEIF;
@@ -4654,7 +4655,7 @@ call_argument_list[] { ENTRY_DEBUG } :
 
 ternary_expression[] { ENTRY_DEBUG } :
     {
-        startElement(SIF_STATEMENT);
+        startElement(STERNARY);
 
         startNewMode(MODE_CONDITION);
         startElement(SCONDITION);
