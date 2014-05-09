@@ -104,6 +104,7 @@ tokens {
     VISUAL_CXX_ASM;
     SIZEOF;
     EXTERN;
+    AUTO;
 
     // C
     RESTRICT;
@@ -400,6 +401,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "mutable"      , MUTABLE        , LANGUAGE_CXX }, 
         { "volatile"     , VOLATILE       , LANGUAGE_ALL }, 
         { "__volatile__" , VOLATILE       , LANGUAGE_C_FAMILY  },
+        { "auto"         , AUTO           , LANGUAGE_CXX | LANGUAGE_C },
 
         // C keywords
         { "restrict"       , RESTRICT          , LANGUAGE_C },
