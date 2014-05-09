@@ -139,7 +139,7 @@ header "post_include_hpp" {
 #include <bitset_bucket_sorter.hpp>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -2944,6 +2944,9 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { inMode(MODE_VARIABLE_NAME) }?
         goto_case | 
 
+        { inTransparentMode(MODE_TERNARY) && inMode(MODE_CONDITION | MODE_EXPECT) }?
+        ternary_condition |
+
         /*
           Check for MODE_FOR_CONDITION before template stuff, since it can conflict
         */
@@ -4671,11 +4674,20 @@ ternary_expression[] { ENTRY_DEBUG } :
     {
         startNewMode(MODE_TERNARY);
         startElement(STERNARY);
+    }
+    ternary_condition
 
+;
+
+ternary_condition[] { ENTRY_DEBUG } :
+
+    {
         startNewMode(MODE_CONDITION);
         startElement(SCONDITION);
     }
     ({ LA(1) != QMARK }? (type_identifier | literals | general_operators))* QMARK 
+    //({ LA(1) != QMARK }? expression)* QMARK 
+
     {
         endMode(MODE_CONDITION);
         startNewMode(MODE_THEN);
