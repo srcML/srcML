@@ -1610,6 +1610,34 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
         RPAREN
 ;
 
+perform_tenary_check[] returns [bool is_ternary] {
+
+    is_ternary = false;
+
+    int start = mark();
+    inputState->guessing++;
+
+    try {
+
+        call_check();
+        if(LA(1) == QMARK) is_ternary = true;
+
+    } catch(...) {}
+
+    inputState->guessing--;
+    rewind(start);
+
+    ENTRY_DEBUG
+
+}:;
+
+ternary_check[] { ENTRY_DEBUG } :
+
+    ({LA(1) != QMARK }? expression)*
+
+;
+
+
 // records the current token, even in guessing mode
 markend[int& token] { token = LA(1); } :;
 
@@ -5798,6 +5826,8 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
 
         { notdestructor }? sole_destop { notdestructor = false; } |
+
+        { perform_ternary_check() }? ternary_expression |
 
 //        generic_selection |
 
