@@ -3748,15 +3748,19 @@ qmark_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 qmark[] { ENTRY_DEBUG } :
+        {
+            if(inTransparentMode(MODE_TERNARY | MODE_CONDITION))
+                endDownToMode(MODE_CONDITION);
+        }
 
         qmark_marked
         {
             if(inTransparentMode(MODE_TERNARY | MODE_CONDITION)) {
 
-                endDownToMode(MODE_CONDITION);
                 endMode(MODE_CONDITION);
                 startNewMode(MODE_THEN | MODE_EXPRESSION | MODE_EXPECT);
                 startNoSkipElement(STHEN);
+
             }
         }
 ;
@@ -4694,9 +4698,10 @@ ternary_expression[] { ENTRY_DEBUG } :
     {
         startNewMode(MODE_TERNARY);
         startElement(STERNARY);
-
-        startNewMode(MODE_CONDITION | MODE_EXPRESSION | MODE_EXPECT);
+ 
+        startNewMode(MODE_CONDITION);
         startElement(SCONDITION);
+        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
     }
 
 ;
