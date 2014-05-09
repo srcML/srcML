@@ -3075,6 +3075,15 @@ colon[] { ENTRY_DEBUG } :
             // colon ends the current item in a list
             if (inTransparentMode(MODE_TOP_SECTION))
                 endDownToMode(MODE_TOP_SECTION);
+
+            if(inTransparentMode(MODE_TERNARY | MODE_THEN)) {
+
+                endDownOverMode(MODE_THEN);
+                startNewMode(MODE_ELSE | MODE_EXPECT);
+                startElement(SELSE);
+
+            }
+
         }
         COLON
 ;
@@ -4655,12 +4664,17 @@ call_argument_list[] { ENTRY_DEBUG } :
 
 ternary_expression[] { ENTRY_DEBUG } :
     {
+        startNewMode(MODE_TERNARY);
         startElement(STERNARY);
 
         startNewMode(MODE_CONDITION);
         startElement(SCONDITION);
     }
     (type_identifier | literals) { endMode(MODE_CONDITION); } QMARK 
+    {
+        startNewMode(MODE_THEN | MODE_EXPECT);
+        startNoSkipElement(STHEN);
+    }
 
 ;
 
