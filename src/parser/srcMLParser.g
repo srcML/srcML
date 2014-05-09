@@ -1155,7 +1155,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))*  (auto_keyword[type_count != 1] | lead_type_identifier)
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))*  (auto_keyword[type_count > 1] | lead_type_identifier)
 
         { 
 
@@ -5441,7 +5441,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
 
-        ({ LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count != 1] | lead_type_identifier) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+        ({ LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] | lead_type_identifier) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
         (options { generateAmbigWarnings = false; } : keyword_name | type_identifier) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
@@ -5869,7 +5869,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         rcurly_argument |
 
         // variable or literal
-        variable_identifier | keyword_name) | literals | noexcept_list | 
+        variable_identifier | keyword_name | auto_keyword[false]) | literals | noexcept_list | 
 
         variable_identifier_array_grammar_sub[flag]
 ;
@@ -6204,7 +6204,7 @@ parameter_type_count[int & type_count] { CompleteElement element(this); ENTRY_DE
             // start of type
             startElement(STYPE);
         }
-        (type_identifier set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+        ((auto_keyword[type_count > 1] | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 
         // sometimes there is no parameter name.  if so, we need to eat it
         ( options { greedy = true; } : multops | tripledotop | LBRACKET RBRACKET)*
@@ -6240,7 +6240,7 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
             startElement(STYPE);
         }
         { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : (type_count = 1))}?
-        (type_identifier set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+        ((auto_keyword[type_count > 1] | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 ;
 
 // Template
