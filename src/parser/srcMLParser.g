@@ -316,7 +316,7 @@ void srcMLParser::endAllModes() {
          endLastMode();
 }
 
-typedef boost::mpl::vector_c<unsigned long, srcMLParser::LPAREN, srcMLParser::RCURLY, srcMLParser::EQUAL, srcMLParser::TEMPOPS, srcMLParser::TEMPOPE, srcMLParser::DESTOP,
+typedef boost::mpl::vector_c<long, srcMLParser::LPAREN, srcMLParser::RCURLY, srcMLParser::EQUAL, srcMLParser::TEMPOPS, srcMLParser::TEMPOPE, srcMLParser::DESTOP,
                                   srcMLParser::OPERATORS, srcMLParser::PERIOD, srcMLParser::DOTDEREF, srcMLParser::TRETURN, srcMLParser::MPDEREF, srcMLParser::RPAREN,
                                   srcMLParser::LBRACKET, srcMLParser::RBRACKET, srcMLParser::TERMINATE, srcMLParser::COLON, srcMLParser::COMMA, srcMLParser::MULTOPS,
                                   srcMLParser::QMARK, srcMLParser::BAR, srcMLParser::REFOPS, srcMLParser::RVALUEREF
@@ -324,7 +324,7 @@ typedef boost::mpl::vector_c<unsigned long, srcMLParser::LPAREN, srcMLParser::RC
 
 const antlr::BitSet srcMLParser::keyword_name_token_set(bitset_buckets<keyword_name_tokens>::data, bitset_buckets<keyword_name_tokens>::num_token_longs);
 
-typedef boost::mpl::vector_c<unsigned long, srcMLParser::DO, srcMLParser::RETURN, srcMLParser::DEFAULT, srcMLParser::UNSAFE, srcMLParser::WHILE, srcMLParser::CASE,
+typedef boost::mpl::vector_c<long, srcMLParser::DO, srcMLParser::RETURN, srcMLParser::DEFAULT, srcMLParser::UNSAFE, srcMLParser::WHILE, srcMLParser::CASE,
                                             srcMLParser::SWITCH, srcMLParser::CATCH, srcMLParser::IMPORT, srcMLParser::ASM, srcMLParser::TYPEDEF, srcMLParser::CHECKED,
                                             srcMLParser::GOTO, srcMLParser::FOR, srcMLParser::PACKAGE, srcMLParser::LOCK, srcMLParser::NAMESPACE, srcMLParser::YIELD,
                                             srcMLParser::ELSE, srcMLParser::TRY, srcMLParser::FINALLY, srcMLParser::FOREACH, srcMLParser::FIXED, srcMLParser::IF,
@@ -335,7 +335,7 @@ typedef boost::mpl::vector_c<unsigned long, srcMLParser::DO, srcMLParser::RETURN
 
 const antlr::BitSet srcMLParser::keyword_token_set(bitset_buckets<keyword_tokens>::data, bitset_buckets<keyword_tokens>::num_token_longs);
 
-typedef boost::mpl::vector_c<unsigned long, srcMLParser::ELIF, srcMLParser::GROUP, srcMLParser::JOIN, srcMLParser::REGION, srcMLParser::LINE, srcMLParser::FINAL,
+typedef boost::mpl::vector_c<long, srcMLParser::ELIF, srcMLParser::GROUP, srcMLParser::JOIN, srcMLParser::REGION, srcMLParser::LINE, srcMLParser::FINAL,
                                             srcMLParser::SELECT, srcMLParser::SET, srcMLParser::GET, srcMLParser::ASCENDING, srcMLParser::OVERRIDE, srcMLParser::BY,
                                             srcMLParser::DEFINE, srcMLParser::ORDERBY, srcMLParser::UNDEF, srcMLParser::CHECKED, srcMLParser::INTO, srcMLParser::EQUALS,
                                             srcMLParser::YIELD, srcMLParser::ADD, srcMLParser::DESCENDING, srcMLParser::PRAGMA, srcMLParser::ENDIF, srcMLParser::ASYNC,
@@ -346,7 +346,7 @@ typedef boost::mpl::vector_c<unsigned long, srcMLParser::ELIF, srcMLParser::GROU
 
 const antlr::BitSet srcMLParser::macro_call_token_set(bitset_buckets<macro_call_tokens>::data, bitset_buckets<macro_call_tokens>::num_token_longs);
 
-typedef boost::mpl::vector_c<unsigned long, srcMLParser::VOLATILE, srcMLParser::LBRACKET, srcMLParser::PROTECTED, srcMLParser::LINE, srcMLParser::BY, srcMLParser::DEFINE,
+typedef boost::mpl::vector_c<long, srcMLParser::VOLATILE, srcMLParser::LBRACKET, srcMLParser::PROTECTED, srcMLParser::LINE, srcMLParser::BY, srcMLParser::DEFINE,
                                             srcMLParser::CHECKED, srcMLParser::ENUM, srcMLParser::ENDIF, srcMLParser::WHERE, srcMLParser::ON, srcMLParser::PARTIAL,
                                             srcMLParser::ENDREGION, srcMLParser::THIS, srcMLParser::REGION, srcMLParser::THREAD_LOCAL, srcMLParser::TRANSIENT, srcMLParser::MAIN,
                                             srcMLParser::GROUP, srcMLParser::SYNCHRONIZED, srcMLParser::UNSAFE, srcMLParser::STATIC, srcMLParser::MUTABLE, srcMLParser::DCOLON,
@@ -358,7 +358,7 @@ typedef boost::mpl::vector_c<unsigned long, srcMLParser::VOLATILE, srcMLParser::
 
 const antlr::BitSet srcMLParser::argument_token_set_one(bitset_buckets<argument_tokens_one>::data, bitset_buckets<argument_tokens_one>::num_token_longs);
 
-typedef boost::mpl::vector_c<unsigned long, srcMLParser::REF, srcMLParser::NATIVE, srcMLParser::SET, srcMLParser::ASCENDING, srcMLParser::STRICTFP, srcMLParser::FRIEND,
+typedef boost::mpl::vector_c<long, srcMLParser::REF, srcMLParser::NATIVE, srcMLParser::SET, srcMLParser::ASCENDING, srcMLParser::STRICTFP, srcMLParser::FRIEND,
                                             srcMLParser::OUT, srcMLParser::ADD, srcMLParser::DESCENDING, srcMLParser::ASYNC, srcMLParser::JOIN, srcMLParser::NAME,
                                             srcMLParser::QMARK, srcMLParser::INTERNAL, srcMLParser::PARAMS, srcMLParser::INLINE, srcMLParser::EVENT, srcMLParser::ELIF,
                                             srcMLParser::CONST, srcMLParser::ABSTRACT, srcMLParser::REFOPS, srcMLParser::MULTOPS, srcMLParser::PRIVATE, srcMLParser::OVERRIDE,
@@ -370,12 +370,12 @@ typedef boost::mpl::vector_c<unsigned long, srcMLParser::REF, srcMLParser::NATIV
 
 const antlr::BitSet srcMLParser::argument_token_set_two(bitset_buckets<argument_tokens_two>::data, bitset_buckets<argument_tokens_two>::num_token_longs);
 
-typedef boost::mpl::vector_c<unsigned long, srcMLParser::NORETURN, srcMLParser::IMAGINARY, srcMLParser::GENERIC_SELECTION, srcMLParser::ASM,
+typedef boost::mpl::vector_c<long, srcMLParser::NORETURN, srcMLParser::IMAGINARY, srcMLParser::GENERIC_SELECTION, srcMLParser::ASM,
                                             srcMLParser::CXX_TRY, srcMLParser::CXX_CATCH, srcMLParser::CXX_CLASS> argument_tokens_three;
 
 const antlr::BitSet srcMLParser::argument_token_set_three(bitset_buckets<argument_tokens_three>::data, bitset_buckets<argument_tokens_three>::num_token_longs);
 
-typedef boost::mpl::vector_c<unsigned long, srcMLParser::EXTERN, srcMLParser::RESTRICT, srcMLParser::CONSTEXPR, srcMLParser::THREAD_LOCAL, srcMLParser::ALIGNAS,
+typedef boost::mpl::vector_c<long, srcMLParser::EXTERN, srcMLParser::RESTRICT, srcMLParser::CONSTEXPR, srcMLParser::THREAD_LOCAL, srcMLParser::ALIGNAS,
                                             srcMLParser::INLINE, srcMLParser::MACRO_SPECIFIER, srcMLParser::PUBLIC, srcMLParser::PRIVATE, srcMLParser::PROTECTED,
                                             srcMLParser::VIRTUAL, srcMLParser::FRIEND, srcMLParser::EXPLICIT, srcMLParser::NEW, srcMLParser::STATIC, srcMLParser::CONST,
                                             srcMLParser::MUTABLE, srcMLParser::VOLATILE, srcMLParser::TRANSIENT, srcMLParser::FINAL, srcMLParser::ABSTRACT, srcMLParser::SYNCHRONIZED,

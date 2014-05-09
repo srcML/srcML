@@ -3,8 +3,9 @@
 
 #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #define BOOST_MPL_LIMIT_VECTOR_SIZE 50
+#define BOOST_MPL_LIMIT_MAP_SIZE 50
 #include <boost/mpl/vector_c.hpp>
-#include <boost/mpl/vector.hpp>
+#include <boost/mpl/map.hpp>
 #include <boost/mpl/accumulate.hpp>
 #include <boost/mpl/long.hpp>
 #include <boost/mpl/if.hpp>
@@ -15,18 +16,18 @@
 #include <boost/mpl/modulus.hpp>
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/times.hpp>
-#include <boost/mpl/erase.hpp>
+#include <boost/mpl/erase_key.hpp>
 #include <boost/mpl/insert.hpp>
 #include <boost/mpl/advance.hpp>
 #include <boost/mpl/begin.hpp>
 #include <boost/mpl/at.hpp>
 
-template<typename seq, typename pos, typename item>
+template<typename seq, typename key, typename item>
 struct replace_pos {
 
 
-    typedef typename boost::mpl::erase<seq, typename boost::mpl::advance<typename boost::mpl::begin<seq>::type, pos>::type>::type temp;
-    typedef typename boost::mpl::insert<temp, typename boost::mpl::advance<typename boost::mpl::begin<temp>::type, pos>::type, item >::type type;
+    typedef typename boost::mpl::erase_key<seq, key>::type temp;
+    typedef typename boost::mpl::insert<temp, boost::mpl::pair<key, item> >::type type;
 
 };
 
@@ -69,16 +70,25 @@ const unsigned long bitset_buckets<token_set>::data[bitset_buckets<token_set>::n
 template<typename token_set>
 struct bitset_bucket_sorter {
 
-    typedef typename boost::mpl::accumulate<token_set, boost::mpl::vector_c<unsigned long,
-                                            0, 0, 0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0, 0, 0,
-                                            0, 0, 0, 0, 0, 0, 0, 0>,
+    typedef typename boost::mpl::accumulate<token_set, boost::mpl::map<
+                                            boost::mpl::pair<boost::mpl::integral_c<long, 0>, boost::mpl::integral_c<long, 0> >, boost::mpl::pair<boost::mpl::integral_c<long, 1>, boost::mpl::integral_c<long, 0> >,
+                                            boost::mpl::pair<boost::mpl::integral_c<long, 2>, boost::mpl::integral_c<long, 0> >, boost::mpl::pair<boost::mpl::integral_c<long, 3>, boost::mpl::integral_c<long, 0> >,
+                                            boost::mpl::pair<boost::mpl::integral_c<long, 4>, boost::mpl::integral_c<long, 0> >, boost::mpl::pair<boost::mpl::integral_c<long, 5>, boost::mpl::integral_c<long, 0> >,
+                                            boost::mpl::pair<boost::mpl::integral_c<long, 6>, boost::mpl::integral_c<long, 0> >, boost::mpl::pair<boost::mpl::integral_c<long, 7>, boost::mpl::integral_c<long, 0> >,
+                                            boost::mpl::pair<boost::mpl::integral_c<long, 8>, boost::mpl::integral_c<long, 0> >, boost::mpl::pair<boost::mpl::integral_c<long, 9>, boost::mpl::integral_c<long, 0> >,
+                                            boost::mpl::pair<boost::mpl::integral_c<long, 10>, boost::mpl::integral_c<long, 0> >, boost::mpl::pair<boost::mpl::integral_c<long, 11>, boost::mpl::integral_c<long, 0> >,
+                                            boost::mpl::pair<boost::mpl::integral_c<long, 12>, boost::mpl::integral_c<long, 0> >, boost::mpl::pair<boost::mpl::integral_c<long, 13>, boost::mpl::integral_c<long, 0> >,
+                                            boost::mpl::pair<boost::mpl::integral_c<long, 14>, boost::mpl::integral_c<long, 0> >, boost::mpl::pair<boost::mpl::integral_c<long, 15>, boost::mpl::integral_c<long, 0> >,
+                                            boost::mpl::pair<boost::mpl::integral_c<long, 16>, boost::mpl::integral_c<long, 0> >, boost::mpl::pair<boost::mpl::integral_c<long, 17>, boost::mpl::integral_c<long, 0> >,
+                                            boost::mpl::pair<boost::mpl::integral_c<long, 18>, boost::mpl::integral_c<long, 0> >, boost::mpl::pair<boost::mpl::integral_c<long, 19>, boost::mpl::integral_c<long, 0> >,
+                                            boost::mpl::pair<boost::mpl::integral_c<long, 20>, boost::mpl::integral_c<long, 0> >, boost::mpl::pair<boost::mpl::integral_c<long, 21>, boost::mpl::integral_c<long, 0> >,
+                                            boost::mpl::pair<boost::mpl::integral_c<long, 22>, boost::mpl::integral_c<long, 0> >, boost::mpl::pair<boost::mpl::integral_c<long, 23>, boost::mpl::integral_c<long, 0> > >,
 
-        replace_pos<boost::mpl::_1, boost::mpl::shift_right<boost::mpl::_2, boost::mpl::long_<5> >,
-                boost::mpl::bitor_<
-                boost::mpl::at<boost::mpl::_1, boost::mpl::shift_right<boost::mpl::_2, boost::mpl::long_<5> > >,
-                boost::mpl::shift_left<boost::mpl::long_<1>, boost::mpl::modulus<boost::mpl::_2, boost::mpl::long_<32> > > 
-            >
+        replace_pos<boost::mpl::_1, boost::mpl::shift_right<boost::mpl::_2, boost::mpl::integral_c<long, 5> >,
+                    boost::mpl::bitor_<
+                        boost::mpl::at<boost::mpl::_1, boost::mpl::shift_right<boost::mpl::_2, boost::mpl::integral_c<long, 5> > >,
+                        boost::mpl::shift_left<boost::mpl::integral_c<long, 1>, boost::mpl::modulus<boost::mpl::_2, boost::mpl::integral_c<long, 32> > >
+                    >
         >
     >::type type;
 
@@ -97,31 +107,31 @@ struct bitset_buckets {
 
 template<typename token_set>
 const unsigned long bitset_buckets<token_set>::data[bitset_buckets<token_set>::num_token_longs] = 
-{ 
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<0> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<1> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<2> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<3> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<4> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<5> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<6> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<7> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<8> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<9> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<10> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<11> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<12> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<13> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<14> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<15> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<16> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<17> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<18> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<19> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<20> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<21> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<22> >::type::type::value,
-    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::long_<23> >::type::type::value
+{
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 0> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 1> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 2> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 3> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 4> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 5> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 6> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 7> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 8> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 9> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 10> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 11> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 12> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 13> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 14> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 15> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 16> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 17> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 18> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 19> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 20> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 21> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 22> >::type::value,
+    boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<long, 23> >::type::value
 
 };
 
