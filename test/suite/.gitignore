@@ -9,6 +9,7 @@ c_cpp_mode*.cpp.xml
 
 asm.c.xml
 asm.cs.xml
+auto.c.xml
 call.c.xml
 call.cs.xml
 call.java.xml
