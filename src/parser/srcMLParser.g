@@ -1633,7 +1633,7 @@ perform_ternary_check[] returns [bool is_ternary] {
 
 ternary_check[] { ENTRY_DEBUG } :
 
-    (trace_int[LA(1)] ~(QMARK | TERMINATE))+
+    (paren_pair | ~(QMARK | TERMINATE)) (paren_pair | ~(QMARK | TERMINATE))* 
 
 ;
 
