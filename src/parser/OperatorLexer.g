@@ -75,7 +75,6 @@ MEMBERPOINTER; // = ".*";
 PERIOD; // = ".";
 MULTOPS; // = "*";
 REFOPS;  // = "&";
-MULTIMM; // = "*=";
 RVALUEREF; // = "&&";
 
 DOTDOT;
