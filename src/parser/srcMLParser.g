@@ -3738,7 +3738,7 @@ qmark_name[] { SingleElement element(this); ENTRY_DEBUG } :
         QMARK
 ;
 
-qmark_marked[] { SingleElement element(this); ENTRY_DEBUG } :
+qmark_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
