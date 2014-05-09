@@ -3755,6 +3755,8 @@ qmark[] { ENTRY_DEBUG } :
 
                 endDownToMode(MODE_CONDITION);
                 endMode(MODE_CONDITION);
+                startNewMode(MODE_THEN | MODE_EXPRESSION | MODE_EXPECT);
+                startNoSkipElement(STHEN);
             }
         }
 ;
