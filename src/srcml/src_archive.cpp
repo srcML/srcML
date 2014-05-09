@@ -79,11 +79,6 @@ static constexpr archive_calls_t format_calls[] = {
     { ".iso", archive_write_set_format_iso9660 },
 #endif
 
-#if ARCHIVE_VERSION_NUMBER >= 3000000
-    { ".lha", 0 },
-    { ".lzh", 0 },
-#endif
-
     { ".mtree", archive_write_set_format_mtree },
     { ".pax", archive_write_set_format_pax },
 
