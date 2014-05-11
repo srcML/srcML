@@ -29,17 +29,30 @@
 // transform srcml with query or transformation
 void transform_srcml(const srcml_request_t& srcml_request,
                      const srcml_input_t& input_sources,
-                     const srcml_output_dest& /* output*/) {
+                     const srcml_output_dest& output) {
 
+	int status;
+
+	// Convert output into srcml archive
+	srcml_archive* out_arch = srcml_create_archive();
+    if (contains<int>(output))
+        status = srcml_write_open_fd(out_arch, output);
+    else if (contains<FILE*>(output))
+        status = srcml_write_open_FILE(out_arch, output);
+    else
+        status = srcml_write_open_filename(out_arch, output.c_str());
+    if (status != SRCML_STATUS_OK)
+        throw status;
+
+    // Convert inputs into srcml archive
 	BOOST_FOREACH(const srcml_input_src& input, input_sources) {
-		srcml_archive* arch = srcml_create_archive();
-		int status;
+        srcml_archive* in_arch = srcml_create_archive();
         if (contains<int>(input))
-            status = srcml_read_open_fd(arch, input);
+            status = srcml_read_open_fd(in_arch, input);
         else if (contains<FILE*>(input))
-            status = srcml_read_open_FILE(arch, input);
+            status = srcml_read_open_FILE(in_arch, input);
         else
-            status = srcml_read_open_filename(arch, input.c_str());
+            status = srcml_read_open_filename(in_arch, input.c_str());
         if (status != SRCML_STATUS_OK)
             throw status;
 
@@ -49,10 +62,12 @@ void transform_srcml(const srcml_request_t& srcml_request,
 			std::string resource;
 			src_prefix_split_uri(trans, protocol, resource);
 			if (protocol.compare("xpath") == 0) {
-				std::cerr << resource << "\n";
+				srcml_append_transform_xpath(in_arch, resource.c_str());
 			}
 		}
-
-		srcml_free_archive(arch);
+		srcml_apply_transforms(in_arch, out_arch);
+		srcml_close_archive(out_arch);
 	}
+
+	// need to free archives....
 }
