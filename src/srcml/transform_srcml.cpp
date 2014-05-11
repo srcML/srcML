@@ -21,6 +21,7 @@
  */
 
 #include <transform_srcml.hpp>
+#include <src_prefix.hpp>
 #include <srcml.h>
 #include <string>
 #include <boost/foreach.hpp>
@@ -44,7 +45,12 @@ void transform_srcml(const srcml_request_t& srcml_request,
 
 		// iterate through all transformations added during cli parsing
 		BOOST_FOREACH(const std::string& trans, srcml_request.transformations) {
-			std::cerr << trans << "\n"; // output the transformations for debugging
+			std::string protocol;
+			std::string resource;
+			src_prefix_split_uri(trans, protocol, resource);
+			if (protocol.compare("xpath") == 0) {
+				std::cerr << resource << "\n";
+			}
 		}
 
 		srcml_free_archive(arch);
