@@ -64,6 +64,15 @@ void transform_srcml(const srcml_request_t& srcml_request,
 			if (protocol.compare("xpath") == 0) {
 				srcml_append_transform_xpath(in_arch, resource.c_str());
 			}
+			else if (protocol.compare("relaxng") == 0) {
+				std::cerr << protocol << " : " << resource << "\n"; //Stub
+			}
+			else if (protocol.compare("xslt") == 0) {
+				std::cerr << protocol << " : " << resource << "\n"; // Stub
+			}
+			else if (protocol.compare("xpathparam") == 0) {
+				std::cerr << protocol << " : " << resource << "\n"; // Stub
+			}
 		}
 		srcml_apply_transforms(in_arch, out_arch);
 		srcml_close_archive(in_arch);
