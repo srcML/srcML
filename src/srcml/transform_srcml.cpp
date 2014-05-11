@@ -66,8 +66,10 @@ void transform_srcml(const srcml_request_t& srcml_request,
 			}
 		}
 		srcml_apply_transforms(in_arch, out_arch);
-		srcml_close_archive(out_arch);
+		srcml_close_archive(in_arch);
+		srcml_free_archive(in_arch);
 	}
 
-	// need to free archives....
+	srcml_close_archive(out_arch);
+	srcml_free_archive(out_arch);
 }
