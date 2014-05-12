@@ -43,6 +43,14 @@
 </unit>
 
 <unit>
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name> * 0</expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name> &amp; 0</expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
 <decl_stmt><decl><type><name>bool</name></type> <name>is_true</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl>;</decl_stmt>
 </unit>
 
