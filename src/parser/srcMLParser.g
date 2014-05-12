@@ -1088,7 +1088,10 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))*  (auto_keyword[type_count > 1] | lead_type_identifier)
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))* 
+
+        // match auto keyword first as special case do no warn about ambiguity
+        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | lead_type_identifier)
 
         { 
 
@@ -1566,8 +1569,12 @@ perform_ternary_check[] returns [bool is_ternary] {
 
 ternary_check[] { ENTRY_DEBUG } :
 
-    ({ LA(1) != 1 }? (paren_pair | bracket_pair | curly_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET)))
-    ({ LA(1) != 1 }? (paren_pair | bracket_pair | curly_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET)))* 
+
+    // ends are catch alls ok if overlap
+    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair | curly_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET)))
+
+    // ends are catch alls ok if overlap
+    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair | curly_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET)))* 
 
 ;
 
@@ -5585,7 +5592,9 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
 
-        ({ LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] | lead_type_identifier) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+        // match auto keyword first as special case do no warn about ambiguity
+        (options { generateAmbigWarnings = false; } : 
+            { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] | lead_type_identifier) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
         (options { generateAmbigWarnings = false; } : keyword_name | type_identifier) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
@@ -6349,7 +6358,10 @@ parameter_type_count[int & type_count] { CompleteElement element(this); ENTRY_DE
             // start of type
             startElement(STYPE);
         }
-        ((auto_keyword[type_count > 1] | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+
+
+        // match auto keyword first as special case do no warn about ambiguity
+        ((options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 
         // sometimes there is no parameter name.  if so, we need to eat it
         ( options { greedy = true; } : multops | tripledotop | LBRACKET RBRACKET)*
@@ -6385,7 +6397,9 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
             startElement(STYPE);
         }
         { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : (type_count = 1))}?
-        ((auto_keyword[type_count > 1] | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+
+        // match auto keyword first as special case do no warn about ambiguity
+        ((options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 ;
 
 // Template
@@ -6559,7 +6573,9 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 template_argument_expression[] { ENTRY_DEBUG } :
 
         lparen_marked
-        ({ LA(1) != RPAREN }? ({ true }? general_operators | qmark | (variable_identifier)=>variable_identifier | literals | type_identifier | template_argument_expression))*
+        
+        // qmark matches before template argument expression is fine
+        ({ LA(1) != RPAREN }? (options { generateAmbigWarnings = false; } : general_operators | qmark | (variable_identifier)=>variable_identifier | literals | type_identifier | template_argument_expression))*
        rparen_operator[true]
 
 ;
