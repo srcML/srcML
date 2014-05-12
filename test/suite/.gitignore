@@ -117,6 +117,9 @@ struct_cs.cs.xml
 switch.c.xml
 switch.cs.xml
 switch.java.xml
+ternary.c.xml
+ternary.cs.xml
+ternary.java.xml
 throw.cpp.xml
 throw.cs.xml
 throw.java.xml
