@@ -1634,8 +1634,8 @@ perform_ternary_check[] returns [bool is_ternary] {
 
 ternary_check[] { ENTRY_DEBUG } :
 
-    ({ LA(1) != 1 }? (paren_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET)))
-    ({ LA(1) != 1 }? (paren_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET)))* 
+    ({ LA(1) != 1 }? (paren_pair | bracket_pair | curly_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET)))
+    ({ LA(1) != 1 }? (paren_pair | bracket_pair | curly_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET)))* 
 
 ;
 
