@@ -54,7 +54,7 @@
 </unit>
 
 <unit>
-<assert>assert <expr><name>a</name> ? <name>b</name> : <name>c</name></expr>;</assert>
+<assert>assert <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</assert>
 </unit>
 
 <unit>
@@ -66,11 +66,11 @@
 </unit>
 
 <unit>
-<assert>assert <expr><name><name>a</name><index>[<expr>1 + 1 - 1 * 1 &amp; 1 % 1 ! 1 ~ 1 &lt; 1 &gt; 1 &lt;= 1 &gt;= 1 == 1 != 1 / 1 | 1 || 1 &amp;&amp; 1 ? 1 : 1</expr>]</index></name></expr>;</assert>
+<assert>assert <expr><name><name>a</name><index>[<expr><ternary><condition><expr>1 + 1 - 1 * 1 &amp; 1 % 1 ! 1 ~ 1 &lt; 1 &gt; 1 &lt;= 1 &gt;= 1 == 1 != 1 / 1 | 1 || 1 &amp;&amp; 1</expr> ?</condition><then> <expr>1</expr> </then><else>: <expr>1</expr></else></ternary></expr>]</index></name></expr>;</assert>
 </unit>
 
 <unit>
-<assert>assert <expr>1 + 1 - 1 * 1 &amp; 1 % 1 ! 1 ~ 1 &lt; 1 &gt; 1 &lt;= 1 &gt;= 1 == 1 != 1 / 1 | 1 || 1 &amp;&amp; 1 ? 1 : 1</expr>;</assert>
+<assert>assert <expr><ternary><condition><expr>1 + 1 - 1 * 1 &amp; 1 % 1 ! 1 ~ 1 &lt; 1 &gt; 1 &lt;= 1 &gt;= 1 == 1 != 1 / 1 | 1 || 1 &amp;&amp; 1</expr> ?</condition><then> <expr>1</expr> </then><else>: <expr>1</expr></else></ternary></expr>;</assert>
 </unit>
 
 <unit>
