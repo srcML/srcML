@@ -31,9 +31,8 @@ void transform_srcml(const srcml_request_t& srcml_request,
                      const srcml_input_t& input_sources,
                      const srcml_output_dest& output) {
 
-	int status;
-
 	// Convert output into srcml archive
+	int status;
 	srcml_archive* out_arch = srcml_create_archive();
     if (contains<int>(output))
         status = srcml_write_open_fd(out_arch, output);
@@ -61,20 +60,22 @@ void transform_srcml(const srcml_request_t& srcml_request,
 			std::string protocol;
 			std::string resource;
 			src_prefix_split_uri(trans, protocol, resource);
-			if (protocol.compare("xpath") == 0) {
+
+			if (protocol == "xpath") {
 				srcml_append_transform_xpath(in_arch, resource.c_str());
 			}
-			else if (protocol.compare("relaxng") == 0) {
+			else if (protocol == "xslt") {
+				std::cerr << protocol << " : " << resource << "\n"; // Stub
+			}
+			else if (protocol == "xpathparam") {
+				std::cerr << protocol << " : " << resource << "\n"; // Stub
+			}
+			else if (protocol == "relaxng") {
 				std::cerr << protocol << " : " << resource << "\n"; //Stub
-			}
-			else if (protocol.compare("xslt") == 0) {
-				std::cerr << protocol << " : " << resource << "\n"; // Stub
-			}
-			else if (protocol.compare("xpathparam") == 0) {
-				std::cerr << protocol << " : " << resource << "\n"; // Stub
 			}
 		}
 		srcml_apply_transforms(in_arch, out_arch);
+
 		srcml_close_archive(in_arch);
 		srcml_free_archive(in_arch);
 	}
