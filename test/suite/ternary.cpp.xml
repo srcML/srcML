@@ -9,4 +9,23 @@
 <expr_stmt><expr>(<ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary>)</expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><ternary><condition><expr>(<ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary>)</expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+
+<unit>
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+
+<unit>
+<expr_stmt><expr><ternary><condition><expr>(<ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary>)</expr> ?</condition><then> <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr> </then><else>: <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+
 </unit>
