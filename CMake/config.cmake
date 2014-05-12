@@ -153,7 +153,7 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
       set(USE_FPIC -fPIC)
     endif()
 
-    set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas")
+    set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas -Wno-variadic-macros")
     # Adding global compiler definitions.                                                                                      
     set(CMAKE_CXX_FLAGS "${USE_FPIC} -O3 ${GCC_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "${USE_FPIC} -O3 -DNDEBUG -DSTATIC_GLOBALS ${GCC_WARNINGS}")
