@@ -159,20 +159,20 @@ COMMENT_TEXT {
 
         '\011' /* '\t' */ |
 
+        { if(rawstring && first && LA(1) == '\012') {
+
+                rawstring = false;
+                $setType(mode);
+                selector->pop();
+                goto newline_break;
+            } 
+        }
         '\012' /* '\n' */ { 
 
               // make sure to count newlines even when inside of comments
               newline();
               if(isoption(options, SRCML_OPTION_LINE))
                   setLine(getLine() + (1 << 16));
-
-            if(rawstring && first && LA(1) == '\012') {
-
-                rawstring = false;
-                $setType(mode);
-                selector->pop();
-
-            } else 
 
               // end at EOL when for line comment, or the end of a string or char on a preprocessor line
               if (mode == LINECOMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline || rawstring))) {
@@ -287,6 +287,7 @@ COMMENT_TEXT {
         ']'..'\377'
         )
         {
+         newline_break:
 
             ++realbegin;
 
