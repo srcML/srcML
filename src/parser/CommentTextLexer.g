@@ -151,13 +151,6 @@ COMMENT_TEXT {
             prevLA = prevprevLA;
             prevprevLA = LA(1);
 
-            if(rawstring && first && LA(1) == '\012') {
-
-                rawstring = false;
-                $setType(mode);
-                selector->pop();
-                continue;
-            }
          }
          (
         '\000'..'\010'
@@ -172,6 +165,14 @@ COMMENT_TEXT {
               newline();
               if(isoption(options, SRCML_OPTION_LINE))
                   setLine(getLine() + (1 << 16));
+
+            if(rawstring && first && LA(1) == '\012') {
+
+                rawstring = false;
+                $setType(mode);
+                selector->pop();
+
+            } else 
 
               // end at EOL when for line comment, or the end of a string or char on a preprocessor line
               if (mode == LINECOMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline || rawstring))) {
