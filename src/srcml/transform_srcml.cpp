@@ -21,13 +21,65 @@
  */
 
 #include <transform_srcml.hpp>
+#include <src_prefix.hpp>
 #include <srcml.h>
+#include <string>
 #include <boost/foreach.hpp>
 
 // transform srcml with query or transformation
 void transform_srcml(const srcml_request_t& srcml_request,
-			         const srcml_input_t& input_sources,
+                     const srcml_input_t& input_sources,
                      const srcml_output_dest& output) {
 
+	// Convert output into srcml archive
+	int status;
+	srcml_archive* out_arch = srcml_create_archive();
+    if (contains<int>(output))
+        status = srcml_write_open_fd(out_arch, output);
+    else if (contains<FILE*>(output))
+        status = srcml_write_open_FILE(out_arch, output);
+    else
+        status = srcml_write_open_filename(out_arch, output.c_str());
+    if (status != SRCML_STATUS_OK)
+        throw status;
 
+    // Convert inputs into srcml archive
+	BOOST_FOREACH(const srcml_input_src& input, input_sources) {
+        srcml_archive* in_arch = srcml_create_archive();
+        if (contains<int>(input))
+            status = srcml_read_open_fd(in_arch, input);
+        else if (contains<FILE*>(input))
+            status = srcml_read_open_FILE(in_arch, input);
+        else
+            status = srcml_read_open_filename(in_arch, input.c_str());
+        if (status != SRCML_STATUS_OK)
+            throw status;
+
+		// iterate through all transformations added during cli parsing
+		BOOST_FOREACH(const std::string& trans, srcml_request.transformations) {
+			std::string protocol;
+			std::string resource;
+			src_prefix_split_uri(trans, protocol, resource);
+
+			if (protocol == "xpath") {
+				srcml_append_transform_xpath(in_arch, resource.c_str());
+			}
+			else if (protocol == "xslt") {
+				std::cerr << protocol << " : " << resource << "\n"; // Stub
+			}
+			else if (protocol == "xpathparam") {
+				std::cerr << protocol << " : " << resource << "\n"; // Stub
+			}
+			else if (protocol == "relaxng") {
+				std::cerr << protocol << " : " << resource << "\n"; //Stub
+			}
+		}
+		srcml_apply_transforms(in_arch, out_arch);
+
+		srcml_close_archive(in_arch);
+		srcml_free_archive(in_arch);
+	}
+
+	srcml_close_archive(out_arch);
+	srcml_free_archive(out_arch);
 }

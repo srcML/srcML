@@ -116,7 +116,7 @@ int main(int argc, char * argv[]) {
     }
 
     // XPath and XSLT processing
-    if (!srcml_request.xpath.empty() || !srcml_request.xslt.empty() || !srcml_request.relaxng.empty()) {
+    if (!srcml_request.transformations.empty()) {
         pipeline.push_back(transform_srcml);
     }
 

@@ -115,10 +115,7 @@ struct srcml_request_t {
     std::vector<std::string> xmlns_prefix;
 
     // srcml transformation
-    std::vector<std::string> xpath;
-    std::vector<std::string> xslt;
-    std::vector<std::string> relaxng;
-    std::vector<std::string> xpathparam;
+    std::vector<std::string> transformations;
 
     int unit;
     int max_threads;

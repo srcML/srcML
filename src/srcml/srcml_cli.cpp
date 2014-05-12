@@ -160,7 +160,7 @@ void option_field<&srcml_request_t::files_from>(const std::vector<std::string>& 
 
     srcml_request.files_from = value;
     BOOST_FOREACH(const std::string& inputFile, value) {
-        srcml_request.input.push_back("filelist://" + inputFile);
+        srcml_request.input.push_back(src_prefix_add_uri("filelist", inputFile));
     }
 }
 
@@ -355,10 +355,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         query_transform.add_options()
             ("apply-root", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_APPLY_ROOT>), "apply an xslt program or xpath query to the root element")
-            ("relaxng", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::relaxng>), "output individual units that match RELAXNG_FILE (FILE or URI) arg")
-            ("xpath", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::xpath>), "apply XPATH expression arg to each individual unit")
-            ("xpathparam", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::xpathparam>), "passes a parameter NAME and VAL arg to the XSLT program. arg format NAME=VAL")
-            ("xslt", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::xslt>), "apply XSLT_FILE (FILE or URI) arg transformation to each individual unit")
+            ("relaxng", prog_opts::value< std::vector<std::string> >(), "output individual units that match RELAXNG_FILE (FILE or URI) arg")
+            ("xpath", prog_opts::value< std::vector<std::string> >(), "apply XPATH expression arg to each individual unit")
+            ("xpathparam", prog_opts::value< std::vector<std::string> >(), "passes a parameter NAME and VAL arg to the XSLT program. arg format NAME=VAL")
+            ("xslt", prog_opts::value< std::vector<std::string> >(), "apply XSLT_FILE (FILE or URI) arg transformation to each individual unit")
             ;
 
         srcml_archive_options.add_options()
@@ -391,8 +391,22 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // Assign the CLI args to the map
         prog_opts::variables_map cli_map;
-        prog_opts::store(prog_opts::command_line_parser(argc, argv).options(all).
-                         positional(input_file).extra_parser(custom_parser).run(), cli_map);
+        
+        const prog_opts::basic_parsed_options< char >& cliopts = prog_opts::command_line_parser(argc, argv).options(all).
+                         positional(input_file).extra_parser(custom_parser).run();
+
+        std::vector< prog_opts::basic_option< char > > parsedOptions = cliopts.options;
+
+        // loop the cli options in the order they were processed/received
+        BOOST_FOREACH(const prog_opts::basic_option< char >& option, parsedOptions) {
+          if (option.string_key == "relaxng" || option.string_key == "xpath" || option.string_key == "xslt" || option.string_key == "xpathparam") {
+            BOOST_FOREACH(const std::basic_string< char >& vals, option.value) {
+              srcml_request.transformations.push_back(src_prefix_add_uri(option.string_key, vals));
+            }
+          }
+        }
+
+        prog_opts::store(cliopts , cli_map);
         prog_opts::notify(cli_map);
 
         // Check option conflicts
