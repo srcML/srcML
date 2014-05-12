@@ -4071,7 +4071,7 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         // expression with right parentheses if a previous match is in one
         { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
 
-        COLON)*
+        colon_marked)*
 ;
 
 // match a linq_expression completely
