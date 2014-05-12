@@ -445,6 +445,7 @@ tokens {
 	SENUM;
 
 	SIF_STATEMENT;
+    STERNARY;
 	STHEN;
 	SELSE;
 	SELSEIF;
@@ -648,7 +649,7 @@ public:
 #ifdef ENTRY_DEBUG
     int ruledepth;
 #endif
-    bool qmark;
+    bool is_qmark;
     bool notdestructor;
     bool operatorname;
     int curly_count;
@@ -1609,6 +1610,35 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
 
         RPAREN
 ;
+
+perform_ternary_check[] returns [bool is_ternary] {
+
+    is_ternary = false;
+
+    int start = mark();
+    inputState->guessing++;
+
+    try {
+
+        ternary_check();
+        if(LA(1) == QMARK) is_ternary = true;
+
+    } catch(...) {}
+
+    inputState->guessing--;
+    rewind(start);
+
+    ENTRY_DEBUG
+
+}:;
+
+ternary_check[] { ENTRY_DEBUG } :
+
+    ({ LA(1) != 1 }? (paren_pair | bracket_pair | curly_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET)))
+    ({ LA(1) != 1 }? (paren_pair | bracket_pair | curly_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET)))* 
+
+;
+
 
 // records the current token, even in guessing mode
 markend[int& token] { token = LA(1); } :;
@@ -3034,9 +3064,22 @@ comma_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 // mark COLON
 colon_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
+
+            if(inTransparentMode(MODE_TERNARY | MODE_THEN)) {
+
+                endDownToMode(MODE_THEN);
+                flushSkip();
+                endMode(MODE_THEN);
+                startNewMode(MODE_ELSE | MODE_EXPRESSION | MODE_EXPECT);
+                startElement(SELSE);
+
+            }
+
             if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
+
         }
+
         COLON
 ;
 
@@ -3046,6 +3089,7 @@ colon[] { ENTRY_DEBUG } :
             // colon ends the current item in a list
             if (inTransparentMode(MODE_TOP_SECTION))
                 endDownToMode(MODE_TOP_SECTION);
+
         }
         COLON
 ;
@@ -3203,7 +3247,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             bool endbracket = false;
             bool modifieroperator = false;
             bool is_c_class_identifier = false;
-            qmark = false;
+            is_qmark = false;
             int real_type_count = 0;
             bool lcurly = false;
         ENTRY_DEBUG } :
@@ -3226,7 +3270,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         ({ ((inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0)) || (LA(1) != LBRACKET || next_token() == LBRACKET))
          && (LA(1) != IN || !inTransparentMode(MODE_FOR_CONDITION)) }?
 
-            set_bool[qmark, (qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
+            set_bool[is_qmark, (is_qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
 
             set_int[posin, LA(1) == IN ? posin = type_count : posin]
 
@@ -3362,7 +3406,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_int[real_type_count, type_count]
 
         // special case for ternary operator on its own
-        throw_exception[LA(1) == COLON && qmark]
+        throw_exception[LA(1) == COLON && is_qmark]
 
         // adjust specifier tokens to account for keyword async used as name (only for C#)
         set_int[specifier_count, token == ASYNC ? specifier_count - 1 : specifier_count]
@@ -3688,11 +3732,38 @@ atomic_call_full[] { ENTRY_DEBUG } :
 ;
 
 // qmark
-qmark_marked[] { SingleElement element(this); ENTRY_DEBUG } :
+qmark_name[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
         QMARK
+;
+
+qmark_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+                startElement(SOPERATOR);
+        }
+        QMARK ({ SkipBufferSize() == 0 }? QMARK)?
+
+;
+
+qmark[] { ENTRY_DEBUG } :
+        {
+            if(inTransparentMode(MODE_TERNARY | MODE_CONDITION))
+                endDownToMode(MODE_CONDITION);
+        }
+
+        qmark_marked
+        {
+            if(inTransparentMode(MODE_TERNARY | MODE_CONDITION)) {
+
+                endMode(MODE_CONDITION);
+                startNewMode(MODE_THEN | MODE_EXPRESSION | MODE_EXPECT);
+                startNoSkipElement(STHEN);
+
+            }
+        }
 ;
 
 /* linq expressions */
@@ -4000,7 +4071,7 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         // expression with right parentheses if a previous match is in one
         { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
 
-        COLON)*
+        colon_marked)*
 ;
 
 // match a linq_expression completely
@@ -4622,6 +4693,145 @@ call_argument_list[] { ENTRY_DEBUG } :
             startElement(SARGUMENT_LIST);
         }
         (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
+;
+
+ternary_expression[] { ENTRY_DEBUG } :
+    {
+        startNewMode(MODE_TERNARY);
+        startElement(STERNARY);
+ 
+        startNewMode(MODE_CONDITION);
+        startElement(SCONDITION);
+        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+    }
+    (
+        { LA(1) == LPAREN }?
+        expression_process lparen_marked
+            {
+                startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
+            } 
+        ({ perform_ternary_check() }? ternary_expression)? |
+        expression_no_ternary
+)
+;
+
+// an expression
+expression_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
+
+        expression_process
+
+        expression_part_plus_linq_no_ternary[type, call_count]
+;
+
+// expression with linq
+expression_part_plus_linq_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
+
+        { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token_string().find('=') == std::string::npos }?
+        (linq_expression_pure)=> linq_expression |
+
+        expression_part_no_ternary[type, call_count]
+;
+expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; ENTRY_DEBUG } :
+
+        // cast
+        { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+        UNION |
+
+        // cast
+        { inTransparentMode(MODE_INTERNAL_END_PAREN) && (LA(1) != CXX_CLASS || !keyword_name_token_set.member(next_token())) }?
+        (CLASS | CXX_CLASS) |
+
+        { next_token() == LPAREN }?
+        delegate_anonymous |
+
+        { next_token() == LCURLY }?
+        lambda_anonymous |
+
+        { inLanguage(LANGUAGE_CSHARP) }?
+        (lambda_expression_full_csharp) => lambda_expression_csharp |
+
+        { inLanguage(LANGUAGE_CXX) }?
+        (bracket_pair (LPAREN | LCURLY)) => lambda_expression_cpp |
+
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        (NEW template_argument_list)=> sole_new template_argument_list |
+
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
+
+        { notdestructor }? sole_destop { notdestructor = false; } |
+
+        // call
+        // distinguish between a call and a macro
+        { type == CALL || (perform_call_check(type, isempty, call_count, -1) && type == CALL) }?
+
+            // Added argument to correct markup of default parameters using a call.
+            // normally call claims left paren and start calls argument.
+            // however I believe parameter_list matches a right paren of the call.
+           (call[call_count] | sizeof_call | alignof_call) argument |
+
+        // macro call
+        { type == MACRO }? macro_call |
+
+        // general math operators
+        // looks like general operators and variable identifier can match same thing
+        (options { generateAmbigWarnings = false; } : general_operators
+        {
+            if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
+                general_operators();
+        }
+        | qmark | /* newop | */ period | member_pointer | member_pointer_dereference | dot_dereference |
+
+        // left parentheses
+        { function_pointer_name_check() }?
+        function_pointer_name |
+        lparen_marked
+        {
+            startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
+        } |
+
+        // right parentheses that only matches a left parentheses of an expression
+        { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+        {
+            // stop at this matching paren, or a preprocessor statement
+            endDownToModeSet(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
+            
+            if (inMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN))
+                endMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
+        }
+
+        // treat as operator for operator markup
+        rparen[true] |
+
+        // left curly brace
+        {
+            startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
+
+            startElement(SBLOCK);
+        }
+        LCURLY
+        {
+            incCurly();
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_CURLY);
+        } |
+        { inTransparentMode(MODE_INTERNAL_END_CURLY) }?
+        {
+
+            if(!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT)) {
+
+                endDownToMode(MODE_INTERNAL_END_CURLY);
+
+                endMode(MODE_INTERNAL_END_CURLY);
+
+            }
+
+        }
+        rcurly_argument |
+
+        // variable or literal
+        variable_identifier | keyword_name | auto_keyword[false]) | literals | noexcept_list | 
+
+        variable_identifier_array_grammar_sub[flag]
 ;
 
 // sizeof(...)
@@ -5563,8 +5773,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         (
             OPERATORS | TEMPOPS |
             TEMPOPE ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? EQUAL)? |
-            EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF |
-            QMARK ({ SkipBufferSize() == 0 }? QMARK)? | { inLanguage(LANGUAGE_JAVA) }? BAR |
+            EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
             NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
@@ -5589,7 +5798,7 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
         DESTOP
 ;
 
-// list of operators
+/** list of operators @todo is this still needed */
 general_operators_list[] { ENTRY_DEBUG } :
         OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
         DOTDOT | RVALUEREF | QMARK
@@ -5799,7 +6008,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
 
         { notdestructor }? sole_destop { notdestructor = false; } |
 
-//        generic_selection |
+       { !inTransparentMode(MODE_TERNARY | MODE_CONDITION) 
+            && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
+            && perform_ternary_check() }? ternary_expression |
 
         // call
         // distinguish between a call and a macro
@@ -5820,7 +6031,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
             if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
                 general_operators();
         }
-        | /* newop | */ period | member_pointer | member_pointer_dereference | dot_dereference |
+        | qmark | /* newop | */ period | member_pointer | member_pointer_dereference | dot_dereference |
 
         // left parentheses
         { function_pointer_name_check() }?
@@ -6217,7 +6428,7 @@ multops[] { LightweightElement element(this); ENTRY_DEBUG } :
             if (isoption(parseoptions, SRCML_OPTION_MODIFIER))
                 startElement(SMODIFIER);
         }
-        (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[qmark, true])
+        (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[is_qmark, true])
 ;
 
 // ...
@@ -6404,7 +6615,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             template_extends_java |
 
-            template_super_java | qmark_marked |
+            template_super_java | qmark_name |
             template_argument_expression
         )+ 
 ;
@@ -6414,7 +6625,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 template_argument_expression[] { ENTRY_DEBUG } :
 
         lparen_marked
-        ({ LA(1) != RPAREN }? ({ true }? general_operators | (variable_identifier)=>variable_identifier | literals | type_identifier | template_argument_expression))*
+        ({ LA(1) != RPAREN }? ({ true }? general_operators | qmark | (variable_identifier)=>variable_identifier | literals | type_identifier | template_argument_expression))*
        rparen_operator[true]
 
 ;
@@ -7189,8 +7400,9 @@ cpp_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
         }
-        (options { greedy = true; } :
+        (options { greedy = true; } : { !cpp_check_end() }? 
 
+        (   
         // commas as in a list
         { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
         comma |
@@ -7204,7 +7416,9 @@ cpp_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         // expression with right parentheses if a previous match is in one
         { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? cpp_expression |
 
-        COLON)*
+        COLON
+        )
+        )*
 ;
 
 // symbol in cpp

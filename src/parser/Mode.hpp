@@ -216,7 +216,10 @@ const static srcMLState::MODE_TYPE MODE_CALL;
 /** mode for an argument list */
  const static srcMLState::MODE_TYPE MODE_ARGUMENT_LIST;
 
-/** mode for an argument list */
- const static srcMLState::MODE_TYPE MODE_ASSOCIATION_LIST;
+/** mode for an _Generic association list */
+const static srcMLState::MODE_TYPE MODE_ASSOCIATION_LIST;
+
+/** mode for an tenary */
+const static srcMLState::MODE_TYPE MODE_TERNARY;
 
 #endif

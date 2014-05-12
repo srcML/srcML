@@ -186,7 +186,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>?</op:operator> <name>b</name> <op:operator>:</op:operator> <name>c</name></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> <op:operator>?</op:operator></condition><then> <expr><name>b</name></expr> </then><else><op:operator>:</op:operator> <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -351,7 +351,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>?</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -519,7 +519,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>?</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>+=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -687,7 +687,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><op:operator>?</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>-=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -855,7 +855,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>?</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>*=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1023,7 +1023,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>?</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>/=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1191,7 +1191,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>?</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>%=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1359,7 +1359,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><op:operator>?</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>&amp;=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1527,7 +1527,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><op:operator>?</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>|=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1695,7 +1695,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><op:operator>?</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>^=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1863,7 +1863,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><op:operator>?</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -2031,7 +2031,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>?</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
