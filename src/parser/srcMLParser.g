@@ -3367,9 +3367,11 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         */
         set_type[type, VARIABLE, ((((type_count - specifier_count) > 0 && LA(1) != OPERATORS 
                 && ((inLanguage(LANGUAGE_CXX) && !inMode(MODE_ACCESS_REGION)) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET
-                                              || (LA(1) == LPAREN && next_token() != RPAREN) || LA(1) == LCURLY || LA(1) == EQUAL || (inLanguage(LANGUAGE_CXX) && LA(1) == RBRACKET)))) ||
+                                              || (LA(1) == LPAREN && next_token() != RPAREN) || LA(1) == LCURLY || LA(1) == EQUAL
+                                              || (inTransparentMode(MODE_FOR_CONDITION) && LA(1) == COLON)
+                                              || (inLanguage(LANGUAGE_CSHARP) && (LA(1) == RBRACKET || LA(1) == IN))))) ||
                                                 (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET || LA(1) == EQUAL
-                                                    || (inLanguage(LANGUAGE_CXX) && LA(1) == RBRACKET))))]
+                                                    || (inLanguage(LANGUAGE_CSHARP) && (LA(1) == RBRACKET || LA(1) == IN)))))]
 
         // need to see if we possibly have a constructor/destructor name, with no type
         set_bool[isconstructor,
