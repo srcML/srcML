@@ -151,13 +151,6 @@ COMMENT_TEXT {
             prevLA = prevprevLA;
             prevprevLA = LA(1);
 
-            if(rawstring && first && LA(1) == '\012') {
-
-                rawstring = false;
-                $setType(mode);
-                selector->pop();
-                continue;
-            }
          }
          (
         '\000'..'\010'
@@ -166,6 +159,14 @@ COMMENT_TEXT {
 
         '\011' /* '\t' */ |
 
+        { if(rawstring && first && LA(1) == '\012') {
+
+                rawstring = false;
+                $setType(mode);
+                selector->pop();
+                goto newline_break;
+            } 
+        }
         '\012' /* '\n' */ { 
 
               // make sure to count newlines even when inside of comments
@@ -286,6 +287,7 @@ COMMENT_TEXT {
         ']'..'\377'
         )
         {
+         newline_break:
 
             ++realbegin;
 
