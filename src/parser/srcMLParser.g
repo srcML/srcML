@@ -1634,7 +1634,8 @@ perform_ternary_check[] returns [bool is_ternary] {
 
 ternary_check[] { ENTRY_DEBUG } :
 
-    ({ LA(1) != 1 }? (paren_pair | ~(QMARK | TERMINATE | COLON | RPAREN))) ({ LA(1) != 1 }? (paren_pair | ~(QMARK | TERMINATE | COLON | RPAREN)))* 
+    ({ LA(1) != 1 }? (paren_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET)))
+    ({ LA(1) != 1 }? (paren_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET)))* 
 
 ;
 
@@ -4703,12 +4704,139 @@ ternary_expression[] { ENTRY_DEBUG } :
         startElement(SCONDITION);
         startNewMode(MODE_EXPRESSION | MODE_EXPECT);
     }
-    { LA(1) == LPAREN }? (expression_process lparen_marked
+    { LA(1) == LPAREN }?
+    lparen_marked
         {
             startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
         } 
-     ({ perform_ternary_check() }? ternary_expression)?)?
+     ({ perform_ternary_check() }? ternary_expression)* |
+    expression_no_ternary
 
+;
+exception
+catch[...] {
+
+    // actually want to match nothing
+
+}
+
+// an expression
+expression_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
+
+        expression_process
+
+        expression_part_plus_linq_no_ternary[type, call_count]
+;
+
+// expression with linq
+expression_part_plus_linq_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
+
+        { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token_string().find('=') == std::string::npos }?
+        (linq_expression_pure)=> linq_expression |
+
+        expression_part_no_ternary[type, call_count]
+;
+expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; ENTRY_DEBUG } :
+
+        // cast
+        { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+        UNION |
+
+        // cast
+        { inTransparentMode(MODE_INTERNAL_END_PAREN) && (LA(1) != CXX_CLASS || !keyword_name_token_set.member(next_token())) }?
+        (CLASS | CXX_CLASS) |
+
+        { next_token() == LPAREN }?
+        delegate_anonymous |
+
+        { next_token() == LCURLY }?
+        lambda_anonymous |
+
+        { inLanguage(LANGUAGE_CSHARP) }?
+        (lambda_expression_full_csharp) => lambda_expression_csharp |
+
+        { inLanguage(LANGUAGE_CXX) }?
+        (bracket_pair (LPAREN | LCURLY)) => lambda_expression_cpp |
+
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        (NEW template_argument_list)=> sole_new template_argument_list |
+
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
+
+        { notdestructor }? sole_destop { notdestructor = false; } |
+
+        // call
+        // distinguish between a call and a macro
+        { type == CALL || (perform_call_check(type, isempty, call_count, -1) && type == CALL) }?
+
+            // Added argument to correct markup of default parameters using a call.
+            // normally call claims left paren and start calls argument.
+            // however I believe parameter_list matches a right paren of the call.
+           (call[call_count] | sizeof_call | alignof_call) argument |
+
+        // macro call
+        { type == MACRO }? macro_call |
+
+        // general math operators
+        // looks like general operators and variable identifier can match same thing
+        (options { generateAmbigWarnings = false; } : general_operators
+        {
+            if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
+                general_operators();
+        }
+        | qmark | /* newop | */ period | member_pointer | member_pointer_dereference | dot_dereference |
+
+        // left parentheses
+        { function_pointer_name_check() }?
+        function_pointer_name |
+        lparen_marked
+        {
+            startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
+        } |
+
+        // right parentheses that only matches a left parentheses of an expression
+        { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+        {
+            // stop at this matching paren, or a preprocessor statement
+            endDownToModeSet(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
+            
+            if (inMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN))
+                endMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
+        }
+
+        // treat as operator for operator markup
+        rparen[true] |
+
+        // left curly brace
+        {
+            startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
+
+            startElement(SBLOCK);
+        }
+        LCURLY
+        {
+            incCurly();
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_CURLY);
+        } |
+        { inTransparentMode(MODE_INTERNAL_END_CURLY) }?
+        {
+
+            if(!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT)) {
+
+                endDownToMode(MODE_INTERNAL_END_CURLY);
+
+                endMode(MODE_INTERNAL_END_CURLY);
+
+            }
+
+        }
+        rcurly_argument |
+
+        // variable or literal
+        variable_identifier | keyword_name | auto_keyword[false]) | literals | noexcept_list | 
+
+        variable_identifier_array_grammar_sub[flag]
 ;
 
 // sizeof(...)
@@ -5885,11 +6013,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
 
         { notdestructor }? sole_destop { notdestructor = false; } |
 
-        { !inTransparentMode(MODE_TERNARY | MODE_CONDITION) 
+       { !inTransparentMode(MODE_TERNARY | MODE_CONDITION) 
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
             && perform_ternary_check() }? ternary_expression |
-
-//        generic_selection |
 
         // call
         // distinguish between a call and a macro
