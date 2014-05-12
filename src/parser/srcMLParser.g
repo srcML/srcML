@@ -4705,7 +4705,7 @@ ternary_expression[] { ENTRY_DEBUG } :
         startNewMode(MODE_EXPRESSION | MODE_EXPECT);
     }
     { LA(1) == LPAREN }?
-    lparen_marked
+    expression_process lparen_marked
         {
             startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
         } 
@@ -4713,12 +4713,6 @@ ternary_expression[] { ENTRY_DEBUG } :
     expression_no_ternary
 
 ;
-exception
-catch[...] {
-
-    // actually want to match nothing
-
-}
 
 // an expression
 expression_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
