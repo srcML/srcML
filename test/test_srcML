@@ -55,12 +55,12 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
     fi
 
     if [[ $OS = "" ]]; then
-        ./sshall.py --test 'bash -c "cd /srcML; tar xvf srcML.tar.gz; mkdir -p bin; cp srcML/* bin/"'
+        ./sshall.py --test 'bash -c "cd /srcML; tar xvf srcML.tar.gz; mkdir -p bin; cp srcML/bin/* srcML/lib/* bin/"'
         ./sshall.py --test 'bash -c "cd /srcML/test/; rm -f srcMLTestReport*; make clean; cd suite; make; cd ..; ./testsuite.py"'
 
         ./sshall.py --test 'bash -c "grep -a \"Errors:\" /srcML/test/srcMLTestReport*"' > tmp_srcml_test_reports
     else
-        ./sshall.py --test --$OS 'bash -c "cd /srcML; tar xvf srcML.tar.gz; mkdir -p bin; cp srcML/* bin/"'
+        ./sshall.py --test --$OS 'bash -c "cd /srcML; tar xvf srcML.tar.gz; mkdir -p bin; cp srcML/bin/* srcML/lib/* bin/"'
         ./sshall.py --test --$OS 'bash -c "cd /srcML/test/; rm -f srcMLTestReport*; make clean; cd suite; make; cd ..; ./testsuite.py"'
 
         ./sshall.py --test --$OS 'bash -c "grep -a \"Errors:\" /srcML/test/srcMLTestReport*"' >> tmp_srcml_test_reports
