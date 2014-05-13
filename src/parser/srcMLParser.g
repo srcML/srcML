@@ -4624,6 +4624,23 @@ call[int call_count = 1] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
+
+// function call for Objective_C
+objective_c_call[] { ENTRY_DEBUG } :
+        {
+
+        // start a new mode that will end after the argument list
+        //startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+
+        // start the function call element
+        startElement(SFUNCTION_CALL);
+
+        }
+
+        LBRACKET function_identifier function_identifier RBRACKET
+
+;
+
 // argument list to a call
 call_argument_list[] { ENTRY_DEBUG } :
         {
@@ -5966,6 +5983,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
 
         // macro call
         { type == MACRO }? macro_call |
+
+        { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        objective_c_call | 
 
         // general math operators
         // looks like general operators and variable identifier can match same thing
