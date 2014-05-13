@@ -61,6 +61,9 @@ namespace LanguageName {
     /** String constant for AspectJ language */
     const char* const LANGUAGE_ASPECTJ = "AspectJ";
 
+    /** String constant for Objective-C language */
+    const char* const LANGUAGE_OBJECTIVE_C = "Objective-C";
+
 
 }
 
@@ -99,6 +102,9 @@ public:
 
         /** Interger Constant for C# language */
         LANGUAGE_CSHARP = 16,
+
+        /** Interger Constant for Objective-C language */
+        LANGUAGE_OBJECTIVE_C = 32,
 
         /** Interger Constant for languages in C++ family i.e. C++/C#  */
         LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP,

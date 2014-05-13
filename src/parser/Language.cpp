@@ -34,5 +34,6 @@ language_pair Language::lang2int[] = {
     language_pair( LanguageName::LANGUAGE_JAVA, LANGUAGE_JAVA ),
     language_pair( LanguageName::LANGUAGE_ASPECTJ, LANGUAGE_ASPECTJ ),
     language_pair( LanguageName::LANGUAGE_CSHARP, LANGUAGE_CSHARP ),
+    language_pair( LanguageName::LANGUAGE_OBJECTIVE_C, LANGUAGE_OBJECTIVE_C ),
     language_pair( LanguageName::LANGUAGE_NONE, LANGUAGE_NONE ),
 };
