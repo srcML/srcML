@@ -27,7 +27,7 @@
 #pragma GCC diagnostic pop
 #include <boost/foreach.hpp>
 
-#ifdef _MSC_BUILD  
+#if defined(_MSC_BUILD) || defined(__MINGW32__)
 #include <io.h>
 #include <fcntl.h>
 #include <windows.h>
@@ -51,7 +51,7 @@ void srcml_execute(const srcml_request_t& srcml_request,
         int prevoutfd = fds[0];
         fds[0] = fds[1] = -1;
         if (pipeline.size() > 1 && !last) {
-#ifndef _MSC_BUILD            
+#if !defined(_MSC_BUILD) && !defined(__MINGW32__)
             pipe(fds);
 #else
             HANDLE read_pipe;
