@@ -25,7 +25,7 @@
 
 #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #define BOOST_MPL_LIMIT_VECTOR_SIZE 50
-#define BOOST_MPL_LIMIT_MAP_SIZE 50
+#define BOOST_MPL_LIMIT_MAP_SIZE 30
 #include <boost/mpl/vector_c.hpp>
 #include <boost/mpl/map.hpp>
 #include <boost/mpl/accumulate.hpp>
