@@ -111,6 +111,7 @@ struct bitset_buckets {
 template<typename token_set>
 const unsigned long bitset_buckets<token_set>::data[bitset_buckets<token_set>::num_token_longs] = 
 {
+
     boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<unsigned long, 0> >::type::value,
     boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<unsigned long, 1> >::type::value,
     boost::mpl::at<bitset_buckets<token_set>::buckets, boost::mpl::integral_c<unsigned long, 2> >::type::value,
