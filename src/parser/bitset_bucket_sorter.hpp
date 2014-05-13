@@ -144,14 +144,14 @@ const unsigned long bitset_buckets<token_set>::data[bitset_buckets<token_set>::n
 template<typename token_set, int bucket_number, int limit = srcMLParser::START_ELEMENT_TOKEN>
 struct bitset_bucket {
 
-    typedef typename boost::mpl::if_<boost::mpl::less<boost::mpl::times<boost::mpl::long_<bucket_number>, boost::mpl::int_<32> >, boost::mpl::long_<limit> >,
-            typename boost::mpl::accumulate<token_set, boost::mpl::long_<0>,
+    typedef typename boost::mpl::if_<boost::mpl::less<boost::mpl::times<boost::mpl::integral_c<unsigned long, bucket_number>, boost::mpl::integral_c<unsigned long, 32> >, boost::mpl::integral_c<unsigned long, limit> >,
+            typename boost::mpl::accumulate<token_set, boost::mpl::integral_c<unsigned long, 0>,
                 boost::mpl::if_<
-                    boost::mpl::equal_to<boost::mpl::shift_right<boost::mpl::_2, boost::mpl::long_<5> >, boost::mpl::long_<bucket_number> >,
-                    boost::mpl::bitor_<boost::mpl::_1, boost::mpl::shift_left<boost::mpl::long_<1>, boost::mpl::modulus<boost::mpl::_2, boost::mpl::long_<32> > > >,
+                    boost::mpl::equal_to<boost::mpl::shift_right<boost::mpl::_2, boost::mpl::integral_c<unsigned long, 5> >, boost::mpl::integral_c<unsigned long, bucket_number> >,
+                    boost::mpl::bitor_<boost::mpl::_1, boost::mpl::shift_left<boost::mpl::integral_c<unsigned long, 1>, boost::mpl::modulus<boost::mpl::_2, boost::mpl::integral_c<unsigned long, 32> > > >,
                     boost::mpl::_1 >
                 >::type,
-            boost::mpl::long_<0> >::type type;
+            boost::mpl::integral_c<unsigned long, 0> >::type type;
 
 };
 
