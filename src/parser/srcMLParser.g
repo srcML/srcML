@@ -138,7 +138,7 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -558,6 +558,10 @@ tokens {
     SANNOTATION;
     SALIGNOF;
 
+    // Objective-C
+    SOBJECT;
+    SSELECTOR;
+
     // Last token used for boundary
     END_ELEMENT_TOKEN;
 }
@@ -646,7 +650,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         // end of line
         line_continuation | EOL | LINECOMMENT_START |
 
-        comma | { inLanguage(LANGUAGE_JAVA) }? bar |
+        comma | { inLanguage(LANGUAGE_JAVA) }? bar | { inTransparentMode(MODE_OBJECTIVE_C_CALL) }? rbracket |
 
         { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }? rparen[false] |
 
@@ -4624,23 +4628,6 @@ call[int call_count = 1] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-
-// function call for Objective_C
-objective_c_call[] { ENTRY_DEBUG } :
-        {
-
-        // start a new mode that will end after the argument list
-        //startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
-
-        // start the function call element
-        startElement(SFUNCTION_CALL);
-
-        }
-
-        LBRACKET function_identifier function_identifier RBRACKET
-
-;
-
 // argument list to a call
 call_argument_list[] { ENTRY_DEBUG } :
         {
@@ -4651,6 +4638,38 @@ call_argument_list[] { ENTRY_DEBUG } :
             startElement(SARGUMENT_LIST);
         }
         (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
+;
+
+// function call for Objective_C
+objective_c_call[] { ENTRY_DEBUG } :
+        {
+
+        // start a new mode that will end after the argument list
+        startNewMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+
+        // start the function call element
+        startElement(SFUNCTION_CALL);
+
+        }
+
+        LBRACKET
+        objective_c_call_object
+
+;
+
+// function call for Objective_C
+objective_c_call_object[] { ENTRY_DEBUG } :
+        {
+
+        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+
+        // start the function call element
+        startElement(SOBJECT);
+        startElement(SEXPRESSION);
+
+        }
+        (function_identifier { endMode(); } | objective_c_call)
+
 ;
 
 ternary_expression[] { ENTRY_DEBUG } :
@@ -5850,6 +5869,21 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
         }
 
 ;
+
+rbracket[] { ENTRY_DEBUG } :
+
+    {
+        endDownToMode(MODE_OBJECTIVE_C_CALL | MODE_LIST);
+    }
+    RBRACKET
+    {
+
+    if(inMode(MODE_OBJECTIVE_C_CALL))
+        endMode(MODE_OBJECTIVE_C_CALL);
+
+    }
+
+; 
 
 // Dot (period) operator
 period[] { LightweightElement element(this); ENTRY_DEBUG } :
