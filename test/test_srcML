@@ -12,13 +12,13 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
 
         ./sshall.py --test "bash -c \"date \\\"$(date "+%m%d%H%M%Y.%S")\\\"\""
 
-        ./sshall.py --test 'bash -c "cd /srcML; git pull; git checkout issue321b; git pull; cd ..; chown -R srcml:srcml /srcML"'
+        ./sshall.py --test 'bash -c "cd /srcML; git pull; git checkout master; git pull; cd ..; chown -R srcml:srcml /srcML"'
 
     else
 
         ./sshall.py --test --$OS "bash -c \"date \\\"$(date "+%m%d%H%M%Y.%S")\\\"\""
 
-        ./sshall.py --test --$OS 'bash -c "cd /srcML; git pull; git checkout issue321b; git pull; cd ..; chown -R srcml:srcml /srcML"'
+        ./sshall.py --test --$OS 'bash -c "cd /srcML; git pull; git checkout master; git pull; cd ..; chown -R srcml:srcml /srcML"'
 
     fi
 
