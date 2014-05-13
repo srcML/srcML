@@ -5,36 +5,38 @@ In short, srcML is an XML format for source code. Specifically, the parsing tech
 srcML toolkit includes:
 
 * srcML client
-  Both conversion to the srcML format, operations on srcML, as well as, conversion of srcML to source code is accomplished using the command srcml
+
+  	Both conversion to the srcML format, operations on srcML, as well as, conversion of srcML to source code is accomplished using the command `srcml`.
 
 * libsrcml
-  The library provides a C interface for translation of source code to and from srcML, as well as, efficient manipulation and fact extraction (XPath, XSLT, and RelaxNG).  The client srcml is built utilizing libsrcml.
+
+  	The library provides a C interface for translation of source code to and from srcML, as well as, efficient manipulation and fact extraction (XPath, XSLT, and RelaxNG).  The srcMLclient `srcml` is built utilizing libsrcml.
 
 # Building srcML
 
-srcML is built using cmake, www.cmake.org, (version 2.8.12 or above) and supports builds for OS X, Fedora, Ubuntu, Linux Mint, and Windows Visual Studio.
+srcML is built using cmake, www.cmake.org, (version 2.8.12 or above) and currently supports builds for OS X, Fedora, Ubuntu, Linux Mint, and Windows Visual Studio.
 
-In source (builds within the source directory) and out of source 	builds (builds outside the source directory) are supported.  However, the use of out of source build is recommended.
+In source (builds within the source directory) and out of source builds (builds outside the source directory) are supported.  However, the use of out of source build is recommended.
 
 ---
 
 ## Unix
 
-To generate a simple make file in the current directory run:
+* To generate a simple make file in the current directory run:
 
-For in source builds:  
+	* For in source builds:  
 
-	cmake .
+		`cmake .`
 
-For out of source builds:
+	* For out of source builds:
 
-	cmake path_to_srcml
+		`cmake path_to_srcml`
 
-The following make commands are supported with their usual meaning
+* The following make commands are supported with their usual meaning
 
-	make
-	make clean
- 	make tests
+	`make`  
+	`make clean`  
+ 	`make tests`  
 
 ### Unix Distribution Specifics
 
@@ -46,19 +48,19 @@ The following make commands are supported with their usual meaning
 * boost  
 * cmake  
 
-* For srcML documentation generation:
+*# For srcML documentation generation:*  
 
   * man2html  
   * docbook  
   * docbook2x  
 
-* additional packages that may not needed, but are recommended (for timing etc.)
+*# additional packages that may not needed, but are recommended (for timing etc.)*  
 
   *	coreutils  
   *	gnu-sed  
   *	gnu-time  
 
-* for dmg/pkg distruction
+*# for dmg/pkg distribution*
 
   * PackageMaker  
 
@@ -84,20 +86,20 @@ The following make commands are supported with their usual meaning
 * boost-devel  
 * boost  
 * libcurl-devel  
-	* openssl-devel  
-	* antlr-C++  
+* openssl-devel  
+* antlr-C++  
 
-# srcML documentation generation
+*# srcML documentation generation*
 
 * man2html  
 * 	docbook2X  
 
-# rpm generation
+*# rpm generation*
 
 * @development-tools  
 * fedora-packager  
 
-# for mingw cross compilation for Windows
+*# for mingw cross compilation for Windows*
 
 * dos2unix  
 * mingw32-gcc-c++  
@@ -152,7 +154,7 @@ install the lastest version of cmake.
 * There is no man2html package on OpenSUSE for srcML documentation
 generation. The url is:
 
-	http://www.oit.uci.edu/indiv/ehood/tar/man2html3.0.1.tar.gz
+	`http://www.oit.uci.edu/indiv/ehood/tar/man2html3.0.1.tar.gz`
 
 * Use the following to install as ./install.me does not appear to use
 the right location
@@ -173,7 +175,7 @@ the right location
 * libcurl4-openssl-dev  
 * libssl-dev  
 
-# for srcML documentation generation
+*# for srcML documentation generation*
 
 * man2html  
 * docbook2X  
@@ -193,8 +195,10 @@ to download and install the lastest version of cmake.
 
 * The boost libraries are statically compiled in, 64-bit machines do not provide adequate libraries for static compilation (require compilation with -fPIC).  Download boost at http://www.boost.org.  The commands to build boost (written for boost 1.55.0) are:
 
-	./bootstrap.sh --without-libraries=atomic,chrono,context,coroutine,exception,graph,graph_parallel,iostreams,locale,log,math,mpi,python,random,serialization,signals,test,timer,wave`
-			`./b2 link=static cxxflags="-fPIC -static -Wl,--whole-archive" threading=multi install
+	`./bootstrap.sh --without-libraries=atomic,chrono,context,coroutine,exception,graph,graph_parallel,iostreams,locale,log,math,mpi,python,random,serialization,signals,test,timer,wave`
+	
+	
+	`./b2 link=static cxxflags="-fPIC -static -Wl,--whole-archive" threading=multi install`
 
 ---
 
@@ -206,18 +210,19 @@ preparation.
 ## Packages Required
 
 * cmake from `http://www.cmake.org`  
-# some GNU command line utilities (from cygwin or other sources)
+
+*# some GNU command line utilities (from cygwin or other sources)*  
 * grep  
 * sed  
 
-# required libraries (most are available from http://xmlsoft.org/sources/win32/)
+*# required libraries (most are available from http://xmlsoft.org/sources/win32/)*
 * iconv  
 * libxml2  
 * libxslt  
-* zlib 
-* libcurl http://curl.haxx.se/download.html
-* antlr 2 http://www.antlr2.org/download/antlr-2.7.7.msi and http://www.antlr2.org/download/antlr-2.7.7.tar.gz
-* boost
+* zlib  
+* libcurl http://curl.haxx.se/download.html  
+* antlr 2 http://www.antlr2.org/download/antlr-2.7.7.msi and http://www.antlr2.org/download/antlr-2.7.7.tar.gz  
+* boost  
 
 ##### Notes
 
