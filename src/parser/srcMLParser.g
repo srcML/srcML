@@ -138,7 +138,7 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -4003,6 +4003,58 @@ complete_default_parameter[] { CompleteElement element(this); int count_paren = 
 
 ;
 
+complete_objective_c_call[] { CompleteElement element(this); int bracket_count = 0; bool first = true; ENTRY_DEBUG} :
+
+    { inputState->guessing }? bracket_pair |
+
+    {
+        // start a mode to end at right bracket with expressions inside
+        if(!inMode(MODE_EXPRESSION | MODE_EXPECT))
+            startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
+        else
+            startNewMode(MODE_TOP);
+
+    }
+
+    (options { greedy = true; } :
+
+        (
+
+            // end of objective c call
+            { inTransparentMode(MODE_OBJECTIVE_C_CALL) && bracket_count }? rbracket set_int[bracket_count, bracket_count - 1] |
+
+            // objective c argument list
+            { LA(1) == LBRACKET }? expression set_int[bracket_count, bracket_count + 1] |
+
+            // objective c argument list
+            { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
+            (function_identifier (COLON | RBRACKET)) => objective_c_call_message |
+
+            // objective c argument
+            { inTransparentMode(MODE_OBJECTIVE_C_CALL) }?
+            (function_identifier (COLON | RBRACKET) | COLON) => objective_c_call_argument |
+
+            // commas as in a list
+            { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
+            comma |
+
+            // right parentheses, unless we are in a pair of parentheses in an expression
+            { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
+
+            // argument mode (as part of call)
+            { inMode(MODE_ARGUMENT) }? argument |
+
+            // expression with right parentheses if a previous match is in one
+            { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
+
+            colon_marked
+
+        )
+
+    )*
+
+;
+
 // match a complete expression no stream
 complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
@@ -4018,16 +4070,7 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         // right parentheses, unless we are in a pair of parentheses in an expression
         { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
 
-        // end of objective c call
-        { inTransparentMode(MODE_OBJECTIVE_C_CALL) }? rbracket |
-
-        // objective c argument list
-        { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
-        (function_identifier (COLON | RBRACKET)) => objective_c_call_message |
-
-        // objective c argument
-        { inTransparentMode(MODE_OBJECTIVE_C_CALL) }?
-        (function_identifier (COLON | RBRACKET) | COLON) => objective_c_call_argument |
+        { inLanguage(LANGUAGE_OBJECTIVE_C) }? expression_process complete_objective_c_call |
 
         // argument mode (as part of call)
         { inMode(MODE_ARGUMENT) }? argument |
