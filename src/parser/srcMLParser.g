@@ -4003,6 +4003,8 @@ complete_default_parameter[] { CompleteElement element(this); int count_paren = 
 
 ;
 
+
+// match a complete objective_c_call no stream
 complete_objective_c_call[] { CompleteElement element(this); int bracket_count = 0; ENTRY_DEBUG} :
 
     { inputState->guessing }? bracket_pair |
