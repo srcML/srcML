@@ -541,9 +541,9 @@ protected:
 
     /**
      * endDownOverMode
-     * @param mode mode to end down to
+     * @param mode mode to down over
      *
-     * End elements down to and including the mode mode.
+     * End elements while in mode mode.
      */
      void endDownOverMode(const srcMLState::MODE_TYPE& mode) {
 
