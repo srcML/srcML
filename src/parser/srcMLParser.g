@@ -4020,9 +4020,6 @@ complete_objective_c_call[] { CompleteElement element(this); int bracket_count =
 
     (options { greedy = true; } :
 
-        { LA(1) != RBRACKET || bracket_count }?
-        (
-
             // end of objective c call
             { inTransparentMode(MODE_OBJECTIVE_C_CALL) && bracket_count }? rbracket set_int[bracket_count, bracket_count - 1] |
 
@@ -4051,8 +4048,6 @@ complete_objective_c_call[] { CompleteElement element(this); int bracket_count =
             { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
 
             colon_marked
-
-        )
 
     )*
 
