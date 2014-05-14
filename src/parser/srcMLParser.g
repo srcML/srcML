@@ -4741,16 +4741,10 @@ objective_c_call_argument[] { bool first = true; ENTRY_DEBUG } :
         startNewMode(MODE_TOP);
     }
 
-    (objective_c_call_selector ({ first }? COLON objective_c_call_argument_value set_bool[first, false])* | COLON objective_c_call_argument_value)
+    objective_c_call_selector ({ first }? objective_c_call_argument_value set_bool[first, false])*
     { 
         endDownOverMode(MODE_TOP);
     }
-;
-
-objective_c_call_argument_value[] { ENTRY_DEBUG } :
-
-    argument ({ look_past_rule(&srcMLParser::function_identifier) != COLON }? ({ inMode(MODE_ARGUMENT_LIST) }? objective_c_call_message | { inMode(MODE_ARGUMENT) }? objective_c_call_argument | rbracket | expression))*
-
 ;
 
 // function call message for Objective_C
@@ -4760,7 +4754,13 @@ objective_c_call_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         startElement(SSELECTOR);
     }
-    function_identifier
+    (function_identifier (COLON)* | COLON)
+
+;
+
+objective_c_call_argument_value[] { ENTRY_DEBUG } :
+
+    argument ({ LA(1) != COLON && look_past_rule(&srcMLParser::function_identifier) != COLON }? ({ inMode(MODE_ARGUMENT_LIST) }? objective_c_call_message | { inMode(MODE_ARGUMENT) }? objective_c_call_argument | rbracket | expression))*
 
 ;
 
