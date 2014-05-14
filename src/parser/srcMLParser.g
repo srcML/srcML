@@ -966,6 +966,8 @@ look_past_three[int skiptoken1, int skiptoken2, int skiptoken3] returns [int tok
 // or START_ELEMENT_TOKEN which should never match a real token
 look_past_rule[void (srcMLParser::*rule)()] returns[int token] {
 
+    ENTRY_DEBUG
+
     int place = mark();
     inputState->guessing++;
 
@@ -4743,7 +4745,8 @@ objective_c_call_argument[] { bool first = true; ENTRY_DEBUG } :
 
     objective_c_call_selector ({ first }? objective_c_call_argument_value set_bool[first, false])*
     { 
-        endDownOverMode(MODE_TOP);
+        if(inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_TOP))
+            endDownOverMode(MODE_TOP);
     }
 ;
 
@@ -4760,7 +4763,9 @@ objective_c_call_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 objective_c_call_argument_value[] { ENTRY_DEBUG } :
 
-    argument ({ LA(1) != COLON && look_past_rule(&srcMLParser::function_identifier) != COLON }? ({ inMode(MODE_ARGUMENT_LIST) }? objective_c_call_message | { inMode(MODE_ARGUMENT) }? objective_c_call_argument | rbracket | expression))*
+    argument
+    ({ inTransparentMode(MODE_OBJECTIVE_C_CALL) && LA(1) != COLON && look_past_rule(&srcMLParser::function_identifier) != COLON }? 
+    ({ inMode(MODE_ARGUMENT_LIST) }? objective_c_call_message | { inMode(MODE_ARGUMENT) }? objective_c_call_argument | rbracket | expression))*
 
 ;
 
