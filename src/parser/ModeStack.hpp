@@ -547,6 +547,22 @@ protected:
      */
      void endDownOverMode(const srcMLState::MODE_TYPE& mode) {
 
+        if (!inTransparentMode(mode))
+            return;
+
+        while (size() > 1 && !inMode(mode))
+            endMode();
+        endMode();
+    }
+
+    /**
+     * endWhileMode
+     * @param mode mode to down over
+     *
+     * End elements while in mode mode.
+     */
+     void endWhileMode(const srcMLState::MODE_TYPE& mode) {
+
         while (size() > 1 && inMode(mode))
             endMode();
     }
