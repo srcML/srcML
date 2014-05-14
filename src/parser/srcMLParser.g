@@ -4066,27 +4066,22 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         (options { greedy = true; } :
 
-            { LA(1) != RBRACKET }?
-            (
+            // commas as in a list
+            { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
+            comma |
 
-                // commas as in a list
-                { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
-                comma |
+            // right parentheses, unless we are in a pair of parentheses in an expression
+            { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
 
-                // right parentheses, unless we are in a pair of parentheses in an expression
-                { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
+            { inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == LBRACKET }? complete_objective_c_call |
 
-                { inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == LBRACKET }? complete_objective_c_call |
+            // argument mode (as part of call)
+            { inMode(MODE_ARGUMENT) }? argument |
 
-                // argument mode (as part of call)
-                { inMode(MODE_ARGUMENT) }? argument |
+            // expression with right parentheses if a previous match is in one
+            { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
 
-                // expression with right parentheses if a previous match is in one
-                { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
-
-                colon_marked
-
-            )
+            colon_marked
 
         )*
 ;
