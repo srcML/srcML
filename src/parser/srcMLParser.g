@@ -138,7 +138,7 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -4003,13 +4003,13 @@ complete_default_parameter[] { CompleteElement element(this); int count_paren = 
 
 ;
 
-complete_objective_c_call[] { CompleteElement element(this); int bracket_count = 0; bool first = true; ENTRY_DEBUG} :
+complete_objective_c_call[] { CompleteElement element(this); int bracket_count = 0; ENTRY_DEBUG} :
 
     { inputState->guessing }? bracket_pair |
 
     {
         // start a mode to end at right bracket with expressions inside
-        if(!inMode(MODE_EXPRESSION | MODE_EXPECT))
+        if(!inMode(MODE_EXPRESSION))
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
         else
             startNewMode(MODE_TOP);
@@ -4018,6 +4018,7 @@ complete_objective_c_call[] { CompleteElement element(this); int bracket_count =
 
     (options { greedy = true; } :
 
+        { LA(1) != RBRACKET || bracket_count }?
         (
 
             // end of objective c call
@@ -4063,22 +4064,29 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         (options { greedy = true; } :
 
-        // commas as in a list
-        { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
-        comma |
+            { LA(1) != RBRACKET }?
+            (
 
-        // right parentheses, unless we are in a pair of parentheses in an expression
-        { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
+                // commas as in a list
+                { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
+                comma |
 
-        { inLanguage(LANGUAGE_OBJECTIVE_C) }? expression_process complete_objective_c_call |
+                // right parentheses, unless we are in a pair of parentheses in an expression
+                { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
 
-        // argument mode (as part of call)
-        { inMode(MODE_ARGUMENT) }? argument |
+                { inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != RBRACKET }? expression_process complete_objective_c_call |
 
-        // expression with right parentheses if a previous match is in one
-        { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
+                // argument mode (as part of call)
+                { inMode(MODE_ARGUMENT) }? argument |
 
-        colon_marked)*
+                // expression with right parentheses if a previous match is in one
+                { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
+
+                colon_marked
+
+            )
+
+        )*
 ;
 
 // match a linq_expression completely
