@@ -962,6 +962,31 @@ look_past_three[int skiptoken1, int skiptoken2, int skiptoken3] returns [int tok
     rewind(place);
 } :;
 
+// returns the next token after apply the given rule on success
+// or START_ELEMENT_TOKEN which should never match a real token
+look_past_rule[srcMLParser * parser, void (srcMLParser::*rule)()] returns[int token] {
+
+    int place = mark();
+    inputState->guessing++;
+
+    try {
+
+       (parser->*rule)();
+
+        token = LA(1);
+
+    } catch(...) {
+
+        token = START_ELEMENT_TOKEN;
+
+    }
+
+    inputState->guessing--;
+    rewind(place);
+
+
+} :;
+
 /* functions */
 
 // beginning function declaration/header
@@ -4724,7 +4749,7 @@ objective_c_call_argument[] { bool first = true; ENTRY_DEBUG } :
 
 objective_c_call_argument_value[] { ENTRY_DEBUG } :
 
-    argument ({ next_token() != COLON }? ({ inMode(MODE_ARGUMENT_LIST) }? objective_c_call_message | { inMode(MODE_ARGUMENT) }? objective_c_call_argument | rbracket | expression))*
+    argument ({ look_past_rule(this, &srcMLParser::function_identifier) != COLON }? ({ inMode(MODE_ARGUMENT_LIST) }? objective_c_call_message | { inMode(MODE_ARGUMENT) }? objective_c_call_argument | rbracket | expression))*
 
 ;
 
