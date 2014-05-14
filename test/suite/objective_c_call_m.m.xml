@@ -100,4 +100,48 @@
 <expr_stmt><expr><call><call>[<receiver><expr><name>foo</name> <argument><expr><name>bar</name></expr></argument></expr></receiver>]</call><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr>0 + <call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call> + 1</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>0 + <call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call> + 1</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>Foo</name></type> <name>foo</name> <init>= <expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>foo</name> <init>= <expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call> + 1</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call></expr></argument>, <argument><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call> + 0</expr></argument>, <argument><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call> + 1</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name><index>[<expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name><index>[<expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call></expr>]</index><index>[<expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name><index>[<expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call> + 0</expr>]</index><index>[<expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call> + 1</expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
 </unit>

@@ -4018,6 +4018,17 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         // right parentheses, unless we are in a pair of parentheses in an expression
         { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
 
+        // end of objective c call
+        { inTransparentMode(MODE_OBJECTIVE_C_CALL) }? rbracket |
+
+        // objective c argument list
+        { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
+        (function_identifier (COLON | RBRACKET)) => objective_c_call_message |
+
+        // objective c argument
+        { inTransparentMode(MODE_OBJECTIVE_C_CALL) }?
+        (function_identifier (COLON | RBRACKET) | COLON) => objective_c_call_argument |
+
         // argument mode (as part of call)
         { inMode(MODE_ARGUMENT) }? argument |
 
