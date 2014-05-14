@@ -4699,6 +4699,7 @@ objective_c_call_receiver[] { ENTRY_DEBUG } :
 objective_c_call_message[] { ENTRY_DEBUG } :
     {
 
+        endDownToMode(MODE_ARGUMENT_LIST);
         clearMode(MODE_ARGUMENT_LIST);
 
         // start the function call element
@@ -5947,9 +5948,6 @@ rbracket[] { ENTRY_DEBUG } :
             endDownOverMode(MODE_OBJECTIVE_C_CALL);
 
         }
-
-        if(inMode(MODE_EXPRESSION) && inTransparentMode(MODE_OBJECTIVE_C_CALL))
-            endMode();
 
     }
 
