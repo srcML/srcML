@@ -2877,6 +2877,9 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
                 || (LA(1) == IN && inLanguage(LANGUAGE_CSHARP))) }?
         variable_declaration_range |
 
+        { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
+        objective_c_call_argument_list |
+
         // in an argument list expecting an argument
         { inMode(MODE_ARGUMENT | MODE_LIST) }?
         argument |
@@ -4645,10 +4648,12 @@ objective_c_call[] { ENTRY_DEBUG } :
         {
 
         // start a new mode that will end after the argument list
-        startNewMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+        startNewMode(MODE_OBJECTIVE_C_CALL);
 
         // start the function call element
         startElement(SFUNCTION_CALL);
+
+        startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
 
         }
 
@@ -4657,7 +4662,7 @@ objective_c_call[] { ENTRY_DEBUG } :
 
 ;
 
-// function call for Objective_C
+// function call object  for Objective_C
 objective_c_call_object[] { ENTRY_DEBUG } :
         {
 
@@ -4669,6 +4674,20 @@ objective_c_call_object[] { ENTRY_DEBUG } :
 
         }
         (function_identifier { endMode(); } | objective_c_call)
+
+;
+
+// function call argument list for Objective_C
+objective_c_call_argument_list[] { ENTRY_DEBUG } :
+        {
+
+        replaceMode(MODE_ARGUMENT_LIST, MODE_EXPRESSION | MODE_EXPECT);
+
+        // start the function call element
+        startElement(SARGUMENT_LIST);
+
+        }
+        function_identifier (COLON argument)*
 
 ;
 
@@ -5873,14 +5892,21 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
 rbracket[] { ENTRY_DEBUG } :
 
     {
-        endDownToMode(MODE_OBJECTIVE_C_CALL | MODE_LIST);
+        endDownToMode(MODE_LIST);
+        endMode(MODE_LIST);
     }
     RBRACKET
     {
 
-    if(inMode(MODE_OBJECTIVE_C_CALL))
+    if(inMode(MODE_OBJECTIVE_C_CALL)) {
+
+        endDownToMode(MODE_OBJECTIVE_C_CALL);
         endMode(MODE_OBJECTIVE_C_CALL);
 
+    }
+
+    if(inMode(MODE_EXPRESSION) && inTransparentMode(MODE_OBJECTIVE_C_CALL))
+        endMode();
     }
 
 ; 
