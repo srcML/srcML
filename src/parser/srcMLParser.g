@@ -4775,7 +4775,7 @@ objective_c_call_argument[] { bool first = true; ENTRY_DEBUG } :
         startNewMode(MODE_ARGUMENT);
 
     }
-    objective_c_call_selector ({ first && LA(1) != RBRACKET }? argument set_bool[first, false])*
+    objective_c_call_selector (options { greedy = true; } : { first && LA(1) != RBRACKET }? argument set_bool[first, false])*
 ;
 
 // function call message for Objective_C
@@ -4785,7 +4785,7 @@ objective_c_call_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         startElement(SSELECTOR);
     }
-    (function_identifier (COLON)* | COLON)
+    (function_identifier (options { greedy = true; } : COLON)* | COLON)
 
 ;
 
