@@ -138,7 +138,7 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -2880,6 +2880,9 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
         objective_c_call_argument_list |
 
+        { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT) }?
+        objective_c_call_argument |
+
         // in an argument list expecting an argument
         { inMode(MODE_ARGUMENT | MODE_LIST) }?
         argument |
@@ -4687,9 +4690,24 @@ objective_c_call_argument_list[] { ENTRY_DEBUG } :
         startElement(SARGUMENT_LIST);
 
         }
-        function_identifier (COLON argument)*
+        objective_c_call_argument
 
 ;
+
+// function call argument list for Objective_C
+objective_c_call_argument[] { ENTRY_DEBUG } :
+
+        {
+            startNewMode(MODE_TOP);
+        }
+
+        (function_identifier (COLON argument)? | COLON argument)
+        { 
+            endDownToMode(MODE_TOP);
+            endMode(MODE_TOP);
+        }
+;
+
 
 ternary_expression[] { ENTRY_DEBUG } :
     {
