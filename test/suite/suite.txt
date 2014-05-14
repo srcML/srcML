@@ -161,6 +161,8 @@ LANGUAGE_CSHARP using_statement_cs
 LANGUAGE_CSHARP specifier_cs
 LANGUAGE_CSHARP modifier_cs
 
+LANGUAGE_OBJECTIVE_C objective_c_call_m
+
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
 LANGUAGE_JAVA keyword_java

@@ -62,6 +62,9 @@ BASE_CS=${call language,'LANGUAGE_CSHARP'}
 # base for C# only
 BASE_CS_GEN=${call language,'LANGUAGE_CSHARP_GEN'}
 
+# base Objective-C
+BASE_OBJECTIVE_C=${call language,'LANGUAGE_OBJECTIVE_C'}
+
 # base for Java only
 BASE_JAVA=${call language,'LANGUAGE_JAVA'}
 
@@ -210,17 +213,6 @@ GEN_PART=${foreach nm, $(GEN_SEP), $(nm).cpp.xml}
 
 SEP_FILES=$(SEP_BASE) preprocessor
 
-# base for all of Java
-BASE_JAVA_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO)
-
-BASE_JAVA_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
-
-GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL_GEN), $(nm).java.xml}
-
-#BASE_ASPECTJ_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
-
-#GEN_ASPECTJ= ${foreach nm, $(BASE_ASPECTJ_ALL_GEN), $(nm).aj.xml}
-
 BASE_CXX_ALL_GEN = $(BASE_CXX_GEN)
 GEN_CXX= ${foreach nm, $(BASE_CXX_ALL_GEN), $(nm).cpp.xml}
 
@@ -232,6 +224,21 @@ BASE_CS_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_CS_GEN) $(BASE_OO)
 BASE_CS_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_CS) $(BASE_CS_GEN)
 GEN_CS= ${foreach nm, $(BASE_CS_ALL_GEN), $(nm).cs.xml}
 
+#BASE_OBJECTIVE_C_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_OJBECTIVE_C)
+BASE_OBJECTIVE_C_ALL = $(BASE_OBJECTIVE_C)
+
+
+# base for all of Java
+BASE_JAVA_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO)
+
+BASE_JAVA_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
+
+GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL_GEN), $(nm).java.xml}
+
+#BASE_ASPECTJ_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
+
+#GEN_ASPECTJ= ${foreach nm, $(BASE_ASPECTJ_ALL_GEN), $(nm).aj.xml}
+
 SEP_PLUS= ${SEP_FILES} ${GEN_SEP}
 SEP_PLUSNOPREPROC= ${SEP_BASE} ${GEN_SEP}
 
@@ -240,20 +247,22 @@ SEP_STRUCT = function function_const function_cpp function_decl function_ns func
 ##
 # generate cases for all
 GEN_ALL= ${foreach nm, $(SEP_PLUS), $(nm).all.cpp.xml} extra_cpp.all.cpp.xml \
-	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).all.java.xml} \
-	       ${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).all.aj.xml} \
-	       ${foreach nm, $(BASE_C_ALL), $(nm).all.c.xml} \
-	       ${foreach nm, $(BASE_CS_ALL), $(nm).all.cs.xml} \
-		extra_c.all.c.xml extra_cpp.all.cpp.xml
+	       	${foreach nm, $(BASE_C_ALL), $(nm).all.c.xml} \
+	       	${foreach nm, $(BASE_CS_ALL), $(nm).all.cs.xml} \
+	       	${foreach nm, $(BASE_OBJECTIVE_C_ALL), $(nm).all.m.xml} \
+	       	${foreach nm, $(BASE_JAVA_ALL), $(nm).all.java.xml} \
+	    	${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).all.aj.xml} \
+			extra_c.all.c.xml extra_cpp.all.cpp.xml
 
 # generated cases for blocks
 GEN_BLOCK= ${foreach nm, $(SEP_PLUS),          $(nm).block.cpp.xml} \
-               ${foreach nm, $(BASE_C_ALL),    $(nm).block.c.xml} \
-               ${foreach nm, $(BASE_CS_ALL),    $(nm).block.cs.xml} \
-	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).block.cpp11.xml} \
-               ${foreach nm, $(BASE_JAVA_ALL), $(nm).block.java.xml} \
-	       ${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).block.aj.xml} \
-		 extra_c.block.c.xml extra_cpp.block.cpp.xml
+           	${foreach nm, $(BASE_C_ALL),    $(nm).block.c.xml} \
+           	${foreach nm, $(BASE_CS_ALL),    $(nm).block.cs.xml} \
+           	${foreach nm, $(BASE_OBJECTIVE_C_ALL),    $(nm).block.m.xml} \
+	       	${foreach nm, $(BASE_CXX_11_ALL), $(nm).block.cpp11.xml} \
+           	${foreach nm, $(BASE_JAVA_ALL), $(nm).block.java.xml} \
+	       	${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).block.aj.xml} \
+		 	extra_c.block.c.xml extra_cpp.block.cpp.xml
 
 # generated cases for structs
 GEN_STRUCT= ${foreach nm, $(SEP_STRUCT),          $(nm).struct.cpp.xml}
@@ -262,6 +271,7 @@ GEN_STRUCT= ${foreach nm, $(SEP_STRUCT),          $(nm).struct.cpp.xml}
 GEN_COMMENT= ${foreach nm, $(SEP_PLUS),          $(nm).comment.cpp.xml} \
 	       ${foreach nm, $(BASE_C_ALL),    $(nm).comment.c.xml} \
 	       ${foreach nm, $(BASE_CS_ALL),    $(nm).comment.cs.xml} \
+	       ${foreach nm, $(BASE_OBJECTIVE_C_ALL),    $(nm).comment.m.xml} \
 	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).comment.cpp11.xml} \
 	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).comment.java.xml} \
 	       ${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).comment.aj.xml} \
@@ -271,6 +281,7 @@ GEN_COMMENT= ${foreach nm, $(SEP_PLUS),          $(nm).comment.cpp.xml} \
 GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          $(nm).formfeed.cpp.xml} \
 		     ${foreach nm, $(BASE_C_ALL),    $(nm).formfeed.c.xml} \
 		     ${foreach nm, $(BASE_CS_ALL),    $(nm).formfeed.cs.xml} \
+		     ${foreach nm, $(BASE_OBJECTIVE_C_ALL),    $(nm).formfeed.m.xml} \
 	             ${foreach nm, $(BASE_CXX_11_ALL), $(nm).formfeed.cpp11.xml} \
 		     ${foreach nm, $(BASE_JAVA_ALL), $(nm).formfeed.java.xml} \
 	             ${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).formfeed.aj.xml} \
@@ -278,16 +289,18 @@ GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          $(nm).formfeed.cpp.xml} \
 
 # generated test cases for preproc
 GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), $(nm).preproc.cpp.xml} \
-                   ${foreach nm, $(BASE_CXX_11_ALL), $(nm).preproc.cpp11.xml} \
-	           ${foreach nm, $(BASE_C_ALL), $(nm).preproc.c.xml} \
-	           ${foreach nm, $(BASE_CS_ALL), $(nm).preproc.cs.xml} \
-		   extra_c.preproc.c.xml extra_cpp.preproc.cpp.xml
+	           	${foreach nm, $(BASE_C_ALL), $(nm).preproc.c.xml} \
+	           	${foreach nm, $(BASE_CS_ALL), $(nm).preproc.cs.xml} \
+	           	${foreach nm, $(BASE_OBJECTIVE_C_ALL), $(nm).preproc.m.xml} \
+               	${foreach nm, $(BASE_CXX_11_ALL), $(nm).preproc.cpp11.xml} \
+				extra_c.preproc.c.xml extra_cpp.preproc.cpp.xml
 
 # generated test cases for preproc
 GEN_IFTHENELSE= ${foreach nm, $(SEP_PLUS), $(nm).ifthenelse.cpp.xml} \
-	           ${foreach nm, $(BASE_CXX_11_ALL), $(nm).ifthenelse.cpp11.xml} \
 	           ${foreach nm, $(BASE_C_ALL), $(nm).ifthenelse.c.xml} \
 	           ${foreach nm, $(BASE_CS_ALL), $(nm).ifthenelse.cs.xml} \
+	           ${foreach nm, $(BASE_OBJECTIVE_C_ALL), $(nm).ifthenelse.m.xml} \
+	           ${foreach nm, $(BASE_CXX_11_ALL), $(nm).ifthenelse.cpp11.xml} \
 	           ${foreach nm, $(BASE_JAVA_ALL), $(nm).ifthenelse.java.xml} \
 	           ${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).ifthenelse.aj.xml} \
 		   extra_c.ifthenelse.c.xml extra_cpp.ifthenelse.cpp.xml
@@ -427,6 +440,9 @@ problem.formfeed.aj.xml : problem.aj.xml
 %.all.cs.xml : %.cs.xml
 	${XSLT_MERGEUNIT} $< > $@
 
+%.all.m.xml : %.m.xml
+	${XSLT_MERGEUNIT} $< > $@
+
 %.all.java.xml : %.java.xml
 	${XSLT_MERGEUNIT} $< > $@
 
@@ -445,6 +461,9 @@ problem.formfeed.aj.xml : problem.aj.xml
 %.block.cs.xml : %.cs.xml
 	${XSLT_BLOCKUNIT} $< > $@
 
+%.block.m.xml : %.m.xml
+	${XSLT_BLOCKUNIT} $< > $@
+
 %.block.java.xml : %.java.xml
 	${XSLT_BLOCKUNIT_JAVA} $< > $@
 
@@ -458,6 +477,9 @@ problem.formfeed.aj.xml : problem.aj.xml
 	${XSLT_INSERTCOMMENT} $< > $@
 
 %.comment.cs.xml : %.cs.xml
+	${XSLT_INSERTCOMMENT} $< > $@
+
+%.comment.m.xml : %.m.xml
 	${XSLT_INSERTCOMMENT} $< > $@
 
 %.comment.java.xml : %.java.xml
@@ -475,6 +497,9 @@ problem.formfeed.aj.xml : problem.aj.xml
 %.preproc.cs.xml : %.cs.xml
 	${XSLT_INSERTPREPROC} $< > $@
 
+%.preproc.m.xml : %.m.xml
+	${XSLT_INSERTPREPROC} $< > $@
+
 %.preproc.java.xml : %.java.xml
 	${XSLT_INSERTPREPROC} $< > $@
 
@@ -490,6 +515,9 @@ problem.formfeed.aj.xml : problem.aj.xml
 %.ifthenelse.cs.xml : %.cs.xml
 	${XSLT_INSERTIFTHENELSE} $< > $@
 
+%.ifthenelse.m.xml : %.m.xml
+	${XSLT_INSERTIFTHENELSE} $< > $@
+
 %.ifthenelse.java.xml : %.java.xml
 	${XSLT_INSERTIFTHENELSE_JAVA} $< > $@
 
@@ -503,6 +531,9 @@ problem.formfeed.aj.xml : problem.aj.xml
 	${XSLT_INSERTFORMFEED} $< > $@
 
 %.formfeed.cs.xml : %.cs.xml
+	${XSLT_INSERTFORMFEED} $< > $@
+
+%.formfeed.m.xml : %.m.xml
 	${XSLT_INSERTFORMFEED} $< > $@
 
 %.formfeed.java.xml : %.java.xml

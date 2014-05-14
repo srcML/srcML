@@ -31,8 +31,8 @@ maxcount = 700
 error_filename = "srcMLTestReport"
 error_filename_extension = ".txt"
 
-FIELD_WIDTH_LANGUAGE = 5
-FIELD_WIDTH_DIRECTORY = 40
+FIELD_WIDTH_LANGUAGE = 15
+FIELD_WIDTH_DIRECTORY = 30
 MAX_COUNT = 29
 sperrorlist = []
 xml_filename = ""
@@ -396,13 +396,13 @@ specnum = 0
 speclang = ""
 if len(sys.argv) == 3:
 	result = sys.argv[2]
-	if result == "C++" or result == "C" or result == "C#" or result == "Java" or result == "C++11" or result == "AspectJ":
+	if result == "C++" or result == "C" or result == "C#" or result == "Objective-C" or result == "Java" or result == "C++11" or result == "AspectJ":
 		speclang = result
 	else:
 		specnum = int(sys.argv[2])
 elif len(sys.argv) == 2:
 	result = sys.argv[1]
-	if result == "C++" or result == "C" or result == "C#" or result == "Java" or result == "C++11" or result == "AspectJ":
+	if result == "C++" or result == "C" or result == "C#" or result == "Objective-C" or result == "Java" or result == "C++11" or result == "AspectJ":
 		speclang = result
 		specname = ""
 	else:
