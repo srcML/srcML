@@ -4720,7 +4720,7 @@ objective_c_call_argument[] { bool first = true; ENTRY_DEBUG } :
         startNewMode(MODE_ARGUMENT);
 
     }
-    objective_c_call_selector ({first && LA(1) != RBRACKET }? argument set_bool[first, false])*
+    objective_c_call_selector ({ first && LA(1) != RBRACKET }? argument set_bool[first, false])*
 ;
 
 // function call message for Objective_C
