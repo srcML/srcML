@@ -559,7 +559,7 @@ tokens {
     SALIGNOF;
 
     // Objective-C
-    SOBJECT;
+    SRECEIVER;
     SMESSAGE;
     SSELECTOR;
 
@@ -4715,7 +4715,7 @@ objective_c_call_receiver[] { ENTRY_DEBUG } :
     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
 
     // start the function call element
-    startElement(SOBJECT);
+    startElement(SRECEIVER);
     startElement(SEXPRESSION);
 
     }

@@ -295,7 +295,7 @@ namespace {
     ELEMENT_MAP(SALIGNAS,    "alignas")
 
     // Objective-C
-    ELEMENT_MAP(SOBJECT,    "object")
+    ELEMENT_MAP(SRECEIVER,    "receiver")
     ELEMENT_MAP(SMESSAGE,   "message")
     ELEMENT_MAP(SSELECTOR,  "selector")
 
