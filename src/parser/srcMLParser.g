@@ -4677,7 +4677,7 @@ objective_c_call_receiver[] { ENTRY_DEBUG } :
     startElement(SEXPRESSION);
 
     }
-    (function_identifier { endMode(); } | objective_c_call)
+    (function_identifier { endDownToMode(MODE_ARGUMENT_LIST); } | objective_c_call)
 
 ;
 
@@ -4701,11 +4701,17 @@ objective_c_call_argument[] { ENTRY_DEBUG } :
         startNewMode(MODE_TOP);
     }
 
-    (objective_c_call_selector (COLON argument)* | COLON argument)
+    (objective_c_call_selector (COLON objective_c_call_argument_value)* | COLON objective_c_call_argument_value)
     { 
         endDownToMode(MODE_TOP);
         endMode(MODE_TOP);
     }
+;
+
+objective_c_call_argument_value[] { ENTRY_DEBUG } :
+
+    argument ({ inMode(MODE_ARGUMENT_LIST) }? objective_c_call_message | { inMode(MODE_ARGUMENT) }? objective_c_call_argument | rbracket | expression)*
+
 ;
 
 // function call message for Objective_C
