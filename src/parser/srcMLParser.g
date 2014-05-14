@@ -4284,7 +4284,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         { inLanguage(LANGUAGE_OBJECTIVE_C) }?
         compound_name_objective_c[iscompound] |
 
-        { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
+        { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
         compound_name_cpp[iscompound] |
         macro_type_name_call 
         )

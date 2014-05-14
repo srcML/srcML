@@ -65,6 +65,9 @@ BASE_CS_GEN=${call language,'LANGUAGE_CSHARP_GEN'}
 # base Objective-C
 BASE_OBJECTIVE_C=${call language,'LANGUAGE_OBJECTIVE_C'}
 
+# base Objective-C
+BASE_OBJECTIVE_C_GEN=${call language,'LANGUAGE_OBJECTIVE_C_GEN'}
+
 # base for Java only
 BASE_JAVA=${call language,'LANGUAGE_JAVA'}
 
@@ -178,6 +181,8 @@ XSLT_SETLANGUAGE_C=${XSLT} --stringparam language "C" ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_SETLANGUAGE_CS=${XSLT} --stringparam language "C\#" ${XSLT_SETLANGUAGE_XSL}
 
+XSLT_SETLANGUAGE_OBJECTIVE_C=${XSLT} --stringparam language "Objective-C" ${XSLT_SETLANGUAGE_XSL}
+
 XSLT_SETLANGUAGE_CXX=${XSLT} --stringparam language "CXX" ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_SETLANGUAGE_CXX_11=${XSLT} --stringparam language "C++11" ${XSLT_SETLANGUAGE_XSL}
@@ -224,9 +229,9 @@ BASE_CS_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_CS_GEN) $(BASE_OO)
 BASE_CS_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_CS) $(BASE_CS_GEN)
 GEN_CS= ${foreach nm, $(BASE_CS_ALL_GEN), $(nm).cs.xml}
 
-#BASE_OBJECTIVE_C_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_OJBECTIVE_C)
-BASE_OBJECTIVE_C_ALL = $(BASE_OBJECTIVE_C)
-
+BASE_OBJECTIVE_C_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_C_FAMILY) $(BASE_C) $(BASE_OBJECTIVE_C_GEN)
+BASE_OBJECTIVE_C_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_C_FAMILY) $(BASE_C) $(BASE_OBJECTIVE_C) $(BASE_OBJECTIVE_C_GEN)
+GEN_OBJECTIVE_C = ${foreach nm, $(BASE_OBJECTIVE_C_ALL_GEN), $(nm).m.xml}
 
 # base for all of Java
 BASE_JAVA_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO)
@@ -557,10 +562,16 @@ problem.formfeed.aj.xml : problem.aj.xml
 %.cs.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_CS} $< > $@
 
+%.m.xml : %.cpp.xml
+	${XSLT_SETLANGUAGE_OBJECTIVE_C} $< > $@
+
+%.m.xml : %.c.xml
+	${XSLT_SETLANGUAGE_OBJECTIVE_C} $< > $@
+
 %.cpp11.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_CXX_11} $< > $@
 
-GEN_FILES= $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_CXX) $(GEN_ASPECTJ) ${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_IFTHENELSE} ${GEN_FORMFEED} ${GEN_STRUCT}
+GEN_FILES= $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_OBJECTIVE_C) $(GEN_CXX) $(GEN_ASPECTJ) ${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_IFTHENELSE} ${GEN_FORMFEED} ${GEN_STRUCT}
 
 GEN_CPP_BASE=${GEN_SEP} ${foreach nm, $(SEP_PLUS), $(nm).all} ${foreach nm, $(SEP_PLUS), $(nm).block} ${foreach nm, $(SEP_PLUS), $(nm).comment} ${foreach nm, $(SEP_PLUS), $(nm).preproc} ${foreach nm, $(SEP_PLUS), $(nm).struct}
 

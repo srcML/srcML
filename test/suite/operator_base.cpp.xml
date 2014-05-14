@@ -323,7 +323,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><index>[<expr>0</expr>]</index><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><name><name>a</name><index>[<expr>0</expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -491,7 +491,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><index>[<expr>0</expr>]</index><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><name><name>a</name><index>[<expr>0</expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -659,7 +659,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><index>[<expr>0</expr>]</index><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><name><name>a</name><index>[<expr>0</expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -827,7 +827,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><index>[<expr>0</expr>]</index><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><name><name>a</name><index>[<expr>0</expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -995,7 +995,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><index>[<expr>0</expr>]</index><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><name><name>a</name><index>[<expr>0</expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1163,7 +1163,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><index>[<expr>0</expr>]</index><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><name><name>a</name><index>[<expr>0</expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1331,7 +1331,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><index>[<expr>0</expr>]</index><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><name><name>a</name><index>[<expr>0</expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1499,7 +1499,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><index>[<expr>0</expr>]</index><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><name><name>a</name><index>[<expr>0</expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1667,7 +1667,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><index>[<expr>0</expr>]</index><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><name><name>a</name><index>[<expr>0</expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1835,7 +1835,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><index>[<expr>0</expr>]</index><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><name><name>a</name><index>[<expr>0</expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -2003,7 +2003,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><index>[<expr>0</expr>]</index><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><name><name>a</name><index>[<expr>0</expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
