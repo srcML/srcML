@@ -962,33 +962,6 @@ look_past_three[int skiptoken1, int skiptoken2, int skiptoken3] returns [int tok
     rewind(place);
 } :;
 
-// returns the next token after apply the given rule on success
-// or START_ELEMENT_TOKEN which should never match a real token
-look_past_rule[void (srcMLParser::*rule)()] returns[int token] {
-
-    ENTRY_DEBUG
-
-    int place = mark();
-    inputState->guessing++;
-
-    try {
-
-       (this->*rule)();
-
-        token = LA(1);
-
-    } catch(...) {
-
-        token = START_ELEMENT_TOKEN;
-
-    }
-
-    inputState->guessing--;
-    rewind(place);
-
-
-} :;
-
 /* functions */
 
 // beginning function declaration/header
@@ -2908,8 +2881,8 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
         objective_c_call_message |
 
-        { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT) }?
-        objective_c_call_argument |
+        { inTransparentMode(MODE_OBJECTIVE_C_CALL) }?
+        (function_identifier COLON | COLON) => objective_c_call_argument |
 
         // in an argument list expecting an argument
         { inMode(MODE_ARGUMENT | MODE_LIST) }?
@@ -4693,13 +4666,13 @@ call_argument_list[] { ENTRY_DEBUG } :
 objective_c_call[] { ENTRY_DEBUG } :
     {
 
-    // start a new mode that will end after the argument list
-    startNewMode(MODE_OBJECTIVE_C_CALL);
+        // start a new mode that will end after the argument list
+        startNewMode(MODE_OBJECTIVE_C_CALL);
 
-    // start the function call element
-    startElement(SFUNCTION_CALL);
+        // start the function call element
+        startElement(SFUNCTION_CALL);
 
-    startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+        startNewMode(MODE_ARGUMENT_LIST | MODE_LIST);
 
     }
 
@@ -4712,11 +4685,11 @@ objective_c_call[] { ENTRY_DEBUG } :
 objective_c_call_receiver[] { ENTRY_DEBUG } :
     {
 
-    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
 
-    // start the function call element
-    startElement(SRECEIVER);
-    startElement(SEXPRESSION);
+        // start the function call element
+        startElement(SRECEIVER);
+        startElement(SEXPRESSION);
 
     }
     (function_identifier { endDownToMode(MODE_ARGUMENT_LIST); } | objective_c_call)
@@ -4727,10 +4700,10 @@ objective_c_call_receiver[] { ENTRY_DEBUG } :
 objective_c_call_message[] { ENTRY_DEBUG } :
     {
 
-    replaceMode(MODE_ARGUMENT_LIST, MODE_EXPRESSION | MODE_EXPECT);
+        clearMode(MODE_ARGUMENT_LIST);
 
-    // start the function call element
-    startElement(SMESSAGE);
+        // start the function call element
+        startElement(SMESSAGE);
 
     }
     objective_c_call_argument
@@ -4740,14 +4713,14 @@ objective_c_call_message[] { ENTRY_DEBUG } :
 // function call argument name:value pair for Objective_C
 objective_c_call_argument[] { bool first = true; ENTRY_DEBUG } :
     {
-        startNewMode(MODE_TOP);
-    }
 
-    objective_c_call_selector ({ first }? objective_c_call_argument_value set_bool[first, false])*
-    { 
-        if(inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_TOP))
-            endDownOverMode(MODE_TOP);
+        if(inTransparentMode(MODE_LIST))
+            endDownToMode(MODE_LIST);
+
+        startNewMode(MODE_ARGUMENT);
+
     }
+    objective_c_call_selector ({first && LA(1) != RBRACKET }? argument set_bool[first, false])*
 ;
 
 // function call message for Objective_C
@@ -4758,14 +4731,6 @@ objective_c_call_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
         startElement(SSELECTOR);
     }
     (function_identifier (COLON)* | COLON)
-
-;
-
-objective_c_call_argument_value[] { ENTRY_DEBUG } :
-
-    argument
-    ({ inTransparentMode(MODE_OBJECTIVE_C_CALL) && LA(1) != COLON && look_past_rule(&srcMLParser::function_identifier) != COLON }? 
-    ({ inMode(MODE_ARGUMENT_LIST) }? objective_c_call_message | { inMode(MODE_ARGUMENT) }? objective_c_call_argument | rbracket | expression))*
 
 ;
 
