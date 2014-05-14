@@ -90,7 +90,23 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call>[<receiver><expr><call><name>name</name><argument_list>()</argument_list></call></expr></receiver> <message><selector><name>bar</name></selector></message>]</call></expr>;</expr_stmt>
+<expr_stmt><expr><call>[<receiver><expr><call><name>foo</name><argument_list>()</argument_list></call></expr></receiver> <message><selector><name>bar</name></selector></message>]</call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name>:</selector><argument><expr><call><name>bar</name><argument_list>()</argument_list></call></expr></argument></message>]</call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name>:</selector><argument><expr><call><name>bar</name><argument_list>()</argument_list></call></expr></argument> <selector><name>foobar</name>:</selector><argument><expr>0</expr></argument></message>]</call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name>:</selector><argument><expr>0</expr></argument> <selector><name>foobar</name>:</selector><argument><expr><call><name>foobar</name><argument_list>()</argument_list></call></expr></argument></message>]</call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call>[<receiver><expr><name><name>foo</name><index>[<expr>0</expr>]</index></name></expr></receiver> <message><selector><name>bar</name>:</selector><argument><expr><name><name>bar</name><index>[<expr>0</expr>]</index></name></expr></argument> <selector><name>foobar</name>:</selector><argument><expr><name><name>foobar</name><index>[<expr>0</expr>]</index></name></expr></argument></message>]</call></expr>;</expr_stmt>
 </unit>
 
 </unit>
