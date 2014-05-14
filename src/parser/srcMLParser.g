@@ -2823,7 +2823,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         objective_c_call_message |
 
         { inTransparentMode(MODE_OBJECTIVE_C_CALL) }?
-        (function_identifier COLON | COLON) => objective_c_call_argument |
+        (function_identifier (COLON | RBRACKET) | COLON) => objective_c_call_argument |
 
         // already in an expression
         { inMode(MODE_EXPRESSION) }?

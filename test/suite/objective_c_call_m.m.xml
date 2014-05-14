@@ -2,11 +2,19 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Objective-C" dir="call" filename="objective_c_call_m">
 
 <unit>
+<expr_stmt><expr><call>[<receiver><expr><name>foo</name></expr></receiver>]</call></expr>;</expr_stmt>
+</unit>
+
+<unit>
 <expr_stmt><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name>:</selector><argument><expr>0</expr></argument></message>]</call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name>:</selector><argument><expr>0</expr></argument> <selector><name>foobar</name></selector></message>]</call></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -32,5 +40,42 @@
 <unit>
 <expr_stmt><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name>:</selector><argument><expr>0</expr></argument> <selector>:</selector><argument><expr>0</expr></argument> <selector>:</selector><argument><expr>0</expr></argument></message>]</call></expr>;</expr_stmt>
 </unit>
+
+<unit>
+<expr_stmt><expr><call>[<receiver><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>alloc</name></selector></message>]</call></expr></receiver> <message><selector><name>init</name></selector></message>]</call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name>:</selector><argument><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>copy</name></selector></message>]</call></expr></argument></message>]</call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name>:</selector><argument><expr>0</expr></argument> <selector><name>foobar</name>:</selector><argument><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>copy</name></selector></message>]</call></expr></argument></message>]</call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name>:</selector><argument><expr>0</expr></argument> <selector><name>foobar</name>:</selector><argument><expr>0</expr></argument> <selector><name>foobar2</name>:</selector><argument><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>copy</name></selector></message>]</call></expr></argument></message>]</call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call>[<receiver><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>copy</name>:</selector><argument><expr>0</expr></argument></message>]</call></expr></receiver> <message><selector><name>bar</name></selector></message>]</call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call>[<receiver><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>copy</name>:</selector><argument><expr>0</expr></argument> <selector><name>copy2</name>:</selector><argument><expr>0</expr></argument></message>]</call></expr></receiver> <message><selector><name>bar</name></selector></message>]</call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call>[<receiver><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>copy</name>:</selector><argument><expr>0</expr></argument> <selector>:</selector><argument><expr>0</expr></argument></message>]</call></expr></receiver> <message><selector><name>bar</name></selector></message>]</call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name>:</selector><argument><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>copy</name>:</selector><argument><expr>0</expr></argument> <selector><name>copy2</name>:</selector><argument><expr>0</expr></argument></message>]</call></expr> <expr><name>foobar</name></expr></argument></message>]</call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name>:</selector><argument><expr>0</expr></argument> <selector><name>foobar</name>:</selector><argument><expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>copy</name>:</selector><argument><expr>0</expr></argument> <selector><name>copy2</name>:</selector><argument><expr>0</expr></argument></message>]</call></expr></argument> <selector><name>foobar2</name>:</selector><argument><expr>0</expr></argument></message>]</call></expr>;</expr_stmt>
+</unit>
+
 
 </unit>
