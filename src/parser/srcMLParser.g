@@ -2819,6 +2819,12 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         terminate_post
         keyword_statements |
 
+        { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
+        objective_c_call_message |
+
+        { inTransparentMode(MODE_OBJECTIVE_C_CALL) }?
+        (function_identifier COLON | COLON) => objective_c_call_argument |
+
         // already in an expression
         { inMode(MODE_EXPRESSION) }?
         expression_part_plus_linq |
@@ -2877,12 +2883,6 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { inMode(MODE_INIT | MODE_EXPECT) && ((LA(1) == COLON && (inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_JAVA)))
                 || (LA(1) == IN && inLanguage(LANGUAGE_CSHARP))) }?
         variable_declaration_range |
-
-        { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
-        objective_c_call_message |
-
-        { inTransparentMode(MODE_OBJECTIVE_C_CALL) }?
-        (function_identifier COLON | COLON) => objective_c_call_argument |
 
         // in an argument list expecting an argument
         { inMode(MODE_ARGUMENT | MODE_LIST) }?
