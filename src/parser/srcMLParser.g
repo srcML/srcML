@@ -560,6 +560,7 @@ tokens {
 
     // Objective-C
     SOBJECT;
+    SMESSAGE;
     SSELECTOR;
 
     // Last token used for boundary
@@ -2878,7 +2879,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         variable_declaration_range |
 
         { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
-        objective_c_call_argument_list |
+        objective_c_call_message |
 
         { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT) }?
         objective_c_call_argument |
@@ -4648,66 +4649,75 @@ call_argument_list[] { ENTRY_DEBUG } :
 
 // function call for Objective_C
 objective_c_call[] { ENTRY_DEBUG } :
-        {
+    {
 
-        // start a new mode that will end after the argument list
-        startNewMode(MODE_OBJECTIVE_C_CALL);
+    // start a new mode that will end after the argument list
+    startNewMode(MODE_OBJECTIVE_C_CALL);
 
-        // start the function call element
-        startElement(SFUNCTION_CALL);
+    // start the function call element
+    startElement(SFUNCTION_CALL);
 
-        startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+    startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
 
-        }
+    }
 
-        LBRACKET
-        objective_c_call_object
-
-;
-
-// function call object  for Objective_C
-objective_c_call_object[] { ENTRY_DEBUG } :
-        {
-
-        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
-
-        // start the function call element
-        startElement(SOBJECT);
-        startElement(SEXPRESSION);
-
-        }
-        (function_identifier { endMode(); } | objective_c_call)
+    LBRACKET
+    objective_c_call_receiver
 
 ;
 
-// function call argument list for Objective_C
-objective_c_call_argument_list[] { ENTRY_DEBUG } :
-        {
+// function call object for Objective_C
+objective_c_call_receiver[] { ENTRY_DEBUG } :
+    {
 
-        replaceMode(MODE_ARGUMENT_LIST, MODE_EXPRESSION | MODE_EXPECT);
+    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
 
-        // start the function call element
-        startElement(SARGUMENT_LIST);
+    // start the function call element
+    startElement(SOBJECT);
+    startElement(SEXPRESSION);
 
-        }
-        objective_c_call_argument
+    }
+    (function_identifier { endMode(); } | objective_c_call)
 
 ;
 
-// function call argument list for Objective_C
+// function call message for Objective_C
+objective_c_call_message[] { ENTRY_DEBUG } :
+    {
+
+    replaceMode(MODE_ARGUMENT_LIST, MODE_EXPRESSION | MODE_EXPECT);
+
+    // start the function call element
+    startElement(SMESSAGE);
+
+    }
+    objective_c_call_argument
+
+;
+
+// function call argument name:value pair for Objective_C
 objective_c_call_argument[] { ENTRY_DEBUG } :
+    {
+        startNewMode(MODE_TOP);
+    }
 
-        {
-            startNewMode(MODE_TOP);
-        }
-
-        (function_identifier (COLON argument)? | COLON argument)
-        { 
-            endDownToMode(MODE_TOP);
-            endMode(MODE_TOP);
-        }
+    (objective_c_call_selector (COLON argument)* | COLON argument)
+    { 
+        endDownToMode(MODE_TOP);
+        endMode(MODE_TOP);
+    }
 ;
 
+// function call message for Objective_C
+objective_c_call_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+        startNewMode(MODE_LOCAL);
+
+        startElement(SSELECTOR);
+    }
+    function_identifier
+
+;
 
 ternary_expression[] { ENTRY_DEBUG } :
     {
@@ -5908,23 +5918,27 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
 ;
 
 rbracket[] { ENTRY_DEBUG } :
-
     {
+
         endDownToMode(MODE_LIST);
         endMode(MODE_LIST);
+
     }
+
     RBRACKET
+
     {
 
-    if(inMode(MODE_OBJECTIVE_C_CALL)) {
+        if(inMode(MODE_OBJECTIVE_C_CALL)) {
 
-        endDownToMode(MODE_OBJECTIVE_C_CALL);
-        endMode(MODE_OBJECTIVE_C_CALL);
+            endDownToMode(MODE_OBJECTIVE_C_CALL);
+            endMode(MODE_OBJECTIVE_C_CALL);
 
-    }
+        }
 
-    if(inMode(MODE_EXPRESSION) && inTransparentMode(MODE_OBJECTIVE_C_CALL))
-        endMode();
+        if(inMode(MODE_EXPRESSION) && inTransparentMode(MODE_OBJECTIVE_C_CALL))
+            endMode();
+
     }
 
 ; 
