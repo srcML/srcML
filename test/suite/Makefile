@@ -228,8 +228,7 @@ GEN_CS= ${foreach nm, $(BASE_CS_ALL_GEN), $(nm).cs.xml}
 
 BASE_OBJECTIVE_C_ALL_GEN = $(BASE_COMMON) $(GEN_BASE)
 BASE_OBJECTIVE_C_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_OBJECTIVE_C)
-GEN_OBJECTIVE_C = ${foreach nm, $(BASE_CS_ALL_GEN), $(nm).m.xml}
-
+GEN_OBJECTIVE_C = ${foreach nm, $(BASE_OBJECTIVE_ALL_GEN), $(nm).m.xml}
 
 # base for all of Java
 BASE_JAVA_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO)
