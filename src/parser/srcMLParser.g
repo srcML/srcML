@@ -4684,14 +4684,13 @@ objective_c_call[] { ENTRY_DEBUG } :
 objective_c_call_receiver[] { ENTRY_DEBUG } :
     {
 
-        startNewMode(MODE_EXPRESSION);
+        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
 
         // start the function call element
         startElement(SRECEIVER);
-        startElement(SEXPRESSION);
-
+    
     }
-    (function_identifier | objective_c_call)
+    expression
 
 ;
 
