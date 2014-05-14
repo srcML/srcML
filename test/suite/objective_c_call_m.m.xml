@@ -96,4 +96,8 @@
 <expr_stmt><expr><call>[<receiver><expr><name><name>foo</name><index>[<expr>0</expr>]</index></name></expr></receiver> <message><selector><name>bar</name>:</selector><argument><expr><name><name>bar</name><index>[<expr>0</expr>]</index></name></expr></argument> <selector><name>foobar</name>:</selector><argument><expr><name><name>foobar</name><index>[<expr>0</expr>]</index></name></expr></argument></message>]</call></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><call><call>[<receiver><expr><name>foo</name> <argument><expr><name>bar</name></expr></argument></expr></receiver>]</call><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
 </unit>

@@ -138,7 +138,7 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -1498,7 +1498,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty, int & call_count] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF)
+        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -1538,6 +1538,8 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             lambda_anonymous |
 
             (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_full_cpp  |
+
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair |
 
             // found two names in a row, so this is not an expression
             // cause this to fail by explicitly throwing exception
@@ -4645,8 +4647,8 @@ call[int call_count = 1] { ENTRY_DEBUG } :
             } while(--call_count > 0);
 
         }
-        function_identifier
-        call_argument_list
+        ({inLanguage(LANGUAGE_OBJECTIVE_C) }? objective_c_call | function_identifier call_argument_list)
+        
 ;
 
 // argument list to a call
