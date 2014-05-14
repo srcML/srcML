@@ -65,6 +65,9 @@ BASE_CS_GEN=${call language,'LANGUAGE_CSHARP_GEN'}
 # base Objective-C
 BASE_OBJECTIVE_C=${call language,'LANGUAGE_OBJECTIVE_C'}
 
+# base Objective-C
+BASE_OBJECTIVE_C_GEN=${call language,'LANGUAGE_OBJECTIVE_C_GEN'}
+
 # base for Java only
 BASE_JAVA=${call language,'LANGUAGE_JAVA'}
 
@@ -226,8 +229,8 @@ BASE_CS_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_CS_GEN) $(BASE_OO)
 BASE_CS_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_CS) $(BASE_CS_GEN)
 GEN_CS= ${foreach nm, $(BASE_CS_ALL_GEN), $(nm).cs.xml}
 
-BASE_OBJECTIVE_C_ALL_GEN = $(BASE_COMMON) $(GEN_BASE)
-BASE_OBJECTIVE_C_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_OBJECTIVE_C)
+BASE_OBJECTIVE_C_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OBJECTIVE_C_GEN)
+BASE_OBJECTIVE_C_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_OBJECTIVE_C) $(BASE_OBJECTIVE_C_GEN)
 GEN_OBJECTIVE_C = ${foreach nm, $(BASE_OBJECTIVE_ALL_GEN), $(nm).m.xml}
 
 # base for all of Java
@@ -560,6 +563,9 @@ problem.formfeed.aj.xml : problem.aj.xml
 	${XSLT_SETLANGUAGE_CS} $< > $@
 
 %.m.xml : %.cpp.xml
+	${XSLT_SETLANGUAGE_OBJECTIVE_C} $< > $@
+
+%.m.xml : %.c.xml
 	${XSLT_SETLANGUAGE_OBJECTIVE_C} $< > $@
 
 %.cpp11.xml : %.cpp.xml
