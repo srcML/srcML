@@ -4011,9 +4011,9 @@ complete_objective_c_call[] { CompleteElement element(this); int bracket_count =
 
     {
         // start a mode to end at right bracket with expressions inside
-        if(!inMode(MODE_EXPRESSION))
+        if(!inMode(MODE_EXPRESSION) || inMode(MODE_EXPRESSION | MODE_EXPECT))
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
-        else
+        else 
             startNewMode(MODE_TOP);
 
     }
@@ -4076,7 +4076,7 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
                 // right parentheses, unless we are in a pair of parentheses in an expression
                 { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
 
-                { inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == LBRACKET }? expression_process complete_objective_c_call |
+                { inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == LBRACKET }? complete_objective_c_call |
 
                 // argument mode (as part of call)
                 { inMode(MODE_ARGUMENT) }? argument |
