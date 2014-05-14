@@ -277,7 +277,7 @@ public :
 
                 if(archive->language != 0) {
 
-                    if(*archive->language == "C++" || *archive->language == "C")
+                    if(*archive->language == "C++" || *archive->language == "C" || *archive->language == "Objective-C")
                         archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
                     else if(*archive->language == "C#")
                         archive->options |= SRCML_OPTION_CPP_NOMACRO;

@@ -110,7 +110,7 @@ public:
         LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP,
 
         /** Interger Constant for languages in C family i.e. C/C++/C# */
-        LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY,
+        LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY | Language::LANGUAGE_OBJECTIVE_C,
 
         /** Interger Constant for languages in Java family i.e. Java/AspectJ */
         LANGUAGE_JAVA_FAMILY = LANGUAGE_JAVA | LANGUAGE_ASPECTJ,
