@@ -2801,6 +2801,12 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { inLanguage(LANGUAGE_CXX) && inMode(MODE_FUNCTION_TAIL) }?
         trailing_return |
 
+        { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
+        objective_c_call_message |
+
+        { inTransparentMode(MODE_OBJECTIVE_C_CALL) }?
+        (function_identifier (COLON | RBRACKET) | COLON) => objective_c_call_argument |
+
         // start of argument for return or throw statement
         { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
             isoption(parseoptions, SRCML_OPTION_CPP) && perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO }?
@@ -2818,13 +2824,6 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         terminate_pre
         terminate_post
         keyword_statements |
-
-        { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
-        objective_c_call_message |
-
-        { inTransparentMode(MODE_OBJECTIVE_C_CALL) }?
-        (function_identifier (COLON | RBRACKET) | COLON) => objective_c_call_argument |
-
         // already in an expression
         { inMode(MODE_EXPRESSION) }?
         expression_part_plus_linq |
