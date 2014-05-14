@@ -1885,7 +1885,7 @@ section_entry_action[] :
             flushSkip();
 
             // end the section inside the block
-            endDownOverMode(MODE_TOP_SECTION);
+            endWhileMode(MODE_TOP_SECTION);
         }
         section_entry_action_first
 ;
@@ -2565,7 +2565,7 @@ rcurly[] { ENTRY_DEBUG } :
             flushSkip();
 
             // end any sections inside the mode
-            endDownOverMode(MODE_TOP_SECTION);
+            endWhileMode(MODE_TOP_SECTION);
 
             if(getCurly() != 0)
                 decCurly();
@@ -4703,8 +4703,7 @@ objective_c_call_argument[] { ENTRY_DEBUG } :
 
     (objective_c_call_selector (COLON objective_c_call_argument_value)* | COLON objective_c_call_argument_value)
     { 
-        endDownToMode(MODE_TOP);
-        endMode(MODE_TOP);
+        endDownOverMode(MODE_TOP);
     }
 ;
 
@@ -5912,10 +5911,10 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
             // end the single mode that started the list
             // don't end more than one since they may be nested
             if (isempty && inMode(MODE_LIST))
-                endDownOverMode(MODE_LIST);
+                endWhileMode(MODE_LIST);
             
             else if(inTransparentMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP))
-                endDownOverMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
+                endWhileMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
 
             if(!isempty)
                 decCurly();
@@ -5926,8 +5925,7 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
 rbracket[] { ENTRY_DEBUG } :
     {
 
-        endDownToMode(MODE_LIST);
-        endMode(MODE_LIST);
+        endDownOverMode(MODE_LIST);
 
     }
 
@@ -5937,8 +5935,7 @@ rbracket[] { ENTRY_DEBUG } :
 
         if(inMode(MODE_OBJECTIVE_C_CALL)) {
 
-            endDownToMode(MODE_OBJECTIVE_C_CALL);
-            endMode(MODE_OBJECTIVE_C_CALL);
+            endDownOverMode(MODE_OBJECTIVE_C_CALL);
 
         }
 
@@ -7166,7 +7163,7 @@ eol_skip[int directive_token, bool markblockzero] {
 eol[int directive_token, bool markblockzero] {
 
             // end all preprocessor modes
-            endDownOverMode(MODE_PREPROC);
+            endWhileMode(MODE_PREPROC);
 
             endMode(MODE_PARSE_EOL);
 ENTRY_DEBUG } :
@@ -7430,7 +7427,7 @@ cppmode_cleanup[] {
 line_continuation[] { ENTRY_DEBUG } :
         {
             // end all preprocessor modes
-            endDownOverMode(MODE_PARSE_EOL);
+            endWhileMode(MODE_PARSE_EOL);
         }
         EOL_BACKSLASH
 ;
