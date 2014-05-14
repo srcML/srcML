@@ -4226,6 +4226,9 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         { inLanguage(LANGUAGE_C) }?
         compound_name_c[iscompound] |
 
+        { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        compound_name_objective_c[iscompound] |
+
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
         compound_name_cpp[iscompound] |
         macro_type_name_call 
@@ -4293,6 +4296,18 @@ catch[antlr::RecognitionException] {
 
 // compound name for C
 compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
+
+        (identifier | generic_selection) (options { greedy = true; }: { LA(1) == MULTOPS }? multops)*
+
+        ( options { greedy = true; } :
+            (period | member_pointer) { iscompound = true; }
+            ({LA(1) == MULTOPS }? multops)*
+            identifier
+        )*
+;
+
+// compound name for C
+compound_name_objective_c[bool& iscompound] { ENTRY_DEBUG } :
 
         (identifier | generic_selection) (options { greedy = true; }: { LA(1) == MULTOPS }? multops)*
 
@@ -4696,12 +4711,12 @@ objective_c_call_message[] { ENTRY_DEBUG } :
 ;
 
 // function call argument name:value pair for Objective_C
-objective_c_call_argument[] { ENTRY_DEBUG } :
+objective_c_call_argument[] { bool first = true; ENTRY_DEBUG } :
     {
         startNewMode(MODE_TOP);
     }
 
-    (objective_c_call_selector (COLON objective_c_call_argument_value)* | COLON objective_c_call_argument_value)
+    (objective_c_call_selector ({ first }? COLON objective_c_call_argument_value set_bool[first, false])* | COLON objective_c_call_argument_value)
     { 
         endDownOverMode(MODE_TOP);
     }
@@ -4709,7 +4724,7 @@ objective_c_call_argument[] { ENTRY_DEBUG } :
 
 objective_c_call_argument_value[] { ENTRY_DEBUG } :
 
-    argument ({ inMode(MODE_ARGUMENT_LIST) }? objective_c_call_message | { inMode(MODE_ARGUMENT) }? objective_c_call_argument | rbracket | expression)*
+    argument ({ next_token() != COLON }? ({ inMode(MODE_ARGUMENT_LIST) }? objective_c_call_message | { inMode(MODE_ARGUMENT) }? objective_c_call_argument | rbracket | expression))*
 
 ;
 
