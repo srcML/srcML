@@ -4076,7 +4076,7 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
                 // right parentheses, unless we are in a pair of parentheses in an expression
                 { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
 
-                { inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != RBRACKET }? expression_process complete_objective_c_call |
+                { inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == LBRACKET }? expression_process complete_objective_c_call |
 
                 // argument mode (as part of call)
                 { inMode(MODE_ARGUMENT) }? argument |
