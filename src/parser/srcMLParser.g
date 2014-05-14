@@ -1461,7 +1461,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 
         // call syntax succeeded, however post call token is not legitimate
         if (isoption(parseoptions, SRCML_OPTION_CPP) &&
-               (keyword_token_set.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID
+            (((!inLanguage(LANGUAGE_OBJECTIVE_C) || !inTransparentMode(MODE_OBJECTIVE_C_CALL)) && (keyword_token_set.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID))
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS || postcalltoken == CXX_CLASS
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
