@@ -660,19 +660,23 @@ if error_count != 0:
         # TODO:  Replace with Counter from collections
         n = list.count("C++")
         if n != 0:
-                print "Errors:  C++  " + str(n)
+                print "Errors:  C++".ljust(FIELD_WIDTH_LANGUAGE), " ", str(n)
         
         n = list.count("C#")
         if n != 0:
-                print "Errors:  C#   " + str(n)
+                print "Errors:  C#".ljust(FIELD_WIDTH_LANGUAGE), " ", str(n)
         
         n = list.count("C")
         if n != 0:
-                print "Errors:  C    " + str(n)
+                print "Errors:  C".ljust(FIELD_WIDTH_LANGUAGE), " ", str(n)
+
+        n = list.count("Objective-C")
+        if n != 0:
+                print "Errors:  Objective-C".ljust(FIELD_WIDTH_LANGUAGE), " ", str(n)
         
         n = list.count("Java")
         if n != 0:
-                print "Errors:  Java " + str(n)
+                print "Errors:  Java".ljust(FIELD_WIDTH_LANGUAGE), " ", str(n)
         
 # output tool errors counts
 print
