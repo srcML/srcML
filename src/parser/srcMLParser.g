@@ -2573,7 +2573,7 @@ block_end[] { ENTRY_DEBUG } :
                 else_handling();
 
             // then we needed to markup the (abbreviated) variable declaration
-            if (inMode(MODE_DECL) && LA(1) != TERMINATE)
+            if (!inLanguage(LANGUAGE_OBJECTIVE_C) && inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
 
         }
