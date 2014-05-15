@@ -562,6 +562,7 @@ tokens {
     SRECEIVER;
     SMESSAGE;
     SSELECTOR;
+    SPROTOCOL_LIST;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -2269,9 +2270,11 @@ class_post[] { ENTRY_DEBUG } :
 objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 
     {
+
         startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS);
 
         startElement(SCLASS);
+
     }
 
     (ATINTERFACE | ATIMPLEMENTATION) ({ first }? class_header set_bool[first, false])* (lcurly)*
@@ -2430,6 +2433,8 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         // move suppressed ()* warning to begin
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_type_constraint)*
+
+        (options { greedy = true; } : { inLanguage(LANGUAGE_OBJECTIVE_C) }? protocol_list)*
 
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } 
             (extends_list | implements_list) (options { greedy = true; } : extends_list | implements_list)*))*
@@ -6334,7 +6339,7 @@ derived[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
             variable_identifier
             ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
 
-            (options { greedy = true; } : template_argument_list)*
+            (options { greedy = true; } : { !inLanguage(LANGUAGE_OBJECTIVE_C) }? template_argument_list)*
 
             set_bool[first, false]
             )
@@ -6740,6 +6745,19 @@ generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
         WHERE compound_name_inner[false] COLON
         (compound_name_inner[false] | CLASS | CXX_CLASS | STRUCT | NEW LPAREN RPAREN)
         (options { greedy = true; } : COMMA (compound_name_inner[false] | CLASS | CXX_CLASS | STRUCT | NEW LPAREN RPAREN))*
+;
+
+protocol_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        // local mode
+        startNewMode(MODE_LOCAL | MODE_LIST);
+
+        startElement(SPROTOCOL_LIST);
+
+    }
+    TEMPOPS identifier (comma identifier)* TEMPOPE
+
 ;
 
 // save the namestack

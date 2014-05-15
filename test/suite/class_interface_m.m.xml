@@ -14,7 +14,23 @@
 </unit>
 
 <unit>
+<class>@interface <name>classname</name> <super>: <name>super</name></super> @end</class>
+</unit>
+
+<unit>
+<class>@interface <name>classname</name> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list> @end</class>
+</unit>
+
+<unit>
 <class>@interface <name>classname</name> <super>: <name>super</name></super> <block>{ }</block> @end</class>
+</unit>
+
+<unit>
+<class>@interface <name>classname</name> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list> <block>{ }</block> @end</class>
+</unit>
+
+<unit>
+<class>@interface <name>classname</name> <super>: <name>super</name></super> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list> <block>{ }</block> @end</class>
 </unit>
 
 <unit>
