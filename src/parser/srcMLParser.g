@@ -6036,7 +6036,7 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
 /** list of operators @todo is this still needed */
 general_operators_list[] { ENTRY_DEBUG } :
         OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
-        DOTDOT | RVALUEREF | QMARK
+        DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC
 ;
 
 // mark up )
