@@ -2479,7 +2479,7 @@ access_specifier_region[] { ENTRY_DEBUG } :
             SIGNAL
 
         ) 
-    (compound_name)* COLON
+    ({ !inLanguage(LANGUAGE_OBJECTIVE_C) }? (compound_name)* COLON)*
 ;
 
 /*
@@ -3286,7 +3286,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 (specifier | template_specifier set_bool[sawtemplate, true] | { next_token() == COLON }? SIGNAL)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
-                        inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
+                        ((inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON) ||inLanguage(LANGUAGE_OBJECTIVE_C)) && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
                 throw_exception[type == ACCESS_REGION] |
                 { !isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) }? template_declaration_full set_int[template_count, template_count + 1] | 
 
