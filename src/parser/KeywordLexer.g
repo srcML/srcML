@@ -277,6 +277,10 @@ tokens {
     EQUALS;
     INTO;
 
+    // Objective-C
+    ATINTERFACE;
+    ATEND;
+
 }
 
 {
@@ -558,6 +562,11 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "on"            , ON            , LANGUAGE_CSHARP }, 
         { "equals"        , EQUALS        , LANGUAGE_CSHARP }, 
         { "into"          , INTO          , LANGUAGE_CSHARP },
+
+        // Objective-C
+        { "@interface"     , ATINTERFACE  , LANGUAGE_OBJECTIVE_C }, 
+        { "@end"           , ATEND        , LANGUAGE_OBJECTIVE_C },
+
 
 
         // Combined C/C++ Mode  at end so overrides defaults
