@@ -1455,7 +1455,17 @@ objective_c_method_declaration[] { ENTRY_DEBUG } :
         startElement(SFUNCTION_DECLARATION);
 
     }
-    (CSPEC | MSPEC) (objective_c_method_type)* /*objective_c_call_selector*/ (objective_c_method_type)* (objective_c_parameter_list)*
+    objective_c_method_specifier (objective_c_method_type)* /*objective_c_call_selector*/ (objective_c_method_type)* (objective_c_parameter_list)*
+
+;
+
+objective_c_method_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+    {
+
+        startElement(SFUNCTION_SPECIFIER);
+
+    }
+    (CSPEC | MSPEC)
 
 ;
 
