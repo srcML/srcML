@@ -436,6 +436,7 @@ tokens {
 	SPRIVATE_ACCESS;
 	SPRIVATE_ACCESS_DEFAULT;
 	SPROTECTED_ACCESS;
+    SPROTECTED_ACCESS_DEFAULT;
     SMEMBER_INITIALIZATION_LIST;
 	SCONSTRUCTOR_DEFINITION;
 	SCONSTRUCTOR_DECLARATION;
@@ -2282,7 +2283,7 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
     (lcurly
         {
 
-            class_default_access_action(SPROTECTED_ACCESS);
+            class_default_access_action(SPROTECTED_ACCESS_DEFAULT);
 
         }
     )*
