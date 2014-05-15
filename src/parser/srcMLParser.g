@@ -750,7 +750,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         asm_declaration |
 
         // Objective-C - kewywords only detected for Objective-C
-        objective_c_class_interface | objective_c_class_end
+        objective_c_class | objective_c_class_end
 
 ;
 
@@ -2266,7 +2266,7 @@ class_post[] { ENTRY_DEBUG } :
 
 ;
 
-objective_c_class_interface[] { bool first = true; ENTRY_DEBUG } :
+objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 
     {
         startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS);
@@ -2274,7 +2274,7 @@ objective_c_class_interface[] { bool first = true; ENTRY_DEBUG } :
         startElement(SCLASS);
     }
 
-    ATINTERFACE ({ first }? class_header set_bool[first, false])* (lcurly)*
+    (ATINTERFACE | ATIMPLEMENTATION) ({ first }? class_header set_bool[first, false])* (lcurly)*
 
 ;
 
