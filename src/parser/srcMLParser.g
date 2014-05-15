@@ -2270,7 +2270,7 @@ objective_c_class_interface[] { ENTRY_DEBUG } :
 
     class_preprocessing[SCLASS]
 
-    ATINTERFACE class_header lcurly
+    ATINTERFACE class_header (lcurly)*
 
 ;
 
@@ -6314,7 +6314,7 @@ boolean[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // a derived class
-derived[] { CompleteElement element(this); ENTRY_DEBUG } :
+derived[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -6324,13 +6324,15 @@ derived[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         COLON
         (options { greedy = true; } :
-            { LA(1) != WHERE }? (
+            { LA(1) != WHERE && (!inLanguage(LANGUAGE_OBJECTIVE_C) || first) }? (
             (derive_access)*
 
             variable_identifier
             ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
 
             (options { greedy = true; } : template_argument_list)*
+
+            set_bool[first, false]
             )
         |
             COMMA
