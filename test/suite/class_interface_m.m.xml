@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Objective-C" dir="class" filename="class_interface_m">
+
+<unit>
+<class>@interface @end</class>
+</unit>
+
+<unit>
+<class>@interface <block>{ }</block> @end</class>
+</unit>
+
+<unit>
+<class>@interface <name>classname</name> <block>{ }</block> @end</class>
+</unit>
+
+<unit>
+<class>@interface <name>classname</name> <super>: <name>super</name></super> <block>{ }</block> @end</class>
+</unit>
+
+<unit>
+<class>@interface <block>{ <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> }</block> @end</class>
+</unit>
+
+<unit>
+<class>@interface <block>{ <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt> }</block> @end</class>
+</unit>
+
+<unit>
+<class>@interface <block>{
+<decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt>
+}</block>
+@end</class>
+</unit>
+
+<unit>
+<class>@interface <name>classname</name> <block>{ <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> }</block> @end</class>
+</unit>
+
+<unit>
+<class>@interface <name>classname</name> <super>: <name>super</name></super> <block>{ <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt> }</block> @end</class>
+</unit>
+
+<unit>
+<class>@interface <name>classname</name> <super>: <name>super</name></super> <block>{
+<decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt>
+}</block>
+@end</class>
+</unit>
+
+</unit>
