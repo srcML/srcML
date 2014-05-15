@@ -1454,7 +1454,36 @@ objective_c_method_declaration[] { ENTRY_DEBUG } :
         startElement(SFUNCTION_DECLARATION);
 
     }
-    (CSPEC | MSPEC)
+    (CSPEC | MSPEC) (objective_c_method_type)* function_identifier
+
+;
+
+objective_c_method_type[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+
+            // start a mode for the type that will end in this grammar rule
+            startNewMode(MODE_LOCAL);
+
+            // type element begins
+            startElement(STYPE);
+
+        }
+
+        LPAREN
+
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))* 
+
+        // match auto keyword first as special case do no warn about ambiguity
+        (options { generateAmbigWarnings = false; } : auto_keyword[true] | lead_type_identifier)
+
+
+        (options { greedy = true; } : { LA(1) != RPAREN}? 
+
+            // Mark as name before mark without name
+            (options { generateAmbigWarnings = false;} :  keyword_name | type_identifier)
+        )*
+
+        RPAREN
 
 ;
 
