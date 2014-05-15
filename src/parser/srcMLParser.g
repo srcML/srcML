@@ -2453,7 +2453,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 ;
 
 // Each instance of an access specifier defines a region in the class
-access_specifier_region[] { ENTRY_DEBUG } :
+access_specifier_region[] { bool first = true; ENTRY_DEBUG } :
         section_entry_action
         {
             // mark access regions to detect statements that only occur in them
@@ -2479,7 +2479,7 @@ access_specifier_region[] { ENTRY_DEBUG } :
             SIGNAL
 
         ) 
-    ({ !inLanguage(LANGUAGE_OBJECTIVE_C) }? (compound_name)* COLON)*
+    ({ !inLanguage(LANGUAGE_OBJECTIVE_C) && first }? (compound_name)* COLON set_bool[first, false])*
 ;
 
 /*
