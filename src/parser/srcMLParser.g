@@ -6339,7 +6339,7 @@ derived[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
             variable_identifier
             ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
 
-            (options { greedy = true; } : template_argument_list)*
+            (options { greedy = true; } : { !inLanguage(LANGUAGE_OBJECTIVE_C) }? template_argument_list)*
 
             set_bool[first, false]
             )
