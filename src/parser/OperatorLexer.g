@@ -165,7 +165,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
             // names can start with a @ in C#
             '@' { $setType(ATSIGN); }
             ( 
-            { inLanguage(LANGUAGE_CSHARP) }? NAME
+            { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? NAME
             { $setType(NAME); }
             |
             { inLanguage(LANGUAGE_CSHARP) }? { atstring = true; } STRING_START
