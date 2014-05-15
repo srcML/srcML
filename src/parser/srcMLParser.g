@@ -747,7 +747,11 @@ keyword_statements[] { ENTRY_DEBUG } :
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
 
         // C/C++ assembly block
-        asm_declaration
+        asm_declaration |
+
+        // Objective-C - kewywords only detected for Objective-C
+        objective_c_class_interface | objective_c_class_end
+
 ;
 
 /*
@@ -2262,6 +2266,26 @@ class_post[] { ENTRY_DEBUG } :
 
 ;
 
+objective_c_class_interface[] { ENTRY_DEBUG } :
+
+    class_preprocessing[SCLASS]
+
+    ATINTERFACE class_header lcurly
+
+;
+
+objective_c_class_end[] { ENTRY_DEBUG } :
+
+    {
+        endDownToMode(MODE_CLASS);
+    }
+    ATEND
+    {
+        endMode(MODE_CLASS);
+    }
+
+;
+
 // Handle an enum class
 enum_class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SENUM]
@@ -2398,7 +2422,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         // suppress ()* warning
         ({ LA(1) != FINAL }? compound_name_inner[false] | keyword_name) (options { greedy = true; } : specifier)*
 
-        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
+        ({ inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_OBJECTIVE_C) }? (options { greedy = true; } : derived))*
 
         // move suppressed ()* warning to begin
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_type_constraint)*
