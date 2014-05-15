@@ -279,6 +279,7 @@ tokens {
 
     // Objective-C
     ATINTERFACE;
+    ATIMPLEMENTATION;
     ATEND;
 
 }
@@ -564,8 +565,9 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "into"          , INTO          , LANGUAGE_CSHARP },
 
         // Objective-C
-        { "@interface"     , ATINTERFACE  , LANGUAGE_OBJECTIVE_C }, 
-        { "@end"           , ATEND        , LANGUAGE_OBJECTIVE_C },
+        { "@interface"      , ATINTERFACE      , LANGUAGE_OBJECTIVE_C }, 
+        { "@implementation" , ATIMPLEMENTATION , LANGUAGE_OBJECTIVE_C }, 
+        { "@end"            , ATEND            , LANGUAGE_OBJECTIVE_C },
 
 
 

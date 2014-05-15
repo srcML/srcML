@@ -139,6 +139,9 @@ XSLT_IF2IFBLOCK=${XSLT} ${XSLT_IF2IFBLOCK_XSL}
 
 XSLT_RENAME_XSL=xsl/rename.xsl
 
+XSLT_INTERFACE2IMPLEMENTATION_XSL=xsl/interface2implementation.xsl
+XSLT_INTERFACE2IMPLEMENTATION=${XSLT} ${XSLT_INTERFACE2IMPLEMENTATION_XSL}
+
 ##
 # Comments and preprocessor statements are handled out of the normal grammar rules
 # in src2srcml.  In order to test the handling of these tokens, special cases are
@@ -684,6 +687,10 @@ c_cpp_mode.class.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_decl_tem
 	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
 	${XSLT} --stringparam new_name class ${XSLT_RENAME_XSL} $@.temp > $@
 	${RM} $@.temp
+
+# class implementation from class interface
+class_implementation_m.m.xml : class_interface_m.m.xml ${XSLT_INTERFACE2IMPLEMENTATION_XSL}
+	${XSLT_INTERFACE2IMPLEMENTATION} $< > $@
 
 clean :
 	rm -f ${GEN_FILES}
