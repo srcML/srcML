@@ -1455,7 +1455,7 @@ objective_c_method_declaration[] { ENTRY_DEBUG } :
         startElement(SFUNCTION_DECLARATION);
 
     }
-    objective_c_method_specifier (objective_c_method_type)* /*objective_c_call_selector*/ (objective_c_method_type)* (objective_c_parameter_list)*
+    objective_c_method_specifier (objective_c_method_type)* /*objective_c_selector*/ (objective_c_method_type)* (objective_c_parameter_list)*
 
 ;
 
@@ -1526,7 +1526,7 @@ objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
 
-    objective_c_call_selector
+    objective_c_selector
 
     objective_c_method_type
 
@@ -4910,11 +4910,11 @@ objective_c_call_argument[] { bool first = true; ENTRY_DEBUG } :
         startNewMode(MODE_ARGUMENT);
 
     }
-    objective_c_call_selector (options { greedy = true; } : { first && LA(1) != RBRACKET }? argument set_bool[first, false])*
+    objective_c_selector (options { greedy = true; } : { first && LA(1) != RBRACKET }? argument set_bool[first, false])*
 ;
 
 // function call message for Objective_C
-objective_c_call_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
+objective_c_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
     {
         startNewMode(MODE_LOCAL);
 
