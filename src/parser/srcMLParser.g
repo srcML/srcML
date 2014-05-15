@@ -2266,11 +2266,11 @@ class_post[] { ENTRY_DEBUG } :
 
 ;
 
-objective_c_class_interface[] { ENTRY_DEBUG } :
+objective_c_class_interface[] { bool first = true; ENTRY_DEBUG } :
 
     class_preprocessing[SCLASS]
 
-    ATINTERFACE class_header (lcurly)*
+    ATINTERFACE ({ first }? class_header set_bool[first, false])* (lcurly)*
 
 ;
 
