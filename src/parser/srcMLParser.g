@@ -436,6 +436,7 @@ tokens {
 	SPRIVATE_ACCESS;
 	SPRIVATE_ACCESS_DEFAULT;
 	SPROTECTED_ACCESS;
+    SPROTECTED_ACCESS_DEFAULT;
     SMEMBER_INITIALIZATION_LIST;
 	SCONSTRUCTOR_DEFINITION;
 	SCONSTRUCTOR_DECLARATION;
@@ -2277,8 +2278,15 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 
     }
 
-    (ATINTERFACE | ATIMPLEMENTATION) ({ first }? class_header set_bool[first, false])* (lcurly)*
+    (ATINTERFACE | ATIMPLEMENTATION) ({ first }? class_header set_bool[first, false])*
 
+    (lcurly
+        {
+
+            class_default_access_action(SPROTECTED_ACCESS_DEFAULT);
+
+        }
+    )*
 ;
 
 objective_c_class_end[] { ENTRY_DEBUG } :
@@ -2390,7 +2398,7 @@ union_declaration[] { ENTRY_DEBUG } :
 // default private/public section for C++
 class_default_access_action[int access_token] { ENTRY_DEBUG } :
         {
-            if (inLanguage(LANGUAGE_CXX) && (SkipBufferSize() > 0 ||
+            if ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_OBJECTIVE_C)) && (SkipBufferSize() > 0 ||
                 !(LA(1) == PUBLIC || LA(1) == PRIVATE || LA(1) == PROTECTED || LA(1) == SIGNAL))) {
 
                 // setup block section
@@ -2471,7 +2479,7 @@ access_specifier_region[] { ENTRY_DEBUG } :
             SIGNAL
 
         ) 
-    (compound_name)* COLON
+    ({ !inLanguage(LANGUAGE_OBJECTIVE_C) }? (compound_name)* COLON)*
 ;
 
 /*
@@ -3278,7 +3286,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 (specifier | template_specifier set_bool[sawtemplate, true] | { next_token() == COLON }? SIGNAL)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
-                        inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
+                        ((inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON) ||inLanguage(LANGUAGE_OBJECTIVE_C)) && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
                 throw_exception[type == ACCESS_REGION] |
                 { !isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) }? template_declaration_full set_int[template_count, template_count + 1] | 
 

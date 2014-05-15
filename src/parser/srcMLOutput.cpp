@@ -189,13 +189,14 @@ namespace {
     ELEMENT_MAP(SUNION_DECLARATION,    "union_decl")
 
     // class
-    ELEMENT_MAP(SCLASS,                   "class")
-    ELEMENT_MAP(SCLASS_DECLARATION,       "class_decl")
-    ELEMENT_MAP(SPUBLIC_ACCESS,           "public")
-    ELEMENT_MAP(SPUBLIC_ACCESS_DEFAULT,   "public")
-    ELEMENT_MAP(SPRIVATE_ACCESS,          "private")
-    ELEMENT_MAP(SPRIVATE_ACCESS_DEFAULT,  "private")
-    ELEMENT_MAP(SPROTECTED_ACCESS,        "protected")
+    ELEMENT_MAP(SCLASS,                    "class")
+    ELEMENT_MAP(SCLASS_DECLARATION,        "class_decl")
+    ELEMENT_MAP(SPUBLIC_ACCESS,            "public")
+    ELEMENT_MAP(SPUBLIC_ACCESS_DEFAULT,    "public")
+    ELEMENT_MAP(SPRIVATE_ACCESS,           "private")
+    ELEMENT_MAP(SPRIVATE_ACCESS_DEFAULT,   "private")
+    ELEMENT_MAP(SPROTECTED_ACCESS,         "protected")
+    ELEMENT_MAP(SPROTECTED_ACCESS_DEFAULT, "protected")
 
     // Qt
     ELEMENT_MAP(SSIGNAL_ACCESS,           "signals")
