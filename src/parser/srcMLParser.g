@@ -2268,7 +2268,11 @@ class_post[] { ENTRY_DEBUG } :
 
 objective_c_class_interface[] { bool first = true; ENTRY_DEBUG } :
 
-    class_preprocessing[SCLASS]
+    {
+        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS);
+
+        startElement(SCLASS);
+    }
 
     ATINTERFACE ({ first }? class_header set_bool[first, false])* (lcurly)*
 
@@ -2573,7 +2577,7 @@ block_end[] { ENTRY_DEBUG } :
                 else_handling();
 
             // then we needed to markup the (abbreviated) variable declaration
-            if (!inLanguage(LANGUAGE_OBJECTIVE_C) && inMode(MODE_DECL) && LA(1) != TERMINATE)
+            if (inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
 
         }
