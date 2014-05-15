@@ -6,11 +6,15 @@
 </unit>
 
 <unit>
-<class>@interface <block>{ }</block> @end</class>
+<class>@interface <block>{<protected type="default"/>}</block> @end</class>
 </unit>
 
 <unit>
-<class>@interface <name>classname</name> <block>{ }</block> @end</class>
+<class>@interface <name>classname</name> <block>{<protected type="default"/>}</block> @end</class>
+</unit>
+
+<unit>
+<class>@interface <name>classname</name> <block>{<protected type="default"> </protected>}</block> @end</class>
 </unit>
 
 <unit>
@@ -22,46 +26,46 @@
 </unit>
 
 <unit>
-<class>@interface <name>classname</name> <super>: <name>super</name></super> <block>{ }</block> @end</class>
+<class>@interface <name>classname</name> <super>: <name>super</name></super> <block>{<protected type="default"/>}</block> @end</class>
 </unit>
 
 <unit>
-<class>@interface <name>classname</name> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list> <block>{ }</block> @end</class>
+<class>@interface <name>classname</name> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list> <block>{<protected type="default"/>}</block> @end</class>
 </unit>
 
 <unit>
-<class>@interface <name>classname</name> <super>: <name>super</name></super> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list> <block>{ }</block> @end</class>
+<class>@interface <name>classname</name> <super>: <name>super</name></super> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list> <block>{<protected type="default"/>}</block> @end</class>
 </unit>
 
 <unit>
-<class>@interface <block>{ <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> }</block> @end</class>
+<class>@interface <block>{<protected type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> </protected>}</block> @end</class>
 </unit>
 
 <unit>
-<class>@interface <block>{ <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt> }</block> @end</class>
+<class>@interface <block>{<protected type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt> </protected>}</block> @end</class>
 </unit>
 
 <unit>
-<class>@interface <block>{
+<class>@interface <block>{<protected type="default">
 <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
 <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt>
-}</block>
+</protected>}</block>
 @end</class>
 </unit>
 
 <unit>
-<class>@interface <name>classname</name> <block>{ <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> }</block> @end</class>
+<class>@interface <name>classname</name> <block>{<protected type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> </protected>}</block> @end</class>
 </unit>
 
 <unit>
-<class>@interface <name>classname</name> <super>: <name>super</name></super> <block>{ <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt> }</block> @end</class>
+<class>@interface <name>classname</name> <super>: <name>super</name></super> <block>{<protected type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt> </protected>}</block> @end</class>
 </unit>
 
 <unit>
-<class>@interface <name>classname</name> <super>: <name>super</name></super> <block>{
+<class>@interface <name>classname</name> <super>: <name>super</name></super> <block>{<protected type="default">
 <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
 <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt>
-}</block>
+</protected>}</block>
 @end</class>
 </unit>
 
