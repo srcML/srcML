@@ -295,10 +295,10 @@ namespace {
     ELEMENT_MAP(SALIGNAS,    "alignas")
 
     // Objective-C
-    ELEMENT_MAP(SRECEIVER,    "receiver")
+    ELEMENT_MAP(SRECEIVER,  "receiver")
     ELEMENT_MAP(SMESSAGE,   "message")
     ELEMENT_MAP(SSELECTOR,  "selector")
-
+    ELEMENT_MAP(SPROTOCOL_LIST,  "protocol_list")
 
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
