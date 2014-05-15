@@ -664,7 +664,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         { inMode(MODE_ENUM) }? enum_block |
 
-        //{ inLanguage(LANGUAGE_OBJECTIVE_C) && inMode(MODE_CLASS) }?  |
+        { inLanguage(LANGUAGE_OBJECTIVE_C) && inMode(MODE_CLASS) }? objective_c_method_declaration |
 
         // don't confuse with expression block
         { ((inTransparentMode(MODE_CONDITION) ||
