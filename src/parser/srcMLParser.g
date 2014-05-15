@@ -2286,9 +2286,11 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 
     {
 
-        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS);
+        startNewMode(MODE_STATEMENT | MODE_CLASS);
 
         startElement(SCLASS);
+
+        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK  | MODE_TOP | MODE_CLASS);
 
     }
 
@@ -2306,11 +2308,11 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 objective_c_class_end[] { ENTRY_DEBUG } :
 
     {
-        endDownToMode(MODE_CLASS);
+        endDownOverMode(MODE_TOP | MODE_CLASS);
     }
     ATEND
     {
-        endMode(MODE_CLASS);
+        endDownOverMode(MODE_CLASS);
     }
 
 ;
