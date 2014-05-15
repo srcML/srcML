@@ -1446,6 +1446,7 @@ property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
         (GET | SET | ADD | REMOVE)
 ;
 
+// Objective-C method declaration
 objective_c_method_declaration[] { ENTRY_DEBUG } :
     {
 
@@ -1454,10 +1455,11 @@ objective_c_method_declaration[] { ENTRY_DEBUG } :
         startElement(SFUNCTION_DECLARATION);
 
     }
-    (CSPEC | MSPEC) (objective_c_method_type)* function_identifier
+    (CSPEC | MSPEC) (objective_c_method_type)* /*objective_c_call_selector*/ (objective_c_method_type)* (objective_c_parameter_list)*
 
 ;
 
+// either Objective-C method return type or parameter type
 objective_c_method_type[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
 
@@ -1486,6 +1488,43 @@ objective_c_method_type[] { CompleteElement element(this); ENTRY_DEBUG } :
         RPAREN
 
 ;
+
+objective_c_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_FUNCTION_PARAMETER);
+
+        // start the function call element
+        startElement(SPARAMETER_LIST);
+
+    }
+
+    objective_c_parameter (objective_c_parameter)*
+
+;
+
+// method parameter name:value pair for Objective_C
+objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        if(inTransparentMode(MODE_LIST))
+            endDownToMode(MODE_LIST);
+
+        startNewMode(MODE_PARAMETER);
+
+        startElement(SPARAMETER);
+
+    }
+
+    objective_c_call_selector
+
+    objective_c_method_type
+
+    // Mark as name before mark without name
+    (options { generateAmbigWarnings = false; } : compound_name | keyword_name)
+
+;
+
 
 // Check and see if this is a call and what type
 perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int secondtoken] returns [bool iscall] {
