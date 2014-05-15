@@ -664,6 +664,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         { inMode(MODE_ENUM) }? enum_block |
 
+        //{ inLanguage(LANGUAGE_OBJECTIVE_C) && inMode(MODE_CLASS) }?  |
+
         // don't confuse with expression block
         { ((inTransparentMode(MODE_CONDITION) ||
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
@@ -1442,6 +1444,18 @@ property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SNAME);
         }
         (GET | SET | ADD | REMOVE)
+;
+
+objective_c_method_declaration[] { ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_STATEMENT);
+
+        startElement(SFUNCTION_DECLARATION);
+
+    }
+    (CSPEC | MSPEC)
+
 ;
 
 // Check and see if this is a call and what type
@@ -5913,7 +5927,11 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
-            NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
+            NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA |
+
+            // Objective-C
+            CSPEC | MSPEC
+
         )
 ;
 
