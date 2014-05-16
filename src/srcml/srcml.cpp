@@ -59,11 +59,10 @@ int main(int argc, char * argv[]) {
         srcml_request.att_filename = input_sources[0].filename;
     }
 
-    // input source that is stdin, if it exists
-    srcml_input_src* pstdin = srcml_request.stdindex ? &input_sources[*srcml_request.stdindex] : 0;
+    // standard input setup
+    if (srcml_request.stdindex) {
 
-    // standard input handled as FILE* to be able to peek
-    if (pstdin) {
+        srcml_input_src* pstdin = &input_sources[*srcml_request.stdindex];
 
         // FILE* becomes part of stdin input source
         pstdin->fileptr = fdopen(STDIN_FILENO, "r");
@@ -76,6 +75,12 @@ int main(int argc, char * argv[]) {
 
         // from the first up-to 4 bytes determine if is srcML or not
         pstdin->state = isxml(data, size) ? SRCML : SRC;
+
+        // language is required standard input is used for source
+        if ((pstdin->state == SRC) && !srcml_request.att_language) {
+            std::cerr << "Using stdin requires a declared language\n";
+            exit(1);
+        }
     }
 
     // output destination setup just like an input source
@@ -91,12 +96,6 @@ int main(int argc, char * argv[]) {
 
     // src->srcml when there is any src input, or multiple srcml input with output to srcml (merge)
     if (src_input || (input_sources.size() > 1 && destination.state == SRCML)) {
-
-        // language is required when creating srcml and standard input is used for source
-        if (pstdin && (pstdin->state == SRC) && !srcml_request.att_language) {
-                std::cerr << "Using stdin requires a declared language\n";
-                exit(1);
-        }
 
         pipeline.push_back(create_srcml);
 
