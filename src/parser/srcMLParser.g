@@ -568,6 +568,7 @@ tokens {
     SSELECTOR;
     SPROTOCOL_LIST;
     SCATEGORY;
+    SPROTOCOL;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -757,7 +758,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         asm_declaration |
 
         // Objective-C - kewywords only detected for Objective-C
-        objective_c_class | objective_c_class_end
+        objective_c_class | protocol | objective_c_class_end
 
 ;
 
@@ -2294,6 +2295,26 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
     )*
 ;
 
+protocol[] { bool first = true; ENTRY_DEBUG } :
+
+    {
+
+        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS);
+
+        startElement(SPROTOCOL);
+
+    }
+
+    ATPROTOCOL ({ first }? objective_c_class_header set_bool[first, false])*
+
+    {
+
+        class_default_access_action(SPROTECTED_ACCESS_DEFAULT);
+
+    }
+
+;
+
 
 // handle class header
 objective_c_class_header[] { ENTRY_DEBUG } :
@@ -2306,17 +2327,21 @@ objective_c_class_header[] { ENTRY_DEBUG } :
 ;
 
 // class header base
-objective_c_class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
+objective_c_class_header_base[] { ENTRY_DEBUG } :
 
         // suppress ()* warning
-        ({ LA(1) != FINAL }? compound_name_inner[false] | keyword_name) (options { greedy = true; } : specifier)*
+        (compound_name_inner[false] | keyword_name)
 
+        // suppressed ()* warning
+        (options { greedy = true; } : specifier)*
+
+        // suppressed ()* warning
         (options { greedy = true; } : derived)*
 
-        // move suppressed ()* warning to begin
+        // suppressed ()* warning
         (category)*
 
-        // move suppressed ()* warning to begin
+        // suppressed ()* warning
         (protocol_list)*
 
 ;

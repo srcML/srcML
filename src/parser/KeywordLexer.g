@@ -282,6 +282,9 @@ tokens {
     ATIMPLEMENTATION;
     ATEND;
     IMPORT;
+    ATPROTOCOL;
+    ATREQUIRED;
+    ATOPTIONAL;
 
 }
 
@@ -568,10 +571,13 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         // Objective-C
         { "@interface"      , ATINTERFACE      , LANGUAGE_OBJECTIVE_C }, 
         { "@implementation" , ATIMPLEMENTATION , LANGUAGE_OBJECTIVE_C }, 
+        { "@protocol"       , ATPROTOCOL       , LANGUAGE_OBJECTIVE_C },
         { "@end"            , ATEND            , LANGUAGE_OBJECTIVE_C },
         { "@private"        , PRIVATE          , LANGUAGE_OBJECTIVE_C },
         { "@protected"      , PROTECTED        , LANGUAGE_OBJECTIVE_C },
         { "@public"         , PUBLIC           , LANGUAGE_OBJECTIVE_C },
+        { "@required"       , ATREQUIRED       , LANGUAGE_OBJECTIVE_C },
+        { "@optional"       , ATOPTIONAL       , LANGUAGE_OBJECTIVE_C },
         { "import"          , IMPORT           , LANGUAGE_OBJECTIVE_C },
 
 

@@ -307,6 +307,7 @@ namespace {
     ELEMENT_MAP(SSELECTOR,      "selector")
     ELEMENT_MAP(SPROTOCOL_LIST, "protocol_list")
     ELEMENT_MAP(SCATEGORY,      "category")
+    ELEMENT_MAP(SPROTOCOL,      "protocol")
 
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
