@@ -38,13 +38,6 @@ void input_file(srcml_input_src& input) {
     if (!input.compressions.empty() &&
         (input.compressions.size() > 1 || input.compressions.front() != ".gz")) {
 
-    	srcml_request_t empty;
-    	srcml_input_t inputs;
-    	inputs.push_back(input);
-    	srcml_output_dest output;
-
-   	    // create a thread for each step, creating pipes between adjoining steps
-	    boost::thread_group pipeline_threads;
 	    int fds[2] = { -1, -1 };
 #if !defined(_MSC_BUILD) && !defined(__MINGW32__)
         pipe(fds);
@@ -57,6 +50,14 @@ void input_file(srcml_input_src& input) {
         fds[0] = _open_osfhandle((intptr_t)read_pipe, _O_RDONLY);
 #endif
 
+    	srcml_request_t empty;
+    	srcml_input_t inputs;
+    	inputs.push_back(input);
+    	srcml_output_dest output("-", fds[1]);
+
+   	    // create a thread for each step, creating pipes between adjoining steps
+	    boost::thread_group pipeline_threads;
+
         /* run this step in the sequence */
         pipeline_threads.create_thread(
             boost::bind(
@@ -68,7 +69,6 @@ void input_file(srcml_input_src& input) {
         );
 
 //        pipeline_threads.join_all();
-
-        input = output;
+        input.fd = fds[0];
     }
 }
