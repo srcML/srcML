@@ -92,6 +92,18 @@ int main(int argc, char * argv[]) {
     // setup the commands in the pipeline
     processing_steps_t pipeline;
 
+    // libsrcml can apply gz decompression
+    // all other srcml compressions require an internal decompression stage
+    BOOST_FOREACH(srcml_input_src& input, input_sources) {
+
+        if (!is_src(input) &&
+            !input_sources[0].compressions.empty() &&
+            (input_sources[0].compressions.size() > 1 || input_sources[0].compressions.front() != ".gz")) {
+
+            input_file(input);
+        }
+    }
+
     bool src_input = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
 
     // src->srcml when there is any src input, or multiple srcml input with output to srcml (merge)
@@ -110,15 +122,6 @@ int main(int argc, char * argv[]) {
             std::cerr << "Unsupported output compression\n";
 #endif
         }
-    }
-
-    // libsrcml can apply gz decompression
-    // all other compressions require an internal decompression stage
-    if (!src_input &&
-        !input_sources[0].compressions.empty() &&
-        (input_sources[0].compressions.size() > 1 || input_sources[0].compressions.front() != ".gz")) {
-
-        input_file(input_sources[0]);
     }
 
     // XPath and XSLT processing
