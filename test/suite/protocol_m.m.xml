@@ -40,4 +40,8 @@
 </required>@end</protocol>
 </unit>
 
+<unit>
+<protocol>@protocol <name>protocolname</name> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list><required type="default"/>@end</protocol>
+</unit>
+
 </unit>
