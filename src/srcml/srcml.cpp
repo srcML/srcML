@@ -102,7 +102,7 @@ int main(int argc, char * argv[]) {
 #if ARCHIVE_VERSION_NUMBER > 3001002
         // libsrcml can apply gz compression
         // all other compressions require an additional compression stage
-        if (!destination.compressions.empty() && (destination.compressions.size() > 1 || destination.compressions.front() != ".gz")) 
+        if (destination.compressions.size() > 1 || destination.compressions.front() != ".gz") 
             pipeline.push_back(compress_srcml);
 #endif
     }
