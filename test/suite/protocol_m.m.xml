@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Objective-C" dir="protocol" filename="protocol_m">
+
+<unit>
+<protocol>@protocol<required type="default"/>@end</protocol>
+</unit>
+
+<unit>
+<protocol>@protocol <name>protocolname</name><required type="default"> </required>@end</protocol>
+</unit>
+
+<unit>
+<protocol>@protocol <name>protocolname</name><required>@required </required>@end</protocol>
+</unit>
+
+<unit>
+<protocol>@protocol <name>protocolname</name><optional>@optional</optional>@end</protocol>
+</unit>
+
+<unit>
+<protocol>@protocol <name>protocolname</name><required>@required </required>@end</protocol>
+</unit>
+
+<unit>
+<protocol>@protocol <name>protocolname</name><optional>@optional </optional>@end</protocol>
+</unit>
+
+<unit>
+<protocol>@protocol <name>protocolname</name><required type="default"> </required><optional>@optional</optional>@end</protocol>
+</unit>
+
+<unit>
+<protocol>@protocol <name>protocolname</name><required type="default"> </required><required>@required</required>@end</protocol>
+</unit>
+
+<unit>
+<protocol>@protocol <name>protocolname</name><required type="default">
+</required><optional>@optional
+</optional><required>@required
+</required>@end</protocol>
+</unit>
+
+</unit>

@@ -165,6 +165,7 @@ LANGUAGE_OBJECTIVE_C objective_c_call_m
 LANGUAGE_OBJECTIVE_C class_interface_m
 LANGUAGE_OBJECTIVE_C cpp_import_m
 LANGUAGE_OBJECTIVE_C decl_simple_m
+LANGUAGE_OBJECTIVE_C protocol_m
 
 LANGUAGE_OBJECTIVE_C_GEN class_implementation_m
 
