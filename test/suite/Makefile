@@ -71,6 +71,9 @@ BASE_OBJECTIVE_C_GEN=${call language,'LANGUAGE_OBJECTIVE_C_GEN'}
 # base for Java only
 BASE_JAVA=${call language,'LANGUAGE_JAVA'}
 
+# base for Java only
+BASE_JAVA_GEN=${call language,'LANGUAGE_JAVA_GEN'}
+
 all : gen
 
 testbase : gen
@@ -211,6 +214,10 @@ XSLT_REMOVECPP_PROBLEM=${XSLT} ${XSLT_REMOVECPP_PROBLEM_XSL}
 XSLT_REMOVECPP_LITERAL=${XSLT} ${XSLT_REMOVECPP_LITERAL_XSL}
 XSLT_REMOVECPP_OPERATOR=${XSLT} ${XSLT_REMOVECPP_OPERATOR_XSL}
 
+#  try/catch/finally/throw keywords to @try/@catch/@finally/throw keywords
+XSLT_KEYWORD2MKEYWORD_XSL=xsl/keyword2mkeyword.xsl
+XSLT_KEYWORD2MKEYWORD=${XSLT} ${XSLT_KEYWORD2MKEYWORD_XSL}
+
 SEP_BASE=$(BASE_COMMON) $(BASE_C_FAMILY) $(BASE_CXX) $(BASE_OO)
 
 # basic generated C++ files
@@ -237,10 +244,8 @@ BASE_OBJECTIVE_C_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_C_FAMILY) $(BASE_C) $(B
 GEN_OBJECTIVE_C = ${foreach nm, $(BASE_OBJECTIVE_C_ALL_GEN), $(nm).m.xml}
 
 # base for all of Java
-BASE_JAVA_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO)
-
+BASE_JAVA_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA_GEN)
 BASE_JAVA_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
-
 GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL_GEN), $(nm).java.xml}
 
 #BASE_ASPECTJ_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
@@ -375,6 +380,8 @@ problem.all.c.xml : problem.c.xml
 	${XSLT_MERGEUNIT_PROBLEM} $< > $@
 problem.all.cs.xml : problem.cs.xml
 	${XSLT_MERGEUNIT_PROBLEM} $< > $@
+problem.all.m.xml : problem.m.xml
+	${XSLT_MERGEUNIT_PROBLEM} $< > $@
 problem.all.java.xml : problem.java.xml
 	${XSLT_MERGEUNIT_PROBLEM} $< > $@
 problem.all.aj.xml : problem.aj.xml
@@ -385,6 +392,8 @@ problem.block.cpp.xml : problem.cpp.xml
 problem.block.c.xml : problem.c.xml
 	${XSLT_BLOCKUNIT_PROBLEM} $< > $@
 problem.block.cs.xml : problem.cs.xml
+	${XSLT_BLOCKUNIT_PROBLEM} $< > $@
+problem.block.m.xml : problem.m.xml
 	${XSLT_BLOCKUNIT_PROBLEM} $< > $@
 problem.block.java.xml : problem.java.xml
 	${XSLT_BLOCKUNIT_PROBLEM_JAVA} $< > $@
@@ -397,6 +406,8 @@ problem.comment.c.xml : problem.c.xml
 	${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
 problem.comment.cs.xml : problem.cs.xml
 	${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
+problem.comment.m.xml : problem.m.xml
+	${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
 problem.comment.java.xml : problem.java.xml
 	${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
 problem.comment.aj.xml : problem.aj.xml
@@ -407,6 +418,8 @@ problem.preproc.cpp.xml : problem.cpp.xml
 problem.preproc.c.xml : problem.c.xml
 	${XSLT_INSERTPREPROC_PROBLEM} $< > $@
 problem.preproc.cs.xml : problem.cs.xml
+	${XSLT_INSERTPREPROC_PROBLEM} $< > $@
+problem.preproc.m.xml : problem.m.xml
 	${XSLT_INSERTPREPROC_PROBLEM} $< > $@
 problem.preproc.java.xml : problem.java.xml
 	${XSLT_INSERTPREPROC_PROBLEM} $< > $@
@@ -419,6 +432,8 @@ problem.ifthenelse.c.xml : problem.c.xml
 	${XSLT_INSERTIFTHENELSE_PROBLEM} $< > $@
 problem.ifthenelse.cs.xml : problem.cs.xml
 	${XSLT_INSERTIFTHENELSE_PROBLEM} $< > $@
+problem.ifthenelse.m.xml : problem.m.xml
+	${XSLT_INSERTIFTHENELSE_PROBLEM} $< > $@
 problem.ifthenelse.java.xml : problem.java.xml
 	${XSLT_INSERTIFTHENELSE_PROBLEM_JAVA} $< > $@
 problem.ifthenelse.aj.xml : problem.aj.xml
@@ -429,6 +444,8 @@ problem.formfeed.cpp.xml : problem.cpp.xml
 problem.formfeed.c.xml : problem.c.xml
 	${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
 problem.formfeed.cs.xml : problem.cs.xml
+	${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
+problem.formfeed.m.xml : problem.m.xml
 	${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
 problem.formfeed.java.xml : problem.java.xml
 	${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
@@ -691,6 +708,30 @@ c_cpp_mode.class.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_decl_tem
 # class implementation from class interface
 class_implementation_m.m.xml : class_interface_m.m.xml ${XSLT_INTERFACE2IMPLEMENTATION_XSL}
 	${XSLT_INTERFACE2IMPLEMENTATION} $< > $@
+
+# Java finallly from C#
+finally_java.java.xml : finally_cs.cs.xml ${XSLT_SETLANGUAGE_CS_XSL}
+	${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_PROBLEM} - > $@
+
+# Objective-C try from C++
+try_m.m.xml : try.cpp.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
+	${XSLT_KEYWORD2MKEYWORD} $< > $@
+
+# Objective-C catch from C++
+catch_m.m.xml : catch_form.cpp.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
+	${XSLT_KEYWORD2MKEYWORD} $< > $@
+
+# Objective-C finally from C++
+finally_m.m.xml : finally_cs.cs.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
+	${XSLT_KEYWORD2MKEYWORD} $< > $@
+
+# Objective-C throw from C++
+throw_m.m.xml : throw.cpp.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
+	${XSLT_KEYWORD2MKEYWORD} $< > $@
+
+# Objective-C throw from C++
+throw_base_m.m.xml : throw_base.cpp.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
+	${XSLT_KEYWORD2MKEYWORD} $< > $@
 
 clean :
 	rm -f ${GEN_FILES}

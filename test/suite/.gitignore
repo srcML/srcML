@@ -21,6 +21,7 @@ call_c.m.xml
 cast_c.m.xml
 catch_form.cs.xml
 catch_form.java.xml
+catch_m.m.xml
 class_implementation_m.m.xml
 comment.c.xml
 comment.cs.xml
@@ -57,6 +58,8 @@ expression_pointer.m.xml
 extern.c.xml
 extern.cs.xml
 extern.m.xml
+finally_java.java.xml
+finally_m.m.xml
 for.c.xml
 for.cs.xml
 for.m.xml
@@ -168,8 +171,11 @@ throw.cs.xml
 throw.java.xml
 throw_base.cs.xml
 throw_base.java.xml
+throw_base_m.m.xml
+throw_m.m.xml
 try.cs.xml
 try.java.xml
+try_m.m.xml
 typedef.c.xml
 typedef.m.xml
 union.cpp.xml

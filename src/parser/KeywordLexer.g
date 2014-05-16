@@ -579,6 +579,10 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "@required"       , ATREQUIRED       , LANGUAGE_OBJECTIVE_C },
         { "@optional"       , ATOPTIONAL       , LANGUAGE_OBJECTIVE_C },
         { "import"          , IMPORT           , LANGUAGE_OBJECTIVE_C },
+        { "@try"            , TRY              , LANGUAGE_OBJECTIVE_C },
+        { "@catch"          , CATCH            , LANGUAGE_OBJECTIVE_C },
+        { "@finally"        , FINALLY          , LANGUAGE_OBJECTIVE_C },
+        { "@throw"          , THROW            , LANGUAGE_OBJECTIVE_C },
 
 
 
