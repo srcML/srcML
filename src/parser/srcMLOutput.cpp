@@ -251,11 +251,17 @@ namespace {
     ELEMENT_MAP(SCPP_THEN,      "then")
     ELEMENT_MAP(SCPP_PRAGMA,    "pragma")
     ELEMENT_MAP(SCPP_ERROR,     "error")
-    ELEMENT_MAP(SCPP_REGION,    "region")
-    ELEMENT_MAP(SCPP_ENDREGION, "endregion")
     ELEMENT_MAP(SCPP_MACRO_DEFN, "macro")
     ELEMENT_MAP(SCPP_MACRO_VALUE, "value")
 
+    // C# cpp
+    ELEMENT_MAP(SCPP_REGION,    "region")
+    ELEMENT_MAP(SCPP_ENDREGION, "endregion")
+
+    // Objective-C cpp
+    ELEMENT_MAP(SCPP_IMPORT,    "import")
+
+    // debug
     ELEMENT_MAP(SMARKER,        "marker")
     ELEMENT_MAP(SERROR_PARSE,   "parse")
     ELEMENT_MAP(SERROR_MODE,    "mode")
@@ -296,10 +302,10 @@ namespace {
     ELEMENT_MAP(SALIGNAS,    "alignas")
 
     // Objective-C
-    ELEMENT_MAP(SRECEIVER,  "receiver")
-    ELEMENT_MAP(SMESSAGE,   "message")
-    ELEMENT_MAP(SSELECTOR,  "selector")
-    ELEMENT_MAP(SPROTOCOL_LIST,  "protocol_list")
+    ELEMENT_MAP(SRECEIVER,      "receiver")
+    ELEMENT_MAP(SMESSAGE,       "message")
+    ELEMENT_MAP(SSELECTOR,      "selector")
+    ELEMENT_MAP(SPROTOCOL_LIST, "protocol_list")
 
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")

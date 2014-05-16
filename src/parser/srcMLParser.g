@@ -512,6 +512,9 @@ tokens {
     SCPP_REGION;
     SCPP_ENDREGION;
 
+    // Objective-C cpp directives
+    SCPP_IMPORT;
+
     // This HAS to mark the end of the CPP directives
 	SCPP_ENDIF;
 
@@ -684,7 +687,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         // statements that clearly start with a keyword
         { (isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) || (LA(1) != TEMPLATE || next_token() != TEMPOPS))
-         && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS) 
+         && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS)
+         && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
          && (LA(1) == DEFAULT || next_token() != COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
@@ -4216,11 +4220,15 @@ identifier_list[] { ENTRY_DEBUG } :
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
             INTO | THIS |
 
+            // Objective-C
+            IMPORT |
+
             // C
-            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH /*| CXX_CLASS| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
+            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH/*| CXX_CLASS| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
             SIGNALS | FOREACH | FOREVER | VIRTUAL | FRIEND | OPERATOR | EXPLICIT | NAMESPACE | USING |
             DELETE | FALSE | TRUE | FINAL | OVERRIDE | CONSTEXPR | NOEXCEPT | THREADLOCAL | NULLPTR |
             DECLTYPE | ALIGNAS | TYPENAME | ALIGNOF*/
+
 ;
 
 // most basic name
@@ -7226,6 +7234,14 @@ preprocessor[] { ENTRY_DEBUG
 
             tp.setType(SCPP_ENDREGION);
         } |
+
+        IMPORT
+        {
+            endMode();
+
+            tp.setType(SCPP_IMPORT);
+        }
+        (cpp_filename)* |
 
         /* blank preproc */
         // suppress ()* warning
