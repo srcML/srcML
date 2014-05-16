@@ -2283,7 +2283,7 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 
     }
 
-    (ATINTERFACE | ATIMPLEMENTATION) ({ first }? class_header set_bool[first, false])*
+    (ATINTERFACE | ATIMPLEMENTATION) ({ first }? objective_c_class_header set_bool[first, false])*
 
     (lcurly
         {
@@ -2292,6 +2292,33 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 
         }
     )*
+;
+
+
+// handle class header
+objective_c_class_header[] { ENTRY_DEBUG } :
+
+        { isoption(parseoptions, SRCML_OPTION_CPP) }?
+        (macro_call_check class_header_base LCURLY)=>
+           macro_call objective_c_class_header_base |
+
+        objective_c_class_header_base
+;
+
+// class header base
+objective_c_class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
+
+        // suppress ()* warning
+        ({ LA(1) != FINAL }? compound_name_inner[false] | keyword_name) (options { greedy = true; } : specifier)*
+
+        (options { greedy = true; } : derived)*
+
+        // move suppressed ()* warning to begin
+        (category)*
+
+        // move suppressed ()* warning to begin
+        (protocol_list)*
+
 ;
 
 objective_c_class_end[] { ENTRY_DEBUG } :
@@ -2442,14 +2469,10 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         // suppress ()* warning
         ({ LA(1) != FINAL }? compound_name_inner[false] | keyword_name) (options { greedy = true; } : specifier)*
 
-        ({ inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_OBJECTIVE_C) }? (options { greedy = true; } : derived))*
+        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
         // move suppressed ()* warning to begin
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_type_constraint)*
-
-        (options { greedy = true; } : { inLanguage(LANGUAGE_OBJECTIVE_C) }? category)*
-
-        (options { greedy = true; } : { inLanguage(LANGUAGE_OBJECTIVE_C) }? protocol_list)*
 
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } 
             (extends_list | implements_list) (options { greedy = true; } : extends_list | implements_list)*))*
