@@ -23,6 +23,9 @@
 #ifndef INPUT_FILE_HPP
 #define INPUT_FILE_HPP
 
-void input_file();
+#include <srcml_input_src.hpp>
+
+// adjust input for libcurl and libarchive decompressions
+void input_file(srcml_input_src& input);
 
 #endif

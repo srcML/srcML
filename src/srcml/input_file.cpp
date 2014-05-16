@@ -22,6 +22,6 @@
 
 #include <input_file.hpp>
 
-void input_file() {
+void input_file(srcml_input_src& input) {
 
 }

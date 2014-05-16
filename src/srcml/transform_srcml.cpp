@@ -22,6 +22,7 @@
 
 #include <transform_srcml.hpp>
 #include <src_prefix.hpp>
+#include <input_file.hpp>
 #include <srcml.h>
 #include <string>
 #include <boost/foreach.hpp>
@@ -65,6 +66,23 @@ void transform_srcml(const srcml_request_t& srcml_request,
 				srcml_append_transform_xpath(in_arch, resource.c_str());
 			}
 			else if (protocol == "xslt") {
+
+				// xslt has file input, which may need to be processed
+				std::string xslt_filename;
+				srcml_input_src xslt_file(xslt_filename.c_str());
+				input_file(xslt_file);
+
+				int status;
+		        if (contains<int>(xslt_file))
+		            status = srcml_append_transform_xslt_fd(in_arch, xslt_file);
+		        else if (contains<FILE*>(xslt_file))
+		            status = srcml_append_transform_xslt_FILE(in_arch, xslt_file);
+		        else
+		            status = srcml_append_transform_xslt_filename(in_arch, xslt_file.c_str());
+		        if (status != SRCML_STATUS_OK)
+		            throw status;
+
+				// 
 				std::cerr << protocol << " : " << resource << "\n"; // Stub
 			}
 			else if (protocol == "xpathparam") {
