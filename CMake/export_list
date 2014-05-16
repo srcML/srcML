@@ -1,4 +1,5 @@
 _srcml
+_srcml_append_transform_param
 _srcml_append_transform_relaxng_filename
 _srcml_append_transform_relaxng_memory
 _srcml_append_transform_relaxng_FILE

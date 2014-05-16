@@ -273,6 +273,17 @@ int srcml_append_transform_relaxng_fd(srcml_archive* archive, int relaxng_fd) {
 
 }
 
+int srcml_append_transform_param(srcml_archive* archive, const char* xpath_param_name, const char* xpath_param_value) {
+
+    archive->xsl_parameters.pop_back();
+    archive->xsl_parameters.push_back(xpath_param_name);
+    archive->xsl_parameters.push_back(xpath_param_value);
+    archive->xsl_parameters.push_back(0);
+
+    return SRCML_STATUS_OK;
+
+}
+
 /**
  * srcml_clear_transforms
  * @param archive an archive
@@ -356,10 +367,9 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
             case SRCML_XSLT: {
 
-                const char * params[1] = { 0 };
                 error = srcml_xslt(pinput, "src:unit",
                                    iarchive->transformations.at(i).transformation.doc,
-                                   params, 0, transform_fd, oarchive->options);
+                                   &iarchive->xsl_parameters.front(), 0, transform_fd, oarchive->options);
                 break;
             }
 
