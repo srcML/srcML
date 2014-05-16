@@ -700,7 +700,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }? keyword_statements |
 
-        { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
+        { next_token() == LPAREN }? synchronized_statement |
 
         { inLanguage(LANGUAGE_CXX) && inMode(MODE_USING) }? using_aliasing |
 

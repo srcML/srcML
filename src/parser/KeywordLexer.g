@@ -583,6 +583,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "@catch"          , CATCH            , LANGUAGE_OBJECTIVE_C },
         { "@finally"        , FINALLY          , LANGUAGE_OBJECTIVE_C },
         { "@throw"          , THROW            , LANGUAGE_OBJECTIVE_C },
+        { "@synchronized"   , SYNCHRONIZED     , LANGUAGE_OBJECTIVE_C },
 
 
 
