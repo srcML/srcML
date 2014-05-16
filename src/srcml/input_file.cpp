@@ -21,7 +21,54 @@
  */
 
 #include <input_file.hpp>
+#include <decompress_srcml.hpp>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
+#include <boost/thread.hpp>
+#pragma GCC diagnostic pop
+
+#if defined(_MSC_BUILD) || defined(__MINGW32__)
+#include <io.h>
+#include <fcntl.h>
+#include <windows.h>
+#endif
 
 void input_file(srcml_input_src& input) {
 
+    if (!input.compressions.empty() &&
+        (input.compressions.size() > 1 || input.compressions.front() != ".gz")) {
+
+    	srcml_request_t empty;
+    	srcml_input_t inputs;
+    	inputs.push_back(input);
+    	srcml_output_dest output;
+
+   	    // create a thread for each step, creating pipes between adjoining steps
+	    boost::thread_group pipeline_threads;
+	    int fds[2] = { -1, -1 };
+#if !defined(_MSC_BUILD) && !defined(__MINGW32__)
+        pipe(fds);
+#else
+        HANDLE read_pipe;
+        HANDLE write_pipe;
+        CreatePipe(&read_pipe,&write_pipe, NULL, 0);
+
+        fds[1] = _open_osfhandle((intptr_t)write_pipe, 0);
+        fds[0] = _open_osfhandle((intptr_t)read_pipe, _O_RDONLY);
+#endif
+
+        /* run this step in the sequence */
+        pipeline_threads.create_thread(
+            boost::bind(
+                decompress_srcml,
+                empty,
+                inputs,
+                output
+            )
+        );
+
+//        pipeline_threads.join_all();
+
+        input = output;
+    }
 }
