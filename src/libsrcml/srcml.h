@@ -392,6 +392,7 @@ __LIBSRCML_DECL int srcml_append_transform_relaxng_filename(struct srcml_archive
 __LIBSRCML_DECL int srcml_append_transform_relaxng_memory  (struct srcml_archive*, const char* relaxng_buffer, size_t size);
 __LIBSRCML_DECL int srcml_append_transform_relaxng_FILE    (struct srcml_archive*, FILE* relaxng_file);
 __LIBSRCML_DECL int srcml_append_transform_relaxng_fd      (struct srcml_archive*, int relaxng_fd);
+__LIBSRCML_DECL int srcml_append_transform_param           (struct srcml_archive*, const char* xpath_param_name, const char* xpath_param_value);
 __LIBSRCML_DECL int srcml_apply_transforms                 (struct srcml_archive* iarchive, struct srcml_archive* oarchive);
 
 /* Augment read to use user defined xml handlers */
