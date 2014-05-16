@@ -32,6 +32,7 @@
 #include <srcml_execute.hpp>
 #include <isxml.hpp>
 #include <peek4char.hpp>
+#include <input_file.hpp>
 
 #include <archive.h>
 #include <iostream>
@@ -112,13 +113,12 @@ int main(int argc, char * argv[]) {
     }
 
     // libsrcml can apply gz decompression
-    // all other compressions require an additional compression stage
-    // NOTE: assumes only one input file
+    // all other compressions require an internal decompression stage
     if (!src_input &&
         !input_sources[0].compressions.empty() &&
         (input_sources[0].compressions.size() > 1 || input_sources[0].compressions.front() != ".gz")) {
 
-        pipeline.push_back(decompress_srcml);
+        input_file(input_sources[0]);
     }
 
     // XPath and XSLT processing
