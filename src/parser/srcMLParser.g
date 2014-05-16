@@ -775,8 +775,11 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         variable_declaration_statement[type_count] |
 
         // check for Objective-C method
-        { stmt_type == FUNCTION_DECL || stmt_type == FUNCTION }?
-        objective_c_method_declaration |
+        { stmt_type == FUNCTION_DECL }?
+        objective_c_method[SFUNCTION_DECLARATION] |
+
+        { stmt_type == FUNCTION }?
+        objective_c_method[SFUNCTION_DEFINITION] |
 
         // check for declaration of some kind (variable, function, constructor, destructor
         { stmt_type == FUNCTION_DECL }?
@@ -1449,12 +1452,12 @@ property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 // Objective-C method declaration
-objective_c_method_declaration[] { ENTRY_DEBUG } :
+objective_c_method[int token = SNOP] { ENTRY_DEBUG } :
     {
 
         startNewMode(MODE_STATEMENT);
 
-        startElement(SFUNCTION_DECLARATION);
+        startElement(token);
 
     }
     objective_c_method_specifier (objective_c_method_type)* /*objective_c_selector*/ (objective_c_method_type)* (objective_c_parameter_list)*
@@ -3280,6 +3283,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     else if (type == FUNCTION && (fla == TERMINATE || fla == COMMA))
         type = FUNCTION_DECL;
 
+    // declaration form
+    else if (type == FUNCTION && LA(1) == TERMINATE)
+        type = FUNCTION_DECL;
+
     // we actually have a macro and then a constructor
     else if(type == FUNCTION && fla == COLON)
         type = SINGLE_MACRO;
@@ -3584,7 +3591,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 function_rest[fla]
             ) |
 
-            { type_count == 0 }? objective_c_method_declaration |
+            { type_count == 0 }? objective_c_method |
 
         )
 
