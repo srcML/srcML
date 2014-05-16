@@ -6433,7 +6433,7 @@ derived[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
             { LA(1) != WHERE && (!inLanguage(LANGUAGE_OBJECTIVE_C) || first) }? (
             (derive_access)*
 
-            variable_identifier
+            ({ inLanguage(LANGUAGE_OBJECTIVE_C) }? identifier | variable_identifier)
             ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
 
             (options { greedy = true; } : { !inLanguage(LANGUAGE_OBJECTIVE_C) }? template_argument_list)*
