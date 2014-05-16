@@ -425,6 +425,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     free((void *)last_transform_filename);
 
     srcml_clear_transforms(iarchive);
+    iarchive->xsl_parameters.clear();
 
     return SRCML_STATUS_OK;
 
