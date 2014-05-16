@@ -2349,9 +2349,24 @@ objective_c_class_header_base[] { ENTRY_DEBUG } :
 objective_c_class_end[] { ENTRY_DEBUG } :
 
     {
+
+        if(inTransparentMode(MODE_ACCESS_REGION)) {
+
+            endDownToMode(MODE_TOP);
+
+            // flush any whitespace tokens since sections should
+            // end at the last possible place
+            flushSkip();
+
+            endWhileMode(MODE_TOP_SECTION);
+
+        }
+
         endDownToMode(MODE_CLASS);
     }
+
     ATEND
+
     {
         endMode(MODE_CLASS);
     }
