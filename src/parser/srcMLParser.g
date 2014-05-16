@@ -784,6 +784,13 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         { stmt_type == VARIABLE }?
         variable_declaration_statement[type_count] |
 
+        // check for Objective-C method
+        { stmt_type == FUNCTION_DECL }?
+        objective_c_method[SFUNCTION_DECLARATION] |
+
+        { stmt_type == FUNCTION }?
+        objective_c_method[SFUNCTION_DEFINITION] |
+
         // check for declaration of some kind (variable, function, constructor, destructor
         { stmt_type == FUNCTION_DECL }?
         function_declaration[type_count] |
@@ -1453,6 +1460,96 @@ property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
         }
         (GET | SET | ADD | REMOVE)
 ;
+
+// Objective-C method declaration
+objective_c_method[int token = SNOP] { ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_STATEMENT);
+
+        startElement(token);
+
+    }
+    objective_c_method_specifier (objective_c_method_type)* /*objective_c_selector*/ objective_c_parameter_list
+
+;
+
+objective_c_method_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+    {
+
+        startElement(SFUNCTION_SPECIFIER);
+
+    }
+    (CSPEC | MSPEC)
+
+;
+
+// either Objective-C method return type or parameter type
+objective_c_method_type[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+
+            // start a mode for the type that will end in this grammar rule
+            startNewMode(MODE_LOCAL);
+
+            // type element begins
+            startElement(STYPE);
+
+        }
+
+        LPAREN
+
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))* 
+
+        // match auto keyword first as special case do no warn about ambiguity
+        (options { generateAmbigWarnings = false; } : auto_keyword[true] | lead_type_identifier)
+
+
+        (options { greedy = true; } : { LA(1) != RPAREN}? 
+
+            // Mark as name before mark without name
+            (options { generateAmbigWarnings = false;} :  keyword_name | type_identifier)
+        )*
+
+        RPAREN
+
+;
+
+objective_c_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_FUNCTION_PARAMETER);
+
+        // start the function call element
+        startElement(SPARAMETER_LIST);
+
+    }
+
+    objective_c_parameter (objective_c_parameter)*
+
+;
+
+// method parameter name:value pair for Objective_C
+objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        if(inTransparentMode(MODE_LIST))
+            endDownToMode(MODE_LIST);
+
+        startNewMode(MODE_PARAMETER);
+
+        startElement(SPARAMETER);
+
+    }
+
+    objective_c_selector
+
+    objective_c_method_type
+
+    // Mark as name before mark without name
+    (options { generateAmbigWarnings = false; } : compound_name | keyword_name)
+
+;
+
 
 // Check and see if this is a call and what type
 perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int secondtoken] returns [bool iscall] {
@@ -2283,9 +2380,11 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 
     {
 
-        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS);
+        startNewMode(MODE_STATEMENT | MODE_CLASS);
 
         startElement(SCLASS);
+
+        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK  | MODE_TOP | MODE_CLASS);
 
     }
 
@@ -2304,9 +2403,11 @@ protocol[] { bool first = true; ENTRY_DEBUG } :
 
     {
 
-        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS);
+        startNewMode(MODE_STATEMENT | MODE_CLASS);
 
         startElement(SPROTOCOL);
+
+        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK  | MODE_TOP | MODE_CLASS);
 
     }
 
@@ -2364,13 +2465,15 @@ objective_c_class_end[] { ENTRY_DEBUG } :
 
         }
 
-        endDownToMode(MODE_CLASS);
+
+        endDownOverMode(MODE_TOP | MODE_CLASS);
+
     }
 
     ATEND
 
     {
-        endMode(MODE_CLASS);
+        endDownOverMode(MODE_CLASS);
     }
 
 ;
@@ -3510,7 +3613,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             For now attribute and template counts are left out on purpose.
         */
-        set_type[type, VARIABLE, ((((type_count - specifier_count) > 0 && LA(1) != OPERATORS 
+        set_type[type, VARIABLE, ((((type_count - specifier_count) > 0 && LA(1) != OPERATORS && LA(1) != CSPEC && LA(1) != MSPEC
                 && ((inLanguage(LANGUAGE_CXX) && !inMode(MODE_ACCESS_REGION)) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET
                                               || (LA(1) == LPAREN && next_token() != RPAREN) || LA(1) == LCURLY || LA(1) == EQUAL
                                               || (inTransparentMode(MODE_FOR_CONDITION) && LA(1) == COLON)
@@ -3552,23 +3655,29 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
         // we have a declaration, so do we have a function?
         (
-            // check for function pointer, which must have a non-specifier part of the type
-            { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && real_type_count > 0 }?
-            (function_pointer_name_grammar eat_optional_macro_call LPAREN)=>
-            function_pointer_name_grammar
 
-            // what was assumed to be the name of the function is actually part of the type
-            set_int[type_count, type_count + 1]
+            (
+                // check for function pointer, which must have a non-specifier part of the type
+                { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && real_type_count > 0 }?
+                (function_pointer_name_grammar eat_optional_macro_call LPAREN)=>
+                function_pointer_name_grammar
 
-            // this ain't a constructor
-            set_bool[isconstructor, false]
+                // what was assumed to be the name of the function is actually part of the type
+                set_int[type_count, type_count + 1]
 
-            function_rest[fla] |
+                // this ain't a constructor
+                set_bool[isconstructor, false]
 
-            // POF (Plain Old Function)
-            // need at least one non-specifier in the type (not including the name)
-            { (type_count - specifier_count - attribute_count - template_count > 0) || isoperator || saveisdestructor || isconstructor}?
-            function_rest[fla]
+                function_rest[fla] |
+
+                // POF (Plain Old Function)
+                // need at least one non-specifier in the type (not including the name)
+                { (type_count - specifier_count - attribute_count - template_count > 0) || isoperator || saveisdestructor || isconstructor}?
+                function_rest[fla]
+            ) |
+
+            { type_count == 0 }? objective_c_method set_int[fla, LA(1)] throw_exception[fla != TERMINATE && fla != LCURLY]
+
         )
 
         // since we got this far, we have a function
@@ -4905,11 +5014,11 @@ objective_c_call_argument[] { bool first = true; ENTRY_DEBUG } :
         startNewMode(MODE_ARGUMENT);
 
     }
-    objective_c_call_selector (options { greedy = true; } : { first && LA(1) != RBRACKET }? argument set_bool[first, false])*
+    objective_c_selector (options { greedy = true; } : { first && LA(1) != RBRACKET }? argument set_bool[first, false])*
 ;
 
 // function call message for Objective_C
-objective_c_call_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
+objective_c_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
     {
         startNewMode(MODE_LOCAL);
 
@@ -6002,7 +6111,11 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
-            NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
+            NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA |
+
+            // Objective-C
+            CSPEC | MSPEC
+
         )
 ;
 
@@ -6027,7 +6140,7 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
 /** list of operators @todo is this still needed */
 general_operators_list[] { ENTRY_DEBUG } :
         OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
-        DOTDOT | RVALUEREF | QMARK
+        DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC
 ;
 
 // mark up )
