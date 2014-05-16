@@ -59,7 +59,7 @@ int main(int argc, char * argv[]) {
         srcml_request.att_filename = input_sources[0].filename;
     }
 
-    // standard input setup
+    // standard input handled as FILE* to be able to peek
     if (srcml_request.stdindex) {
 
         srcml_input_src* pstdin = &input_sources[*srcml_request.stdindex];
@@ -90,7 +90,6 @@ int main(int argc, char * argv[]) {
 
     // setup the commands in the pipeline
     processing_steps_t pipeline;
-    bool last_command = false;
 
     bool src_input = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
 
@@ -99,18 +98,26 @@ int main(int argc, char * argv[]) {
 
         pipeline.push_back(create_srcml);
 
-#if ARCHIVE_VERSION_NUMBER > 3001002
         // libsrcml can apply gz compression
         // all other compressions require an additional compression stage
-        if (destination.compressions.size() > 1 || destination.compressions.front() != ".gz") 
+        if (!destination.compressions.empty() &&
+            (destination.compressions.size() > 1 || destination.compressions.front() != ".gz")) {
+
+#if ARCHIVE_VERSION_NUMBER > 3001002
             pipeline.push_back(compress_srcml);
+#else
+            std::cerr << "Unsupported output compression\n";
 #endif
+        }
     }
 
     // libsrcml can apply gz decompression
     // all other compressions require an additional compression stage
     // NOTE: assumes only one input file
-    if (!src_input && !input_sources[0].compressions.empty() && (input_sources[0].compressions.size() > 1 || input_sources[0].compressions.front() != ".gz")) {
+    if (!src_input &&
+        !input_sources[0].compressions.empty() &&
+        (input_sources[0].compressions.size() > 1 || input_sources[0].compressions.front() != ".gz")) {
+
         pipeline.push_back(decompress_srcml);
     }
 
@@ -119,14 +126,18 @@ int main(int argc, char * argv[]) {
         pipeline.push_back(transform_srcml);
     }
 
+    bool last_command = false;
+
     // metadata(srcml) based on command
     if (!last_command && ((srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0)) {
+
         pipeline.push_back(srcml_display_metadata);
         last_command = true;
     }
 
     // srcml->src, based on the destination
     if (!last_command && !src_input && destination.state != SRCML) {
+
         pipeline.push_back(create_src);
     }
 
