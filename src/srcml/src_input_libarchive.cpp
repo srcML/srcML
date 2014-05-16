@@ -80,16 +80,7 @@ void setup_libarchive(archive* arch) {
 #endif
 }
 
-// Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue,
-                          srcml_archive* srcml_arch,
-                          const srcml_request_t& srcml_request,
-                          const srcml_input_src& input_file) {
-
-    archive* arch = archive_read_new();
-
-    setup_libarchive(arch);
-
+int open_input(archive* arch, const srcml_input_src& input_file) {
     // open the archive
     curl curling;
     int open_status;
@@ -115,7 +106,20 @@ void src_input_libarchive(ParseQueue& queue,
         exit(1);
     }
 
-    int status = open_status;
+    return open_status;
+}
+
+// Convert input to a ParseRequest and assign request to the processing queue
+void src_input_libarchive(ParseQueue& queue,
+                          srcml_archive* srcml_arch,
+                          const srcml_request_t& srcml_request,
+                          const srcml_input_src& input_file) {
+
+    archive* arch = archive_read_new();
+
+    setup_libarchive(arch);
+
+    int status = open_input(arch, input_file);
     if (status == ARCHIVE_OK) {
 
         /* In general, go through this once for each time the header can be read
