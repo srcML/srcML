@@ -694,6 +694,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { (isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) || (LA(1) != TEMPLATE || next_token() != TEMPOPS))
          && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS)
          && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
+         && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
          && (LA(1) == DEFAULT || next_token() != COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
@@ -2942,6 +2943,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // so stop the expression, and markup the keyword statement
         { inMode(MODE_EXPRESSION) && (LA(1) == DEFAULT || next_token() != COLON)
          && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
+         && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }?
@@ -4300,7 +4302,7 @@ identifier_list[] { ENTRY_DEBUG } :
             INTO | THIS |
 
             // Objective-C
-            IMPORT |
+            IMPORT | ATPROTOCOL |
 
             // C
             CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH/*| CXX_CLASS| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
