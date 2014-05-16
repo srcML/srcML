@@ -2865,6 +2865,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // already in an expression, and run into a keyword
         // so stop the expression, and markup the keyword statement
         { inMode(MODE_EXPRESSION) && (LA(1) == DEFAULT || next_token() != COLON)
+         && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }?
