@@ -138,7 +138,7 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -1460,7 +1460,7 @@ objective_c_method[int token = SNOP] { ENTRY_DEBUG } :
         startElement(token);
 
     }
-    objective_c_method_specifier (objective_c_method_type)* /*objective_c_selector*/ (objective_c_method_type)* (objective_c_parameter_list)*
+    objective_c_method_specifier (objective_c_method_type)* /*objective_c_selector*/ objective_c_parameter_list
 
 ;
 
@@ -3283,10 +3283,6 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     else if (type == FUNCTION && (fla == TERMINATE || fla == COMMA))
         type = FUNCTION_DECL;
 
-    // declaration form
-    else if (type == FUNCTION && LA(1) == TERMINATE)
-        type = FUNCTION_DECL;
-
     // we actually have a macro and then a constructor
     else if(type == FUNCTION && fla == COLON)
         type = SINGLE_MACRO;
@@ -3591,7 +3587,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 function_rest[fla]
             ) |
 
-            { type_count == 0 }? objective_c_method |
+            { type_count == 0 }? objective_c_method set_int[fla, LA(1)] throw_exception[fla != TERMINATE && fla != LCURLY] |
 
         )
 
