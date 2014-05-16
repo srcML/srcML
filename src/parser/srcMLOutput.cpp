@@ -302,12 +302,15 @@ namespace {
     ELEMENT_MAP(SALIGNAS,    "alignas")
 
     // Objective-C
-    ELEMENT_MAP(SRECEIVER,      "receiver")
-    ELEMENT_MAP(SMESSAGE,       "message")
-    ELEMENT_MAP(SSELECTOR,      "selector")
-    ELEMENT_MAP(SPROTOCOL_LIST, "protocol_list")
-    ELEMENT_MAP(SCATEGORY,      "category")
-    ELEMENT_MAP(SPROTOCOL,      "protocol")
+    ELEMENT_MAP(SRECEIVER,         "receiver")
+    ELEMENT_MAP(SMESSAGE,          "message")
+    ELEMENT_MAP(SSELECTOR,         "selector")
+    ELEMENT_MAP(SPROTOCOL_LIST,    "protocol_list")
+    ELEMENT_MAP(SCATEGORY,         "category")
+    ELEMENT_MAP(SPROTOCOL,         "protocol")
+    ELEMENT_MAP(SREQUIRED_DEFAULT, "required")
+    ELEMENT_MAP(SREQUIRED,         "required")
+    ELEMENT_MAP(SOPTIONAL,         "optional")
 
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")

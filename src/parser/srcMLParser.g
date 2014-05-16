@@ -569,6 +569,9 @@ tokens {
     SPROTOCOL_LIST;
     SCATEGORY;
     SPROTOCOL;
+    SREQUIRED_DEFAULT;
+    SREQUIRED;
+    SOPTIONAL;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -2309,7 +2312,7 @@ protocol[] { bool first = true; ENTRY_DEBUG } :
 
     {
 
-        class_default_access_action(SPROTECTED_ACCESS_DEFAULT);
+        class_default_access_action(SREQUIRED_DEFAULT);
 
     }
 
@@ -2456,7 +2459,8 @@ union_declaration[] { ENTRY_DEBUG } :
 class_default_access_action[int access_token] { ENTRY_DEBUG } :
         {
             if ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_OBJECTIVE_C)) && (SkipBufferSize() > 0 ||
-                !(LA(1) == PUBLIC || LA(1) == PRIVATE || LA(1) == PROTECTED || LA(1) == SIGNAL))) {
+                !(LA(1) == PUBLIC || LA(1) == PRIVATE || LA(1) == PROTECTED || LA(1) == SIGNAL
+                    || LA(1) == ATREQUIRED || LA(1) == ATOPTIONAL))) {
 
                 // setup block section
                 section_entry_action_first();
