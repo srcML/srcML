@@ -300,7 +300,7 @@ int srcml_clear_transforms(srcml_archive * archive) {
         if(itr->type == SRCML_XSLT || itr->type == SRCML_RELAXNG)
             xmlFreeDoc(itr->transformation.doc);
     archive->transformations.clear();
-    iarchive->xsl_parameters.clear();
+    archive->xsl_parameters.clear();
 
     return SRCML_STATUS_OK;
 
