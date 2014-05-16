@@ -2335,7 +2335,7 @@ objective_c_class_header[] { ENTRY_DEBUG } :
 objective_c_class_header_base[] { ENTRY_DEBUG } :
 
         // suppress ()* warning
-        (compound_name_inner[false] | keyword_name)
+        identifier
 
         // suppressed ()* warning
         (options { greedy = true; } : derived)*
@@ -4248,7 +4248,7 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
             setTokenPosition(tp);
         }
         push_namestack identifier (
-            { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) }?
+            { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
             (template_argument_list)=>
                 template_argument_list |
 
@@ -4408,11 +4408,11 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         { inLanguage(LANGUAGE_CSHARP) }?
         compound_name_csharp[iscompound] |
 
-        { inLanguage(LANGUAGE_C) }?
-        compound_name_c[iscompound] |
-
         { inLanguage(LANGUAGE_OBJECTIVE_C) }?
         compound_name_objective_c[iscompound] |
+
+        { inLanguage(LANGUAGE_C) }?
+        compound_name_c[iscompound] |
 
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
         compound_name_cpp[iscompound] |
@@ -4494,12 +4494,12 @@ compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 // compound name for C
 compound_name_objective_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        (identifier | generic_selection) (options { greedy = true; }: { LA(1) == MULTOPS }? multops)*
+        (simple_name_optional_template | generic_selection) (options { greedy = true; }: { LA(1) == MULTOPS }? multops)*
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
             ({LA(1) == MULTOPS }? multops)*
-            identifier
+            simple_name_optional_template
         )*
 ;
 
