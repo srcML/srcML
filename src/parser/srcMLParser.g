@@ -138,7 +138,7 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -664,8 +664,6 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         { inMode(MODE_ENUM) }? enum_block |
 
-        { inLanguage(LANGUAGE_OBJECTIVE_C) && inMode(MODE_CLASS) }? objective_c_method_declaration |
-
         // don't confuse with expression block
         { ((inTransparentMode(MODE_CONDITION) ||
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
@@ -775,6 +773,10 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         // variable declaration
         { stmt_type == VARIABLE }?
         variable_declaration_statement[type_count] |
+
+        // check for Objective-C method
+        { stmt_type == FUNCTION_DECL || stmt_type == FUNCTION }?
+        objective_c_method_declaration |
 
         // check for declaration of some kind (variable, function, constructor, destructor
         { stmt_type == FUNCTION_DECL }?
@@ -3519,7 +3521,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             For now attribute and template counts are left out on purpose.
         */
-        set_type[type, VARIABLE, ((((type_count - specifier_count) > 0 && LA(1) != OPERATORS 
+        set_type[type, VARIABLE, ((((type_count - specifier_count) > 0 && LA(1) != OPERATORS && LA(1) != CSPEC && LA(1) != MSPEC
                 && ((inLanguage(LANGUAGE_CXX) && !inMode(MODE_ACCESS_REGION)) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET
                                               || (LA(1) == LPAREN && next_token() != RPAREN) || LA(1) == LCURLY || LA(1) == EQUAL
                                               || (inTransparentMode(MODE_FOR_CONDITION) && LA(1) == COLON)
@@ -3561,23 +3563,29 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
         // we have a declaration, so do we have a function?
         (
-            // check for function pointer, which must have a non-specifier part of the type
-            { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && real_type_count > 0 }?
-            (function_pointer_name_grammar eat_optional_macro_call LPAREN)=>
-            function_pointer_name_grammar
 
-            // what was assumed to be the name of the function is actually part of the type
-            set_int[type_count, type_count + 1]
+            (
+                // check for function pointer, which must have a non-specifier part of the type
+                { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && real_type_count > 0 }?
+                (function_pointer_name_grammar eat_optional_macro_call LPAREN)=>
+                function_pointer_name_grammar
 
-            // this ain't a constructor
-            set_bool[isconstructor, false]
+                // what was assumed to be the name of the function is actually part of the type
+                set_int[type_count, type_count + 1]
 
-            function_rest[fla] |
+                // this ain't a constructor
+                set_bool[isconstructor, false]
 
-            // POF (Plain Old Function)
-            // need at least one non-specifier in the type (not including the name)
-            { (type_count - specifier_count - attribute_count - template_count > 0) || isoperator || saveisdestructor || isconstructor}?
-            function_rest[fla]
+                function_rest[fla] |
+
+                // POF (Plain Old Function)
+                // need at least one non-specifier in the type (not including the name)
+                { (type_count - specifier_count - attribute_count - template_count > 0) || isoperator || saveisdestructor || isconstructor}?
+                function_rest[fla]
+            ) |
+
+            { type_count == 0 }? objective_c_method_declaration |
+
         )
 
         // since we got this far, we have a function
