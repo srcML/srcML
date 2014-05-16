@@ -1482,7 +1482,8 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
             || postcalltoken == 1 /* EOF ? */
             || postcalltoken == TEMPLATE
-            || postcalltoken == PUBLIC || postcalltoken == PRIVATE || postcalltoken == PROTECTED || SIGNAL || ATREQUIRED || ATOPTIONAL
+            || postcalltoken == PUBLIC || postcalltoken == PRIVATE || postcalltoken == PROTECTED || postcalltoken == SIGNAL
+            || postcalltoken == ATREQUIRED || postcalltoken == ATOPTIONAL
             || postcalltoken == STATIC || postcalltoken == CONST))
 
             type = MACRO;
