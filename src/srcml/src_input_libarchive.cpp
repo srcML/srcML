@@ -48,13 +48,8 @@ namespace {
     int     archive_curl_close(archive *, void *client_data);
 }
 
-// Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue,
-                          srcml_archive* srcml_arch,
-                          const srcml_request_t& srcml_request,
-                          const srcml_input_src& input_file) {
-
-    archive* arch = archive_read_new();
+// Setup supported compressions and 
+void setup_libarchive(archive* arch) {
 
     archive_read_support_format_ar(arch);
     archive_read_support_format_cpio(arch);
@@ -83,6 +78,17 @@ void src_input_libarchive(ParseQueue& queue,
     // Compressions
     archive_read_support_filter_all(arch);
 #endif
+}
+
+// Convert input to a ParseRequest and assign request to the processing queue
+void src_input_libarchive(ParseQueue& queue,
+                          srcml_archive* srcml_arch,
+                          const srcml_request_t& srcml_request,
+                          const srcml_input_src& input_file) {
+
+    archive* arch = archive_read_new();
+
+    setup_libarchive(arch);
 
     // open the archive
     curl curling;
