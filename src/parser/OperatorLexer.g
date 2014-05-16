@@ -80,6 +80,10 @@ RVALUEREF; // = "&&";
 DOTDOT;
 DOTDOTDOT;
 
+// Objective-C
+CSPEC;
+MSPEC;
+
 // literals
 FALSE;
 TRUE;
@@ -134,8 +138,9 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
            '>' { if (realbegin == _begin) gt = true; text.erase(realbegin); text += "&gt;"; realbegin += 3; } | 
            '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3; gt = true; }) { ++realbegin; } )+ */ 
 
-       '+' ('+' | '=')? |
-       '-' ('-' | '=' | '>' { star = true; $setText("-&gt;"); $setType(TRETURN);})? ({ star }? '*' { $setText("-&gt;*"); $setType(MPDEREF); })? |
+       '+' { if(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '+' && LA(1) != '=') $setType(CSPEC); } ('+' | '=')? |
+       '-' { if(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '-' && LA(1) != '=') $setType(MSPEC); } 
+           ('-' | '=' | '>' { star = true; $setText("-&gt;"); $setType(TRETURN);})? ({ star }? '*' { $setText("-&gt;*"); $setType(MPDEREF); })? |
        '*' ('=')? |
 //       '/' ('=')? |
        '%' ('=')? |
