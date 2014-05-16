@@ -281,6 +281,7 @@ tokens {
     ATINTERFACE;
     ATIMPLEMENTATION;
     ATEND;
+    IMPORT;
 
 }
 
@@ -571,6 +572,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "@private"        , PRIVATE          , LANGUAGE_OBJECTIVE_C },
         { "@protected"      , PROTECTED        , LANGUAGE_OBJECTIVE_C },
         { "@public"         , PUBLIC           , LANGUAGE_OBJECTIVE_C },
+        { "import"          , IMPORT           , LANGUAGE_OBJECTIVE_C },
 
 
 
