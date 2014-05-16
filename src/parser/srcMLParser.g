@@ -567,6 +567,7 @@ tokens {
     SMESSAGE;
     SSELECTOR;
     SPROTOCOL_LIST;
+    SCATEGORY;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -2445,6 +2446,8 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         // move suppressed ()* warning to begin
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_type_constraint)*
+
+        (options { greedy = true; } : { inLanguage(LANGUAGE_OBJECTIVE_C) }? category)*
 
         (options { greedy = true; } : { inLanguage(LANGUAGE_OBJECTIVE_C) }? protocol_list)*
 
@@ -6774,6 +6777,19 @@ protocol_list[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
     TEMPOPS identifier (comma identifier)* TEMPOPE
+
+;
+
+category[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        // local mode
+        startNewMode(MODE_LOCAL);
+
+        startElement(SCATEGORY);
+
+    }
+    LPAREN (identifier)* RPAREN
 
 ;
 
