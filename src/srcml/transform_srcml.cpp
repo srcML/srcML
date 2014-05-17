@@ -68,11 +68,10 @@ void transform_srcml(const srcml_request_t& srcml_request,
 			else if (protocol == "xslt") {
 
 				// xslt has file input, which may need to be processed
-				std::string xslt_filename;
+				std::string xslt_filename = resource;
 				srcml_input_src xslt_file(xslt_filename.c_str());
 				input_file(xslt_file);
 
-				int status;
 		        if (contains<int>(xslt_file))
 		            status = srcml_append_transform_xslt_fd(in_arch, xslt_file);
 		        else if (contains<FILE*>(xslt_file))
@@ -89,6 +88,21 @@ void transform_srcml(const srcml_request_t& srcml_request,
 				std::cerr << protocol << " : " << resource << "\n"; // Stub
 			}
 			else if (protocol == "relaxng") {
+
+				// relaxng has file input, which may need to be processed
+				std::string relaxng_filename = resource;
+				srcml_input_src relaxng_file(relaxng_filename.c_str());
+				input_file(relaxng_file);
+
+		        if (contains<int>(relaxng_file))
+		            status = srcml_append_transform_relaxng_fd(in_arch, relaxng_file);
+		        else if (contains<FILE*>(relaxng_file))
+		            status = srcml_append_transform_relaxng_FILE(in_arch, relaxng_file);
+		        else
+		            status = srcml_append_transform_relaxng_filename(in_arch, relaxng_file.c_str());
+		        if (status != SRCML_STATUS_OK)
+		            throw status;
+
 				std::cerr << protocol << " : " << resource << "\n"; //Stub
 			}
 		}

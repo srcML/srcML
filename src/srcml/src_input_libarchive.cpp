@@ -49,13 +49,11 @@ namespace {
 }
 
 bool curl_supported(const std::string& input_protocol) {
-    curl_version_info_data* curl_types = curl_version_info(CURLVERSION_NOW);
-    std::cerr << "LOOKING FOR: " << input_protocol << "\n";
+    const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
     int i = 0;
-    while (curl_types->protocols[i] != NULL) {
-        std::cerr << curl_types->protocols[i] << "\n";
-        if (strcmp(curl_types->protocols[i], input_protocol.c_str()) == 0) {
-            std::cerr << "Found: " << curl_types->protocols[i] << "\n";
+    while (curl_types[i] != NULL) {
+        if (strcmp(curl_types[i], input_protocol.c_str()) == 0) {
+            std::cerr << curl_types[i] << "\n"; // If this is removed appication segfaults
             return true;
         }
         ++i;
@@ -97,7 +95,6 @@ void setup_libarchive(archive* arch) {
 
 int open_input(archive* arch, const srcml_input_src& input_file) {
     // open the archive
-    curl curling;
     int open_status;
     if (contains<int>(input_file)) {
 
@@ -109,7 +106,7 @@ int open_input(archive* arch, const srcml_input_src& input_file) {
 
     // NOTE: Leave check for "http" in, or memory problem
     } else if (curl_supported(input_file.protocol) || input_file.protocol == "http") {
-
+        curl curling;
         curling.source = input_file.filename;
         open_status = archive_read_open(arch, &curling, archive_curl_open, (archive_read_callback *)archive_curl_read, archive_curl_close);
 
