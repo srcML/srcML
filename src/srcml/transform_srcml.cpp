@@ -43,6 +43,22 @@
     return status;
  }
 
+int apply_relaxng(srcml_archive* in_arch, const std::string& transform_input) {
+	// relaxng has file input, which may need to be processed
+	int status;
+	srcml_input_src relaxng_file(transform_input.c_str());
+	input_file(relaxng_file);
+
+    if (contains<int>(relaxng_file))
+        status = srcml_append_transform_relaxng_fd(in_arch, relaxng_file);
+    else if (contains<FILE*>(relaxng_file))
+        status = srcml_append_transform_relaxng_FILE(in_arch, relaxng_file);
+    else
+        status = srcml_append_transform_relaxng_filename(in_arch, relaxng_file.c_str());
+
+    return status;
+}
+
 // transform srcml with query or transformation
 void transform_srcml(const srcml_request_t& srcml_request,
                      const srcml_input_t& input_sources,
@@ -91,22 +107,10 @@ void transform_srcml(const srcml_request_t& srcml_request,
 				std::cerr << protocol << " : " << resource << "\n"; // Stub
 			}
 			else if (protocol == "relaxng") {
-
-				// relaxng has file input, which may need to be processed
-				std::string relaxng_filename = resource;
-				srcml_input_src relaxng_file(relaxng_filename.c_str());
-				input_file(relaxng_file);
-
-		        if (contains<int>(relaxng_file))
-		            status = srcml_append_transform_relaxng_fd(in_arch, relaxng_file);
-		        else if (contains<FILE*>(relaxng_file))
-		            status = srcml_append_transform_relaxng_FILE(in_arch, relaxng_file);
-		        else
-		            status = srcml_append_transform_relaxng_filename(in_arch, relaxng_file.c_str());
-		        if (status != SRCML_STATUS_OK)
+		        if (apply_relaxng(in_arch, resource) != SRCML_STATUS_OK)
 		            throw status;
 
-				std::cerr << protocol << " : " << resource << "\n"; //Stub
+				std::cerr << protocol << " : " << resource << "\n"; //Debug Printout
 			}
 		}
 		srcml_apply_transforms(in_arch, out_arch);
