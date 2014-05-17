@@ -27,6 +27,22 @@
 #include <string>
 #include <boost/foreach.hpp>
 
+ int apply_xslt(srcml_archive* in_arch, const std::string& transform_input) {
+ 	// xslt has file input, which may need to be processed
+ 	int status;
+	srcml_input_src xslt_file(transform_input.c_str());
+	input_file(xslt_file);
+
+    if (contains<int>(xslt_file))
+        status = srcml_append_transform_xslt_fd(in_arch, xslt_file);
+    else if (contains<FILE*>(xslt_file))
+        status = srcml_append_transform_xslt_FILE(in_arch, xslt_file);
+    else
+        status = srcml_append_transform_xslt_filename(in_arch, xslt_file.c_str());
+
+    return status;
+ }
+
 // transform srcml with query or transformation
 void transform_srcml(const srcml_request_t& srcml_request,
                      const srcml_input_t& input_sources,
@@ -66,23 +82,10 @@ void transform_srcml(const srcml_request_t& srcml_request,
 				srcml_append_transform_xpath(in_arch, resource.c_str());
 			}
 			else if (protocol == "xslt") {
-
-				// xslt has file input, which may need to be processed
-				std::string xslt_filename = resource;
-				srcml_input_src xslt_file(xslt_filename.c_str());
-				input_file(xslt_file);
-
-		        if (contains<int>(xslt_file))
-		            status = srcml_append_transform_xslt_fd(in_arch, xslt_file);
-		        else if (contains<FILE*>(xslt_file))
-		            status = srcml_append_transform_xslt_FILE(in_arch, xslt_file);
-		        else
-		            status = srcml_append_transform_xslt_filename(in_arch, xslt_file.c_str());
-		        if (status != SRCML_STATUS_OK)
+		        if (apply_xslt(in_arch, resource) != SRCML_STATUS_OK)
 		            throw status;
-
-				// 
-				std::cerr << protocol << " : " << resource << "\n"; // Stub
+				
+				std::cerr << protocol << " : " << resource << "\n"; // Debug Printout
 			}
 			else if (protocol == "xpathparam") {
 				std::cerr << protocol << " : " << resource << "\n"; // Stub
