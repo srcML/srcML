@@ -107,8 +107,8 @@ int open_input(archive* arch, const srcml_input_src& input_file) {
 
         open_status = archive_read_open_FILE(arch, input_file);
 
-    } else if (input_file.protocol == "http" || input_file.protocol == "https") {
-    //} else if (curl_supported(input_file.protocol)) {
+    // NOTE: Leave check for "http" in, or memory problem
+    } else if (curl_supported(input_file.protocol) || input_file.protocol == "http") {
 
         curling.source = input_file.filename;
         open_status = archive_read_open(arch, &curling, archive_curl_open, (archive_read_callback *)archive_curl_read, archive_curl_close);
