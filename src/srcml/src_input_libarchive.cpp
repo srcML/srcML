@@ -48,6 +48,21 @@ namespace {
     int     archive_curl_close(archive *, void *client_data);
 }
 
+bool curl_supported(const std::string& input_protocol) {
+    curl_version_info_data* curl_types = curl_version_info(CURLVERSION_NOW);
+    std::cerr << "LOOKING FOR: " << input_protocol << "\n";
+    int i = 0;
+    while (curl_types->protocols[i] != NULL) {
+        std::cerr << curl_types->protocols[i] << "\n";
+        if (strcmp(curl_types->protocols[i], input_protocol.c_str()) == 0) {
+            std::cerr << "Found: " << curl_types->protocols[i] << "\n";
+            return true;
+        }
+        ++i;
+    }
+    return false;
+}
+
 // Setup supported compressions and 
 void setup_libarchive(archive* arch) {
 
@@ -92,7 +107,8 @@ int open_input(archive* arch, const srcml_input_src& input_file) {
 
         open_status = archive_read_open_FILE(arch, input_file);
 
-    } else if (input_file.protocol == "http") {
+    } else if (input_file.protocol == "http" || input_file.protocol == "https") {
+    //} else if (curl_supported(input_file.protocol)) {
 
         curling.source = input_file.filename;
         open_status = archive_read_open(arch, &curling, archive_curl_open, (archive_read_callback *)archive_curl_read, archive_curl_close);
