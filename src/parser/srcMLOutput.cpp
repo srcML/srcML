@@ -189,13 +189,14 @@ namespace {
     ELEMENT_MAP(SUNION_DECLARATION,    "union_decl")
 
     // class
-    ELEMENT_MAP(SCLASS,                   "class")
-    ELEMENT_MAP(SCLASS_DECLARATION,       "class_decl")
-    ELEMENT_MAP(SPUBLIC_ACCESS,           "public")
-    ELEMENT_MAP(SPUBLIC_ACCESS_DEFAULT,   "public")
-    ELEMENT_MAP(SPRIVATE_ACCESS,          "private")
-    ELEMENT_MAP(SPRIVATE_ACCESS_DEFAULT,  "private")
-    ELEMENT_MAP(SPROTECTED_ACCESS,        "protected")
+    ELEMENT_MAP(SCLASS,                    "class")
+    ELEMENT_MAP(SCLASS_DECLARATION,        "class_decl")
+    ELEMENT_MAP(SPUBLIC_ACCESS,            "public")
+    ELEMENT_MAP(SPUBLIC_ACCESS_DEFAULT,    "public")
+    ELEMENT_MAP(SPRIVATE_ACCESS,           "private")
+    ELEMENT_MAP(SPRIVATE_ACCESS_DEFAULT,   "private")
+    ELEMENT_MAP(SPROTECTED_ACCESS,         "protected")
+    ELEMENT_MAP(SPROTECTED_ACCESS_DEFAULT, "protected")
 
     // Qt
     ELEMENT_MAP(SSIGNAL_ACCESS,           "signals")
@@ -250,11 +251,17 @@ namespace {
     ELEMENT_MAP(SCPP_THEN,      "then")
     ELEMENT_MAP(SCPP_PRAGMA,    "pragma")
     ELEMENT_MAP(SCPP_ERROR,     "error")
-    ELEMENT_MAP(SCPP_REGION,    "region")
-    ELEMENT_MAP(SCPP_ENDREGION, "endregion")
     ELEMENT_MAP(SCPP_MACRO_DEFN, "macro")
     ELEMENT_MAP(SCPP_MACRO_VALUE, "value")
 
+    // C# cpp
+    ELEMENT_MAP(SCPP_REGION,    "region")
+    ELEMENT_MAP(SCPP_ENDREGION, "endregion")
+
+    // Objective-C cpp
+    ELEMENT_MAP(SCPP_IMPORT,    "import")
+
+    // debug
     ELEMENT_MAP(SMARKER,        "marker")
     ELEMENT_MAP(SERROR_PARSE,   "parse")
     ELEMENT_MAP(SERROR_MODE,    "mode")
@@ -293,6 +300,17 @@ namespace {
 
     // C++11
     ELEMENT_MAP(SALIGNAS,    "alignas")
+
+    // Objective-C
+    ELEMENT_MAP(SRECEIVER,         "receiver")
+    ELEMENT_MAP(SMESSAGE,          "message")
+    ELEMENT_MAP(SSELECTOR,         "selector")
+    ELEMENT_MAP(SPROTOCOL_LIST,    "protocol_list")
+    ELEMENT_MAP(SCATEGORY,         "category")
+    ELEMENT_MAP(SPROTOCOL,         "protocol")
+    ELEMENT_MAP(SREQUIRED_DEFAULT, "required")
+    ELEMENT_MAP(SREQUIRED,         "required")
+    ELEMENT_MAP(SOPTIONAL,         "optional")
 
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")

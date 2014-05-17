@@ -31,8 +31,8 @@ maxcount = 700
 error_filename = "srcMLTestReport"
 error_filename_extension = ".txt"
 
-FIELD_WIDTH_LANGUAGE = 5
-FIELD_WIDTH_DIRECTORY = 40
+FIELD_WIDTH_LANGUAGE = 15
+FIELD_WIDTH_DIRECTORY = 30
 MAX_COUNT = 29
 sperrorlist = []
 xml_filename = ""
@@ -396,13 +396,13 @@ specnum = 0
 speclang = ""
 if len(sys.argv) == 3:
 	result = sys.argv[2]
-	if result == "C++" or result == "C" or result == "C#" or result == "Java" or result == "C++11" or result == "AspectJ":
+	if result == "C++" or result == "C" or result == "C#" or result == "Objective-C" or result == "Java" or result == "C++11" or result == "AspectJ":
 		speclang = result
 	else:
 		specnum = int(sys.argv[2])
 elif len(sys.argv) == 2:
 	result = sys.argv[1]
-	if result == "C++" or result == "C" or result == "C#" or result == "Java" or result == "C++11" or result == "AspectJ":
+	if result == "C++" or result == "C" or result == "C#" or result == "Objective-C" or result == "Java" or result == "C++11" or result == "AspectJ":
 		speclang = result
 		specname = ""
 	else:
@@ -660,19 +660,23 @@ if error_count != 0:
         # TODO:  Replace with Counter from collections
         n = list.count("C++")
         if n != 0:
-                print "Errors:  C++  " + str(n)
+                print "Errors:  C++".ljust(FIELD_WIDTH_LANGUAGE), " ", str(n)
         
         n = list.count("C#")
         if n != 0:
-                print "Errors:  C#   " + str(n)
+                print "Errors:  C#".ljust(FIELD_WIDTH_LANGUAGE), " ", str(n)
         
         n = list.count("C")
         if n != 0:
-                print "Errors:  C    " + str(n)
+                print "Errors:  C".ljust(FIELD_WIDTH_LANGUAGE), " ", str(n)
+
+        n = list.count("Objective-C")
+        if n != 0:
+                print "Errors:  Objective-C".ljust(FIELD_WIDTH_LANGUAGE), " ", str(n)
         
         n = list.count("Java")
         if n != 0:
-                print "Errors:  Java " + str(n)
+                print "Errors:  Java".ljust(FIELD_WIDTH_LANGUAGE), " ", str(n)
         
 # output tool errors counts
 print

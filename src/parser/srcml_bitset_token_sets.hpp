@@ -79,7 +79,7 @@ create_token_set(argument_tokens_two, srcMLParser::REF, srcMLParser::NATIVE, src
 const antlr::BitSet srcMLParser::argument_token_set_two(bitset_buckets<argument_tokens_two>::data, bitset_buckets<argument_tokens_two>::num_token_longs);
 
 create_token_set(argument_tokens_three, srcMLParser::NORETURN, srcMLParser::IMAGINARY, srcMLParser::GENERIC_SELECTION, srcMLParser::ASM,
-                                            srcMLParser::CXX_TRY, srcMLParser::CXX_CATCH, srcMLParser::CXX_CLASS);
+                                            srcMLParser::CXX_TRY, srcMLParser::CXX_CATCH, srcMLParser::CXX_CLASS, srcMLParser::ATREQUIRED, srcMLParser::ATOPTIONAL);
 
 const antlr::BitSet srcMLParser::argument_token_set_three(bitset_buckets<argument_tokens_three>::data, bitset_buckets<argument_tokens_three>::num_token_longs);
 

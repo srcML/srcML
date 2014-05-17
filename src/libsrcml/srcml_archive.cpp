@@ -87,6 +87,8 @@ srcml_archive* srcml_create_archive()
 
     archive->registered_languages.register_standard_file_extensions();
 
+    archive->xsl_parameters.push_back(0);
+
     return archive;
 
 }

@@ -147,6 +147,10 @@ struct srcml_archive {
  
     /** an array of transformations to apply */
     std::vector<transform> transformations;
+
+    /** XSLT parameters */
+    std::vector<const char *> xsl_parameters;
+
 };
 
 /**

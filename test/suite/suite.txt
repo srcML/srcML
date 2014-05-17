@@ -161,6 +161,22 @@ LANGUAGE_CSHARP using_statement_cs
 LANGUAGE_CSHARP specifier_cs
 LANGUAGE_CSHARP modifier_cs
 
+LANGUAGE_OBJECTIVE_C objective_c_call_m
+LANGUAGE_OBJECTIVE_C class_interface_m
+LANGUAGE_OBJECTIVE_C cpp_import_m
+LANGUAGE_OBJECTIVE_C decl_simple_m
+LANGUAGE_OBJECTIVE_C protocol_m
+LANGUAGE_OBJECTIVE_C expression_m
+LANGUAGE_OBJECTIVE_C synchronized_m
+
+LANGUAGE_OBJECTIVE_C_GEN class_implementation_m
+LANGUAGE_OBJECTIVE_C_GEN try_m
+LANGUAGE_OBJECTIVE_C_GEN catch_m
+LANGUAGE_OBJECTIVE_C_GEN finally_m
+LANGUAGE_OBJECTIVE_C_GEN throw_m
+LANGUAGE_OBJECTIVE_C_GEN throw_base_m
+LANGUAGE_OBJECTIVE_C synchronized_m
+
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
 LANGUAGE_JAVA keyword_java
@@ -184,6 +200,7 @@ LANGUAGE_JAVA foreach
 LANGUAGE_JAVA enum_java
 LANGUAGE_JAVA import_java
 LANGUAGE_JAVA assert_java
+LANGUAGE_JAVA_GEN finally_java
 
 LANGUAGE_OO catch_form
 LANGUAGE_OO try

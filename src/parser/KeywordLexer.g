@@ -277,6 +277,15 @@ tokens {
     EQUALS;
     INTO;
 
+    // Objective-C
+    ATINTERFACE;
+    ATIMPLEMENTATION;
+    ATEND;
+    IMPORT;
+    ATPROTOCOL;
+    ATREQUIRED;
+    ATOPTIONAL;
+
 }
 
 {
@@ -558,6 +567,24 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "on"            , ON            , LANGUAGE_CSHARP }, 
         { "equals"        , EQUALS        , LANGUAGE_CSHARP }, 
         { "into"          , INTO          , LANGUAGE_CSHARP },
+
+        // Objective-C
+        { "@interface"      , ATINTERFACE      , LANGUAGE_OBJECTIVE_C }, 
+        { "@implementation" , ATIMPLEMENTATION , LANGUAGE_OBJECTIVE_C }, 
+        { "@protocol"       , ATPROTOCOL       , LANGUAGE_OBJECTIVE_C },
+        { "@end"            , ATEND            , LANGUAGE_OBJECTIVE_C },
+        { "@private"        , PRIVATE          , LANGUAGE_OBJECTIVE_C },
+        { "@protected"      , PROTECTED        , LANGUAGE_OBJECTIVE_C },
+        { "@public"         , PUBLIC           , LANGUAGE_OBJECTIVE_C },
+        { "@required"       , ATREQUIRED       , LANGUAGE_OBJECTIVE_C },
+        { "@optional"       , ATOPTIONAL       , LANGUAGE_OBJECTIVE_C },
+        { "import"          , IMPORT           , LANGUAGE_OBJECTIVE_C },
+        { "@try"            , TRY              , LANGUAGE_OBJECTIVE_C },
+        { "@catch"          , CATCH            , LANGUAGE_OBJECTIVE_C },
+        { "@finally"        , FINALLY          , LANGUAGE_OBJECTIVE_C },
+        { "@throw"          , THROW            , LANGUAGE_OBJECTIVE_C },
+        { "@synchronized"   , SYNCHRONIZED     , LANGUAGE_OBJECTIVE_C },
+
 
 
         // Combined C/C++ Mode  at end so overrides defaults

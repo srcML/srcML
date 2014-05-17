@@ -436,6 +436,7 @@ tokens {
 	SPRIVATE_ACCESS;
 	SPRIVATE_ACCESS_DEFAULT;
 	SPROTECTED_ACCESS;
+    SPROTECTED_ACCESS_DEFAULT;
     SMEMBER_INITIALIZATION_LIST;
 	SCONSTRUCTOR_DEFINITION;
 	SCONSTRUCTOR_DECLARATION;
@@ -511,6 +512,9 @@ tokens {
     SCPP_REGION;
     SCPP_ENDREGION;
 
+    // Objective-C cpp directives
+    SCPP_IMPORT;
+
     // This HAS to mark the end of the CPP directives
 	SCPP_ENDIF;
 
@@ -557,6 +561,17 @@ tokens {
 
     SANNOTATION;
     SALIGNOF;
+
+    // Objective-C
+    SRECEIVER;
+    SMESSAGE;
+    SSELECTOR;
+    SPROTOCOL_LIST;
+    SCATEGORY;
+    SPROTOCOL;
+    SREQUIRED_DEFAULT;
+    SREQUIRED;
+    SOPTIONAL;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -646,7 +661,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         // end of line
         line_continuation | EOL | LINECOMMENT_START |
 
-        comma | { inLanguage(LANGUAGE_JAVA) }? bar |
+        comma | { inLanguage(LANGUAGE_JAVA) }? bar | { inTransparentMode(MODE_OBJECTIVE_C_CALL) }? rbracket |
 
         { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }? rparen[false] |
 
@@ -677,13 +692,15 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         // statements that clearly start with a keyword
         { (isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) || (LA(1) != TEMPLATE || next_token() != TEMPOPS))
-         && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS) 
+         && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS)
+         && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
+         && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
          && (LA(1) == DEFAULT || next_token() != COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }? keyword_statements |
 
-        { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? synchronized_statement |
+        { next_token() == LPAREN }? synchronized_statement |
 
         { inLanguage(LANGUAGE_CXX) && inMode(MODE_USING) }? using_aliasing |
 
@@ -742,7 +759,11 @@ keyword_statements[] { ENTRY_DEBUG } :
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
 
         // C/C++ assembly block
-        asm_declaration
+        asm_declaration |
+
+        // Objective-C - kewywords only detected for Objective-C
+        objective_c_class | protocol | objective_c_class_end
+
 ;
 
 /*
@@ -762,6 +783,13 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         // variable declaration
         { stmt_type == VARIABLE }?
         variable_declaration_statement[type_count] |
+
+        // check for Objective-C method
+        { stmt_type == FUNCTION_DECL }?
+        objective_c_method[SFUNCTION_DECLARATION] |
+
+        { stmt_type == FUNCTION }?
+        objective_c_method[SFUNCTION_DEFINITION] |
 
         // check for declaration of some kind (variable, function, constructor, destructor
         { stmt_type == FUNCTION_DECL }?
@@ -1433,6 +1461,96 @@ property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
         (GET | SET | ADD | REMOVE)
 ;
 
+// Objective-C method declaration
+objective_c_method[int token = SNOP] { ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_STATEMENT);
+
+        startElement(token);
+
+    }
+    objective_c_method_specifier (objective_c_method_type)* /*objective_c_selector*/ objective_c_parameter_list
+
+;
+
+objective_c_method_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+    {
+
+        startElement(SFUNCTION_SPECIFIER);
+
+    }
+    (CSPEC | MSPEC)
+
+;
+
+// either Objective-C method return type or parameter type
+objective_c_method_type[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+
+            // start a mode for the type that will end in this grammar rule
+            startNewMode(MODE_LOCAL);
+
+            // type element begins
+            startElement(STYPE);
+
+        }
+
+        LPAREN
+
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))* 
+
+        // match auto keyword first as special case do no warn about ambiguity
+        (options { generateAmbigWarnings = false; } : auto_keyword[true] | lead_type_identifier)
+
+
+        (options { greedy = true; } : { LA(1) != RPAREN}? 
+
+            // Mark as name before mark without name
+            (options { generateAmbigWarnings = false;} :  keyword_name | type_identifier)
+        )*
+
+        RPAREN
+
+;
+
+objective_c_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_FUNCTION_PARAMETER);
+
+        // start the function call element
+        startElement(SPARAMETER_LIST);
+
+    }
+
+    objective_c_parameter (objective_c_parameter)*
+
+;
+
+// method parameter name:value pair for Objective_C
+objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        if(inTransparentMode(MODE_LIST))
+            endDownToMode(MODE_LIST);
+
+        startNewMode(MODE_PARAMETER);
+
+        startElement(SPARAMETER);
+
+    }
+
+    objective_c_selector
+
+    objective_c_method_type
+
+    // Mark as name before mark without name
+    (options { generateAmbigWarnings = false; } : compound_name | keyword_name)
+
+;
+
+
 // Check and see if this is a call and what type
 perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int secondtoken] returns [bool iscall] {
 
@@ -1456,13 +1574,14 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 
         // call syntax succeeded, however post call token is not legitimate
         if (isoption(parseoptions, SRCML_OPTION_CPP) &&
-               (keyword_token_set.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID
+            (((!inLanguage(LANGUAGE_OBJECTIVE_C) || !inTransparentMode(MODE_OBJECTIVE_C_CALL)) && (keyword_token_set.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID))
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS || postcalltoken == CXX_CLASS
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
             || postcalltoken == 1 /* EOF ? */
             || postcalltoken == TEMPLATE
-            || postcalltoken == PUBLIC || postcalltoken == PRIVATE || postcalltoken == PROTECTED
+            || postcalltoken == PUBLIC || postcalltoken == PRIVATE || postcalltoken == PROTECTED || postcalltoken == SIGNAL
+            || postcalltoken == ATREQUIRED || postcalltoken == ATOPTIONAL
             || postcalltoken == STATIC || postcalltoken == CONST))
 
             type = MACRO;
@@ -1493,7 +1612,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty, int & call_count] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF)
+        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -1533,6 +1652,8 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             lambda_anonymous |
 
             (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_full_cpp  |
+
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair |
 
             // found two names in a row, so this is not an expression
             // cause this to fail by explicitly throwing exception
@@ -1880,7 +2001,7 @@ section_entry_action[] :
             flushSkip();
 
             // end the section inside the block
-            endDownOverMode(MODE_TOP_SECTION);
+            endWhileMode(MODE_TOP_SECTION);
         }
         section_entry_action_first
 ;
@@ -2255,6 +2376,108 @@ class_post[] { ENTRY_DEBUG } :
 
 ;
 
+objective_c_class[] { bool first = true; ENTRY_DEBUG } :
+
+    {
+
+        startNewMode(MODE_STATEMENT | MODE_CLASS);
+
+        startElement(SCLASS);
+
+        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK  | MODE_TOP | MODE_CLASS);
+
+    }
+
+    (ATINTERFACE | ATIMPLEMENTATION) ({ first }? objective_c_class_header set_bool[first, false])*
+
+    (lcurly
+        {
+
+            class_default_access_action(SPROTECTED_ACCESS_DEFAULT);
+
+        }
+    )*
+;
+
+protocol[] { bool first = true; ENTRY_DEBUG } :
+
+    {
+
+        startNewMode(MODE_STATEMENT | MODE_CLASS);
+
+        startElement(SPROTOCOL);
+
+        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK  | MODE_TOP | MODE_CLASS);
+
+    }
+
+    ATPROTOCOL ({ first }? objective_c_class_header set_bool[first, false])*
+
+    {
+
+        class_default_access_action(SREQUIRED_DEFAULT);
+
+    }
+
+;
+
+
+// handle class header
+objective_c_class_header[] { ENTRY_DEBUG } :
+
+        { isoption(parseoptions, SRCML_OPTION_CPP) }?
+        (macro_call_check class_header_base LCURLY)=>
+           macro_call objective_c_class_header_base |
+
+        objective_c_class_header_base
+;
+
+// class header base
+objective_c_class_header_base[] { ENTRY_DEBUG } :
+
+        // suppress ()* warning
+        identifier
+
+        // suppressed ()* warning
+        (options { greedy = true; } : derived)*
+
+        // suppressed ()* warning
+        (category)*
+
+        // suppressed ()* warning
+        (protocol_list)*
+
+;
+
+objective_c_class_end[] { ENTRY_DEBUG } :
+
+    {
+
+        if(inTransparentMode(MODE_ACCESS_REGION)) {
+
+            endDownToMode(MODE_TOP);
+
+            // flush any whitespace tokens since sections should
+            // end at the last possible place
+            flushSkip();
+
+            endWhileMode(MODE_TOP_SECTION);
+
+        }
+
+
+        endDownOverMode(MODE_TOP | MODE_CLASS);
+
+    }
+
+    ATEND
+
+    {
+        endDownOverMode(MODE_CLASS);
+    }
+
+;
+
 // Handle an enum class
 enum_class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SENUM]
@@ -2352,8 +2575,9 @@ union_declaration[] { ENTRY_DEBUG } :
 // default private/public section for C++
 class_default_access_action[int access_token] { ENTRY_DEBUG } :
         {
-            if (inLanguage(LANGUAGE_CXX) && (SkipBufferSize() > 0 ||
-                !(LA(1) == PUBLIC || LA(1) == PRIVATE || LA(1) == PROTECTED || LA(1) == SIGNAL))) {
+            if ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_OBJECTIVE_C)) && (SkipBufferSize() > 0 ||
+                !(LA(1) == PUBLIC || LA(1) == PRIVATE || LA(1) == PROTECTED || LA(1) == SIGNAL
+                    || LA(1) == ATREQUIRED || LA(1) == ATOPTIONAL))) {
 
                 // setup block section
                 section_entry_action_first();
@@ -2405,7 +2629,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 ;
 
 // Each instance of an access specifier defines a region in the class
-access_specifier_region[] { ENTRY_DEBUG } :
+access_specifier_region[] { bool first = true; ENTRY_DEBUG } :
         section_entry_action
         {
             // mark access regions to detect statements that only occur in them
@@ -2428,10 +2652,18 @@ access_specifier_region[] { ENTRY_DEBUG } :
             {
                 startElement(SSIGNAL_ACCESS);
             }
-            SIGNAL
+            SIGNAL |
+            {
+                startElement(SREQUIRED);
+            }
+            ATREQUIRED |
+            {
+                startElement(SOPTIONAL);
+            }
+            ATOPTIONAL
 
         ) 
-    (compound_name)* COLON
+    ({ !inLanguage(LANGUAGE_OBJECTIVE_C) && first }? (compound_name)* COLON set_bool[first, false])*
 ;
 
 /*
@@ -2560,7 +2792,7 @@ rcurly[] { ENTRY_DEBUG } :
             flushSkip();
 
             // end any sections inside the mode
-            endDownOverMode(MODE_TOP_SECTION);
+            endWhileMode(MODE_TOP_SECTION);
 
             if(getCurly() != 0)
                 decCurly();
@@ -2796,6 +3028,12 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { inLanguage(LANGUAGE_CXX) && inMode(MODE_FUNCTION_TAIL) }?
         trailing_return |
 
+        { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
+        (function_identifier (COLON | RBRACKET)) => objective_c_call_message |
+
+        { inTransparentMode(MODE_OBJECTIVE_C_CALL) }?
+        (function_identifier (COLON | RBRACKET) | COLON) => objective_c_call_argument |
+
         // start of argument for return or throw statement
         { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
             isoption(parseoptions, SRCML_OPTION_CPP) && perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO }?
@@ -2807,13 +3045,14 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // already in an expression, and run into a keyword
         // so stop the expression, and markup the keyword statement
         { inMode(MODE_EXPRESSION) && (LA(1) == DEFAULT || next_token() != COLON)
+         && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
+         && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }?
         terminate_pre
         terminate_post
         keyword_statements |
-
         // already in an expression
         { inMode(MODE_EXPRESSION) }?
         expression_part_plus_linq |
@@ -3226,14 +3465,16 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT || LA(1) == MUTABLE]
             (
-                { (argument_token_set_one.member(LA(1)) || argument_token_set_two.member(LA(1)) || argument_token_set_three.member(LA(1))) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
+                { (argument_token_set_one.member(LA(1)) || argument_token_set_two.member(LA(1)) || argument_token_set_three.member(LA(1)))
+                    && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
                      && (LA(1) != TEMPLATE || next_token() != TEMPOPS) }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
-                (specifier | template_specifier set_bool[sawtemplate, true] | { next_token() == COLON }? SIGNAL)
+                (specifier | template_specifier set_bool[sawtemplate, true] | { next_token() == COLON }? SIGNAL | ATREQUIRED | ATOPTIONAL)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
-                        inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
+                        ((inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON) || inLanguage(LANGUAGE_OBJECTIVE_C)) 
+                        && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL || token == ATREQUIRED || token == ATOPTIONAL)]
                 throw_exception[type == ACCESS_REGION] |
                 { !isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) }? template_declaration_full set_int[template_count, template_count + 1] | 
 
@@ -3372,7 +3613,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             For now attribute and template counts are left out on purpose.
         */
-        set_type[type, VARIABLE, ((((type_count - specifier_count) > 0 && LA(1) != OPERATORS 
+        set_type[type, VARIABLE, ((((type_count - specifier_count) > 0 && LA(1) != OPERATORS && LA(1) != CSPEC && LA(1) != MSPEC
                 && ((inLanguage(LANGUAGE_CXX) && !inMode(MODE_ACCESS_REGION)) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET
                                               || (LA(1) == LPAREN && next_token() != RPAREN) || LA(1) == LCURLY || LA(1) == EQUAL
                                               || (inTransparentMode(MODE_FOR_CONDITION) && LA(1) == COLON)
@@ -3414,23 +3655,29 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
         // we have a declaration, so do we have a function?
         (
-            // check for function pointer, which must have a non-specifier part of the type
-            { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && real_type_count > 0 }?
-            (function_pointer_name_grammar eat_optional_macro_call LPAREN)=>
-            function_pointer_name_grammar
 
-            // what was assumed to be the name of the function is actually part of the type
-            set_int[type_count, type_count + 1]
+            (
+                // check for function pointer, which must have a non-specifier part of the type
+                { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && real_type_count > 0 }?
+                (function_pointer_name_grammar eat_optional_macro_call LPAREN)=>
+                function_pointer_name_grammar
 
-            // this ain't a constructor
-            set_bool[isconstructor, false]
+                // what was assumed to be the name of the function is actually part of the type
+                set_int[type_count, type_count + 1]
 
-            function_rest[fla] |
+                // this ain't a constructor
+                set_bool[isconstructor, false]
 
-            // POF (Plain Old Function)
-            // need at least one non-specifier in the type (not including the name)
-            { (type_count - specifier_count - attribute_count - template_count > 0) || isoperator || saveisdestructor || isconstructor}?
-            function_rest[fla]
+                function_rest[fla] |
+
+                // POF (Plain Old Function)
+                // need at least one non-specifier in the type (not including the name)
+                { (type_count - specifier_count - attribute_count - template_count > 0) || isoperator || saveisdestructor || isconstructor}?
+                function_rest[fla]
+            ) |
+
+            { type_count == 0 }? objective_c_method set_int[fla, LA(1)] throw_exception[fla != TERMINATE && fla != LCURLY]
+
         )
 
         // since we got this far, we have a function
@@ -3991,6 +4238,56 @@ complete_default_parameter[] { CompleteElement element(this); int count_paren = 
 
 ;
 
+
+// match a complete objective_c_call no stream
+complete_objective_c_call[] { CompleteElement element(this); int bracket_count = 0; ENTRY_DEBUG} :
+
+    { inputState->guessing }? bracket_pair |
+
+    {
+        // start a mode to end at right bracket with expressions inside
+        if(!inMode(MODE_EXPRESSION) || inMode(MODE_EXPRESSION | MODE_EXPECT))
+            startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
+        else 
+            startNewMode(MODE_TOP);
+
+    }
+
+    (options { greedy = true; } :
+
+            // end of objective c call
+            { inTransparentMode(MODE_OBJECTIVE_C_CALL) && bracket_count }? rbracket set_int[bracket_count, bracket_count - 1] |
+
+            // objective c argument list
+            { LA(1) == LBRACKET }? expression set_int[bracket_count, bracket_count + 1] |
+
+            // objective c argument list
+            { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
+            (function_identifier (COLON | RBRACKET)) => objective_c_call_message |
+
+            // objective c argument
+            { inTransparentMode(MODE_OBJECTIVE_C_CALL) }?
+            (function_identifier (COLON | RBRACKET) | COLON) => objective_c_call_argument |
+
+            // commas as in a list
+            { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
+            comma |
+
+            // right parentheses, unless we are in a pair of parentheses in an expression
+            { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
+
+            // argument mode (as part of call)
+            { inMode(MODE_ARGUMENT) }? argument |
+
+            // expression with right parentheses if a previous match is in one
+            { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
+
+            colon_marked
+
+    )*
+
+;
+
 // match a complete expression no stream
 complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
@@ -3999,20 +4296,24 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         (options { greedy = true; } :
 
-        // commas as in a list
-        { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
-        comma |
+            // commas as in a list
+            { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
+            comma |
 
-        // right parentheses, unless we are in a pair of parentheses in an expression
-        { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
+            // right parentheses, unless we are in a pair of parentheses in an expression
+            { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
 
-        // argument mode (as part of call)
-        { inMode(MODE_ARGUMENT) }? argument |
+            { inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == LBRACKET }? complete_objective_c_call |
 
-        // expression with right parentheses if a previous match is in one
-        { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
+            // argument mode (as part of call)
+            { inMode(MODE_ARGUMENT) }? argument |
 
-        colon_marked)*
+            // expression with right parentheses if a previous match is in one
+            { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
+
+            colon_marked
+
+        )*
 ;
 
 // match a linq_expression completely
@@ -4056,7 +4357,7 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
             setTokenPosition(tp);
         }
         push_namestack identifier (
-            { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) }?
+            { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
             (template_argument_list)=>
                 template_argument_list |
 
@@ -4109,11 +4410,15 @@ identifier_list[] { ENTRY_DEBUG } :
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
             INTO | THIS |
 
+            // Objective-C
+            IMPORT | ATPROTOCOL |
+
             // C
-            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH /*| CXX_CLASS| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
-            SIGNALS | FOREACH | FOREVER | VIRTUAL | FRIEND | OPERATOR | EXPLICIT | NAMESPACE | USING |
+            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH/*| CXX_CLASS| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
+            SIGNAL | FOREACH | FOREVER | VIRTUAL | FRIEND | OPERATOR | EXPLICIT | NAMESPACE | USING |
             DELETE | FALSE | TRUE | FINAL | OVERRIDE | CONSTEXPR | NOEXCEPT | THREADLOCAL | NULLPTR |
             DECLTYPE | ALIGNAS | TYPENAME | ALIGNOF*/
+
 ;
 
 // most basic name
@@ -4212,10 +4517,13 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         { inLanguage(LANGUAGE_CSHARP) }?
         compound_name_csharp[iscompound] |
 
+        { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        compound_name_objective_c[iscompound] |
+
         { inLanguage(LANGUAGE_C) }?
         compound_name_c[iscompound] |
 
-        { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
+        { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
         compound_name_cpp[iscompound] |
         macro_type_name_call 
         )
@@ -4289,6 +4597,18 @@ compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
             (period | member_pointer) { iscompound = true; }
             ({LA(1) == MULTOPS }? multops)*
             identifier
+        )*
+;
+
+// compound name for C
+compound_name_objective_c[bool& iscompound] { ENTRY_DEBUG } :
+
+        (simple_name_optional_template | generic_selection) (options { greedy = true; }: { LA(1) == MULTOPS }? multops)*
+
+        ( options { greedy = true; } :
+            (period | member_pointer) { iscompound = true; }
+            ({LA(1) == MULTOPS }? multops)*
+            simple_name_optional_template
         )*
 ;
 
@@ -4620,8 +4940,8 @@ call[int call_count = 1] { ENTRY_DEBUG } :
             } while(--call_count > 0);
 
         }
-        function_identifier
-        call_argument_list
+        ({inLanguage(LANGUAGE_OBJECTIVE_C) }? objective_c_call | function_identifier call_argument_list)
+        
 ;
 
 // argument list to a call
@@ -4634,6 +4954,78 @@ call_argument_list[] { ENTRY_DEBUG } :
             startElement(SARGUMENT_LIST);
         }
         (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
+;
+
+// function call for Objective_C
+objective_c_call[] { ENTRY_DEBUG } :
+    {
+
+        // start a new mode that will end after the argument list
+        startNewMode(MODE_OBJECTIVE_C_CALL);
+
+        // start the function call element
+        startElement(SFUNCTION_CALL);
+
+        startNewMode(MODE_ARGUMENT_LIST | MODE_LIST);
+
+    }
+
+    LBRACKET
+    objective_c_call_receiver
+
+;
+
+// function call object for Objective_C
+objective_c_call_receiver[] { ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+
+        // start the function call element
+        startElement(SRECEIVER);
+    
+    }
+    expression
+
+;
+
+// function call message for Objective_C
+objective_c_call_message[] { ENTRY_DEBUG } :
+    {
+
+        endDownToMode(MODE_ARGUMENT_LIST);
+        clearMode(MODE_ARGUMENT_LIST);
+
+        // start the function call element
+        startElement(SMESSAGE);
+
+    }
+    objective_c_call_argument
+
+;
+
+// function call argument name:value pair for Objective_C
+objective_c_call_argument[] { bool first = true; ENTRY_DEBUG } :
+    {
+
+        if(inTransparentMode(MODE_LIST))
+            endDownToMode(MODE_LIST);
+
+        startNewMode(MODE_ARGUMENT);
+
+    }
+    objective_c_selector (options { greedy = true; } : { first && LA(1) != RBRACKET }? argument set_bool[first, false])*
+;
+
+// function call message for Objective_C
+objective_c_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+        startNewMode(MODE_LOCAL);
+
+        startElement(SSELECTOR);
+    }
+    (function_identifier (options { greedy = true; } : COLON)* | COLON)
+
 ;
 
 ternary_expression[] { ENTRY_DEBUG } :
@@ -5719,7 +6111,11 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
-            NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
+            NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA |
+
+            // Objective-C
+            CSPEC | MSPEC
+
         )
 ;
 
@@ -5744,7 +6140,7 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
 /** list of operators @todo is this still needed */
 general_operators_list[] { ENTRY_DEBUG } :
         OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
-        DOTDOT | RVALUEREF | QMARK
+        DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC
 ;
 
 // mark up )
@@ -5823,16 +6219,37 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
             // end the single mode that started the list
             // don't end more than one since they may be nested
             if (isempty && inMode(MODE_LIST))
-                endDownOverMode(MODE_LIST);
+                endWhileMode(MODE_LIST);
             
             else if(inTransparentMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP))
-                endDownOverMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
+                endWhileMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
 
             if(!isempty)
                 decCurly();
         }
 
 ;
+
+rbracket[] { ENTRY_DEBUG } :
+    {
+
+        endDownOverMode(MODE_LIST);
+
+    }
+
+    RBRACKET
+
+    {
+
+        if(inMode(MODE_OBJECTIVE_C_CALL)) {
+
+            endDownOverMode(MODE_OBJECTIVE_C_CALL);
+
+        }
+
+    }
+
+; 
 
 // Dot (period) operator
 period[] { LightweightElement element(this); ENTRY_DEBUG } :
@@ -5966,6 +6383,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
 
         // macro call
         { type == MACRO }? macro_call |
+
+        { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        objective_c_call | 
 
         // general math operators
         // looks like general operators and variable identifier can match same thing
@@ -6113,7 +6533,7 @@ boolean[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // a derived class
-derived[] { CompleteElement element(this); ENTRY_DEBUG } :
+derived[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -6123,13 +6543,15 @@ derived[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         COLON
         (options { greedy = true; } :
-            { LA(1) != WHERE }? (
+            { LA(1) != WHERE && (!inLanguage(LANGUAGE_OBJECTIVE_C) || first) }? (
             (derive_access)*
 
-            variable_identifier
+            ({ inLanguage(LANGUAGE_OBJECTIVE_C) }? identifier | variable_identifier)
             ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
 
-            (options { greedy = true; } : template_argument_list)*
+            (options { greedy = true; } : { !inLanguage(LANGUAGE_OBJECTIVE_C) }? template_argument_list)*
+
+            set_bool[first, false]
             )
         |
             COMMA
@@ -6533,6 +6955,32 @@ generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
         WHERE compound_name_inner[false] COLON
         (compound_name_inner[false] | CLASS | CXX_CLASS | STRUCT | NEW LPAREN RPAREN)
         (options { greedy = true; } : COMMA (compound_name_inner[false] | CLASS | CXX_CLASS | STRUCT | NEW LPAREN RPAREN))*
+;
+
+protocol_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        // local mode
+        startNewMode(MODE_LOCAL | MODE_LIST);
+
+        startElement(SPROTOCOL_LIST);
+
+    }
+    TEMPOPS identifier (comma identifier)* TEMPOPE
+
+;
+
+category[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        // local mode
+        startNewMode(MODE_LOCAL);
+
+        startElement(SCATEGORY);
+
+    }
+    LPAREN (identifier)* RPAREN
+
 ;
 
 // save the namestack
@@ -6994,6 +7442,14 @@ preprocessor[] { ENTRY_DEBUG
             tp.setType(SCPP_ENDREGION);
         } |
 
+        IMPORT
+        {
+            endMode();
+
+            tp.setType(SCPP_IMPORT);
+        }
+        (cpp_filename)* |
+
         /* blank preproc */
         // suppress ()* warning
         { tp_directive.setType(SNOP); endMode(); } (options { greedy = true; } : cpp_garbage)*
@@ -7048,7 +7504,7 @@ eol_skip[int directive_token, bool markblockzero] {
 eol[int directive_token, bool markblockzero] {
 
             // end all preprocessor modes
-            endDownOverMode(MODE_PREPROC);
+            endWhileMode(MODE_PREPROC);
 
             endMode(MODE_PARSE_EOL);
 ENTRY_DEBUG } :
@@ -7312,7 +7768,7 @@ cppmode_cleanup[] {
 line_continuation[] { ENTRY_DEBUG } :
         {
             // end all preprocessor modes
-            endDownOverMode(MODE_PARSE_EOL);
+            endWhileMode(MODE_PARSE_EOL);
         }
         EOL_BACKSLASH
 ;
