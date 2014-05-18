@@ -46,23 +46,25 @@ namespace {
     int     archive_curl_open(archive *, void *client_data);
     ssize_t archive_curl_read(archive *, void *client_data, const void **buff);
     int     archive_curl_close(archive *, void *client_data);
+
+	bool curl_supported(const std::string& input_protocol) {
+	    const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
+	    for (int i = 0; curl_types[i] != NULL; ++i) {
+	        if (strcmp(curl_types[i], input_protocol.c_str()) == 0)
+	            return true;
+	    }
+	    return false;
+	}
 }
 
-bool curl_supported(const std::string& input_protocol) {
-    const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
-    int i = 0;
-    while (curl_types[i] != NULL) {
-        if (strcmp(curl_types[i], input_protocol.c_str()) == 0) {
-            std::cerr << curl_types[i] << "\n"; // If this is removed appication segfaults
-            return true;
-        }
-        ++i;
-    }
-    return false;
-}
 
-// Setup supported compressions and 
-void setup_libarchive(archive* arch) {
+// Convert input to a ParseRequest and assign request to the processing queue
+void src_input_libarchive(ParseQueue& queue,
+                          srcml_archive* srcml_arch,
+                          const srcml_request_t& srcml_request,
+                          const srcml_input_src& input_file) {
+
+    archive* arch = archive_read_new();
 
     archive_read_support_format_ar(arch);
     archive_read_support_format_cpio(arch);
@@ -91,48 +93,31 @@ void setup_libarchive(archive* arch) {
     // Compressions
     archive_read_support_filter_all(arch);
 #endif
-}
 
-int open_input(archive* arch, const srcml_input_src& input_file) {
-    // open the archive
-    int open_status;
+    int status;
     if (contains<int>(input_file)) {
 
-        open_status = archive_read_open_fd(arch, input_file, 16384);
+        status = archive_read_open_fd(arch, input_file, 16384);
 
     } else if (contains<FILE*>(input_file)) {
 
-        open_status = archive_read_open_FILE(arch, input_file);
+        status = archive_read_open_FILE(arch, input_file);
 
     // NOTE: Leave check for "http" in, or memory problem
-    } else if (curl_supported(input_file.protocol) || input_file.protocol == "http") {
+    } else if (curl_supported(input_file.protocol)) {
         curl curling;
         curling.source = input_file.filename;
-        open_status = archive_read_open(arch, &curling, archive_curl_open, (archive_read_callback *)archive_curl_read, archive_curl_close);
+        status = archive_read_open(arch, &curling, archive_curl_open, (archive_read_callback *)archive_curl_read, archive_curl_close);
 
     } else {
 
-        open_status = archive_read_open_filename(arch, input_file.c_str(), 16384);
+        status = archive_read_open_filename(arch, input_file.c_str(), 16384);
     }
-    if (open_status != ARCHIVE_OK) {
+    if (status != ARCHIVE_OK) {
         std::cerr << "Unable to open file " << input_file.filename << '\n';
         exit(1);
     }
 
-    return open_status;
-}
-
-// Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue,
-                          srcml_archive* srcml_arch,
-                          const srcml_request_t& srcml_request,
-                          const srcml_input_src& input_file) {
-
-    archive* arch = archive_read_new();
-
-    setup_libarchive(arch);
-
-    int status = open_input(arch, input_file);
     if (status == ARCHIVE_OK) {
 
         /* In general, go through this once for each time the header can be read
