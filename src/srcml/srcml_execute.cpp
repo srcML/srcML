@@ -58,7 +58,7 @@ void srcml_execute(const srcml_request_t& srcml_request,
             HANDLE write_pipe;
             CreatePipe(&read_pipe,&write_pipe, NULL, 0);
 
-            fds[1]= _open_osfhandle((intptr_t)write_pipe, 0);
+            fds[1] = _open_osfhandle((intptr_t)write_pipe, 0);
             fds[0] = _open_osfhandle((intptr_t)read_pipe, _O_RDONLY);
 #endif
         }
