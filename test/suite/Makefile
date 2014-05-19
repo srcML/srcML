@@ -737,7 +737,7 @@ throw_m.m.xml : throw.cpp.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
 throw_base_m.m.xml : throw_base.cpp.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
 	${XSLT_KEYWORD2MKEYWORD} $< > $@
 
-# Objective-C throw from C++
+# Objective-C dynamic from synthesize
 dynamic_m.m.xml : synthesize_m.m.xml ${XSLT_SYNTHESIZE2DYNAMIC_XSL}
 	${XSLT_SYNTHESIZE2DYNAMIC} $< > $@
 
