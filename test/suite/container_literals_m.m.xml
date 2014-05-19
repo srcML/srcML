@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Objective-C" dir="container_literal" filename="container_literal_m">
+
+<unit>
+<expr_stmt><expr><index>@[ ]</index></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><index>@[ <expr>0</expr> ]</index></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><index>@[ <expr>0</expr>, <expr>0</expr> ]</index></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>NSArray</name> *</type><name>array</name> <init>= <expr><index>@[ <expr><name>@Hello</name></expr>, <expr><name>NSApp</name></expr>, <expr><call>[<receiver><expr><name>NSNumber</name></expr></receiver> <message><selector><name>numberWithInt</name>:</selector><argument><expr>42</expr></argument></message>]</call></expr> ]</index></expr></init></decl>;</decl_stmt>
+</unit>
+
+</unit>
