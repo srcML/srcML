@@ -95,6 +95,7 @@ void src_input_libarchive(ParseQueue& queue,
 #endif
 
     int status;
+    curl curling;
     if (contains<int>(input_file)) {
 
         status = archive_read_open_fd(arch, input_file, 16384);
@@ -103,9 +104,8 @@ void src_input_libarchive(ParseQueue& queue,
 
         status = archive_read_open_FILE(arch, input_file);
 
-    // NOTE: Leave check for "http" in, or memory problem
     } else if (curl_supported(input_file.protocol)) {
-        curl curling;
+
         curling.source = input_file.filename;
         status = archive_read_open(arch, &curling, archive_curl_open, (archive_read_callback *)archive_curl_read, archive_curl_close);
 
