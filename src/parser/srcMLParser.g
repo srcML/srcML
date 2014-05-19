@@ -764,7 +764,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         asm_declaration |
 
         // Objective-C - kewywords only detected for Objective-C
-        objective_c_class | protocol | objective_c_class_end | property_declaration
+        objective_c_class | protocol | objective_c_class_end | property_declaration | synthesize_statement | dynamic_statement
 
 ;
 
@@ -1602,6 +1602,16 @@ property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG
 
     }
     EQUAL identifier
+
+;
+
+synthesize_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
+    SYNTHESIZE
+
+;
+
+dynamic_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
+    DYNAMIC
 
 ;
 
@@ -5964,7 +5974,7 @@ expression_statement_process[] { ENTRY_DEBUG } :
         }
 ;
 
-// an expression statment
+// an expression statement
 expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
 
         expression_statement_process
