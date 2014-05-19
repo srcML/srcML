@@ -285,6 +285,7 @@ tokens {
     ATPROTOCOL;
     ATREQUIRED;
     ATOPTIONAL;
+    PROPERTY;
 
 }
 
@@ -584,8 +585,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "@finally"        , FINALLY          , LANGUAGE_OBJECTIVE_C },
         { "@throw"          , THROW            , LANGUAGE_OBJECTIVE_C },
         { "@synchronized"   , SYNCHRONIZED     , LANGUAGE_OBJECTIVE_C },
-
-
+        { "@property"       , PROPERTY     , LANGUAGE_OBJECTIVE_C },
 
         // Combined C/C++ Mode  at end so overrides defaults
         { "restrict"     , CRESTRICT         , LANGUAGE_CXX },

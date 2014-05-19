@@ -311,6 +311,7 @@ namespace {
     ELEMENT_MAP(SREQUIRED_DEFAULT, "required")
     ELEMENT_MAP(SREQUIRED,         "required")
     ELEMENT_MAP(SOPTIONAL,         "optional")
+    ELEMENT_MAP(SPROPERTY,         "property")
 
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
