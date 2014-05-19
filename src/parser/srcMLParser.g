@@ -1589,7 +1589,19 @@ property_attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
         startElement(SATTRIBUTE);
 
     }
-    identifier (EQUAL identifier)* 
+    identifier (property_attribute_initialization)* 
+
+;
+
+property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        //startElement(SDECLARATION_INITIALIZATION);
+
+    }
+    EQUAL identifier
 
 ;
 
