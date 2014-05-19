@@ -186,6 +186,9 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
               }
               STRING_START
             |
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+              '(' { $setType(LPAREN); }
+            |
             )
         |
 
