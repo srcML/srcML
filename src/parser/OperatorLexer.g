@@ -173,8 +173,18 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
             { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? NAME
             { $setType(NAME); }
             |
-            { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? { atstring = true; } STRING_START
-            { $setType(STRING_START); }
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }? CONSTANTS
+            { $setType(CONSTANTS); }
+            |
+            { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? 
+              { if(LA(1) == '"') {
+                atstring = true; 
+                $setType(STRING_START);
+                } else {
+                  $setType(CHAR_START);
+                }
+              }
+              STRING_START
             |
             )
         |
