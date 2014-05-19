@@ -178,6 +178,16 @@ int main() {
     {
         srcml_archive * archive = srcml_create_archive();
         archive->type = SRCML_ARCHIVE_RW;
+        srcml_append_transform_param(archive, "foo", "bar");
+        dassert(archive->xsl_parameters.size(), 3);
+        dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
+        dassert(archive->xsl_parameters.size(), 0);
+        srcml_free_archive(archive);
+    }
+
+    {
+        srcml_archive * archive = srcml_create_archive();
+        archive->type = SRCML_ARCHIVE_RW;
 
         srcml_append_transform_xpath(archive, "//src:unit");
 
@@ -198,10 +208,14 @@ int main() {
         fd = OPEN("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(archive, fd);
         CLOSE(fd);
+        
+        srcml_append_transform_param(archive, "foo", "bar");
 
         dassert(!archive->transformations.size(), 0);
+        dassert(archive->xsl_parameters.size(), 3);
         dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
         dassert(archive->transformations.size(), 0);
+        dassert(archive->xsl_parameters.size(), 0);
         srcml_free_archive(archive);
     }
 
