@@ -144,4 +144,8 @@
 <expr_stmt><expr><name><name>a</name><index>[<expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call> + 0</expr>]</index><index>[<expr><call>[<receiver><expr><name>foo</name></expr></receiver> <message><selector><name>bar</name></selector></message>]</call> + 1</expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><call>[<receiver><expr>@""</expr></receiver> <message><selector><name>foobar</name></selector></message>]</call></expr>;</expr_stmt>
+</unit>
+
 </unit>
