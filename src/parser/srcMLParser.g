@@ -1615,7 +1615,7 @@ synthesize_statement[] { ENTRY_DEBUG } :
         startElement(SSYNTHESIZE);
 
     }
-    SYNTHESIZE
+    SYNTHESIZE property_implementation_inner
 
 ;
 
@@ -1627,7 +1627,37 @@ dynamic_statement[] { ENTRY_DEBUG } :
         startElement(SDYNAMIC);
         
     }
-    DYNAMIC
+    DYNAMIC property_implementation_inner
+
+;
+
+property_implementation_inner[] { ENTRY_DEBUG } :
+
+    property_implementation_name (COMMA property_implementation_name)*
+
+;
+
+property_implementation_name[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        startElement(SDECLARATION);
+
+    }
+    identifier (property_implementation_initialization)*
+
+;
+
+property_implementation_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        //startElement(SDECLARATION_INITIALIZATION);
+
+    }
+    EQUAL identifier
 
 ;
 
