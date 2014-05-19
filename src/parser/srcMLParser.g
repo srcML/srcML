@@ -4214,14 +4214,14 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
             iscomplex = true;
 
             // start a mode to end at right bracket with expressions inside
-            if (inLanguage(LANGUAGE_CSHARP))
+            if (inLanguage(LANGUAGE_CSHARP) || (LA(1) == ATLBRACKET && LANGUAGE_OBJECTIVE_C))
                 startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST | MODE_END_AT_COMMA);
             else
                 startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST);
 
             startElement(SINDEX);
         }
-        LBRACKET
+        (LBRACKET | ATLBRACKET)
 
         variable_identifier_array_grammar_sub_contents
 
@@ -4230,9 +4230,9 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
 
 // contents of array index
 variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
-        { !inLanguage(LANGUAGE_CSHARP) }? complete_expression |
+        { !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }? complete_expression |
 
-        { inLanguage(LANGUAGE_CSHARP) }? (options { greedy = true; } : { LA(1) != RBRACKET }?
+        { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? (options { greedy = true; } : { LA(1) != RBRACKET }?
             ({ /* stop warning */ LA(1) == COMMA }? COMMA | complete_expression)
         )*
 ;
