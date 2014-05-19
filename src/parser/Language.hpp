@@ -104,7 +104,7 @@ public:
         LANGUAGE_CSHARP = 16,
 
         /** Interger Constant for Objective-C language */
-        LANGUAGE_OBJECTIVE_C = 32 | LANGUAGE_C,
+        LANGUAGE_OBJECTIVE_C = 32,
 
         /** Interger Constant for languages in C++ family i.e. C++/C#  */
         LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP,
