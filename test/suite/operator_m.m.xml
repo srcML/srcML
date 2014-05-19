@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="Objective-C" dir="operator" filename="operator_m">
+
+<unit>
+<expr_stmt><expr><call><name><name>const_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name><name>static_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name><name>dynamic_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name><name>reinterpret_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><op:operator>@(</op:operator> <op:operator>&lt;</op:operator><name>expression</name><op:operator>&gt;</op:operator> <op:operator>)</op:operator></expr>;</expr_stmt>
+</unit>
+
+</unit>
