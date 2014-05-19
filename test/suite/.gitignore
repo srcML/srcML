@@ -44,6 +44,7 @@ do.c.xml
 do.cs.xml
 do.java.xml
 do.m.xml
+dynamic_m.m.xml
 enum.c.xml
 enum.m.xml
 enum_c.m.xml
@@ -161,7 +162,6 @@ switch.c.xml
 switch.cs.xml
 switch.java.xml
 switch.m.xml
-temp
 ternary.c.xml
 ternary.cs.xml
 ternary.java.xml

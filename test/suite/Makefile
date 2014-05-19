@@ -214,9 +214,13 @@ XSLT_REMOVECPP_PROBLEM=${XSLT} ${XSLT_REMOVECPP_PROBLEM_XSL}
 XSLT_REMOVECPP_LITERAL=${XSLT} ${XSLT_REMOVECPP_LITERAL_XSL}
 XSLT_REMOVECPP_OPERATOR=${XSLT} ${XSLT_REMOVECPP_OPERATOR_XSL}
 
-#  try/catch/finally/throw keywords to @try/@catch/@finally/throw keywords
+# try/catch/finally/throw keywords to @try/@catch/@finally/throw keywords
 XSLT_KEYWORD2MKEYWORD_XSL=xsl/keyword2mkeyword.xsl
 XSLT_KEYWORD2MKEYWORD=${XSLT} ${XSLT_KEYWORD2MKEYWORD_XSL}
+
+# convert @synthesize to @dynamic
+XSLT_SYNTHESIZE2DYNAMIC_XSL=xsl/synthesize2dynamic.xsl
+XSLT_SYNTHESIZE2DYNAMIC=${XSLT} ${XSLT_SYNTHESIZE2DYNAMIC_XSL}
 
 SEP_BASE=$(BASE_COMMON) $(BASE_C_FAMILY) $(BASE_CXX) $(BASE_OO)
 
@@ -732,6 +736,10 @@ throw_m.m.xml : throw.cpp.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
 # Objective-C throw from C++
 throw_base_m.m.xml : throw_base.cpp.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
 	${XSLT_KEYWORD2MKEYWORD} $< > $@
+
+# Objective-C throw from C++
+dynamic_m.m.xml : synthesize_m.m.xml ${XSLT_SYNTHESIZE2DYNAMIC_XSL}
+	${XSLT_SYNTHESIZE2DYNAMIC} $< > $@
 
 clean :
 	rm -f ${GEN_FILES}

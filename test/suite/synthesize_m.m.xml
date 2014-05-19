@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Objective-C" dir="synthesize" filename="synthesize_m">
+
+<unit>
+<synthesize>@synthesize <decl><name>foo</name></decl>;</synthesize>
+</unit>
+
+<unit>
+<synthesize>@synthesize <decl><name>foo</name></decl>, <decl><name>bar</name></decl>;</synthesize>
+</unit>
+
+<unit>
+<synthesize>@synthesize <decl><name>foo</name>=<name>bar</name></decl>;</synthesize>
+</unit>
+
+<unit>
+<synthesize>@synthesize <decl><name>foo</name>=<name>bar</name></decl>, <decl><name>foobar</name>=<name>foobar</name></decl>;</synthesize>
+</unit>
+
+</unit>

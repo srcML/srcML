@@ -574,6 +574,8 @@ tokens {
     SOPTIONAL;
     SPROPERTY;
     SATTRIBUTE_LIST;
+    SSYNTHESIZE;
+    SDYNAMIC;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -764,7 +766,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         asm_declaration |
 
         // Objective-C - kewywords only detected for Objective-C
-        objective_c_class | protocol | objective_c_class_end | property_declaration
+        objective_c_class | protocol | objective_c_class_end | property_declaration | synthesize_statement | dynamic_statement
 
 ;
 
@@ -1605,6 +1607,59 @@ property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG
 
 ;
 
+synthesize_statement[] { ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_STATEMENT);
+
+        startElement(SSYNTHESIZE);
+
+    }
+    SYNTHESIZE property_implementation_inner
+
+;
+
+dynamic_statement[] { ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_STATEMENT);
+
+        startElement(SDYNAMIC);
+        
+    }
+    DYNAMIC property_implementation_inner
+
+;
+
+property_implementation_inner[] { ENTRY_DEBUG } :
+
+    property_implementation_name (COMMA property_implementation_name)*
+
+;
+
+property_implementation_name[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        startElement(SDECLARATION);
+
+    }
+    identifier (property_implementation_initialization)*
+
+;
+
+property_implementation_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        //startElement(SDECLARATION_INITIALIZATION);
+
+    }
+    EQUAL identifier
+
+;
 
 // Check and see if this is a call and what type
 perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int secondtoken] returns [bool iscall] {
@@ -5964,7 +6019,7 @@ expression_statement_process[] { ENTRY_DEBUG } :
         }
 ;
 
-// an expression statment
+// an expression statement
 expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
 
         expression_statement_process
