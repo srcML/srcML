@@ -1474,7 +1474,7 @@ objective_c_method[int token = SNOP] { ENTRY_DEBUG } :
         startElement(token);
 
     }
-    objective_c_method_specifier (objective_c_method_type)* /*objective_c_selector*/ objective_c_parameter_list
+    objective_c_method_specifier (options { greedy = true; } : objective_c_method_type)* /*objective_c_selector*/ objective_c_parameter_list
 
 ;
 

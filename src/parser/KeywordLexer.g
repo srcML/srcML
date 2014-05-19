@@ -281,7 +281,6 @@ tokens {
     ATINTERFACE;
     ATIMPLEMENTATION;
     ATEND;
-    IMPORT;
     ATPROTOCOL;
     ATREQUIRED;
     ATOPTIONAL;
@@ -590,7 +589,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "@property"       , PROPERTY         , LANGUAGE_OBJECTIVE_C },
         { "@synthesize"     , SYNTHESIZE       , LANGUAGE_OBJECTIVE_C },
         { "@dynamic"        , DYNAMIC          , LANGUAGE_OBJECTIVE_C },
-        { "in"              , IN          , LANGUAGE_OBJECTIVE_C },
+        { "in"              , IN               , LANGUAGE_OBJECTIVE_C },
 
         // Combined C/C++ Mode  at end so overrides defaults
         { "restrict"     , CRESTRICT         , LANGUAGE_CXX },
