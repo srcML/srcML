@@ -574,6 +574,8 @@ tokens {
     SOPTIONAL;
     SPROPERTY;
     SATTRIBUTE_LIST;
+    SSYNTHESIZE;
+    SDYNAMIC;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -1605,16 +1607,29 @@ property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG
 
 ;
 
-synthesize_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
+synthesize_statement[] { ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_STATEMENT);
+
+        startElement(SSYNTHESIZE);
+
+    }
     SYNTHESIZE
 
 ;
 
-dynamic_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
+dynamic_statement[] { ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_STATEMENT);
+
+        startElement(SDYNAMIC);
+        
+    }
     DYNAMIC
 
 ;
-
 
 // Check and see if this is a call and what type
 perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int secondtoken] returns [bool iscall] {

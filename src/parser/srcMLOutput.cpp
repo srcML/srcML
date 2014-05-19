@@ -313,6 +313,8 @@ namespace {
     ELEMENT_MAP(SOPTIONAL,         "optional")
     ELEMENT_MAP(SPROPERTY,         "property")
     ELEMENT_MAP(SATTRIBUTE_LIST,   "attribute_list")
+    ELEMENT_MAP(SSYNTHESIZE,       "synthesize")
+    ELEMENT_MAP(SDYNAMIC,          "dynamic")
 
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
