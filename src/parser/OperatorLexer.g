@@ -49,6 +49,7 @@ DESTOP; // = "~";
 LCURLY; // = "{";
 RCURLY; // = "}";
 LBRACKET; // = "[";
+ATLBRACKET; // = "@[";
 RBRACKET; // = "]";
 COMMA; // = ",";
 RPAREN; // = ")";
@@ -170,6 +171,15 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
             // names can start with a @ in C#
             '@' { $setType(ATSIGN); }
             ( 
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+              '(' { $setType(LPAREN); }
+            |
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+              '[' { $setType(ATLBRACKET); }
+            |
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+              '{' { $setType(LCURLY); }
+            |
             { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? NAME
             { $setType(NAME); }
             |
@@ -185,9 +195,6 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
                 }
               }
               STRING_START
-            |
-            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-              '(' { $setType(LPAREN); }
             |
             )
         |

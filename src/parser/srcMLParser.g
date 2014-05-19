@@ -2918,6 +2918,10 @@ rcurly[] { ENTRY_DEBUG } :
         }
 ;
 
+objective_c_index_block[] { ENTRY_DEBUG } :
+    ATLBRACKET
+;
+
 // terminate (';')
 terminate[] { ENTRY_DEBUG } :
         {
