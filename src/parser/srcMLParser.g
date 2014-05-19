@@ -3219,7 +3219,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // start of argument for return or throw statement
         { inMode(MODE_INIT | MODE_EXPECT) && ((LA(1) == COLON && (inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_JAVA)))
-                || (LA(1) == IN && inLanguage(LANGUAGE_CSHARP))) }?
+                || LA(1) == IN) }?
         variable_declaration_range |
 
         // in an argument list expecting an argument
@@ -3725,11 +3725,11 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         */
         set_type[type, VARIABLE, ((((type_count - specifier_count) > 0 && LA(1) != OPERATORS && LA(1) != CSPEC && LA(1) != MSPEC
                 && ((inLanguage(LANGUAGE_CXX) && !inMode(MODE_ACCESS_REGION)) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET
-                                              || (LA(1) == LPAREN && next_token() != RPAREN) || LA(1) == LCURLY || LA(1) == EQUAL
+                                              || (LA(1) == LPAREN && next_token() != RPAREN) || LA(1) == LCURLY || LA(1) == EQUAL || LA(1) == IN
                                               || (inTransparentMode(MODE_FOR_CONDITION) && LA(1) == COLON)
-                                              || (inLanguage(LANGUAGE_CSHARP) && (LA(1) == RBRACKET || LA(1) == IN))))) ||
-                                                (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET || LA(1) == EQUAL
-                                                    || (inLanguage(LANGUAGE_CSHARP) && (LA(1) == RBRACKET || LA(1) == IN)))))]
+                                              || (inLanguage(LANGUAGE_CSHARP) && LA(1) == RBRACKET)))) ||
+                                                (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET || LA(1) == EQUAL || LA(1) == IN
+                                                    || (inLanguage(LANGUAGE_CSHARP) && LA(1) == RBRACKET))))]
 
         // need to see if we possibly have a constructor/destructor name, with no type
         set_bool[isconstructor,
