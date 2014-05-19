@@ -173,7 +173,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
             { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? NAME
             { $setType(NAME); }
             |
-            { inLanguage(LANGUAGE_CSHARP) }? { atstring = true; } STRING_START
+            { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? { atstring = true; } STRING_START
             { $setType(STRING_START); }
             |
             )
