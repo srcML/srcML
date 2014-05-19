@@ -572,6 +572,8 @@ tokens {
     SREQUIRED_DEFAULT;
     SREQUIRED;
     SOPTIONAL;
+    SPROPERTY;
+    SATTRIBUTE_LIST;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -762,7 +764,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         asm_declaration |
 
         // Objective-C - kewywords only detected for Objective-C
-        objective_c_class | protocol | objective_c_class_end
+        objective_c_class | protocol | objective_c_class_end | property_declaration
 
 ;
 
@@ -1547,6 +1549,59 @@ objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     // Mark as name before mark without name
     (options { generateAmbigWarnings = false; } : compound_name | keyword_name)
+
+;
+
+// Objective-C property declaration
+property_declaration[] { int type_count = 0;  int secondtoken = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_STATEMENT);
+
+        startElement(SPROPERTY);
+
+    }
+    PROPERTY (property_attribute_list)*
+    { pattern_check(stmt_type, secondtoken, type_count) }?
+    variable_declaration[type_count]
+
+;
+
+property_attribute_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        startElement(SATTRIBUTE_LIST);
+
+    }
+    LPAREN
+    (property_attribute | COMMA)*
+    RPAREN
+
+;
+
+property_attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        startElement(SATTRIBUTE);
+
+    }
+    identifier (property_attribute_initialization)* 
+
+;
+
+property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        //startElement(SDECLARATION_INITIALIZATION);
+
+    }
+    EQUAL identifier
 
 ;
 
