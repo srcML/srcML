@@ -1576,8 +1576,20 @@ property_attribute_list[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
     LPAREN
-    (~RPAREN)*
+    (property_attribute | COMMA)*
     RPAREN
+
+;
+
+property_attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        startElement(SATTRIBUTE);
+
+    }
+    identifier (EQUAL identifier)* 
 
 ;
 
