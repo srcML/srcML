@@ -590,6 +590,10 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "@synthesize"     , SYNTHESIZE       , LANGUAGE_OBJECTIVE_C },
         { "@dynamic"        , DYNAMIC          , LANGUAGE_OBJECTIVE_C },
         { "in"              , IN               , LANGUAGE_OBJECTIVE_C },
+        { "@YES"            , TRUE             , LANGUAGE_OBJECTIVE_C },
+        { "@NO"             , FALSE            , LANGUAGE_OBJECTIVE_C },
+        { "@true"           , TRUE             , LANGUAGE_OBJECTIVE_C },
+        { "@false"          , FALSE            , LANGUAGE_OBJECTIVE_C },
 
         // Combined C/C++ Mode  at end so overrides defaults
         { "restrict"     , CRESTRICT         , LANGUAGE_CXX },
