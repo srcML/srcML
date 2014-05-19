@@ -76,6 +76,8 @@ int main() {
         dassert(archive->input, 0);
 
         dassert(archive->transformations.size(), 0);
+        dassert(archive->xsl_parameters.size(), 1);
+        dassert(archive->xsl_parameters.back(), 0);
 
         srcml_free_archive(archive);
     }
