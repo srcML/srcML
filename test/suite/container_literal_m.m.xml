@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Objective-C" dir="container_literal" filename="container_literal_m">
+
+<unit>
+<expr_stmt><expr><index>@[ ]</index></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><index>@[ <expr>0</expr> ]</index></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><index>@[ <expr>0</expr>, <expr>0</expr> ]</index></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>NSArray</name> *</type><name>array</name> <init>= <expr><index>@[ <expr><name>@Hello</name></expr>, <expr><name>NSApp</name></expr>, <expr><call>[<receiver><expr><name>NSNumber</name></expr></receiver> <message><selector><name>numberWithInt</name>:</selector><argument><expr>42</expr></argument></message>]</call></expr> ]</index></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>1 + <block>@{ }</block></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>1 + <block>@{ <expr>0</expr> }</block></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>1 + <block>@{ <expr>0</expr>, <expr>0</expr> }</block></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>NSArray</name> *</type><name>array</name> <init>= <expr><block>@{ <expr><name>@Hello</name></expr>, <expr><name>NSApp</name></expr>, <expr><call>[<receiver><expr><name>NSNumber</name></expr></receiver> <message><selector><name>numberWithInt</name>:</selector><argument><expr>42</expr></argument></message>]</call></expr> }</block></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+    <decl_stmt><decl><type><name>NSDictionary</name> *</type><name>dictionary</name> <init>= <expr><block>@{
+    <expr>@"name" : <call><name>NSUserName</name><argument_list>()</argument_list></call></expr>,
+    <expr>@"date" : <call>[<receiver><expr><name>NSDate</name></expr></receiver> <message><selector><name>date</name></selector></message>]</call></expr>,
+    <expr>@"processInfo" : <call>[<receiver><expr><name>NSProcessInfo</name></expr></receiver> <message><selector><name>processInfo</name></selector></message>]</call></expr>
+}</block></expr></init></decl>;</decl_stmt>
+</unit>
+</unit>
