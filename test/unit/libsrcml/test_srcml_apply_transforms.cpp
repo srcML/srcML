@@ -51,6 +51,7 @@ int main() {
     const std::string srcml_a_after = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" filename=\"a.cpp\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
     const std::string srcml_b_after = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\" dir=\"test\" filename=\"project\" version=\"1\">\n\n<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
     const std::string srcml_full = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\">\n\n<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
+    const std::string srcml_full_python = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\">\n\n<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"Python\" dir=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
 
     std::string copy;
     {
@@ -58,6 +59,15 @@ int main() {
         char c = 0;
         while(in.get(c)) {
             copy += c;
+        }
+    }
+
+    std::string setlanguage;
+    {
+        std::ifstream in("setlanguage.xsl");
+        char c = 0;
+        while(in.get(c)) {
+            setlanguage += c;
         }
     }
 
@@ -251,6 +261,28 @@ int main() {
 
     }
 
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+        srcml_append_transform_xslt_filename(iarchive, "setlanguage.xsl");
+        srcml_append_transform_param(iarchive, "language", "\"Python\"");
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_full_python);
+        free(s);
+
+    }
+
     /*
       xslt_memory
     */
@@ -335,6 +367,28 @@ int main() {
         srcml_close_archive(iarchive);
         srcml_free_archive(iarchive);
         dassert(s, srcml_b);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+        srcml_append_transform_xslt_memory(iarchive, setlanguage.c_str(), setlanguage.size());
+        srcml_append_transform_param(iarchive, "language", "\"Python\"");
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_full_python);
         free(s);
 
     }
@@ -435,6 +489,30 @@ int main() {
 
     }
 
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+        FILE * f = fopen("setlanguage.xsl", "r");
+        srcml_append_transform_xslt_FILE(iarchive, f);
+        fclose(f);
+        srcml_append_transform_param(iarchive, "language", "\"Python\"");
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_full_python);
+        free(s);
+
+    }
+
     /*
       xslt_fd
     */
@@ -530,6 +608,31 @@ int main() {
         srcml_close_archive(iarchive);
         srcml_free_archive(iarchive);
         dassert(s, srcml_b);
+        free(s);
+
+    }
+
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+        int fd = OPEN("setlanguage.xsl", O_RDONLY, 0);
+        srcml_append_transform_xslt_fd(iarchive, fd);
+        CLOSE(fd);
+        srcml_append_transform_param(iarchive, "language", "\"Python\"");
+
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_full_python);
         free(s);
 
     }

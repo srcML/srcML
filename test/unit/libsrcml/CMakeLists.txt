@@ -49,6 +49,7 @@ addUnitTest(test_srcml_translator test_srcml_translator.cpp ${LIBXML2_LIBRARIES}
 
 if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
     copyDependentFile(copy.xsl)
+    copyDependentFile(setlanguage.xsl)
     copyDependentFile(schema.rng)
     
     add_dependencies(test_srcml_apply_transforms copy.xsl schema.rng)
