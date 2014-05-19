@@ -440,6 +440,7 @@ int main() {
     {
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_memory(archive, s.c_str(), s.size());
+        srcml_append_transform_xslt_filename(archive, "copy.xsl");
         srcml_append_transform_param(archive, "foo", "bar");
 
         dassert(archive->xsl_parameters.size(), 3);
@@ -500,6 +501,8 @@ int main() {
         srcml_append_transform_xslt_fd(archive, fd);
         CLOSE(fd);
 
+        srcml_append_transform_param(archive, "foo", "bar");
+
         srcml_append_transform_relaxng_filename(archive, "schema.rng");
         srcml_append_transform_relaxng_memory(archive, schema.c_str(), schema.size());
         f = fopen("schema.rng", "r");
@@ -508,8 +511,6 @@ int main() {
         fd = OPEN("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(archive, fd);
         CLOSE(fd);
-
-        srcml_append_transform_param(archive, "foo", "bar");
 
         dassert(archive->transformations.at(0).type, SRCML_XPATH);
         dassert(archive->transformations.at(0).transformation.str, "//src:unit");

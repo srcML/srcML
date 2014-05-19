@@ -178,6 +178,7 @@ int main() {
     {
         srcml_archive * archive = srcml_create_archive();
         archive->type = SRCML_ARCHIVE_RW;
+        srcml_append_transform_xslt_filename(archive, "copy.xsl");
         srcml_append_transform_param(archive, "foo", "bar");
         dassert(archive->xsl_parameters.size(), 3);
         dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
