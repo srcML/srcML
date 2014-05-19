@@ -315,6 +315,7 @@ namespace {
     ELEMENT_MAP(SATTRIBUTE_LIST,   "attribute_list")
     ELEMENT_MAP(SSYNTHESIZE,       "synthesize")
     ELEMENT_MAP(SDYNAMIC,          "dynamic")
+    ELEMENT_MAP(SENCODE,           "encode")
 
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
