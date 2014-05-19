@@ -2918,10 +2918,6 @@ rcurly[] { ENTRY_DEBUG } :
         }
 ;
 
-objective_c_index_block[] { ENTRY_DEBUG } :
-    ATLBRACKET
-;
-
 // terminate (';')
 terminate[] { ENTRY_DEBUG } :
         {
@@ -4225,7 +4221,7 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
 
             startElement(SINDEX);
         }
-        LBRACKET
+        (LBRACKET | ATLBRACKET)
 
         variable_identifier_array_grammar_sub_contents
 
