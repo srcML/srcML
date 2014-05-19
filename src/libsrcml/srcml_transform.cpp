@@ -275,6 +275,9 @@ int srcml_append_transform_relaxng_fd(srcml_archive* archive, int relaxng_fd) {
 
 int srcml_append_transform_param(srcml_archive* archive, const char* xpath_param_name, const char* xpath_param_value) {
 
+    if(archive == NULL || xpath_param_name == NULL || xpath_param_value == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
     archive->xsl_parameters.pop_back();
     archive->xsl_parameters.push_back(xpath_param_name);
     archive->xsl_parameters.push_back(xpath_param_value);
