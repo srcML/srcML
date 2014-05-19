@@ -48,6 +48,7 @@ LPAREN; // = "(";
 DESTOP; // = "~";
 LCURLY; // = "{";
 RCURLY; // = "}";
+ATLCURLY; // = "@{";
 LBRACKET; // = "[";
 ATLBRACKET; // = "@[";
 RBRACKET; // = "]";
@@ -178,7 +179,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
               '[' { $setType(ATLBRACKET); }
             |
             { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-              '{' { $setType(LCURLY); }
+              '{' { $setType(ATLCURLY); }
             |
             { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? NAME
             { $setType(NAME); }
