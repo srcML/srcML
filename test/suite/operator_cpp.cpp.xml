@@ -345,5 +345,9 @@
 <expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><name><name>a</name><index>[<expr>0</expr><op:operator>,</op:operator> 0]</index></name></expr>;</expr_stmt>
+</unit>
+
 </unit>
  

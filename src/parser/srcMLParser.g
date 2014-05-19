@@ -3343,7 +3343,7 @@ comma[] { ENTRY_DEBUG } :
 // marking comma operator
 comma_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR) && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT))
+            if (isoption(parseoptions, SRCML_OPTION_OPERATOR) && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT) && !(inTransparentMode(MODE_IN_INIT) && inMode(MODE_EXPRESSION | MODE_LIST)) )
                 startElement(SOPERATOR);
         }
         COMMA
