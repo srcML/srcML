@@ -287,6 +287,7 @@ tokens {
     PROPERTY;
     SYNTHESIZE;
     DYNAMIC;
+    ENCODE;
 
 }
 
@@ -594,6 +595,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "@NO"             , FALSE            , LANGUAGE_OBJECTIVE_C },
         { "@true"           , TRUE             , LANGUAGE_OBJECTIVE_C },
         { "@false"          , FALSE            , LANGUAGE_OBJECTIVE_C },
+        { "@encode"         , ENCODE           , LANGUAGE_OBJECTIVE_C },
 
         // Combined C/C++ Mode  at end so overrides defaults
         { "restrict"     , CRESTRICT         , LANGUAGE_CXX },
