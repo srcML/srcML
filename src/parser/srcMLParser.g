@@ -573,6 +573,7 @@ tokens {
     SREQUIRED;
     SOPTIONAL;
     SPROPERTY;
+    SATTRIBUTE_LIST;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -1560,9 +1561,23 @@ property_declaration[] { int type_count = 0;  int secondtoken = 0; STMT_TYPE stm
         startElement(SPROPERTY);
 
     }
-    PROPERTY
+    PROPERTY (property_attribute_list)*
     { pattern_check(stmt_type, secondtoken, type_count) }?
     variable_declaration[type_count]
+
+;
+
+property_attribute_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        startElement(SATTRIBUTE_LIST);
+
+    }
+    LPAREN
+    (~RPAREN)*
+    RPAREN
 
 ;
 
