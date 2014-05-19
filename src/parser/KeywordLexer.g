@@ -288,6 +288,7 @@ tokens {
     SYNTHESIZE;
     DYNAMIC;
     ENCODE;
+    SELECTOR;
 
 }
 
