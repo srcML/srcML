@@ -5884,8 +5884,6 @@ autoreleasepool_block[] { ENTRY_DEBUG } :
             // start of the try statement
             startElement(SAUTORELEASEPOOL);
 
-            // expect a condition to follow the keyword
-            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
         }
         AUTORELEASEPOOL lcurly
 
