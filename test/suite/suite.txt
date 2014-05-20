@@ -179,6 +179,7 @@ LANGUAGE_OBJECTIVE_C encode_m
 LANGUAGE_OBJECTIVE_C selector_m
 LANGUAGE_OBJECTIVE_C autoreleasepool_m
 LANGUAGE_OBJECTIVE_C compatibility_alias_m
+LANGUAGE_OBJECTIVE_C class_directive_m
 
 LANGUAGE_OBJECTIVE_C_GEN class_implementation_m
 LANGUAGE_OBJECTIVE_C_GEN try_m

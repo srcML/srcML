@@ -771,7 +771,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         // Objective-C - kewywords only detected for Objective-C
         objective_c_class | protocol | objective_c_class_end | property_declaration | synthesize_statement | dynamic_statement |
 
-        autoreleasepool_block | compatibility_alias
+        autoreleasepool_block | compatibility_alias | class_directive
 
 ;
 
@@ -2480,6 +2480,21 @@ compatibility_alias[] { ENTRY_DEBUG } :
 
     }
     COMPATIBILITY_ALIAS
+
+;
+
+//  Objectice-C @class directive
+class_directive[] { ENTRY_DEBUG } :
+    {
+
+        // statement
+        startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME | MODE_LIST);
+
+        // start the namespace definition
+        startElement(SCLASS_DECLARATION);
+
+    }
+    ATCLASS
 
 ;
 
