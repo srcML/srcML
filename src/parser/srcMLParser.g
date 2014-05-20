@@ -6247,6 +6247,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
               && !inTransparentMode(MODE_TYPEDEF)
               && !inTransparentMode(MODE_USING)) {
 
+                startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
                 // start the declaration
                 startElement(SDECLARATION);
