@@ -3855,7 +3855,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 function_rest[fla]
             ) |
 
-            { type_count == 0 }? objective_c_method set_int[fla, LA(1)] throw_exception[fla != TERMINATE && fla != LCURLY]
+            { real_type_count == 0 && specifier_count == 0 && attribute_count == 0 }? (objective_c_method set_int[fla, LA(1)] throw_exception[fla != TERMINATE && fla != LCURLY])
 
         )
 
