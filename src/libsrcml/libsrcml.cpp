@@ -746,7 +746,7 @@ int srcml_check_language(const char* language) { return language == 0 ? 0 : Lang
  */
 int srcml_get_language_list_size() {
 
-    return 4;
+    return 5;
 }
 
 /**
@@ -762,7 +762,7 @@ const char * srcml_get_language_list(int pos) {
 
     if(pos >= srcml_get_language_list_size()) return NULL;
 
-    static const char* langs[] = { "C", "C++", "C#", "Java", 0 };
+    static const char* langs[] = { "C", "C++", "C#", "Objective-C", "Java", 0 };
     return langs[pos];
 }
 
