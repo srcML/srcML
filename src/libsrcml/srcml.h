@@ -154,6 +154,8 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_STATUS_UNINITIALIZED_UNIT   6
     /** Return status indicating an unset language */
 #define SRCML_STATUS_UNSET_LANGUAGE       7
+    /** Return status their are no transformations */
+#define SRCML_STATUS_NO_TRANSFORMATION    8
 
 /* libsrcml data structures */
 struct srcml_archive;

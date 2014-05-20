@@ -47,7 +47,7 @@
  * Append the XPath expression to the list
  * of transformation/queries.  As of yet no way to specify context
  *
- * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
 
@@ -69,7 +69,7 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
  * Append the XSLT program filename path to the list
  * of transformation/queries.  As of yet no way to specify parameters or context
  *
- * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
 int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xslt_filename) {
 
@@ -96,7 +96,7 @@ int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xsl
  * Append the XSLT program in the buffer to the list
  * of transformation/queries.  As of yet no way to specify parameters or context
  *
- * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
 int srcml_append_transform_xslt_memory(srcml_archive* archive, const char* xslt_buffer, size_t size) {
 
@@ -122,7 +122,7 @@ int srcml_append_transform_xslt_memory(srcml_archive* archive, const char* xslt_
  * Append the XSLT program in FILE to the list
  * of transformation/queries.  As of yet no way to specify parameters or context
  *
- * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
 int srcml_append_transform_xslt_FILE(srcml_archive* archive, FILE* xslt_file) {
 
@@ -149,7 +149,7 @@ int srcml_append_transform_xslt_FILE(srcml_archive* archive, FILE* xslt_file) {
  * Append the XSLT program in fd to the list
  * of transformation/queries.  As of yet no way to specify parameters or context
  *
- * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
 int srcml_append_transform_xslt_fd(srcml_archive* archive, int xslt_fd) {
 
@@ -175,7 +175,7 @@ int srcml_append_transform_xslt_fd(srcml_archive* archive, int xslt_fd) {
  * Append the RelaxNG schema filename path to the list
  * of transformation/queries.
  *
- * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
 int srcml_append_transform_relaxng_filename(srcml_archive* archive, const char* relaxng_filename) {
 
@@ -202,7 +202,7 @@ int srcml_append_transform_relaxng_filename(srcml_archive* archive, const char* 
  * Append the RelaxNG schema in the buffer to the list
  * of transformation/queries.
  *
- * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
 int srcml_append_transform_relaxng_memory(srcml_archive* archive, const char* relaxng_buffer, size_t size) {
 
@@ -228,7 +228,7 @@ int srcml_append_transform_relaxng_memory(srcml_archive* archive, const char* re
  * Append the RelaxNG schema in FILE to the list
  * of transformation/queries.
  *
- * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
 int srcml_append_transform_relaxng_FILE(srcml_archive* archive, FILE* relaxng_file) {
 
@@ -255,7 +255,7 @@ int srcml_append_transform_relaxng_FILE(srcml_archive* archive, FILE* relaxng_fi
  * Append the RelaxNG schema in fd to the list
  * of transformation/queries.
  *
- * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
 int srcml_append_transform_relaxng_fd(srcml_archive* archive, int relaxng_fd) {
 
@@ -273,10 +273,21 @@ int srcml_append_transform_relaxng_fd(srcml_archive* archive, int relaxng_fd) {
 
 }
 
+/**
+ * srcml_append_transform_param
+ * @param archive a srcml archive
+ * @param xpath_param_name name of a parameter
+ * @param xpath_param_value value of the named parameter
+ *
+ * Append the parameter to the last transformation.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status errors code on failure.
+ */
 int srcml_append_transform_param(srcml_archive* archive, const char* xpath_param_name, const char* xpath_param_value) {
 
     if(archive == NULL || xpath_param_name == NULL || xpath_param_value == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+    if(archive->transformations.size() == 0) return SRCML_STATUS_NO_TRANSFORMATION;
 
     archive->transformations.back().xsl_parameters.pop_back();
     archive->transformations.back().xsl_parameters.push_back(xpath_param_name);
@@ -317,11 +328,13 @@ int srcml_clear_transforms(srcml_archive * archive) {
  * Intermediate results are stored in a temporary file.
  * Transformations are cleared.
  *
- * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     if(iarchive == NULL || oarchive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+    if((iarchive->type != SRCML_ARCHIVE_READ && iarchive->type != SRCML_ARCHIVE_RW)
+        || (oarchive->type != SRCML_ARCHIVE_WRITE && oarchive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_INVALID_IO_OPERATION;
 
     static const char * transform_filename_template = "srcml_transform_XXXXXXXX";
 
