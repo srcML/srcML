@@ -31,7 +31,6 @@
 #include <srcml_display_metadata.hpp>
 #include <srcml_execute.hpp>
 #include <isxml.hpp>
-#include <peek4char.hpp>
 
 #include <archive.h>
 #include <iostream>
@@ -69,13 +68,8 @@ int main(int argc, char * argv[]) {
         pstdin->fileptr = fdopen(STDIN_FILENO, "r");
         pstdin->fd = boost::none;
 
-        // peek at the first 4 bytes
-        unsigned char data[4];
-        ssize_t size = 0;
-        peek4char(*(pstdin->fileptr), data, &size);
-
-        // determine if the input is srcML or src from the first up-to 4 bytes
-        pstdin->state = isxml(data, size) ? SRCML : SRC;
+        // determine if the input is srcML or src
+        pstdin->state = isxml(*(pstdin->fileptr)) ? SRCML : SRC;
 
         // language is required when standard input is used for source
         if ((pstdin->state == SRC) && !srcml_request.att_language) {

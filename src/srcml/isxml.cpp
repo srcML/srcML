@@ -23,7 +23,22 @@
 #include <isxml.hpp>
 #include <boost/static_assert.hpp>
 #include <stdint.h>
-#include <stdio.h>
+#include <peek4char.hpp>
+
+// determine if XML from first four bytes in almost any encoding
+bool isxml(unsigned char ar[], ssize_t size);
+
+// determine if XML
+bool isxml(FILE* infd) {
+
+    // peek at the first 4 bytes
+    unsigned char data[4];
+    ssize_t size = 0;
+    peek4char(infd, data, &size);
+
+    // determine if the input is srcML or src from the first up-to 4 bytes
+    return isxml(data, size);
+}
 
 // determine if XML from first four bytes in almost any encoding
 bool isxml(unsigned char ar[], ssize_t size) {
