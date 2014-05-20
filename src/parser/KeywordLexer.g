@@ -297,6 +297,7 @@ tokens {
     STRONG;
     AUTORELEASEPOOL;
     COMPATIBILITY_ALIAS;
+    NIL;
 
 }
 
