@@ -1392,6 +1392,20 @@ lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 ;
 
+// handle a block expression lambda expression
+block_expression[] { ENTRY_DEBUG } :
+        {
+
+            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+
+            startElement(SFUNCTION_LAMBDA);
+
+        }
+
+        BLOCKOP
+
+;
+
 // handle the beginning of a function definition
 function_definition[int type_count] { ENTRY_DEBUG } :
 		{
@@ -6938,7 +6952,7 @@ multops[] { LightweightElement element(this); ENTRY_DEBUG } :
             if (isoption(parseoptions, SRCML_OPTION_MODIFIER))
                 startElement(SMODIFIER);
         }
-        (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[is_qmark, true])
+        (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[is_qmark, true] | BLOCKOP)
 ;
 
 // ...
