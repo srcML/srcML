@@ -540,12 +540,13 @@ verify_test("Exception", test)
 srcml.cleanup_globals()
 
 # test language list
-verify_test(4, str(srcml.get_language_list_size()))
+verify_test(5, str(srcml.get_language_list_size()))
 verify_test("C", str(srcml.get_language_list(0)))
 verify_test("C++", str(srcml.get_language_list(1)))
 verify_test("C#", str(srcml.get_language_list(2)))
-verify_test("Java", str(srcml.get_language_list(3)))
-verify_test(None, str(srcml.get_language_list(4)))
+verify_test("Objective-C", str(srcml.get_language_list(3)))
+verify_test("Java", str(srcml.get_language_list(4)))
+verify_test(None, str(srcml.get_language_list(5)))
 
 file = open("a.cpp", "w")
 file.write("a;\n")
