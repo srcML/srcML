@@ -1392,7 +1392,7 @@ lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 ;
 
-// handle a block expression lambda expression
+// handle a block expression lambda
 block_lambda_expression[] { ENTRY_DEBUG } :
         {
 
@@ -1401,6 +1401,13 @@ block_lambda_expression[] { ENTRY_DEBUG } :
             startElement(SFUNCTION_LAMBDA);
 
         }
+
+        BLOCKOP (type_identifier)* (parameter_list)*
+
+;
+
+// completely match block expression lambda
+block_lambda_expression_full[] { ENTRY_DEBUG } :
 
         BLOCKOP (type_identifier)* (paren_pair)* curly_pair
 
@@ -5212,8 +5219,8 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         { inLanguage(LANGUAGE_CXX) }?
         (bracket_pair (LPAREN | LCURLY)) => lambda_expression_cpp |
 
-        { !inLanguage(LANGUAGE_CSHARP) }?
-        (block_lambda_expression) => block_lambda_expression |
+        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+        (block_lambda_expression_full) => block_lambda_expression |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
@@ -6519,8 +6526,8 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         { inLanguage(LANGUAGE_CXX) }?
         (bracket_pair (LPAREN | LCURLY)) => lambda_expression_cpp |
 
-        { !inLanguage(LANGUAGE_CSHARP) }?
-        (block_lambda_expression) => block_lambda_expression |
+        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+        (block_lambda_expression_full) => block_lambda_expression |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
