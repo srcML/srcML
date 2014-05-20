@@ -6253,7 +6253,10 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA |
 
             // Objective-C
-            CSPEC | MSPEC
+            CSPEC | MSPEC |
+
+            // Apple
+            BLOCKOP
 
         )
 ;
@@ -6279,7 +6282,7 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
 /** list of operators @todo is this still needed */
 general_operators_list[] { ENTRY_DEBUG } :
         OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
-        DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC
+        DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC | BLOCKOP
 ;
 
 // mark up )
