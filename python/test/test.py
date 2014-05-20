@@ -465,11 +465,37 @@ archive.close()
 
 verify_test(asrcml, oarchive.srcML())
 
+python_srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Python"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Python"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+# xslt param
+archive = srcml.srcml_archive()
+archive.read_open_memory(asrcml)
+archive.append_transform_xslt_filename("setlanguage.xsl")
+archive.append_transform_param("language", "Python")
+oarchive = archive.clone()
+oarchive.write_open_memory()
+archive.apply_transforms(oarchive)
+oarchive.close()
+archive.close()
+
+verify_test(python_srcml, oarchive.srcML())
+
 # clear transforms
 archive = srcml.srcml_archive()
 archive.read_open_memory(asrcml)
 archive.append_transform_xpath("//src:unit")
 archive.append_transform_xslt_filename("copy.xsl")
+archive.append_transform_param("language", '"Python"')
 archive.append_transform_relaxng_filename("schema.rng")
 archive.clear_transforms()
 oarchive = archive.clone()

@@ -271,6 +271,10 @@ libsrcml.srcml_append_transform_relaxng_FILE.argtypes = [c_void_p, c_void_p]
 libsrcml.srcml_append_transform_relaxng_fd.restype = c_int
 libsrcml.srcml_append_transform_relaxng_fd.argtypes = [c_void_p, c_int]
 
+# int srcml_append_transform_param           (struct srcml_archive*, const char* xpath_param_name, const char* xpath_param_value);
+libsrcml.srcml_append_transform_param.restype = c_int
+libsrcml.srcml_append_transform_param.argtypes = [c_void_p, c_char_p, c_char_p]
+
 # int srcml_apply_transforms(struct srcml_archive* iarchive, struct srcml_archive* oarchive);
 libsrcml.srcml_apply_transforms.restype = c_int
 libsrcml.srcml_apply_transforms.argtypes = [c_void_p, c_void_p]
@@ -468,6 +472,9 @@ class srcml_archive :
 
     def append_transform_relaxng_fd(self, relaxng_fd) :
         check_return(libsrcml.srcml_append_transform_relaxng_fd(self.archive, relaxng_fd))
+
+    def append_transform_param(self, xpath_param_name, xpath_param_value) :
+        check_return(libsrcml.srcml_append_transform_param(self.archive, xpath_param_name, xpath_param_value))
 
     def apply_transforms(self, oarchive) :
         check_return(libsrcml.srcml_apply_transforms(self.archive, oarchive.archive))
