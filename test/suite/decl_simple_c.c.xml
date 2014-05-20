@@ -33,4 +33,8 @@
 <decl_stmt><decl><type><name>float</name> <specifier>_Thread_local</specifier></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><specifier>__block</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
 </unit>

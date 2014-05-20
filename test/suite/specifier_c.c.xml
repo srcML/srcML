@@ -29,4 +29,8 @@
 <decl_stmt><decl><type><specifier>_Thread_local</specifier></type></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><specifier>__block</specifier></type></decl>;</decl_stmt>
+</unit>
+
 </unit>

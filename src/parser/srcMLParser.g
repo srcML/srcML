@@ -4895,7 +4895,11 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
             { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP | TRANSIENT) |
 
-            CONST
+            CONST |
+
+            // Apple
+            BLOCK
+
         )
 ;
 

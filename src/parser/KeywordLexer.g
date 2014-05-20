@@ -290,6 +290,9 @@ tokens {
     ENCODE;
     SELECTOR;
 
+    //Apple
+    BLOCK;
+
 }
 
 {
@@ -598,6 +601,10 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "@false"          , FALSE            , LANGUAGE_OBJECTIVE_C },
         { "@encode"         , ENCODE           , LANGUAGE_OBJECTIVE_C },
         { "@selector"       , SELECTOR         , LANGUAGE_OBJECTIVE_C },
+
+        // Apple
+        { "__block"         , BLOCK            , LANGUAGE_CXX | LANGUAGE_C | LANGUAGE_OBJECTIVE_C },
+
 
         // Combined C/C++ Mode  at end so overrides defaults
         { "restrict"     , CRESTRICT         , LANGUAGE_CXX },
