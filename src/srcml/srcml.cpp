@@ -32,7 +32,6 @@
 #include <srcml_execute.hpp>
 #include <isxml.hpp>
 #include <peek4char.hpp>
-#include <input_file.hpp>
 
 #include <archive.h>
 #include <iostream>
@@ -42,9 +41,6 @@ int main(int argc, char * argv[]) {
     // parse the command line
     srcml_request_t srcml_request = parseCLI(argc, argv);
 
-    // setup global options
-    SRCMLOptions::set(srcml_request.command);
-
     // version
     if (srcml_request.command & SRCML_COMMAND_VERSION) {
         std::cout <<  srcml_version_string() << "\n";
@@ -53,9 +49,13 @@ int main(int argc, char * argv[]) {
         return 0;
     }
 
-    // convert the list of input filenames to actual input sources
+    // setup global access to options
+    SRCMLOptions::set(srcml_request.command);
+
+    // convert the list of input filenames to input sources
     srcml_input_t input_sources(srcml_request.input.begin(), srcml_request.input.end());
 
+    // for single input src archives (e.g., .tar), filename attribute is the source filename
     if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
         srcml_request.att_filename = input_sources[0].filename;
     }
@@ -74,10 +74,10 @@ int main(int argc, char * argv[]) {
         ssize_t size = 0;
         peek4char(*(pstdin->fileptr), data, &size);
 
-        // from the first up-to 4 bytes determine if is srcML or not
+        // determine if the input is srcML or src from the first up-to 4 bytes
         pstdin->state = isxml(data, size) ? SRCML : SRC;
 
-        // language is required standard input is used for source
+        // language is required when standard input is used for source
         if ((pstdin->state == SRC) && !srcml_request.att_language) {
             std::cerr << "Using stdin requires a declared language\n";
             exit(1);
@@ -87,61 +87,48 @@ int main(int argc, char * argv[]) {
     // output destination setup just like an input source
     srcml_output_dest destination(srcml_request.output_filename ? *srcml_request.output_filename : "");
 
-    // Determine what processing needs to occur based on the inputs, outputs, and commands
+    /*
+        Determine what processing needs to occur based on the inputs, outputs, and commands
+    */
 
     // setup the commands in the pipeline
     processing_steps_t pipeline;
 
-    // libsrcml can apply gz decompression
-    // all other srcml compressions require an internal decompression stage
-    BOOST_FOREACH(srcml_input_src& input, input_sources) {
-
-        if (!is_src(input) &&
-            !input_sources[0].compressions.empty() &&
-            (input_sources[0].compressions.size() > 1 || input_sources[0].compressions.front() != ".gz")) {
-
-            input_file(input);
-        }
-    }
-
-    bool src_input = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
-
     // src->srcml when there is any src input, or multiple srcml input with output to srcml (merge)
-    if (src_input || (input_sources.size() > 1 && destination.state == SRCML)) {
+    if (std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end() ||
+        (input_sources.size() > 1 && destination.state == SRCML)) {
 
         pipeline.push_back(create_srcml);
-
-        // libsrcml can apply gz compression
-        // all other compressions require an additional compression stage
-        if ((destination.compressions.size() > 1) ||
-            (destination.compressions.size() == 1 && destination.compressions.front() != ".gz")) {
-
-#if ARCHIVE_VERSION_NUMBER > 3001002
-            pipeline.push_back(compress_srcml);
-#else
-            std::cerr << "Unsupported output compression\n";
-#endif
-        }
     }
 
     // XPath and XSLT processing
     if (!srcml_request.transformations.empty()) {
+
         pipeline.push_back(transform_srcml);
     }
 
-    bool last_command = false;
-
-    // metadata(srcml) based on command
-    if (!last_command && ((srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0)) {
+    // output stage of metadata on srcML
+    if ((srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0) {
 
         pipeline.push_back(srcml_display_metadata);
-        last_command = true;
     }
-
-    // srcml->src, based on the destination
-    if (!last_command && !src_input && destination.state != SRCML) {
+    // output stage of src, based on the destination
+    else if (destination.state != SRCML) {
 
         pipeline.push_back(create_src);
+    }
+
+    // libsrcml can apply gz compression
+    // all other compressions require an additional compression stage
+    if ((destination.compressions.size() > 1) ||
+        (destination.compressions.size() == 1 && destination.compressions.front() != ".gz")) {
+
+#if ARCHIVE_VERSION_NUMBER > 3001002
+        pipeline.push_back(compress_srcml);
+#else
+        std::cerr << "Unsupported output compression\n";
+        exit(1);
+#endif
     }
 
     assert(!pipeline.empty());

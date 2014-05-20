@@ -35,6 +35,7 @@
 #include <srcml_input_srcml.hpp>
 #include <trace_log.hpp>
 #include <srcml_options.hpp>
+#include <input_file.hpp>
 
 void srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,
@@ -44,7 +45,11 @@ void srcml_handler_dispatch(ParseQueue& queue,
     // call appropriate handler
     if (input.state == SRCML) {
 
-        srcml_input_srcml(queue, srcml_arch, input);
+        // libsrcml can apply gz decompression
+        // all other srcml compressions require a per-input decompression stage
+        srcml_input_src uninput = input;
+        input_file(uninput);
+        srcml_input_srcml(queue, srcml_arch, uninput);
 
     } else if (input.protocol == "filelist") {
 
