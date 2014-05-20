@@ -481,7 +481,7 @@ python_srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 archive = srcml.srcml_archive()
 archive.read_open_memory(asrcml)
 archive.append_transform_xslt_filename("setlanguage.xsl")
-archive.append_transform_param("language", "Python")
+archive.append_transform_param("language", '"Python"')
 oarchive = archive.clone()
 oarchive.write_open_memory()
 archive.apply_transforms(oarchive)
