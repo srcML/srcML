@@ -578,6 +578,7 @@ tokens {
     SDYNAMIC;
     SENCODE;
     SAUTORELEASEPOOL;
+    SCOMPATIBILITY_ALIAS;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -770,7 +771,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         // Objective-C - kewywords only detected for Objective-C
         objective_c_class | protocol | objective_c_class_end | property_declaration | synthesize_statement | dynamic_statement |
 
-        autoreleasepool_block
+        autoreleasepool_block | compatibility_alias
 
 ;
 
@@ -2460,6 +2461,21 @@ namespace_directive[] { ENTRY_DEBUG } :
 using_aliasing[]  { ENTRY_DEBUG } :
 
         EQUAL pattern_statements
+
+;
+
+//  Objectice-C compatibility alias
+compatibility_alias[] { ENTRY_DEBUG } :
+    {
+
+        // statement
+        startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME);
+
+        // start the namespace definition
+        startElement(SCOMPATIBILITY_ALIAS);
+
+    }
+    COMPATIBILITY_ALIAS
 
 ;
 
