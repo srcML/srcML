@@ -316,6 +316,7 @@ namespace {
     ELEMENT_MAP(SSYNTHESIZE,       "synthesize")
     ELEMENT_MAP(SDYNAMIC,          "dynamic")
     ELEMENT_MAP(SENCODE,           "encode")
+    ELEMENT_MAP(SAUTORELEASEPOOL,  "autoreleasepool")
 
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")

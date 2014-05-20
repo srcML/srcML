@@ -577,6 +577,7 @@ tokens {
     SSYNTHESIZE;
     SDYNAMIC;
     SENCODE;
+    SAUTORELEASEPOOL;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -767,7 +768,9 @@ keyword_statements[] { ENTRY_DEBUG } :
         asm_declaration |
 
         // Objective-C - kewywords only detected for Objective-C
-        objective_c_class | protocol | objective_c_class_end | property_declaration | synthesize_statement | dynamic_statement
+        objective_c_class | protocol | objective_c_class_end | property_declaration | synthesize_statement | dynamic_statement |
+
+        autoreleasepool_block
 
 ;
 
@@ -5870,6 +5873,22 @@ unchecked_statement[] { ENTRY_DEBUG } :
             startElement(SUNCHECKED_STATEMENT);
         }
         UNCHECKED
+;
+
+// a synchonized statement
+autoreleasepool_block[] { ENTRY_DEBUG } :
+        {
+            // treat try block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            // start of the try statement
+            startElement(SAUTORELEASEPOOL);
+
+            // expect a condition to follow the keyword
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
+        }
+        AUTORELEASEPOOL lcurly
+
 ;
 
 // the catch statement
