@@ -221,6 +221,7 @@ int main() {
         language_extension_registry reg_ext_two;
         reg_ext_two.register_user_ext("h", "C");  
         reg_ext_two.register_user_ext("cs", "C#");  
+        reg_ext_two.register_user_ext("m", "Objective-C");  
         reg_ext_two.register_user_ext("java", "Java");  
 
         dassert(reg_ext_one.size(), 1);
@@ -229,15 +230,17 @@ int main() {
 
         reg_ext_one.append(reg_ext_two);
 
-        dassert(reg_ext_one.size(), 4);
+        dassert(reg_ext_one.size(), 5);
         dassert(get_language(reg_ext_one.at(0)), Language::LANGUAGE_CXX);
         dassert(get_extension(reg_ext_one.at(0)), "cpp");
         dassert(get_language(reg_ext_one.at(1)), Language::LANGUAGE_C);
         dassert(get_extension(reg_ext_one.at(1)), "h");
         dassert(get_language(reg_ext_one.at(2)), Language::LANGUAGE_CSHARP);
         dassert(get_extension(reg_ext_one.at(2)), "cs");
-        dassert(get_language(reg_ext_one.at(3)), Language::LANGUAGE_JAVA);
-        dassert(get_extension(reg_ext_one.at(3)), "java");
+        dassert(get_language(reg_ext_one.at(3)), (Language::LANGUAGE_OBJECTIVE_C | Language::LANGUAGE_C));
+        dassert(get_extension(reg_ext_one.at(3)), "m");
+        dassert(get_language(reg_ext_one.at(4)), Language::LANGUAGE_JAVA);
+        dassert(get_extension(reg_ext_one.at(4)), "java");
     }
 
     return 0;
