@@ -1593,10 +1593,14 @@ objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     objective_c_selector
 
-    objective_c_method_type
+    (
 
-    // Mark as name before mark without name
-    (options { generateAmbigWarnings = false; } : compound_name | keyword_name)
+        objective_c_method_type
+
+        // Mark as name before mark without name
+        (options { generateAmbigWarnings = false; } : compound_name | keyword_name)
+
+    )*
 
 ;
 
