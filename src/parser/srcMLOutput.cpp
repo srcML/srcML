@@ -318,6 +318,7 @@ namespace {
     ELEMENT_MAP(SENCODE,              "encode")
     ELEMENT_MAP(SAUTORELEASEPOOL,     "autoreleasepool")
     ELEMENT_MAP(SCOMPATIBILITY_ALIAS, "compatibility_alias")
+    ELEMENT_MAP(SNIL,                 "literal")
 
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
@@ -371,6 +372,7 @@ namespace {
     ELEMENT_MAP(SBOOLEAN,  SRCML_EXT_LITERAL_NS_URI_POS)
     ELEMENT_MAP(SNULL,     SRCML_EXT_LITERAL_NS_URI_POS)
     ELEMENT_MAP(SCOMPLEX,  SRCML_EXT_LITERAL_NS_URI_POS)
+    ELEMENT_MAP(SNIL,      SRCML_EXT_LITERAL_NS_URI_POS)
 
     // operator namespace
     ELEMENT_MAP(SOPERATOR, SRCML_EXT_OPERATOR_NS_URI_POS)
@@ -1273,6 +1275,17 @@ void srcMLOutput::processBoolean(const antlr::RefToken& token) {
 void srcMLOutput::processNull(const antlr::RefToken& token) {
 
     processOptional(token, "type", "null");
+}
+
+/**
+ * processNull
+ * @param token token to output as nil literal
+ *
+ * Callback to process/output token as nil literal.
+ */
+void srcMLOutput::processNil(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "nil");
 }
 
 /**

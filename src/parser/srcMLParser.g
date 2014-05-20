@@ -579,6 +579,7 @@ tokens {
     SENCODE;
     SAUTORELEASEPOOL;
     SCOMPATIBILITY_ALIAS;
+    SNIL;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -6707,7 +6708,7 @@ expression_part_default[] { ENTRY_DEBUG } :
 
 // rule for literals
 literals[] { ENTRY_DEBUG } :
-        string_literal | char_literal | literal | boolean | null_literal | complex_literal
+        string_literal | char_literal | literal | boolean | null_literal | complex_literal | nil_literal
 ;
 
 // Only start and end of strings are put directly through the parser.
@@ -6740,6 +6741,16 @@ null_literal[]{ LightweightElement element(this); ENTRY_DEBUG } :
                 startElement(SNULL);
         }
         (NULLPTR | NULLLITERAL)
+;
+
+// literals
+nil_literal[]{ LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // only markup literals in literal option
+            if (isoption(parseoptions, SRCML_OPTION_LITERAL))
+                startElement(SNIL);
+        }
+        NIL
 ;
 
 // complex numbers

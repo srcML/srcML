@@ -297,6 +297,7 @@ tokens {
     STRONG;
     AUTORELEASEPOOL;
     COMPATIBILITY_ALIAS;
+    NIL;
 
 }
 
@@ -602,6 +603,8 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "in"                   , IN                  , LANGUAGE_OBJECTIVE_C },
         { "@YES"                 , TRUE                , LANGUAGE_OBJECTIVE_C },
         { "@NO"                  , FALSE               , LANGUAGE_OBJECTIVE_C },
+        { "YES"                  , TRUE                , LANGUAGE_OBJECTIVE_C },
+        { "NO"                   , FALSE               , LANGUAGE_OBJECTIVE_C },
         { "@true"                , TRUE                , LANGUAGE_OBJECTIVE_C },
         { "@false"               , FALSE               , LANGUAGE_OBJECTIVE_C },
         { "@encode"              , ENCODE              , LANGUAGE_OBJECTIVE_C },
@@ -609,6 +612,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "@autoreleasepool"     , AUTORELEASEPOOL     , LANGUAGE_OBJECTIVE_C },
         { "@compatibility_alias" , COMPATIBILITY_ALIAS , LANGUAGE_OBJECTIVE_C },
         { "@class"               , ATCLASS             , LANGUAGE_OBJECTIVE_C },
+        { "nil"                  , NIL                 , LANGUAGE_OBJECTIVE_C },
 
         // Apple
         { "__block"         , BLOCK            , LANGUAGE_CXX | LANGUAGE_C | LANGUAGE_OBJECTIVE_C },
