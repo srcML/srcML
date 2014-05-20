@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="block_lambda" filename="block_lambda">
+
+<unit>
+<expr_stmt><expr><lambda>^<block>{}</block></lambda></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><lambda>^<parameter_list>(<param><decl><type><name>void</name></type></decl></param>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><lambda>^<name>void</name> <block>{}</block></lambda></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><lambda>^<name>void</name> <parameter_list>(<param><decl><type><name>void</name></type></decl></param>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><lambda>^<name>int</name> <parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><lambda>^ <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>ret</name> <init>= <expr><name>i</name></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><name>i</name> += <name>increment</name></expr>;</expr_stmt>
+    <return>return <expr><name>ret</name></expr>;</return>
+}</block></lambda></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> = <lambda>^<name>int</name> <parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name></expr>;</return> }</block></lambda></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>block</name></type> <name>a</name> <init>= <expr><lambda>^<name>int</name> <parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name></expr>;</return> }</block></lambda></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><lambda>^<name>int</name> <parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name></expr>;</return> }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr>0</expr></argument>, <argument><expr><lambda>^<name>int</name> <parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name></expr>;</return> }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><lambda>^<name>int</name> <parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name></expr>;</return> }</block></lambda></expr></argument>, <argument><expr>0</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><lambda>^<name>int</name> <parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name></expr>;</return> }</block></lambda><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+</unit>

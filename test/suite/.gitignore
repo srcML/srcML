@@ -13,6 +13,8 @@ asm.m.xml
 atomic_c.m.xml
 auto.c.xml
 auto.m.xml
+block_lambda.c.xml
+block_lambda.m.xml
 call.c.xml
 call.cs.xml
 call.java.xml

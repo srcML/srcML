@@ -85,6 +85,9 @@ DOTDOTDOT;
 CSPEC;
 MSPEC;
 
+// Apple
+BLOCKOP;
+
 // literals
 FALSE;
 TRUE;
@@ -145,7 +148,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
        '*' ('=')? |
 //       '/' ('=')? |
        '%' ('=')? |
-       '^' ('=')? |
+       '^' { if(LA(1) != '=') $setType(BLOCKOP); } ('=')? |
        '|' ('|')? ('=')? |
        '`' |
        '!' ('=')? |

@@ -904,6 +904,7 @@ next_token[] returns [int token] {
 
     inputState->guessing--;
     rewind(place);
+
 } :;
 
 // efficient way to view the token after the current next_token
@@ -920,6 +921,7 @@ next_token_two[] returns [int token] {
 
     inputState->guessing--;
     rewind(place);
+
 } :;
 
 // eficient way of getting the next token string value.
@@ -935,6 +937,7 @@ next_token_string[] returns [std::string token] {
 
     inputState->guessing--;
     rewind(place);
+
 } :;
 
 // is the next token one of the parameters
@@ -943,6 +946,7 @@ next_token_check[int token1, int token2] returns [bool result] {
     int token = next_token();
 
     result = token == token1 || token == token2;
+
 } :;
 
 // skips past any skiptokens to get the one after
@@ -958,6 +962,7 @@ look_past[int skiptoken] returns [int token] {
 
     inputState->guessing--;
     rewind(place);
+
 } :;
 
 // skip past all of the skiptoken1 and skiptoken2 and return the one after
@@ -973,6 +978,7 @@ look_past_two[int skiptoken1, int skiptoken2] returns [int token] {
 
     inputState->guessing--;
     rewind(place);
+
 } :;
 
 // skip past all of the skiptoken1, skiptoken2 and skiptoken3 and return the one after
@@ -988,6 +994,29 @@ look_past_three[int skiptoken1, int skiptoken2, int skiptoken3] returns [int tok
 
     inputState->guessing--;
     rewind(place);
+
+} :;
+
+// give the next token as if rule was applied.  If rule can not be applied return -1
+look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
+
+   int place = mark();
+    inputState->guessing++;
+
+    try {
+
+        (this->*rule)();
+        token = LA(1);
+
+    } catch(...) {
+
+        token = -1;
+
+    }
+
+    inputState->guessing--;
+    rewind(place);
+
 } :;
 
 /* functions */
@@ -1293,7 +1322,7 @@ lambda_parameter_type_count_csharp[int & type_count] { if(type_count < 1) return
 lambda_expression_cpp[] { ENTRY_DEBUG } :
 		{
 
-            bool iscall = lambda_call_check();
+            bool iscall = look_past_rule(&srcMLParser::lambda_expression_full_cpp) == LPAREN;
             if(iscall) {
 
                 // start a new mode that will end after the argument list
@@ -1346,26 +1375,6 @@ lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { generateAmbigWarnings = false;  } : lambda_capture_modifiers | { LA(1) != RBRACKET }? expression | type_identifier)*
 ;
 
-// check and see if the lambda is directly used as a call.
-lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG 
-
-    iscall = false;
-
-    int start = mark();
-    inputState->guessing++;
-
-    try {
-
-        lambda_expression_full_cpp();
-
-        if(LA(1) == LPAREN) iscall = true;
-
-    } catch(...) {}
-
-    inputState->guessing--;
-    rewind(start);
-} :;
-
 // completely match a C# lambda expression
 lambda_expression_full_csharp[] { ENTRY_DEBUG } :
 
@@ -1389,6 +1398,38 @@ lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
                     startElement(SMODIFIER);
         }
         (EQUAL | REFOPS)
+
+;
+
+// handle a block expression lambda
+block_lambda_expression[] { ENTRY_DEBUG } :
+        {
+
+            bool iscall = look_past_rule(&srcMLParser::block_lambda_expression_full) == LPAREN;
+            if(iscall) {
+
+                // start a new mode that will end after the argument list
+                startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+                // start the function call element
+                startElement(SFUNCTION_CALL);
+
+            }
+
+            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+
+            startElement(SFUNCTION_LAMBDA);
+
+        }
+
+        BLOCKOP (options { greedy = true; } : type_identifier)* (options { greedy = true; } : parameter_list)*
+
+;
+
+// completely match block expression lambda
+block_lambda_expression_full[] { ENTRY_DEBUG } :
+
+        BLOCKOP (options { greedy = true; } : type_identifier)* (options { greedy = true; } : paren_pair)* curly_pair
 
 ;
 
@@ -1762,7 +1803,9 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             { next_token_check(LCURLY, LPAREN) }?
             lambda_anonymous |
 
-            (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_full_cpp  |
+            (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_full_cpp |
+
+            (block_lambda_expression_full) => block_lambda_expression_full |
 
             { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair |
 
@@ -5198,6 +5241,9 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         { inLanguage(LANGUAGE_CXX) }?
         (bracket_pair (LPAREN | LCURLY)) => lambda_expression_cpp |
 
+        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+        (block_lambda_expression_full) => block_lambda_expression |
+
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
 
@@ -6253,7 +6299,10 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA |
 
             // Objective-C
-            CSPEC | MSPEC
+            CSPEC | MSPEC |
+
+            // Apple
+            BLOCKOP
 
         )
 ;
@@ -6279,7 +6328,7 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
 /** list of operators @todo is this still needed */
 general_operators_list[] { ENTRY_DEBUG } :
         OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
-        DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC
+        DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC | BLOCKOP
 ;
 
 // mark up )
@@ -6498,6 +6547,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
 
         { inLanguage(LANGUAGE_CXX) }?
         (bracket_pair (LPAREN | LCURLY)) => lambda_expression_cpp |
+
+        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+        (block_lambda_expression_full) => block_lambda_expression |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
@@ -6935,7 +6987,7 @@ multops[] { LightweightElement element(this); ENTRY_DEBUG } :
             if (isoption(parseoptions, SRCML_OPTION_MODIFIER))
                 startElement(SMODIFIER);
         }
-        (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[is_qmark, true])
+        (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[is_qmark, true] | BLOCKOP)
 ;
 
 // ...
