@@ -80,7 +80,7 @@ const antlr::BitSet srcMLParser::argument_token_set_two(bitset_buckets<argument_
 
 create_token_set(argument_tokens_three, srcMLParser::NORETURN, srcMLParser::IMAGINARY, srcMLParser::GENERIC_SELECTION, srcMLParser::ASM,
                                             srcMLParser::CXX_TRY, srcMLParser::CXX_CATCH, srcMLParser::CXX_CLASS, srcMLParser::ATREQUIRED, srcMLParser::ATOPTIONAL,
-                                            srcMLParser::BLOCK);
+                                            srcMLParser::BLOCK, srcMLParser::WEAK, srcMLParser::STRONG);
 
 const antlr::BitSet srcMLParser::argument_token_set_three(bitset_buckets<argument_tokens_three>::data, bitset_buckets<argument_tokens_three>::num_token_longs);
 
@@ -91,7 +91,7 @@ create_token_set(enum_preprocessing_tokens, srcMLParser::EXTERN, srcMLParser::RE
                                             srcMLParser::NATIVE, srcMLParser::STRICTFP, srcMLParser::REF, srcMLParser::OUT, srcMLParser::IN, srcMLParser::INTERNAL, srcMLParser::SEALED,
                                             srcMLParser::OVERRIDE, srcMLParser::IMPLICIT, srcMLParser::DELEGATE, srcMLParser::UNSAFE, srcMLParser::READONLY, srcMLParser::PARTIAL,
                                             srcMLParser::EVENT, srcMLParser::ASYNC, srcMLParser::PARAMS, srcMLParser::CRESTRICT, srcMLParser::COMPLEX, srcMLParser::NORETURN,
-                                            srcMLParser::IMAGINARY, srcMLParser::ENUM, srcMLParser::BLOCK);
+                                            srcMLParser::IMAGINARY, srcMLParser::ENUM, srcMLParser::BLOCK, srcMLParser::WEAK, srcMLParser::STRONG);
 
 const antlr::BitSet srcMLParser::enum_preprocessing_token_set(bitset_buckets<enum_preprocessing_tokens>::data, bitset_buckets<enum_preprocessing_tokens>::num_token_longs);
 

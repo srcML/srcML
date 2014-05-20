@@ -4898,7 +4898,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             CONST |
 
             // Apple
-            BLOCK
+            BLOCK | WEAK | STRONG
 
         )
 ;
