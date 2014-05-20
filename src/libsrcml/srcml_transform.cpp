@@ -278,11 +278,6 @@ int srcml_append_transform_param(srcml_archive* archive, const char* xpath_param
     if(archive == NULL || xpath_param_name == NULL || xpath_param_value == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    archive->xsl_parameters.pop_back();
-    archive->xsl_parameters.push_back(xpath_param_name);
-    archive->xsl_parameters.push_back(xpath_param_value);
-    archive->xsl_parameters.push_back(0);
-
     archive->transformations.back().xsl_parameters.pop_back();
     archive->transformations.back().xsl_parameters.push_back(xpath_param_name);
     archive->transformations.back().xsl_parameters.push_back(xpath_param_value);
@@ -308,7 +303,6 @@ int srcml_clear_transforms(srcml_archive * archive) {
         if(itr->type == SRCML_XSLT || itr->type == SRCML_RELAXNG)
             xmlFreeDoc(itr->transformation.doc);
     archive->transformations.clear();
-    archive->xsl_parameters.clear();
 
     return SRCML_STATUS_OK;
 

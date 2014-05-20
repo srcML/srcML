@@ -443,10 +443,10 @@ int main() {
         srcml_append_transform_xslt_filename(archive, "copy.xsl");
         srcml_append_transform_param(archive, "foo", "bar");
 
-        dassert(archive->xsl_parameters.size(), 3);
-        dassert(archive->xsl_parameters.at(0), "foo");
-        dassert(archive->xsl_parameters.at(1), "bar");
-        dassert(archive->xsl_parameters.at(2), 0);
+        dassert(archive->transformations.back().xsl_parameters.size(), 3);
+        dassert(archive->transformations.back().xsl_parameters.at(0), "foo");
+        dassert(archive->transformations.back().xsl_parameters.at(1), "bar");
+        dassert(archive->transformations.back().xsl_parameters.at(2), 0);
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
@@ -531,10 +531,10 @@ int main() {
         dassert(archive->transformations.back().type, SRCML_RELAXNG);
         assert(archive->transformations.back().transformation.doc != 0);
 
-        dassert(archive->xsl_parameters.size(), 3);
-        dassert(archive->xsl_parameters.at(0), "foo");
-        dassert(archive->xsl_parameters.at(1), "bar");
-        dassert(archive->xsl_parameters.at(2), 0);
+        dassert(archive->transformations.back().xsl_parameters.size(), 3);
+        dassert(archive->transformations.back().xsl_parameters.at(0), "foo");
+        dassert(archive->transformations.back().xsl_parameters.at(1), "bar");
+        dassert(archive->transformations.back().xsl_parameters.at(2), 0);
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
