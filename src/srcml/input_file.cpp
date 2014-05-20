@@ -52,8 +52,7 @@ void input_file(srcml_input_src& input) {
 #endif
 
    	    // create a single thread to prefix decompression
-	    boost::thread_group pipeline_threads;
-        pipeline_threads.create_thread(
+        boost::thread input_thread(
             boost::bind(
                 decompress_srcml,
                 srcml_request_t(),
