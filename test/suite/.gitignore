@@ -122,6 +122,7 @@ main.cs.xml
 main.m.xml
 modifier_base.c.xml
 modifier_base.m.xml
+modifier_c.m.xml
 namespace.cs.xml
 operator.cs.xml
 operator_base.c.xml
