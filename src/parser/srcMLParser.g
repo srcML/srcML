@@ -482,6 +482,7 @@ tokens {
     SLAMBDA_CAPTURE;
     SNOEXCEPT;
     STYPENAME;
+    SALIGNOF;
 
     // Qt
 	SSIGNAL_ACCESS;
@@ -531,6 +532,7 @@ tokens {
     SASSERT_STATEMENT;
     SINTERFACE;
     SSYNCHRONIZED_STATEMENT;
+    SANNOTATION;
 
     // C#
     SCHECKED_STATEMENT;
@@ -558,9 +560,6 @@ tokens {
 
     // misc
     SEMPTY;  // empty statement
-
-    SANNOTATION;
-    SALIGNOF;
 
     // Objective-C
     SRECEIVER;
@@ -633,7 +632,9 @@ public:
         std::deque<int> statesize;
         bool isclosed;
         bool skipelse;
+
     };
+
     std::stack<cppmodeitem> cppmode;
 
     void startUnit() {
@@ -2516,7 +2517,7 @@ protocol_declaration[] { ENTRY_DEBUG } :
 
 protocol_declaration_full[] { ENTRY_DEBUG } :
 
-    ATPROTOCOL (identifier | comma)*
+    ATPROTOCOL (variable_identifier | comma)*
 
 ;
 
@@ -2618,7 +2619,7 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 
 protocol[] { ENTRY_DEBUG } :
 
-    { look_past_rule(&srcMLParser::protocol_declaration_full) == TERMINATE }? property_declaration |
+    { look_past_rule(&srcMLParser::protocol_declaration_full) == TERMINATE }? protocol_declaration |
     protocol_definition
 
 ;
