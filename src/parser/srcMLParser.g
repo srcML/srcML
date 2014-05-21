@@ -772,7 +772,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         asm_declaration |
 
         // Objective-C - kewywords only detected for Objective-C
-        objective_c_class | protocol | objective_c_class_end | property_declaration | synthesize_statement | dynamic_statement |
+        objective_c_class | protocol_definition | objective_c_class_end | property_declaration | synthesize_statement | dynamic_statement |
 
         autoreleasepool_block | compatibility_alias | class_directive
 
@@ -2597,7 +2597,7 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
     )*
 ;
 
-protocol[] { bool first = true; ENTRY_DEBUG } :
+protocol_definition[] { bool first = true; ENTRY_DEBUG } :
 
     {
 
