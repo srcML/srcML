@@ -1594,7 +1594,7 @@ objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     objective_c_selector
 
-    (
+    (options { greedy = true; } : 
 
         objective_c_method_type
 
