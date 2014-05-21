@@ -581,6 +581,7 @@ tokens {
     SNIL;
     SCLASS_INTERFACE;
     SCLASS_IMPLEMENTATION;
+    SPROTOCOL_DECLARATION;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -2508,7 +2509,7 @@ protocol_declaration[] { ENTRY_DEBUG } :
 
         startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME | MODE_LIST);
 
-        startElement(SPROTOCOL);
+        startElement(SPROTOCOL_DECLARATION);
 
     }
     ATPROTOCOL
