@@ -35,11 +35,11 @@
 #include <archive.h>
 #include <iostream>
 
-bool request_create_srcml(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-bool request_transform_srcml(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-bool request_display_metadata(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+bool request_create_srcml          (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+bool request_transform_srcml       (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+bool request_display_metadata      (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
 bool request_additional_compression(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-bool request_create_src(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+bool request_create_src            (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
 
 int main(int argc, char * argv[]) {
 
@@ -59,11 +59,6 @@ int main(int argc, char * argv[]) {
 
     // convert the list of input filenames to input sources
     srcml_input_t input_sources(srcml_request.input.begin(), srcml_request.input.end());
-
-    // for single input src archives (e.g., .tar), filename attribute is the source filename (if not already given)
-    if (!srcml_request.att_filename && input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
-        srcml_request.att_filename = input_sources[0].filename;
-    }
 
     // standard input handled as FILE* to determine if srcML or src
     if (srcml_request.stdindex) {
