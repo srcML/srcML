@@ -79,9 +79,6 @@ void decompress_srcml(const srcml_request_t& /* srcml_request */,
     archive_read_support_filter_all(libarchive_srcml);
 #endif    // setup decompressions
 
-//    BOOST_FOREACH(const std::string& ext, input_sources[0].compressions)
-//        archive_read_support_compression_by_extension(ar, ext.c_str());
-
     int status = ARCHIVE_OK;
     curl curling;
 
@@ -104,15 +101,7 @@ void decompress_srcml(const srcml_request_t& /* srcml_request */,
 
     // copy from the libarchive decompressed data into the destination file descriptor
     // for the next stage in the pipeline
-    const char* buffer;
-    size_t size;
-#if ARCHIVE_VERSION_NUMBER < 3000000
-    off_t offset;
-#else
-    int64_t offset;
-#endif
-    while (archive_read_data_block(libarchive_srcml, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
-        write(*destination.fd, buffer, size);
+    archive_read_data_into_fd(libarchive_srcml, *destination.fd);
 
     // important to close, since this is how the file descriptor reader get an EOF
     close(*destination.fd);
