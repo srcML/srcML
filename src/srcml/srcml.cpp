@@ -35,6 +35,12 @@
 #include <archive.h>
 #include <iostream>
 
+bool request_create_srcml(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+bool request_transform_srcml(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+bool request_display_metadata(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+bool request_additional_compression(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+bool request_create_src(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+
 int main(int argc, char * argv[]) {
 
     // parse the command line
@@ -88,34 +94,32 @@ int main(int argc, char * argv[]) {
     // setup the commands in the pipeline
     processing_steps_t pipeline;
 
-    // src->srcml when there is any src input, or multiple srcml input with output to srcml (merge)
-    if (std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end() ||
-        (input_sources.size() > 1 && destination.state == SRCML)) {
+    // src->srcml
+    if (request_create_srcml(srcml_request, input_sources, destination)) {
 
         pipeline.push_back(create_srcml);
     }
 
-    // XPath and XSLT processing
-    if (!srcml_request.transformations.empty()) {
+    // XPath, XSLT, and RelaxNG processing
+    if (request_transform_srcml(srcml_request, input_sources, destination)) {
 
         pipeline.push_back(transform_srcml);
     }
 
-    // output stage of metadata on srcML
-    if ((srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0) {
+    // metadata output
+    if (request_display_metadata(srcml_request, input_sources, destination)) {
 
         pipeline.push_back(srcml_display_metadata);
     }
-    // output stage of src, based on the destination
-    else if (destination.state != SRCML) {
+    
+    // srcml->src
+    if (request_create_src(srcml_request, input_sources, destination)) {
 
         pipeline.push_back(create_src);
     }
 
-    // libsrcml can apply gz compression
-    // all other compressions require an additional compression stage
-    if ((destination.compressions.size() > 1) ||
-        (destination.compressions.size() == 1 && destination.compressions.front() != ".gz")) {
+    // additional output compression
+    if (request_additional_compression(srcml_request, input_sources, destination)) {
 
 #if ARCHIVE_VERSION_NUMBER > 3001002
         pipeline.push_back(compress_srcml);
@@ -125,12 +129,50 @@ int main(int argc, char * argv[]) {
 #endif
     }
 
+    // should always have something to do
     assert(!pipeline.empty());
 
-    // execute the steps in order
+    // execute the pipeline
     srcml_execute(srcml_request, pipeline, input_sources, destination);
 
     srcml_cleanup_globals();
 
     return 0;
+}
+
+bool request_create_srcml(const srcml_request_t& /* srcml_request */, 
+                          const srcml_input_t& input_sources,
+                          const srcml_output_dest& destination) {
+
+    return std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end() ||
+        (input_sources.size() > 1 && destination.state == SRCML);
+}
+
+bool request_transform_srcml(const srcml_request_t& srcml_request,
+                             const srcml_input_t& /* input_sources */,
+                             const srcml_output_dest& /* destination */) {
+
+    return !srcml_request.transformations.empty();
+}
+
+bool request_display_metadata(const srcml_request_t& srcml_request,
+                              const srcml_input_t& /* input_sources */,
+                              const srcml_output_dest& /* destination */) {
+
+    return (srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0;
+}
+
+bool request_additional_compression(const srcml_request_t& /* srcml_request */,
+                                    const srcml_input_t& /* input_sources */,
+                                    const srcml_output_dest& destination) {
+
+    return ((destination.compressions.size() > 1) ||
+        (destination.compressions.size() == 1 && destination.compressions.front() != ".gz"));
+}
+
+bool request_create_src(const srcml_request_t& srcml_request,
+                        const srcml_input_t& input_sources,
+                        const srcml_output_dest& destination) {
+
+    return destination.state != SRCML && !request_display_metadata(srcml_request, input_sources, destination);
 }
