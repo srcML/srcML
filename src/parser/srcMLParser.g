@@ -482,6 +482,7 @@ tokens {
     SLAMBDA_CAPTURE;
     SNOEXCEPT;
     STYPENAME;
+    SALIGNOF;
 
     // Qt
 	SSIGNAL_ACCESS;
@@ -531,6 +532,7 @@ tokens {
     SASSERT_STATEMENT;
     SINTERFACE;
     SSYNCHRONIZED_STATEMENT;
+    SANNOTATION;
 
     // C#
     SCHECKED_STATEMENT;
@@ -559,9 +561,6 @@ tokens {
     // misc
     SEMPTY;  // empty statement
 
-    SANNOTATION;
-    SALIGNOF;
-
     // Objective-C
     SRECEIVER;
     SMESSAGE;
@@ -582,6 +581,7 @@ tokens {
     SNIL;
     SCLASS_INTERFACE;
     SCLASS_IMPLEMENTATION;
+    SPROTOCOL_DECLARATION;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -633,7 +633,9 @@ public:
         std::deque<int> statesize;
         bool isclosed;
         bool skipelse;
+
     };
+
     std::stack<cppmodeitem> cppmode;
 
     void startUnit() {
@@ -2501,6 +2503,25 @@ class_directive[] { ENTRY_DEBUG } :
 
 ;
 
+protocol_declaration[] { ENTRY_DEBUG } :
+
+    {
+
+        startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME | MODE_LIST);
+
+        startElement(SPROTOCOL_DECLARATION);
+
+    }
+    ATPROTOCOL
+
+;
+
+protocol_declaration_full[] { ENTRY_DEBUG } :
+
+    ATPROTOCOL (variable_identifier | comma)*
+
+;
+
 /* Declarations Definitions CFG */
 
 // check the ending token
@@ -2597,7 +2618,16 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
     )*
 ;
 
-protocol[] { bool first = true; ENTRY_DEBUG } :
+protocol[] { ENTRY_DEBUG } :
+
+    { look_past_rule(&srcMLParser::protocol_declaration_full) == TERMINATE }? protocol_declaration |
+    protocol_definition
+
+;
+
+
+
+protocol_definition[] { bool first = true; ENTRY_DEBUG } :
 
     {
 
@@ -2618,7 +2648,6 @@ protocol[] { bool first = true; ENTRY_DEBUG } :
     }
 
 ;
-
 
 // handle class header
 objective_c_class_header[] { ENTRY_DEBUG } :
