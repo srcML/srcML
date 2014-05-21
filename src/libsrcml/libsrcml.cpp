@@ -65,7 +65,7 @@ static
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL,
                                  8, std::vector<std::string>(), std::vector<std::string>(), language_extension_registry(),
-                                 std::vector<std::string>(), 0, 0, 0, std::vector<transform>(), std::vector<const char *>() };
+                                 std::vector<std::string>(), 0, 0, 0, std::vector<transform>() };
 
 /**
  * @var global_unit
@@ -746,7 +746,7 @@ int srcml_check_language(const char* language) { return language == 0 ? 0 : Lang
  */
 int srcml_get_language_list_size() {
 
-    return 4;
+    return 5;
 }
 
 /**
@@ -762,7 +762,7 @@ const char * srcml_get_language_list(int pos) {
 
     if(pos >= srcml_get_language_list_size()) return NULL;
 
-    static const char* langs[] = { "C", "C++", "C#", "Java", 0 };
+    static const char* langs[] = { "C", "C++", "C#", "Objective-C", "Java", 0 };
     return langs[pos];
 }
 

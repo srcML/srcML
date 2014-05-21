@@ -71,8 +71,12 @@ enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
  * Struct to hold transformation information for latter application.
  */
 struct transform {
+    
     /** a transformation type */
     SRCML_TRANSFORM_TYPE type;
+
+    /** XSLT parameters */
+    std::vector<const char *> xsl_parameters;
 
     /** union holding the transformation */
     union {
@@ -147,9 +151,6 @@ struct srcml_archive {
  
     /** an array of transformations to apply */
     std::vector<transform> transformations;
-
-    /** XSLT parameters */
-    std::vector<const char *> xsl_parameters;
 
 };
 

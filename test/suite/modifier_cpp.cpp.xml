@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" dir="modifier" filename="modifier_cpp">
 
-
 <unit>
 <decl_stmt><decl><type><name>int</name><type:modifier>*</type:modifier><type:modifier>&amp;</type:modifier></type> <name>i</name></decl>;</decl_stmt>
 </unit>
@@ -61,6 +60,10 @@
 
 <unit>
 <expr_stmt><expr><lambda><capture>[<argument><name>x</name></argument>, <argument><type:modifier>&amp;</type:modifier><name>s</name></argument>]</capture> <parameter_list>(<param><decl><type><name>delta</name> <specifier>const</specifier><type:modifier>*</type:modifier></type></decl></param>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>type</name><type:modifier>^</type:modifier></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <!-- 

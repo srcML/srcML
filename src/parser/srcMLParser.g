@@ -572,6 +572,14 @@ tokens {
     SREQUIRED_DEFAULT;
     SREQUIRED;
     SOPTIONAL;
+    SPROPERTY;
+    SATTRIBUTE_LIST;
+    SSYNTHESIZE;
+    SDYNAMIC;
+    SENCODE;
+    SAUTORELEASEPOOL;
+    SCOMPATIBILITY_ALIAS;
+    SNIL;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -762,7 +770,9 @@ keyword_statements[] { ENTRY_DEBUG } :
         asm_declaration |
 
         // Objective-C - kewywords only detected for Objective-C
-        objective_c_class | protocol | objective_c_class_end
+        objective_c_class | protocol | objective_c_class_end | property_declaration | synthesize_statement | dynamic_statement |
+
+        autoreleasepool_block | compatibility_alias | class_directive
 
 ;
 
@@ -899,6 +909,7 @@ next_token[] returns [int token] {
 
     inputState->guessing--;
     rewind(place);
+
 } :;
 
 // efficient way to view the token after the current next_token
@@ -915,6 +926,7 @@ next_token_two[] returns [int token] {
 
     inputState->guessing--;
     rewind(place);
+
 } :;
 
 // eficient way of getting the next token string value.
@@ -930,6 +942,7 @@ next_token_string[] returns [std::string token] {
 
     inputState->guessing--;
     rewind(place);
+
 } :;
 
 // is the next token one of the parameters
@@ -938,6 +951,7 @@ next_token_check[int token1, int token2] returns [bool result] {
     int token = next_token();
 
     result = token == token1 || token == token2;
+
 } :;
 
 // skips past any skiptokens to get the one after
@@ -953,6 +967,7 @@ look_past[int skiptoken] returns [int token] {
 
     inputState->guessing--;
     rewind(place);
+
 } :;
 
 // skip past all of the skiptoken1 and skiptoken2 and return the one after
@@ -968,6 +983,7 @@ look_past_two[int skiptoken1, int skiptoken2] returns [int token] {
 
     inputState->guessing--;
     rewind(place);
+
 } :;
 
 // skip past all of the skiptoken1, skiptoken2 and skiptoken3 and return the one after
@@ -983,6 +999,29 @@ look_past_three[int skiptoken1, int skiptoken2, int skiptoken3] returns [int tok
 
     inputState->guessing--;
     rewind(place);
+
+} :;
+
+// give the next token as if rule was applied.  If rule can not be applied return -1
+look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
+
+   int place = mark();
+    inputState->guessing++;
+
+    try {
+
+        (this->*rule)();
+        token = LA(1);
+
+    } catch(...) {
+
+        token = -1;
+
+    }
+
+    inputState->guessing--;
+    rewind(place);
+
 } :;
 
 /* functions */
@@ -1288,7 +1327,7 @@ lambda_parameter_type_count_csharp[int & type_count] { if(type_count < 1) return
 lambda_expression_cpp[] { ENTRY_DEBUG } :
 		{
 
-            bool iscall = lambda_call_check();
+            bool iscall = look_past_rule(&srcMLParser::lambda_expression_full_cpp) == LPAREN;
             if(iscall) {
 
                 // start a new mode that will end after the argument list
@@ -1341,26 +1380,6 @@ lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { generateAmbigWarnings = false;  } : lambda_capture_modifiers | { LA(1) != RBRACKET }? expression | type_identifier)*
 ;
 
-// check and see if the lambda is directly used as a call.
-lambda_call_check[] returns [bool iscall] { ENTRY_DEBUG 
-
-    iscall = false;
-
-    int start = mark();
-    inputState->guessing++;
-
-    try {
-
-        lambda_expression_full_cpp();
-
-        if(LA(1) == LPAREN) iscall = true;
-
-    } catch(...) {}
-
-    inputState->guessing--;
-    rewind(start);
-} :;
-
 // completely match a C# lambda expression
 lambda_expression_full_csharp[] { ENTRY_DEBUG } :
 
@@ -1384,6 +1403,38 @@ lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
                     startElement(SMODIFIER);
         }
         (EQUAL | REFOPS)
+
+;
+
+// handle a block expression lambda
+block_lambda_expression[] { ENTRY_DEBUG } :
+        {
+
+            bool iscall = look_past_rule(&srcMLParser::block_lambda_expression_full) == LPAREN;
+            if(iscall) {
+
+                // start a new mode that will end after the argument list
+                startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+                // start the function call element
+                startElement(SFUNCTION_CALL);
+
+            }
+
+            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+
+            startElement(SFUNCTION_LAMBDA);
+
+        }
+
+        BLOCKOP (options { greedy = true; } : type_identifier)* (options { greedy = true; } : parameter_list)*
+
+;
+
+// completely match block expression lambda
+block_lambda_expression_full[] { ENTRY_DEBUG } :
+
+        BLOCKOP (options { greedy = true; } : type_identifier)* (options { greedy = true; } : paren_pair)* curly_pair
 
 ;
 
@@ -1470,7 +1521,7 @@ objective_c_method[int token = SNOP] { ENTRY_DEBUG } :
         startElement(token);
 
     }
-    objective_c_method_specifier (objective_c_method_type)* /*objective_c_selector*/ objective_c_parameter_list
+    objective_c_method_specifier (options { greedy = true; } : objective_c_method_type)* /*objective_c_selector*/ objective_c_parameter_list
 
 ;
 
@@ -1543,13 +1594,123 @@ objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     objective_c_selector
 
-    objective_c_method_type
+    (options { greedy = true; } : 
 
-    // Mark as name before mark without name
-    (options { generateAmbigWarnings = false; } : compound_name | keyword_name)
+        objective_c_method_type
+
+        // Mark as name before mark without name
+        (options { generateAmbigWarnings = false; } : compound_name | keyword_name)
+
+    )*
 
 ;
 
+// Objective-C property declaration
+property_declaration[] { int type_count = 0;  int secondtoken = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_STATEMENT);
+
+        startElement(SPROPERTY);
+
+    }
+    PROPERTY (property_attribute_list)*
+    { pattern_check(stmt_type, secondtoken, type_count) }?
+    variable_declaration[type_count]
+
+;
+
+property_attribute_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        startElement(SATTRIBUTE_LIST);
+
+    }
+    LPAREN
+    (property_attribute | COMMA)*
+    RPAREN
+
+;
+
+property_attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        startElement(SATTRIBUTE);
+
+    }
+    identifier (property_attribute_initialization)* 
+
+;
+
+property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        //startElement(SDECLARATION_INITIALIZATION);
+
+    }
+    EQUAL identifier
+
+;
+
+synthesize_statement[] { ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_STATEMENT);
+
+        startElement(SSYNTHESIZE);
+
+    }
+    SYNTHESIZE property_implementation_inner
+
+;
+
+dynamic_statement[] { ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_STATEMENT);
+
+        startElement(SDYNAMIC);
+        
+    }
+    DYNAMIC property_implementation_inner
+
+;
+
+property_implementation_inner[] { ENTRY_DEBUG } :
+
+    property_implementation_name (COMMA property_implementation_name)*
+
+;
+
+property_implementation_name[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        startElement(SDECLARATION);
+
+    }
+    identifier (property_implementation_initialization)*
+
+;
+
+property_implementation_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        //startElement(SDECLARATION_INITIALIZATION);
+
+    }
+    EQUAL identifier
+
+;
 
 // Check and see if this is a call and what type
 perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int secondtoken] returns [bool iscall] {
@@ -1612,7 +1773,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty, int & call_count] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
+        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair | ENCODE | SELECTOR)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -1651,7 +1812,9 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             { next_token_check(LCURLY, LPAREN) }?
             lambda_anonymous |
 
-            (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_full_cpp  |
+            (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_full_cpp |
+
+            (block_lambda_expression_full) => block_lambda_expression_full |
 
             { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair |
 
@@ -2303,6 +2466,36 @@ namespace_directive[] { ENTRY_DEBUG } :
 using_aliasing[]  { ENTRY_DEBUG } :
 
         EQUAL pattern_statements
+
+;
+
+//  Objectice-C compatibility alias
+compatibility_alias[] { ENTRY_DEBUG } :
+    {
+
+        // statement
+        startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME);
+
+        // start the namespace definition
+        startElement(SCOMPATIBILITY_ALIAS);
+
+    }
+    COMPATIBILITY_ALIAS
+
+;
+
+//  Objectice-C @class directive
+class_directive[] { ENTRY_DEBUG } :
+    {
+
+        // statement
+        startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME | MODE_LIST);
+
+        // start the namespace definition
+        startElement(SCLASS_DECLARATION);
+
+    }
+    ATCLASS
 
 ;
 
@@ -3109,7 +3302,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // start of argument for return or throw statement
         { inMode(MODE_INIT | MODE_EXPECT) && ((LA(1) == COLON && (inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_JAVA)))
-                || (LA(1) == IN && inLanguage(LANGUAGE_CSHARP))) }?
+                || LA(1) == IN) }?
         variable_declaration_range |
 
         // in an argument list expecting an argument
@@ -3233,7 +3426,7 @@ comma[] { ENTRY_DEBUG } :
 // marking comma operator
 comma_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR) && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT))
+            if (isoption(parseoptions, SRCML_OPTION_OPERATOR) && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT) && !(inTransparentMode(MODE_IN_INIT) && inMode(MODE_EXPRESSION | MODE_LIST)) )
                 startElement(SOPERATOR);
         }
         COMMA
@@ -3615,11 +3808,11 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         */
         set_type[type, VARIABLE, ((((type_count - specifier_count) > 0 && LA(1) != OPERATORS && LA(1) != CSPEC && LA(1) != MSPEC
                 && ((inLanguage(LANGUAGE_CXX) && !inMode(MODE_ACCESS_REGION)) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET
-                                              || (LA(1) == LPAREN && next_token() != RPAREN) || LA(1) == LCURLY || LA(1) == EQUAL
+                                              || (LA(1) == LPAREN && next_token() != RPAREN) || LA(1) == LCURLY || LA(1) == EQUAL || LA(1) == IN
                                               || (inTransparentMode(MODE_FOR_CONDITION) && LA(1) == COLON)
-                                              || (inLanguage(LANGUAGE_CSHARP) && (LA(1) == RBRACKET || LA(1) == IN))))) ||
-                                                (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET || LA(1) == EQUAL
-                                                    || (inLanguage(LANGUAGE_CSHARP) && (LA(1) == RBRACKET || LA(1) == IN)))))]
+                                              || (inLanguage(LANGUAGE_CSHARP) && LA(1) == RBRACKET)))) ||
+                                                (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET || LA(1) == EQUAL || LA(1) == IN
+                                                    || (inLanguage(LANGUAGE_CSHARP) && LA(1) == RBRACKET))))]
 
         // need to see if we possibly have a constructor/destructor name, with no type
         set_bool[isconstructor,
@@ -3628,6 +3821,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  !isoperator &&
 
                  !isdestructor &&
+
+                 !inLanguage(LANGUAGE_OBJECTIVE_C) &&
 
                  // entire type is specifiers
                  (type_count == (specifier_count + attribute_count + template_count)) &&
@@ -3676,7 +3871,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 function_rest[fla]
             ) |
 
-            { type_count == 0 }? objective_c_method set_int[fla, LA(1)] throw_exception[fla != TERMINATE && fla != LCURLY]
+            { real_type_count == 0 && specifier_count == 0 && attribute_count == 0 }? (objective_c_method set_int[fla, LA(1)] throw_exception[fla != TERMINATE && fla != LCURLY])
 
         )
 
@@ -4104,14 +4299,14 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
             iscomplex = true;
 
             // start a mode to end at right bracket with expressions inside
-            if (inLanguage(LANGUAGE_CSHARP))
+            if (inLanguage(LANGUAGE_CSHARP) || (LA(1) == ATLBRACKET && LANGUAGE_OBJECTIVE_C))
                 startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST | MODE_END_AT_COMMA);
             else
                 startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST);
 
             startElement(SINDEX);
         }
-        LBRACKET
+        (LBRACKET | ATLBRACKET)
 
         variable_identifier_array_grammar_sub_contents
 
@@ -4120,9 +4315,9 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
 
 // contents of array index
 variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
-        { !inLanguage(LANGUAGE_CSHARP) }? complete_expression |
+        { !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }? complete_expression |
 
-        { inLanguage(LANGUAGE_CSHARP) }? (options { greedy = true; } : { LA(1) != RBRACKET }?
+        { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? (options { greedy = true; } : { LA(1) != RBRACKET }?
             ({ /* stop warning */ LA(1) == COMMA }? COMMA | complete_expression)
         )*
 ;
@@ -4192,7 +4387,8 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
 
                 { LA(1) == RPAREN }? expression { --count_paren; } |
 
-                { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression_process (call[call_count] | sizeof_call | alignof_call) complete_arguments |
+                { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; }
+                    expression_process (call[call_count] | sizeof_call | alignof_call | encode_call | selector_call) complete_arguments |
 
                 expression |
 
@@ -4740,7 +4936,11 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
             { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP | TRANSIENT) |
 
-            CONST
+            CONST |
+
+            // Apple
+            BLOCK | WEAK | STRONG
+
         )
 ;
 
@@ -5086,6 +5286,9 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         { inLanguage(LANGUAGE_CXX) }?
         (bracket_pair (LPAREN | LCURLY)) => lambda_expression_cpp |
 
+        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+        (block_lambda_expression_full) => block_lambda_expression |
+
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
 
@@ -5101,7 +5304,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
             // however I believe parameter_list matches a right paren of the call.
-           (call[call_count] | sizeof_call | alignof_call) argument |
+           (call[call_count] | sizeof_call | alignof_call | encode_call | selector_call) argument |
 
         // macro call
         { type == MACRO }? macro_call |
@@ -5192,6 +5395,32 @@ alignof_call[] { ENTRY_DEBUG } :
             startElement(SALIGNOF);
         }
         ALIGNOF
+        call_argument_list
+;
+
+// @encode(...)
+encode_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+            startElement(SENCODE);
+        }
+        ENCODE
+        call_argument_list
+;
+
+// @selector(...)
+selector_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+            startElement(SSELECTOR);
+        }
+        SELECTOR
         call_argument_list
 ;
 
@@ -5684,6 +5913,20 @@ unchecked_statement[] { ENTRY_DEBUG } :
         UNCHECKED
 ;
 
+// a synchonized statement
+autoreleasepool_block[] { ENTRY_DEBUG } :
+        {
+            // treat try block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            // start of the try statement
+            startElement(SAUTORELEASEPOOL);
+
+        }
+        AUTORELEASEPOOL lcurly
+
+;
+
 // the catch statement
 catch_statement[] { ENTRY_DEBUG } :
         {
@@ -5849,7 +6092,8 @@ generic_selection_complete_expression[] { CompleteElement element(this); int cou
 
             { LA(1) == RPAREN }? expression { --count_paren; } |
 
-            { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } expression_process (call[call_count] | sizeof_call | alignof_call) complete_arguments  |
+            { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } 
+                expression_process (call[call_count] | sizeof_call | alignof_call | encode_call | selector_call) complete_arguments  |
 
             expression
             )
@@ -5909,7 +6153,7 @@ expression_statement_process[] { ENTRY_DEBUG } :
         }
 ;
 
-// an expression statment
+// an expression statement
 expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
 
         expression_statement_process
@@ -6003,6 +6247,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
               && !inTransparentMode(MODE_TYPEDEF)
               && !inTransparentMode(MODE_USING)) {
 
+                startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
                 // start the declaration
                 startElement(SDECLARATION);
@@ -6114,7 +6359,10 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA |
 
             // Objective-C
-            CSPEC | MSPEC
+            CSPEC | MSPEC |
+
+            // Apple
+            BLOCKOP
 
         )
 ;
@@ -6140,7 +6388,7 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
 /** list of operators @todo is this still needed */
 general_operators_list[] { ENTRY_DEBUG } :
         OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
-        DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC
+        DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC | BLOCKOP
 ;
 
 // mark up )
@@ -6360,6 +6608,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         { inLanguage(LANGUAGE_CXX) }?
         (bracket_pair (LPAREN | LCURLY)) => lambda_expression_cpp |
 
+        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+        (block_lambda_expression_full) => block_lambda_expression |
+
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
 
@@ -6379,7 +6630,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
             // however I believe parameter_list matches a right paren of the call.
-           (call[call_count] | sizeof_call | alignof_call) argument |
+           (call[call_count] | sizeof_call | alignof_call | encode_call | selector_call) argument |
 
         // macro call
         { type == MACRO }? macro_call |
@@ -6458,7 +6709,7 @@ expression_part_default[] { ENTRY_DEBUG } :
 
 // rule for literals
 literals[] { ENTRY_DEBUG } :
-        string_literal | char_literal | literal | boolean | null_literal | complex_literal
+        string_literal | char_literal | literal | boolean | null_literal | complex_literal | nil_literal
 ;
 
 // Only start and end of strings are put directly through the parser.
@@ -6491,6 +6742,16 @@ null_literal[]{ LightweightElement element(this); ENTRY_DEBUG } :
                 startElement(SNULL);
         }
         (NULLPTR | NULLLITERAL)
+;
+
+// literals
+nil_literal[]{ LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // only markup literals in literal option
+            if (isoption(parseoptions, SRCML_OPTION_LITERAL))
+                startElement(SNIL);
+        }
+        NIL
 ;
 
 // complex numbers
@@ -6596,11 +6857,11 @@ implements_list[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // super list
-super_list[] { bool is_compound = false; ENTRY_DEBUG } :
+super_list[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             (derive_access)*
 
-            compound_name_java[is_compound]
+            variable_identifier
         |
             COMMA
         )*
@@ -6796,7 +7057,7 @@ multops[] { LightweightElement element(this); ENTRY_DEBUG } :
             if (isoption(parseoptions, SRCML_OPTION_MODIFIER))
                 startElement(SMODIFIER);
         }
-        (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[is_qmark, true])
+        (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[is_qmark, true] | BLOCKOP)
 ;
 
 // ...

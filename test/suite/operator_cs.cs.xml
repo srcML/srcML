@@ -58,4 +58,8 @@
 <decl_stmt><decl><type><name><name><name>A</name><argument_list>&lt;<argument><name>T</name></argument>&gt;</argument_list></name><op:operator>::</op:operator>*<name>b</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><name><name>a</name><index>[<expr>0</expr>, <expr>0</expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
 </unit>

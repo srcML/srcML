@@ -18,7 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # number representing libsrcml version
-SRCML_VERSION_NUMBER = 10000
+SRCML_VERSION_NUMBER = 1000000
 # string containing libsrcml version
 SRCML_VERSION_STRING = "libsrcml 0.9"
 # srcML language not set

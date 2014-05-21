@@ -465,11 +465,37 @@ archive.close()
 
 verify_test(asrcml, oarchive.srcML())
 
+python_srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Python"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Python"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+# xslt param
+archive = srcml.srcml_archive()
+archive.read_open_memory(asrcml)
+archive.append_transform_xslt_filename("setlanguage.xsl")
+archive.append_transform_param("language", '"Python"')
+oarchive = archive.clone()
+oarchive.write_open_memory()
+archive.apply_transforms(oarchive)
+oarchive.close()
+archive.close()
+
+verify_test(python_srcml, oarchive.srcML())
+
 # clear transforms
 archive = srcml.srcml_archive()
 archive.read_open_memory(asrcml)
 archive.append_transform_xpath("//src:unit")
 archive.append_transform_xslt_filename("copy.xsl")
+archive.append_transform_param("language", '"Python"')
 archive.append_transform_relaxng_filename("schema.rng")
 archive.clear_transforms()
 oarchive = archive.clone()
@@ -514,12 +540,13 @@ verify_test("Exception", test)
 srcml.cleanup_globals()
 
 # test language list
-verify_test(4, str(srcml.get_language_list_size()))
+verify_test(5, str(srcml.get_language_list_size()))
 verify_test("C", str(srcml.get_language_list(0)))
 verify_test("C++", str(srcml.get_language_list(1)))
 verify_test("C#", str(srcml.get_language_list(2)))
-verify_test("Java", str(srcml.get_language_list(3)))
-verify_test(None, str(srcml.get_language_list(4)))
+verify_test("Objective-C", str(srcml.get_language_list(3)))
+verify_test("Java", str(srcml.get_language_list(4)))
+verify_test(None, str(srcml.get_language_list(5)))
 
 file = open("a.cpp", "w")
 file.write("a;\n")

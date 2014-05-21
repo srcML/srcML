@@ -25,4 +25,8 @@
 <class>class <block>{ <typedef>typedef <type><name>a</name></type> <name>b</name>;</typedef> }</block></class>
 </unit>
 
+<unit>
+<class>class <name>D</name> <super>: <name><name>A</name>.<name>B</name>.<name>C</name></name></super> <block>{ }</block></class><empty_stmt>;</empty_stmt>
+</unit>
+
 </unit>

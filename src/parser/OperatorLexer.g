@@ -49,6 +49,7 @@ DESTOP; // = "~";
 LCURLY; // = "{";
 RCURLY; // = "}";
 LBRACKET; // = "[";
+ATLBRACKET; // = "@[";
 RBRACKET; // = "]";
 COMMA; // = ",";
 RPAREN; // = ")";
@@ -83,6 +84,9 @@ DOTDOTDOT;
 // Objective-C
 CSPEC;
 MSPEC;
+
+// Apple
+BLOCKOP;
 
 // literals
 FALSE;
@@ -144,7 +148,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
        '*' ('=')? |
 //       '/' ('=')? |
        '%' ('=')? |
-       '^' ('=')? |
+       '^' { if(LA(1) != '=') $setType(BLOCKOP); } ('=')? |
        '|' ('|')? ('=')? |
        '`' |
        '!' ('=')? |
@@ -170,11 +174,30 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
             // names can start with a @ in C#
             '@' { $setType(ATSIGN); }
             ( 
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+              '(' { $setType(LPAREN); }
+            |
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+              '[' { $setType(ATLBRACKET); }
+            |
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+              '{' { $setType(LCURLY); }
+            |
             { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? NAME
             { $setType(NAME); }
             |
-            { inLanguage(LANGUAGE_CSHARP) }? { atstring = true; } STRING_START
-            { $setType(STRING_START); }
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }? CONSTANTS
+            { $setType(CONSTANTS); }
+            |
+            { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? 
+              { if(LA(1) == '"') {
+                atstring = true; 
+                $setType(STRING_START);
+                } else {
+                  $setType(CHAR_START);
+                }
+              }
+              STRING_START
             |
             )
         |

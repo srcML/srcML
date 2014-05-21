@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C" dir="modifier" filename="modifier_c">
+
+<unit>
+<decl_stmt><decl><type><name>type</name><type:modifier>^</type:modifier></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+</unit>

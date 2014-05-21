@@ -172,7 +172,7 @@ void language_extension_registry::register_standard_file_extensions()
 
     register_user_ext("cs",   Language::LANGUAGE_CSHARP);
 
-    register_user_ext("m",   Language::LANGUAGE_OBJECTIVE_C);
+    register_user_ext("m",   Language::LANGUAGE_OBJECTIVE_C | Language::LANGUAGE_C);
 }
 
 /**

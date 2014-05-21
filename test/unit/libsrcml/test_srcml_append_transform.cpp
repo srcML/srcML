@@ -440,12 +440,13 @@ int main() {
     {
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_memory(archive, s.c_str(), s.size());
+        srcml_append_transform_xslt_filename(archive, "copy.xsl");
         srcml_append_transform_param(archive, "foo", "bar");
 
-        dassert(archive->xsl_parameters.size(), 3);
-        dassert(archive->xsl_parameters.at(0), "foo");
-        dassert(archive->xsl_parameters.at(1), "bar");
-        dassert(archive->xsl_parameters.at(2), 0);
+        dassert(archive->transformations.back().xsl_parameters.size(), 3);
+        dassert(archive->transformations.back().xsl_parameters.at(0), "foo");
+        dassert(archive->transformations.back().xsl_parameters.at(1), "bar");
+        dassert(archive->transformations.back().xsl_parameters.at(2), 0);
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
@@ -500,6 +501,8 @@ int main() {
         srcml_append_transform_xslt_fd(archive, fd);
         CLOSE(fd);
 
+        srcml_append_transform_param(archive, "foo", "bar");
+
         srcml_append_transform_relaxng_filename(archive, "schema.rng");
         srcml_append_transform_relaxng_memory(archive, schema.c_str(), schema.size());
         f = fopen("schema.rng", "r");
@@ -509,33 +512,31 @@ int main() {
         srcml_append_transform_relaxng_fd(archive, fd);
         CLOSE(fd);
 
-        srcml_append_transform_param(archive, "foo", "bar");
-
+        dassert(archive->transformations.size(), 9);
         dassert(archive->transformations.at(0).type, SRCML_XPATH);
         dassert(archive->transformations.at(0).transformation.str, "//src:unit");
         dassert(archive->transformations.at(1).type, SRCML_XSLT);
         assert(archive->transformations.at(1).transformation.doc != 0);
         dassert(archive->transformations.at(1).type, SRCML_XSLT);
-        assert(archive->transformations.at(1).transformation.doc != 0);
-        dassert(archive->transformations.at(1).type, SRCML_XSLT);
-        assert(archive->transformations.at(1).transformation.doc != 0);
-        dassert(archive->transformations.at(1).type, SRCML_XSLT);
-        assert(archive->transformations.at(1).transformation.doc != 0);
-        dassert(archive->transformations.back().type, SRCML_RELAXNG);
-        assert(archive->transformations.back().transformation.doc != 0);
-        dassert(archive->transformations.back().type, SRCML_RELAXNG);
-        assert(archive->transformations.back().transformation.doc != 0);
-        dassert(archive->transformations.back().type, SRCML_RELAXNG);
-        assert(archive->transformations.back().transformation.doc != 0);
-        dassert(archive->transformations.back().type, SRCML_RELAXNG);
-        assert(archive->transformations.back().transformation.doc != 0);
+        assert(archive->transformations.at(2).transformation.doc != 0);
+        dassert(archive->transformations.at(2).type, SRCML_XSLT);
+        assert(archive->transformations.at(3).transformation.doc != 0);
+        dassert(archive->transformations.at(4).type, SRCML_XSLT);
 
-        dassert(archive->xsl_parameters.size(), 3);
-        dassert(archive->xsl_parameters.at(0), "foo");
-        dassert(archive->xsl_parameters.at(1), "bar");
-        dassert(archive->xsl_parameters.at(2), 0);
+        dassert(archive->transformations.at(4).xsl_parameters.size(), 3);
+        dassert(archive->transformations.at(4).xsl_parameters.at(0), "foo");
+        dassert(archive->transformations.at(4).xsl_parameters.at(1), "bar");
+        dassert(archive->transformations.at(4).xsl_parameters.at(2), 0);
 
-        srcml_close_archive(archive);
+        assert(archive->transformations.at(5).transformation.doc != 0);
+        dassert(archive->transformations.at(5).type, SRCML_RELAXNG);
+        assert(archive->transformations.at(6).transformation.doc != 0);
+        dassert(archive->transformations.at(6).type, SRCML_RELAXNG);
+        assert(archive->transformations.at(7).transformation.doc != 0);
+        dassert(archive->transformations.at(7).type, SRCML_RELAXNG);
+        assert(archive->transformations.at(8).transformation.doc != 0);
+        dassert(archive->transformations.at(8).type, SRCML_RELAXNG);
+
         srcml_free_archive(archive);
     }
 

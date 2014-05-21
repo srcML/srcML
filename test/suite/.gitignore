@@ -13,6 +13,8 @@ asm.m.xml
 atomic_c.m.xml
 auto.c.xml
 auto.m.xml
+block_lambda.c.xml
+block_lambda.m.xml
 call.c.xml
 call.cs.xml
 call.java.xml
@@ -44,6 +46,7 @@ do.c.xml
 do.cs.xml
 do.java.xml
 do.m.xml
+dynamic_m.m.xml
 enum.c.xml
 enum.m.xml
 enum_c.m.xml
@@ -119,6 +122,7 @@ main.cs.xml
 main.m.xml
 modifier_base.c.xml
 modifier_base.m.xml
+modifier_c.m.xml
 namespace.cs.xml
 operator.cs.xml
 operator_base.c.xml
@@ -161,7 +165,6 @@ switch.c.xml
 switch.cs.xml
 switch.java.xml
 switch.m.xml
-temp
 ternary.c.xml
 ternary.cs.xml
 ternary.java.xml

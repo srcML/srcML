@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Objective-C" dir="class_directive" filename="class_directive_m">
+
+<unit>
+<class_decl>@class;</class_decl>
+</unit>
+
+<unit>
+<class_decl>@class <name>WOApplication</name>;</class_decl>
+</unit>
+
+
+<unit>
+<class_decl>@class <name>WOApplication</name>, <name>GSWApplication</name>;</class_decl>
+</unit>
+
+
+</unit>

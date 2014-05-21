@@ -302,15 +302,23 @@ namespace {
     ELEMENT_MAP(SALIGNAS,    "alignas")
 
     // Objective-C
-    ELEMENT_MAP(SRECEIVER,         "receiver")
-    ELEMENT_MAP(SMESSAGE,          "message")
-    ELEMENT_MAP(SSELECTOR,         "selector")
-    ELEMENT_MAP(SPROTOCOL_LIST,    "protocol_list")
-    ELEMENT_MAP(SCATEGORY,         "category")
-    ELEMENT_MAP(SPROTOCOL,         "protocol")
-    ELEMENT_MAP(SREQUIRED_DEFAULT, "required")
-    ELEMENT_MAP(SREQUIRED,         "required")
-    ELEMENT_MAP(SOPTIONAL,         "optional")
+    ELEMENT_MAP(SRECEIVER,            "receiver")
+    ELEMENT_MAP(SMESSAGE,             "message")
+    ELEMENT_MAP(SSELECTOR,            "selector")
+    ELEMENT_MAP(SPROTOCOL_LIST,       "protocol_list")
+    ELEMENT_MAP(SCATEGORY,            "category")
+    ELEMENT_MAP(SPROTOCOL,            "protocol")
+    ELEMENT_MAP(SREQUIRED_DEFAULT,    "required")
+    ELEMENT_MAP(SREQUIRED,            "required")
+    ELEMENT_MAP(SOPTIONAL,            "optional")
+    ELEMENT_MAP(SPROPERTY,            "property")
+    ELEMENT_MAP(SATTRIBUTE_LIST,      "attribute_list")
+    ELEMENT_MAP(SSYNTHESIZE,          "synthesize")
+    ELEMENT_MAP(SDYNAMIC,             "dynamic")
+    ELEMENT_MAP(SENCODE,              "encode")
+    ELEMENT_MAP(SAUTORELEASEPOOL,     "autoreleasepool")
+    ELEMENT_MAP(SCOMPATIBILITY_ALIAS, "compatibility_alias")
+    ELEMENT_MAP(SNIL,                 "literal")
 
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
@@ -364,6 +372,7 @@ namespace {
     ELEMENT_MAP(SBOOLEAN,  SRCML_EXT_LITERAL_NS_URI_POS)
     ELEMENT_MAP(SNULL,     SRCML_EXT_LITERAL_NS_URI_POS)
     ELEMENT_MAP(SCOMPLEX,  SRCML_EXT_LITERAL_NS_URI_POS)
+    ELEMENT_MAP(SNIL,      SRCML_EXT_LITERAL_NS_URI_POS)
 
     // operator namespace
     ELEMENT_MAP(SOPERATOR, SRCML_EXT_OPERATOR_NS_URI_POS)
@@ -1266,6 +1275,17 @@ void srcMLOutput::processBoolean(const antlr::RefToken& token) {
 void srcMLOutput::processNull(const antlr::RefToken& token) {
 
     processOptional(token, "type", "null");
+}
+
+/**
+ * processNull
+ * @param token token to output as nil literal
+ *
+ * Callback to process/output token as nil literal.
+ */
+void srcMLOutput::processNil(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "nil");
 }
 
 /**

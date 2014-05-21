@@ -138,6 +138,30 @@
 <decl_stmt><decl><type><alignas>alignas<argument_list>(<argument><expr>(<name>float</name>)</expr></argument>)</argument_list></alignas> <name>unsigned</name> <name>char</name></type> <name><name>c</name><index>[]</index></name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><specifier>__block</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>a</name> <specifier>__block</specifier></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>__weak</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>a</name> <specifier>__weak</specifier></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>__strong</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>a</name> <specifier>__strong</specifier></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
 <!-- Incorrect with C/C++ mode
 <unit>
 <decl_stmt><decl><type><name>restrict</name></type> <name>restrict</name></decl>;</decl_stmt>

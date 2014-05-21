@@ -60,10 +60,6 @@ int main() {
         trans.type = SRCML_XPATH;
         trans.transformation.str = "//src:unit";
         archive->transformations.push_back(trans);
-        archive->xsl_parameters.pop_back();
-        archive->xsl_parameters.push_back("foo");
-        archive->xsl_parameters.push_back("bar");
-        archive->xsl_parameters.push_back(0);
 
         srcml_archive * new_archive = srcml_clone_archive(archive);
 
@@ -111,7 +107,6 @@ int main() {
         dassert(new_archive->input, 0);
 
         dassert(new_archive->transformations.size(), 0);
-        dassert(new_archive->xsl_parameters.size(), 1);
 
         archive->translator = 0;
         archive->reader = 0;

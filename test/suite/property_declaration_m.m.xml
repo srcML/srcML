@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Objective-C" dir="property_declaration" filename="property_declaration_m">
+
+<unit>
+<property>@property <decl><type><name>foo</name></type> <name>bar</name></decl>;</property>
+</unit>
+
+<unit>
+<property>@property <decl><type><name>foo</name></type> <name>bar</name></decl>, <decl><type ref="prev"/><name>foobar</name></decl>;</property>
+</unit>
+
+<unit>
+<property>@property<attribute_list>()</attribute_list> <decl><type><name>foo</name></type> <name>bar</name></decl>;</property>
+</unit>
+
+<unit>
+<property>@property<attribute_list>(<attribute><name>readwrite</name></attribute>)</attribute_list> <decl><type><name>foo</name></type> <name>bar</name></decl>;</property>
+</unit>
+
+<unit>
+<property>@property<attribute_list>(<attribute><name>getter</name>=<name>bar</name></attribute>, <attribute><name>setter</name>=<name>setBar</name></attribute>)</attribute_list> <decl><type><name>foo</name></type> <name>bar</name></decl>;</property>
+</unit>
+
+<unit>
+<property>@property<attribute_list>(<attribute><name>getter</name>=<name>bar</name></attribute>, <attribute><name>setter</name>=<name>setBar</name></attribute>)</attribute_list> <decl><type><name>foo</name></type> <name>bar</name></decl>, <decl><type ref="prev"/><name>foobar</name></decl>;</property>
+</unit>
+
+</unit>
