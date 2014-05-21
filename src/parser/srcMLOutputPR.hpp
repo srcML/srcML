@@ -54,7 +54,9 @@ enum {
     PROCESSESCAPE,
     PROCESSTYPEPREV,
     PROCESSSTATICASSERT,
-    PROCESSNIL
+    PROCESSNIL,
+    PROCESSCLASSINTERFACE,
+    PROCESSCLASSIMPLEMENTATION
 };
 
 /** for conversion of process numbers to callbacks */
@@ -83,7 +85,9 @@ srcMLOutput::PROCESS_PTR srcMLOutput::num2process[] = {
     &srcMLOutput::processEscape,
     &srcMLOutput::processTypePrevious,
     &srcMLOutput::processStaticAssert,
-    &srcMLOutput::processNil
+    &srcMLOutput::processNil,
+    &srcMLOutput::processClassInterface,
+    &srcMLOutput::processClassImplementation
 };
 
 /** element map call name */
@@ -309,6 +313,9 @@ namespace {
     ELEMENT_MAP(SAUTORELEASEPOOL, PROCESSTOKEN)
     ELEMENT_MAP(SCOMPATIBILITY_ALIAS, PROCESSTOKEN)
     ELEMENT_MAP(SNIL, PROCESSNIL)
+    ELEMENT_MAP(SCLASS_INTERFACE, PROCESSCLASSINTERFACE)
+    ELEMENT_MAP(SCLASS_IMPLEMENTATION, PROCESSCLASSIMPLEMENTATION)
+    ELEMENT_MAP(SPROTOCOL_DECLARATION, PROCESSTOKEN)
 
 }
 

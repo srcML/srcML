@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Objective-C" dir="protocol" filename="protocol_declaration_m">
+
+<unit>
+<protocol_decl>@protocol;</protocol_decl>
+</unit>
+
+<unit>
+<protocol_decl>@protocol <name>foo</name>;</protocol_decl>
+</unit>
+
+<unit>
+<protocol_decl>@protocol <name>foo</name>, <name>bar</name>;</protocol_decl>
+</unit>
+
+<unit>
+<protocol_decl>@protocol <name>foo</name>, <name>bar</name>, <name>foobar</name>;</protocol_decl>
+</unit>
+
+</unit>

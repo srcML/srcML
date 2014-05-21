@@ -302,23 +302,27 @@ namespace {
     ELEMENT_MAP(SALIGNAS,    "alignas")
 
     // Objective-C
-    ELEMENT_MAP(SRECEIVER,            "receiver")
-    ELEMENT_MAP(SMESSAGE,             "message")
-    ELEMENT_MAP(SSELECTOR,            "selector")
-    ELEMENT_MAP(SPROTOCOL_LIST,       "protocol_list")
-    ELEMENT_MAP(SCATEGORY,            "category")
-    ELEMENT_MAP(SPROTOCOL,            "protocol")
-    ELEMENT_MAP(SREQUIRED_DEFAULT,    "required")
-    ELEMENT_MAP(SREQUIRED,            "required")
-    ELEMENT_MAP(SOPTIONAL,            "optional")
-    ELEMENT_MAP(SPROPERTY,            "property")
-    ELEMENT_MAP(SATTRIBUTE_LIST,      "attribute_list")
-    ELEMENT_MAP(SSYNTHESIZE,          "synthesize")
-    ELEMENT_MAP(SDYNAMIC,             "dynamic")
-    ELEMENT_MAP(SENCODE,              "encode")
-    ELEMENT_MAP(SAUTORELEASEPOOL,     "autoreleasepool")
-    ELEMENT_MAP(SCOMPATIBILITY_ALIAS, "compatibility_alias")
-    ELEMENT_MAP(SNIL,                 "literal")
+    ELEMENT_MAP(SRECEIVER,             "receiver")
+    ELEMENT_MAP(SMESSAGE,              "message")
+    ELEMENT_MAP(SSELECTOR,             "selector")
+    ELEMENT_MAP(SPROTOCOL_LIST,        "protocol_list")
+    ELEMENT_MAP(SCATEGORY,             "category")
+    ELEMENT_MAP(SPROTOCOL,             "protocol")
+    ELEMENT_MAP(SREQUIRED_DEFAULT,     "required")
+    ELEMENT_MAP(SREQUIRED,             "required")
+    ELEMENT_MAP(SOPTIONAL,             "optional")
+    ELEMENT_MAP(SPROPERTY,             "property")
+    ELEMENT_MAP(SATTRIBUTE_LIST,       "attribute_list")
+    ELEMENT_MAP(SSYNTHESIZE,           "synthesize")
+    ELEMENT_MAP(SDYNAMIC,              "dynamic")
+    ELEMENT_MAP(SENCODE,               "encode")
+    ELEMENT_MAP(SAUTORELEASEPOOL,      "autoreleasepool")
+    ELEMENT_MAP(SCOMPATIBILITY_ALIAS,  "compatibility_alias")
+    ELEMENT_MAP(SNIL,                  "literal")
+    ELEMENT_MAP(SCLASS_INTERFACE,      "class")
+    ELEMENT_MAP(SCLASS_IMPLEMENTATION, "class")
+    ELEMENT_MAP(SPROTOCOL_DECLARATION, "protocol_decl")
+
 
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
@@ -628,7 +632,7 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
 
 /**
  * processStaticAssert
- * @param token escape the token in srcML escape tag
+ * @param token the assert token
  *
  * Outputs a assert tag with static attribute.
  */
@@ -637,6 +641,31 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
     processOptional(token, "type", "static");
 
  }
+
+/**
+ * processClassInterface
+ * @param token the class token
+ *
+ * Outputs a class tag with @interface type attribute.
+ */
+ void srcMLOutput::processClassInterface(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "@interface");
+
+ }
+
+/**
+ * processClassImplementation
+ * @param token the class token
+ *
+ * Outputs a class tag with @interface type attribute.
+ */
+ void srcMLOutput::processClassImplementation(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "@implementation");
+
+ }
+
 
 /**
  * outputXMLDecl

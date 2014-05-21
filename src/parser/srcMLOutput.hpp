@@ -215,6 +215,8 @@ public:
     void processInterface(const antlr::RefToken& token);
     void processEscape(const antlr::RefToken& token);
     void processStaticAssert(const antlr::RefToken& token);
+    void processClassInterface(const antlr::RefToken& token);
+    void processClassImplementation(const antlr::RefToken& token);
 
     /** method pointer for token processing dispatch */
     typedef void (srcMLOutput::*PROCESS_PTR)(const antlr::RefToken & );

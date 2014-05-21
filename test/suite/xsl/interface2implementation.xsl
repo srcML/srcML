@@ -42,6 +42,11 @@
 </xsl:template>
 
 <!-- change the class keyword to a interface keyword -->
+<xsl:template match="src:class/@type">
+	<xsl:attribute name="type">@implementation</xsl:attribute>
+</xsl:template>
+
+<!-- change the class keyword to a interface keyword -->
 <xsl:template match="src:class/text()">
 	<xsl:value-of select="str:replace(., 'interface', 'implementation')"/>
 </xsl:template>
