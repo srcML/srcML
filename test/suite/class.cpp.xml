@@ -130,4 +130,8 @@
 </private>}</block>;</class>
 </unit>
 
+<unit>
+<class>class <name>D</name> <super>: <name><name>A</name>.<name>B</name>.<name>C</name></name></super> <block>{<private type="default"> </private>}</block>;</class>
+</unit>
+
 </unit>

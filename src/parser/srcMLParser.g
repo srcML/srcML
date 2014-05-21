@@ -6857,11 +6857,11 @@ implements_list[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // super list
-super_list[] { bool is_compound = false; ENTRY_DEBUG } :
+super_list[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             (derive_access)*
 
-            compound_name_java[is_compound]
+            variable_identifier
         |
             COMMA
         )*

@@ -49,4 +49,8 @@
 <class>class <name>test</name> <super><implements>implements <name>Cloneable</name></implements> <extends>extends <name>Object</name></extends></super> <block>{}</block></class>
 </unit>
 
+<unit>
+<class>class <name>D</name> <super><implements>implements <name><name>A</name>.<name>B</name>.<name>C</name></name></implements></super> <block>{ }</block></class>
+</unit>
+
 </unit>
