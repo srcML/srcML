@@ -580,6 +580,8 @@ tokens {
     SAUTORELEASEPOOL;
     SCOMPATIBILITY_ALIAS;
     SNIL;
+    SCLASS_INTERFACE;
+    SCLASS_IMPLEMENTATION;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -2575,7 +2577,10 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 
         startNewMode(MODE_STATEMENT | MODE_CLASS);
 
-        startElement(SCLASS);
+        if(LA(1) == ATINTERFACE)
+            startElement(SCLASS_INTERFACE);
+        else
+            startElement(SCLASS_IMPLEMENTATION);
 
         startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK  | MODE_TOP | MODE_CLASS);
 
