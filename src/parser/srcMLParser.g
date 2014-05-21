@@ -772,7 +772,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         asm_declaration |
 
         // Objective-C - kewywords only detected for Objective-C
-        objective_c_class | protocol_definition | objective_c_class_end | property_declaration | synthesize_statement | dynamic_statement |
+        objective_c_class | protocol | objective_c_class_end | property_declaration | synthesize_statement | dynamic_statement |
 
         autoreleasepool_block | compatibility_alias | class_directive
 
@@ -2514,6 +2514,12 @@ protocol_declaration[] { ENTRY_DEBUG } :
 
 ;
 
+protocol_declaration_full[] { ENTRY_DEBUG } :
+
+    ATPROTOCOL (identifier | comma)*
+
+;
+
 /* Declarations Definitions CFG */
 
 // check the ending token
@@ -2609,6 +2615,15 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
         }
     )*
 ;
+
+protocol[] { ENTRY_DEBUG } :
+
+    { look_past_rule(&srcMLParser::protocol_declaration_full) == TERMINATE }? property_declaration |
+    protocol_definition
+
+;
+
+
 
 protocol_definition[] { bool first = true; ENTRY_DEBUG } :
 
