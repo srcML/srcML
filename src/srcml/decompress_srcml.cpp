@@ -21,7 +21,36 @@
  */
 
 #include <decompress_srcml.hpp>
+#include <curl/curl.h>
 #include <archive.h>
+
+namespace {
+    struct curl {
+        CURL* handle;
+        CURLM* multi_handle;
+        CURLMsg* msg;
+        int msgs_left;
+        int still_running;
+        size_t data_len;
+        char* data_buffer;
+        std::string source;
+    };
+
+    size_t curl_cb(void* buffer, size_t len, size_t nmemb, void* data);
+
+    int     archive_curl_open(archive *, void *client_data);
+    ssize_t archive_curl_read(archive *, void *client_data, const void **buff);
+    int     archive_curl_close(archive *, void *client_data);
+
+    bool curl_supported(const std::string& input_protocol) {
+        const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
+        for (int i = 0; curl_types[i] != NULL; ++i) {
+            if (strcmp(curl_types[i], input_protocol.c_str()) == 0)
+                return true;
+        }
+        return false;
+    }
+}
 
 void decompress_srcml(const srcml_request_t& /* srcml_request */,
     const srcml_input_t& input_sources,
@@ -54,8 +83,15 @@ void decompress_srcml(const srcml_request_t& /* srcml_request */,
 //        archive_read_support_compression_by_extension(ar, ext.c_str());
 
     int status = ARCHIVE_OK;
+    curl curling;
+
     if (contains<int>(input_sources[0])) {
         status = archive_read_open_fd(libarchive_srcml, input_sources[0], 16384);
+    } else if (curl_supported(input_sources[0].protocol)) {
+
+        curling.source = input_sources[0].filename;
+        status = archive_read_open(libarchive_srcml, &curling, archive_curl_open, (archive_read_callback *)archive_curl_read, archive_curl_close);
+
     } else {
         status = archive_read_open_filename(libarchive_srcml, input_sources[0].resource.c_str(), 16384);
     }
@@ -84,3 +120,74 @@ void decompress_srcml(const srcml_request_t& /* srcml_request */,
     archive_read_close(libarchive_srcml);
     archive_read_finish(libarchive_srcml);
 }
+
+namespace {
+
+    size_t curl_cb(void* buffer, size_t len, size_t nmemb, void* data) {
+
+        curl* curldata = (curl*) data;
+
+        curldata->data_buffer = (char*)buffer;
+        curldata->data_len = len * nmemb;
+
+        return curldata->data_len;
+    }
+
+    int archive_curl_open(archive*, void* client_data) {
+
+        curl* curldata = (curl*) client_data;
+
+        curl_global_init(CURL_GLOBAL_DEFAULT);
+
+        curldata->handle = curl_easy_init();
+
+        curl_easy_setopt(curldata->handle, CURLOPT_SSL_VERIFYPEER, 0L);
+        curl_easy_setopt(curldata->handle, CURLOPT_SSL_VERIFYHOST, 0L);
+        curl_easy_setopt(curldata->handle, CURLOPT_HTTPAUTH, (long)CURLAUTH_ANY);
+        curl_easy_setopt(curldata->handle, CURLOPT_FOLLOWLOCATION, 1L);
+        curl_easy_setopt(curldata->handle, CURLOPT_VERBOSE, 0L);
+        curl_easy_setopt(curldata->handle, CURLOPT_WRITEFUNCTION, curl_cb);
+        curl_easy_setopt(curldata->handle, CURLOPT_WRITEDATA, curldata);
+        curl_easy_setopt(curldata->handle, CURLOPT_URL, curldata->source.c_str());
+
+        curldata->multi_handle = curl_multi_init();
+        curl_multi_add_handle(curldata->multi_handle, curldata->handle);
+        curl_multi_perform(curldata->multi_handle, &curldata->still_running);
+
+        // TODO: SOMETHING HERE TO MAKE SURE THE FILE IS ACTUALLY PRESENT
+        return ARCHIVE_OK;
+    }
+
+    ssize_t archive_curl_read(archive*, void* client_data, const void** buff) {
+
+        curl* curldata = (curl*) client_data;
+
+        curldata->data_len = 0;
+        while (curldata->data_len == 0 && curldata->still_running) {
+            curl_multi_perform(curldata->multi_handle, &curldata->still_running);
+        }
+
+        *buff = curldata->data_buffer;
+
+        return curldata->data_len;
+    }
+
+    int archive_curl_close(archive*, void* client_data) {
+
+        curl* curldata = (curl*) client_data;
+        /*
+          while ((curldata->msg = curl_multi_info_read(curldata->multi_handle, &curldata->msgs_left))) {
+          if (curldata->msg->msg == CURLMSG_DONE) {
+          if (curldata->msg->data.result) {
+          //                std::cerr << "Download status: " << curldata->msg->data.result << "\n";
+          }
+          break;
+          }
+          }
+        */
+        curl_multi_cleanup(curldata->multi_handle);
+        curl_easy_cleanup(curldata->handle);
+
+        return 0;
+    }
+};
