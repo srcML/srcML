@@ -2501,6 +2501,19 @@ class_directive[] { ENTRY_DEBUG } :
 
 ;
 
+protocol_declaration[] { ENTRY_DEBUG } :
+
+    {
+
+        startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME | MODE_LIST);
+
+        startElement(SPROTOCOL);
+
+    }
+    ATPROTOCOL
+
+;
+
 /* Declarations Definitions CFG */
 
 // check the ending token
@@ -2618,7 +2631,6 @@ protocol_definition[] { bool first = true; ENTRY_DEBUG } :
     }
 
 ;
-
 
 // handle class header
 objective_c_class_header[] { ENTRY_DEBUG } :
