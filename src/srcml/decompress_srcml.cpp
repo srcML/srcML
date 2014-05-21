@@ -90,7 +90,7 @@ void decompress_srcml(const srcml_request_t& /* srcml_request */,
     } else if (curl_supported(input_sources[0].protocol)) {
 
         curling.source = input_sources[0].filename;
-        status = archive_read_open(libarchive_srcml, &curling, archive_curl_open, (archive_read_callback *)archive_curl_read, archive_curl_close);
+        status = archive_read_open(libarchive_srcml, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
 
     } else {
         status = archive_read_open_filename(libarchive_srcml, input_sources[0].resource.c_str(), 16384);
