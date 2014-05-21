@@ -60,12 +60,12 @@ int main(int argc, char * argv[]) {
     // convert the list of input filenames to input sources
     srcml_input_t input_sources(srcml_request.input.begin(), srcml_request.input.end());
 
-    // for single input src archives (e.g., .tar), filename attribute is the source filename
-    if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
+    // for single input src archives (e.g., .tar), filename attribute is the source filename (if not already given)
+    if (!srcml_request.att_filename && input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
         srcml_request.att_filename = input_sources[0].filename;
     }
 
-    // standard input handled as FILE* to be able to peek
+    // standard input handled as FILE* to determine if srcML or src
     if (srcml_request.stdindex) {
 
         srcml_input_src* pstdin = &input_sources[*srcml_request.stdindex];
@@ -84,14 +84,10 @@ int main(int argc, char * argv[]) {
         }
     }
 
-    // output destination setup just like an input source
+    // output destination
     srcml_output_dest destination(srcml_request.output_filename ? *srcml_request.output_filename : "");
 
-    /*
-        Determine what processing needs to occur based on the inputs, outputs, and commands
-    */
-
-    // setup the commands in the pipeline
+    // determine what processing needs to occur by setting up an internal pipeline
     processing_steps_t pipeline;
 
     // src->srcml
@@ -166,8 +162,8 @@ bool request_additional_compression(const srcml_request_t& /* srcml_request */,
                                     const srcml_input_t& /* input_sources */,
                                     const srcml_output_dest& destination) {
 
-    return ((destination.compressions.size() > 1) ||
-        (destination.compressions.size() == 1 && destination.compressions.front() != ".gz"));
+    return (destination.compressions.size() > 1) ||
+        (destination.compressions.size() == 1 && destination.compressions.front() != ".gz");
 }
 
 bool request_create_src(const srcml_request_t& srcml_request,
