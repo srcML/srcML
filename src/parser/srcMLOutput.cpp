@@ -321,6 +321,7 @@ namespace {
     ELEMENT_MAP(SNIL,                  "literal")
     ELEMENT_MAP(SCLASS_INTERFACE,      "class")
     ELEMENT_MAP(SCLASS_IMPLEMENTATION, "class")
+    ELEMENT_MAP(SPROTOCOL_DECLARATION, "protocol_decl")
 
 
     //
