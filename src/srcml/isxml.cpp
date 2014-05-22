@@ -26,21 +26,19 @@
 #include <peek4char.hpp>
 
 // determine if XML from first four bytes in almost any encoding
-bool isxml(unsigned char ar[], ssize_t size);
+bool isxml(unsigned char ar[], int size);
 
 // determine if XML
 bool isxml(FILE* infd) {
 
-    // peek at the first 4 bytes
-    unsigned char data[4];
-    ssize_t size = peek4char(infd, data);
-
     // determine if the input is srcML or src from the first up-to 4 bytes
-    return isxml(data, size);
+    unsigned char data[4];
+
+    return isxml(data, peek4char(infd, data));
 }
 
 // determine if XML from first four bytes in almost any encoding
-bool isxml(unsigned char ar[], ssize_t size) {
+bool isxml(unsigned char ar[], int size) {
 
     // bail if not valid array
     if (!ar)

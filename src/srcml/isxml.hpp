@@ -24,16 +24,8 @@
 #define INCLUDED_IS_XML_HPP
 
 #include <stdio.h>
-#ifndef _MSC_BUILD 
-#include <unistd.h>
-#else
-#define ssize_t int
-#include <io.h>
-#endif
 
+// determine if XML
 bool isxml(FILE* infd);
-
-// determine if XML from first four bytes in almost any encoding
-bool isxml(unsigned char ar[], ssize_t size);
 
 #endif
