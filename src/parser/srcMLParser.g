@@ -1870,10 +1870,10 @@ ternary_check[] { ENTRY_DEBUG } :
 
 
     // ends are catch alls ok if overlap
-    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair | curly_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET)))
+    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair | curly_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET | RCURLY)))
 
     // ends are catch alls ok if overlap
-    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair | curly_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET)))* 
+    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair | curly_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET | RCURLY)))* 
 
 ;
 
