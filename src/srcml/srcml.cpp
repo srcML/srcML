@@ -113,7 +113,7 @@ int main(int argc, char * argv[]) {
         pipeline.push_back(create_src);
     }
 
-    // output->compressed output
+    // (srcml|src)->compressed
     if (request_additional_compression(srcml_request, input_sources, destination)) {
 
 #if ARCHIVE_VERSION_NUMBER > 3001002
