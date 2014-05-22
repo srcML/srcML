@@ -393,6 +393,28 @@ int main() {
 
     }
 
+    {
+
+        char * s;
+        int size;
+        srcml_archive * iarchive = srcml_create_archive();
+        srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+        srcml_append_transform_xslt_memory(iarchive, setlanguage.c_str(), setlanguage.size());
+        srcml_append_transform_stringparam(iarchive, "language", "Python");
+        srcml_archive * oarchive = srcml_clone_archive(iarchive);
+        srcml_write_open_memory(oarchive, &s, &size);
+
+        srcml_apply_transforms(iarchive, oarchive);
+
+        srcml_close_archive(oarchive);
+        srcml_free_archive(oarchive);
+        srcml_close_archive(iarchive);
+        srcml_free_archive(iarchive);
+        dassert(s, srcml_full_python);
+        free(s);
+
+    }
+
     /*
       xslt_FILE
     */
