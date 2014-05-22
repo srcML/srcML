@@ -269,7 +269,7 @@ private:
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Language(lang), ModeStack(this), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
-    parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0)
+    parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0), skip_ternary(false)
 {
 
     // root, single mode
@@ -610,6 +610,9 @@ public:
     bool notdestructor;
     bool operatorname;
     int curly_count;
+
+    bool skip_ternary;
+
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
     static const antlr::BitSet macro_call_token_set;
@@ -1844,7 +1847,15 @@ perform_ternary_check[] returns [bool is_ternary] {
         ternary_check();
         if(LA(1) == QMARK) is_ternary = true;
 
-    } catch(...) {}
+        if(!is_qmark)
+            if(LA(1) == TERMINATE) skip_ternary = true;
+
+    } catch(...) { 
+
+        if(!is_qmark)
+            if(LA(1) == TERMINATE) skip_ternary = true;
+
+    }
 
     inputState->guessing--;
     rewind(start);
@@ -3049,7 +3060,7 @@ terminate_pre[] { ENTRY_DEBUG } :
 ;
 
 // do the post terminate processing
-terminate_post[] { ENTRY_DEBUG } :
+terminate_post[] { skip_ternary = false; ENTRY_DEBUG } :
         {
 
             // end all statements this statement is nested in
@@ -4136,7 +4147,7 @@ qmark_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 ;
 
-qmark[] { ENTRY_DEBUG } :
+qmark[] { is_qmark = true; ENTRY_DEBUG } :
         {
             if(inTransparentMode(MODE_TERNARY | MODE_CONDITION))
                 endDownToMode(MODE_CONDITION);
@@ -6624,7 +6635,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
 
         { notdestructor }? sole_destop { notdestructor = false; } |
 
-       { !inTransparentMode(MODE_TERNARY | MODE_CONDITION) 
+       { !skip_ternary && !inTransparentMode(MODE_TERNARY | MODE_CONDITION) 
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
             && perform_ternary_check() }? ternary_expression |
 
@@ -7393,17 +7404,17 @@ typedef_statement[] { ENTRY_DEBUG } :
 
 // matching set of parenthesis
 paren_pair[] :
-        LPAREN (paren_pair | ~(LPAREN | RPAREN))* RPAREN
+        LPAREN (paren_pair | qmark | ~(LPAREN | RPAREN))* RPAREN
 ;
 
 // matching set of curly braces
 curly_pair[] :
-        LCURLY (curly_pair | ~(LCURLY | RCURLY))* RCURLY
+        LCURLY (curly_pair | qmark | ~(LCURLY | RCURLY))* RCURLY
 ;
 
 // matching set of curly braces
 bracket_pair[] :
-        LBRACKET (bracket_pair | ~(LBRACKET | RBRACKET))* RBRACKET
+        LBRACKET (bracket_pair | qmark | ~(LBRACKET | RBRACKET))* RBRACKET
 ;
 
 // See if there is a semicolon terminating a statement inside a block at the top level
