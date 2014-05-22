@@ -69,8 +69,8 @@ message() {
 }
 
 # output filenames for capturing stdout and stderr from the command
-typeset STDERR=.stderr_$(basename $0)
-typeset STDOUT=.stdout_$(basename $0)
+typeset STDERR=.stderr_$(basename $0 .sh)
+typeset STDOUT=.stdout_$(basename $0 .sh)
 
 # save stdout and stderr to our files
 [ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
