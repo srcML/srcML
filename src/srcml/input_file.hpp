@@ -1,5 +1,5 @@
 /**
- * @file peek4char.cpp
+ * @file input_file.hpp
  *
  * @copyright Copyright (C) 2014 SDML (www.srcML.org)
  *
@@ -20,30 +20,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <peek4char.hpp>
+#ifndef INPUT_FILE_HPP
+#define INPUT_FILE_HPP
 
-int peek4char(FILE* fp, unsigned char data[]) {
-    int size = 0;
-    int c;
-    if ((c = getc(fp)) != EOF) {
-        data[0] = c;
-        ++size;
-        if ((c = getc(fp)) != EOF) {
-            data[1] = c;
-            ++size;
-            if ((c = getc(fp)) != EOF) {
-                data[2] = c;
-                ++size;
-                if ((c = getc(fp)) != EOF) {
-                    data[3] = c;
-                    ++size;
-                    ungetc(data[3], fp);
-                }
-                ungetc(data[2], fp);
-            }
-            ungetc(data[1], fp);
-        }
-        ungetc(data[0], fp);
-    }
-    return size;
-}
+#include <srcml_input_src.hpp>
+
+// adjust input for libcurl and libarchive decompressions
+void input_file(srcml_input_src& input);
+
+#endif

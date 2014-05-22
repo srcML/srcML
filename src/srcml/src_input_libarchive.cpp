@@ -46,7 +46,17 @@ namespace {
     int     archive_curl_open(archive *, void *client_data);
     ssize_t archive_curl_read(archive *, void *client_data, const void **buff);
     int     archive_curl_close(archive *, void *client_data);
+
+	bool curl_supported(const std::string& input_protocol) {
+	    const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
+	    for (int i = 0; curl_types[i] != NULL; ++i) {
+	        if (strcmp(curl_types[i], input_protocol.c_str()) == 0)
+	            return true;
+	    }
+	    return false;
+	}
 }
+
 
 // Convert input to a ParseRequest and assign request to the processing queue
 void src_input_libarchive(ParseQueue& queue,
@@ -84,106 +94,100 @@ void src_input_libarchive(ParseQueue& queue,
     archive_read_support_filter_all(arch);
 #endif
 
-    // open the archive
+    int status;
     curl curling;
-    int open_status;
     if (contains<int>(input_file)) {
 
-        open_status = archive_read_open_fd(arch, input_file, 16384);
+        status = archive_read_open_fd(arch, input_file, 16384);
 
     } else if (contains<FILE*>(input_file)) {
 
-        open_status = archive_read_open_FILE(arch, input_file);
+        status = archive_read_open_FILE(arch, input_file);
 
-    } else if (input_file.protocol == "http") {
+    } else if (curl_supported(input_file.protocol)) {
 
         curling.source = input_file.filename;
-        open_status = archive_read_open(arch, &curling, archive_curl_open, (archive_read_callback *)archive_curl_read, archive_curl_close);
+        status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
 
     } else {
 
-        open_status = archive_read_open_filename(arch, input_file.c_str(), 16384);
+        status = archive_read_open_filename(arch, input_file.c_str(), 16384);
     }
-    if (open_status != ARCHIVE_OK) {
+    if (status != ARCHIVE_OK) {
         std::cerr << "Unable to open file " << input_file.filename << '\n';
         exit(1);
     }
 
-    int status = open_status;
-    if (status == ARCHIVE_OK) {
+    /* In general, go through this once for each time the header can be read
+       Exception: if empty, go through the loop exactly once */
+    int count = 0;
+    archive_entry *entry;
+    while (status == ARCHIVE_OK &&
+           (((status = archive_read_next_header(arch, &entry)) == ARCHIVE_OK) ||
+            (status == ARCHIVE_EOF && !count))) {
 
-        /* In general, go through this once for each time the header can be read
-           Exception: if empty, go through the loop exactly once */
-        int count = 0;
-        int status = ARCHIVE_OK;
-        archive_entry *entry;
-        while (status == ARCHIVE_OK &&
-               (((status = archive_read_next_header(arch, &entry)) == ARCHIVE_OK) ||
-                (status == ARCHIVE_EOF && !count))) {
+        // skip any directories
+        if (status == ARCHIVE_OK && archive_entry_filetype(entry) == AE_IFDIR)
+            continue;
 
-            // skip any directories
-            if (status == ARCHIVE_OK && archive_entry_filetype(entry) == AE_IFDIR)
-                continue;
+        // default is filename from archive entry (if not empty)
+        std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(entry) : "";
 
-            // default is filename from archive entry (if not empty)
-            std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(entry) : "";
+        if (count == 0 && filename != "data" && status != ARCHIVE_EOF)
+            srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
 
-            if (count == 0 && filename != "data" && status != ARCHIVE_EOF)
-                srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+        // archive entry filename for non-archive input is "data"
+        if (filename.empty() || filename == "data")
+            filename = input_file.resource;
 
-            // archive entry filename for non-archive input is "data"
-            if (filename.empty() || filename == "data")
-                filename = input_file.resource;
+        if (srcml_request.att_filename && !(srcml_archive_get_options(srcml_arch) & SRCML_OPTION_ARCHIVE))
+            filename = *srcml_request.att_filename;
 
-            if (srcml_request.att_filename && !(srcml_archive_get_options(srcml_arch) & SRCML_OPTION_ARCHIVE))
-                filename = *srcml_request.att_filename;
+        // language may have been explicitly set
+        std::string language;
 
-            // language may have been explicitly set
-            std::string language;
+        if (srcml_request.att_language)
+            language = *srcml_request.att_language;
 
-            if (srcml_request.att_language)
-                language = *srcml_request.att_language;
+        // if not explicitly set, language comes from extension
+        // we have to do this ourselves, since libsrcml can't for memory
+        if (language.empty())
+            if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
+                language = l;
 
-            // if not explicitly set, language comes from extension
-            // we have to do this ourselves, since libsrcml can't for memory
-            if (language.empty())
-                if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
-                    language = l;
+        // form the parsing request
+        ParseRequest* prequest = new ParseRequest;
+        if (srcml_request.att_filename || (filename != "-"))
+            prequest->filename = filename;
+        prequest->directory = srcml_request.att_directory;
+        prequest->version = srcml_request.att_version;
+        prequest->srcml_arch = srcml_arch;
+        prequest->language = language;
+        prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
-            // form the parsing request
-            ParseRequest* prequest = new ParseRequest;
-            if (srcml_request.att_filename || (filename != "-"))
-                prequest->filename = filename;
-            prequest->directory = srcml_request.att_directory;
-            prequest->version = srcml_request.att_version;
-            prequest->srcml_arch = srcml_arch;
-            prequest->language = language;
-            prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
+        // fill up the parse request buffer
+        if (!status) {
+            // if we know the size, create the right sized data_buffer
+            if (archive_entry_size_is_set(entry))
+                prequest->buffer.reserve(archive_entry_size(entry));
 
-            // fill up the parse request buffer
-            if (!status) {
-                // if we know the size, create the right sized data_buffer
-                if (archive_entry_size_is_set(entry))
-                    prequest->buffer.reserve(archive_entry_size(entry));
-
-                const char* buffer;
-                size_t size;
+            const char* buffer;
+            size_t size;
 #if ARCHIVE_VERSION_NUMBER < 3000000
-                off_t offset;
+            off_t offset;
 #else
-                int64_t offset;
+            int64_t offset;
 #endif
-                while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
-                    prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
-            }
-
-            // schedule for parsing
-            queue.schedule(prequest);
-
-            ++count;
+            while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
+                prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
         }
-        archive_read_finish(arch);
+
+        // schedule for parsing
+        queue.schedule(prequest);
+
+        ++count;
     }
+    archive_read_finish(arch);
 }
 
 namespace {

@@ -31,18 +31,20 @@
 #include <srcml_display_metadata.hpp>
 #include <srcml_execute.hpp>
 #include <isxml.hpp>
-#include <peek4char.hpp>
 
 #include <archive.h>
 #include <iostream>
+
+bool request_create_srcml          (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+bool request_transform_srcml       (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+bool request_display_metadata      (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+bool request_additional_compression(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+bool request_create_src            (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
 
 int main(int argc, char * argv[]) {
 
     // parse the command line
     srcml_request_t srcml_request = parseCLI(argc, argv);
-
-    // setup global options
-    SRCMLOptions::set(srcml_request.command);
 
     // version
     if (srcml_request.command & SRCML_COMMAND_VERSION) {
@@ -52,91 +54,120 @@ int main(int argc, char * argv[]) {
         return 0;
     }
 
-    // convert the list of input filenames to actual input sources
+    // global access to options
+    SRCMLOptions::set(srcml_request.command);
+
+    // convert the list of input filenames to input sources
     srcml_input_t input_sources(srcml_request.input.begin(), srcml_request.input.end());
 
-    if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
-        srcml_request.att_filename = input_sources[0].filename;
-    }
+    // standard input handled as FILE* to determine if srcML or src
+    if (srcml_request.stdindex) {
 
-    // input source that is stdin, if it exists
-    srcml_input_src* pstdin = srcml_request.stdindex ? &input_sources[*srcml_request.stdindex] : 0;
+        srcml_input_src* pstdin = &input_sources[*srcml_request.stdindex];
 
-    // standard input handled as FILE* to be able to peek
-    if (pstdin) {
-
-        // FILE* becomes part of stdin input source
+        // stdin accessed as FILE*
         pstdin->fileptr = fdopen(STDIN_FILENO, "r");
+        if (!pstdin->fileptr) {
+            std::cerr << "Unable to open stdin\n";
+            exit(1);
+        }
         pstdin->fd = boost::none;
 
-        // peek at the first 4 bytes
-        unsigned char data[4];
-        ssize_t size = 0;
-        peek4char(*(pstdin->fileptr), data, &size);
+        // determine if the input is srcML or src
+        pstdin->state = isxml(*(pstdin->fileptr)) ? SRCML : SRC;
 
-        // from the first up-to 4 bytes determine if is srcML or not
-        pstdin->state = isxml(data, size) ? SRCML : SRC;
+        // language is required when standard input is used for source
+        if ((pstdin->state == SRC) && !srcml_request.att_language) {
+            std::cerr << "Using stdin requires a declared language\n";
+            exit(1);
+        }
     }
 
-    // output destination setup just like an input source
+    // output destination
     srcml_output_dest destination(srcml_request.output_filename ? *srcml_request.output_filename : "");
 
-    // Determine what processing needs to occur based on the inputs, outputs, and commands
-
-    // setup the commands in the pipeline
+    // determine what processing needs to occur by setting up an internal pipeline
     processing_steps_t pipeline;
-    bool last_command = false;
 
-    bool src_input = std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end();
-
-    // src->srcml when there is any src input, or multiple srcml input with output to srcml (merge)
-    if (src_input || (input_sources.size() > 1 && destination.state == SRCML)) {
-
-        // language is required when creating srcml and standard input is used for source
-        if (pstdin && (pstdin->state == SRC) && !srcml_request.att_language) {
-                std::cerr << "Using stdin requires a declared language\n";
-                exit(1);
-        }
+    // src->srcml
+    if (request_create_srcml(srcml_request, input_sources, destination)) {
 
         pipeline.push_back(create_srcml);
-
-#if ARCHIVE_VERSION_NUMBER > 3001002
-        // libsrcml can apply gz compression
-        // all other compressions require an additional compression stage
-        if (!destination.compressions.empty() && (destination.compressions.size() > 1 || destination.compressions.front() != ".gz")) 
-            pipeline.push_back(compress_srcml);
-#endif
     }
 
-    // libsrcml can apply gz decompression
-    // all other compressions require an additional compression stage
-    // NOTE: assumes only one input file
-    if (!src_input && !input_sources[0].compressions.empty() && (input_sources[0].compressions.size() > 1 || input_sources[0].compressions.front() != ".gz")) {
-        pipeline.push_back(decompress_srcml);
-    }
+    // srcml->srcml
+    if (request_transform_srcml(srcml_request, input_sources, destination)) {
 
-    // XPath and XSLT processing
-    if (!srcml_request.transformations.empty()) {
         pipeline.push_back(transform_srcml);
     }
 
-    // metadata(srcml) based on command
-    if (!last_command && ((srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0)) {
-        pipeline.push_back(srcml_display_metadata);
-        last_command = true;
-    }
+    // srcml->metadata
+    if (request_display_metadata(srcml_request, input_sources, destination)) {
 
-    // srcml->src, based on the destination
-    if (!last_command && !src_input && destination.state != SRCML) {
+        pipeline.push_back(srcml_display_metadata);
+    }
+    
+    // srcml->src
+    if (request_create_src(srcml_request, input_sources, destination)) {
+
         pipeline.push_back(create_src);
     }
 
+    // (srcml|src)->compressed
+    if (request_additional_compression(srcml_request, input_sources, destination)) {
+
+#if ARCHIVE_VERSION_NUMBER > 3001002
+        pipeline.push_back(compress_srcml);
+#else
+        std::cerr << "Unsupported output compression\n";
+        exit(1);
+#endif
+    }
+
+    // should always have something to do
     assert(!pipeline.empty());
 
-    // execute the steps in order
+    // execute the pipeline
     srcml_execute(srcml_request, pipeline, input_sources, destination);
 
     srcml_cleanup_globals();
 
     return 0;
+}
+
+bool request_create_srcml(const srcml_request_t& /* srcml_request */, 
+                          const srcml_input_t& input_sources,
+                          const srcml_output_dest& destination) {
+
+    return std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end() ||
+        (input_sources.size() > 1 && destination.state == SRCML);
+}
+
+bool request_transform_srcml(const srcml_request_t& srcml_request,
+                             const srcml_input_t& /* input_sources */,
+                             const srcml_output_dest& /* destination */) {
+
+    return !srcml_request.transformations.empty();
+}
+
+bool request_display_metadata(const srcml_request_t& srcml_request,
+                              const srcml_input_t& /* input_sources */,
+                              const srcml_output_dest& /* destination */) {
+
+    return (srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0;
+}
+
+bool request_additional_compression(const srcml_request_t& /* srcml_request */,
+                                    const srcml_input_t& /* input_sources */,
+                                    const srcml_output_dest& destination) {
+
+    return (destination.compressions.size() > 1) ||
+        (destination.compressions.size() == 1 && destination.compressions.front() != ".gz");
+}
+
+bool request_create_src(const srcml_request_t& srcml_request,
+                        const srcml_input_t& input_sources,
+                        const srcml_output_dest& destination) {
+
+    return destination.state != SRCML && !request_display_metadata(srcml_request, input_sources, destination);
 }

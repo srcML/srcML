@@ -1053,7 +1053,7 @@ check 3<<- 'STDOUT'
 	STDOUT
 
 
-echo -n "" | src2srcml emptysrc/empty.h.gz
+src2srcml emptysrc/empty.h.gz
 
 check 3<<- STDOUT
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1076,111 +1076,112 @@ check 3<<- 'STDOUT'
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.c"/>
 	STDOUT
 
-echo -n "" | src2srcml emptysrc/empty.cxx
+src2srcml emptysrc/empty.cxx
 
 check 3<<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.c"
 	STDOUT
 
-echo -n "" | src2srcml emptysrc/empty.c++
+src2srcml emptysrc/empty.c++
 
 check 3<<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.c"
 	STDOUT
 
-echo -n "" | src2srcml emptysrc/empty.hpp
+src2srcml emptysrc/empty.hpp
 
 check 3<<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.h"
 	STDOUT
 
-echo -n "" | src2srcml emptysrc/empty.hh
+src2srcml emptysrc/empty.hh
 
 check 3<<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.h"/>
 	STDOUT
 
-echo -n "" | src2srcml emptysrc/empty.hxx
+src2srcml emptysrc/empty.hxx
 
 check 3<<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.h"
 	STDOUT
 
-echo -n "" | src2srcml emptysrc/empty.h++
+src2srcml emptysrc/empty.h++
 
 check 3<<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.h"
 	STDOUT
 
-echo -n "" | src2srcml emptysrc/empty.tcc
+src2srcml emptysrc/empty.tcc
 
 check 3<<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.t"/>
 	STDOUT
 
-echo -n "" | src2srcml emptysrc/empty.cpp.gz
+src2srcml emptysrc/empty.cpp.gz
 
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+check 3<<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.c"/>
 	STDOUT
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.c"/>
 
-echo -n "" | src2srcml emptysrc/empty.cc.gz
+
+src2srcml emptysrc/empty.cc.gz
 
 check 3<<<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.c"/>
 	STDOUT
 
-echo -n "" | src2srcml emptysrc/empty.cxx.gz
+src2srcml emptysrc/empty.cxx.gz
 
 check 3<<<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.c"/>
 	STDOUT
 
-echo -n "" | src2srcml emptysrc/empty.c++.gz
+src2srcml emptysrc/empty.c++.gz
 
 check 3<<<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.c"/>
 	STDOUT
 
-echo -n "" | src2srcml emptysrc/empty.hpp.gz
+src2srcml emptysrc/empty.hpp.gz
 
 check 3<<<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.h"/>
 	STDOUT
 
-echo -n "" | src2srcml emptysrc/empty.hh.gz
+src2srcml emptysrc/empty.hh.gz
 
 check 3<<<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.h"/>
 	STDOUT
 
-echo -n "" | src2srcml emptysrc/empty.hxx.gz
-
-check 3<<<- 'STDOUT'
+define emptyh 3<<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.h"/>
 	STDOUT
 
-echo -n "" | src2srcml emptysrc/empty.h++.gz
+src2srcml emptysrc/empty.hxx.gz
 
-check 3<<<- 'STDOUT'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.h"/>
-	STDOUT
+check 3<<<- "$emptyh"
 
-echo -n "" | src2srcml emptysrc/empty.tcc.gz
+src2srcml emptysrc/empty.h++.gz
+
+check 3<<<- "$emptyh"
+
+src2srcml emptysrc/empty.tcc.gz
 
 check 3<<<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -1193,11 +1194,11 @@ define emptyjava 3<<- 'STDOUT'
 	STDOUT
 
 # check java file extension
-echo -n "" | src2srcml emptysrc/empty.java
+src2srcml emptysrc/empty.java
 
 check 3<<< "$emptyjava"
 
-echo -n "" | src2srcml emptysrc/empty.java.gz
+src2srcml emptysrc/empty.java.gz
 
 check 3<<< "$emptyjava"
 
@@ -1206,7 +1207,7 @@ define emptyaj 3<<- 'STDOUT'
 	<unit xmlns="http://www.sdml.info/srcML/src" language="C" filename="emptysrc/empty.aj"/>
 	STDOUT
 
-echo -n "" | src2srcml emptysrc/empty.aj.gz
+src2srcml emptysrc/empty.aj.gz
 
 check 3<<< "$emptyaj"
 
@@ -1215,51 +1216,43 @@ check 3<<< "$emptyaj"
 # Test output options
 
 # src2srcml
-define sfile <<- 'STDOUT'
-	a;
-	STDOUT
-
-define output <<- 'STDOUT'
-	sxmlfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+define sxmlfile <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT
 
-define output <<- 'STDOUT'
-	xmlfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+define xmlfile <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename=sub/a.cpp>
-	INPUT
 	</unit>
 	STDOUT
 
-f = open(sub/a.cpp 'w')
-f.write(sfile)
-f.close()
-
-src2srcml sub/a.cpp' '--output' sub/a.cpp.xml
-validate(open(sub/a.cpp.xml 'r').read() fxmlfile)
-src2srcml sub/a.cpp' '--output=sub/a.cpp.xml' ""
-
-validate(open(sub/a.cpp.xml 'r').read() fxmlfile)
-
-src2srcml sub/a.cpp' -o sub/a.cpp.xml
-validate(open(sub/a.cpp.xml 'r').read() fxmlfil)
+createfile sub/a.cpp "a;"
 
 
+src2srcml sub/a.cpp --output sub/a.cpp.xml
 
-if sys.platform != 'cygwin' :
+check 3<<< "$sxmlfile"
 
-	src2srcml -l C++ '-' -o sub/a.cpp.xml sfile
-	validate(open(sub/a.cpp.xml 'r').read() sxmlfile)
-	src2srcml -l C++ -o sub/a.cpp.xml sfile
+src2srcml sub/a.cpp --output=sub/a.cpp.xml
 
-	validate(open(sub/a.cpp.xml 'r').read() sxmlfile)
+check 3<<< "$sxmlfile"
 
+src2srcml sub/a.cpp -o sub/a.cpp.xml
 
+check 3<<< "$sxmlfile"
 
-# non-windows
-src2srcml -l C++ '-' '--output' '/dev/stdout' <<< "$sfile"
+src2srcml -l C++ - -o sub/a.cpp.xml 3<<< "$sfile"
+
+check 3<<< "$sxmlfile"
+
+src2srcml -l C++ -o sub/a.cpp.xml sfile
+
+check 3<<< "$sxmlfile"
+
+src2srcml -l C++ - --output /dev/stdout <<< "$sfile"
 
 check 3<<< "$sxmlfile"
 
@@ -1378,9 +1371,9 @@ define output <<- 'STDOUT'
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename=sub/a.cpp/>
 	INPUT
 
-src2srcml sub/a.cpp' -l --language "C" "" fsrcml)
-src2srcml sub/a.cpp' -l --language "C" "" fsrcml)
-src2srcml sub/a.cpp' -l --language "C" "" fsrcml)
+src2srcml sub/a.cpp -l "C"
+src2srcml sub/a.cpp --language "C"
+src2srcml sub/a.cpp --language="C"
 src2srcml -l 'C' -o sub/a.cpp.xml sfile1
 validate(open(sub/a.cpp.xml 'r').read() srcml)
 src2srcml -l 'C' sub/a.cpp-o sub/a.cpp.xml
@@ -1401,8 +1394,8 @@ define output <<- 'STDOUT'
 	<unit xmlns="http://www.sdml.info/srcML/src" language="Java" filename=sub/a.cpp/>
 	STDOUT
 INPUT
-src2srcml sub/a.cpp' -l --language "Java" "" fsrcml)
-src2srcml sub/a.cpp' -l --language "Java" "" fsrcml)
+src2srcml sub/a.cpp -l --language "Java"
+src2srcml sub/a.cpp -l --language "Java"
 src2srcml -l 'Java' -o sub/a.cpp.xml sfile1
 validate(open(sub/a.cpp.xml 'r').read() srcml)
 src2srcml -l 'Java' sub/a.cpp-o sub/a.cpp.xml
@@ -1424,9 +1417,10 @@ define output <<- 'STDOUT'
 	f<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo.cpp"/>
 	INPUT
-src2srcml sub/a.cpp' -f --filename "foo.cpp" "" fsrcml)
-src2srcml sub/a.cpp' -f --filename "foo.cpp" "" fsrcml)
-src2srcml sub/a.cpp' -f --filename "foo.cpp" "" fsrcml)
+
+src2srcml sub/a.cpp -f "foo.cpp"
+src2srcml sub/a.cpp --filename "foo.cpp"
+src2srcml sub/a.cpp --filename="foo.cpp"
 src2srcml -l C++ -f 'foo.cpp' -o sub/a.cpp.xml sfile1
 validate(open(sub/a.cpp.xml 'r').read() srcml)
 src2srcml -f 'foo.cpp' sub/a.cpp-o sub/a.cpp.xml
@@ -1448,10 +1442,11 @@ define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename=sub/a.cpp/>
 	INPUT
-src2srcml sub/a.cpp' -d --directory "bar" "" fsrcml)
-src2srcml sub/a.cpp' -d --directory "bar" "" fsrcml)
-src2srcml sub/a.cpp' -d --directory "bar" "" fsrcml)
+src2srcml sub/a.cpp -d "bar"
+src2srcml sub/a.cpp --directory "bar"
+src2srcml sub/a.cpp --directory="bar"
 src2srcml -l C++ -d 'bar' -o sub/a.cpp.xml sfile1
+
 validate(open(sub/a.cpp.xml 'r').read() srcml)
 src2srcml -d 'bar' sub/a.cpp-o sub/a.cpp.xml
 
@@ -1472,9 +1467,10 @@ define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename=sub/a.cpp version="1.0"/>
 	INPUT
-src2srcml sub/a.cpp' -s --src-version "1.0" "" fsrcml)
-src2srcml sub/a.cpp' -s --src-version "1.0" "" fsrcml)
-src2srcml sub/a.cpp' -s --src-version "1.0" "" fsrcml)
+src2srcml sub/a.cpp -s "1.0"
+src2srcml sub/a.cpp --src-version "1.0"
+src2srcml sub/a.cpp --src-version="1.0"
+
 src2srcml -l C++ -s '1.0' -o sub/a.cpp.xml sfile1
 validate(open(sub/a.cpp.xml 'r').read() srcml)
 src2srcml -s '1.0' sub/a.cpp-o sub/a.cpp.xml
@@ -1494,9 +1490,9 @@ validate(open(sub/a.cpp.xml 'r').read() fsrcml)
 f<?xml vrsion="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename=sub/a.cpp/>
 	STDOUT
-src2srcml sub/a.cpp' -x --encoding "ISO-8859-1" "" fsrcml)
-src2srcml sub/a.cpp' -x --encoding "ISO-8859-1" "" fsrcml)
-src2srcml sub/a.cpp' -x --encoding "ISO-8859-1" "" fsrcml)
+src2srcml sub/a.cpp -x --encoding "ISO-8859-1"
+src2srcml sub/a.cpp -x --encoding "ISO-8859-1"
+src2srcml sub/a.cpp -x --encoding "ISO-8859-1"
 src2srcml -l C++ -x 'ISO-8859-1' -o sub/a.cpp.xml sfile1
 validate(open(sub/a.cpp.xml 'r').read() srcml)
 src2srcml -x 'ISO-8859-1' sub/a.cpp-o sub/a.cpp.xml
@@ -1513,20 +1509,30 @@ define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes">
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 	STDOUT
-INPUT
+
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename=sub/a.cpp/>
-	INPUT
-src2srcml -t --src-encoding "ISO-8859-1" sfile1 srcml)
-src2srcml -t --src-encoding "ISO-8859-1" sfile1 srcml)
-src2srcml -t --src-encoding "ISO-8859-1" sfile1 srcml)
-src2srcml sub/a.cpp' -t --src-encoding "ISO-8859-1" "" fsrcml)
-src2srcml sub/a.cpp' -t --src-encoding "ISO-8859-1" "" fsrcml)
-src2srcml sub/a.cpp' -t --src-encoding "ISO-8859-1" "" fsrcml)
-src2srcml --src-encoding "ISO-8859-1" sub/a.cpp "" fsrcml)
+	STDOUT
+
+src2srcml -t "ISO-8859-1" sfile1 srcml)
+
+src2srcml --src-encoding "ISO-8859-1" sfile1 srcml)
+
+src2srcml --src-encoding="ISO-8859-1" sfile1 srcml)
+
+src2srcml sub/a.cpp -t "ISO-8859-1"
+
+src2srcml sub/a.cpp --src-encoding "ISO-8859-1"
+
+src2srcml sub/a.cpp --src-encoding="ISO-8859-1"
+
+src2srcml --src-encoding "ISO-8859-1" sub/a.cpp
+
 src2srcml -l C++ --src-encoding "ISO-8859-1" -o sub/a.cpp.xml sfile1
+
 validate(open(sub/a.cpp.xml 'r').read() srcml)
+
 src2srcml --src-encoding "ISO-8859-1" sub/a.cpp -o sub/a.cpp.xml
 
 validate(open(sub/a.cpp.xml 'r').read() fsrcml)
@@ -1580,17 +1586,13 @@ define output <<- 'STDOUT'
 	</src:unit>
 	STDOUT
 
-# f = open(sub/a.cpp 'w')
-# f.write(sfile1)
-# f.close()
+createfile sub/a.cpp "$sfile1"
 
-# f = open('sub/b.cpp' 'w')
-# f.write(<<< "b;"
-# f.close()
+createfile sub/b.cpp "b;"
 
 src2srcml --archive sub/a.cpp -o sub/a.cpp.xml
 readfile input sub/a.cpp.xml').read() <<< "$nestedfile1)"
-src2srcml sub/a.cpp' 'sub/b.cpp' -o sub/a.cpp.xml
+src2srcml sub/a.cpp 'sub/b.cpp' -o sub/a.cpp.xml
 
 readfile input sub/a.cpp.xml').read() <<< "$nestedfile)"
 src2srcml --xmlns:src=http://www.sdml.info/srcML/src' sub/a.cpp 'sub/b.cpp' -o sub/a.cpp.xml
@@ -1654,7 +1656,7 @@ f.write(sfile1)
 f.close()
 
 # separate
-src2srcml --xmlns="http://www.sdml.info/srcML/src" sub/a.cpp "" fsrcml)
+src2srcml --xmlns="http://www.sdml.info/srcML/src" sub/a.cpp
 src2srcml -l C++ --xmlns="http://www.sdml.info/srcML/src" -o sub/a.cpp.xml sfile1
 validate(open(sub/a.cpp.xml 'r').read() srcml)
 
@@ -1664,7 +1666,7 @@ src2srcml --xmlns="http://www.sdml.info/srcML/src" sub/a.cpp -o sub/a.cpp.xml
 
 validate(open(sub/a.cpp.xml 'r').read() fsrcml)
 
-src2srcml --xmlns:cpp="http://www.sdml.info/srcML/cpp" sub/a.cpp "" fsrcml)
+src2srcml --xmlns:cpp="http://www.sdml.info/srcML/cpp" sub/a.cpp
 
 
 
@@ -1709,7 +1711,7 @@ define output <<- 'STDOUT'
 # separate
 src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" "--
 
-xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp "" fsrcml)src2srcml -l C++ --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" 
+xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cppsrc2srcml -l C++ --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" 
 --xmlns:err="http://www.sdml.info/srcML/srcerr" -o sub/a.cpp.xml sfile1
 validate(open(sub/a.cpp.xml 'r').read() srcml)
 src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" "--
@@ -1730,7 +1732,7 @@ cpp' -o sub/a.cpp.xml
 validate(open(sub/a.cpp.xml 'r').read() fsrcml)
 
 
-src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp "" fsrcml)src2srcml -l C++ --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:err="http://www.sdml.info/srcML/srcerr" -o sub/a.cpp.xml sfile1validate(open(sub/a.cpp.xml 'r').read() srcml)
+src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cppsrc2srcml -l C++ --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:err="http://www.sdml.info/srcML/srcerr" -o sub/a.cpp.xml sfile1validate(open(sub/a.cpp.xml 'r').read() srcml)
 
 src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp -o sub/a.cpp.xmlvalidate(open(sub/a.cpp.xml 'r').read() fsrcml)
 
@@ -1753,7 +1755,7 @@ define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	STDOUT<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns="http://www.sdml.info/srcML/cpp" language="C++" filename=sub/a.cpp/>
 	INPUT
-src2srcml --xmlns:src=http://www.sdml.info/srcML/src" --xmlns="http://www.sdml.info/srcML/cpp" sub/a.cpp "" fsrcml)
+src2srcml --xmlns:src=http://www.sdml.info/srcML/src" --xmlns="http://www.sdml.info/srcML/cpp" sub/a.cpp
 src2srcml -l C++ --xmlns:src=http://www.sdml.info/srcML/src" --xmlns="http://www.sdml.info/srcML/cpp" -o sub/a.cpp.xml sfile1
 validate(open(sub/a.cpp.xml 'r').read() srcml)
 src2srcml --xmlns:src=http://www.sdml.info/srcML/src" --xmlns="http://www.sdml.info/srcML/cpp" sub/a.cpp -o sub/a.cpp.xml
@@ -1793,7 +1795,7 @@ define output <<- 'STDOUT'
 	<unit language="C++" filename=sub/a.cpp/>
 	STDOUT
 INPUT
-src2srcml --no-namespace-decl sub/a.cpp "" fsrcml)
+src2srcml --no-namespace-decl sub/a.cpp
 src2srcml -l C++ --no-namespace-decl -o sub/a.cpp.xml sfile1
 validate(open(sub/a.cpp.xml 'r').read() srcml)
 src2srcml --no-namespace-decl sub/a.cpp -o sub/a.cpp.xml
@@ -1840,11 +1842,11 @@ f = open(sub/a.cpp 'w')
 f.write(cpp_src)
 f.close()
 
-src2srcml sub/a.cpp' "" fcpp_marked_srcml)
+src2srcml sub/a.cpp "" fcpp_marked_srcml)
 if sys.platform != 'cygwin':
 	src2srcml -l C++ -o sub/a.cpp.xml cpp_src
 	validate(open(sub/a.cpp.xml 'r').read() cpp_marked_srcml)
-src2srcml sub/a.cpp' -o sub/a.cpp.xml
+src2srcml sub/a.cpp -o sub/a.cpp.xml
 
 validate(open(sub/a.cpp.xml 'r').read() fcpp_marked_srcml)
 
@@ -1926,11 +1928,11 @@ f = open(sub/a.cpp 'w')
 f.write(cpp_if0)
 f.close()
 
-src2srcml sub/a.cpp' "" fcpp_textonly_srcml)
+src2srcml sub/a.cpp "" fcpp_textonly_srcml)
 if sys.platform != 'cygwin' :
 	src2srcml -l C++ -o sub/a.cpp.xml cpp_if0
 	validate(open(sub/a.cpp.xml 'r').read() cpp_textonly_srcm)
-src2srcml sub/a.cpp' -o sub/a.cpp.xml
+src2srcml sub/a.cpp -o sub/a.cpp.xml
 
 validate(open(sub/a.cpp.xml 'r').read() fcpp_textonly_srcml)
 
@@ -2531,7 +2533,7 @@ check sub/a.cpp.xml 3<<< "$sfile"
 
 src2srcml -l C++ --operator --literal sfile srcml)
 
-src2srcml --operator --literal sub/a.cpp "" fsrcml)
+src2srcml --operator --literal sub/a.cpp
 if sys.platform != 'cygwin' :
 	src2srcml -l C++ --operator --literal -o sub/a.cpp.xml sfie
 	validate(open(sub/a.cpp.xml 'r').read() srcml)
@@ -2554,7 +2556,7 @@ define output <<- 'STDOUT'
 	INPUT
 
 src2srcml -l C++ --literal --modifier sfile srcml)
-src2srcml --literal --modifier sub/a.cpp "" fsrcml)
+src2srcml --literal --modifier sub/a.cpp
 if sys.platform != 'cygwin' :
 	src2srcml -l C++ --literal --modifier -o sub/a.cpp.xml sfile
 	validate(open(sub/a.cpp.xml 'r').read() srcml)
@@ -2566,7 +2568,7 @@ validate(open(sub/a.cpp.xml 'r').read() fsrcml)
 
 src2srcml -l C++ --modifier --literal sfile srcml)
 
-src2srcml --modifier --literal sub/a.cpp "" fsrcml)
+src2srcml --modifier --literal sub/a.cpp
 if sys.platform != 'cygwin' :
 	src2srcml -l C++ --modifier --literal -o sub/a.cpp.xml sfie
 	validate(open(sub/a.cpp.xml 'r').read() srcml)
@@ -2589,7 +2591,7 @@ define output <<- 'STDOUT'
 	INPUT
 
 src2srcml -l C++ --operator --modifier sfile srcml)
-src2srcml --operator --modifier sub/a.cpp "" fsrcml)
+src2srcml --operator --modifier sub/a.cpp
 if sys.platform != 'cygwin' :
 	src2srcml -l C++ --operator --modifier -o sub/a.cpp.xml sfile
 	validate(open(sub/a.cpp.xml 'r').read() srcml)
@@ -2601,7 +2603,7 @@ validate(open(sub/a.cpp.xml 'r').read() fsrcml)
 
 src2srcml -l C++ --modifier --operator sfile srcml)
 
-src2srcml --modifier --operator sub/a.cpp "" fsrcml)
+src2srcml --modifier --operator sub/a.cpp
 if sys.platform != 'cygwin' :
 	src2srcml -l C++ --modifier --operator -o sub/a.cpp.xml sfie
 	validate(open(sub/a.cpp.xml 'r').read() srcml)
@@ -2622,7 +2624,7 @@ define output <<- 'STDOUT'
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp=""	STDOUT
 
 src2srcml -l C++ --literal --operator --modifier sfile srcml)
-src2srcml --literal --operator --modifier sub/a.cpp "" fsrcml)
+src2srcml --literal --operator --modifier sub/a.cpp
 if sys.platform != 'cygwin' :
 	src2srcml -l C++ --literal --operator --modifier -o sub/a.cpp.xml sfile
 	validate(open(sub/a.cpp.xml 'r').read() srcml)
@@ -2634,7 +2636,7 @@ validate(open(sub/a.cpp.xml 'r').read() fsrcml)
 
 src2srcml -l C++ --literal --modifier --operator sfile srcml)
 
-src2srcml --literal --modifier --operator sub/a.cpp "" fsrcml)
+src2srcml --literal --modifier --operator sub/a.cpp
 if sys.platform != 'cygwin' :
 	src2srcml -l C++ --literal --modifier --operator -o sub/a.cpp.xml sfile
 	validate(open(sub/a.cpp.xml 'r').read() srcml)
@@ -2646,7 +2648,7 @@ validate(open(sub/a.cpp.xml 'r').read() fsrcml)
 
 src2srcml -l C++ --operator --literal --modifier sfile srcml)
 
-src2srcml --operator --literal --modifier sub/a.cpp "" fsrcml)
+src2srcml --operator --literal --modifier sub/a.cpp
 if sys.platform != 'cygwin' :
 	src2srcml -l C++ --operator --literal --modifier -o sub/a.cpp.xml sfile
 	 validate(open(sub/a.cpp.xml 'r').read() srcml)
@@ -2658,7 +2660,7 @@ validate(open(sub/a.cpp.xml 'r').read() fsrcml)
 
 src2srcml -l C++ --operator --modifier --literal sfile srcml)
 
-src2srcml --operator --modifier --literal sub/a.cpp "" fsrcml)
+src2srcml --operator --modifier --literal sub/a.cpp
 if sys.platform != 'cygwin' :
 	src2srcml -l C++ --operator --modifier --literal -o sub/a.cpp.xml sfile
 	validate(open(sub/a.cpp.xml 'r').read() srcml)
@@ -2670,7 +2672,7 @@ validate(open(sub/a.cpp.xml 'r').read() fsrcml)
 
 src2srcml -l C++ --modifier --literal --operator sfile srcml)
 
-src2srcml --modifier --literal --operator sub/a.cpp "" fsrcml)
+src2srcml --modifier --literal --operator sub/a.cpp
 if sys.platform != 'cygwin' :
 	src2srcml -l C++ --modifier --literal --operator -o sub/a.cpp.xml sfile
 	validate(open(sub/a.cpp.xml 'r').read() srcml)
@@ -2682,7 +2684,7 @@ validate(open(sub/a.cpp.xml 'r').read() fsrcml)
 
 src2srcml -l C++ --modifier --operator --literal sfile srcml)
 
-src2srcml --modifier --operator --literal sub/a.cpp "" fsrcml)
+src2srcml --modifier --operator --literal sub/a.cpp
 if sys.platform != 'cygwin' :
 	src2srcml -l C++ --modifier --operator --literal -o sub/a.cpp.xml sfile
 	validate(open(sub/a.cpp.xml 'r').read() srcml)
@@ -3054,8 +3056,8 @@ if platform.system() != "Windows" and sys.platform != 'cygwin' :
 	execute(['grep' srcencoding + xmlencoding line)
 
 	globals()["test_count" += 1
-	globals()["test_line" = os.path.basename(src2srcml) + ' ' + --verbose + ' sub/a.cpp'
-	print test_count os.path.basename(src2srcml) + ' ' + --verbose + ' sub/a.cpp'
+	globals()["test_line" = os.path.basename(src2srcml) + ' ' + --verbose + ' sub/a.cpp
+	print test_count os.path.basename(src2srcml) + ' ' + --verbose + ' sub/a.cpp
 	line = src2srcml --verbose sub/a.cpp
 	execute(['grep' srcencoding + xmlencoding line)
 
@@ -4269,7 +4271,7 @@ srcmlend = STDOT
 	STDOUT
 
 if platform.system() != "Windows" :
-	os.system('rm sub/a.cpp; touch sub/a.cpp')
+	os.system('rm sub/a.cpp; touch sub/a.cpp)
 else :
 	os.system("del sub\\a.cpp")
 	os.system("copy emptysrc\\empty.cpp sub\\a.cpp")
@@ -4278,8 +4280,8 @@ f = open('sub/a.java' 'w')
 f.write(src)
 f.close()
 
-src2srcml sub/a.cpp' 'sub/a.java' '' srcmlstart + cppempty + java + srcmlend)
-src2srcml sub/a.cpp' 'sub/a.java' -o 'sub/all.xml' '' '')
+src2srcml sub/a.cpp 'sub/a.java' '' srcmlstart + cppempty + java + srcmlend)
+src2srcml sub/a.cpp 'sub/a.java' -o 'sub/all.xml' '' '')
 readfile input sub/all.xml' 'r').read() srcmlstart + cppempty + java + srcmlend)
 
 src2srcml sub/a.java' sub/a.cpp '' srcmlstart + java + cppempty + srcmlend)
@@ -4296,8 +4298,8 @@ f = open(sub/a.cpp 'w')
 f.write(src)
 f.close()
 
-src2srcml sub/a.cpp' 'sub/a.java' '' srcmlstart + cpp + javaempty + srcmlend)
-src2srcml sub/a.cpp' 'sub/a.java' -o 'sub/all.xml' '' '')
+src2srcml sub/a.cpp 'sub/a.java' '' srcmlstart + cpp + javaempty + srcmlend)
+src2srcml sub/a.cpp 'sub/a.java' -o 'sub/all.xml' '' '')
 readfile input sub/all.xml' 'r').read() srcmlstart + cpp + javaempty + srcmlend)
 
 src2srcml sub/a.java' sub/a.cpp '' srcmlstart + javaempty + cpp + srcmlend)
@@ -4311,7 +4313,7 @@ cpp = STDOUT
 	STDOUT
 
 if platform.system() != "Windows" :
-	os.system('rm sub/a.cpp; touch sub/a.cpp')
+	os.system('rm sub/a.cpp; touch sub/a.cpp)
 else :
 	os.system("del sub\\a.cpp")
 	os.system("copy emptysrc\\empty.cpp sub\\a.cpp")
@@ -4320,8 +4322,8 @@ f = open('sub/b.cpp' 'w')
 f.write(src)
 f.close()
 
-src2srcml sub/a.cpp' 'sub/b.cpp' '' srcmlstart + cppempty + cpp + srcmlend)
-src2srcml sub/a.cpp' 'sub/b.cpp' -o 'sub/all.xml' '' '')
+src2srcml sub/a.cpp 'sub/b.cpp' '' srcmlstart + cppempty + cpp + srcmlend)
+src2srcml sub/a.cpp 'sub/b.cpp' -o 'sub/all.xml' '' '')
 readfile input sub/all.xml' 'r').read() srcmlstart + cppempty + cpp + srcmlend)
 
 src2srcml sub/b.cpp' sub/a.cpp '' srcmlstart + cpp + cppempty + srcmlend)
