@@ -42,7 +42,7 @@ if(${SVN_ENABLED})
 endif()
 
 # setup tests for cli
-file(GLOB TESTFILES "${CMAKE_SOURCE_DIR}/cli/test_*.sh")
+file(GLOB TESTFILES "${CMAKE_SOURCE_DIR}/cli/testsuite/*_test_cli.sh")
 foreach(TESTFILE ${TESTFILES})
   add_test(${TESTFILE} ${TESTFILE})
 endforeach()

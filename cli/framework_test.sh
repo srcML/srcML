@@ -30,7 +30,7 @@
 #   can be made
 
 # make sure to find the srcml executable
-export PATH=../bin/:$PATH
+export PATH=../../bin/:$PATH
 
 # always exit when a command exits with a non-zero status
 #set -e

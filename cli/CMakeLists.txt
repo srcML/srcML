@@ -18,5 +18,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # Add tests
-addBashTest(framework_test.sh)
-addBashTest(test_language_flag_short_blank.sh)
+#addBashTest(framework_test.sh)
+#addBashTest(test_language_flag_short_blank.sh)
+addBashTest(candidates/1_test_cli.sh)
