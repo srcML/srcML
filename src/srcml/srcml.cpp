@@ -54,7 +54,7 @@ int main(int argc, char * argv[]) {
         return 0;
     }
 
-    // setup global access to options
+    // global access to options
     SRCMLOptions::set(srcml_request.command);
 
     // convert the list of input filenames to input sources
@@ -65,8 +65,12 @@ int main(int argc, char * argv[]) {
 
         srcml_input_src* pstdin = &input_sources[*srcml_request.stdindex];
 
-        // FILE* becomes part of stdin input source
+        // stdin accessed as FILE*
         pstdin->fileptr = fdopen(STDIN_FILENO, "r");
+        if (!pstdin->fileptr) {
+            std::cerr << "Unable to open stdin\n";
+            exit(1);
+        }
         pstdin->fd = boost::none;
 
         // determine if the input is srcML or src
@@ -91,13 +95,13 @@ int main(int argc, char * argv[]) {
         pipeline.push_back(create_srcml);
     }
 
-    // XPath, XSLT, and RelaxNG processing
+    // srcml->srcml
     if (request_transform_srcml(srcml_request, input_sources, destination)) {
 
         pipeline.push_back(transform_srcml);
     }
 
-    // metadata output
+    // srcml->metadata
     if (request_display_metadata(srcml_request, input_sources, destination)) {
 
         pipeline.push_back(srcml_display_metadata);
@@ -109,7 +113,7 @@ int main(int argc, char * argv[]) {
         pipeline.push_back(create_src);
     }
 
-    // additional output compression
+    // output->compressed output
     if (request_additional_compression(srcml_request, input_sources, destination)) {
 
 #if ARCHIVE_VERSION_NUMBER > 3001002
