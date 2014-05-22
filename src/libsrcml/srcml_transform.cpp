@@ -319,11 +319,10 @@ int srcml_append_transform_stringparam(srcml_archive* archive, const char* xpath
 
     size_t xpath_param_value_length = strlen(xpath_param_value);
     char * string_value = new char[xpath_param_value_length + 3];
-    
     string_value[0] = '"';
-    memcpy(string_value + 1, xpath_param_value, xpath_param_value_length);
-    string_value[xpath_param_value_length - 2] = '"';
-    string_value[xpath_param_value_length - 1] = 0;
+    strncpy(string_value + 1, xpath_param_value, xpath_param_value_length);
+    string_value[xpath_param_value_length + 1] = '"';
+    string_value[xpath_param_value_length + 2] = 0;
 
     archive->transformations.back().xsl_parameters.push_back(string_value);
     archive->transformations.back().xsl_parameters.push_back(0);

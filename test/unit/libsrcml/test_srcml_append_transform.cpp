@@ -444,8 +444,8 @@ int main() {
         srcml_append_transform_param(archive, "foo", "bar");
 
         dassert(archive->transformations.back().xsl_parameters.size(), 3);
-        dassert(archive->transformations.back().xsl_parameters.at(0), "foo");
-        dassert(archive->transformations.back().xsl_parameters.at(1), "bar");
+        dassert(archive->transformations.back().xsl_parameters.at(0), std::string("foo"));
+        dassert(archive->transformations.back().xsl_parameters.at(1), std::string("bar"));
         dassert(archive->transformations.back().xsl_parameters.at(2), 0);
 
         srcml_close_archive(archive);
@@ -483,6 +483,55 @@ int main() {
     }
 
     /*
+      srcml_append_transform_stringparam
+    */
+
+    {
+        srcml_archive * archive = srcml_create_archive();
+        srcml_read_open_memory(archive, s.c_str(), s.size());
+        srcml_append_transform_xslt_filename(archive, "copy.xsl");
+        srcml_append_transform_stringparam(archive, "foo", "bar");
+
+        dassert(archive->transformations.back().xsl_parameters.size(), 3);
+        dassert(archive->transformations.back().xsl_parameters.at(0), std::string("foo"));
+        dassert(archive->transformations.back().xsl_parameters.at(1), std::string("\"bar\""));
+        dassert(archive->transformations.back().xsl_parameters.at(2), 0);
+
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+    }
+
+    {
+        srcml_archive * archive = srcml_create_archive();
+        dassert(srcml_append_transform_stringparam(archive, "foo", "bar"), SRCML_STATUS_INVALID_IO_OPERATION);
+
+        srcml_free_archive(archive);
+    }
+
+    {
+
+        dassert(srcml_append_transform_stringparam(0, "foo", "bar"), SRCML_STATUS_INVALID_ARGUMENT);
+    }
+
+    {
+        srcml_archive * archive = srcml_create_archive();
+        srcml_read_open_memory(archive, s.c_str(), s.size());
+        dassert(srcml_append_transform_stringparam(archive, 0, "bar"), SRCML_STATUS_INVALID_ARGUMENT);
+
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+    }
+
+    {
+        srcml_archive * archive = srcml_create_archive();
+        srcml_read_open_memory(archive, s.c_str(), s.size());
+        dassert(srcml_append_transform_stringparam(archive, "foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
+
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+    }
+
+    /*
       srcml_append_transform_*
     */
 
@@ -502,6 +551,7 @@ int main() {
         CLOSE(fd);
 
         srcml_append_transform_param(archive, "foo", "bar");
+        srcml_append_transform_stringparam(archive, "foo", "bar");
 
         srcml_append_transform_relaxng_filename(archive, "schema.rng");
         srcml_append_transform_relaxng_memory(archive, schema.c_str(), schema.size());
@@ -523,10 +573,12 @@ int main() {
         assert(archive->transformations.at(3).transformation.doc != 0);
         dassert(archive->transformations.at(4).type, SRCML_XSLT);
 
-        dassert(archive->transformations.at(4).xsl_parameters.size(), 3);
-        dassert(archive->transformations.at(4).xsl_parameters.at(0), "foo");
-        dassert(archive->transformations.at(4).xsl_parameters.at(1), "bar");
-        dassert(archive->transformations.at(4).xsl_parameters.at(2), 0);
+        dassert(archive->transformations.at(4).xsl_parameters.size(), 5);
+        dassert(archive->transformations.at(4).xsl_parameters.at(0), std::string("foo"));
+        dassert(archive->transformations.at(4).xsl_parameters.at(1), std::string("bar"));
+        dassert(archive->transformations.at(4).xsl_parameters.at(2), std::string("foo"));
+        dassert(archive->transformations.at(4).xsl_parameters.at(3), std::string("\"bar\""));
+        dassert(archive->transformations.at(4).xsl_parameters.at(4), 0);
 
         assert(archive->transformations.at(5).transformation.doc != 0);
         dassert(archive->transformations.at(5).type, SRCML_RELAXNG);
