@@ -33,6 +33,6 @@
 #endif
 
 // determine if XML from first four bytes in almost any encoding
-void peek4char(FILE* fp, unsigned char data[], ssize_t* psize);
+int peek4char(FILE* fp, unsigned char data[]);
 
 #endif

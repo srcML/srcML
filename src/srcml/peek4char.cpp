@@ -22,21 +22,21 @@
 
 #include <peek4char.hpp>
 
-void peek4char(FILE* fp, unsigned char data[], ssize_t* psize) {
-    *psize = 0;
+int peek4char(FILE* fp, unsigned char data[]) {
+    int size = 0;
     int c;
     if ((c = getc(fp)) != EOF) {
         data[0] = c;
-        ++(*psize);
+        ++size;
         if ((c = getc(fp)) != EOF) {
             data[1] = c;
-            ++(*psize);
+            ++size;
             if ((c = getc(fp)) != EOF) {
                 data[2] = c;
-                ++(*psize);
+                ++size;
                 if ((c = getc(fp)) != EOF) {
                     data[3] = c;
-                    ++(*psize);
+                    ++size;
                     ungetc(data[3], fp);
                 }
                 ungetc(data[2], fp);
@@ -45,4 +45,5 @@ void peek4char(FILE* fp, unsigned char data[], ssize_t* psize) {
         }
         ungetc(data[0], fp);
     }
+    return size;
 }

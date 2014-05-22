@@ -33,8 +33,7 @@ bool isxml(FILE* infd) {
 
     // peek at the first 4 bytes
     unsigned char data[4];
-    ssize_t size = 0;
-    peek4char(infd, data, &size);
+    ssize_t size = peek4char(infd, data);
 
     // determine if the input is srcML or src from the first up-to 4 bytes
     return isxml(data, size);
