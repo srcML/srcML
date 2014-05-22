@@ -291,7 +291,41 @@ int srcml_append_transform_param(srcml_archive* archive, const char* xpath_param
 
     archive->transformations.back().xsl_parameters.pop_back();
     archive->transformations.back().xsl_parameters.push_back(xpath_param_name);
-    archive->transformations.back().xsl_parameters.push_back(xpath_param_value);
+    archive->transformations.back().xsl_parameters.push_back(strdup(xpath_param_value));
+    archive->transformations.back().xsl_parameters.push_back(0);
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_append_transform_stringparam
+ * @param archive a srcml archive
+ * @param xpath_param_name name of a parameter
+ * @param xpath_param_value value of the named parameter will be wrapped in "
+ *
+ * Append the parameter to the last transformation with the value wrapped in ".
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status errors code on failure.
+ */
+int srcml_append_transform_stringparam(srcml_archive* archive, const char* xpath_param_name, const char* xpath_param_value) {
+
+    if(archive == NULL || xpath_param_name == NULL || xpath_param_value == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+    if(archive->transformations.size() == 0) return SRCML_STATUS_NO_TRANSFORMATION;
+
+    archive->transformations.back().xsl_parameters.pop_back();
+    archive->transformations.back().xsl_parameters.push_back(xpath_param_name);
+
+    size_t xpath_param_value_length = strlen(xpath_param_value);
+    char * string_value = new char[xpath_param_value_length + 3];
+    
+    string_value[0] = '"';
+    memcpy(string_value + 1, xpath_param_value, xpath_param_value_length);
+    string_value[xpath_param_value_length - 2] = '"';
+    string_value[xpath_param_value_length - 1] = 0;
+
+    archive->transformations.back().xsl_parameters.push_back(string_value);
     archive->transformations.back().xsl_parameters.push_back(0);
 
     return SRCML_STATUS_OK;
@@ -310,9 +344,16 @@ int srcml_clear_transforms(srcml_archive * archive) {
 
     if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    for(std::vector<transform>::iterator itr = archive->transformations.begin(); itr != archive->transformations.end(); ++itr)
+    for(std::vector<transform>::iterator itr = archive->transformations.begin(); itr != archive->transformations.end(); ++itr) {
+
+        for(std::vector<const char *>::size_type pos = 1; pos < itr->xsl_parameters.size(); pos += 2)
+            delete itr->xsl_parameters[pos];
+
         if(itr->type == SRCML_XSLT || itr->type == SRCML_RELAXNG)
             xmlFreeDoc(itr->transformation.doc);
+
+    }
+
     archive->transformations.clear();
 
     return SRCML_STATUS_OK;
