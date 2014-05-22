@@ -3070,6 +3070,7 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
                 startElement(SEMPTY);
         }
         TERMINATE
+        set_bool[skip_ternary, false]
 ;
 
 // do the pre terminate processing
@@ -3089,7 +3090,7 @@ terminate_pre[] { ENTRY_DEBUG } :
 ;
 
 // do the post terminate processing
-terminate_post[] { skip_ternary = false; ENTRY_DEBUG } :
+terminate_post[] { ENTRY_DEBUG } :
         {
 
             // end all statements this statement is nested in
