@@ -1,0 +1,1 @@
+../candidates/7_test_cli.sh
