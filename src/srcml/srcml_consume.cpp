@@ -68,7 +68,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         // sha1 attribute, if hash is on
         // sha1 value based on the code as encoded (source text encoding) in the original file
-        if (srcml_archive_get_options(request->srcml_arch) & SRCML_OPTION_HASH) {
+        if (!request->disk_filename && srcml_archive_get_options(request->srcml_arch) & SRCML_OPTION_HASH) {
 
 #ifdef _MSC_BUILD
             unsigned char md[20];
@@ -99,6 +99,8 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             BOOST_STATIC_ASSERT_MSG(sizeof(outmd)/sizeof(outmd[0]) == (SHA_DIGEST_LENGTH * 2 + 1),
                 "Wrong size for SHA_DIGEST_LENGTH conversion");
 #endif
+
+            fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, outmd);
             
             srcml_unit_set_hash(unit, outmd);
         }
