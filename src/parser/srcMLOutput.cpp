@@ -799,6 +799,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     if(isoption(options, SRCML_OPTION_NESTIF))         { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NESTIF"; }
     if(isoption(options, SRCML_OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
     if(isoption(options, SRCML_OPTION_WRAP_TEMPLATE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "WRAP_TEMPLATE"; }
+    if(isoption(options, SRCML_OPTION_TERNARY))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "TERNARY"; }
 
     std::string stab = stabs.str();
 
@@ -826,7 +827,8 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
         // timestamp attribute
         { UNIT_ATTRIBUTE_HASH, hash },
 
-        { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && (isoption(options, SRCML_OPTION_NESTIF) || isoption(options, SRCML_OPTION_CPPIF_CHECK) || isoption(options, SRCML_OPTION_WRAP_TEMPLATE)) ? soptions.c_str() : 0 },
+        { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && (isoption(options, SRCML_OPTION_NESTIF)
+         || isoption(options, SRCML_OPTION_CPPIF_CHECK) || isoption(options, SRCML_OPTION_WRAP_TEMPLATE) || isoption(options, SRCML_OPTION_TERNARY)) ? soptions.c_str() : 0 },
 
     };
 

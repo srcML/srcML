@@ -136,6 +136,8 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_CPPIF_CHECK       1<<21
 /** debug time attribute */
 #define SRCML_OPTION_DEBUG_TIMER       1<<22
+/** debug time attribute */
+#define SRCML_OPTION_TERNARY           1<<23
 
     /* srcml status messages */
     /** Return status indicating no errors */
