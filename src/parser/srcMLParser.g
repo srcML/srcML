@@ -7434,17 +7434,17 @@ typedef_statement[] { ENTRY_DEBUG } :
 
 // matching set of parenthesis
 paren_pair[] :
-        LPAREN (paren_pair | qmark | ~(LPAREN | RPAREN))* RPAREN
+        LPAREN (paren_pair | qmark | ~(QMARK | LPAREN | RPAREN))* RPAREN
 ;
 
 // matching set of curly braces
 curly_pair[] :
-        LCURLY (curly_pair | qmark | ~(LCURLY | RCURLY))* RCURLY
+        LCURLY (curly_pair | qmark | ~(QMARK | LCURLY | RCURLY))* RCURLY
 ;
 
 // matching set of curly braces
 bracket_pair[] :
-        LBRACKET (bracket_pair | qmark | ~(LBRACKET | RBRACKET))* RBRACKET
+        LBRACKET (bracket_pair | qmark | ~(QMARK | LBRACKET | RBRACKET))* RBRACKET
 ;
 
 // See if there is a semicolon terminating a statement inside a block at the top level
