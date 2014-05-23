@@ -76,87 +76,87 @@ __LIBSRCML_DECL const char* srcml_version_string();
 /* Core language set */
 /** srcML language not set */
 #define SRCML_LANGUAGE_NONE   0
-    /** string for language C */
+/** string for language C */
 #define SRCML_LANGUAGE_C      "C"
-    /** string for language C++ */
+/** string for language C++ */
 #define SRCML_LANGUAGE_CXX    "C++"
-    /** string for language Java */
+/** string for language Java */
 #define SRCML_LANGUAGE_JAVA   "Java"
-    /** string for language C# */
+/** string for language C# */
 #define SRCML_LANGUAGE_CSHARP "C#"
-    /** string for language C# */
+/** string for language C# */
 #define SRCML_LANGUAGE_OBJECTIVE_C "Objective-C"
-    /** string for language XML */
+/** string for language XML */
 #define SRCML_LANGUAGE_XML    "xml"
 
-    /* Options */
-    /** Create an archive */
+/* Options */
+/** Create an archive */
 #define SRCML_OPTION_ARCHIVE           1<<0
-    /** Markups literal in special namespace */
+/** Markups literal in special namespace */
 #define SRCML_OPTION_LITERAL           1<<1
-    /** Markups modifiers in special namespace */
+/** Markups modifiers in special namespace */
 #define SRCML_OPTION_MODIFIER          1<<2
-    /** Markups operator in special namespace */
+/** Markups operator in special namespace */
 #define SRCML_OPTION_OPERATOR          1<<3
-    /** Markups operator in special namespace */
+/** Markups operator in special namespace */
 #define SRCML_OPTION_DEBUG             1<<4
-    /** Include line/column position attributes */
+/** Include line/column position attributes */
 #define SRCML_OPTION_POSITION          1<<5
-    /** Markup preprocessor elements (default for C, C++, C#) */
+/** Markup preprocessor elements (default for C, C++, C#) */
 #define SRCML_OPTION_CPP_NOMACRO       1<<6
-    /** Markup preprocessor elements (default for C, C++) */
+/** Markup preprocessor elements (default for C, C++) */
 #define SRCML_OPTION_CPP               1 << 6 | 1<<7 
-    /** Issue an XML declaration */
+/** Issue an XML declaration */
 #define SRCML_OPTION_XML_DECL          1<<8
-    /** Include any XML namespace declarations */
+/** Include any XML namespace declarations */
 #define SRCML_OPTION_NAMESPACE_DECL    1<<9
-    /** Leave as text preprocessor else parts (default: markup) */
+/** Leave as text preprocessor else parts (default: markup) */
 #define SRCML_OPTION_CPP_TEXT_ELSE     1<<10
-    /** Markup preprocessor @code #if 0 @endcode sections (default: leave as text) */
+/** Markup preprocessor @code #if 0 @endcode sections (default: leave as text) */
 #define SRCML_OPTION_CPP_MARKUP_IF0    1<<11
-    /** Apply transformations to the entire srcML file (default: each unit */
+/** Apply transformations to the entire srcML file (default: each unit */
 #define SRCML_OPTION_APPLY_ROOT        1<<12
-    /** Compress the output file */
+/** Compress the output file */
 #define SRCML_OPTION_COMPRESS          1<<13
-    /** Nest if in else if intead of elseif tag */
+/** Nest if in else if intead of elseif tag */
 #define SRCML_OPTION_NESTIF            1<<14
-    /** Output hash attribute on each unit (default: on) */
+/** Output hash attribute on each unit (default: on) */
 #define SRCML_OPTION_HASH              1<<15
-    /** Wrap function/classes/etc with templates (default: on) */
+/** Wrap function/classes/etc with templates (default: on) */
 #define SRCML_OPTION_WRAP_TEMPLATE     1<<16
-    /** output is interactive (good for editing applications) */
+/** output is interactive (good for editing applications) */
 #define SRCML_OPTION_INTERACTIVE       1<<17
-    /** Not sure what this used for */
+/** Not sure what this used for */
 #define SRCML_OPTION_XPATH_TOTAL       1<<18
-    /** expression mode */
+/** expression mode */
 #define SRCML_OPTION_EXPRESSION        1<<19
-    /** Extra processing of @code#line@endcode for position information */
+/** Extra processing of @code#line@endcode for position information */
 #define SRCML_OPTION_LINE              1<<20
 /** additional cpp:if/cpp:endif checking */
 #define SRCML_OPTION_CPPIF_CHECK       1<<21
 /** debug time attribute */
 #define SRCML_OPTION_DEBUG_TIMER       1<<22
-/** debug time attribute */
+/** turn on optional ternary operator markup */
 #define SRCML_OPTION_TERNARY           1<<23
 
-    /* srcml status messages */
-    /** Return status indicating no errors */
+/* srcml status messages */
+/** Return status indicating no errors */
 #define SRCML_STATUS_OK                   0
-    /** Return status indicating errors occurred */
+/** Return status indicating errors occurred */
 #define SRCML_STATUS_ERROR                1
-    /** Return status indicating an invalid argument */
+/** Return status indicating an invalid argument */
 #define SRCML_STATUS_INVALID_ARGUMENT     2
-    /** Return status indicating that their is some problem with the input */
+/** Return status indicating that their is some problem with the input */
 #define SRCML_STATUS_INVALID_INPUT        3
-    /** Return status indicating an invalid read I/O operation (such as write on read only archive) */
+/** Return status indicating an invalid read I/O operation (such as write on read only archive) */
 #define SRCML_STATUS_INVALID_IO_OPERATION 4
-    /** Return status indicating that their is some problem with the input */
+/** Return status indicating that their is some problem with the input */
 #define SRCML_STATUS_IO_ERROR             5
-    /** Return status indicating an unitialized unit */
+/** Return status indicating an unitialized unit */
 #define SRCML_STATUS_UNINITIALIZED_UNIT   6
-    /** Return status indicating an unset language */
+/** Return status indicating an unset language */
 #define SRCML_STATUS_UNSET_LANGUAGE       7
-    /** Return status their are no transformations */
+/** Return status inidicating their are no transformations */
 #define SRCML_STATUS_NO_TRANSFORMATION    8
 
 /* libsrcml data structures */
