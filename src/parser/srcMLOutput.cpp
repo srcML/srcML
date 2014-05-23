@@ -799,7 +799,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     if(isoption(options, SRCML_OPTION_NESTIF))         { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NESTIF"; }
     if(isoption(options, SRCML_OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
     if(isoption(options, SRCML_OPTION_WRAP_TEMPLATE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "WRAP_TEMPLATE"; }
-    if(isoption(options, SRCML_OPTION_TERNARY))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "TERNARY"; }
+    if(isoption(options, SRCML_OPTION_TERNARY))        { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "TERNARY"; }
 
     std::string stab = stabs.str();
 
