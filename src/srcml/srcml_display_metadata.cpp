@@ -64,7 +64,7 @@ void srcml_aquire_unit(srcml_archive* srcml_arch, int unit_index) {
 int srcml_unit_count(srcml_archive* srcml_arch) {
     int numUnits = 0;
     while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
-        std::cerr << "test\n";
+        std::cerr << srcml_unit_get_filename(unit) << '\n';
         ++numUnits;
         srcml_free_unit(unit);
     }
