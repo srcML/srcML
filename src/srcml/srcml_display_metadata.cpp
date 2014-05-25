@@ -76,11 +76,8 @@ void srcml_list_unit_files(srcml_archive* srcml_arch) {
 
     int numUnits = 0;
     while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
-
         ++numUnits;
-
         std::cout << numUnits << '\t' << std::setw(5) << srcml_unit_get_filename(unit) << '\n';
-
         srcml_free_unit(unit);
     }
 }
