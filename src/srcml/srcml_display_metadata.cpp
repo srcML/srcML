@@ -91,6 +91,15 @@ void srcml_display_info(srcml_archive* srcml_arch) {
 
 }
 
+void srcml_display_unit_count(srcml_archive* srcml_arch) {
+    int num_units = 0;
+    while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
+        ++num_units;
+        srcml_free_unit(unit);
+    }
+    std::cout << "units=" << "\"" << num_units << "\"\n";
+}
+
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
     int display_commands = SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE |
                             SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
@@ -170,6 +179,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         // srcml long info
         if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
             srcml_display_info(srcml_arch);
+            srcml_display_unit_count(srcml_arch);
         }
         // srcml info
         if (srcml_request.command & SRCML_COMMAND_INFO) {
