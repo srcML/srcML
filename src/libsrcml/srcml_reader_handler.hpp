@@ -111,6 +111,7 @@ public :
          terminate(false), is_empty(false), wait_root(true), skip(false) {
 
         archive = srcml_create_archive();
+        srcml_archive_set_encoding(archive, "UTF-8");
 
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
 
