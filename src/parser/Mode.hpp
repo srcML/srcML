@@ -225,4 +225,7 @@ const static srcMLState::MODE_TYPE MODE_TERNARY;
 /** mode for Objectie-C call */
 const static srcMLState::MODE_TYPE MODE_OBJECTIVE_C_CALL;
 
+/** mode for switch statement */
+const static srcMLState::MODE_TYPE MODE_SWITCH;
+
 #endif
