@@ -2164,7 +2164,9 @@ switch_statement[] { ENTRY_DEBUG } :
 section_entry_action_first[] :
         {
             // start a new section inside the block with nested statements
-            if(!inMode(MODE_SWITCH))
+            if(inMode(MODE_SWITCH))
+                startNewMode(MODE_TOP_SECTION | MODE_STATEMENT | MODE_NEST);
+            else
                 startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST);
         }
 ;
@@ -3104,18 +3106,18 @@ terminate_post[] { ENTRY_DEBUG } :
                 && !inMode(MODE_END_AT_ENDIF)) {
 
                 // end down to either a block or top section, or to an if or else
-                endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE);
+                endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE | MODE_SWITCH);
 
             }
-
-            if(inMode(MODE_SWITCH))
-                endMode();
 
         }
 
         else_handling
 
         {
+
+            if(inMode(MODE_SWITCH))
+                endMode();
 
             if(inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP)) {
 
