@@ -84,30 +84,9 @@ void srcml_list_unit_files(srcml_archive* srcml_arch) {
 
 void srcml_display_info(srcml_archive* srcml_arch) {
 
-    int numUnits = 0;
-
-    while (srcml_unit* unit = srcml_read_unit(srcml_arch)) {
-
-        ++numUnits;
-
-        /* Query options of srcml unit */
-        const char* language = srcml_unit_get_language(unit);
-        if (language)
-            std::cout << "language=\"" << language << "\"\n";
-
-        if (srcml_unit_get_filename(unit))
-            std::cout << "filename=\"" << srcml_unit_get_filename(unit) << "\"\n";
-
-        if (srcml_unit_get_directory(unit))
-            std::cout << "directory=\"" << srcml_unit_get_directory(unit) << "\"\n";
-
-        if (srcml_unit_get_version(unit))
-            std::cout << "version=\"" << srcml_unit_get_version(unit) << "\"\n";
-
-        srcml_free_unit(unit);
-    }
-
-    std::cout << "units=\"" << numUnits << "\"\n";
+    if(srcml_archive_get_namespace_uri(srcml_arch, 0))
+        std::cout << "xmlns=" << "\"" << srcml_archive_get_namespace_uri(srcml_arch, 0) << "\"\n";
+    
 }
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
