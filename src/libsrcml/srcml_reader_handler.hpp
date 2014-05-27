@@ -111,6 +111,7 @@ public :
          terminate(false), is_empty(false), wait_root(true), skip(false) {
 
         archive = srcml_create_archive();
+        srcml_archive_set_encoding(archive, "UTF-8");
 
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
 
@@ -241,22 +242,24 @@ public :
 
                     if(option == "XMLDECL")
                         archive->options |= SRCML_OPTION_XML_DECL;
-                    if(option == "NAMESPACEDECL")
+                    else if(option == "NAMESPACEDECL")
                         archive->options |= SRCML_OPTION_NAMESPACE_DECL;
-                    if(option == "CPP_TEXT_ELSE")
+                    else if(option == "CPP_TEXT_ELSE")
                         archive->options |= SRCML_OPTION_CPP_TEXT_ELSE;
-                    if(option == "CPP_MARKUP_IF0")
+                    else if(option == "CPP_MARKUP_IF0")
                         archive->options |= SRCML_OPTION_CPP_MARKUP_IF0;
-                    if(option == "EXPRESSION")
+                    else if(option == "EXPRESSION")
                         archive->options |= SRCML_OPTION_EXPRESSION;
-                    if(option == "LINE")
+                    else if(option == "LINE")
                         archive->options |= SRCML_OPTION_LINE;
-                    if(option == "NESTIF")
+                    else if(option == "NESTIF")
                         archive->options |= SRCML_OPTION_NESTIF;
-                    if(option == "CPPIF_CHECK")
+                    else if(option == "CPPIF_CHECK")
                         archive->options |= SRCML_OPTION_CPPIF_CHECK;
-                    if(option == "WRAP_TEMPLATE")
+                    else if(option == "WRAP_TEMPLATE")
                         archive->options |= SRCML_OPTION_WRAP_TEMPLATE;
+                    else if(option == "TERNARY")
+                        archive->options |= SRCML_OPTION_TERNARY;
 
                 }
 

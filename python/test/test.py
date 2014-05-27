@@ -490,6 +490,19 @@ archive.close()
 
 verify_test(python_srcml, oarchive.srcML())
 
+# xslt stringparam
+archive = srcml.srcml_archive()
+archive.read_open_memory(asrcml)
+archive.append_transform_xslt_filename("setlanguage.xsl")
+archive.append_transform_stringparam("language", 'Python')
+oarchive = archive.clone()
+oarchive.write_open_memory()
+archive.apply_transforms(oarchive)
+oarchive.close()
+archive.close()
+
+verify_test(python_srcml, oarchive.srcML())
+
 # clear transforms
 archive = srcml.srcml_archive()
 archive.read_open_memory(asrcml)
