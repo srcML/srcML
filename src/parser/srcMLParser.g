@@ -2182,8 +2182,7 @@ section_entry_action[] :
             flushSkip();
 
             // end the section inside the block
-            if(!inMode(MODE_SWITCH))
-               endWhileMode(MODE_TOP_SECTION);
+            endWhileMode(MODE_TOP_SECTION);
         }
         section_entry_action_first
 ;
