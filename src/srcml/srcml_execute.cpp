@@ -75,6 +75,7 @@ void srcml_execute(const srcml_request_t& srcml_request,
             )
         );
 
-        pipeline_threads.join_all();
     }
+
+    pipeline_threads.join_all();
 }
