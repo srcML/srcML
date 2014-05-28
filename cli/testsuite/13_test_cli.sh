@@ -69,7 +69,5 @@ createfile filelistab "$filelist"
 
 #check 3<< "$nestedfile"
 
-message "A"
-
 rm -f filelistab
 
