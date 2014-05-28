@@ -37,7 +37,7 @@ if(NOT DYNAMIC_LOAD_ENABLED)
 endif()
 
 option(BUILD_UNIT_TESTS "Build unit tests for srcML/libsrcml" OFF)
-option(BUILD_CLI_TESTS "Build cli tests" ON)
+option(BUILD_CLI_TESTS "Build cli tests" OFF)
 option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
 
 # Setting some windows only properties.
