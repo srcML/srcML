@@ -75,7 +75,10 @@ void startDocument(void * ctx) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2srcMLHandler * state = (SAX2srcMLHandler *) ctxt->_private;
 
-    state->process->set_encoding((const char *)ctxt->encoding);
+    if(ctxt->encoding)
+        state->process->set_encoding((const char *)ctxt->encoding);
+    else if(ctxt->input)
+        state->process->set_encoding((const char *)ctxt->input->encoding);
 
     //    state->process->init(ctxt);
     state->process->startDocument();

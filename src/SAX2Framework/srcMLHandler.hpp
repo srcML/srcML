@@ -51,7 +51,7 @@ public :
      *
      * Default constructor default values to everything
      */
-    srcMLHandler() : control_handler(0), is_archive(false), unit_count(0), encoding() {}
+    srcMLHandler() : control_handler(0), is_archive(false), unit_count(0), encoding(0) {}
 
     /**
      * set_control_handler
