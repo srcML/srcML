@@ -21,7 +21,7 @@ srcml2src --get-filename <<< "$input"
 
 check 3<<< "foo"
 
-srcml2src --get-version <<< "$input"
+srcml2src --get-src-version <<< "$input"
 
 check 3<<< "1.2"
 
