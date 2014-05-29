@@ -71,13 +71,13 @@ endmacro()
 # additional arguments are dependent files that need to be copied.
 #
 #
-macro(addBashTest TEST_NAME)
-
-    add_test(NAME ${TEST_NAME} COMMAND bash ${TEST_NAME})
+macro(addBashTest TEST_FILE)
+    get_filename_component(TEST_NAME ${TEST_FILE} NAME)
+    add_test(NAME ${TEST_NAME} COMMAND bash ${TEST_FILE})
 
 if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
 
-    copyDependentFile(${TEST_NAME})
+    copyDependentFile(${TEST_FILE})
 
 foreach(FILE ${ARGN})
 

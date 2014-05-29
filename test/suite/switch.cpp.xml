@@ -6,6 +6,18 @@
 </unit>
 
 <unit>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <empty_stmt>;</empty_stmt></switch>
+</unit>
+
+<unit>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <case>case <expr><name>foo</name></expr>: <break>break;</break></case></switch>
+</unit>
+
+<unit>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <default>default: <break>break;</break></default></switch>
+</unit>
+
+<unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
  <case>case <expr>1</expr>:
 </case>}</block></switch>

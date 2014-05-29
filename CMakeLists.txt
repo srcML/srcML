@@ -36,22 +36,6 @@ include_directories(src/srcml src/libsrcml src/parser src/SAX2Framework)
 add_definitions(-DVERSION=\"1\")
 add_definitions(-DREVISION=\"1\")
 
-get_property(SVN_ENABLED GLOBAL PROPERTY SVN_ENABLED)
-if(${SVN_ENABLED})
-    add_definitions(-DSVN)
-endif()
-
-# setup tests for cli
-file(GLOB TESTFILES "${CMAKE_SOURCE_DIR}/cli/testsuite/*_test_cli.sh")
-foreach(TESTFILE ${TESTFILES})
-  add_test(${TESTFILE} ${TESTFILE})
-endforeach()
-
-get_property(SAX2_ENABLED GLOBAL PROPERTY SAX2_ENABLED)
-if(${SAX2_ENABLED})
-    add_definitions(-DSAX2)
-endif()
-
 # Including extra directories.
 add_subdirectory(src)
 

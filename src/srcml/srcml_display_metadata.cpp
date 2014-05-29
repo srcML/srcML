@@ -64,7 +64,7 @@ void srcml_aquire_unit(srcml_archive* srcml_arch, int unit_index) {
 int srcml_unit_count(srcml_archive* srcml_arch) {
     int numUnits = 0;
     while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
-        std::cerr << "test\n";
+        std::cerr << srcml_unit_get_filename(unit) << '\n';
         ++numUnits;
         srcml_free_unit(unit);
     }
@@ -76,41 +76,28 @@ void srcml_list_unit_files(srcml_archive* srcml_arch) {
 
     int numUnits = 0;
     while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
-
         ++numUnits;
-
-        std::cout << std::setw(5) << numUnits << ' ' << srcml_unit_get_filename(unit) << '\n';
-
+        std::cout << numUnits << '\t' << std::setw(5) << srcml_unit_get_filename(unit) << '\n';
         srcml_free_unit(unit);
     }
 }
 
 void srcml_display_info(srcml_archive* srcml_arch) {
 
-    int numUnits = 0;
+    if(srcml_archive_get_encoding(srcml_arch))
+        std::cout << "encoding=" << "\"" << srcml_archive_get_encoding(srcml_arch) << "\"\n";
+    if(srcml_archive_get_namespace_uri(srcml_arch, 0))
+        std::cout << "xmlns=" << "\"" << srcml_archive_get_namespace_uri(srcml_arch, 0) << "\"\n";
 
-    while (srcml_unit* unit = srcml_read_unit(srcml_arch)) {
+}
 
-        ++numUnits;
-
-        /* Query options of srcml unit */
-        const char* language = srcml_unit_get_language(unit);
-        if (language)
-            std::cout << "language=\"" << language << "\"\n";
-
-        if (srcml_unit_get_filename(unit))
-            std::cout << "filename=\"" << srcml_unit_get_filename(unit) << "\"\n";
-
-        if (srcml_unit_get_directory(unit))
-            std::cout << "directory=\"" << srcml_unit_get_directory(unit) << "\"\n";
-
-        if (srcml_unit_get_version(unit))
-            std::cout << "version=\"" << srcml_unit_get_version(unit) << "\"\n";
-
+void srcml_display_unit_count(srcml_archive* srcml_arch) {
+    int num_units = 0;
+    while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
+        ++num_units;
         srcml_free_unit(unit);
     }
-
-    std::cout << "units=\"" << numUnits << "\"\n";
+    std::cout << "units=" << "\"" << num_units << "\"\n";
 }
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
@@ -192,6 +179,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         // srcml long info
         if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
             srcml_display_info(srcml_arch);
+            srcml_display_unit_count(srcml_arch);
         }
         // srcml info
         if (srcml_request.command & SRCML_COMMAND_INFO) {

@@ -2149,7 +2149,7 @@ elseif_statement[] { ENTRY_DEBUG } :
 switch_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested block
-            startNewMode(MODE_STATEMENT | MODE_NEST);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_SWITCH);
 
             // start the switch statement
             startElement(SSWITCH);
@@ -2164,7 +2164,10 @@ switch_statement[] { ENTRY_DEBUG } :
 section_entry_action_first[] :
         {
             // start a new section inside the block with nested statements
-            startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST);
+            if(inMode(MODE_SWITCH))
+                startNewMode(MODE_TOP_SECTION | MODE_STATEMENT | MODE_NEST);
+            else
+                startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST);
         }
 ;
 
@@ -2172,7 +2175,7 @@ section_entry_action_first[] :
 section_entry_action[] :
         {
             // end any statements inside the section
-            endDownToMode(MODE_TOP);
+            endDownToModeSet(MODE_TOP | MODE_SWITCH);
 
             // flush any whitespace tokens since sections should
             // end at the last possible place
@@ -3102,14 +3105,18 @@ terminate_post[] { ENTRY_DEBUG } :
                 && !inMode(MODE_END_AT_ENDIF)) {
 
                 // end down to either a block or top section, or to an if or else
-                endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE);
+                endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE | MODE_SWITCH);
 
             }
+
         }
 
         else_handling
 
         {
+
+            if(inMode(MODE_SWITCH))
+                endMode();
 
             if(inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP)) {
 
