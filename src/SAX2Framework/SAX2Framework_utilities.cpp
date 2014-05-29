@@ -101,7 +101,7 @@ SAX2FrameworkCreateParserCtxt(xmlParserInputBufferPtr buffer_input) {
     if (ctxt == NULL)
         return(NULL);
 
-    //xmlCtxtUseOptions(ctxt, XML_PARSE_COMPACT | XML_PARSE_HUGE);
+    xmlCtxtUseOptions(ctxt, XML_PARSE_COMPACT | XML_PARSE_HUGE | XML_PARSE_NODICT);
 
     buf = buffer_input;
     if (buf == NULL) {
