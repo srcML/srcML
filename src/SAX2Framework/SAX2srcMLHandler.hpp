@@ -41,12 +41,63 @@ enum srcMLMode {
 };
 
 /**
+ * declaration
+ *
+ * Data structure to hold a declaration.
+ */
+struct declaration {
+
+    /** default constructor */
+    declaration() : type(), name(), mode(TYPE) {}
+
+    /** declaration type */
+    std::string type;
+
+    /** declaration name */
+    std::string name;
+
+    /** declaration parsing modes */
+    enum { TYPE, NAME, INIT } mode;
+
+};
+
+/**
+ * function_prototype
+ *
+ * Data structure to hold a function prototype.
+ */
+struct function_prototype {
+
+    /**constructor */
+    function_prototype(bool is_decl = false) : name(), return_type(), parameter_list(), mode(RETURN_TYPE), is_decl(is_decl) {}
+
+    /** function name */
+    std::string name;
+
+    /** function return type */
+    std::string return_type;
+
+    /** function parameter list */
+    std::vector<declaration> parameter_list;
+
+    /** function prototype parsing modes */
+    enum { RETURN_TYPE, NAME, PARAMETER_LIST, PARAMETER } mode;
+
+    /** bool to indicate if function_decl or function */
+    bool is_decl;
+
+};
+
+/**
  * SAX2srcMLHandler
  *
  * Data structure to hold process during
  * sax parsing.
  */
 struct SAX2srcMLHandler {
+
+    /** default constructor */
+    SAX2srcMLHandler() : process(0), root(), meta_tags(), is_archive(false), mode(ROOT), parse_function(false), in_function_header(false), current_function() {}
 
     /** hooks for processing */
     srcMLHandler * process;
@@ -62,6 +113,16 @@ struct SAX2srcMLHandler {
 
     /** the current parsing mode */
     srcMLMode mode;
+
+    /** bool to indicate if should do special function parsing */
+    bool parse_function;
+
+    /** bool to indicate if in funciton for special function parsing */
+    bool in_function_header;
+
+    /** store data for special function parsing */
+    function_prototype current_function;
+
 };
 
 /**

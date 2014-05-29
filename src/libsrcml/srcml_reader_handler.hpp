@@ -111,7 +111,6 @@ public :
          terminate(false), is_empty(false), wait_root(true), skip(false) {
 
         archive = srcml_create_archive();
-        srcml_archive_set_encoding(archive, "UTF-8");
 
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
 
@@ -187,6 +186,18 @@ public :
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
+
+    /**
+     * startDocument
+     *
+     * SAX handler function for start of document.
+     * Overide for desired behaviour.
+     */
+    virtual void startDocument() {
+
+        srcml_archive_set_encoding(archive, encoding ? encoding : "UTF-8");
+
+    }
 
     /**
      * startRoot
