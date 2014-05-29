@@ -50,8 +50,8 @@
  class srcml_input_src {
  public:
 
-    srcml_input_src() {}
-    srcml_input_src(const std::string& other) : state(INDETERMINATE), isdirectory(false) { 
+    srcml_input_src() : unit(0) {}
+    srcml_input_src(const std::string& other) : state(INDETERMINATE), isdirectory(false), unit(0) { 
 
         filename = src_prefix_add_uri(other);
 
@@ -90,7 +90,7 @@
             fd = STDOUT_FILENO;
     }
 
-    srcml_input_src(const std::string& other, int fds) {
+    srcml_input_src(const std::string& other, int fds) : unit(0) {
 
         srcml_input_src s(other);
         s = fds;
@@ -98,7 +98,7 @@
         swap(s);
     }
 
-    srcml_input_src(int fds) {
+    srcml_input_src(int fds) : unit(0) {
 
         srcml_input_src s("-");
         s = fds;
@@ -145,6 +145,7 @@
     std::list<std::string> compressions;
     std::list<std::string> archives;
     bool isdirectory;
+    int unit;
 };
 
 template <typename T>

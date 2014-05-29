@@ -39,12 +39,19 @@ void srcml_input_srcml(ParseQueue&,
         srcml_read_open_filename(srcml_input_archive, srcml_input.c_str());
 
     // process each entry in the input srcml archive
+    int count = 0;
     while (srcml_unit* unit = srcml_read_unit(srcml_input_archive)) {
+        ++count;
 
         // write the just-read unit to the output srcml archive
-        srcml_write_unit(srcml_output_archive, unit);
+        if (srcml_input.unit == 0 || srcml_input.unit == count) {
+            srcml_write_unit(srcml_output_archive, unit);
+        }
 
         srcml_free_unit(unit);
+
+        if (srcml_input.unit == count)
+            break;
     }
 
     // done with the input srcml archive
