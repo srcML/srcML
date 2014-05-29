@@ -942,8 +942,8 @@ static void srcml_read_internal(srcml_archive * archive) {
 
     archive->type = SRCML_ARCHIVE_READ;
 
-    boost::optional<std::string> language, filename, directory, version;
-    bool done = !archive->reader->read_root_unit_attributes(language, filename, directory, version,
+    boost::optional<std::string> encoding, language, filename, directory, version;
+    bool done = !archive->reader->read_root_unit_attributes(encoding, language, filename, directory, version,
                                                             archive->attributes, archive->prefixes,
                                                             archive->namespaces,
                                                             archive->options,
@@ -951,6 +951,7 @@ static void srcml_read_internal(srcml_archive * archive) {
                                                             archive->user_macro_list);
     if(!done) {
 
+        archive->encoding = encoding;
         archive->language = language;
         archive->filename = filename;
         archive->directory = directory;
