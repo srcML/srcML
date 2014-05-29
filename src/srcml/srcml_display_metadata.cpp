@@ -37,6 +37,7 @@ void srcml_aquire_unit_xml(srcml_archive* srcml_arch, int unit_index) {
     }
 
     if (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
+        // TODO: Cannot just write to std::cout, must write to destination
         std::cout << srcml_unit_get_xml(unit) << "\n";
         srcml_free_unit(unit);
     }
@@ -55,6 +56,7 @@ void srcml_aquire_unit(srcml_archive* srcml_arch, int unit_index) {
         char* unit_buffer = 0;
         int buffer_size = 0;
         srcml_unparse_unit_memory(unit, &unit_buffer, &buffer_size);
+        // TODO: Cannot just write to std::cout, must write to destination
         std::cout << unit_buffer;
         srcml_free_unit(unit);
     }
