@@ -147,6 +147,14 @@ public :
     void enable_cdataBlock(bool enable);
 
     /**
+     * enable_function
+     * @param enable bool indicate enable or disable special function parsing.
+     *
+     * Enables or disables special function parsing.
+     */
+    void enable_function(bool enable);
+
+    /**
      * parse
      * @param handler srcMLHandler with hooks for sax parsing
      *

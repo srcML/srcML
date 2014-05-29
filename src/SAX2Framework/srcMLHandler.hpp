@@ -42,6 +42,7 @@ private :
 protected:
     bool is_archive;
     int unit_count;
+    const char * encoding;
 
 public :
 
@@ -50,7 +51,7 @@ public :
      *
      * Default constructor default values to everything
      */
-    srcMLHandler() : control_handler(0), is_archive(false), unit_count(0) {}
+    srcMLHandler() : control_handler(0), is_archive(false), unit_count(0), encoding() {}
 
     /**
      * set_control_handler
@@ -105,6 +106,18 @@ public :
 
         xmlStopParser(control_handler->getCtxt());
 
+    } 
+
+    /**
+     * set_encoding
+     * @param encoding set the encoding
+     *
+     * Used by SAX2srcMLHandler when determined
+     * encoding.  Set the input encoding if any.
+     */
+    void set_encoding(const char * encoding) {
+
+        this->encoding = encoding;
     }
 
     /**
@@ -177,6 +190,20 @@ public :
                            const xmlChar ** attributes) {}
 
     /**
+     * startFunction
+     * @param name the function's name
+     * @param return_type the function return type
+     * @param parameter_list a list of the function parameters in struct containing (declaration.type/declaration.name)
+     * @param is_decl indicates if the call is a function declaration (true) or definition (false)
+     *
+     * SAX handler function for start of function with prototype.
+     * Accessing references after callback termination is undefined.
+     *
+     * Overide for desired behaviour.
+     */
+    virtual void startFunction(const std::string & name, const std::string & return_type, const std::vector<declaration> & parameter_list, bool is_decl) {}
+
+    /**
      * startElementNs
      * @param localname the name of the element tag
      * @param prefix the tag prefix
@@ -215,6 +242,14 @@ public :
      * Overide for desired behaviour.
      */
     virtual void endUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {}
+
+    /**
+     * endFunction
+     *
+     * SAX handler function for end of a function.
+     * Overide for desired behaviour.
+     */
+    virtual void endFunction() {}
 
     /**
      * endElementNs

@@ -75,6 +75,8 @@ void startDocument(void * ctx) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2srcMLHandler * state = (SAX2srcMLHandler *) ctxt->_private;
 
+    state->process->set_encoding((const char *)ctxt->encoding);
+
     //    state->process->init(ctxt);
     state->process->startDocument();
 
@@ -341,8 +343,35 @@ void startElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefi
         if(URI && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)URI) == 0)
             URI = state->root.namespaces[i];
 
-    state->process->startElementNs(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
+    if(state->parse_function && (strcmp((const char *)localname, "function_decl") == 0 || strcmp((const char *)localname, "function") == 0)) {
 
+        state->in_function_header = true;
+        state->current_function = function_prototype(strcmp((const char *)localname, "function_decl") == 0);
+
+    } else if(!state->in_function_header) {
+
+        state->process->startElementNs(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
+
+    } else {
+
+        if(state->current_function.mode == function_prototype::NAME && strcmp((const char *)localname, "parameter_list") == 0) {
+
+            state->current_function.mode = function_prototype::PARAMETER_LIST;
+
+        } else if(state->current_function.mode == function_prototype::PARAMETER_LIST && strcmp((const char *)localname, "param") == 0) {
+
+            state->current_function.parameter_list.push_back(declaration());
+            state->current_function.mode = function_prototype::PARAMETER;
+
+        } else if(state->current_function.mode == function_prototype::PARAMETER && strcmp((const char *)localname, "init") == 0) {
+
+            state->current_function.parameter_list.back().mode = declaration::INIT;
+
+            state->current_function.mode = function_prototype::PARAMETER_LIST;
+
+        }
+
+    }
 
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -419,7 +448,39 @@ void endElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix,
 
     } else {
 
-        state->process->endElementNs(localname, prefix, URI);
+        if(state->in_function_header && (strcmp((const char *)localname, "function_decl") == 0 || strcmp((const char *)localname, "function") == 0)) {
+
+            state->process->endFunction();
+
+        } else if(!state->in_function_header) {
+
+            state->process->endElementNs(localname, prefix, URI);
+
+        } else {
+
+            if(state->current_function.mode == function_prototype::RETURN_TYPE && strcmp((const char *)localname, "type") == 0) {
+
+                state->current_function.mode = function_prototype::NAME;
+
+            } else if(state->current_function.mode == function_prototype::PARAMETER && state->current_function.parameter_list.back().mode == declaration::TYPE
+                    && strcmp((const char *)localname, "type") == 0) {
+
+                state->current_function.parameter_list.back().mode = declaration::NAME;
+
+            } else if(state->current_function.mode == function_prototype::PARAMETER 
+                && (strcmp((const char *)localname, "param") == 0 || strcmp((const char *)localname, "decl") == 0)) {
+
+                state->current_function.mode = function_prototype::PARAMETER_LIST;
+
+            } else if(state->current_function.mode == function_prototype::PARAMETER_LIST && strcmp((const char *)localname, "parameter_list") == 0) {
+
+                state->in_function_header = false;
+                state->process->startFunction(state->current_function.name, state->current_function.return_type, state->current_function.parameter_list, state->current_function.is_decl);
+
+            }
+
+        }
+
     }
 
 #ifdef DEBUG
@@ -511,7 +572,26 @@ void charactersUnit(void * ctx, const xmlChar * ch, int len) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2srcMLHandler * state = (SAX2srcMLHandler *) ctxt->_private;
 
-    state->process->charactersUnit(ch, len);
+
+    if(!state->in_function_header)
+        state->process->charactersUnit(ch, len);
+
+    else {
+
+        if(state->current_function.mode == function_prototype::RETURN_TYPE)
+            state->current_function.return_type.append((const char *)ch, len);
+        else if(state->current_function.mode == function_prototype::NAME)
+            state->current_function.name.append((const char *)ch, len);
+        else if(state->current_function.mode == function_prototype::PARAMETER) {
+
+            if(state->current_function.parameter_list.back().mode == declaration::TYPE)
+                state->current_function.parameter_list.back().type.append((const char *)ch, len);
+            else if(state->current_function.parameter_list.back().mode == declaration::NAME)
+                state->current_function.parameter_list.back().name.append((const char *)ch, len);
+
+        }
+
+    }
 
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());

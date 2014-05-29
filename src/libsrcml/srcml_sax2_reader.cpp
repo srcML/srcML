@@ -133,7 +133,8 @@ srcml_sax2_reader::~srcml_sax2_reader() {
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
+int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & encoding,
+                                                 boost::optional<std::string> & language, boost::optional<std::string> & filename,
                                                  boost::optional<std::string> & directory, boost::optional<std::string> & version,
                                                  std::vector<std::string> & attributes,
                                                  std::vector<std::string> & prefixes,
@@ -144,6 +145,7 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
 
     if(read_root || handler.read_root) return 0;
 
+    encoding.swap(handler.archive->encoding);
     language.swap(handler.archive->language);
     filename.swap(handler.archive->filename);
     directory.swap(handler.archive->directory);
