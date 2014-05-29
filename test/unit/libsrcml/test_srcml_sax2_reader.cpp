@@ -162,6 +162,7 @@ int main() {
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -189,6 +190,7 @@ int main() {
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, options, tabstop, user_macro_list), 0);
+        dassert(*encoding, "UTF-8");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -227,6 +229,7 @@ int main() {
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -256,6 +259,7 @@ int main() {
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, options, tabstop, user_macro_list), 0);
+        dassert(*encoding, "UTF-8");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -294,6 +298,7 @@ int main() {
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -322,6 +327,7 @@ int main() {
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, options, tabstop, user_macro_list), 0);
+        dassert(*encoding, "UTF-8");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -361,6 +367,7 @@ int main() {
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -389,6 +396,7 @@ int main() {
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, options, tabstop, user_macro_list), 0);
+        dassert(*encoding, "UTF-8");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -428,6 +436,7 @@ int main() {
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -455,6 +464,7 @@ int main() {
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, options, tabstop, user_macro_list), 0);
+        dassert(*encoding, "UTF-8");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -747,6 +757,7 @@ int main() {
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -810,6 +821,7 @@ int main() {
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -873,6 +885,7 @@ int main() {
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -928,6 +941,7 @@ int main() {
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -983,6 +997,7 @@ int main() {
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
