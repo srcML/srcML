@@ -67,7 +67,7 @@ int main() {
 
     const std::string srcml_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n";
 
-    const std::string srcml_ns = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\" xmlns:pos=\"http://www.sdml.info/srcML/position\" xmlns:foo=\"bar\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\" pos:tabs=\"4\" foo=\"bar\">\n\n<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
+    const std::string srcml_ns = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\" xmlns:pos=\"http://www.sdml.info/srcML/position\" xmlns:foo=\"bar\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\" pos:tabs=\"4\" foo=\"bar\">\n\n<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
 
     const std::string srcml_empty_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\"/>";
 
@@ -229,7 +229,7 @@ int main() {
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, options, tabstop, user_macro_list);
-        dassert(*encoding, "UTF-8");
+        dassert(*encoding, "ISO-8859-1");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -259,7 +259,7 @@ int main() {
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, options, tabstop, user_macro_list), 0);
-        dassert(*encoding, "UTF-8");
+        dassert(*encoding, "ISO-8859-1");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -821,7 +821,7 @@ int main() {
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, options, tabstop, user_macro_list);
-        dassert(*encoding, "UTF-8");
+        dassert(*encoding, "ISO-8859-1");
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
