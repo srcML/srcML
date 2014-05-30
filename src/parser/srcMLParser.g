@@ -1849,13 +1849,21 @@ perform_ternary_check[] returns [bool is_ternary] {
         ternary_check();
         if(LA(1) == QMARK) is_ternary = true;
 
-        if(!is_qmark)
+        if(!is_qmark) {
+
             if(LA(1) == TERMINATE) skip_ternary = true;
+            if(LA(1) == LCURLY) skip_ternary = true;
+
+        }
 
     } catch(...) { 
 
-        if(!is_qmark)
+        if(!is_qmark) {
+
             if(LA(1) == TERMINATE) skip_ternary = true;
+            if(LA(1) == LCURLY) skip_ternary = true;
+
+        }
 
     }
 
@@ -1870,10 +1878,10 @@ ternary_check[] { ENTRY_DEBUG } :
 
 
     // ends are catch alls ok if overlap
-    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair | curly_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET | RCURLY)))
+    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY)))
 
     // ends are catch alls ok if overlap
-    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair | curly_pair | ~(QMARK | TERMINATE | COLON | RPAREN | COMMA | RBRACKET | RCURLY)))* 
+    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair | ~(QMARK | TERMINATE | LCURLY  | COLON | RPAREN | COMMA | RBRACKET | RCURLY)))* 
 
 ;
 
@@ -2973,6 +2981,7 @@ lcurly_base[] { ENTRY_DEBUG } :
 
         }
         LCURLY
+        set_bool[skip_ternary, false]
 ;
 
 // end of a block.  Also indicates the end of some open elements.
