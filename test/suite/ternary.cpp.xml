@@ -79,7 +79,7 @@
 </unit>
 
 <unit>
-<for>for(<init><expr><ternary><condition><expr><name>i</name> = <name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</init><condition>;</condition><incr/>)<empty_stmt>;</empty_stmt></for>
+<for>for(<init><expr><name>i</name> = <ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</init><condition>;</condition><incr/>)<empty_stmt>;</empty_stmt></for>
 </unit>
 
 <unit>

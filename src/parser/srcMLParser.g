@@ -1878,10 +1878,12 @@ ternary_check[] { ENTRY_DEBUG } :
 
 
     // ends are catch alls ok if overlap
-    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair (paren_pair | curly_pair)* | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY)))
+    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair (paren_pair | curly_pair)*
+         | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL)))
 
     // ends are catch alls ok if overlap
-    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair (paren_pair | curly_pair)* | ~(QMARK | TERMINATE | LCURLY  | COLON | RPAREN | COMMA | RBRACKET | RCURLY)))* 
+    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair (paren_pair | curly_pair)*
+         | ~(QMARK | TERMINATE | LCURLY  | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL)))* 
 
 ;
 
@@ -6650,7 +6652,7 @@ expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_D
 // the expression part
 expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; ENTRY_DEBUG } :
 
-       { isoption(parseoptions, SRCML_OPTION_TERNARY) && !skip_ternary && !inTransparentMode(MODE_TERNARY | MODE_CONDITION) 
+       { isoption(parseoptions, SRCML_OPTION_TERNARY) && !skip_ternary && (!inTransparentMode(MODE_TERNARY | MODE_CONDITION) || inTransparentMode(MODE_ANONYMOUS))
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
             && perform_ternary_check() }? ternary_expression |
 
