@@ -106,4 +106,48 @@
 <do>do <empty_stmt>;</empty_stmt> while<condition>(<decl><type><name>int</name></type> <name>i</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl>)</condition>;</do>
 </unit>
 
+<unit>
+<expr_stmt><expr><name>a</name> = <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> += <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> -= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> *= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> /= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> %= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> &lt;&lt;= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> &gt;&gt;= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> &amp;= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> ^= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> |= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
 </unit>

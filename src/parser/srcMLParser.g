@@ -1880,11 +1880,11 @@ ternary_check[] { ENTRY_DEBUG } :
 
     // ends are catch alls ok if overlap
     ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair (paren_pair | curly_pair)*
-         | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL)))
+         | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)))
 
     // ends are catch alls ok if overlap
     ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair (paren_pair | curly_pair)*
-         | ~(QMARK | TERMINATE | LCURLY  | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL)))* 
+         | ~(QMARK | TERMINATE | LCURLY  | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)))* 
 
 ;
 
@@ -6452,7 +6452,7 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 /** list of operators @todo is this still needed */
 general_operators_list[] { ENTRY_DEBUG } :
-        OPERATORS | ASSIGNEMENT  | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
+        OPERATORS | ASSIGNMENT  | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
         DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC | BLOCKOP
 ;
 
