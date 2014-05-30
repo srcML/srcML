@@ -1878,10 +1878,10 @@ ternary_check[] { ENTRY_DEBUG } :
 
 
     // ends are catch alls ok if overlap
-    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY)))
+    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair (paren_pair | curly_pair)* | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY)))
 
     // ends are catch alls ok if overlap
-    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair | ~(QMARK | TERMINATE | LCURLY  | COLON | RPAREN | COMMA | RBRACKET | RCURLY)))* 
+    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair (paren_pair | curly_pair)* | ~(QMARK | TERMINATE | LCURLY  | COLON | RPAREN | COMMA | RBRACKET | RCURLY)))* 
 
 ;
 
@@ -2924,7 +2924,7 @@ lcurly[] { ENTRY_DEBUG } :
         {
 
             // special end for conditions
-            if (inTransparentMode(MODE_CONDITION)) {
+            if (inTransparentMode(MODE_CONDITION) && !inMode(MODE_ANONYMOUS)) {
                 endDownToMode(MODE_CONDITION);
                 endMode(MODE_CONDITION);
             }
@@ -6650,6 +6650,10 @@ expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_D
 // the expression part
 expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; ENTRY_DEBUG } :
 
+       { isoption(parseoptions, SRCML_OPTION_TERNARY) && !skip_ternary && !inTransparentMode(MODE_TERNARY | MODE_CONDITION) 
+            && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
+            && perform_ternary_check() }? ternary_expression |
+
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
         UNION |
@@ -6680,10 +6684,6 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
 
         { notdestructor }? sole_destop { notdestructor = false; } |
-
-       { isoption(parseoptions, SRCML_OPTION_TERNARY) && !skip_ternary && !inTransparentMode(MODE_TERNARY | MODE_CONDITION) 
-            && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
-            && perform_ternary_check() }? ternary_expression |
 
         // call
         // distinguish between a call and a macro
