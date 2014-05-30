@@ -193,7 +193,7 @@ LINECOMMENT_START
                 startline = true;
             } |
 
-            '=' { $setType(OPERATORS); } |
+            '=' { $setType(ASSIGNMENT); } |
 
             { $setType(OPERATORS); }
         )

@@ -383,7 +383,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 	    { "["            , LBRACKET      , LANGUAGE_ALL }, 
 
 	    { "&lt;"         , TEMPOPS       , LANGUAGE_ALL }, 
-	    { "&gt;"         , TEMPOPE       , LANGUAGE_ALL }, 
+	    { "&gt;"         , TEMPOPE       , LANGUAGE_ALL },
 	    { "&amp;"        , REFOPS        , LANGUAGE_ALL }, 
 	    { "="            , EQUAL         , LANGUAGE_ALL }, 
 

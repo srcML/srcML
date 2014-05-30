@@ -1236,6 +1236,7 @@ overloaded_operator[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SNAME);
         }
         set_bool[operatorname, true]
+
         OPERATOR
         (
             // special case for 'operator()'
@@ -1878,10 +1879,12 @@ ternary_check[] { ENTRY_DEBUG } :
 
 
     // ends are catch alls ok if overlap
-    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair (paren_pair | curly_pair)* | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY)))
+    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair (paren_pair | curly_pair)*
+         | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)))
 
     // ends are catch alls ok if overlap
-    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair (paren_pair | curly_pair)* | ~(QMARK | TERMINATE | LCURLY  | COLON | RPAREN | COMMA | RBRACKET | RCURLY)))* 
+    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair (paren_pair | curly_pair)*
+         | ~(QMARK | TERMINATE | LCURLY  | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)))* 
 
 ;
 
@@ -6413,8 +6416,8 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
                 startElement(SOPERATOR);
         }
         (
-            OPERATORS | TEMPOPS |
-            TEMPOPE ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? EQUAL)? |
+            OPERATORS | ASSIGNMENT | TEMPOPS |
+            TEMPOPE ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? TEMPOPE)? |
             EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
@@ -6449,7 +6452,7 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 /** list of operators @todo is this still needed */
 general_operators_list[] { ENTRY_DEBUG } :
-        OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
+        OPERATORS | ASSIGNMENT  | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
         DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC | BLOCKOP
 ;
 
@@ -6650,7 +6653,7 @@ expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_D
 // the expression part
 expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; ENTRY_DEBUG } :
 
-       { isoption(parseoptions, SRCML_OPTION_TERNARY) && !skip_ternary && !inTransparentMode(MODE_TERNARY | MODE_CONDITION) 
+       { isoption(parseoptions, SRCML_OPTION_TERNARY) && !skip_ternary && (!inTransparentMode(MODE_TERNARY | MODE_CONDITION) || inTransparentMode(MODE_ANONYMOUS))
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
             && perform_ternary_check() }? ternary_expression |
 

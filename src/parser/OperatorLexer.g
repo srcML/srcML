@@ -58,6 +58,8 @@ PREPROC;
 COLON; // = ":";
 QMARK;
 
+ASSIGNMENT; // +=, -=, etc.
+
 // Java
 BAR; // |
 
@@ -100,7 +102,7 @@ EOL_PLACEHOLD;
 }
 
 // @todo remove statics possibly breaking point for threading.
-OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1);
+OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1); bool do_not_apply = false;
 } : 
         (
             '#' {
@@ -142,28 +144,28 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
            '>' { if (realbegin == _begin) gt = true; text.erase(realbegin); text += "&gt;"; realbegin += 3; } | 
            '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3; gt = true; }) { ++realbegin; } )+ */ 
 
-       '+' { if(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '+' && LA(1) != '=') $setType(CSPEC); } ('+' | '=')? |
+       '+' { if(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '+' && LA(1) != '=') $setType(CSPEC); } ('+' | '=' { $setType(ASSIGNMENT); } )? |
        '-' { if(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '-' && LA(1) != '=') $setType(MSPEC); } 
-           ('-' | '=' | '>' { star = true; $setText("-&gt;"); $setType(TRETURN);})? ({ star }? '*' { $setText("-&gt;*"); $setType(MPDEREF); })? |
-       '*' ('=')? |
+           ('-' | '=' { $setType(ASSIGNMENT); } | '>' { star = true; $setText("-&gt;"); $setType(TRETURN);})? ({ star }? '*' { $setText("-&gt;*"); $setType(MPDEREF); })? |
+       '*' ('=' { $setType(ASSIGNMENT); } )? |
 //       '/' ('=')? |
-       '%' ('=')? |
-       '^' { if(LA(1) != '=') $setType(BLOCKOP); } ('=')? |
-       '|' ('|')? ('=')? |
+       '%' ('=' { $setType(ASSIGNMENT); } )? |
+       '^' { if(LA(1) != '=') $setType(BLOCKOP); } ('=' { $setType(ASSIGNMENT); } )? |
+       '|' ('|')? ('=' { $setType(ASSIGNMENT); } )? |
        '`' |
        '!' ('=')? |
        ':' (':')? |
        '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>' { $setText("=&gt;"); $setType(LAMBDA); } |) |
 
        '&' { $setText("&amp;"); }
-            (options { greedy = true; } : '&' { $setText("&amp;&amp;"); star = true; } | '=' { $setText("&amp;="); } )?
+            (options { greedy = true; } : '&' { $setText("&amp;&amp;"); star = true; } | '=' { $setText("&amp;="); $setType(ASSIGNMENT); } )?
              ({ star }? '=' { $setText("&amp;&amp;="); } )? | 
      
-       '>' { $setText("&gt;"); } |
+       '>' { $setText("&gt;"); } (('>' '=') => '>' '=' { $setText("&gt;&gt;="); $setType(ASSIGNMENT); do_not_apply = true; })? ({ !do_not_apply }? '=' { $setText("&gt;="); })?  { do_not_apply = false; } |
 
        '<' { $setText("&lt;"); }
             (options { greedy = true; } : '<' { $setText("&lt;&lt;"); } | '=' { $setText("&lt;="); })?
-            ('=' { $setText("&lt;&lt;="); })? |
+            ('=' { $setText("&lt;&lt;="); $setType(ASSIGNMENT); })? |
 
 //       '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3; gt = true; realbegin += 3; } 
 //            ('<' { text.erase(realbegin); text += "&lt;"; realbegin += 4; gt = true; })? ('=')? |
