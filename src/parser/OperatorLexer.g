@@ -161,7 +161,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
             (options { greedy = true; } : '&' { $setText("&amp;&amp;"); star = true; } | '=' { $setText("&amp;="); $setType(ASSIGNMENT); } )?
              ({ star }? '=' { $setText("&amp;&amp;="); } )? | 
      
-       '>' { $setText("&gt;"); } (('>' '=') => '>' '=' { $setText("&gt;&gt;="); $setType(ASSIGNMENT); do_not_apply = true; })? ({ !do_not_apply }? '=' { $setText("&gt;="); })?  { do_no_apply = false; } |
+       '>' { $setText("&gt;"); } (('>' '=') => '>' '=' { $setText("&gt;&gt;="); $setType(ASSIGNMENT); do_not_apply = true; })? ({ !do_not_apply }? '=' { $setText("&gt;="); })?  { do_not_apply = false; } |
 
        '<' { $setText("&lt;"); }
             (options { greedy = true; } : '<' { $setText("&lt;&lt;"); } | '=' { $setText("&lt;="); })?
