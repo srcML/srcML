@@ -52,11 +52,10 @@ void srcml_list_unit_files(srcml_archive* srcml_arch) {
 
 void srcml_display_info(srcml_archive* srcml_arch) {
 
-    if(srcml_archive_get_encoding(srcml_arch))
-        std::cout << "encoding=" << "\"" << srcml_archive_get_encoding(srcml_arch) << "\"\n";
     if(srcml_archive_get_namespace_uri(srcml_arch, 0))
         std::cout << "xmlns=" << "\"" << srcml_archive_get_namespace_uri(srcml_arch, 0) << "\"\n";
-
+    if(srcml_archive_get_encoding(srcml_arch))
+        std::cout << "encoding=" << "\"" << srcml_archive_get_encoding(srcml_arch) << "\"\n";
 }
 
 void srcml_display_unit_count(srcml_archive* srcml_arch) {
