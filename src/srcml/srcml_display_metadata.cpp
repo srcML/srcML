@@ -193,9 +193,12 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             srcml_list_unit_files(srcml_arch);
         }
         // get specific unit xml
+        /*
+        // Moved to srcml_input_srcml()
         if (srcml_request.unit > 0 && (srcml_request.command & SRCML_COMMAND_XML)) {
             srcml_aquire_unit_xml(srcml_arch, srcml_request.unit);
         }
+        */
         // get specific unit
         if (srcml_request.unit > 0 && !(srcml_request.command & SRCML_COMMAND_XML)) {
             srcml_aquire_unit(srcml_arch, srcml_request.unit);

@@ -85,9 +85,9 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str());
 
     // for single input src archives (e.g., .tar), filename attribute is the source filename (if not already given)
-    if (srcml_request.att_filename)
+    if (srcml_request.att_filename) {
         srcml_archive_set_filename(srcml_arch, srcml_request.att_filename->c_str());
-    else if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
+    } else if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
         srcml_archive_set_filename(srcml_arch, input_sources[0].filename.c_str());
     }
 
