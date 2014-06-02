@@ -5300,7 +5300,7 @@ ternary_expression[] { ENTRY_DEBUG } :
  
         startNewMode(MODE_CONDITION);
         startElement(SCONDITION);
-        startNewMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+        startNewMode(MODE_TERNARY_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
     }
     (
         { LA(1) == LPAREN }?
@@ -6619,6 +6619,9 @@ expression_process[] { ENTRY_DEBUG } :
                 // use a new mode without the expect so we don't nest expression parts
                 startNewMode(MODE_EXPRESSION);
 
+                if(inPrevMode(MODE_TERNARY_CONDITION))
+                   setMode(MODE_TERNARY_CONDITION);
+
                 // start the expression element
                 startElement(SEXPRESSION);
             }
@@ -6644,6 +6647,7 @@ expression_setup_linq[CALL_TYPE type = NOCALL] { ENTRY_DEBUG } :
 // expression with linq
 expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
 
+        /*! @todo probably can make to not use  a string since have ASSIGNMENT token */
         { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token_string().find('=') == std::string::npos }?
         (linq_expression_pure)=> linq_expression |
 
@@ -6653,7 +6657,7 @@ expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_D
 // the expression part
 expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; ENTRY_DEBUG } :
 
-       { isoption(parseoptions, SRCML_OPTION_TERNARY) && !skip_ternary && (!inTransparentMode(MODE_TERNARY | MODE_CONDITION) || inTransparentMode(MODE_ANONYMOUS))
+       { isoption(parseoptions, SRCML_OPTION_TERNARY) && !skip_ternary && !inMode(MODE_TERNARY_CONDITION)
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
             && perform_ternary_check() }? ternary_expression |
 
@@ -6721,9 +6725,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         }
 
         // can have (ternary) in a ternary condition
-        { isoption(parseoptions, SRCML_OPTION_TERNARY) && !skip_ternary && inTransparentMode(MODE_TERNARY | MODE_CONDITION)
+        ({ isoption(parseoptions, SRCML_OPTION_TERNARY) && !skip_ternary && inMode(MODE_TERNARY_CONDITION)
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
-            && perform_ternary_check() }? ternary_expression |
+            && perform_ternary_check() }? ternary_expression)* |
             
         // right parentheses that only matches a left parentheses of an expression
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
