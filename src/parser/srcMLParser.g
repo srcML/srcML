@@ -5300,7 +5300,7 @@ ternary_expression[] { ENTRY_DEBUG } :
  
         startNewMode(MODE_CONDITION);
         startElement(SCONDITION);
-        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+        startNewMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
     }
     (
         { LA(1) == LPAREN }?
@@ -6718,8 +6718,12 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         lparen_marked
         {
             startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
-        } |
+        }
 
+        { isoption(parseoptions, SRCML_OPTION_TERNARY) && !skip_ternary && inTransparentMode(MODE_TERNARY | MODE_CONDITION)
+            && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
+            && perform_ternary_check() }? ternary_expression |
+            
         // right parentheses that only matches a left parentheses of an expression
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
         {
