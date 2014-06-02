@@ -150,4 +150,16 @@
 <expr_stmt><expr><name>a</name> |= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><ternary><condition><expr><name>i</name> + (<name>a</name> + <name>c</name>)</expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><ternary><condition><expr><name>i</name> + (<ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary>)</expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><ternary><condition><expr><call><name>a</name><argument_list>(<argument><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></argument>)</argument_list></call></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
 </unit>

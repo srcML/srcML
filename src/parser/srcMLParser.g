@@ -936,22 +936,6 @@ next_token_two[] returns [int token] {
 
 } :;
 
-// eficient way of getting the next token string value.
-next_token_string[] returns [std::string token] {
-
-    int place = mark();
-    inputState->guessing++;
-
-    // consume current token
-    consume();
-
-    token = LT(1)->getText();
-
-    inputState->guessing--;
-    rewind(place);
-
-} :;
-
 // is the next token one of the parameters
 next_token_check[int token1, int token2] returns [bool result] {
 
@@ -5324,7 +5308,7 @@ expression_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG
 // expression with linq
 expression_part_plus_linq_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
 
-        { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token_string().find('=') == std::string::npos }?
+        { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token() != ASSIGNMENT && next_token() != EQUAL }?
         (linq_expression_pure)=> linq_expression |
 
         expression_part_no_ternary[type, call_count]
@@ -6647,8 +6631,7 @@ expression_setup_linq[CALL_TYPE type = NOCALL] { ENTRY_DEBUG } :
 // expression with linq
 expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
 
-        /*! @todo probably can make to not use  a string since have ASSIGNMENT token */
-        { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token_string().find('=') == std::string::npos }?
+        { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token() != ASSIGNMENT && next_token() != EQUAL }?
         (linq_expression_pure)=> linq_expression |
 
         expression_part[type, call_count]
