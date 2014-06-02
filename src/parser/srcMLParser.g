@@ -6720,6 +6720,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
             startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
         }
 
+        // can have (ternary) in a ternary condition
         { isoption(parseoptions, SRCML_OPTION_TERNARY) && !skip_ternary && inTransparentMode(MODE_TERNARY | MODE_CONDITION)
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
             && perform_ternary_check() }? ternary_expression |
