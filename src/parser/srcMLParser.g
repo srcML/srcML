@@ -977,26 +977,10 @@ look_past_two[int skiptoken1, int skiptoken2] returns [int token] {
 
 } :;
 
-// skip past all of the skiptoken1, skiptoken2 and skiptoken3 and return the one after
-look_past_three[int skiptoken1, int skiptoken2, int skiptoken3] returns [int token] {
-
-    int place = mark();
-    inputState->guessing++;
-
-    while (LA(1) != antlr::Token::EOF_TYPE && (LA(1) == skiptoken1 || LA(1) == skiptoken2 || LA(1) == skiptoken3))
-        consume();
-
-    token = LA(1);
-
-    inputState->guessing--;
-    rewind(place);
-
-} :;
-
 // give the next token as if rule was applied.  If rule can not be applied return -1
 look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
 
-   int place = mark();
+    int place = mark();
     inputState->guessing++;
 
     try {
@@ -1014,6 +998,30 @@ look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
     rewind(place);
 
 } :;
+
+// give the next token as if rule was applied until failure.  If rule can not be applied return -1
+look_past_rule_star[void (srcMLParser::*rule)()] returns [int token] {
+
+    int place = mark();
+    token = -1;
+    inputState->guessing++;
+
+    try {
+
+        while(LA(1) != antlr::Token::EOF_TYPE) {
+
+            (this->*rule)();
+            token = LA(1);
+
+        }
+
+    } catch(...) {}
+
+    inputState->guessing--;
+    rewind(place);
+
+} :;
+
 
 /* functions */
 
@@ -4802,7 +4810,7 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
             (DESTOP set_bool[isdestructor])*
             (multops)*
             (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main | keyword_identifier)
-            (options { greedy = true; } : { look_past_three(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
+            (options { greedy = true; } : { look_past_rule_star(&srcMLParser::multops) == DCOLON }? multops)*
         )*
 
         { notdestructor = LA(1) == DESTOP; }
@@ -4912,7 +4920,7 @@ keyword_name_inner[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_D
             (DESTOP set_bool[isdestructor])*
             (multops)*
             (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main | keyword_identifier)
-            (options { greedy = true; } : { look_past_three(MULTOPS, REFOPS, RVALUEREF) == DCOLON }? multops)*
+            (options { greedy = true; } : { look_past_rule_star(&srcMLParser::multops) == DCOLON }? multops)*
         )*
 
         { notdestructor = LA(1) == DESTOP; }
