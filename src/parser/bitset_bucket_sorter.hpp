@@ -24,7 +24,13 @@
 #define BITSET_BUCKET_SORTER
 
 #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+
+#ifdef SRCML_BOOST_MPL_LARGE
+#define BOOST_MPL_LIMIT_VECTOR_SIZE 150
+#else
 #define BOOST_MPL_LIMIT_VECTOR_SIZE 50
+#endif
+ 
 #define BOOST_MPL_LIMIT_MAP_SIZE 30
 #include <boost/mpl/vector_c.hpp>
 #include <boost/mpl/map.hpp>

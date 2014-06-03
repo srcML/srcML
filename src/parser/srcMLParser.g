@@ -616,9 +616,15 @@ public:
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
     static const antlr::BitSet macro_call_token_set;
+
+#ifdef SRCML_BOOST_MPL_LARGE
+    static const antlr::BitSet argument_token_set;
+#else
     static const antlr::BitSet argument_token_set_one;
     static const antlr::BitSet argument_token_set_two;
     static const antlr::BitSet argument_token_set_three;
+#endif
+
     static const antlr::BitSet enum_preprocessing_token_set;
 
     // constructor
@@ -3715,9 +3721,16 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT || LA(1) == MUTABLE]
             (
-                { (argument_token_set_one.member(LA(1)) || argument_token_set_two.member(LA(1)) || argument_token_set_three.member(LA(1)))
+
+                { 
+#ifdef SRCML_BOOST_MPL_LARGE
+                    argument_token_set.member(LA(1))
+#else
+                    (argument_token_set_one.member(LA(1)) || argument_token_set_two.member(LA(1)) || argument_token_set_three.member(LA(1)))
+#endif
                     && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
-                     && (LA(1) != TEMPLATE || next_token() != TEMPOPS) }?
+                     && (LA(1) != TEMPLATE || next_token() != TEMPOPS) 
+                 }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
                 (specifier | template_specifier set_bool[sawtemplate, true] | { next_token() == COLON }? SIGNAL | ATREQUIRED | ATOPTIONAL)
@@ -4042,7 +4055,14 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         // ambigous on template keyword from template specifier and probably class_preamble template
         (options { generateAmbigWarnings = false; } : 
         // specifiers that occur in a type
-        { argument_token_set_one.member(LA(1)) || argument_token_set_two.member(LA(1)) || argument_token_set_three.member(LA(1)) }?
+
+        { 
+#ifdef SRCML_BOOST_MPL_LARGE
+            argument_token_set.member(LA(1))
+#else
+            (argument_token_set_one.member(LA(1)) || argument_token_set_two.member(LA(1)) || argument_token_set_three.member(LA(1)))
+#endif
+        }?
         specifier | template_specifier | auto_keyword[true] | 
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
