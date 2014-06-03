@@ -10,7 +10,7 @@ srcML toolkit includes:
 
 * libsrcml
 
-  	The library provides a C interface for translation of source code to and from srcML, as well as, efficient manipulation and fact extraction (XPath, XSLT, and RelaxNG).  The srcMLclient `srcml` is built utilizing libsrcml.
+  	The library provides a C interface for translation of source code to and from srcML, as well as, efficient manipulation and fact extraction (XPath, XSLT, and RelaxNG).  The srcML client `srcml` is built utilizing libsrcml.
 
 # Building srcML
 
