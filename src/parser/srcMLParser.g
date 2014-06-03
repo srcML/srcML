@@ -284,15 +284,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
     else
        // root, single mode that allows statements to be nested
        startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
-
-    // for(int i = 0; i < int(_tokenSet_1.toArray().size()); ++i)
-    //     std::cout << _tokenSet_1.toArray().at(i) << ' ';
-    // std::cout << '\n';
-
-    // for(int i = 0; i < int(keyword_token_set.toArray().size()); ++i)
-    //     std::cout << keyword_token_set.toArray().at(i) << ' ';
-    // std::cout << '\n';
-
+   
 }
 
 // ends all currently open modes
