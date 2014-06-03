@@ -74,7 +74,7 @@ create_token_set(argument_tokens, srcMLParser::VOLATILE, srcMLParser::LBRACKET, 
                                             srcMLParser::NORETURN, srcMLParser::IMAGINARY, srcMLParser::GENERIC_SELECTION, srcMLParser::ASM, srcMLParser::CXX_TRY, srcMLParser::CXX_CATCH,
                                             srcMLParser::CXX_CLASS, srcMLParser::ATREQUIRED, srcMLParser::ATOPTIONAL, srcMLParser::BLOCK, srcMLParser::WEAK, srcMLParser::STRONG);
 
-const antlr::BitSet srcMLParser::argument_token_set_one(bitset_buckets<argument_tokens>::data, bitset_buckets<argument_tokens>::num_token_longs);
+const antlr::BitSet srcMLParser::argument_token_set(bitset_buckets<argument_tokens>::data, bitset_buckets<argument_tokens>::num_token_longs);
 #else
 create_token_set(argument_tokens_one, srcMLParser::VOLATILE, srcMLParser::LBRACKET, srcMLParser::PROTECTED, srcMLParser::LINE, srcMLParser::BY, srcMLParser::DEFINE,
                                             srcMLParser::CHECKED, srcMLParser::ENUM, srcMLParser::ENDIF, srcMLParser::WHERE, srcMLParser::ON, srcMLParser::PARTIAL,

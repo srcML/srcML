@@ -142,8 +142,8 @@ if(NOT ${DYNAMIC_LOAD_ENABLED})
     add_definitions(-DNO_DLLOAD)
 endif()
 
-if(EXISTS ${Boost_INCLUDE_DIR}/mpl/vector/vector150_c.hpp)
-    add_definitions(SRCML_BOOST_MPL_LARGE)
+if(EXISTS ${Boost_INCLUDE_DIR}/boost/mpl/vector/vector150_c.hpp)
+    add_definitions(-DSRCML_BOOST_MPL_LARGE)
 endif()
 
 # Adding compiler configuration for GCC.
