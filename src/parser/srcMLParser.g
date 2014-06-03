@@ -4850,7 +4850,7 @@ compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
-            ({LA(1) == MULTOPS }? multops)*
+            ({ LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
             identifier
         )*
 ;
@@ -4862,7 +4862,7 @@ compound_name_objective_c[bool& iscompound] { ENTRY_DEBUG } :
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
-            ({LA(1) == MULTOPS }? multops)*
+            ({ LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
             simple_name_optional_template
         )*
 ;
