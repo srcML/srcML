@@ -44,7 +44,7 @@ In source (builds within the source directory) and out of source builds (builds 
 
 ##### Packages Required
 
-* antlr 2  
+* antlr2  
 * boost  
 * cmake  
 
