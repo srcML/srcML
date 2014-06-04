@@ -274,7 +274,8 @@ private:
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Language(lang), ModeStack(this), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
-    parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0), skip_ternary(false)
+    parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0), skip_ternary(false),
+    current_column(-1), current_line(-1), nxt_token(-1)
 {
 
     // root, single mode
@@ -610,6 +611,10 @@ public:
 
     bool skip_ternary;
 
+    int current_column;
+    int current_line;
+    int nxt_token;
+
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
     static const antlr::BitSet macro_call_token_set;
@@ -909,16 +914,31 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
 // efficient way to view the token after the current LA(1)
 next_token[] returns [int token] {
 
-    int place = mark();
-    inputState->guessing++;
+    antlr::RefToken rtoken = LT(1);
 
-    // consume current token
-    consume();
+    if(rtoken->getColumn() == current_column && rtoken->getLine() == current_line) {
 
-    token = LA(1);
+        token = nxt_token;
 
-    inputState->guessing--;
-    rewind(place);
+    } else {
+
+        current_column = rtoken->getColumn();
+        current_line = rtoken->getLine();
+
+        int place = mark();
+        inputState->guessing++;
+
+        // consume current token
+        consume();
+
+        token = LA(1);
+
+        inputState->guessing--;
+        rewind(place);
+
+        nxt_token = token;
+
+    }
 
 } :;
 
