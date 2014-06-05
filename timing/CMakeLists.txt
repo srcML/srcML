@@ -1,0 +1,1 @@
+add_test(NAME Foo COMMAND timing_driver)
