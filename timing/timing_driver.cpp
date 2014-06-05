@@ -31,9 +31,9 @@
 
 int main(int argc, char * argv[]) {
 
-    if(argc < 2) {
+    if(argc < 3) {
 
-        std::cerr << "timing_driver input_file\n";
+        std::cerr << "timing_driver input_file log_file\n";
         exit(1);
 
     }
@@ -100,6 +100,12 @@ int main(int argc, char * argv[]) {
 
 
     std::cout << std::left << std::setw(9) << language << std::right << std::setw(6) << lines_of_code_per_second_stream.str() << " LOC/sec\n";
+
+    std::string log_file_name = argv[2];
+
+    std::ofstream log_file(log_file_name, std::ios_base::app);
+
+    log_file << std::left << std::setw(9) << language << std::right << std::setw(6) << lines_of_code_per_second_stream.str() << " LOC/sec\n";
 
     return 0;
 }

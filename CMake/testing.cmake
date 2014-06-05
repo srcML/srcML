@@ -98,9 +98,9 @@ endmacro()
 # By default all tests are linked against the srcml_static library.
 #
 #
-macro(addTimingTest TEST_NAME FILE_NAME)
+macro(addTimingTest TEST_NAME FILE_NAME LOG_FILE_NAME)
 
-    add_test(NAME ${TEST_NAME} COMMAND timing_driver ${CMAKE_CURRENT_BINARY_DIR}/${FILE_NAME})
+    add_test(NAME ${TEST_NAME} COMMAND timing_driver ${CMAKE_CURRENT_BINARY_DIR}/${FILE_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${LOG_FILE_NAME})
     copyDependentFile(${FILE_NAME})
 
 endmacro()

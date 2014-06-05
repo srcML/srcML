@@ -23,7 +23,7 @@
 add_executable(timing_driver timing_driver.cpp ${Boost_LIBRARIES})
 set_target_properties(timing_driver PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-addTimingTest(C timing_long.h)
-addTimingTest(Cpp timing_long.hpp)
-addTimingTest(Csharp timing_csharp.cs)
-addTimingTest(Java timing_java.java)
+addTimingTest(C timing_long.h timing_log.txt)
+addTimingTest(Cpp timing_long.hpp timing_log.txt)
+addTimingTest(Csharp timing_csharp.cs timing_log.txt)
+addTimingTest(Java timing_java.java timing_log.txt)
