@@ -88,6 +88,23 @@ endforeach()
 endif()
 
 endmacro()
+
+#
+# addTimingTest
+# Creates a unit test from a given file with a given name.
+# - TEST_NAME the name of the test.
+# - FILE_NAME the name of the unit test file.
+# All arguments after the file name are considered to be linker arguments.
+# By default all tests are linked against the srcml_static library.
+#
+#
+macro(addTimingTest TEST_NAME FILE_NAME LOG_FILE_NAME)
+
+    add_test(NAME ${TEST_NAME} COMMAND timing_driver ${CMAKE_CURRENT_BINARY_DIR}/${FILE_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${LOG_FILE_NAME})
+    copyDependentFile(${FILE_NAME})
+
+endmacro()
+
 # 
 # copyDependentFile 
 # This copies a file given as TARGET_NAME to the current bunary directory
