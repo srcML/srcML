@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <cmath>
+#include <sstream>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
@@ -46,6 +47,15 @@ int main(int argc, char * argv[]) {
     if(lines_of_code && !is_text) lines_of_code--;
     if(is_text) ++lines_of_code;
 
+    std::string extension = input_file.substr(input_file.rfind('.') + 1);
+
+    std::string language = "";
+    if(extension == "hpp" || extension == "cpp") language = "C++";
+    if(extension == "h" || extension == "c") language = "C";
+    if(extension == "cs") language = "C#";
+    if(extension == "java") language = "Java";
+
+
     std::string str_command = "srcml " + input_file + " -o " + output_file;
 
     //std::cout << "Command: " << str_command << " Line count: " << lines_of_code << '\n';
@@ -63,7 +73,14 @@ int main(int argc, char * argv[]) {
 
     unsigned long long lines_of_code_per_second = (lines_of_code / elapsed_seconds) + 0.5;
 
-    std::cout << lines_of_code_per_second / 1000 << ',' << (lines_of_code_per_second % 1000) << " LOC/sec\n";
+    std::ostringstream lines_of_code_per_second_stream;
+    if(lines_of_code_per_second > 1000)
+        lines_of_code_per_second_stream << lines_of_code_per_second / 1000 << ',' << std::setfill('0') << std::setw(3) << (lines_of_code_per_second % 1000);
+    else
+        lines_of_code_per_second_stream << lines_of_code_per_second;
+
+
+    std::cout << std::left << std::setw(9) << language << std::right << std::setw(6) << lines_of_code_per_second_stream.str() << " LOC/sec\n";
 
     return 0;
 }
