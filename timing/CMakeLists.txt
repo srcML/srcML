@@ -20,7 +20,10 @@
 #    The CMake project file for srcML.
 #
 
-add_test(NAME Foo COMMAND timing_driver timing_long.h)
-add_test(NAME Foo COMMAND timing_driver timing_long.hpp)
-add_test(NAME Foo COMMAND timing_driver timing_java.java)
-add_test(NAME Foo COMMAND timing_driver timing_csharp.cs)
+add_executable(timing_driver timing_driver.cpp ${Boost_LIBRARIES})
+set_target_properties(timing_driver PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+addTimingTest(C timing_long.h)
+addTimingTest(Cpp timing_long.hpp)
+addTimingTest(Csharp timing_csharp.cs)
+addTimingTest(Java timing_java.java)
