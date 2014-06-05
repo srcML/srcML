@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <cmath>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
@@ -21,7 +22,7 @@ int main(int argc, char * argv[]) {
 
     std::ifstream in(input_file);
 
-    size_t line_count = 0;
+    size_t lines_of_code = 0;
 
     bool is_text = false;
     while(in) {
@@ -31,7 +32,7 @@ int main(int argc, char * argv[]) {
 
         if(c == '\n') {
 
-            ++line_count;
+            ++lines_of_code;
             is_text = false;
 
         } else {
@@ -42,12 +43,12 @@ int main(int argc, char * argv[]) {
 
     }
 
-    if(line_count && !is_text) line_count--;
-    if(is_text) ++line_count;
+    if(lines_of_code && !is_text) lines_of_code--;
+    if(is_text) ++lines_of_code;
 
     std::string str_command = "srcml " + input_file + " -o " + output_file;
 
-    //std::cout << "Command: " << str_command << " Line count: " << line_count << '\n';
+    //std::cout << "Command: " << str_command << " Line count: " << lines_of_code << '\n';
 
     const char * command = str_command.c_str();
 
@@ -56,9 +57,13 @@ int main(int argc, char * argv[]) {
     FILE * sub_process = popen(command, "r");
     pclose(sub_process);
 
-    std::string time = to_simple_string(boost::posix_time::microsec_clock::universal_time() - start_time);
+    boost::posix_time::time_duration elapsed_time_duration = boost::posix_time::microsec_clock::universal_time() - start_time;
 
-    std::cout << time << '\n';
+    long double elapsed_seconds = elapsed_time_duration.total_seconds() + (elapsed_time_duration.fractional_seconds() / pow((long double)10, boost::posix_time::time_duration::num_fractional_digits()));
+
+    unsigned long long lines_of_code_per_second = (lines_of_code / elapsed_seconds) + 0.5;
+
+    std::cout << lines_of_code_per_second / 1000 << ',' << (lines_of_code_per_second % 1000) << " LOC/sec\n";
 
     return 0;
 }
