@@ -39,7 +39,6 @@ int main(int argc, char * argv[]) {
     }
 
     std::string input_file = argv[1];
-    std::string output_file = argv[2];
 
     std::ifstream in(input_file);
 
