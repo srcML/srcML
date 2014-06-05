@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
@@ -8,22 +9,45 @@
 
 int main(int argc, char * argv[]) {
 
-    if(argc < 2) {
+    if(argc < 3) {
 
-        std::cerr << "timing_driver command args ...\n";
+        std::cerr << "timing_driver input_file output_file\n";
         exit(1);
 
     }
 
-    std::string str_command = "";
-    while(*(++argv)) {
+    std::string input_file = argv[1];
+    std::string output_file = argv[2];
 
-        str_command += argv[0];
-        str_command += " ";
+    std::ifstream in(input_file);
+
+    size_t line_count = 0;
+
+    bool is_text = false;
+    while(in) {
+
+        char c;
+        in.get(c);
+
+        if(c == '\n') {
+
+            ++line_count;
+            is_text = false;
+
+        } else {
+
+            is_text = true;
+
+        }
 
     }
 
-    //std::cout << str_command << '\n';
+    if(line_count && !is_text) line_count--;
+    if(is_text) ++line_count;
+
+    std::string str_command = "srcml " + input_file + " -o " + output_file;
+
+    //std::cout << "Command: " << str_command << " Line count: " << line_count << '\n';
 
     const char * command = str_command.c_str();
 
