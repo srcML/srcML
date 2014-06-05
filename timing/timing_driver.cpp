@@ -8,10 +8,22 @@
 
 int main(int argc, char * argv[]) {
 
-    std::string str_command = "";
-    while(*(++argv)) str_command += argv[0];
+    if(argc < 2) {
 
-    std::cout << str_command << '\n';
+        std::cerr << "timing_driver command args ...\n";
+        exit(1);
+
+    }
+
+    std::string str_command = "";
+    while(*(++argv)) {
+
+        str_command += argv[0];
+        str_command += " ";
+
+    }
+
+    //std::cout << str_command << '\n';
 
     const char * command = str_command.c_str();
 
