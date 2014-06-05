@@ -1,3 +1,23 @@
+/**
+ * @file timing_driver.cpp
+ *
+ * @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ *
+ * The srcML Toolkit is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML Toolkit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML Toolkit; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -11,9 +31,9 @@
 
 int main(int argc, char * argv[]) {
 
-    if(argc < 3) {
+    if(argc < 2) {
 
-        std::cerr << "timing_driver input_file output_file\n";
+        std::cerr << "timing_driver input_file\n";
         exit(1);
 
     }
@@ -56,7 +76,7 @@ int main(int argc, char * argv[]) {
     if(extension == "java") language = "Java";
 
 
-    std::string str_command = "srcml " + input_file + " -o " + output_file;
+    std::string str_command = "srcml " + input_file + " -o " + intput_file + ".xml";
 
     //std::cout << "Command: " << str_command << " Line count: " << lines_of_code << '\n';
 
