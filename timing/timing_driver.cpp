@@ -74,7 +74,6 @@ int main(int argc, char * argv[]) {
     if(extension == "cs") language = "C#";
     if(extension == "java") language = "Java";
 
-
     std::string str_command = "srcml " + input_file + " -o " + input_file + ".xml";
 
     //std::cout << "Command: " << str_command << " Line count: " << lines_of_code << '\n';
@@ -97,7 +96,6 @@ int main(int argc, char * argv[]) {
         lines_of_code_per_second_stream << lines_of_code_per_second / 1000 << ',' << std::setfill('0') << std::setw(3) << (lines_of_code_per_second % 1000);
     else
         lines_of_code_per_second_stream << lines_of_code_per_second;
-
 
     std::cout << std::left << std::setw(9) << language << std::right << std::setw(6) << lines_of_code_per_second_stream.str() << " LOC/sec\n";
 
