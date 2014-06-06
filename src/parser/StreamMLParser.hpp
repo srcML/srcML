@@ -113,9 +113,7 @@ public:
      */
     void endElement(int id) {
 
-        static srcMLState::MODE_TYPE empty_mode;
-
-        if((srcMLParser::getMode() & srcMLParser::MODE_ISSUE_EMPTY_AT_POP) != empty_mode) 
+        if((srcMLParser::getMode() & srcMLParser::MODE_ISSUE_EMPTY_AT_POP).any()) 
             pushSToken(id, false);
 
         pushEToken(id);

@@ -481,10 +481,8 @@ protected:
      */
     void dupDownOverMode(const srcMLState::MODE_TYPE& m) {
 
-        static srcMLState::MODE_TYPE empty_mode;
-
         std::list<srcMLState> alist;
-        while((st.top().getMode() & m) == empty_mode) {
+        while((st.top().getMode() & m).none()) {
 
             alist.push_front(st.top());
             st.pop();
