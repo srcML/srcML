@@ -134,8 +134,8 @@ struct srcml_archive {
     /** namespaces an array of XML namespaces */
     std::vector<std::string> namespaces;
 
-    /** target/data list of processing instructions */
-    std::vector<std::string> processing_instructions;
+    /** target/data pair for processing instruction */
+    std::pair<boost::optional<std::string>, boost::optional<std::string> > processing_instruction;
 
     /** an array of registered extension language pairs */
     language_extension_registry registered_languages;
