@@ -691,6 +691,8 @@ void srcMLOutput::outputPreRootProcessingInstruction() {
 
         xmlTextWriterStartPI(xout, BAD_CAST processing_instruction->first.c_str());
         xmlTextWriterWriteString(xout, BAD_CAST processing_instruction->second.c_str());
+        xmlTextWriterEndPI(xout);
+        xmlTextWriterWriteString(xout, BAD_CAST "\n");
 
     }
 
