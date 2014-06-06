@@ -288,9 +288,16 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
     /** extract language */
     char * language_start_name = strnstr(xml, "language", end_start_unit - xml);
-    char * language_start_value = (char *)strchr(language_start_name, '"');
-    char * language_end_value = (char *)strchr(language_start_value + 1, '"');
-    (*language_end_value) = '\0';
+
+    char * language_start_value = 0;
+    char * language_end_value = 0;
+    if(language_start_name) {
+
+      language_start_value = (char *)strchr(language_start_name, '"');
+      language_end_value = (char *)strchr(language_start_value + 1, '"');
+      (*language_end_value) = '\0';
+
+    } 
 
     /** is there a cpp namespace */
     bool is_cpp = strnstr(xml, SRCML_CPP_NS_URI, end_start_unit - xml) != 0;
@@ -298,11 +305,12 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
     OPTION_TYPE save_options = options;
     if(is_cpp) options |= SRCML_OPTION_CPP;
 
-    out.startUnit(language_start_value + 1, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
-                          unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, false);
+    out.startUnit(language_start_value ? language_start_value + 1 : 0, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
+                         unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, false);
+
+    (*language_end_value) = '"';
 
     options = save_options;
-    (*language_end_value) = '"';
 
     size_t size = strlen(end_start_unit);
 
