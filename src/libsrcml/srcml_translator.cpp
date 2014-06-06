@@ -308,7 +308,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
     out.startUnit(language_start_value ? language_start_value + 1 : 0, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
                          unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, false);
 
-    (*language_end_value) = '"';
+    if(language_start_name) (*language_end_value) = '"';
 
     options = save_options;
 

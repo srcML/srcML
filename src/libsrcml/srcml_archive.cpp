@@ -153,6 +153,8 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
     }
 
+    new_archive->processing_instruction = archive->processing_instruction;
+
     new_archive->registered_languages = archive->registered_languages;
 
     try {
