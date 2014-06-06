@@ -606,14 +606,15 @@ public :
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\" standalone=\""));
         xmlOutputBufferWriteString(buf, ctxt->standalone ? "yes" : "no");
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
+        
     }
 
-        /**
-     * xml_output_buffer_write_xml_decl
-     * @param ctxt an xml parser context
+    /**
+     * xml_output_buffer_write_processing_instruction
      * @param buf output buffer to write element
+     * @param processing_instruction the pre-root processing instruction to write
      *
-     * Write the xml declaration to output buffer.
+     * Write the xml pre-root processing instruction to the output buffer.
      */
     static void xml_output_buffer_write_processing_instruction(xmlOutputBufferPtr buf, boost::optional<std::pair<std::string, std::string> > processing_instruction) {
 
