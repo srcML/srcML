@@ -994,6 +994,7 @@ static void srcml_read_internal(srcml_archive * archive) {
     bool done = !archive->reader->read_root_unit_attributes(encoding, language, filename, directory, version,
                                                             archive->attributes, archive->prefixes,
                                                             archive->namespaces,
+                                                            archive->processing_instruction,
                                                             archive->options,
                                                             archive->tabstop,
                                                             archive->user_macro_list);

@@ -689,7 +689,7 @@ public :
      * Overrident processingInstruction to collect srcML.
      */
     virtual void processingInstruction(const xmlChar * target, const xmlChar * data) {
-
+        
         srcml_archive_set_processing_instruction(archive, (const char*)target, (const char *)data);
 
     }
