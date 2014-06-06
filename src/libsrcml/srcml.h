@@ -317,8 +317,8 @@ __LIBSRCML_DECL const char*        srcml_archive_get_namespace_prefix           
 __LIBSRCML_DECL const char*        srcml_archive_get_prefix_from_uri              (const struct srcml_archive*, const char* namespace_uri);
 __LIBSRCML_DECL const char*        srcml_archive_get_namespace_uri                (const struct srcml_archive*, int pos);
 __LIBSRCML_DECL const char*        srcml_archive_get_uri_from_prefix              (const struct srcml_archive*, const char* prefix);
-__LIBSRCML_DECL const char*        srcml_archive_get_processing_instruction_target(struct srcml_archive*); 
-__LIBSRCML_DECL const char*        srcml_archive_get_processing_instruction_data  (struct srcml_archive*); 
+__LIBSRCML_DECL const char*        srcml_archive_get_processing_instruction_target(const struct srcml_archive*); 
+__LIBSRCML_DECL const char*        srcml_archive_get_processing_instruction_data  (const struct srcml_archive*); 
 __LIBSRCML_DECL int                srcml_archive_get_macro_list_size              (const struct srcml_archive*);
 __LIBSRCML_DECL const char*        srcml_archive_get_macro_token                  (const struct srcml_archive*, int pos);
 __LIBSRCML_DECL const char*        srcml_archive_get_macro_token_type             (const struct srcml_archive*, const char* namespace_uri);
