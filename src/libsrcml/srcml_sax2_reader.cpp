@@ -124,6 +124,7 @@ srcml_sax2_reader::~srcml_sax2_reader() {
  * @param attributes array to store other attributes gathered
  * @param prefixes an array to store gathered XML namespace prefixes
  * @param namespaces an array to store gathered XML naamespaces
+ * @param processing_instruction a location to store the pre-root processing-instruction
  * @param options a variable to set used options
  * @param tabstop a variable to set the tabstop
  * @param user_macro_list a variable to set the list of user defined macros
@@ -139,6 +140,7 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
                                                  std::vector<std::string> & attributes,
                                                  std::vector<std::string> & prefixes,
                                                  std::vector<std::string> & namespaces,
+                                                 boost::optional<std::pair<std::string, std::string> > & processing_instruction,
                                                  OPTION_TYPE & options,
                                                  int & tabstop,
                                                  std::vector<std::string> & user_macro_list) {
@@ -153,6 +155,7 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
     attributes.swap(handler.archive->attributes);
     prefixes.swap(handler.archive->prefixes);
     namespaces.swap(handler.archive->namespaces);
+    processing_instruction.swap(handler.archive->processing_instruction);
     options = handler.archive->options;
     tabstop = handler.archive->tabstop;
     user_macro_list.swap(handler.archive->user_macro_list);

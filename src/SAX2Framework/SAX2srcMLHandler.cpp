@@ -50,6 +50,7 @@ xmlSAXHandler factory() {
 
     sax.comment = &comment;
     sax.cdataBlock = &cdataBlock;
+    sax.processingInstruction = &processingInstruction;
 
     return sax;
 }
@@ -650,6 +651,34 @@ void cdataBlock(void * ctx, const xmlChar * value, int len) {
     SAX2srcMLHandler * state = (SAX2srcMLHandler *) ctxt->_private;
 
     state->process->cdataBlock(value, len);
+
+#ifdef DEBUG
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+
+}
+
+/**
+ * processingInstruction
+ * @param ctx an xmlParserCtxtPtr
+ * @param target the processing instruction target.
+ * @param data the processing instruction data.
+ *
+ * Called when a processing instruction has been parsed.
+ * Immediately calls supplied handlers function.
+ */
+void processingInstruction(void * ctx, const xmlChar * target, const xmlChar * data) {
+
+#ifdef DEBUG
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+#endif
+
+    if(ctx == NULL) return;
+
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    SAX2srcMLHandler * state = (SAX2srcMLHandler *) ctxt->_private;
+
+    state->process->processingInstruction(target, data);
 
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);

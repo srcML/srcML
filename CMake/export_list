@@ -26,6 +26,8 @@ _srcml_archive_get_namespace_uri
 _srcml_archive_get_namespace_prefix
 _srcml_archive_get_namespace_size
 _srcml_archive_get_options
+_srcml_archive_get_processing_instruction_data
+_srcml_archive_get_processing_instruction_target
 _srcml_archive_get_uri_from_prefix
 _srcml_archive_get_prefix_from_uri
 _srcml_archive_get_src_encoding
@@ -39,6 +41,7 @@ _srcml_archive_set_encoding
 _srcml_archive_set_filename
 _srcml_archive_set_language
 _srcml_archive_set_options
+_srcml_archive_set_processing_instruction
 _srcml_archive_set_src_encoding
 _srcml_archive_set_tabstop
 _srcml_archive_set_version
@@ -70,6 +73,8 @@ _srcml_get_namespace_uri
 _srcml_get_uri_from_prefix
 _srcml_get_namespace_size
 _srcml_get_options
+_srcml_get_processing_instruction_data
+_srcml_get_processing_instruction_target
 _srcml_get_namespace_prefix
 _srcml_get_prefix_from_uri
 _srcml_get_src_encoding
@@ -98,6 +103,7 @@ _srcml_set_encoding
 _srcml_set_filename
 _srcml_set_language
 _srcml_set_options
+_srcml_set_processing_instruction
 _srcml_set_src_encoding
 _srcml_set_tabstop
 _srcml_set_version

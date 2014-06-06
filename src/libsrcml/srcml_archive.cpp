@@ -413,6 +413,26 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
 
 }
 
+/**
+ * srcml_archive_set_processing_instruction
+ * @param archive a srcml_archive
+ * @param target the processing instruction's target
+ * @param data the processing instruciton's data
+ *
+ * Set a processing instruction that will be output before root element of archive.
+ *
+ * @returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_archive_set_processing_instruction(srcml_archive* archive, const char* target, const char* data) {
+
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+
+    archive->processing_instruction = std::pair<std::string,std::string>(target, data);
+
+    return SRCML_STATUS_OK;
+
+}
 
 /**
  * srcml_archive_register_macro
@@ -657,6 +677,30 @@ const char* srcml_archive_get_uri_from_prefix(const struct srcml_archive* archiv
 }
 
 /**
+ * srcml_archive_get_processing_instruction_target
+ * @param archive a srcml_archive
+ *
+ * @returns Get the processing instruction target.
+ */
+const char* srcml_archive_get_processing_instruction_target(const struct srcml_archive* archive) {
+
+    return archive->processing_instruction ? archive->processing_instruction->first.c_str() : 0;
+
+}
+
+/**
+ * srcml_archive_get_processing_instruction_data
+ * @param archive a srcml_archive
+ *
+ * @returns Get the processing instruction data.
+ */
+const char* srcml_archive_get_processing_instruction_data(const struct srcml_archive* archive) {
+
+    return archive->processing_instruction ?  archive->processing_instruction->second.c_str() : 0;
+
+}
+
+/**
  * srcml_archive_get_macro_list_size
  * @param archive a srcml_archive
  *
@@ -773,6 +817,7 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
                                                 archive->options,
                                                 archive->prefixes,
                                                 archive->namespaces,
+                                                archive->processing_instruction,
                                                 archive->tabstop,
                                                 srcml_check_language(archive->language ? archive->language->c_str() : 0),
                                                 archive->directory ? archive->directory->c_str() : 0,
@@ -818,6 +863,7 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
                                                 archive->options,
                                                 archive->prefixes,
                                                 archive->namespaces,
+                                                archive->processing_instruction,
                                                 archive->tabstop,
                                                 srcml_check_language(archive->language ? archive->language->c_str() : 0),
                                                 archive->directory ? archive->directory->c_str() : 0,
@@ -859,6 +905,7 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
                                                 archive->options,
                                                 archive->prefixes,
                                                 archive->namespaces,
+                                                archive->processing_instruction,
                                                 archive->tabstop,
                                                 srcml_check_language(archive->language ? archive->language->c_str() : 0),
                                                 archive->directory ? archive->directory->c_str() : 0,
@@ -905,6 +952,7 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
                                                 archive->options,
                                                 archive->prefixes,
                                                 archive->namespaces,
+                                                archive->processing_instruction,
                                                 archive->tabstop,
                                                 srcml_check_language(archive->language ? archive->language->c_str() : 0),
                                                 archive->directory ? archive->directory->c_str() : 0,
@@ -946,6 +994,7 @@ static void srcml_read_internal(srcml_archive * archive) {
     bool done = !archive->reader->read_root_unit_attributes(encoding, language, filename, directory, version,
                                                             archive->attributes, archive->prefixes,
                                                             archive->namespaces,
+                                                            archive->processing_instruction,
                                                             archive->options,
                                                             archive->tabstop,
                                                             archive->user_macro_list);

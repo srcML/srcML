@@ -301,6 +301,16 @@ public :
      */
     virtual void cdataBlock(const xmlChar * value, int len) {}
 
+    /**
+     * processingInstruction
+     * @param target the processing instruction target.
+     * @param data the processing instruction data.
+     *
+     * Called when a processing instruction has been parsed.
+     * Overide for desired behaviour.
+     */
+    virtual void processingInstruction(const xmlChar * target, const xmlChar * data) {}
+
 #pragma GCC diagnostic pop
 
 };

@@ -147,6 +147,14 @@ public :
     void enable_cdataBlock(bool enable);
 
     /**
+     * enable_processingInstruction
+     * @param enable bool indicate enable or disable SAX parsing.
+     *
+     * Enables or disables processingInstruction parsing.
+     */
+    void enable_processingInstruction(bool enable);
+
+    /**
      * enable_function
      * @param enable bool indicate enable or disable special function parsing.
      *
