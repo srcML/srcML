@@ -43,12 +43,14 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
     // NOTE: thread task cannot throw exception
 
     // construct and parse the unit
-    srcml_unit* unit = 0;
+    srcml_unit* unit = request->unit;
     int status = SRCML_STATUS_OK;
     try {
+
         // create the unit start tag
-        if (!(unit = srcml_create_unit(request->srcml_arch)))
-            throw SRCML_STATUS_ERROR;
+        if (!unit)
+            if (!(unit = srcml_create_unit(request->srcml_arch)))
+                throw SRCML_STATUS_ERROR;
 
         // language attribute, required if from memory
         if ((status = srcml_unit_set_language(unit, request->language.c_str())) != SRCML_STATUS_OK)
@@ -100,16 +102,19 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
                 "Wrong size for SHA_DIGEST_LENGTH conversion");
 #endif
 
-            fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, outmd);
+//            fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, outmd);
             
             srcml_unit_set_hash(unit, outmd);
         }
 
-        // parse the buffer/file
-        status = request->disk_filename ?
-                                    srcml_parse_unit_filename(unit, request->disk_filename->c_str()) :
-                                    srcml_parse_unit_memory(unit, &request->buffer.front(), request->buffer.size());
+        // parse the buffer/file (unless it is already form a srcml archive)
+        if (request->disk_filename)
+            status = srcml_parse_unit_filename(unit, request->disk_filename->c_str());
+        else if (!request->unit)
+            status = srcml_parse_unit_memory(unit, &request->buffer.front(), request->buffer.size());
+
         if (status != SRCML_STATUS_OK)
+            // FIXME: Cannot throw exception from thread
             throw status;
 
     } catch (...) {

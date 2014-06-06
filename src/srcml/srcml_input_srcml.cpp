@@ -25,7 +25,7 @@
 #include <srcml_input_src.hpp>
 #include <srcml.h>
  
-void srcml_input_srcml(ParseQueue&,
+void srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
                        const srcml_input_src& srcml_input) {
 
@@ -45,16 +45,28 @@ void srcml_input_srcml(ParseQueue&,
 
         // write the just-read unit to the output srcml archive
         if (srcml_input.unit == 0 || srcml_input.unit == count) {
-            srcml_write_unit(srcml_output_archive, unit);
-        }
 
-        srcml_free_unit(unit);
+            // form the parsing request
+            ParseRequest* prequest = new ParseRequest;
+            // if (srcml_request.att_filename)
+            //     prequest->filename = *srcml_request.att_filename;
+            // else if (input_file != "_")
+            //     prequest->filename = input_file;
+            // prequest->directory = srcml_request.att_directory;
+            // prequest->version = srcml_request.att_version;
+            // prequest->srcml_arch = srcml_arch;
+            // prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
+            prequest->unit = unit;
+
+            // Hand request off to the processing queue
+            queue.schedule(prequest);
+        }
 
         if (srcml_input.unit == count)
             break;
     }
 
     // done with the input srcml archive
-    srcml_close_archive(srcml_input_archive);
-    srcml_free_archive(srcml_input_archive);
+    //srcml_close_archive(srcml_input_archive);
+    //srcml_free_archive(srcml_input_archive);
 }
