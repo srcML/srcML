@@ -168,4 +168,12 @@
 </unit>
 -->
 
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>c</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>;</decl_stmt>
+</unit>
+
 </unit>
