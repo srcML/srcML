@@ -3463,6 +3463,9 @@ comma[] { ENTRY_DEBUG } :
             if (inMode(MODE_IN_INIT))
                 endMode(MODE_IN_INIT);
 
+            if(inMode(MODE_LOCAL | MODE_VARIABLE_NAME))
+                endMode();
+
             if(inTransparentMode(MODE_ENUM) && inMode(MODE_INIT | MODE_EXPECT))
                 endDownToModeSet(MODE_ENUM | MODE_TOP);
 
@@ -6276,7 +6279,7 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
             startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
             // declaration
-            startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+            startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
             if(inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
                 setMode(MODE_LIST);
