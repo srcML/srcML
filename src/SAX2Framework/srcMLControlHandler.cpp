@@ -222,6 +222,19 @@ void srcMLControlHandler::enable_cdataBlock(bool enable) {
 }
 
 /**
+ * enable_processingInstruction
+ * @param enable bool indicate enable or disable SAX parsing.
+ *
+ * Enables or disables processingInstruction parsing.
+ */
+void srcMLControlHandler::enable_processingInstruction(bool enable) {
+
+    if(enable) sax.processingInstruction = processingInstruction;
+    else sax.processingInstruction = 0;
+
+}
+
+/**
 * enable_function
 * @param enable bool indicate enable or disable special function parsing.
 *
