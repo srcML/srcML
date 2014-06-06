@@ -26,6 +26,7 @@
 #include <stack>
 
 #include "srcMLException.hpp"
+#include <bitset>
 
 /**
  * srcMLState
@@ -40,7 +41,7 @@ public:
 #ifdef __GNUC__
 
     /** type of mode for GNU */
-    typedef unsigned long long MODE_TYPE;
+    typedef std::bitset<128> MODE_TYPE;
 
 #else
 
