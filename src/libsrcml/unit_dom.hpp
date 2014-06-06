@@ -308,6 +308,20 @@ public :
     }
 
     /**
+     * processingInstruction
+     * @param target the processing instruction target.
+     * @param data the processing instruction data.
+     *
+     * A processing instruction has been parsed.
+     * processing instruction in unit tree.
+     */
+    virtual void processingInstruction(const xmlChar * target, const xmlChar * data) {
+
+        xmlSAX2ProcessingInstruction(ctxt, target, data);
+
+    }
+
+    /**
      * endUnit
      * @param localname the name of the element tag
      * @param prefix the tag prefix
