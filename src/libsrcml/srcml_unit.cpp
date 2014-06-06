@@ -344,6 +344,7 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
             translation_options,
             unit->archive->prefixes,
             unit->archive->namespaces,
+            boost::optional<std::pair<std::string, std::string> >(),
             unit->archive->tabstop,
             lang,
             unit->directory ? unit->directory->c_str() : 0,

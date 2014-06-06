@@ -406,10 +406,11 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          OPTION_TYPE& op,
                          std::vector<std::string> & prefix,
                          std::vector<std::string> & uri,
+                         boost::optional<std::pair<std::string, std::string> > processing_instruction,
                          int ts)
     : input(ints), xout(0), output_buffer(output_buffer), unit_language(language), unit_dir(0), unit_filename(0),
-      unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(prefix), num2uri(uri)
-    , openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0),
+      unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(prefix), num2uri(uri), processing_instruction(processing_instruction),
+      openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0),
       debug_time_start(boost::posix_time::microsec_clock::universal_time())
 {
 
@@ -676,6 +677,22 @@ void srcMLOutput::outputXMLDecl() {
 
     // issue the xml declaration, but only if we want to
     if(depth == 0 && isoption(options, SRCML_OPTION_XML_DECL)) xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
+
+}
+
+/**
+ * outputPreRootProcessingInstruction
+ *
+ * Output a pre-root preprocessing instruction.
+ */
+void srcMLOutput::outputPreRootProcessingInstruction() {
+
+    if(depth == 0 && processing_instruction) {
+
+        xmlTextWriterStartPI(xout, BAD_CAST processing_instruction->first.c_str());
+        xmlTextWriterWriteString(xout, BAD_CAST processing_instruction->second.c_str());
+
+    }
 
 }
 

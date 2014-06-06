@@ -64,6 +64,7 @@ public:
                 OPTION_TYPE& option,
                 std::vector<std::string> & prefix,
                 std::vector<std::string> & uri,
+                boost::optional<std::pair<std::string, std::string> > processing_instruction,
                 int tabsize);
 
     void setOutputBuffer(xmlOutputBufferPtr output_buffer);
@@ -75,6 +76,8 @@ public:
     void setTokenStream(TokenStream& ints);
 
     void outputXMLDecl();
+
+    void outputPreRootProcessingInstruction();
 
     // start a unit element with the passed metadata
     void startUnit(const char* unit_language,
@@ -144,6 +147,9 @@ public:
 
     /** array for a number to uri */
     std::vector<std::string> & num2uri;
+
+    /** pre-root processing instruction */
+    boost::optional<std::pair<std::string, std::string> > processing_instruction;
 
     /** number of open elements */
     int openelementcount;

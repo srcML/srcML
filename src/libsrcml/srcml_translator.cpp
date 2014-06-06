@@ -75,6 +75,7 @@ char * strnstr(const char *s1, const char *s2, size_t n) {
  * @param op translator options
  * @param prefix namespace prefix array
  * @param uri namespace uri array
+ * @param processing_instruciton a pre-root processing instuction
  * @param tabsize size of tabstop
  * @param language what language to parse in
  * @param directory unit directory attribute
@@ -91,6 +92,7 @@ srcml_translator::srcml_translator(char ** str_buf,
                                  OPTION_TYPE & op,
                                  std::vector<std::string> & prefix,
                                  std::vector<std::string> & uri,
+                                 boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  int tabsize,
                                  int language,
                                  const char* directory,
@@ -100,7 +102,7 @@ srcml_translator::srcml_translator(char ** str_buf,
                                  const char* hash)
     :  Language(language), first(true), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
        options(op), buffer(0),
-       out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
+       out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, processing_instruction, tabsize), tabsize(tabsize),
        str_buffer(str_buf), size(size), is_outputting_unit(false), output_unit_depth(0) {
 
     buffer = xmlBufferCreate();
@@ -116,6 +118,7 @@ srcml_translator::srcml_translator(char ** str_buf,
  * @param op translator options
  * @param prefix namespace prefix array
  * @param uri namespace uri array
+ * @param processing_instruciton a pre-root processing instuction
  * @param tabsize size of tabstop
  * @param language what language to parse in
  * @param directory unit directory attribute
@@ -129,9 +132,9 @@ srcml_translator::srcml_translator(char ** str_buf,
 srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* xml_encoding,
                                  OPTION_TYPE& op,
-
                                  std::vector<std::string> & prefix,
                                  std::vector<std::string> & uri,
+                                 boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  int tabsize,
                                  int language,
                                  const char* directory,
@@ -142,7 +145,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
     : Language(language), first(true),
       directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
       options(op), buffer(0),
-      out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
+      out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, processing_instruction, tabsize), tabsize(tabsize),
       str_buffer(0), size(0), is_outputting_unit(false), output_unit_depth(0) {}
 
 /**
@@ -171,6 +174,7 @@ void srcml_translator::close() {
         out.initWriter();
 
         out.outputXMLDecl();
+        out.outputPreRootProcessingInstruction();
 
         // root unit for compound srcML documents
         out.startUnit(0, directory, filename, version, 0, 0, true);
@@ -266,6 +270,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
         out.initWriter();
 
         out.outputXMLDecl();
+        out.outputPreRootProcessingInstruction();
 
         // root unit for compound srcML documents
         if((options & SRCML_OPTION_ARCHIVE) > 0)
@@ -337,6 +342,7 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
         out.initWriter();
 
         out.outputXMLDecl();
+        out.outputPreRootProcessingInstruction();
 
         // root unit for compound srcML documents
         if((options & SRCML_OPTION_ARCHIVE) > 0)
