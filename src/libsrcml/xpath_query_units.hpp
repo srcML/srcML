@@ -228,6 +228,8 @@ public :
                 if (isoption(options, SRCML_OPTION_XML_DECL))
                     xml_output_buffer_write_xml_decl(ctxt, buf);
 
+                xml_output_buffer_write_processing_instruction(buf, processing_instruction);
+
                 // output a root element, just like the one read in
                 // note that this has to be ended somewhere
                 xml_output_buffer_write_element_ns(buf, root->localname, root->prefix, root->URI,
@@ -604,6 +606,27 @@ public :
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\" standalone=\""));
         xmlOutputBufferWriteString(buf, ctxt->standalone ? "yes" : "no");
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
+    }
+
+        /**
+     * xml_output_buffer_write_xml_decl
+     * @param ctxt an xml parser context
+     * @param buf output buffer to write element
+     *
+     * Write the xml declaration to output buffer.
+     */
+    static void xml_output_buffer_write_processing_instruction(xmlOutputBufferPtr buf, boost::optional<std::pair<std::string, std::string> > processing_instruction) {
+
+        if(processing_instruction) {
+
+            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?"));
+            xmlOutputBufferWriteString(buf, processing_instruction->first.c_str());
+            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" "));
+            xmlOutputBufferWriteString(buf, processing_instruction->second.c_str());
+            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("?>\n"));
+
+        }
+
     }
 
     /**

@@ -317,7 +317,8 @@ public :
      */
     virtual void processingInstruction(const xmlChar * target, const xmlChar * data) {
 
-        xmlSAX2ProcessingInstruction(ctxt, target, data);
+        processing_instruction = std::pair<std::string, std::string>(target ? (const char *)target : "", data ? (const char *)data : "");
+        //xmlSAX2ProcessingInstruction(ctxt, target, data);
 
     }
 
@@ -443,6 +444,9 @@ protected:
 
     /**  The meta tags for the root element */
     std::vector<srcMLElement> * meta_tags;
+
+    /** The pre-root processing instruction */
+    boost::optional<std::pair<std::string, std::string> > processing_instruction;
 
 };
 
