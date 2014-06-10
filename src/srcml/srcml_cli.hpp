@@ -112,6 +112,9 @@ struct srcml_request_t {
     // xml namespaces
     boost::optional<std::string> xmlns_prefix_query;
 
+    // xml processing attributes
+    boost::optional<std::string> xml_processing;    
+
     std::vector<std::string> xmlns_prefix;
 
     // srcml transformation
