@@ -100,6 +100,11 @@ void create_srcml(const srcml_request_t& srcml_request,
     if (srcml_request.markup_options)
         srcml_archive_set_options(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options);
 
+    if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL)
+        srcml_archive_disable_option(srcml_arch, SRCML_OPTION_XML_DECL);
+    else
+        srcml_archive_enable_option(srcml_arch, SRCML_OPTION_XML_DECL);
+
     if (srcml_request.att_language)
         srcml_archive_set_language(srcml_arch, srcml_request.att_language->c_str());
     else
