@@ -106,6 +106,12 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
                 else
                     std::cout << "language=\"" << archive_info << "\"\n";
             }
+            else {
+                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)
+                    std::cout << "\n";
+                else
+                    std::cout << "language=\"\"\n";
+            }
         }
         // srcml->src filename
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME){
@@ -115,6 +121,12 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
                     std::cout << archive_info << "\n";
                 else
                     std::cout << "filename=\"" << archive_info << "\"\n";
+            }
+            else {
+                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_FILENAME)
+                    std::cout << "\n";
+                else
+                    std::cout << "filename=\"\"\n";
             }
         }
         // srcml->src directory
@@ -126,6 +138,12 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
                 else
                     std::cout << "directory=\"" << archive_info << "\"\n";
             }
+            else {
+                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY)
+                    std::cout << "\n";
+                else
+                    std::cout << "directory=\"\"\n";
+            }
         }
         // srcml->src src version
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION){
@@ -135,6 +153,12 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
                     std::cout << archive_info << "\n";
                 else
                     std::cout << "version=\"" << archive_info << "\"\n";
+            }
+            else {
+                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION)
+                    std::cout << "\n";
+                else
+                    std::cout << "version=\"\"\n";
             }
         }
         // srcml->src encoding
