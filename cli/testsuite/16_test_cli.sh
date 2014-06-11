@@ -38,11 +38,11 @@ define nestedfilesrc <<- 'STDOUT'
 # test
 srcml2src --units <<< "$nestedfile"
 
-check 4<<< "2"
+check 3<<< "2"
 
 srcml2src --units <<< "$nestedfilesrc"
 
-check 4<<< "2"
+check 3<<< "2"
 
 srcml2src -U "1" <<< "$nestedfile"
 
