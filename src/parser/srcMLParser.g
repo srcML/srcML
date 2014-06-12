@@ -1072,7 +1072,8 @@ function_tail[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
 
             /* order is important */
-            { inLanguage(LANGUAGE_CXX_FAMILY) }?
+            { inLanguage(LANGUAGE_CXX_FAMILY)
+                && (LA(1) != EQUAL || next_token() == CONSTANTS || next_token() == DEFAULT || next_token() == DELETE) }?
             function_specifier |
 
             { inLanguage(LANGUAGE_CXX) }?
@@ -4983,7 +4984,7 @@ function_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         ({ LA(1) != ASYNC }? specifier |
 
-        // pure virtual specifier = default and = delete
+        // pure virtual specifier, = default, and = delete
         EQUAL (literal | function_equal_specifier) |
 
         simple_name_optional_template)
