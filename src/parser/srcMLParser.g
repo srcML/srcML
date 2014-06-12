@@ -6383,7 +6383,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 function_pointer_initialization[] { ENTRY_DEBUG } :
         {
             // end the init correctly
-            startNewMode(MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
+            startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
 
             // start the initialization element
             startElement(SDECLARATION_INITIALIZATION);
@@ -7120,9 +7120,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
 
             (macro_call_check)*
 
-            parameter_list
-
-            (options { greedy = true; } : function_pointer_initialization)* |
+            parameter_list |
             {
                 // start the declaration element
                 startElement(SDECLARATION);
