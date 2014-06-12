@@ -2542,7 +2542,7 @@ protocol_declaration_full[] { ENTRY_DEBUG } :
 
 // check the ending token
 check_end[int& token] { token = LA(1); ENTRY_DEBUG } :
-        LCURLY | TERMINATE | COLON | COMMA | RPAREN
+        LCURLY | TERMINATE | COLON | COMMA | RPAREN | EQUAL
 ;
 
 // handle a class declaration
@@ -3619,7 +3619,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         type = DESTRUCTOR_DECL;
 
     // declaration form
-    else if (type == FUNCTION && (fla == TERMINATE || fla == COMMA))
+    else if (type == FUNCTION && (fla == TERMINATE || fla == COMMA || fla == EQUAL))
         type = FUNCTION_DECL;
 
     // we actually have a macro and then a constructor
