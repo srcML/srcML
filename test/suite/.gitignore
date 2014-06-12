@@ -91,6 +91,7 @@ function_operator.struct.cpp.xml
 function_pointer.c.xml
 function_pointer.m.xml
 function_pointer.struct.cpp.xml
+function_pointer_c.m.xml
 function_throw.struct.cpp.xml
 generic_selection_c.m.xml
 goto.c.xml

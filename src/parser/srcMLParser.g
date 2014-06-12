@@ -1073,7 +1073,7 @@ function_tail[] { ENTRY_DEBUG } :
 
             /* order is important */
             { inLanguage(LANGUAGE_CXX_FAMILY)
-                && (LA(1) != EQUAL || next_token() == CONSTANTS || next_token() == DEFAULT || next_token() == DELETE) }?
+                && (LA(1) != EQUAL || (inLanguage(LANGUAGE_CXX) && (next_token() == CONSTANTS || next_token() == DEFAULT || next_token() == DELETE))) }?
             function_specifier |
 
             { inLanguage(LANGUAGE_CXX) }?
@@ -3272,7 +3272,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // function specifier at end of function header
         { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL)
-            && (LA(1) != EQUAL || next_token() == CONSTANTS || next_token() == DEFAULT || next_token() == DELETE) }?
+            && (LA(1) != EQUAL || (inLanguage(LANGUAGE_CXX) && (next_token() == CONSTANTS || next_token() == DEFAULT || next_token() == DELETE))) }?
         function_specifier |
 
         { inMode(MODE_FUNCTION_TAIL) }?
