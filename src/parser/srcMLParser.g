@@ -3271,8 +3271,12 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         kr_parameter[type_count] |
 
         // function specifier at end of function header
-        { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
+        { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL)
+            && (LA(1) != EQUAL || next_token() == CONSTANTS || next_token() == DEFAULT || next_token() == DELETE) }?
         function_specifier |
+
+        { inMode(MODE_FUNCTION_TAIL) }?
+        function_pointer_initialization |
 
         // function specifier at end of function header
         { inLanguage(LANGUAGE_CXX) && inMode(MODE_FUNCTION_TAIL) }?
