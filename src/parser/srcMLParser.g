@@ -1072,7 +1072,8 @@ function_tail[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
 
             /* order is important */
-            { inLanguage(LANGUAGE_CXX_FAMILY) }?
+            { inLanguage(LANGUAGE_CXX_FAMILY)
+                && (LA(1) != EQUAL || next_token() == CONSTANTS || next_token() == DEFAULT || next_token() == DELETE) }?
             function_specifier |
 
             { inLanguage(LANGUAGE_CXX) }?
@@ -2542,7 +2543,7 @@ protocol_declaration_full[] { ENTRY_DEBUG } :
 
 // check the ending token
 check_end[int& token] { token = LA(1); ENTRY_DEBUG } :
-        LCURLY | TERMINATE | COLON | COMMA | RPAREN
+        LCURLY | TERMINATE | COLON | COMMA | RPAREN | EQUAL
 ;
 
 // handle a class declaration
@@ -3270,8 +3271,12 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         kr_parameter[type_count] |
 
         // function specifier at end of function header
-        { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
+        { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL)
+            && (LA(1) != EQUAL || next_token() == CONSTANTS || next_token() == DEFAULT || next_token() == DELETE) }?
         function_specifier |
+
+        { inMode(MODE_FUNCTION_TAIL) }?
+        function_pointer_initialization |
 
         // function specifier at end of function header
         { inLanguage(LANGUAGE_CXX) && inMode(MODE_FUNCTION_TAIL) }?
@@ -3619,7 +3624,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         type = DESTRUCTOR_DECL;
 
     // declaration form
-    else if (type == FUNCTION && (fla == TERMINATE || fla == COMMA))
+    else if (type == FUNCTION && (fla == TERMINATE || fla == COMMA || fla == EQUAL))
         type = FUNCTION_DECL;
 
     // we actually have a macro and then a constructor
@@ -4983,7 +4988,7 @@ function_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         ({ LA(1) != ASYNC }? specifier |
 
-        // pure virtual specifier = default and = delete
+        // pure virtual specifier, = default, and = delete
         EQUAL (literal | function_equal_specifier) |
 
         simple_name_optional_template)
@@ -6378,13 +6383,13 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 function_pointer_initialization[] { ENTRY_DEBUG } :
         {
             // end the init correctly
-            setMode(MODE_EXPRESSION | MODE_EXPECT);
+            startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
 
             // start the initialization element
             startElement(SDECLARATION_INITIALIZATION);
         }
         EQUAL
-        (options { greedy = true; } : expression)*
+        complete_default_parameter
 ;
 
 // initialization of a declared variable
@@ -7115,9 +7120,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
 
             (macro_call_check)*
 
-            parameter_list
-
-            (options { greedy = true; } : function_pointer_initialization)* |
+            parameter_list |
             {
                 // start the declaration element
                 startElement(SDECLARATION);
