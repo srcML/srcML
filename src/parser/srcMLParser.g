@@ -2484,9 +2484,15 @@ namespace_directive[] { ENTRY_DEBUG } :
         USING
 ;
 
-using_aliasing[]  { ENTRY_DEBUG } :
+using_aliasing[]  { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
 
-        EQUAL pattern_statements
+            // start the initialization element
+            startElement(SDECLARATION_INITIALIZATION);
+        }
+        EQUAL ({ pattern_check(stmt_type, secondtoken, type_count) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION) }? function_declaration[type_count])*
 
 ;
 
