@@ -2492,7 +2492,13 @@ using_aliasing[]  { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = 
             // start the initialization element
             startElement(SDECLARATION_INITIALIZATION);
         }
-        EQUAL ({ pattern_check(stmt_type, secondtoken, type_count) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION) }? function_declaration[type_count])*
+        EQUAL 
+
+    {
+        startElement(STYPE);
+    }
+
+        ({ pattern_check(stmt_type, secondtoken, type_count) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION) }? function_declaration[type_count])*
 
 ;
 
