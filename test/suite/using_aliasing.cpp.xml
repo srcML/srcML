@@ -2,11 +2,11 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="using_aliasing">
 
 <unit>
-<using>using <name>a</name> = <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type></decl>;</decl_stmt></using>
+<using>using <name>a</name> <init>= <expr>const <name>int</name></expr></init>;</using>
 </unit>
 
 <unit>
-<using>using <name>FunctionType</name> = <function_decl><type><name>void</name></type> (*)<parameter_list>(<param><decl><type><name>double</name></type></decl></param>)</parameter_list>;</function_decl></using>
+<using>using <name>FunctionType</name> <init>= <function_decl><type><name>void</name></type> (*)<parameter_list>(<param><decl><type><name>double</name></type></decl></param>)</parameter_list>;</function_decl></init></using>
 </unit>
 
 </unit>
