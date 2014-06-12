@@ -6383,7 +6383,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 function_pointer_initialization[] { ENTRY_DEBUG } :
         {
             // end the init correctly
-            setMode(MODE_EXPRESSION | MODE_EXPECT);
+            startNewMode(MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
 
             // start the initialization element
             startElement(SDECLARATION_INITIALIZATION);
