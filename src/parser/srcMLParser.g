@@ -6384,7 +6384,7 @@ function_pointer_initialization[] { ENTRY_DEBUG } :
             startElement(SDECLARATION_INITIALIZATION);
         }
         EQUAL
-        (options { greedy = true; } : expression)*
+        complete_default_parameter
 ;
 
 // initialization of a declared variable
