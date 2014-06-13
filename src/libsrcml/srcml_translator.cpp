@@ -273,6 +273,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
         out.outputPreRootProcessingInstruction();
 
         // root unit for compound srcML documents
+
         if((options & SRCML_OPTION_ARCHIVE) > 0)
             out.startUnit(0, directory, filename, version, 0, 0, true);
 
@@ -344,22 +345,8 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
  */
 bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
-    if(first) {
-
-        // Open for write;
+    if(first)
         out.initWriter();
-
-        out.outputXMLDecl();
-        out.outputPreRootProcessingInstruction();
-
-        // root unit for compound srcML documents
-        if((options & SRCML_OPTION_ARCHIVE) > 0)
-            out.startUnit(0, directory, filename, version, 0, 0, true);
-
-        if ((options & SRCML_OPTION_ARCHIVE) > 0)
-            out.processText("\n\n", 2);
-
-    }
 
     first = false;
 
@@ -401,9 +388,6 @@ bool srcml_translator::add_end_unit() {
     is_outputting_unit = false;
 
     bool success = xmlTextWriterEndElement(out.getWriter()) != -1;
-
-    if ((options & SRCML_OPTION_ARCHIVE) > 0)
-        out.processText("\n\n", 2);
 
     return success;
     
