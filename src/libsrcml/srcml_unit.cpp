@@ -813,9 +813,6 @@ int srcml_write_start_unit(struct srcml_unit * unit) {
     unit->output_buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(unit->output_buffer, xmlFindCharEncodingHandler("UTF-8"));
 
-    int lang = unit->language ? srcml_check_language(unit->language->c_str())
-        : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
-
     try {
 
         unit->unit_translator = new srcml_translator(
@@ -826,7 +823,7 @@ int srcml_write_start_unit(struct srcml_unit * unit) {
             unit->archive->namespaces,
             boost::optional<std::pair<std::string, std::string> >(),
             unit->archive->tabstop,
-            lang,
+            SRCML_LANGUAGE_NONE,
             unit->directory ? unit->directory->c_str() : 0,
             unit->filename ? unit->filename->c_str() : 0,
             unit->version ? unit->version->c_str() : 0,

@@ -200,8 +200,7 @@ void srcml_translator::translate(UTF8CharBuffer * parser_input) {
     first = false;
 
     // output as inner unit
-    if(isoption(options, SRCML_OPTION_ARCHIVE))
-      out.setDepth(1);
+    if(isoption(options, SRCML_OPTION_ARCHIVE)) out.setDepth(1);
 
     //options |= SRCML_OPTION_ARCHIVE;
 
@@ -354,17 +353,22 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     is_outputting_unit = true;
 
-    OPTION_TYPE save_options = options;
 
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
         : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
     if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP)
         options |= SRCML_OPTION_CPP;
 
+    if(isoption(options, SRCML_OPTION_ARCHIVE)) out.setDepth(1);
+
+    OPTION_TYPE save_options = options;
+
     out.startUnit(unit->language ? unit->language->c_str() : (unit->archive->language ? unit->archive->language->c_str() : 0), unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
                           unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, false);
 
     options = save_options;
+
+    out.setDepth(0);
 
     return true;
 
