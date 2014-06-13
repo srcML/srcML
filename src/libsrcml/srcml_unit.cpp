@@ -794,6 +794,200 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
 }
 
+/**
+ * srcml_write_start_unit
+ * @param archive a srcml archive opened for writing
+ * @param unit a srcml_unit to start output with
+ *
+ * Begin by element output and output the start tag unit to the srcml_archive archive
+ * using attributes in srcml_unit.
+ *
+ * Can not usage with add_unit call srcml_write_end_unit, to end element mode.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_start_unit(struct srcml_unit * unit) {
+
+    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    unit->output_buffer = xmlBufferCreate();
+    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(unit->output_buffer, xmlFindCharEncodingHandler("UTF-8"));
+
+    int lang = unit->language ? srcml_check_language(unit->language->c_str())
+        : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
+
+    try {
+
+        unit->unit_translator = new srcml_translator(
+            obuffer,
+            unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8",
+            unit->archive->options,
+            unit->archive->prefixes,
+            unit->archive->namespaces,
+            boost::optional<std::pair<std::string, std::string> >(),
+            unit->archive->tabstop,
+            lang,
+            unit->directory ? unit->directory->c_str() : 0,
+            unit->filename ? unit->filename->c_str() : 0,
+            unit->version ? unit->version->c_str() : 0,
+            unit->timestamp ? unit->timestamp->c_str() : 0,
+            unit->hash ? unit->hash->c_str() : (unit->archive->options & SRCML_OPTION_HASH ? "" : 0));
+
+        unit->unit_translator->set_macro_list(unit->archive->user_macro_list);
+
+    } catch(...) {
+
+        xmlBufferFree(unit->output_buffer);
+        return SRCML_STATUS_IO_ERROR;
+
+    }
+
+    if(!unit->unit_translator->add_start_unit(unit)) return SRCML_STATUS_INVALID_INPUT;
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_write_end_unit
+ * @param archive a srcml archive opened for writing
+ *
+ * End by element output and output the end tag unit to the srcml_archive archive.
+ * srcml_write_start_unit must be called first.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_end_unit(struct srcml_unit * unit) {
+
+    if(unit == NULL || unit->unit_translator == 0)  return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(!unit->unit_translator->add_end_unit()) return SRCML_STATUS_INVALID_INPUT;
+
+    delete unit->unit_translator;
+    unit->unit_translator = 0;
+
+    size_t length = strlen((const char *)unit->output_buffer->content);
+    while(length > 0 && unit->output_buffer->content[length - 1] == '\n')
+        --length;
+
+    unit->unit = std::string((const char *)unit->output_buffer->content, length);
+
+    xmlBufferFree(unit->output_buffer);
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_write_start_element
+ * @param archive a srcml archive opened for writing
+ * @param prefix the namespace prefix for element
+ * @param name the name of the element
+ * @param uri the namespace uri for element
+ *
+ * Start an element and write to the srcml_archive archive.
+ * srcml_write_start_unit must be called first.
+ * A unit tag may not be written.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_start_element(struct srcml_unit * unit, const char * prefix, const char * name, const char * uri) {
+
+    if(unit == NULL || unit->unit_translator == 0 || name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(!unit->unit_translator->add_start_element(prefix, name, uri)) return SRCML_STATUS_INVALID_INPUT;
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_write_end_element
+ * @param archive a srcml archive opened for writing
+ *
+ * Output an end tag to the srcml_archive archive.
+ * srcml_write_start_unit must be called first.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_end_element(struct srcml_unit * unit) {
+
+    if(unit == NULL|| unit->unit_translator == 0)  return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(!unit->unit_translator->add_end_element()) return SRCML_STATUS_INVALID_INPUT;
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_write_namespace
+ * @param archive a srcml archive opened for writing
+ * @param prefix the namespace prefix
+ * @param uri the namespace uri
+ *
+ * Write a namespace on an element.  No checking is done to see if valid place for a namespace.
+ * i.e being added to start tag.
+ * srcml_write_start_unit must be called first.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+
+int srcml_write_namespace(struct srcml_unit * unit, const char * prefix, const char * uri) {
+
+    if(unit == NULL || unit->unit_translator == 0 || uri == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(!unit->unit_translator->add_namespace(prefix, uri)) return SRCML_STATUS_INVALID_INPUT;
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_write_attribute
+ * @param archive a srcml archive opened for writing
+ * @param prefix the namespace prefix for attribute
+ * @param name the name of the attribute
+ * @param uri the namespace uri for attriubute
+ * @param content the contents/value of the attribute
+ *
+ * Write an namespace on an element.  No checking is done to see if valid place for a namespace.
+ * i.e being added to start tag.
+ * srcml_write_start_unit must be called first.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_attribute(struct srcml_unit * unit, const char * prefix, const char * name, const char * uri, const char * content) {
+
+    if(unit == NULL || unit->unit_translator == 0 || name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(!unit->unit_translator->add_attribute(prefix, name, uri, content)) return SRCML_STATUS_INVALID_INPUT;
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_write_string.
+ * @param archive a srcml archive opened for writing
+ * @param content the string to write out
+ *
+ * Write the string/text to a started unit.
+ * i.e being added to start tag.
+ * srcml_write_start_unit must be called first.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_string(struct srcml_unit * unit, const char * content) {
+
+    if(unit == NULL || unit->unit_translator == 0 || content == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(!unit->unit_translator->add_string(content)) return SRCML_STATUS_INVALID_INPUT;
+
+    return SRCML_STATUS_OK;
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                       Unit creation/cleanup functions                      *

@@ -182,8 +182,15 @@ struct srcml_unit {
     /** an attribute for a hash string */
     boost::optional<std::string> hash;
 
+    /** output buffer to hold streaming creation of unit */
+    xmlBuffer * output_buffer;
+
+    /** a unit srcMLTranslator for writing and parsing as a stream */
+    srcml_translator * unit_translator;
+
     /** store if attributes have been read */
     bool read_header;
+
     /** a buffer to store srcml from read and after parsing */
     boost::optional<std::string> unit;
 };

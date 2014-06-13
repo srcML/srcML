@@ -346,13 +346,15 @@ __LIBSRCML_DECL int srcml_parse_unit_fd      (struct srcml_unit*, int src_fd);
 
 /* Append unit to an archive */
 __LIBSRCML_DECL int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*);
-__LIBSRCML_DECL int srcml_write_start_unit(struct srcml_archive*, const struct srcml_unit*);
-__LIBSRCML_DECL int srcml_write_end_unit(struct srcml_archive*);
-__LIBSRCML_DECL int srcml_write_start_element(struct srcml_archive*, const char * prefix, const char * name, const char * uri);
-__LIBSRCML_DECL int srcml_write_end_element(struct srcml_archive*);
-__LIBSRCML_DECL int srcml_write_namespace(struct srcml_archive*, const char * prefix, const char * uri);
-__LIBSRCML_DECL int srcml_write_attribute(struct srcml_archive*, const char * prefix, const char * name, const char * uri, const char * content);
-__LIBSRCML_DECL int srcml_write_string(struct srcml_archive*, const char * content);
+
+/* Iteratively build a unit */
+__LIBSRCML_DECL int srcml_write_start_unit(struct srcml_unit*);
+__LIBSRCML_DECL int srcml_write_end_unit(struct srcml_unit*);
+__LIBSRCML_DECL int srcml_write_start_element(struct srcml_unit*, const char * prefix, const char * name, const char * uri);
+__LIBSRCML_DECL int srcml_write_end_element(struct srcml_unit*);
+__LIBSRCML_DECL int srcml_write_namespace(struct srcml_unit*, const char * prefix, const char * uri);
+__LIBSRCML_DECL int srcml_write_attribute(struct srcml_unit*, const char * prefix, const char * name, const char * uri, const char * content);
+__LIBSRCML_DECL int srcml_write_string(struct srcml_unit*, const char * content);
  
 /* Free allocated unit */
 __LIBSRCML_DECL void srcml_free_unit(struct srcml_unit*);
