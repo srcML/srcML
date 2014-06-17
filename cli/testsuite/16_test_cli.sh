@@ -46,25 +46,25 @@ check 3<<< "2"
 
 srcml2src -U "1" <<< "$nestedfile"
 
-check 3<<< "a;"
+check 3<<< $'\na;\n'
 
 srcml2src --unit "1" <<< "$nestedfile"
 
-check 3<<< "a;"
+check 3<<< $'\na;\n'
 
 srcml2src --unit="1" <<< "$nestedfile"
 
-check 3<<< "a;"
+check 3<<< $'\na;\n'
 
 srcml2src -U "2" <<< "$nestedfile"
 
-check 3<<< "b;"
+check 3<<< $'\nb;\n'
 
 srcml2src --unit "2" <<< "$nestedfile"
 
-check 3<<< "b;"
+check 3<<< $'\nb;\n'
 
 srcml2src --unit="2" <<< "$nestedfile"
 
-check 3<<< "b;"
+check 3<<< $'\nb;\n'
 
