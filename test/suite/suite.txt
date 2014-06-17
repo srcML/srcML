@@ -61,6 +61,7 @@ LANGUAGE_C_ONLY generic_selection_c
 LANGUAGE_C_ONLY modifier_c
 LANGUAGE_C_ONLY for_c
 LANGUAGE_C_ONLY function_pointer_c
+LANGUAGE_C_ONLY function_decl_c
 
 LANGUAGE_CXX friend
 LANGUAGE_CXX namespace
@@ -165,6 +166,7 @@ LANGUAGE_CSHARP using_directive_cs
 LANGUAGE_CSHARP using_statement_cs
 LANGUAGE_CSHARP specifier_cs
 LANGUAGE_CSHARP modifier_cs
+LANGUAGE_CSHARP function_decl_cs
 
 LANGUAGE_OBJECTIVE_C objective_c_call_m
 LANGUAGE_OBJECTIVE_C class_interface_m

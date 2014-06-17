@@ -86,6 +86,7 @@ function_decl.cs.xml
 function_decl.java.xml
 function_decl.m.xml
 function_decl.struct.cpp.xml
+function_decl_c.m.xml
 function_ns.struct.cpp.xml
 function_operator.struct.cpp.xml
 function_pointer.c.xml

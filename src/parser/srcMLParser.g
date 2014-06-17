@@ -4901,7 +4901,7 @@ catch[antlr::RecognitionException] {
 // compound name for C
 compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        (identifier | generic_selection) (options { greedy = true; }: { LA(1) == MULTOPS }? multops)*
+        (identifier | generic_selection) (options { greedy = true; }: { LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
@@ -4913,7 +4913,7 @@ compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 // compound name for C
 compound_name_objective_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        (simple_name_optional_template | generic_selection) (options { greedy = true; }: { LA(1) == MULTOPS }? multops)*
+        (simple_name_optional_template | generic_selection) (options { greedy = true; }: { LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
@@ -7167,7 +7167,8 @@ parameter_type_count[int & type_count] { CompleteElement element(this); ENTRY_DE
         ((options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 
         // sometimes there is no parameter name.  if so, we need to eat it
-        ( options { greedy = true; } : multops | tripledotop | LBRACKET RBRACKET)*
+        ( options { greedy = true; generateAmbigWarnings = false; } : multops | tripledotop | LBRACKET RBRACKET |
+         { next_token() == MULTOPS || next_token() == REFOPS || next_token() == RVALUEREF || (inLanguage(LANGUAGE_CSHARP) &&  next_token() == QMARK) || next_token() == BLOCKOP }? type_identifier)*
 ;
 
 // Modifier ops

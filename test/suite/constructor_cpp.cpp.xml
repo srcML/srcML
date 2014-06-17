@@ -10,7 +10,7 @@
 </unit>
 
 <unit>
-<class>class <name>NonCopyable</name> <block>{<private type="default"> <constructor_decl><name>NonCopyable</name><parameter_list>(<param><decl><type><specifier>const</specifier></type> <name>NonCopyable</name>&amp;</decl></param>)</parameter_list> = <specifier>delete</specifier>;</constructor_decl> </private>}</block>;</class>
+<class>class <name>NonCopyable</name> <block>{<private type="default"> <constructor_decl><name>NonCopyable</name><parameter_list>(<param><decl><type><specifier>const</specifier> <name>NonCopyable</name>&amp;</type></decl></param>)</parameter_list> = <specifier>delete</specifier>;</constructor_decl> </private>}</block>;</class>
 </unit>
 
 <unit>

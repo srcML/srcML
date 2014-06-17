@@ -14,11 +14,11 @@
 </unit>
 
 <unit>
-<function_decl><type><specifier>virtual</specifier> <name>NonCopyable</name> &amp;</type> <name>operator=</name><parameter_list>(<param><decl><type><specifier>const</specifier></type> <name>NonCopyable</name>&amp;</decl></param>)</parameter_list> = 0;</function_decl>
+<function_decl><type><specifier>virtual</specifier> <name>NonCopyable</name> &amp;</type> <name>operator=</name><parameter_list>(<param><decl><type><specifier>const</specifier> <name>NonCopyable</name>&amp;</type></decl></param>)</parameter_list> = 0;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>NonCopyable</name> &amp;</type> <name>operator=</name><parameter_list>(<param><decl><type><specifier>const</specifier></type> <name>NonCopyable</name>&amp;</decl></param>)</parameter_list> = <specifier>delete</specifier>;</function_decl>
+<function_decl><type><name>NonCopyable</name> &amp;</type> <name>operator=</name><parameter_list>(<param><decl><type><specifier>const</specifier> <name>NonCopyable</name>&amp;</type></decl></param>)</parameter_list> = <specifier>delete</specifier>;</function_decl>
 </unit>
 
 <unit>
@@ -51,6 +51,22 @@
 
 <unit>
 <function_decl><type><name>int</name></type> <name>match</name><parameter_list>(<param><decl><type><name>Flags</name></type> <name>flags</name> <init>= <expr>( <name>MatchStartsWith</name> | <name>MatchWrap</name> )</expr></init></decl></param> )</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>a</name> *</type></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>a</name> ^</type></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>a</name> &amp;</type></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>a</name> &amp;&amp;</type></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 </unit>
