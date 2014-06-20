@@ -4871,6 +4871,7 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
         )*
 
         { notdestructor = LA(1) == DESTOP; }
+
 ;
 exception
 catch[antlr::RecognitionException] {
@@ -4893,6 +4894,7 @@ compound_name_csharp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY
             (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
             (options { greedy = true; } : multops)*
         )*
+
 ;
 exception
 catch[antlr::RecognitionException] {
@@ -4908,6 +4910,7 @@ compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
             ({ LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
             identifier
         )*
+
 ;
 
 // compound name for C
@@ -4920,6 +4923,7 @@ compound_name_objective_c[bool& iscompound] { ENTRY_DEBUG } :
             ({ LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
             simple_name_optional_template
         )*
+
 ;
 
 // compound name for Java
@@ -4927,7 +4931,8 @@ compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
 
         template_argument_list |
         simple_name_optional_template
-        (options { greedy = true; } : (period { iscompound = true; } (keyword_name | simple_name_optional_template)))*
+        (options { greedy = true; } : (period { iscompound = true; } (keyword_name | simple_name_optional_template | { LA(1) == MULTOPS && next_token() == TERMINATE }? general_operators)))*
+
 ;
 
 
@@ -4960,6 +4965,7 @@ keyword_name { CompleteElement element(this); TokenPosition tp; bool iscompound 
                 // set the token to NOP
                 tp.setType(SNOP);
         }
+
 ;
 
 // C++ compound name handling
@@ -4981,6 +4987,7 @@ keyword_name_inner[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_D
         )*
 
         { notdestructor = LA(1) == DESTOP; }
+
 ;
 exception
 catch[antlr::RecognitionException] {
@@ -4992,6 +4999,7 @@ keyword_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
                 startElement(SNAME);
         }
         (CLASS | CXX_CLASS)
+        
 ;
 
 // Specifier for a function

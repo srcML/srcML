@@ -37,5 +37,13 @@
 <expr_stmt><expr><name>a</name> <op:operator>instanceof</op:operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<import>import <name><name>a</name><op:operator>.</op:operator><name>b</name><op:operator>.</op:operator><op:operator>*</op:operator></name>;</import>
+</unit>
+
+<unit>
+<import>import <name><name>a</name><op:operator>.</op:operator><name>b</name> <comment type="block">/* */</comment><op:operator>.</op:operator><comment type="block">/* */</comment><op:operator>*</op:operator></name>;</import>
+</unit>
+
 </unit>
  

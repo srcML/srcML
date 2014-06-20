@@ -62,4 +62,52 @@
 <expr_stmt><expr><name><name>a</name><index>[<expr>0</expr>, <expr>0</expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr>1 <op:operator>.*</op:operator> 2</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
 </unit>

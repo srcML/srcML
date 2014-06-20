@@ -207,7 +207,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
         '?' { $setType(QMARK); } ('?' { $setType(OPERATORS); })* | // part of ternary
         '~'  | // has to be separate if part of name
 
-        '.' ('*' { $setType(DOTDEREF); } | '.' ( '.' { $setType(DOTDOTDOT); } | { $setType(DOTDOT); }) | { $setType(CONSTANTS); } CONSTANTS | ) |
+        '.' ({ !inLanguage(LANGUAGE_JAVA) }? '*' { $setType(DOTDEREF); } | '.' ( '.' { $setType(DOTDOTDOT); } | { $setType(DOTDOT); }) | { $setType(CONSTANTS); } CONSTANTS | ) |
 
         '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
         )
