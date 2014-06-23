@@ -57,7 +57,7 @@ int main(int argc, char * argv[]) {
     // global access to options
     SRCMLOptions::set(srcml_request.command);
 
-    // convert the list of input filenames to input sources
+    // create input sources from the list of input filenames
     srcml_input_t input_sources(srcml_request.input.begin(), srcml_request.input.end());
     if (input_sources.size() == 1 && srcml_request.unit != 0)
         input_sources[0].unit = srcml_request.unit;
@@ -88,7 +88,7 @@ int main(int argc, char * argv[]) {
     // output destination
     srcml_output_dest destination(srcml_request.output_filename ? *srcml_request.output_filename : "");
 
-    // determine what processing needs to occur by setting up an internal pipeline
+    // steps in the internal pipeline
     processing_steps_t pipeline;
 
     // src->srcml
