@@ -500,7 +500,29 @@ bool srcml_translator::add_string(const char * content) {
 
     if(!is_outputting_unit || content == 0) return false;
 
-    return xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)content) != -1;
+    int ret = 0;
+    char * text = (char *)content;
+    for(char * pos = text; *pos; ++pos) {
+
+      if(*pos != '"') continue;
+
+      *pos = 0;
+      ret = xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)text);
+      if(ret == -1) return false;
+
+      *pos = '\"';
+      xmlTextWriterWriteRaw(out.getWriter(), (const xmlChar *)"\"");
+      if(ret == -1) return false;
+
+      text = pos + 1;
+
+  }
+
+  ret = xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)text);
+
+
+
+  return ret != -1;
 
 }
 
