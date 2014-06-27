@@ -108,8 +108,8 @@ struct srcMLIO {
     /** provided close callback */
     UTF8CharBuffer::srcml_close_callback close_callback;
 
-    /** Does this file need to be closed */
-    bool close_file;
+    /** Does this context need to be closed */
+    bool close_context;
 
 #ifdef _MSC_BUILD
     /** mvcs hash context object */
@@ -179,13 +179,6 @@ int srcMLFdRead(void * context,  char * buffer, int len) {
     srcMLFd * sfd = (srcMLFd *)context;
     size_t num_read = READ(sfd->fd, buffer, len);
 
-    if(sfd->ctx)
-#ifdef _MSC_BUILD
-        CryptHashData(*sfd->ctx, (BYTE *)buffer, num_read, 0);
-#else
-        SHA1_Update(sfd->ctx, buffer, (SHA_LONG)num_read);
-#endif
-
     return (int)num_read;
 }
 
@@ -197,12 +190,7 @@ int srcMLFdRead(void * context,  char * buffer, int len) {
  */
 int srcMLFdClose(void * context) {
 
-    srcMLFd * sfd = (srcMLFd *)context;
-    int ret = 0; //CLOSE(sfd->fd);
-
-    delete sfd;
-
-    return ret;
+    return 0;
 }
 
 /**
@@ -241,7 +229,7 @@ int srcMLIOClose(void * context) {
 
     srcMLIO * sio = (srcMLIO *)context;
     int ret = 0;
-    if(sio->close_file) ret = sio->close_callback(sio->context);
+    if(sio->close_context) ret = sio->close_callback(sio->context);
 
     delete sio;
 
@@ -275,16 +263,19 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
 #endif
     }
 
-    srcMLFile * sfile = new srcMLFile();
-    sfile->file = (FILE *)file;
-    sfile->close_file = true;
+    srcMLIO * sio = new srcMLIO();
+    sio->context = file;
+    sio->read_callback = xmlFileRead;
+    sio->close_callback = xmlFileClose;
+    sio->close_context = true;
+
 #ifdef _MSC_BUILD
-    hash ? sfile->ctx = &crypt_hash : 0;
+    hash ? sio->ctx = &crypt_hash : 0;
 #else
-    hash ? sfile->ctx = &ctx : 0;
+    hash ? sio->ctx = &ctx : 0;
 #endif
 
-    input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sfile,
+    input = xmlParserInputBufferCreateIO(srcMLIORead, srcMLIOClose, sio,
                                          encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
@@ -418,15 +409,19 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
 #endif
     }
 
-    srcMLFd * sfd = new srcMLFd();
-    sfd->fd = fd;
+    srcMLIO * sio = new srcMLIO();
+    sio->context = (void *)fd;
+    sio->read_callback = srcMLFdRead;
+    sio->close_callback = srcMLFdClose;
+    sio->close_context = false;
+
 #ifdef _MSC_BUILD
-    hash ? sfd->ctx = &crypt_hash : 0;
+    hash ? sio->ctx = &crypt_hash : 0;
 #else
-    hash ? sfd->ctx = &ctx : 0;
+    hash ? sio->ctx = &ctx : 0;
 #endif
 
-    input = xmlParserInputBufferCreateIO(srcMLFdRead, srcMLFdClose, sfd,
+    input = xmlParserInputBufferCreateIO(srcMLIORead, srcMLIOClose, sio,
                                          encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
@@ -462,7 +457,10 @@ UTF8CharBuffer::UTF8CharBuffer(srcml_read_callback read_callback, srcml_close_ca
 
     srcMLIO * sio = new srcMLIO();
     sio->context = context;
-    sio->close_file = true;
+    sio->read_callback = read_callback;
+    sio->close_callback = close_callback;
+    sio->close_context = true;
+    
 #ifdef _MSC_BUILD
     hash ? sio->ctx = &crypt_hash : 0;
 #else
