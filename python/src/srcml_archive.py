@@ -320,6 +320,9 @@ class srcml_archive :
     def write_open_fd(self, srcml_fd) :
         check_return(libsrcml.srcml_write_open_fd(self.archive, srcml_fd))
 
+    def write_open_io(self, context, write_callback, close_callback) :
+        check_return(libsrcml.srcml_write_open_io(self.archive, context, write_callback, close_callback))
+
     def read_open_filename(self, srcml_filename) :
         check_return(libsrcml.srcml_read_open_filename(self.archive, srcml_filename))
 
@@ -331,6 +334,9 @@ class srcml_archive :
 
     def read_open_fd(self, srcml_fd) :
         check_return(libsrcml.srcml_read_open_fd(self.archive, srcml_fd))
+
+    def read_open_io(self, context, read_callback, close_callback) :
+        check_return(libsrcml.srcml_read_open_fd(self.archive, context, read_callback, close_callback))
 
     def set_src_encoding(self, src_encoding) :
         check_return(libsrcml.srcml_archive_set_src_encoding(self.archive, src_encoding))

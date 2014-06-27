@@ -153,6 +153,9 @@ class srcml_unit :
     def parse_fd(self, src_fd) :
         check_return(libsrcml.srcml_parse_unit_fd(self.unit, src_fd))
 
+    def parse_io(self, context, read_callback, close_callback) :
+        check_return(libsrcml.srcml_parse_unit_io(self.unit, context, read_callback, close_callback))
+
     def unparse_filename(self, src_filename) :
         check_return(libsrcml.srcml_unparse_unit_filename(self.unit, src_filename))
 
@@ -166,6 +169,9 @@ class srcml_unit :
 
     def unparse_fd(self, src_fd) :
         check_return(libsrcml.srcml_unparse_unit_fd(self.unit, src_fd))
+
+    def unparse_io(self, context, write_callback, close_callback) :
+        check_return(libsrcml.srcml_unparse_unit_io(self.unit, context, write_callback, close_callback))
 
     def set_encoding(self, encoding) :
         check_return(libsrcml.srcml_unit_set_encoding(self.unit, encoding))
