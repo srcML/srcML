@@ -155,7 +155,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
     if(hash) {
 #ifdef _MSC_BUILD
         BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
-        if(! success && GetLastError() == NTE_BAD_KEYSET)
+        if(!success && GetLastError() == NTE_BAD_KEYSET)
             success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
         CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
 #else
@@ -347,7 +347,7 @@ UTF8CharBuffer::UTF8CharBuffer(srcml_read_callback read_callback, srcml_close_ca
     if(hash) {
 #ifdef _MSC_BUILD
         BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
-        if(! success && GetLastError() == NTE_BAD_KEYSET)
+        if(!success && GetLastError() == NTE_BAD_KEYSET)
             success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
         CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
 #else
