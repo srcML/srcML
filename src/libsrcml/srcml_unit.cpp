@@ -564,6 +564,53 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
 }
 
+/**
+ * srcml_parse_unit_io
+ * @param unit a unit to parse the results to
+ * @param context an io context
+ * @param read_callback a read callback function
+ * @param close_callback a close callback function
+ *
+ * Convert to srcML the contents of src_fd
+ * place it into the unit.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_parse_unit_io(srcml_unit* unit, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context)) {
+
+    if(unit == NULL || context == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
+        return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    int lang = unit->language ? srcml_check_language(unit->language->c_str())
+        : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
+
+    if(lang == SRCML_LANGUAGE_NONE) return SRCML_STATUS_UNSET_LANGUAGE;
+
+    OPTION_TYPE translation_options = unit->archive->options;
+
+    if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang & Language::LANGUAGE_OBJECTIVE_C)
+        translation_options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+    else if (lang == Language::LANGUAGE_CSHARP)
+        translation_options |= SRCML_OPTION_CPP_NOMACRO;
+
+    UTF8CharBuffer * input = 0;
+    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
+    try {
+
+        input = new UTF8CharBuffer(context, read_callback, close_callback, unit->encoding ? unit->encoding->c_str()
+                                   : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"),
+                                   output_hash ? &unit->hash : 0);
+
+    } catch(...) { return SRCML_STATUS_IO_ERROR; }
+
+    int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
+
+    return status;
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                           Unit unparsing functions                         *
