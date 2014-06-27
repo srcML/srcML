@@ -71,6 +71,10 @@ libsrcml.srcml_read_open_FILE.argtypes = [c_void_p, c_void_p]
 libsrcml.srcml_read_open_fd.restype = c_int
 libsrcml.srcml_read_open_fd.argtypes = [c_void_p, c_int]
 
+# int srcml_read_open_io      (struct srcml_archive*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
+libsrcml.srcml_read_open_io.restype = c_int
+libsrcml.srcml_read_open_io.argtypes = [c_void_p, c_void_p, read_callback_t, close_callback_t]
+
 # void srcml_free_archive(struct srcml_archive* archive);
 libsrcml.srcml_free_archive.restype = None
 libsrcml.srcml_free_archive.argtypes = [c_void_p]
