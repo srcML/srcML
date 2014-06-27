@@ -579,7 +579,7 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
  */
 int srcml_parse_unit_io(srcml_unit* unit, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context)) {
 
-    if(unit == NULL || context == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(unit == NULL || context == NULL || read_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
         return SRCML_STATUS_INVALID_IO_OPERATION;

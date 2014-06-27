@@ -1142,6 +1142,41 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
 
 }
 
+/**
+ * srcml_read_open_io
+ * @param archive a srcml_archive
+ * @param context an io context
+ * @param read_callback a read callback function
+ * @param close_callback a close callback function
+ *
+ * Open a srcML archive for reading.  Set the input to be read from
+ * the opened context accessed via read_callback and closed via close_callback.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_read_open_fd(srcml_archive* archive, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context)) {
+
+    if(archive == NULL || context == NULL || read_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    archive->input = xmlParserInputBufferCreateIO(read_callback, close_callback, context, XML_CHAR_ENCODING_NONE);
+    archive->input->closecallback = 0;
+    try {
+
+        archive->reader = new srcml_sax2_reader(archive->input);
+
+    } catch(...) {
+
+        xmlFreeParserInputBuffer(archive->input);
+        return SRCML_STATUS_IO_ERROR;
+
+    }
+
+    srcml_read_internal(archive);
+
+    return SRCML_STATUS_OK;
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                       Archive read/write unit functions                    *

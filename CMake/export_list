@@ -91,6 +91,7 @@ _srcml_parse_unit_memory
 _srcml_parse_unit_FILE
 _srcml_read_open_fd
 _srcml_read_open_filename
+_srcml_read_open_fd
 _srcml_read_open_memory
 _srcml_read_open_FILE
 _srcml_read_unit
