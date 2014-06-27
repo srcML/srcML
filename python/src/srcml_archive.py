@@ -18,10 +18,14 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from globals import libsrcml
-from ctypes import c_int, c_void_p, c_char_p, pointer, c_ulonglong
+from ctypes import c_int, c_void_p, c_char_p, pointer, c_ulonglong, CFUNCTYPE
 
 from srcml_unit import srcml_unit
 from exception import *
+
+write_callback_t = CFUNCTYPE(c_int, c_void_p, c_char_p, c_int)
+read_callback_t  = CFUNCTYPE(c_int, c_void_p, c_char_p, c_int)
+close_callback_t = CFUNCTYPE(c_int, c_void_p)
 
 # struct srcml_archive* srcml_create_archive();
 libsrcml.srcml_create_archive.restype = c_void_p
@@ -46,6 +50,10 @@ libsrcml.srcml_write_open_FILE.argtypes = [c_void_p, c_void_p]
 # int srcml_write_open_fd      (struct srcml_archive*, int srcml_fd);
 libsrcml.srcml_write_open_fd.restype = c_int
 libsrcml.srcml_write_open_fd.argtypes = [c_void_p, c_int]
+
+# int srcml_write_open_io      (struct srcml_archive*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
+libsrcml.srcml_write_open_io.restype = c_int
+libsrcml.srcml_write_open_io.argtypes = [c_void_p, c_void_p, write_callback_t, close_callback_t]
 
 # int srcml_read_open_filename(struct srcml_archive*, const char* srcml_filename);
 libsrcml.srcml_read_open_filename.restype = c_int
