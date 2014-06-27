@@ -46,52 +46,6 @@
 #endif
 
 /**
- * srcMLFile
- *
- * Data struct passed around for reading/closing of FILE.
- * Wrapper around FILE * to provide hashing.
- */
-struct srcMLFile {
-
-    /** hold FILE * file */
-    FILE * file;
-
-    /** Does this file need to be closed */
-    bool close_file;
-
-#ifdef _MSC_BUILD
-    /** mvcs hash context object */
-    HCRYPTHASH * ctx;
-#else
-    /** openssl/CommonCrypto hash context */
-    SHA_CTX * ctx;
-#endif
-
-};
-
-/**
- * srcMLFd
- *
- * Data struct passed around for reading/closing of file descriptor.
- * Wrapper around file desciptor to provide hashing.
- */
-struct srcMLFd {
-
-    /** file descriptor */
-    int fd;
-
-#ifdef _MSC_BUILD
-    /** mvcs hash context object */
-    HCRYPTHASH * ctx;
-#else
-    /** openssl/CommonCrypto hash context */
-    SHA_CTX * ctx;
-#endif
-
-};
-
-
-/**
  * srcMLIO
  *
  * Data struct passed around for reading/closing of Generic IO.
@@ -108,9 +62,6 @@ struct srcMLIO {
     /** provided close callback */
     UTF8CharBuffer::srcml_close_callback close_callback;
 
-    /** Does this context need to be closed */
-    bool close_context;
-
 #ifdef _MSC_BUILD
     /** mvcs hash context object */
     HCRYPTHASH * ctx;
@@ -120,49 +71,6 @@ struct srcMLIO {
 #endif
 
 };
-
-/**
- * srcMLFileRead
- * @param context a srcMLFile context
- * @param buffer a buffer to write output of read
- * @param len number of bytes to read/size of buffer
- *
- * Wrapper around xmlFileRead to provide hashing.
- * Read len bytes from file and put in buffer.
- * Update hash with newly read data.
- */
-int srcMLFileRead(void * context,  char * buffer, int len) {
-
-    srcMLFile * sfile = (srcMLFile *)context;
-    size_t num_read = xmlFileRead(sfile->file, buffer, len);
-
-    if(sfile->ctx)
-#ifdef _MSC_BUILD
-        CryptHashData(*sfile->ctx, (BYTE *)buffer, num_read, 0);
-#else
-        SHA1_Update(sfile->ctx, buffer, (SHA_LONG)num_read);
-#endif
-
-    return (int)num_read;
-}
-
-/**
- * srcMLFileClose
- * @param context a srcMLFile context
- *
- * Wrapper around xmlFileClose.
- * Cleans up memory of srcMLFile and closes file.
- */
-int srcMLFileClose(void * context) {
-
-    srcMLFile * sfile = (srcMLFile *)context;
-    int ret = 0;
-    if(sfile->close_file) ret = xmlFileClose(sfile->file);
-
-    delete sfile;
-
-    return ret;
-}
 
 /**
  * srcMLFdRead
@@ -185,17 +93,6 @@ int srcMLFdRead(void * context, char * buffer, int len) {
 }
 
 /**
- * srcMLFdClose
- * @param context a srcMLFd context
- *
- * Cleans up memory of srcMLFd.  Does not close fd.
- */
-int srcMLFdClose(void * context) {
-
-    return 0;
-}
-
-/**
  * srcMLIORead
  * @param context a srcMLIO context
  * @param buffer a buffer to write output of read
@@ -208,7 +105,8 @@ int srcMLFdClose(void * context) {
 int srcMLIORead(void * context,  char * buffer, int len) {
 
     srcMLIO * sio = (srcMLIO *)context;
-    size_t num_read = sio->read_callback(sio->context, buffer, len);
+    size_t num_read = -1;
+    if(sio->read_callback) num_read = sio->read_callback(sio->context, buffer, len);
 
     if(sio->ctx)
 #ifdef _MSC_BUILD
@@ -231,7 +129,7 @@ int srcMLIOClose(void * context) {
 
     srcMLIO * sio = (srcMLIO *)context;
     int ret = 0;
-    if(sio->close_context) ret = sio->close_callback(sio->context);
+    if(sio->close_callback) ret = sio->close_callback(sio->context);
 
     delete sio;
 
@@ -269,7 +167,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
     sio->context = file;
     sio->read_callback = xmlFileRead;
     sio->close_callback = xmlFileClose;
-    sio->close_context = true;
 
 #ifdef _MSC_BUILD
     hash ? sio->ctx = &crypt_hash : 0;
@@ -368,16 +265,18 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
 #endif
     }
 
-    srcMLFile * sfile = new srcMLFile();
-    sfile->file = file;
-    sfile->close_file = false;
+    srcMLIO * sio = new srcMLIO();
+    sio->context = file;
+    sio->read_callback = xmlFileRead;
+    sio->close_callback = 0;
+
 #ifdef _MSC_BUILD
-    hash ? sfile->ctx= &crypt_hash : 0;
+    hash ? sio->ctx= &crypt_hash : 0;
 #else
-    hash ? sfile->ctx = &ctx : 0;
+    hash ? sio->ctx = &ctx : 0;
 #endif
 
-    input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sfile,
+    input = xmlParserInputBufferCreateIO(srcMLIORead, srcMLIOClose, sio,
                                          encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
@@ -414,8 +313,7 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
     srcMLIO * sio = new srcMLIO();
     sio->context = (void *)fd;
     sio->read_callback = srcMLFdRead;
-    sio->close_callback = srcMLFdClose;
-    sio->close_context = false;
+    sio->close_callback = 0;
 
 #ifdef _MSC_BUILD
     hash ? sio->ctx = &crypt_hash : 0;
@@ -461,7 +359,6 @@ UTF8CharBuffer::UTF8CharBuffer(srcml_read_callback read_callback, srcml_close_ca
     sio->context = context;
     sio->read_callback = read_callback;
     sio->close_callback = close_callback;
-    sio->close_context = true;
     
 #ifdef _MSC_BUILD
     hash ? sio->ctx = &crypt_hash : 0;
@@ -469,7 +366,7 @@ UTF8CharBuffer::UTF8CharBuffer(srcml_read_callback read_callback, srcml_close_ca
     hash ? sio->ctx = &ctx : 0;
 #endif
 
-    input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sio,
+    input = xmlParserInputBufferCreateIO(srcMLIORead, srcMLIOClose, sio,
                                          encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
