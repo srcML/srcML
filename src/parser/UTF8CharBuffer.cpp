@@ -90,6 +90,37 @@ struct srcMLFd {
 
 };
 
+
+/**
+ * srcMLIO
+ *
+ * Data struct passed around for reading/closing of Generic IO.
+ * Wrapper around FILE * to provide hashing.
+ */
+struct srcMLIO {
+
+    /** hold void * context */
+    void * context;
+
+    /** provided read callback */
+    UTF8CharBuffer::srcml_read_callback read_callback;
+
+    /** provided close callback */
+    UTF8CharBuffer::srcml_close_callback close_callback;
+
+    /** Does this file need to be closed */
+    bool close_file;
+
+#ifdef _MSC_BUILD
+    /** mvcs hash context object */
+    HCRYPTHASH * ctx;
+#else
+    /** openssl/CommonCrypto hash context */
+    SHA_CTX * ctx;
+#endif
+
+};
+
 /**
  * srcMLFileRead
  * @param context a srcMLFile context
@@ -170,6 +201,49 @@ int srcMLFdClose(void * context) {
     int ret = 0; //CLOSE(sfd->fd);
 
     delete sfd;
+
+    return ret;
+}
+
+/**
+ * srcMLIORead
+ * @param context a srcMLIO context
+ * @param buffer a buffer to write output of read
+ * @param len number of bytes to read/size of buffer
+ *
+ * Wrapper around xmlFileRead to provide hashing.
+ * Read len bytes from file and put in buffer.
+ * Update hash with newly read data.
+ */
+int srcMLIORead(void * context,  char * buffer, int len) {
+
+    srcMLIO * sio = (srcMLIO *)context;
+    size_t num_read = sio->read_callback(sio->context, buffer, len);
+
+    if(sio->ctx)
+#ifdef _MSC_BUILD
+        CryptHashData(*sio->ctx, (BYTE *)buffer, num_read, 0);
+#else
+        SHA1_Update(sio->ctx, buffer, (SHA_LONG)num_read);
+#endif
+
+    return (int)num_read;
+}
+
+/**
+ * srcMLIOClose
+ * @param context a srcMLIO context
+ *
+ * Wrapper around xmlFileClose.
+ * Cleans up memory of srcMLIO and closes file.
+ */
+int srcMLIOClose(void * context) {
+
+    srcMLIO * sio = (srcMLIO *)context;
+    int ret = 0;
+    if(sio->close_file) ret = sio->close_callback(sio->context);
+
+    delete sio;
 
     return ret;
 }
@@ -373,35 +447,32 @@ UTF8CharBuffer::UTF8CharBuffer(srcml_read_callback read_callback, srcml_close_ca
      const char * encoding, boost::optional<std::string> * hash)
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
 
-    if(!read_callback) throw UTF8FileError();
+    if(read_callback == 0 || context == 0) throw UTF8FileError();
 
-//     void * file = xmlFileOpen(ifilename);
-//     if(!file) throw UTF8FileError();
+    if(hash) {
+#ifdef _MSC_BUILD
+        BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
+        if(! success && GetLastError() == NTE_BAD_KEYSET)
+            success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
+        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
+#else
+        SHA1_Init(&ctx);
+#endif
+    }
 
-//     if(hash) {
-// #ifdef _MSC_BUILD
-//         BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
-//         if(! success && GetLastError() == NTE_BAD_KEYSET)
-//             success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-//         CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-// #else
-//         SHA1_Init(&ctx);
-// #endif
-//     }
+    srcMLIO * sio = new srcMLIO();
+    sio->context = context;
+    sio->close_file = true;
+#ifdef _MSC_BUILD
+    hash ? sio->ctx = &crypt_hash : 0;
+#else
+    hash ? sio->ctx = &ctx : 0;
+#endif
 
-//     srcMLFile * sfile = new srcMLFile();
-//     sfile->file = (FILE *)file;
-//     sfile->close_file = true;
-// #ifdef _MSC_BUILD
-//     hash ? sfile->ctx = &crypt_hash : 0;
-// #else
-//     hash ? sfile->ctx = &ctx : 0;
-// #endif
+    input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sio,
+                                         encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
-//     input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sfile,
-//                                          encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
-
-//     if(!input) throw UTF8FileError();
+    if(!input) throw UTF8FileError();
 
 
     init(encoding);

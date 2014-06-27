@@ -87,7 +87,7 @@ public:
     /** size of the original character buffer */
     static const size_t SRCBUFSIZE = 1024;
     typedef void * (*srcml_open_callback)(const char * filename);
-    typedef int (*srcml_read_callback)(char * buffer, int len, void * context);
+    typedef int (*srcml_read_callback)( void * context, char * buffer, int len);
     typedef int (*srcml_close_callback)(void * context);
 
     // Create a character buffer
