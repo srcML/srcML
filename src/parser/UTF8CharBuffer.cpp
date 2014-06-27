@@ -49,7 +49,7 @@
  * srcMLIO
  *
  * Data struct passed around for reading/closing of Generic IO.
- * Wrapper around FILE * to provide hashing.
+ * Structure to hold context with callbacks to provide hashing.
  */
 struct srcMLIO {
 
@@ -98,7 +98,7 @@ int srcMLFdRead(void * context, char * buffer, int len) {
  * @param buffer a buffer to write output of read
  * @param len number of bytes to read/size of buffer
  *
- * Wrapper around xmlFileRead to provide hashing.
+ * Wrapper around provided read callback to provide hashing.
  * Read len bytes from file and put in buffer.
  * Update hash with newly read data.
  */
@@ -123,7 +123,7 @@ int srcMLIORead(void * context,  char * buffer, int len) {
  * @param context a srcMLIO context
  *
  * Wrapper around xmlFileClose.
- * Cleans up memory of srcMLIO and closes file.
+ * Cleans up memory of srcMLIO and closes context.
  */
 int srcMLIOClose(void * context) {
 
