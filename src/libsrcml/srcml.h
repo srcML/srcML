@@ -285,6 +285,7 @@ __LIBSRCML_DECL int srcml_write_open_filename(struct srcml_archive*, const char*
 __LIBSRCML_DECL int srcml_write_open_memory  (struct srcml_archive*, char** buffer, int * size);
 __LIBSRCML_DECL int srcml_write_open_FILE    (struct srcml_archive*, FILE* srcml_file);
 __LIBSRCML_DECL int srcml_write_open_fd      (struct srcml_archive*, int srcml_fd);
+__LIBSRCML_DECL int srcml_write_open_io      (struct srcml_unit*, void * context, int (*write_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
 
 /* Setup options for srcml archive */
 __LIBSRCML_DECL int srcml_archive_set_encoding           (struct srcml_archive*, const char* encoding);
@@ -371,6 +372,7 @@ __LIBSRCML_DECL int srcml_read_open_filename(struct srcml_archive*, const char* 
 __LIBSRCML_DECL int srcml_read_open_memory  (struct srcml_archive*, const char* buffer, size_t buffer_size);
 __LIBSRCML_DECL int srcml_read_open_FILE    (struct srcml_archive*, FILE* srcml_file);
 __LIBSRCML_DECL int srcml_read_open_fd      (struct srcml_archive*, int srcml_fd);
+__LIBSRCML_DECL int srcml_read_open_io      (struct srcml_unit*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
 
 /* Read the next unit from the archive
    Returns 0 if there are no more units */
@@ -393,6 +395,7 @@ __LIBSRCML_DECL int srcml_unparse_unit_filename(struct srcml_unit*, const char* 
 __LIBSRCML_DECL int srcml_unparse_unit_memory  (struct srcml_unit*, char** src_buffer, int * src_size);
 __LIBSRCML_DECL int srcml_unparse_unit_FILE    (struct srcml_unit*, FILE* srcml_file);
 __LIBSRCML_DECL int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
+__LIBSRCML_DECL int srcml_unparse_unit_io      (struct srcml_unit*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
 
 /* srcML XPath query and XSLT transform functions */
 __LIBSRCML_DECL int srcml_clear_transforms                 (struct srcml_archive*);
