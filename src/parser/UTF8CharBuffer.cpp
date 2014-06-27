@@ -369,12 +369,11 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
  *
  * Constructor.  Setup input from filename and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding,
-    srcml_read_callback read_callback, srcml_close_callback close_callback, void * context,
-    boost::optional<std::string> * hash)
+UTF8CharBuffer::UTF8CharBuffer(srcml_read_callback read_callback, srcml_close_callback close_callback, void * context,
+     const char * encoding, boost::optional<std::string> * hash)
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
 
-//     if(!ifilename) throw UTF8FileError();
+    if(!read_callback) throw UTF8FileError();
 
 //     void * file = xmlFileOpen(ifilename);
 //     if(!file) throw UTF8FileError();
@@ -405,7 +404,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding,
 //     if(!input) throw UTF8FileError();
 
 
-//     init(encoding);
+    init(encoding);
 
 }
 
