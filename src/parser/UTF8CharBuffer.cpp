@@ -84,9 +84,9 @@ struct srcMLIO {
  */
 int srcMLFdRead(void * context, char * buffer, int len) {
 
-    intptr_t fd = (intptr_t)context;
+    int fd = (int)(size_t)context;
 
-    size_t num_read = READ((int)fd, buffer, len);
+    size_t num_read = READ(fd, buffer, len);
 
     return (int)num_read;
 
