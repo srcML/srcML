@@ -974,6 +974,56 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
 
 }
 
+/**
+ * srcml_archive_open_io
+ * @param archive a srcml_archive
+ * @param context an io context
+ * @param write_callback a write callback function
+ * @param close_callback a close callback function
+ *
+ * Open up a srcml_archive for writing.  Set the output
+ * to go the opened io context written to using write callback
+ * and closed using close callback.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_open_io(srcml_archive* archive, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context)) {
+
+    if(archive == NULL || context == NULL || write_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateIO(write_callback, close_callback, context, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+    if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
+
+    archive->type = SRCML_ARCHIVE_WRITE;
+
+    try {
+
+        archive->translator = new srcml_translator(
+                                                output_buffer,
+                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                                archive->options,
+                                                archive->prefixes,
+                                                archive->namespaces,
+                                                archive->processing_instruction,
+                                                archive->tabstop,
+                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                                archive->directory ? archive->directory->c_str() : 0,
+                                                archive->filename ? archive->filename->c_str() : 0,
+                                                archive->version ? archive->version->c_str() : 0);
+
+        archive->translator->set_macro_list(archive->user_macro_list);
+
+    } catch(...) {
+
+        xmlOutputBufferClose(output_buffer);
+        return SRCML_STATUS_IO_ERROR;
+
+    }
+
+    return SRCML_STATUS_OK;
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                       Archive read open functions                          *
@@ -1154,7 +1204,7 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_read_open_fd(srcml_archive* archive, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context)) {
+int srcml_read_open_io(srcml_archive* archive, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context)) {
 
     if(archive == NULL || context == NULL || read_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
