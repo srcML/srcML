@@ -843,6 +843,60 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 }
 
 /**
+ * srcml_unparse_unit_io
+ * @param unit a srcml unit
+ * @param write_callback a write callback function
+ * @param close_callback a close callback function
+ *
+ * Convert the srcML in unit into source code and place it into 
+ * the opened io context written to using write callback
+ * and closed using close callback.  If the srcML was not read in,
+ * but the attributes were read in the xml and unparse that value.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_unparse_unit_io(srcml_unit* unit, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context)) {
+
+    if(unit == NULL || context == NULL || write_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)
+        return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    if(!unit->unit && !unit->read_header) return SRCML_STATUS_UNINITIALIZED_UNIT;
+
+    const char * encoding   = unit->encoding ? unit->encoding->c_str() :
+        (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
+
+    xmlOutputBufferPtr output_handler = xmlOutputBufferCreateIO(write_callback, close_callback, context, encoding ? xmlFindCharEncodingHandler(encoding) : 0);
+
+    try {
+
+
+        if(!unit->unit) {
+
+            unit->archive->reader->read_src(output_handler);
+            xmlOutputBufferClose(output_handler);
+
+            return SRCML_STATUS_OK;
+
+        }
+
+        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options);
+        xmlOutputBufferClose(output_handler);
+
+        return status;
+
+    } catch(...) {
+
+        xmlOutputBufferClose(output_handler);
+
+        return SRCML_STATUS_IO_ERROR;
+
+    }
+
+}
+
+/**
  * srcml_write_start_unit
  * @param archive a srcml archive opened for writing
  * @param unit a srcml_unit to start output with
