@@ -343,6 +343,7 @@ __LIBSRCML_DECL int srcml_parse_unit_filename(struct srcml_unit* unit, const cha
 __LIBSRCML_DECL int srcml_parse_unit_memory  (struct srcml_unit*, const char* src_buffer, size_t buffer_size);
 __LIBSRCML_DECL int srcml_parse_unit_FILE    (struct srcml_unit*, FILE* src_file);
 __LIBSRCML_DECL int srcml_parse_unit_fd      (struct srcml_unit*, int src_fd);
+__LIBSRCML_DECL int srcml_parse_unit_io      (struct srcml_unit*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
 
 /* Append unit to an archive */
 __LIBSRCML_DECL int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*);
