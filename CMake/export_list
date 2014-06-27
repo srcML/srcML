@@ -86,6 +86,7 @@ _srcml_get_language_list
 _srcml_get_language_list_size
 _srcml_parse_unit_fd
 _srcml_parse_unit_filename
+_srcml_parse_unit_io
 _srcml_parse_unit_memory
 _srcml_parse_unit_FILE
 _srcml_read_open_fd
