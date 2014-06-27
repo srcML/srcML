@@ -856,9 +856,9 @@ int srcml_write_start_unit(struct srcml_unit * unit) {
  */
 int srcml_write_end_unit(struct srcml_unit * unit) {
 
-    if(unit == NULL || unit->unit_translator == 0)  return SRCML_STATUS_INVALID_ARGUMENT;
+    if(unit == NULL)  return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(!unit->unit_translator->add_end_unit()) return SRCML_STATUS_INVALID_INPUT;
+    if(unit->unit_translator == 0 || !unit->unit_translator->add_end_unit()) return SRCML_STATUS_INVALID_INPUT;
 
     delete unit->unit_translator;
     unit->unit_translator = 0;
@@ -890,9 +890,9 @@ int srcml_write_end_unit(struct srcml_unit * unit) {
  */
 int srcml_write_start_element(struct srcml_unit * unit, const char * prefix, const char * name, const char * uri) {
 
-    if(unit == NULL || unit->unit_translator == 0 || name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(unit == NULL || name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(!unit->unit_translator->add_start_element(prefix, name, uri)) return SRCML_STATUS_INVALID_INPUT;
+    if(unit->unit_translator == 0 || !unit->unit_translator->add_start_element(prefix, name, uri)) return SRCML_STATUS_INVALID_INPUT;
 
     return SRCML_STATUS_OK;
 
@@ -909,9 +909,9 @@ int srcml_write_start_element(struct srcml_unit * unit, const char * prefix, con
  */
 int srcml_write_end_element(struct srcml_unit * unit) {
 
-    if(unit == NULL|| unit->unit_translator == 0)  return SRCML_STATUS_INVALID_ARGUMENT;
+    if(unit == NULL)  return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(!unit->unit_translator->add_end_element()) return SRCML_STATUS_INVALID_INPUT;
+    if(unit->unit_translator == 0 || !unit->unit_translator->add_end_element()) return SRCML_STATUS_INVALID_INPUT;
 
     return SRCML_STATUS_OK;
 
@@ -932,9 +932,9 @@ int srcml_write_end_element(struct srcml_unit * unit) {
 
 int srcml_write_namespace(struct srcml_unit * unit, const char * prefix, const char * uri) {
 
-    if(unit == NULL || unit->unit_translator == 0 || uri == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(unit == NULL || uri == 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(!unit->unit_translator->add_namespace(prefix, uri)) return SRCML_STATUS_INVALID_INPUT;
+    if(unit->unit_translator == 0 || !unit->unit_translator->add_namespace(prefix, uri)) return SRCML_STATUS_INVALID_INPUT;
 
     return SRCML_STATUS_OK;
 
@@ -956,9 +956,9 @@ int srcml_write_namespace(struct srcml_unit * unit, const char * prefix, const c
  */
 int srcml_write_attribute(struct srcml_unit * unit, const char * prefix, const char * name, const char * uri, const char * content) {
 
-    if(unit == NULL || unit->unit_translator == 0 || name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(unit == NULL || name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(!unit->unit_translator->add_attribute(prefix, name, uri, content)) return SRCML_STATUS_INVALID_INPUT;
+    if(unit->unit_translator == 0 || !unit->unit_translator->add_attribute(prefix, name, uri, content)) return SRCML_STATUS_INVALID_INPUT;
 
     return SRCML_STATUS_OK;
 
@@ -977,9 +977,9 @@ int srcml_write_attribute(struct srcml_unit * unit, const char * prefix, const c
  */
 int srcml_write_string(struct srcml_unit * unit, const char * content) {
 
-    if(unit == NULL || unit->unit_translator == 0 || content == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(unit == NULL || content == 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if(!unit->unit_translator->add_string(content)) return SRCML_STATUS_INVALID_INPUT;
+    if(unit->unit_translator == 0 || !unit->unit_translator->add_string(content)) return SRCML_STATUS_INVALID_INPUT;
 
     return SRCML_STATUS_OK;
 
@@ -1011,6 +1011,7 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
     } catch(...) { return 0; }
     unit->archive = archive;
     unit->read_header = false;
+    unit->unit_translator = 0;
 
     return unit;
 
@@ -1025,6 +1026,8 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
 void srcml_free_unit(srcml_unit* unit) {
 
     if(unit == NULL) return;
+
+    if(unit->unit_translator) srcml_write_end_unit(unit);
 
     delete unit;
 
