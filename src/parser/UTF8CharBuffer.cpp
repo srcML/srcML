@@ -362,6 +362,54 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
 }
 
 /**
+ * UTF8CharBuffer
+ * @param ifilename input filename (complete path)
+ * @param encoding input encoding
+ * @param hash optional location to output hash of input (default = 0)
+ *
+ * Constructor.  Setup input from filename and hashing if needed.
+ */
+UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding,
+    srcml_read_callback read_callback, srcml_close_callback close_callback, void * context,
+    boost::optional<std::string> * hash)
+    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
+
+//     if(!ifilename) throw UTF8FileError();
+
+//     void * file = xmlFileOpen(ifilename);
+//     if(!file) throw UTF8FileError();
+
+//     if(hash) {
+// #ifdef _MSC_BUILD
+//         BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
+//         if(! success && GetLastError() == NTE_BAD_KEYSET)
+//             success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
+//         CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
+// #else
+//         SHA1_Init(&ctx);
+// #endif
+//     }
+
+//     srcMLFile * sfile = new srcMLFile();
+//     sfile->file = (FILE *)file;
+//     sfile->close_file = true;
+// #ifdef _MSC_BUILD
+//     hash ? sfile->ctx = &crypt_hash : 0;
+// #else
+//     hash ? sfile->ctx = &ctx : 0;
+// #endif
+
+//     input = xmlParserInputBufferCreateIO(srcMLFileRead, srcMLFileClose, sfile,
+//                                          encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+
+//     if(!input) throw UTF8FileError();
+
+
+//     init(encoding);
+
+}
+
+/**
  * init
  * @param encoding the input encoding
  *
