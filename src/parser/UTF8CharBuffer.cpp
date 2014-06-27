@@ -174,12 +174,14 @@ int srcMLFileClose(void * context) {
  * Read len bytes from file and put in buffer.
  * Update hash with newly read data.
  */
-int srcMLFdRead(void * context,  char * buffer, int len) {
+int srcMLFdRead(void * context, char * buffer, int len) {
 
-    srcMLFd * sfd = (srcMLFd *)context;
-    size_t num_read = READ(sfd->fd, buffer, len);
+    intptr_t fd = (intptr_t)context;
+
+    size_t num_read = READ((int)fd, buffer, len);
 
     return (int)num_read;
+
 }
 
 /**
