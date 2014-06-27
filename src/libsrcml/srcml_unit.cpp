@@ -571,7 +571,8 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
  * @param read_callback a read callback function
  * @param close_callback a close callback function
  *
- * Convert to srcML the contents of src_fd
+ * Convert to srcML the contents from the opened context
+ * accessed via read_callback and closed via close_callback
  * place it into the unit.
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
