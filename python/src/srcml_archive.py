@@ -18,10 +18,14 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from globals import libsrcml
-from ctypes import c_int, c_void_p, c_char_p, pointer, c_ulonglong
+from ctypes import c_int, c_void_p, c_char_p, pointer, c_ulonglong, CFUNCTYPE
 
 from srcml_unit import srcml_unit
 from exception import *
+
+write_callback_t = CFUNCTYPE(c_int, c_void_p, c_char_p, c_int)
+read_callback_t  = CFUNCTYPE(c_int, c_void_p, c_char_p, c_int)
+close_callback_t = CFUNCTYPE(c_int, c_void_p)
 
 # struct srcml_archive* srcml_create_archive();
 libsrcml.srcml_create_archive.restype = c_void_p
@@ -47,6 +51,10 @@ libsrcml.srcml_write_open_FILE.argtypes = [c_void_p, c_void_p]
 libsrcml.srcml_write_open_fd.restype = c_int
 libsrcml.srcml_write_open_fd.argtypes = [c_void_p, c_int]
 
+# int srcml_write_open_io      (struct srcml_archive*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
+libsrcml.srcml_write_open_io.restype = c_int
+libsrcml.srcml_write_open_io.argtypes = [c_void_p, c_void_p, write_callback_t, close_callback_t]
+
 # int srcml_read_open_filename(struct srcml_archive*, const char* srcml_filename);
 libsrcml.srcml_read_open_filename.restype = c_int
 libsrcml.srcml_read_open_filename.argtypes = [c_void_p, c_char_p]
@@ -62,6 +70,10 @@ libsrcml.srcml_read_open_FILE.argtypes = [c_void_p, c_void_p]
 # int srcml_read_open_fd      (struct srcml_archive*, int srcml_fd);
 libsrcml.srcml_read_open_fd.restype = c_int
 libsrcml.srcml_read_open_fd.argtypes = [c_void_p, c_int]
+
+# int srcml_read_open_io      (struct srcml_archive*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
+libsrcml.srcml_read_open_io.restype = c_int
+libsrcml.srcml_read_open_io.argtypes = [c_void_p, c_void_p, read_callback_t, close_callback_t]
 
 # void srcml_free_archive(struct srcml_archive* archive);
 libsrcml.srcml_free_archive.restype = None
@@ -308,6 +320,9 @@ class srcml_archive :
     def write_open_fd(self, srcml_fd) :
         check_return(libsrcml.srcml_write_open_fd(self.archive, srcml_fd))
 
+    def write_open_io(self, context, write_callback, close_callback) :
+        check_return(libsrcml.srcml_write_open_io(self.archive, context, write_callback, close_callback))
+
     def read_open_filename(self, srcml_filename) :
         check_return(libsrcml.srcml_read_open_filename(self.archive, srcml_filename))
 
@@ -319,6 +334,9 @@ class srcml_archive :
 
     def read_open_fd(self, srcml_fd) :
         check_return(libsrcml.srcml_read_open_fd(self.archive, srcml_fd))
+
+    def read_open_io(self, context, read_callback, close_callback) :
+        check_return(libsrcml.srcml_read_open_fd(self.archive, context, read_callback, close_callback))
 
     def set_src_encoding(self, src_encoding) :
         check_return(libsrcml.srcml_archive_set_src_encoding(self.archive, src_encoding))

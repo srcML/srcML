@@ -792,22 +792,9 @@ const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, in
  *                                                                            *
  ******************************************************************************/
 
-/**
- * srcml_archive_open_filename
- * @param archive a srcml_archive
- * @param srcml_filename name of an output file
- *
- * Open up a srcml_archive for writing.  Set the output
- * to go to the file srcml_filename.
- *
- * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
- */
-int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename) {
+ int srcml_write_open_internal(srcml_archive * archive, xmlOutputBufferPtr output_buffer) {
 
-    if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
-
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(srcml_filename, 0, archive->options & SRCML_OPTION_COMPRESS);
-    if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
+if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
 
     archive->type = SRCML_ARCHIVE_WRITE;
 
@@ -836,6 +823,26 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
 
     return SRCML_STATUS_OK;
 
+ }
+
+/**
+ * srcml_archive_open_filename
+ * @param archive a srcml_archive
+ * @param srcml_filename name of an output file
+ *
+ * Open up a srcml_archive for writing.  Set the output
+ * to go to the file srcml_filename.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename) {
+
+    if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(srcml_filename, 0, archive->options & SRCML_OPTION_COMPRESS);
+
+    return srcml_write_open_internal(archive, output_buffer);
+    
 }
 
 /**
@@ -895,35 +902,8 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
     if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
-    if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
 
-    archive->type = SRCML_ARCHIVE_WRITE;
-
-    try {
-
-        archive->translator = new srcml_translator(
-                                                output_buffer,
-                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                                archive->options,
-                                                archive->prefixes,
-                                                archive->namespaces,
-                                                archive->processing_instruction,
-                                                archive->tabstop,
-                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                archive->directory ? archive->directory->c_str() : 0,
-                                                archive->filename ? archive->filename->c_str() : 0,
-                                                archive->version ? archive->version->c_str() : 0);
-
-        archive->translator->set_macro_list(archive->user_macro_list);
-
-    } catch(...) {
-
-        xmlOutputBufferClose(output_buffer);
-        return SRCML_STATUS_IO_ERROR;
-
-    }
-
-    return SRCML_STATUS_OK;
+    return srcml_write_open_internal(archive, output_buffer);
 
 }
 
@@ -942,35 +922,31 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
     if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
-    if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
 
-    archive->type = SRCML_ARCHIVE_WRITE;
+    return srcml_write_open_internal(archive, output_buffer);
 
-    try {
+}
 
-        archive->translator = new srcml_translator(
-                                                output_buffer,
-                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                                archive->options,
-                                                archive->prefixes,
-                                                archive->namespaces,
-                                                archive->processing_instruction,
-                                                archive->tabstop,
-                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                archive->directory ? archive->directory->c_str() : 0,
-                                                archive->filename ? archive->filename->c_str() : 0,
-                                                archive->version ? archive->version->c_str() : 0);
+/**
+ * srcml_archive_open_io
+ * @param archive a srcml_archive
+ * @param context an io context
+ * @param write_callback a write callback function
+ * @param close_callback a close callback function
+ *
+ * Open up a srcml_archive for writing.  Set the output
+ * to go the opened io context written to using write callback
+ * and closed using close callback.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_open_io(srcml_archive* archive, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context)) {
 
-        archive->translator->set_macro_list(archive->user_macro_list);
+    if(archive == NULL || context == NULL || write_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    } catch(...) {
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateIO(write_callback, close_callback, context, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
 
-        xmlOutputBufferClose(output_buffer);
-        return SRCML_STATUS_IO_ERROR;
-
-    }
-
-    return SRCML_STATUS_OK;
+    return srcml_write_open_internal(archive, output_buffer);
 
 }
 
@@ -988,7 +964,18 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
  * Reads and sets the open type as well as gathers the attributes
  * and sets the options from the opened srcML Archive.
  */
-static void srcml_read_internal(srcml_archive * archive) {
+static int srcml_read_open_internal(srcml_archive * archive) {
+
+    try {
+
+        archive->reader = new srcml_sax2_reader(archive->input);
+
+    } catch(...) {
+
+        xmlFreeParserInputBuffer(archive->input);
+        return SRCML_STATUS_IO_ERROR;
+
+    }
 
     archive->type = SRCML_ARCHIVE_READ;
 
@@ -1010,6 +997,8 @@ static void srcml_read_internal(srcml_archive * archive) {
 
     }
 
+    return SRCML_STATUS_OK;
+
 }
 
 /**
@@ -1027,20 +1016,8 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
     if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->input = xmlParserInputBufferCreateFilename(srcml_filename, XML_CHAR_ENCODING_NONE);
-    try {
 
-        archive->reader = new srcml_sax2_reader(archive->input);
-
-    } catch(...) {
-
-        xmlFreeParserInputBuffer(archive->input);
-        return SRCML_STATUS_IO_ERROR;
-
-    }
-
-    srcml_read_internal(archive);
-
-    return SRCML_STATUS_OK;
+    return srcml_read_open_internal(archive);
 
 }
 
@@ -1060,20 +1037,8 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
     if(archive == NULL || buffer == NULL || buffer_size <= 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, XML_CHAR_ENCODING_NONE);
-    try {
 
-        archive->reader = new srcml_sax2_reader(archive->input);
-
-    } catch(...) {
-
-        xmlFreeParserInputBuffer(archive->input);
-        return SRCML_STATUS_IO_ERROR;
-
-    }
-
-    srcml_read_internal(archive);
-
-    return SRCML_STATUS_OK;
+    return srcml_read_open_internal(archive);
 
 }
 
@@ -1092,18 +1057,8 @@ int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
     if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->input = xmlParserInputBufferCreateFile(srcml_file, XML_CHAR_ENCODING_NONE);
-    try {
-
-        archive->reader = new srcml_sax2_reader(archive->input);
-
-    } catch(...) {
-
-        xmlFreeParserInputBuffer(archive->input);
-        return SRCML_STATUS_IO_ERROR;
-
-    }
-
-    srcml_read_internal(archive);
+    
+    return srcml_read_open_internal(archive);
 
     return SRCML_STATUS_OK;
 
@@ -1125,20 +1080,30 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
 
     archive->input = xmlParserInputBufferCreateFd(srcml_fd, XML_CHAR_ENCODING_NONE);
     archive->input->closecallback = 0;
-    try {
 
-        archive->reader = new srcml_sax2_reader(archive->input);
+    return srcml_read_open_internal(archive);
 
-    } catch(...) {
+}
 
-        xmlFreeParserInputBuffer(archive->input);
-        return SRCML_STATUS_IO_ERROR;
+/**
+ * srcml_read_open_io
+ * @param archive a srcml_archive
+ * @param context an io context
+ * @param read_callback a read callback function
+ * @param close_callback a close callback function
+ *
+ * Open a srcML archive for reading.  Set the input to be read from
+ * the opened context accessed via read_callback and closed via close_callback.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_read_open_io(srcml_archive* archive, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context)) {
 
-    }
+    if(archive == NULL || context == NULL || read_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    srcml_read_internal(archive);
+    archive->input = xmlParserInputBufferCreateIO(read_callback, close_callback, context, XML_CHAR_ENCODING_NONE);
 
-    return SRCML_STATUS_OK;
+    return srcml_read_open_internal(archive);
 
 }
 

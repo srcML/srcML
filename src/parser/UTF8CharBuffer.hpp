@@ -86,12 +86,16 @@ public:
 
     /** size of the original character buffer */
     static const size_t SRCBUFSIZE = 1024;
+    typedef void * (*srcml_open_callback)(const char * filename);
+    typedef int (*srcml_read_callback)(void * context, char * buffer, int len);
+    typedef int (*srcml_close_callback)(void * context);
 
     // Create a character buffer
     UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash);
     UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, boost::optional<std::string> * hash);
     UTF8CharBuffer(FILE * file, const char * encoding, boost::optional<std::string> * hash);
     UTF8CharBuffer(int fd, const char * encoding, boost::optional<std::string> * hash);
+    UTF8CharBuffer(void * context, srcml_read_callback read_callback, srcml_close_callback close_callback, const char * encoding, boost::optional<std::string> * hash);
 
     // Get the next character from the stream
     int getChar();
