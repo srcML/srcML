@@ -43,6 +43,18 @@
 
 #include "dassert.hpp"
 
+int write_callback(void * context, const char * buffer, int len) {
+
+    return (int)fwrite(buffer, 1, len, (FILE *)context);
+
+}
+
+int close_callback(void * context) {
+
+    return fclose((FILE *)context);
+
+}
+
 int main() {
 
     /*
@@ -213,6 +225,62 @@ int main() {
         dassert(srcml_write_open_fd(0, fd), SRCML_STATUS_INVALID_ARGUMENT);
         CLOSE(fd);
     }
+
+    /*
+      srcml_write_open_io
+    */
+
+    {
+        FILE * file = fopen("project.xml", "w");
+
+        srcml_archive * archive = srcml_create_archive();
+        srcml_write_open_io(archive, (void *)file, write_callback, close_callback);
+
+        dassert(archive->type, SRCML_ARCHIVE_WRITE);
+        dassert(!archive->translator, 0);
+        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
+                                                     | SRCML_OPTION_HASH));
+
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+        fclose(file);
+
+        //char buf[1];
+        file = fopen("project.xml", "r");
+        //size_t num_read = fread(buf, 1, 1, file);
+        fclose(file);
+        //dassert(num_read, 0);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+        dassert(srcml_write_open_io(archive, 0, write_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
+
+        srcml_free_archive(archive);
+
+    }
+
+    {
+
+        FILE * file = fopen("project_ns.xml", "w");
+        srcml_archive * archive = srcml_create_archive();
+        dassert(srcml_write_open_io(archive, (void *)file, 0, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
+
+        srcml_free_archive(archive);
+        fclose(file);
+
+    }
+
+    {
+        FILE * file = fopen("project_ns.xml", "w");
+        dassert(srcml_write_open_io(0, (void *)file, write_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);         fclose(file);
+        fclose(file);
+
+   }
+
+
 
     UNLINK("project.xml");
     UNLINK("project_ns.xml");
