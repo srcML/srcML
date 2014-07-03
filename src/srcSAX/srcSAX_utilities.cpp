@@ -1,5 +1,5 @@
 /**
- * @file SAX2Framework_utilities.cpp
+ * @file srcSAX_utilities.cpp
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <SAX2Framework_utilities.hpp>
+#include <srcSAX_utilities.hpp>
 
 #ifdef LIBXML2_NEW_BUFFER
 struct _xmlBuf {
@@ -124,6 +124,12 @@ SAX2FrameworkCreateParserCtxt(xmlParserInputBufferPtr buffer_input) {
     return(ctxt);
 }
 
+/**
+ * internal_stop_parser
+ * @param ctxt an libxml2 xml parser context
+ *
+ * Stop the internal xml parser.
+ */
 void internal_stop_parser(xmlParserCtxtPtr ctxt) {
 
     ctxt->sax->startDocument = 0;

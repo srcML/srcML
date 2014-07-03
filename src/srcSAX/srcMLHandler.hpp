@@ -37,11 +37,18 @@ class srcMLHandler {
 
 private :
 
+    /** Control handler for parser */
     srcMLControlHandler * control_handler;
 
 protected:
+
+    /** is the document an archive */
     bool is_archive;
+
+    /** the current unit count */
     int unit_count;
+
+    /** the xml documents encoding */
     const char * encoding;
 
 public :

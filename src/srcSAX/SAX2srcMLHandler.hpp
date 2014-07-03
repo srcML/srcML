@@ -31,6 +31,11 @@ class srcMLHandler;
 #include <string>
 #include <vector>
 
+/**
+ * srcMLMode
+ * 
+ * Enum of srcML parsing modes.
+ */
 enum srcMLMode {
 
     ROOT,
