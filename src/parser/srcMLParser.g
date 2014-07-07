@@ -5952,6 +5952,7 @@ for_like_statement_post[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE 
                 startNewMode(MODE_EXPRESSION);
 
                 // start the expression element
+                startElement(SDECLARATION_INITIALIZATION);
                 startElement(SEXPRESSION);
             }
             // explicitly check for non-terminate so that a large switch statement
