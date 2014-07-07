@@ -4095,7 +4095,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         // class/struct/union before a name in a type, e.g., class A f();
-        class_lead_type_identifier | typename_keyword |
+        class_lead_type_identifier | typename_keyword | default_specifier
 
         // enum use in a type
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
@@ -5066,6 +5066,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         )
 ;
 
+// C/C++ auto specifier (as either type name or specifier)
 auto_keyword[bool is_specifier] { SingleElement element(this); ENTRY_DEBUG } :
         {
             if(is_specifier)
@@ -5097,6 +5098,14 @@ alignas_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
         ({ inputState->guessing }? paren_pair | 
 
         complete_argument_list)
+
+;
+
+// default specifier (Java Methods)
+default_specifier[]  { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
 
 ;
 
