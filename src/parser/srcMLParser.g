@@ -5938,7 +5938,7 @@ using_namespace_statement[] { ENTRY_DEBUG } :
 ;
 
 // using statement
-using_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+using_statement[] { ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -5950,6 +5950,13 @@ using_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_typ
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
         }
         USING LPAREN
+
+        for_like_statement_inner
+
+;
+
+for_like_statement_inner[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
@@ -5967,10 +5974,11 @@ using_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_typ
             // isn't needed
             expression
         )
+
 ;
 
 // lock statement
-lock_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+lock_statement[] { ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -5982,27 +5990,13 @@ lock_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
         }
         LOCK LPAREN
-        (
-            // explicitly check for a variable declaration since it can easily
-            // be confused with an expression
-            { pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
-            for_initialization_variable_declaration[type_count] |
 
-            {
-                // use a new mode without the expect so we don't nest expression parts
-                startNewMode(MODE_EXPRESSION);
+        for_like_statement_inner
 
-                // start the expression element
-                startElement(SEXPRESSION);
-            }
-            // explicitly check for non-terminate so that a large switch statement
-            // isn't needed
-            expression
-        )
 ;
 
 // a synchonized statement
-synchronized_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+synchronized_statement[] { ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -6014,23 +6008,8 @@ synchronized_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE s
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
         }
         SYNCHRONIZED LPAREN
-        (
-            // explicitly check for a variable declaration since it can easily
-            // be confused with an expression
-            { pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
-            for_initialization_variable_declaration[type_count] |
 
-            {
-                // use a new mode without the expect so we don't nest expression parts
-                startNewMode(MODE_EXPRESSION);
-
-                // start the expression element
-                startElement(SEXPRESSION);
-            }
-            // explicitly check for non-terminate so that a large switch statement
-            // isn't needed
-            expression
-        )
+        for_like_statement_inner
 ;
 
 // unchecked statement
@@ -6042,7 +6021,9 @@ unchecked_statement[] { ENTRY_DEBUG } :
             // start of the try statement
             startElement(SUNCHECKED_STATEMENT);
         }
+
         UNCHECKED
+
 ;
 
 // a synchonized statement
