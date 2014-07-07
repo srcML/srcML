@@ -718,7 +718,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
          && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS)
          && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
          && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
-         && (LA(1) == DEFAULT || next_token() != COLON)
+         && (LA(1) != DEFAULT || next_token() == COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }? keyword_statements |
@@ -1154,7 +1154,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))* 
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST || (inLanguage(LANGUAGE_JAVA) && LA(1) == DEFAULT)) }? (lead_type_identifier))* 
 
         // match auto keyword first as special case do no warn about ambiguity
         (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | lead_type_identifier)
@@ -3746,7 +3746,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
-                (specifier | template_specifier set_bool[sawtemplate, true] | { next_token() == COLON }? SIGNAL | ATREQUIRED | ATOPTIONAL)
+                (specifier | template_specifier set_bool[sawtemplate, true] | { next_token() == COLON }? SIGNAL | ATREQUIRED | ATOPTIONAL | { inLanguage(LANGUAGE_JAVA) }? default_specifier)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
                         ((inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON) || inLanguage(LANGUAGE_OBJECTIVE_C)) 
@@ -4076,7 +4076,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
             (argument_token_set_one.member(LA(1)) || argument_token_set_two.member(LA(1)) || argument_token_set_three.member(LA(1)))
 #endif
         }?
-        specifier | template_specifier | auto_keyword[true] | 
+        specifier | template_specifier | auto_keyword[true] | {inLanguage(LANGUAGE_JAVA)}? default_specifier |
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
         LBRACKET (COMMA)* RBRACKET |
@@ -4095,7 +4095,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         // class/struct/union before a name in a type, e.g., class A f();
-        class_lead_type_identifier | typename_keyword | default_specifier
+        class_lead_type_identifier | typename_keyword |
 
         // enum use in a type
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
@@ -5106,6 +5106,7 @@ default_specifier[]  { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
+        DEFAULT
 
 ;
 
