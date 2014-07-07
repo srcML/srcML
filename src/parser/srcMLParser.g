@@ -1154,10 +1154,10 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST || (inLanguage(LANGUAGE_JAVA) && LA(1) == DEFAULT)) }? (lead_type_identifier))* 
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))* 
 
         // match auto keyword first as special case do no warn about ambiguity
-        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | lead_type_identifier)
+        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier)
 
         { 
 
@@ -1168,7 +1168,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : {getTypeCount() > 0}? 
             // Mark as name before mark without name
-            (options { generateAmbigWarnings = false;} :  keyword_name | type_identifier) { decTypeCount(); })*
+            (options { generateAmbigWarnings = false;} :  keyword_name | type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier) { decTypeCount(); })*
 
         {
             endMode(MODE_EAT_TYPE);
@@ -4076,7 +4076,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
             (argument_token_set_one.member(LA(1)) || argument_token_set_two.member(LA(1)) || argument_token_set_three.member(LA(1)))
 #endif
         }?
-        specifier | template_specifier | auto_keyword[true] | {inLanguage(LANGUAGE_JAVA)}? default_specifier |
+        specifier | template_specifier | auto_keyword[true] |
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
         LBRACKET (COMMA)* RBRACKET |
