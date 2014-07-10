@@ -102,10 +102,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr>1 <op:operator>.*</op:operator> 2</expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr>1 <op:operator>&lt;</op:operator> 2</expr>;</expr_stmt>
 </unit>
 
@@ -339,19 +335,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>(</op:operator>0<op:operator>,</op:operator> 1<op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>=</op:operator></expr><op:operator>,</op:operator><expr><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -507,19 +495,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>(</op:operator>0<op:operator>,</op:operator> 1<op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>+=</op:operator></expr><op:operator>,</op:operator><expr><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>+=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -675,19 +655,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><op:operator>(</op:operator>0<op:operator>,</op:operator> 1<op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>-=</op:operator></expr><op:operator>,</op:operator><expr><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>-=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -843,19 +815,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>(</op:operator>0<op:operator>,</op:operator> 1<op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>*=</op:operator></expr><op:operator>,</op:operator><expr><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>*=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1011,19 +975,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>(</op:operator>0<op:operator>,</op:operator> 1<op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>/=</op:operator></expr><op:operator>,</op:operator><expr><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>/=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1179,19 +1135,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>(</op:operator>0<op:operator>,</op:operator> 1<op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>%=</op:operator></expr><op:operator>,</op:operator><expr><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>%=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1347,19 +1295,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><op:operator>(</op:operator>0<op:operator>,</op:operator> 1<op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator></expr><op:operator>,</op:operator><expr><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>&amp;=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1515,21 +1455,12 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><op:operator>(</op:operator>0<op:operator>,</op:operator> 1<op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>|=</op:operator></expr><op:operator>,</op:operator><expr><name>b</name></expr>;</expr_stmt>
 </unit>
-
-<unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>|=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
-</unit>
-
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><op:operator>:</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
@@ -1683,19 +1614,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><op:operator>(</op:operator>0<op:operator>,</op:operator> 1<op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>^=</op:operator></expr><op:operator>,</op:operator><expr><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>^=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1851,19 +1774,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><op:operator>(</op:operator>0<op:operator>,</op:operator> 1<op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator></expr><op:operator>,</op:operator><expr><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -2019,19 +1934,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>(</op:operator>0<op:operator>,</op:operator> 1<op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator></expr><op:operator>,</op:operator><expr><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator></expr><op:operator>?</op:operator></condition><then> <expr><name>b</name></expr></then></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>

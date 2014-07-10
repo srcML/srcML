@@ -37,11 +37,18 @@ class srcMLHandler {
 
 private :
 
+    /** Control handler for parser */
     srcMLControlHandler * control_handler;
 
 protected:
+
+    /** is the document an archive */
     bool is_archive;
+
+    /** the current unit count */
     int unit_count;
+
+    /** the xml documents encoding */
     const char * encoding;
 
 public :
@@ -300,6 +307,16 @@ public :
      * Overide for desired behaviour.
      */
     virtual void cdataBlock(const xmlChar * value, int len) {}
+
+    /**
+     * processingInstruction
+     * @param target the processing instruction target.
+     * @param data the processing instruction data.
+     *
+     * Called when a processing instruction has been parsed.
+     * Overide for desired behaviour.
+     */
+    virtual void processingInstruction(const xmlChar * target, const xmlChar * data) {}
 
 #pragma GCC diagnostic pop
 

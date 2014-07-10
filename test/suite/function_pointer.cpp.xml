@@ -61,4 +61,12 @@
 }</block></function>
 </unit>
 
+<unit>
+<function_decl><type><name>int</name></type> (*<name>minus</name>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <init>= <expr><name>subtract</name></expr></init>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><function_decl><type><name>int</name></type> (*<name>minus</name>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <init>= <expr><name>subtract</name></expr></init></function_decl></param>)</parameter_list>;</function_decl>
+</unit>
+
 </unit>

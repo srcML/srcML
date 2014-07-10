@@ -75,6 +75,7 @@ public :
                                   std::vector<std::string> & attributes,
                                   std::vector<std::string> & prefixes,
                                   std::vector<std::string> & namespaces,
+                                  boost::optional<std::pair<std::string, std::string> > & processing_instruction,
                                   OPTION_TYPE & options,
                                   int & tabstop,
                                   std::vector<std::string> & user_macro_list);

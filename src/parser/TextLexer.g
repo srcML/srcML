@@ -180,12 +180,25 @@ LINECOMMENT_START
             } |
             '*'
             { 
-                if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*')
-                    $setType(JAVADOC_COMMENT_START);
-                else if (inLanguage(LANGUAGE_CXX) && (LA(1) == '*' || LA(1) == '!'))
-                    $setType(DOXYGEN_COMMENT_START);
-                else
+                if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*') {
+
+                    if(next_char()  != '/')
+                        $setType(JAVADOC_COMMENT_START);
+                    else
+                        $setType(COMMENT_START);
+
+                } else if (inLanguage(LANGUAGE_CXX) && (LA(1) == '*' || LA(1) == '!')) {
+
+                    if(next_char() != '/')
+                        $setType(DOXYGEN_COMMENT_START);
+                    else
+                        $setType(COMMENT_START);
+
+                } else {
+
                     $setType(COMMENT_START);
+
+                }
 
                 changetotextlexer(COMMENT_END);
 
@@ -193,7 +206,7 @@ LINECOMMENT_START
                 startline = true;
             } |
 
-            '=' { $setType(OPERATORS); } |
+            '=' { $setType(ASSIGNMENT); } |
 
             { $setType(OPERATORS); }
         )

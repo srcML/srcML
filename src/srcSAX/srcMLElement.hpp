@@ -22,12 +22,13 @@
 #define INCLUDED_SRCML_ELEMENT_HPP
 
 #ifndef _MSC_BUILD
+/** Macro to define the correct name of strdup on unix/windows */
 #define STRDUP strdup
 #else
 #define STRDUP _strdup
 #endif
 
-#include <SAX2Framework_utilities.hpp>
+#include <srcSAX_utilities.hpp>
 
 #include <libxml/parser.h>
 
@@ -231,7 +232,7 @@ struct srcMLElement {
 
     }
 
-    /* parser context */
+    /** parser context */
     xmlParserCtxtPtr ctxt;
 
     /** local name of an element*/
@@ -258,6 +259,7 @@ struct srcMLElement {
     /** attributes of an element*/
     const xmlChar** attributes;
 
+    /** text characters (most likely only those right after root tag */
     std::string characters;
 
 };

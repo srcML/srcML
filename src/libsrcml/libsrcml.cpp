@@ -64,8 +64,8 @@ static
 #endif
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL,
-                                 8, std::vector<std::string>(), std::vector<std::string>(), language_extension_registry(),
-                                 std::vector<std::string>(), 0, 0, 0, std::vector<transform>() };
+                                 8, std::vector<std::string>(), std::vector<std::string>(), boost::optional<std::pair<std::string, std::string> >(),
+                                 language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>() };
 
 /**
  * @var global_unit
@@ -75,7 +75,7 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
 #ifdef STATIC_GLOBALS
 static
 #endif
-srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 /**
  * @var register_languages
@@ -474,6 +474,21 @@ int srcml_register_namespace(const char* prefix, const char* ns) {
 }
 
 /**
+ * srcml_archive_set_processing_instruction
+ * @param target the processing instruction's target
+ * @param data the processing instruciton's data
+ *
+ * Set a processing instruction that will be output before root element of archive.
+ *
+ * @returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_set_processing_instruction(const char* target, const char* data) {
+
+    return srcml_archive_set_processing_instruction(&global_archive, target, data);
+
+}
+
+/**
  * srcml_archive_register_macro
  * @param token name of macro
  * @param type macro type
@@ -666,6 +681,29 @@ const char* srcml_get_namespace_uri(int pos) {
 const char* srcml_get_uri_from_prefix(const char* prefix) {
 
     return srcml_archive_get_uri_from_prefix(&global_archive, prefix);
+
+}
+
+/**
+ * srcml_get_processing_instruction_target
+ *
+ * @returns Get the processing instruction target.
+ */
+const char* srcml_get_processing_instruction_target() {
+
+    return srcml_archive_get_processing_instruction_target(&global_archive);
+
+}
+
+/**
+ * srcml_get_processing_instruction_data
+ * @param archive a srcml
+ *
+ * @returns Get the processing instruction data.
+ */
+const char* srcml_get_processing_instruction_data() {
+
+    return srcml_archive_get_processing_instruction_data(&global_archive);
 
 }
 

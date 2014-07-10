@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="for" filename="for_cpp">
+
+<unit>
+<for>for(<init><decl><type><name>int</name></type> <name>a</name> <range>: <expr>0</expr></range></decl>, <decl><type ref="prev"/><name>b</name> <range>: <expr>0</expr></range></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)
+<empty_stmt>;</empty_stmt></for>
+</unit>
+
+<unit>
+<for>for(<init><decl><type><name>int</name></type> <name>a</name> <range>: <expr>0</expr></range></decl>, <decl><type ref="prev"/><name>b</name> <range>: <expr>0</expr></range></decl>, <decl><type ref="prev"/><name>c</name> <range>: <expr>0</expr></range></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)
+<empty_stmt>;</empty_stmt></for>
+</unit>
+
+<unit>
+<for>for(<init><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)
+<empty_stmt>;</empty_stmt></for>
+</unit>
+
+<unit>
+<for>for(<init><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>c</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)
+<empty_stmt>;</empty_stmt></for>
+</unit>
+
+</unit>

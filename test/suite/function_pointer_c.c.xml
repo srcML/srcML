@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="function_pointer" filename="function_pointer_c">
+
+<unit>
+<function_decl><type><name>int</name></type> (*<name>minus</name>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <init>= <expr>0</expr></init>;</function_decl>
+</unit>
+
+</unit>

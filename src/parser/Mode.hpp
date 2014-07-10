@@ -228,4 +228,7 @@ const static srcMLState::MODE_TYPE MODE_OBJECTIVE_C_CALL;
 /** mode for switch statement */
 const static srcMLState::MODE_TYPE MODE_SWITCH;
 
+/** mode for ternary condition */
+const static srcMLState::MODE_TYPE MODE_TERNARY_CONDITION;
+
 #endif

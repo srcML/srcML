@@ -27,9 +27,17 @@ class srcMLHandler;
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
 
+/**
+ * SAXError
+ *
+ * Data struct to hold contents of an error.
+ */
 struct SAXError {
 
+    /** error message */
     std::string message;
+
+    /** error code */
     int error_code;
 
 };
@@ -62,6 +70,7 @@ public :
     /**
      * srcMLControlHandler
      * @param filename name of a file
+     * @param encoding the xml encoding
      *
      * Constructor
      */
@@ -147,6 +156,14 @@ public :
     void enable_cdataBlock(bool enable);
 
     /**
+     * enable_processingInstruction
+     * @param enable bool indicate enable or disable SAX parsing.
+     *
+     * Enables or disables processingInstruction parsing.
+     */
+    void enable_processingInstruction(bool enable);
+
+    /**
      * enable_function
      * @param enable bool indicate enable or disable special function parsing.
      *
@@ -162,7 +179,13 @@ public :
      */
     void parse(srcMLHandler * handler);
 
+    /**
+     * stop_parser
+     *
+     * Stop parsing.
+     */
     void stop_parser();
+
 };
 
 #endif

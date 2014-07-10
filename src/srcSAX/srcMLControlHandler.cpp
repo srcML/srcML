@@ -21,17 +21,29 @@
 #include <srcMLControlHandler.hpp>
 #include <srcMLHandler.hpp>
 
-#include <SAX2Framework_utilities.hpp>
+#include <srcSAX_utilities.hpp>
 
 #include <string>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
+/**
+ * libxml_error
+ * @param ctx the context
+ * @param msg the message
+ *
+ * Stub function to intercept and do nothing with libxml errors.
+ */
 void libxml_error(void *ctx, const char *msg, ...) {}
 
 #pragma GCC diagnostic pop
 
+/**
+ * srcml_control_handler_init
+ *
+ * Internal method to initialize the srcml_control_handler.
+ */
 void srcml_control_handler_init() {
 
     static bool initialized = false;
@@ -218,6 +230,19 @@ void srcMLControlHandler::enable_cdataBlock(bool enable) {
 
     if(enable) sax.cdataBlock = cdataBlock;
     else sax.cdataBlock = 0;
+
+}
+
+/**
+ * enable_processingInstruction
+ * @param enable bool indicate enable or disable SAX parsing.
+ *
+ * Enables or disables processingInstruction parsing.
+ */
+void srcMLControlHandler::enable_processingInstruction(bool enable) {
+
+    if(enable) sax.processingInstruction = processingInstruction;
+    else sax.processingInstruction = 0;
 
 }
 

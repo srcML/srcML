@@ -25,3 +25,9 @@ from exception import srcMLException
 
 srcml_archive = srcml_archive.srcml_archive
 srcml_unit = srcml_unit.srcml_unit
+
+from ctypes import c_int, c_void_p, c_char_p, CFUNCTYPE
+
+write_callback_t = CFUNCTYPE(c_int, c_void_p, c_char_p, c_int)
+read_callback_t  = CFUNCTYPE(c_int, c_void_p, c_char_p, c_int)
+close_callback_t = CFUNCTYPE(c_int, c_void_p)

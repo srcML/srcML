@@ -423,5 +423,13 @@
 <decl_stmt><decl><type><name>s</name></type> <name>descending</name> <init>= <expr>0</expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<foreach>foreach (<init><decl><type><name>var</name></type> <name>application</name> <range>in <expr><linq><from>from <expr><name>app</name></expr> <in>in <expr><name>apps</name></expr></in></from>
+                            <where>where <expr><name><name>app</name>.<name>MonitoredId</name></name> &gt; 0</expr></where>
+                            <select>select <expr><name>app</name></expr></select></linq></expr></range></decl></init>)
+<block>{
+    <if>if <condition>(<expr>true</expr>)</condition><then><block>{ }</block></then></if>
+}</block></foreach>
+</unit>
 
 </unit>

@@ -52,9 +52,27 @@ header "post_include_cpp" {
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 
 void KeywordLexer::changetotextlexer(int typeend) {
-          selector->push("text"); 
-           ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, rawstring, delimiter, isline, line_number, options);
+    selector->push("text"); 
+    ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, rawstring, delimiter, isline, line_number, options);
 }
+
+int KeywordLexer::next_char() {
+
+    ++inputState->guessing;
+    int start = mark();
+
+    consume();
+
+    int token = LA(1);
+
+    rewind(start);
+
+    --inputState->guessing;
+
+    return token;
+
+}
+
 }
 
 options {
@@ -320,6 +338,8 @@ struct keyword { char const * const text; int token; int language; };
 
 void changetotextlexer(int typeend);
 
+int next_char();
+
 KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
              std::vector<std::string> user_macro_list)
     : antlr::CharScanner(pinput,true), Language(language), options(options), onpreprocline(false), startline(true),
@@ -383,7 +403,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 	    { "["            , LBRACKET      , LANGUAGE_ALL }, 
 
 	    { "&lt;"         , TEMPOPS       , LANGUAGE_ALL }, 
-	    { "&gt;"         , TEMPOPE       , LANGUAGE_ALL }, 
+	    { "&gt;"         , TEMPOPE       , LANGUAGE_ALL },
 	    { "&amp;"        , REFOPS        , LANGUAGE_ALL }, 
 	    { "="            , EQUAL         , LANGUAGE_ALL }, 
 

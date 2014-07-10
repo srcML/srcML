@@ -79,7 +79,7 @@
 </unit>
 
 <unit>
-<for>for(<init><expr><ternary><condition><expr><name>i</name> = <name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</init><condition>;</condition><incr/>)<empty_stmt>;</empty_stmt></for>
+<for>for(<init><expr><name>i</name> = <ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</init><condition>;</condition><incr/>)<empty_stmt>;</empty_stmt></for>
 </unit>
 
 <unit>
@@ -104,6 +104,62 @@
 
 <unit>
 <do>do <empty_stmt>;</empty_stmt> while<condition>(<decl><type><name>int</name></type> <name>i</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl>)</condition>;</do>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> = <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> += <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> -= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> *= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> /= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> %= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> &lt;&lt;= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> &gt;&gt;= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> &amp;= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> ^= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> |= <ternary><condition><expr><name>b</name></expr> ?</condition><then> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><ternary><condition><expr><name>i</name> + (<name>a</name> + <name>c</name>)</expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><ternary><condition><expr><name>i</name> + (<ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary>)</expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><ternary><condition><expr><call><name>a</name><argument_list>(<argument><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></argument>)</argument_list></call></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
 </unit>
 
 </unit>

@@ -344,6 +344,7 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
             translation_options,
             unit->archive->prefixes,
             unit->archive->namespaces,
+            boost::optional<std::pair<std::string, std::string> >(),
             unit->archive->tabstop,
             lang,
             unit->directory ? unit->directory->c_str() : 0,
@@ -552,6 +553,54 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
     try {
 
         input = new UTF8CharBuffer(src_fd, unit->encoding ? unit->encoding->c_str()
+                                   : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"),
+                                   output_hash ? &unit->hash : 0);
+
+    } catch(...) { return SRCML_STATUS_IO_ERROR; }
+
+    int status = srcml_parse_unit_internal(unit, lang, input, translation_options);
+
+    return status;
+
+}
+
+/**
+ * srcml_parse_unit_io
+ * @param unit a unit to parse the results to
+ * @param context an io context
+ * @param read_callback a read callback function
+ * @param close_callback a close callback function
+ *
+ * Convert to srcML the contents from the opened context
+ * accessed via read_callback and closed via close_callback
+ * place it into the unit.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_parse_unit_io(srcml_unit* unit, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context)) {
+
+    if(unit == NULL || context == NULL || read_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
+        return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    int lang = unit->language ? srcml_check_language(unit->language->c_str())
+        : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
+
+    if(lang == SRCML_LANGUAGE_NONE) return SRCML_STATUS_UNSET_LANGUAGE;
+
+    OPTION_TYPE translation_options = unit->archive->options;
+
+    if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang & Language::LANGUAGE_OBJECTIVE_C)
+        translation_options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+    else if (lang == Language::LANGUAGE_CSHARP)
+        translation_options |= SRCML_OPTION_CPP_NOMACRO;
+
+    UTF8CharBuffer * input = 0;
+    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
+    try {
+
+        input = new UTF8CharBuffer(context, read_callback, close_callback, unit->encoding ? unit->encoding->c_str()
                                    : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1"),
                                    output_hash ? &unit->hash : 0);
 
@@ -793,6 +842,251 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
 }
 
+/**
+ * srcml_unparse_unit_io
+ * @param unit a srcml unit
+ * @param write_callback a write callback function
+ * @param close_callback a close callback function
+ *
+ * Convert the srcML in unit into source code and place it into 
+ * the opened io context written to using write callback
+ * and closed using close callback.  If the srcML was not read in,
+ * but the attributes were read in the xml and unparse that value.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_unparse_unit_io(srcml_unit* unit, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context)) {
+
+    if(unit == NULL || context == NULL || write_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)
+        return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    if(!unit->unit && !unit->read_header) return SRCML_STATUS_UNINITIALIZED_UNIT;
+
+    const char * encoding   = unit->encoding ? unit->encoding->c_str() :
+        (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
+
+    xmlOutputBufferPtr output_handler = xmlOutputBufferCreateIO(write_callback, close_callback, context, encoding ? xmlFindCharEncodingHandler(encoding) : 0);
+
+    try {
+
+
+        if(!unit->unit) {
+
+            unit->archive->reader->read_src(output_handler);
+            xmlOutputBufferClose(output_handler);
+
+            return SRCML_STATUS_OK;
+
+        }
+
+        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options);
+        xmlOutputBufferClose(output_handler);
+
+        return status;
+
+    } catch(...) {
+
+        xmlOutputBufferClose(output_handler);
+
+        return SRCML_STATUS_IO_ERROR;
+
+    }
+
+}
+
+/**
+ * srcml_write_start_unit
+ * @param archive a srcml archive opened for writing
+ * @param unit a srcml_unit to start output with
+ *
+ * Begin by element output and output the start tag unit to the srcml_archive archive
+ * using attributes in srcml_unit.
+ *
+ * Can not usage with add_unit call srcml_write_end_unit, to end element mode.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_start_unit(struct srcml_unit * unit) {
+
+    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    unit->output_buffer = xmlBufferCreate();
+    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(unit->output_buffer, xmlFindCharEncodingHandler("UTF-8"));
+
+    try {
+
+        unit->unit_translator = new srcml_translator(
+            obuffer,
+            unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8",
+            unit->archive->options,
+            unit->archive->prefixes,
+            unit->archive->namespaces,
+            boost::optional<std::pair<std::string, std::string> >(),
+            unit->archive->tabstop,
+            SRCML_LANGUAGE_NONE,
+            unit->directory ? unit->directory->c_str() : 0,
+            unit->filename ? unit->filename->c_str() : 0,
+            unit->version ? unit->version->c_str() : 0,
+            unit->timestamp ? unit->timestamp->c_str() : 0,
+            unit->hash ? unit->hash->c_str() : (unit->archive->options & SRCML_OPTION_HASH ? "" : 0));
+
+        unit->unit_translator->set_macro_list(unit->archive->user_macro_list);
+
+    } catch(...) {
+
+        xmlBufferFree(unit->output_buffer);
+        return SRCML_STATUS_IO_ERROR;
+
+    }
+
+    if(!unit->unit_translator->add_start_unit(unit)) return SRCML_STATUS_INVALID_INPUT;
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_write_end_unit
+ * @param archive a srcml archive opened for writing
+ *
+ * End by element output and output the end tag unit to the srcml_archive archive.
+ * srcml_write_start_unit must be called first.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_end_unit(struct srcml_unit * unit) {
+
+    if(unit == NULL)  return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->unit_translator == 0 || !unit->unit_translator->add_end_unit()) return SRCML_STATUS_INVALID_INPUT;
+
+    delete unit->unit_translator;
+    unit->unit_translator = 0;
+
+    size_t length = strlen((const char *)unit->output_buffer->content);
+    while(length > 0 && unit->output_buffer->content[length - 1] == '\n')
+        --length;
+
+    unit->unit = std::string((const char *)unit->output_buffer->content, length);
+
+    xmlBufferFree(unit->output_buffer);
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_write_start_element
+ * @param archive a srcml archive opened for writing
+ * @param prefix the namespace prefix for element
+ * @param name the name of the element
+ * @param uri the namespace uri for element
+ *
+ * Start an element and write to the srcml_archive archive.
+ * srcml_write_start_unit must be called first.
+ * A unit tag may not be written.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_start_element(struct srcml_unit * unit, const char * prefix, const char * name, const char * uri) {
+
+    if(unit == NULL || name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->unit_translator == 0 || !unit->unit_translator->add_start_element(prefix, name, uri)) return SRCML_STATUS_INVALID_INPUT;
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_write_end_element
+ * @param archive a srcml archive opened for writing
+ *
+ * Output an end tag to the srcml_archive archive.
+ * srcml_write_start_unit must be called first.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_end_element(struct srcml_unit * unit) {
+
+    if(unit == NULL)  return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->unit_translator == 0 || !unit->unit_translator->add_end_element()) return SRCML_STATUS_INVALID_INPUT;
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_write_namespace
+ * @param archive a srcml archive opened for writing
+ * @param prefix the namespace prefix
+ * @param uri the namespace uri
+ *
+ * Write a namespace on an element.  No checking is done to see if valid place for a namespace.
+ * i.e being added to start tag.
+ * srcml_write_start_unit must be called first.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+
+int srcml_write_namespace(struct srcml_unit * unit, const char * prefix, const char * uri) {
+
+    if(unit == NULL || uri == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->unit_translator == 0 || !unit->unit_translator->add_namespace(prefix, uri)) return SRCML_STATUS_INVALID_INPUT;
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_write_attribute
+ * @param archive a srcml archive opened for writing
+ * @param prefix the namespace prefix for attribute
+ * @param name the name of the attribute
+ * @param uri the namespace uri for attriubute
+ * @param content the contents/value of the attribute
+ *
+ * Write an namespace on an element.  No checking is done to see if valid place for a namespace.
+ * i.e being added to start tag.
+ * srcml_write_start_unit must be called first.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_attribute(struct srcml_unit * unit, const char * prefix, const char * name, const char * uri, const char * content) {
+
+    if(unit == NULL || name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->unit_translator == 0 || !unit->unit_translator->add_attribute(prefix, name, uri, content)) return SRCML_STATUS_INVALID_INPUT;
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_write_string.
+ * @param archive a srcml archive opened for writing
+ * @param content the string to write out
+ *
+ * Write the string/text to a started unit.
+ * i.e being added to start tag.
+ * srcml_write_start_unit must be called first.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_write_string(struct srcml_unit * unit, const char * content) {
+
+    if(unit == NULL || content == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(unit->unit_translator == 0 || !unit->unit_translator->add_string(content)) return SRCML_STATUS_INVALID_INPUT;
+
+    return SRCML_STATUS_OK;
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                       Unit creation/cleanup functions                      *
@@ -819,6 +1113,7 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
     } catch(...) { return 0; }
     unit->archive = archive;
     unit->read_header = false;
+    unit->unit_translator = 0;
 
     return unit;
 
@@ -833,6 +1128,8 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
 void srcml_free_unit(srcml_unit* unit) {
 
     if(unit == NULL) return;
+
+    if(unit->unit_translator) srcml_write_end_unit(unit);
 
     delete unit;
 

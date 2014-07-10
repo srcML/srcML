@@ -31,6 +31,11 @@ class srcMLHandler;
 #include <string>
 #include <vector>
 
+/**
+ * srcMLMode
+ * 
+ * Enum of srcML parsing modes.
+ */
 enum srcMLMode {
 
     ROOT,
@@ -294,5 +299,16 @@ void comment(void * ctx, const xmlChar * value);
  * Immediately calls supplied handlers function.
  */
 void cdataBlock(void * ctx, const xmlChar * value, int len);
+
+/**
+ * processingInstruction
+ * @param ctx an xmlParserCtxtPtr
+ * @param target the processing instruction target.
+ * @param data the processing instruction data.
+ *
+ * Called when a processing instruction has been parsed.
+ * Immediately calls supplied handlers function.
+ */
+void processingInstruction(void * ctx, const xmlChar * target, const xmlChar * data);
 
 #endif

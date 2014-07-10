@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="lambda" filename="lambda_cpp">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="lambda" filename="lambda_cpp" options="TERNARY">
 
 <unit>
 <expr_stmt><expr><lambda><capture>[]</capture><parameter_list>(<param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{<return>return <expr><name>i</name> + 1</expr>;</return>}</block></lambda></expr>;</expr_stmt>
@@ -83,6 +83,18 @@
 
 <unit>
 <decl_stmt><decl><type><name>auto</name></type> <name>lambda</name> <init>= <expr><lambda><capture>[<argument><name>a</name> = <name><name>b</name><index>[<expr>0</expr>]</index></name></argument>]</capture> <block>{ <return>return <expr><name>a</name></expr>;</return> }</block></lambda></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><ternary><condition><expr><lambda><capture>[]</capture><block>{ <return>return <expr>1</expr>;</return> }</block></lambda></expr> ?</condition><then> <expr><lambda><capture>[]</capture><block>{ <return>return <expr>1</expr>;</return> }</block></lambda></expr> </then><else>: <expr><lambda><capture>[]</capture><block>{ <return>return <expr>1</expr>;</return> }</block></lambda></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><ternary><condition><expr><lambda><capture>[]</capture><parameter_list>()</parameter_list><block>{ <return>return <expr>1</expr>;</return> }</block></lambda></expr> ?</condition><then> <expr><lambda><capture>[]</capture><parameter_list>()</parameter_list><block>{ <return>return <expr>1</expr>;</return> }</block></lambda></expr> </then><else>: <expr><lambda><capture>[]</capture><parameter_list>()</parameter_list><block>{ <return>return <expr>1</expr>;</return> }</block></lambda></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><ternary><condition><expr><lambda><capture>[]</capture><parameter_list>()</parameter_list><block>{ <return>return <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</return> }</block></lambda></expr> ?</condition><then> <expr><lambda><capture>[]</capture><parameter_list>()</parameter_list><block>{ <return>return <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</return> }</block></lambda></expr> </then><else>: <expr><lambda><capture>[]</capture><parameter_list>()</parameter_list><block>{ <return>return <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</return> }</block></lambda></expr></else></ternary></expr>;</expr_stmt>
 </unit>
 
 </unit>

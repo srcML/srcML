@@ -219,11 +219,11 @@ protected:
      *
      * Delegate to add the open element id to the top of the open element of the current mode.
      */
-    void push(const srcMLState::MODE_TYPE& id) {
+    void push(int id) {
         if (st.empty())
             throw Segmentation_Fault();
 
-        st.top().push((int) id);
+        st.top().push(id);
     }
 
     /**
@@ -482,7 +482,7 @@ protected:
     void dupDownOverMode(const srcMLState::MODE_TYPE& m) {
 
         std::list<srcMLState> alist;
-        while(!(st.top().getMode() & m)) {
+        while((st.top().getMode() & m).none()) {
 
             alist.push_front(st.top());
             st.pop();

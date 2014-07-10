@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="function_decl" filename="function_decl_cs">
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>a</name> *</type></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>a</name> ?</type></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>a</name> &amp;</type></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>a</name> &amp;&amp;</type></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+</unit>

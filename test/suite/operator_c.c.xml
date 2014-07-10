@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" dir="operator" filename="operator_cpp" options="WRAP_TEMPLATE">
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>&gt;</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>&gt;=</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>&gt;&gt;</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>&gt;&gt;=</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>&gt;</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>&gt;=</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>&gt;&gt;</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>&gt;&gt;=</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name><index>[<expr>0</expr><op:operator>,</op:operator> 0]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>1 <op:operator>.*</op:operator> 2</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>1 <op:operator>.*</op:operator> 2</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+ 

@@ -59,6 +59,10 @@ LANGUAGE_C_ONLY atomic_c
 LANGUAGE_C_ONLY static_assert_c
 LANGUAGE_C_ONLY generic_selection_c
 LANGUAGE_C_ONLY modifier_c
+LANGUAGE_C_ONLY for_c
+LANGUAGE_C_ONLY function_pointer_c
+LANGUAGE_C_ONLY function_decl_c
+LANGUAGE_C_ONLY operator_c
 
 LANGUAGE_CXX friend
 LANGUAGE_CXX namespace
@@ -103,6 +107,7 @@ LANGUAGE_CXX function_pointer_cpp
 LANGUAGE_CXX forever
 LANGUAGE_CXX qt_foreach
 LANGUAGE_CXX auto_cpp
+LANGUAGE_CXX for_cpp
 
 LANGUAGE_CXX_GEN c_cpp_mode.restrict
 LANGUAGE_CXX_GEN c_cpp_mode.mutable
@@ -162,6 +167,7 @@ LANGUAGE_CSHARP using_directive_cs
 LANGUAGE_CSHARP using_statement_cs
 LANGUAGE_CSHARP specifier_cs
 LANGUAGE_CSHARP modifier_cs
+LANGUAGE_CSHARP function_decl_cs
 
 LANGUAGE_OBJECTIVE_C objective_c_call_m
 LANGUAGE_OBJECTIVE_C class_interface_m
@@ -214,6 +220,7 @@ LANGUAGE_JAVA foreach
 LANGUAGE_JAVA enum_java
 LANGUAGE_JAVA import_java
 LANGUAGE_JAVA assert_java
+LANGUAGE_JAVA function_java
 LANGUAGE_JAVA_GEN finally_java
 
 LANGUAGE_OO catch_form

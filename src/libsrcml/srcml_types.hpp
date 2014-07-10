@@ -134,6 +134,9 @@ struct srcml_archive {
     /** namespaces an array of XML namespaces */
     std::vector<std::string> namespaces;
 
+    /** target/data pair for processing instruction */
+    boost::optional<std::pair<std::string, std::string> > processing_instruction;
+
     /** an array of registered extension language pairs */
     language_extension_registry registered_languages;
 
@@ -179,8 +182,15 @@ struct srcml_unit {
     /** an attribute for a hash string */
     boost::optional<std::string> hash;
 
+    /** output buffer to hold streaming creation of unit */
+    xmlBuffer * output_buffer;
+
+    /** a unit srcMLTranslator for writing and parsing as a stream */
+    srcml_translator * unit_translator;
+
     /** store if attributes have been read */
     bool read_header;
+
     /** a buffer to store srcml from read and after parsing */
     boost::optional<std::string> unit;
 };

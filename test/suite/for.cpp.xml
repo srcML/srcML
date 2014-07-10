@@ -13,4 +13,14 @@
 }</block>
 </unit>
 
+<unit>
+<for>for(<init><decl><type><name>int</name></type> <name>a</name> <init>= <expr>0</expr></init></decl>, <decl><type ref="prev"/><name>b</name> <init>= <expr>0</expr></init></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)
+<empty_stmt>;</empty_stmt></for>
+</unit>
+
+<unit>
+<for>for(<init><decl><type><name>int</name></type> <name>a</name> <init>= <expr>0</expr></init></decl>, <decl><type ref="prev"/><name>b</name> <init>= <expr>0</expr></init></decl>, <decl><type ref="prev"/><name>c</name> <init>= <expr>0</expr></init></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)
+<empty_stmt>;</empty_stmt></for>
+</unit>
+
 </unit>

@@ -18,8 +18,12 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from globals import libsrcml
-from ctypes import c_int, c_void_p, c_char_p, pointer
+from ctypes import c_int, c_void_p, c_char_p, pointer, CFUNCTYPE
 from exception import *
+
+write_callback_t = CFUNCTYPE(c_int, c_void_p, c_char_p, c_int)
+read_callback_t  = CFUNCTYPE(c_int, c_void_p, c_char_p, c_int)
+close_callback_t = CFUNCTYPE(c_int, c_void_p)
 
 # int srcml_parse_unit_filename(struct srcml_unit* unit, const char* src_filename);
 libsrcml.srcml_parse_unit_filename.restype = c_int
@@ -37,6 +41,10 @@ libsrcml.srcml_parse_unit_FILE.argtypes = [c_void_p, c_void_p]
 libsrcml.srcml_parse_unit_fd.restype = c_int
 libsrcml.srcml_parse_unit_fd.argtypes = [c_void_p, c_int]
 
+# int srcml_parse_unit_io      (struct srcml_unit*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
+libsrcml.srcml_parse_unit_io.restype = c_int
+libsrcml.srcml_parse_unit_io.argtypes = [c_void_p, c_void_p, read_callback_t, close_callback_t]
+
 # int srcml_unparse_unit_filename(struct srcml_unit*, const char* src_filename);
 libsrcml.srcml_unparse_unit_filename.restype = c_int
 libsrcml.srcml_unparse_unit_filename.argtypes = [c_void_p, c_char_p]
@@ -45,13 +53,17 @@ libsrcml.srcml_unparse_unit_filename.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_unparse_unit_memory.restype = c_int
 libsrcml.srcml_unparse_unit_memory.argtypes = [c_void_p, c_void_p, c_void_p]
 
-#int srcml_unparse_unit_FILE    (struct srcml_unit*, FILE* srcml_file);
+# int srcml_unparse_unit_FILE    (struct srcml_unit*, FILE* srcml_file);
 libsrcml.srcml_unparse_unit_FILE.restype = c_int
 libsrcml.srcml_unparse_unit_FILE.argtypes = [c_void_p, c_void_p]
 
-#int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
+# int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
 libsrcml.srcml_unparse_unit_fd.restype = c_int
 libsrcml.srcml_unparse_unit_fd.argtypes = [c_void_p, c_int]
+
+# int srcml_unparse_unit_io      (struct srcml_unit*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
+libsrcml.srcml_unparse_unit_io.restype = c_int
+libsrcml.srcml_unparse_unit_io.argtypes = [c_void_p, c_void_p, write_callback_t, close_callback_t]
 
 # struct srcml_unit* srcml_create_unit(struct srcml_archive* archive);
 libsrcml.srcml_create_unit.restype = c_void_p
@@ -141,6 +153,9 @@ class srcml_unit :
     def parse_fd(self, src_fd) :
         check_return(libsrcml.srcml_parse_unit_fd(self.unit, src_fd))
 
+    def parse_io(self, context, read_callback, close_callback) :
+        check_return(libsrcml.srcml_parse_unit_io(self.unit, context, read_callback, close_callback))
+
     def unparse_filename(self, src_filename) :
         check_return(libsrcml.srcml_unparse_unit_filename(self.unit, src_filename))
 
@@ -154,6 +169,9 @@ class srcml_unit :
 
     def unparse_fd(self, src_fd) :
         check_return(libsrcml.srcml_unparse_unit_fd(self.unit, src_fd))
+
+    def unparse_io(self, context, write_callback, close_callback) :
+        check_return(libsrcml.srcml_unparse_unit_io(self.unit, context, write_callback, close_callback))
 
     def set_encoding(self, encoding) :
         check_return(libsrcml.srcml_unit_set_encoding(self.unit, encoding))

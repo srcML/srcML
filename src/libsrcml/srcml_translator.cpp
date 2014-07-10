@@ -75,6 +75,7 @@ char * strnstr(const char *s1, const char *s2, size_t n) {
  * @param op translator options
  * @param prefix namespace prefix array
  * @param uri namespace uri array
+ * @param processing_instruciton a pre-root processing instuction
  * @param tabsize size of tabstop
  * @param language what language to parse in
  * @param directory unit directory attribute
@@ -91,6 +92,7 @@ srcml_translator::srcml_translator(char ** str_buf,
                                  OPTION_TYPE & op,
                                  std::vector<std::string> & prefix,
                                  std::vector<std::string> & uri,
+                                 boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  int tabsize,
                                  int language,
                                  const char* directory,
@@ -100,7 +102,7 @@ srcml_translator::srcml_translator(char ** str_buf,
                                  const char* hash)
     :  Language(language), first(true), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
        options(op), buffer(0),
-       out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
+       out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, processing_instruction, tabsize), tabsize(tabsize),
        str_buffer(str_buf), size(size), is_outputting_unit(false), output_unit_depth(0) {
 
     buffer = xmlBufferCreate();
@@ -116,6 +118,7 @@ srcml_translator::srcml_translator(char ** str_buf,
  * @param op translator options
  * @param prefix namespace prefix array
  * @param uri namespace uri array
+ * @param processing_instruciton a pre-root processing instuction
  * @param tabsize size of tabstop
  * @param language what language to parse in
  * @param directory unit directory attribute
@@ -129,9 +132,9 @@ srcml_translator::srcml_translator(char ** str_buf,
 srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* xml_encoding,
                                  OPTION_TYPE& op,
-
                                  std::vector<std::string> & prefix,
                                  std::vector<std::string> & uri,
+                                 boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  int tabsize,
                                  int language,
                                  const char* directory,
@@ -142,7 +145,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
     : Language(language), first(true),
       directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
       options(op), buffer(0),
-      out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, tabsize), tabsize(tabsize),
+      out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, processing_instruction, tabsize), tabsize(tabsize),
       str_buffer(0), size(0), is_outputting_unit(false), output_unit_depth(0) {}
 
 /**
@@ -171,6 +174,7 @@ void srcml_translator::close() {
         out.initWriter();
 
         out.outputXMLDecl();
+        out.outputPreRootProcessingInstruction();
 
         // root unit for compound srcML documents
         out.startUnit(0, directory, filename, version, 0, 0, true);
@@ -196,8 +200,7 @@ void srcml_translator::translate(UTF8CharBuffer * parser_input) {
     first = false;
 
     // output as inner unit
-    if(isoption(options, SRCML_OPTION_ARCHIVE))
-      out.setDepth(1);
+    if(isoption(options, SRCML_OPTION_ARCHIVE)) out.setDepth(1);
 
     //options |= SRCML_OPTION_ARCHIVE;
 
@@ -266,8 +269,10 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
         out.initWriter();
 
         out.outputXMLDecl();
+        out.outputPreRootProcessingInstruction();
 
         // root unit for compound srcML documents
+
         if((options & SRCML_OPTION_ARCHIVE) > 0)
             out.startUnit(0, directory, filename, version, 0, 0, true);
 
@@ -283,9 +288,16 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
     /** extract language */
     char * language_start_name = strnstr(xml, "language", end_start_unit - xml);
-    char * language_start_value = (char *)strchr(language_start_name, '"');
-    char * language_end_value = (char *)strchr(language_start_value + 1, '"');
-    (*language_end_value) = '\0';
+
+    char * language_start_value = 0;
+    char * language_end_value = 0;
+    if(language_start_name) {
+
+      language_start_value = (char *)strchr(language_start_name, '"');
+      language_end_value = (char *)strchr(language_start_value + 1, '"');
+      (*language_end_value) = '\0';
+
+    } 
 
     /** is there a cpp namespace */
     bool is_cpp = strnstr(xml, SRCML_CPP_NS_URI, end_start_unit - xml) != 0;
@@ -293,11 +305,12 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
     OPTION_TYPE save_options = options;
     if(is_cpp) options |= SRCML_OPTION_CPP;
 
-    out.startUnit(language_start_value + 1, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
-                          unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, false);
+    out.startUnit(language_start_value ? language_start_value + 1 : 0, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
+                         unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, false);
+
+    if(language_start_name) (*language_end_value) = '"';
 
     options = save_options;
-    (*language_end_value) = '"';
 
     size_t size = strlen(end_start_unit);
 
@@ -331,21 +344,8 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
  */
 bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
-    if(first) {
-
-        // Open for write;
+    if(first)
         out.initWriter();
-
-        out.outputXMLDecl();
-
-        // root unit for compound srcML documents
-        if((options & SRCML_OPTION_ARCHIVE) > 0)
-            out.startUnit(0, directory, filename, version, 0, 0, true);
-
-        if ((options & SRCML_OPTION_ARCHIVE) > 0)
-            out.processText("\n\n", 2);
-
-    }
 
     first = false;
 
@@ -353,17 +353,22 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     is_outputting_unit = true;
 
-    OPTION_TYPE save_options = options;
 
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
         : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
     if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP)
         options |= SRCML_OPTION_CPP;
 
+    if(isoption(options, SRCML_OPTION_ARCHIVE)) out.setDepth(1);
+
+    OPTION_TYPE save_options = options;
+
     out.startUnit(unit->language ? unit->language->c_str() : (unit->archive->language ? unit->archive->language->c_str() : 0), unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
                           unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, false);
 
     options = save_options;
+
+    out.setDepth(0);
 
     return true;
 
@@ -387,9 +392,6 @@ bool srcml_translator::add_end_unit() {
     is_outputting_unit = false;
 
     bool success = xmlTextWriterEndElement(out.getWriter()) != -1;
-
-    if ((options & SRCML_OPTION_ARCHIVE) > 0)
-        out.processText("\n\n", 2);
 
     return success;
     
@@ -498,7 +500,29 @@ bool srcml_translator::add_string(const char * content) {
 
     if(!is_outputting_unit || content == 0) return false;
 
-    return xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)content) != -1;
+    int ret = 0;
+    char * text = (char *)content;
+    for(char * pos = text; *pos; ++pos) {
+
+      if(*pos != '"') continue;
+
+      *pos = 0;
+      ret = xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)text);
+      if(ret == -1) return false;
+
+      *pos = '\"';
+      xmlTextWriterWriteRaw(out.getWriter(), (const xmlChar *)"\"");
+      if(ret == -1) return false;
+
+      text = pos + 1;
+
+  }
+
+  ret = xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)text);
+
+
+
+  return ret != -1;
 
 }
 

@@ -112,7 +112,8 @@ public:
      * End an element id (xml tag).
      */
     void endElement(int id) {
-        if(srcMLParser::getMode() & srcMLParser::MODE_ISSUE_EMPTY_AT_POP)
+
+        if((srcMLParser::getMode() & srcMLParser::MODE_ISSUE_EMPTY_AT_POP).any()) 
             pushSToken(id, false);
 
         pushEToken(id);
