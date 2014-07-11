@@ -4972,7 +4972,8 @@ keyword_name { CompleteElement element(this); TokenPosition tp; bool iscompound 
 // C++ compound name handling
 keyword_name_inner[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
-        (DESTOP set_bool[isdestructor] { iscompound = true; })*
+        //( options { greedy = true; } : dcolon)*
+        //(DESTOP set_bool[isdestructor] { iscompound = true; })*
         keyword_identifier
         (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
