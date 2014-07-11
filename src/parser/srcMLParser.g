@@ -3806,7 +3806,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_type[type, UNION_DEFN,     type == UNION_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, INTERFACE_DEFN, type == INTERFACE_DECL && (LA(1) == LCURLY || lcurly)]
                 set_type[type, NONE, !(LA(1) == TERMINATE || (LA(1) == LCURLY || lcurly))]
-                throw_exception[type != NONE] 
+                throw_exception[type != NONE]
+                (multops)*
                 set_int[type_count, type_count + 1] |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
@@ -4971,7 +4972,6 @@ keyword_name { CompleteElement element(this); TokenPosition tp; bool iscompound 
 // C++ compound name handling
 keyword_name_inner[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
-        (dcolon { iscompound = true; })*
         (DESTOP set_bool[isdestructor] { iscompound = true; })*
         keyword_identifier
         (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*

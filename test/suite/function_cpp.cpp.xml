@@ -109,4 +109,28 @@
 	     <argument><expr><name><name>QFuture</name><argument_list>&lt;<argument><expr><decltype>decltype<argument_list>(<argument><expr><call><name>functor</name><argument_list>(<argument><expr><name>arg1</name></expr></argument>, <argument><expr><name>arg2</name></expr></argument>, <argument><expr><name>arg3</name></expr></argument>, <argument><expr><name>arg4</name></expr></argument>, <argument><expr><name>arg5</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></decltype></expr></argument>&gt;</argument_list></name></expr></argument> &gt;</argument_list></name>::<name>Type</name></name></type> <block>{}</block></function>
 </unit>
 
+<unit>
+<function><type><name><name>class</name> ::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+</unit>
+
+<unit>
+<function><type><name><name>struct</name> ::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+</unit>
+
+<unit>
+<function><type><name><name>union</name> ::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+</unit>
+
+<unit>
+<function><type><name><name>enum</name> ::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+</unit>
+
+<unit>
+<function><type><typename>typename</typename> <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+</unit>
+
+<unit>
+<function><type><specifier>virtual</specifier> <name><name>class</name> ::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+</unit>
+
 </unit>
