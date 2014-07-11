@@ -3807,7 +3807,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_bool[lcurly, LA(1) == LCURLY]
                 (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
-                (enum_class_header | LCURLY)
+                ({ inLanguage(LANGUAGE_JAVA) }? class_header | { inLanguage(LANGUAGE_CSHARP)}? variable_identifier | enum_class_header | LCURLY)
                 set_type[type, NONE, !(LA(1) == TERMINATE || (LA(1) == LCURLY || lcurly))]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
