@@ -51,7 +51,7 @@
  public:
 
     srcml_input_src() : unit(0) {}
-    srcml_input_src(const std::string& other) : state(INDETERMINATE), isdirectory(false), unit(0) { 
+    srcml_input_src(const std::string& other) : arch(0), state(INDETERMINATE), isdirectory(false), unit(0) { 
 
         filename = src_prefix_add_uri(other);
 
@@ -141,6 +141,7 @@
     std::string extension;
     boost::optional<FILE*> fileptr;
     boost::optional<int> fd;
+    archive* arch;
     enum STATES state;
     std::list<std::string> compressions;
     std::list<std::string> archives;
