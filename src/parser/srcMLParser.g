@@ -1157,7 +1157,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))* 
 
         // match auto keyword first as special case do no warn about ambiguity
-        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | ( { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier)
+        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | ( { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
 
         { 
 
