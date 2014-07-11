@@ -3583,7 +3583,6 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     int start = mark();
     inputState->guessing++;
 
-    bool sawenum;
     bool sawtemplate;
     bool sawcontextual;
     int posin = 0;
@@ -3591,7 +3590,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 
     try {
 
-        pattern_check_core(token, fla, type_count, type, inparam, sawenum, sawtemplate, sawcontextual, posin);
+        pattern_check_core(token, fla, type_count, type, inparam, sawtemplate, sawcontextual, posin);
 
     } catch (...) {
 
@@ -3611,10 +3610,6 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     // may just have an expression
     if (type == VARIABLE && posin)
         type_count = posin - 1;
-
-    // enum
-    else if (sawenum)
-        type = ENUM_DECL;
 
     // may just have a single macro (no parens possibly) before a statement
     else if (type == 0 && type_count == 0 && keyword_token_set.member(LA(1)))
@@ -3670,7 +3665,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
               int& type_count,      /* number of tokens in type (not including name) */
               STMT_TYPE& type,      /* type discovered */
               bool inparam,         /* are we in a parameter */
-              bool& sawenum,        /* have we seen an enum */
               bool& sawtemplate,    /* have we seen a template */
               bool& sawcontextual,  /* have we seen a contextual keyword */
               int& posin            /* */
@@ -3679,7 +3673,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             fla = 0;
             type_count = 0;
             type = NONE;
-            sawenum = false;
             sawtemplate = false;
             sawcontextual= false;
             posin = 0;
@@ -3731,7 +3724,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             // the ~ operator
             set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS || LA(1) == QMARK]
 
-            set_bool[sawenum, sawenum || LA(1) == ENUM]
             set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT || LA(1) == MUTABLE]
             (
 
@@ -3805,6 +3797,17 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
                 set_type[type, UNION_DEFN,     type == UNION_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, INTERFACE_DEFN, type == INTERFACE_DECL && (LA(1) == LCURLY || lcurly)]
+                set_type[type, NONE, !(LA(1) == LCURLY || lcurly)]
+                throw_exception[type != NONE]
+                set_bool[foundpure]
+                set_int[type_count, type_count + 1] |
+
+                { type_count == attribute_count + specifier_count + template_count }?
+                (ENUM set_type[type, ENUM_DECL])
+                set_bool[lcurly, LA(1) == LCURLY]
+                (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
+                ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
+                (enum_class_header | LCURLY)
                 set_type[type, NONE, !(LA(1) == TERMINATE || (LA(1) == LCURLY || lcurly))]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
@@ -4118,7 +4121,7 @@ class_lead_type_identifier[]  { SingleElement element(this); ENTRY_DEBUG } :
             else
                 startElement(SNOP);
         }
-        (CLASS | CXX_CLASS | STRUCT | UNION)
+        (CLASS | CXX_CLASS | STRUCT | UNION | ENUM)
 ;
 
 // type identifier
