@@ -27,6 +27,23 @@
 #include <src_output_libarchive.hpp>
 #include <src_output_filesystem.hpp>
 
+int srcml_read_callback(void* context, char * buffer, int len) {
+    archive* libarchive_srcml = (archive*) context;
+
+    ssize_t status = archive_read_data(libarchive_srcml, (void*) buffer, (size_t) len);
+
+    return (int) status;
+}
+
+int srcml_close_callback(void* context) {
+    archive* libarchive_srcml = (archive*) context;
+
+    archive_read_close(libarchive_srcml);
+    archive_read_finish(libarchive_srcml);
+
+    return 0;
+}
+
 struct srcMLReadArchiveError {
     srcMLReadArchiveError(int status, const std::string& emsg)
         : status(status), errmsg(emsg) {}
@@ -43,7 +60,9 @@ public:
             throw srcMLReadArchiveError(0, input_source);
 
         int status;
-        if (contains<int>(input_source))
+        if (input_source.arch)
+            status = srcml_read_open_io(arch, input_source.arch, srcml_read_callback, srcml_close_callback);
+        else if (contains<int>(input_source))
             status = srcml_read_open_fd(arch, input_source);
         else if (contains<FILE*>(input_source))
             status = srcml_read_open_FILE(arch, input_source);
