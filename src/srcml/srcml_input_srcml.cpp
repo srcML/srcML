@@ -45,23 +45,20 @@ void srcml_input_srcml(ParseQueue& queue,
     }
 
     // process each entry in the input srcml archive
-    int count = 0;
     while (srcml_unit* unit = srcml_read_unit(srcml_input_archive)) {
-        ++count;
 
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;
         prequest->srcml_arch = srcml_output_archive;
         prequest->unit = unit;
 
-        // Hand request off to the processing queue
+        // hand request off to the processing queue
         queue.schedule(prequest);
 
+        // one-time through for individual unit
         if (srcml_input.unit)
             break;
     }
 
-    // done with the input srcml archive
-    //srcml_close_archive(srcml_input_archive);
-    //srcml_free_archive(srcml_input_archive);
 }
+
