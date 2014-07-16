@@ -48,14 +48,7 @@ void srcml_input_srcml(ParseQueue& queue,
 
             // form the parsing request
             ParseRequest* prequest = new ParseRequest;
-            // if (srcml_request.att_filename)
-            //     prequest->filename = *srcml_request.att_filename;
-            // else if (input_file != "_")
-            //     prequest->filename = input_file;
-            // prequest->directory = srcml_request.att_directory;
-            // prequest->version = srcml_request.att_version;
-            // prequest->srcml_arch = srcml_arch;
-            // prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
+            prequest->srcml_arch = srcml_output_archive;
             prequest->unit = unit;
 
             // Hand request off to the processing queue

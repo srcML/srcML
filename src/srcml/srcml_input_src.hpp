@@ -128,6 +128,7 @@
         std::swap(extension, other.extension);
         std::swap(fileptr, other.fileptr);
         std::swap(fd, other.fd);
+        std::swap(arch, other.arch);
         std::swap(state, other.state);
         std::swap(compressions, other.compressions);
         std::swap(archives, other.archives);
