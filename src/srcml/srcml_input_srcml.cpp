@@ -38,24 +38,26 @@ void srcml_input_srcml(ParseQueue& queue,
     else
         srcml_read_open_filename(srcml_input_archive, srcml_input.c_str());
 
+    // move to the correct unit
+    for (int i = 1; i < srcml_input.unit; ++i) {
+        srcml_unit* unit = srcml_read_unit_header(srcml_input_archive);
+        srcml_free_unit(unit);
+    }
+
     // process each entry in the input srcml archive
     int count = 0;
     while (srcml_unit* unit = srcml_read_unit(srcml_input_archive)) {
         ++count;
 
-        // write the just-read unit to the output srcml archive
-        if (srcml_input.unit == 0 || srcml_input.unit == count) {
+        // form the parsing request
+        ParseRequest* prequest = new ParseRequest;
+        prequest->srcml_arch = srcml_output_archive;
+        prequest->unit = unit;
 
-            // form the parsing request
-            ParseRequest* prequest = new ParseRequest;
-            prequest->srcml_arch = srcml_output_archive;
-            prequest->unit = unit;
+        // Hand request off to the processing queue
+        queue.schedule(prequest);
 
-            // Hand request off to the processing queue
-            queue.schedule(prequest);
-        }
-
-        if (srcml_input.unit == count)
+        if (srcml_input.unit)
             break;
     }
 
