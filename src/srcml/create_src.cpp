@@ -51,6 +51,21 @@ struct srcMLReadArchiveError {
     std::string errmsg;
 };
 
+int srcml_read_open(srcml_archive* arch, const srcml_input_src& input_source) {
+
+    int status;
+    if (input_source.arch)
+        status = srcml_read_open_io(arch, input_source.arch, srcml_read_callback, srcml_close_callback);
+    else if (contains<int>(input_source))
+        status = srcml_read_open_fd(arch, input_source);
+    else if (contains<FILE*>(input_source))
+        status = srcml_read_open_FILE(arch, input_source);
+    else
+        status = srcml_read_open_filename(arch, input_source.c_str());
+
+    return status;
+}
+
 class srcMLReadArchive {
 public:
     srcMLReadArchive(const srcml_input_src& input_source) {
@@ -59,15 +74,7 @@ public:
         if (!arch)
             throw srcMLReadArchiveError(0, input_source);
 
-        int status;
-        if (input_source.arch)
-            status = srcml_read_open_io(arch, input_source.arch, srcml_read_callback, srcml_close_callback);
-        else if (contains<int>(input_source))
-            status = srcml_read_open_fd(arch, input_source);
-        else if (contains<FILE*>(input_source))
-            status = srcml_read_open_FILE(arch, input_source);
-        else
-            status = srcml_read_open_filename(arch, input_source.c_str());
+        int status = srcml_read_open(arch, input_source);
         if (status != SRCML_STATUS_OK)
             throw status;
     }

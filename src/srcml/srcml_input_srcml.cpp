@@ -59,6 +59,5 @@ void srcml_input_srcml(ParseQueue& queue,
         if (srcml_input.unit)
             break;
     }
-
 }
 
