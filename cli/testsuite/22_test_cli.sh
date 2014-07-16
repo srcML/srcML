@@ -7,7 +7,8 @@ source $(dirname "$0")/framework_test.sh
 ##
 # cpp markup else
 
-define cpp_src <<- 'INPUT'
+define input <<- 'INPUT'
+	
 	#if A
 	break;
 	#else
@@ -16,22 +17,24 @@ define cpp_src <<- 'INPUT'
 	INPUT
 
 define output <<- 'STDOUT'
-    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 	<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+	<break>break;</break>
 	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 	<return>return;</return>
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+
 	</unit>
 	STDOUT
 
-src2srcml -l C++ cpp_src <<< "$input"
+src2srcml -l C++ <<< "$input"
 
-check 3<<< "$cpp_marked_srcml"
+check 3<<< "$output"
 
 src2srcml -l C++ --cpp-markup-else <<< "$input"
 
-check 3<<< "$cpp_marked_srcml"
+check 3<<< "$output"
 
 define output <<- 'STDOUT'
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
