@@ -32,6 +32,7 @@
 #include <algorithm>
 #include <src_archive.hpp>
 #include <boost/foreach.hpp>
+#include <archive.h>
 
 #ifdef WIN32
 #include <io.h>
@@ -150,6 +151,17 @@
     int unit;
 };
 
+int srcml_read_callback(void* context, char * buffer, int len);
+
+int srcml_close_callback(void* context);
+
+struct srcMLReadArchiveError {
+    srcMLReadArchiveError(int status, const std::string& emsg)
+        : status(status), errmsg(emsg) {}
+    int status;
+    std::string errmsg;
+};
+
 template <typename T>
 inline bool contains(const srcml_input_src&) { return false; }
 
@@ -181,5 +193,7 @@ inline std::ostream& operator<<(std::ostream& out, const srcml_input_src& input)
 
     return out;
 }
+
+int srcml_read_open(srcml_archive* arch, const srcml_input_src& input_source);
 
 #endif

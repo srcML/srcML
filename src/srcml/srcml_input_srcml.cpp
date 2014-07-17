@@ -60,4 +60,3 @@ void srcml_input_srcml(ParseQueue& queue,
             break;
     }
 }
-
