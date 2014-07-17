@@ -36,4 +36,8 @@
 <macro><name>MACRO</name></macro> <struct>struct <block>{}</block> <decl><name>u</name></decl>;</struct>
 </unit>
 
+<unit>
+<struct>struct <block>{ <decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr>0</expr></range></decl>;</decl_stmt> }</block>;</struct>
+</unit>
+
 </unit>
