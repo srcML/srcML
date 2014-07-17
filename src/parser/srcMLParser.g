@@ -1157,7 +1157,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))* 
 
         // match auto keyword first as special case do no warn about ambiguity
-        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier)
+        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | ( { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
 
         { 
 
@@ -3806,7 +3806,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_type[type, UNION_DEFN,     type == UNION_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, INTERFACE_DEFN, type == INTERFACE_DECL && (LA(1) == LCURLY || lcurly)]
                 set_type[type, NONE, !(LA(1) == TERMINATE || (LA(1) == LCURLY || lcurly))]
-                throw_exception[type != NONE] 
+                throw_exception[type != NONE]
+                set_bool[foundpure]
                 set_int[type_count, type_count + 1] |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
@@ -4903,7 +4904,7 @@ catch[antlr::RecognitionException] {
 // compound name for C
 compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        (identifier | generic_selection) (options { greedy = true; }: { LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
+        (identifier | generic_selection) (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) && (LA(1) == MULTOPS || LA(1) == BLOCKOP) }? multops)*
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
@@ -4916,7 +4917,7 @@ compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 // compound name for C
 compound_name_objective_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        (simple_name_optional_template | generic_selection) (options { greedy = true; }: { LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
+        (simple_name_optional_template | generic_selection) (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) && (LA(1) == MULTOPS || LA(1) == BLOCKOP) }? multops)*
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
@@ -4971,8 +4972,8 @@ keyword_name { CompleteElement element(this); TokenPosition tp; bool iscompound 
 // C++ compound name handling
 keyword_name_inner[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
-        (dcolon { iscompound = true; })*
-        (DESTOP set_bool[isdestructor] { iscompound = true; })*
+        //( options { greedy = true; } : dcolon)*
+        //(DESTOP set_bool[isdestructor] { iscompound = true; })*
         keyword_identifier
         (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
