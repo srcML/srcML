@@ -43,4 +43,8 @@
 <class>class <block>{<private type="default"> <typedef>typedef <type><name>a</name></type> <name>b</name>;</typedef> </private>}</block>;</class>
 </unit>
 
+<unit>
+<class>class <block>{<private type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr>0</expr></range></decl>;</decl_stmt> </private>}</block>;</class>
+</unit>
+
 </unit>
