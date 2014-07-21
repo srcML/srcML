@@ -151,7 +151,8 @@ header "post_include_hpp" {
 enum STMT_TYPE { 
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
     SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
-    EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION
+    EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
+    USING_STMT
 };
 
 enum CALL_TYPE { NOCALL, CALL, MACRO };
@@ -768,7 +769,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
-        namespace_definition | using_namespace_statement |
+        namespace_definition |
 
         // C/C++
         typedef_statement |
@@ -886,6 +887,9 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         // enum definition as opposed to part of type or declaration
         { stmt_type == ENUM_DECL }?
         enum_definition |
+
+        { stmt_type == USING_STMT }?
+        using_namespace_statement |
 
         // "~" which looked like destructor, but isn't
         { stmt_type == NONE }?
@@ -2490,6 +2494,7 @@ namespace_directive[] { ENTRY_DEBUG } :
             // start the using directive
             startElement(SUSING_DIRECTIVE);
         }
+        (options { greedy = true; } : { !isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full)*
         USING
 ;
 
@@ -3323,6 +3328,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
          && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
          && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
+         && (LA(1) != INLINE || next_token() == NAMESPACE)
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }?
         terminate_pre
@@ -3818,6 +3824,11 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 throw_exception[type != NONE]
                 set_bool[foundpure]
                 set_int[type_count, type_count + 1] |
+
+                (
+                    USING set_type[type, USING_STMT]
+                    throw_exception[true]
+                ) |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
                 template_argument_list set_int[specifier_count, specifier_count + 1] |
