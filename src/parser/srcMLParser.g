@@ -722,7 +722,6 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
          && (LA(1) != DEFAULT || next_token() == COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != INLINE || next_token() == NAMESPACE)
-         && (!inLanguage(LANGUAGE_CSHARP) || LA(1) != USING || next_token() == LPAREN)
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }? keyword_statements |
 
@@ -770,7 +769,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
-        namespace_definition | using_statement |
+        namespace_definition |
 
         // C/C++
         typedef_statement |
@@ -890,7 +889,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         enum_definition |
 
         { stmt_type == USING_STMT }?
-        namespace_directive |
+        using_namespace_statement |
 
         // "~" which looked like destructor, but isn't
         { stmt_type == NONE }?
@@ -3329,6 +3328,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
          && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
          && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
+         && (LA(1) != INLINE || next_token() == NAMESPACE)
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }?
         terminate_pre
@@ -3825,6 +3825,11 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_bool[foundpure]
                 set_int[type_count, type_count + 1] |
 
+                (
+                    USING set_type[type, USING_STMT]
+                    throw_exception[true]
+                ) |
+
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
                 template_argument_list set_int[specifier_count, specifier_count + 1] |
 
@@ -3874,8 +3879,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_type[type, PROPERTY_ACCESSOR_DECL, type == PROPERTY_ACCESSOR]
         throw_exception[type == PROPERTY_ACCESSOR_DECL && (type_count == attribute_count + specifier_count + 1) && LA(1) == TERMINATE]
         set_type[type, NONE, type == PROPERTY_ACCESSOR_DECL]
-        set_type[type, USING_STMT, inLanguage(LANGUAGE_CXX) && LA(1) == USING]
-        throw_exception[type == USING_STMT]
 
         set_int[real_type_count, type_count]
 
@@ -5922,6 +5925,15 @@ unsafe_statement[] { ENTRY_DEBUG } :
             startElement(SUNSAFE_STATEMENT);
         }
         UNSAFE
+;
+
+// using namespace 
+using_namespace_statement[] { ENTRY_DEBUG } :
+
+        { inLanguage(LANGUAGE_CSHARP) && next_token() == LPAREN }?
+        using_statement |
+
+        namespace_directive
 ;
 
 // using statement

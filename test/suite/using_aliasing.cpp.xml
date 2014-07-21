@@ -9,4 +9,12 @@
 <using>using <name>FunctionType</name> <init>= <type><function_decl><type><name>void</name></type> (*)<parameter_list>(<param><decl><type><name>double</name></type></decl></param>)</parameter_list>;</function_decl></type></init></using>
 </unit>
 
+<unit>
+<using><template>template<parameter_list>&lt;&gt;</parameter_list></template> using <name>foo</name> <init>= <type><expr><name><name>bar</name><argument_list>&lt;&gt;</argument_list></name></expr></type></init>;</using>
+</unit>
+
+<unit>
+<using><template>template<parameter_list>&lt;<param><type><name>class</name></type> <name>T</name></param>&gt;</parameter_list></template> using <name>Vec</name> <init>= <type><expr><name><name>vector</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name><name>Alloc</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></expr></type></init>;</using>
+</unit>
+
 </unit>
