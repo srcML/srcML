@@ -1461,7 +1461,14 @@ throw_list[] { ENTRY_DEBUG } :
 
             startElement(STHROW_SPECIFIER);
         }
-        THROW LPAREN |
+        THROW 
+
+        {
+
+            startElement(SARGUMENT_LIST);
+
+        }
+        LPAREN |
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT | MODE_END_LIST_AT_BLOCK);
@@ -1481,7 +1488,17 @@ noexcept_list[] { ENTRY_DEBUG } :
 
             startElement(SNOEXCEPT);
         }
-        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (options { greedy = true;} : LPAREN)*
+        NOEXCEPT 
+
+        { 
+
+            if(LA(1) != LPAREN) endMode(); 
+            else startElement(SARGUMENT_LIST); 
+
+        } 
+
+        (options { greedy = true;} : LPAREN)*
+
 ;
 
 // match a thow list completely

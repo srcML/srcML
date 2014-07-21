@@ -6,7 +6,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><noexcept>noexcept(<argument><expr><name>A</name></expr></argument>)</noexcept></expr>;</expr_stmt>
+<expr_stmt><expr><noexcept>noexcept<argument_list>(<argument><expr><name>A</name></expr></argument>)</argument_list></noexcept></expr>;</expr_stmt>
 </unit>
 
 <unit>
