@@ -720,6 +720,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
          && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
          && (LA(1) != DEFAULT || next_token() == COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
+         && (LA(1) != INLINE || next_token() == NAMESPACE)
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }? keyword_statements |
 
@@ -2441,6 +2442,14 @@ extern_name[] { ENTRY_DEBUG } :
         }
 ;
 
+namespace_inline_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        INLINE
+
+;
+
 // namespaces
 namespace_definition[] { ENTRY_DEBUG } :
         {
@@ -2450,7 +2459,7 @@ namespace_definition[] { ENTRY_DEBUG } :
             // start the namespace definition
             startElement(SNAMESPACE);
         }
-        NAMESPACE
+        (namespace_inline_specifier)* NAMESPACE
 ;
 
 // a namespace alias
