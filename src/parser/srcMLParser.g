@@ -151,7 +151,8 @@ header "post_include_hpp" {
 enum STMT_TYPE { 
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
     SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
-    EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION
+    EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
+    USING_STMT
 };
 
 enum CALL_TYPE { NOCALL, CALL, MACRO };
@@ -721,6 +722,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
          && (LA(1) != DEFAULT || next_token() == COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != INLINE || next_token() == NAMESPACE)
+         && (!inLanguage(LANGUAGE_CSHARP) || LA(1) != USING || next_token() == LPAREN)
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }? keyword_statements |
 
@@ -768,7 +770,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
-        namespace_definition | using_namespace_statement |
+        namespace_definition | using_statement |
 
         // C/C++
         typedef_statement |
@@ -886,6 +888,9 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         // enum definition as opposed to part of type or declaration
         { stmt_type == ENUM_DECL }?
         enum_definition |
+
+        { stmt_type == USING_STMT }?
+        namespace_directive |
 
         // "~" which looked like destructor, but isn't
         { stmt_type == NONE }?
@@ -2490,6 +2495,7 @@ namespace_directive[] { ENTRY_DEBUG } :
             // start the using directive
             startElement(SUSING_DIRECTIVE);
         }
+        (options { greedy = true; } : { !isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full)*
         USING
 ;
 
@@ -3868,6 +3874,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_type[type, PROPERTY_ACCESSOR_DECL, type == PROPERTY_ACCESSOR]
         throw_exception[type == PROPERTY_ACCESSOR_DECL && (type_count == attribute_count + specifier_count + 1) && LA(1) == TERMINATE]
         set_type[type, NONE, type == PROPERTY_ACCESSOR_DECL]
+        set_type[type, USING_STMT, inLanguage(LANGUAGE_CXX) && LA(1) == USING]
+        throw_exception[type == USING_STMT]
 
         set_int[real_type_count, type_count]
 
@@ -5914,15 +5922,6 @@ unsafe_statement[] { ENTRY_DEBUG } :
             startElement(SUNSAFE_STATEMENT);
         }
         UNSAFE
-;
-
-// using namespace 
-using_namespace_statement[] { ENTRY_DEBUG } :
-
-        { inLanguage(LANGUAGE_CSHARP) && next_token() == LPAREN }?
-        using_statement |
-
-        namespace_directive
 ;
 
 // using statement
