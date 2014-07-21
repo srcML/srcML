@@ -15,6 +15,10 @@ auto.c.xml
 auto.m.xml
 block_lambda.c.xml
 block_lambda.m.xml
+break.c.xml
+break.cs.xml
+break.java.xml
+break.m.xml
 call.c.xml
 call.cs.xml
 call.java.xml
@@ -31,6 +35,10 @@ comment.java.xml
 comment.m.xml
 constructor.cpp.xml
 constructor_explicit.cpp.xml
+continue.c.xml
+continue.cs.xml
+continue.java.xml
+continue.m.xml
 decl_pointer.c.xml
 decl_pointer.cs.xml
 decl_pointer.m.xml

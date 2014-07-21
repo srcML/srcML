@@ -532,6 +532,7 @@ tokens {
     SINTERFACE;
     SSYNCHRONIZED_STATEMENT;
     SANNOTATION;
+    SSTATIC_BLOCK;
 
     // C#
     SCHECKED_STATEMENT;
@@ -722,6 +723,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
          && (LA(1) != DEFAULT || next_token() == COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != INLINE || next_token() == NAMESPACE)
+         && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }? keyword_statements |
 
@@ -778,7 +780,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         static_assert_statement |
 
         // Java - keyword only detected for Java
-        import_statement | package_statement | assert_statement | 
+        import_statement | package_statement | assert_statement | static_block |
 
         // C# - keyword only detected for C#
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
@@ -2276,6 +2278,18 @@ assert_statement[] { ENTRY_DEBUG } :
         ASSERT
 ;
 
+static_block  { ENTRY_DEBUG } :
+
+    {
+        startNewMode(MODE_STATEMENT | MODE_NEST);
+        startElement(SSTATIC_BLOCK);
+
+    }
+
+    STATIC lcurly
+
+;
+
 // C _Static_assert statement
 static_assert_statement[] { ENTRY_DEBUG } :
         {
@@ -3346,6 +3360,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
          && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != INLINE || next_token() == NAMESPACE)
+         && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }?
         terminate_pre

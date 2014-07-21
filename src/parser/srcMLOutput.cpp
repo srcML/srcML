@@ -274,6 +274,7 @@ namespace {
     ELEMENT_MAP(SASSERT_STATEMENT,       "assert")
     ELEMENT_MAP(SSYNCHRONIZED_STATEMENT, "synchronized")
     ELEMENT_MAP(SINTERFACE,              "class")
+    ELEMENT_MAP(SSTATIC_BLOCK,           "static")
 
     // special characters
     ELEMENT_MAP(SATTRIBUTE,   "attribute")
