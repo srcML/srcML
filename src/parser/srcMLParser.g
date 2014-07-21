@@ -2349,7 +2349,7 @@ yield_break_statement[] { ENTRY_DEBUG } :
 break_statement[] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME);
 
             // start the break statement
             startElement(SBREAK_STATEMENT);
@@ -2361,7 +2361,7 @@ break_statement[] { ENTRY_DEBUG } :
 continue_statement[] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME);
 
             // start the continue statement
             startElement(SCONTINUE_STATEMENT);
