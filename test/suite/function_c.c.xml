@@ -40,4 +40,16 @@
 <function><type><specifier>_Noreturn</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
+<unit>
+<function><type>struct <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+</unit>
+
+<unit>
+<function><type>union <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+</unit>
+
+<unit>
+<function><type>enum <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+</unit>
+
 </unit>
