@@ -7182,7 +7182,7 @@ annotation_argument[] { ENTRY_DEBUG } :
 ;
 
 // a parameter
-parameter[] { int type_count = 0; int secondtoken = 0; int after_look_past_rule_token; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+parameter[] { int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
@@ -7200,7 +7200,14 @@ parameter[] { int type_count = 0; int secondtoken = 0; int after_look_past_rule_
             (macro_call_check)*
 
             parameter_list |
-            {
+   
+            parameter_type_variable[type_count, stmt_type]
+
+        )
+;
+
+parameter_type_variable[int type_count, STMT_TYPE stmt_type] { ENTRY_DEBUG } :
+         {
 
                 // start the declaration element
                 startElement(SDECLARATION);
@@ -7208,30 +7215,18 @@ parameter[] { int type_count = 0; int secondtoken = 0; int after_look_past_rule_
                 if (stmt_type != VARIABLE)
                     type_count = 1;
 
-            }
+        }
 
-            (
+        { stmt_type == VARIABLE || LA(1) == DOTDOTDOT }?
+        (parameter_type_count[type_count])
+        // suppress warning caused by ()*
+        (options { greedy = true; } : bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
+        {
+            // expect a name initialization
+            setMode(MODE_VARIABLE_NAME | MODE_INIT);
+        }
+        ( options { greedy = true; } : variable_declaration_nameinit)*
 
-            { inLanguage(LANGUAGE_JAVA) && type_count == 1 && ((after_look_past_rule_token = look_past_rule(&srcMLParser::type_identifier)) == COMMA || after_look_past_rule_token == RPAREN)}?
-            {
-                // expect a name initialization
-                setMode(MODE_VARIABLE_NAME | MODE_INIT);
-            }
-            ( options { greedy = true; } : variable_declaration_nameinit)* |
-
-            { stmt_type == VARIABLE || LA(1) == DOTDOTDOT }?
-            (parameter_type_count[type_count])
-            // suppress warning caused by ()*
-            (options { greedy = true; } : bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
-            {
-                // expect a name initialization
-                setMode(MODE_VARIABLE_NAME | MODE_INIT);
-            }
-            ( options { greedy = true; } : variable_declaration_nameinit)*
-
-            )
-
-        )
 ;
 
 // count types in parameter
