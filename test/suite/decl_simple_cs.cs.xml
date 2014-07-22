@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="decl_simple" filename="decl_simple_cs">
+
+<unit>
+<decl_stmt><decl><type>class <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type>struct <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type>enum <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+</unit>
