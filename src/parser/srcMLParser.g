@@ -7201,8 +7201,10 @@ parameter[] { int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NON
 
             parameter_list |
    
-            parameter_type_variable[type_count, stmt_type]// |
-//            parameter_name_only
+            { inLanguage(LANGUAGE_JAVA) && type_count == 1 
+                && (look_past_rule(&srcMLParser::type_identifier) == COMMA ||
+                look_past_rule(&srcMLParser::type_identifier) == RPAREN) }? parameter_name_only |
+            parameter_type_variable[type_count, stmt_type]
 
         )
 ;
