@@ -7201,13 +7201,15 @@ parameter[] { int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NON
 
             parameter_list |
    
-            parameter_type_variable[type_count, stmt_type]
+            parameter_type_variable[type_count, stmt_type]// |
+//            parameter_name_only
 
         )
 ;
 
+// handle parameter type if not function_decl
 parameter_type_variable[int type_count, STMT_TYPE stmt_type] { ENTRY_DEBUG } :
-         {
+        {
 
                 // start the declaration element
                 startElement(SDECLARATION);
@@ -7217,6 +7219,7 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { ENTRY_DEBUG } :
 
         }
 
+        (
         { stmt_type == VARIABLE || LA(1) == DOTDOTDOT }?
         (parameter_type_count[type_count])
         // suppress warning caused by ()*
@@ -7226,6 +7229,26 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { ENTRY_DEBUG } :
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         }
         ( options { greedy = true; } : variable_declaration_nameinit)*
+        )
+
+;
+
+// handle parameter if no type
+parameter_name_only[] { ENTRY_DEBUG } :
+        {
+
+                // start the declaration element
+                startElement(SDECLARATION);
+
+        }
+
+        (
+        {
+            // expect a name initialization
+            setMode(MODE_VARIABLE_NAME | MODE_INIT);
+        }
+        ( options { greedy = true; } : variable_declaration_nameinit)*
+        )
 
 ;
 
