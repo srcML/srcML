@@ -3839,12 +3839,12 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
                 class_post
-                (class_header | LCURLY)
+                (class_header_base | LCURLY)
                 set_type[type, CLASS_DEFN,     type == CLASS_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
                 set_type[type, UNION_DEFN,     type == UNION_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, INTERFACE_DEFN, type == INTERFACE_DECL && (LA(1) == LCURLY || lcurly)]
-                set_type[type, NONE, !(LA(1) == LCURLY || lcurly)]
+                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
                 set_int[type_count, type_count + 1] |
@@ -3855,7 +3855,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
                 ({ inLanguage(LANGUAGE_JAVA) }? class_header | { inLanguage(LANGUAGE_CSHARP)}? variable_identifier | enum_class_header | LCURLY)
-                set_type[type, NONE, !(LA(1) == TERMINATE || (LA(1) == LCURLY || lcurly))]
+                //set_type[type, ENUM_DEFN, type == ENUM_DECL     && (LA(1) == LCURLY || lcurly)]
+                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
                 set_int[type_count, type_count + 1] |
