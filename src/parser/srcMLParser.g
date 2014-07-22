@@ -7207,8 +7207,9 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
                 if (stmt_type != VARIABLE)
                     type_count = 1;
             }
-            { stmt_type == VARIABLE || LA(1) == DOTDOTDOT}?
-            parameter_type_count[type_count]
+
+            { stmt_type == VARIABLE || LA(1) == DOTDOTDOT }?
+            (parameter_type_count[type_count])
             // suppress warning caused by ()*
             (options { greedy = true; } : { LA(1) == BAR }? bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
             {
@@ -7220,7 +7221,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
 ;
 
 // count types in parameter
-parameter_type_count[int & type_count] { CompleteElement element(this); ENTRY_DEBUG } :
+parameter_type_count[int & type_count] { if(inLanguage(LANGUAGE_JAVA) && type_count <= 1) return; CompleteElement element(this); ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
