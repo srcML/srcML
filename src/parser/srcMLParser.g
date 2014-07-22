@@ -1449,14 +1449,26 @@ block_lambda_expression_full[] { ENTRY_DEBUG } :
 lambda_expression_java[] { ENTRY_DEBUG } :
         {
 
-            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
 
             startElement(SFUNCTION_LAMBDA);
 
         }
 
-        (paren_pair | variable_identifier) TRETURN (curly_pair | complete_expression)
+        (parameter_list | variable_identifier) lambda_marked_java
+
 ;
+
+// lambda character
+lambda_marked_java[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+                startElement(SOPERATOR);
+        }
+        TRETURN
+
+;
+
 
 // handle the beginning of a function definition
 function_definition[int type_count] { ENTRY_DEBUG } :
@@ -6160,6 +6172,7 @@ lambda_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
                 startElement(SOPERATOR);
         }
         LAMBDA
+
 ;
 
 // fix the statement
