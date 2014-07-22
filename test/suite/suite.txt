@@ -225,6 +225,7 @@ LANGUAGE_JAVA import_java
 LANGUAGE_JAVA assert_java
 LANGUAGE_JAVA function_java
 LANGUAGE_JAVA static_block_java
+LANGUAGE_JAVA lambda_java
 LANGUAGE_JAVA_GEN finally_java
 
 LANGUAGE_OO catch_form

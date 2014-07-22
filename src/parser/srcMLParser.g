@@ -1446,7 +1446,7 @@ block_lambda_expression_full[] { ENTRY_DEBUG } :
 ;
 
 // handle a Java lambda expression
-lambda_expression_java[] { ENTRY_DEBUG } :
+lambda_expression_java[] { bool first = true; ENTRY_DEBUG } :
         {
 
             startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
@@ -1455,7 +1455,7 @@ lambda_expression_java[] { ENTRY_DEBUG } :
 
         }
 
-        (parameter_list | variable_identifier) lambda_marked_java
+        (parameter_list | variable_identifier) lambda_marked_java ({ LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
 
 ;
 
