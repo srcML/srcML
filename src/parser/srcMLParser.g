@@ -1445,6 +1445,19 @@ block_lambda_expression_full[] { ENTRY_DEBUG } :
 
 ;
 
+// handle a Java lambda expression
+lambda_expression_java[] { ENTRY_DEBUG } :
+        {
+
+            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+
+            startElement(SFUNCTION_LAMBDA);
+
+        }
+
+        (paren_pair | variable_identifier) TRETURN (curly_pair | complete_expression)
+;
+
 // handle the beginning of a function definition
 function_definition[int type_count] { ENTRY_DEBUG } :
 		{
@@ -5479,6 +5492,9 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (block_lambda_expression_full) => block_lambda_expression |
 
+        { inLanguage(LANGUAGE_JAVA) }?
+        ((paren_pair | variable_identifier) TRETURN) => lambda_expression_java |
+
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
 
@@ -6766,6 +6782,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
 
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (block_lambda_expression_full) => block_lambda_expression |
+
+        { inLanguage(LANGUAGE_JAVA) }?
+        ((paren_pair | variable_identifier) TRETURN) => lambda_expression_java |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
