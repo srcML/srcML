@@ -7182,7 +7182,7 @@ annotation_argument[] { ENTRY_DEBUG } :
 ;
 
 // a parameter
-parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+parameter[] { int type_count = 0; int secondtoken = 0; int after_look_past_rule_token; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
@@ -7210,6 +7210,15 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
 
             }
 
+            (
+
+            { inLanguage(LANGUAGE_JAVA) && type_count == 1 && ((after_look_past_rule_token = look_past_rule(&srcMLParser::type_identifier)) == COMMA || after_look_past_rule_token == RPAREN)}?
+            {
+                // expect a name initialization
+                setMode(MODE_VARIABLE_NAME | MODE_INIT);
+            }
+            ( options { greedy = true; } : variable_declaration_nameinit)* |
+
             { stmt_type == VARIABLE || LA(1) == DOTDOTDOT }?
             (parameter_type_count[type_count])
             // suppress warning caused by ()*
@@ -7219,6 +7228,9 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
                 setMode(MODE_VARIABLE_NAME | MODE_INIT);
             }
             ( options { greedy = true; } : variable_declaration_nameinit)*
+
+            )
+
         )
 ;
 
