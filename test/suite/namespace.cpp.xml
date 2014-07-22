@@ -14,6 +14,18 @@
 </unit>
 
 <unit>
+<namespace><specifier>inline</specifier> namespace <name>a</name> <block>{}</block></namespace>
+</unit>
+
+<unit>
+<namespace><specifier>inline</specifier> namespace <name>a</name> = <name>b</name>;</namespace>
+</unit>
+
+<unit>
+<namespace><specifier>inline</specifier> namespace <block>{}</block></namespace>
+</unit>
+
+<unit>
 <using>using <name><name>std</name>::<name>cin</name></name>;</using>
 </unit>
 

@@ -2,6 +2,10 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="goto">
 
 <unit>
+<goto>goto;</goto>
+</unit>
+
+<unit>
 <goto>goto <name>label</name>;</goto>
 </unit>
 
