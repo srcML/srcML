@@ -1465,8 +1465,9 @@ lambda_single_parameter_java { CompleteElement element(this); ENTRY_DEBUG } :
             startNewMode(MODE_LOCAL);
 
             startElement(SPARAMETER);
+            startElement(SDECLARATION);
         }
-        parameter_type_variable[1, VARIABLE]
+        variable_identifier
 
 ;
 
@@ -7227,7 +7228,7 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
                 if (stmt_type != VARIABLE)
                     type_count = 1;
 
-                int look_past_token;
+                int look_past_token = 0;
                 output_type = !(inLanguage(LANGUAGE_JAVA) && type_count == 1 && LA(1) != DOTDOTDOT && inTransparentMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS)
                     && ((look_past_token = look_past_rule(&srcMLParser::type_identifier)) == COMMA ||
                         look_past_token == RPAREN || look_past_token == TRETURN));
