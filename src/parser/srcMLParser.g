@@ -1445,6 +1445,43 @@ block_lambda_expression_full[] { ENTRY_DEBUG } :
 
 ;
 
+// handle a Java lambda expression
+lambda_expression_java[] { bool first = true; ENTRY_DEBUG } :
+        {
+
+            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+
+            startElement(SFUNCTION_LAMBDA);
+
+        }
+
+        (parameter_list | lambda_single_parameter_java) lambda_marked_java ({ LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
+
+;
+
+lambda_single_parameter_java { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+
+            startNewMode(MODE_LOCAL);
+
+            startElement(SPARAMETER);
+            startElement(SDECLARATION);
+        }
+        variable_identifier
+
+;
+
+// lambda character
+lambda_marked_java[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+                startElement(SOPERATOR);
+        }
+        TRETURN
+
+;
+
+
 // handle the beginning of a function definition
 function_definition[int type_count] { ENTRY_DEBUG } :
 		{
@@ -5479,6 +5516,9 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (block_lambda_expression_full) => block_lambda_expression |
 
+        { inLanguage(LANGUAGE_JAVA) }?
+        ((paren_pair | variable_identifier) TRETURN) => lambda_expression_java |
+
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
 
@@ -6144,6 +6184,7 @@ lambda_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
                 startElement(SOPERATOR);
         }
         LAMBDA
+
 ;
 
 // fix the statement
@@ -6767,6 +6808,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (block_lambda_expression_full) => block_lambda_expression |
 
+        { inLanguage(LANGUAGE_JAVA) }?
+        ((paren_pair | variable_identifier) TRETURN) => lambda_expression_java |
+
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
 
@@ -7150,7 +7194,7 @@ annotation_argument[] { ENTRY_DEBUG } :
 ;
 
 // a parameter
-parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+parameter[] { int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
@@ -7168,33 +7212,52 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
             (macro_call_check)*
 
             parameter_list |
-            {
+   
+            parameter_type_variable[type_count, stmt_type]
+
+        )
+;
+
+// handle parameter type if not function_decl
+parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type = true; ENTRY_DEBUG } :
+        {
+
                 // start the declaration element
                 startElement(SDECLARATION);
 
                 if (stmt_type != VARIABLE)
                     type_count = 1;
-            }
-            { stmt_type == VARIABLE || LA(1) == DOTDOTDOT}?
-            parameter_type_count[type_count]
-            // suppress warning caused by ()*
-            (options { greedy = true; } : { LA(1) == BAR }? bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
-            {
-                // expect a name initialization
-                setMode(MODE_VARIABLE_NAME | MODE_INIT);
-            }
-            ( options { greedy = true; } : variable_declaration_nameinit)*
+
+                int look_past_token = 0;
+                output_type = !(inLanguage(LANGUAGE_JAVA) && type_count == 1 && LA(1) != DOTDOTDOT && inTransparentMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS)
+                    && ((look_past_token = look_past_rule(&srcMLParser::type_identifier)) == COMMA ||
+                        look_past_token == RPAREN || look_past_token == TRETURN));
+
+        }
+
+        (
+        { stmt_type == VARIABLE || LA(1) == DOTDOTDOT }?
+        (parameter_type_count[type_count, output_type])
+        // suppress warning caused by ()*
+        (options { greedy = true; } : bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
+        {
+            // expect a name initialization
+            setMode(MODE_VARIABLE_NAME | MODE_INIT);
+        }
+        ( options { greedy = true; } : variable_declaration_nameinit)*
         )
+
 ;
 
 // count types in parameter
-parameter_type_count[int & type_count] { CompleteElement element(this); ENTRY_DEBUG } :
+parameter_type_count[int & type_count, bool output_type = true] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
 
             // start of type
-            startElement(STYPE);
+            if(output_type)
+                startElement(STYPE);
         }
 
 
