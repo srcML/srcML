@@ -2,15 +2,15 @@
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="lambda" filename="lambda_java">
 
 <unit>
-<expr_stmt><expr><lambda><name>a</name> -&gt; <expr><name>b</name></expr></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><param><decl><name>a</name></decl></param> -&gt; <expr><name>b</name></expr></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lambda><name>a</name> -&gt; <expr><name>b</name> + <call><name>c</name><argument_list>()</argument_list></call></expr></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><param><decl><name>a</name></decl></param> -&gt; <expr><name>b</name> + <call><name>c</name><argument_list>()</argument_list></call></expr></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lambda><name>a</name> -&gt; <block>{}</block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><param><decl><name>a</name></decl></param> -&gt; <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
