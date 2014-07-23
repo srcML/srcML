@@ -7201,16 +7201,13 @@ parameter[] { int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NON
 
             parameter_list |
    
-            { inLanguage(LANGUAGE_JAVA) && type_count == 1 
-                && (look_past_rule(&srcMLParser::type_identifier) == COMMA ||
-                look_past_rule(&srcMLParser::type_identifier) == RPAREN) }? parameter_name_only |
             parameter_type_variable[type_count, stmt_type]
 
         )
 ;
 
 // handle parameter type if not function_decl
-parameter_type_variable[int type_count, STMT_TYPE stmt_type] { ENTRY_DEBUG } :
+parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type = true; ENTRY_DEBUG } :
         {
 
                 // start the declaration element
@@ -7219,11 +7216,15 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { ENTRY_DEBUG } :
                 if (stmt_type != VARIABLE)
                     type_count = 1;
 
+                output_type = !(inLanguage(LANGUAGE_JAVA) && type_count == 1 
+                    && (look_past_rule(&srcMLParser::type_identifier) == COMMA ||
+                        look_past_rule(&srcMLParser::type_identifier) == RPAREN));
+
         }
 
         (
         { stmt_type == VARIABLE || LA(1) == DOTDOTDOT }?
-        (parameter_type_count[type_count])
+        (parameter_type_count[type_count, output_type])
         // suppress warning caused by ()*
         (options { greedy = true; } : bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
         {
@@ -7235,33 +7236,15 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { ENTRY_DEBUG } :
 
 ;
 
-// handle parameter if no type
-parameter_name_only[] { ENTRY_DEBUG } :
-        {
-
-                // start the declaration element
-                startElement(SDECLARATION);
-
-        }
-
-        (
-        {
-            // expect a name initialization
-            setMode(MODE_VARIABLE_NAME | MODE_INIT);
-        }
-        ( options { greedy = true; } : variable_declaration_nameinit)*
-        )
-
-;
-
 // count types in parameter
-parameter_type_count[int & type_count] { CompleteElement element(this); ENTRY_DEBUG } :
+parameter_type_count[int & type_count, bool output_type = true] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
 
             // start of type
-            startElement(STYPE);
+            if(output_type)
+                startElement(STYPE);
         }
 
 
