@@ -57,4 +57,20 @@
 <decl_stmt><decl><type><name>a</name> <specifier>__strong</specifier></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr>0</expr></range></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type>struct <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type>union <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type>enum <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
 </unit>

@@ -151,7 +151,8 @@ header "post_include_hpp" {
 enum STMT_TYPE { 
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
     SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
-    EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION
+    EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
+    USING_STMT
 };
 
 enum CALL_TYPE { NOCALL, CALL, MACRO };
@@ -531,6 +532,7 @@ tokens {
     SINTERFACE;
     SSYNCHRONIZED_STATEMENT;
     SANNOTATION;
+    SSTATIC_BLOCK;
 
     // C#
     SCHECKED_STATEMENT;
@@ -720,6 +722,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
          && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
          && (LA(1) != DEFAULT || next_token() == COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
+         && (LA(1) != INLINE || next_token() == NAMESPACE)
+         && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }? keyword_statements |
 
@@ -767,7 +771,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
-        namespace_definition | using_namespace_statement |
+        namespace_definition |
 
         // C/C++
         typedef_statement |
@@ -776,7 +780,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         static_assert_statement |
 
         // Java - keyword only detected for Java
-        import_statement | package_statement | assert_statement | 
+        import_statement | package_statement | assert_statement | static_block |
 
         // C# - keyword only detected for C#
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
@@ -885,6 +889,9 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         // enum definition as opposed to part of type or declaration
         { stmt_type == ENUM_DECL }?
         enum_definition |
+
+        { stmt_type == USING_STMT }?
+        using_namespace_statement |
 
         // "~" which looked like destructor, but isn't
         { stmt_type == NONE }?
@@ -1438,6 +1445,43 @@ block_lambda_expression_full[] { ENTRY_DEBUG } :
 
 ;
 
+// handle a Java lambda expression
+lambda_expression_java[] { bool first = true; ENTRY_DEBUG } :
+        {
+
+            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+
+            startElement(SFUNCTION_LAMBDA);
+
+        }
+
+        (parameter_list | lambda_single_parameter_java) lambda_marked_java ({ LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
+
+;
+
+lambda_single_parameter_java { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+
+            startNewMode(MODE_LOCAL);
+
+            startElement(SPARAMETER);
+            startElement(SDECLARATION);
+        }
+        variable_identifier
+
+;
+
+// lambda character
+lambda_marked_java[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+                startElement(SOPERATOR);
+        }
+        TRETURN
+
+;
+
+
 // handle the beginning of a function definition
 function_definition[int type_count] { ENTRY_DEBUG } :
 		{
@@ -1456,7 +1500,14 @@ throw_list[] { ENTRY_DEBUG } :
 
             startElement(STHROW_SPECIFIER);
         }
-        THROW LPAREN |
+        THROW 
+
+        {
+
+            startElement(SARGUMENT_LIST);
+
+        }
+        LPAREN |
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT | MODE_END_LIST_AT_BLOCK);
@@ -1476,7 +1527,17 @@ noexcept_list[] { ENTRY_DEBUG } :
 
             startElement(SNOEXCEPT);
         }
-        NOEXCEPT { if(LA(1) != LPAREN) endMode(); } (options { greedy = true;} : LPAREN)*
+        NOEXCEPT 
+
+        { 
+
+            if(LA(1) != LPAREN) endMode(); 
+            else startElement(SARGUMENT_LIST); 
+
+        } 
+
+        (options { greedy = true;} : LPAREN)*
+
 ;
 
 // match a thow list completely
@@ -2254,6 +2315,18 @@ assert_statement[] { ENTRY_DEBUG } :
         ASSERT
 ;
 
+static_block  { ENTRY_DEBUG } :
+
+    {
+        startNewMode(MODE_STATEMENT | MODE_NEST);
+        startElement(SSTATIC_BLOCK);
+
+    }
+
+    STATIC lcurly
+
+;
+
 // C _Static_assert statement
 static_assert_statement[] { ENTRY_DEBUG } :
         {
@@ -2327,7 +2400,7 @@ yield_break_statement[] { ENTRY_DEBUG } :
 break_statement[] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME);
 
             // start the break statement
             startElement(SBREAK_STATEMENT);
@@ -2339,7 +2412,7 @@ break_statement[] { ENTRY_DEBUG } :
 continue_statement[] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME);
 
             // start the continue statement
             startElement(SCONTINUE_STATEMENT);
@@ -2441,6 +2514,14 @@ extern_name[] { ENTRY_DEBUG } :
         }
 ;
 
+namespace_inline_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        INLINE
+
+;
+
 // namespaces
 namespace_definition[] { ENTRY_DEBUG } :
         {
@@ -2450,7 +2531,7 @@ namespace_definition[] { ENTRY_DEBUG } :
             // start the namespace definition
             startElement(SNAMESPACE);
         }
-        NAMESPACE
+        (namespace_inline_specifier)* NAMESPACE
 ;
 
 // a namespace alias
@@ -2481,6 +2562,7 @@ namespace_directive[] { ENTRY_DEBUG } :
             // start the using directive
             startElement(SUSING_DIRECTIVE);
         }
+        (options { greedy = true; } : { !isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full)*
         USING
 ;
 
@@ -3314,6 +3396,8 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
          && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
          && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
+         && (LA(1) != INLINE || next_token() == NAMESPACE)
+         && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
          && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }?
         terminate_pre
@@ -3583,7 +3667,6 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     int start = mark();
     inputState->guessing++;
 
-    bool sawenum;
     bool sawtemplate;
     bool sawcontextual;
     int posin = 0;
@@ -3591,7 +3674,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 
     try {
 
-        pattern_check_core(token, fla, type_count, type, inparam, sawenum, sawtemplate, sawcontextual, posin);
+        pattern_check_core(token, fla, type_count, type, inparam, sawtemplate, sawcontextual, posin);
 
     } catch (...) {
 
@@ -3611,10 +3694,6 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     // may just have an expression
     if (type == VARIABLE && posin)
         type_count = posin - 1;
-
-    // enum
-    else if (sawenum)
-        type = ENUM_DECL;
 
     // may just have a single macro (no parens possibly) before a statement
     else if (type == 0 && type_count == 0 && keyword_token_set.member(LA(1)))
@@ -3653,7 +3732,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     rewind(start);
 
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
-       && enum_preprocessing_token_set.member(LA(1)) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
+       && (enum_preprocessing_token_set.member(LA(1)) || LA(1) == DECLTYPE) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && save_la == TERMINATE)
         type = VARIABLE;
 
@@ -3670,7 +3749,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
               int& type_count,      /* number of tokens in type (not including name) */
               STMT_TYPE& type,      /* type discovered */
               bool inparam,         /* are we in a parameter */
-              bool& sawenum,        /* have we seen an enum */
               bool& sawtemplate,    /* have we seen a template */
               bool& sawcontextual,  /* have we seen a contextual keyword */
               int& posin            /* */
@@ -3679,7 +3757,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             fla = 0;
             type_count = 0;
             type = NONE;
-            sawenum = false;
             sawtemplate = false;
             sawcontextual= false;
             posin = 0;
@@ -3731,7 +3808,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             // the ~ operator
             set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS || LA(1) == QMARK]
 
-            set_bool[sawenum, sawenum || LA(1) == ENUM]
             set_bool[sawcontextual, sawcontextual || LA(1) == CRESTRICT || LA(1) == MUTABLE]
             (
 
@@ -3805,10 +3881,27 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
                 set_type[type, UNION_DEFN,     type == UNION_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, INTERFACE_DEFN, type == INTERFACE_DECL && (LA(1) == LCURLY || lcurly)]
-                set_type[type, NONE, !(LA(1) == TERMINATE || (LA(1) == LCURLY || lcurly))]
+                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
                 set_int[type_count, type_count + 1] |
+
+                { type_count == attribute_count + specifier_count + template_count }?
+                (ENUM set_type[type, ENUM_DECL])
+                set_bool[lcurly, LA(1) == LCURLY]
+                (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
+                ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
+                ({ inLanguage(LANGUAGE_JAVA) }? class_header | { inLanguage(LANGUAGE_CSHARP)}? variable_identifier | enum_class_header | LCURLY)
+                //set_type[type, ENUM_DEFN, type == ENUM_DECL     && (LA(1) == LCURLY || lcurly)]
+                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == LCURLY || lcurly)]
+                throw_exception[type != NONE]
+                set_bool[foundpure]
+                set_int[type_count, type_count + 1] |
+
+                (
+                    USING set_type[type, USING_STMT]
+                    throw_exception[true]
+                ) |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
                 template_argument_list set_int[specifier_count, specifier_count + 1] |
@@ -3840,7 +3933,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // do not match a struct class or union.  If was class/struct/union decl will not reach here.
                 // if elaborated type specifier should also be handled above. Reached here because 
                 // non-specifier then class/struct/union.
-                { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != CXX_CLASS && LA(1) != STRUCT && LA(1) != UNION)}?
+                { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != CXX_CLASS && LA(1) != STRUCT && LA(1) != UNION) }?
                 ({ LA(1) == DECLTYPE || LA(1) == ATOMIC }? type_specifier_call | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
@@ -3890,10 +3983,11 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             For now attribute and template counts are left out on purpose.
         */
+        /*! @todo verify this is correct */
         set_type[type, VARIABLE, ((((type_count - specifier_count) > 0 && LA(1) != OPERATORS && LA(1) != CSPEC && LA(1) != MSPEC
                 && ((inLanguage(LANGUAGE_CXX) && !inMode(MODE_ACCESS_REGION)) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET
                                               || (LA(1) == LPAREN && next_token() != RPAREN) || LA(1) == LCURLY || LA(1) == EQUAL || LA(1) == IN
-                                              || (inTransparentMode(MODE_FOR_CONDITION) && LA(1) == COLON)
+                                              || ((inTransparentMode(MODE_FOR_CONDITION) || inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && LA(1) == COLON)
                                               || (inLanguage(LANGUAGE_CSHARP) && LA(1) == RBRACKET)))) ||
                                                 (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET || LA(1) == EQUAL || LA(1) == IN
                                                     || (inLanguage(LANGUAGE_CSHARP) && LA(1) == RBRACKET))))]
@@ -4118,7 +4212,7 @@ class_lead_type_identifier[]  { SingleElement element(this); ENTRY_DEBUG } :
             else
                 startElement(SNOP);
         }
-        (CLASS | CXX_CLASS | STRUCT | UNION)
+        (CLASS | CXX_CLASS | STRUCT | UNION | ENUM)
 ;
 
 // type identifier
@@ -4158,7 +4252,7 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
         variable_identifier_array_grammar_sub[iscomplex]
 ;
 
-type_specifier_call[] {} :
+type_specifier_call[] { ENTRY_DEBUG } :
 
     {inputState->guessing }? (decltype_call_full | atomic_call_full) | decltype_call | atomic_call
 
@@ -5422,6 +5516,9 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (block_lambda_expression_full) => block_lambda_expression |
 
+        { inLanguage(LANGUAGE_JAVA) }?
+        ((paren_pair | variable_identifier) TRETURN) => lambda_expression_java |
+
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
 
@@ -6087,6 +6184,7 @@ lambda_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
                 startElement(SOPERATOR);
         }
         LAMBDA
+
 ;
 
 // fix the statement
@@ -6710,6 +6808,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (block_lambda_expression_full) => block_lambda_expression |
 
+        { inLanguage(LANGUAGE_JAVA) }?
+        ((paren_pair | variable_identifier) TRETURN) => lambda_expression_java |
+
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
 
@@ -7093,7 +7194,7 @@ annotation_argument[] { ENTRY_DEBUG } :
 ;
 
 // a parameter
-parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+parameter[] { int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
@@ -7111,33 +7212,52 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
             (macro_call_check)*
 
             parameter_list |
-            {
+   
+            parameter_type_variable[type_count, stmt_type]
+
+        )
+;
+
+// handle parameter type if not function_decl
+parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type = true; ENTRY_DEBUG } :
+        {
+
                 // start the declaration element
                 startElement(SDECLARATION);
 
                 if (stmt_type != VARIABLE)
                     type_count = 1;
-            }
-            { stmt_type == VARIABLE || LA(1) == DOTDOTDOT}?
-            parameter_type_count[type_count]
-            // suppress warning caused by ()*
-            (options { greedy = true; } : { LA(1) == BAR }? bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
-            {
-                // expect a name initialization
-                setMode(MODE_VARIABLE_NAME | MODE_INIT);
-            }
-            ( options { greedy = true; } : variable_declaration_nameinit)*
+
+                int look_past_token = 0;
+                output_type = !(inLanguage(LANGUAGE_JAVA) && type_count == 1 && LA(1) != DOTDOTDOT && inTransparentMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS)
+                    && ((look_past_token = look_past_rule(&srcMLParser::type_identifier)) == COMMA ||
+                        look_past_token == RPAREN || look_past_token == TRETURN));
+
+        }
+
+        (
+        { stmt_type == VARIABLE || LA(1) == DOTDOTDOT }?
+        (parameter_type_count[type_count, output_type])
+        // suppress warning caused by ()*
+        (options { greedy = true; } : bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
+        {
+            // expect a name initialization
+            setMode(MODE_VARIABLE_NAME | MODE_INIT);
+        }
+        ( options { greedy = true; } : variable_declaration_nameinit)*
         )
+
 ;
 
 // count types in parameter
-parameter_type_count[int & type_count] { CompleteElement element(this); ENTRY_DEBUG } :
+parameter_type_count[int & type_count, bool output_type = true] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
 
             // start of type
-            startElement(STYPE);
+            if(output_type)
+                startElement(STYPE);
         }
 
 

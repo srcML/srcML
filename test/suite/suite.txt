@@ -16,6 +16,8 @@ LANGUAGE_ALL_BASE operator_base
 LANGUAGE_ALL_BASE whitespace
 LANGUAGE_ALL_BASE specifier
 LANGUAGE_ALL_BASE goto
+LANGUAGE_ALL_BASE break
+LANGUAGE_ALL_BASE continue
 LANGUAGE_ALL_BASE ternary
 
 LANGUAGE_ALL_GEN while
@@ -168,6 +170,7 @@ LANGUAGE_CSHARP using_statement_cs
 LANGUAGE_CSHARP specifier_cs
 LANGUAGE_CSHARP modifier_cs
 LANGUAGE_CSHARP function_decl_cs
+LANGUAGE_CSHARP decl_simple_cs
 
 LANGUAGE_OBJECTIVE_C objective_c_call_m
 LANGUAGE_OBJECTIVE_C class_interface_m
@@ -221,6 +224,8 @@ LANGUAGE_JAVA enum_java
 LANGUAGE_JAVA import_java
 LANGUAGE_JAVA assert_java
 LANGUAGE_JAVA function_java
+LANGUAGE_JAVA static_block_java
+LANGUAGE_JAVA lambda_java
 LANGUAGE_JAVA_GEN finally_java
 
 LANGUAGE_OO catch_form

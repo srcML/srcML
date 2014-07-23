@@ -2,12 +2,9 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="enum" filename="enum_c">
 
 <unit>
-<enum>enum <name>a</name> <name>b</name>;</enum>
-</unit>
-
-<unit>
 <enum>enum <name>Enum2</name> : <type><name>unsigned</name> <name>int</name></type>;</enum>
 </unit>
+
 <unit>
 <enum><specifier>const</specifier> enum <name>a</name> <block>{ <decl><name>b</name> <init>= <expr>0</expr></init></decl> }</block> <decl><name>a</name></decl>;</enum>
 </unit>
