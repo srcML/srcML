@@ -24,6 +24,12 @@
 </unit>
 
 <unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr>new <class><super><name>Foo</name></super><argument_list>()</argument_list> <block>{ 
+  <function><type><name>void</name></type> <name>bar</name><parameter_list>(<param><decl><type><name>a</name></type></decl></param>)</parameter_list> <block>{}</block></function>
+}</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
 <comment type="line">// complex name on call with anonymous class as an argument </comment>
       <expr_stmt><expr><call><name><name>jbutton1</name>.<name>addActionListener</name></name><argument_list>(<argument><expr>new <class><super><name>ActionListener</name></super><argument_list>()</argument_list> <block>{
       <decl_stmt><decl><type><name>int</name></type> <name>i</name> <init>= <expr>0</expr></init></decl>;</decl_stmt>
