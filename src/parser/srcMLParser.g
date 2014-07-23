@@ -7216,7 +7216,7 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
                 if (stmt_type != VARIABLE)
                     type_count = 1;
 
-                output_type = !(inLanguage(LANGUAGE_JAVA) && type_count == 1 
+                output_type = !(inLanguage(LANGUAGE_JAVA) && type_count == 1 && LA(1) != DOTDOTDOT && inTransparentMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS)
                     && (look_past_rule(&srcMLParser::type_identifier) == COMMA ||
                         look_past_rule(&srcMLParser::type_identifier) == RPAREN));
 
