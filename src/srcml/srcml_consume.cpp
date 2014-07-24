@@ -29,6 +29,9 @@
 #include <write_queue.hpp>
 #include <boost/static_assert.hpp>
 #include <sha1utilities.hpp>
+#include <srcml_options.hpp>
+#include <srcml_cli.hpp>
+#include <string>
 
 // creates initial unit, parses, and then sends unit to write queue
 void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
@@ -42,6 +45,18 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
     // NOTE: thread task cannot throw exception
 
+    // global access to options
+    bool isseparatearchive = SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get();
+
+    // current output archive
+    srcml_archive* srcml_arch = request->srcml_arch;
+    if (isseparatearchive) {
+        srcml_arch = srcml_clone_archive(request->srcml_arch);
+        std::string xml_filename = *request->filename + ".xml";
+        srcml_write_open_filename(srcml_arch, xml_filename.c_str());
+        request->srcml_arch = srcml_arch;
+    }
+
     // construct and parse the unit
     srcml_unit* unit = request->unit;
     int status = SRCML_STATUS_OK;
@@ -49,7 +64,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         // create the unit start tag
         if (!unit)
-            if (!(unit = srcml_create_unit(request->srcml_arch)))
+            if (!(unit = srcml_create_unit(srcml_arch)))
                 throw SRCML_STATUS_ERROR;
 
         // language attribute, required if from memory
@@ -70,7 +85,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         // sha1 attribute, if hash is on
         // sha1 value based on the code as encoded (source text encoding) in the original file
-        if (!request->disk_filename && srcml_archive_get_options(request->srcml_arch) & SRCML_OPTION_HASH) {
+        if (!request->disk_filename && srcml_archive_get_options(srcml_arch) & SRCML_OPTION_HASH) {
 
 #ifdef _MSC_BUILD
             unsigned char md[20];

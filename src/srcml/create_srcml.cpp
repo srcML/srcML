@@ -142,7 +142,14 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // create the srcML output file
     int status = 0;
-    if (contains<int>(destination)) {
+    if (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) {
+/*    	char* buffer;
+    	int size;
+    	status = srcml_write_open_memory(srcml_arch, &buffer, &size);
+    	*/
+    	status = srcml_write_open_fd(srcml_arch, 2);
+
+    } else if (contains<int>(destination)) {
         status = srcml_write_open_fd(srcml_arch, *destination.fd);
     } else {
         status = srcml_write_open_filename(srcml_arch, destination.c_str());

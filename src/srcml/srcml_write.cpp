@@ -26,6 +26,7 @@
 #include <iostream>
 #include <srcml_options.hpp>
 #include <trace_log.hpp>
+#include <srcml_cli.hpp>
 
 // Public consumption thread function
 void srcml_write_request(ParseRequest* request, TraceLog& log) {
@@ -58,6 +59,12 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
     if (request->unit)
         srcml_free_unit(request->unit);
     request->unit = 0;
+
+    // close the archive (if per-unit)
+    if (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) {
+        srcml_close_archive(request->srcml_arch);
+        srcml_free_archive(request->srcml_arch);
+    }
 
     delete request;
     request = 0;
