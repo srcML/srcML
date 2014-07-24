@@ -1164,7 +1164,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))* 
 
         // match auto keyword first as special case do no warn about ambiguity
-        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | ( { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
+        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
 
         { 
 
@@ -1455,7 +1455,7 @@ lambda_expression_java[] { bool first = true; ENTRY_DEBUG } :
 
         }
 
-        (parameter_list | lambda_single_parameter_java) lambda_marked_java ({ LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
+        (parameter_list | lambda_single_parameter_java) lambda_marked_java (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
 
 ;
 
@@ -4190,6 +4190,8 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         // class/struct/union before a name in a type, e.g., class A f();
+        (options { generateAmbigWarnings = false; } :
+
         class_lead_type_identifier | typename_keyword |
 
         // enum use in a type
@@ -4201,6 +4203,8 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
         enum_definition_complete |
 
         type_specifier_call
+
+        )
 
 ;
 
@@ -4697,6 +4701,7 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         )*
 ;
 
+
 // match a linq_expression completely
 linq_expression_complete[] { CompleteElement element(this); int count_paren = 0; ENTRY_DEBUG } :
         {
@@ -4706,10 +4711,32 @@ linq_expression_complete[] { CompleteElement element(this); int count_paren = 0;
         (options {warnWhenFollowAmbig = false; } : { LA(1) != RPAREN || count_paren > 0 }?
 
 
-            (linq_expression_complete_inner[count_paren]) => linq_expression_complete_inner[count_paren, true]
+            { (LA(1) != RPAREN || count_paren > 0) && try_linq_expression_complete_inner(count_paren) }? linq_expression_complete_inner[count_paren, true]
             
         )*
 ;
+
+try_linq_expression_complete_inner[int & count_paren] returns[bool success = false] {
+
+    int start = mark();
+    ++inputState->guessing;
+
+    try {
+
+        linq_expression_complete_inner(count_paren);
+        success = true;
+
+    } catch(antlr::RecognitionException & e) {
+
+        success = false;
+
+    }
+
+    rewind(start);
+    --inputState->guessing;
+
+
+} :;
 
 linq_expression_complete_inner[int & count_paren, bool update = false] { CALL_TYPE type = NOCALL; bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
 
