@@ -272,7 +272,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         general.add_options()
             ("compress,z", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_COMPRESS>), "output in gzip format")
             ("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
-            ("no-archive", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_NO_ARCHIVE>), "output individual srcml units")
+            ("no-archive", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_NOARCHIVE>), "output individual srcml units")
             ("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NAMESPACE_DECL>), "do not output any namespace declarations")
             ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_XML_DECL>), "do not output the XML declaration")
             ("output,o", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::output_filename>)->default_value("stdout://-"), "write result ouput to arg which is a FILE or URI")
