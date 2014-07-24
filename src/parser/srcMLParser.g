@@ -1116,9 +1116,30 @@ function_tail[] { ENTRY_DEBUG } :
         )*
 ;
 
-// Java annotation default alues
-annotation_default[] { ENTRY_DEBUG } :
-            DEFAULT literals
+// Java annotation default values
+annotation_default[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        startElement(SDEFAULT);
+
+    }
+    DEFAULT annotation_default_initialization
+
+;
+
+// Java annotation default value initialization
+annotation_default_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+
+        startNewMode(MODE_LOCAL);
+
+        startElement(SDECLARATION_INITIALIZATION);
+
+    }
+    complete_expression
+
 ;
 
 // Ref qualifiers in function tail
@@ -3375,6 +3396,9 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // function specifier at end of function header
         { inLanguage(LANGUAGE_CXX) && inMode(MODE_FUNCTION_TAIL) }?
         trailing_return |
+
+        { inLanguage(LANGUAGE_JAVA) && inMode(MODE_FUNCTION_TAIL) }?
+        annotation_default |
 
         { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
         (function_identifier (COLON | RBRACKET)) => objective_c_call_message |
