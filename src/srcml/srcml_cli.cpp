@@ -272,6 +272,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         general.add_options()
             ("compress,z", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_COMPRESS>), "output in gzip format")
             ("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
+            ("no-archive", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_NO_ARCHIVE>), "output individual srcml units")
             ("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NAMESPACE_DECL>), "do not output any namespace declarations")
             ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_XML_DECL>), "do not output the XML declaration")
             ("output,o", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::output_filename>)->default_value("stdout://-"), "write result ouput to arg which is a FILE or URI")
@@ -280,8 +281,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("max-threads", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->default_value(4), "set the maximum number of threads srcml can spawn")
             ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")
             ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "display version number and exit")
-            //("src", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRC>), "explicitly declare src->srcml mode")
-            //("srcml", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRCML>), "explicitly declare srcml->src mode")
             ("ordered", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OUTPUT_ORDERED>), "enable strict output ordering")
             ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "output and update existing srcml")
             ;
@@ -342,11 +341,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("longinfo,L", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LONGINFO>), "display all metadata including file count (individual units) and exit")
             ("prefix,p", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xmlns_prefix_query>), "display prefix of namespace given by URI arg and exit")
             ("count", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UNITS>), "display number of srcML files and exit")
-            //("show-directory", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO_DIRECTORY>), "display source directory name and exit")
-            //("show-encoding", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO_ENCODING>), "display xml encoding and exit")
-            //("show-filename", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO_FILENAME>), "display source filename and exit")
-            //("show-language", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO_LANGUAGE>), "display source language and exit")
-            //("show-src-version", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO_SRC_VERSION>), "display source version and exit")
             ;
 
         prefix.add_options()
