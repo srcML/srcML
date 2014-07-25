@@ -81,6 +81,29 @@ public :
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
     /**
+     * form_simple_xpath
+     * @parem root_result_node the root node form xpath query result
+     *
+     * Form a simple xpath expression that marks the location of the result.
+     */
+    std::string form_simple_xpath(xmlNodePtr root_result_node) {
+
+        std::string simple_xpath = (const char *)root_result_node;
+        xmlNodePtr parent_node = root_result_node->parent;
+        while(parent_node) {
+
+            simple_xpath = (const char *)parent_node->name + std::string("/") + simple_xpath;
+            parent_node = parent_node->parent;
+
+        }
+
+        simple_xpath = "/" + simple_xpath;
+
+        return simple_xpath;
+
+    }
+
+    /**
      * start_output
      *
      * Create the output buffer and setup XPath.
@@ -325,6 +348,7 @@ public :
                         }
 
                         wrap.append(LITERALPLUSSIZE(" item=\""));
+
                     }
 
                     // output the start of the wrapping unit
