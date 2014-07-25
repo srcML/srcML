@@ -90,9 +90,11 @@ public :
 
         std::string simple_xpath = (const char *)root_result_node;
         xmlNodePtr parent_node = root_result_node->parent;
-        while(parent_node) {
 
-            simple_xpath = (const char *)parent_node->name + std::string("/") + simple_xpath;
+        while(parent_node) {
+            if(parent_node->name)
+                simple_xpath = (const char *)parent_node->name + std::string("/") + simple_xpath;
+
             parent_node = parent_node->parent;
 
         }
@@ -359,6 +361,11 @@ public :
                     static char itoabuf[MAXSSIZE];
                     snprintf(itoabuf, MAXSSIZE, "%d", i + 1);
                     xmlOutputBufferWriteString(buf, itoabuf);
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xpath=\""));
+                    std::string simple_xpath = form_simple_xpath(onode);
+                    xmlOutputBufferWriteString(buf, simple_xpath.c_str());
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\">"));
                 }
 
