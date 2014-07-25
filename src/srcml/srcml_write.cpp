@@ -61,8 +61,6 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
 
         // close the archive (if per-unit)
         if (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) {
-            fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-
             srcml_close_archive(request->srcml_arch);
             srcml_free_archive(request->srcml_arch);
         }
