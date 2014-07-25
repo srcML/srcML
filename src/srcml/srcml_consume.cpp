@@ -52,6 +52,8 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
     srcml_archive* srcml_arch = request->srcml_arch;
     if (isseparatearchive) {
         srcml_arch = srcml_clone_archive(request->srcml_arch);
+        srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+        srcml_archive_enable_option(srcml_arch, SRCML_OPTION_HASH);
         std::string xml_filename = *request->filename + ".xml";
         srcml_write_open_filename(srcml_arch, xml_filename.c_str());
         request->srcml_arch = srcml_arch;

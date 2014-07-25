@@ -147,7 +147,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     	int size;
     	status = srcml_write_open_memory(srcml_arch, &buffer, &size);
     	*/
-    	status = srcml_write_open_fd(srcml_arch, 2);
+    	status = srcml_write_open_fd(srcml_arch, 0);
 
     } else if (contains<int>(destination)) {
         status = srcml_write_open_fd(srcml_arch, *destination.fd);
