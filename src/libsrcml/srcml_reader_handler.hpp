@@ -275,8 +275,10 @@ public :
                 }
 
             } else {
+
                 archive->attributes.push_back(attribute);
                 archive->attributes.push_back(value);
+
             }
 
         }
@@ -413,6 +415,13 @@ public :
                 srcml_unit_set_directory(unit, value.c_str());
             else if(attribute == "version")
                 srcml_unit_set_version(unit, value.c_str());
+
+            else {
+
+                unit->attributes.push_back(attribute);
+                unit->attributes.push_back(value);
+
+            }
 
         }
 
