@@ -67,6 +67,8 @@ int main() {
     namespace_uri.push_back(SRCML_EXT_POSITION_NS_URI);
 
     std::vector<std::string> attributes;
+    attributes.push_back("foo");
+    attributes.push_back("bar");
 
     boost::optional<std::pair<std::string, std::string> > processing_instruction;
 
@@ -128,7 +130,7 @@ int main() {
         translator.translate(input);
         translator.close();
 
-        dassert((char *)buffer->content, std::string("<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>\n"));
+        dassert((char *)buffer->content, std::string("<unit language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>\n"));
 
         xmlBufferFree(buffer);
 
@@ -179,7 +181,7 @@ int main() {
         translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
-        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
         xmlBufferFree(buffer);
 
@@ -230,7 +232,7 @@ int main() {
         translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
-        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
         xmlBufferFree(buffer);
 
@@ -276,7 +278,7 @@ int main() {
         translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
-        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:lit=\"http://www.sdml.info/srcML/literal\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:lit=\"http://www.sdml.info/srcML/literal\" foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
         xmlBufferFree(buffer);
 
@@ -322,7 +324,7 @@ int main() {
         translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
-        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:op=\"http://www.sdml.info/srcML/operator\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:op=\"http://www.sdml.info/srcML/operator\" foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
         xmlBufferFree(buffer);
 
@@ -368,7 +370,7 @@ int main() {
         translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
-        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:type=\"http://www.sdml.info/srcML/modifier\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:type=\"http://www.sdml.info/srcML/modifier\" foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
         xmlBufferFree(buffer);
 
@@ -414,7 +416,7 @@ int main() {
         translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
-        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:pos=\"http://www.sdml.info/srcML/position\" pos:tabs=\"4\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:pos=\"http://www.sdml.info/srcML/position\" pos:tabs=\"4\" foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
         xmlBufferFree(buffer);
 
@@ -636,7 +638,7 @@ int main() {
         translator.add_unit(unit, s_before.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
-        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
         xmlBufferFree(buffer);
 
@@ -682,7 +684,7 @@ int main() {
         translator.add_unit(unit, s.c_str());
         translator.close();
         std::string result = (const char *)buffer->content;
-        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + "</unit>\n");
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" foo=\"bar\">\n\n" + "</unit>\n");
 
         xmlBufferFree(buffer);
 
