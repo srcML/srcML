@@ -85,15 +85,20 @@ public :
      * @parem root_result_node the root node form xpath query result
      *
      * Form a simple xpath expression that marks the location of the result.
+     * @returns the simple xpath to the result node as a string.
      */
     std::string form_simple_xpath(xmlNodePtr root_result_node) {
 
-        std::string simple_xpath = (const char *)root_result_node->name;
+        std::string simple_xpath = (const char *)root_result_node->name
+         + std::string("[") + child_offset(root_result_node) + std::string("]");
         xmlNodePtr parent_node = root_result_node->parent;
 
         while(parent_node) {
+
             if(parent_node->name)
-                simple_xpath = (const char *)parent_node->name + std::string("/") + simple_xpath;
+                simple_xpath = (const char *)parent_node->name
+                 + std::string("[") + child_offset(root_result_node) + std::string("]")
+                 + std::string("/") + simple_xpath;
 
             parent_node = parent_node->parent;
 
@@ -102,6 +107,32 @@ public :
         simple_xpath = "/" + simple_xpath;
 
         return simple_xpath;
+
+    }
+
+    /**
+     * child_offset
+     * @parem root_result_node the root node form xpath query result
+     *
+     * Find the child offset.
+    * @returns the child offset number as a string.
+     */
+    std::string child_offset(xmlNodePtr root_result_node) {
+
+        xmlNodePtr parent_node = root_result_node->parent;
+        std::ostringstream child_offset_string("");
+        if(parent_node) {
+
+            child_offset_string << 1;
+
+
+        } else {
+
+            child_offset_string << 1;
+
+        }
+
+        return child_offset_string.str();
 
     }
 
