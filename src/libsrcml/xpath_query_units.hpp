@@ -82,22 +82,22 @@ public :
 
     /**
      * form_simple_xpath
-     * @parem root_result_node the root node form xpath query result
+     * @param root_result_node the root node form xpath query result
      *
      * Form a simple xpath expression that marks the location of the result.
      * @returns the simple xpath to the result node as a string.
      */
     std::string form_simple_xpath(xmlNodePtr root_result_node) {
 
-        std::string simple_xpath = (const char *)root_result_node->name
+        std::string simple_xpath = form_full_name(root_result_node)
          + std::string("[") + child_offset(root_result_node) + std::string("]");
         xmlNodePtr parent_node = root_result_node->parent;
 
         while(parent_node) {
 
             if(parent_node->name)
-                simple_xpath = (const char *)parent_node->name
-                 + std::string("[") + child_offset(root_result_node) + std::string("]")
+                simple_xpath = form_full_name(parent_node)
+                 + std::string("[") + child_offset(parent_node) + std::string("]")
                  + std::string("/") + simple_xpath;
 
             parent_node = parent_node->parent;
@@ -111,11 +111,39 @@ public :
     }
 
     /**
+     * form_full_name
+     * @param prefix the xml prefix
+     * @param name the xml name;
+     *
+     * Form the full xpath name.
+     * @returns the full name as a string.
+     */
+    std::string form_full_name(xmlNodePtr root_result_node) {
+
+        std::string full_name = ""; 
+        if(root_result_node->ns && root_result_node->ns->prefix) {
+
+            full_name += (const char *)root_result_node->ns->prefix;
+
+        } else {
+
+            full_name += "src";
+
+        }
+
+        full_name += ":";
+        full_name += (const char *)root_result_node->name;
+
+        return full_name;
+
+    }
+
+    /**
      * child_offset
-     * @parem root_result_node the root node form xpath query result
+     * @param root_result_node the root node form xpath query result
      *
      * Find the child offset.
-    * @returns the child offset number as a string.
+     * @returns the child offset number as a string.
      */
     std::string child_offset(xmlNodePtr root_result_node) {
 
