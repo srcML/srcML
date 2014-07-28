@@ -141,7 +141,7 @@ machine.
 * libarchive-devel  
 * libcurl-devel  
 * libopenssl-devel  
-* docbook2X  
+* docbook2X
 
 ##### Notes
 
@@ -173,7 +173,7 @@ the right location
 * antlr  
 * libantlr-dev  
 * libcurl4-openssl-dev  
-* libssl-dev  
+* libssl-dev
 
 *# for srcML documentation generation*
 

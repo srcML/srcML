@@ -120,7 +120,7 @@ struct srcml_archive {
     /** an attribute for a version string */
     boost::optional<std::string> version;
     /** an array of name-value attribute pairs */
-    std::vector<std::string>  attributes;
+    std::vector<std::string> attributes;
 
     /** srcml options */
     OPTION_TYPE options;
@@ -181,6 +181,8 @@ struct srcml_unit {
     boost::optional<std::string> timestamp;
     /** an attribute for a hash string */
     boost::optional<std::string> hash;
+    /** an array of name-value attribute pairs */
+    std::vector<std::string> attributes;
 
     /** output buffer to hold streaming creation of unit */
     xmlBuffer * output_buffer;
