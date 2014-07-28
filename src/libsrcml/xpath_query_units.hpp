@@ -88,7 +88,7 @@ public :
      */
     std::string form_simple_xpath(xmlNodePtr root_result_node) {
 
-        std::string simple_xpath = (const char *)root_result_node;
+        std::string simple_xpath = (const char *)root_result_node->name;
         xmlNodePtr parent_node = root_result_node->parent;
 
         while(parent_node) {
