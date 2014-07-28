@@ -615,6 +615,7 @@ int main() {
         dassert(*filename, "a.cpp");
         dassert(*directory, "test");
         dassert(*version, "1");
+        dassert(attributes.size(), 0);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
         reader.read_unit_attributes(language, filename, directory, version, attributes);
@@ -658,7 +659,9 @@ int main() {
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
-        dassert(attributes.size(), 0);
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
         dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
     }
@@ -672,7 +675,9 @@ int main() {
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
-        dassert(attributes.size(), 0);
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
         dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
     }
@@ -948,7 +953,9 @@ int main() {
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
-        dassert(attributes.size(), 0);
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
         boost::optional<std::string> unit;
@@ -1006,7 +1013,9 @@ int main() {
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
-        dassert(attributes.size(), 0);
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
         boost::optional<std::string> unit;

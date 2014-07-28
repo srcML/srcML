@@ -274,7 +274,9 @@ public :
 
                 }
 
-            } else {
+            } else if(attribute == "hash") 
+                ;
+            else {
 
                 archive->attributes.push_back(attribute);
                 archive->attributes.push_back(value);
@@ -415,7 +417,8 @@ public :
                 srcml_unit_set_directory(unit, value.c_str());
             else if(attribute == "version")
                 srcml_unit_set_version(unit, value.c_str());
-
+            else if(attribute == "tabs" || attribute == "options" || attribute == "hash")
+                ;
             else {
 
                 unit->attributes.push_back(attribute);
