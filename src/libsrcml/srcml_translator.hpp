@@ -68,6 +68,7 @@ public:
                      const char* directory,
                      const char* filename,
                      const char* version,
+                     const std::vector<std::string> & attributes,
                      const char* timestamp = 0,
                      const char* hash = 0);
 
@@ -83,6 +84,7 @@ public:
                      const char* directory,
                      const char* filename,
                      const char* version,
+                     const std::vector<std::string> & attributes,
                      const char* timestamp = 0, 
                      const char* hash = 0);
 
@@ -123,6 +125,9 @@ private:
 
     /** the unit hash attribute */
     const char* hash;
+
+    /** an array of name-value attribute pairs */
+    const std::vector<std::string> & attributes;
 
     /** translation options */
     OPTION_TYPE& options;

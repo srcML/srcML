@@ -64,6 +64,7 @@ public:
                 OPTION_TYPE& option,
                 std::vector<std::string> & prefix,
                 std::vector<std::string> & uri,
+                const std::vector<std::string> & attributes,
                 boost::optional<std::pair<std::string, std::string> > processing_instruction,
                 int tabsize);
 
@@ -84,6 +85,7 @@ public:
                    const char* unit_directory, const char* unit_filename,
                    const char* unit_version, const char* unit_timestamp,
                    const char* unit_hash,
+                   const std::vector<std::string> & attributes,
                    bool output_macrolist);
 
     // consume the entire tokenstream with output of srcml
@@ -147,6 +149,9 @@ public:
 
     /** array for a number to uri */
     std::vector<std::string> & num2uri;
+
+    /** an array of name-value attribute pairs */
+    const std::vector<std::string> & unit_attributes;
 
     /** pre-root processing instruction */
     boost::optional<std::pair<std::string, std::string> > processing_instruction;
