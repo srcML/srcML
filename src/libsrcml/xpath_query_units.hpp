@@ -81,6 +81,96 @@ public :
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
     /**
+     * form_simple_xpath
+     * @param root_result_node the root node form xpath query result
+     *
+     * Form a simple xpath expression that marks the location of the result.
+     * @returns the simple xpath to the result node as a string.
+     */
+    std::string form_simple_xpath(xmlNodePtr root_result_node) {
+
+        std::string simple_xpath = form_full_name(root_result_node)
+         + std::string("[") + child_offset(root_result_node) + std::string("]");
+        xmlNodePtr parent_node = root_result_node->parent;
+
+        while(parent_node) {
+
+            if(parent_node->name)
+                simple_xpath = form_full_name(parent_node)
+                 + std::string("[") + child_offset(parent_node) + std::string("]")
+                 + std::string("/") + simple_xpath;
+
+            parent_node = parent_node->parent;
+
+        }
+
+        simple_xpath = "/" + simple_xpath;
+
+        return simple_xpath;
+
+    }
+
+    /**
+     * form_full_name
+     * @param prefix the xml prefix
+     * @param name the xml name;
+     *
+     * Form the full xpath name.
+     * @returns the full name as a string.
+     */
+    std::string form_full_name(xmlNodePtr root_result_node) {
+
+        std::string full_name = ""; 
+        if(root_result_node->ns && root_result_node->ns->prefix) {
+
+            full_name += (const char *)root_result_node->ns->prefix;
+
+        } else {
+
+            full_name += "src";
+
+        }
+
+        full_name += ":";
+        full_name += (const char *)root_result_node->name;
+
+        return full_name;
+
+    }
+
+    /**
+     * child_offset
+     * @param root_result_node the root node form xpath query result
+     *
+     * Find the child offset.
+     * @returns the child offset number as a string.
+     */
+    std::string child_offset(xmlNodePtr root_result_node) {
+
+        xmlNodePtr sibling_node = root_result_node->prev;
+        std::ostringstream child_offset_string("");
+
+        int child_count = 1;
+        if(sibling_node) {
+
+            std::string full_name = form_full_name(root_result_node);
+
+            for(; sibling_node; sibling_node = sibling_node->prev) {
+
+                if(full_name == form_full_name(sibling_node))
+                    ++child_count;
+
+            }
+
+        }
+
+        child_offset_string << child_count;
+
+        return child_offset_string.str();
+
+    }
+
+    /**
      * start_output
      *
      * Create the output buffer and setup XPath.
@@ -325,6 +415,7 @@ public :
                         }
 
                         wrap.append(LITERALPLUSSIZE(" item=\""));
+
                     }
 
                     // output the start of the wrapping unit
@@ -335,6 +426,11 @@ public :
                     static char itoabuf[MAXSSIZE];
                     snprintf(itoabuf, MAXSSIZE, "%d", i + 1);
                     xmlOutputBufferWriteString(buf, itoabuf);
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xpath=\""));
+                    std::string simple_xpath = form_simple_xpath(onode);
+                    xmlOutputBufferWriteString(buf, simple_xpath.c_str());
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\">"));
                 }
 
