@@ -370,6 +370,7 @@ tokens {
     STYPEPREV;
 	SCONDITION;
 	SBLOCK;
+    SPSEUDO_BLOCK;
     SINDEX;
 
     // statements

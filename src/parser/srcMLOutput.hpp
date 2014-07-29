@@ -204,6 +204,7 @@ public:
 
     // token handlers
     void processAccess(const antlr::RefToken& token);
+    void processPseudoBlock(const antlr::RefToken& token);
     void processToken(const antlr::RefToken& token);
     void processTypePrevious(const antlr::RefToken& token);
     void processBlockCommentStart(const antlr::RefToken& token);
