@@ -275,12 +275,12 @@ private:
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Language(lang), ModeStack(this), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
-    parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0), skip_ternary(false),
+    parser_options(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0), skip_ternary(false),
     current_column(-1), current_line(-1), nxt_token(-1)
 {
 
     // root, single mode
-    if (isoption(parseoptions, SRCML_OPTION_EXPRESSION))
+    if (isoption(parser_options, SRCML_OPTION_EXPRESSION))
         // root, single mode to allows for an expression without a statement
         startNewMode(MODE_TOP | MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
     else
@@ -294,12 +294,12 @@ void srcMLParser::endAllModes() {
 
      // expression mode has an extra mode
      /*
-       if (isoption(parseoptions, SRCML_OPTION_EXPRESSION))
+       if (isoption(parser_options, SRCML_OPTION_EXPRESSION))
        endMode();
      */
 
      // should only be one mode
-     if (size() > 1 && isoption(parseoptions, SRCML_OPTION_DEBUG))
+     if (size() > 1 && isoption(parser_options, SRCML_OPTION_DEBUG))
          emptyElement(SERROR_MODE);
 
      // end all modes except the last
@@ -601,7 +601,7 @@ public:
     bool cpp_skipelse;
     int cpp_ifcount;
     bool isdestructor;
-    OPTION_TYPE & parseoptions;
+    OPTION_TYPE & parser_options;
     std::string namestack[2];
     int ifcount;
 #ifdef ENTRY_DEBUG
@@ -717,7 +717,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
 
         // statements that clearly start with a keyword
-        { (isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) || (LA(1) != TEMPLATE || next_token() != TEMPOPS))
+        { (isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) || (LA(1) != TEMPLATE || next_token() != TEMPOPS))
          && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS)
          && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
          && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
@@ -757,7 +757,7 @@ catch[...] {
 keyword_statements[] { ENTRY_DEBUG } :
 
         // conditional statements
-        if_statement | { !isoption(parseoptions, SRCML_OPTION_NESTIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
+        if_statement | { !isoption(parser_options, SRCML_OPTION_NESTIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
         while_statement | for_statement | do_statement | foreach_statement | forever_statement |
@@ -911,7 +911,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         extern_definition |
 
         // call
-        { isoption(parseoptions, SRCML_OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO)) }?
+        { isoption(parser_options, SRCML_OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO)) }?
         macro_call |
 
         { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration |
@@ -1070,7 +1070,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         // no return value functions:  casting operator method and main
         { type_count == 0 }? function_identifier
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
-        (options { greedy = true; } : { !isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
         function_type[type_count]
 ;
 
@@ -1147,7 +1147,7 @@ annotation_default_initialization[] { CompleteElement element(this); ENTRY_DEBUG
 ref_qualifier []  { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
-            if (isoption(parseoptions, SRCML_OPTION_MODIFIER))
+            if (isoption(parser_options, SRCML_OPTION_MODIFIER))
                 startElement(SMODIFIER);
         }
         (
@@ -1428,7 +1428,7 @@ lambda_expression_full_cpp[] { ENTRY_DEBUG } :
 lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
-            if (isoption(parseoptions, SRCML_OPTION_MODIFIER))
+            if (isoption(parser_options, SRCML_OPTION_MODIFIER))
                     startElement(SMODIFIER);
         }
         (EQUAL | REFOPS)
@@ -1496,7 +1496,7 @@ lambda_single_parameter_java { CompleteElement element(this); ENTRY_DEBUG } :
 // lambda character
 lambda_marked_java[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
         }
         TRETURN
@@ -1817,7 +1817,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
         type = CALL;
 
         // call syntax succeeded, however post call token is not legitimate
-        if (isoption(parseoptions, SRCML_OPTION_CPP) &&
+        if (isoption(parser_options, SRCML_OPTION_CPP) &&
             (((!inLanguage(LANGUAGE_OBJECTIVE_C) || !inTransparentMode(MODE_OBJECTIVE_C_CALL)) && (keyword_token_set.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID))
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS || postcalltoken == CXX_CLASS
@@ -1836,11 +1836,11 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 
         type = NOCALL;
 
-        if (isoption(parseoptions, SRCML_OPTION_CPP) && argumenttoken != 0 && postcalltoken == 0)
+        if (isoption(parser_options, SRCML_OPTION_CPP) && argumenttoken != 0 && postcalltoken == 0)
             type = MACRO;
 
         // single macro call followed by statement_cfg
-        else if (isoption(parseoptions, SRCML_OPTION_CPP) && secondtoken != -1
+        else if (isoption(parser_options, SRCML_OPTION_CPP) && secondtoken != -1
                  && (keyword_token_set.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
                      || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED))
 
@@ -1862,7 +1862,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & is
         markend[postnametoken]
         set_bool[isempty, LA(1) == LPAREN && next_token() == RPAREN]
         (
-            { isoption(parseoptions, SRCML_OPTION_CPP) }?
+            { isoption(parser_options, SRCML_OPTION_CPP) }?
             // check for proper form of argument list
             (call_check_paren_pair[argumenttoken] set_int[call_count, call_count + 1])*
 
@@ -2584,7 +2584,7 @@ namespace_directive[] { ENTRY_DEBUG } :
             // start the using directive
             startElement(SUSING_DIRECTIVE);
         }
-        (options { greedy = true; } : { !isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full)*
+        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full)*
         USING
 ;
 
@@ -2703,7 +2703,7 @@ class_preamble[] { ENTRY_DEBUG } :
         // suppress warning probably do to only having ()*
         (options { greedy = true; } : { inLanguage(LANGUAGE_JAVA) }? annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-        (specifier | { LA(1) != TEMPLATE || next_token() != TEMPOPS }? template_specifier | { !isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) }? template_declaration_full)*
+        (specifier | { LA(1) != TEMPLATE || next_token() != TEMPOPS }? template_specifier | { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) }? template_declaration_full)*
 ;
 
 // a class definition
@@ -2785,7 +2785,7 @@ protocol_definition[] { bool first = true; ENTRY_DEBUG } :
 // handle class header
 objective_c_class_header[] { ENTRY_DEBUG } :
 
-        { isoption(parseoptions, SRCML_OPTION_CPP) }?
+        { isoption(parser_options, SRCML_OPTION_CPP) }?
         (macro_call_check class_header_base LCURLY)=>
            macro_call objective_c_class_header_base |
 
@@ -2962,7 +2962,7 @@ class_default_access_action[int access_token] { ENTRY_DEBUG } :
 // handle class header
 class_header[] { ENTRY_DEBUG } :
 
-        { isoption(parseoptions, SRCML_OPTION_CPP) }?
+        { isoption(parser_options, SRCML_OPTION_CPP) }?
         (macro_call_check class_header_base LCURLY)=>
            macro_call class_header_base |
 
@@ -3218,7 +3218,7 @@ terminate_post[] { ENTRY_DEBUG } :
 
             // end all statements this statement is nested in
             // special case when ending then of if statement
-            if (!isoption(parseoptions, SRCML_OPTION_EXPRESSION) &&
+            if (!isoption(parser_options, SRCML_OPTION_EXPRESSION) &&
                  (!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT)) &&
                 !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INTERNAL_END_PAREN)
                 && !inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP)
@@ -3409,7 +3409,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // start of argument for return or throw statement
         { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
-            isoption(parseoptions, SRCML_OPTION_CPP) && perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO }?
+            isoption(parser_options, SRCML_OPTION_CPP) && perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO }?
         macro_call |
 
         { inMode(MODE_EXPRESSION | MODE_EXPECT) }?
@@ -3559,7 +3559,7 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             incParen();
 
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
         }
         LPAREN
@@ -3568,7 +3568,7 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 // marking | operator
 bar[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR) && !inMode(MODE_PARAMETER))
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR) && !inMode(MODE_PARAMETER))
                 startElement(SOPERATOR);
         }
         BAR
@@ -3611,7 +3611,7 @@ comma[] { ENTRY_DEBUG } :
 // marking comma operator
 comma_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR) && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT) && !(inTransparentMode(MODE_IN_INIT) && inMode(MODE_EXPRESSION | MODE_LIST)) )
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR) && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT) && !(inTransparentMode(MODE_IN_INIT) && inMode(MODE_EXPRESSION | MODE_LIST)) )
                 startElement(SOPERATOR);
         }
         COMMA
@@ -3631,7 +3631,7 @@ colon_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 
             }
 
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
 
         }
@@ -3853,7 +3853,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                         ((inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON) || inLanguage(LANGUAGE_OBJECTIVE_C)) 
                         && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL || token == ATREQUIRED || token == ATOPTIONAL)]
                 throw_exception[type == ACCESS_REGION] |
-                { !isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) }? template_declaration_full set_int[template_count, template_count + 1] | 
+                { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) }? template_declaration_full set_int[template_count, template_count + 1] | 
 
                 { inLanguage(LANGUAGE_CSHARP) }?
                 LBRACKET
@@ -4338,7 +4338,7 @@ qmark_name[] { SingleElement element(this); ENTRY_DEBUG } :
 
 qmark_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
         }
         QMARK ({ SkipBufferSize() == 0 }? QMARK)?
@@ -5788,7 +5788,7 @@ exception
 catch[antlr::RecognitionException] {
 
         // no end found to macro
-        if (isoption(parseoptions, SRCML_OPTION_DEBUG))
+        if (isoption(parser_options, SRCML_OPTION_DEBUG))
             emptyElement(SERROR_PARSE);
 }
 
@@ -5920,7 +5920,7 @@ exception
 catch[antlr::RecognitionException] {
 
         // no end found to macro
-        if (isoption(parseoptions, SRCML_OPTION_DEBUG))
+        if (isoption(parser_options, SRCML_OPTION_DEBUG))
             emptyElement(SERROR_PARSE);
 }
 
@@ -5969,7 +5969,7 @@ exception
 catch[antlr::RecognitionException] {
 
         // no end found to macro
-        if (isoption(parseoptions, SRCML_OPTION_DEBUG))
+        if (isoption(parser_options, SRCML_OPTION_DEBUG))
             emptyElement(SERROR_PARSE);
 }
 
@@ -6232,7 +6232,7 @@ delegate_marked[] { SingleElement element(this); ENTRY_DEBUG } :
 // lambda character
 lambda_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
         }
         LAMBDA
@@ -6454,7 +6454,7 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
 
         }
 
-        (options { greedy = true; } : { !isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
         variable_declaration_type[type_count]
 ;
 
@@ -6589,7 +6589,7 @@ pure_expression_block[] { ENTRY_DEBUG } :
 // All possible operators
 general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
         }
         (
@@ -6612,7 +6612,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
 // only new operator
 sole_new[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
         }
         NEW
@@ -6621,7 +6621,7 @@ sole_new[] { LightweightElement element(this); ENTRY_DEBUG } :
 // only ~
 sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
         }
         DESTOP
@@ -6636,7 +6636,7 @@ general_operators_list[] { ENTRY_DEBUG } :
 // mark up )
 rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (markup && isoption(parseoptions, SRCML_OPTION_OPERATOR) && !inMode(MODE_END_ONLY_AT_RPAREN))
+            if (markup && isoption(parser_options, SRCML_OPTION_OPERATOR) && !inMode(MODE_END_ONLY_AT_RPAREN))
                 startElement(SOPERATOR);
         }
         RPAREN
@@ -6682,7 +6682,7 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
                     // start the then element
                     startNoSkipElement(STHEN);
 
-                    if(isoption(parseoptions, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                    if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
                         startElement(SPSEUDO_BLOCK);
 
                 }
@@ -6748,7 +6748,7 @@ rbracket[] { ENTRY_DEBUG } :
 // Dot (period) operator
 period[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
         }
         PERIOD
@@ -6757,7 +6757,7 @@ period[] { LightweightElement element(this); ENTRY_DEBUG } :
 // ->* operator
 member_pointer[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
         }
       TRETURN  
@@ -6766,7 +6766,7 @@ member_pointer[] { LightweightElement element(this); ENTRY_DEBUG } :
 // ->* operator
 member_pointer_dereference[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
         }
       MPDEREF  
@@ -6775,7 +6775,7 @@ member_pointer_dereference[] { LightweightElement element(this); ENTRY_DEBUG } :
 // .* operator
 dot_dereference[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
         }
         DOTDEREF
@@ -6784,7 +6784,7 @@ dot_dereference[] { LightweightElement element(this); ENTRY_DEBUG } :
 // Namespace operator '::'
 dcolon[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
         }
         DCOLON
@@ -6837,7 +6837,7 @@ expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_D
 // the expression part
 expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; ENTRY_DEBUG } :
 
-       { isoption(parseoptions, SRCML_OPTION_TERNARY) && !skip_ternary && !inMode(MODE_TERNARY_CONDITION)
+       { isoption(parser_options, SRCML_OPTION_TERNARY) && !skip_ternary && !inMode(MODE_TERNARY_CONDITION)
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
             && perform_ternary_check() }? ternary_expression |
 
@@ -6908,7 +6908,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         }
 
         // can have (ternary) in a ternary condition
-        (options { greedy = true; } : { isoption(parseoptions, SRCML_OPTION_TERNARY) && !skip_ternary && inMode(MODE_TERNARY_CONDITION)
+        (options { greedy = true; } : { isoption(parser_options, SRCML_OPTION_TERNARY) && !skip_ternary && inMode(MODE_TERNARY_CONDITION)
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
             && perform_ternary_check() }? ternary_expression)* |
             
@@ -6974,7 +6974,7 @@ literals[] { ENTRY_DEBUG } :
 string_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup strings in literal option
-            if (isoption(parseoptions, SRCML_OPTION_LITERAL))
+            if (isoption(parser_options, SRCML_OPTION_LITERAL))
                 startElement(SSTRING);
         }
         (STRING_START STRING_END)
@@ -6985,7 +6985,7 @@ string_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
 char_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup characters in literal option
-            if (isoption(parseoptions, SRCML_OPTION_LITERAL))
+            if (isoption(parser_options, SRCML_OPTION_LITERAL))
                 startElement(SCHAR);
         }
         (CHAR_START CHAR_END)
@@ -6995,7 +6995,7 @@ char_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
 null_literal[]{ LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup literals in literal option
-            if (isoption(parseoptions, SRCML_OPTION_LITERAL))
+            if (isoption(parser_options, SRCML_OPTION_LITERAL))
                 startElement(SNULL);
         }
         (NULLPTR | NULLLITERAL)
@@ -7005,7 +7005,7 @@ null_literal[]{ LightweightElement element(this); ENTRY_DEBUG } :
 nil_literal[]{ LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup literals in literal option
-            if (isoption(parseoptions, SRCML_OPTION_LITERAL))
+            if (isoption(parser_options, SRCML_OPTION_LITERAL))
                 startElement(SNIL);
         }
         NIL
@@ -7015,7 +7015,7 @@ nil_literal[]{ LightweightElement element(this); ENTRY_DEBUG } :
 complex_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup literals in literal option
-            if (isoption(parseoptions, SRCML_OPTION_LITERAL))
+            if (isoption(parser_options, SRCML_OPTION_LITERAL))
                 startElement(SCOMPLEX);
         }
         COMPLEX_NUMBER ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == CONSTANTS }? OPERATORS CONSTANTS)?
@@ -7027,7 +7027,7 @@ complex_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
 literal[] { LightweightElement element(this); TokenPosition tp; ENTRY_DEBUG } :
         {
             // only markup literals in literal option
-            if (isoption(parseoptions, SRCML_OPTION_LITERAL)) {
+            if (isoption(parser_options, SRCML_OPTION_LITERAL)) {
 
                 startElement(SLITERAL);
 
@@ -7044,7 +7044,7 @@ literal[] { LightweightElement element(this); TokenPosition tp; ENTRY_DEBUG } :
 boolean[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup boolean values in literal option
-            if (isoption(parseoptions, SRCML_OPTION_LITERAL))
+            if (isoption(parser_options, SRCML_OPTION_LITERAL))
                 startElement(SBOOLEAN);
         }
         (TRUE | FALSE)
@@ -7329,7 +7329,7 @@ parameter_type_count[int & type_count, bool output_type = true] { CompleteElemen
 multops[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
-            if (isoption(parseoptions, SRCML_OPTION_MODIFIER))
+            if (isoption(parser_options, SRCML_OPTION_MODIFIER))
                 startElement(SMODIFIER);
         }
         (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[is_qmark, true] | BLOCKOP)
@@ -7339,7 +7339,7 @@ multops[] { LightweightElement element(this); ENTRY_DEBUG } :
 tripledotop[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
-            if (isoption(parseoptions, SRCML_OPTION_MODIFIER))
+            if (isoption(parser_options, SRCML_OPTION_MODIFIER))
                 startElement(SMODIFIER);
         }
         DOTDOTDOT
@@ -7408,7 +7408,7 @@ template_param[] { ENTRY_DEBUG } :
 
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         }  
-        (options { greedy = true; } : { !isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) }? variable_declaration_nameinit)* |
+        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) }? variable_declaration_nameinit)* |
 
         template_inner_full
     )
@@ -7426,7 +7426,7 @@ template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STM
             // expect a name initialization
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         }
-        (options { greedy = true; } : { !isoption(parseoptions, SRCML_OPTION_WRAP_TEMPLATE) }? variable_declaration_nameinit)*
+        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) }? variable_declaration_nameinit)*
 
 ;
 
@@ -7567,7 +7567,7 @@ template_argument_expression[] { ENTRY_DEBUG } :
 // All possible operators
 template_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, SRCML_OPTION_OPERATOR))
+            if (isoption(parser_options, SRCML_OPTION_OPERATOR))
                 startElement(SOPERATOR);
         }
         (
@@ -8157,7 +8157,7 @@ eol_post[int directive_token, bool markblockzero] {
 
                 // should work unless also creates a dangling lcurly or lparen
                 // in which case may need to run on everthing except else.
-                if(isoption(parseoptions, SRCML_OPTION_CPPIF_CHECK) && !inputState->guessing) {
+                if(isoption(parser_options, SRCML_OPTION_CPPIF_CHECK) && !inputState->guessing) {
 
                     std::list<int> end_order = cppif_end_count_check();
                     srcMLState::MODE_TYPE current_mode = getMode();
@@ -8203,7 +8203,7 @@ eol_post[int directive_token, bool markblockzero] {
                 ++cpp_ifcount;
 
                 // create new context for #if (and possible #else)
-                if (!isoption(parseoptions, SRCML_OPTION_CPP_TEXT_ELSE) && !inputState->guessing)
+                if (!isoption(parser_options, SRCML_OPTION_CPP_TEXT_ELSE) && !inputState->guessing)
                     cppmode.push(cppmodeitem(size()));
 
                 break;
@@ -8221,7 +8221,7 @@ eol_post[int directive_token, bool markblockzero] {
                     cpp_ifcount = 1;
                 }
 
-                if (isoption(parseoptions, SRCML_OPTION_CPP_TEXT_ELSE) && !inputState->guessing) {
+                if (isoption(parser_options, SRCML_OPTION_CPP_TEXT_ELSE) && !inputState->guessing) {
 
                     // create an empty cppmode for #if if one doesn't exist
                     if (cppmode.empty())
@@ -8248,7 +8248,7 @@ eol_post[int directive_token, bool markblockzero] {
                 if (cpp_skipelse && cpp_ifcount == 0)
                     cpp_skipelse = false;
 
-                if (isoption(parseoptions, SRCML_OPTION_CPP_TEXT_ELSE) && !inputState->guessing &&
+                if (isoption(parser_options, SRCML_OPTION_CPP_TEXT_ELSE) && !inputState->guessing &&
                     !cppmode.empty()) {
 
                     // add new context for #endif in current #if
@@ -8272,8 +8272,8 @@ eol_post[int directive_token, bool markblockzero] {
                 - when guessing and in else (unless in zero block)
                 - when ??? for cppmode
         */
-        if ((!isoption(parseoptions, SRCML_OPTION_CPP_MARKUP_IF0) && cpp_zeromode) ||
-            (isoption(parseoptions, SRCML_OPTION_CPP_TEXT_ELSE) && cpp_skipelse) ||
+        if ((!isoption(parser_options, SRCML_OPTION_CPP_MARKUP_IF0) && cpp_zeromode) ||
+            (isoption(parser_options, SRCML_OPTION_CPP_TEXT_ELSE) && cpp_skipelse) ||
             (inputState->guessing && cpp_skipelse) ||
             (!cppmode.empty() && !cppmode.top().isclosed && cppmode.top().skipelse)
         ) {
