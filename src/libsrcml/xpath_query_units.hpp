@@ -147,18 +147,24 @@ public :
      */
     std::string child_offset(xmlNodePtr root_result_node) {
 
-        xmlNodePtr parent_node = root_result_node->parent;
+        xmlNodePtr siblilng_node = root_result_node->prev;
         std::ostringstream child_offset_string("");
-        if(parent_node) {
 
-            child_offset_string << 1;
+        int child_count = 1;
+        if(siblilng_node) {
 
+            std::string full_name = form_full_name(root_result_node);
 
-        } else {
+            for(; sibling_node; sibling_node = sibling_node->prev) {
 
-            child_offset_string << 1;
+                if(full_name == form_full_name(sibling_node))
+                    ++child_count;
+
+            }
 
         }
+
+        child_offset_string << child_count;
 
         return child_offset_string.str();
 
