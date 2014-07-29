@@ -138,6 +138,8 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_DEBUG_TIMER       1<<22
 /** turn on optional ternary operator markup */
 #define SRCML_OPTION_TERNARY           1<<23
+/** turn on optional ternary operator markup */
+#define SRCML_OPTION_PSEUDO_BLOCK      1<<24
 
 /* srcml status messages */
 /** Return status indicating no errors */

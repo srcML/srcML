@@ -6681,6 +6681,10 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
 
                     // start the then element
                     startNoSkipElement(STHEN);
+
+                    if(isoption(parseoptions, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                        startElement(SPSEUDO_BLOCK);
+
                 }
 
                 // end the single mode that started the list
