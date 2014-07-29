@@ -6688,13 +6688,20 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
                 }
 
 
-                // end while, etc. and output pseudo block  @todo may need to have a MODE_WHILE
+                // end while condition, etc. and output pseudo block  @todo may need to have a MODE_WHILE
                 if(inMode(MODE_LIST | MODE_CONDITION) && inPrevMode(MODE_STATEMENT | MODE_NEST)) {
 
                     endMode(MODE_LIST);
                     if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
                         startElement(SPSEUDO_BLOCK);
 
+
+                // end for group and output pseudo block @todo make sure does not hid other things that use for grammar
+                } else if(inMode(MODE_LIST | MODE_FOR_INCREMENT) || inMode(MODE_LIST | MODE_FOR_CONDITION)) {
+
+                    endMode(MODE_FOR_INCREMENT);
+                    if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                        startElement(SPSEUDO_BLOCK);
 
                 } else
 
