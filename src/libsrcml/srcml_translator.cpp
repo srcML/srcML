@@ -98,11 +98,13 @@ srcml_translator::srcml_translator(char ** str_buf,
                                  const char* directory,
                                  const char* filename,
                                  const char* version,
+                                 const std::vector<std::string> & attributes,
                                  const char* timestamp,
                                  const char* hash)
-    :  Language(language), first(true), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
+    :  Language(language), first(true),
+       directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), attributes(attributes),
        options(op), buffer(0),
-       out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, processing_instruction, tabsize), tabsize(tabsize),
+       out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, attributes, processing_instruction, tabsize), tabsize(tabsize),
        str_buffer(str_buf), size(size), is_outputting_unit(false), output_unit_depth(0) {
 
     buffer = xmlBufferCreate();
@@ -140,12 +142,13 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* directory,
                                  const char* filename,
                                  const char* version,
+                                 const std::vector<std::string> & attributes,
                                  const char* timestamp, 
                                  const char* hash)
     : Language(language), first(true),
-      directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash),
+      directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), attributes(attributes),
       options(op), buffer(0),
-      out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, processing_instruction, tabsize), tabsize(tabsize),
+      out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, attributes, processing_instruction, tabsize), tabsize(tabsize),
       str_buffer(0), size(0), is_outputting_unit(false), output_unit_depth(0) {}
 
 /**
@@ -177,7 +180,7 @@ void srcml_translator::close() {
         out.outputPreRootProcessingInstruction();
 
         // root unit for compound srcML documents
-        out.startUnit(0, directory, filename, version, 0, 0, true);
+        out.startUnit(0, directory, filename, version, 0, 0, attributes, true);
 
     }
 
@@ -274,7 +277,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
         // root unit for compound srcML documents
 
         if((options & SRCML_OPTION_ARCHIVE) > 0)
-            out.startUnit(0, directory, filename, version, 0, 0, true);
+            out.startUnit(0, directory, filename, version, 0, 0, attributes, true);
 
         if ((options & SRCML_OPTION_ARCHIVE) > 0)
             out.processText("\n\n", 2);
@@ -306,7 +309,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
     if(is_cpp) options |= SRCML_OPTION_CPP;
 
     out.startUnit(language_start_value ? language_start_value + 1 : 0, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
-                         unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, false);
+                         unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, unit->attributes, false);
 
     if(language_start_name) (*language_end_value) = '"';
 
@@ -364,7 +367,7 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
     OPTION_TYPE save_options = options;
 
     out.startUnit(unit->language ? unit->language->c_str() : (unit->archive->language ? unit->archive->language->c_str() : 0), unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
-                          unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, false);
+                          unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, unit->attributes, false);
 
     options = save_options;
 

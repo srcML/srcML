@@ -407,10 +407,11 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          OPTION_TYPE& op,
                          std::vector<std::string> & prefix,
                          std::vector<std::string> & uri,
+                         const std::vector<std::string> & attributes,
                          boost::optional<std::pair<std::string, std::string> > processing_instruction,
                          int ts)
     : input(ints), xout(0), output_buffer(output_buffer), unit_language(language), unit_dir(0), unit_filename(0),
-      unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(prefix), num2uri(uri), processing_instruction(processing_instruction),
+      unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(prefix), num2uri(uri), unit_attributes(attributes), processing_instruction(processing_instruction),
       openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0),
       debug_time_start(boost::posix_time::microsec_clock::universal_time())
 {
@@ -783,6 +784,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename,
                             const char* version, const char* timestamp,
                             const char* hash,
+                            const std::vector<std::string> & attributes,
                             bool output_macrolist) {
 
     const char * prefix = num2prefix[0].c_str();
@@ -860,6 +862,12 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
         xmlTextWriterWriteAttribute(xout, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
     }
 
+    for(std::vector<std::string>::size_type pos = 0; pos < attributes.size(); pos += 2) {
+
+        xmlTextWriterWriteAttribute(xout, BAD_CAST attributes[pos].c_str(), BAD_CAST attributes[pos + 1].c_str());
+
+    }
+
     if(output_macrolist) outputMacroList();
 
     ++depth;
@@ -905,7 +913,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
         // keep track of number of open elements
         openelementcount = 0;
-        startUnit(unit_language, unit_dir, unit_filename, unit_version, unit_timestamp, unit_hash, !isoption(options, SRCML_OPTION_ARCHIVE));
+        startUnit(unit_language, unit_dir, unit_filename, unit_version, unit_timestamp, unit_hash, unit_attributes, !isoption(options, SRCML_OPTION_ARCHIVE));
 
     } else {
 

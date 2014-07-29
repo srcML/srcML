@@ -141,8 +141,7 @@ machine.
 * libarchive-devel  
 * libcurl-devel  
 * libopenssl-devel  
-* docbook2X 
-* cmake 
+* docbook2X
 
 ##### Notes
 
@@ -175,7 +174,6 @@ the right location
 * libantlr-dev  
 * libcurl4-openssl-dev  
 * libssl-dev
-* cmake
 
 *# for srcML documentation generation*
 
