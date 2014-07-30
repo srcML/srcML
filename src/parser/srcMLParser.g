@@ -689,7 +689,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         comma | { inLanguage(LANGUAGE_JAVA) }? bar | { inTransparentMode(MODE_OBJECTIVE_C_CALL) }? rbracket |
 
-        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) || inMode(MODE_FOR_INCREMENT) || inPrevMode(MODE_FOR_INCREMENT) }? rparen[false] |
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION)
+            || (inMode(MODE_FOR_INCREMENT) && !inMode(MODE_FOR_INCREMENT | MODE_EXPECT)) || inPrevMode(MODE_FOR_INCREMENT) }? rparen[false] |
 
         // characters with special actions that usually end currently open elements
         { !inTransparentMode(MODE_INTERNAL_END_CURLY) }? block_end |
