@@ -6657,8 +6657,17 @@ rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DE
     ;
 
 //processing on )
-rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
+rparen[bool markup = true] { bool isempty = getParen() == 0; bool in_for_incr = inPrevMode(MODE_FOR_INCREMENT); ENTRY_DEBUG } :
         {
+
+            if(in_for_incr) {
+
+                // stop at this matching paren, or a preprocessor statement
+                endDownToModeSet(MODE_INTERNAL_END_PAREN);
+
+            }
+
+
             if (isempty) {
 
                 // additional right parentheses indicates end of non-list modes
@@ -6710,9 +6719,17 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
 
 
                 // end for group and output pseudo block @todo make sure does not hid other things that use for grammar
-                } else if(inMode(MODE_LIST | MODE_FOR_INCREMENT) || inMode(MODE_LIST | MODE_FOR_CONDITION)) {
+                } else if(in_for_incr) {
 
-                    endMode();
+                    if(inMode(MODE_LIST))
+                        endMode(MODE_LIST);
+    
+                    if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                        startElement(SPSEUDO_BLOCK);
+
+                } else if(inMode(MODE_LIST | MODE_FOR_CONDITION)) {
+
+                    endMode(MODE_FOR_CONDITION);
                     if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
                         startElement(SPSEUDO_BLOCK);
 
