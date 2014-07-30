@@ -6,12 +6,12 @@
     <block type="pseudo"><if>if <condition>(<expr>2</expr>)</condition><then>
       <block type="pseudo"><expr_stmt><expr><name>x</name> = 1</expr>;</expr_stmt></block></then>
     <else>else
-      <expr_stmt><expr><name>x</name> = 2</expr>;</expr_stmt></else></if></block></then>
+      <block type="pseudo"><expr_stmt><expr><name>x</name> = 2</expr>;</expr_stmt></block></else></if></block></then>
   <elseif>else
     <if>if <condition>(<expr>3</expr>)</condition><then> 
       <block type="pseudo"><expr_stmt><expr><name>x</name> = 3</expr>;</expr_stmt></block></then></if></elseif>
     <else>else
-      <expr_stmt><expr><name>x</name> = 4</expr>;</expr_stmt></else></if>
+      <block type="pseudo"><expr_stmt><expr><name>x</name> = 4</expr>;</expr_stmt></block></else></if>
 </unit>
 
 <unit>
@@ -22,7 +22,7 @@
     <if>if <condition>(<expr>3</expr>)</condition><then> 
       <block type="pseudo"><expr_stmt><expr><name>x</name> = 3</expr>;</expr_stmt></block></then></if></elseif>
     <else>else
-      <expr_stmt><expr><name>x</name> = 4</expr>;</expr_stmt></else></if></block></then></if>
+      <expr_stmt><expr><name>x</name> = 4</expr>;</expr_stmt></block></else></if></block></then></if>
 </unit>
 
 <unit>
@@ -31,23 +31,23 @@
       <block type="pseudo"><if>if <condition>(<expr>3</expr>)</condition><then>
 	<block type="pseudo"><break>break;</break></block></then>
       <else>else
-	<break>break;</break></else></if></block></then>
+	<block type="pseudo"><break>break;</break></block></else></if></block></then>
     <elseif>else
       <if>if <condition>(<expr>4</expr>)</condition><then>
 	<block type="pseudo"><break>break;</break></block></then></if></elseif>
       <else>else
-	<break>break;</break></else></if></block></then>
+	<block type="pseudo"><break>break;</break></block></else></if></block></then>
   <elseif>else
     <if>if <condition>(<expr>5</expr>)</condition><then> 
       <block type="pseudo"><if>if <condition>(<expr>6</expr>)</condition><then>
 	<block type="pseudo"><break>break;</break></block></then>
       <else>else
-	<break>break;</break></else></if></block></then></if></elseif>
+	<block type="pseudo"><break>break;</break></block></else></if></block></then></if></elseif>
     <elseif>else
       <if>if <condition>(<expr>7</expr>)</condition><then>
 	<block type="pseudo"><break>break;</break></block></then></if></elseif>
       <else>else
-	<break>break;</break></else></if>
+	<break>break;</break></block></else></if>
 </unit>
 
 <unit>
@@ -56,23 +56,23 @@
       <block type="pseudo"><if>if <condition>(<expr>3</expr>)</condition><then>
 	<block type="pseudo"><continue>continue;</continue></block></then>
       <else>else
-	<continue>continue;</continue></else></if></block></then>
+	<block type="pseudo"><continue>continue;</continue></block></else></if></block></then>
     <elseif>else
       <if>if <condition>(<expr>4</expr>)</condition><then>
 	<block type="pseudo"><continue>continue;</continue></block></then></if></elseif>
       <else>else
-	<continue>continue;</continue></else></if></block></then>
+	<continue>continue;</continue></block></else></if></block></then>
   <elseif>else
     <if>if <condition>(<expr>5</expr>)</condition><then> 
       <block type="pseudo"><if>if <condition>(<expr>6</expr>)</condition><then>
 	<block type="pseudo"><continue>continue;</continue></block></then>
       <else>else
-	<continue>continue;</continue></else></if></block></then></if></elseif>
+	<block type="pseudo"><continue>continue;</continue></block></else></if></block></then></if></elseif>
     <elseif>else
       <if>if <condition>(<expr>7</expr>)</condition><then>
 	<block type="pseudo"><continue>continue;</continue></block></then></if></elseif>
       <else>else
-	<continue>continue;</continue></else></if>
+	<block type="pseudo"><continue>continue;</continue></block></else></if>
 </unit>
 
 </unit>

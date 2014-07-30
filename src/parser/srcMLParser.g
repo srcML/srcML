@@ -2206,6 +2206,13 @@ else_statement[] { ENTRY_DEBUG } :
             startElement(SELSE);
         }
         ELSE
+
+        {
+
+            if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                startElement(SPSEUDO_BLOCK);
+
+        }
 ;
 
 /*
