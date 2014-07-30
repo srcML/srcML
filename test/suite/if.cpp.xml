@@ -97,7 +97,7 @@
     <block type="pseudo"><if>if <condition>(<expr>3</expr>)</condition><then> 
       <block type="pseudo"><expr_stmt><expr><name>x</name> = 3</expr>;</expr_stmt></block></then>
     <else>else
-      <block type="pseudo"><expr_stmt><expr><name>x</name> = 4</expr>;</expr_stmt></block></else></if></else></if></block></then></if>
+      <block type="pseudo"><expr_stmt><expr><name>x</name> = 4</expr>;</expr_stmt></block></else></if></block></else></if></block></then></if>
 </unit>
 
 <unit>
