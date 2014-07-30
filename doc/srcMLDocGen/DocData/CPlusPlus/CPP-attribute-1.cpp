@@ -1,0 +1,1 @@
+[[noreturn]] void std::exit() { }

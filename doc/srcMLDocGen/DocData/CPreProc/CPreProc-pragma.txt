@@ -1,0 +1,3 @@
+// #pragma example
+#pragma warning( once : 4385 )
+#pragma ms_struct on

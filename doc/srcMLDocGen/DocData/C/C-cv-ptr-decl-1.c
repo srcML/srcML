@@ -1,0 +1,1 @@
+int volatile *const z = &some_object;

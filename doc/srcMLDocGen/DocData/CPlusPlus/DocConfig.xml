@@ -1,0 +1,1135 @@
+<DocConfig title="C++ srcML" lang="C++" outputFile="CPP.md">
+
+    <DocEntry title="Array Access">
+        <Elements>
+            <Element name="name"/>
+            <Subelement name="name" />
+            <Subelement name="index" />
+        </Elements>
+        <Example file="../C/C-array-access.c" />
+    </DocEntry>
+
+    <DocEntry title="Function Call">
+        <Elements>
+            <Element name="call"/>
+            <Subelement name="name" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example title="Typical Function Call" file="../C/C-call.c" />
+        <Example title="Explicit Operator Call" file="CPP-new-6.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Member Access">
+        <Elements>
+            <Element name="expr"/>
+            <Subelement name="name" />
+            <Subelement ns="op" name="operator" >
+            	<RequiredMarkup srcMLOption="--operator"/>
+            </Subelement>
+        </Elements>
+        <Example file="../C/C-member-access.c" />
+    </DocEntry>
+
+    <DocEntry title="Dereference Member Access">
+        <Elements>
+            <Element name="expr"/>
+            <Subelement name="name" />
+            <Subelement ns="op" name="operator">
+            	<RequiredMarkup srcMLOption="--operator"/>
+            </Subelement>
+        </Elements>
+        <Example file="../C/C-deref-member-access.c" />
+    </DocEntry>
+
+    <DocEntry title="sizeof">
+        <Elements>
+            <Element name="sizeof"/>
+            <Subelement name="argument_list" />
+            <Subelement name="argument"/>
+        </Elements>
+        <Example file="../C/C-sizeof.c" />
+        <Example file="CPP-sizeof-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Cast" cat="expr">
+        <Elements>
+            <Element ns="op" name="operator">
+            	<RequiredMarkup srcMLOption="--operator"/>
+            </Element>
+            <Subelement name="name" />
+        </Elements>
+        <Example file="../C/C-c-style-cast.c" />
+    </DocEntry>
+
+    <DocEntry title="Variable Declaration">
+        <Elements>
+            <Element name="decl" />
+            <Subelement name="init">
+            	<Desc>Only used when variable is initialized at declaration. See initialization examples for more details.</Desc>
+            </Subelement>
+        </Elements>
+        <Example title="A Trivial Example" file="../C/C-variable-declaration-1.c" />
+        <Example title="struct, union and enum declarations" file="../C/C-variable-declaration-2.c" />
+    </DocEntry>
+
+    <DocEntry title="Variable Declaration Statement">
+        <Elements>
+            <Element name="decl_stmt" />
+        </Elements>
+        <Example title="A Trivial Example" file="../C/C-variable-declaration-1.c" />
+        <Example title="struct, union and enum declarations" file="../C/C-variable-declaration-2.c" />
+    </DocEntry>
+
+    <DocEntry title="const" cat="stmt">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="../C/C-const-variable-1.c" />
+        <Example file="../C/C-const-variable-2.c" />
+    </DocEntry>
+
+    <DocEntry title="const Funciton" >
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="CPP-const-func-1.cpp" />
+    </DocEntry>
+
+
+    <DocEntry title="extern Block">
+        <Elements>
+            <Element name="extern" />
+            <Subelement ns="lit" name="literal" >
+                <RequiredMarkup srcMLOption="--literal"/>
+            </Subelement>
+            <Subelement name="block" />
+        </Elements>
+        <Example title="Extern Block with Linkage Specifier" file="../C/C-extern-linkage-block.c" />
+    </DocEntry>
+
+    <DocEntry title="extern Specifier">
+        <Elements>
+            <Element name="specifier" />
+            <Subelement ns="lit" name="literal" >
+                <RequiredMarkup srcMLOption="--literal"/>
+            </Subelement>
+            <Subelement name="decl_stmt" />
+            <Subelement name="function_stmt" />
+            <Subelement name="block" />
+        </Elements>
+        <Example title="External Variable" file="../C/C-extern-1.c" />
+        <Example title="External Structure" file="../C/C-extern-2.c" />
+        <Example title="External Function" file="../C/C-extern-3.c" />
+        <Example title="External Function with Linkage Specifier" file="../C/C-extern-linkage-1.c" />
+        <Example title="Extern Structure with Linkage Specifier" file="../C/C-extern-linkage-2.c" />
+        <Example title="Extern Variable with Linkage Specifier" file="../C/C-extern-linkage-3.c" />
+    </DocEntry>
+
+    <DocEntry title="auto Specifier">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="../C/C-auto.c" />
+
+    </DocEntry>
+
+    <DocEntry title="auto Type" cat="decl">
+        <Elements>
+            <Element name="name" />
+        </Elements>
+        <Example file="CPP-auto-1.cpp" />
+        <Example file="CPP-auto-2.cpp" />
+    </DocEntry>
+
+
+    <DocEntry title="static">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="../C/C-static-1.c" />
+        <Example file="../C/C-static-2.c" />
+    </DocEntry>
+
+
+    <DocEntry title="typedef">
+        <Elements>
+            <Element name="typedef" />
+            <Subelement name="type" />
+            <Subelement name="name" />
+            <Subelement name="function_decl" />
+        </Elements>
+        <Example file="../C/C-typedef-1.c" />
+        <Example file="../C/C-typedef-2.c" />
+        <Example file="../C/C-typedef-3.c" />
+        <Example file="../C/C-typedef-4.c" />
+    </DocEntry>
+
+    <DocEntry title="register">
+        <Elements>
+            <Element name="name" />
+        </Elements>
+        <Example file="../C/C-register.c" />
+    </DocEntry>
+
+    <DocEntry title="restrict">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="../C/C-restrict.c" />
+    </DocEntry>
+
+    <DocEntry title="volatile">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="../C/C-volatile.c" />
+    </DocEntry>
+
+    <DocEntry title="inline">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="../C/C-inline.c" />
+        <Example file="CPP-inline-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="struct Definition">
+    	<Desc>See [Class](#class) for more examples.</Desc>
+        <Elements>
+            <Element name="struct" />
+            <Subelement name="name" />
+            <Subelement name="super" />
+        </Elements>
+        <Example title="Trivial Declaration" file="../C/C-struct-declaration-1.c" />
+        <Example title="Variable Of An Anonymous Struct Type" file="../C/C-struct-declaration-2.c" />
+        <Example title="Declaring A Struct And Instance" file="../C/C-struct-declaration-4.c" />
+    </DocEntry>
+
+    <DocEntry title="struct Declaration">
+        <Elements>
+            <Element name="struct_decl" />
+        </Elements>
+        <Example title="Forward Declaration" file="../C/C-struct-declaration-3.c" />
+    </DocEntry>
+
+    <DocEntry title="Bitfield">
+        <Elements>
+            <Element name="range" />
+            <Subelement ns="lit" name="literal">
+            	<RequiredMarkup srcMLOption="--literal"/>
+            </Subelement>
+            <Subelement name="name" />
+        </Elements>
+        <Example file="../C/C-bitfields.c" />
+    </DocEntry>
+
+    <DocEntry title="struct Varaiable Initialization">
+        <Elements>
+            <Element name="decl_stmt" />
+            <Subelement name="decl" />
+            <Subelement name="init" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="../C/C-struct-initialization-1.c" />
+        <Example file="../C/C-struct-initialization-2.c" />
+        <Example file="../C/C-struct-initialization-3.c" />
+    </DocEntry>
+
+    <DocEntry title="union Declaration">
+        <Elements>
+            <Element name="union_decl" />
+            <Subelement name="name" />
+        </Elements>
+        <!-- <Example file="../C/C-union-declaration-1.c" /> -->
+        <Example file="../C/C-union-declaration-2.c" />
+    </DocEntry>
+
+
+    <DocEntry title="union Definition">
+        <Elements>
+            <Element name="union" />
+            <Subelement name="name" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="../C/C-union-declaration-1.c" />
+        <!-- <Example file="../C/C-union-declaration-2.c" /> -->
+    </DocEntry>
+
+    <DocEntry title="enum Declaration">
+        <Elements>
+            <Element name="enum" />
+            <Subelement name="name" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="../C/C-enum-declaration-1.c" />
+        <Example file="../C/C-enum-declaration-2.c" />
+        <Example file="../C/C-enum-declaration-3.c" />
+    </DocEntry>
+
+    <DocEntry title="Array Declaration">
+        <Elements>
+            <Element name="decl" />
+            <Subelement name="name" />
+            <Subelement name="index" />
+        </Elements>
+        <Example file="../C/C-array-declaration-1.c" />
+        <Example file="../C/C-array-declaration-2.c" />
+        <Example file="../C/C-array-declaration-3.c" />
+        <Example file="../C/C-array-declaration-4.c" />
+    </DocEntry>
+
+    <DocEntry title="Array Declaration Initialization">
+        <Elements>
+            <Element name="init" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="../C/C-array-initialization-1.c" />
+        <Example file="../C/C-array-initialization-2.c" />
+    </DocEntry>
+
+    <DocEntry title="Pointer Declaration" cat="decl">
+        <Elements>
+            <Element ns="type" name="modifier">
+                <RequiredMarkup srcMLOption="--modifier"/>
+            </Element>
+        </Elements>
+        <Example file="../C/C-pointer-declaration-1.c" />
+        <Example file="../C/C-pointer-declaration-2.c" />
+        <Example file="../C/C-pointer-declaration-3.c" />
+        <Example file="../C/C-pointer-declaration-4.c" />
+        <Example file="../C/C-pointer-declaration-5.c" />
+        <Example file="../C/C-cv-ptr-decl-1.c" />
+        <Example file="../C/C-cv-ptr-decl-2.c" />
+    </DocEntry>
+
+    <DocEntry title="Function Declaration">
+        <Elements>
+            <Element name="function_decl" />
+            <Subelement name="name" />
+            <Subelement name="parameter_list" />
+            <Subelement name="param" />
+        </Elements>
+        <Example file="../C/C-function-decl-1.c" />
+        <Example file="../C/C-function-decl-2.c" />
+        <Example file="../C/C-function-decl-3.c" />
+        <Example file="../C/C-function-decl-4.c" />
+        <Example file="../C/C-function-decl-5.c" />
+        <Example file="CPP-function-decl-1.cpp" />
+    </DocEntry>
+
+
+    <DocEntry title="Function Definition">
+        <Elements>
+            <Element name="function" />
+            <Subelement name="name" />
+            <Subelement name="parameter_list" />
+            <Subelement name="param" />
+        </Elements>
+        <Example file="../C/C-function-def-1.c" />
+        <Example file="../C/C-function-def-2.c" />
+        <Example file="../C/C-function-def-3.c" />
+        <Example file="../C/C-function-def-4.c" />
+        <Example file="../C/C-function-def-5.c" />
+        <Example file="CPP-auto-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Function Call">
+        <Elements>
+            <Element name="call" />
+            <Subelement name="name" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="../C/C-function-call.c" />
+    </DocEntry>
+
+    <DocEntry title="break">
+        <Elements>
+            <Element name="break" />
+        </Elements>
+        <Example file="../C/C-break.c" />
+    </DocEntry>
+
+    <DocEntry title="Block">
+        <Elements>
+            <Element name="block" />
+        </Elements>
+        <Example file="../C/C-compound-block.c" />
+    </DocEntry>
+
+    <DocEntry title="continue Statement">
+        <Elements>
+            <Element name="continue" />
+        </Elements>
+        <Example file="../C/C-continue.c" />
+    </DocEntry>
+
+    <DocEntry title="do while Statement">
+        <Elements>
+            <Element name="do" />
+            <Subelement name="block" />
+            <Subelement name="condition" />
+        </Elements>
+        <Example file="../C/C-do-while-1.c" />
+        <Example file="../C/C-do-while-2.c" />
+    </DocEntry>
+
+    <DocEntry title="for Statement">
+        <Elements>
+            <Element name="for" />
+            <Subelement name="init" />
+            <Subelement name="condition" />
+            <Subelement name="incr" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="../C/C-for-1.c" />
+        <Example file="../C/C-for-2.c" />
+        <Example file="../C/C-for-3.c" />
+        <Example file="CPP-range-for-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="goto Statement">
+        <Elements>
+            <Element name="goto" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="../C/C-goto.c" />
+    </DocEntry>
+
+    <DocEntry title="Label Statement">
+        <Elements>
+            <Element name="label" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="../C/C-label.c" />
+    </DocEntry>
+
+    <DocEntry title="if Statement">
+        <Elements>
+            <Element name="if" />
+            <Subelement name="else" />
+            <Subelement name="elseif" />
+            <Subelement name="condition" />
+            <Subelement name="block" />
+            <Subelement name="then" />
+        </Elements>
+        <Example file="../C/C-if-1.c" />
+        <Example file="../C/C-if-2.c" />
+        <Example file="../C/C-if-3.c" />
+        <Example file="../C/C-if-4.c" />
+        <Example file="../C/C-if-5.c" />
+        <Example file="../C/C-if-6.c" />
+    </DocEntry>
+
+    <DocEntry title="Empty Statement">
+        <Elements>
+            <Element name="empty_stmt" />
+        </Elements>
+        <Example file="../C/C-empty-stmt.c" />
+    </DocEntry>
+
+    <DocEntry title="return">
+        <Elements>
+            <Element name="return" />
+        </Elements>
+        <Example file="../C/C-return-1.c" />
+        <Example file="../C/C-return-2.c" />
+    </DocEntry>
+
+    <DocEntry title="switch Statements">
+        <Elements>
+            <Element name="switch" />
+            <Subelement name="case" />
+            <Subelement name="condition" />
+            <Subelement name="block" />
+
+        </Elements>
+        <Example file="../C/C-switch-1.c" />
+        <Example file="../C/C-switch-2.c" />
+    </DocEntry>
+
+    <DocEntry title="case Statements">
+        <Elements>
+            <Element name="case" />
+            <Subelement name="expr" />
+        </Elements>
+        <Example file="../C/C-case-1.c" />
+    </DocEntry>
+
+    <DocEntry title="while Statement">
+        <Elements>
+            <Element name="while" />
+            <Subelement name="condition" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="../C/C-while-1.c" />
+    </DocEntry>
+
+     <DocEntry title="new" cat="expr">
+        <Elements>
+            <Element ns="op" name="operator">
+                <RequiredMarkup srcMLOption="--operator"/>
+            </Element>
+        </Elements>
+        <Example title="Regular new" file="CPP-new-1.cpp" />
+        <Example title="Array new 1" file="CPP-new-2.cpp" />
+        <Example title="Array new 2" file="CPP-new-3.cpp" />
+        <Example title="std::nothrow new" file="CPP-new-4.cpp" />
+        <Example title="Placement new" file="CPP-new-5.cpp" />
+    </DocEntry>
+
+     <DocEntry title="Reference Declaration" cat="decl">
+        <Elements>
+            <Element ns="type" name="modifier">
+                <RequiredMarkup srcMLOption="--modifier"/>
+            </Element>
+        </Elements>
+        <Example file="CPP-reference-decl-1.cpp" />
+    </DocEntry>
+
+ 	<DocEntry title="static_cast">
+        <Elements>
+            <Element name="call" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="CPP-static_cast-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="dynamic_cast">
+        <Elements>
+            <Element name="call" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="CPP-dynamic_cast-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="reinterpret_cast">
+        <Elements>
+            <Element name="call" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="CPP-reinterpret_cast-1.cpp" />
+    </DocEntry>
+
+     <DocEntry title="delete" cat="expr">
+        <Elements>
+            <Element ns="op" name="operator">
+                <RequiredMarkup srcMLOption="--operator"/>
+            </Element>
+        </Elements>
+        <Example title="Regular delete" file="CPP-delete-1.cpp" />
+        <Example title="Array delete" file="CPP-delete-2.cpp" />
+    </DocEntry>
+
+    <DocEntry title="typeid">
+        <Elements>
+            <Element name="call" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="CPP-typeid-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="noexcept" cat="lang">
+        <Elements>
+            <Element name="noexcept" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="CPP-noexcept-1.cpp" />
+        <Example file="CPP-noexcept-2.cpp" />
+    </DocEntry>
+
+    <DocEntry title="alignof">
+        <Elements>
+            <Element name="alignof" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="CPP-alignof-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="constexpr">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="CPP-constexpr-1.cpp" />
+        <Example file="CPP-constexpr-2.cpp" />
+    </DocEntry>
+
+    <DocEntry title="alignas">
+        <Elements>
+            <Element name="alignas" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="CPP-alignas-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="namespace">
+        <Elements>
+            <Element name="namespace" />
+            <Subelement name="name" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="CPP-namespace-1.cpp" />
+        <Example file="CPP-namespace-2.cpp" />
+        <Example file="CPP-namespace-3.cpp" />
+        <Example file="CPP-namespace-4.cpp" />
+        <Example file="CPP-namespace-5.cpp" />
+        <Example file="CPP-namespace-6.cpp" />
+    </DocEntry>
+
+    <DocEntry title="thread_local">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="CPP-thread_local-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="decltype">
+        <Elements>
+            <Element name="decltype" />
+            <Subelement name="argument_list"/>
+            <Subelement name="argument"/>
+        </Elements>
+        <Example file="CPP-decltype-1.cpp" />
+        <Example file="CPP-decltype-2.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Type Aliasing">
+        <Elements>
+            <Element name="using" />
+        </Elements>
+        <Example file="CPP-type-alias-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Attribute">
+        <Elements>
+            <Element name="attribute" />
+            <Subelement name="expr" />
+        </Elements>
+        <Example file="CPP-attribute-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Initialization with an initialization_list">
+        <Elements>
+            <Element name="call" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="CPP-block-init-ctor-syntax-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Default Function Arguments">
+        <Elements>
+            <Element name="init" />
+            <Subelement name="expr" />
+        </Elements>
+        <Example file="CPP-default-func-args-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="RValue Reference" cat="decl">
+        <Elements>
+            <Element ns="type" name="modifier" >
+            	<RequiredMarkup srcMLOption="--modifier"/>
+            </Element>
+        </Elements>
+        <Example file="CPP-rvalue-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Lamda Expression">
+        <Elements>
+            <Element name="lambda" />
+            <Subelement name="parameter_list" />
+            <Subelement name="param" />
+            <Subelement name="capture" />
+            <Subelement name="argument" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="CPP-lambda-1.cpp" />
+        <Example file="CPP-lambda-2.cpp" />
+        <Example file="CPP-lambda-3.cpp" />
+        <Example file="CPP-lambda-4.cpp" />
+        <Example file="CPP-lambda-5.cpp" />
+        <Example file="CPP-lambda-6.cpp" />
+        <Example file="CPP-lambda-7.cpp" />
+    </DocEntry>
+
+    <DocEntry title="throw">
+        <Elements>
+            <Element name="throw" />
+            <Subelement name="expr" />
+        </Elements>
+        <Example file="CPP-throw-1.cpp" />
+        <Example file="CPP-throw-2.cpp" />
+        <Example file="CPP-throw-3.cpp" />
+    </DocEntry>
+
+    <DocEntry title="try">
+        <Elements>
+            <Element name="try" />
+            <Subelement name="block" />
+            <Subelement name="catch" />
+        </Elements>
+        <Example file="CPP-try-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="catch">
+        <Elements>
+            <Element name="catch" />
+            <Subelement name="parameter_list" />
+            <Subelement name="param" />
+        </Elements>
+        <Example file="CPP-catch-1.cpp" />
+        <Example file="CPP-catch-2.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Function try-catch">
+        <Elements>
+            <Element name="try" />
+            <Subelement name="catch" />
+            <Subelement name="block" />
+            <Subelement name="member_list" />
+        </Elements>
+        <Example file="CPP-func-try-catch-1.cpp" />
+        <Example file="CPP-func-try-catch-2.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Variadic Type Modifier" cat="decl">
+        <Elements>
+            <Element ns="type" name="modifier" />
+        </Elements>
+        <Example file="CPP-var-type-mod-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="final">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="CPP-final-1.cpp" />
+        <Example file="CPP-final-2.cpp" />
+    </DocEntry>
+
+    <DocEntry title="override">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="CPP-override-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="class">
+        <Elements>
+            <Element name="class" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="CPP-class-1.cpp" />
+        <Example file="CPP-class-2.cpp" />
+        <Example file="CPP-class-3.cpp" />
+        <Example file="CPP-class-4.cpp" />
+        <Example file="CPP-class-5.cpp" />
+        <Example file="CPP-class-6.cpp" />
+        <Example file="CPP-class-7.cpp" />
+        <Example file="CPP-class-8.cpp" />
+    </DocEntry>
+
+    <DocEntry title="class Declaration">
+        <Elements>
+            <Element name="class_decl" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="CPP-class-decl-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Constructor">
+        <Elements>
+            <Element name="constructor" />
+            <Subelement name="name" />
+            <Subelement name="parameter_list" />
+            <Subelement name="param" />
+            <Subelement name="member_list" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="CPP-ctor-1.cpp" />
+        <Example file="CPP-ctor-2.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Constructor Declaration">
+        <Elements>
+            <Element name="constructor_decl" />
+            <Subelement name="name" />
+            <Subelement name="parameter_list" />
+            <Subelement name="param" />
+            <Subelement name="member_list" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="CPP-ctor-decl-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Destructor">
+        <Elements>
+            <Element name="destructor" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="CPP-dtor-1.cpp" />
+        <Example file="CPP-dtor-2.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Destructor Declaration">
+        <Elements>
+            <Element name="destructor_decl" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="CPP-dtor-decl-1.cpp" />
+    </DocEntry>
+
+
+    <DocEntry title="friend">
+        <Elements>
+            <Element name="specifier" />
+            <!-- <Subelement name="A" /> -->
+        </Elements>
+        <Example file="CPP-friend-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="using">
+        <Elements>
+            <Element name="using" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="CPP-using-1.cpp" />
+        <Example file="CPP-using-2.cpp" />
+    </DocEntry>
+
+    <DocEntry title="static_assert">
+        <Elements>
+        	<Element name="call"/>
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="CPP-static_assert-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="virtual">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="CPP-virtual-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Abstract Function" cat="lang">
+        <Elements>
+            <Element ns="lit" name="literal">
+            	<AttribStr>type="number"</AttribStr>
+            	<RequiredMarkup srcMLOption="--literal"/>
+            </Element>
+        </Elements>
+        <Example file="CPP-abstract-func-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="this">
+        <Elements>
+            <Element name="name" />
+        </Elements>
+        <Example file="CPP-this-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Deleted Function">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="CPP-deleted-func.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Default Function Implementation">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="CPP-default-func.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Operator Overloading Declaration">
+        <Elements>
+            <Element name="function_decl" />
+            <Subelement name="name" />
+            <Subelement name="parameter_list" />
+            <Subelement name="parm" />
+        </Elements>
+        <Example file="CPP-op-decl-2.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Operator Overloading Definition">
+        <Elements>
+            <Element name="function" />
+            <Subelement name="name" />
+            <Subelement name="parameter_list" />
+            <Subelement name="parm" />
+        </Elements>
+        <Example file="CPP-op-decl-1.cpp" />
+    </DocEntry>
+
+
+    <DocEntry title="Implicit Conversion Operator Definition">
+        <Elements>
+            <Element name="function" />
+            <Subelement name="name" />
+            <Subelement name="parameter_list" />
+            <Subelement name="parm" />
+        </Elements>
+        <Example file="CPP-implicit-conv-2.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Implicit Conversion Operator Declaration">
+        <Elements>
+            <Element name="function" />
+            <Subelement name="name" />
+            <Subelement name="parameter_list" />
+            <Subelement name="parm" />
+        </Elements>
+        <Example file="CPP-implicit-conv-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Explicit Conversion Operator Declaration">
+        <Elements>
+            <Element name="function_decl" />
+            <Subelement name="specifier" />
+            <Subelement name="name" />
+            <Subelement name="parameter_list" />
+            <Subelement name="parm" />
+        </Elements>
+        <Example file="CPP-explicit-conv-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Explicit Conversion Operator Definition">
+        <Elements>
+            <Element name="function" />
+            <Subelement name="specifier" />
+            <Subelement name="name" />
+            <Subelement name="parameter_list" />
+            <Subelement name="parm" />
+        </Elements>
+        <Example file="CPP-explicit-conv-2.cpp" />
+    </DocEntry>
+
+
+    <DocEntry title="explict">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="CPP-explicit-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="template">
+        <Elements>
+            <Element name="template" />
+            <Subelement name="parameter_list" />
+            <Subelement name="parameter" />
+            <Subelement name="typename" />
+        </Elements>
+        <Example title="Templated Class" file="CPP-template-1.cpp" />
+        <Example title="Templated Function" file="CPP-template-2.cpp" />
+        <Example title="Partial Template Specialization" file="CPP-template-4.cpp" />
+        <Example title="Template Member Function Template" file="CPP-template-5.cpp" />
+    </DocEntry>
+
+    <DocEntry title="template Specifier">
+        <Elements>
+            <Element name="specifier" />
+            <Subelement name="parameter_list" />
+            <Subelement name="parameter" />
+            <Subelement name="typename" />
+        </Elements>
+        <Example title="Template as a Specifier" file="CPP-template-3.cpp" />
+    </DocEntry>
+    
+
+    <DocEntry title="Template Parameters">
+        <Elements>
+            <Element name="parameter_list" />
+            <Subelement name="param" />
+        </Elements>
+        <Example title="typename Parameter" file="CPP-template-param-1.cpp" />
+        <Example title="class Parameter" file="CPP-template-param-2.cpp" />
+        <Example title="Default Template Parameter" file="CPP-template-param-3.cpp" />
+        <Example title="Template Parameter Pack" file="CPP-template-param-4.cpp" />
+        <Example title="Template Template Parameter" file="CPP-template-param-5.cpp" />
+    </DocEntry>
+
+    <DocEntry title="enum class">
+        <Elements>
+            <Element name="enum" />
+        </Elements>
+        <Example file="CPP-enum-class-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Default public Visibility">
+        <Elements>
+            <Element name="public">
+                <AttribStr>type="default"</AttribStr>                
+            </Element>
+        </Elements>
+        <Example file="CPP-public-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="public Visibility">
+        <Elements>
+            <Element name="public"/>
+        </Elements>
+        <Example file="CPP-public-2.cpp" />
+    </DocEntry>
+
+    <DocEntry title="Default private Visibility">
+        <Elements>
+            <Element name="private">
+                <AttribStr>type="default"</AttribStr>                
+            </Element>
+        </Elements>
+        <Example file="CPP-private-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="private Visibility">
+        <Elements>
+            <Element name="private"/>
+        </Elements>
+        <Example file="CPP-private-2.cpp" />
+    </DocEntry>
+
+    <DocEntry title="protected Visibility">
+        <Elements>
+            <Element name="protected"/>
+        </Elements>
+        <Example file="CPP-protected-1.cpp" />
+    </DocEntry>
+
+
+    <DocEntry title="protected Inheritance Specifier">
+        <Elements>
+            <Element name="specifier"/>
+        </Elements>
+        <Example file="CPP-protected-inheritance-specifier-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="private Inheritance Specifier">
+        <Elements>
+            <Element name="specifier"/>
+        </Elements>
+        <Example file="CPP-private-inheritance-specifier-1.cpp" />
+    </DocEntry>
+
+    <DocEntry title="public Inheritance Specifier">
+        <Elements>
+            <Element name="specifier"/>
+        </Elements>
+        <Example file="CPP-public-inheritance-specifier-1.cpp" />
+    </DocEntry>
+
+
+
+    <DocEntry title="Inheritance List">
+        <Elements>
+            <Element name="super" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="CPP-inherit-1.cpp" />
+    </DocEntry>
+<!--
+
+    <DocEntry title="">
+        <Elements>
+            <Element name="N" />
+            <Subelement name="A" />
+        </Elements>
+        <Example file="CPP-.cpp" />
+    </DocEntry>
+
+    <DocEntry title="">
+        <Elements>
+            <Element name="N" />
+            <Subelement name="A" />
+        </Elements>
+        <Example file="CPP-.cpp" />
+    </DocEntry>
+
+    <DocEntry title="">
+        <Elements>
+            <Element name="N" />
+            <Subelement name="A" />
+        </Elements>
+        <Example file="CPP-.cpp" />
+    </DocEntry>
+
+    <DocEntry title="">
+        <Elements>
+            <Element name="N" />
+            <Subelement name="A" />
+        </Elements>
+        <Example file="CPP-.cpp" />
+    </DocEntry>
+
+    <DocEntry title="">
+        <Elements>
+            <Element name="N" />
+            <Subelement name="A" />
+        </Elements>
+        <Example file="CPP-.cpp" />
+    </DocEntry>
+
+    <DocEntry title="">
+        <Elements>
+            <Element name="N" />
+            <Subelement name="A" />
+        </Elements>
+        <Example file="CPP-.cpp" />
+    </DocEntry>
+
+ -->
+
+	<OperatorEntry title="Pre Increment" op="++" example="../C/C-Operator-pre_increment.c" />
+	<OperatorEntry title="Post Increment" op="++" example="../C/C-Operator-post_increment.c" />
+	<OperatorEntry title="Pre Decrement" op="--" example="../C/C-Operator-pre_decrement.c" />
+	<OperatorEntry title="Post Decrement" op="--" example="../C/C-Operator-post_decrement.c" />
+	<OperatorEntry title="Address Of" op="&amp;" example="../C/C-Operator-address_of.c" />
+	<OperatorEntry title="Dereference" op="*" example="../C/C-Operator-deref.c" />
+	<OperatorEntry title="Unary Minus" op="-" example="../C/C-Operator-unary-minus.c" />
+	<OperatorEntry title="Bitwise Not" op="~" example="../C/C-Operator-bitwise-not.c" />
+	<OperatorEntry title="Logical Not" op="!" example="../C/C-Operator-logical-not.c" />
+	<OperatorEntry title="Multiplication" op="*" example="../C/C-Operator-multiplication.c" />
+	<OperatorEntry title="Division" op="/" example="../C/C-Operator-divide.c" />
+	<OperatorEntry title="Modulus" op="%" example="../C/C-Operator-modulus.c" />
+	<OperatorEntry title="Addition" op="+" example="../C/C-Operator-addition.c" />
+	<OperatorEntry title="Subtraction" op="-" example="../C/C-Operator-subtraction.c" />
+	<OperatorEntry title="Left Shift" op="&lt;&lt;" example="../C/C-Operator-left-shift.c" />
+	<OperatorEntry title="Right Shift" op="&gt;&gt;" example="../C/C-Operator-right-shift.c" />
+	<OperatorEntry title="Less Then" op="&lt;" example="../C/C-Operator-less-then.c" />
+	<OperatorEntry title="Greater Then" op="&gt;" example="../C/C-Operator-greater-then.c" />
+	<OperatorEntry title="Less Then or Equal To" op="&lt;=" example="../C/C-Operator-less-equal.c" />
+	<OperatorEntry title="Greater Then or Equal To" op="&gt;=" example="../C/C-Operator-greater-equal.c" />
+	<OperatorEntry title="Equals" op="==" example="../C/C-Operator-equal.c" />
+	<OperatorEntry title="Not Equal" op="!=" example="../C/C-Operator-not-equal.c" />
+	<OperatorEntry title="Bitwise And" op="&amp;" example="../C/C-Operator-bitwise-and.c" />
+	<OperatorEntry title="Bitwise XOr" op="^" example="../C/C-Operator-bitwise-xor.c" />
+	<OperatorEntry title="Bitwise Or" op="|" example="../C/C-Operator-bitwise-or.c" />
+	<OperatorEntry title="Logical And" op="&amp;&amp;" example="../C/C-Operator-logical-and.c" />
+	<OperatorEntry title="Logical Or" op="||" example="../C/C-Operator-logical-or.c" />
+	<OperatorEntry title="Assignment" op="=" example="../C/C-Operator-assignment.c" />
+	<OperatorEntry title="Multiply Assign" op="*=" example="../C/C-Operator-multiply-assign.c" />
+	<OperatorEntry title="Divide Assign" op="/=" example="../C/C-Operator-divide-assign.c" />
+	<OperatorEntry title="Modulus Assign" op="%=" example="../C/C-Operator-modulus-assign.c" />
+	<OperatorEntry title="Add Assign" op="+=" example="../C/C-Operator-addition-assign.c" />
+	<OperatorEntry title="Subtract Assign" op="-=" example="../C/C-Operator-sub-assign.c" />
+	<OperatorEntry title="Left Shift Assign" op="&lt;&lt;=" example="../C/C-Operator-left-shift-assign.c" />
+	<OperatorEntry title="Right Shift Assign" op="&gt;&gt;=" example="../C/C-Operator-right-shift-assign.c" />
+	<OperatorEntry title="Bitwise And Assign" op="&amp;=" example="../C/C-Operator-bitwise-and-assign.c" />
+	<OperatorEntry title="Bitwise XOr Assign" op="^=" example="../C/C-Operator-bitwise-xor-assign.c" />
+	<OperatorEntry title="Bitwise Or Assign" op="|=" example="../C/C-Operator-bitwise-or-assign.c" />
+	<OperatorEntry title="Sceope" op="::" example="CPP-Operator-scope.cpp" />
+	<OperatorEntry title="Pointer To Member" op=".*" example="CPP-Operator-member-ptr.cpp" />
+	<OperatorEntry title="Dereference Pointer To Member" op="->*" example="CPP-Operator-deref-member-ptr.cpp" />
+	<OperatorEntry title="Comma" op="," example="../C/C-Operator-comma.c" />
+    <OperatorEntry title="Conditional" op="?  :" example="../C/C-Operator-turnary.c" />
+    <OperatorEntry title="Dot" op="." example="../C/C-member-access.c" />
+    <OperatorEntry title="Arrow" op="-&gt;" example="../C/C-deref-member-access.c" />
+</DocConfig>

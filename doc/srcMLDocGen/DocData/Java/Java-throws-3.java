@@ -1,0 +1,1 @@
+public MyOtherType foo() throws MyExceptionType, MyExceptionType2 { }

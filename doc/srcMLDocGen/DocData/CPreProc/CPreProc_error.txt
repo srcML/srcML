@@ -1,0 +1,4 @@
+// #error message example
+#if !defined(__cplusplus)
+#error "C++ compiler required."
+#endif

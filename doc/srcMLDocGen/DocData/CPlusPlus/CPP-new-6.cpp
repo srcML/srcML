@@ -1,0 +1,1 @@
+x = operator new(NewCapacityInBytes);
