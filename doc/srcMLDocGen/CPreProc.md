@@ -79,13 +79,13 @@
         <tr>
             <td><a href="#error">#error</a> </td>
             <td>&lt;cpp:error&gt;</td>
-            <td>&lt;cpp:value&gt;</td>
+            <td></td>
         </tr>
 
         <tr>
             <td><a href="#line">#line</a> </td>
             <td>&lt;cpp:line&gt;</td>
-            <td>&lt;cpp:directive&gt;, &lt;cpp:number&gt;</td>
+            <td>&lt;cpp:directive&gt;, &lt;cpp:number&gt;, &lt;cpp:file&gt;</td>
         </tr>
 </tbody></table>
 
@@ -476,9 +476,6 @@
 ### Element
 * **&lt;cpp:error&gt;** 
 
-### SubElement
-* **&lt;cpp:value&gt;** 
-
 
 ### Example
 
@@ -509,6 +506,7 @@
 ### SubElements
 * **&lt;cpp:directive&gt;** 
 * **&lt;cpp:number&gt;** 
+* **&lt;cpp:file&gt;** 
 
 
 ### Example
@@ -522,10 +520,20 @@
 <cpp:line>#<cpp:directive>line</cpp:directive> <cpp:number><lit:literal type="number">151</lit:literal></cpp:number> <cpp:file><lit:literal type="string">&quot;copy.c&quot;</lit:literal></cpp:file></cpp:line>
 ```
 
-####XPath Query Example
+####XPath Query Examples
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all uses of `#line`.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//cpp:line`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all line numbers used by all `#line` directives.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//cpp:line/cpp:number/lit:literal`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all `#line` directives which reference the file `"copy.c"`.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//cpp:line[cpp:file/lit:literal = '"copy.c"']`<br/>
 <br/>

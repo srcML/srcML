@@ -191,7 +191,6 @@
         <DocEntry title="#error">
             <Elements>
                 <Element ns="cpp" name="error"/>
-                <Subelement ns="cpp" name="value" />
             </Elements>
             <Example file="CPreProc_error.txt" >
                 <XPath path="//cpp:error">
@@ -205,10 +204,19 @@
                 <Element ns="cpp" name="line"/>
                 <Subelement ns="cpp" name="directive" />
                 <Subelement ns="cpp" name="number" />
+                <Subelement ns="cpp" name="file" />
             </Elements>
             <Example file="CPreProc-line.txt">
                 <XPath path="//cpp:line">
                     <Desc>Find all uses of `#line`.</Desc>
+                </XPath>
+
+                <XPath path="//cpp:line/cpp:number/lit:literal">
+                    <Desc>Find all line numbers used by all `#line` directives.</Desc>
+                </XPath>
+
+                <XPath path="//cpp:line[cpp:file/lit:literal = '&quot;copy.c&quot;']">
+                    <Desc>Find all `#line` directives which reference the file `"copy.c"`.</Desc>
                 </XPath>
             </Example>
         </DocEntry>

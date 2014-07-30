@@ -99,13 +99,13 @@
 <td>
 <a href="#error">#error</a> </td>
             <td>&lt;cpp:error&gt;</td>
-            <td>&lt;cpp:value&gt;</td>
+            <td></td>
         </tr>
 <tr>
 <td>
 <a href="#line">#line</a> </td>
             <td>&lt;cpp:line&gt;</td>
-            <td>&lt;cpp:directive&gt;, &lt;cpp:number&gt;</td>
+            <td>&lt;cpp:directive&gt;, &lt;cpp:number&gt;, &lt;cpp:file&gt;</td>
         </tr>
 </tbody>
 </table><h2>
@@ -592,12 +592,6 @@
 <li>
 <strong>&lt;cpp:error&gt;</strong> </li>
 </ul><h3>
-<a name="user-content-subelement-3" class="anchor" href="#subelement-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>SubElement</h3>
-
-<ul>
-<li>
-<strong>&lt;cpp:value&gt;</strong> </li>
-</ul><h3>
 <a name="user-content-example-9" class="anchor" href="#example-9" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h3>
 
 <div class="highlight highlight-C"><pre><span class="c1">// #error message example</span>
@@ -637,6 +631,8 @@
 <strong>&lt;cpp:directive&gt;</strong> </li>
 <li>
 <strong>&lt;cpp:number&gt;</strong> </li>
+<li>
+<strong>&lt;cpp:file&gt;</strong> </li>
 </ul><h3>
 <a name="user-content-example-10" class="anchor" href="#example-10" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h3>
 
@@ -649,12 +645,22 @@
 </pre></div>
 
 <h4>
-<a name="user-content-xpath-query-example-7" class="anchor" href="#xpath-query-example-7" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+<a name="user-content-xpath-query-examples-6" class="anchor" href="#xpath-query-examples-6" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
 
 <p>      <strong>Description:</strong><br>
           Find all uses of <code>#line</code>.<br>
       <strong>XPath</strong><br>
-          <code>//cpp:line</code><br><br></p>
+          <code>//cpp:line</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all line numbers used by all <code>#line</code> directives.<br>
+      <strong>XPath</strong><br>
+          <code>//cpp:line/cpp:number/lit:literal</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all <code>#line</code> directives which reference the file <code>"copy.c"</code>.<br>
+      <strong>XPath</strong><br>
+          <code>//cpp:line[cpp:file/lit:literal = '"copy.c"']</code><br><br></p>
       </article>
     </div>
   </div>
