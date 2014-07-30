@@ -10,7 +10,7 @@
 </unit>
 
 <unit>
-<macro><name>a</name></macro> <for>for(<init><expr>1</expr></init>)<empty_stmt>;</empty_stmt></for>
+<macro><name>a</name></macro> <for>for<control>(<init><expr>1</expr></init>)</control><empty_stmt>;</empty_stmt></for>
 </unit>
 
 </unit>
