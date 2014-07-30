@@ -7,7 +7,7 @@
 
 <unit>
 <if>if<condition>(<expr><name>a</name> <op:operator>is</op:operator> <name>int</name></expr>)</condition><then>
-<empty_stmt>;</empty_stmt></then></if>
+<block type="pseudo"><empty_stmt>;</empty_stmt></block></then></if>
 </unit>
 
 <unit>

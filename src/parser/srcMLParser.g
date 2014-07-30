@@ -2014,6 +2014,13 @@ do_statement[] { ENTRY_DEBUG } :
             startNewMode(MODE_STATEMENT | MODE_NEST);
         }
         DO
+
+        {
+
+            if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                startElement(SPSEUDO_BLOCK);
+
+        }
 ;
 
 // while part of do statement
