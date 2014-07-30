@@ -5194,7 +5194,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             CONSTEXPR | THREAD_LOCAL |
 
             // C
-            RESTRICT | NORETURN | COMPLEX | IMAGINARY |
+            REGISTER | RESTRICT | NORETURN | COMPLEX | IMAGINARY |
 
             // C/C++ mode
             CRESTRICT | 

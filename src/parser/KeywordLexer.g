@@ -125,6 +125,7 @@ tokens {
     AUTO;
 
     // C
+    REGISTER;
     RESTRICT;
     ATOMIC;
     COMPLEX;
@@ -426,7 +427,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "pragma"       , PRAGMA         , LANGUAGE_C_FAMILY }, 
         { "undef"        , UNDEF          , LANGUAGE_C_FAMILY }, 
 
-        { "union"        , UNION          , LANGUAGE_CXX | LANGUAGE_C }, 
+        { "union"        , UNION          , LANGUAGE_C | LANGUAGE_CXX }, 
         { "struct"       , STRUCT         , LANGUAGE_C_FAMILY }, 
         { "void"         , VOID           , LANGUAGE_ALL }, 
 
@@ -440,6 +441,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "goto"         , GOTO           , LANGUAGE_ALL }, 
         { "sizeof"       , SIZEOF         , LANGUAGE_C_FAMILY }, 
 
+        { "register"     , REGISTER       , LANGUAGE_C | LANGUAGE_CXX }, 
         { "mutable"      , MUTABLE        , LANGUAGE_CXX }, 
         { "volatile"     , VOLATILE       , LANGUAGE_ALL }, 
         { "__volatile__" , VOLATILE       , LANGUAGE_C_FAMILY  },
