@@ -689,7 +689,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         comma | { inLanguage(LANGUAGE_JAVA) }? bar | { inTransparentMode(MODE_OBJECTIVE_C_CALL) }? rbracket |
 
-        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) || inPrevMode(MODE_FOR_INCREMENT) }? rparen[false] |
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) || inMode(MODE_FOR_INCREMENT) || inPrevMode(MODE_FOR_INCREMENT) }? rparen[false] |
 
         // characters with special actions that usually end currently open elements
         { !inTransparentMode(MODE_INTERNAL_END_CURLY) }? block_end |
@@ -6657,7 +6657,7 @@ rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DE
     ;
 
 //processing on )
-rparen[bool markup = true] { bool isempty = getParen() == 0; bool in_for_incr = inPrevMode(MODE_FOR_INCREMENT); ENTRY_DEBUG } :
+rparen[bool markup = true] { bool isempty = getParen() == 0; bool in_for_incr = inMode(MODE_FOR_INCREMENT) || inPrevMode(MODE_FOR_INCREMENT); ENTRY_DEBUG } :
         {
 
             if(in_for_incr) {
