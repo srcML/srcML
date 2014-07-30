@@ -79,23 +79,23 @@
 </unit>
 
 <unit>
-<for>for<control>(<init><expr><name>i</name> = <ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</init><condition>;</condition><incr/>)</control><empty_stmt>;</empty_stmt></for>
+<for>for<control>(<init><expr><name>i</name> = <ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</init><condition>;</condition><incr/>)</control><block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
-<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl>;</init><condition>;</condition><incr/>)</control><empty_stmt>;</empty_stmt></for>
+<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl>;</init><condition>;</condition><incr/>)</control><block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
-<for>for<control>(<init>;</init><condition><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</condition><incr/>)</control><empty_stmt>;</empty_stmt></for>
+<for>for<control>(<init>;</init><condition><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</condition><incr/>)</control><block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
-<for>for<control>(<init>;</init><condition>;</condition><incr><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></incr>)</control><empty_stmt>;</empty_stmt></for>
+<for>for<control>(<init>;</init><condition>;</condition><incr><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></incr>)</control><block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
-<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl>;</init><condition><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</condition><incr><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></incr>)</control><empty_stmt>;</empty_stmt></for>
+<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl>;</init><condition><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</condition><incr><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></incr>)</control><block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
