@@ -143,15 +143,14 @@ void create_srcml(const srcml_request_t& srcml_request,
     // create the srcML output file
     int status = 0;
     if (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) {
-/*    	char* buffer;
-    	int size;
-    	status = srcml_write_open_memory(srcml_arch, &buffer, &size);
-    	*/
-    	status = srcml_write_open_fd(srcml_arch, 0);
+
+        /* when no archive, this one is just used as a clone, so just don't open it */
 
     } else if (contains<int>(destination)) {
+
         status = srcml_write_open_fd(srcml_arch, *destination.fd);
     } else {
+
         status = srcml_write_open_filename(srcml_arch, destination.c_str());
     }
 
