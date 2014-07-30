@@ -12,12 +12,12 @@
 </unit>
 
 <unit>
-<foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>element</name>,<range> <expr><call><name><name>fibarray</name>.<name>array</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control><empty_stmt>;</empty_stmt></block></foreach>
+<foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>element</name>,<range> <expr><call><name><name>fibarray</name>.<name>array</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control><block type="pseudo"><empty_stmt>;</empty_stmt></block></foreach>
 </unit>
 
 <unit>
 <foreach>foreach <control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)</control>
-<block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></foreach>
+<block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></foreach>
 </unit>
 
 <unit>
