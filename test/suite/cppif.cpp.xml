@@ -174,7 +174,7 @@
 
 <unit>
 <if>if<condition>()</condition><then> <block>{
-    <block type="pseudo"><expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
+    <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
         <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
