@@ -2,23 +2,23 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="foreach">
 
 <unit>
-<for>for (<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>b</name></expr></range></decl></init>)
+<for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>b</name></expr></range></decl></init>)</control>
 <empty_stmt>;</empty_stmt></for>
 </unit>
 
 <unit>
-<for>for (<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>b</name></expr></range></decl></init>)
+<for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>b</name></expr></range></decl></init>)</control>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt></for>
 </unit>
 
 <unit>
-<for>for (<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>b</name></expr></range></decl></init>)
+<for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>b</name></expr></range></decl></init>)</control>
 <block>{
 }</block></for>
 </unit>
 
 <unit>
-<for>for (<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>b</name></expr></range></decl></init>)
+<for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>b</name></expr></range></decl></init>)</control>
 <block>{
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 }</block></for>

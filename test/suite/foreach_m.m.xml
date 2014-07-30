@@ -2,32 +2,32 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Objective-C" dir="foreach" filename="foreach_m">
 
 <unit>
-<for>for (<init><decl><type><name>int</name></type> <name>p</name> <range>in <expr><name>arr</name></expr></range></decl></init>)
+<for>for <control>(<init><decl><type><name>int</name></type> <name>p</name> <range>in <expr><name>arr</name></expr></range></decl></init>)</control>
 <empty_stmt>;</empty_stmt></for>
 </unit>
 
 <unit>
-<for>for (<init><decl><type><name>int</name></type> <name>p</name> <range>in <expr><name>arr</name></expr></range></decl></init>)
+<for>for <control>(<init><decl><type><name>int</name></type> <name>p</name> <range>in <expr><name>arr</name></expr></range></decl></init>)</control>
 <block>{}</block></for>
 </unit>
 
 <unit>
-<for>for(<init><decl><type><name>int</name></type> <name>i</name> <range>in <expr><name>a</name></expr></range></decl></init>)
+<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>in <expr><name>a</name></expr></range></decl></init>)</control>
         <empty_stmt>;</empty_stmt></for>
 </unit>
 
 <unit>
-<for>for(<init><decl><type><name>int</name></type> <name>i</name> <range>in <expr><call><name>a</name><argument_list>()</argument_list></call></expr></range></decl></init>)
+<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>in <expr><call><name>a</name><argument_list>()</argument_list></call></expr></range></decl></init>)</control>
         <empty_stmt>;</empty_stmt></for>
 </unit>
 
 <unit>
-<for>for(<init><expr><name>i</name> in <name>a</name></expr></init>)
+<for>for<control>(<init><expr><name>i</name> in <name>a</name></expr></init>)</control>
         <empty_stmt>;</empty_stmt></for>
 </unit>
 
 <unit>
-<for>for(<init><expr><name>i</name> in <call><name>a</name><argument_list>()</argument_list></call></expr></init>)
+<for>for<control>(<init><expr><name>i</name> in <call><name>a</name><argument_list>()</argument_list></call></expr></init>)</control>
         <empty_stmt>;</empty_stmt></for>
 </unit>
 

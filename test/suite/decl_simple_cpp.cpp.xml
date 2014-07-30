@@ -196,4 +196,8 @@
 <decl_stmt><decl><type>enum <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><specifier>register</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
 </unit>

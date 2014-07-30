@@ -2,32 +2,32 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="foreach" filename="foreach_cs">
 
 <unit>
-<foreach>foreach (<init><decl><type><name>int</name></type> <name>p</name> <range>in <expr><name>arr</name></expr></range></decl></init>)
+<foreach>foreach <control>(<init><decl><type><name>int</name></type> <name>p</name> <range>in <expr><name>arr</name></expr></range></decl></init>)</control>
 <empty_stmt>;</empty_stmt></foreach>
 </unit>
 
 <unit>
-<foreach>foreach (<init><decl><type><name>int</name></type> <name>p</name> <range>in <expr><name>arr</name></expr></range></decl></init>)
+<foreach>foreach <control>(<init><decl><type><name>int</name></type> <name>p</name> <range>in <expr><name>arr</name></expr></range></decl></init>)</control>
 <block>{}</block></foreach>
 </unit>
 
 <unit>
-<foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name> <range>in <expr><name>a</name></expr></range></decl></init>)
+<foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>in <expr><name>a</name></expr></range></decl></init>)</control>
         <empty_stmt>;</empty_stmt></foreach>
 </unit>
 
 <unit>
-<foreach>foreach(<init><decl><type><name>int</name></type> <name>i</name> <range>in <expr><call><name>a</name><argument_list>()</argument_list></call></expr></range></decl></init>)
+<foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>in <expr><call><name>a</name><argument_list>()</argument_list></call></expr></range></decl></init>)</control>
         <empty_stmt>;</empty_stmt></foreach>
 </unit>
 
 <unit>
-<foreach>foreach(<init><expr><name>i</name> in <name>a</name></expr></init>)
+<foreach>foreach<control>(<init><expr><name>i</name> in <name>a</name></expr></init>)</control>
         <empty_stmt>;</empty_stmt></foreach>
 </unit>
 
 <unit>
-<foreach>foreach(<init><expr><name>i</name> in <call><name>a</name><argument_list>()</argument_list></call></expr></init>)
+<foreach>foreach<control>(<init><expr><name>i</name> in <call><name>a</name><argument_list>()</argument_list></call></expr></init>)</control>
         <empty_stmt>;</empty_stmt></foreach>
 </unit>
 
