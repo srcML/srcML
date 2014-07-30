@@ -52,7 +52,7 @@
 <unit>
 <expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><lambda><name>delegate</name><parameter_list>()</parameter_list> <block>{
                 <for>for<control>(<init>;</init><condition><expr>1</expr>;</condition><incr/>)</control>
-                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></for>
+                    <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></for>
  }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
