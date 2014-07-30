@@ -106,7 +106,7 @@ const static srcMLState::MODE_TYPE MODE_CALL;
  const static srcMLState::MODE_TYPE MODE_TOP_SECTION;
 
 /** in a for heading group i.e. for init/condition/increment */
- const static srcMLState::MODE_TYPE MODE_FOR_GROUP;
+ const static srcMLState::MODE_TYPE MODE_FOR_CONTROL;
 
 /** for initialization (in header) */
  const static srcMLState::MODE_TYPE MODE_FOR_INITIALIZATION;

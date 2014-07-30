@@ -387,7 +387,7 @@ tokens {
 
 	SFOR_STATEMENT;
 	SFOREACH_STATEMENT;
-    SFOR_GROUP;
+    SFOR_CONTROL;
 	SFOR_INITIALIZATION;
 	SFOR_CONDITION;
 	SFOR_INCREMENT;
@@ -2041,7 +2041,7 @@ for_statement[] { ENTRY_DEBUG } :
         FOR
         {
             // statement with nested statement after the for group
-            startNewMode(MODE_EXPECT | MODE_FOR_GROUP);
+            startNewMode(MODE_EXPECT | MODE_FOR_CONTROL);
         }
 ;
 
@@ -2058,22 +2058,22 @@ foreach_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement after the for group
             if(inLanguage(LANGUAGE_CSHARP))
-                startNewMode(MODE_EXPECT | MODE_FOR_GROUP);
+                startNewMode(MODE_EXPECT | MODE_FOR_CONTROL);
             else
-                startNewMode(MODE_EXPECT | MODE_FOR_GROUP | MODE_END_AT_COMMA);
+                startNewMode(MODE_EXPECT | MODE_FOR_CONTROL | MODE_END_AT_COMMA);
         }
 ;
 
 // start of for group, i.e., initialization, test, increment
-for_group[] { ENTRY_DEBUG } :
+for_control[] { ENTRY_DEBUG } :
         {
             // start the for group mode that will end at the next matching
             // parentheses
-            replaceMode(MODE_FOR_GROUP, MODE_TOP | MODE_FOR_INITIALIZATION | MODE_IGNORE_TERMINATE |
+            replaceMode(MODE_FOR_CONTROL, MODE_TOP | MODE_FOR_INITIALIZATION | MODE_IGNORE_TERMINATE |
                         MODE_INTERNAL_END_PAREN | MODE_LIST);
 
             // start the for heading group element
-            startElement(SFOR_GROUP);
+            startElement(SFOR_CONTROL);
         }
         LPAREN
 ;
@@ -3503,8 +3503,8 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         */
 
         // inside of for group expecting initialization
-        { inMode(MODE_FOR_GROUP | MODE_EXPECT) }?
-        for_group |
+        { inMode(MODE_FOR_CONTROL | MODE_EXPECT) }?
+        for_control |
 
         // inside of for group expecting initialization
         { inMode(MODE_FOR_INITIALIZATION | MODE_EXPECT) }?
@@ -5195,7 +5195,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             CONSTEXPR | THREAD_LOCAL |
 
             // C
-            RESTRICT | NORETURN | COMPLEX | IMAGINARY |
+            REGISTER | RESTRICT | NORETURN | COMPLEX | IMAGINARY |
 
             // C/C++ mode
             CRESTRICT | 
