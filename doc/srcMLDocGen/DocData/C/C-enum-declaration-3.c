@@ -1,0 +1,1 @@
+enum { yes, no } response;

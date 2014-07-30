@@ -1,0 +1,1 @@
+_Noreturn void die(const char *fmt, ...) { exit(EXIT_FAILURE); }

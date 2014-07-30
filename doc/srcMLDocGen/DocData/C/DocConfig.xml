@@ -1,0 +1,589 @@
+<DocConfig title="C srcML" lang="C" outputFile="C.md">
+
+    <!-- A -->
+    <DocEntry title="Array Access" cat="Statements">
+        <Elements>
+            <Element name="name"/>
+            <Subelement name="name" />
+            <Subelement name="index" />
+        </Elements>
+        <Example file="C-array-access.c" />
+    </DocEntry>
+
+    <DocEntry title="Array Declaration">
+        <Elements>
+            <Element name="decl" />
+            <Subelement name="name" />
+            <Subelement name="index" />
+        </Elements>
+        <Example file="C-array-declaration-1.c" />
+        <Example file="C-array-declaration-2.c" />
+        <Example file="C-array-declaration-3.c" />
+        <Example file="C-array-declaration-4.c" />
+    </DocEntry>
+
+    <DocEntry title="Array Declaration Initialization">
+        <Elements>
+            <Element name="init" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="C-array-initialization-1.c" />
+        <Example file="C-array-initialization-2.c" />
+    </DocEntry>
+
+    <DocEntry title="auto" cat="stmt">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="C-auto.c" />
+    </DocEntry>
+
+    <!-- B -->
+    <DocEntry title="Bitfield">
+        <Elements>
+            <Element name="range" />
+            <Subelement name="expr" />
+            <Subelement ns="lit" name="literal">
+                <RequiredMarkup srcMLOption="--literal"/>
+            </Subelement>
+        </Elements>
+        <Example file="C-bitfields.c" />
+    </DocEntry>
+
+    <DocEntry title="Block">
+        <Elements>
+            <Element name="block" />
+        </Elements>
+        <Example file="C-compound-block.c" />
+    </DocEntry>
+
+    <DocEntry title="break Statement">
+        <Elements>
+            <Element name="break" />
+        </Elements>
+        <Example file="C-break.c" />
+    </DocEntry>
+
+    <!-- C -->
+    <DocEntry title="case Statement">
+        <Elements>
+            <Element name="case" />
+            <Subelement name="expr" />
+        </Elements>
+        <Example file="C-case-1.c" />
+    </DocEntry>
+
+    <DocEntry title="Cast" cat="expr">
+        <Elements>
+            <Element ns="op" name="operator">
+                <RequiredMarkup srcMLOption="--operator"/>
+            </Element>
+            <Subelement name="name" />
+        </Elements>
+        <Example file="C-c-style-cast.c" />
+    </DocEntry>
+
+    <DocEntry title="const" cat="stmt">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="C-const-variable-1.c" />
+        <Example file="C-const-variable-2.c" />
+    </DocEntry>
+
+    <DocEntry title="continue Statement">
+        <Elements>
+            <Element name="continue" />
+        </Elements>
+        <Example file="C-continue.c" />
+    </DocEntry>
+
+    <!-- D -->
+    <DocEntry title="default Statement">
+        <Elements>
+            <Element name="default"/>
+        </Elements>
+        <Example file="C-default-1.c" />
+    </DocEntry>
+
+    <DocEntry title="Dereference Member Access">
+        <Elements>
+            <Element name="expr"/>
+            <Subelement name="name" />
+            <Subelement ns="op" name="operator">
+                <RequiredMarkup srcMLOption="--operator"/>
+            </Subelement>
+        </Elements>
+        <Example file="C-deref-member-access.c" />
+    </DocEntry>
+
+    <DocEntry title="do while Statement">
+        <Elements>
+            <Element name="do" />
+            <Subelement name="block" />
+            <Subelement name="condition" />
+        </Elements>
+        <Example file="C-do-while-1.c" />
+        <Example file="C-do-while-2.c" />
+    </DocEntry>
+    
+
+    <!-- E -->
+    <DocEntry title="Empty Statement">
+        <Elements>
+            <Element name="empty_stmt" />
+        </Elements>
+        <Example file="C-empty-stmt.c" />
+    </DocEntry>
+
+    <DocEntry title="enum Declaration">
+        <Elements>
+            <Element name="enum" />
+            <Subelement name="name" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="C-enum-declaration-1.c" />
+        <Example file="C-enum-declaration-2.c" />
+        <Example file="C-enum-declaration-3.c" />
+    </DocEntry>
+
+    <DocEntry title="extern Block">
+        <Elements>
+            <Element name="extern" />
+            <Subelement ns="lit" name="literal" >
+                <RequiredMarkup srcMLOption="--literal"/>
+            </Subelement>
+            <Subelement name="block" />
+        </Elements>
+        <Example title="Extern Block with Linkage Specifier" file="C-extern-linkage-block.c" />
+    </DocEntry>
+
+    <DocEntry title="extern Specifier">
+        <Elements>
+            <Element name="specifier" />
+            <Subelement ns="lit" name="literal" >
+                <RequiredMarkup srcMLOption="--literal"/>
+            </Subelement>
+            <Subelement name="decl_stmt" />
+            <Subelement name="function_stmt" />
+            <Subelement name="block" />
+        </Elements>
+        <Example title="External Variable" file="C-extern-1.c" />
+        <Example title="External Structure" file="C-extern-2.c" />
+        <Example title="External Function" file="C-extern-3.c" />
+        <Example title="External Function with Linkage Specifier" file="C-extern-linkage-1.c" />
+        <Example title="Extern Structure with Linkage Specifier" file="C-extern-linkage-2.c" />
+        <Example title="Extern Variable with Linkage Specifier" file="C-extern-linkage-3.c" />
+    </DocEntry>
+
+
+    <!-- F -->
+    <DocEntry title="for Statement">
+        <Elements>
+            <Element name="for" />
+            <Subelement name="init" />
+            <Subelement name="condition" />
+            <Subelement name="incr" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="C-for-1.c" />
+        <Example file="C-for-2.c" />
+        <Example file="C-for-3.c" />
+    </DocEntry>
+
+    <DocEntry title="Function Call">
+        <Elements>
+            <Element name="call" />
+            <Subelement name="name" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="C-function-call.c" />
+    </DocEntry>
+
+    <DocEntry title="Function Declaration">
+        <Elements>
+            <Element name="function_decl" />
+            <Subelement name="name" />
+            <Subelement name="parameter_list" />
+            <Subelement name="param" />
+        </Elements>
+        <Example file="C-function-decl-1.c" />
+        <Example file="C-function-decl-2.c" />
+        <Example file="C-function-decl-3.c" />
+        <Example file="C-function-decl-4.c" />
+        <Example file="C-function-decl-5.c" />
+    </DocEntry>
+
+    <DocEntry title="Function Definition">
+        <Elements>
+            <Element name="function" />
+            <Subelement name="name" />
+            <Subelement name="parameter_list" />
+            <Subelement name="param" />
+        </Elements>
+        <Example file="C-function-def-1.c" />
+        <Example file="C-function-def-2.c" />
+        <Example file="C-function-def-3.c" />
+        <Example file="C-function-def-4.c" />
+        <Example file="C-function-def-5.c" />
+    </DocEntry>
+
+    <!-- G -->
+    <DocEntry title="goto Statement">
+        <Elements>
+            <Element name="goto" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="C-goto.c" />
+    </DocEntry>
+
+    <!-- H -->
+    <!-- I -->
+    <DocEntry title="if Statement">
+        <Elements>
+            <Element name="if" />
+            <Subelement name="condition" />
+            <Subelement name="then" />
+            <Subelement name="else" />
+            <Subelement name="elseif" />
+        </Elements>
+        <Example file="C-if-1.c" />
+        <Example file="C-if-2.c" />
+        <Example file="C-if-3.c" />
+        <Example file="C-if-4.c" />
+        <Example file="C-if-5.c" />
+        <Example file="C-if-6.c" />
+    </DocEntry>
+
+    <DocEntry title="inline">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="C-inline.c" />
+    </DocEntry>
+
+
+    <!-- J -->
+    <!-- K -->
+    <!-- L -->
+    <DocEntry title="Label Statement">
+        <Elements>
+            <Element name="label" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="C-label.c" />
+    </DocEntry>
+
+
+    <!-- M -->
+    <DocEntry title="Member Access">
+        <Elements>
+            <Element name="expr"/>
+            <Subelement name="name" />
+            <Subelement ns="op" name="operator" >
+                <RequiredMarkup srcMLOption="--operator"/>
+            </Subelement>
+        </Elements>
+        <Example file="C-member-access.c" />
+    </DocEntry>
+
+
+
+
+    <!-- N -->
+    <!-- O -->
+    <!-- P -->
+    <DocEntry title="Pointer Declaration" cat="decl">
+        <Elements>
+            <Element ns="type" name="modifier">
+                <RequiredMarkup srcMLOption="--modifier"/>
+            </Element>
+        </Elements>
+        <Example file="C-pointer-declaration-1.c" />
+        <Example file="C-pointer-declaration-2.c" />
+        <Example file="C-pointer-declaration-3.c" />
+        <Example file="C-pointer-declaration-4.c" />
+        <Example file="C-pointer-declaration-5.c" />
+        <Example file="C-cv-ptr-decl-1.c" />
+        <Example file="C-cv-ptr-decl-2.c" />
+    </DocEntry>
+
+
+
+    <!-- Q -->
+    <!-- R -->
+    <DocEntry title="register">
+        <Elements>
+            <Element name="name" />
+        </Elements>
+        <Example file="C-register.c" />
+    </DocEntry>
+
+    <DocEntry title="restrict">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="C-restrict.c" />
+    </DocEntry>
+
+    <DocEntry title="return Statement">
+        <Elements>
+            <Element name="return" />
+        </Elements>
+        <Example file="C-return-1.c" />
+        <Example file="C-return-2.c" />
+    </DocEntry>
+
+
+    <!-- S -->
+    <DocEntry title="sizeof">
+        <Elements>
+            <Element name="sizeof"/>
+            <Subelement name="argument_list" />
+            <Subelement name="argument"/>
+        </Elements>
+        <Example file="C-sizeof.c" />
+    </DocEntry>
+
+    <DocEntry title="static">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="C-static-1.c" />
+        <Example file="C-static-2.c" />
+    </DocEntry>
+
+    <DocEntry title="struct Declaration">
+        <Elements>
+            <Element name="struct_decl" />
+            <Subelement name="name" />
+        </Elements>
+        <Example title="Forward Declaration" file="C-struct-declaration-3.c" />
+    </DocEntry>
+
+    <DocEntry title="struct Definition">
+        <Elements>
+            <Element name="struct" />
+            <Subelement name="name" />
+            <Subelement name="block" />
+        </Elements>
+        <Example title="Trivial Declaration" file="C-struct-declaration-1.c" />
+        <Example title="Variable Of An Anonymous Struct Type" file="C-struct-declaration-2.c" />
+        <Example title="Declaring A Struct And Instance" file="C-struct-declaration-4.c" />
+    </DocEntry>
+
+    <DocEntry title="struct Variable Initialization">
+        <Elements>
+            <Element name="decl_stmt" />
+            <Subelement name="decl" />
+            <Subelement name="init" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="C-struct-initialization-1.c" />
+        <Example file="C-struct-initialization-2.c" />
+        <Example file="C-struct-initialization-3.c" />
+    </DocEntry>
+
+    <DocEntry title="switch Statements">
+        <Elements>
+            <Element name="switch" />
+            <Subelement name="case" />
+            <Subelement name="condition" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="C-switch-1.c" />
+        <Example file="C-switch-2.c" />
+    </DocEntry>
+
+    <!-- T -->
+    <DocEntry title="typedef">
+        <Elements>
+            <Element name="typedef" />
+            <Subelement name="type" />
+            <Subelement name="name" />
+            <Subelement name="function_decl" />
+        </Elements>
+        <Example file="C-typedef-1.c" />
+        <Example file="C-typedef-2.c" />
+        <Example file="C-typedef-3.c" />
+        <Example file="C-typedef-4.c" />
+    </DocEntry>
+
+
+    <!-- U -->
+    <DocEntry title="union Declaration">
+        <Elements>
+            <Element name="union_decl" />
+            <Subelement name="name" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="C-union-declaration-2.c" />
+    </DocEntry>
+
+    <DocEntry title="union Definition">
+        <Elements>
+            <Element name="union" />
+            <Subelement name="name" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="C-union-declaration-1.c" />
+    </DocEntry>
+
+
+    <!-- V -->
+    <DocEntry title="Variable Declaration">
+        <Elements>
+            <Element name="decl" />
+            <Subelement name="init">
+                <Desc>Only used when variable is initialized at declaration. See initialization examples for more details.</Desc>
+            </Subelement>
+        </Elements>
+        <Example title="A Trivial Example" file="C-variable-declaration-1.c" />
+        <Example title="struct, union and enum declarations" file="C-variable-declaration-2.c" />
+    </DocEntry>
+
+    <DocEntry title="Variable Declaration Statement">
+        <Elements>
+            <Element name="decl_stmt" />
+        </Elements>
+        <Example title="A Trivial Example" file="C-variable-declaration-1.c" />
+        <Example title="struct, union and enum declarations" file="C-variable-declaration-2.c" />
+    </DocEntry>
+
+    <DocEntry title="volatile" cat="stmt">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="C-volatile.c" />
+    </DocEntry>
+
+
+    <!-- W -->
+    <DocEntry title="while Statement">
+        <Elements>
+            <Element name="while" />
+            <Subelement name="condition" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="C-while-1.c" />
+    </DocEntry>
+
+
+    <!-- X -->
+    <!-- Y -->
+    <!-- Z -->
+
+
+    <!--  All things which begin with a _ -->
+    <DocEntry title="_Alignas">
+        <Elements>
+            <Element name="alignas" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="C-_Alignas-1.c" />
+        <Example file="C-_Alignas-2.c" />
+    </DocEntry>
+
+    <DocEntry title="_Alignof">
+        <Elements>
+            <Element name="alignof"/>
+            <Subelement name="argument_list" />
+            <Subelement name="argument"/>
+        </Elements>
+        <Example file="C-_Alignof.c" />
+    </DocEntry>
+
+    <DocEntry title="_Atomic">
+        <Elements>
+            <Element name="atomic" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="C-_Atomic-1.c" />
+        <Example file="C-_Atomic-2.c" />
+        <Example file="C-_Atomic-3.c" />
+    </DocEntry>
+    
+    <DocEntry title="_Generic">
+        <Desc>The only use case for this keyword is within a macro, in which case srcML will not mark it up.</Desc>
+        <Elements>
+            <Element name="generic_selection"/>
+            <Subelement name="selector" />
+            <Subelement name="association_list" />
+            <Subelement name="association" />
+        </Elements>
+        <Example file="C-_Generic.c" />
+    </DocEntry>
+    
+    <DocEntry title="_Noreturn" cat="lang">
+        <Elements>
+            <Element name="name" />
+        </Elements>
+        <Example file="C-_Noreturn.c" />
+    </DocEntry>
+
+    <DocEntry title="_Static_assert" cat="lang">
+        <Elements>
+            <Element name="assert">
+                <AttribStr>type="static"</AttribStr>
+            </Element>
+            <Subelement name="argument_list" />
+            <Subelement name="argument"/>
+        </Elements>
+        <Example file="C-_Static_assert.c" />
+    </DocEntry>
+
+    <DocEntry title="_Thread_local" cat="lang">
+        <Elements>
+            <Element name="name" />
+        </Elements>
+        <Example file="C-_Thread_local.c" />
+    </DocEntry>
+    
+
+
+	<OperatorEntry title="Pre Increment" op="++" example="C-Operator-pre_increment.c" />
+	<OperatorEntry title="Post Increment" op="++" example="C-Operator-post_increment.c" />
+	<OperatorEntry title="Pre Decrement" op="--" example="C-Operator-pre_decrement.c" />
+	<OperatorEntry title="Post Decrement" op="--" example="C-Operator-post_decrement.c" />
+	<OperatorEntry title="Address Of" op="&amp;" example="C-Operator-address_of.c" />
+	<OperatorEntry title="Dereference" op="*" example="C-Operator-deref.c" />
+	<OperatorEntry title="Unary Minus" op="-" example="C-Operator-unary-minus.c" />
+	<OperatorEntry title="Bitwise Not" op="~" example="C-Operator-bitwise-not.c" />
+	<OperatorEntry title="Logical Not" op="!" example="C-Operator-logical-not.c" />
+	<OperatorEntry title="Multiplication" op="*" example="C-Operator-multiplication.c" />
+	<OperatorEntry title="Division" op="/" example="C-Operator-divide.c" />
+	<OperatorEntry title="Modulus" op="%" example="C-Operator-modulus.c" />
+	<OperatorEntry title="Addition" op="+" example="C-Operator-addition.c" />
+	<OperatorEntry title="Subtraction" op="-" example="C-Operator-subtraction.c" />
+	<OperatorEntry title="Left Shift" op="&lt;&lt;" example="C-Operator-left-shift.c" />
+	<OperatorEntry title="Right Shift" op="&gt;&gt;" example="C-Operator-right-shift.c" />
+	<OperatorEntry title="Less Then" op="&lt;" example="C-Operator-less-then.c" />
+	<OperatorEntry title="Greater Then" op="&gt;" example="C-Operator-greater-then.c" />
+	<OperatorEntry title="Less Then or Equal To" op="&lt;=" example="C-Operator-less-equal.c" />
+	<OperatorEntry title="Greater Then or Equal To" op="&gt;=" example="C-Operator-greater-equal.c" />
+	<OperatorEntry title="Equals" op="==" example="C-Operator-equal.c" />
+	<OperatorEntry title="Not Equal" op="!=" example="C-Operator-not-equal.c" />
+	<OperatorEntry title="Bitwise And" op="&amp;" example="C-Operator-bitwise-and.c" />
+	<OperatorEntry title="Bitwise XOr" op="^" example="C-Operator-bitwise-xor.c" />
+	<OperatorEntry title="Bitwise Or" op="|" example="C-Operator-bitwise-or.c" />
+	<OperatorEntry title="Logical And" op="&amp;&amp;" example="C-Operator-logical-and.c" />
+	<OperatorEntry title="Logical Or" op="||" example="C-Operator-logical-or.c" />
+	<OperatorEntry title="Assignment" op="=" example="C-Operator-assignment.c" />
+	<OperatorEntry title="Multiply Assign" op="*=" example="C-Operator-multiply-assign.c" />
+	<OperatorEntry title="Divide Assign" op="/=" example="C-Operator-divide-assign.c" />
+	<OperatorEntry title="Modulus Assign" op="%=" example="C-Operator-modulus-assign.c" />
+	<OperatorEntry title="Add Assign" op="+=" example="C-Operator-addition-assign.c" />
+	<OperatorEntry title="Subtract Assign" op="-=" example="C-Operator-sub-assign.c" />
+	<OperatorEntry title="Left Shift Assign" op="&lt;&lt;=" example="C-Operator-left-shift-assign.c" />
+	<OperatorEntry title="Right Shift Assign" op="&gt;&gt;=" example="C-Operator-right-shift-assign.c" />
+	<OperatorEntry title="Bitwise And Assign" op="&amp;=" example="C-Operator-bitwise-and-assign.c" />
+	<OperatorEntry title="Bitwise XOr Assign" op="^=" example="C-Operator-bitwise-xor-assign.c" />
+	<OperatorEntry title="Bitwise Or Assign" op="|=" example="C-Operator-bitwise-or-assign.c" />
+	<OperatorEntry title="Comma" op="," example="C-Operator-comma.c" />
+    <OperatorEntry title="Conditional" op="?  :" example="C-Operator-turnary.c" />
+    <OperatorEntry title="Dot" op="." example="C-member-access.c" />
+    <OperatorEntry title="Arrow" op="-&gt;" example="C-deref-member-access.c" />
+</DocConfig>

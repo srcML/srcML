@@ -1,0 +1,1 @@
+throw std::runtime_error("msg");

@@ -1,0 +1,1 @@
+<T extends Comparable<T>> int countGreaterThan(T[] anArray, T elem) { }

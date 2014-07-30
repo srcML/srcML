@@ -1,0 +1,1 @@
+(ClassOrInterface T2 extends Interface1 & Interface2 & SecondInterface3)x;

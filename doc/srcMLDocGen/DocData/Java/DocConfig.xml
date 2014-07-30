@@ -1,0 +1,664 @@
+<DocConfig title="Java srcML" lang="Java" outputFile="java.md">
+
+    <DocEntry title="Variable Declaration And Initialization">
+        <Elements>
+            <Element name="decl_stmt" />
+            <Subelement name="decl" />
+            <Subelement name="init" />
+        </Elements>
+        <Example file="Java-variable-declarations.java" />
+        <Example file="Java-variable-decl-2.java" />
+        <Example file="Java-variable-decl-3.java" />
+        <Example file="Java-variable-decl-4.java" />
+        <Example file="Java-variable-decl-5.java" />
+    </DocEntry>
+
+    <DocEntry title="Function Call">
+        <Elements>
+            <Element name="call" />
+            <Subelement name="name" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="Java-call.java" />
+    </DocEntry>
+
+    <DocEntry title="break">
+        <Elements>
+            <Element name="break" />
+        </Elements>
+        <Example file="../C/C-break.c" />
+        <Example file="Java-break.java" />
+    </DocEntry>
+
+    <DocEntry title="Block">
+        <Elements>
+            <Element name="block" />
+        </Elements>
+        <Example file="../C/C-compound-block.c" />
+    </DocEntry>
+
+    <DocEntry title="continue">
+        <Elements>
+            <Element name="continue" />
+        </Elements>
+        <Example file="../C/C-continue.c" />
+        <Example file="Java-continue.java" />
+    </DocEntry>
+
+    <DocEntry title="do while Statement">
+        <Elements>
+            <Element name="do" />
+            <Subelement name="block" />
+            <Subelement name="condition" />
+            <Subelement name="while" />
+        </Elements>
+        <Example file="../C/C-do-while-1.c" />
+        <Example file="../C/C-do-while-2.c" />
+    </DocEntry>
+
+    <DocEntry title="for Statement">
+        <Elements>
+            <Element name="for" />
+            <Subelement name="init" />
+            <Subelement name="condition" />
+            <Subelement name="incr" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="../C/C-for-1.c" />
+        <Example file="../C/C-for-2.c" />
+        <Example file="../C/C-for-3.c" />
+        <Example file="Java-for-1.java" />
+    </DocEntry>
+
+    <DocEntry title="Label Statement">
+        <Elements>
+            <Element name="label" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="../C/C-label.c" />
+    </DocEntry>
+
+    <DocEntry title="if">
+        <Elements>
+            <Element name="if" />
+            <Subelement name="else" />
+            <Subelement name="elseif" />
+            <Subelement name="condition" />
+            <Subelement name="block" />
+            <Subelement name="then" />
+        </Elements>
+        <Example file="../C/C-if-1.c" />
+        <Example file="../C/C-if-2.c" />
+        <Example file="../C/C-if-3.c" />
+        <Example file="../C/C-if-4.c" />
+        <Example file="../C/C-if-5.c" />
+        <Example file="../C/C-if-6.c" />
+    </DocEntry>
+
+    <DocEntry title="Empty Statement">
+        <Elements>
+            <Element name="empty_stmt" />
+        </Elements>
+        <Example file="../C/C-empty-stmt.c" />
+    </DocEntry>
+
+    <DocEntry title="return">
+        <Elements>
+            <Element name="return" />
+        </Elements>
+        <Example file="../C/C-return-1.c" />
+        <Example file="../C/C-return-2.c" />
+    </DocEntry>
+
+    <DocEntry title="switch Statements">
+        <Elements>
+            <Element name="switch" />
+            <Subelement name="case" />
+            <Subelement name="condition" />
+            <Subelement name="block" />
+
+        </Elements>
+        <Example file="../C/C-switch-1.c" />
+        <Example file="../C/C-switch-2.c" />
+    </DocEntry>
+
+    <DocEntry title="case Statements">
+        <Elements>
+            <Element name="case" />
+            <Subelement name="expr" />
+        </Elements>
+        <Example file="../C/C-case-1.c" />
+    </DocEntry>
+
+    <DocEntry title="while Statement">
+        <Elements>
+            <Element name="while" />
+            <Subelement name="condition" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="../C/C-while-1.c" />
+    </DocEntry>
+
+    <DocEntry title="Conditional Operator">
+        <Elements>
+            <Element ns="op" name="operator">
+                <RequiredMarkup srcMLOption="--operator"/>
+            </Element>
+            <!-- <Subelement name="" /> -->
+        </Elements>
+        <Example file="../C/C-Operator-turnary.c" />
+    </DocEntry>
+
+    <DocEntry title="Class Definition">
+        <Elements>
+            <Element name="class" />
+            <Subelement name="name" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="Java-class.java" />
+    </DocEntry>
+
+    <DocEntry title="Method Definition">
+        <Elements>
+            <Element name="function" />
+            <Subelement name="name" />
+            <Subelement name="type" />
+            <Subelement name="block" />
+            <Subelement name="parameter_list" />
+            <Subelement name="param" />
+        </Elements>
+        <Example file="Java-method-decl-1.java" />
+        <Example file="Java-method-decl-2.java" />
+    </DocEntry>
+
+    <DocEntry title="abstract">
+        <Elements>
+            <Element name="specifier" />
+            <!-- <Subelement name="" /> -->
+        </Elements>
+        <Example file="Java-abstract-1.java" />
+        <Example file="Java-abstract-2.java" />
+    </DocEntry>
+
+    <DocEntry title="catch">
+        <Elements>
+            <Element name="catch" />
+            <Subelement name="parameter_list" />
+            <Subelement name="param" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="Java-catch-1.java" />
+        <Example file="Java-catch-2.java" />
+        <Example file="Java-catch-3.java" />
+    </DocEntry>
+
+    <DocEntry title="default">
+        <Elements>
+            <Element name="default" />
+            <Element name="specifier" />
+        </Elements>
+        <Example title="Default Case" file="Java-default.java" />
+        <Example title="Default Attribute Property Value" file="Java-default-2.java" />
+        <Example title="Default Method Implementation" file="Java-default-3.java" />
+    </DocEntry>
+
+    <DocEntry title="extends">
+        <Elements>
+            <Element name="extends" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="Java-extends.java" />
+    </DocEntry>
+
+    <DocEntry title="final">
+        <Elements>
+            <Element name="specifier" />
+            <!-- <Subelement name="" /> -->
+        </Elements>
+        <Example file="Java-final-1.java" />
+        <Example file="Java-final-2.java" />
+        <Example file="Java-final-3.java" />
+    </DocEntry>
+
+    <DocEntry title="finally">
+        <Elements>
+            <Element name="finally" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="Java-finally-1.java" />
+    </DocEntry>
+    
+    <DocEntry title="implements">
+        <Elements>
+            <Element name="implements" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="Java-implements-1.java" />
+    </DocEntry>
+
+    <DocEntry title="import">
+        <Elements>
+            <Element name="import" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="Java-import-1.java" />
+    </DocEntry>
+
+    <DocEntry title="interface">
+        <Elements>
+            <Element name="class">
+                <AttribStr>type="interface"</AttribStr>
+            </Element>
+            <Subelement name="name" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="Java-interface-1.java" />
+    </DocEntry>
+
+    <DocEntry title="native">
+        <Elements>
+            <Element name="specifier" />
+            <!-- <Subelement name="" /> -->
+        </Elements>
+        <Example file="Java-native-1.java" />
+    </DocEntry>
+
+    <DocEntry title="package">
+        <Elements>
+            <Element name="package" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="Java-package-1.java" />
+    </DocEntry>
+
+    <DocEntry title="private">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="Java-private-1.java" />
+        <Example file="Java-private-2.java" />
+        <Example file="Java-private-3.java" />
+    </DocEntry>
+
+    <DocEntry title="protected ">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="Java-protected-1.java" />
+        <Example file="Java-protected-2.java" />
+        <Example file="Java-protected-3.java" />
+    </DocEntry>
+
+    <DocEntry title="public">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="Java-public-1.java" />
+        <Example file="Java-public-2.java" />
+        <Example file="Java-public-3.java" />
+    </DocEntry>
+
+    <DocEntry title="static">
+        <Elements>
+            <Element name="specifier" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="Java-static-1.java" />
+        <Example file="Java-static-2.java" />
+        <Example file="Java-static-3.java" />
+        <Example file="Java-static-4.java" />
+    </DocEntry>
+
+    <DocEntry title="super">
+        <Elements>
+            <Element name="name" />
+        </Elements>
+        <Example file="Java-super.java" />
+    </DocEntry>
+
+    <DocEntry title="synchronized">
+        <Elements>
+            <Element name="specifier" />
+            <Element name="synchronized" />
+        </Elements>
+        <Example file="Java-synchronized-1.java" />
+        <Example file="Java-synchronized-2.java" />
+    </DocEntry>
+
+    <DocEntry title="throw">
+        <Elements>
+            <Element name="throw" />
+            <Subelement name="expt" />
+        </Elements>
+        <Example file="Java-throw.java" />
+    </DocEntry>
+
+    <DocEntry title="throws">
+        <Elements>
+            <Element name="throws" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="Java-throws-1.java" />
+        <Example file="Java-throws-2.java" />
+        <Example file="Java-throws-3.java" />
+    </DocEntry>
+
+    <DocEntry title="transient">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="Java-transient-1.java" />
+    </DocEntry>
+
+    <DocEntry title="try">
+        <Elements>
+            <Element name="try" />
+            <Subelement name="init" />
+            <Subelement name="block" />
+            <Subelement name="catch" />
+            <Subelement name="finally" />
+        </Elements>
+        <Example file="Java-try-1.java" />
+        <Example file="Java-try-2.java" />
+        <Example file="Java-try-3.java" />
+    </DocEntry>
+
+    <DocEntry title="volatile">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="Java-volatile-1.java" />
+    </DocEntry>
+
+    <DocEntry title="Annotation Definition">
+        <Elements>
+            <Element name="class">
+                <AttribStr>type="interface"</AttribStr>
+            </Element>
+        </Elements>
+        <Example file="Java-annotation-def-1.java" />
+    </DocEntry>
+
+    <DocEntry title="Annotation Use">
+        <Elements>
+            <Element name="annotation" />
+            <Subelement name="name" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="Java-annotation-use-1.java" />
+    </DocEntry>
+
+    <DocEntry title="enum Definition">
+        <Elements>
+            <Element name="enum" />
+            <Subelement name="block" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="Java-enum-def-1.java" />
+    </DocEntry>
+
+    <DocEntry title="Lambda Functions">
+        <Elements>
+            <Element name="lambda" />
+            <Subelement name="block" />
+            <Subelement name="expr" />
+            <Subelement name="parameter_list" />
+            <Subelement name="param" />
+        </Elements>
+        <Example file="Java-lambda-1.java" />
+        <Example file="Java-lambda-2.java" />
+        <Example file="Java-lambda-3.java" />
+        <Example file="Java-lambda-4.java" />
+        <Example file="Java-lambda-5.java" />
+    </DocEntry>
+
+    <DocEntry title="this">
+        <Elements>
+            <Element name="name" />
+        </Elements>
+        <Example file="Java-this-1.java" />
+        <Example file="Java-this-2.java" />
+    </DocEntry>
+
+    <DocEntry title="Anonymous Class">
+        <Elements>
+            <Element name="class" />
+            <Subelement name="super" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="Java-anonymous-class-1.java" />
+    </DocEntry>
+
+    <DocEntry title="Generic Class Definition">
+        <Elements>
+            <Element name="class" />
+            <Subelement name="block" />
+            <Subelement name="name" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+        </Elements>
+        <Example file="Java-generic-class-1.java" />
+    </DocEntry>
+
+    <DocEntry title="Generic Variable Declaration">
+        <Elements>
+            <Element name="decl_stmt" />
+            <Subelement name="decl" />
+        </Elements>
+        <Example file="Java-generic-variable-decl-1.java" />
+        <Example file="Java-generic-variable-decl-2.java" />
+    </DocEntry>
+
+    <DocEntry title="Generic Method Definition">
+        <Elements>
+            <Element name="function" />
+            <Subelement name="name" />
+            <Subelement name="argument_list" />
+            <Subelement name="argument" />
+            <Subelement name="parameter_list" />
+            <Subelement name="param" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="Java-generic-method-def-1.java" />
+    </DocEntry>
+
+    <DocEntry title="Bound Generic Parameter">
+        <Elements>
+            <Element name="extends" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="Java-bound-generic-1.java" />
+        <Example file="Java-bound-generic-2.java" />
+        <Example file="Java-bound-generic-3.java" />
+    </DocEntry>
+
+
+<!--     <DocEntry title="Bound Generic Parameter">
+        <Elements>
+            <Element name="extends" />
+            <Subelement name="name" />
+        </Elements>
+        <Example file="Java-bound-generic-1.java" />
+    </DocEntry> -->
+
+    <DocEntry title="Wildcard">
+        <Elements>
+            <Element name="extends" />
+            <Subelement name="name" />
+        </Elements>
+        <Example title="Upper Bound Wildcard" file="Java-wildcard-1.java" />
+        <Example title="Unbound Wildcard" file="Java-wildcard-2.java" />
+        <Example title="Lower Bound Wildcard" file="Java-wildcard-3.java" />
+    </DocEntry>
+
+    <DocEntry title="Method Reference">
+        <Elements>
+            <Element name="name" />
+        </Elements>
+        <Example file="Java-method-ref-1.java" />
+        <Example file="Java-method-ref-2.java" />
+        <Example file="Java-method-ref-3.java" />
+        <Example file="Java-method-ref-4.java" />
+    </DocEntry>
+
+    <DocEntry title="assert">
+        <Elements>
+            <Element name="assert" />
+            <Subelement name="expr" />
+        </Elements>
+        <Example file="Java-assert-1.java" />
+    </DocEntry>
+
+    <DocEntry title="strictfp">
+        <Elements>
+            <Element name="specifier" />
+        </Elements>
+        <Example file="Java-strictfp-1.java" />
+    </DocEntry>
+
+    <DocEntry title="Constructor">
+        <Elements>
+            <Element name="Constructor" />
+            <Subelement name="name" />
+            <Subelement name="parameter_list" />
+            <Subelement name="param" />
+            <Subelement name="block" />
+        </Elements>
+        <Example file="Java-ctor-1.java" />
+    </DocEntry>
+
+    <DocEntry title="Constructor Declaration">
+        <Elements>
+            <Element name="Constructor_decl" />
+            <Subelement name="name" />
+            <Subelement name="parameter_list" />
+            <Subelement name="param" />
+        </Elements>
+        <Example file="Java-ctor-decl-1.java" />
+    </DocEntry>
+
+    <DocEntry title="Receiver Parameter">
+        <Elements>
+            <Element name="name" />
+        </Elements>
+        <Example file="Java-receiver-parameter-1.java" />
+    </DocEntry>
+
+    <DocEntry title="Cast">
+        <Elements>
+            <Element name="expr" />
+        </Elements>
+        <Example file="Java-cast-1.java" />
+    </DocEntry>
+<!--
+
+    <DocEntry title="">
+        <Elements>
+            <Element name="" />
+            <Subelement name="" />
+        </Elements>
+        <Example file="Java-.java" />
+    </DocEntry>
+
+    <DocEntry title="">
+        <Elements>
+            <Element name="" />
+            <Subelement name="" />
+        </Elements>
+        <Example file="Java-.java" />
+    </DocEntry>
+
+    <DocEntry title="">
+        <Elements>
+            <Element name="" />
+            <Subelement name="" />
+        </Elements>
+        <Example file="Java-.java" />
+    </DocEntry>
+
+    <DocEntry title="">
+        <Elements>
+            <Element name="" />
+            <Subelement name="" />
+        </Elements>
+        <Example file="Java-.java" />
+    </DocEntry>
+
+    <DocEntry title="">
+        <Elements>
+            <Element name="" />
+            <Subelement name="" />
+        </Elements>
+        <Example file="Java-.java" />
+    </DocEntry>
+
+    <DocEntry title="">
+        <Elements>
+            <Element name="" />
+            <Subelement name="" />
+        </Elements>
+        <Example file="Java-.java" />
+    </DocEntry>
+
+    <DocEntry title="">
+        <Elements>
+            <Element name="" />
+            <Subelement name="" />
+        </Elements>
+        <Example file="Java-.java" />
+    </DocEntry>
+
+    <DocEntry title="">
+        <Elements>
+            <Element name="" />
+            <Subelement name="" />
+        </Elements>
+        <Example file="Java-.java" />
+    </DocEntry>
+-->
+
+
+
+	<OperatorEntry title="Pre Increment" op="++" example="../C/C-Operator-pre_increment.c" />
+	<OperatorEntry title="Post Increment" op="++" example="../C/C-Operator-post_increment.c" />
+	<OperatorEntry title="Pre Decrement" op="--" example="../C/C-Operator-pre_decrement.c" />
+	<OperatorEntry title="Post Decrement" op="--" example="../C/C-Operator-post_decrement.c" />
+	<OperatorEntry title="Unary Minus" op="-" example="../C/C-Operator-unary-minus.c" />
+	<OperatorEntry title="Bitwise Not" op="~" example="../C/C-Operator-bitwise-not.c" />
+	<OperatorEntry title="Logical Not" op="!" example="../C/C-Operator-logical-not.c" />
+	<OperatorEntry title="Multiplication" op="*" example="../C/C-Operator-multiplication.c" />
+	<OperatorEntry title="Division" op="/" example="../C/C-Operator-divide.c" />
+	<OperatorEntry title="Modulus" op="%" example="../C/C-Operator-modulus.c" />
+	<OperatorEntry title="Addition" op="+" example="../C/C-Operator-addition.c" />
+	<OperatorEntry title="Subtraction" op="-" example="../C/C-Operator-subtraction.c" />
+	<OperatorEntry title="Left Shift" op="&lt;&lt;" example="../C/C-Operator-left-shift.c" />
+	<OperatorEntry title="Right Shift" op="&gt;&gt;" example="../C/C-Operator-right-shift.c" />
+	<OperatorEntry title="Less Then" op="&lt;" example="../C/C-Operator-less-then.c" />
+	<OperatorEntry title="Greater Then" op="&gt;" example="../C/C-Operator-greater-then.c" />
+	<OperatorEntry title="Less Then or Equal To" op="&lt;=" example="../C/C-Operator-less-equal.c" />
+	<OperatorEntry title="Greater Then or Equal To" op="&gt;=" example="../C/C-Operator-greater-equal.c" />
+	<OperatorEntry title="Equals" op="==" example="../C/C-Operator-equal.c" />
+	<OperatorEntry title="Not Equal" op="!=" example="../C/C-Operator-not-equal.c" />
+	<OperatorEntry title="Bitwise And" op="&amp;" example="../C/C-Operator-bitwise-and.c" />
+	<OperatorEntry title="Bitwise XOr" op="^" example="../C/C-Operator-bitwise-xor.c" />
+	<OperatorEntry title="Bitwise Or" op="|" example="../C/C-Operator-bitwise-or.c" />
+	<OperatorEntry title="Logical And" op="&amp;&amp;" example="../C/C-Operator-logical-and.c" />
+	<OperatorEntry title="Logical Or" op="||" example="../C/C-Operator-logical-or.c" />
+	<OperatorEntry title="Assignment" op="=" example="../C/C-Operator-assignment.c" />
+	<OperatorEntry title="Multiply Assign" op="*=" example="../C/C-Operator-multiply-assign.c" />
+	<OperatorEntry title="Divide Assign" op="/=" example="../C/C-Operator-divide-assign.c" />
+	<OperatorEntry title="Modulus Assign" op="%=" example="../C/C-Operator-modulus-assign.c" />
+	<OperatorEntry title="Add Assign" op="+=" example="../C/C-Operator-addition-assign.c" />
+	<OperatorEntry title="Subtract Assign" op="-=" example="../C/C-Operator-sub-assign.c" />
+	<OperatorEntry title="Signed Left Shift Assign" op="&lt;&lt;=" example="../C/C-Operator-left-shift-assign.c" />
+	<OperatorEntry title="Signed Right Shift Assign" op="&gt;&gt;=" example="../C/C-Operator-right-shift-assign.c" />
+	<OperatorEntry title="Bitwise And Assign" op="&amp;=" example="../C/C-Operator-bitwise-and-assign.c" />
+	<OperatorEntry title="Bitwise XOr Assign" op="^=" example="../C/C-Operator-bitwise-xor-assign.c" />
+	<OperatorEntry title="Bitwise Or Assign" op="|=" example="../C/C-Operator-bitwise-or-assign.c" />
+    <OperatorEntry title="Unsigned Right Shift" op="&gt;&gt;&gt;" example="Java-unsigned-right-shift.java" />
+	<OperatorEntry title="Unsigned Right Shift Assign" op="&gt;&gt;&gt;=" example="Java-unsigned-right-shift.java" />
+    <OperatorEntry title="instanceof" op="instanceof" example="Java-Operator-instanceof.java" />
+    <OperatorEntry title="new" op="new" example="Java-Operator-new.java" />
+</DocConfig>

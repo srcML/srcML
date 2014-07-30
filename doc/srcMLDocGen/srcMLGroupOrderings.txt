@@ -1,0 +1,108 @@
+
+Statement 
+	if,
+	then,
+	else,
+	while,
+	do,
+	switch,
+	case,
+	default,
+	for,
+	init,
+	incr,
+	condition,
+	break,
+	continue,
+	comment,
+	name,
+	type,
+	block,
+	index,
+	expr_stmt,
+	expr,
+	decl_stmt,
+	decl,
+	init,
+	goto,
+	label,
+	typedef,
+	asm,
+	macro,
+	enum,
+	empty_stmt,
+	namespace,
+	template,
+	using,
+	extern
+
+Function/Method
+
+	function,
+	function_decl,
+	specifier,
+	return,
+	call,
+	parameter_list,
+	param,
+	argument_list,
+	argument Class class,
+	class_decl,
+	public,
+	private,
+	protected,
+	member_list,
+	constructor,
+	constructor_decl,
+	destructor,
+	destructor_decl,
+	super,
+	friend
+
+Struct and Union
+
+	struct,
+	struct_decl,
+	union,
+	union_decl
+
+Exception
+
+	try,
+	catch,
+	throw,
+	throws
+
+C-Preprocessor
+
+	cpp:directive,
+	cpp:file,
+	cpp:include,
+	cpp:define,
+	cpp:undef,
+	cpp:line,
+	cpp:if,
+	cpp:ifdef,
+	cpp:ifndef,
+	cpp:else,
+	cpp:elif,
+	cpp:endif,
+	cpp:then,
+	cpp:pragma,
+	cpp:error
+
+Java
+
+	extends,
+	implements,
+	import,
+	package
+
+Extra Markup
+
+	literal,
+	operator,
+	modifier
+
+Misc
+	escape

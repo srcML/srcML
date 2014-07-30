@@ -1,0 +1,5 @@
+class Cls {
+	static {
+
+	}  
+}

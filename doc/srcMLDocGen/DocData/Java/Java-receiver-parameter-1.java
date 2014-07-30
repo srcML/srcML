@@ -1,0 +1,1 @@
+public void foo(MyType MyType.this) { }

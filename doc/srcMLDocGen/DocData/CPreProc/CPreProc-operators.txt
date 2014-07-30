@@ -1,0 +1,13 @@
+// Operator # example
+// stringizer.cpp
+#define stringer( x ) printf_s( #x "\n" )
+
+// Operator ## example
+#define paster( n ) printf_s( "token" #n " = %d", token##n )
+    
+// Operator defined
+#if defined NDBUG
+if(x >180) {
+    abort();
+}
+#endif
