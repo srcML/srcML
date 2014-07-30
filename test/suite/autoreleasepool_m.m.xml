@@ -11,7 +11,7 @@
 
 <unit>
 <autoreleasepool>@autoreleasepool <block>{
-    <for>for (<init><decl><type><name>ExtensionFactory</name></type> <name>factory</name> <init>= <expr>0</expr></init></decl>;</init> <condition>;</condition><incr/>) <block>{
+    <for>for <control>(<init><decl><type><name>ExtensionFactory</name></type> <name>factory</name> <init>= <expr>0</expr></init></decl>;</init> <condition>;</condition><incr/>)</control> <block>{
         <expr_stmt><expr><name>t</name> = (<name>T</name>) <call><name><name>factory</name>.<name>getElementWrapper</name></name><argument_list>(<argument><expr><name>internal</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
         <if>if <condition>(<expr><name>t</name> != <name>null</name> &amp;&amp; <name>t</name> != <name>internal</name></expr>)</condition><then> <block>{
             <expr_stmt><expr><call><name>setElementWrapper</name><argument_list>(<argument><expr><name>internal</name></expr></argument>,<argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
