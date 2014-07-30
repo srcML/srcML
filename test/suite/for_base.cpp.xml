@@ -3,7 +3,7 @@
 
 <unit>
 <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr>0</expr></init></decl>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr></incr>)</control>
-<empty_stmt>;</empty_stmt></for>
+<block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
@@ -13,7 +13,7 @@
 
 <unit>
 <for>for <control>(<init><expr><name>i</name> = 0</expr>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr></incr>)</control>
-<empty_stmt>;</empty_stmt></for>
+<block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
@@ -23,7 +23,7 @@
 
 <unit>
 <for>for <control>(<init>;</init><condition>;</condition><incr/>)</control>
-<empty_stmt>;</empty_stmt></for>
+<block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
@@ -33,17 +33,17 @@
 
 <unit>
 <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr>0</expr></init></decl>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr>, <expr>++<name>s</name></expr></incr>)</control>
-  <expr_stmt><expr><name>a</name></expr>;</expr_stmt></for>
+  <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></for>
 </unit>
 
 <unit>
 <for>for <control>(<init>;</init><condition><expr>1</expr>, <expr>2</expr>;</condition><incr/>)</control>
-<empty_stmt>;</empty_stmt></for>
+<block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
 <for>for<control>(<init>;</init> <condition><expr>(*<name>i</name>) != 0</expr>;</condition> <incr><expr>++<name>i</name></expr></incr>)</control>
-<empty_stmt>;</empty_stmt></for>
+<block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 </unit>

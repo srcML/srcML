@@ -3,12 +3,12 @@
 
 <unit>
 <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>b</name></expr></range></decl></init>)</control>
-<empty_stmt>;</empty_stmt></for>
+<block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
 <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>b</name></expr></range></decl></init>)</control>
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt></for>
+<block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></for>
 </unit>
 
 <unit>

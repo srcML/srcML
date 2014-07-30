@@ -113,6 +113,7 @@ namespace {
     ELEMENT_MAP(STYPEPREV, "type")
     ELEMENT_MAP(SCONDITION, "condition")
     ELEMENT_MAP(SBLOCK, "block")
+    ELEMENT_MAP(SPSEUDO_BLOCK, "block")
     ELEMENT_MAP(SINDEX, "index")
     ELEMENT_MAP(SDECLTYPE, "decltype")
     ELEMENT_MAP(STYPENAME, "typename")
@@ -1024,6 +1025,21 @@ void srcMLOutput::processAccess(const antlr::RefToken& token) {
         xmlTextWriterEndElement(xout);
         --openelementcount;
     }
+}
+
+
+/**
+ * processPseudoBlock
+ * @param token token to output
+ *
+ * Callback to process/output token for pseudo block.
+ */
+void srcMLOutput::processPseudoBlock(const antlr::RefToken& token) {
+
+    static const char* type_pseudo = "pseudo";
+
+    processOptional(token, "type", type_pseudo);
+
 }
 
 /**
