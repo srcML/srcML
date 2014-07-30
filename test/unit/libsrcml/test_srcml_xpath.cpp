@@ -140,9 +140,9 @@ int main() {
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                         "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
-                        "<unit language=\"C++\" filename=\"a.cpp\" item=\"1\" location=\"/src:unit[1]/src:function_decl[1]\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl></unit>\n\n"
-                        "<unit language=\"C++\" filename=\"a.cpp\" item=\"2\" location=\"/src:unit[1]/src:function_decl[2]\"><function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl></unit>\n\n"
-                        "<unit language=\"C++\" filename=\"a.cpp\" item=\"3\" location=\"/src:unit[1]/src:function_decl[3]\"><function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></unit>\n\n"
+                        "<unit language=\"C++\" filename=\"a.cpp\" item=\"1\" location=\"/src:function_decl[1]\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl></unit>\n\n"
+                        "<unit language=\"C++\" filename=\"a.cpp\" item=\"2\" location=\"/src:function_decl[2]\"><function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl></unit>\n\n"
+                        "<unit language=\"C++\" filename=\"a.cpp\" item=\"3\" location=\"/src:function_decl[3]\"><function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></unit>\n\n"
                         "</unit>\n");
         xmlFreeParserInputBuffer(buffer_input);
         UNLINK("input.xml");
@@ -173,7 +173,7 @@ int main() {
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                         "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
-                        "<unit language=\"C++\" filename=\"a.cpp\" item=\"1\" location=\"/src:unit[1]/src:function_decl[2]\"><function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl></unit>\n\n"
+                        "<unit language=\"C++\" filename=\"a.cpp\" item=\"1\" location=\"/src:function_decl[2]\"><function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl></unit>\n\n"
                         "</unit>\n");
         xmlFreeParserInputBuffer(buffer_input);
         UNLINK("input.xml");
@@ -204,7 +204,7 @@ int main() {
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                         "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
-                        "<unit language=\"C++\" filename=\"a.cpp\" item=\"1\" location=\"/src:unit[1]/src:function_decl[2]/src:parameter_list[1]/src:param[2]\"><param><decl><type><name>double</name></type> <name>b</name></decl></param></unit>\n\n"
+                        "<unit language=\"C++\" filename=\"a.cpp\" item=\"1\" location=\"/src:function_decl[2]/src:parameter_list[1]/src:param[2]\"><param><decl><type><name>double</name></type> <name>b</name></decl></param></unit>\n\n"
                         "</unit>\n");
         xmlFreeParserInputBuffer(buffer_input);
         UNLINK("input.xml");

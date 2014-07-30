@@ -93,7 +93,8 @@ public :
          + std::string("[") + child_offset(root_result_node) + std::string("]");
         xmlNodePtr parent_node = root_result_node->parent;
 
-        while(parent_node) {
+        while(parent_node && parent_node->name && (strcmp((const char *)parent_node->name, "unit") != 0
+         || (parent_node->parent && parent_node->parent->name && strcmp((const char *)parent_node->parent->name, "unit") == 0))) {
 
             if(parent_node->name)
                 simple_xpath = form_full_name(parent_node)
