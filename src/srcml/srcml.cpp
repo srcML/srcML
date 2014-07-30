@@ -174,5 +174,6 @@ bool request_create_src(const srcml_request_t& srcml_request,
 
     return !request_create_srcml(srcml_request, input_sources, destination) &&
             destination.state != SRCML &&
-            !request_display_metadata(srcml_request, input_sources, destination);
+            !request_display_metadata(srcml_request, input_sources, destination) &&
+            !request_transform_srcml(srcml_request, input_sources, destination);
 }
