@@ -1,0 +1,1 @@
+template<class T> using Vec = vector<T, Alloc<T>>;

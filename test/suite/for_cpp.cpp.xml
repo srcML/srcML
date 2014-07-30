@@ -3,22 +3,22 @@
 
 <unit>
 <for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <range>: <expr>0</expr></range></decl>, <decl><type ref="prev"/><name>b</name> <range>: <expr>0</expr></range></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)</control>
-<empty_stmt>;</empty_stmt></for>
+<block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
 <for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <range>: <expr>0</expr></range></decl>, <decl><type ref="prev"/><name>b</name> <range>: <expr>0</expr></range></decl>, <decl><type ref="prev"/><name>c</name> <range>: <expr>0</expr></range></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)</control>
-<empty_stmt>;</empty_stmt></for>
+<block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
 <for>for<control>(<init><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)</control>
-<empty_stmt>;</empty_stmt></for>
+<block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
 <for>for<control>(<init><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>c</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)</control>
-<empty_stmt>;</empty_stmt></for>
+<block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 </unit>

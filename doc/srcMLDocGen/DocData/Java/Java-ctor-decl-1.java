@@ -1,0 +1,3 @@
+class MyType {
+    MyType();
+}

@@ -1,0 +1,1 @@
+explicit operator int*() const { return nullptr; }

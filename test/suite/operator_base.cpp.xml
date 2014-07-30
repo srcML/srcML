@@ -199,7 +199,7 @@
 
 <unit>
 <for>for<control>(<init>;</init><condition><expr>1</expr>;</condition><incr/>)</control>
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt></for>
+<block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></for>
 </unit>
 
 <unit>

@@ -1,0 +1,1 @@
+namespace new_name = ns; 

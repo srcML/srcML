@@ -3,7 +3,7 @@
 
 <unit>
 <for>for <control>(<init><decl><type><name>int</name></type> <name>p</name> <range>in <expr><name>arr</name></expr></range></decl></init>)</control>
-<empty_stmt>;</empty_stmt></for>
+<block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
@@ -13,22 +13,22 @@
 
 <unit>
 <for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>in <expr><name>a</name></expr></range></decl></init>)</control>
-        <empty_stmt>;</empty_stmt></for>
+        <block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
 <for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>in <expr><call><name>a</name><argument_list>()</argument_list></call></expr></range></decl></init>)</control>
-        <empty_stmt>;</empty_stmt></for>
+        <block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
 <for>for<control>(<init><expr><name>i</name> in <name>a</name></expr></init>)</control>
-        <empty_stmt>;</empty_stmt></for>
+        <block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
 <for>for<control>(<init><expr><name>i</name> in <call><name>a</name><argument_list>()</argument_list></call></expr></init>)</control>
-        <empty_stmt>;</empty_stmt></for>
+        <block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 </unit>

@@ -1,0 +1,11 @@
+#define WIDTH 80
+#define LENGTH ( WIDTH + 10 )
+
+#define multiply( f1, f2 ) ( f1 * f2 )
+
+// Variadic Macro example
+#define eprintf(format, ...) fprintf (stderr, format, __VA_ARGS__)
+    
+// # undef example
+#define multiply( f1, f2 ) ( f1 * f2 )
+#undef multiply

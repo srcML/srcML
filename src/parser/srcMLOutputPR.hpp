@@ -44,6 +44,7 @@ enum {
     PROCESSMARKER,
 #endif
     PROCESSACCESS,
+    PROCESSPSEUDOBLOCK,
     PROCESSSTRING,
     PROCESSCHAR,
     PROCESSLITERAL,
@@ -75,6 +76,7 @@ srcMLOutput::PROCESS_PTR srcMLOutput::num2process[] = {
     &srcMLOutput::processMarker,
 #endif
     &srcMLOutput::processAccess,
+    &srcMLOutput::processPseudoBlock,
     &srcMLOutput::processString,
     &srcMLOutput::processChar,
     &srcMLOutput::processLiteral,
@@ -151,6 +153,7 @@ namespace {
     ELEMENT_MAP(STYPEPREV, PROCESSTYPEPREV)
     ELEMENT_MAP(SCONDITION, PROCESSTOKEN)
     ELEMENT_MAP(SBLOCK, PROCESSTOKEN)
+    ELEMENT_MAP(SPSEUDO_BLOCK, PROCESSPSEUDOBLOCK)
     ELEMENT_MAP(SINDEX, PROCESSTOKEN)
     ELEMENT_MAP(SDECLTYPE, PROCESSTOKEN)
     ELEMENT_MAP(SATOMIC, PROCESSTOKEN)
