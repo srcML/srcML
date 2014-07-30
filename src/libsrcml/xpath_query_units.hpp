@@ -428,7 +428,9 @@ public :
                     xmlOutputBufferWriteString(buf, itoabuf);
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
 
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xpath=\""));
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" "));
+                    xmlOutputBufferWrite(buf, (int)strlen(simple_xpath_attribute_name), simple_xpath_attribute_name);
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
                     std::string simple_xpath = form_simple_xpath(onode);
                     xmlOutputBufferWriteString(buf, simple_xpath.c_str());
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\">"));
@@ -858,6 +860,11 @@ private :
     bool closetag;
     int fd;
 
+    static const char * const simple_xpath_attribute_name;
+
 };
+
+
+const char * const xpath_query_units::simple_xpath_attribute_name = "location";
 
 #endif
