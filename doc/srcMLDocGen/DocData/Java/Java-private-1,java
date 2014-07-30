@@ -1,0 +1,11 @@
+public class MyPublicClass
+{
+	private class MyPrivateClass
+	{
+	}
+private int i;
+private String myMethod()
+{
+<statements>
+}
+}

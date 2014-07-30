@@ -1,0 +1,1 @@
+typename t::template iterator<int>::value_type v;

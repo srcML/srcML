@@ -1,0 +1,1 @@
+int (*pointer)[10];

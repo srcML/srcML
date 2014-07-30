@@ -1,0 +1,743 @@
+Java grammar statement examples
+
+Identifier:
+    bob
+    b0b
+    st3v3
+    
+numericLiterals:
+    -- supported numeric literals go here..
+    
+stringLiteral:
+    "something"
+
+types:
+    boolean
+    
+    @annotation
+    boolean
+    
+ClassTypes:
+    myCls
+    myCls.myInnerClass
+    
+    @annotation
+    myCls. @annotation myInnerCls<type>
+    
+ArrayType:
+    short[]
+    cls[]
+    cls.innerCls[]
+    cls.innerCls[][]
+    cls.innerCls @annotation [] @annotation[]
+
+TypeParamListMore:    
+TypeParameterList:
+TypeParameters:
+TypeParameter:
+TypeBound:
+AdditionalBound:
+    <T1, T2, T3>
+    <@Annotation T1>
+    <@Annotation T1 extends SomeType>
+    <T1 extends SomeType, T2 extends Interface1 & Interface2 & SecondInterface3>
+    
+TypeArguments:
+TypeArgumentList:
+TypeArgument:
+Wildcard:
+    Collection<Type> a;
+    Collection<short> b;
+    Collection<short[]> c;
+    Collection<?> d;
+    Collection<@Annotation ?> e;
+    Collection<@Annotation ? extends MyTypeOrInterface> f;
+    Collection<? super MyTypeOrInterface> g;
+    
+
+CompilationUnit:
+    package APackage;
+    import org.collections.*;
+    class MyType {
+    }
+
+PackageModifier:
+PackageDeclaration:    
+    package MySoftwarePackage;
+    package MySoftwarePackage.Internals;
+    @Annotation package MySoftwarePackage.Internals;
+    
+ImportDeclaration:
+SingleTypeImportDeclaration:
+TypeImportOnDemandDeclaration:
+SingleStaticImportDeclaration:
+StaticImportOnDemandDeclaration:
+    import MyType;
+    import MySoftwarePackage.*;
+    import static MyType.MyInternalType;
+    import static MyType.*;
+    
+Empty-TypeDeclaration:
+    ;
+
+ClassModifier:
+Superclass:
+Superinterfaces:    
+InterfaceTypeList:
+NormalClassDeclaration:
+    *ClassModifier 'class' Identifier ?TypeParameters ?Superclass ?Superinterfaces ClassBody
+    
+    @Annotation strictfp public abstract class MyType { }
+    private class MyType { }
+    static class MyType</*See TypeParameters example for what's valid here.*/> { }
+    final class MyType
+        extends MyOtherType
+    { }
+    
+    protected class MyType
+        implements Interface1
+    { }
+    
+    class MyType
+        extends MyOtherType implements Interface1, Interface2
+    { }
+    
+ClassBody:
+ClassBodyDeclaration:
+ClassMemberDeclaration:
+ClassMemberDeclaration:
+InstanceInitializer:
+StaticInitializer:
+ConstructorDeclaration:
+ClassMemberDeclaration:
+FieldDeclaration:
+MethodDeclaration:
+ClassDeclaration:
+InterfaceDeclaration:
+EmptyDeclaration:
+FieldModifier:
+FormalParameterList:
+VariableDeclaratorId:
+VariableDeclaratorInitMore:
+FormalParametersMore:
+FormalParameters:
+FormalParameterList:
+MethodDeclarator:
+MethodBody:
+LastFormalParameter:
+
+    FieldDeclarations:
+    
+        class MyType {
+            @Annotation int field1;
+            public int field2;
+            protected double field3;
+            private float[] field4;
+            static String field5;
+            final MyType field6;
+            transient int[] field7;
+            volatile int field8;
+            volatile int field9, field10, field11;
+            public int field9 = 1, field10, field11 = 4;
+            public int field9 = 1, field10, field11 = expr;
+            public int field9 = 1, field10, field11 = expr;
+        }
+    
+    MethodDeclaration:
+        class MyType {
+                // Method Modifiers
+                @Annotation void foo() { }
+                public void foo() { }
+                protected void foo() { }
+                private void foo() { }
+                abstract void foo() { }
+                static void foo() { }
+                final void foo() { }
+                synchronized void foo() { }
+                native void foo() { }
+                strictfp void foo() { }
+                void foo() { }
+                
+                public void foo() { }
+                public MyOtherType foo() { }
+                @Annotation public MyOtherType<MyType> foo() { }
+                public MyOtherType foo() throws MyExceptionType { }
+                public MyOtherType foo() throws MyExceptionType throws MyExceptionType2 { }
+                public MyOtherType foo() throws MyExceptionType, MyExceptionType2 { }
+                public MyOtherType foo() throws { }
+                
+                // Generic function examples                
+                // See TypeParameters for examples of how generic parameters
+                // can be used.
+                public <T> MyOtherType foo(T p1);
+                public <T> MyOtherType foo(T p1) { }
+                
+                // method declarator with dims...
+                public MyOtherType foo() @Annotation [] { }
+                public MyOtherType foo() @Annotation [] @Annotation [] throws;
+                
+                
+                // FormalParameterList: examples public void foo and throws are used
+                // for brevity (unless generic parameters are used).
+                public void foo() throws;
+                
+                public void foo(MyType1 param) throws;
+                public void foo(final MyType1 param) { }
+                public void foo(@Annotation MyType1 param) { }
+                public void foo(@Annotation final MyType1 param) { }
+                public void foo(@Annotation final MyType1 param, MyOtherType p2) { }
+                public void foo(@Annotation final MyType1 param, MyOtherType ... p2,) { }
+                public void foo(@Annotation final MyOtherType @Annotation ... p2,) { }
+                public void foo(MyType MyType.this) { }
+        }
+        
+        
+StaticInitializer:
+    class StaticInit {
+        static { }
+    }
+    
+ConstructorDeclaration:
+ConstructorModifier:    
+ConstructorDeclarator:
+ExplicitConstructorInvocation:
+
+    // See methods for what's valid for formal parameters and exception
+    // Sequences.
+    
+    @Annotation private CTors() throws
+    protected CTors() throws;
+    // See TypeParameters for examples of what is valid for
+    // generic parameters
+    public <T> CTors() throws {}
+    
+    // Constructor body Examples.
+    // public CTors() {} used as example template.
+    public CTors() { this(arguments);  }
+    public CTors() { super(arguments); }
+    
+    public CTors() { CTors.field0(arguments); }
+    public CTors() { CTors.field0(arguments); }
+    public CTors() { AnIdnetifierName.super(arguments); }
+    public CTors() { AnIdnetifierName.<T> super(arguments); }
+    
+
+EnumBody:
+EnumConstant:
+Superinterfaces:
+EnumConstantList:
+EnumBodyDeclarations:
+EnumDeclaration:
+    enum FooNum { }
+    @Annotation enum FooNum { }
+    public enum FooNum { }
+    protected enum FooNum { }
+    private enum FooNum { }
+    abstract enum FooNum { }
+    static enum FooNum { }
+    final enum FooNum { }
+    strictfp enum FooNum { }
+    
+    // Super interfaces
+    enum FooNum implementes AnInterface { }
+    
+    // EnumBody
+    enum FooNum { c1, c2, c3 }
+    enum FooNum { c1, c2, c3, }
+    enum FooNum { @Annotation c1, @Annotation c2, @Annotation c3 }
+    
+    // EnumBody with Class Decl
+    enum FooNum { c1, c2, c3,; }
+    enum FooNum { c1, c2, c3; }
+    enum FooNum { c1, c2, c3; void foo(); void bar(); }
+    
+    // EnumConstant, with/without args in combonation with/without ClassBody.
+    enum FooNum { c1(4) };
+    enum FooNum { c1{ void foo(); } };
+    enum FooNum { c1(4){ void foo(); } };
+    
+    
+NormalInterfaceDeclaration:
+InterfaceModifier:
+ExtendsInterfaces:
+ConstantDeclaration:
+InterfaceBody:
+ConstantModifier:
+InterfaceMethodDeclaration:
+InterfaceMethodModifier:
+InterfaceMethodModifier:
+    interface IFoo { }
+    @Annotation public @Annotation abstract interface IFoo { }
+    protected interface IFoo { }
+    private interface IFoo { }
+    abstract interface IFoo { }
+    static interface IFoo { }
+    strictfp interface IFoo { }
+    
+    // Generic Interface See TypeArguments for
+    // examples of type arguments.
+    interface IFoo <T> { }
+    
+    // Interface extension
+    interface IFoo extends Collection<IBar> { }
+    
+    // Interface body Examples
+    
+    // Constant declaration.
+    @Annotation int ConstVariableName = 4;
+    public int ConstVariableName = 4, ConstVariableName2 = 4;
+    static int ConstVariableName = 4;
+    final int ConstVariableName = 4;
+    
+    // Empty declaration
+    ;
+    
+    // InterfaceMethodDeclaration    
+    @Annotation void foo() { }
+    public void foo() { }
+    abstract void foo() { }
+    static void foo() { }
+    default void foo() { }
+    strictfp void foo() { }
+    void foo() { }
+    
+    public void foo() { }
+    public MyOtherType foo() { }
+    @Annotation public MyOtherType<MyType> foo() { }
+    public MyOtherType foo() throws MyExceptionType { }
+    public MyOtherType foo() throws MyExceptionType throws MyExceptionType2 { }
+    public MyOtherType foo() throws MyExceptionType, MyExceptionType2 { }
+    public MyOtherType foo() throws { }
+    
+    // Generic function examples                
+    // See TypeParameters for examples of how generic parameters
+    // can be used.
+    public <T> MyOtherType foo(T p1);
+    public <T> MyOtherType foo(T p1) { }
+    
+    // method declarator with dims...
+    public MyOtherType foo() @Annotation [] { }
+    public MyOtherType foo() @Annotation [] @Annotation [] throws;
+    
+    
+    // FormalParameterList: examples public void foo and throws are used
+    // for brevity (unless generic parameters are used).
+    public void foo() throws;
+    
+    public void foo(MyType1 param) throws;
+    public void foo(final MyType1 param) { }
+    public void foo(@Annotation MyType1 param) { }
+    public void foo(@Annotation final MyType1 param) { }
+    public void foo(@Annotation final MyType1 param, MyOtherType p2) { }
+    public void foo(@Annotation final MyType1 param, MyOtherType ... p2,) { }
+    public void foo(@Annotation final MyOtherType @Annotation ... p2,) { }
+    public void foo(MyType MyType.this) { }
+
+    // Other stuff valid within interface body.
+    interface IInnerFoo { }
+    class foo { }
+
+    
+AnnotationTypeElementDeclaration:
+AnnotationTypeMemberDeclaration:
+AnnotationTypeElementModifier:
+DefaultValue:
+AnnotationTypeDeclaration:
+
+    // Basic Annotation declarations.
+    @interface Annotation { }
+    @Annotation public @Annotation abstract @interface Annotation { }
+    protected @interface Annotation { }
+    private @interface Annotation { }
+    abstract @interface Annotation { }
+    static @interface Annotation { }
+    strictfp @interface Annotation { }
+    
+    // AnnotationTypeElementDeclaration
+    *AnnotationTypeElementModifier UnannType Identifier '(' ')' ?Dims ?DefaultValue ';'
+    String foo();
+    public String foo();
+    abstract String foo();
+    
+    // Dims
+    MyOtherType foo() [];
+    MyOtherType foo() @Annotation [][];
+    
+    // Default Value Examples.
+    MyOtherType foo() default new OtherType;
+    MyOtherType foo() default anyExprHere;
+    int[] foo() default {8, 9 10};
+    int[] foo() default @Annotation;
+    
+    // Default Value + dims examples
+    int[] foo() [] default @Annotation;
+    MyOtherType foo() @Annotation [] default new OtherType;
+    
+    // Constant declaration.
+    @Annotation int ConstVariableName = 4;
+    int ConstVariableName;
+    public int ConstVariableName = 4, ConstVariableName2 = 4;
+    static int ConstVariableName = 4;
+    final int ConstVariableName = 4;
+    
+    
+    // Other stuff valid within annotation body.
+    interface IInnerFoo { }
+    class foo { }
+    
+
+Annotation: (This refers to how they can be used to annotate things)
+NormalAnnotation: (Any time an @Annotation is used within this document
+    it refers to ANY of these examples)
+MarkerAnnotation:
+ElementValuePair:
+ElementValuePairMore:
+SingleElementAnnotation:
+    @Annot ( )
+    @Annot (5)
+    @Annot ( ident = 5 )
+    @Annot ( ident = 5, ident2 = "banana" )
+    @Annot ( ident = {1,2,3} )
+    @Annot ( ident = new Obj )
+    @Annot ( ident = AnyExprHere )
+    @Annot ( ident = @Annotation )
+    @Annot
+
+    
+Block:
+    { 
+    /* Statements go here.*/
+    }
+
+BlockClassDeclaration:
+    // Class declaration is valid within a block.
+    {
+        class Foo { } 
+    }
+
+Statement: (All of the types of statements).
+StatementWithoutTrailingSubstatement:
+LabeledStatement:
+IfThenStatement:
+IfThenElseStatement:
+WhileStatement:
+ForStatement:
+BasicForStatement:
+EnhancedForStatement:
+Block:
+EmptyStatement:
+ExpressionStatement:
+AssertStatement:
+SwitchStatement:
+DoStatement:
+BreakStatement:
+ContinueStatement:
+ReturnStatement:
+SynchronizedStatement:
+ThrowStatement:
+TryStatement:
+StatementExpression:
+ExpressionStatement:
+Assignment:
+PreIncrementExpression:
+PreDecrementExpression:
+PostIncrementExpression:
+PostDecrementExpression:
+MethodInvocation:
+ClassInstanceCreationExpression:
+CatchFormalParameter:
+CatchType:
+CatchTypeMore:
+Finally:
+TryWithResourcesStatement:
+ResourceSpecification:
+ResourceList:
+ResourceListMore:
+Resource:
+DimExprs:
+DimExpr:
+
+    // EmptyStatement
+    ;
+
+    // Label
+    label:
+    
+    // If Then Statement
+    if(expr)
+    if(expr) { }
+    
+    // If Then Else Statement
+    if(expr) /* Any Single Statement */; else /* Any Single Statement */;
+    if(expr) { } else { }
+
+    // Assert Statement
+    assert expr ;
+    assert expr1 : expr2 ;
+    
+    // Switch Statement
+    // Switch Label
+    switch(expr){
+        case 5:
+        case "literal":
+        case 'c':
+        case Identifier:
+        case id1.id2.id3:
+        default:
+    }
+
+    // While Statement
+    while( exprHere) /* Any Single Statement */;
+    while( exprHere) { }
+    
+    // Do Statement
+    do /* Any Single Statement */; while(exprHere);
+    do {} while(exprHere);
+
+    // For Statement
+    for(?ForInit ; ?Expression ; ?ForUpdate) Statement
+    for( ; ; ) /* Any Single Statement */ ;
+    for(;;) { }
+    for( anyStatementHere, nextStmt, thirdStmt; ; );
+    for( int i = 0; ; ) ;
+    for( int i = 0; i < 6; ) ;
+    for( int i = 0; i < 6; ++i) ;
+    for( final int i = 0; i < 6; ++i) ;
+    for( ; i < 6; ++i) ;
+    for( ; ; ++i) ;
+    for( ; i < 6; ) ;
+    for( anyStatementHere, nextStmt, thirdStmt; conditionalStmt; incStatment) ;
+    
+    // Enhanced For Statement ( ranged for statement)
+    for( int i : IntCollection ) ;
+    for( final @Annotation int i : IntCollection ) {}
+
+    // BreakStatement
+    break;
+    break label;
+    
+    // ContinueStatement
+    continue;
+    continue label;
+    
+    // ReturnStatement
+    return;
+    return expressionHere;
+    
+    // ThrowStatement
+    throw myExceptionVariable;
+    
+    // SynchronizedStatement
+    synchronized(itemToSyncOn) { }
+    
+    // TryStatement
+    // 'try' Block Catches
+    try { } catch(Exception varName) { }
+    try { } catch(Exception varName) { } catch(Exception2 varName) { }
+    try { } catch(Exception varName) { } catch(Exception2 varName) { }
+        catch(Exception3 varName) { }
+    
+    // The following demonstrates the possible parameter list
+    // for a catch.
+    try { } catch(final Exception varName) { }
+    try { } catch(@Annotation final Exception varName) { }
+    try { } catch(@Annotation Exception varName) { }
+    try { } catch(Exception | Exception2 | Exception3 | Exception4 varName) { }
+    
+    // try block + optional Catches + Finally Block 
+    try { } finally { } 
+    try { } catch (Exception e) { } finally { } 
+    try { } catch (Exception e) { } catch (Exception2 e) { } finally { } 
+    
+    // TryWithResourcesStatement :
+    // 'try' ResourceSpecification Block ?Catches ?Finally
+    try (final res1 = expr1; res2 = expr2; @Annotation res3 = expr3) { }
+    try (final res1 = expr1; res2 = expr2; @Annotation res3 = expr3;) { }
+    try (res1 = expr1;) { }
+    try (res1 = expr1) { }
+    
+    // Resource list + catches + finally.
+    try (res1 = expr1){ } finally { } 
+    try (res1 = expr1){ } catch (Exception e) { } finally { } 
+    try (res1 = expr1){ } catch (Exception e) { } catch (Exception2 e) { } finally { } 
+    
+    // ClassInstanceCreationExpression (Assignment used as example for this expression).
+    new ?TypeArguments *Annotation Identifier ?TypeArgumentsOrDiamond '(' ?ArgumentList ')' ?ClassBody
+    x = new Type ();
+    x = new @Annotation Type ();
+    x = new Type (ctorArguments);
+    x = new <T> Type (); // See TypeArguments for what's valid here.
+    x = new Type <> ();
+    x = new Type <Foo> ();
+    x = new Type () { /* See ClassBody */ };
+
+    x = Identifier.new Type ();
+    
+    // Prefix to operator new is a Primary
+    // Primary '.' 'new' ?TypeArguments *Annotation Identifier ?TypeArgumentsOrDiamond '(' ?ArgumentList ')' ?ClassBody
+    // See Primary for what is valid here.
+    x = primary.new Type();
+    
+    // Array Creation Works only for
+    // stuff that's not an annotation. 
+    x = new int[Expr]
+    x = new int @Annotation [Expr]
+    x = new int @Annotation @Annotation [Expr]
+    x = new int[Expr] @Annotation [][]
+    x = new int[Expr] @Annotation [] @Annotation[]
+    x = new int[Expr] {1, 2, 3, 4};
+    
+    
+    
+Primary:
+ArrayCreationExpression:
+PrimaryNoNewArray:
+'(' Expression ')'
+FieldAccess:
+ArrayAccess:
+MethodInvocation:
+MethodReference:
+    // Primary Expression
+    ClsName.class;
+    ClsName[].class;
+    ClsName[][].class;
+    void.class;
+    this;
+    clsName.this;
+    (anyExpr);
+    
+    // Field Accessors.
+    AnyPrimaryExpr.FieldName;
+    super.FieldName;
+    clsName.super.FieldName;
+    
+    // ArrayAccess
+    identifier[AnyExprHere];
+    AnyNonArrayCreationExpressionExpr[anyExprHere];
+    
+    // Method Invocation
+    methodName();
+    methodName(argumentList);
+    clsName.methodName();
+    clsName.methodName(Args);
+    clsName.<T> methodName();
+    clsName.<T> methodName(Args);
+    qualifyingNameExpr. methodName( );
+    qualifyingNameExpr. methodName( ArgumentList );
+    qualifyingNameExpr.<T> methodName( );
+    qualifyingNameExpr.<T> methodName( ArgumentList );
+    PrimaryExprHere.MethodName();
+    PrimaryExprHere.MethodName(args);
+    PrimaryExprHere.<T> MethodName();
+    PrimaryExprHere.<T> MethodName(args);
+    super.MethodName();
+    super.MethodName(args);
+    super.<T> MethodName();
+    super.<T> MethodName(args);
+    clsName.super.MethodName();
+    clsName.super.MethodName(args);
+    clsName.super.<T> MethodName();
+    clsName.super.<T> MethodName(args);
+    
+    // Method References
+    IdentifierType::methodName;
+    IdentifierType::<T> MethodName;
+    PrimaryExpr::MethodName;
+    PrimaryExpr::<T> MethodName;
+    super::MethodName;
+    super::<T> MethodName;
+    ClsName.super::MethodName;
+    ClsName.super::<T> MethodName;
+    ClsName::new;
+    ClsName::<T> new;
+    int[]::new
+
+    
+LambdaExpression:
+LambdaBody:
+LambdaParameters:
+InferredFormalParameterList:
+    X -> AnyExpr
+    X -> { }
+    (int x, int y) -> AnyExpr
+    (int x, int y) -> { } 
+    (x, y) -> AnyExpr
+    (x, y) -> { } 
+    
+ConditionalExpression:
+    Expr ? IfTrueExpr : IfFalseExpr;
+    
+ConditionalOrExpression:
+    LhsExpr || RhsExpr;
+        
+ConditionalAndExpression:
+    LhsExpr && RhsExpr;
+    
+InclusiveOrExpression:
+    LhsExpr | RhsExpr;
+    
+ExclusiveOrExpression:
+    LhsExpr ^ RhsExpr;
+    
+AndExpression:
+    LhsExpr & RhsExpr;
+    
+EqualityExpression:
+    LhsExpr == RhsExpr;
+    LhsExpr != RhsExpr;
+    
+RelationalExpression:
+    LhsExpr < RhsExpr;
+    LhsExpr > RhsExpr;
+    LhsExpr <= RhsExpr;
+    LhsExpr >= RhsExpr;
+    LhsExpr instanceOf RhsExpr;
+    
+ShiftExpression:
+    LhsExpr << RhsExpr;
+    LhsExpr >> RhsExpr;
+    LhsExpr >>> RhsExpr;
+
+AdditiveExpression:
+    LhsExpr - RhsExpr;
+    LhsExpr + RhsExpr;
+    
+MultiplicativeExpression:
+    LhsExpr % RhsExpr;
+    LhsExpr / RhsExpr;
+    LhsExpr * RhsExpr;
+    
+UnaryExpression:
+    +expr;
+    -expr;
+    
+PreIncrementExpression:
+    ++expr;
+    
+PreDecrementExpression:
+    --expr;
+    
+UnaryExpressionNotPlusMinus:
+    ~expr;
+    !expr;
+
+PostIncrementExpression:
+    expr++;
+    
+PostDecrementExpression:
+    expr--;
+
+CastExpression:
+    (int)expr;
+    (ClassOrInterface)expr;
+    (ClassOrInterface T2 extends Interface1 & Interface2 & SecondInterface3)expr;
+    (ClassOrInterface) x-> x.run();
+    (ClassOrInterface T2 extends Interface1 & Interface2 & SecondInterface3) x-> { };
+    
+VariableDeclaratorList:
+LocalVariableDeclarationStatement:
+    int field9 = 1, field10, field11 = 4;
+    final int[] field7 = {5,5};
+    int[] field7 = new int[2];
+    @Annotation int[] field7 = {5,5};
+    
