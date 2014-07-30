@@ -689,8 +689,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         comma | { inLanguage(LANGUAGE_JAVA) }? bar | { inTransparentMode(MODE_OBJECTIVE_C_CALL) }? rbracket |
 
-        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION)
-            || (inMode(MODE_FOR_INCREMENT) && !inMode(MODE_INTERNAL_END_PAREN)) || inPrevMode(MODE_FOR_INCREMENT) }? rparen[false] |
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }? rparen[false] |
 
         // characters with special actions that usually end currently open elements
         { !inTransparentMode(MODE_INTERNAL_END_CURLY) }? block_end |
@@ -2150,7 +2149,7 @@ for_condition[] { ENTRY_DEBUG } :
 ;
 
 // increment in for parameter list
-for_increment[] { bool first = true; ENTRY_DEBUG } :
+for_increment[] { ENTRY_DEBUG } :
         {
             assertMode(MODE_EXPECT | MODE_FOR_INCREMENT);
 
@@ -2165,7 +2164,7 @@ for_increment[] { bool first = true; ENTRY_DEBUG } :
             else
                 startElement(SFOR_INCREMENT);
         }
-        ({ LA(1) != RPAREN && first }? expression set_bool[first, false])*
+        expression
 ;
 
 /*
@@ -5558,7 +5557,7 @@ expression_part_plus_linq_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1
 
         expression_part_no_ternary[type, call_count]
 ;
-expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; ENTRY_DEBUG } :
+expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; bool end_for_incr = false; ENTRY_DEBUG } :
 
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
@@ -5626,15 +5625,21 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         // right parentheses that only matches a left parentheses of an expression
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
         {
+
+            end_for_incr = inTransparentMode(MODE_FOR_INCREMENT);
+
             // stop at this matching paren, or a preprocessor statement
             endDownToModeSet(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
             
             if (inMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN))
                 endMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
+
+            end_for_incr = end_for_incr && !inTransparentMode(MODE_FOR_INCREMENT);
+
         }
 
         // treat as operator for operator markup
-        rparen[true] |
+        rparen[!end_for_incr, end_for_incr] |
 
         // left curly brace
         {
@@ -6658,16 +6663,8 @@ rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DE
     ;
 
 //processing on )
-rparen[bool markup = true] { bool isempty = getParen() == 0; bool in_for_incr = inMode(MODE_FOR_INCREMENT) || inPrevMode(MODE_FOR_INCREMENT); ENTRY_DEBUG } :
+rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
         {
-
-            if(in_for_incr) {
-
-                // stop at this matching paren, or a preprocessor statement
-                endDownToModeSet(MODE_INTERNAL_END_PAREN);
-
-            }
-
 
             if (isempty) {
 
@@ -6720,7 +6717,7 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; bool in_for_incr = 
 
 
                 // end for group and output pseudo block @todo make sure does not hid other things that use for grammar
-                } else if(in_for_incr) {
+                } else if(end_for_incr) {
 
                     if(inMode(MODE_LIST))
                         endMode(MODE_LIST);
@@ -6885,7 +6882,7 @@ expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_D
 ;
 
 // the expression part
-expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; ENTRY_DEBUG } :
+expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; bool end_for_incr = false; ENTRY_DEBUG } :
 
        { isoption(parser_options, SRCML_OPTION_TERNARY) && !skip_ternary && !inMode(MODE_TERNARY_CONDITION)
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
@@ -6961,19 +6958,25 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         (options { greedy = true; } : { isoption(parser_options, SRCML_OPTION_TERNARY) && !skip_ternary && inMode(MODE_TERNARY_CONDITION)
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
             && perform_ternary_check() }? ternary_expression)* |
-            
+
         // right parentheses that only matches a left parentheses of an expression
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
         {
+
+            end_for_incr = inTransparentMode(MODE_FOR_INCREMENT);
+
             // stop at this matching paren, or a preprocessor statement
             endDownToModeSet(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
             
             if (inMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN))
                 endMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
+
+            end_for_incr = end_for_incr && !inTransparentMode(MODE_FOR_INCREMENT);
+
         }
 
         // treat as operator for operator markup
-        rparen[true] |
+        rparen[!end_for_incr, end_for_incr] |
 
         // left curly brace
         {
