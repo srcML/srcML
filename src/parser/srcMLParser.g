@@ -690,7 +690,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         comma | { inLanguage(LANGUAGE_JAVA) }? bar | { inTransparentMode(MODE_OBJECTIVE_C_CALL) }? rbracket |
 
         { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION)
-            || (inMode(MODE_FOR_INCREMENT) && !inMode(MODE_FOR_INCREMENT | MODE_EXPECT)) || inPrevMode(MODE_FOR_INCREMENT) }? rparen[false] |
+            || (inMode(MODE_FOR_INCREMENT) && !inMode(MODE_INTERNAL_END_PAREN)) || inPrevMode(MODE_FOR_INCREMENT) }? rparen[false] |
 
         // characters with special actions that usually end currently open elements
         { !inTransparentMode(MODE_INTERNAL_END_CURLY) }? block_end |
@@ -2150,7 +2150,7 @@ for_condition[] { ENTRY_DEBUG } :
 ;
 
 // increment in for parameter list
-for_increment[] { ENTRY_DEBUG } :
+for_increment[] { bool first = true; ENTRY_DEBUG } :
         {
             assertMode(MODE_EXPECT | MODE_FOR_INCREMENT);
 
@@ -2165,7 +2165,7 @@ for_increment[] { ENTRY_DEBUG } :
             else
                 startElement(SFOR_INCREMENT);
         }
-        expression
+        ({ LA(1) != RPAREN && first }? expression set_bool[first, false])*
 ;
 
 /*
