@@ -689,7 +689,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         comma | { inLanguage(LANGUAGE_JAVA) }? bar | { inTransparentMode(MODE_OBJECTIVE_C_CALL) }? rbracket |
 
-        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }? rparen[false] |
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) || inPrevMode(MODE_FOR_INCREMENT) }? rparen[false] |
 
         // characters with special actions that usually end currently open elements
         { !inTransparentMode(MODE_INTERNAL_END_CURLY) }? block_end |
@@ -6701,7 +6701,6 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
 
                 }
 
-
                 // end while condition, etc. and output pseudo block  @todo may need to have a MODE_WHILE
                 if(inMode(MODE_LIST | MODE_CONDITION) && inPrevMode(MODE_STATEMENT | MODE_NEST)) {
 
@@ -6713,7 +6712,7 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
                 // end for group and output pseudo block @todo make sure does not hid other things that use for grammar
                 } else if(inMode(MODE_LIST | MODE_FOR_INCREMENT) || inMode(MODE_LIST | MODE_FOR_CONDITION)) {
 
-                    endMode(MODE_FOR_INCREMENT);
+                    endMode();
                     if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
                         startElement(SPSEUDO_BLOCK);
 
