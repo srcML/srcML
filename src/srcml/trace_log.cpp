@@ -30,6 +30,14 @@ TraceLog::TraceLog(std::ostream& out, int options)
     enabled = options & SRCML_COMMAND_VERBOSE;
 }
 
+void TraceLog::header() {
+
+    if (!enabled)
+        return;
+
+    out << "Source encoding:  (null)\nXML encoding:  UTF-8\n";
+}
+
 void TraceLog::report() {
 
     if (!enabled)

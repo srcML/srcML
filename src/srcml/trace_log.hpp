@@ -33,6 +33,7 @@ public:
     friend TraceLog& operator<<(TraceLog& tlog, char c);
     friend TraceLog& operator<<(TraceLog& tlog, const std::string& s);
 
+    void header();
     void report();
 
 private:

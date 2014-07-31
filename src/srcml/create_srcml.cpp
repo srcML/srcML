@@ -160,6 +160,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // setup the parsing queue
     TraceLog log(std::cerr, SRCMLOptions::get());
+    log.header();
     WriteQueue write_queue(boost::bind(srcml_write_request, _1, boost::ref(log)), srcml_request.command & SRCML_COMMAND_OUTPUT_ORDERED);
     ParseQueue parse_queue(srcml_request.max_threads, boost::bind(srcml_consume, _1, &write_queue));
 
