@@ -180,6 +180,8 @@ return; // stdin was requested, but no data was received
     parse_queue.wait();
     write_queue.wait();
 
+    log.report();
+    
     // close the created srcML archive
     srcml_close_archive(srcml_arch);
     srcml_free_archive(srcml_arch);

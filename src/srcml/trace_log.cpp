@@ -25,9 +25,17 @@
 #include <iomanip>
  
 TraceLog::TraceLog(std::ostream& out, int options)
-    : out(out), count(0), overallcount(0) {
+    : out(out), count(0), overallcount(0), num_skipped(), num_error(0) {
 
     enabled = options & SRCML_COMMAND_VERBOSE;
+}
+
+void TraceLog::report() {
+
+    if (!enabled)
+        return;
+
+    out << "\nTranslated: " << count << " Skipped: " << num_skipped << " Error: " << num_error << "\tTotal: " << (count + num_skipped + num_error) << '\n';
 }
 
 TraceLog& operator<<(TraceLog& tlog, char c) {
@@ -38,8 +46,10 @@ TraceLog& operator<<(TraceLog& tlog, char c) {
     tlog.out << std::setw(5);
     if (c != '-')
         tlog.out << ++tlog.count;
-    else
+    else {
         tlog.out << '-';
+        ++tlog.num_skipped;
+    }
 
     return tlog;
 }

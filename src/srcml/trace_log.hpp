@@ -33,11 +33,15 @@ public:
     friend TraceLog& operator<<(TraceLog& tlog, char c);
     friend TraceLog& operator<<(TraceLog& tlog, const std::string& s);
 
+    void report();
+
 private:
     std::ostream& out;
     int count;
     int overallcount;
     bool enabled;
+    int num_skipped;
+    int num_error;
 };
 
 
