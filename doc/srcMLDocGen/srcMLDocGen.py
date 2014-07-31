@@ -116,9 +116,9 @@ class Example:
 """.format(self))
         if len(self.xpathExamples) > 0:
             if len(self.xpathExamples) == 1:
-                mdStrm.write("####XPath Query Example\n")
+                mdStrm.write("####XPath Query\n")
             else:
-                mdStrm.write("####XPath Query Examples\n")
+                mdStrm.write("####XPath Queries\n")
             for xpathExample in self.xpathExamples:
                 xpathExample.genMarkdown(mdStrm)
             mdStrm.write("<br/>")
@@ -752,7 +752,9 @@ Relivant xmlTag names:
 </DocConfig>
 """
 
+# def migrateXPathExamples(docConfigFolder):
 
+# 	dom1 = parse(os.path.join()) 
 
 # -------------------------------------------------
 #                     Main
@@ -803,6 +805,8 @@ if __name__ == "__main__":
                             or os.path.getmtime(pageDocConfigPath) > os.path.getmtime(resultingPage.outputFileName)
                             or os.path.getmtime(sys.argv[0]) > os.path.getmtime(resultingPage.outputFileName)):
                         resultingPage.genMarkDown()
+
+
                     
             except Exception as e:
                 print "Failed with exception: ", traceback.format_exc(e)
