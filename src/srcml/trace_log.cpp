@@ -43,7 +43,7 @@ void TraceLog::report() {
     if (!enabled)
         return;
 
-    out << "\nTranslated: " << count << " Skipped: " << num_skipped << " Error: " << num_error << "\tTotal: " << (count + num_skipped + num_error) << '\n';
+    out << "\nTranslated: " << count << "\tSkipped: " << num_skipped << "\tError: " << num_error << "\tTotal: " << (count + num_skipped + num_error) << '\n';
 }
 
 TraceLog& operator<<(TraceLog& tlog, char c) {
