@@ -104,7 +104,7 @@ void src_input_libarchive(ParseQueue& queue,
 
         status = archive_read_open_FILE(arch, input_file);
 
-    } else if (curl_supported(input_file.protocol)) {
+    } else if (input_file.protocol != "file" && curl_supported(input_file.protocol)) {
 
         curling.source = input_file.filename;
         status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
