@@ -23,7 +23,8 @@
 #include <trace_log.hpp>
 #include <srcml_cli.hpp>
 #include <iomanip>
- 
+#include <stdio.h>
+
 TraceLog::TraceLog(std::ostream& out, int options)
     : out(out), count(0), overallcount(0), num_skipped(), num_error(0) {
 
@@ -35,7 +36,7 @@ void TraceLog::header() {
     if (!enabled)
         return;
 
-    out << "Source encoding:  (null)\nXML encoding:  UTF-8\n";
+    fprintf(stderr, "Source encoding:  (null)\nXML encoding:  UTF-8\n");
 }
 
 void TraceLog::report() {
@@ -43,7 +44,9 @@ void TraceLog::report() {
     if (!enabled)
         return;
 
-    out << "\nTranslated: " << count << "\tSkipped: " << num_skipped << "\tError: " << num_error << "\tTotal: " << (count + num_skipped + num_error) << '\n';
+    fprintf(stderr, "\nTranslated: %d\tSkipped: %d\tError: %d\tTotal: %d\n", count, num_skipped, num_error, (count + num_skipped + num_error));
+//    out << "\nTranslated: " << count << "\tSkipped: " << num_skipped << "\tError: " << num_error << "\tTotal: " << (count + num_skipped + num_error) << '\n';
+//    out << "\nTranslated: " << count << "\tSkipped: " << num_skipped << "\tError: " << num_error << "\tTotal: " << (count + num_skipped + num_error) << '\n';
 }
 
 TraceLog& operator<<(TraceLog& tlog, char c) {
@@ -52,10 +55,12 @@ TraceLog& operator<<(TraceLog& tlog, char c) {
         return tlog;
 
     tlog.out << std::setw(5);
-    if (c != '-')
-        tlog.out << ++tlog.count;
-    else {
-        tlog.out << '-';
+    if (c != '-') {
+        fprintf(stderr, "%5d ", ++tlog.count);
+//        tlog.out << ++tlog.count;
+    } else {
+        fprintf(stderr, "%5c ", '-');
+//        tlog.out << '-';
         ++tlog.num_skipped;
     }
 
@@ -67,7 +72,8 @@ TraceLog& operator<<(TraceLog& tlog, const std::string& s) {
     if (!tlog.enabled)
         return tlog;
 
-    tlog.out << ' ' << s << '\n';
+    fprintf(stderr, "%s\n", s.c_str());
+//    tlog.out << ' ' << s << '\n';
 
     return tlog;
 }
