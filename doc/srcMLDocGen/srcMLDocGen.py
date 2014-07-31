@@ -277,9 +277,9 @@ class DocConfig:
         mdStrm.write("</tbody></table>\n")
 
     def genOperatorTable(self, mdStrm):
-        # self.operators.sort(key = lambda x: x.title)
-        mdStrm.write("## Operators")
         mdStrm.write("""
+
+## Operators
 Name | Operator | srcML
 --- | --- | ---
 """)

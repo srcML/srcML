@@ -75,7 +75,7 @@
 <td>
 <a href="#for-statement">for</a> </td>
             <td>&lt;for&gt;</td>
-            <td>&lt;init&gt;, &lt;condition&gt;, &lt;incr&gt;, &lt;block&gt;</td>
+            <td>&lt;init&gt;, &lt;condition&gt;, &lt;incr&gt;</td>
         </tr>
 <tr>
 <td>
@@ -262,7 +262,7 @@
         </tr>
 <tr>
 <td>
-<a href="#enum-declaration">enum declaration</a> </td>
+<a href="#enum-definition">enum definition</a> </td>
             <td>&lt;enum&gt;</td>
             <td>&lt;name&gt;, &lt;block&gt;</td>
         </tr>
@@ -351,7 +351,7 @@
 <tr>
 <td>
 <a href="#_noreturn">_Noreturn</a> </td>
-            <td>&lt;name&gt;</td>
+            <td>&lt;specifier&gt;</td>
             <td></td>
         </tr>
 <tr>
@@ -363,7 +363,7 @@
 <tr>
 <td>
 <a href="#_thread_local">_Thread_local</a> </td>
-            <td>&lt;name&gt;</td>
+            <td>&lt;specifier&gt;</td>
             <td></td>
         </tr>
 </tbody>
@@ -464,6 +464,14 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-example-2" class="anchor" href="#xpath-query-example-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all else statements.<br>
+      <strong>XPath</strong><br>
+          <code>//src:else</code><br><br></p>
+
+<h4>
 <a name="user-content-4" class="anchor" href="#4" aria-hidden="true"><span class="octicon octicon-link"></span></a>4</h4>
 
 <div class="highlight highlight-C"><pre><span class="k">if</span> <span class="p">(</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">)</span>           <span class="cm">/* Without braces */</span>
@@ -479,6 +487,14 @@
     <span class="nt">&lt;else&gt;</span>else
         <span class="nt">&lt;expr_stmt&gt;&lt;expr&gt;&lt;name&gt;</span>x<span class="nt">&lt;/name&gt;</span> <span class="nt">&lt;op:operator&gt;</span>=<span class="nt">&lt;/op:operator&gt;</span> <span class="nt">&lt;name&gt;</span>i<span class="nt">&lt;/name&gt;&lt;/expr&gt;</span>;<span class="nt">&lt;/expr_stmt&gt;&lt;/else&gt;&lt;/if&gt;&lt;/then&gt;&lt;/if&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-3" class="anchor" href="#xpath-query-example-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all nested if statements.<br>
+      <strong>XPath</strong><br>
+          <code>//src:if/src:then//src:if</code><br><br></p>
 
 <h4>
 <a name="user-content-5" class="anchor" href="#5" aria-hidden="true"><span class="octicon octicon-link"></span></a>5</h4>
@@ -526,6 +542,14 @@
 
 </pre></div>
 
+<h4>
+<a name="user-content-xpath-query-example-4" class="anchor" href="#xpath-query-example-4" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all else-if statements.<br>
+      <strong>XPath</strong><br>
+          <code>//src:elseif</code><br><br></p>
+
 <h2>
 <a name="user-content-while-statement" class="anchor" href="#while-statement" aria-hidden="true"><span class="octicon octicon-link"></span></a>while statement</h2>
 
@@ -563,12 +587,22 @@
 </pre></div>
 
 <h4>
-<a name="user-content-xpath-query-example-2" class="anchor" href="#xpath-query-example-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+<a name="user-content-xpath-query-examples" class="anchor" href="#xpath-query-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
 
 <p>      <strong>Description:</strong><br>
           Find all while statements.<br>
       <strong>XPath</strong><br>
-          <code>//src:while</code><br><br></p>
+          <code>//src:while</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all of the conditions of all while statements.<br>
+      <strong>XPath</strong><br>
+          <code>//src:while/src:condition</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all while statements which have a condition containing the variable <code>'X'</code>.<br>
+      <strong>XPath</strong><br>
+          <code>//src:while[src:condition//src:name = 'X']</code><br><br></p>
 
 <h2>
 <a name="user-content-do-while-statement" class="anchor" href="#do-while-statement" aria-hidden="true"><span class="octicon octicon-link"></span></a>do while statement</h2>
@@ -606,12 +640,17 @@
 </pre></div>
 
 <h4>
-<a name="user-content-xpath-query-example-3" class="anchor" href="#xpath-query-example-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+<a name="user-content-xpath-query-examples-1" class="anchor" href="#xpath-query-examples-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
 
 <p>      <strong>Description:</strong><br>
           Find all do statements.<br>
       <strong>XPath</strong><br>
-          <code>//src:do</code><br><br></p>
+          <code>//src:do</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all do while statements which have a condition containing the variable <code>'Z'</code>.<br>
+      <strong>XPath</strong><br>
+          <code>//src:do[src:condition//src:name = 'Z']</code><br><br></p>
 
 <h4>
 <a name="user-content-2-1" class="anchor" href="#2-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>2</h4>
@@ -672,12 +711,17 @@
 </pre></div>
 
 <h4>
-<a name="user-content-xpath-query-example-4" class="anchor" href="#xpath-query-example-4" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+<a name="user-content-xpath-query-examples-2" class="anchor" href="#xpath-query-examples-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
 
 <p>      <strong>Description:</strong><br>
           Find all switch statements.<br>
       <strong>XPath</strong><br>
-          <code>//src:switch</code><br><br></p>
+          <code>//src:switch</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all of the conditions of all switch statements.<br>
+      <strong>XPath</strong><br>
+          <code>//src:switch/src:condition</code><br><br></p>
 
 <h4>
 <a name="user-content-2-2" class="anchor" href="#2-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>2</h4>
@@ -735,12 +779,22 @@
 </pre></div>
 
 <h4>
-<a name="user-content-xpath-query-example-5" class="anchor" href="#xpath-query-example-5" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+<a name="user-content-xpath-query-examples-3" class="anchor" href="#xpath-query-examples-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
 
 <p>      <strong>Description:</strong><br>
           Find all case statements.<br>
       <strong>XPath</strong><br>
-          <code>//src:case</code><br><br></p>
+          <code>//src:case</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all case statements which use the name <code>'SATURDAY'</code>.<br>
+      <strong>XPath</strong><br>
+          <code>//src:case[.//src:name = 'SATURDAY']</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all switch statements which have a case that uses the name <code>'SATURDAY'</code>.<br>
+      <strong>XPath</strong><br>
+          <code>//src:switch[src:block/src:case[.//src:name = 'SATURDAY']]</code><br><br></p>
 
 <h2>
 <a name="user-content-default-statement" class="anchor" href="#default-statement" aria-hidden="true"><span class="octicon octicon-link"></span></a>default statement</h2>
@@ -761,12 +815,17 @@
 </pre></div>
 
 <h4>
-<a name="user-content-xpath-query-example-6" class="anchor" href="#xpath-query-example-6" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+<a name="user-content-xpath-query-examples-4" class="anchor" href="#xpath-query-examples-4" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
 
 <p>      <strong>Description:</strong><br>
           Find all default statements.<br>
       <strong>XPath</strong><br>
-          <code>//src:default</code><br><br></p>
+          <code>//src:default</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all switch statements which have a case that have a <code>default:</code> statement.<br>
+      <strong>XPath</strong><br>
+          <code>//src:switch[src:block/src:default]</code><br><br></p>
 
 <h2>
 <a name="user-content-for-statement" class="anchor" href="#for-statement" aria-hidden="true"><span class="octicon octicon-link"></span></a>for statement</h2>
@@ -787,8 +846,6 @@
 <strong>&lt;condition&gt;</strong> </li>
 <li>
 <strong>&lt;incr&gt;</strong> </li>
-<li>
-<strong>&lt;block&gt;</strong> </li>
 </ul><h3>
 <a name="user-content-examples-3" class="anchor" href="#examples-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h3>
 
@@ -802,12 +859,27 @@
 </pre></div>
 
 <h4>
-<a name="user-content-xpath-query-example-7" class="anchor" href="#xpath-query-example-7" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+<a name="user-content-xpath-query-examples-5" class="anchor" href="#xpath-query-examples-5" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
 
 <p>      <strong>Description:</strong><br>
           Find all for statements.<br>
       <strong>XPath</strong><br>
-          <code>//src:for</code><br><br></p>
+          <code>//src:for</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all initialization statements from within the control of all for statements.<br>
+      <strong>XPath</strong><br>
+          <code>//src:for/src:init</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all for loops which declare a variable with a single character name (e.g. <code>x</code>, <code>i</code> or <code>y</code>).<br>
+      <strong>XPath</strong><br>
+          <code>//src:for[string-length(src:init/src:decl/src:name) = 1]</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all for loops which use post decrement as part of the increment expression.<br>
+      <strong>XPath</strong><br>
+          <code>//src:for[src:incr/src:expr//node()/following-sibling::op:operator[.= '++']]</code><br><br></p>
 
 <h4>
 <a name="user-content-2-3" class="anchor" href="#2-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>2</h4>
@@ -839,6 +911,14 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-example-5" class="anchor" href="#xpath-query-example-5" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all of the increments expression of all for loops.<br>
+      <strong>XPath</strong><br>
+          <code>//src:for/src:incr</code><br><br></p>
+
+<h4>
 <a name="user-content-3-1" class="anchor" href="#3-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>3</h4>
 
 <div class="highlight highlight-C"><pre><span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
@@ -848,6 +928,14 @@
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;for&gt;</span>for(<span class="nt">&lt;init&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>i<span class="nt">&lt;/name&gt;</span> <span class="nt">&lt;init&gt;</span>=<span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>0<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;&lt;/init&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/init&gt;</span> <span class="nt">&lt;condition&gt;&lt;expr&gt;&lt;name&gt;</span>i<span class="nt">&lt;/name&gt;</span> <span class="nt">&lt;op:operator&gt;</span><span class="ni">&amp;lt;</span><span class="nt">&lt;/op:operator&gt;</span> <span class="nt">&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>10<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;</span>;<span class="nt">&lt;/condition&gt;&lt;incr&gt;&lt;expr&gt;&lt;op:operator&gt;</span>++<span class="nt">&lt;/op:operator&gt;&lt;name&gt;</span>i<span class="nt">&lt;/name&gt;&lt;/expr&gt;&lt;/incr&gt;</span>)
     <span class="nt">&lt;expr_stmt&gt;&lt;expr&gt;&lt;name&gt;</span>a<span class="nt">&lt;/name&gt;</span> <span class="nt">&lt;op:operator&gt;</span>+=<span class="nt">&lt;/op:operator&gt;</span> <span class="nt">&lt;name&gt;&lt;name&gt;</span>x<span class="nt">&lt;/name&gt;&lt;index&gt;</span>[<span class="nt">&lt;expr&gt;&lt;name&gt;</span>i<span class="nt">&lt;/name&gt;&lt;/expr&gt;</span>]<span class="nt">&lt;/index&gt;&lt;/name&gt;&lt;/expr&gt;</span>;<span class="nt">&lt;/expr_stmt&gt;&lt;/for&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-6" class="anchor" href="#xpath-query-example-6" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all of the conditions of all for loops.<br>
+      <strong>XPath</strong><br>
+          <code>//src:for/src:condition</code><br><br></p>
 
 <h2>
 <a name="user-content-break-statement" class="anchor" href="#break-statement" aria-hidden="true"><span class="octicon octicon-link"></span></a>break statement</h2>
@@ -884,7 +972,7 @@
 </pre></div>
 
 <h4>
-<a name="user-content-xpath-query-example-8" class="anchor" href="#xpath-query-example-8" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+<a name="user-content-xpath-query-example-7" class="anchor" href="#xpath-query-example-7" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
 
 <p>      <strong>Description:</strong><br>
           Find all break statements.<br>
@@ -924,7 +1012,7 @@
 </pre></div>
 
 <h4>
-<a name="user-content-xpath-query-example-9" class="anchor" href="#xpath-query-example-9" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+<a name="user-content-xpath-query-example-8" class="anchor" href="#xpath-query-example-8" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
 
 <p>      <strong>Description:</strong><br>
           Find all continue statements.<br>
@@ -953,12 +1041,17 @@
 </pre></div>
 
 <h4>
-<a name="user-content-xpath-query-example-10" class="anchor" href="#xpath-query-example-10" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+<a name="user-content-xpath-query-examples-6" class="anchor" href="#xpath-query-examples-6" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
 
 <p>      <strong>Description:</strong><br>
           Find all return statements.<br>
       <strong>XPath</strong><br>
-          <code>//src:return</code><br><br></p>
+          <code>//src:return</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all functions with more then one return statements.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function[ count(.//src:return) &gt; 1]</code><br><br></p>
 
 <h4>
 <a name="user-content-2-4" class="anchor" href="#2-4" aria-hidden="true"><span class="octicon octicon-link"></span></a>2</h4>
@@ -996,12 +1089,17 @@
 </pre></div>
 
 <h4>
-<a name="user-content-xpath-query-example-11" class="anchor" href="#xpath-query-example-11" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+<a name="user-content-xpath-query-examples-7" class="anchor" href="#xpath-query-examples-7" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
 
 <p>      <strong>Description:</strong><br>
           Find all blocks.<br>
       <strong>XPath</strong><br>
-          <code>//src:block</code><br><br></p>
+          <code>//src:block</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all variable declaration statements which are children of a block.<br>
+      <strong>XPath</strong><br>
+          <code>//src:block/src:decl_stmt</code><br><br></p>
 
 <h2>
 <a name="user-content-label-statement" class="anchor" href="#label-statement" aria-hidden="true"><span class="octicon octicon-link"></span></a>label statement</h2>
@@ -1028,12 +1126,17 @@
 </pre></div>
 
 <h4>
-<a name="user-content-xpath-query-example-12" class="anchor" href="#xpath-query-example-12" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+<a name="user-content-xpath-query-examples-8" class="anchor" href="#xpath-query-examples-8" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
 
 <p>      <strong>Description:</strong><br>
           Find all label statements.<br>
       <strong>XPath</strong><br>
-          <code>//src:label</code><br><br></p>
+          <code>//src:label</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all label statements without goto statements.<br>
+      <strong>XPath</strong><br>
+          <code>//src:label[src:name[. != //src:goto/src:name]]</code><br><br></p>
 
 <h2>
 <a name="user-content-goto-statement" class="anchor" href="#goto-statement" aria-hidden="true"><span class="octicon octicon-link"></span></a>goto statement</h2>
@@ -1060,7 +1163,7 @@
 </pre></div>
 
 <h4>
-<a name="user-content-xpath-query-example-13" class="anchor" href="#xpath-query-example-13" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+<a name="user-content-xpath-query-example-9" class="anchor" href="#xpath-query-example-9" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
 
 <p>      <strong>Description:</strong><br>
           Find all goto statements.<br>
@@ -1086,7 +1189,7 @@
 </pre></div>
 
 <h4>
-<a name="user-content-xpath-query-example-14" class="anchor" href="#xpath-query-example-14" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+<a name="user-content-xpath-query-example-10" class="anchor" href="#xpath-query-example-10" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
 
 <p>      <strong>Description:</strong><br>
           Find all empty statements.<br>
@@ -1115,6 +1218,14 @@
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;specifier&gt;</span>const<span class="nt">&lt;/specifier&gt;</span> <span class="nt">&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>x<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
 <span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;specifier&gt;</span>const<span class="nt">&lt;/specifier&gt;</span> <span class="nt">&lt;name&gt;</span>X<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>y<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-11" class="anchor" href="#xpath-query-example-11" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all const variable declarations.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl/src:type/src:specifier [.='const']</code><br><br></p>
 
 <h4>
 <a name="user-content-2-5" class="anchor" href="#2-5" aria-hidden="true"><span class="octicon octicon-link"></span></a>2</h4>
@@ -1147,6 +1258,14 @@
 <span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;</span> <span class="nt">&lt;specifier&gt;</span>volatile<span class="nt">&lt;/specifier&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>foo<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
 </pre></div>
 
+<h4>
+<a name="user-content-xpath-query-example-12" class="anchor" href="#xpath-query-example-12" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all volatile variable declarations.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl/src:type/src:specifier [.='volatile']</code><br><br></p>
+
 <h2>
 <a name="user-content-restrict" class="anchor" href="#restrict" aria-hidden="true"><span class="octicon octicon-link"></span></a>restrict</h2>
 
@@ -1167,6 +1286,14 @@
 <span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;specifier&gt;</span>restrict<span class="nt">&lt;/specifier&gt;</span> union <span class="nt">&lt;name&gt;</span>Z<span class="nt">&lt;/name&gt;&lt;type:modifier&gt;</span>*<span class="nt">&lt;/type:modifier&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>x<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
 </pre></div>
 
+<h4>
+<a name="user-content-xpath-query-example-13" class="anchor" href="#xpath-query-example-13" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all variables declared with the restrict specifier.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl/src:type/src:specifier [.='restrict']</code><br><br></p>
+
 <h2>
 <a name="user-content-auto" class="anchor" href="#auto" aria-hidden="true"><span class="octicon octicon-link"></span></a>auto</h2>
 
@@ -1184,6 +1311,14 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;specifier&gt;</span>auto<span class="nt">&lt;/specifier&gt;</span> <span class="nt">&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>x<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-14" class="anchor" href="#xpath-query-example-14" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all auto variable declarations.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl/src:type/src:specifier [.='auto']</code><br><br></p>
 
 <h2>
 <a name="user-content-register" class="anchor" href="#register" aria-hidden="true"><span class="octicon octicon-link"></span></a>register</h2>
@@ -1204,6 +1339,14 @@
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>register<span class="nt">&lt;/name&gt;</span> <span class="nt">&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>x<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
 <span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>register<span class="nt">&lt;/name&gt;</span> <span class="nt">&lt;name&gt;</span>float<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>y<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-15" class="anchor" href="#xpath-query-example-15" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all volatile variable declarations.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl/src:type/src:name [.='volatile']</code><br><br></p>
 
 <h2>
 <a name="user-content-extern-block" class="anchor" href="#extern-block" aria-hidden="true"><span class="octicon octicon-link"></span></a>extern block</h2>
@@ -1244,6 +1387,14 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;extern&gt;</span>extern <span class="nt">&lt;lit:literal</span> <span class="na">type=</span><span class="s">"string"</span><span class="nt">&gt;</span><span class="ni">&amp;quot;</span>C<span class="ni">&amp;quot;</span><span class="nt">&lt;/lit:literal&gt;</span> <span class="nt">&lt;block&gt;</span>{ }<span class="nt">&lt;/block&gt;&lt;/extern&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-16" class="anchor" href="#xpath-query-example-16" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all extern block variable declarations.<br>
+      <strong>XPath</strong><br>
+          <code>//src:extern</code><br><br></p>
 
 <h2>
 <a name="user-content-extern-specifier" class="anchor" href="#extern-specifier" aria-hidden="true"><span class="octicon octicon-link"></span></a>extern specifier</h2>
@@ -1290,6 +1441,14 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-example-17" class="anchor" href="#xpath-query-example-17" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all variables declared with the specifier extern.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl/src:type/src:specifier [.='extern']</code><br><br></p>
+
+<h4>
 <a name="user-content-external-structure" class="anchor" href="#external-structure" aria-hidden="true"><span class="octicon octicon-link"></span></a>External Structure</h4>
 
 <div class="highlight highlight-C"><pre><span class="k">extern</span> <span class="k">struct</span> <span class="n">Z</span> <span class="n">X</span><span class="p">;</span>
@@ -1315,6 +1474,14 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;extern&gt;</span>extern <span class="nt">&lt;lit:literal</span> <span class="na">type=</span><span class="s">"string"</span><span class="nt">&gt;</span><span class="ni">&amp;quot;</span>C<span class="ni">&amp;quot;</span><span class="nt">&lt;/lit:literal&gt;</span> <span class="nt">&lt;function_decl&gt;&lt;type&gt;&lt;name&gt;</span>void<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>foo<span class="nt">&lt;/name&gt;&lt;parameter_list&gt;</span>()<span class="nt">&lt;/parameter_list&gt;</span>;<span class="nt">&lt;/function_decl&gt;&lt;/extern&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-18" class="anchor" href="#xpath-query-example-18" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all functions declared with the specifier extern.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function_decl/src:type/src:specifier [.='extern']</code><br><br></p>
 
 <h4>
 <a name="user-content-extern-structure-with-linkage-specifier" class="anchor" href="#extern-structure-with-linkage-specifier" aria-hidden="true"><span class="octicon octicon-link"></span></a>Extern Structure with Linkage Specifier</h4>
@@ -1356,6 +1523,14 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-example-19" class="anchor" href="#xpath-query-example-19" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all static functions declarations.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function_decl/src:type/src:specifier [.='static']</code><br><br></p>
+
+<h4>
 <a name="user-content-2-6" class="anchor" href="#2-6" aria-hidden="true"><span class="octicon octicon-link"></span></a>2</h4>
 
 <div class="highlight highlight-C"><pre><span class="k">static</span> <span class="kt">void</span> <span class="nf">foo</span><span class="p">();</span>
@@ -1363,6 +1538,14 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;function_decl&gt;&lt;type&gt;&lt;specifier&gt;</span>static<span class="nt">&lt;/specifier&gt;</span> <span class="nt">&lt;name&gt;</span>void<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>foo<span class="nt">&lt;/name&gt;&lt;parameter_list&gt;</span>()<span class="nt">&lt;/parameter_list&gt;</span>;<span class="nt">&lt;/function_decl&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-20" class="anchor" href="#xpath-query-example-20" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all static variables declarations.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl/src:type/src:specifier [.='static']</code><br><br></p>
 
 <h2>
 <a name="user-content-inline" class="anchor" href="#inline" aria-hidden="true"><span class="octicon octicon-link"></span></a>inline</h2>
@@ -1381,6 +1564,14 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;function_decl&gt;&lt;type&gt;&lt;specifier&gt;</span>inline<span class="nt">&lt;/specifier&gt;</span> <span class="nt">&lt;name&gt;</span>void<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>swapValues<span class="nt">&lt;/name&gt;&lt;parameter_list&gt;</span>(<span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;type:modifier&gt;</span>*<span class="nt">&lt;/type:modifier&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>a<span class="nt">&lt;/name&gt;&lt;/decl&gt;&lt;/param&gt;</span>,<span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;type:modifier&gt;</span>*<span class="nt">&lt;/type:modifier&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>b<span class="nt">&lt;/name&gt;&lt;/decl&gt;&lt;/param&gt;</span>)<span class="nt">&lt;/parameter_list&gt;</span>;<span class="nt">&lt;/function_decl&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-21" class="anchor" href="#xpath-query-example-21" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all inline function declarations.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function_decl/src:type/src:specifier [.='inline']</code><br><br></p>
 
 <h2>
 <a name="user-content-variable-declaration-statement" class="anchor" href="#variable-declaration-statement" aria-hidden="true"><span class="octicon octicon-link"></span></a>variable declaration statement</h2>
@@ -1404,6 +1595,14 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-example-22" class="anchor" href="#xpath-query-example-22" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all declaration statements.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl_stmt</code><br><br></p>
+
+<h4>
 <a name="user-content-struct-union-and-enum-declarations" class="anchor" href="#struct-union-and-enum-declarations" aria-hidden="true"><span class="octicon octicon-link"></span></a>struct, union and enum declarations</h4>
 
 <div class="highlight highlight-C"><pre><span class="k">struct</span> <span class="n">X</span> <span class="n">y</span><span class="p">;</span>
@@ -1415,6 +1614,14 @@
 <span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;</span>union <span class="nt">&lt;name&gt;</span>X<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>y<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
 <span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;</span>enum <span class="nt">&lt;name&gt;</span>X<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>y<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-23" class="anchor" href="#xpath-query-example-23" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all variable declaration statements with the union qualifier.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl_stmt/src:decl[src:type/text()[contains(., 'union')]]</code><br><br></p>
 
 <h2>
 <a name="user-content-variable-declaration" class="anchor" href="#variable-declaration" aria-hidden="true"><span class="octicon octicon-link"></span></a>variable declaration</h2>
@@ -1449,6 +1656,19 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-examples-9" class="anchor" href="#xpath-query-examples-9" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all variable declarations.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all variable declarations which also initialize the variable.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl[src:init]</code><br><br></p>
+
+<h4>
 <a name="user-content-struct-union-and-enum-declarations-1" class="anchor" href="#struct-union-and-enum-declarations-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>struct, union and enum declarations</h4>
 
 <div class="highlight highlight-C"><pre><span class="k">struct</span> <span class="n">X</span> <span class="n">y</span><span class="p">;</span>
@@ -1460,6 +1680,14 @@
 <span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;</span>union <span class="nt">&lt;name&gt;</span>X<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>y<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
 <span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;</span>enum <span class="nt">&lt;name&gt;</span>X<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>y<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-24" class="anchor" href="#xpath-query-example-24" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all variable declarations with the struct qualifier.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl[src:type/text()[contains(., 'struct')]]</code><br><br></p>
 
 <h2>
 <a name="user-content-function-declaration" class="anchor" href="#function-declaration" aria-hidden="true"><span class="octicon octicon-link"></span></a>function declaration</h2>
@@ -1495,6 +1723,19 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-examples-10" class="anchor" href="#xpath-query-examples-10" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all function declarations.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function_decl</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all return types from all function declarations.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function_decl/src:type</code><br><br></p>
+
+<h4>
 <a name="user-content-2-7" class="anchor" href="#2-7" aria-hidden="true"><span class="octicon octicon-link"></span></a>2</h4>
 
 <div class="highlight highlight-C"><pre><span class="kt">void</span> <span class="nf">foo</span> <span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">[]);</span>
@@ -1502,6 +1743,24 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;function_decl&gt;&lt;type&gt;&lt;name&gt;</span>void<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>foo<span class="nt">&lt;/name&gt;</span> <span class="nt">&lt;parameter_list&gt;</span>(<span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;&lt;name&gt;</span>a<span class="nt">&lt;/name&gt;&lt;index&gt;</span>[]<span class="nt">&lt;/index&gt;&lt;/name&gt;&lt;/decl&gt;&lt;/param&gt;</span>)<span class="nt">&lt;/parameter_list&gt;</span>;<span class="nt">&lt;/function_decl&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-examples-11" class="anchor" href="#xpath-query-examples-11" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all parameters from all function declarations.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function_decl/src:parameter_list/src:param</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all function declarations with only two parameters.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function_decl[src:parameter_list[count(src:param) = 2]</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find the names of all function declarations.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function_decl/src:name</code><br><br></p>
 
 <h4>
 <a name="user-content-3-2" class="anchor" href="#3-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>3</h4>
@@ -1522,21 +1781,12 @@
 </pre></div>
 
 <h4>
-<a name="user-content-5-1" class="anchor" href="#5-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>5</h4>
+<a name="user-content-xpath-query-example-25" class="anchor" href="#xpath-query-example-25" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
 
-<div class="highlight highlight-C"><pre><span class="kt">int</span> <span class="n">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
-   <span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
-   <span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
-   <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
-<span class="p">{</span> <span class="p">}</span>
-</pre></div>
-
-<div class="highlight highlight-XML"><pre><span class="nt">&lt;function&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>func<span class="nt">&lt;/name&gt;&lt;parameter_list&gt;</span>(<span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>a<span class="nt">&lt;/name&gt;&lt;/type&gt;&lt;/decl&gt;&lt;/param&gt;</span>, <span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>b<span class="nt">&lt;/name&gt;&lt;/type&gt;&lt;/decl&gt;&lt;/param&gt;</span>, <span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>c<span class="nt">&lt;/name&gt;&lt;/type&gt;&lt;/decl&gt;&lt;/param&gt;</span>)<span class="nt">&lt;/parameter_list&gt;</span>
-   <span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>a<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
-   <span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>b<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
-   <span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>c<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
-<span class="nt">&lt;block&gt;</span>{ }<span class="nt">&lt;/block&gt;&lt;/function&gt;</span>
-</pre></div>
+<p>      <strong>Description:</strong><br>
+          Find all function declarations that has variadic arguments.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function_decl[src:parameter_list/src:param/src:decl/src:type/type:modifier[.='...']]</code><br><br></p>
 
 <h2>
 <a name="user-content-function-definition" class="anchor" href="#function-definition" aria-hidden="true"><span class="octicon octicon-link"></span></a>function definition</h2>
@@ -1576,6 +1826,19 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-examples-12" class="anchor" href="#xpath-query-examples-12" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all function definitions.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all return types from all function definitions.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function/src:type</code><br><br></p>
+
+<h4>
 <a name="user-content-2-8" class="anchor" href="#2-8" aria-hidden="true"><span class="octicon octicon-link"></span></a>2</h4>
 
 <div class="highlight highlight-C"><pre><span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="n">STUDENT</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
@@ -1583,6 +1846,24 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;function&gt;&lt;type&gt;&lt;name&gt;</span>void<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>print<span class="nt">&lt;/name&gt;&lt;parameter_list&gt;</span>(<span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>STUDENT<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>a<span class="nt">&lt;/name&gt;&lt;/decl&gt;&lt;/param&gt;</span>)<span class="nt">&lt;/parameter_list&gt;</span> <span class="nt">&lt;block&gt;</span>{ }<span class="nt">&lt;/block&gt;&lt;/function&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-examples-13" class="anchor" href="#xpath-query-examples-13" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all parameters from all function definitions.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function/src:parameter_list/src:param</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all function definitions with only two parameters.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function[src:parameter_list[count(src:param) = 2]</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find the names of all function definitions.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function/src:name</code><br><br></p>
 
 <h4>
 <a name="user-content-3-3" class="anchor" href="#3-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>3</h4>
@@ -1603,13 +1884,46 @@
 </pre></div>
 
 <h4>
-<a name="user-content-5-2" class="anchor" href="#5-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>5</h4>
+<a name="user-content-5-1" class="anchor" href="#5-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>5</h4>
 
 <div class="highlight highlight-C"><pre><span class="kt">int</span> <span class="nf">add_multiple_values</span> <span class="p">(</span><span class="kt">int</span> <span class="n">number</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span> <span class="p">}</span>
 </pre></div>
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;function&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>add_multiple_values<span class="nt">&lt;/name&gt;</span> <span class="nt">&lt;parameter_list&gt;</span>(<span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>number<span class="nt">&lt;/name&gt;&lt;/decl&gt;&lt;/param&gt;</span>, <span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;type:modifier&gt;</span>...<span class="nt">&lt;/type:modifier&gt;&lt;/type&gt;&lt;/decl&gt;&lt;/param&gt;</span>)<span class="nt">&lt;/parameter_list&gt;</span> <span class="nt">&lt;block&gt;</span>{ }<span class="nt">&lt;/block&gt;&lt;/function&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-26" class="anchor" href="#xpath-query-example-26" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all function definition that has variadic arguments.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function[src:parameter_list/src:param/src:decl/src:type/type:modifier[.='...']]</code><br><br></p>
+
+<h4>
+<a name="user-content-6-1" class="anchor" href="#6-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>6</h4>
+
+<div class="highlight highlight-C"><pre><span class="kt">int</span> <span class="n">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+   <span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+   <span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+   <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
+<span class="p">{</span> <span class="p">}</span>
+</pre></div>
+
+<div class="highlight highlight-XML"><pre><span class="nt">&lt;function&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>func<span class="nt">&lt;/name&gt;&lt;parameter_list&gt;</span>(<span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>a<span class="nt">&lt;/name&gt;&lt;/type&gt;&lt;/decl&gt;&lt;/param&gt;</span>, <span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>b<span class="nt">&lt;/name&gt;&lt;/type&gt;&lt;/decl&gt;&lt;/param&gt;</span>, <span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>c<span class="nt">&lt;/name&gt;&lt;/type&gt;&lt;/decl&gt;&lt;/param&gt;</span>)<span class="nt">&lt;/parameter_list&gt;</span>
+   <span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>a<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
+   <span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>b<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
+   <span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>c<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
+<span class="nt">&lt;block&gt;</span>{ }<span class="nt">&lt;/block&gt;&lt;/function&gt;</span>
+</pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-27" class="anchor" href="#xpath-query-example-27" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all K &amp; R function definitions.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function[src:decl_stmt]</code><br><br></p>
 
 <h2>
 <a name="user-content-pointer-declaration" class="anchor" href="#pointer-declaration" aria-hidden="true"><span class="octicon octicon-link"></span></a>pointer declaration</h2>
@@ -1644,6 +1958,14 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-example-28" class="anchor" href="#xpath-query-example-28" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all of the declarations of pointers.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl[type:modifier[.='*']]</code><br><br></p>
+
+<h4>
 <a name="user-content-2-9" class="anchor" href="#2-9" aria-hidden="true"><span class="octicon octicon-link"></span></a>2</h4>
 
 <div class="highlight highlight-C"><pre><span class="kt">int</span> <span class="o">*</span><span class="n">pointers</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
@@ -1671,7 +1993,7 @@
 </pre></div>
 
 <h4>
-<a name="user-content-5-3" class="anchor" href="#5-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>5</h4>
+<a name="user-content-5-2" class="anchor" href="#5-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>5</h4>
 
 <div class="highlight highlight-C"><pre><span class="kt">int</span><span class="p">(</span><span class="o">*</span><span class="n">X</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span>
 <span class="kt">int</span><span class="p">(</span><span class="o">*</span><span class="n">X</span><span class="p">)(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">float</span><span class="p">);</span>
@@ -1684,7 +2006,15 @@
 </pre></div>
 
 <h4>
-<a name="user-content-6-1" class="anchor" href="#6-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>6</h4>
+<a name="user-content-xpath-query-example-29" class="anchor" href="#xpath-query-example-29" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all function pointers.<br>
+      <strong>XPath</strong><br>
+          <code>//src:function_decl[text()[contains(., ')')]]</code><br><br></p>
+
+<h4>
+<a name="user-content-6-2" class="anchor" href="#6-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>6</h4>
 
 <div class="highlight highlight-C"><pre><span class="kt">int</span> <span class="k">volatile</span> <span class="o">*</span><span class="k">const</span> <span class="n">z</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">some_object</span><span class="p">;</span>
 </pre></div>
@@ -1741,6 +2071,24 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-examples-14" class="anchor" href="#xpath-query-examples-14" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all typedefs.<br>
+      <strong>XPath</strong><br>
+          <code>//src:typedef</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all types within typedefs.<br>
+      <strong>XPath</strong><br>
+          <code>//src:typedef/src:type</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all names for all typedefs.<br>
+      <strong>XPath</strong><br>
+          <code>//src:typedef/src:name</code><br><br></p>
+
+<h4>
 <a name="user-content-2-10" class="anchor" href="#2-10" aria-hidden="true"><span class="octicon octicon-link"></span></a>2</h4>
 
 <div class="highlight highlight-C"><pre><span class="k">typedef</span> <span class="k">struct</span> <span class="n">club</span> 
@@ -1758,6 +2106,14 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-example-30" class="anchor" href="#xpath-query-example-30" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all typedefs that are used to define a struct.<br>
+      <strong>XPath</strong><br>
+          <code>//src:typedef[src:type/src:struct]</code><br><br></p>
+
+<h4>
 <a name="user-content-3-5" class="anchor" href="#3-5" aria-hidden="true"><span class="octicon octicon-link"></span></a>3</h4>
 
 <div class="highlight highlight-C"><pre><span class="k">typedef</span> <span class="kt">void</span> <span class="nf">DRAWF</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span> <span class="p">);</span>
@@ -1767,6 +2123,14 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-example-31" class="anchor" href="#xpath-query-example-31" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all typedefs that declare a function type.<br>
+      <strong>XPath</strong><br>
+          <code>//src:typedef[src:function_decl]</code><br><br></p>
+
+<h4>
 <a name="user-content-4-4" class="anchor" href="#4-4" aria-hidden="true"><span class="octicon octicon-link"></span></a>4</h4>
 
 <div class="highlight highlight-C"><pre><span class="k">typedef</span> <span class="nf">void</span> <span class="p">(</span><span class="o">*</span><span class="n">DRAWF</span><span class="p">)(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span> <span class="p">);</span>
@@ -1774,6 +2138,19 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;typedef&gt;</span>typedef <span class="nt">&lt;function_decl&gt;&lt;type&gt;&lt;name&gt;</span>void<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> (<span class="nt">&lt;type:modifier&gt;</span>*<span class="nt">&lt;/type:modifier&gt;&lt;name&gt;</span>DRAWF<span class="nt">&lt;/name&gt;</span>)<span class="nt">&lt;parameter_list&gt;</span>( <span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;&lt;/decl&gt;&lt;/param&gt;</span>, <span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;&lt;/decl&gt;&lt;/param&gt;</span> )<span class="nt">&lt;/parameter_list&gt;</span>;<span class="nt">&lt;/function_decl&gt;&lt;/typedef&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-examples-15" class="anchor" href="#xpath-query-examples-15" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all typedefs of a function pointer.<br>
+      <strong>XPath</strong><br>
+          <code>//src:typedef[src:function_decl[text()[contains(., ')')]]]</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find all names from all typedefs of function pointers.<br>
+      <strong>XPath</strong><br>
+          <code>//src:typedef/src:function_decl[text()[contains(., ')')]]/src:name</code><br><br></p>
 
 <h2>
 <a name="user-content-array-declaration" class="anchor" href="#array-declaration" aria-hidden="true"><span class="octicon octicon-link"></span></a>array declaration</h2>
@@ -1805,6 +2182,14 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-example-32" class="anchor" href="#xpath-query-example-32" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all array declarations.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl[src:name/src:name/src:index]]</code><br><br></p>
+
+<h4>
 <a name="user-content-2-11" class="anchor" href="#2-11" aria-hidden="true"><span class="octicon octicon-link"></span></a>2</h4>
 
 <div class="highlight highlight-C"><pre><span class="kt">float</span> <span class="n">matrix</span><span class="p">[</span><span class="mi">10</span><span class="p">][</span><span class="mi">15</span><span class="p">];</span>
@@ -1812,6 +2197,14 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>float<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;&lt;name&gt;</span>matrix<span class="nt">&lt;/name&gt;&lt;index&gt;</span>[<span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>10<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;</span>]<span class="nt">&lt;/index&gt;&lt;index&gt;</span>[<span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>15<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;</span>]<span class="nt">&lt;/index&gt;&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-33" class="anchor" href="#xpath-query-example-33" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all array declarations where the number of elements is less then 50.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl[src:name/src:name/src:index/lit:literal[number(text()) &lt; 50]]</code><br><br></p>
 
 <h4>
 <a name="user-content-3-6" class="anchor" href="#3-6" aria-hidden="true"><span class="octicon octicon-link"></span></a>3</h4>
@@ -1861,6 +2254,14 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;&lt;name&gt;</span>myArray<span class="nt">&lt;/name&gt;&lt;index&gt;</span>[<span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>10<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;</span>]<span class="nt">&lt;/index&gt;&lt;/name&gt;</span> <span class="nt">&lt;init&gt;</span>= <span class="nt">&lt;expr&gt;&lt;block&gt;</span>{ <span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>5<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;</span>, <span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>5<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;</span>, <span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>5<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;</span>, <span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>5<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;</span>, <span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>5<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;</span>, <span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>5<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;</span>, <span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>5<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;</span>, <span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>5<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;</span>, <span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>5<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;</span>, <span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>5<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;</span> }<span class="nt">&lt;/block&gt;&lt;/expr&gt;&lt;/init&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-34" class="anchor" href="#xpath-query-example-34" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all array declarations which initialize the array at the same time.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl[src:name/src:name/src:index]][src:init]</code><br><br></p>
 
 <h4>
 <a name="user-content-2-12" class="anchor" href="#2-12" aria-hidden="true"><span class="octicon octicon-link"></span></a>2</h4>
@@ -1914,6 +2315,14 @@
 }<span class="nt">&lt;/block&gt;</span> <span class="nt">&lt;decl&gt;&lt;name&gt;</span>test<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/struct&gt;</span>
 </pre></div>
 
+<h4>
+<a name="user-content-xpath-query-example-35" class="anchor" href="#xpath-query-example-35" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all bitfield declarations.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl[src:range]</code><br><br></p>
+
 <h2>
 <a name="user-content-struct-declaration" class="anchor" href="#struct-declaration" aria-hidden="true"><span class="octicon octicon-link"></span></a>struct declaration</h2>
 
@@ -1933,13 +2342,21 @@
 <a name="user-content-example-16" class="anchor" href="#example-16" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h3>
 
 <h4>
-<a name="user-content-forward-declaration" class="anchor" href="#forward-declaration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Forward Declaration</h4>
+<a name="user-content-forward-declaration" class="anchor" href="#forward-declaration" aria-hidden="true"><span class="octicon octicon-link"></span></a>forward declaration</h4>
 
 <div class="highlight highlight-C"><pre><span class="k">struct</span> <span class="n">employee</span><span class="p">;</span>
 </pre></div>
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;struct_decl&gt;</span>struct <span class="nt">&lt;name&gt;</span>employee<span class="nt">&lt;/name&gt;</span>;<span class="nt">&lt;/struct_decl&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-36" class="anchor" href="#xpath-query-example-36" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all of the forward declarations for all structs.<br>
+      <strong>XPath</strong><br>
+          <code>//src:struct_decl</code><br><br></p>
 
 <h2>
 <a name="user-content-struct-definition" class="anchor" href="#struct-definition" aria-hidden="true"><span class="octicon octicon-link"></span></a>struct definition</h2>
@@ -1962,7 +2379,7 @@
 <a name="user-content-examples-16" class="anchor" href="#examples-16" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h3>
 
 <h4>
-<a name="user-content-trivial-declaration" class="anchor" href="#trivial-declaration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Trivial Declaration</h4>
+<a name="user-content-trivial-declaration" class="anchor" href="#trivial-declaration" aria-hidden="true"><span class="octicon octicon-link"></span></a>trivial declaration</h4>
 
 <div class="highlight highlight-C"><pre><span class="k">struct</span> <span class="n">a</span> <span class="p">{</span>
     <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
@@ -1979,7 +2396,20 @@
 </pre></div>
 
 <h4>
-<a name="user-content-variable-of-an-anonymous-struct-type" class="anchor" href="#variable-of-an-anonymous-struct-type" aria-hidden="true"><span class="octicon octicon-link"></span></a>Variable Of An Anonymous Struct Type</h4>
+<a name="user-content-xpath-query-examples-16" class="anchor" href="#xpath-query-examples-16" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Examples</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find the definition of all structs.<br>
+      <strong>XPath</strong><br>
+          <code>//src:struct</code><br></p>
+
+<p>      <strong>Description:</strong><br>
+          Find the members from all structs.<br>
+      <strong>XPath</strong><br>
+          <code>//src:struct/src:block/src:decl_stmt</code><br><br></p>
+
+<h4>
+<a name="user-content-variable-of-an-anonymous-struct-type" class="anchor" href="#variable-of-an-anonymous-struct-type" aria-hidden="true"><span class="octicon octicon-link"></span></a>variable of an anonymous struct type</h4>
 
 <div class="highlight highlight-C"><pre><span class="k">struct</span>
 <span class="p">{</span>
@@ -1996,7 +2426,7 @@
 </pre></div>
 
 <h4>
-<a name="user-content-declaring-a-struct-and-instance" class="anchor" href="#declaring-a-struct-and-instance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Declaring A Struct And Instance</h4>
+<a name="user-content-declaring-a-struct-and-instance" class="anchor" href="#declaring-a-struct-and-instance" aria-hidden="true"><span class="octicon octicon-link"></span></a>declaring a struct and instance</h4>
 
 <div class="highlight highlight-C"><pre><span class="k">struct</span> <span class="n">employee</span>
 <span class="p">{</span>
@@ -2046,6 +2476,14 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-example-37" class="anchor" href="#xpath-query-example-37" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all of declaration of structs which also initialize it.<br>
+      <strong>XPath</strong><br>
+          <code>//src:decl[src:init/src:block]</code><br><br></p>
+
+<h4>
 <a name="user-content-2-13" class="anchor" href="#2-13" aria-hidden="true"><span class="octicon octicon-link"></span></a>2</h4>
 
 <div class="highlight highlight-C"><pre><span class="n">MY_TYPE</span> <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">MY_TYPE</span><span class="p">)</span> <span class="p">{</span> <span class="nb">false</span><span class="p">,</span> <span class="mi">234</span><span class="p">,</span> <span class="mf">1.234</span> <span class="p">};</span>
@@ -2064,7 +2502,7 @@
 </pre></div>
 
 <h2>
-<a name="user-content-enum-declaration" class="anchor" href="#enum-declaration" aria-hidden="true"><span class="octicon octicon-link"></span></a>enum declaration</h2>
+<a name="user-content-enum-definition" class="anchor" href="#enum-definition" aria-hidden="true"><span class="octicon octicon-link"></span></a>enum definition</h2>
 
 <h3>
 <a name="user-content-element-35" class="anchor" href="#element-35" aria-hidden="true"><span class="octicon octicon-link"></span></a>Element</h3>
@@ -2109,6 +2547,14 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-example-38" class="anchor" href="#xpath-query-example-38" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all enum definitions.<br>
+      <strong>XPath</strong><br>
+          <code>//src:enum</code><br><br></p>
+
+<h4>
 <a name="user-content-2-14" class="anchor" href="#2-14" aria-hidden="true"><span class="octicon octicon-link"></span></a>2</h4>
 
 <div class="highlight highlight-C"><pre><span class="k">enum</span> <span class="n">DAY</span><span class="p">;</span>
@@ -2116,6 +2562,14 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;enum&gt;</span>enum <span class="nt">&lt;name&gt;</span>DAY<span class="nt">&lt;/name&gt;</span>;<span class="nt">&lt;/enum&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-39" class="anchor" href="#xpath-query-example-39" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find the names of all members of all enums.<br>
+      <strong>XPath</strong><br>
+          <code>//src:enum/src:decl/src:name</code><br><br></p>
 
 <h4>
 <a name="user-content-3-8" class="anchor" href="#3-8" aria-hidden="true"><span class="octicon octicon-link"></span></a>3</h4>
@@ -2152,6 +2606,14 @@
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;union_decl&gt;</span>union <span class="nt">&lt;name&gt;</span>X<span class="nt">&lt;/name&gt;</span>;<span class="nt">&lt;/union_decl&gt;</span>
 </pre></div>
 
+<h4>
+<a name="user-content-xpath-query-example-40" class="anchor" href="#xpath-query-example-40" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all of the forward declarations for all unions.<br>
+      <strong>XPath</strong><br>
+          <code>//src:union_decl</code><br><br></p>
+
 <h2>
 <a name="user-content-union-definition" class="anchor" href="#union-definition" aria-hidden="true"><span class="octicon octicon-link"></span></a>union definition</h2>
 
@@ -2186,6 +2648,14 @@
 }<span class="nt">&lt;/block&gt;</span> <span class="nt">&lt;decl&gt;&lt;name&gt;</span>number<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/union&gt;</span>
 </pre></div>
 
+<h4>
+<a name="user-content-xpath-query-example-41" class="anchor" href="#xpath-query-example-41" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all definitions of all unions.<br>
+      <strong>XPath</strong><br>
+          <code>//src:union</code><br><br></p>
+
 <h2>
 <a name="user-content-function-call" class="anchor" href="#function-call" aria-hidden="true"><span class="octicon octicon-link"></span></a>Function Call</h2>
 
@@ -2213,6 +2683,14 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;expr_stmt&gt;&lt;expr&gt;&lt;call&gt;&lt;name&gt;</span>foo<span class="nt">&lt;/name&gt;&lt;argument_list&gt;</span>(<span class="nt">&lt;argument&gt;&lt;expr&gt;&lt;name&gt;</span>x<span class="nt">&lt;/name&gt;&lt;/expr&gt;&lt;/argument&gt;</span>, <span class="nt">&lt;argument&gt;&lt;expr&gt;&lt;name&gt;</span>y<span class="nt">&lt;/name&gt;&lt;/expr&gt;&lt;/argument&gt;</span>, <span class="nt">&lt;argument&gt;&lt;expr&gt;&lt;name&gt;</span>z<span class="nt">&lt;/name&gt;&lt;/expr&gt;&lt;/argument&gt;</span>)<span class="nt">&lt;/argument_list&gt;&lt;/call&gt;&lt;/expr&gt;</span>;<span class="nt">&lt;/expr_stmt&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-42" class="anchor" href="#xpath-query-example-42" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all function calls.<br>
+      <strong>XPath</strong><br>
+          <code>//src:call</code><br><br></p>
 
 <h2>
 <a name="user-content-array-indexing" class="anchor" href="#array-indexing" aria-hidden="true"><span class="octicon octicon-link"></span></a>array indexing</h2>
@@ -2243,7 +2721,7 @@
 </pre></div>
 
 <h4>
-<a name="user-content-xpath-query-example-15" class="anchor" href="#xpath-query-example-15" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+<a name="user-content-xpath-query-example-43" class="anchor" href="#xpath-query-example-43" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
 
 <p>      <strong>Description:</strong><br>
           Find all array indexings.<br>
@@ -2287,6 +2765,14 @@
 <div class="highlight highlight-XML"><pre> <span class="nt">&lt;expr_stmt&gt;&lt;expr&gt;&lt;name&gt;&lt;name&gt;</span>t<span class="nt">&lt;/name&gt;&lt;op:operator&gt;</span>-<span class="ni">&amp;gt;</span><span class="nt">&lt;/op:operator&gt;&lt;name&gt;</span>tm_sec<span class="nt">&lt;/name&gt;&lt;/name&gt;&lt;/expr&gt;</span>;<span class="nt">&lt;/expr_stmt&gt;</span>
 </pre></div>
 
+<h4>
+<a name="user-content-xpath-query-example-44" class="anchor" href="#xpath-query-example-44" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all uses of the <code>-&gt;</code> operator.<br>
+      <strong>XPath</strong><br>
+          <code>//op:operator[.='-&gt;']</code><br><br></p>
+
 <h2>
 <a name="user-content-member-access" class="anchor" href="#member-access" aria-hidden="true"><span class="octicon octicon-link"></span></a>member access</h2>
 
@@ -2323,6 +2809,14 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;expr_stmt&gt;&lt;expr&gt;&lt;name&gt;&lt;name&gt;</span>t<span class="nt">&lt;/name&gt;&lt;op:operator&gt;</span>.<span class="nt">&lt;/op:operator&gt;&lt;name&gt;</span>tm_sec<span class="nt">&lt;/name&gt;&lt;/name&gt;&lt;/expr&gt;</span>;<span class="nt">&lt;/expr_stmt&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-45" class="anchor" href="#xpath-query-example-45" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all uses of the <code>.</code> operator.<br>
+      <strong>XPath</strong><br>
+          <code>//op:operator[.='.']</code><br><br></p>
 
 <h2>
 <a name="user-content-cast" class="anchor" href="#cast" aria-hidden="true"><span class="octicon octicon-link"></span></a>cast</h2>
@@ -2389,6 +2883,14 @@
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;expr_stmt&gt;&lt;expr&gt;&lt;sizeof&gt;</span>sizeof<span class="nt">&lt;argument_list&gt;</span>(<span class="nt">&lt;argument&gt;</span>struct <span class="nt">&lt;expr&gt;&lt;name&gt;</span>type<span class="nt">&lt;/name&gt;&lt;/expr&gt;&lt;/argument&gt;</span>)<span class="nt">&lt;/argument_list&gt;&lt;/sizeof&gt;&lt;/expr&gt;</span>;<span class="nt">&lt;/expr_stmt&gt;</span>
 </pre></div>
 
+<h4>
+<a name="user-content-xpath-query-example-46" class="anchor" href="#xpath-query-example-46" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all uses of sizeof.<br>
+      <strong>XPath</strong><br>
+          <code>//src:sizeof</code><br><br></p>
+
 <h2>
 <a name="user-content-_alignas" class="anchor" href="#_alignas" aria-hidden="true"><span class="octicon octicon-link"></span></a>_Alignas</h2>
 
@@ -2417,6 +2919,14 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;alignas&gt;</span>_Alignas<span class="nt">&lt;argument_list&gt;</span>(<span class="nt">&lt;/argument_list&gt;&lt;/alignas&gt;</span>struct <span class="nt">&lt;name&gt;</span>X<span class="nt">&lt;/name&gt;&lt;/type&gt;&lt;/decl&gt;</span>) struct X y;<span class="nt">&lt;/decl_stmt&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-47" class="anchor" href="#xpath-query-example-47" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all uses of _Alignas.<br>
+      <strong>XPath</strong><br>
+          <code>//src:alignas</code><br><br></p>
 
 <h4>
 <a name="user-content-2-15" class="anchor" href="#2-15" aria-hidden="true"><span class="octicon octicon-link"></span></a>2</h4>
@@ -2452,6 +2962,14 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;expr_stmt&gt;&lt;expr&gt;&lt;alignof&gt;</span>_Alignof<span class="nt">&lt;argument_list&gt;</span>(<span class="nt">&lt;argument&gt;&lt;expr&gt;</span>union <span class="nt">&lt;name&gt;</span>type<span class="nt">&lt;/name&gt;&lt;/expr&gt;&lt;/argument&gt;</span>)<span class="nt">&lt;/argument_list&gt;&lt;/alignof&gt;&lt;/expr&gt;</span>;<span class="nt">&lt;/expr_stmt&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-48" class="anchor" href="#xpath-query-example-48" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all uses of _Alignof.<br>
+      <strong>XPath</strong><br>
+          <code>//src:alignof</code><br><br></p>
 
 <h2>
 <a name="user-content-_atomic" class="anchor" href="#_atomic" aria-hidden="true"><span class="octicon octicon-link"></span></a>_Atomic</h2>
@@ -2492,6 +3010,14 @@
 </pre></div>
 
 <h4>
+<a name="user-content-xpath-query-example-49" class="anchor" href="#xpath-query-example-49" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all uses of _Atomic.<br>
+      <strong>XPath</strong><br>
+          <code>//src:atomic</code><br><br></p>
+
+<h4>
 <a name="user-content-3-9" class="anchor" href="#3-9" aria-hidden="true"><span class="octicon octicon-link"></span></a>3</h4>
 
 <div class="highlight highlight-C"><pre><span class="n">_Atomic</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">t</span><span class="p">;</span>
@@ -2530,6 +3056,14 @@
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;expr_stmt&gt;&lt;expr&gt;&lt;generic_selection&gt;</span>_Generic ( <span class="nt">&lt;selector&gt;&lt;expr&gt;&lt;name&gt;</span>AnyExpression<span class="nt">&lt;/name&gt;&lt;/expr&gt;&lt;/selector&gt;</span> <span class="nt">&lt;op:operator&gt;</span>,<span class="nt">&lt;/op:operator&gt;</span> <span class="nt">&lt;association_list&gt;&lt;association&gt;&lt;type&gt;&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span>:<span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>5<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;&lt;/association&gt;&lt;op:operator&gt;</span>,<span class="nt">&lt;/op:operator&gt;</span> <span class="nt">&lt;association&gt;&lt;type&gt;&lt;name&gt;</span>double<span class="nt">&lt;/name&gt;&lt;/type&gt;</span>:<span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>5.0<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;&lt;/association&gt;&lt;op:operator&gt;</span>,<span class="nt">&lt;/op:operator&gt;</span> <span class="nt">&lt;association&gt;&lt;type&gt;</span>default<span class="nt">&lt;/type&gt;</span>:<span class="nt">&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>0<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;&lt;/association&gt;&lt;/association_list&gt;</span>)<span class="nt">&lt;/generic_selection&gt;&lt;/expr&gt;</span>;<span class="nt">&lt;/expr_stmt&gt;</span>
 </pre></div>
 
+<h4>
+<a name="user-content-xpath-query-example-50" class="anchor" href="#xpath-query-example-50" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all uses of _Generic.<br>
+      <strong>XPath</strong><br>
+          <code>//src:generic_selection</code><br><br></p>
+
 <h2>
 <a name="user-content-_noreturn" class="anchor" href="#_noreturn" aria-hidden="true"><span class="octicon octicon-link"></span></a>_Noreturn</h2>
 
@@ -2538,7 +3072,7 @@
 
 <ul>
 <li>
-<strong>&lt;name&gt;</strong> </li>
+<strong>&lt;specifier&gt;</strong> </li>
 </ul><h3>
 <a name="user-content-example-27" class="anchor" href="#example-27" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h3>
 
@@ -2547,6 +3081,14 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;function&gt;&lt;type&gt;&lt;specifier&gt;</span>_Noreturn<span class="nt">&lt;/specifier&gt;</span> <span class="nt">&lt;name&gt;</span>void<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>die<span class="nt">&lt;/name&gt;&lt;parameter_list&gt;</span>(<span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;specifier&gt;</span>const<span class="nt">&lt;/specifier&gt;</span> <span class="nt">&lt;name&gt;</span>char<span class="nt">&lt;/name&gt;</span> <span class="nt">&lt;type:modifier&gt;</span>*<span class="nt">&lt;/type:modifier&gt;&lt;/type&gt;&lt;name&gt;</span>fmt<span class="nt">&lt;/name&gt;&lt;/decl&gt;&lt;/param&gt;</span>, <span class="nt">&lt;param&gt;&lt;decl&gt;&lt;type&gt;&lt;type:modifier&gt;</span>...<span class="nt">&lt;/type:modifier&gt;&lt;/type&gt;&lt;/decl&gt;&lt;/param&gt;</span>)<span class="nt">&lt;/parameter_list&gt;</span> <span class="nt">&lt;block&gt;</span>{ <span class="nt">&lt;expr_stmt&gt;&lt;expr&gt;&lt;call&gt;&lt;name&gt;</span>exit<span class="nt">&lt;/name&gt;&lt;argument_list&gt;</span>(<span class="nt">&lt;argument&gt;&lt;expr&gt;&lt;name&gt;</span>EXIT_FAILURE<span class="nt">&lt;/name&gt;&lt;/expr&gt;&lt;/argument&gt;</span>)<span class="nt">&lt;/argument_list&gt;&lt;/call&gt;&lt;/expr&gt;</span>;<span class="nt">&lt;/expr_stmt&gt;</span> }<span class="nt">&lt;/block&gt;&lt;/function&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-51" class="anchor" href="#xpath-query-example-51" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all uses of _Noreturn.<br>
+      <strong>XPath</strong><br>
+          <code>//src:specifier[.='_Noreturn']</code><br><br></p>
 
 <h2>
 <a name="user-content-_static_assert" class="anchor" href="#_static_assert" aria-hidden="true"><span class="octicon octicon-link"></span></a>_Static_assert</h2>
@@ -2574,6 +3116,14 @@
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;assert</span> <span class="na">type=</span><span class="s">"static"</span><span class="nt">&gt;</span>_Static_assert<span class="nt">&lt;argument_list&gt;</span>(<span class="nt">&lt;argument&gt;&lt;expr&gt;&lt;name&gt;</span>DEBUG_LEVEL<span class="nt">&lt;/name&gt;</span> <span class="nt">&lt;op:operator&gt;</span><span class="ni">&amp;gt;</span><span class="nt">&lt;/op:operator&gt;</span> <span class="nt">&lt;lit:literal</span> <span class="na">type=</span><span class="s">"number"</span><span class="nt">&gt;</span>5<span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;&lt;/argument&gt;</span>, <span class="nt">&lt;argument&gt;&lt;expr&gt;&lt;lit:literal</span> <span class="na">type=</span><span class="s">"string"</span><span class="nt">&gt;</span><span class="ni">&amp;quot;</span>Message<span class="ni">&amp;quot;</span><span class="nt">&lt;/lit:literal&gt;&lt;/expr&gt;&lt;/argument&gt;</span>)<span class="nt">&lt;/argument_list&gt;</span>;<span class="nt">&lt;/assert&gt;</span>
 </pre></div>
 
+<h4>
+<a name="user-content-xpath-query-example-52" class="anchor" href="#xpath-query-example-52" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all uses of _Static_assert.<br>
+      <strong>XPath</strong><br>
+          <code>//src:assert[@type ='static']</code><br><br></p>
+
 <h2>
 <a name="user-content-_thread_local" class="anchor" href="#_thread_local" aria-hidden="true"><span class="octicon octicon-link"></span></a>_Thread_local</h2>
 
@@ -2582,7 +3132,7 @@
 
 <ul>
 <li>
-<strong>&lt;name&gt;</strong> </li>
+<strong>&lt;specifier&gt;</strong> </li>
 </ul><h3>
 <a name="user-content-example-29" class="anchor" href="#example-29" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h3>
 
@@ -2591,6 +3141,14 @@
 
 <div class="highlight highlight-XML"><pre><span class="nt">&lt;decl_stmt&gt;&lt;decl&gt;&lt;type&gt;&lt;specifier&gt;</span>_Thread_local<span class="nt">&lt;/specifier&gt;</span> <span class="nt">&lt;name&gt;</span>int<span class="nt">&lt;/name&gt;&lt;/type&gt;</span> <span class="nt">&lt;name&gt;</span>x<span class="nt">&lt;/name&gt;&lt;/decl&gt;</span>;<span class="nt">&lt;/decl_stmt&gt;</span>
 </pre></div>
+
+<h4>
+<a name="user-content-xpath-query-example-53" class="anchor" href="#xpath-query-example-53" aria-hidden="true"><span class="octicon octicon-link"></span></a>XPath Query Example</h4>
+
+<p>      <strong>Description:</strong><br>
+          Find all uses of _Thread_local.<br>
+      <strong>XPath</strong><br>
+          <code>//src:specifier[.='_Thread_local']</code><br><br></p>
 
 <h2>
 <a name="user-content-operators" class="anchor" href="#operators" aria-hidden="true"><span class="octicon octicon-link"></span></a>Operators</h2>

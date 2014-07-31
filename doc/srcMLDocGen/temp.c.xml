@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" language="C" filename="temp.c"><cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>ONE</name></cpp:macro></cpp:define>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" language="C" filename="temp.c"><for>for( <init><decl><type><name>int</name></type> <name>i</name> <init>=<expr><lit:literal type="number">0</lit:literal></expr></init></decl>;</init> <condition><expr><name>i</name> <op:operator>&lt;</op:operator> <lit:literal type="number">5</lit:literal></expr>;</condition> <incr><expr><op:operator>++</op:operator><name>i</name></expr></incr>) <empty_stmt>;</empty_stmt></for>
 
-<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>TWO</name></cpp:macro></cpp:define>
-<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>THREE</name></cpp:macro></cpp:define>
-<cpp:undef>#<cpp:directive>undef</cpp:directive> <name>TWO</name></cpp:undef>
+<for>for( <init><decl><type><name>int</name></type> <name>bob</name> <init>=<expr><lit:literal type="number">0</lit:literal></expr></init></decl>;</init> <condition><expr><name>bob</name> <op:operator>&lt;</op:operator> <lit:literal type="number">5</lit:literal></expr>;</condition> <incr><expr><name>bob</name><op:operator>++</op:operator></expr></incr>) <empty_stmt>;</empty_stmt></for>
 
+
+<function_decl><type><name>int</name></type>(<type:modifier>*</type:modifier><name>X</name>)<parameter_list>(<param><decl><type><name>void</name></type></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>int</name></type>(<type:modifier>*</type:modifier><name>X</name>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>float</name></type></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>int</name></type>(<type:modifier>*</type:modifier><name>X</name>)<parameter_list>(<param><decl><type><name>char</name> <specifier>const</specifier><type:modifier>*</type:modifier></type></decl></param>,<param><decl><type><type:modifier>...</type:modifier></type></decl></param>)</parameter_list>;</function_decl>
+
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <block>{
+}</block></function>
+
+<function_decl><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>

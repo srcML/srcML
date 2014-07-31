@@ -4059,6 +4059,8 @@ class Foo
 <block>{<private type="default"> </private>}</block>;</class>
 ```
 
+
+
 ## Operators
 Name | Operator | srcML
 --- | --- | ---

@@ -55,7 +55,7 @@
         <tr>
             <td><a href="#for-statement">for</a> </td>
             <td>&lt;for&gt;</td>
-            <td>&lt;init&gt;, &lt;condition&gt;, &lt;incr&gt;, &lt;block&gt;</td>
+            <td>&lt;init&gt;, &lt;condition&gt;, &lt;incr&gt;</td>
         </tr>
 
         <tr>
@@ -242,7 +242,7 @@
         </tr>
 
         <tr>
-            <td><a href="#enum-declaration">enum declaration</a> </td>
+            <td><a href="#enum-definition">enum definition</a> </td>
             <td>&lt;enum&gt;</td>
             <td>&lt;name&gt;, &lt;block&gt;</td>
         </tr>
@@ -331,7 +331,7 @@
 
         <tr>
             <td><a href="#_noreturn">_Noreturn</a> </td>
-            <td>&lt;name&gt;</td>
+            <td>&lt;specifier&gt;</td>
             <td></td>
         </tr>
 
@@ -343,7 +343,7 @@
 
         <tr>
             <td><a href="#_thread_local">_Thread_local</a> </td>
-            <td>&lt;name&gt;</td>
+            <td>&lt;specifier&gt;</td>
             <td></td>
         </tr>
 </tbody><thead>
@@ -433,7 +433,13 @@ else
 }</block></else></if>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all else statements.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:else`<br/>
+<br/>
 #### 4
 
 ```C
@@ -451,7 +457,13 @@ if ( i > 0 )           /* Without braces */
         <expr_stmt><expr><name>x</name> <op:operator>=</op:operator> <name>i</name></expr>;</expr_stmt></else></if></then></if>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all nested if statements.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:if/src:then//src:if`<br/>
+<br/>
 #### 5
 
 ```C
@@ -499,7 +511,13 @@ else
     
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all else-if statements.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:elseif`<br/>
+<br/>
 ## while statement
 ### Element
 * **&lt;while&gt;** 
@@ -528,12 +546,22 @@ while ( i >= 0 )
 
 ```
 
-####XPath Query Example
+####XPath Query Examples
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all while statements.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:while`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all of the conditions of all while statements.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:while/src:condition`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all while statements which have a condition containing the variable `'X'`.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:while[src:condition//src:name = 'X']`<br/>
 <br/>
 ## do while statement
 ### Element
@@ -561,12 +589,17 @@ do {
 }</block> while <condition>( <expr><name>x</name> <op:operator>&gt;</op:operator> <lit:literal type="number">0</lit:literal></expr> )</condition>;</do>
 ```
 
-####XPath Query Example
+####XPath Query Examples
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all do statements.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:do`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all do while statements which have a condition containing the variable `'Z'`.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:do[src:condition//src:name = 'Z']`<br/>
 <br/>
 #### 2
 
@@ -617,12 +650,17 @@ switch( c )
 </default>}</block></switch>
 ```
 
-####XPath Query Example
+####XPath Query Examples
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all switch statements.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:switch`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all of the conditions of all switch statements.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:switch/src:condition`<br/>
 <br/>
 #### 2
 
@@ -673,12 +711,22 @@ case THREE:
 <case>case <expr><name>THREE</name></expr>:</case>
 ```
 
-####XPath Query Example
+####XPath Query Examples
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all case statements.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:case`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all case statements which use the name `'SATURDAY'`.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:case[.//src:name = 'SATURDAY']`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all switch statements which have a case that uses the name `'SATURDAY'`.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:switch[src:block/src:case[.//src:name = 'SATURDAY']]`<br/>
 <br/>
 ## default statement
 ### Element
@@ -694,12 +742,17 @@ default:
 <default>default:</default>
 ```
 
-####XPath Query Example
+####XPath Query Examples
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all default statements.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:default`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all switch statements which have a case that have a `default:` statement.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:switch[src:block/src:default]`<br/>
 <br/>
 ## for statement
 ### Element
@@ -709,7 +762,6 @@ default:
 * **&lt;init&gt;** 
 * **&lt;condition&gt;** 
 * **&lt;incr&gt;** 
-* **&lt;block&gt;** 
 
 
 ### Examples
@@ -723,12 +775,27 @@ for( ;; ) { }
 <for>for( <init>;</init><condition>;</condition> <incr/>) <block>{ }</block></for>
 ```
 
-####XPath Query Example
+####XPath Query Examples
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all for statements.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:for`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all initialization statements from within the control of all for statements.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:for/src:init`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all for loops which declare a variable with a single character name (e.g. `x`, `i` or `y`).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:for[string-length(src:init/src:decl/src:name) = 1]`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all for loops which use post decrement as part of the increment expression.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:for[src:incr/src:expr//node()/following-sibling::op:operator[.= '++']]`<br/>
 <br/>
 #### 2
 
@@ -759,7 +826,13 @@ for (i = 0; i < max; i++ )
 }</block></for>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all of the increments expression of all for loops.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:for/src:incr`<br/>
+<br/>
 #### 3
 
 ```C
@@ -771,7 +844,13 @@ for(int i =0; i < 10;++i)
 	<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator> <name><name>x</name><index>[<expr><name>i</name></expr>]</index></name></expr>;</expr_stmt></for>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all of the conditions of all for loops.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:for/src:condition`<br/>
+<br/>
 ## break statement
 ### Element
 * **&lt;break&gt;** 
@@ -860,12 +939,17 @@ return( s * (long long)s );
 <return>return<expr><op:operator>(</op:operator> <name>s</name> <op:operator>*</op:operator> <op:operator>(</op:operator><name>long</name> <name>long</name><op:operator>)</op:operator><name>s</name> <op:operator>)</op:operator></expr>;</return>
 ```
 
-####XPath Query Example
+####XPath Query Examples
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all return statements.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:return`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all functions with more then one return statements.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function[ count(.//src:return) > 1]`<br/>
 <br/>
 #### 2
 
@@ -899,12 +983,17 @@ return;
 }</block>
 ```
 
-####XPath Query Example
+####XPath Query Examples
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all blocks.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:block`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all variable declaration statements which are children of a block.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:block/src:decl_stmt`<br/>
 <br/>
 ## label statement
 ### Element
@@ -923,12 +1012,17 @@ stop:
 <label><name>stop</name>:</label>
 ```
 
-####XPath Query Example
+####XPath Query Examples
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all label statements.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:label`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all label statements without goto statements.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:label[src:name[. != //src:goto/src:name]]`<br/>
 <br/>
 ## goto statement
 ### Element
@@ -993,7 +1087,13 @@ const X y;
 <decl_stmt><decl><type><specifier>const</specifier> <name>X</name></type> <name>y</name></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all const variable declarations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl/src:type/src:specifier [.='const']`<br/>
+<br/>
 #### 2
 
 ```C
@@ -1022,7 +1122,13 @@ int volatile foo;
 <decl_stmt><decl><type><name>int</name> <specifier>volatile</specifier></type> <name>foo</name></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all volatile variable declarations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl/src:type/src:specifier [.='volatile']`<br/>
+<br/>
 ## restrict
 ### Element
 * **&lt;specifier&gt;** 
@@ -1039,7 +1145,13 @@ restrict union Z* x;
 <decl_stmt><decl><type><specifier>restrict</specifier> union <name>Z</name><type:modifier>*</type:modifier></type> <name>x</name></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all variables declared with the restrict specifier.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl/src:type/src:specifier [.='restrict']`<br/>
+<br/>
 ## auto
 ### Element
 * **&lt;specifier&gt;** 
@@ -1054,7 +1166,13 @@ auto int x;
 <decl_stmt><decl><type><specifier>auto</specifier> <name>int</name></type> <name>x</name></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all auto variable declarations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl/src:type/src:specifier [.='auto']`<br/>
+<br/>
 ## register
 ### Element
 * **&lt;name&gt;** 
@@ -1071,7 +1189,13 @@ register float y;
 <decl_stmt><decl><type><name>register</name> <name>float</name></type> <name>y</name></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all volatile variable declarations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl/src:type/src:name [.='volatile']`<br/>
+<br/>
 ## extern block
 ### Element
 * **&lt;extern&gt;** 
@@ -1094,7 +1218,13 @@ extern "C" { }
 <extern>extern <lit:literal type="string">&quot;C&quot;</lit:literal> <block>{ }</block></extern>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all extern block variable declarations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:extern`<br/>
+<br/>
 ## extern specifier
 ### Element
 * **&lt;specifier&gt;** 
@@ -1119,7 +1249,13 @@ extern int X;
 <decl_stmt><decl><type><specifier>extern</specifier> <name>int</name></type> <name>X</name></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all variables declared with the specifier extern.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl/src:type/src:specifier [.='extern']`<br/>
+<br/>
 #### External Structure
 
 ```C
@@ -1149,7 +1285,13 @@ extern "C" void foo();
 <extern>extern <lit:literal type="string">&quot;C&quot;</lit:literal> <function_decl><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></extern>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all functions declared with the specifier extern.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function_decl/src:type/src:specifier [.='extern']`<br/>
+<br/>
 #### Extern Structure with Linkage Specifier
 
 ```C
@@ -1186,7 +1328,13 @@ static int x;
 <decl_stmt><decl><type><specifier>static</specifier> <name>int</name></type> <name>x</name></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all static functions declarations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function_decl/src:type/src:specifier [.='static']`<br/>
+<br/>
 #### 2
 
 ```C
@@ -1196,7 +1344,13 @@ static void foo();
 <function_decl><type><specifier>static</specifier> <name>void</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all static variables declarations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl/src:type/src:specifier [.='static']`<br/>
+<br/>
 ## inline
 ### Element
 * **&lt;specifier&gt;** 
@@ -1211,7 +1365,13 @@ inline void swapValues(int* a,int* b);
 <function_decl><type><specifier>inline</specifier> <name>void</name></type> <name>swapValues</name><parameter_list>(<param><decl><type><name>int</name><type:modifier>*</type:modifier></type> <name>a</name></decl></param>,<param><decl><type><name>int</name><type:modifier>*</type:modifier></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all inline function declarations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function_decl/src:type/src:specifier [.='inline']`<br/>
+<br/>
 ## variable declaration statement
 ### Element
 * **&lt;decl_stmt&gt;** 
@@ -1228,7 +1388,13 @@ int x;
 <decl_stmt><decl><type><name>int</name></type> <name>x</name></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all declaration statements.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl_stmt`<br/>
+<br/>
 #### struct, union and enum declarations
 
 ```C
@@ -1242,7 +1408,13 @@ enum X y;
 <decl_stmt><decl><type>enum <name>X</name></type> <name>y</name></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all variable declaration statements with the union qualifier.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl_stmt/src:decl[src:type/text()[contains(., 'union')]]`<br/>
+<br/>
 ## variable declaration
 ### Element
 * **&lt;decl&gt;** 
@@ -1263,7 +1435,18 @@ int x;
 <decl_stmt><decl><type><name>int</name></type> <name>x</name></decl>;</decl_stmt>
 ```
 
+####XPath Query Examples
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all variable declarations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all variable declarations which also initialize the variable.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl[src:init]`<br/>
+<br/>
 #### struct, union and enum declarations
 
 ```C
@@ -1277,7 +1460,13 @@ enum X y;
 <decl_stmt><decl><type>enum <name>X</name></type> <name>y</name></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all variable declarations with the struct qualifier.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl[src:type/text()[contains(., 'struct')]]`<br/>
+<br/>
 ## function declaration
 ### Element
 * **&lt;function_decl&gt;** 
@@ -1301,7 +1490,18 @@ void print(STUDENT a);
 <function_decl><type><name>void</name></type> <name>print</name><parameter_list>(<param><decl><type><name>STUDENT</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
 ```
 
+####XPath Query Examples
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all function declarations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function_decl`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all return types from all function declarations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function_decl/src:type`<br/>
+<br/>
 #### 2
 
 ```C
@@ -1311,7 +1511,23 @@ void foo (int a[]);
 <function_decl><type><name>void</name></type> <name>foo</name> <parameter_list>(<param><decl><type><name>int</name></type> <name><name>a</name><index>[]</index></name></decl></param>)</parameter_list>;</function_decl>
 ```
 
+####XPath Query Examples
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all parameters from all function declarations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function_decl/src:parameter_list/src:param`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all function declarations with only two parameters.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function_decl[src:parameter_list[count(src:param) = 2]`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find the names of all function declarations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function_decl/src:name`<br/>
+<br/>
 #### 3
 
 ```C
@@ -1331,25 +1547,13 @@ int add_multiple_values (int number, ...);
 <function_decl><type><name>int</name></type> <name>add_multiple_values</name> <parameter_list>(<param><decl><type><name>int</name></type> <name>number</name></decl></param>, <param><decl><type><type:modifier>...</type:modifier></type></decl></param>)</parameter_list>;</function_decl>
 ```
 
+####XPath Query Example
 
-#### 5
-
-```C
-int func(a, b, c)
-   int a;
-   int b;
-   int c;
-{ }
-```
-```XML
-<function><type><name>int</name></type> <name>func</name><parameter_list>(<param><decl><type><name>a</name></type></decl></param>, <param><decl><type><name>b</name></type></decl></param>, <param><decl><type><name>c</name></type></decl></param>)</parameter_list>
-   <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
-   <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt>
-   <decl_stmt><decl><type><name>int</name></type> <name>c</name></decl>;</decl_stmt>
-<block>{ }</block></function>
-```
-
-
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all function declarations that has variadic arguments.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function_decl[src:parameter_list/src:param/src:decl/src:type/type:modifier[.='...']]`<br/>
+<br/>
 ## function definition
 ### Element
 * **&lt;function&gt;** 
@@ -1377,7 +1581,18 @@ struct STUDENT sortstu( STUDENT a, STUDENT b ) {
 }</block></function>
 ```
 
+####XPath Query Examples
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all function definitions.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all return types from all function definitions.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function/src:type`<br/>
+<br/>
 #### 2
 
 ```C
@@ -1387,7 +1602,23 @@ void print(STUDENT a) { }
 <function><type><name>void</name></type> <name>print</name><parameter_list>(<param><decl><type><name>STUDENT</name></type> <name>a</name></decl></param>)</parameter_list> <block>{ }</block></function>
 ```
 
+####XPath Query Examples
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all parameters from all function definitions.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function/src:parameter_list/src:param`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all function definitions with only two parameters.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function[src:parameter_list[count(src:param) = 2]`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find the names of all function definitions.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function/src:name`<br/>
+<br/>
 #### 3
 
 ```C
@@ -1417,7 +1648,37 @@ int add_multiple_values (int number, ...) { }
 <function><type><name>int</name></type> <name>add_multiple_values</name> <parameter_list>(<param><decl><type><name>int</name></type> <name>number</name></decl></param>, <param><decl><type><type:modifier>...</type:modifier></type></decl></param>)</parameter_list> <block>{ }</block></function>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all function definition that has variadic arguments.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function[src:parameter_list/src:param/src:decl/src:type/type:modifier[.='...']]`<br/>
+<br/>
+#### 6
+
+```C
+int func(a, b, c)
+   int a;
+   int b;
+   int c;
+{ }
+```
+```XML
+<function><type><name>int</name></type> <name>func</name><parameter_list>(<param><decl><type><name>a</name></type></decl></param>, <param><decl><type><name>b</name></type></decl></param>, <param><decl><type><name>c</name></type></decl></param>)</parameter_list>
+   <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
+   <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt>
+   <decl_stmt><decl><type><name>int</name></type> <name>c</name></decl>;</decl_stmt>
+<block>{ }</block></function>
+```
+
+####XPath Query Example
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all K & R function definitions.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function[src:decl_stmt]`<br/>
+<br/>
 ## pointer declaration
 ### Element
 * **&lt;type:modifier&gt;** 
@@ -1436,7 +1697,13 @@ char *message;
 <decl_stmt><decl><type><name>char</name> <type:modifier>*</type:modifier></type><name>message</name></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all of the declarations of pointers.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl[type:modifier[.='*']]`<br/>
+<br/>
 #### 2
 
 ```C
@@ -1480,7 +1747,13 @@ int(*X)(char const*,...);
 <function_decl><type><name>int</name></type>(<type:modifier>*</type:modifier><name>X</name>)<parameter_list>(<param><decl><type><name>char</name> <specifier>const</specifier><type:modifier>*</type:modifier></type></decl></param>,<param><decl><type><type:modifier>...</type:modifier></type></decl></param>)</parameter_list>;</function_decl>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all function pointers.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:function_decl[text()[contains(., ')')]]`<br/>
+<br/>
 #### 6
 
 ```C
@@ -1530,7 +1803,23 @@ typedef char field, *field2;
 <typedef>typedef <type><name>char</name></type> <name>field</name><op:operator>,</op:operator> <type:modifier>*</type:modifier><name>field2</name>;</typedef> 
 ```
 
+####XPath Query Examples
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all typedefs.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:typedef`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all types within typedefs.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:typedef/src:type`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all names for all typedefs.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:typedef/src:name`<br/>
+<br/>
 #### 2
 
 ```C
@@ -1548,7 +1837,13 @@ typedef struct club
 }</block></struct></type> <name>GROUP</name>;</typedef>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all typedefs that are used to define a struct.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:typedef[src:type/src:struct]`<br/>
+<br/>
 #### 3
 
 ```C
@@ -1558,7 +1853,13 @@ typedef void DRAWF( int, int );
 <typedef>typedef <function_decl><type><name>void</name></type> <name>DRAWF</name><parameter_list>( <param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param> )</parameter_list>;</function_decl></typedef>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all typedefs that declare a function type.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:typedef[src:function_decl]`<br/>
+<br/>
 #### 4
 
 ```C
@@ -1568,7 +1869,18 @@ typedef void (*DRAWF)( int, int );
 <typedef>typedef <function_decl><type><name>void</name></type> (<type:modifier>*</type:modifier><name>DRAWF</name>)<parameter_list>( <param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param> )</parameter_list>;</function_decl></typedef>
 ```
 
+####XPath Query Examples
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all typedefs of a function pointer.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:typedef[src:function_decl[text()[contains(., ')')]]]`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all names from all typedefs of function pointers.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:typedef/src:function_decl[text()[contains(., ')')]]/src:name`<br/>
+<br/>
 ## array declaration
 ### Element
 * **&lt;decl&gt;** 
@@ -1589,7 +1901,13 @@ char A[2];
 <decl_stmt><decl><type><name>char</name></type> <name><name>A</name><index>[<expr><lit:literal type="number">2</lit:literal></expr>]</index></name></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all array declarations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl[src:name/src:name/src:index]]`<br/>
+<br/>
 #### 2
 
 ```C
@@ -1599,7 +1917,13 @@ float matrix[10][15];
 <decl_stmt><decl><type><name>float</name></type> <name><name>matrix</name><index>[<expr><lit:literal type="number">10</lit:literal></expr>]</index><index>[<expr><lit:literal type="number">15</lit:literal></expr>]</index></name></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all array declarations where the number of elements is less then 50.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl[src:name/src:name/src:index/lit:literal[number(text()) < 50]]`<br/>
+<br/>
 #### 3
 
 ```C
@@ -1643,7 +1967,13 @@ int myArray[10] = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 };
 <decl_stmt><decl><type><name>int</name></type> <name><name>myArray</name><index>[<expr><lit:literal type="number">10</lit:literal></expr>]</index></name> <init>= <expr><block>{ <expr><lit:literal type="number">5</lit:literal></expr>, <expr><lit:literal type="number">5</lit:literal></expr>, <expr><lit:literal type="number">5</lit:literal></expr>, <expr><lit:literal type="number">5</lit:literal></expr>, <expr><lit:literal type="number">5</lit:literal></expr>, <expr><lit:literal type="number">5</lit:literal></expr>, <expr><lit:literal type="number">5</lit:literal></expr>, <expr><lit:literal type="number">5</lit:literal></expr>, <expr><lit:literal type="number">5</lit:literal></expr>, <expr><lit:literal type="number">5</lit:literal></expr> }</block></expr></init></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all array declarations which initialize the array at the same time.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl[src:name/src:name/src:index]][src:init]`<br/>
+<br/>
 #### 2
 
 ```C
@@ -1680,7 +2010,13 @@ struct mybitfields
 }</block> <decl><name>test</name></decl>;</struct>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all bitfield declarations.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl[src:range]`<br/>
+<br/>
 ## struct declaration
 ### Element
 * **&lt;struct_decl&gt;** 
@@ -1691,7 +2027,7 @@ struct mybitfields
 
 ### Example
 
-#### Forward Declaration
+#### forward declaration
 
 ```C
 struct employee;
@@ -1700,7 +2036,13 @@ struct employee;
 <struct_decl>struct <name>employee</name>;</struct_decl>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all of the forward declarations for all structs.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:struct_decl`<br/>
+<br/>
 ## struct definition
 ### Element
 * **&lt;struct&gt;** 
@@ -1712,7 +2054,7 @@ struct employee;
 
 ### Examples
 
-#### Trivial Declaration
+#### trivial declaration
 
 ```C
 struct a {
@@ -1729,8 +2071,19 @@ struct a {
  }</block>;</struct>
 ```
 
+####XPath Query Examples
 
-#### Variable Of An Anonymous Struct Type
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find the definition of all structs.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:struct`<br/>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find the members from all structs.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:struct/src:block/src:decl_stmt`<br/>
+<br/>
+#### variable of an anonymous struct type
 
 ```C
 struct
@@ -1748,7 +2101,7 @@ struct
 ```
 
 
-#### Declaring A Struct And Instance
+#### declaring a struct and instance
 
 ```C
 struct employee
@@ -1789,7 +2142,13 @@ MY_TYPE a = { false, 234, 1.234 };
 <decl_stmt><decl><type><name>MY_TYPE</name></type> <name>a</name> <init>= <expr><block>{ <expr><name>false</name></expr>, <expr><lit:literal type="number">234</lit:literal></expr>, <expr><lit:literal type="number">1.234</lit:literal></expr> }</block></expr></init></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all of declaration of structs which also initialize it.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:decl[src:init/src:block]`<br/>
+<br/>
 #### 2
 
 ```C
@@ -1810,7 +2169,7 @@ MY_TYPE c = { .flag = true, .value = 123, .stuff = 0.456 };
 ```
 
 
-## enum declaration
+## enum definition
 ### Element
 * **&lt;enum&gt;** 
 
@@ -1846,7 +2205,13 @@ enum DAY {
 }</block>;</enum>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all enum definitions.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:enum`<br/>
+<br/>
 #### 2
 
 ```C
@@ -1856,7 +2221,13 @@ enum DAY;
 <enum>enum <name>DAY</name>;</enum>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find the names of all members of all enums.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:enum/src:decl/src:name`<br/>
+<br/>
 #### 3
 
 ```C
@@ -1885,7 +2256,13 @@ union X;
 <union_decl>union <name>X</name>;</union_decl>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all of the forward declarations for all unions.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:union_decl`<br/>
+<br/>
 ## union definition
 ### Element
 * **&lt;union&gt;** 
@@ -1912,7 +2289,13 @@ union sign
 }</block> <decl><name>number</name></decl>;</union>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all definitions of all unions.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:union`<br/>
+<br/>
 ## Function Call
 ### Element
 * **&lt;call&gt;** 
@@ -1932,7 +2315,13 @@ foo(x, y, z);
 <expr_stmt><expr><call><name>foo</name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>, <argument><expr><name>z</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all function calls.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:call`<br/>
+<br/>
 ## array indexing
 ### Element
 * **&lt;name&gt;** 
@@ -1980,7 +2369,13 @@ val = matrix[x][y];
  <expr_stmt><expr><name><name>t</name><op:operator>-&gt;</op:operator><name>tm_sec</name></name></expr>;</expr_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all uses of the `->` operator.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//op:operator[.='->']`<br/>
+<br/>
 ## member access
 ### Element
 * **&lt;expr&gt;** 
@@ -2001,7 +2396,13 @@ t.tm_sec;
 <expr_stmt><expr><name><name>t</name><op:operator>.</op:operator><name>tm_sec</name></name></expr>;</expr_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all uses of the `.` operator.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//op:operator[.='.']`<br/>
+<br/>
 ## cast
 ### Element
 * **&lt;op:operator&gt;** 
@@ -2044,7 +2445,13 @@ sizeof(struct type);
 <expr_stmt><expr><sizeof>sizeof<argument_list>(<argument>struct <expr><name>type</name></expr></argument>)</argument_list></sizeof></expr>;</expr_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all uses of sizeof.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:sizeof`<br/>
+<br/>
 ## _Alignas
 ### Element
 * **&lt;alignas&gt;** 
@@ -2065,7 +2472,13 @@ _Alignas(struct X) struct X y;
 <decl_stmt><decl><type><alignas>_Alignas<argument_list>(</argument_list></alignas>struct <name>X</name></type></decl>) struct X y;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all uses of _Alignas.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:alignas`<br/>
+<br/>
 #### 2
 
 ```C
@@ -2094,7 +2507,13 @@ _Alignof(union type);
 <expr_stmt><expr><alignof>_Alignof<argument_list>(<argument><expr>union <name>type</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all uses of _Alignof.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:alignof`<br/>
+<br/>
 ## _Atomic
 ### Element
 * **&lt;atomic&gt;** 
@@ -2125,7 +2544,13 @@ _Atomic int t;
 <decl_stmt><decl><type><atomic>_Atomic</atomic> <name>int</name></type> <name>t</name></decl>;</decl_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all uses of _Atomic.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:atomic`<br/>
+<br/>
 #### 3
 
 ```C
@@ -2157,10 +2582,16 @@ _Generic ( AnyExpression , int:5, double:5.0, default:0);
 <expr_stmt><expr><generic_selection>_Generic ( <selector><expr><name>AnyExpression</name></expr></selector> <op:operator>,</op:operator> <association_list><association><type><name>int</name></type>:<expr><lit:literal type="number">5</lit:literal></expr></association><op:operator>,</op:operator> <association><type><name>double</name></type>:<expr><lit:literal type="number">5.0</lit:literal></expr></association><op:operator>,</op:operator> <association><type>default</type>:<expr><lit:literal type="number">0</lit:literal></expr></association></association_list>)</generic_selection></expr>;</expr_stmt>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all uses of _Generic.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:generic_selection`<br/>
+<br/>
 ## _Noreturn
 ### Element
-* **&lt;name&gt;** 
+* **&lt;specifier&gt;** 
 
 
 ### Example
@@ -2172,7 +2603,13 @@ _Noreturn void die(const char *fmt, ...) { exit(EXIT_FAILURE); }
 <function><type><specifier>_Noreturn</specifier> <name>void</name></type> <name>die</name><parameter_list>(<param><decl><type><specifier>const</specifier> <name>char</name> <type:modifier>*</type:modifier></type><name>fmt</name></decl></param>, <param><decl><type><type:modifier>...</type:modifier></type></decl></param>)</parameter_list> <block>{ <expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><name>EXIT_FAILURE</name></expr></argument>)</argument_list></call></expr>;</expr_stmt> }</block></function>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all uses of _Noreturn.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:specifier[.='_Noreturn']`<br/>
+<br/>
 ## _Static_assert
 ### Element
 * **&lt;assert type="static"&gt;** 
@@ -2191,10 +2628,16 @@ _Static_assert(DEBUG_LEVEL > 5, "Message");
 <assert type="static">_Static_assert<argument_list>(<argument><expr><name>DEBUG_LEVEL</name> <op:operator>&gt;</op:operator> <lit:literal type="number">5</lit:literal></expr></argument>, <argument><expr><lit:literal type="string">&quot;Message&quot;</lit:literal></expr></argument>)</argument_list>;</assert>
 ```
 
+####XPath Query Example
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all uses of _Static_assert.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:assert[@type ='static']`<br/>
+<br/>
 ## _Thread_local
 ### Element
-* **&lt;name&gt;** 
+* **&lt;specifier&gt;** 
 
 
 ### Example
@@ -2205,6 +2648,14 @@ _Thread_local int x;
 ```XML
 <decl_stmt><decl><type><specifier>_Thread_local</specifier> <name>int</name></type> <name>x</name></decl>;</decl_stmt>
 ```
+
+####XPath Query Example
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Find all uses of _Thread_local.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**XPath**<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`//src:specifier[.='_Thread_local']`<br/>
+<br/>
 
 ## Operators
 Name | Operator | srcML
