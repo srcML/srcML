@@ -42,8 +42,17 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
 
         srcml_write_unit(request->srcml_arch, request->unit);
 
-        if (isarchive)
-            log << 'a' << (request->filename ? *request->filename : "");
+        if (isarchive) {
+            std::string s = request->filename ? *request->filename : "";
+            s += "\t";
+            s += request->language;
+            s += "\t";
+            s += "LOC";
+            s += "\t";
+            s += "HASH";
+
+            log << 'a' << s;
+        }
 
     } else if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
 
