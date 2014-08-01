@@ -1,5 +1,8 @@
-<DocConfig lang="C" outputFile="C.md" title="C srcML">
-
+<DocConfig lang="C" outputFile="c_srcML.html" title="C srcML">
+    <Desc>Waffle
+<table>
+</table>
+    </Desc>
     <Category title="Statements">
         <DocEntry shortTitle="if" title="if Statement">
             <Elements>
