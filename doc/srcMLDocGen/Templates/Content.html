@@ -1,0 +1,19 @@
+{% for cat in doc.categories %}
+<!--
+	#{{entry.linkName}}"
+	{{entry.title}}
+				{% else %} 
+				{{entry.shortTitle}}
+				{% endifequal %}</a></td>
+			<td>{% for elem in entry.elements %} {{elem.QName|safe}} {% endfor %}</td>
+			<td>{% for elem in entry.subelements %} {{elem.QName|safe}} {% endfor %}</td>
+		</tr>
+		{% endfor %}
+		{% if cat.operators|length > 0 %}
+			<tr>
+				<td><a href="#operators">operators</a></td>
+				<td>&lt;op:operator&gt;</td>
+				<td>&nbsp;</td>
+			</tr>
+		{% endif %} -->
+{% endfor %}

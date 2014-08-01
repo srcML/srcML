@@ -8,7 +8,17 @@ class Element(object):
         self.desc = ""
         self.markupOptionsRequired = []
         self.attributeStr = ""
+    def QName(self):
+        nameFormat = ""
+        if self.ns == "":
+            nameFormat = "&lt;{0.tag}"
+        else:
+            nameFormat = "&lt;{0.ns}:{0.tag}"
 
+        if self.attributeStr != "":
+            nameFormat += " {0.attributeStr}"
+        nameFormat += "&gt;"
+        return nameFormat.format(self)
 
 class Subelement(Element):
     """ Stores information related to sub elements. """
@@ -38,7 +48,10 @@ class DocEntry:
         self.subelements = []
         self.examples = []
         self.xpathQueries = []
-        self.linkName = ""
+
+    def linkName(self):
+        return "-".join(self.title.strip().replace("#","").replace(",", "").lower().split())
+
 
 class OperatorEntry:
     """ This is an operator entry within the document that tell me to extract

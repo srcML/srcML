@@ -189,6 +189,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
 
         # read in attributes.
         entry.title = getAttribOrFail(entryElement, titleAttr)
+        # print entry.title
         entry.shortTitle = getAttribOrDefault(entryElement, shortTilteAttr, "")
         
         for entryPart in entryElement:

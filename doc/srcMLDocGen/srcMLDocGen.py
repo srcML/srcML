@@ -10,8 +10,6 @@ from django.conf import settings
 from django.template import Template, Context, loader
 from DocGen import *
 
-HTMLFileFormat = """" """
-
 # -------------------------------------------------
 #                     Main
 # -------------------------------------------------
