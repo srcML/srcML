@@ -65,7 +65,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             // srcml->src extract all archives to the filesystem
 
-            TraceLog log(std::cerr, *srcml_request.markup_options);
+            TraceLog log(*srcml_request.markup_options);
 
             BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
                 srcMLReadArchive arch(input_source);

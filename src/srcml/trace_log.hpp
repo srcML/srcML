@@ -28,7 +28,7 @@
 
 class TraceLog {
 public:
-    TraceLog(std::ostream& out, int options);
+    TraceLog(int options);
 
     friend TraceLog& operator<<(TraceLog& tlog, char c);
     friend TraceLog& operator<<(TraceLog& tlog, const std::string& s);
@@ -37,7 +37,6 @@ public:
     void report();
 
 private:
-    std::ostream& out;
     int count;
     int overallcount;
     bool enabled;
