@@ -260,6 +260,10 @@ void option_help(const std::string& help_opt) {
    at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2);
 
+
+// Determine dependent options
+void option_dependency(const prog_opts::variables_map& vm, const char* option, const char* dependent_option);
+
 // Custom Parser Definition
 std::pair<std::string, std::string> custom_parser(const std::string& s);
 
@@ -407,6 +411,9 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         // Check option conflicts
         conflicting_options(cli_map, "quiet", "verbose");
 
+        // Check dependent options
+        option_dependency(cli_map, "no-archive", "output");
+
         // If input was from stdin, then artificially put a "-" into the list of input files
         if (srcml_request.input.empty())
           positional_args(std::vector<std::string>(1, "stdin://-"));
@@ -439,5 +446,17 @@ void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, c
     if (vm.count(opt1) && !vm[opt1].defaulted() && vm.count(opt2) && !vm[opt2].defaulted()) {
         throw std::logic_error(std::string("Conflicting options '")
                                + opt1 + "' and '" + opt2 + "'.");
+    }
+}
+
+// Check for dependent options
+void option_dependency(const prog_opts::variables_map& vm,
+                        const char* option, const char* dependent_option)
+{
+    if (vm.count(option)) {
+        if (vm.count(dependent_option) == 0 || vm[dependent_option].defaulted()) {
+            throw std::logic_error(std::string("Option '") + option 
+                                    + "' requires option '" + dependent_option + "'.");
+        }
     }
 }
