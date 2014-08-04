@@ -44,8 +44,8 @@
                 {% for example in entry.examples %}
                 	<div class="example">
                 		<h4 class="subtitle">{% ifequal example.title "" %}{{forloop.counter}}{%else%}{{example.title}}{%endifequal%}</h4>
-                		<pre class="sourceCodeExample" style="border:1px solid black; margin:3px;">{{example.sourceCode}}</pre>
-                		<pre class="srcMLExample" style="border:1px solid black; margin:3px;">{{example.srcML}}</pre>
+                		<pre class="sourceCodeExample" style="border:1px solid black; margin:3px;">{% HighlightSyntaxFromTree example.srcML doc.srcMLLanguage "code" %}{# {example.sourceCode} #}</pre>
+                		<pre class="srcMLExample" style="border:1px solid black; margin:3px;">{% HighlightSyntaxFromTree example.srcML doc.srcMLLanguage "srcML" %}{# {example.srcML} #}</pre>
                 	</div>
                 {% endfor %}
             </div>

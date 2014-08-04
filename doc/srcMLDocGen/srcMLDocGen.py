@@ -27,8 +27,7 @@ def genDocFile(docConfig):
 if __name__ == "__main__":
 
     if not settings.configured:
-        # sys.path.append('templatetags/')
-        django.conf.settings.configure(DEBUG=True, TEMPLATE_DEBUG=True, TEMPLATE_DIRS=("Templates", "."), INSTALLED_APPS=("DocGen",))
+        django.conf.settings.configure(DEBUG=True, TEMPLATE_DEBUG=True, TEMPLATE_DIRS=("Templates", ), INSTALLED_APPS=("DocGen",))
 
     for root, dirs, files in os.walk(os.path.abspath("./DocData")):
         if os.path.basename(root) == "DocData":

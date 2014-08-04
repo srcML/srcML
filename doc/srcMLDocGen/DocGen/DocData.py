@@ -37,12 +37,6 @@ class Example:
         self.sourceCode = ""
         self.srcML = ""
 
-    def highlightedSourceCode(self):
-        return ""
-        
-    def highlightedsrcML(self):
-        return ""
-
 class DocEntry:
     """ This is an entry within the documentation. """
     def __init__(self):

@@ -87,8 +87,7 @@ def srcMLFile(fileName, language):
     srcMLProc = subprocess.Popen([srcMLExec, "--language", language, "--literal", "--modifier", "--operator", fileName],  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     errOutput = srcMLProc.stderr.readlines()
     try:
-        tempTree = ET.ElementTree(ET.fromstringlist(srcMLProc.stdout.readlines()))
-        return (sourceCode, tempTree)
+        return (sourceCode, srcMLProc.stdout.readlines())
     except Exception as ex:
         print "Failed with exception: ", traceback.format_exc(ex)
         print "Caught exception while parsing output from srcML.", ex
@@ -171,7 +170,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         example.sourceCodeFile = fileName
         srcMLExResults = srcMLFile(fileName, doc.srcMLLanguage)
         example.sourceCode = srcMLExResults[0]
-        example.srcML = srcMLExResults[1]
+        example.srcML = "".join(srcMLExResults[1])
         return example
 
     def buildEntry(entryElement):
@@ -214,8 +213,8 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         
         srcCodeAndTree = srcMLFile(fileName, doc.srcMLLanguage)
         operatorEntry.sourceCode = srcCodeAndTree[0]
-
-        locatedElements = srcCodeAndTree[1].xpath("//op:operator",namespaces={"op": "http://www.sdml.info/srcML/operator"})
+        tempTree = ET.ElementTree(ET.fromstringlist(srcCodeAndTree[1]))
+        locatedElements = tempTree.xpath("//op:operator",namespaces={"op": "http://www.sdml.info/srcML/operator"})
         if len(locatedElements) != 1:
             if len(locatedElements) > 1:
                 matchingLocatedElements = [x for x in locatedElements if x.text == operatorEntry.op]
