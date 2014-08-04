@@ -410,6 +410,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // Check option conflicts
         conflicting_options(cli_map, "quiet", "verbose");
+        conflicting_options(cli_map, "output", "to-dir");
 
         // Check dependent options
         option_dependency(cli_map, "no-archive", "directory");
@@ -454,7 +455,7 @@ void option_dependency(const prog_opts::variables_map& vm,
                         const char* option, const char* dependent_option)
 {
     if (vm.count(option) && !vm[option].defaulted()) {
-        if (vm.count(dependent_option) == 0 || vm[dependent_option].defaulted()) {
+        if (vm.count(dependent_option) == 0) {
             throw std::logic_error(std::string("Option '") + option 
                                     + "' requires option '" + dependent_option + "'.");
         }
