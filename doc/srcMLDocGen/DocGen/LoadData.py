@@ -88,17 +88,7 @@ def srcMLFile(fileName, language):
     errOutput = srcMLProc.stderr.readlines()
     try:
         tempTree = ET.ElementTree(ET.fromstringlist(srcMLProc.stdout.readlines()))
-        root = tempTree.getroot()
-
-        if root.text != None:
-            srcML += root.text
-        for x in root.iterdescendants():
-            srcML+= ET.tostring(x)
-            if x.tail != None:
-                srcML += x.tail
-        # srcML += "".join([ + x.tail ])
-
-        return (sourceCode, srcML)
+        return (sourceCode, tempTree)
     except Exception as ex:
         print "Failed with exception: ", traceback.format_exc(ex)
         print "Caught exception while parsing output from srcML.", ex
@@ -198,9 +188,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
             elif entryPart.tag == XPathQueriesTag:
                 buildXPathQueries(entryPart, entry)
             elif entryPart.tag == ExampleTag:
-                example = buildExample(entryPart)
-                example.index = len(entry.examples)
-                entry.examples.append(example)
+                entry.examples.append(buildExample(entryPart))
             elif entryPart.tag == DescTag:
                 entry.desc = entryPart.text + "".join([ET.tostring(x) + x.tail for x in entryPart.iterdescendants()])
             else:
@@ -224,29 +212,10 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
 
         operatorEntry.exampleFile = fileName
         
-        strm = open(fileName, "r")
-        sourceCode = "".join(strm.readlines())
-        srcML = ""
-        srcMLProc = subprocess.Popen([srcMLExec, "--language", doc.srcMLLanguage, "--literal", "--modifier", "--operator", fileName],  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        errOutput = srcMLProc.stderr.readlines()
-        tempTree = None
-        try:
-            tempTree = ET.ElementTree(ET.fromstringlist(srcMLProc.stdout.readlines()))
-            root = tempTree.getroot()
+        srcCodeAndTree = srcMLFile(fileName, doc.srcMLLanguage)
+        operatorEntry.sourceCode = srcCodeAndTree[0]
 
-            if root.text != None:
-                srcML += root.text
-            for x in root.iterdescendants():
-                srcML+= ET.tostring(x)
-                if x.tail != None:
-                    srcML += x.tail
-        except Exception as ex:
-            print "Failed with exception: ", traceback.format_exc(ex)
-            print "Caught exception while parsing output from srcML.", ex
-            raise
-        operatorEntry.sourceCode = sourceCode
-
-        locatedElements = tempTree.xpath("//op:operator",namespaces={"op": "http://www.sdml.info/srcML/operator"})
+        locatedElements = srcCodeAndTree[1].xpath("//op:operator",namespaces={"op": "http://www.sdml.info/srcML/operator"})
         if len(locatedElements) != 1:
             if len(locatedElements) > 1:
                 matchingLocatedElements = [x for x in locatedElements if x.text == operatorEntry.op]

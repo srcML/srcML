@@ -36,7 +36,12 @@ class Example:
         self.sourceCodeFile = "" 
         self.sourceCode = ""
         self.srcML = ""
-        self.index = 0
+
+    def highlightedSourceCode(self):
+        return ""
+        
+    def highlightedsrcML(self):
+        return ""
 
 class DocEntry:
     """ This is an entry within the documentation. """

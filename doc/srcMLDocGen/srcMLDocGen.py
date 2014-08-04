@@ -27,7 +27,8 @@ def genDocFile(docConfig):
 if __name__ == "__main__":
 
     if not settings.configured:
-        django.conf.settings.configure(DEBUG=True, TEMPLATE_DEBUG=True, TEMPLATE_DIRS=("Templates", "."))
+        # sys.path.append('templatetags/')
+        django.conf.settings.configure(DEBUG=True, TEMPLATE_DEBUG=True, TEMPLATE_DIRS=("Templates", "."), INSTALLED_APPS=("DocGen",))
 
     for root, dirs, files in os.walk(os.path.abspath("./DocData")):
         if os.path.basename(root) == "DocData":
@@ -42,7 +43,7 @@ if __name__ == "__main__":
                 if docConfig != None:
                 	print "Beginning HTML Generation"
                 	genDocFile(docConfig)
-                	print "HTML Generation"
+                	print "HTML Generation Complete"
             except Exception as e:
                 print "Failed with exception: ", traceback.format_exc(e)
         

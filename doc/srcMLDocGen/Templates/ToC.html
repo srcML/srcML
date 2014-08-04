@@ -1,36 +1,36 @@
 <table border="1">
-	<thead>
-		<tr>
-			<th>Language Element</th>
-			<th>Element</th>
-			<th>Sublement</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for cat in doc.categories %}
-			<tr>
-				<td colspan="3">{{cat.title}}</td>
-			</tr>{% for entry in cat.entries %}
-				<tr>
-					<td><a href="#{{entry.linkName}}">
-						{% ifequal entry.shortTitle "" %}
-						{{entry.title}}
-						{% else %} 
-						{{entry.shortTitle}}
-						{% endifequal %}</a></td>
-					<td>{% for elem in entry.elements %} {{elem.QName|safe}} {% endfor %}</td>
-					<td>{% for elem in entry.subelements %} {{elem.QName|safe}} {% endfor %}</td>
-				</tr>
-				{% endfor %}
-				{% if cat.operators|length > 0 %}
-					<tr>
-						<td><a href="#operators">operators</a></td>
-						<td>&lt;op:operator&gt;</td>
-						<td>&nbsp;</td>
-					</tr>
-				{% endif %}
-		{% endfor %}
-		<!-- derp -->
-		<!-- Operator entries if they are not part of a category (This is being removed) -->
-	</tbody>
+    <thead>
+        <tr>
+            <th>Language Element</th>
+            <th>Element</th>
+            <th>Sublement</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cat in doc.categories %}
+            <tr>
+                <td colspan="3">{{cat.title}}</td>
+            </tr>{% for entry in cat.entries %}
+                <tr>
+                    <td><a href="#{{entry.linkName}}">
+                        {% ifequal entry.shortTitle "" %}
+                        {{entry.title}}
+                        {% else %} 
+                        {{entry.shortTitle}}
+                        {% endifequal %}</a></td>
+                    <td>{% for elem in entry.elements %} {{elem.QName|safe}} {% endfor %}</td>
+                    <td>{% for elem in entry.subelements %} {{elem.QName|safe}} {% endfor %}</td>
+                </tr>
+                {% endfor %}
+                {% if cat.operators|length > 0 %}
+                    <tr>
+                        <td><a href="#operators">operators</a></td>
+                        <td>&lt;op:operator&gt;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                {% endif %}
+        {% endfor %}
+        <!-- derp -->
+        <!-- Operator entries if they are not part of a category (This is being removed) -->
+    </tbody>
 </table>
