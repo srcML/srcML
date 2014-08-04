@@ -1,4 +1,4 @@
-<DocConfig title="C++ srcML" lang="C++" outputFile="CPP.md">
+<DocConfig title="C++ srcML" lang="C++" outputFile="cpp_srcML.html">
 
     <DocEntry title="Array Access">
         <Elements>

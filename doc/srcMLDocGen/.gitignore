@@ -1,14 +1,20 @@
- C.md
- C.md.html
- CPP.md
- CPP.md.html
- CPreProc.md
- CPreProc.md.html
- c_srcML.html
- java.md
- java.md.html
- oldCategoryCode.py
- srcMLGroupOrderings.txt
- temp.c
- temp.c.xml 
- *.pyc
+C.md
+C.md.html
+CPP.md
+CPP.md.html
+CPreProc.md
+CPreProc.md.html
+c_srcML.html
+java.md
+java.md.html
+oldCategoryCode.py
+srcMLGroupOrderings.txt
+temp.c
+temp.c.xml 
+*.pyc
+
+c_srcML.html
+cpp_srcML.html
+cpreproc_srcML.html
+java_srcML.html
+

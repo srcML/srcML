@@ -1,4 +1,4 @@
-<DocConfig title="Java srcML" lang="Java" outputFile="java.md">
+<DocConfig title="Java srcML" lang="Java" outputFile="java_srcML.html">
 
     <DocEntry title="Variable Declaration And Initialization">
         <Elements>
