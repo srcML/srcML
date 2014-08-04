@@ -11,3 +11,4 @@
  srcMLGroupOrderings.txt
  temp.c
  temp.c.xml 
+ *.pyc
