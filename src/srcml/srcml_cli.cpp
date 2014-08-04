@@ -453,7 +453,7 @@ void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, c
 void option_dependency(const prog_opts::variables_map& vm,
                         const char* option, const char* dependent_option)
 {
-    if (vm.count(option)) {
+    if (vm.count(option) && !vm[option].defaulted()) {
         if (vm.count(dependent_option) == 0 || vm[dependent_option].defaulted()) {
             throw std::logic_error(std::string("Option '") + option 
                                     + "' requires option '" + dependent_option + "'.");
