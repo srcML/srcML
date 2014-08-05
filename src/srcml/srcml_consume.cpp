@@ -135,7 +135,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             throw status;
 
     } catch (...) {
-        std::cerr << "Error in constructing srcml\n";
+        fprintf(stderr, "Error in constructing srcml\n");
         if (unit)
             srcml_free_unit(unit);
         unit = 0;
