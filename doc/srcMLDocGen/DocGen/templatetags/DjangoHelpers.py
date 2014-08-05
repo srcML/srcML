@@ -9,37 +9,71 @@ import cStringIO
 
 register = template.Library()
 
+namesOfStyles = set()
+
+
+uriToPrefix = {
+    "http://www.sdml.info/srcML/operator": "op",
+    "http://www.sdml.info/srcML/src": "src",
+    "http://www.sdml.info/srcML/cpp": "cpp",
+    "http://www.sdml.info/srcML/literal": "lit",
+    "http://www.sdml.info/srcML/modifier": "type",
+}
+
 class SyntaxHighlighter(ContentHandler):
     htmlEscapeTable = {'"': "&quot;", "'": "&apos;" }
     spanStart = "<span class=\"{0}\">"
     spanEnd = "</span>"
-    def writeTagStart(self, name, attr):
-        pass
 
     def __init__(self, codeIssrcML):
         self.out = cStringIO.StringIO()
         self.content = ""
         self.displayXML = codeIssrcML
+        self.tagOutput = open("styleClassList2.css","a")
+
+
+    def getNormalizedStyleName(self, name):
+        return uriToPrefix[name[0]] + "_" + name[1]
+
+    def getResolvedTagName(self, name):
+        prefix = uriToPrefix[name[0]]
+        if prefix == "src":
+            return name[1]
+        else:
+            return "{0}:{1}".format(prefix, name[1])
+
+    def writeTagStart(self, name, attr):
+        self.out.write(SyntaxHighlighter.spanStart.format("srcMLElement"))
+        if len(attr) > 0:
+            self.out.write("&lt;{0} {1}&gt;".format(self.getResolvedTagName(name),  " ".join(["<span class=\"srcMLAttribName\">{0}</span><span class=\"srcMLAttribEquals\">=</span><span class=\"srcMLAttribValue\">&quot;{1}&quot;</span>".format(k[1], v) for k, v in attr.items()])))
+        else:
+            self.out.write("&lt;{0}&gt;".format(self.getResolvedTagName(name)))
+        self.out.write(SyntaxHighlighter.spanEnd)
+    
+    def writeTagEnd(self, name):
+        self.out.write(SyntaxHighlighter.spanStart.format("srcMLElement") )
+        self.out.write("&lt;/{0}&gt;".format(self.getResolvedTagName(name)))
+        self.out.write(SyntaxHighlighter.spanEnd)
 
     def endDocument(self):
         self.content = self.out.getvalue()
         self.out.close()
 
     def startElementNS(self, name, qname, attributes):
-        # print qname.__class__
-        print name.__class__
-        # print qname
-        #print name
-        self.out.write(SyntaxHighlighter.spanStart.format("derp"))
+        if name[1] == "unit":
+            return
+        self.out.write(SyntaxHighlighter.spanStart.format(self.getNormalizedStyleName(name)))
         if self.displayXML:
-            self.out.write(SyntaxHighlighter.spanStart.format(name[1]))
             self.writeTagStart(name, attributes)
-            self.out.write(SyntaxHighlighter.spanEnd)
 
 
     def endElementNS(self, name, qname):
+        if name[1] == "unit":
+            return
+        self.out.write(SyntaxHighlighter.spanEnd)
         if self.displayXML:
-            self.out.write(SyntaxHighlighter.spanEnd)
+            self.writeTagEnd(name)
+
 
     def characters(self, data):
         self.out.write(SAXUtils.escape(data, SyntaxHighlighter.htmlEscapeTable))

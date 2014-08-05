@@ -1,0 +1,254 @@
+pre {
+    padding: 10px;
+}
+
+.xpathQueryExample {
+}
+
+/* Examples Displays. */
+.sourceCodeExample {
+}
+
+.srcMLExample {
+
+    overflow:scroll;
+}
+
+
+/** Syntax Highlighting for srcML Markup. */
+.srcMLElement {
+    color:#3333FF;
+}
+
+.srcMLAttribName {
+    color:#FF4D4D;
+}
+
+.srcMLAttribEquals{
+    color:#FF4D4D;
+}
+
+.srcMLAttribValue {
+    color:#C5C545;
+}
+
+/** Syntax Highlighting for all srcML languages (but not the XML representation). */
+.cpp_define {
+}
+
+.cpp_directive {
+}
+
+.cpp_macro {
+}
+
+.src_name {
+}
+
+.cpp_value {
+}
+
+.src_parameter_list {
+}
+
+.src_param {
+}
+
+.src_type {
+}
+
+.type_modifier {
+}
+
+.cpp_undef {
+}
+
+.cpp_if {
+}
+
+.src_expr {
+}
+
+.op_operator {
+}
+
+.lit_literal {
+}
+
+.cpp_ifdef {
+}
+
+.src_if {
+}
+
+.src_condition {
+}
+
+.src_then {
+}
+
+.src_block {
+}
+
+.src_expr_stmt {
+}
+
+.src_call {
+}
+
+.src_argument_list {
+}
+
+.cpp_endif {
+}
+
+.cpp_ifndef {
+}
+
+.cpp_else {
+}
+
+.cpp_elif {
+}
+
+.src_argument {
+}
+
+.cpp_include {
+}
+
+.cpp_file {
+}
+
+.src_comment {
+}
+
+.cpp_pragma {
+}
+
+.cpp_error {
+}
+
+.cpp_line {
+}
+
+.cpp_number {
+}
+
+.src_else {
+}
+
+.src_elseif {
+}
+
+.src_while {
+}
+
+.src_index {
+}
+
+.src_for {
+}
+
+.src_init {
+}
+
+.src_incr {
+}
+
+.src_decl {
+}
+
+.src_do {
+}
+
+.src_decl_stmt {
+}
+
+.src_break {
+}
+
+.src_continue {
+}
+
+.src_return {
+}
+
+.src_switch {
+}
+
+.src_case {
+}
+
+.src_default {
+}
+
+.src_label {
+}
+
+.src_goto {
+}
+
+.src_empty_stmt {
+}
+
+.src_specifier {
+}
+
+.src_extern {
+}
+
+.src_function_decl {
+}
+
+.src_function {
+}
+
+.src_typedef {
+}
+
+.src_struct {
+}
+
+.src_range {
+}
+
+.src_struct_decl {
+}
+
+.src_union_decl {
+}
+
+.src_union {
+}
+
+.src_enum {
+}
+
+.src_sizeof {
+}
+
+.src_alignas {
+}
+
+.src_alignof {
+}
+
+.src_atomic {
+}
+
+.src_generic_selection {
+}
+
+.src_selector {
+}
+
+.src_association_list {
+}
+
+.src_association {
+}
+
+.src_assert {
+}
+
