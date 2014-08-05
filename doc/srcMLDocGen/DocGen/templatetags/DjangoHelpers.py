@@ -112,30 +112,21 @@ def highlightSyntaxFromsrcML(parser, token):
     return SyntaxHighlightedNode(parser.compile_filter(tokens[1]), parser.compile_filter(tokens[2]), parser.compile_filter(tokens[3]))
 
 
+def formatTagOrStrOutStr(var):
+    if isinstance(var, str):
+        return var
+    elif isinstance(var, ET._Element):
+        return "&lt;{0}:{1}&gt;{2}&lt;/{0}:{1}&gt;".format(var.prefix, var.tag[var.tag.find('}')+1:], SAXUtils.escape(SAXUtils.escape(var.text, SyntaxHighlighter.htmlEscapeTable), SyntaxHighlighter.htmlEscapeTable))
+    else:
+        raise Exception("Invalid or unhandled type.")
+
 class GetOperatorCodeNode(template.Node):
     def __init__(self, operatorListVar):
         self.operatorListVariable = operatorListVar
 
     def render(self, context):
         opList = self.operatorListVariable.resolve(context)
-        print "Called Render!"
-        if len(opList) == 0:
-            raise Exception("MISSING operator entries!")
-        for item in opList:
-            if isinstance(item, str):
-                print "Got str"
-            elif isinstance(item, ET._Element):
-                print "Got Element"
-            else:
-                print "FUCK!"
-                raise Exception("Invalid or unhandled type.")
-        # return "\n".join([x for x in opList])
-        # tree = self.nameOfTreeLoc.resolve(context)
-        # language = self.language.resolve(context)
-        # sourceCodeOrXML = self.isSourceOrXml.resolve(context)
-        # contentHandler = SyntaxHighlighter(sourceCodeOrXML == "srcML", language)
-        # lxmlSAX.saxify(ET.fromstring(tree), contentHandler)
-        # return contentHandler.content
+        return "<br/>".join([formatTagOrStrOutStr(x) for x in opList])
         
 @register.tag(name="GetOperators")
 def getOperators(parser, token):

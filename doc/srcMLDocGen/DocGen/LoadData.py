@@ -223,6 +223,8 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
                     operatorEntry.srcML = ["BUG"]
             else:
                 raise Exception("ERROR: Didn't locate correct any operators within the  {0} ".format(allSrcMLCode) + self.makeAtLineCol())
+        else:
+            operatorEntry.srcML = locatedElements
         return operatorEntry
 
 
