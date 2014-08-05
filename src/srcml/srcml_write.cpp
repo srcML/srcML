@@ -47,7 +47,11 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
             s += "\t";
             s += request->language;
             s += "\t";
-            s += "LOC";
+
+            char str[5] = { 0 };
+            sprintf(str,"%ld", request->loc);
+
+            s += str;
             s += "\t";
             s += "HASH";
 
