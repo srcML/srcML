@@ -28,6 +28,7 @@
 #include <curl/curl.h>
 #include <archive.h>
 #include <archive_entry.h>
+#include <algorithm>
 
 namespace {
     struct curl {
@@ -180,6 +181,9 @@ void src_input_libarchive(ParseQueue& queue,
 #endif
             while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
                 prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
+
+            // LOC count
+            prequest->loc = std::count(prequest->buffer.begin(), prequest->buffer.end(), '\n');
         }
 
         // schedule for parsing

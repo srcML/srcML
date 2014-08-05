@@ -44,7 +44,7 @@ struct ParseRequest {
     boost::optional<std::string> disk_filename;
     int position;
     int status;
-    int loc;
+    long loc;
 };
 
 #endif
