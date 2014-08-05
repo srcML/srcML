@@ -200,9 +200,6 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         fileName = getAttribOrFail(opElement, exampleAttr)
         operatorEntry.op = getAttribOrFail(opElement, opAttr)
         operatorEntry.title = getAttribOrFail(opElement, titleAttr)
-        
-        # <OperatorEntry example="C-deref-member-access.c" op="-&gt;" title="Arrow" />
-        # fileName = getAttribOrFail(exampleElement, fileAttr)
         if not os.path.isabs(fileName):
             fileName = os.path.join(dirPath, fileName)
 
@@ -214,16 +211,16 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         srcCodeAndTree = srcMLFile(fileName, doc.srcMLLanguage)
         operatorEntry.sourceCode = srcCodeAndTree[0]
         tempTree = ET.ElementTree(ET.fromstringlist(srcCodeAndTree[1]))
-        locatedElements = tempTree.xpath("//op:operator",namespaces={"op": "http://www.sdml.info/srcML/operator"})
+        locatedElements = tempTree.xpath("//op:operator", namespaces={"op": "http://www.sdml.info/srcML/operator"})
         if len(locatedElements) != 1:
             if len(locatedElements) > 1:
                 matchingLocatedElements = [x for x in locatedElements if x.text == operatorEntry.op]
                 if len(matchingLocatedElements) == 1:
-                    operatorEntry.srcML = [ET.tostring(matchingLocatedElements[0])]
+                    operatorEntry.srcML = [matchingLocatedElements[0]]
                 elif len(matchingLocatedElements) == 0:
-                    operatorEntry.srcML = [ET.tostring(elem) for elem in locatedElements]
+                    operatorEntry.srcML = locatedElements
                 else:
-                    operatorEntry.srcML = "BUG"
+                    operatorEntry.srcML = ["BUG"]
             else:
                 raise Exception("ERROR: Didn't locate correct any operators within the  {0} ".format(allSrcMLCode) + self.makeAtLineCol())
         return operatorEntry
@@ -264,7 +261,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
     doc.srcMLLanguage = getAttribOrFail(root, langAttr)
 
     if (os.path.exists(doc.outputFileName)
-             and os.path.getmtime(filePath) < os.path.getmtime(doc.outputFileName)
+            and os.path.getmtime(filePath) < os.path.getmtime(doc.outputFileName)
             and not forceBuild):
         print "    Up to date."
         return None

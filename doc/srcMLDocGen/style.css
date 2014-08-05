@@ -1,51 +1,149 @@
+.opTitle { }
+.opCodeCol { } 
+.opsrcMLCol { }
 pre {
     padding: 10px;
+    overflow:auto;
+    font-weight:bold;
+    color:#33cc33;
 }
 
 .xpathQueryExample {
 }
 
 /* Examples Displays. */
-.sourceCodeExample {
-}
+.sourceCodeExample { }
 
-.srcMLExample {
-
-    overflow:scroll;
-}
+.srcMLExample { }
 
 
 /** Syntax Highlighting for srcML Markup. */
 .srcMLElement {
+    font-weight: normal;
     color:#3333FF;
 }
 
 .srcMLAttribName {
+    font-weight: normal;
     color:#FF4D4D;
 }
 
-.srcMLAttribEquals{
+.srcMLAttribEquals {
+    font-weight: normal;
     color:#FF4D4D;
 }
 
 .srcMLAttribValue {
+    font-weight: normal;
     color:#C5C545;
 }
 
 /** Syntax Highlighting for all srcML languages (but not the XML representation). */
+
+/*
+    This helps with SOME keywords not all of them, just the ones which are more
+    difficult to locate because they are part of mixed content OR they are
+    marked up as src:name
+*/
+.keyword {
+
+}
+
+/* Preprocessor highlighting*/
 .cpp_define {
+    color:#B84DDB;
 }
 
 .cpp_directive {
+    color:#B84DDB;
 }
 
 .cpp_macro {
-}
-
-.src_name {
+    color:black;
 }
 
 .cpp_value {
+    color:black;
+    font-weight: normal;
+}
+
+.cpp_undef {
+    color:#B84DDB;
+}
+
+span.cpp_undef span.src_name {
+    color:black;
+    font-weight:bold;
+}
+
+.cpp_if {
+    color:#B84DDB;
+}
+
+.cpp_ifdef {
+    color:#B84DDB;
+}
+
+.cpp_endif {
+    color:#B84DDB;
+}
+
+.cpp_ifndef {
+    color:#B84DDB;
+}
+
+.cpp_else {
+    color:#B84DDB;
+}
+
+.cpp_elif {
+    color:#B84DDB;
+}
+
+.cpp_include {
+    color:#B84DDB;
+}
+
+.cpp_file {
+    color:#C5C545;
+}
+
+.cpp_pragma {
+    color:#B84DDB;
+}
+
+.cpp_error {
+    color:#B84DDB;
+}
+
+.cpp_line {
+    color:#B84DDB;
+}
+
+.cpp_number {
+    color:#33cc33;
+}
+
+.type_modifier {
+    font-weight:normal;
+    color:black;
+}
+
+.op_operator {
+    font-weight:normal;
+    color:black;
+}
+
+.lit_literal {
+    color:#C5C545;
+    font-weight:bold;
+}
+
+.src_name {
+
+}
+
+.src_name {
 }
 
 .src_parameter_list {
@@ -55,27 +153,11 @@ pre {
 }
 
 .src_type {
-}
-
-.type_modifier {
-}
-
-.cpp_undef {
-}
-
-.cpp_if {
+    font-weight:normal;
+    color:red;
 }
 
 .src_expr {
-}
-
-.op_operator {
-}
-
-.lit_literal {
-}
-
-.cpp_ifdef {
 }
 
 .src_if {
@@ -99,40 +181,11 @@ pre {
 .src_argument_list {
 }
 
-.cpp_endif {
-}
-
-.cpp_ifndef {
-}
-
-.cpp_else {
-}
-
-.cpp_elif {
-}
-
 .src_argument {
 }
 
-.cpp_include {
-}
-
-.cpp_file {
-}
-
 .src_comment {
-}
-
-.cpp_pragma {
-}
-
-.cpp_error {
-}
-
-.cpp_line {
-}
-
-.cpp_number {
+    color:#009900;
 }
 
 .src_else {

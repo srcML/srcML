@@ -9,9 +9,6 @@ import cStringIO
 
 register = template.Library()
 
-namesOfStyles = set()
-
-
 uriToPrefix = {
     "http://www.sdml.info/srcML/operator": "op",
     "http://www.sdml.info/srcML/src": "src",
@@ -20,16 +17,24 @@ uriToPrefix = {
     "http://www.sdml.info/srcML/modifier": "type",
 }
 
+
+
+keywordDictionary = {
+    "c++":set([x.strip() for x in open("DocGen/templatetags/CppKeywords.txt","r").readlines()]),
+    "c":set([x.strip() for x in open("DocGen/templatetags/CKeywords.txt","r").readlines()]),
+    "java":set([x.strip() for x in open("DocGen/templatetags/JavaKeywords.txt","r").readlines()])
+}
+
 class SyntaxHighlighter(ContentHandler):
     htmlEscapeTable = {'"': "&quot;", "'": "&apos;" }
     spanStart = "<span class=\"{0}\">"
     spanEnd = "</span>"
 
-    def __init__(self, codeIssrcML):
+    def __init__(self, codeIssrcML, language):
         self.out = cStringIO.StringIO()
         self.content = ""
         self.displayXML = codeIssrcML
-        self.tagOutput = open("styleClassList2.css","a")
+        self.language = language
 
 
     def getNormalizedStyleName(self, name):
@@ -76,7 +81,13 @@ class SyntaxHighlighter(ContentHandler):
 
 
     def characters(self, data):
-        self.out.write(SAXUtils.escape(data, SyntaxHighlighter.htmlEscapeTable))
+        if self.displayXML:
+            self.out.write(SAXUtils.escape(SAXUtils.escape(data, SyntaxHighlighter.htmlEscapeTable)))
+        else:
+            if data.strip() in keywordDictionary[self.language.lower()]:
+                self.out.write("<span class=\"keyword\">{0}</span>".format(SAXUtils.escape(data, SyntaxHighlighter.htmlEscapeTable)))
+            else:
+                self.out.write(SAXUtils.escape(data, SyntaxHighlighter.htmlEscapeTable))
 
 
 class SyntaxHighlightedNode(template.Node):
@@ -89,18 +100,46 @@ class SyntaxHighlightedNode(template.Node):
         tree = self.nameOfTreeLoc.resolve(context)
         language = self.language.resolve(context)
         sourceCodeOrXML = self.isSourceOrXml.resolve(context)
-        contentHandler = SyntaxHighlighter(sourceCodeOrXML == "srcML")
+        contentHandler = SyntaxHighlighter(sourceCodeOrXML == "srcML", language)
         lxmlSAX.saxify(ET.fromstring(tree), contentHandler)
         return contentHandler.content
         
 @register.tag(name="HighlightSyntaxFromTree")
 def highlightSyntaxFromsrcML(parser, token):
     tokens = token.split_contents()
-    # print tokens
     if len(tokens) != 4:
         raise TemplateSyntaxError("Incorrect number of arguments for HighlightSyntaxFromTree, expected: 4. Got: %d" % len(tokens))
-
-    # parser.compile_filter(tokens[1]),
-    # tokens[2], # fragment_name can't be a variable.
-    # [parser.compile_filter(token) for token in tokens[3:]]
     return SyntaxHighlightedNode(parser.compile_filter(tokens[1]), parser.compile_filter(tokens[2]), parser.compile_filter(tokens[3]))
+
+
+class GetOperatorCodeNode(template.Node):
+    def __init__(self, operatorListVar):
+        self.operatorListVariable = operatorListVar
+
+    def render(self, context):
+        opList = self.operatorListVariable.resolve(context)
+        print "Called Render!"
+        if len(opList) == 0:
+            raise Exception("MISSING operator entries!")
+        for item in opList:
+            if isinstance(item, str):
+                print "Got str"
+            elif isinstance(item, ET._Element):
+                print "Got Element"
+            else:
+                print "FUCK!"
+                raise Exception("Invalid or unhandled type.")
+        # return "\n".join([x for x in opList])
+        # tree = self.nameOfTreeLoc.resolve(context)
+        # language = self.language.resolve(context)
+        # sourceCodeOrXML = self.isSourceOrXml.resolve(context)
+        # contentHandler = SyntaxHighlighter(sourceCodeOrXML == "srcML", language)
+        # lxmlSAX.saxify(ET.fromstring(tree), contentHandler)
+        # return contentHandler.content
+        
+@register.tag(name="GetOperators")
+def getOperators(parser, token):
+    tokens = token.split_contents()
+    if len(tokens) != 2:
+        raise TemplateSyntaxError("Incorrect number of arguments for GetOperatorCode, expected: 1. Got: %d" % len(tokens))
+    return GetOperatorCodeNode(parser.compile_filter(tokens[1]))

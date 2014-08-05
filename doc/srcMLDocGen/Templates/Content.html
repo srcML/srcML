@@ -60,4 +60,26 @@
 {% endfor %}
 
 
-<!-- Generating Operators table. -->
+<!-- Operators table. -->
+<h2><a id="operators">Operators</a></h2>
+<hr />
+<table border="1">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Operator</th>
+            <th>srcML</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    {% for cat in doc.categories %}
+        {% for entry in cat.operators %}
+        	{% include "OperatorTableEntry.html" with entry=entry %}    
+        {% endfor %}
+    {% endfor %}
+    {% for entry in doc.operators %}
+        {% include "OperatorTableEntry.html" with entry=entry %}
+    {% endfor %}
+    </tbody>
+</table>

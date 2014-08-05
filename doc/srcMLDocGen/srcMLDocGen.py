@@ -1,8 +1,4 @@
 #!/usr/bin/python
-#   srcMLDocGen is used to generate markdown files from srcML so that they can be
-#   easily formatting and made to look nice without a lot of effort.
-#
-#   use grip to evaluate the created.md files.
 
 import os, sys, traceback
 import django
@@ -16,13 +12,13 @@ from DocGen import *
 
 DocConfigFileName = "DocConfig.xml"
 def genDocFile(docConfig):
-	# How to generate the template.
-	out = open(docConfig.outputFileName, "w")
-	fileTemplate = loader.get_template("DefaultPage.html")
-	page = fileTemplate.render(Context({"doc": docConfig}))
-	out.write(page)
-	out.close()
-	
+    # How to generate the template.
+    out = open(docConfig.outputFileName, "w")
+    fileTemplate = loader.get_template("DefaultPage.html")
+    page = fileTemplate.render(Context({"doc": docConfig}))
+    out.write(page)
+    out.close()
+    
 
 if __name__ == "__main__":
 
@@ -40,9 +36,9 @@ if __name__ == "__main__":
             try:
                 docConfig = loadXmlDocFile(root, DocConfigFileName, True)
                 if docConfig != None:
-                	print "Beginning HTML Generation"
-                	genDocFile(docConfig)
-                	print "HTML Generation Complete"
+                    print "Beginning HTML Generation"
+                    genDocFile(docConfig)
+                    print "HTML Generation Complete"
             except Exception as e:
                 print "Failed with exception: ", traceback.format_exc(e)
         
