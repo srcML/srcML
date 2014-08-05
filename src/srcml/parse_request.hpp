@@ -31,7 +31,7 @@
 #include <boost/optional.hpp>
 
 struct ParseRequest {
-    ParseRequest(int size = 0) : buffer(size), srcml_arch(0), unit(0), position(0), status(0) {}
+    ParseRequest(int size = 0) : buffer(size), srcml_arch(0), unit(0), position(0), status(0), loc(0) {}
 
     // Fields required by thread to process a unit
     std::string language;
@@ -44,6 +44,7 @@ struct ParseRequest {
     boost::optional<std::string> disk_filename;
     int position;
     int status;
+    int loc;
 };
 
 #endif
