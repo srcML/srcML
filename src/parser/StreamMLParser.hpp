@@ -89,7 +89,7 @@ public:
     void startElement(int id) {
 
         srcMLParser::currentState().push(id);
-        pushSToken(id, true);
+        pushSTokenFlush(id);
     }
 
     /**
@@ -102,7 +102,7 @@ public:
     void startNoSkipElement(int id) {
 
         srcMLParser::currentState().push(id);
-        pushSToken(id, false);
+        pushSToken(id);
     }
 
     /**
@@ -114,7 +114,7 @@ public:
     void endElement(int id) {
 
         if((srcMLParser::getMode() & srcMLParser::MODE_ISSUE_EMPTY_AT_POP).any()) 
-            pushSToken(id, false);
+            pushSToken(id);
 
         pushEToken(id);
         srcMLParser::currentState().pop();
@@ -228,10 +228,16 @@ private:
      * Push the start token token onto the output token stream flushing skipped tokens before output
      * if requested.
      */
-    void pushSToken(int token, bool flush = true) {
+    void pushSToken(int token) {
 
         // push a new start token
-        pushToken(antlr::RefToken(StartTokenFactory(token)), flush);
+        pushToken(antlr::RefToken(StartTokenFactory(token)), false);
+    }
+
+    void pushSTokenFlush(int token) {
+
+        // push a new start token
+        pushToken(antlr::RefToken(StartTokenFactory(token)), true);
     }
 
     /**
