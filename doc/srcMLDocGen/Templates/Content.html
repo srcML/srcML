@@ -1,7 +1,7 @@
 {% load DjangoHelpers %}
 {% for cat in doc.categories %}
     {% for entry in cat.entries %}
-        <div class="displayedDocDefinition" style="padding-top:10px;border:1px solid black;">
+        <div class="displayedDocDefinition">
             <h2 class="title"><a id="{{entry.linkName}}">{{entry.title}}</a></h2>
             <hr/>
             {% if entry.desc != "" %}
@@ -14,7 +14,19 @@
                 <h3 class="subtitle">Element{% if entry.elements|length > 1 %}s{%endif%}</h3>
                 <ul>
                 {% for elem in entry.elements %}
-                    <li>{{elem.QName|safe}}</li>
+                    <li>{{elem.QName|safe}}
+                    {% if elem.markupOptionsRequired|length > 0 %}
+                        <ul>
+                            <li><span class="note">Note</span>: This mark up is disabled by default and is enabled using the following command line argument/s with srcML:
+                                <ul>
+                                    {% for markup in elem.markupOptionsRequired %}
+                                    <li>{{markup}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        </ul>
+                        {% endif %}
+                    </li>
                 {% endfor %}
                 </ul>
             </div>
@@ -24,7 +36,19 @@
                 <h3 class="subtitle">Subelement{% if entry.subelements|length > 1 %}s{% endif %}</h3>
                 <ul>
                 {% for elem in entry.subelements %}
-                    <li>{{elem.QName|safe}}</li>
+                    <li>{{elem.QName|safe}}
+                        {% if elem.markupOptionsRequired|length > 0 %}
+                        <ul>
+                            <li><span class="note">Note</span>: This mark up is disabled by default and is enabled using the following command line argument/s with srcML:
+                                <ul>
+                                    {% for markup in elem.markupOptionsRequired %}
+                                    <li>{{markup}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        </ul>
+                        {% endif %}
+                    </li>
                 {% endfor %}
                 </ul>
             </div>
@@ -33,10 +57,10 @@
             <!-- XPathQueries -->
             {% if entry.xpathQueries|length > 0 %}
             <div class="xpathQueries">
-                <h3 class="exampleTitle">XPathQuer{% if entry.subelements|length > 1 %}ies{% else %}y{% endif %}</h3>
+                <h3 class="exampleTitle">XPath Quer{% if entry.subelements|length > 1 %}ies{% else %}y{% endif %}</h3>
                 {% for xpExample in entry.xpathQueries %}
                     <div class="xpathQueryExample">
-                        <span class="xpathDesc">{{xpExample.desc|safe}}</span><code class="xpathExample">{{xpExample.xpath|safe}}</code>
+                        <span class="xpathDesc">{{xpExample.desc|safe}}</span>&nbsp;<code class="xpathExample">{{xpExample.xpath|safe}}</code>
                     </div>
                 {% endfor %}
             </div>
@@ -48,7 +72,7 @@
                 <h3>Example{% if entry.examples|length > 1 %}s{% endif %}</h3>
                 {% for example in entry.examples %}
                     <div class="example">
-                        <h4 class="subtitle">{% ifequal example.title "" %}{{forloop.counter}}{%else%}{{example.title}}{%endifequal%}</h4>
+                        <h4 class="subtitle">{% ifequal example.title "" %}<br/>{%else%}{{example.title}}{%endifequal%}</h4>
                         <pre class="sourceCodeExample" style="border:1px solid black; margin:3px;">{% HighlightSyntaxFromTree example.srcML doc.srcMLLanguage "code" %}</pre>
                         <pre class="srcMLExample" style="border:1px solid black; margin:3px;">{% HighlightSyntaxFromTree example.srcML doc.srcMLLanguage "srcML" %}</pre>
                     </div>
@@ -61,25 +85,33 @@
 
 
 <!-- Operators table. -->
-<h2><a id="operators">Operators</a></h2>
-<hr />
-<table border="1">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Operator</th>
-            <th>srcML</th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="displayedDocDefinition">
+    <h2><a id="operators">Operators</a></h2>
+    <hr />
+    <div class="xpathQueries">
+        <h3 class="exampleTitle">XPath queries for locating operators</h3>
+        <div class="xpathQueryExample">
+            <span class="xpathDesc">Find all occurrences of the <code class="inline">++</code> operator</span>&nbsp;<code class="xpathExample">//op:operator[.='++']</code>
+        </div>
+    </div>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Operator</th>
+                <th>srcML</th>
+            </tr>
+        </thead>
+        <tbody>
 
-    {% for cat in doc.categories %}
-        {% for entry in cat.operators %}
-        	{% include "OperatorTableEntry.html" with entry=entry %}    
+        {% for cat in doc.categories %}
+            {% for entry in cat.operators %}
+            	{% include "OperatorTableEntry.html" with entry=entry %}    
+            {% endfor %}
         {% endfor %}
-    {% endfor %}
-    {% for entry in doc.operators %}
-        {% include "OperatorTableEntry.html" with entry=entry %}
-    {% endfor %}
-    </tbody>
-</table>
+        {% for entry in doc.operators %}
+            {% include "OperatorTableEntry.html" with entry=entry %}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

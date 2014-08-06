@@ -2,6 +2,7 @@ import os, sys, subprocess, string, traceback
 import lxml.etree as ET
 from DocData import DocConfig, Element, Subelement, XPathExample, Example, DocEntry, OperatorEntry, Category, DocConfig
 from os.path import join, getsize
+import cStringIO
 
 # Constants
 srcMLExec = "srcml"
@@ -33,6 +34,8 @@ fileAttr="file"
 opAttr = "op"
 exampleAttr ="example"
 pathAttr = "path"
+
+
 
 
 #
@@ -95,6 +98,33 @@ def srcMLFile(fileName, language):
 
 
 #
+# Formatting helper.
+#
+# lxmlSAX.saxify(ET.fromstring(tree), contentHandler)
+def extractSubText(element):
+    out = cStringIO.StringIO()
+    if element.text != None:
+        out.write(element.text)
+    def extract(currentElement):
+        if len(currentElement.attrib) > 0:
+            out.write("<{0} {1}>".format(currentElement.tag, " ".join(["{0}=\"{1}\"".format(k[0], v) for k, v in currentElement.attrib.items()]) ) )
+        else:
+            out.write("<{0}>".format(currentElement.tag))
+        if currentElement.text != None:
+            out.write(currentElement.text)
+        for chld in currentElement.iterchildren():
+            extract(chld)
+            if chld.tail != None:
+                out.write(chld.tail)
+        out.write("</{0}>".format(currentElement.tag))
+
+    for chld in element.iterchildren():
+        extract(chld)
+        if chld.tail != None:
+            out.write(chld.tail)
+
+    return out.getvalue()
+#
 # Info building from here on down.
 #
 def loadXmlDocFile(dirPath, fileName, forceBuild = False):
@@ -118,11 +148,13 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         # descElem = elemElement.find(DescTag)
         descElem = locateSingleChildOf_Optional(elemElement, "Desc")
         if descElem != None:
-            element.desc = descElem.text + "".join([ET.tostring(x) + x.tail for x in descElem.iterdescendants()])
+            element.desc = extractSubText(descElem)
+            #descElem.text + "".join([ET.tostring(x) + x.tail for x in descElem.iterdescendants()])
 
         # Locating all of the tags named reuired markup.
         for reqMarkUpElem in elemElement.findall(ReqsrcMLMarUpOptionTag):
             element.markupOptionsRequired.append(getAttribOrFail(reqMarkUpElem, srcMLOptionAttr))
+            # print "Added req markup!", reqMarkUpElem.attrib[srcMLOptionAttr]
         return element
 
 
@@ -141,7 +173,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         xpathExample.xpath = getAttribOrFail(xpathNode, pathAttr)
         descElem = locateSingleChildOf_Optional(xpathNode, "Desc")
         if descElem != None:
-            xpathExample.desc = descElem.text + "".join([ET.tostring(x) + x.tail for x in descElem.iterdescendants()])
+            xpathExample.desc =extractSubText(descElem)
         else:
             raise Exception("ERROR: All XPath Expressions must provide a description. " + formatElementErrorMsg(element) )
         return xpathExample
@@ -280,7 +312,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         if elem.tag == CategoryTag:
             doc.categories.append(buildCategory(elem))
         elif elem.tag == DocEntryTag:
-            doc.categories.append(buildEntry(elem))
+            doc.entries.append(buildEntry(elem))
         elif elem.tag == OperatorEntryTag:
             doc.operators.append(buildOperatorEntry(elem))
         else:

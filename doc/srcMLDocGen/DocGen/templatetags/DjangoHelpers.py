@@ -1,6 +1,6 @@
 from django.conf import settings
 from django import template
-import os, sys
+import os, sys, re
 import lxml.etree as ET
 import lxml.sax as lxmlSAX
 import xml.sax.saxutils as SAXUtils
@@ -25,6 +25,17 @@ keywordDictionary = {
     "java":set([x.strip() for x in open("DocGen/templatetags/JavaKeywords.txt","r").readlines()])
 }
 
+cKeywordRegex = re.compile("\\b(?P<kw>{0})\\b".format( "|".join(keywordDictionary["c"])), re.I | re.M)
+cppKeywordRegEx = re.compile("\\b(?P<kw>{0})\\b".format( "|".join(keywordDictionary["c++"])))
+javaKeywordRegEx = re.compile("\\b(?P<kw>{0})\\b".format( "|".join(keywordDictionary["java"])))
+keywordRegExDictionary = {
+    "c++":cppKeywordRegEx,
+    "c":cKeywordRegex,
+    "java":javaKeywordRegEx,
+
+}
+kwSubPattern = "<span class=\"kw\">\g<kw></span>"
+
 class SyntaxHighlighter(ContentHandler):
     htmlEscapeTable = {'"': "&quot;", "'": "&apos;" }
     spanStart = "<span class=\"{0}\">"
@@ -35,7 +46,7 @@ class SyntaxHighlighter(ContentHandler):
         self.content = ""
         self.displayXML = codeIssrcML
         self.language = language
-
+        self.keywordRegEx = keywordRegExDictionary[language.lower()]
 
     def getNormalizedStyleName(self, name):
         return uriToPrefix[name[0]] + "_" + name[1]
@@ -81,13 +92,20 @@ class SyntaxHighlighter(ContentHandler):
 
 
     def characters(self, data):
+        toWrite = data
         if self.displayXML:
-            self.out.write(SAXUtils.escape(SAXUtils.escape(data, SyntaxHighlighter.htmlEscapeTable)))
+            toWrite = SAXUtils.escape(SAXUtils.escape(toWrite, SyntaxHighlighter.htmlEscapeTable))
         else:
-            if data.strip() in keywordDictionary[self.language.lower()]:
-                self.out.write("<span class=\"keyword\">{0}</span>".format(SAXUtils.escape(data, SyntaxHighlighter.htmlEscapeTable)))
-            else:
-                self.out.write(SAXUtils.escape(data, SyntaxHighlighter.htmlEscapeTable))
+            toWrite = SAXUtils.escape(toWrite, SyntaxHighlighter.htmlEscapeTable)
+        toWrite = self.keywordRegEx.sub(kwSubPattern, toWrite)
+        self.out.write(toWrite)
+        # if self.displayXML:
+        #     self.out.write()
+        # else:
+        #     if data.strip() in keywordDictionary[self.language.lower()]:
+        #         self.out.write("<span class=\"keyword\">{0}</span>".format(SAXUtils.escape(data, SyntaxHighlighter.htmlEscapeTable)))
+        #     else:
+        #         self.out.write()
 
 
 class SyntaxHighlightedNode(template.Node):

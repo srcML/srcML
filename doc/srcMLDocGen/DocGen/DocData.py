@@ -8,6 +8,7 @@ class Element(object):
         self.desc = ""
         self.markupOptionsRequired = []
         self.attributeStr = ""
+
     def QName(self):
         nameFormat = ""
         if self.ns == "":

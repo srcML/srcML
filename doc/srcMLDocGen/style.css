@@ -1,11 +1,19 @@
+.displayedDocDefinition {
+    padding-top:10px;
+    border:1px solid black;
+    margin-top:7px;
+}
+
 .opTitle { }
 .opCodeCol { } 
 .opsrcMLCol { }
+
+
 pre {
     padding: 10px;
     overflow:auto;
-    font-weight:bold;
-    color:#33cc33;
+
+
 }
 
 .xpathQueryExample {
@@ -45,8 +53,9 @@ pre {
     difficult to locate because they are part of mixed content OR they are
     marked up as src:name
 */
-.keyword {
-
+.kw {
+    color:orange;
+    font-weight:bold;
 }
 
 /* Preprocessor highlighting*/
@@ -71,9 +80,15 @@ pre {
     color:#B84DDB;
 }
 
+span.cpp_if span.kw {
+    color:#B84DDB;
+}
+span.cpp_else span.kw {
+    color:#B84DDB;
+}
+
 span.cpp_undef span.src_name {
     color:black;
-    font-weight:bold;
 }
 
 .cpp_if {
@@ -106,6 +121,7 @@ span.cpp_undef span.src_name {
 
 .cpp_file {
     color:#C5C545;
+    font-weight:bold;
 }
 
 .cpp_pragma {
@@ -152,9 +168,7 @@ span.cpp_undef span.src_name {
 .src_param {
 }
 
-.src_type {
-    font-weight:normal;
-    color:red;
+.src_type { 
 }
 
 .src_expr {
