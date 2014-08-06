@@ -1,0 +1,6 @@
+{% load DjangoHelpers %}
+        <tr>
+            <td class="opTitle">{{entry.title}}</td>
+            <td class="opCodeCol"><code>{{entry.op}}</code></td>
+            <td class="opsrcMLCol"><code style="operatorCode">{% GetOperators entry.srcML %}</code></td>
+        </tr>
