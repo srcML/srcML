@@ -1453,13 +1453,11 @@
                     <AttribStr>type="default"</AttribStr>                
                 </Element>
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:public[@type='default']/src:function_decl">
+                    <Desc>Find all functions declared within the default public area of a struct</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-public-1.cpp" />
         </DocEntry>
 
@@ -1467,13 +1465,11 @@
             <Elements>
                 <Element name="public"/>
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:public/src:function_decl">
+                    <Desc>Find all public functions</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-public-2.cpp" />
         </DocEntry>
 
@@ -1483,13 +1479,11 @@
                     <AttribStr>type="default"</AttribStr>                
                 </Element>
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:private[@type='default']/src:function_decl">
+                    <Desc>Find all of the functions declared within the default private area of a class</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-private-1.cpp" />
         </DocEntry>
 
@@ -1497,13 +1491,11 @@
             <Elements>
                 <Element name="private"/>
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:private/src:decl_stmt">
+                    <Desc>Find all private members</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-private-2.cpp" />
         </DocEntry>
 
@@ -1511,13 +1503,11 @@
             <Elements>
                 <Element name="protected"/>
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:protected/src:function_decl">
+                    <Desc>Find all protected function declarations</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-protected-1.cpp" />
         </DocEntry>
 
@@ -1525,13 +1515,11 @@
             <Elements>
                 <Element name="specifier"/>
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:class[src:super/src:specifier[.='protected']]">
+                    <Desc>Find all class which use protected inheritance</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-protected-inheritance-specifier-1.cpp" />
         </DocEntry>
 
@@ -1539,13 +1527,11 @@
             <Elements>
                 <Element name="specifier"/>
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:class[src:super/src:specifier[.='private']]">
+                    <Desc>Find all classes that use private inheritance</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-private-inheritance-specifier-1.cpp" />
         </DocEntry>
 
@@ -1553,13 +1539,11 @@
             <Elements>
                 <Element name="specifier"/>
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:class[src:super/src:specifier[.='private']]">
+                    <Desc>Find all classes that use private inheritance</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-public-inheritance-specifier-1.cpp" />
         </DocEntry>
 
@@ -1572,13 +1556,11 @@
                 <Subelement name="argument_list" />
                 <Subelement name="argument" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:call[src:name/src:nmae[.='static_cast']]">
+                    <Desc>Find all uses of static_cast</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-static_cast-1.cpp" />
         </DocEntry>
 
@@ -1588,13 +1570,11 @@
                 <Subelement name="argument_list" />
                 <Subelement name="argument" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:call[src:name/src:nmae[.='dynamic_cast']]">
+                    <Desc>Find all uses of dynamic_cast</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-dynamic_cast-1.cpp" />
         </DocEntry>
 
@@ -1604,13 +1584,11 @@
                 <Subelement name="argument_list" />
                 <Subelement name="argument" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:call[src:name/src:nmae[.='reinterpret_cast']]">
+                    <Desc>Find all uses of reinterpret_cast</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-reinterpret_cast-1.cpp" />
         </DocEntry>
 
@@ -1635,12 +1613,11 @@
                 <Subelement name="argument_list" />
                 <Subelement name="argument" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:call[src:name/src:nmae[.='static_cast']]">
+                    <Desc>Find all uses of static_cast</Desc>
                 </XPath>
-            </XPathQueries> -->
+            </XPathQueries>
             <Example file="CPP-static_assert-1.cpp" />
         </DocEntry>
 
@@ -1654,11 +1631,6 @@
                 <XPath path="//src:sizeof">
                     <Desc>Find all uses of sizeof</Desc>
                 </XPath>
-            <!-- ADD another EXAMPLE HERE
-                <XPath path="">
-                    <Desc>Find all </Desc>
-                </XPath>
-            -->
             </XPathQueries>
             <Example file="../C/C-sizeof.c" />
             <Example file="CPP-sizeof-1.cpp" />
