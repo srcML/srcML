@@ -270,7 +270,6 @@
     </Category>
 
 
-
     <Category title="Specifiers">
         <DocEntry title="const">
             <Elements>
@@ -1446,7 +1445,7 @@
 
 
 
-    <Category title="public, private, protected">
+    <Category title="Public, Private, Protected">
 
         <DocEntry title="default public visibility">
             <Elements>
