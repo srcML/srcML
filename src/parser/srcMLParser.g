@@ -483,6 +483,7 @@ tokens {
     SNOEXCEPT;
     STYPENAME;
     SALIGNOF;
+    STYPEID;
 
     // Qt
 	SSIGNAL_ACCESS;
@@ -1856,7 +1857,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty, int & call_count] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair | ENCODE | SELECTOR)
+        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF | TYPEID | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair | ENCODE | SELECTOR)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -3458,6 +3459,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
         alignof_call |
 
+        // call list in member initialization list
+        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
+        typeid_call |
+
         /*
           MODE_VARIABLE_NAME
         */
@@ -4616,7 +4621,7 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
                 { LA(1) == RPAREN }? expression { --count_paren; } |
 
                 { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; }
-                    expression_process (call[call_count] | sizeof_call | alignof_call | encode_call | selector_call) complete_arguments |
+                    expression_process (call[call_count] | sizeof_call | alignof_call | typeid_call | encode_call | selector_call) complete_arguments |
 
                 expression |
 
@@ -5600,7 +5605,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
             // however I believe parameter_list matches a right paren of the call.
-           (call[call_count] | sizeof_call | alignof_call | encode_call | selector_call) argument |
+           (call[call_count] | sizeof_call | alignof_call | typeid_call | encode_call | selector_call) argument |
 
         // macro call
         { type == MACRO }? macro_call |
@@ -5697,6 +5702,20 @@ alignof_call[] { ENTRY_DEBUG } :
             startElement(SALIGNOF);
         }
         ALIGNOF
+        call_argument_list
+;
+
+// typeid
+typeid_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+
+            startElement(STYPEID);
+        }
+        TYPEID
         call_argument_list
 ;
 
@@ -6355,7 +6374,7 @@ generic_selection_complete_expression[] { CompleteElement element(this); int cou
             { LA(1) == RPAREN }? expression { --count_paren; } |
 
             { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } 
-                expression_process (call[call_count] | sizeof_call | alignof_call | encode_call | selector_call) complete_arguments  |
+                expression_process (call[call_count] | sizeof_call | alignof_call | typeid_call | encode_call | selector_call) complete_arguments  |
 
             expression
             )
@@ -6929,7 +6948,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
             // however I believe parameter_list matches a right paren of the call.
-           (call[call_count] | sizeof_call | alignof_call | encode_call | selector_call) argument |
+           (call[call_count] | sizeof_call | alignof_call | typeid_call | encode_call | selector_call) argument |
 
         // macro call
         { type == MACRO }? macro_call |
