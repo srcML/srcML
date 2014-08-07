@@ -1642,13 +1642,11 @@
                 <Subelement name="argument_list" />
                 <Subelement name="argument" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:typeid">
+                    <Desc>Find all uses of typeid</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-typeid-1.cpp" />
         </DocEntry>
 
@@ -1658,13 +1656,15 @@
                 <Subelement name="argument_list" />
                 <Subelement name="argument" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:noexcept">
+                    <Desc>Find all uses of noexcept</Desc>
                 </XPath>
+                <XPath path="//src:function[src:noexcept]">
+                    <Desc>Find all noexcept functions</Desc>
+                </XPath>
+
             </XPathQueries>
-            -->
             <Example file="CPP-noexcept-1.cpp" />
             <Example file="CPP-noexcept-2.cpp" />
         </DocEntry>
@@ -1675,13 +1675,11 @@
                 <Subelement name="argument_list" />
                 <Subelement name="argument" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:alignof">
+                    <Desc>Find all uses of alignof</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-alignof-1.cpp" />
         </DocEntry>
 
@@ -1691,13 +1689,11 @@
                 <Subelement name="argument_list" />
                 <Subelement name="argument" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:alignas">
+                    <Desc>Find all uses of alignas</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-alignas-1.cpp" />
         </DocEntry>
 
@@ -1707,13 +1703,11 @@
                 <Subelement name="argument_list"/>
                 <Subelement name="argument"/>
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:decltype">
+                    <Desc>Find all uses of decltype</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-decltype-1.cpp" />
             <Example file="CPP-decltype-2.cpp" />
         </DocEntry>
@@ -1723,16 +1717,16 @@
                 <Element name="attribute" />
                 <Subelement name="expr" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:attribute">
+                    <Desc>Find all attributes</Desc>
+                </XPath>
+                <XPath path="//src:function[src:attribute/src:expr/src:name[.='noreturn']]">
+                    <Desc>Find all noreturn functions</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-attribute-1.cpp" />
         </DocEntry>
-
     </Category>
 
     <Category title="Templates">
@@ -1743,16 +1737,21 @@
                 <Subelement name="parameter" />
                 <Subelement name="typename" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:class[src:template]">
+                    <Desc>Find all class templates</Desc>
                 </XPath>
-            </XPathQueries> -->
-            <Example title="Templated Class" file="CPP-template-1.cpp" />
-            <Example title="Templated Function" file="CPP-template-2.cpp" />
-            <Example title="Partial Template Specialization" file="CPP-template-4.cpp" />
-            <Example title="Template Member Function Template" file="CPP-template-5.cpp" />
+                <XPath path="//src:function[src:template]">
+                    <Desc>Find all function templates</Desc>
+                </XPath>
+                <XPath path="//src:function[count(src:template) = 2]">
+                    <Desc>Find all template member function templates</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example title="templated class" file="CPP-template-1.cpp" />
+            <Example title="templated function" file="CPP-template-2.cpp" />
+            <Example title="partial template specialization" file="CPP-template-4.cpp" />
+            <Example title="template member function template" file="CPP-template-5.cpp" />
         </DocEntry>
 
         <DocEntry title="template parameters">
@@ -1760,12 +1759,14 @@
                 <Element name="parameter_list" />
                 <Subelement name="param" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:template/src:parameter_list/src:param">
+                    <Desc>Find all template parameters</Desc>
                 </XPath>
-            </XPathQueries> -->
+                <XPath path="//src:class[src:template/src:parameter_list/src:param/src:type/src:template]">
+                    <Desc>Find all class templates which use a template template parameter</Desc>
+                </XPath>
+            </XPathQueries>
             <Example title="typename parameter" file="CPP-template-param-1.cpp" />
             <Example title="class parameter" file="CPP-template-param-2.cpp" />
             <Example title="default template parameter" file="CPP-template-param-3.cpp" />
@@ -1773,17 +1774,15 @@
             <Example title="template template parameter" file="CPP-template-param-5.cpp" />
         </DocEntry>
 
-        <!-- Create a typename & class entries here for when they are used as part of the template parameter-->
         <DocEntry title="typename">
             <Elements>
                 <Element name="typename" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:class[src:template/src:parameter_iist/src:param/src:type/src:typename]">
+                    <Desc>Find all class templates which use typename as part of its parameter list</Desc>
                 </XPath>
-            </XPathQueries> -->
+            </XPathQueries>
             <Example title="typename parameter" file="CPP-template-param-1.cpp" />
         </DocEntry>
 
@@ -1791,25 +1790,23 @@
             <Elements>
                 <Element name="typename" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:class[src:template/src:parameter_list/src:param/src:type/src:name[.='class']]">
+                    <Desc>Find all class which use class within instead of type name in at least one template parameter</Desc>
                 </XPath>
-            </XPathQueries> -->
-            <!-- Add example here! <Example title="typename parameter" file="CPP-template-param-1.cpp" /> -->
+            </XPathQueries>
+            <Example file="CPP-class-template-specifier-1.cpp" />
         </DocEntry>
 
         <DocEntry title="template parameter pack">
             <Elements>
                 <Element ns="type" name="modifier" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:class[src:template/src:parameter_list/src:param/src:type/type:modifier[.='...']]">
+                    <Desc>Find all class templates that use a template parameter pack</Desc>
                 </XPath>
-            </XPathQueries> -->
+            </XPathQueries>
             <Example file="CPP-var-type-mod-1.cpp" />
         </DocEntry>
     </Category>
@@ -1820,13 +1817,11 @@
                 <Element name="throw" />
                 <Subelement name="expr" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:throw">
+                    <Desc>Find all uses of throw</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-throw-1.cpp" />
             <Example file="CPP-throw-2.cpp" />
             <Example file="CPP-throw-3.cpp" />
@@ -1838,13 +1833,11 @@
                 <Subelement name="block" />
                 <Subelement name="catch" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:try">
+                    <Desc>Find all try block</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-try-1.cpp" />
         </DocEntry>
 
@@ -1854,13 +1847,11 @@
                 <Subelement name="parameter_list" />
                 <Subelement name="param" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:catch">
+                    <Desc>Find all catch blocks</Desc>
                 </XPath>
             </XPathQueries>
-            -->
             <Example file="CPP-catch-1.cpp" />
             <Example file="CPP-catch-2.cpp" />
         </DocEntry>
@@ -1872,16 +1863,14 @@
                 <Subelement name="block" />
                 <Subelement name="member_list" />
             </Elements>
-            <!-- ADD EXAMPLES HERE
             <XPathQueries>
-                <XPath path="">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:try[count(src:catch) >= 2]">
+                    <Desc>Find all try blocks with at least two catch blocks.</Desc>
                 </XPath>
-            </XPathQueries> -->
+            </XPathQueries>
             <Example file="CPP-func-try-catch-1.cpp" />
             <Example file="CPP-func-try-catch-2.cpp" />
         </DocEntry>
-
     </Category>
 
 </DocConfig>
