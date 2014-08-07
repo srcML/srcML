@@ -10,25 +10,25 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:if">
-                    <Desc>Find all if statements.</Desc>
+                    <Desc>Find all if statements</Desc>
                 </XPath>
                 <XPath path="//src:if/src:condition">
-                    <Desc>Find all conditions of all if statements.</Desc>
+                    <Desc>Find all conditions of all if statements</Desc>
                 </XPath>
                 <XPath path="//src:then">
-                    <Desc>Find all then statements.</Desc>
+                    <Desc>Find all then statements</Desc>
                 </XPath>
                 <XPath path="//src:else">
-                    <Desc>Find all else statements.</Desc>
+                    <Desc>Find all else statements</Desc>
                 </XPath>
                 <XPath path="//src:if[count(src:else) = 0]">
-                    <Desc>Find all if statements without an else.</Desc>
+                    <Desc>Find all if statements without an else</Desc>
                 </XPath>
                 <XPath path="//src:if//src:if">
-                    <Desc>Find all nested if statements.</Desc>
+                    <Desc>Find all nested if statements</Desc>
                 </XPath>
                 <XPath path="//src:elseif">
-                    <Desc>Find all else-if statements.</Desc>
+                    <Desc>Find all else-if statements</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="C-if-1.c"/>
@@ -47,13 +47,13 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:while">
-                    <Desc>Find all while statements.</Desc>
+                    <Desc>Find all while statements</Desc>
                 </XPath>
                 <XPath path="//src:while/src:condition">
-                    <Desc>Find all of the conditions of all while statements.</Desc>
+                    <Desc>Find all of the conditions of all while statements</Desc>
                 </XPath>
                 <XPath path="//src:while[src:condition//src:name = 'X']">
-                    <Desc>Find all while statements which have a condition containing the variable `'X'`.</Desc>
+                    <Desc>Find all while statements which have a condition containing the variable `'X'`</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="C-while-1.c" />
@@ -68,7 +68,7 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:for">
-                    <Desc>Find all for statements.</Desc>
+                    <Desc>Find all for statements</Desc>
                 </XPath>
                 <XPath path="//src:for/src:init">
                     <Desc>Find all initialization statements from within the control of all for loops</Desc>
@@ -99,7 +99,7 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:do">
-                    <Desc>Find all do statements.</Desc>
+                    <Desc>Find all do statements</Desc>
                 </XPath>
                 <XPath path="//src:do[src:condition//src:name = 'Z']">
                     <Desc>Find all do while statements which have a condition containing the variable <code class="inline">'x'</code></Desc>
@@ -240,7 +240,7 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:goto">
-                    <Desc>Find all goto statements.</Desc>
+                    <Desc>Find all goto statements</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="C-goto.c"/>
@@ -253,7 +253,7 @@
             <Example file="C-empty-stmt.c"/>
             <XPathQueries>
                 <XPath path="//src:empty_stmt">
-                    <Desc>Find all empty statements.</Desc>
+                    <Desc>Find all empty statements</Desc>
                 </XPath>
             </XPathQueries>
         </DocEntry>
@@ -403,7 +403,7 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:decl_stmt">
-                    <Desc>Find all declaration statements.</Desc>
+                    <Desc>Find all declaration statements</Desc>
                 </XPath>
                 <XPath path="//src:decl_stmt/src:decl[src:type/text()[contains(., 'union')]]">
                     <Desc>Find all variable declaration statements with the union qualifier</Desc>
@@ -422,7 +422,7 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:decl">
-                    <Desc>Find all variable declarations.</Desc>
+                    <Desc>Find all variable declarations</Desc>
                 </XPath>
                 <XPath path="//src:decl[src:init]">
                     <Desc>Find all variable declarations which also initialize the variable</Desc>
@@ -607,12 +607,12 @@
                     <RequiredMarkup srcMLOption="--literal" />
                 </Subelement>
             </Elements>
-            <Example file="C-bitfields.c"/>
             <XPathQueries>
                 <XPath path="//src:decl[src:range]">
                     <Desc>Find all bitfield declarations</Desc>
                 </XPath>
             </XPathQueries>
+            <Example file="C-bitfields.c"/>
         </DocEntry>
     </Category>
 
@@ -623,12 +623,12 @@
                 <Element name="struct_decl" />
                 <Subelement name="name" />
             </Elements>
-            <Example file="C-struct-declaration-3.c" title="forward declaration"/>
             <XPathQueries>
                 <XPath path="//src:struct_decl">
                     <Desc>Find all of the forward declarations for all structs</Desc>
                 </XPath>
             </XPathQueries>
+            <Example file="C-struct-declaration-3.c" title="forward declaration"/>
         </DocEntry>
 
         <DocEntry title="struct definition">
@@ -637,9 +637,6 @@
                 <Subelement name="name" />
                 <Subelement name="block" />
             </Elements>
-            <Example file="C-struct-declaration-1.c" title="trivial declaration"/>
-            <Example file="C-struct-declaration-2.c" title="variable of an anonymous struct type" />
-            <Example file="C-struct-declaration-4.c" title="declaring a struct and instance" />
             <XPathQueries>
                 <XPath path="//src:struct">
                     <Desc>Find the definition of all structs</Desc>
@@ -648,6 +645,9 @@
                     <Desc>Find the members from all structs</Desc>
                 </XPath>
             </XPathQueries>
+            <Example file="C-struct-declaration-1.c" title="trivial declaration"/>
+            <Example file="C-struct-declaration-2.c" title="variable of an anonymous struct type" />
+            <Example file="C-struct-declaration-4.c" title="declaring a struct and instance" />
         </DocEntry>
 
         <DocEntry title="struct initialization">
@@ -657,14 +657,14 @@
                 <Subelement name="init" />
                 <Subelement name="block" />
             </Elements>
-            <Example file="C-struct-initialization-1.c"/>
-            <Example file="C-struct-initialization-2.c" />
-            <Example file="C-struct-initialization-3.c" />
             <XPathQueries>
                 <XPath path="//src:decl[src:init/src:block]">
                     <Desc>Find all of declaration of structs which also initialize it</Desc>
                 </XPath>
             </XPathQueries>
+            <Example file="C-struct-initialization-1.c"/>
+            <Example file="C-struct-initialization-2.c" />
+            <Example file="C-struct-initialization-3.c" />
         </DocEntry>
 
         <DocEntry title="union declaration">
@@ -673,12 +673,12 @@
                 <Subelement name="name" />
                 <Subelement name="block" />
             </Elements>
-            <Example file="C-union-declaration-2.c"/>
             <XPathQueries>
                 <XPath path="//src:union_decl">
                     <Desc>Find all of the forward declarations for all unions</Desc>
                 </XPath>
             </XPathQueries>
+            <Example file="C-union-declaration-2.c"/>
         </DocEntry>
 
         <DocEntry title="union definition">
@@ -687,11 +687,12 @@
                 <Subelement name="name" />
                 <Subelement name="block" />
             </Elements>
-            <Example file="C-union-declaration-1.c"/>
-            <XPathQueries><XPath path="//src:union">
+            <XPathQueries>
+                <XPath path="//src:union">
                     <Desc>Find all definitions of all unions</Desc>
                 </XPath>
             </XPathQueries>
+            <Example file="C-union-declaration-1.c"/>
         </DocEntry>
 
         <DocEntry title="enum definition">
@@ -700,9 +701,6 @@
                 <Subelement name="name" />
                 <Subelement name="block" />
             </Elements>
-            <Example file="C-enum-declaration-1.c"/>
-            <Example file="C-enum-declaration-2.c"/>
-            <Example file="C-enum-declaration-3.c"/>
             <XPathQueries>
                 <XPath path="//src:enum">
                     <Desc>Find all enum definitions</Desc>
@@ -711,6 +709,9 @@
                     <Desc>Find the names of all members of all enums</Desc>
                 </XPath>
             </XPathQueries>
+            <Example file="C-enum-declaration-1.c"/>
+            <Example file="C-enum-declaration-2.c"/>
+            <Example file="C-enum-declaration-3.c"/>
         </DocEntry>
     </Category>
 
