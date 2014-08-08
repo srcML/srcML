@@ -18,6 +18,20 @@ uriToPrefix = {
 }
 
 
+tagListing = set(["<src:unit>"])
+def getTagListing():
+    return tagListing
+
+def clearTagListing():
+    tagListing = set()
+
+def formatTagName(ns, name, attr):
+    tag = "<" 
+    tag += "{0}:{1}".format(uriToPrefix[ns], name)
+    if len(attr) > 0:
+        tag += " " + " ".join(["{0}=\"{1}\"".format(k[1], v) for k, v in attr.items()])
+    tag +=">"
+    return tag
 
 keywordDictionary = {
     "c++":set([x.strip() for x in open("DocGen/templatetags/CppKeywords.txt","r").readlines()]),
@@ -79,6 +93,7 @@ class SyntaxHighlighter(ContentHandler):
     def startElementNS(self, name, qname, attributes):
         if name[1] == "unit":
             return
+        tagListing.add(formatTagName(name[0], name[1], attributes))
         if name[1] == "comment":
             self.iscomment = True
         self.out.write(SyntaxHighlighter.spanStart.format(self.getNormalizedStyleName(name)))

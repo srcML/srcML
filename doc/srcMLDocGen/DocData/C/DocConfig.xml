@@ -1,6 +1,6 @@
 <DocConfig lang="C" outputFile="c_srcML.html" title="C srcML">
     <Category title="Statements">
-        <DocEntry shortTitle="if" title="if Statement">
+        <DocEntry shortTitle="if" title="if statement">
             <Elements>
                 <Element name="if" />
                 <Subelement name="condition" />
@@ -777,48 +777,48 @@
             </XPathQueries>
         </DocEntry>
 
-	    <OperatorEntry example="C-Operator-pre_increment.c" op="++" title="Pre Increment" />
-	    <OperatorEntry example="C-Operator-post_increment.c" op="++" title="Post Increment" />
-	    <OperatorEntry example="C-Operator-pre_decrement.c" op="--" title="Pre Decrement" />
-	    <OperatorEntry example="C-Operator-post_decrement.c" op="--" title="Post Decrement" />
-	    <OperatorEntry example="C-Operator-address_of.c" op="&amp;" title="Address Of" />
-	    <OperatorEntry example="C-Operator-deref.c" op="*" title="Dereference" />
-	    <OperatorEntry example="C-Operator-unary-minus.c" op="-" title="Unary Minus" />
-	    <OperatorEntry example="C-Operator-bitwise-not.c" op="~" title="Bitwise Not" />
-	    <OperatorEntry example="C-Operator-logical-not.c" op="!" title="Logical Not" />
-	    <OperatorEntry example="C-Operator-multiplication.c" op="*" title="Multiplication" />
-	    <OperatorEntry example="C-Operator-divide.c" op="/" title="Division" />
-	    <OperatorEntry example="C-Operator-modulus.c" op="%" title="Modulus" />
-	    <OperatorEntry example="C-Operator-addition.c" op="+" title="Addition" />
-	    <OperatorEntry example="C-Operator-subtraction.c" op="-" title="Subtraction" />
-	    <OperatorEntry example="C-Operator-left-shift.c" op="&lt;&lt;" title="Left Shift" />
-	    <OperatorEntry example="C-Operator-right-shift.c" op="&gt;&gt;" title="Right Shift" />
-	    <OperatorEntry example="C-Operator-less-then.c" op="&lt;" title="Less Then" />
-	    <OperatorEntry example="C-Operator-greater-then.c" op="&gt;" title="Greater Then" />
-	    <OperatorEntry example="C-Operator-less-equal.c" op="&lt;=" title="Less Then or Equal To" />
-	    <OperatorEntry example="C-Operator-greater-equal.c" op="&gt;=" title="Greater Then or Equal To" />
-	    <OperatorEntry example="C-Operator-equal.c" op="==" title="Equals" />
-	    <OperatorEntry example="C-Operator-not-equal.c" op="!=" title="Not Equal" />
-	    <OperatorEntry example="C-Operator-bitwise-and.c" op="&amp;" title="Bitwise And" />
-	    <OperatorEntry example="C-Operator-bitwise-xor.c" op="^" title="Bitwise XOr" />
-	    <OperatorEntry example="C-Operator-bitwise-or.c" op="|" title="Bitwise Or" />
-	    <OperatorEntry example="C-Operator-logical-and.c" op="&amp;&amp;" title="Logical And" />
-	    <OperatorEntry example="C-Operator-logical-or.c" op="||" title="Logical Or" />
-	    <OperatorEntry example="C-Operator-assignment.c" op="=" title="Assignment" />
-	    <OperatorEntry example="C-Operator-multiply-assign.c" op="*=" title="Multiply Assign" />
-	    <OperatorEntry example="C-Operator-divide-assign.c" op="/=" title="Divide Assign" />
-	    <OperatorEntry example="C-Operator-modulus-assign.c" op="%=" title="Modulus Assign" />
-	    <OperatorEntry example="C-Operator-addition-assign.c" op="+=" title="Add Assign" />
-	    <OperatorEntry example="C-Operator-sub-assign.c" op="-=" title="Subtract Assign" />
-	    <OperatorEntry example="C-Operator-left-shift-assign.c" op="&lt;&lt;=" title="Left Shift Assign" />
-	    <OperatorEntry example="C-Operator-right-shift-assign.c" op="&gt;&gt;=" title="Right Shift Assign" />
-	    <OperatorEntry example="C-Operator-bitwise-and-assign.c" op="&amp;=" title="Bitwise And Assign" />
-	    <OperatorEntry example="C-Operator-bitwise-xor-assign.c" op="^=" title="Bitwise XOr Assign" />
-	    <OperatorEntry example="C-Operator-bitwise-or-assign.c" op="|=" title="Bitwise Or Assign" />
-	    <OperatorEntry example="C-Operator-comma.c" op="," title="Comma" />
-        <OperatorEntry example="C-Operator-turnary.c" op="?  :" title="Conditional" />
-        <OperatorEntry example="C-member-access.c" op="." title="Dot" />
-        <OperatorEntry example="C-deref-member-access.c" op="-&gt;" title="Arrow" />
+	    <OperatorEntry example="C-Operator-pre_increment.c" op="++" title="pre-increment" />
+	    <OperatorEntry example="C-Operator-post_increment.c" op="++" title="post-increment" />
+	    <OperatorEntry example="C-Operator-pre_decrement.c" op="--" title="pre-decrement" />
+	    <OperatorEntry example="C-Operator-post_decrement.c" op="--" title="post-decrement" />
+	    <OperatorEntry example="C-Operator-address_of.c" op="&amp;" title="address of" />
+	    <OperatorEntry example="C-Operator-deref.c" op="*" title="dereference" />
+	    <OperatorEntry example="C-Operator-unary-minus.c" op="-" title="unary minus" />
+	    <OperatorEntry example="C-Operator-logical-not.c" op="!" title="logical not" />
+	    <OperatorEntry example="C-Operator-multiplication.c" op="*" title="multiplication" />
+	    <OperatorEntry example="C-Operator-divide.c" op="/" title="division" />
+	    <OperatorEntry example="C-Operator-modulus.c" op="%" title="modulus" />
+	    <OperatorEntry example="C-Operator-addition.c" op="+" title="addition" />
+	    <OperatorEntry example="C-Operator-subtraction.c" op="-" title="subtraction" />
+	    <OperatorEntry example="C-Operator-left-shift.c" op="&lt;&lt;" title="left shift" />
+	    <OperatorEntry example="C-Operator-right-shift.c" op="&gt;&gt;" title="right shift" />
+	    <OperatorEntry example="C-Operator-less-then.c" op="&lt;" title="less then" />
+	    <OperatorEntry example="C-Operator-greater-then.c" op="&gt;" title="greater then" />
+	    <OperatorEntry example="C-Operator-less-equal.c" op="&lt;=" title="less then or equal to" />
+	    <OperatorEntry example="C-Operator-greater-equal.c" op="&gt;=" title="greater then or equal to" />
+	    <OperatorEntry example="C-Operator-equal.c" op="==" title="equals" />
+	    <OperatorEntry example="C-Operator-not-equal.c" op="!=" title="not equal" />
+	    <OperatorEntry example="C-Operator-bitwise-not.c" op="~" title="bitwise not" />
+	    <OperatorEntry example="C-Operator-bitwise-and.c" op="&amp;" title="bitwise and" />
+	    <OperatorEntry example="C-Operator-bitwise-xor.c" op="^" title="bitwise xor" />
+	    <OperatorEntry example="C-Operator-bitwise-or.c" op="|" title="bitwise or" />
+	    <OperatorEntry example="C-Operator-logical-and.c" op="&amp;&amp;" title="logical and" />
+	    <OperatorEntry example="C-Operator-logical-or.c" op="||" title="logical or" />
+	    <OperatorEntry example="C-Operator-assignment.c" op="=" title="assignment" />
+	    <OperatorEntry example="C-Operator-multiply-assign.c" op="*=" title="multiply assign" />
+	    <OperatorEntry example="C-Operator-divide-assign.c" op="/=" title="divide assign" />
+	    <OperatorEntry example="C-Operator-modulus-assign.c" op="%=" title="modulus assign" />
+	    <OperatorEntry example="C-Operator-addition-assign.c" op="+=" title="add assign" />
+	    <OperatorEntry example="C-Operator-sub-assign.c" op="-=" title="subtract assign" />
+	    <OperatorEntry example="C-Operator-left-shift-assign.c" op="&lt;&lt;=" title="left shift assign" />
+	    <OperatorEntry example="C-Operator-right-shift-assign.c" op="&gt;&gt;=" title="right shift assign" />
+	    <OperatorEntry example="C-Operator-bitwise-and-assign.c" op="&amp;=" title="bitwise and assign" />
+	    <OperatorEntry example="C-Operator-bitwise-xor-assign.c" op="^=" title="bitwise xor assign" />
+	    <OperatorEntry example="C-Operator-bitwise-or-assign.c" op="|=" title="bitwise or assign" />
+	    <OperatorEntry example="C-Operator-comma.c" op="," title="comma" />
+        <OperatorEntry example="C-Operator-turnary.c" op="?  :" title="conditional" />
+        <OperatorEntry example="C-member-access.c" op="." title="dot" />
+        <OperatorEntry example="C-deref-member-access.c" op="-&gt;" title="arrow" />
     </Category>
 
     <Category title="Other">

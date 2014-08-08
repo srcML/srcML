@@ -5,6 +5,7 @@ import django
 from django.conf import settings
 from django.template import Template, Context, loader
 from DocGen import *
+from DocGen.templatetags import *
 
 # -------------------------------------------------
 #                     Main
@@ -60,7 +61,7 @@ def genDocIndex(docConfig):
             indexEntry.element = [Element()]
             indexEntry.element[0].tag="operator"
             indexEntry.element[0].ns="op"
-            indexEntry.linkName = "#operators"
+            indexEntry.linkName = "operators"
             indexEntry.basePageName = pageName
             if not indexEntry.indexLetter() in indexDictionary:
                 indexDictionary[indexEntry.indexLetter()] = [indexEntry]
@@ -69,14 +70,19 @@ def genDocIndex(docConfig):
     for entry in indexDictionary.items():
     	entry[1].sort()
 
-    print "Outputting stuff"
     out = open(indexFileName, "w")
     fileTemplate = loader.get_template("IndexPage.html")
     sortedIndexItems = indexDictionary.items()
-    sortedIndexItems.sort(lambda x, y: x[0] < y[0])
+    sortedIndexItems.sort(key=lambda x: x[0].lower())
     page = fileTemplate.render(Context({"indexItems": sortedIndexItems, "pageTitle": docConfig.title}))
     out.write(page)
     out.close()
+
+def writeAllTagNames():
+	out = open("taglisting.txt", "w")
+	for tag in getTagListing():
+		out.write("{0}\n".format(tag))
+	out.close()
 
 
 
@@ -108,3 +114,4 @@ if __name__ == "__main__":
                 print "Failed with exception: ", traceback.format_exc(e)
         
     print "-" * 80
+    writeAllTagNames()

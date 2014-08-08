@@ -782,46 +782,46 @@
             <Example file="Java-method-ref-4.java" />
         </DocEntry>
 
-	    <OperatorEntry title="Pre Increment" op="++" example="../C/C-Operator-pre_increment.c" />
-	    <OperatorEntry title="Post Increment" op="++" example="../C/C-Operator-post_increment.c" />
-	    <OperatorEntry title="Pre Decrement" op="--" example="../C/C-Operator-pre_decrement.c" />
-	    <OperatorEntry title="Post Decrement" op="--" example="../C/C-Operator-post_decrement.c" />
-	    <OperatorEntry title="Unary Minus" op="-" example="../C/C-Operator-unary-minus.c" />
-	    <OperatorEntry title="Bitwise Not" op="~" example="../C/C-Operator-bitwise-not.c" />
-	    <OperatorEntry title="Logical Not" op="!" example="../C/C-Operator-logical-not.c" />
-	    <OperatorEntry title="Multiplication" op="*" example="../C/C-Operator-multiplication.c" />
-	    <OperatorEntry title="Division" op="/" example="../C/C-Operator-divide.c" />
-	    <OperatorEntry title="Modulus" op="%" example="../C/C-Operator-modulus.c" />
-	    <OperatorEntry title="Addition" op="+" example="../C/C-Operator-addition.c" />
-	    <OperatorEntry title="Subtraction" op="-" example="../C/C-Operator-subtraction.c" />
-	    <OperatorEntry title="Left Shift" op="&lt;&lt;" example="../C/C-Operator-left-shift.c" />
-	    <OperatorEntry title="Right Shift" op="&gt;&gt;" example="../C/C-Operator-right-shift.c" />
-	    <OperatorEntry title="Less Then" op="&lt;" example="../C/C-Operator-less-then.c" />
-	    <OperatorEntry title="Greater Then" op="&gt;" example="../C/C-Operator-greater-then.c" />
-	    <OperatorEntry title="Less Then or Equal To" op="&lt;=" example="../C/C-Operator-less-equal.c" />
-	    <OperatorEntry title="Greater Then or Equal To" op="&gt;=" example="../C/C-Operator-greater-equal.c" />
-	    <OperatorEntry title="Equals" op="==" example="../C/C-Operator-equal.c" />
-	    <OperatorEntry title="Not Equal" op="!=" example="../C/C-Operator-not-equal.c" />
-	    <OperatorEntry title="Bitwise And" op="&amp;" example="../C/C-Operator-bitwise-and.c" />
-	    <OperatorEntry title="Bitwise XOr" op="^" example="../C/C-Operator-bitwise-xor.c" />
-	    <OperatorEntry title="Bitwise Or" op="|" example="../C/C-Operator-bitwise-or.c" />
-	    <OperatorEntry title="Logical And" op="&amp;&amp;" example="../C/C-Operator-logical-and.c" />
-	    <OperatorEntry title="Logical Or" op="||" example="../C/C-Operator-logical-or.c" />
-	    <OperatorEntry title="Assignment" op="=" example="../C/C-Operator-assignment.c" />
-	    <OperatorEntry title="Multiply Assign" op="*=" example="../C/C-Operator-multiply-assign.c" />
-	    <OperatorEntry title="Divide Assign" op="/=" example="../C/C-Operator-divide-assign.c" />
-	    <OperatorEntry title="Modulus Assign" op="%=" example="../C/C-Operator-modulus-assign.c" />
-	    <OperatorEntry title="Add Assign" op="+=" example="../C/C-Operator-addition-assign.c" />
-	    <OperatorEntry title="Subtract Assign" op="-=" example="../C/C-Operator-sub-assign.c" />
-	    <OperatorEntry title="Signed Left Shift Assign" op="&lt;&lt;=" example="../C/C-Operator-left-shift-assign.c" />
-	    <OperatorEntry title="Signed Right Shift Assign" op="&gt;&gt;=" example="../C/C-Operator-right-shift-assign.c" />
-	    <OperatorEntry title="Bitwise And Assign" op="&amp;=" example="../C/C-Operator-bitwise-and-assign.c" />
-	    <OperatorEntry title="Bitwise XOr Assign" op="^=" example="../C/C-Operator-bitwise-xor-assign.c" />
-	    <OperatorEntry title="Bitwise Or Assign" op="|=" example="../C/C-Operator-bitwise-or-assign.c" />
-        <OperatorEntry title="Unsigned Right Shift" op="&gt;&gt;&gt;" example="Java-unsigned-right-shift.java" />
-	    <OperatorEntry title="Unsigned Right Shift Assign" op="&gt;&gt;&gt;=" example="Java-unsigned-right-shift.java" />
+	    <OperatorEntry title="pre-increment" op="++" example="../C/C-Operator-pre_increment.c" />
+	    <OperatorEntry title="post-increment" op="++" example="../C/C-Operator-post_increment.c" />
+	    <OperatorEntry title="pre-decrement" op="--" example="../C/C-Operator-pre_decrement.c" />
+	    <OperatorEntry title="post-decrement" op="--" example="../C/C-Operator-post_decrement.c" />
+	    <OperatorEntry title="unary-minus" op="-" example="../C/C-Operator-unary-minus.c" />
+	    <OperatorEntry title="bitwise-not" op="~" example="../C/C-Operator-bitwise-not.c" />
+	    <OperatorEntry title="logical-not" op="!" example="../C/C-Operator-logical-not.c" />
+	    <OperatorEntry title="multiplication" op="*" example="../C/C-Operator-multiplication.c" />
+	    <OperatorEntry title="division" op="/" example="../C/C-Operator-divide.c" />
+	    <OperatorEntry title="modulus" op="%" example="../C/C-Operator-modulus.c" />
+	    <OperatorEntry title="addition" op="+" example="../C/C-Operator-addition.c" />
+	    <OperatorEntry title="subtraction" op="-" example="../C/C-Operator-subtraction.c" />
+	    <OperatorEntry title="left shift" op="&lt;&lt;" example="../C/C-Operator-left-shift.c" />
+	    <OperatorEntry title="Right shift" op="&gt;&gt;" example="../C/C-Operator-right-shift.c" />
+	    <OperatorEntry title="less then" op="&lt;" example="../C/C-Operator-less-then.c" />
+	    <OperatorEntry title="greater then" op="&gt;" example="../C/C-Operator-greater-then.c" />
+	    <OperatorEntry title="less then or equal to" op="&lt;=" example="../C/C-Operator-less-equal.c" />
+	    <OperatorEntry title="greater then or equal to" op="&gt;=" example="../C/C-Operator-greater-equal.c" />
+	    <OperatorEntry title="equals" op="==" example="../C/C-Operator-equal.c" />
+	    <OperatorEntry title="not equal" op="!=" example="../C/C-Operator-not-equal.c" />
+	    <OperatorEntry title="bitwise and" op="&amp;" example="../C/C-Operator-bitwise-and.c" />
+	    <OperatorEntry title="bitwise xor" op="^" example="../C/C-Operator-bitwise-xor.c" />
+	    <OperatorEntry title="bitwise or" op="|" example="../C/C-Operator-bitwise-or.c" />
+	    <OperatorEntry title="logical and" op="&amp;&amp;" example="../C/C-Operator-logical-and.c" />
+	    <OperatorEntry title="logical or" op="||" example="../C/C-Operator-logical-or.c" />
+	    <OperatorEntry title="assignment" op="=" example="../C/C-Operator-assignment.c" />
+	    <OperatorEntry title="multiply assign" op="*=" example="../C/C-Operator-multiply-assign.c" />
+	    <OperatorEntry title="divide assign" op="/=" example="../C/C-Operator-divide-assign.c" />
+	    <OperatorEntry title="modulus assign" op="%=" example="../C/C-Operator-modulus-assign.c" />
+	    <OperatorEntry title="add assign" op="+=" example="../C/C-Operator-addition-assign.c" />
+	    <OperatorEntry title="subtract assign" op="-=" example="../C/C-Operator-sub-assign.c" />
+	    <OperatorEntry title="signed left shift assign" op="&lt;&lt;=" example="../C/C-Operator-left-shift-assign.c" />
+	    <OperatorEntry title="signed right shift assign" op="&gt;&gt;=" example="../C/C-Operator-right-shift-assign.c" />
+	    <OperatorEntry title="bitwise and assign" op="&amp;=" example="../C/C-Operator-bitwise-and-assign.c" />
+	    <OperatorEntry title="bitwise xor assign" op="^=" example="../C/C-Operator-bitwise-xor-assign.c" />
+	    <OperatorEntry title="bitwise or assign" op="|=" example="../C/C-Operator-bitwise-or-assign.c" />
+        <OperatorEntry title="unsigned right shift" op="&gt;&gt;&gt;" example="Java-unsigned-right-shift.java" />
+	    <OperatorEntry title="unsigned right shift assign" op="&gt;&gt;&gt;=" example="Java-unsigned-right-shift.java" />
         <OperatorEntry title="instanceof" op="instanceof" example="Java-Operator-instanceof.java" />
-        <OperatorEntry title="Conditional" op="?  :" example="../C/C-Operator-turnary.c" />
+        <OperatorEntry title="conditional" op="?  :" example="../C/C-Operator-turnary.c" />
         <OperatorEntry title="new" op="new" example="Java-Operator-new.java" />
 
     </Category>

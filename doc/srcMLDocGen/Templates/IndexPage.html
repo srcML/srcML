@@ -9,9 +9,9 @@
             <div class="indexLetterSection">
                 <h3>{{item.0}}</h3>
                 <hr/>
-                <ul>
+                <ul class="indexList">
                 {% for entry in item.1 %}
-                    <li><span class="indexEntry"><a href="{{entry.page}}{{entry.linkName}}">{{entry.title}}</a></span></li>
+                    <li><span class="indexEntry"><a href="{{entry.basePageName}}#{{entry.linkName}}">{{entry.title}}</a></span></li>
                 {% endfor %}
                 </ul>
             </div>
