@@ -22,19 +22,19 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name><index>[<expr>0</expr><operator>,</operator> 0]</index></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>[<expr><literal type="number">0</literal></expr><operator>,</operator> <literal type="number">0</literal>]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name><index>@[<expr>0</expr>, <expr>0</expr>]</index></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>@[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>=</operator> <block>@{<expr>0</expr><operator>,</operator> <expr>0</expr>}</block></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator> <block>@{<expr><literal type="number">0</literal></expr><operator>,</operator> <expr><literal type="number">0</literal></expr>}</block></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><block>@{ <expr>0</expr>, <expr>0</expr> }</block></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><block>@{ <expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr> }</block></expr></init></decl>;</decl_stmt>
 </unit>
 
 </unit>

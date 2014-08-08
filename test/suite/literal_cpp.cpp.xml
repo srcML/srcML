@@ -77,11 +77,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><literal type="number">2</literal> + <literal type="complex">2 + 3i</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">2</literal> <operator>+</operator> <literal type="complex">2 + 3i</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal type="complex">3i + 2</literal> + <literal type="number">2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="complex">3i + 2</literal> <operator>+</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
