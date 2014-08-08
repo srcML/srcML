@@ -82,3 +82,26 @@ class DocConfig:
         self.categories = []
         self.entries = []
         self.operators = []
+
+
+class IndexEntry:
+    """ An entry within the index of links that's sorted via alphabetic order instead of
+        logical related element ordering
+    """
+    def __init__(self):
+        self.title = ""
+        self.shortTitle = ""
+        self.category = ""
+        self.isOperator = False
+        self.language = ""
+        self.element = []
+        self.subelements = []
+        self.linkName = ""
+        self.basePageName = ""
+        self.op = ""
+
+    def __lt__(self, other):
+        return self.title.lower() < other.title.lower()
+
+    def indexLetter(self):
+        return self.title[0].upper()

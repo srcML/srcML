@@ -1,0 +1,11 @@
+{% extends "Skeleton.html" %}
+{%block body %}
+    <div id="sidebar">
+        {% block ToC %}
+        {% endblock %}
+    </div>
+
+    <div id="content">
+        {% block Content %}{% endblock %}
+    </div>
+{% endblock %}

@@ -11,7 +11,6 @@ from DocGen import *
 # -------------------------------------------------
 
 def genDocFile(docConfig):
-    # How to generate the template.
     out = open(docConfig.outputFileName, "w")
     fileTemplate = loader.get_template("DefaultPage.html")
     page = fileTemplate.render(Context({"doc": docConfig}))
@@ -22,11 +21,62 @@ def genDocFile(docConfig):
 # Generate documentation index for a language.
 #
 def genDocIndex(docConfig):
-	splitName = docConfig.outputFileName.split(".")
-	splitName.insert(-2, "index")
-	indexFileName = ".".join(splitName)
-	print indexFileName
-    # out = open(indexFileName, "w")
+    splitName = docConfig.outputFileName.split(".")
+    splitName.insert(-1, "index")
+    indexFileName = ".".join(splitName)
+
+    # indexEntries = []
+    lang = docConfig.srcMLLanguage
+    pageName = docConfig.outputFileName
+    indexDictionary = dict()
+
+    for cat in docConfig.categories:
+        catTitle = cat.title
+        for entry in cat.entries:
+            indexEntry = IndexEntry()
+            indexEntry.title = entry.title
+            indexEntry.shortTitle = entry.shortTitle
+            indexEntry.category = catTitle
+            indexEntry.isOperator = False
+            indexEntry.language = lang
+            indexEntry.element = entry.elements
+            indexEntry.subelements = entry.subelements
+            indexEntry.linkName = entry.linkName()
+            indexEntry.basePageName = pageName
+            if not indexEntry.indexLetter() in indexDictionary:
+                # indexDictionary.add(indexEntry.indexLetter(), [indexEntry])
+                indexDictionary[indexEntry.indexLetter()] = [indexEntry]
+            else:
+                indexDictionary[indexEntry.indexLetter()].append(indexEntry)
+
+        for opEntry in cat.operators:
+            indexEntry = IndexEntry()
+            indexEntry.title = opEntry.title
+            indexEntry.shortTitle = ""
+            indexEntry.category = catTitle
+            indexEntry.isOperator = True
+            indexEntry.language = lang
+            indexEntry.op = opEntry.op
+            indexEntry.element = [Element()]
+            indexEntry.element[0].tag="operator"
+            indexEntry.element[0].ns="op"
+            indexEntry.linkName = "#operators"
+            indexEntry.basePageName = pageName
+            if not indexEntry.indexLetter() in indexDictionary:
+                indexDictionary[indexEntry.indexLetter()] = [indexEntry]
+            else:
+                indexDictionary[indexEntry.indexLetter()].append(indexEntry)
+    for entry in indexDictionary.items():
+    	entry[1].sort()
+
+    print "Outputting stuff"
+    out = open(indexFileName, "w")
+    fileTemplate = loader.get_template("IndexPage.html")
+    sortedIndexItems = indexDictionary.items()
+    sortedIndexItems.sort(lambda x, y: x[0] < y[0])
+    page = fileTemplate.render(Context({"indexItems": sortedIndexItems, "pageTitle": docConfig.title}))
+    out.write(page)
+    out.close()
 
 
 
@@ -50,8 +100,10 @@ if __name__ == "__main__":
                     print "Beginning HTML Generation"
                     genDocFile(docConfig)
                     print "HTML Generation Complete"
+
                     print "Generating HTML Index"
-                    print "Index HTML Generation COmplete"
+                    genDocIndex(docConfig)
+                    print "Index HTML Generation Complete"
             except Exception as e:
                 print "Failed with exception: ", traceback.format_exc(e)
         

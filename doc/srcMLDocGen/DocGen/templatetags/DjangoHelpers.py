@@ -107,13 +107,6 @@ class SyntaxHighlighter(ContentHandler):
         if not self.iscomment:
             toWrite = self.keywordRegEx.sub(kwSubPattern, toWrite)
         self.out.write(toWrite)
-        # if self.displayXML:
-        #     self.out.write()
-        # else:
-        #     if data.strip() in keywordDictionary[self.language.lower()]:
-        #         self.out.write("<span class=\"keyword\">{0}</span>".format(SAXUtils.escape(data, SyntaxHighlighter.htmlEscapeTable)))
-        #     else:
-        #         self.out.write()
 
 
 class SyntaxHighlightedNode(template.Node):
