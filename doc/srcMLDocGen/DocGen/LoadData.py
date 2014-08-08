@@ -36,30 +36,40 @@ exampleAttr ="example"
 pathAttr = "path"
 
 
+namespaceDict={
+    "src":"http://www.sdml.info/srcML/src",
+    "op":"http://www.sdml.info/srcML/operator",
+    "cpp":"http://www.sdml.info/srcML/cpp",
+    "lit":"http://www.sdml.info/srcML/literal",
+    "type":"http://www.sdml.info/srcML/modifier",
+}
 
 
 #
 # Error and simple data extraction functions.
 #
-
 def formatElementErrorMsg(element):
     return "At line {0.sourceline}, within element: {0.tag}".format(element)
+
 
 def verifyNodeNameOrFail(element, expectedName):
     if element.tag != expectedName:
         raise Exception("ERROR: Expected element with name: {1}. Actual name: {0.tag}".format(element, expectedName) + formatElementErrorMsg(element))
+
 
 def unexpectedOrUnknownTag(element):
     if isinstance(element, ET._Comment):
         return
     raise Exception("ERROR: Unexpected/unknown tag: {0.tag}. ".format(element) + formatElementErrorMsg(element) )
 
+
 # Loads the attributes for the doc
 def getAttribOrFail(element, attribName):
     if attribName in element.keys():
         return element.get(attribName)
     else:
-        raise Exception("ERROR: missing {0} attribute from {1.tag} tag unable to continue. ".format(attribName, element) + formatElementErrorMsg(element) )
+        raise Exception("ERROR: missing {0} attribute from {1.tag} tag unable to continue. ".format(attribName, element) + formatElementErrorMsg(element))
+
 
 def getAttribOrDefault(element, attribName, defaultValue):
     if attribName in element.keys():
@@ -67,12 +77,13 @@ def getAttribOrDefault(element, attribName, defaultValue):
     else:
         return defaultValue
 
+
 def invalidDuplicateTag(element):
-    raise Exception("ERROR: Unexpected duplicate tag {0.tag}. ".format(element) + formatElementErrorMsg(element) )
+    raise Exception("ERROR: Unexpected duplicate tag {0.tag}. ".format(element) + formatElementErrorMsg(element))
+
 
 def locateSingleChildOf_Optional(element, childTagName):
     childElements = element.findall("./{0}".format(childTagName))
-
     if childElements == None:
         return None
     elif len(childElements) > 1:
@@ -85,7 +96,7 @@ def locateSingleChildOf_Optional(element, childTagName):
 
 def srcMLFile(fileName, language):
     strm = open(fileName, "r")
-    sourceCode = "".join(strm.readlines())
+    sourceCode = "".join([x.replace("\t","    ") for x in strm.readlines()])
     srcML = ""
     srcMLProc = subprocess.Popen([srcMLExec, "--language", language, "--literal", "--modifier", "--operator", fileName],  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     errOutput = srcMLProc.stderr.readlines()
@@ -96,11 +107,9 @@ def srcMLFile(fileName, language):
         print "Caught exception while parsing output from srcML.", ex
         raise
 
-
 #
 # Formatting helper.
 #
-# lxmlSAX.saxify(ET.fromstring(tree), contentHandler)
 def extractSubText(element):
     out = cStringIO.StringIO()
     if element.text != None:
@@ -124,6 +133,7 @@ def extractSubText(element):
             out.write(chld.tail)
 
     return out.getvalue()
+
 #
 # Info building from here on down.
 #
@@ -171,11 +181,19 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
     def buildXPathExample(xpathNode):
         xpathExample = XPathExample()
         xpathExample.xpath = getAttribOrFail(xpathNode, pathAttr)
+        try:
+            textCompiledXPath = ET.XPath(xpathExample.xpath, namespaces=namespaceDict)
+        except Exception as e:
+            print e
+            print "Title=", xpathNode.xpath("ancestor::DocEntry/@title")[0]
+            print "Invalid XPath expression: %s\n" % xpathExample.xpath
+
+
         descElem = locateSingleChildOf_Optional(xpathNode, "Desc")
         if descElem != None:
             xpathExample.desc =extractSubText(descElem)
         else:
-            raise Exception("ERROR: All XPath Expressions must provide a description. " + formatElementErrorMsg(element) )
+            raise Exception("ERROR: All XPath Expressions must provide a description. " + formatElementErrorMsg(element))
         return xpathExample
 
 
@@ -198,7 +216,8 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
             fileName = os.path.join(dirPath, fileName)
 
         if not os.path.exists(fileName):
-            raise Exception("ERROR: Provided example file: {0} does not exist. Unable to continue. ".format(fileName) + formatElementErrorMsg(element) )
+            raise Exception("ERROR: Provided example file: {0} does not exist. Unable to continue. ".format(fileName) + formatElementErrorMsg(element))
+
         example.sourceCodeFile = fileName
         srcMLExResults = srcMLFile(fileName, doc.srcMLLanguage)
         example.sourceCode = srcMLExResults[0]

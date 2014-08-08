@@ -10,7 +10,6 @@ from DocGen import *
 #                     Main
 # -------------------------------------------------
 
-DocConfigFileName = "DocConfig.xml"
 def genDocFile(docConfig):
     # How to generate the template.
     out = open(docConfig.outputFileName, "w")
@@ -18,7 +17,20 @@ def genDocFile(docConfig):
     page = fileTemplate.render(Context({"doc": docConfig}))
     out.write(page)
     out.close()
-    
+
+#
+# Generate documentation index for a language.
+#
+def genDocIndex(docConfig):
+	splitName = docConfig.outputFileName.split(".")
+	splitName.insert(-2, "index")
+	indexFileName = ".".join(splitName)
+	print indexFileName
+    # out = open(indexFileName, "w")
+
+
+
+DocConfigFileName = "DocConfig.xml"
 
 if __name__ == "__main__":
 
@@ -29,7 +41,6 @@ if __name__ == "__main__":
         if os.path.basename(root) == "DocData":
             continue
 
-        # print os.path.basename(root)
         if DocConfigFileName in files:
             print "-" * 80
             print "Located a Page Creation Document in", root
@@ -39,6 +50,8 @@ if __name__ == "__main__":
                     print "Beginning HTML Generation"
                     genDocFile(docConfig)
                     print "HTML Generation Complete"
+                    print "Generating HTML Index"
+                    print "Index HTML Generation COmplete"
             except Exception as e:
                 print "Failed with exception: ", traceback.format_exc(e)
         

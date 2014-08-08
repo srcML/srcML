@@ -452,7 +452,7 @@
                 <XPath path="//src:function_decl/src:parameter_list/src:param">
                     <Desc>Find all parameters from all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl[src:parameter_list[count(src:param) = 2]">
+                <XPath path="//src:function_decl[src:parameter_list[count(src:param) = 2]]">
                     <Desc>Find all function declarations with only two parameters</Desc>
                 </XPath>
                 <XPath path="//src:function_decl/src:name">
@@ -485,7 +485,7 @@
                 <XPath path="//src:function/src:parameter_list/src:param">
                     <Desc>Find all parameters from all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function[src:parameter_list[count(src:param) = 2]">
+                <XPath path="//src:function[src:parameter_list[count(src:param) = 2]]">
                     <Desc>Find all function definitions with only two parameters</Desc>
                 </XPath>
                 <XPath path="//src:function/src:name">
@@ -576,7 +576,7 @@
             <Example file="C-array-declaration-3.c" />
             <Example file="C-array-declaration-4.c" />
             <XPathQueries>
-                <XPath path="//src:decl[src:name/src:name/src:index]]">
+                <XPath path="//src:decl[src:name/src:name/src:index]">
                     <Desc>Find all array declarations</Desc>
                 </XPath>
                 <XPath path="//src:decl[src:name/src:name/src:index/lit:literal[number(text()) &lt; 50]]">
@@ -593,7 +593,7 @@
             <Example file="C-array-initialization-1.c"/>
             <Example file="C-array-initialization-2.c" />
             <XPathQueries>
-                <XPath path="//src:decl[src:name/src:name/src:index]][src:init]">
+                <XPath path="//src:decl[src:name/src:name/src:index][src:init]">
                     <Desc>Find all array declarations which initialize the array at the same time</Desc>
                 </XPath>
             </XPathQueries>

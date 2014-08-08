@@ -297,7 +297,7 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function_decl[src:type/src:specifier [.='static']]">
-                    <Desc>Find all static functions</Desc>
+                    <Desc>Find all static function declarations</Desc>
                 </XPath>
                 <XPath path="//src:decl[src:type/src:specifier [.='static']]">
                     <Desc>Find all static variables</Desc>
@@ -447,7 +447,7 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:dec;[src:type/src:specifier [.='mutable']]">
+                <XPath path="//src:decl[src:type/src:specifier [.='mutable']]">
                     <Desc>Find all mutable variables declarations</Desc>
                 </XPath>
             </XPathQueries>
@@ -630,7 +630,7 @@
                 <XPath path="//src:function_decl/src:parameter_list/src:param">
                     <Desc>Find all parameters from all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl[src:parameter_list[count(src:param) = 2]">
+                <XPath path="//src:function_decl[src:parameter_list[count(src:param) = 2]]">
                     <Desc>Find all function declarations with only two parameters</Desc>
                 </XPath>
                 <XPath path="//src:function_decl/src:name">
@@ -665,7 +665,7 @@
                 <XPath path="//src:function/src:parameter_list/src:param">
                     <Desc>Find all parameters from all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function[src:parameter_list[count(src:param) = 2]">
+                <XPath path="//src:function[src:parameter_list[count(src:param) = 2]]">
                     <Desc>Find all function definitions with only two parameters</Desc>
                 </XPath>
                 <XPath path="//src:function/src:name">
@@ -714,7 +714,7 @@
             <Example file="CPP-abstract-func-1.cpp" />
         </DocEntry>
 
-        <DocEntry title="lamda functions">
+        <DocEntry title="lambda functions">
             <Elements>
                 <Element name="lambda" />
                 <Subelement name="parameter_list" />
@@ -900,7 +900,7 @@
                 <Subelement name="index" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:name/src:name/src:index]]">
+                <XPath path="//src:decl[src:name/src:name/src:index]">
                     <Desc>Find all array declarations</Desc>
                 </XPath>
                 <XPath path="//src:decl[src:name/src:name/src:index/lit:literal[number(text()) &lt; 50]]">
@@ -919,7 +919,7 @@
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:name/src:name/src:index]][src:init]">
+                <XPath path="//src:decl[src:name/src:name/src:index][src:init]">
                     <Desc>Find all array declarations which initialize the array at the same time</Desc>
                 </XPath>
             </XPathQueries>
@@ -1318,7 +1318,7 @@
                 <XPath path="//src:expr[op:operator[.='new']/following-sibling::src:name/src:name/src:index]">
                     <Desc>Find all expressions which call array new</Desc>
                 </XPath>
-                <XPath path="//src:expr[op:operator[.='new']/following-sibling::src:name[src:name[.='nothrow']]">
+                <XPath path="//src:expr[op:operator[.='new']/following-sibling::src:name[src:name[.='nothrow']]]">
                     <Desc>Find all expressions which call no throw new</Desc>
                 </XPath>
                 <XPath path="//src:expr[op:operator[.='new']/following-sibling::node()[2]/self::op:operator[.='(']/following-sibling::node()[not(self::src:name[src:name[ .!= 'nothrow']])]]">
