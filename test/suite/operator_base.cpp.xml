@@ -2,139 +2,139 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" dir="operator" options="TERNARY">
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>+</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>+</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>-</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>-</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>*</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>*</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>/</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>/</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>%</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>%</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>&amp;</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>&amp;</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>^</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>^</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>|</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>|</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>&lt;&lt;</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>&lt;&lt;</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>&gt;&gt;</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;&gt;</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>+=</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>+=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>-=</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>-=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>*=</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>*=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>/=</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>/=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>%=</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>%=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>&amp;=</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>&amp;=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>^=</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>^=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>|=</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>|=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>&lt;&lt;=</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>&lt;&lt;=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>&gt;&gt;=</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;&gt;=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>-&gt;</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>-&gt;</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>++</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>++</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>--</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>--</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>!</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>!</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>~</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>~</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>&lt;</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>&lt;</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>&lt;=</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>&lt;=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>&gt;</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>&gt;=</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>==</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>==</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>!=</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>!=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>&amp;&amp;</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>&amp;&amp;</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>||</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>||</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal>1</literal> <operator>=</operator> <literal>2</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -146,11 +146,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><operator>+</operator>1</expr>;</expr_stmt>
+<expr_stmt><expr><operator>+</operator><literal type="number">1</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><operator>-</operator>1</expr>;</expr_stmt>
+<expr_stmt><expr><operator>-</operator><literal type="number">1</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -170,7 +170,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name><index>[<expr><literal>1</literal></expr>]</index></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>[<expr><literal type="number">1</literal></expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -190,7 +190,7 @@
 </unit>
 
 <unit>
-<for>for<control>(<init>;</init><condition><expr><literal>1</literal></expr>;</condition><incr/>)</control>
+<for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control>
 <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></for>
 </unit>
 
@@ -311,7 +311,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>=</operator><name><name>a</name><index>[<expr><literal>0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -327,7 +327,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>=</operator><operator>(</operator><literal>0</literal><operator>,</operator> <literal>1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator><operator>(</operator><literal type="number">0</literal><operator>,</operator> <literal type="number">1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -467,7 +467,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>+=</operator><name><name>a</name><index>[<expr><literal>0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>+=</operator><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -483,7 +483,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>+=</operator><operator>(</operator><literal>0</literal><operator>,</operator> <literal>1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>+=</operator><operator>(</operator><literal type="number">0</literal><operator>,</operator> <literal type="number">1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -623,7 +623,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>-=</operator><name><name>a</name><index>[<expr><literal>0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>-=</operator><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -639,7 +639,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>-=</operator><operator>(</operator><literal>0</literal><operator>,</operator> <literal>1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>-=</operator><operator>(</operator><literal type="number">0</literal><operator>,</operator> <literal type="number">1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -779,7 +779,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>*=</operator><name><name>a</name><index>[<expr><literal>0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>*=</operator><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -795,7 +795,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>*=</operator><operator>(</operator><literal>0</literal><operator>,</operator> <literal>1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>*=</operator><operator>(</operator><literal type="number">0</literal><operator>,</operator> <literal type="number">1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -935,7 +935,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>/=</operator><name><name>a</name><index>[<expr><literal>0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>/=</operator><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -951,7 +951,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>/=</operator><operator>(</operator><literal>0</literal><operator>,</operator> <literal>1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>/=</operator><operator>(</operator><literal type="number">0</literal><operator>,</operator> <literal type="number">1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1091,7 +1091,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>%=</operator><name><name>a</name><index>[<expr><literal>0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>%=</operator><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1107,7 +1107,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>%=</operator><operator>(</operator><literal>0</literal><operator>,</operator> <literal>1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>%=</operator><operator>(</operator><literal type="number">0</literal><operator>,</operator> <literal type="number">1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1247,7 +1247,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>&amp;=</operator><name><name>a</name><index>[<expr><literal>0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1263,7 +1263,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>&amp;=</operator><operator>(</operator><literal>0</literal><operator>,</operator> <literal>1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator><operator>(</operator><literal type="number">0</literal><operator>,</operator> <literal type="number">1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1403,7 +1403,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>|=</operator><name><name>a</name><index>[<expr><literal>0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>|=</operator><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1419,7 +1419,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>|=</operator><operator>(</operator><literal>0</literal><operator>,</operator> <literal>1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>|=</operator><operator>(</operator><literal type="number">0</literal><operator>,</operator> <literal type="number">1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1558,7 +1558,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>^=</operator><name><name>a</name><index>[<expr><literal>0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>^=</operator><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1574,7 +1574,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>^=</operator><operator>(</operator><literal>0</literal><operator>,</operator> <literal>1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>^=</operator><operator>(</operator><literal type="number">0</literal><operator>,</operator> <literal type="number">1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1714,7 +1714,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator><name><name>a</name><index>[<expr><literal>0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1730,7 +1730,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator><operator>(</operator><literal>0</literal><operator>,</operator> <literal>1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator><operator>(</operator><literal type="number">0</literal><operator>,</operator> <literal type="number">1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1870,7 +1870,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><name><name>a</name><index>[<expr><literal>0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1886,7 +1886,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>(</operator><literal>0</literal><operator>,</operator> <literal>1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>(</operator><literal type="number">0</literal><operator>,</operator> <literal type="number">1</literal><operator>)</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1902,15 +1902,15 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>=</operator> <block>{<expr><literal>0</literal></expr><operator>,</operator> <expr><literal>0</literal></expr>}</block></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator> <block>{<expr><literal type="number">0</literal></expr><operator>,</operator> <expr><literal type="number">0</literal></expr>}</block></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><block>{ <expr><literal>0</literal></expr>, <expr><literal>0</literal></expr> }</block></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><block>{ <expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr> }</block></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><literal>0</literal></expr></argument>, <argument><expr><literal>0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
