@@ -90,7 +90,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>thread_local</specifier> <name>unsigned</name> <name>int</name></type> <name>rage</name> <init>=<expr><literal type=number>0</literal></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>thread_local</specifier> <name>unsigned</name> <name>int</name></type> <name>rage</name> <init>=<expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -169,15 +169,15 @@
 -->
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr><literal type=number>0</literal></expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr><literal type=number>0</literal></expr></argument>)</argument_list></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr><literal type=number>0</literal></expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr><literal type=number>0</literal></expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>c</name><argument_list>(<argument><expr><literal type=number>0</literal></expr></argument>)</argument_list></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>c</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type=number>0</literal></expr></range></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type="number">0</literal></expr></range></decl>;</decl_stmt>
 </unit>
 
 <unit>

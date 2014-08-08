@@ -64,9 +64,9 @@
 <!--
 <unit filename="n.c">
 <decl_stmt><decl><type><name>a</name></type> <name>b</name><init>={
-    {1,0,{{2,0</init></decl></decl_stmt>}<srcml:error/>,<expr_stmt><expr><literal type=number>0</literal></expr></expr_stmt>}<srcml:error/>,<block>{<expr_stmt><expr><literal type=number>0</literal></expr></expr_stmt>}</block>}<srcml:error/>,
+    {1,0,{{2,0</init></decl></decl_stmt>}<srcml:error/>,<expr_stmt><expr><literal type="number">0</literal></expr></expr_stmt>}<srcml:error/>,<block>{<expr_stmt><expr><literal type="number">0</literal></expr></expr_stmt>}</block>}<srcml:error/>,
     
-<block>{<expr_stmt><expr>2</expr></expr_stmt>,<block>{<block>{<expr_stmt><expr>1</expr></expr_stmt>}</block>,<block>{<expr_stmt><expr><literal type=number>0</literal></expr></expr_stmt>}</block>,<expr_stmt><expr><literal type=number>0</literal></expr></expr_stmt>}</block>,<block>{<expr_stmt><expr><literal type=number>0</literal></expr></expr_stmt>}</block>}</block>,
+<block>{<expr_stmt><expr>2</expr></expr_stmt>,<block>{<block>{<expr_stmt><expr>1</expr></expr_stmt>}</block>,<block>{<expr_stmt><expr><literal type="number">0</literal></expr></expr_stmt>}</block>,<expr_stmt><expr><literal type="number">0</literal></expr></expr_stmt>}</block>,<block>{<expr_stmt><expr><literal type="number">0</literal></expr></expr_stmt>}</block>}</block>,
     
 }<srcml:error/>;
 </unit>
@@ -74,9 +74,9 @@
 
 <unit>
 <decl_stmt><decl><type><name>a</name></type> <name>b</name><init>=<expr><block>{
-    <expr><block>{<expr>1</expr>,<expr><literal type=number>0</literal></expr>,<expr><block>{<expr><block>{<expr>2</expr>,<expr><literal type=number>0</literal></expr>}</block></expr>,<expr><literal type=number>0</literal></expr>}</block></expr>,<expr><block>{<expr><literal type=number>0</literal></expr>}</block></expr>}</block></expr>,
+    <expr><block>{<expr>1</expr>,<expr><literal type="number">0</literal></expr>,<expr><block>{<expr><block>{<expr>2</expr>,<expr><literal type="number">0</literal></expr>}</block></expr>,<expr><literal type="number">0</literal></expr>}</block></expr>,<expr><block>{<expr><literal type="number">0</literal></expr>}</block></expr>}</block></expr>,
     
-<expr><block>{<expr>2</expr>,<expr><block>{<expr><block>{<expr>1</expr>}</block></expr>,<expr><block>{<expr><literal type=number>0</literal></expr>}</block></expr>,<expr><literal type=number>0</literal></expr>}</block></expr>,<expr><block>{<expr><literal type=number>0</literal></expr>}</block></expr>}</block></expr>,
+<expr><block>{<expr>2</expr>,<expr><block>{<expr><block>{<expr>1</expr>}</block></expr>,<expr><block>{<expr><literal type="number">0</literal></expr>}</block></expr>,<expr><literal type="number">0</literal></expr>}</block></expr>,<expr><block>{<expr><literal type="number">0</literal></expr>}</block></expr>}</block></expr>,
     
 }</block></expr></init></decl>;</decl_stmt>
 </unit>

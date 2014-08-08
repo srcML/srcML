@@ -37,7 +37,7 @@
 </unit>
 
 <unit>
-<struct>struct <block>{ <decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type=number>0</literal></expr></range></decl>;</decl_stmt> }</block>;</struct>
+<struct>struct <block>{ <decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type="number">0</literal></expr></range></decl>;</decl_stmt> }</block>;</struct>
 </unit>
 
 </unit>

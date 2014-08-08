@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="static_assert" filename="static_assert_c">
 
 <unit>
-<assert type="static">_Static_assert<argument_list>(<argument><expr><literal type=number>0</literal></expr></argument>, <argument><expr>"Message"</expr></argument>)</argument_list>;</assert>
+<assert type="static">_Static_assert<argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr>"Message"</expr></argument>)</argument_list>;</assert>
 </unit>
 
 <unit>

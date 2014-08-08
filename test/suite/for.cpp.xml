@@ -14,12 +14,12 @@
 </unit>
 
 <unit>
-<for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type=number>0</literal></expr></init></decl>, <decl><type ref="prev"/><name>b</name> <init>= <expr><literal type=number>0</literal></expr></init></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)</control>
+<for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><type ref="prev"/><name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)</control>
 <block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
-<for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type=number>0</literal></expr></init></decl>, <decl><type ref="prev"/><name>b</name> <init>= <expr><literal type=number>0</literal></expr></init></decl>, <decl><type ref="prev"/><name>c</name> <init>= <expr><literal type=number>0</literal></expr></init></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)</control>
+<for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><type ref="prev"/><name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><type ref="prev"/><name>c</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)</control>
 <block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 

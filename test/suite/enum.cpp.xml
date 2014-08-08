@@ -26,19 +26,19 @@
 </unit>
 
 <unit>
-<enum>enum <block>{ <decl><name>a</name> <init>= <expr><literal type=number>0</literal></expr></init></decl> }</block>;</enum>
+<enum>enum <block>{ <decl><name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl> }</block>;</enum>
 </unit>
 
 <unit>
-<enum>enum <name>a</name> <block>{ <decl><name>b</name> <init>= <expr><literal type=number>0</literal></expr></init></decl> }</block>;</enum>
+<enum>enum <name>a</name> <block>{ <decl><name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl> }</block>;</enum>
 </unit>
 
 <unit>
-<enum>enum <block>{ <decl><name>a</name> <init>= <expr><literal type=number>0</literal></expr></init></decl>, <decl><name>b</name></decl> }</block>;</enum>
+<enum>enum <block>{ <decl><name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><name>b</name></decl> }</block>;</enum>
 </unit>
 
 <unit>
-<enum>enum <name>a</name> <block>{ <decl><name>b</name> <init>= <expr><literal type=number>0</literal></expr></init></decl>, <decl><name>c</name></decl> }</block>;</enum>
+<enum>enum <name>a</name> <block>{ <decl><name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><name>c</name></decl> }</block>;</enum>
 </unit>
 
 </unit>

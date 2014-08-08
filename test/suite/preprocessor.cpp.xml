@@ -153,7 +153,7 @@
 
 <unit>
 <expr_stmt><expr><call><name>printk</name><argument_list>(<argument><expr><name>name</name></expr></argument>, <argument><expr><name>memaddr</name></expr></argument>
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type=number>0</literal></expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">0</literal></expr></cpp:if>
               ()
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
      ,<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
