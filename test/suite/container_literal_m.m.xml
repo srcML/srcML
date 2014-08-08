@@ -6,11 +6,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><index>@[ <expr>0</expr> ]</index></expr>;</expr_stmt>
+<expr_stmt><expr><index>@[ <expr><literal type=number>0</literal></expr> ]</index></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><index>@[ <expr>0</expr>, <expr>0</expr> ]</index></expr>;</expr_stmt>
+<expr_stmt><expr><index>@[ <expr><literal type=number>0</literal></expr>, <expr><literal type=number>0</literal></expr> ]</index></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -22,11 +22,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr>1 + <block>@{ <expr>0</expr> }</block></expr>;</expr_stmt>
+<expr_stmt><expr>1 + <block>@{ <expr><literal type=number>0</literal></expr> }</block></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>1 + <block>@{ <expr>0</expr>, <expr>0</expr> }</block></expr>;</expr_stmt>
+<expr_stmt><expr>1 + <block>@{ <expr><literal type=number>0</literal></expr>, <expr><literal type=number>0</literal></expr> }</block></expr>;</expr_stmt>
 </unit>
 
 <unit>

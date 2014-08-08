@@ -95,13 +95,13 @@
 
 <unit>
 <class>class <name>a</name> <block>{<private>private:
-    <constructor_decl><name>a</name><parameter_list>(<param><decl><type><name>int</name></type> <name>i</name> <init>= <expr>0</expr></init></decl></param>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>a</name><parameter_list>(<param><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type=number>0</literal></expr></init></decl></param>)</parameter_list>;</constructor_decl>
 </private>}</block>;</class>
 </unit>
 
 <unit>
 <class>class <name>a</name> <block>{<private>private:
-    <constructor_decl><name>a</name><parameter_list>(<param><decl><type><name>int</name></type> <init>= <expr>0</expr></init></decl></param>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>a</name><parameter_list>(<param><decl><type><name>int</name></type> <init>= <expr><literal type=number>0</literal></expr></init></decl></param>)</parameter_list>;</constructor_decl>
 </private>}</block>;</class>
 </unit>
 

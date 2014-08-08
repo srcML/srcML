@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="function_decl" filename="function_decl_cpp">
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <init>= <expr>0</expr></init></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <init>= <expr><literal type=number>0</literal></expr></init></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>

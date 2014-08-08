@@ -46,7 +46,7 @@ struct <name><name>CTest1</name><argument_list>&lt;<argument><expr><name>at_Type
 
 <unit>
 <struct><template>template <parameter_list>&lt;<param><type><typename>typename</typename></type> <name>at_Type</name></param>&gt;</parameter_list></template>
-struct <name><name>CTest1</name><argument_list>&lt;<argument><expr><name>at_Type</name></expr></argument> , <argument><expr>0</expr></argument>&gt;</argument_list></name>
+struct <name><name>CTest1</name><argument_list>&lt;<argument><expr><name>at_Type</name></expr></argument> , <argument><expr><literal type=number>0</literal></expr></argument>&gt;</argument_list></name>
 <block>{<public type="default">
 </public>}</block>;</struct>
 </unit>

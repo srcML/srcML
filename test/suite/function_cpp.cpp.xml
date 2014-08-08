@@ -110,59 +110,59 @@
 </unit>
 
 <unit>
-<function><type>class <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>class <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=number>0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>struct <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>struct <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=number>0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>union <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>union <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=number>0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>enum <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>enum <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=number>0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>class <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>class <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=number>0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>struct <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>struct <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=number>0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>union <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>union <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=number>0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>enum <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>enum <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=number>0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type><typename>typename</typename> <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type><typename>typename</typename> <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=number>0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>virtual</specifier> class <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type><specifier>virtual</specifier> class <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=number>0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>virtual</specifier> struct <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type><specifier>virtual</specifier> struct <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=number>0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>virtual</specifier> union <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type><specifier>virtual</specifier> union <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=number>0</literal></expr>;</return>}</block></function>
 </unit>
 <!--
 <unit>
-<function><type><specifier>virtual</specifier> enum <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type><specifier>virtual</specifier> enum <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=number>0</literal></expr>;</return>}</block></function>
 </unit>
 -->
 <unit>
-<function><type><specifier>virtual</specifier> <typename>typename</typename> <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type><specifier>virtual</specifier> <typename>typename</typename> <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=number>0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>

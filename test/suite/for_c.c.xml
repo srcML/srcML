@@ -2,12 +2,12 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="for" filename="for_c">
 
 <unit>
-<for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <range>: <expr>0</expr></range></decl>, <decl><type ref="prev"/><name>b</name> <range>: <expr>0</expr></range></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)</control>
+<for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type=number>0</literal></expr></range></decl>, <decl><type ref="prev"/><name>b</name> <range>: <expr><literal type=number>0</literal></expr></range></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)</control>
 <block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 <unit>
-<for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <range>: <expr>0</expr></range></decl>, <decl><type ref="prev"/><name>b</name> <range>: <expr>0</expr></range></decl>, <decl><type ref="prev"/><name>c</name> <range>: <expr>0</expr></range></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)</control>
+<for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type=number>0</literal></expr></range></decl>, <decl><type ref="prev"/><name>b</name> <range>: <expr><literal type=number>0</literal></expr></range></decl>, <decl><type ref="prev"/><name>c</name> <range>: <expr><literal type=number>0</literal></expr></range></decl>;</init> <condition><expr>1</expr>;</condition> <incr/>)</control>
 <block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 

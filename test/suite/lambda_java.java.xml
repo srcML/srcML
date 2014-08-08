@@ -34,7 +34,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><lambda><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list> -&gt; <block>{ <return>return <expr>0</expr></return> }</block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list> -&gt; <block>{ <return>return <expr><literal type=number>0</literal></expr></return> }</block></lambda></expr>;</expr_stmt>
 </unit>
 
 </unit>

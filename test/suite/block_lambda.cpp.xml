@@ -42,11 +42,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr>0</expr></argument>, <argument><expr><lambda>^<name>int</name> <parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name></expr>;</return> }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><literal type=number>0</literal></expr></argument>, <argument><expr><lambda>^<name>int</name> <parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name></expr>;</return> }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><lambda>^<name>int</name> <parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name></expr>;</return> }</block></lambda></expr></argument>, <argument><expr>0</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><lambda>^<name>int</name> <parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name></expr>;</return> }</block></lambda></expr></argument>, <argument><expr><literal type=number>0</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
