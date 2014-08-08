@@ -133,15 +133,15 @@ __LIBSRCML_DECL const char* srcml_version_string();
 /** turn on optional ternary operator markup */
 #define SRCML_OPTION_PSEUDO_BLOCK      1<<21
 /** Turn on old optional markup behaviour */
-#define SRCML_OPTION_OPTIONAL_MARKUP
+#define SRCML_OPTION_OPTIONAL_MARKUP   1<<22
 /** Markups literal in special namespace */
-#define SRCML_OPTION_LITERAL           1<<22
+#define SRCML_OPTION_LITERAL           1<<23
 /** Markups modifiers in special namespace */
-#define SRCML_OPTION_MODIFIER          1<<23
+#define SRCML_OPTION_MODIFIER          1<<24
 /** Markups operator in special namespace */
-#define SRCML_OPTION_OPERATOR          1<<24
+#define SRCML_OPTION_OPERATOR          1<<25
 /** Markups operator in special namespace */
-#define SRCML_OPTION_DEBUG             1<<25
+#define SRCML_OPTION_DEBUG             1<<26
 
 /* srcml status messages */
 /** Return status indicating no errors */
