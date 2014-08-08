@@ -18,11 +18,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><op:operator>@(</op:operator> <name>expression</name> <op:operator>)</op:operator></expr>;</expr_stmt>
+<expr_stmt><expr><operator>@(</operator> <name>expression</name> <operator>)</operator></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name><index>[<expr>0</expr><op:operator>,</op:operator> 0]</index></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>[<expr>0</expr><operator>,</operator> 0]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -30,7 +30,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator> <block>@{<expr>0</expr><op:operator>,</op:operator> <expr>0</expr>}</block></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator> <block>@{<expr>0</expr><operator>,</operator> <expr>0</expr>}</block></expr>;</expr_stmt>
 </unit>
 
 <unit>

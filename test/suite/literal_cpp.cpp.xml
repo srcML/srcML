@@ -2,106 +2,106 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" language="C++" dir="literal" filename="literal_cpp">
 
 <unit>
-<expr_stmt><expr><lit:literal type="boolean">false</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="boolean">false</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="boolean">true</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="boolean">true</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">L"A String"</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">L"A String"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">u"This is a UTF-16 string."</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">u"This is a UTF-16 string."</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">U"This is a UTF-32 string."</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">U"This is a UTF-32 string."</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">R"()"</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">R"()"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">R"a("()")a"</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">R"a("()")a"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">R"(The String Data \ Stuff " )"</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">R"(The String Data \ Stuff " )"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">R"The</lit:literal></expr>
+<expr_stmt><expr><literal type="string">R"The</literal></expr>
 ;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">R"(The String Data \ Stuff</lit:literal></expr>
+<expr_stmt><expr><literal type="string">R"(The String Data \ Stuff</literal></expr>
 ;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">R"(The String Data \ Stuff)</lit:literal></expr>
+<expr_stmt><expr><literal type="string">R"(The String Data \ Stuff)</literal></expr>
 ;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">u8R"XXX(I'm a "raw UTF-8" string.)XXX"</lit:literal></expr>;</expr_stmt> 
+<expr_stmt><expr><literal type="string">u8R"XXX(I'm a "raw UTF-8" string.)XXX"</literal></expr>;</expr_stmt> 
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">uR"*(This is a "raw UTF-16" string.)*"</lit:literal></expr>;</expr_stmt> 
+<expr_stmt><expr><literal type="string">uR"*(This is a "raw UTF-16" string.)*"</literal></expr>;</expr_stmt> 
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">UR"(This is a "raw UTF-32" string.)"</lit:literal></expr>;</expr_stmt> 
+<expr_stmt><expr><literal type="string">UR"(This is a "raw UTF-32" string.)"</literal></expr>;</expr_stmt> 
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="null">nullptr</lit:literal></expr>;</expr_stmt> 
+<expr_stmt><expr><literal type="null">nullptr</literal></expr>;</expr_stmt> 
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="complex">3i</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="complex">3i</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="complex">2 + 3i</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="complex">2 + 3i</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="complex">3i + 2</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="complex">3i + 2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="number">2</lit:literal> + <lit:literal type="complex">2 + 3i</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">2</literal> + <literal type="complex">2 + 3i</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="complex">3i + 2</lit:literal> + <lit:literal type="number">2</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="complex">3i + 2</literal> + <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="complex">3.0i</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="complex">3.0i</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="complex">2.0 + 3.0i</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="complex">2.0 + 3.0i</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="complex">3.0i + 2.0</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="complex">3.0i + 2.0</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="number">0b11111111</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">0b11111111</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="number">0B11111111</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">0B11111111</literal></expr>;</expr_stmt>
 </unit>
 
 

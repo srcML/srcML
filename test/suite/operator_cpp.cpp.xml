@@ -2,39 +2,39 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" dir="operator" filename="operator_cpp" options="WRAP_TEMPLATE">
 
 <unit>
-<expr_stmt><expr><name><name>a</name><op:operator>-&gt;*</op:operator><name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><operator>-&gt;*</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>&gt;</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>&gt;=</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>&gt;&gt;</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>&gt;&gt;=</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>&gt;</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>&gt;=</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>&gt;&gt;</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>&gt;&gt;=</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -54,155 +54,155 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><operator>delete</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><operator>::</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><op:operator>::</op:operator><name>a</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><operator>::</operator><name>a</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator><name><operator>::</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><op:operator>delete</op:operator><index>[]</index><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><operator>delete</operator><index>[]</index><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator><operator>delete</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>delete</op:operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator><operator>delete</operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>+=</operator><name><operator>::</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>+=</operator><operator>delete</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>delete</op:operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>+=</operator><operator>delete</operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>new</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>*=</operator><operator>new</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>-=</operator><name><operator>::</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>-=</operator><operator>delete</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><op:operator>delete</op:operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>-=</operator><operator>delete</operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>*=</operator><name><operator>::</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>*=</operator><operator>delete</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>delete</op:operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>*=</operator><operator>delete</operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>/=</operator><name><operator>::</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>/=</operator><operator>delete</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>delete</op:operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>/=</operator><operator>delete</operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>%=</operator><name><operator>::</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>%=</operator><operator>delete</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>delete</op:operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>%=</operator><operator>delete</operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator><name><operator>::</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator><operator>delete</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><op:operator>delete</op:operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator><operator>delete</operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>|=</operator><name><operator>::</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>|=</operator><operator>delete</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><op:operator>delete</op:operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>|=</operator><operator>delete</operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>^=</operator><name><operator>::</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>^=</operator><operator>delete</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><op:operator>delete</op:operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>^=</operator><operator>delete</operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator><name><operator>::</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator><operator>delete</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><op:operator>delete</op:operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator><operator>delete</operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><name><operator>::</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>delete</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>delete</op:operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>delete</operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -210,191 +210,191 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name><name>A</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><op:operator>::</op:operator>*<name>b</name></name></type> <name>c</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name><name>A</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><operator>::</operator>*<name>b</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>and</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>and_eq</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>and_eq</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>bitand</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>bitand</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>bitor</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>bitor</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>compl</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>compl</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>not</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>not</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>not_eq</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>not_eq</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>or</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>or</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>or_eq</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>or_eq</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>xor</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>xor</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>xor_eq</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>xor_eq</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>and</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>and</operator> <operator>and</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>and_eq</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>and_eq</operator> <operator>and</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>bitand</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>bitand</operator> <operator>and</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>bitor</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>bitor</operator> <operator>and</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>compl</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>compl</operator> <operator>and</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>not</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>not</operator> <operator>and</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>not_eq</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>not_eq</operator> <operator>and</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>or</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>or</operator> <operator>and</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>or_eq</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>or_eq</operator> <operator>and</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>xor</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>xor</operator> <operator>and</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>xor_eq</op:operator> <op:operator>and</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>xor_eq</operator> <operator>and</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>+=</operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>-=</operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>*=</operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>/=</operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>%=</operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>|=</operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>^=</operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name><index>[<expr>0</expr><op:operator>,</op:operator> 0]</index></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>[<expr>0</expr><operator>,</operator> 0]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>1 <op:operator>.*</op:operator> 2</expr>;</expr_stmt>
+<expr_stmt><expr>1 <operator>.*</operator> 2</expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>+=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>-=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>*=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>/=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>%=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>|=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>^=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 </unit>

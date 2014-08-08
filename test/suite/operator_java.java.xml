@@ -2,47 +2,47 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:op="http://www.sdml.info/srcML/operator" language="Java" dir="operator" filename="operator_java">
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>&gt;</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>&gt;=</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>&gt;&gt;</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>&gt;&gt;=</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>&gt;</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>&gt;=</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>&gt;&gt;</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>&gt;&gt;=</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>instanceof</op:operator> <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>instanceof</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<import>import <name><name>a</name><op:operator>.</op:operator><name>b</name><op:operator>.</op:operator><op:operator>*</op:operator></name>;</import>
+<import>import <name><name>a</name><operator>.</operator><name>b</name><operator>.</operator><operator>*</operator></name>;</import>
 </unit>
 
 <unit>
-<import>import <name><name>a</name><op:operator>.</op:operator><name>b</name> <comment type="block">/* */</comment><op:operator>.</op:operator><comment type="block">/* */</comment><op:operator>*</op:operator></name>;</import>
+<import>import <name><name>a</name><operator>.</operator><name>b</name> <comment type="block">/* */</comment><operator>.</operator><comment type="block">/* */</comment><operator>*</operator></name>;</import>
 </unit>
 
 </unit>

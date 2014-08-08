@@ -2,45 +2,45 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" language="C#" dir="literal" filename="literal_cs">
 
 <unit>
-<expr_stmt><expr><lit:literal type="boolean">false</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="boolean">false</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="boolean">true</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="boolean">true</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">@"goodmorning"</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">@"goodmorning"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">@"c:\Docs\Source\a.txt"</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">@"c:\Docs\Source\a.txt"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">@"c:\Docs\Source\"</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">@"c:\Docs\Source\"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">@"""Ahoy!""criedthecaptain."</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">@"""Ahoy!""criedthecaptain."</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">@"'Ahoy!'""criedthecaptain."""</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">@"'Ahoy!'""criedthecaptain."""</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">@"""'Ahoy!'criedthecaptain."""</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">@"""'Ahoy!'criedthecaptain."""</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">@"""""""Ahoy!""criedthecaptain."""""</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">@"""""""Ahoy!""criedthecaptain."""""</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">@"one
+<expr_stmt><expr><literal type="string">@"one
 two
-three"</lit:literal></expr>;</expr_stmt>
+three"</literal></expr>;</expr_stmt>
 </unit>
 
 </unit>
