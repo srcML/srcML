@@ -47,6 +47,7 @@ class SyntaxHighlighter(ContentHandler):
         self.displayXML = codeIssrcML
         self.language = language
         self.keywordRegEx = keywordRegExDictionary[language.lower()]
+        self.iscomment = False
 
     def getNormalizedStyleName(self, name):
         return uriToPrefix[name[0]] + "_" + name[1]
@@ -78,26 +79,33 @@ class SyntaxHighlighter(ContentHandler):
     def startElementNS(self, name, qname, attributes):
         if name[1] == "unit":
             return
+        if name[1] == "comment":
+            self.iscomment = True
         self.out.write(SyntaxHighlighter.spanStart.format(self.getNormalizedStyleName(name)))
         if self.displayXML:
             self.writeTagStart(name, attributes)
 
 
     def endElementNS(self, name, qname):
+
         if name[1] == "unit":
             return
+        if name[1] == "comment":
+            self.iscomment = False
         self.out.write(SyntaxHighlighter.spanEnd)
         if self.displayXML:
             self.writeTagEnd(name)
 
 
     def characters(self, data):
+            
         toWrite = data
         if self.displayXML:
             toWrite = SAXUtils.escape(SAXUtils.escape(toWrite, SyntaxHighlighter.htmlEscapeTable))
         else:
             toWrite = SAXUtils.escape(toWrite, SyntaxHighlighter.htmlEscapeTable)
-        toWrite = self.keywordRegEx.sub(kwSubPattern, toWrite)
+        if not self.iscomment:
+            toWrite = self.keywordRegEx.sub(kwSubPattern, toWrite)
         self.out.write(toWrite)
         # if self.displayXML:
         #     self.out.write()
