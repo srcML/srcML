@@ -149,6 +149,7 @@ tokens {
     ALIGNAS;
     TYPENAME;
     ALIGNOF;
+    TYPEID;
 
     // aggregate types
     UNION;
@@ -508,12 +509,13 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         // add all C++ specific keywords to the literals table
         { "constexpr"     , CONSTEXPR        , LANGUAGE_CXX }, 
         { "noexcept"      , NOEXCEPT         , LANGUAGE_CXX }, 
-        { "thread_local"  , THREAD_LOCAL      , LANGUAGE_CXX }, 
+        { "thread_local"  , THREAD_LOCAL     , LANGUAGE_CXX }, 
         { "nullptr"       , NULLPTR          , LANGUAGE_CXX }, 
         { "decltype"      , DECLTYPE         , LANGUAGE_CXX }, 
         { "alignas"       , ALIGNAS          , LANGUAGE_CXX }, 
         { "typename"      , TYPENAME         , LANGUAGE_CXX }, 
         { "alignof"       , ALIGNOF          , LANGUAGE_CXX }, 
+        { "typeid"        , TYPEID           , LANGUAGE_CXX }, 
 
         // Add alternative operators
         { "and"           , OPERATORS        , LANGUAGE_CXX }, 

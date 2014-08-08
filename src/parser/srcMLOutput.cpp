@@ -298,10 +298,11 @@ namespace {
     // special characters
     ELEMENT_MAP(CONTROL_CHAR,   "escape")
     ELEMENT_MAP(SANNOTATION,    "annotation")
-    ELEMENT_MAP(SALIGNOF,    "alignof")
 
-    // C++11
+    // C++
     ELEMENT_MAP(SALIGNAS,    "alignas")
+    ELEMENT_MAP(SALIGNOF,    "alignof")
+    ELEMENT_MAP(STYPEID,     "typeid")
 
     // Objective-C
     ELEMENT_MAP(SRECEIVER,             "receiver")

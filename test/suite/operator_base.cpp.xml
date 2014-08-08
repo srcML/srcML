@@ -186,14 +186,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>typeid</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><call><name>typeid</name><argument_list>(<argument><expr><name>type</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><op:operator>(</op:operator><name>type</name><op:operator>)</op:operator> <name>a</name></expr>;</expr_stmt>
 </unit>
 
@@ -344,10 +336,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>:</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -507,10 +495,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>(</op:operator><name>int</name><op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -664,10 +648,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><op:operator>:</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -827,10 +807,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>(</op:operator><name>int</name><op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -984,10 +960,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>:</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1147,10 +1119,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>(</op:operator><name>int</name><op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -1307,10 +1275,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><op:operator>(</op:operator><name>int</name><op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -1463,10 +1427,6 @@
 </unit>
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><op:operator>:</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1626,10 +1586,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><op:operator>(</op:operator><name>int</name><op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -1786,10 +1742,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><op:operator>(</op:operator><name>int</name><op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -1943,10 +1895,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>:</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
