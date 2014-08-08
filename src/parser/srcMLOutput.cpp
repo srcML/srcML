@@ -431,6 +431,20 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
         columnAttribute += ":column";
     }
 
+    if(!isoption(options, SRCML_OPTION_OPTIONAL_MARKUP)) {
+
+        ElementPrefix[SSTRING]   = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SCHAR]     = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SLITERAL]  = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SBOOLEAN]  = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SNULL]     = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SCOMPLEX]  = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SNIL]      = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SOPERATOR] = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SMODIFIER] = SRCML_SRC_NS_URI_POS;
+
+    }
+
 }
 
 /**
