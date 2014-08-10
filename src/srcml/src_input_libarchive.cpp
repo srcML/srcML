@@ -183,9 +183,9 @@ void src_input_libarchive(ParseQueue& queue,
                 prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
 
             // LOC count
-            prequest->loc = std::count(prequest->buffer.begin(), prequest->buffer.end(), '\n') + 1;
-            if (prequest->buffer.empty())
-            	prequest->loc = 0;
+            prequest->loc = std::count(prequest->buffer.begin(), prequest->buffer.end(), '\n');
+            if (!prequest->buffer.empty() && prequest->buffer.back() != '\n')
+            	++prequest->loc;
         }
 
         // schedule for parsing
