@@ -6,11 +6,11 @@
 </unit>
 
 <unit>
-<import>import <name><name>graphics</name>.<name>Rectangle</name></name>;</import>
+<import>import <name><name>graphics</name><operator>.</operator><name>Rectangle</name></name>;</import>
 </unit>
 
 <unit>
-<import>import <name><name>graphics</name>.*</name>;</import>
+<import>import <name><name>graphics</name><operator>.</operator><operator>*</operator></name>;</import>
 </unit>
 
 </unit>
