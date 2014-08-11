@@ -26,7 +26,7 @@
 </unit>
 
 <unit>
-<class>class <alignas>alignas<argument_list>(<argument><expr>(<name>a</name>)</expr></argument>)</argument_list></alignas> <name>A</name> <block>{<private type="default"/>}</block>;</class>
+<class>class <alignas>alignas<argument_list>(<argument><expr><operator>(</operator><name>a</name><operator>)</operator></expr></argument>)</argument_list></alignas> <name>A</name> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 <unit>
