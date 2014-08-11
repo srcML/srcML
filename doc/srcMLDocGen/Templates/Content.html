@@ -10,7 +10,7 @@
             </div>
             {% endif %}
 
-            <div class="elemenListing">
+            <div class="elementListing">
                 <h3 class="subtitle">Element{% if entry.elements|length > 1 %}s{%endif%}</h3>
                 <ul>
                 {% for elem in entry.elements %}
@@ -32,7 +32,7 @@
             </div>
             
             {% if entry.subelements|length > 0 %}
-            <div class="subelementListing">
+            <div class="elementListing">
                 <h3 class="subtitle">Subelement{% if entry.subelements|length > 1 %}s{% endif %}</h3>
                 <ul>
                 {% for elem in entry.subelements %}
@@ -57,7 +57,7 @@
             <!-- XPathQueries -->
             {% if entry.xpathQueries|length > 0 %}
             <div class="xpathQueries">
-                <h3 class="exampleTitle">XPath Quer{% if entry.subelements|length > 1 %}ies{% else %}y{% endif %}</h3>
+                <h3 class="subtitle">XPath Quer{% if entry.subelements|length > 1 %}ies{% else %}y{% endif %}</h3>
                 {% for xpExample in entry.xpathQueries %}
                     <div class="xpathQueryExample">
                         <span class="xpathDesc">{{xpExample.desc|safe}}</span>&nbsp;<code class="xpathExample">{{xpExample.xpath|safe}}</code>
@@ -69,14 +69,32 @@
             <!-- Example/s -->
             {% if entry.examples|length %}
             <div class="exampleListing">
-                <h3>Example{% if entry.examples|length > 1 %}s{% endif %}</h3>
-                {% for example in entry.examples %}
+                {% if entry.examples|length == 1 %}
+                    <h3>Example</h3>
                     <div class="example">
-                        <h4 class="subtitle">{% ifequal example.title "" %}<br/>{%else%}{{example.title}}{%endifequal%}</h4>
-                        <pre class="sourceCodeExample" style="border:1px solid black; margin:3px;">{% HighlightSyntaxFromTree example.srcML doc.srcMLLanguage "code" %}</pre>
-                        <pre class="srcMLExample" style="border:1px solid black; margin:3px;">{% HighlightSyntaxFromTree example.srcML doc.srcMLLanguage "srcML" %}</pre>
+                        {% ifequal entry.examples.0.title "" %}
+                        {%else%}
+                        <h4 class="subtitle">{{entry.examples.0.title}}</h4>
+                        {%endifequal%}
+                        <pre class="sourceCodeExample">{% HighlightSyntaxFromTree entry.examples.0.srcML doc.srcMLLanguage "code" %}</pre>
+                        <pre class="sourceCodeExample">{% HighlightSyntaxFromTree entry.examples.0.srcML doc.srcMLLanguage "srcML" %}</pre>
                     </div>
-                {% endfor %}
+                {% else %}
+                    <h3>Examples</h3>
+                    {% for example in entry.examples %}
+                        <div class="example">
+                            {% ifequal example.title "" %}
+                            {% if forloop.counter != 1 %}
+                            <br class="exampleBreak"/>
+                            {% endif %}
+                            {%else%}
+                            <h4 class="subtitle">{{example.title}}</h4>
+                            {%endifequal%}
+                            <pre class="sourceCodeExample">{% HighlightSyntaxFromTree example.srcML doc.srcMLLanguage "code" %}</pre>
+                            <pre class="sourceCodeExample">{% HighlightSyntaxFromTree example.srcML doc.srcMLLanguage "srcML" %}</pre>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
             {% endif %}
         </div>

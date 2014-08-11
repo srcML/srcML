@@ -1,7 +1,5 @@
 #content {
     margin-top:3em;
-    margin-left:15em;
-    margin-right:15em;
 }
 
 /* ToC styles. */
@@ -46,12 +44,55 @@ table.ToC tbody tr td:nth-child(1) {
     border-left:0px solid black;
 }
 
-/* Sub headers. */
+/* classes used internal to the displayedDocDefinition class. */
 
-/* Examples Displays. */
-.sourceCodeExample { }
+.elementListing>ul ul {
+    padding-bottom:.3em;
+}
 
-.srcMLExample { }
+.elementListing>ul {
+    margin:0px;
+    padding:0em;
+    padding-left:1.5em;
+    margin-bottom:1em;
+}
+
+
+.xpathQueries {
+
+}
+
+.xpathDesc {
+
+}
+
+.xpathExample {
+    font-size: 1.1em;
+    border:.1em solid #dddddd;
+    background-color:#EEE;
+    padding:.2em;
+    line-height:2;
+}
+
+h3.subtitle {
+    line-height:1.3;
+    padding:0em;
+    margin:0em;
+    margin-bottom:.3em;
+}
+
+h4.subtitle {
+    padding:0em;
+    margin:0em;
+    margin-top:2em;
+}
+
+pre.sourceCodeExample {
+    padding: 10px;
+    overflow:auto;
+    background-color:#eee;
+    margin-bottom:.3em;
+}
 
 /* The link color for anchors for titles. */
 div.displayedDocDefinition h2.title a{
@@ -69,7 +110,6 @@ div.displayedDocDefinition h2.title a:hover{
 .displayedDocDefinition {
     padding:.5em;
     padding-top:10px;
-    border:1px solid black;
     margin-top:1em;
     margin-right:0em;
     margin-left:0em;
@@ -89,8 +129,7 @@ div.displayedDocDefinition h2.title a:hover{
 
 
 pre {
-    padding: 10px;
-    overflow:auto;
+    margin:0em;
 }
 
 .xpathQueryExample {
