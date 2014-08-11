@@ -66,7 +66,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><attribute>[[]]</attribute> <name>int</name> &amp; <attribute>[[]]</attribute></type> <name>b</name> <init>= <expr><name>a</name></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><attribute>[[]]</attribute> <name>int</name> <modifier>&amp;</modifier> <attribute>[[]]</attribute></type> <name>b</name> <init>= <expr><name>a</name></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -102,11 +102,11 @@
 </unit>
 
 <unit>
-<enum>enum class <attribute>[[]]</attribute> <name>Enum2</name> : <type><specifier>const</specifier> <name>unsigned</name> <name>int</name></type> <block>{<decl><name>Val1</name></decl>, <decl><name>Val2</name></decl>}</block>;</enum>
+<enum>enum class <attribute>[[]]</attribute> <name>Enum2</name> : <type><specifier>const</specifier> <name>unsigned</name> <name>int</name></type> <block>{<decl><name>Val1</name></decl><operator>,</operator> <decl><name>Val2</name></decl>}</block>;</enum>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>unsigned</name> <name>int</name></type> <name>a</name> <attribute>[[]]</attribute> <range>: <expr>3</expr></range></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>unsigned</name> <name>int</name></type> <name>a</name> <attribute>[[]]</attribute> <range>: <expr><literal type="number">3</literal></expr></range></decl>;</decl_stmt>
 </unit>
 
 </unit>
