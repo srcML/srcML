@@ -24,13 +24,13 @@
 <unit>
 <expr_stmt><expr><lambda>^ <block>{
     <decl_stmt><decl><type><name>int</name></type> <name>ret</name> <init>= <expr><name>i</name></expr></init></decl>;</decl_stmt>
-    <expr_stmt><expr><name>i</name> += <name>increment</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>i</name> <operator>+=</operator> <name>increment</name></expr>;</expr_stmt>
     <return>return <expr><name>ret</name></expr>;</return>
 }</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> = <lambda>^<name>int</name> <parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name></expr>;</return> }</block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator> <lambda>^<name>int</name> <parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <block>{ <return>return <expr><name>i</name></expr>;</return> }</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
