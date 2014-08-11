@@ -1,12 +1,15 @@
 {% extends "Skeleton.html" %}
 {% block cssLinks %}<link rel="stylesheet" href="Style/DocPageStyle.css" />{% endblock %}
 {%block body %}
+<div id="content">
+    <h1>{{doc.title}} Language Documentation</h1>
     <div id="ToCDiv">
         {% block ToC %}
         {% endblock %}
     </div>
 
-    <div id="content">
+    <div id="entries">
         {% block Content %}{% endblock %}
     </div>
+</div>
 {% endblock %}

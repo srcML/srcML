@@ -4,11 +4,17 @@
         <link rel="stylesheet" href="Style/SkeletonStyle.css" />
         {% block cssLinks %}
         {% endblock %}
-
+        <link rel="shortcut icon" href="Images/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="Images/favicon.ico" type="image/x-icon">
         <title>{% block title %}{% endblock %}</title>
     </head>
     <body>
+        <div id="srcMLHeader">
+            <div id="logo"></div>
+        </div>
+        <div id="bodyContent">
         {% block body %}
         {% endblock %}
+        </div>
     </body>
 </html>

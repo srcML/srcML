@@ -1,30 +1,100 @@
-/* Doc display page. */
-.displayedDocDefinition {
-    padding-top:10px;
-    border:1px solid black;
-    margin-top:7px;
+#content {
+    margin-top:3em;
+    margin-left:15em;
+    margin-right:15em;
 }
 
-.opTitle { }
-.opCodeCol { } 
-.opsrcMLCol { }
-
-
-pre {
-    padding: 10px;
-    overflow:auto;
-
-
+/* ToC styles. */
+table.ToC {
+    border-collapse: collapse;
+    border:.1em solid #D2D2CE;
+    margin-left:0px;
+    margin-right:0px;
+    width:100%;
 }
 
-.xpathQueryExample {
+table.ToC th{
+    padding-top:1em;
 }
+table.ToC tbody tr:nth-child(odd) {
+   background-color: #F0F0F0;
+}
+
+table.ToC thead {
+    border-collapse: collapse;
+}
+table.ToC td {
+    border-collapse: collapse;
+    border-left:1px solid #D2D2CE;
+    padding:2px;
+    padding-left:5px;
+}
+table.ToC tbody {
+    border:1px solid #D0D0D0;
+}
+
+table.ToC th.categoryRow {
+    padding-top: 2em;
+    font-weight: bold;
+    background-color: #ffffff;
+    text-align:left;
+    padding-left:3px;
+    padding-bottom:.3em;
+}
+
+table.ToC tbody tr td:nth-child(1) {
+    border-left:0px solid black;
+}
+
+/* Sub headers. */
 
 /* Examples Displays. */
 .sourceCodeExample { }
 
 .srcMLExample { }
 
+/* The link color for anchors for titles. */
+div.displayedDocDefinition h2.title a{
+    color:black;
+    text-decoration:none;
+}
+div.displayedDocDefinition h2.title a:hover{
+    color:black;
+    text-decoration:none;
+}
+
+
+
+/* Doc display page. */
+.displayedDocDefinition {
+    padding:.5em;
+    padding-top:10px;
+    border:1px solid black;
+    margin-top:1em;
+    margin-right:0em;
+    margin-left:0em;
+    border: 1px solid #D2D2CE;
+    border-radius:1em;
+    box-shadow: 0.3em 0.3em 0.3em #888888;
+}
+
+.opTitle {
+}
+
+.opCodeCol {
+} 
+
+.opsrcMLCol {
+}
+
+
+pre {
+    padding: 10px;
+    overflow:auto;
+}
+
+.xpathQueryExample {
+}
 
 /** Syntax Highlighting for srcML Markup. */
 .srcMLElement {

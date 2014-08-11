@@ -14,7 +14,7 @@
                 <h3 class="subtitle">Element{% if entry.elements|length > 1 %}s{%endif%}</h3>
                 <ul>
                 {% for elem in entry.elements %}
-                    <li>{{elem.QName|safe}}
+                    <li><code class="xmlTags">{{elem.QName|safe}}</code>
                     {% if elem.markupOptionsRequired|length > 0 %}
                         <ul>
                             <li><span class="note">Note</span>: This mark up is disabled by default and is enabled using the following command line argument/s with srcML:
@@ -36,7 +36,7 @@
                 <h3 class="subtitle">Subelement{% if entry.subelements|length > 1 %}s{% endif %}</h3>
                 <ul>
                 {% for elem in entry.subelements %}
-                    <li>{{elem.QName|safe}}
+                    <li><code class="xmlTags">{{elem.QName|safe}}</code>
                         {% if elem.markupOptionsRequired|length > 0 %}
                         <ul>
                             <li><span class="note">Note</span>: This mark up is disabled by default and is enabled using the following command line argument/s with srcML:
@@ -86,7 +86,7 @@
 
 <!-- Operators table. -->
 <div class="displayedDocDefinition">
-    <h2><a id="operators">Operators</a></h2>
+    <h2 class="title"><a id="operators">Operators</a></h2>
     <hr />
     <div class="xpathQueries">
         <h3 class="exampleTitle">XPath queries for locating operators</h3>

@@ -961,7 +961,7 @@
                 <Element name="function_decl" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="parm" />
+                <Subelement name="param" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function_decl[src:name[substring(.,0, 8) = 'operator']] ">
@@ -976,7 +976,7 @@
                 <Element name="function" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="parm" />
+                <Subelement name="param" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function[src:name[substring(.,0, 8) = 'operator']]">
@@ -991,7 +991,7 @@
                 <Element name="function" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="parm" />
+                <Subelement name="param" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function[not(src:type)]">
@@ -1006,7 +1006,7 @@
                 <Element name="function" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="parm" />
+                <Subelement name="param" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function[not(src:type)]">
@@ -1022,7 +1022,7 @@
                 <Subelement name="specifier" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="parm" />
+                <Subelement name="param" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function_decl[src:type/src:specifier[.='explicit']][src:name[substring(.,0, 8) = 'operator']]">
@@ -1038,7 +1038,7 @@
                 <Subelement name="specifier" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="parm" />
+                <Subelement name="param" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function[src:type/src:specifier[.='explicit']][src:name[substring(.,0, 8) = 'operator']]">

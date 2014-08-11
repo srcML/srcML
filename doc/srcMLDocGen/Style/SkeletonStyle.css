@@ -1,4 +1,36 @@
 body {
     padding: 0px;
     margin:0px;
+    margin-bottom:3em;
+}
+
+a {
+    text-decoration:none;
+    color:blue;
+}
+
+a:hover {
+    text-decoration:underline;
+}
+
+#bodyContent{
+}
+
+#srcMLHeader {
+    margin-top:0px;
+
+    background-color:black;
+
+    width:100%;
+}
+
+#logo {
+    display:block;
+    margin-left:12.5em;
+    width:6em;
+    height:6em;
+    background: url("../Images/srcMLheader_big.png") no-repeat;
+    background-size: 6.1em 6em;
+    background-position:0 0;
+
 }
