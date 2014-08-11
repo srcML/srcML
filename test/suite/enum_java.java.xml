@@ -10,11 +10,11 @@
 </unit>
 
 <unit>
-<enum>enum <block>{ <decl><name>a</name></decl>, <decl><name>b</name></decl> }</block></enum>
+<enum>enum <block>{ <decl><name>a</name></decl><operator>,</operator> <decl><name>b</name></decl> }</block></enum>
 </unit>
 
 <unit>
-<enum>enum <name>a</name> <block>{ <decl><name>b</name></decl>, <decl><name>c</name></decl> }</block></enum>
+<enum>enum <name>a</name> <block>{ <decl><name>b</name></decl><operator>,</operator> <decl><name>c</name></decl> }</block></enum>
 </unit>
 
 <unit>
@@ -26,30 +26,30 @@
 </unit>
 
 <unit>
-<enum>enum <block>{ <decl><name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><name>b</name></decl> }</block></enum>
+<enum>enum <block>{ <decl><name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl><operator>,</operator> <decl><name>b</name></decl> }</block></enum>
 </unit>
 
 <unit>
-<enum>enum <name>a</name> <block>{ <decl><name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><name>c</name></decl> }</block></enum>
+<enum>enum <name>a</name> <block>{ <decl><name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl><operator>,</operator> <decl><name>c</name></decl> }</block></enum>
 </unit>
 
 <unit>
 <enum><specifier>public</specifier> enum <name>Planet</name> <block>{
 
-    <decl><name>MERCURY</name> <argument_list>(<argument><expr>3.303e+23</expr></argument>, <argument><expr>2.4397e6</expr></argument>)</argument_list></decl>,
-    <decl><name>VENUS</name>   <argument_list>(<argument><expr>4.869e+24</expr></argument>, <argument><expr>6.0518e6</expr></argument>)</argument_list></decl>,
-    <decl><name>EARTH</name>   <argument_list>(<argument><expr>5.976e+24</expr></argument>, <argument><expr>6.37814e6</expr></argument>)</argument_list></decl>,
-    <decl><name>MARS</name>    <argument_list>(<argument><expr>6.421e+23</expr></argument>, <argument><expr>3.3972e6</expr></argument>)</argument_list></decl>,
-    <decl><name>JUPITER</name> <argument_list>(<argument><expr>1.9e+27</expr></argument>,   <argument><expr>7.1492e7</expr></argument>)</argument_list></decl>,
-    <decl><name>SATURN</name>  <argument_list>(<argument><expr>5.688e+26</expr></argument>, <argument><expr>6.0268e7</expr></argument>)</argument_list></decl>,
-    <decl><name>URANUS</name>  <argument_list>(<argument><expr>8.686e+25</expr></argument>, <argument><expr>2.5559e7</expr></argument>)</argument_list></decl>,
-    <decl><name>NEPTUNE</name> <argument_list>(<argument><expr>1.024e+26</expr></argument>, <argument><expr>2.4746e7</expr></argument>)</argument_list></decl>;
+    <decl><name>MERCURY</name> <argument_list>(<argument><expr><literal type="number">3.303e+23</literal></expr></argument>, <argument><expr><literal type="number">2.4397e6</literal></expr></argument>)</argument_list></decl><operator>,</operator>
+    <decl><name>VENUS</name>   <argument_list>(<argument><expr><literal type="number">4.869e+24</literal></expr></argument>, <argument><expr><literal type="number">6.0518e6</literal></expr></argument>)</argument_list></decl><operator>,</operator>
+    <decl><name>EARTH</name>   <argument_list>(<argument><expr><literal type="number">5.976e+24</literal></expr></argument>, <argument><expr><literal type="number">6.37814e6</literal></expr></argument>)</argument_list></decl><operator>,</operator>
+    <decl><name>MARS</name>    <argument_list>(<argument><expr><literal type="number">6.421e+23</literal></expr></argument>, <argument><expr><literal type="number">3.3972e6</literal></expr></argument>)</argument_list></decl><operator>,</operator>
+    <decl><name>JUPITER</name> <argument_list>(<argument><expr><literal type="number">1.9e+27</literal></expr></argument>,   <argument><expr><literal type="number">7.1492e7</literal></expr></argument>)</argument_list></decl><operator>,</operator>
+    <decl><name>SATURN</name>  <argument_list>(<argument><expr><literal type="number">5.688e+26</literal></expr></argument>, <argument><expr><literal type="number">6.0268e7</literal></expr></argument>)</argument_list></decl><operator>,</operator>
+    <decl><name>URANUS</name>  <argument_list>(<argument><expr><literal type="number">8.686e+25</literal></expr></argument>, <argument><expr><literal type="number">2.5559e7</literal></expr></argument>)</argument_list></decl><operator>,</operator>
+    <decl><name>NEPTUNE</name> <argument_list>(<argument><expr><literal type="number">1.024e+26</literal></expr></argument>, <argument><expr><literal type="number">2.4746e7</literal></expr></argument>)</argument_list></decl>;
 
     <decl_stmt><decl><type><specifier>private</specifier> <specifier>final</specifier> <name>double</name></type> <name>mass</name></decl>;</decl_stmt>   <comment type="line">// in kilograms</comment>
     <decl_stmt><decl><type><specifier>private</specifier> <specifier>final</specifier> <name>double</name></type> <name>radius</name></decl>;</decl_stmt> <comment type="line">// in meters</comment>
     <constructor><name>Planet</name><parameter_list>(<param><decl><type><name>double</name></type> <name>mass</name></decl></param>, <param><decl><type><name>double</name></type> <name>radius</name></decl></param>)</parameter_list> <block>{
-        <expr_stmt><expr><name><name>this</name>.<name>mass</name></name> = <name>mass</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name><name>this</name>.<name>radius</name></name> = <name>radius</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>mass</name></name> <operator>=</operator> <name>mass</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>radius</name></name> <operator>=</operator> <name>radius</name></expr>;</expr_stmt>
     }</block></constructor>
 
 }</block></enum>
