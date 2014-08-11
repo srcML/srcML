@@ -11,7 +11,21 @@ from DocGen.templatetags import *
 #                     Main
 # -------------------------------------------------
 
+class PageLink:
+	def __init__(self, pageTitle, pageLink):
+		self.title = pageTitle
+		self.link = pageLink
+
+def genMainPage(maingPageName, pageLinks):
+    out = open(maingPageName, "w")
+    fileTemplate = loader.get_template("MainPage.html")
+    page = fileTemplate.render(Context({"pageLinks": pageLinks}))
+    out.write(page)
+    out.close()	
+
 def genDocFile(docConfig):
+    global pageLinks
+    pageLinks.append(PageLink(docConfig.title, docConfig.outputFileName))
     out = open(docConfig.outputFileName, "w")
     fileTemplate = loader.get_template("DefaultPage.html")
     page = fileTemplate.render(Context({"doc": docConfig}))
@@ -22,6 +36,7 @@ def genDocFile(docConfig):
 # Generate documentation index for a language.
 #
 def genDocIndex(docConfig):
+    global pageLinks
     splitName = docConfig.outputFileName.split(".")
     splitName.insert(-1, "index")
     indexFileName = ".".join(splitName)
@@ -70,6 +85,7 @@ def genDocIndex(docConfig):
     for entry in indexDictionary.items():
     	entry[1].sort()
 
+    pageLinks.append(PageLink(docConfig.title + " Index", indexFileName))
     out = open(indexFileName, "w")
     fileTemplate = loader.get_template("IndexPage.html")
     sortedIndexItems = indexDictionary.items()
@@ -88,6 +104,7 @@ def writeAllTagNames():
 
 DocConfigFileName = "DocConfig.xml"
 
+pageLinks = []
 if __name__ == "__main__":
 
     if not settings.configured:
@@ -114,4 +131,9 @@ if __name__ == "__main__":
                 print "Failed with exception: ", traceback.format_exc(e)
         
     print "-" * 80
+    print "Writing tag names"
     writeAllTagNames()
+    print "-" * 80
+    print "Writing main page"
+    genMainPage("MainPage.html", pageLinks)
+    print "-" * 80
