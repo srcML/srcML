@@ -6822,7 +6822,7 @@ period[] { LightweightElement element(this); ENTRY_DEBUG } :
         PERIOD
 ;
 
-// ->* operator
+// -> operator
 member_pointer[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
