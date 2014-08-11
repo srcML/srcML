@@ -2,15 +2,15 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="function_ns">
 
 <unit>
-<function><type><name>int</name></type> <name><name>A</name>::<name>B</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>B</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>inline</specifier> <name><name>a</name>::<name>b</name>::<name>c</name></name></type> <name>f</name><parameter_list>(<param><decl><type><specifier>const</specifier> <name><name>std</name>::<name>s</name></name>&amp;</type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>inline</specifier> <name><name>a</name><operator>::</operator><name>b</name><operator>::</operator><name>c</name></name></type> <name>f</name><parameter_list>(<param><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>s</name></name>&amp;</type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><name><name>Iter</name>::<name>value_type</name></name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><name><name>Iter</name><operator>::</operator><name>value_type</name></name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 </unit>
