@@ -10,19 +10,19 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>(*<name>a</name>).<name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><operator>(</operator><operator>*</operator><name>a</name><operator>)</operator><operator>.</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>(*<name>a</name>)-&gt;<name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><operator>(</operator><operator>*</operator><name>a</name><operator>)</operator><operator>-&gt;</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>(*<name>a</name>)-&gt;*<name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><operator>(</operator><operator>*</operator><name>a</name><operator>)</operator><operator>-&gt;*</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>(*<name>a</name>).*<name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><operator>(</operator><operator>*</operator><name>a</name><operator>)</operator><operator>.*</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -34,7 +34,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> + <call><call><name>b</name><argument_list>()</argument_list></call><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>+</operator> <call><call><name>b</name><argument_list>()</argument_list></call><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -42,7 +42,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>btVector3</name><argument_list>(<argument><expr>(<name>a</name> &amp; <block>{ <expr>0x0</expr> }</block> ^ <name>b</name> )</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>btVector3</name><argument_list>(<argument><expr><operator>(</operator><name>a</name> <operator>&amp;</operator> <block>{ <expr><literal type="number">0x0</literal></expr> }</block> <operator>^</operator> <name>b</name> <operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>    
 
 </unit>
