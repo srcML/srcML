@@ -6322,7 +6322,7 @@ generic_selection[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         (
             { inputState->guessing }? GENERIC_SELECTION paren_pair | 
-            GENERIC_SELECTION LPAREN generic_selection_selector comma generic_selection_association_list rparen[false]
+            GENERIC_SELECTION LPAREN generic_selection_selector COMMA generic_selection_association_list rparen[false]
         )
 
 ;
@@ -6348,7 +6348,7 @@ generic_selection_association_list[] { CompleteElement element(this); ENTRY_DEBU
             // start the argument list
             startElement(SGENERIC_ASSOCIATION_LIST);
         }
-        (comma | { LA(1) != RPAREN }? generic_selection_association)*
+        (COMMA | { LA(1) != RPAREN }? generic_selection_association)*
         //(LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 

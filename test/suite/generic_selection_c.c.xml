@@ -14,7 +14,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><generic_selection>_Generic(<selector><expr><operator>(</operator><name>X</name><operator>)</operator></expr></selector>, <association_list><association><type><name>long</name> <name>double</name></type>: <expr><name>s</name> <operator>=</operator> <literal type="number">"double"</literal></expr></association>, <association><type>default</type>: <expr><name>s</name> <operator>=</operator> <literal type="number">"int"</literal></expr></association>, <association><type><name>float</name></type>: <expr><name>s</name> <operator>=</operator> <literal type="number">"float"</literal></expr></association></association_list>)</generic_selection></expr>;</expr_stmt>
+<expr_stmt><expr><generic_selection>_Generic(<selector><expr><operator>(</operator><name>X</name><operator>)</operator></expr></selector>, <association_list><association><type><name>long</name> <name>double</name></type>: <expr><name>s</name> <operator>=</operator> <literal type="string">"double"</literal></expr></association>, <association><type>default</type>: <expr><name>s</name> <operator>=</operator> <literal type="string">"int"</literal></expr></association>, <association><type><name>float</name></type>: <expr><name>s</name> <operator>=</operator> <literal type="string">"float"</literal></expr></association></association_list>)</generic_selection></expr>;</expr_stmt>
 </unit>
 
 <unit>
