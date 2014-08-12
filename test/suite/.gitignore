@@ -190,9 +190,7 @@ try_m.m.xml
 typedef.c.xml
 typedef.m.xml
 union.cpp.xml
-union_c.c.xml
 union_c.m.xml
-union_cpp.cpp.xml
 variable_names.c.xml
 variable_names.cs.xml
 variable_names.java.xml

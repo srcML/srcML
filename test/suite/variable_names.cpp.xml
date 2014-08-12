@@ -62,11 +62,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index><index>[<expr>1</expr>]</index></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index><index>[<expr><literal type="number">1</literal></expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index><index>[<expr>1</expr>]</index><index>[<expr>2</expr>]</index></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index><index>[<expr><literal type="number">1</literal></expr>]</index><index>[<expr><literal type="number">2</literal></expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 </unit>
