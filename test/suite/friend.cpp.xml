@@ -8,7 +8,7 @@
 
 <unit>
 <class>class <name>A</name> <block>{<private type="default"> 
-    <function_decl><type><specifier>friend</specifier> <name>int</name>*</type> <name>A</name><parameter_list>()</parameter_list>;</function_decl> </private>}</block>;</class>
+    <function_decl><type><specifier>friend</specifier> <name>int</name><modifier>*</modifier></type> <name>A</name><parameter_list>()</parameter_list>;</function_decl> </private>}</block>;</class>
 </unit>
 
 </unit>
