@@ -45,12 +45,12 @@
 </unit>
 
 <unit>
-<for>for<control>(<init>;</init><condition><expr>1</expr>;</condition><incr/>)</control>
+<for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control>
   <block type="pseudo"><try>try <block>{}</block> <catch>catch <block>{}</block></catch></try></block></for>
 </unit>
 
 <unit>
-<for>for<control>(<init>;</init><condition><expr>1</expr>;</condition><incr/>)</control>
+<for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control>
   <block type="pseudo"><try>try <block>{
       <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
       }</block> <catch>catch <block>{

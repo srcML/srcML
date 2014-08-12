@@ -62,11 +62,11 @@
 </unit>
 
 <unit>
-<typedef>typedef <type><name>int</name>*</type> <name>a</name>;</typedef>
+<typedef>typedef <type><name>int</name><modifier>*</modifier></type> <name>a</name>;</typedef>
 </unit>
 
 <unit>
-<typedef>typedef <type><name>int</name></type> <name>a</name>, <name>b</name>;</typedef>
+<typedef>typedef <type><name>int</name></type> <name>a</name><operator>,</operator> <name>b</name>;</typedef>
 </unit>
 
 <unit>
@@ -74,23 +74,23 @@
 </unit>
 
 <unit>
-<typedef>typedef <type><specifier>const</specifier> <name>int</name>*</type> <name>a</name>;</typedef>
+<typedef>typedef <type><specifier>const</specifier> <name>int</name><modifier>*</modifier></type> <name>a</name>;</typedef>
 </unit>
 
 <unit>
-<typedef>typedef <type><specifier>const</specifier> <name>int</name> *</type> <name>a</name>;</typedef>
+<typedef>typedef <type><specifier>const</specifier> <name>int</name> <modifier>*</modifier></type> <name>a</name>;</typedef>
 </unit>
 
 <unit>
-<typedef>typedef <type><specifier>const</specifier> * <name>int</name> *</type> <name>a</name>;</typedef>
+<typedef>typedef <type><specifier>const</specifier> <modifier>*</modifier> <name>int</name> <modifier>*</modifier></type> <name>a</name>;</typedef>
 </unit>
 
 <unit>
-<typedef>typedef <function_decl><type><name>int</name></type> (*<name>ENGINE_CTRL_FUNC_PTR</name>)<parameter_list>(<param><decl><type><name>ENGINE</name> *</type></decl></param>, <param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>long</name></type></decl></param>, <param><decl><type><name>void</name> *</type></decl></param>, <param><function_decl><type><name>void</name></type> (*<name>f</name>)<parameter_list>()</parameter_list></function_decl></param>)</parameter_list>;</function_decl></typedef>
+<typedef>typedef <function_decl><type><name>int</name></type> (<modifier>*</modifier><name>ENGINE_CTRL_FUNC_PTR</name>)<parameter_list>(<param><decl><type><name>ENGINE</name> <modifier>*</modifier></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>long</name></type></decl></param>, <param><decl><type><name>void</name> <modifier>*</modifier></type></decl></param>, <param><function_decl><type><name>void</name></type> (<modifier>*</modifier><name>f</name>)<parameter_list>()</parameter_list></function_decl></param>)</parameter_list>;</function_decl></typedef>
 </unit>
 
 <unit>
-<typedef>typedef <function_decl><type><name>int</name></type> (*<name>ENGINE_CTRL_FUNC_PTR</name>) <macro><name>D</name><argument_list>(<argument>a</argument>)</argument_list></macro> <parameter_list>(<param><decl><type><name>ENGINE</name> *</type></decl></param>, <param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>long</name></type></decl></param>, <param><decl><type><name>void</name> *</type></decl></param>, <param><function_decl><type><name>void</name></type> (*<name>f</name>)<parameter_list>()</parameter_list></function_decl></param>)</parameter_list>;</function_decl></typedef>
+<typedef>typedef <function_decl><type><name>int</name></type> (<modifier>*</modifier><name>ENGINE_CTRL_FUNC_PTR</name>) <macro><name>D</name><argument_list>(<argument>a</argument>)</argument_list></macro> <parameter_list>(<param><decl><type><name>ENGINE</name> <modifier>*</modifier></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>long</name></type></decl></param>, <param><decl><type><name>void</name> <modifier>*</modifier></type></decl></param>, <param><function_decl><type><name>void</name></type> (<modifier>*</modifier><name>f</name>)<parameter_list>()</parameter_list></function_decl></param>)</parameter_list>;</function_decl></typedef>
 </unit>
 
 <unit>
