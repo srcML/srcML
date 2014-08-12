@@ -7045,10 +7045,10 @@ literals[] { ENTRY_DEBUG } :
 
 // Only start and end of strings are put directly through the parser.
 // The contents of the string are handled as whitespace.
-string_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
+string_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup strings in literal option
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL))
+            if (markup && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL)))
                 startElement(SSTRING);
         }
         (STRING_START STRING_END)
@@ -7056,10 +7056,10 @@ string_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 // Only start and end of character are put directly through the parser.
 // The contents of the character are handled as whitespace.
-char_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
+char_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup characters in literal option
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL))
+            if (markup && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL)))
                 startElement(SCHAR);
         }
         (CHAR_START CHAR_END)
@@ -7098,10 +7098,10 @@ complex_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 
 // literal numbers
-literal[] { LightweightElement element(this); TokenPosition tp; ENTRY_DEBUG } :
+literal[bool markup = true] { LightweightElement element(this); TokenPosition tp; ENTRY_DEBUG } :
         {
             // only markup literals in literal option
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL)) {
+            if (markup && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL))) {
 
                 startElement(SLITERAL);
 
@@ -8524,10 +8524,10 @@ cpp_filename[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SCPP_FILENAME);
         }
-        (string_literal | char_literal | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
+        (string_literal[false] | char_literal[false] | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
 ;
 
 // linenumber in cpp
 cpp_linenumber[] { SingleElement element(this); bool first = true; ENTRY_DEBUG } :
-        (options { greedy = true; } : { if(first) { startElement(SCPP_NUMBER); first = false; } } literal)*
+        (options { greedy = true; } : { if(first) { startElement(SCPP_NUMBER); first = false; } } literal[false])*
 ;

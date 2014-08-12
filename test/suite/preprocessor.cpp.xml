@@ -97,7 +97,7 @@
 </unit>
 
 <unit>
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr><call><name>defined</name><argument_list>(<argument><expr><name>DEBUG</name></expr></argument>)</argument_list></call> &amp;&amp; <call><name>defined</name><argument_list>(<argument><expr><name>__KERNEL__</name></expr></argument>)</argument_list></call></expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><call><name>defined</name><argument_list>(<argument><expr><name>DEBUG</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <call><name>defined</name><argument_list>(<argument><expr><name>__KERNEL__</name></expr></argument>)</argument_list></call></expr></cpp:if>
 </unit>
 
 <unit>
