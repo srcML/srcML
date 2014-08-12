@@ -2,37 +2,37 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="string" filename="string_cs">
 
 <unit>
-<expr_stmt><expr>@"goodmorning"</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">@"goodmorning"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>@"c:\Docs\Source\a.txt"</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">@"c:\Docs\Source\a.txt"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>@"c:\Docs\Source\"</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">@"c:\Docs\Source\"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>@"""Ahoy!""criedthecaptain."</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">@"""Ahoy!""criedthecaptain."</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>@"'Ahoy!'""criedthecaptain."""</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">@"'Ahoy!'""criedthecaptain."""</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>@"""'Ahoy!'criedthecaptain."""</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">@"""'Ahoy!'criedthecaptain."""</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>@"""""""Ahoy!""criedthecaptain."""""</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">@"""""""Ahoy!""criedthecaptain."""""</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>@"one
+<expr_stmt><expr><literal type="string">@"one
 two
-three"</expr>;</expr_stmt>
+three"</literal></expr>;</expr_stmt>
 </unit>
 
 </unit>

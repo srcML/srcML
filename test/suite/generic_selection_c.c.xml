@@ -6,15 +6,15 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><generic_selection>_Generic(<selector><expr>0</expr></selector>, <association_list><association><type>default</type> : <expr><name>foo</name></expr></association></association_list>)</generic_selection></expr>;</expr_stmt>
+<expr_stmt><expr><generic_selection>_Generic(<selector><expr><literal type="number">0</literal></expr></selector>, <association_list><association><type>default</type> : <expr><name>foo</name></expr></association></association_list>)</generic_selection></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><call><generic_selection>_Generic(<selector><expr>(<name>X</name>)</expr></selector>, <association_list><association><type><name>long</name> <name>double</name></type>: <expr><name>cbrtl</name></expr></association>, <association><type>default</type>: <expr><name>cbrt</name></expr></association>, <association><type><name>float</name></type>: <expr><name>cbrtf</name></expr></association></association_list>)</generic_selection><argument_list>(<argument><expr><name>X</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><generic_selection>_Generic(<selector><expr><operator>(</operator><name>X</name><operator>)</operator></expr></selector>, <association_list><association><type><name>long</name> <name>double</name></type>: <expr><name>cbrtl</name></expr></association>, <association><type>default</type>: <expr><name>cbrt</name></expr></association>, <association><type><name>float</name></type>: <expr><name>cbrtf</name></expr></association></association_list>)</generic_selection><argument_list>(<argument><expr><name>X</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><generic_selection>_Generic(<selector><expr>(<name>X</name>)</expr></selector>, <association_list><association><type><name>long</name> <name>double</name></type>: <expr><name>s</name> = "double"</expr></association>, <association><type>default</type>: <expr><name>s</name> = "int"</expr></association>, <association><type><name>float</name></type>: <expr><name>s</name> = "float"</expr></association></association_list>)</generic_selection></expr>;</expr_stmt>
+<expr_stmt><expr><generic_selection>_Generic(<selector><expr><operator>(</operator><name>X</name><operator>)</operator></expr></selector>, <association_list><association><type><name>long</name> <name>double</name></type>: <expr><name>s</name> <operator>=</operator> <literal type="number">"double"</literal></expr></association>, <association><type>default</type>: <expr><name>s</name> <operator>=</operator> <literal type="number">"int"</literal></expr></association>, <association><type><name>float</name></type>: <expr><name>s</name> <operator>=</operator> <literal type="number">"float"</literal></expr></association></association_list>)</generic_selection></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -22,11 +22,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name><generic_selection>_Generic(<selector><expr>0</expr></selector>, <association_list><association><type>struct <name>class</name></type> :  <expr>0</expr></association>, <association><type>default</type> : <expr>1</expr></association>, <association><type><name>int</name></type> : <expr>2</expr></association></association_list>)</generic_selection><index>[<expr><name>index</name></expr>]</index></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><generic_selection>_Generic(<selector><expr><literal type="number">0</literal></expr></selector>, <association_list><association><type>struct <name>class</name></type> :  <expr><literal type="number">0</literal></expr></association>, <association><type>default</type> : <expr><literal type="number">1</literal></expr></association>, <association><type><name>int</name></type> : <expr><literal type="number">2</literal></expr></association></association_list>)</generic_selection><index>[<expr><name>index</name></expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><generic_selection>_Generic(<selector><expr>0</expr></selector>, <association_list><association><type>struct <name>class</name></type> :  <expr>0</expr></association>, <association><type>default</type> : <expr>1</expr></association>, <association><type><name>int</name></type> : <expr>2</expr></association></association_list>)</generic_selection></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><generic_selection>_Generic(<selector><expr><literal type="number">0</literal></expr></selector>, <association_list><association><type>struct <name>class</name></type> :  <expr><literal type="number">0</literal></expr></association>, <association><type>default</type> : <expr><literal type="number">1</literal></expr></association>, <association><type><name>int</name></type> : <expr><literal type="number">2</literal></expr></association></association_list>)</generic_selection></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>    
 
 <unit>

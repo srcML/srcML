@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="return">
 
 <unit>
-<return>return <expr>1</expr>;</return>
+<return>return <expr><literal type="number">1</literal></expr>;</return>
 </unit>
 
 <unit>

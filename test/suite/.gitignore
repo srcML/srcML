@@ -121,7 +121,6 @@ ifnestcond.cpp.xml
 ifnestcond.cs.xml
 ifnestcond.java.xml
 ifnestcond.m.xml
-interface_java.java.xml
 literal.c.xml
 literal.cs.xml
 literal.java.xml
@@ -171,8 +170,6 @@ string.java.xml
 string.m.xml
 struct.cpp.xml
 struct_c.m.xml
-struct_cpp.cpp.xml
-struct_cs.cs.xml
 switch.c.xml
 switch.cs.xml
 switch.java.xml
@@ -181,7 +178,6 @@ ternary.c.xml
 ternary.cs.xml
 ternary.java.xml
 ternary.m.xml
-throw.cpp.xml
 throw.cs.xml
 throw.java.xml
 throw_base.cs.xml
