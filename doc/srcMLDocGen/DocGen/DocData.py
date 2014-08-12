@@ -113,3 +113,68 @@ class IndexEntry:
 
     def indexLetter(self):
         return self.title[0].upper()
+
+
+#
+# Types used for holding information about srcML elements.
+#
+
+class TagExample:
+    def __init__(self):
+        self.title = ""
+        self.text = ""    
+
+class TagAttr:
+    def __init__(self):
+        self.name = ""    
+        self.valueDesc = ""
+        self.languages = []
+        self.desc = ""
+        self.exampleValue = ""
+
+class NsEntry:
+    """ Documentation for an XML namespaces within srcML. """
+    def __init__(self):
+        self.prefix = ""
+        self.url = ""
+        self.desc = ""
+
+class TagUseCase:
+    def __init__(self):
+        self.title = ""
+        self.languages = []
+        self.desc = ""
+        self.attrs = []
+        self.examples = []
+
+class TagRefLink:
+    def __init__(self):
+        self.ns = ""
+        self.tag = ""
+
+class OtherRefLink:
+    def __init__(self):
+        self.title = ""
+        self.url = ""
+
+class TagInfo:
+    """ Contains information about a single tag. """
+    def __init__(self):
+        self.ns = ""
+        self.tag = ""
+        self.desc = ""
+        self.useCases = []
+        self.refs = []
+
+class TagDoc:
+    """ Contains information about a all tags within the system. """
+    def __init__(self):
+        self.title = ""
+        self.outputFileName = ""
+        self.namespaces = []
+        self.nsDesc = ""
+        self.tags = []
+        self.desc = ""
+
+    def link(self):
+        return self.outputFileName

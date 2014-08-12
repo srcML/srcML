@@ -1,6 +1,6 @@
 import os, sys, subprocess, string, traceback
 import lxml.etree as ET
-from DocData import DocConfig, Element, Subelement, XPathExample, Example, DocEntry, OperatorEntry, Category, DocConfig
+from DocData import *
 from os.path import join, getsize
 import cStringIO
 
@@ -49,7 +49,7 @@ namespaceDict={
 # Error and simple data extraction functions.
 #
 def formatElementErrorMsg(element):
-    return "At line {0.sourceline}, within element: {0.tag}".format(element)
+    return "At line {0.sourceline}, within element: {1.tag}".format(element, element.getparent())
 
 
 def verifyNodeNameOrFail(element, expectedName):
@@ -337,3 +337,209 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         else:
             pass
     return doc
+
+
+# TagDoc specific tag names
+TagDocTag = "TagDoc"
+NamespacesTag = "Namespaces"
+NsTag = "Ns"
+CaseTag = "Case"
+ExamplesTag = "Examples"
+LanguagesTag = "Languages"
+LangTag = "Lang"
+RefsTag = "Refs"
+SeeTag = "See"
+AttributesTag = "Attributes"
+AttrTag = "Attr"
+
+# TagDoc specific attribute names
+fileNameAttr = "fileName"
+prefixAttr = "prefix"
+urlAttr = "url"
+languageAttr = "language"
+valueDescAttr = "valueDesc"
+elemAttr = "elem"
+
+def loadTagDoc(dirPath, fileName, forceBuild = False):
+    """ load the tag documentation file. """
+
+    def buildRef(refElement):
+        reference = None
+        if nsAttr in refElement.attrib and elemAttr in refElement.attrib:
+            reference = TagRefLink()
+            reference.ns = getAttribOrFail(refElement, nsAttr)
+            reference.tag = getAttribOrFail(refElement, elemAttr)
+        elif titleAttr in refElement.attrib and urlAttr in refElement.attrib:
+            reference = OtherRefLink()
+            reference.title = getAttribOrFail(refElement, titleAttr)
+            reference.url = getAttribOrFail(refElement, urlAttr)
+        else:
+            raise Exception("Malformed See reference. " + formatElementErrorMsg(refElement))
+
+
+    def buildRefList(refsElement):
+        refList = []
+        for ref in refsElement.iterchildren():
+            if ref.tag == SeeTag:
+                refList.append(buildRef(ref))
+            else:
+                unexpectedOrUnknownTag(ref)
+        return refList
+
+    def buildExample(exampleElement):
+        tagExample = TagExample()
+        tagExample.title = getAttribOrDefault(exampleElement, titleAttr, "")
+        tagExample.text = extractSubText(exampleElement)
+        return tagExample
+
+    def buildExamplesList(examplesElement):
+        exampleList = []
+        for ex in examplesElement.iterchildren():
+            if ex.tag == ExampleTag:
+                exampleList.append(buildExample(ex))
+            else:
+                unexpectedOrUnknownTag(ex)
+        return exampleList
+
+    def buildAttr(attrElement):
+        attr = TagAttr()
+        attr.name = getAttribOrFail(attrElement, nameAttr)
+        attr.valueDesc = getAttribOrFail(attrElement, nameAttr)
+
+        for elem in attrElement.iterchildren():
+            if elem.tag == DescTag:
+                attr.desc = extractSubText(elem)
+
+            elif elem.tag == LanguagesTag:
+                attr.laguages = buildLanguageList(elem)
+
+            elif elem.tag == ExamplesTag:
+                attr.examples = buildExamplesList(elem)
+
+            else:
+                unexpectedOrUnknownTag(elem)
+        return attr
+
+    def buildAttrList(attrElement):
+        attrList = []
+        for elem in attrElement.iterchildren():
+            if elem.tag == AttrTag:
+                attrList.append(buildAttr)
+            else:
+                unexpectedOrUnknownTag(elem)
+
+        return attrList
+
+    def buildLanguageList(languagesElement):
+        langList = []
+        for elem in languagesElement:
+            if elem.tag == LangTag:
+                langList.append(getAttribOrFail(elem, languageAttr))
+            else:
+                unexpectedOrUnknownTag(elem)
+        return langList
+
+    def buildCase(caseElement):
+        useCase = TagUseCase()
+        useCase.desc = getAttribOrDefault(caseElement, titleAttr, "")
+        for elem in caseElement.iterchildren():
+            if elem.tag == DescTag:
+                useCase.desc = extractSubText(elem)
+
+            elif elem.tag == LanguagesTag:
+                useCase.languages = buildLanguageList(elem)
+
+            elif elem.tag == AttributesTag:
+                useCase.attrs = buildAttrList(elem)
+
+            elif elem.tag == ExamplesTag:
+                useCase.examples = buildExamplesList(elem)
+
+            else:
+                unexpectedOrUnknownTag(elem)
+        return useCase
+
+    def buildElement(elemElement):
+        tagInfo = TagInfo()
+
+        # getting attributes.
+        tagInfo.ns = getAttribOrFail(elemElement, nsAttr)
+        tagInfo.tag = getAttribOrFail(elemElement, elemAttr)
+
+        # Gather element stuffs.
+        for elem in elemElement.iterchildren():
+            if elem.tag == DescTag:
+                tagInfo.desc = extractSubText(elem)
+            elif elem.tag == CaseTag:
+                tagInfo.useCases.append(buildCase(elem))
+            elif elem.tag == RefsTag:
+                tagInfo.refs = buildRefList(elem)
+            else:
+                unexpectedOrUnknownTag(elem)
+        return tagInfo
+
+
+    def buildElementsList(elementsElement):
+        elemList = []
+        for elem in elementsElement.iterchildren():
+            if elem.tag == ElementTag:
+                elemList.append(buildElement(elem))
+            else:
+                unexpectedOrUnknownTag(nsElem)            
+        return elemList
+
+    def buildNs(nsElement):
+        ns = NsEntry()
+        ns.prefix = getAttribOrFail(nsElement, prefixAttr)
+        ns.url = getAttribOrFail(nsElement, urlAttr)
+        descElem = nsElement.xpath(DescTag)
+
+        descElem = locateSingleChildOf_Optional(nsElement, DescTag)
+        if descElem != None:
+            ns.desc = extractSubText(descElem)
+        return ns
+
+    def buildNamespaceList(namespacesElement):
+        nsList = []
+        for nsElem in namespacesElement.iterchildren():
+            if nsElem.tag == DescTag:
+                tagDoc.nsDesc = extractSubText(nsElem)
+            elif nsElem.tag == NsTag:
+                nsList.append(buildNs(nsElem))
+            else:
+                unexpectedOrUnknownTag(nsElem)
+        return nsList
+
+
+    # Basic set up.
+    filePath = join(dirPath, fileName)
+    docFile = ET.parse(filePath)
+    tagDoc = TagDoc()
+
+    # Loading and managing documentation xml file XML.
+    root = docFile.getroot()
+
+    # testing to make sure that we are handling the correct node.
+    verifyNodeNameOrFail(root, TagDocTag)
+
+    # Getting all of the root attributes.
+    tagDoc.title = getAttribOrFail(root, titleAttr)
+    tagDoc.outputFileName = getAttribOrFail(root, fileNameAttr)
+
+    if (os.path.exists(tagDoc.outputFileName)
+            and os.path.getmtime(filePath) < os.path.getmtime(tagDoc.outputFileName)
+            and not forceBuild):
+        print "    Up to date."
+        return None
+
+    # Traversing all documentation entries.
+    for elem in root.iterchildren():
+        if elem.tag == DescTag:
+            tagDoc.desc = extractSubText(elem)    
+        elif elem.tag == NamespacesTag:
+            tagDoc.namespaces = buildNamespaceList(elem)
+        elif elem.tag == ElementsTag:
+            tagDoc.tags = buildElementsList(elem)
+        else:
+            unexpectedOrUnknownTag(elem)
+    return tagDoc

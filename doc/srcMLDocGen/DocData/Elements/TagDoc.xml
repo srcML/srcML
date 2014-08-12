@@ -1,0 +1,80 @@
+<TagDoc title="srcML Element Documenation" fileName="srcMLElements.html">
+    <Desc></Desc>
+    <Namespaces>
+        <Desc></Desc>
+        <Ns prefix="src" url="http://www.sdml.info/srcML/src">
+            <Desc>Put description here.</Desc>
+        </Ns>
+        <Ns prefix="op" url="http://www.sdml.info/srcML/operator">
+            <Desc>Put description here.</Desc>
+        </Ns>
+        <Ns prefix="cpp" url="http://www.sdml.info/srcML/cpp">
+            <Desc>Put description here.</Desc>
+        </Ns>
+        <Ns prefix="lit" url="http://www.sdml.info/srcML/literal">
+            <Desc>Put description here.</Desc>
+        </Ns>
+        <Ns prefix="type" url="http://www.sdml.info/srcML/modifier">
+            <Desc>Put description here.</Desc>
+        </Ns>
+    </Namespaces>
+    <Elements>
+        <Element ns="src" elem="unit">
+            <Desc>The unit tag is used to represent two things within srcML,
+            first a single compilation unit, and second is an archive format
+            consisting of multiple compilation units.
+            </Desc>
+            <Case title="archive unit">
+                <Desc></Desc>
+                <Languages>
+                    <Lang language="C"/>
+                    <Lang language="C++"/>
+                    <Lang language="Java"/>
+                </Languages>
+                <Attributes>
+                    <Attr name="filename" valueDesc="the file used to create this srcML">
+                        <Languages>
+                            <Lang language="C"/>
+                            <Lang language="C++"/>
+                            <Lang language="Java"/>
+                        </Languages>
+                        <Examples>
+                            <Example title="Example file Name">filename=""</Example>
+                        </Examples>
+                    </Attr>
+                </Attributes>
+                <Examples>
+                    <Example title="Unit Tag Example"><unit></unit></Example>
+                </Examples>
+            </Case>
+
+            <Case title="compilation unit">
+                <Desc></Desc>
+                <Languages>
+                    <Lang language="C"/>
+                    <Lang language="C++"/>
+                    <Lang language="Java"/>
+                </Languages>
+                <Attributes>
+                    <Attr name="" value="">
+                        <Languages>
+                            <Lang language="C"/>
+                            <Lang language="C++"/>
+                            <Lang language="Java"/>
+                        </Languages>
+                        <Examples>
+                            <Example title="title">filename=""</Example>
+                        </Examples>
+                    </Attr>
+                </Attributes>
+                <Examples>
+                    <Example title="title">filename=""</Example>
+                </Examples>
+            </Case>
+            <Refs>
+                <See ns="src" elem="unit" />
+                <See url="SOMEURI" title="" />
+            </Refs>
+        </Element>
+    </Elements>
+</TagDoc>

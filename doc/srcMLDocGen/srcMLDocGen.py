@@ -104,7 +104,7 @@ def writeAllTagNames():
 
 
 DocConfigFileName = "DocConfig.xml"
-
+TagDocFileName = "TagDoc.xml"
 pageLinks = []
 if __name__ == "__main__":
 
@@ -117,7 +117,7 @@ if __name__ == "__main__":
 
         if DocConfigFileName in files:
             print "-" * 80
-            print "Located a Page Creation Document in", root
+            print "Located a Page Creation Document (DocConfig.xml) in", root
             try:
                 docConfig = loadXmlDocFile(root, DocConfigFileName, True)
                 if docConfig != None:
@@ -131,6 +131,13 @@ if __name__ == "__main__":
             except Exception as e:
                 print "Failed with exception: ", traceback.format_exc(e)
         
+        if TagDocFileName in files:
+            print "-" * 80
+            print "Located a Page Creation Document (TagDoc.xml) in", root
+            try:
+                tagDoc = loadTagDoc(root, TagDocFileName, True)
+            except Exception as e:
+                print "Failed with exception: ", traceback.format_exc(e)	
     print "-" * 80
     print "Writing tag names"
     writeAllTagNames()
