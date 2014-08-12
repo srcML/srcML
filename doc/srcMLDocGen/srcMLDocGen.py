@@ -18,6 +18,7 @@ class PageLink:
 
 def genElementsPage(tagDoc):
     global pageLinks
+    tagDoc.preProcess()
     out = open(tagDoc.outputFileName, "w")
     fileTemplate = loader.get_template("Tags.html")
     page = fileTemplate.render(Context({"doc": tagDoc}))

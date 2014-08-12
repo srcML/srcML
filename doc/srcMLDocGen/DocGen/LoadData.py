@@ -411,7 +411,7 @@ def loadTagDoc(dirPath, fileName, forceBuild = False):
                 attr.desc = extractSubText(elem)
 
             elif elem.tag == LanguagesTag:
-                attr.laguages = buildLanguageList(elem)
+                attr.languages = buildLanguageList(elem)
 
             elif elem.tag == ExamplesTag:
                 attr.examples = buildExamplesList(elem)
@@ -424,7 +424,7 @@ def loadTagDoc(dirPath, fileName, forceBuild = False):
         attrList = []
         for elem in attrElement.iterchildren():
             if elem.tag == AttrTag:
-                attrList.append(buildAttr)
+                attrList.append(buildAttr(elem))
             else:
                 unexpectedOrUnknownTag(elem)
 

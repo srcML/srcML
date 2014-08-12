@@ -1,9 +1,41 @@
 {% extends "Skeleton.html" %}
+{% block cssLinks %}
+    <link rel="stylesheet" href="Style/DocPageStyle.css" />
+    <link rel="stylesheet" href="Style/srcMLElementsPageStyle.css" />
+{% endblock %}
+{%block body %}
+<div id="content">
+    <h2>{{doc.title}}</h2>
+    {% if doc.desc != "" %}
+    <hr/>
+    <p class="pageDesc">{{doc.desc|safe}}</p>
+    {%endif %}
 
-{% block cssLinks %}<link rel="stylesheet" href="Style/MainStyle.css" />{% endblock %}
-{% block title %}{{doc.title}}{% endblock %}
-{% block body %}
-<h2>{{doc.title}}</h2>
-<hr/>
+    <div id="ToCDiv">
+        <div id="ToCDiv">
+            <table class="ToC">
+                {% if doc.namespaces|length > 0 %}
+                <thead class="subheader">
+                    <tr>
+                        <th class="categoryRow">Namespaces</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                {% endif %}
+                <thead class="subheader">
+                    <tr>
+                        <th>srcML Elements</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
+    <div id="entries">
+
+    </div>
+</div>
 {% endblock %}

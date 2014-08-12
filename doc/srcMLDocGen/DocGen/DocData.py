@@ -166,6 +166,9 @@ class TagInfo:
         self.useCases = []
         self.refs = []
 
+    def QNameTagStyle(self):
+        return "<{0.ns}:{0.tag}>".format(self)
+
 class TagDoc:
     """ Contains information about a all tags within the system. """
     def __init__(self):
@@ -175,6 +178,25 @@ class TagDoc:
         self.nsDesc = ""
         self.tags = []
         self.desc = ""
+        self.languages = []
+
+    def preProcess(self):
+        langSet = set()
+        for t in self.tags:
+            for c in t.useCases:
+                for atr in c.attrs:
+                    for l in atr.languages:
+                        langSet.add(l)
+                for l in c.languages:
+                    langSet.add(l)
+        self.languages = list(langSet)
+        self.languages.sort()
+
+
+    def maxLanguageCount(self):
+
+        self.languageMax = tagsMax
+        return 
 
     def link(self):
         return self.outputFileName
