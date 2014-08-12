@@ -3,7 +3,9 @@
     column-width:13em;
     -moz-column-width:13em; /* Firefox */
     -webkit-column-width:13em; /* Safari and Chrome */
-    min-height:50em;
+    min-width:50em;
+    margin-bottom:0em;
+    margin-top:0em;
 }
 
 .indexLetterSection {
