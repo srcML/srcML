@@ -11,7 +11,7 @@
 
 <unit>
 <function><type><specifier>public</specifier> <specifier>strictfp</specifier> <name>void</name></type> <name>increment</name><parameter_list>()</parameter_list> <block>{
-        <expr_stmt><expr><name>c</name>++</expr>;</expr_stmt>
+        <expr_stmt><expr><name>c</name><operator>++</operator></expr>;</expr_stmt>
     }</block></function>
 </unit>
 
