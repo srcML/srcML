@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDDED_SRCML_SAX2_UTILITIES_HPP
-#define INCLUDDED_SRCML_SAX2_UTILITIES_HPP
+#ifndef INCLUDED_SRCML_SAX2_UTILITIES_HPP
+#define INCLUDED_SRCML_SAX2_UTILITIES_HPP
 
 #include <srcml_types.hpp>
 #include <srcml_macros.hpp>
