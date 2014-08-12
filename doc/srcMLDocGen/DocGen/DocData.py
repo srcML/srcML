@@ -83,6 +83,14 @@ class DocConfig:
         self.entries = []
         self.operators = []
 
+    def hasOperators(self):
+        for cat in self.categories:
+            if len(cat.operators) > 0:
+                return True
+        if len(self.operators)>0:
+            return True
+        return False            
+
 
 class IndexEntry:
     """ An entry within the index of links that's sorted via alphabetic order instead of

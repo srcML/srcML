@@ -6,8 +6,9 @@
 table {
     border-collapse: collapse;
     border:.1em solid #D2D2CE;
-    margin-left:0px;
-    margin-right:0px;
+    margin-left:0em;
+    margin-right:0em;
+    width:100%;
 }
 
 table th{
@@ -107,8 +108,8 @@ div.displayedDocDefinition h2.title a:hover{
 
 /* Doc display page. */
 .displayedDocDefinition {
-    padding:.5em;
-    padding-top:10px;
+    padding:.8em;
+    padding-top:1em;
     margin-top:1em;
     margin-right:0em;
     margin-left:0em;

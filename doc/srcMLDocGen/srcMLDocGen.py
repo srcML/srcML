@@ -19,6 +19,7 @@ class PageLink:
 def genMainPage(maingPageName, pageLinks):
     out = open(maingPageName, "w")
     fileTemplate = loader.get_template("MainPage.html")
+    pageLinks.sort(key=lambda x: x.title)
     page = fileTemplate.render(Context({"pageLinks": pageLinks}))
     out.write(page)
     out.close()	

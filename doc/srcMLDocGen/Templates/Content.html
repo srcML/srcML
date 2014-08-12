@@ -101,7 +101,7 @@
     {% endfor %}
 {% endfor %}
 
-
+{% if doc.hasOperators %}
 <!-- Operators table. -->
 <div class="displayedDocDefinition">
     <h2 class="title"><a id="operators">Operators</a></h2>
@@ -133,3 +133,4 @@
         </tbody>
     </table>
 </div>
+{% endif %}
