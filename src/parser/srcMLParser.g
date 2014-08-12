@@ -2666,7 +2666,7 @@ protocol_declaration[] { ENTRY_DEBUG } :
 
 protocol_declaration_full[] { ENTRY_DEBUG } :
 
-    ATPROTOCOL (variable_identifier | comma)*
+    ATPROTOCOL (variable_identifier | COMMA)*
 
 ;
 
@@ -7576,7 +7576,7 @@ protocol_list[] { CompleteElement element(this); ENTRY_DEBUG } :
         startElement(SPROTOCOL_LIST);
 
     }
-    TEMPOPS identifier (comma identifier)* TEMPOPE
+    TEMPOPS identifier (COMMA identifier)* TEMPOPE
 
 ;
 
