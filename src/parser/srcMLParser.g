@@ -6656,7 +6656,8 @@ pure_expression_block[] { ENTRY_DEBUG } :
 // All possible operators
 general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+            if ((!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+                && (LA(1) != IN || !inTransparentMode(MODE_FOR_CONDITION)))
                 startElement(SOPERATOR);
         }
         (
