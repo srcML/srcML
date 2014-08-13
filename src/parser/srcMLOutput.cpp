@@ -238,7 +238,8 @@ namespace {
     // cpp
     ELEMENT_MAP(SCPP_DIRECTIVE, "directive")
     ELEMENT_MAP(SCPP_FILENAME,  "file")
-    ELEMENT_MAP(SCPP_NUMBER,  "number")
+    ELEMENT_MAP(SCPP_NUMBER,    "number")
+    ELEMENT_MAP(SCPP_LITERAL,   "literal")
     ELEMENT_MAP(SCPP_INCLUDE,   "include")
     ELEMENT_MAP(SCPP_DEFINE,    "define")
     ELEMENT_MAP(SCPP_UNDEF,     "undef")
@@ -252,6 +253,7 @@ namespace {
     ELEMENT_MAP(SCPP_THEN,      "then")
     ELEMENT_MAP(SCPP_PRAGMA,    "pragma")
     ELEMENT_MAP(SCPP_ERROR,     "error")
+    ELEMENT_MAP(SCPP_WARNING,   "warning")
     ELEMENT_MAP(SCPP_MACRO_DEFN, "macro")
     ELEMENT_MAP(SCPP_MACRO_VALUE, "value")
 

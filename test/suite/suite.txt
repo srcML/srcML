@@ -172,6 +172,7 @@ LANGUAGE_CSHARP specifier_cs
 LANGUAGE_CSHARP modifier_cs
 LANGUAGE_CSHARP function_decl_cs
 LANGUAGE_CSHARP decl_simple_cs
+LANGUAGE_CSHARP preprocessor_cs
 
 LANGUAGE_OBJECTIVE_C objective_c_call_m
 LANGUAGE_OBJECTIVE_C class_interface_m

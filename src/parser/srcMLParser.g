@@ -493,11 +493,13 @@ tokens {
 	SCPP_DIRECTIVE;
     SCPP_FILENAME;
     SCPP_NUMBER;
+    SCPP_LITERAL;
 	SCPP_MACRO_DEFN;
 	SCPP_MACRO_VALUE;
 
     // cpp directives
 	SCPP_ERROR;
+    SCPP_WARNING;
 	SCPP_PRAGMA;
 	SCPP_INCLUDE;
 	SCPP_DEFINE;
@@ -8022,14 +8024,21 @@ preprocessor[] { ENTRY_DEBUG
             endMode();
 
             tp.setType(SCPP_PRAGMA);
-        } |
+        } (cpp_literal | cpp_symbol)* |
 
         ERRORPREC
         {
             endMode();
 
             tp.setType(SCPP_ERROR);
-        } |
+        } (cpp_literal)* |
+
+        WARNING
+        {
+            endMode();
+
+            tp.setType(SCPP_WARNING);
+        } (cpp_literal)* |
 
         (NAME | VOID)
         {
@@ -8043,7 +8052,7 @@ preprocessor[] { ENTRY_DEBUG
             endMode();
 
             tp.setType(SCPP_REGION);
-        } |
+        } (cpp_symbol)* |
 
         ENDREGION
         {
@@ -8530,4 +8539,12 @@ cpp_filename[] { SingleElement element(this); ENTRY_DEBUG } :
 // linenumber in cpp
 cpp_linenumber[] { SingleElement element(this); bool first = true; ENTRY_DEBUG } :
         (options { greedy = true; } : { if(first) { startElement(SCPP_NUMBER); first = false; } } literal[false])*
+;
+
+// literal in cpp
+cpp_literal[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SCPP_LITERAL);
+        }
+        (string_literal[false] | char_literal[false] | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
 ;
