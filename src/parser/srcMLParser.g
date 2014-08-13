@@ -3644,7 +3644,7 @@ comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY
         {
             if (markup_comma && ((!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
                  && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT) && !(inTransparentMode(MODE_IN_INIT) && inMode(MODE_EXPRESSION | MODE_LIST)))
-                && !inMode(MODE_ENUM) && !inMode(MODE_INTERNAL_END_CURLY))
+                && !inMode(MODE_ENUM) && !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INITIALIZATION_LIST))
                 startElement(SOPERATOR);
         }
         COMMA
@@ -5358,7 +5358,7 @@ constructor_header[] { ENTRY_DEBUG } :
 member_initialization_list[] { ENTRY_DEBUG } :
         {
             // handle member initialization list as a list of calls
-            startNewMode(MODE_LIST | MODE_CALL);
+            startNewMode(MODE_LIST | MODE_CALL | MODE_INITIALIZATION_LIST);
 
             startElement(SMEMBER_INITIALIZATION_LIST);
         }

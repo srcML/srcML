@@ -30,7 +30,7 @@
 </unit>
 
 <unit>
-<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_list>: <call><name>a</name><argument_list>{<argument><expr><block>{<expr><name>a</name></expr><operator>,</operator> <expr><block>{<expr><literal type="number">1</literal></expr>}</block></expr>}</block></expr></argument>}</argument_list></call></member_list> <block>{}</block></constructor>
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_list>: <call><name>a</name><argument_list>{<argument><expr><block>{<expr><name>a</name></expr>, <expr><block>{<expr><literal type="number">1</literal></expr>}</block></expr>}</block></expr></argument>}</argument_list></call></member_list> <block>{}</block></constructor>
 </unit>
 
 <unit>
