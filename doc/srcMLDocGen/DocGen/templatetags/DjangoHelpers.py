@@ -36,17 +36,19 @@ def formatTagName(ns, name, attr):
 keywordDictionary = {
     "c++":set([x.strip() for x in open("DocGen/templatetags/CppKeywords.txt","r").readlines()]),
     "c":set([x.strip() for x in open("DocGen/templatetags/CKeywords.txt","r").readlines()]),
-    "java":set([x.strip() for x in open("DocGen/templatetags/JavaKeywords.txt","r").readlines()])
+    "java":set([x.strip() for x in open("DocGen/templatetags/JavaKeywords.txt","r").readlines()]),
+    "c#":set([x.strip() for x in open("DocGen/templatetags/CSharpKeywords.txt","r").readlines()])
 }
 
 cKeywordRegex = re.compile("\\b(?P<kw>{0})\\b".format( "|".join(keywordDictionary["c"])), re.I | re.M)
 cppKeywordRegEx = re.compile("\\b(?P<kw>{0})\\b".format( "|".join(keywordDictionary["c++"])))
 javaKeywordRegEx = re.compile("\\b(?P<kw>{0})\\b".format( "|".join(keywordDictionary["java"])))
+
 keywordRegExDictionary = {
     "c++":cppKeywordRegEx,
     "c":cKeywordRegex,
     "java":javaKeywordRegEx,
-
+    "c#":re.compile("\\b(?P<kw>{0})\\b".format( "|".join(keywordDictionary["c#"])))
 }
 kwSubPattern = "<span class=\"kw\">\g<kw></span>"
 

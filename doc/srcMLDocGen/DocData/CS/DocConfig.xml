@@ -1,4 +1,4 @@
-<DocConfig title="C++ srcML" lang="C++" outputFile="cpp_srcML.html">
+<DocConfig title="C# srcML" lang="C#" outputFile="cs_srcML.html">
 
     <Category title="Statements">
         <DocEntry title="if statement" shortTitle="if">
@@ -85,14 +85,14 @@
                 <XPath path="//src:for/src:control/src:condition">
                     <Desc>Find the conditions of all for loops</Desc>
                 </XPath>
-                <XPath path="//src:for[src:control/src:range]">
+                <!-- <XPath path="//src:for[src:control/src:range]">
                     <Desc>Find all range based for loops</Desc>
-                </XPath>
+                </XPath>-->
             </XPathQueries>
             <Example file="../C/C-for-1.c" />
             <Example file="../C/C-for-2.c" />
             <Example file="../C/C-for-3.c" />
-            <Example file="CPP-range-for-1.cpp" />
+            <!--<Example file="CPP-range-for-1.cpp" />-->
         </DocEntry>
 
         <DocEntry title="do statement" shortTitle="do">
@@ -269,6 +269,7 @@
 
 
     <Category title="Specifiers">
+        <!--
         <DocEntry title="const">
             <Elements>
                 <Element name="specifier" />
@@ -565,9 +566,11 @@
             </XPathQueries>
             <Example title="template used as a specifier" file="CPP-template-3.cpp" />
         </DocEntry>
+        -->
     </Category>
 
     <Category title="Declarations, Definitions and Initializations">
+        <!--
         <DocEntry title="variable declaration statement">
             <Elements>
                 <Element name="decl_stmt" />
@@ -1028,9 +1031,11 @@
             </XPathQueries>
             <Example file="CPP-explicit-conv-2.cpp" />
         </DocEntry>
+        -->
     </Category>
 
-    <Category title="Classes, Structs, Unions and Enums">
+    <Category title="Classes, Structs, Interfaces and Enums">
+        <!--
         <DocEntry title="class">
             <Elements>
                 <Element name="class" />
@@ -1367,10 +1372,12 @@
             </XPathQueries>
             <Example file="CPP-enum-class-1.cpp" />
         </DocEntry>
+        -->
     </Category>
 
 
     <Category title="Expressions">
+        <!--
         <DocEntry title="function call">
             <Elements>
                 <Element name="call"/>
@@ -1480,7 +1487,7 @@
             </XPathQueries>
             <Example file="CPP-this-1.cpp" />
         </DocEntry>
-
+        -->
 	    <OperatorEntry title="pre/post increment" op="++" example="../C/C-Operator-pre_increment.c" />
 	    <OperatorEntry title="pre/post decrement" op="--" example="../C/C-Operator-pre_decrement.c" />
 	    <OperatorEntry title="address of" op="&amp;" example="../C/C-Operator-address_of.c" />
@@ -1518,9 +1525,11 @@
 	    <OperatorEntry title="bitwise and assign" op="&amp;=" example="../C/C-Operator-bitwise-and-assign.c" />
 	    <OperatorEntry title="bitwise xor assign" op="^=" example="../C/C-Operator-bitwise-xor-assign.c" />
 	    <OperatorEntry title="bitwise or assign" op="|=" example="../C/C-Operator-bitwise-or-assign.c" />
-	    <OperatorEntry title="sceope" op="::" example="CPP-Operator-scope.cpp" />
-	    <OperatorEntry title="pointer to member" op=".*" example="CPP-Operator-member-ptr.cpp" />
+	    <OperatorEntry title="sceope" op="::" example="../CPlusPlus/CPP-Operator-scope.cpp" />
+	    <!--
+        <OperatorEntry title="pointer to member" op=".*" example="CPP-Operator-member-ptr.cpp" />
 	    <OperatorEntry title="dereference pointer to member" op="->*" example="CPP-Operator-deref-member-ptr.cpp" />
+        -->
 	    <OperatorEntry title="comma" op="," example="../C/C-Operator-comma.c" />
         <OperatorEntry title="conditional" op="?  :" example="../C/C-Operator-turnary.c" />
         <OperatorEntry title="dot" op="." example="../C/C-member-access.c" />
@@ -1528,6 +1537,7 @@
     </Category>
 
     <Category title="Other">
+        <!--
      	<DocEntry title="static_cast">
             <Elements>
                 <Element name="call" />
@@ -1720,92 +1730,13 @@
             <Example file="CPP-asm-2.cpp" />
             <Example file="CPP-asm-3.cpp" />
         </DocEntry>
-
+        -->
     </Category>
 
-    <Category title="Templates">
-        <DocEntry title="template">
-            <Elements>
-                <Element name="template" />
-                <Subelement name="parameter_list" />
-                <Subelement name="parameter" />
-                <Subelement name="typename" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:class[src:template]">
-                    <Desc>Find all class templates</Desc>
-                </XPath>
-                <XPath path="//src:function[src:template]">
-                    <Desc>Find all function templates</Desc>
-                </XPath>
-                <XPath path="//src:function[count(src:template) = 2]">
-                    <Desc>Find all template member function templates</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example title="templated class" file="CPP-template-1.cpp" />
-            <Example title="templated function" file="CPP-template-2.cpp" />
-            <Example title="partial template specialization" file="CPP-template-4.cpp" />
-            <Example title="template member function template" file="CPP-template-5.cpp" />
-        </DocEntry>
 
-        <DocEntry title="template parameters">
-            <Elements>
-                <Element name="parameter_list" />
-                <Subelement name="param" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:template/src:parameter_list/src:param">
-                    <Desc>Find all template parameters</Desc>
-                </XPath>
-                <XPath path="//src:class[src:template/src:parameter_list/src:param/src:type/src:template]">
-                    <Desc>Find all class templates which use a template template parameter</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example title="typename parameter" file="CPP-template-param-1.cpp" />
-            <Example title="class parameter" file="CPP-template-param-2.cpp" />
-            <Example title="default template parameter" file="CPP-template-param-3.cpp" />
-            <Example title="template parameter pack" file="CPP-template-param-4.cpp" />
-            <Example title="template template parameter" file="CPP-template-param-5.cpp" />
-        </DocEntry>
-
-        <DocEntry title="typename">
-            <Elements>
-                <Element name="typename" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:class[src:template/src:parameter_iist/src:param/src:type/src:typename]">
-                    <Desc>Find all class templates which use typename as part of its parameter list</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example title="typename parameter" file="CPP-template-param-1.cpp" />
-        </DocEntry>
-
-        <DocEntry title="class type specifier">
-            <Elements>
-                <Element name="typename" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:class[src:template/src:parameter_list/src:param/src:type/src:name[.='class']]">
-                    <Desc>Find all class which use class within instead of type name in at least one template parameter</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="CPP-class-template-specifier-1.cpp" />
-        </DocEntry>
-
-        <DocEntry title="template parameter pack">
-            <Elements>
-                <Element name="modifier" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:class[src:template/src:parameter_list/src:param/src:type/src:modifier[.='...']]">
-                    <Desc>Find all class templates that use a template parameter pack</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="CPP-var-type-mod-1.cpp" />
-        </DocEntry>
-    </Category>
 
     <Category title="Exceptions">
+        <!--
         <DocEntry title="throw">
             <Elements>
                 <Element name="throw" />
@@ -1864,6 +1795,7 @@
             <Example file="CPP-func-try-catch-1.cpp" />
             <Example file="CPP-func-try-catch-2.cpp" />
         </DocEntry>
+        -->
     </Category>
 
 </DocConfig>
