@@ -3644,7 +3644,7 @@ comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY
         {
             if (markup_comma && ((!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
                  && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT) && !(inTransparentMode(MODE_IN_INIT) && inMode(MODE_EXPRESSION | MODE_LIST)))
-                && !inMode(MODE_ENUM))
+                && !inMode(MODE_ENUM) && !inMode(MODE_INTERNAL_END_CURLY))
                 startElement(SOPERATOR);
         }
         COMMA
@@ -3664,7 +3664,14 @@ colon_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 
             }
 
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+            if(inLanguage(LANGUAGE_OBJECTIVE_C) && inTransparentMode(MODE_INTERNAL_END_CURLY)) {
+
+                endDownToMode(MODE_INTERNAL_END_CURLY);
+
+            }
+
+            if ((!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+                && (!inLanguage(LANGUAGE_OBJECTIVE_C) || !inMode(MODE_INTERNAL_END_CURLY)))
                 startElement(SOPERATOR);
 
         }
