@@ -4578,7 +4578,7 @@ variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
 attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
-            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_END_AT_COMMA);
 
             startElement(SATTRIBUTE);
         }
@@ -4587,7 +4587,7 @@ attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         // do not warn as identifier list and colon are in complete expression as well, but need special processing here.
         (options { warnWhenFollowAmbig = false; } : { next_token() == COLON }? attribute_csharp_target COLON)*
 
-        complete_expression
+        attribute_inner_list
 
         RBRACKET
 ;
@@ -4600,17 +4600,24 @@ attribute_csharp_target[] { SingleElement element(this); ENTRY_DEBUG } :
         (RETURN | EVENT | identifier_list)
 ;
 
+// inner attribute list handling
+attribute_inner_list[] { ENTRY_DEBUG } :
+
+    complete_expression (COMMA complete_expression)*
+
+;
+
 // C++11 attributes
 attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
-            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_END_AT_COMMA);
 
             startElement(SATTRIBUTE);
         }
         LBRACKET LBRACKET
 
-        complete_expression
+        attribute_inner_list
 
         RBRACKET RBRACKET
 ;
