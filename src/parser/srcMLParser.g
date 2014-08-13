@@ -2342,6 +2342,15 @@ import_statement[] { ENTRY_DEBUG } :
         IMPORT
 ;
 
+// * as name
+multop_name[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+                startElement(SNAME);
+        }
+        MULTOPS
+;
+
+
 // package statement
 package_statement[] { ENTRY_DEBUG } :
         {
@@ -5149,7 +5158,7 @@ compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
 
         template_argument_list |
         simple_name_optional_template
-        (options { greedy = true; } : (period { iscompound = true; } (keyword_name | simple_name_optional_template | { LA(1) == MULTOPS && next_token() == TERMINATE }? general_operators)))*
+        (options { greedy = true; } : (period { iscompound = true; } (keyword_name | simple_name_optional_template | { next_token() == TERMINATE }? multop_name)))*
 
 ;
 

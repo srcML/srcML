@@ -38,11 +38,11 @@
 </unit>
 
 <unit>
-<import>import <name><name>a</name><operator>.</operator><name>b</name><operator>.</operator><operator>*</operator></name>;</import>
+<import>import <name><name>a</name><operator>.</operator><name>b</name><operator>.</operator><name>*</name></name>;</import>
 </unit>
 
 <unit>
-<import>import <name><name>a</name><operator>.</operator><name>b</name> <comment type="block">/* */</comment><operator>.</operator><comment type="block">/* */</comment><operator>*</operator></name>;</import>
+<import>import <name><name>a</name><operator>.</operator><name>b</name> <comment type="block">/* */</comment><operator>.</operator><comment type="block">/* */</comment><name>*</name></name>;</import>
 </unit>
 
 </unit>
