@@ -66,7 +66,7 @@
 </unit>
 
 <unit>
-<typedef>typedef <type><name>int</name></type> <name>a</name><operator>,</operator> <name>b</name>;</typedef>
+<typedef>typedef <type><name>int</name></type> <name>a</name>, <name>b</name>;</typedef>
 </unit>
 
 <unit>
