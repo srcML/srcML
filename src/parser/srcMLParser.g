@@ -3616,7 +3616,7 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
             if(inTransparentMode(MODE_ENUM) && inMode(MODE_INIT | MODE_EXPECT))
                 endDownToModeSet(MODE_ENUM | MODE_TOP);
 
-            if(inMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_LIST))
+            if(inMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_LIST) || inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
                 markup_comma = false;
 
         }
