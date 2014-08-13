@@ -3596,7 +3596,7 @@ bar[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // handle comma
-comma[] { ENTRY_DEBUG } :
+comma[] { bool markup_comma = true; ENTRY_DEBUG } :
         {
             // comma ends the current item in a list
             // or ends the current expression
@@ -3616,8 +3616,11 @@ comma[] { ENTRY_DEBUG } :
             if(inTransparentMode(MODE_ENUM) && inMode(MODE_INIT | MODE_EXPECT))
                 endDownToModeSet(MODE_ENUM | MODE_TOP);
 
+            if(inMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_LIST))
+                markup_comma = false;
+
         }
-        comma_marked
+        comma_marked[markup_comma]
         {
             if(inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA)) {
 
@@ -3630,10 +3633,10 @@ comma[] { ENTRY_DEBUG } :
 ;
 
 // marking comma operator
-comma_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
+comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if ((!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
-                 && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT) && !(inTransparentMode(MODE_IN_INIT) && inMode(MODE_EXPRESSION | MODE_LIST)) )
+            if (markup_comma && ((!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+                 && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT) && !(inTransparentMode(MODE_IN_INIT) && inMode(MODE_EXPRESSION | MODE_LIST))))
                 startElement(SOPERATOR);
         }
         COMMA
