@@ -2,11 +2,6 @@
     margin-top:3em;
 }
 
-#bodyContent {
-    max-width: 75%;
-    min-width: 50%;
-}
-
 /* ToC styles. */
 table {
     border-collapse: collapse;

@@ -19,6 +19,8 @@ a:hover {
 	height: 100%;
 	position: relative;
 	margin: 0 auto;
+    max-width: 75%;
+    min-width: 50%;
 }
 
 #srcMLHeader {
