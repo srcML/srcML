@@ -923,5 +923,20 @@
                 </XPath>                
             </XPathQueries>
         </DocEntry>
+
+        <DocEntry title="asm">
+            <Elements>
+                <Element name="asm" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:asm">
+                    <Desc>Find all uses of asm</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="../CPlusPlus/CPP-asm-1.cpp" />
+            <Example file="../CPlusPlus/CPP-asm-2.cpp" />
+            <Example file="../CPlusPlus/CPP-asm-3.cpp" />
+        </DocEntry>
+
     </Category>
 </DocConfig>

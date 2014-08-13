@@ -1706,6 +1706,21 @@
             </XPathQueries>
             <Example file="CPP-attribute-1.cpp" />
         </DocEntry>
+
+        <DocEntry title="asm">
+            <Elements>
+                <Element name="asm" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:asm">
+                    <Desc>Find all uses of asm</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="CPP-asm-1.cpp" />
+            <Example file="CPP-asm-2.cpp" />
+            <Example file="CPP-asm-3.cpp" />
+        </DocEntry>
+
     </Category>
 
     <Category title="Templates">

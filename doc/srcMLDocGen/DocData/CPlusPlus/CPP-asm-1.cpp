@@ -1,0 +1,1 @@
+asm("movl %ebx, %eax");
