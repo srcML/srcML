@@ -14,7 +14,7 @@
 </unit>
 
 <unit>
-<catch>catch <parameter_list>(<param><decl><type>...</type></decl></param>)</parameter_list> <block>{}</block></catch>
+<catch>catch <parameter_list>(<param><decl><type><modifier>...</modifier></type></decl></param>)</parameter_list> <block>{}</block></catch>
 </unit>
 
 </unit>

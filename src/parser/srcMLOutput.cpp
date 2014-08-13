@@ -113,6 +113,7 @@ namespace {
     ELEMENT_MAP(STYPEPREV, "type")
     ELEMENT_MAP(SCONDITION, "condition")
     ELEMENT_MAP(SBLOCK, "block")
+    ELEMENT_MAP(SPSEUDO_BLOCK, "block")
     ELEMENT_MAP(SINDEX, "index")
     ELEMENT_MAP(SDECLTYPE, "decltype")
     ELEMENT_MAP(STYPENAME, "typename")
@@ -297,10 +298,11 @@ namespace {
     // special characters
     ELEMENT_MAP(CONTROL_CHAR,   "escape")
     ELEMENT_MAP(SANNOTATION,    "annotation")
-    ELEMENT_MAP(SALIGNOF,    "alignof")
 
-    // C++11
+    // C++
     ELEMENT_MAP(SALIGNAS,    "alignas")
+    ELEMENT_MAP(SALIGNOF,    "alignof")
+    ELEMENT_MAP(STYPEID,     "typeid")
 
     // Objective-C
     ELEMENT_MAP(SRECEIVER,             "receiver")
@@ -427,6 +429,20 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 
         columnAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
         columnAttribute += ":column";
+    }
+
+    if(!isoption(options, SRCML_OPTION_OPTIONAL_MARKUP)) {
+
+        ElementPrefix[SSTRING]   = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SCHAR]     = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SLITERAL]  = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SBOOLEAN]  = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SNULL]     = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SCOMPLEX]  = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SNIL]      = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SOPERATOR] = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SMODIFIER] = SRCML_SRC_NS_URI_POS;
+
     }
 
 }
@@ -724,13 +740,13 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
         (depth == 0) && isoption(options, SRCML_OPTION_DEBUG)    ? SRCML_ERR_NS_URI : 0,
 
         // optional literal xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_LITERAL)  ? SRCML_EXT_LITERAL_NS_URI : 0,
+        (depth == 0) && isoption(options, SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_LITERAL)  ? SRCML_EXT_LITERAL_NS_URI : 0,
 
         // optional operator xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_OPERATOR) ? SRCML_EXT_OPERATOR_NS_URI : 0,
+        (depth == 0) && isoption(options, SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_OPERATOR) ? SRCML_EXT_OPERATOR_NS_URI : 0,
 
         // optional modifier xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_MODIFIER) ? SRCML_EXT_MODIFIER_NS_URI : 0,
+        (depth == 0) && isoption(options, SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_MODIFIER) ? SRCML_EXT_MODIFIER_NS_URI : 0,
 
         // optional position xml namespace
         (depth == 0) && isoption(options, SRCML_OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
@@ -1024,6 +1040,21 @@ void srcMLOutput::processAccess(const antlr::RefToken& token) {
         xmlTextWriterEndElement(xout);
         --openelementcount;
     }
+}
+
+
+/**
+ * processPseudoBlock
+ * @param token token to output
+ *
+ * Callback to process/output token for pseudo block.
+ */
+void srcMLOutput::processPseudoBlock(const antlr::RefToken& token) {
+
+    static const char* type_pseudo = "pseudo";
+
+    processOptional(token, "type", type_pseudo);
+
 }
 
 /**

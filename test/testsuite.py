@@ -309,7 +309,7 @@ def defaultxmlns(l):
 	newl = []
 	for a in l:
 		url = a.split('=')[1]
-		if url == 'http://www.sdml.info/srcML/src' or url == 'http://www.sdml.info/srcML/cpp' or url == 'http://www.sdml.info/srcML/srcerr' or url == 'http://www.sdml.info/srcML/literal' or url == 'http://www.sdml.info/srcML/operator':
+		if url == 'http://www.sdml.info/srcML/src' or url == 'http://www.sdml.info/srcML/cpp' or url == 'http://www.sdml.info/srcML/srcerr':
 			newl.append(a)
 	return newl
 
@@ -318,7 +318,7 @@ def nondefaultxmlns(l):
 	newl = []
 	for a in l:
 		url = a.split('=')[1]
-		if not(url == 'http://www.sdml.info/srcML/src' or url == 'http://www.sdml.info/srcML/cpp' or url == 'http://www.sdml.info/srcML/srcerr' or url == 'http://www.sdml.info/srcML/literal' or url == 'http://www.sdml.info/srcML/operator'):
+		if not(url == 'http://www.sdml.info/srcML/src' or url == 'http://www.sdml.info/srcML/cpp' or url == 'http://www.sdml.info/srcML/srcerr'):
 			newl.append(a)
 	return newl
 

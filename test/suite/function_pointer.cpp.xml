@@ -2,27 +2,27 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="function_pointer" filename="function_pointer">
 
 <unit>
-<function_decl><type><name>int</name></type> <name>f</name><parameter_list>(<param><function_decl><type><name>double</name></type> (*<name>g</name>)<parameter_list>()</parameter_list></function_decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>int</name></type> <name>f</name><parameter_list>(<param><function_decl><type><name>double</name></type> (<modifier>*</modifier><name>g</name>)<parameter_list>()</parameter_list></function_decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>int</name></type> <name>f</name><parameter_list>(<param><function_decl><type><name>double</name></type> (*<name>g</name>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>int</name></type> <name>f</name><parameter_list>(<param><function_decl><type><name>double</name></type> (<modifier>*</modifier><name>g</name>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>int</name></type> <name>f</name><parameter_list>(<param><function_decl><type><name>double</name></type> (*<name>g</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list></function_decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>int</name></type> <name>f</name><parameter_list>(<param><function_decl><type><name>double</name></type> (<modifier>*</modifier><name>g</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list></function_decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>double</name></type> (*<name>g</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>double</name></type> (<modifier>*</modifier><name>g</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>double</name></type> (*)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>double</name></type> (<modifier>*</modifier>)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> (*<name>a</name>) <parameter_list>(<param><function_decl><type><name>void</name></type> (<name>callback</name>) <parameter_list>(<param><decl><type><name>void</name> *</type> <name>data</name></decl></param>)</parameter_list></function_decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> (<modifier>*</modifier><name>a</name>) <parameter_list>(<param><function_decl><type><name>void</name></type> (<name>callback</name>) <parameter_list>(<param><decl><type><name>void</name> <modifier>*</modifier></type> <name>data</name></decl></param>)</parameter_list></function_decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
@@ -30,19 +30,19 @@
 </unit>
 
 <unit>
-<function_decl><type><name>double</name>*</type> (*)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>double</name><modifier>*</modifier></type> (<modifier>*</modifier>)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><specifier>const</specifier> <name>double</name>*</type> (*)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><specifier>const</specifier> <name>double</name><modifier>*</modifier></type> (<modifier>*</modifier>)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><specifier>const</specifier> <name>double</name>*</type> (*<name>f</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><specifier>const</specifier> <name>double</name><modifier>*</modifier></type> (<modifier>*</modifier><name>f</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>f</name></type>(*<name>a</name>)<parameter_list>()</parameter_list>;</function_decl>
+<function_decl><type><name>f</name></type>(<modifier>*</modifier><name>a</name>)<parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <!--
@@ -53,20 +53,20 @@
 
 <unit>
 <function><type><specifier>static</specifier> <name>void</name></type>
-<name>pass_state_graph</name> <parameter_list>(<param><decl><type><name>state_t</name></type> <name>start_state</name></decl></param>, <param><function_decl><type><name>void</name></type> (*<name>applied_func</name>) <parameter_list>(<param><decl><type><name>state_t</name></type> <name>state</name></decl></param>)</parameter_list></function_decl></param>)</parameter_list>
+<name>pass_state_graph</name> <parameter_list>(<param><decl><type><name>state_t</name></type> <name>start_state</name></decl></param>, <param><function_decl><type><name>void</name></type> (<modifier>*</modifier><name>applied_func</name>) <parameter_list>(<param><decl><type><name>state_t</name></type> <name>state</name></decl></param>)</parameter_list></function_decl></param>)</parameter_list>
 <block>{
 
-  <expr_stmt><expr><call>(*<name>applied_func</name>) <argument_list>(<argument><expr><name>start_state</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  <expr_stmt><expr><call>(<modifier>*</modifier><name>applied_func</name>) <argument_list>(<argument><expr><name>start_state</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 
 }</block></function>
 </unit>
 
 <unit>
-<function_decl><type><name>int</name></type> (*<name>minus</name>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <init>= <expr><name>subtract</name></expr></init>;</function_decl>
+<function_decl><type><name>int</name></type> (<modifier>*</modifier><name>minus</name>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <init>= <expr><name>subtract</name></expr></init>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><function_decl><type><name>int</name></type> (*<name>minus</name>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <init>= <expr><name>subtract</name></expr></init></function_decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><function_decl><type><name>int</name></type> (<modifier>*</modifier><name>minus</name>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>)</parameter_list> <init>= <expr><name>subtract</name></expr></init></function_decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 </unit>

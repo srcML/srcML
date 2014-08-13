@@ -2,15 +2,15 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="macro.keyword">
 
 <unit>
-<macro><name>a</name></macro> <if>if<condition>(<expr>1</expr>)</condition><then><empty_stmt>;</empty_stmt></then></if>
+<macro><name>a</name></macro> <if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo"><empty_stmt>;</empty_stmt></block></then></if>
 </unit>
 
 <unit>
-<macro><name>a</name></macro> <while>while<condition>(<expr>1</expr>)</condition><empty_stmt>;</empty_stmt></while>
+<macro><name>a</name></macro> <while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><empty_stmt>;</empty_stmt></block></while>
 </unit>
 
 <unit>
-<macro><name>a</name></macro> <for>for<control>(<init><expr>1</expr></init>)</control><empty_stmt>;</empty_stmt></for>
+<macro><name>a</name></macro> <for>for<control>(<init><expr><literal type="number">1</literal></expr></init>)</control><block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
 </unit>

@@ -6,51 +6,51 @@
 </unit>
 
 <unit>
-<function><type><name>void</name></type> <name>foo</name><parameter_list>(<param><function_decl><type><name>int</name></type> (*<name>a</name>)<parameter_list>(<param><decl><type><name>char</name></type> <name>i</name></decl></param>)</parameter_list></function_decl></param>, <param><decl><type><name>char</name></type> <name>b</name></decl></param>)</parameter_list>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>(<param><function_decl><type><name>int</name></type> (<modifier>*</modifier><name>a</name>)<parameter_list>(<param><decl><type><name>char</name></type> <name>i</name></decl></param>)</parameter_list></function_decl></param>, <param><decl><type><name>char</name></type> <name>b</name></decl></param>)</parameter_list>
 <block>{
 }</block></function> 
 </unit>
 
 <unit>
-<function><type><name>int</name></type> <name>main</name><parameter_list>(<param><decl><type><name>int</name></type> <name>argc</name></decl></param>, <param><decl><type><name><name>int</name>*<index>[]</index></name></type> <name>argv</name></decl></param>)</parameter_list>
+<function><type><name>int</name></type> <name>main</name><parameter_list>(<param><decl><type><name>int</name></type> <name>argc</name></decl></param>, <param><decl><type><name><name>int</name><modifier>*</modifier><index>[]</index></name></type> <name>argv</name></decl></param>)</parameter_list>
 <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>virtual</specifier> <name>int</name>*</type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>virtual</specifier> <name>int</name><modifier>*</modifier></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><name>int</name> *</type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>const</specifier> <name>int</name>*</type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><specifier>const</specifier> <name>int</name><modifier>*</modifier></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><name>int</name>*</type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><name>int</name><modifier>*</modifier></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>const</specifier> <name>int</name>*</type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>const</specifier> <name>int</name><modifier>*</modifier></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name>*</type> <name>a</name></decl></param>)</parameter_list><block>{}</block></function>
+<function><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name><modifier>*</modifier></type> <name>a</name></decl></param>)</parameter_list><block>{}</block></function>
 </unit>
 
 
 <unit>
-<function><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name>*</type> <name>a</name></decl></param>)</parameter_list><block>{}</block></function>
+<function><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name><modifier>*</modifier></type> <name>a</name></decl></param>)</parameter_list><block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>constexpr</specifier> <name>int</name></type> <name>get_five</name><parameter_list>()</parameter_list> <block>{<return>return <expr>5</expr>;</return>}</block></function>
+<function><type><specifier>constexpr</specifier> <name>int</name></type> <name>get_five</name><parameter_list>()</parameter_list> <block>{<return>return <expr><literal type="number">5</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type><name>int</name></type> <name>get_five</name><parameter_list>()</parameter_list> <specifier>const</specifier> <block>{<return>return <expr>5</expr>;</return>}</block></function>
+<function><type><name>int</name></type> <name>get_five</name><parameter_list>()</parameter_list> <specifier>const</specifier> <block>{<return>return <expr><literal type="number">5</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
@@ -62,7 +62,7 @@
 </unit>
 
 <unit>
-<function><type><name>auto</name></type> <name>fpif</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list>-&gt;<function_decl><type><name>int</name></type> (*)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
+<function><type><name>auto</name></type> <name>fpif</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list>-&gt;<function_decl><type><name>int</name></type> (<modifier>*</modifier>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
 </unit>
 
 <unit>
@@ -70,7 +70,7 @@
 </unit>
 
 <unit>
-<function><type><name>void</name></type> <name>bar</name><parameter_list>()</parameter_list> <noexcept>noexcept<argument_list>(<argument><expr>true</expr></argument>)</argument_list></noexcept> <block>{}</block></function>
+<function><type><name>void</name></type> <name>bar</name><parameter_list>()</parameter_list> <noexcept>noexcept<argument_list>(<argument><expr><literal type="boolean">true</literal></expr></argument>)</argument_list></noexcept> <block>{}</block></function>
 </unit>
 
 <unit>
@@ -90,79 +90,79 @@
 </unit>
 
 <unit>
-<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <specifier>const</specifier> &amp; <noexcept>noexcept<argument_list>(<noexcept>noexcept<argument_list>(<argument><expr><call><name>T</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></noexcept>)</argument_list></noexcept> <attribute>[[<expr><name>System</name></expr>]]</attribute> -&gt; <function_decl><type><name>int</name></type> (*)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <specifier>const</specifier> &amp; <noexcept>noexcept<argument_list>(<noexcept>noexcept<argument_list>(<argument><expr><call><name>T</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></noexcept>)</argument_list></noexcept> <attribute>[[<expr><name>System</name></expr>]]</attribute> -&gt; <function_decl><type><name>int</name></type> (<modifier>*</modifier>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <specifier>const</specifier> &amp;&amp; <noexcept>noexcept<argument_list>(<noexcept>noexcept<argument_list>(<argument><expr><call><name>T</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></noexcept>)</argument_list></noexcept> <attribute>[[<expr><name>System</name></expr>]]</attribute> -&gt; <function_decl><type><name>int</name></type> (*)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <specifier>const</specifier> &amp;&amp; <noexcept>noexcept<argument_list>(<noexcept>noexcept<argument_list>(<argument><expr><call><name>T</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></noexcept>)</argument_list></noexcept> <attribute>[[<expr><name>System</name></expr>]]</attribute> -&gt; <function_decl><type><name>int</name></type> (<modifier>*</modifier>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
 </unit>
 
 <unit>
 <template>template <parameter_list>&lt;<param><type><typename>typename</typename></type> <name>F</name></param>&gt;</parameter_list>
-<function><type><name>auto</name></type> <name>run</name><parameter_list>(<param><decl><type><name>F</name></type> <name>f</name></decl></param>)</parameter_list> -&gt; <type><typename>typename</typename> <name><name>Q</name>::<name><name>Q</name><argument_list>&lt;<argument><expr>!<name><name>Q</name>::<name><name>H</name><argument_list>&lt;<argument><expr><name>Functor</name></expr></argument>&gt;</argument_list></name>::<name>V</name></name></expr></argument>, <argument><expr><name><name>Q</name><argument_list>&lt;<argument><expr><decltype>decltype<argument_list>(<argument><expr><call><name>f</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></decltype></expr></argument>&gt;</argument_list></name></expr></argument> &gt;</argument_list></name>::<name>T</name></name></type>
+<function><type><name>auto</name></type> <name>run</name><parameter_list>(<param><decl><type><name>F</name></type> <name>f</name></decl></param>)</parameter_list> -&gt; <type><typename>typename</typename> <name><name>Q</name><operator>::</operator><name><name>Q</name><argument_list>&lt;<argument><expr>!<name><name>Q</name><operator>::</operator><name><name>H</name><argument_list>&lt;<argument><expr><name>Functor</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>V</name></name></expr></argument>, <argument><expr><name><name>Q</name><argument_list>&lt;<argument><expr><decltype>decltype<argument_list>(<argument><expr><call><name>f</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></decltype></expr></argument>&gt;</argument_list></name></expr></argument> &gt;</argument_list></name><operator>::</operator><name>T</name></name></type>
             <block>{}</block></function></template>
 </unit>
 
 <unit>
 <function><type><name>auto</name></type> <name>run</name><parameter_list>()</parameter_list>
-  -&gt; <type><typename>typename</typename> <name><name>QtPrivate</name>::<name><name>QEnableIf</name><argument_list>&lt;<argument><expr>!<name><name>QtPrivate</name>::<name><name>HasResultType</name><argument_list>&lt;<argument><expr><name>Functor</name></expr></argument>&gt;</argument_list></name>::<name>Value</name></name></expr></argument>,
-	     <argument><expr><name><name>QFuture</name><argument_list>&lt;<argument><expr><decltype>decltype<argument_list>(<argument><expr><call><name>functor</name><argument_list>(<argument><expr><name>arg1</name></expr></argument>, <argument><expr><name>arg2</name></expr></argument>, <argument><expr><name>arg3</name></expr></argument>, <argument><expr><name>arg4</name></expr></argument>, <argument><expr><name>arg5</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></decltype></expr></argument>&gt;</argument_list></name></expr></argument> &gt;</argument_list></name>::<name>Type</name></name></type> <block>{}</block></function>
+  -&gt; <type><typename>typename</typename> <name><name>QtPrivate</name><operator>::</operator><name><name>QEnableIf</name><argument_list>&lt;<argument><expr><operator>!</operator><name><name>QtPrivate</name><operator>::</operator><name><name>HasResultType</name><argument_list>&lt;<argument><expr><name>Functor</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>Value</name></name></expr></argument>,
+	     <argument><expr><name><name>QFuture</name><argument_list>&lt;<argument><expr><decltype>decltype<argument_list>(<argument><expr><call><name>functor</name><argument_list>(<argument><expr><name>arg1</name></expr></argument>, <argument><expr><name>arg2</name></expr></argument>, <argument><expr><name>arg3</name></expr></argument>, <argument><expr><name>arg4</name></expr></argument>, <argument><expr><name>arg5</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></decltype></expr></argument>&gt;</argument_list></name></expr></argument> &gt;</argument_list></name><operator>::</operator><name>Type</name></name></type> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type>class <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>class <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>struct <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>struct <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>union <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>union <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>enum <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>enum <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>class <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>class <name><operator>::</operator><name>A</name><operator>::</operator><name>B</name><operator>::</operator><name>C</name></name><modifier>*</modifier></type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>struct <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>struct <name><operator>::</operator><name>A</name><operator>::</operator><name>B</name><operator>::</operator><name>C</name></name><modifier>*</modifier></type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>union <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>union <name><operator>::</operator><name>A</name><operator>::</operator><name>B</name><operator>::</operator><name>C</name></name><modifier>*</modifier></type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>enum <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type>enum <name><operator>::</operator><name>A</name><operator>::</operator><name>B</name><operator>::</operator><name>C</name></name><modifier>*</modifier></type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type><typename>typename</typename> <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type><typename>typename</typename> <name><operator>::</operator><name>A</name><operator>::</operator><name>B</name><operator>::</operator><name>C</name></name><modifier>*</modifier></type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>virtual</specifier> class <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type><specifier>virtual</specifier> class <name><operator>::</operator><name>A</name><operator>::</operator><name>B</name><operator>::</operator><name>C</name></name><modifier>*</modifier></type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>virtual</specifier> struct <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type><specifier>virtual</specifier> struct <name><operator>::</operator><name>A</name><operator>::</operator><name>B</name><operator>::</operator><name>C</name></name><modifier>*</modifier></type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>virtual</specifier> union <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type><specifier>virtual</specifier> union <name><operator>::</operator><name>A</name><operator>::</operator><name>B</name><operator>::</operator><name>C</name></name><modifier>*</modifier></type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 <!--
 <unit>
-<function><type><specifier>virtual</specifier> enum <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type><specifier>virtual</specifier> enum <name><operator>::</operator><name>A</name><operator>::</operator><name>B</name><operator>::</operator><name>C</name></name><modifier>*</modifier></type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 -->
 <unit>
-<function><type><specifier>virtual</specifier> <typename>typename</typename> <name>::<name>A</name>::<name>B</name>::<name>C</name></name>*</type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr>0</expr>;</return>}</block></function>
+<function><type><specifier>virtual</specifier> <typename>typename</typename> <name><operator>::</operator><name>A</name><operator>::</operator><name>B</name><operator>::</operator><name>C</name></name><modifier>*</modifier></type> <name>D</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>

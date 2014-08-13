@@ -2,12 +2,12 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="cppif" options="NESTIF,CPPIF_CHECK">
 
 <unit>
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 
 <unit>
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
 <expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 <expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
@@ -15,27 +15,17 @@
 </unit>
 
 <unit>
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
 <expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-<cpp:elif>#<cpp:directive>elif</cpp:directive> <expr>1</expr></cpp:elif>
+<cpp:elif>#<cpp:directive>elif</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:elif>
 <expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 
 <unit>
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
 <expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-<cpp:elif>#<cpp:directive>elif</cpp:directive> <expr>1</expr></cpp:elif>
-<expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
-<expr_stmt><expr><call><name>c</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
-</unit>
-
-<unit>
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
-<expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<cpp:elif>#<cpp:directive>elif</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:elif>
 <expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 <expr_stmt><expr><call><name>c</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
@@ -43,7 +33,17 @@
 </unit>
 
 <unit>
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
+<expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<expr_stmt><expr><call><name>c</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
 <if>if<condition>()</condition><then> <block>{}</block></then>
 <else>else <block>{}</block></else>
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
@@ -52,7 +52,7 @@
 </unit>
 
 <unit>
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
 <if>if<condition>()</condition><then> <block>{}</block></then>
 <else>else <block>{}</block></else>
 <cpp:error>#<cpp:directive>elseif</cpp:directive></cpp:error>
@@ -66,7 +66,7 @@
 <unit>
 <if>if<condition>()</condition><then>
 <if>if<condition>()</condition><then> <block>{}</block></then>
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
 <else>else <block>{}</block></else></if></then>
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 <else>else <block>{}</block></else></if>
@@ -75,15 +75,15 @@
 -->
 
 <unit>
-<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
 }</block></then></if>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 
 <unit>
-<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
 }<block/>
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 }</block></then></if>
@@ -91,8 +91,8 @@
 </unit>
 
 <unit>
-<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
 }<block/>
 <cpp:elif>#<cpp:directive>elif</cpp:directive></cpp:elif>
 }<block/>
@@ -102,8 +102,8 @@
 </unit>
 
 <unit>
-<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
 }<block/>
 <cpp:elif>#<cpp:directive>elif</cpp:directive></cpp:elif>
 }</block></then></if>
@@ -111,8 +111,8 @@
 </unit>
 
 <unit>
-<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
 }<block/>
 <cpp:elif>#<cpp:directive>elif</cpp:directive></cpp:elif>
 }<block/>
@@ -122,19 +122,19 @@
 </unit>
 
 <unit>
-<if>if<condition>(<expr>1
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
-)<condition/></expr>
+<if>if<condition>(<expr><literal type="number">1
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
+)<condition/></literal></expr>
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 )</condition><then>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
-<empty_stmt>;</empty_stmt></then></if>
+<block type="pseudo"><empty_stmt>;</empty_stmt></block></then></if>
 </unit>
 
 <unit>
 <block>{
 <block>{
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
 }<block/>
 }<block/>
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
@@ -144,8 +144,8 @@
 </unit>
 
 <unit>
-<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
 }</block></then> <else>else <block>{
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 }</block></else></if>
@@ -153,19 +153,19 @@
 </unit>
 
 <unit>
-<if>if<condition>(<expr>1</expr>)</condition><then> <block>{
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
-}</block></then> <else>else <if>if<then> <block>{
+<if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
+}</block></then> <else>else <block type="pseudo"><if>if<then> <block>{
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
-}</block></then> <else>else <if>if<then> <block>{
+}</block></then> <else>else <block type="pseudo"><if>if<then> <block>{
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
-}</block></then></if></else></if></else></if>
+}</block></then></if></block></else></if></block></else></if>
 </unit>
 
 <unit>
 <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
       <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
       <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;
@@ -175,7 +175,7 @@
 <unit>
 <if>if<condition>()</condition><then> <block>{
     <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
         <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
         <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;
@@ -185,19 +185,19 @@
 
 <unit>
 <if>if<condition>()</condition><then>
-    <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+    <block type="pseudo"><expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
         <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
         <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;
-<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></expr_stmt></then></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></expr_stmt></block></then></if>
 
 </unit>
 
 <unit>
 <else>else <block>{
     <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
         <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
         <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;
@@ -207,36 +207,36 @@
 
 <unit>
 <else>else
-    <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+    <block type="pseudo"><expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
         <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
         <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;
-<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></expr_stmt></else>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></expr_stmt></block></else>
 
 </unit>
 
 <unit>
 <if>if<condition>()</condition><then>
-    <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+    <block type="pseudo"><expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
         <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
         <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;
-<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></expr_stmt></then></if>
-<else>else <empty_stmt>;</empty_stmt></else>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></expr_stmt></block></then></if>
+<else>else <block type="pseudo"><empty_stmt>;</empty_stmt></block></else>
 </unit>
 
 <unit>
 <if>if<condition>()</condition><then>
-<if>if<condition>()</condition><then>
-    <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>1</expr></cpp:if>
+<block type="pseudo"><if>if<condition>()</condition><then>
+    <block type="pseudo"><expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><name>arg1</name><argument_list>(
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
         <argument><expr><name>arg2</name></expr></argument>)<argument_list/><call/><expr/><argument/>)<argument_list/><call/><expr/>;
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
         <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;
-<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></expr_stmt></then></if></then></if>
-<else>else <empty_stmt>;</empty_stmt></else>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></expr_stmt></block></then></if></block></then></if>
+<else>else <block type="pseudo"><empty_stmt>;</empty_stmt></block></else>
 </unit>
 
 </unit>

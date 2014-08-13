@@ -26,7 +26,7 @@
 </unit>
 
 <unit>
-<class>class <name>D</name> <super>: <name><name>A</name>.<name>B</name>.<name>C</name></name></super> <block>{ }</block></class><empty_stmt>;</empty_stmt>
+<class>class <name>D</name> <super>: <name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></super> <block>{ }</block></class><empty_stmt>;</empty_stmt>
 </unit>
 
 </unit>

@@ -6,26 +6,26 @@
 </unit>
 
 <unit>
-<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <empty_stmt>;</empty_stmt></switch>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block type="pseudo"><empty_stmt>;</empty_stmt></block></switch>
 </unit>
 
 <unit>
-<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <case>case <expr><name>foo</name></expr>: <break>break;</break></case></switch>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block type="pseudo"><case>case <expr><name>foo</name></expr>: <break>break;</break></case></block></switch>
 </unit>
 
 <unit>
-<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <default>default: <break>break;</break></default></switch>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block type="pseudo"><default>default: <break>break;</break></default></block></switch>
 </unit>
 
 <unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
- <case>case <expr>1</expr>:
+ <case>case <expr><literal type="number">1</literal></expr>:
 </case>}</block></switch>
 </unit>
 
 <unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
- <case>case <expr>1</expr>:
+ <case>case <expr><literal type="number">1</literal></expr>:
    <break>break;</break>
 </case>}</block></switch>
 </unit>
@@ -45,9 +45,9 @@
 
 <unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
- <case>case <expr>1</expr>:
+ <case>case <expr><literal type="number">1</literal></expr>:
    <break>break;</break>
- </case><case>case <expr>2</expr>:
+ </case><case>case <expr><literal type="number">2</literal></expr>:
    <break>break;</break>
 </case>}</block></switch>
 </unit>
@@ -63,9 +63,9 @@
 
 <unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
- <case>case <expr>1</expr>:
+ <case>case <expr><literal type="number">1</literal></expr>:
    <break>break;</break>
- </case><case>case <expr>2</expr>:
+ </case><case>case <expr><literal type="number">2</literal></expr>:
    <break>break;</break>
  </case><default>default:
    <break>break;</break>
@@ -74,10 +74,10 @@
 
 <unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
- <case>case <expr>1</expr>:
+ <case>case <expr><literal type="number">1</literal></expr>:
    <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
    <break>break;</break>
- </case><case>case <expr>2</expr>:
+ </case><case>case <expr><literal type="number">2</literal></expr>:
    <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
    <break>break;</break>
 </case>}</block></switch>
@@ -85,10 +85,10 @@
 
 <unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
- <case>case <expr>1</expr>:
+ <case>case <expr><literal type="number">1</literal></expr>:
    <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
    <break>break;</break>
- </case><case>case <expr>2</expr>:
+ </case><case>case <expr><literal type="number">2</literal></expr>:
    <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
    <break>break;</break>
  </case><default>default:

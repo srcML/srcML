@@ -2,39 +2,39 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="decl_simple" filename="decl_simple_cpp">
 
 <unit>
-<decl_stmt><decl><type><specifier>const</specifier> <name><name>std</name>::<name>s</name></name>&amp;</type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>s</name></name><modifier>&amp;</modifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>A</name>::<name>b</name>&amp;::<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><modifier>&amp;</modifier><operator>::</operator><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>A</name>::<name>b</name>*::<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><modifier>*</modifier><operator>::</operator><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>A</name>::<name>b</name>::*<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><operator>::</operator><modifier>*</modifier><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>A</name>::<name>b</name>::&amp;<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><operator>::</operator><modifier>&amp;</modifier><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>A</name>::<name>b</name>&amp;*::<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><modifier>&amp;</modifier><modifier>*</modifier><operator>::</operator><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>A</name>::<name>b</name>*&amp;::<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><modifier>*</modifier><modifier>&amp;</modifier><operator>::</operator><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>A</name>::<name>b</name>::*&amp;<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><operator>::</operator><modifier>*</modifier><modifier>&amp;</modifier><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>A</name>::<name>b</name>::&amp;*<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><operator>::</operator><modifier>&amp;</modifier><modifier>*</modifier><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -46,11 +46,11 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name> <specifier>const</specifier> *</type> <name>c</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name> <specifier>const</specifier> <modifier>*</modifier></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name> <specifier>const</specifier> * <specifier>const</specifier></type> <name>c</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name> <specifier>const</specifier> <modifier>*</modifier> <specifier>const</specifier></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -90,7 +90,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>thread_local</specifier> <name>unsigned</name> <name>int</name></type> <name>rage</name> <init>=<expr>0</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>thread_local</specifier> <name>unsigned</name> <name>int</name></type> <name>rage</name> <init>=<expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -98,15 +98,15 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr>1</expr></argument>, <argument><expr>2</expr></argument>}</argument_list></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>}</argument_list></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr><block>{<expr>1</expr>}</block></expr></argument>}</argument_list></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr><block>{<expr><literal type="number">1</literal></expr>}</block></expr></argument>}</argument_list></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr>1</expr></argument>, <argument><expr><block>{<expr><name>a</name></expr>}</block></expr></argument>}</argument_list></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><block>{<expr><name>a</name></expr>}</block></expr></argument>}</argument_list></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -123,11 +123,11 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>unsigned</name> <name>int</name></type> <name>a</name> <range>: <expr>3</expr></range></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>unsigned</name> <name>int</name></type> <name>a</name> <range>: <expr><literal type="number">3</literal></expr></range></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>unsigned</name> <name>int</name></type> <name>a</name> <range>: <expr>3</expr></range></decl>, <decl><type ref="prev"/><name>b</name> <range>: <expr>4</expr></range></decl>, <decl><type ref="prev"/><name>c</name> <range>: <expr>5</expr></range></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>unsigned</name> <name>int</name></type> <name>a</name> <range>: <expr><literal type="number">3</literal></expr></range></decl>, <decl><type ref="prev"/><name>b</name> <range>: <expr><literal type="number">4</literal></expr></range></decl>, <decl><type ref="prev"/><name>c</name> <range>: <expr><literal type="number">5</literal></expr></range></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -135,7 +135,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><alignas>alignas<argument_list>(<argument><expr>(<name>float</name>)</expr></argument>)</argument_list></alignas> <name>unsigned</name> <name>char</name></type> <name><name>c</name><index>[]</index></name></decl>;</decl_stmt>
+<decl_stmt><decl><type><alignas>alignas<argument_list>(<argument><expr><operator>(</operator><name>float</name><operator>)</operator></expr></argument>)</argument_list></alignas> <name>unsigned</name> <name>char</name></type> <name><name>c</name><index>[]</index></name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -169,15 +169,15 @@
 -->
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>c</name><argument_list>(<argument><expr>0</expr></argument>)</argument_list></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>c</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr>0</expr></range></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type="number">0</literal></expr></range></decl>;</decl_stmt>
 </unit>
 
 <unit>

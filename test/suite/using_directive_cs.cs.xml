@@ -2,11 +2,11 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="using" filename="using_directive_cs">
 
 <unit>
-<using>using <name><name>System</name>.<name>Text</name></name>;</using>
+<using>using <name><name>System</name><operator>.</operator><name>Text</name></name>;</using>
 </unit>
 
 <unit>
-<using>using <name>Project</name> <init>= <expr><name><name>PC</name>.<name>MyCompony</name>.<name>Project</name></name></expr></init>;</using>
+<using>using <name>Project</name> <init>= <expr><name><name>PC</name><operator>.</operator><name>MyCompony</name><operator>.</operator><name>Project</name></name></expr></init>;</using>
 </unit>
 
 </unit>

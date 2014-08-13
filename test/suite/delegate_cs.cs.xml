@@ -2,8 +2,8 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="delegate" filename="delegate_cs">
 
 <unit>
-<expr_stmt><expr><name><name>button1</name>.<name>Click</name></name> += <lambda><name>delegate</name><parameter_list>(<param><decl><type><name><name>System</name>.<name>Object</name></name></type> <name>o</name></decl></param>, <param><decl><type><name><name>System</name>.<name>EventArgs</name></name></type> <name>e</name></decl></param>)</parameter_list>
-                   <block>{ <expr_stmt><expr><call><name><name>System</name>.<name>Windows</name>.<name>Forms</name>.<name>MessageBox</name>.<name>Show</name></name><argument_list>(<argument><expr>"Click!"</expr></argument>)</argument_list></call></expr>;</expr_stmt> }</block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>button1</name><operator>.</operator><name>Click</name></name> <operator>+=</operator> <lambda><name>delegate</name><parameter_list>(<param><decl><type><name><name>System</name><operator>.</operator><name>Object</name></name></type> <name>o</name></decl></param>, <param><decl><type><name><name>System</name><operator>.</operator><name>EventArgs</name></name></type> <name>e</name></decl></param>)</parameter_list>
+                   <block>{ <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>Windows</name><operator>.</operator><name>Forms</name><operator>.</operator><name>MessageBox</name><operator>.</operator><name>Show</name></name><argument_list>(<argument><expr><literal type="string">"Click!"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt> }</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -21,13 +21,13 @@
 <unit>
 <function><type><name>void</name></type> <name>StartThread</name><parameter_list>()</parameter_list>
 <block>{
-    <decl_stmt><decl><type><name><name>System</name>.<name>Threading</name>.<name>Thread</name></name></type> <name>t1</name> <init>= <expr>new <call><name><name>System</name>.<name>Threading</name>.<name>Thread</name></name>
+    <decl_stmt><decl><type><name><name>System</name><operator>.</operator><name>Threading</name><operator>.</operator><name>Thread</name></name></type> <name>t1</name> <init>= <expr><operator>new</operator> <call><name><name>System</name><operator>.</operator><name>Threading</name><operator>.</operator><name>Thread</name></name>
       <argument_list>(<argument><expr><lambda><name>delegate</name><parameter_list>()</parameter_list>
             <block>{
-                <expr_stmt><expr><call><name><name>System</name>.<name>Console</name>.<name>Write</name></name><argument_list>(<argument><expr>"Hello,"</expr></argument>)</argument_list></call></expr>;</expr_stmt>
-                <expr_stmt><expr><call><name><name>System</name>.<name>Console</name>.<name>WriteLine</name></name><argument_list>(<argument><expr>"World!"</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>Console</name><operator>.</operator><name>Write</name></name><argument_list>(<argument><expr><literal type="string">"Hello,"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>Console</name><operator>.</operator><name>WriteLine</name></name><argument_list>(<argument><expr><literal type="string">"World!"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
             }</block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
-    <expr_stmt><expr><call><name><name>t1</name>.<name>Start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name>t1</name><operator>.</operator><name>Start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 }</block></function>
 </unit>
 
@@ -37,27 +37,27 @@
 
 <unit>
 <expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><lambda><name>delegate</name><parameter_list>()</parameter_list> <block>{
-                <if>if<condition>(<expr>1</expr>)</condition><then>
-                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></then></if>
+                <if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then>
+                    <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if>
  }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><lambda><name>delegate</name><parameter_list>()</parameter_list> <block>{
-                <while>while<condition>(<expr>1</expr>)</condition>
-                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></while>
+                <while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition>
+                    <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></while>
  }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><lambda><name>delegate</name><parameter_list>()</parameter_list> <block>{
-                <for>for<control>(<init>;</init><condition><expr>1</expr>;</condition><incr/>)</control>
-                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></for>
+                <for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control>
+                    <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></for>
  }</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<lambda><name>delegate</name> <block>{ <return>return <expr>1 + 1</expr>;</return> }</block></lambda>
+<lambda><name>delegate</name> <block>{ <return>return <expr><literal type="number">1</literal> <operator>+</operator> <literal type="number">1</literal></expr>;</return> }</block></lambda>
 </unit>
 
 </unit>
