@@ -6819,6 +6819,7 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
 // } matching and processing
 rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
         {
+
             if(isempty) {
 
                 // additional right parentheses indicates end of non-list modes
@@ -6833,7 +6834,8 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
             // end the single mode that started the list
             // don't end more than one since they may be nested
             if (isempty && inMode(MODE_LIST))
-                endWhileMode(MODE_LIST);
+                while(inMode(MODE_LIST) && (!inMode(MODE_INTERNAL_END_PAREN) || inMode(MODE_END_ONLY_AT_RPAREN)))
+                    endMode(MODE_LIST);
             
             else if(inTransparentMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP))
                 endWhileMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
