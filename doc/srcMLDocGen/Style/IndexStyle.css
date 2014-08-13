@@ -1,3 +1,8 @@
+#bodyContent {
+    max-width: 80%;
+    min-width: 50%;
+}
+
 /* Index page style */
 .indexLinks {
     column-width:13em;

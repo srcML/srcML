@@ -1,6 +1,8 @@
-body {
-    padding: 0px;
-    margin:0px;
+html, body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
     margin-bottom:3em;
 }
 
@@ -14,9 +16,9 @@ a:hover {
 }
 
 #bodyContent{
-    margin-left:15em;
-    margin-right:15em;
-    min-width:50em;
+	height: 100%;
+	position: relative;
+	margin: 0 auto;
 }
 
 #srcMLHeader {

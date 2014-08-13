@@ -2,6 +2,11 @@
     margin-top:3em;
 }
 
+#bodyContent {
+    max-width: 75%;
+    min-width: 50%;
+}
+
 /* ToC styles. */
 table {
     border-collapse: collapse;
@@ -431,8 +436,14 @@ span.cpp_undef span.src_name {
 
 
 /* Operators table */
-table.OpsTable tbody td:nth-child(2), table.OpsTable tbody td:nth-child(3) {
+
+
+table.OpsTable tbody td:nth-child(2) {
     text-align:center;
+}
+
+table.OpsTable tbody td:nth-child(3) {
+    padding-left:10px;
 }
 
 table.OpsTable {

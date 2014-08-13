@@ -262,7 +262,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         srcCodeAndTree = srcMLFile(fileName, doc.srcMLLanguage)
         operatorEntry.sourceCode = srcCodeAndTree[0]
         tempTree = ET.ElementTree(ET.fromstringlist(srcCodeAndTree[1]))
-        locatedElements = tempTree.xpath("//op:operator", namespaces={"op": "http://www.sdml.info/srcML/operator"})
+        locatedElements = tempTree.xpath("//src:operator", namespaces={"src": "http://www.sdml.info/srcML/src"})
         if len(locatedElements) != 1:
             if len(locatedElements) > 1:
                 matchingLocatedElements = [x for x in locatedElements if x.text == operatorEntry.op]
@@ -273,7 +273,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
                 else:
                     operatorEntry.srcML = ["BUG"]
             else:
-                raise Exception("ERROR: Didn't locate correct any operators within the  {0} ".format(allSrcMLCode) + self.makeAtLineCol())
+                raise Exception("ERROR: Didn't locate correct any operators within the  {0} \n\n{1}".format(srcCodeAndTree[0], srcCodeAndTree[1]))
         else:
             operatorEntry.srcML = locatedElements
         return operatorEntry

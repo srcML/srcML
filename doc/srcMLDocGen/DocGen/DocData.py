@@ -11,7 +11,7 @@ class Element(object):
 
     def QName(self):
         nameFormat = ""
-        if self.ns == "":
+        if self.ns == "" or self.ns == None:
             nameFormat = "&lt;{0.tag}"
         else:
             nameFormat = "&lt;{0.ns}:{0.tag}"

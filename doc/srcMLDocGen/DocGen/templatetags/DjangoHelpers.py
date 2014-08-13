@@ -150,7 +150,7 @@ def formatTagOrStrOutStr(var):
     if isinstance(var, str):
         return var
     elif isinstance(var, ET._Element):
-        return "&lt;{0}:{1}&gt;{2}&lt;/{0}:{1}&gt;".format(var.prefix, var.tag[var.tag.find('}')+1:], SAXUtils.escape(SAXUtils.escape(var.text, SyntaxHighlighter.htmlEscapeTable), SyntaxHighlighter.htmlEscapeTable))
+        return "&lt;{0}&gt;{1}&lt;/{0}&gt;".format(var.tag[var.tag.find('}')+1:], SAXUtils.escape(SAXUtils.escape(var.text, SyntaxHighlighter.htmlEscapeTable), SyntaxHighlighter.htmlEscapeTable))
     else:
         raise Exception("Invalid or unhandled type.")
 
