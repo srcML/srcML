@@ -30,11 +30,11 @@
 </unit>
 
 <unit>
-<block>{ <case>CASE<expr>(<name>A</name>)</expr>: <break>break;</break> </case>}</block>
+<block>{ <case><macro><name>CASE</name><argument_list>(<argument>A</argument>)</argument_list></macro>: <break>break;</break> </case>}</block>
 </unit>
 
 <unit>
-<block>{ <case>CASE<expr>(<name>A</name>) <name>b</name></expr>: <break>break;</break> </case>}</block>
+<block>{ <case><macro><name>CASE</name><argument_list>(<argument>A</argument>)</argument_list></macro> <expr><name>b</name></expr>: <break>break;</break> </case>}</block>
 </unit>
 
 <unit>
