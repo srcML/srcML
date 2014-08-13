@@ -216,7 +216,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
             fileName = os.path.join(dirPath, fileName)
 
         if not os.path.exists(fileName):
-            raise Exception("ERROR: Provided example file: {0} does not exist. Unable to continue. ".format(fileName) + formatElementErrorMsg(element))
+            raise Exception("ERROR: Provided example file: {0} does not exist. Unable to continue. ".format(fileName) + formatElementErrorMsg(exampleElement))
 
         example.sourceCodeFile = fileName
         srcMLExResults = srcMLFile(fileName, doc.srcMLLanguage)

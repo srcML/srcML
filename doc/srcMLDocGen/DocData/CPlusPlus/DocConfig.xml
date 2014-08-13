@@ -973,12 +973,12 @@
 
         <DocEntry title="implicit conversion operator declaration">
             <Elements>
-                <Element name="function" />
+                <Element name="function_decl" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function[not(src:type)]">
+                <XPath path="//src:function_decl[not(src:type)]">
                     <Desc>Find all implicit conversion operator overload declarations</Desc>
                 </XPath>
             </XPathQueries>
@@ -1014,7 +1014,7 @@
             <Example file="CPP-explicit-conv-1.cpp" />
         </DocEntry>
 
-        <DocEntry title="Explicit Conversion Operator Definition">
+        <DocEntry title="explicit conversion operator definition">
             <Elements>
                 <Element name="function" />
                 <Subelement name="type" />
@@ -1044,7 +1044,7 @@
                 <XPath path="//src:class[src:name[.='foo']]">
                     <Desc>Find all classes with the name <code class="inline">foo</code></Desc>
                 </XPath>
-                <XPath path="//src:functoon[ancestor::src:class]">
+                <XPath path="//src:function[ancestor::src:class]">
                     <Desc>Find all functions within classes</Desc>
                 </XPath>
                 <XPath path="//src:function_decl[ancestor::src:class]">
@@ -1518,7 +1518,7 @@
 	    <OperatorEntry title="bitwise and assign" op="&amp;=" example="../C/C-Operator-bitwise-and-assign.c" />
 	    <OperatorEntry title="bitwise xor assign" op="^=" example="../C/C-Operator-bitwise-xor-assign.c" />
 	    <OperatorEntry title="bitwise or assign" op="|=" example="../C/C-Operator-bitwise-or-assign.c" />
-	    <OperatorEntry title="sceope" op="::" example="CPP-Operator-scope.cpp" />
+	    <OperatorEntry title="scope" op="::" example="CPP-Operator-scope.cpp" />
 	    <OperatorEntry title="pointer to member" op=".*" example="CPP-Operator-member-ptr.cpp" />
 	    <OperatorEntry title="dereference pointer to member" op="->*" example="CPP-Operator-deref-member-ptr.cpp" />
 	    <OperatorEntry title="comma" op="," example="../C/C-Operator-comma.c" />

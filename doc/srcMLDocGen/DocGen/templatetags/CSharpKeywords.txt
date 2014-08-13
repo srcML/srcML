@@ -90,8 +90,7 @@ into
 join
 let
 orderby
-partial (type)
-partial (method)
+partial
 remove
 select
 set

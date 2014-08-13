@@ -1,0 +1,6 @@
+try
+{
+}
+catch(Exception e)
+{
+}
