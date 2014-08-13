@@ -2655,13 +2655,13 @@ class_directive[] { ENTRY_DEBUG } :
     {
 
         // statement
-        startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME | MODE_LIST);
+        startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_LIST);
 
         // start the namespace definition
         startElement(SCLASS_DECLARATION);
 
     }
-    ATCLASS
+    ATCLASS (identifier | COMMA)*
 
 ;
 
