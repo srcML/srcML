@@ -74,15 +74,15 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>auto</name></type> <name>lambda</name> <init>= <expr><lambda><capture>[<argument><name>value</name> <operator>=</operator> <literal type="number">1</literal></argument>]</capture> <block>{<return>return <expr><name>value</name></expr>;</return>}</block></lambda></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>auto</name></type> <name>lambda</name> <init>= <expr><lambda><capture>[<argument><name>value</name> <init>= <expr><literal type="number">1</literal></expr></init></argument>]</capture> <block>{<return>return <expr><name>value</name></expr>;</return>}</block></lambda></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>auto</name></type> <name>lambda</name> <init>= <expr><lambda><capture>[<argument><name>ptr</name> <operator>=</operator> <call><name><name>std</name><operator>::</operator><name>move</name></name><argument_list>(<argument><expr><name>ptr</name></expr></argument>)</argument_list></call></argument>]</capture> <block>{<return>return <expr><operator>*</operator><name>ptr</name></expr>;</return>}</block></lambda></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>auto</name></type> <name>lambda</name> <init>= <expr><lambda><capture>[<argument><name>ptr</name> <init>= <expr><call><name><name>std</name><operator>::</operator><name>move</name></name><argument_list>(<argument><expr><name>ptr</name></expr></argument>)</argument_list></call></expr></init></argument>]</capture> <block>{<return>return <expr><operator>*</operator><name>ptr</name></expr>;</return>}</block></lambda></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>auto</name></type> <name>lambda</name> <init>= <expr><lambda><capture>[<argument><name>a</name> <operator>=</operator> <name><name>b</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></argument>]</capture> <block>{ <return>return <expr><name>a</name></expr>;</return> }</block></lambda></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>auto</name></type> <name>lambda</name> <init>= <expr><lambda><capture>[<argument><name>a</name> <init>= <expr><name><name>b</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></init></argument>]</capture> <block>{ <return>return <expr><name>a</name></expr>;</return> }</block></lambda></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>

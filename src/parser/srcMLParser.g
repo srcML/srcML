@@ -1393,14 +1393,14 @@ lambda_capture[] { CompleteElement element(this); ENTRY_DEBUG } :
             // suppress warning most likely compound_name's can match RBRACKET and it also is matched by RBRACKET
             // after wards.  
             (options { warnWhenFollowAmbig = false; } :
-            { /* warning suppression */ LA(1) == COMMA }? comma | { LA(1) != RBRACKET }? lambda_capture_argument)* 
+            { /* warning suppression */ LA(1) == COMMA }? COMMA | { LA(1) != RBRACKET }? lambda_capture_argument)* 
             RBRACKET
     
         )
 ;
 
 // argument within the capture portion of a C++11 lambda
-lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
+lambda_capture_argument[] { bool first = true; CompleteElement element(this); ENTRY_DEBUG } :
 
         {
             startNewMode(MODE_LOCAL);
@@ -1409,7 +1409,19 @@ lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         // suppress warning of another case where REFOPS or something is in both alts.
-        (options { generateAmbigWarnings = false;  } : lambda_capture_modifiers | { LA(1) != RBRACKET }? expression | type_identifier)*
+        (options { generateAmbigWarnings = false;  } : (lambda_capture_modifiers)* ({ first }? variable_identifier (lambda_capture_initialization)* set_bool[first, false])*)
+;
+
+lambda_capture_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
+   {
+        startNewMode(MODE_LOCAL | MODE_END_AT_COMMA);
+
+        startElement(SDECLARATION_INITIALIZATION);
+    }
+
+    // suppress warning of another case where REFOPS or something is in both alts.
+    EQUAL complete_expression
+
 ;
 
 // completely match a C# lambda expression
