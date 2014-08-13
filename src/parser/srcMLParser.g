@@ -4969,13 +4969,37 @@ function_pointer_name[] { CompleteElement element(this); ENTRY_DEBUG }:
 
         }
 
-        function_pointer_name_grammar (period | member_pointer | member_pointer_dereference | dot_dereference)
+        pointer_dereference (period | member_pointer | member_pointer_dereference | dot_dereference)
 
-        ({ function_pointer_name_check() }? function_pointer_name_grammar (period | member_pointer | member_pointer_dereference | dot_dereference))*
+        ({ function_pointer_name_check() }? pointer_dereference (period | member_pointer | member_pointer_dereference | dot_dereference))*
 
         compound_name_inner[false]
         
     ;
+
+pointer_dereference[] { ENTRY_DEBUG bool flag = false; } :
+
+    lparen_marked
+
+    // special case for function pointer names that don't have '*'
+    (
+        { macro_call_token_set.member(LA(1)) }?
+        (compound_name_inner[false])* |
+
+        // special name prefix of namespace or class
+        identifier (template_argument_list)* DCOLON pointer_dereference |
+
+        // typical function pointer name
+        general_operators (general_operators)* (compound_name_inner[false])*
+
+        // optional array declaration
+        (variable_identifier_array_grammar_sub[flag])*
+
+    )
+
+    rparen[true]
+
+;
 
 // Markup names
 compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
