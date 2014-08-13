@@ -63,9 +63,8 @@
         <DocEntry title="for statement" shortTitle="for">
             <Elements>
                 <Element name="for" />
-                <Subelement name="init" />
-                <Subelement name="condition" />
-                <Subelement name="incr" />
+                <Subelement name="control" />
+                <Subelement name="block" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:for">
@@ -77,7 +76,7 @@
                 <XPath path="//src:for[string-length(src:init/src:decl/src:name) = 1]">
                     <Desc>Find all for loops which declare a variable with a single character name (e.g. <code class="inline">x</code>, <code class="inline">i</code> or <code class="inline">y</code>)</Desc>
                 </XPath>
-                <XPath path="//src:for[src:incr/src:expr//node()/following-sibling::op:operator[.= '++']]">
+                <XPath path="//src:for[src:incr/src:expr//node()/following-sibling::src:operator[.= '++']]">
                     <Desc>Find all for loops which use post decrement as part of the increment expression</Desc>
                 </XPath>
                 <XPath path="//src:for/src:incr">
@@ -117,6 +116,7 @@
         <DocEntry shortTitle="break" title="break statement">
             <Elements>
                 <Element name="break" />
+                <Subelement name="name" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:break">
@@ -136,6 +136,7 @@
         <DocEntry title="continue statement" shortTitle="continue">
             <Elements>
                 <Element name="continue" />
+                <Subelement name="name" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:continue">
@@ -162,7 +163,7 @@
             <Example file="../C/C-label.c" />
         </DocEntry>
 
-        <DocEntry title="return" shortTitle="return statement">
+        <DocEntry title="return statement" shortTitle="return">
             <Elements>
                 <Element name="return" />
             </Elements>
@@ -215,7 +216,7 @@
             <Example file="../C/C-case-1.c" />
         </DocEntry>
 
-        <DocEntry title="default" shortTitle="default statement">
+        <DocEntry title="default statement" shortTitle="default">
             <Elements>
                 <Element name="default" />
             </Elements>
@@ -486,7 +487,7 @@
                 <XPath path="//src:decl[src:name/src:name/src:index]">
                     <Desc>Find all array declarations</Desc>
                 </XPath>
-                <XPath path="//src:decl[src:name/src:name/src:index/lit:literal[number(text()) &lt; 50]]">
+                <XPath path="//src:decl[src:name/src:name/src:index/src:literal[number(.) &lt; 50]]">
                     <Desc>Find all array declarations where the number of elements is less then 50</Desc>
                 </XPath>
             </XPathQueries>
@@ -503,7 +504,7 @@
                 <Subelement name="type" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="param" />
+
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function">
@@ -529,10 +530,10 @@
         <DocEntry title="lambda functions">
             <Elements>
                 <Element name="lambda" />
-                <Subelement name="block" />
-                <Subelement name="expr" />
                 <Subelement name="parameter_list" />
-                <Subelement name="param" />
+                <Subelement name="expr" />
+                <Subelement name="block" />
+
             </Elements>
             <XPathQueries>
                 <XPath path="//src:lambda">
@@ -597,6 +598,8 @@
                 <Element name="class">
                     <AttribStr>type="interface"</AttribStr>
                 </Element>
+                <Subelement name="name" />
+                <Subelement name="block" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:class[@type='interface' and contains(src:name, '@')]">
@@ -611,7 +614,7 @@
                 <Element name="annotation" />
                 <Subelement name="name" />
                 <Subelement name="argument_list" />
-                <Subelement name="argument" />
+
             </Elements>
             <XPathQueries>
                 <XPath path="//src:annotation">
@@ -678,7 +681,7 @@
                 <Element name="Constructor" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="param" />
+
             </Elements>
             <XPathQueries>
                 <XPath path="//src:constructor">
@@ -732,7 +735,7 @@
                 <Element name="call" />
                 <Subelement name="name" />
                 <Subelement name="argument_list" />
-                <Subelement name="argument" />
+
             </Elements>
             <XPathQueries>
                 <XPath path="//src:call">
@@ -772,7 +775,7 @@
                 <Element name="name" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:expr[src:name/op:operator[.='::'] or op:operator[.='::']]">
+                <XPath path="//src:expr[src:name/src:operator[.='::'] or src:operator[.='::']]">
                     <Desc>Find all expressions containing a method reference</Desc>
                 </XPath>
             </XPathQueries>
@@ -782,26 +785,25 @@
             <Example file="Java-method-ref-4.java" />
         </DocEntry>
 
-	    <OperatorEntry title="pre-increment" op="++" example="../C/C-Operator-pre_increment.c" />
-	    <OperatorEntry title="post-increment" op="++" example="../C/C-Operator-post_increment.c" />
-	    <OperatorEntry title="pre-decrement" op="--" example="../C/C-Operator-pre_decrement.c" />
-	    <OperatorEntry title="post-decrement" op="--" example="../C/C-Operator-post_decrement.c" />
-	    <OperatorEntry title="unary-minus" op="-" example="../C/C-Operator-unary-minus.c" />
-	    <OperatorEntry title="bitwise-not" op="~" example="../C/C-Operator-bitwise-not.c" />
-	    <OperatorEntry title="logical-not" op="!" example="../C/C-Operator-logical-not.c" />
+	    <OperatorEntry title="pre/post increment" op="++" example="../C/C-Operator-pre_increment.c" />
+	    <OperatorEntry title="pre/post decrement" op="--" example="../C/C-Operator-pre_decrement.c" />
+	    <OperatorEntry title="unary minus" op="-" example="../C/C-Operator-unary-minus.c" />
+	    <OperatorEntry title="unary plus" op="-" example="../C/C-Operator-unary-plus.c" />
+	    <OperatorEntry title="logical not" op="!" example="../C/C-Operator-logical-not.c" />
 	    <OperatorEntry title="multiplication" op="*" example="../C/C-Operator-multiplication.c" />
 	    <OperatorEntry title="division" op="/" example="../C/C-Operator-divide.c" />
 	    <OperatorEntry title="modulus" op="%" example="../C/C-Operator-modulus.c" />
 	    <OperatorEntry title="addition" op="+" example="../C/C-Operator-addition.c" />
 	    <OperatorEntry title="subtraction" op="-" example="../C/C-Operator-subtraction.c" />
 	    <OperatorEntry title="left shift" op="&lt;&lt;" example="../C/C-Operator-left-shift.c" />
-	    <OperatorEntry title="Right shift" op="&gt;&gt;" example="../C/C-Operator-right-shift.c" />
+	    <OperatorEntry title="right shift" op="&gt;&gt;" example="../C/C-Operator-right-shift.c" />
 	    <OperatorEntry title="less then" op="&lt;" example="../C/C-Operator-less-then.c" />
 	    <OperatorEntry title="greater then" op="&gt;" example="../C/C-Operator-greater-then.c" />
 	    <OperatorEntry title="less then or equal to" op="&lt;=" example="../C/C-Operator-less-equal.c" />
 	    <OperatorEntry title="greater then or equal to" op="&gt;=" example="../C/C-Operator-greater-equal.c" />
 	    <OperatorEntry title="equals" op="==" example="../C/C-Operator-equal.c" />
 	    <OperatorEntry title="not equal" op="!=" example="../C/C-Operator-not-equal.c" />
+	    <OperatorEntry title="bitwise not" op="~" example="../C/C-Operator-bitwise-not.c" />
 	    <OperatorEntry title="bitwise and" op="&amp;" example="../C/C-Operator-bitwise-and.c" />
 	    <OperatorEntry title="bitwise xor" op="^" example="../C/C-Operator-bitwise-xor.c" />
 	    <OperatorEntry title="bitwise or" op="|" example="../C/C-Operator-bitwise-or.c" />
@@ -829,12 +831,10 @@
     <Category title="Other">
         <DocEntry title="cast">
             <Elements>
-                <Element ns="op" name="operator">
-                    <RequiredMarkup srcMLOption="--operator"/>
-                </Element>
+                <Element name="operator" />
             </Elements>
             <XPathQueries>
-                <XPath path="//op:operator[.='(']">
+                <XPath path="//src:operator[.='(']">
                     <Desc>Find all casts</Desc>
                 </XPath>
             </XPathQueries>
@@ -886,7 +886,7 @@
         <DocEntry title="throw">
             <Elements>
                 <Element name="throw" />
-                <Subelement name="expt" />
+                <Subelement name="expr" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:throw">
@@ -899,7 +899,7 @@
         <DocEntry title="throws">
             <Elements>
                 <Element name="throws" />
-                <Subelement name="argument" />
+                <Subelement name="name" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:throws">
@@ -945,7 +945,7 @@
             <Elements>
                 <Element name="catch" />
                 <Subelement name="parameter_list" />
-                <Subelement name="param" />
+
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
@@ -981,7 +981,7 @@
                 <Element name="class" />
                 <Subelement name="name" />
                 <Subelement name="argument_list" />
-                <Subelement name="argument" />
+
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
@@ -1011,9 +1011,9 @@
                 <Element name="function" />
                 <Subelement name="name" />
                 <Subelement name="argument_list" />
-                <Subelement name="argument" />
+
                 <Subelement name="parameter_list" />
-                <Subelement name="param" />
+
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>

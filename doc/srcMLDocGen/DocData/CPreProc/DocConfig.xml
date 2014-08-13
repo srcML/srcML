@@ -13,10 +13,10 @@
             <Example file="CPreProc-define_undef_3.cpp" title="#define a variadic macro"/>
             <XPathQueries>
                 <XPath path="//cpp:define">
-                    <Desc>Find all of the uses of `#define`.</Desc>
+                    <Desc>Find all of the uses of #define.</Desc>
                 </XPath>
                 <XPath path="//cpp:define[cpp:macro/src:name[. = 'LENGTH']]">
-                    <Desc>Find all macro definitions of a macro with the name `LENGTH`.</Desc>
+                    <Desc>Find all macro definitions of a macro with the name LENGTH.</Desc>
                 </XPath>
                 <XPath path="//cpp:define/cpp:value">
                     <Desc>Find all values of all macro definitions.</Desc>
@@ -27,7 +27,7 @@
                 <XPath path="//cpp:define/src:parameter_list/src:param">
                     <Desc>Get the names of all parameters within all macro declarations.</Desc>
                 </XPath>
-                <XPath path="//cpp:define[src:parameter_list[ .//type:modifier = '...']]">
+                <XPath path="//cpp:define[src:parameter_list[ .//src:modifier = '...']]">
                     <Desc>Find all variadic macro definitions.</Desc>
                 </XPath>
             </XPathQueries>
@@ -42,7 +42,7 @@
             <Example file="CPreProc-define_undef_4.cpp"/>
             <XPathQueries>
                 <XPath path="//cpp:undef">
-                    <Desc>Find all uses of `#undef`.</Desc>
+                    <Desc>Find all uses of #undef.</Desc>
                 </XPath>
                 <XPath path="//cpp:undef/src:name">
                     <Desc>Find the name of all undefined macros.</Desc>
@@ -62,10 +62,10 @@
             <Example file="CPreProc-if_2.cpp" />
             <XPathQueries>
                 <XPath path="//cpp:if">
-                    <Desc>Find all uses of `#if`.</Desc>
+                    <Desc>Find all uses of #if.</Desc>
                 </XPath>
                 <XPath path="//cpp:if/src:expr">
-                    <Desc>Find all conditions used by `#if`.</Desc>
+                    <Desc>Find all conditions used by #if.</Desc>
                 </XPath>
             </XPathQueries>
         </DocEntry>
@@ -79,7 +79,7 @@
             <Example file="CPreProc-ifdef_1.cpp"/>
             <XPathQueries>
                 <XPath path="//cpp:ifdef">
-                    <Desc>Find all uses of `#ifdef`.</Desc>
+                    <Desc>Find all uses of #ifdef.</Desc>
                 </XPath>
             </XPathQueries>
         </DocEntry>
@@ -94,7 +94,7 @@
             <Example file="CPreProc-ifndef_1.cpp"/>
             <XPathQueries>
                 <XPath path="//cpp:ifndef">
-                    <Desc>Find all uses of `#ifndef`.</Desc>
+                    <Desc>Find all uses of #ifndef.</Desc>
                 </XPath>
             </XPathQueries>
         </DocEntry>
@@ -107,7 +107,7 @@
             <Example file="CPreProc-else_1.cpp"/>
             <XPathQueries>
             <XPath path="//cpp:else">
-                    <Desc>Find all uses of `#else`.</Desc>
+                    <Desc>Find all uses of #else.</Desc>
                 </XPath>
             </XPathQueries>
         </DocEntry>
@@ -120,10 +120,10 @@
             </Elements>
             <Example file="CPreProc-elif_1.cpp"/>
             <XPathQueries><XPath path="//cpp:elif">
-                    <Desc>Find all uses of `#elif`.</Desc>
+                    <Desc>Find all uses of #elif.</Desc>
                 </XPath>
                 <XPath path="//cpp:elif/src:expr">
-                    <Desc>Find all conditional expressions used with `#elif`.</Desc>
+                    <Desc>Find all conditional expressions used with #elif.</Desc>
                 </XPath>
             </XPathQueries>
         </DocEntry>
@@ -136,7 +136,7 @@
             <Example file="CPreProc-endif.c"/>
             <XPathQueries>
                 <XPath path="//cpp:endif">
-                    <Desc>Find all uses of `#endif`.</Desc>
+                    <Desc>Find all uses of #endif.</Desc>
                 </XPath>
             </XPathQueries>
         </DocEntry>
@@ -152,10 +152,10 @@
                 <XPath path="//cpp:include">
                     <Desc>Find all includes.</Desc>
                 </XPath>
-                <XPath path="//cpp:include[cpp:file/lit:literal[@type ='string']]">
+                <XPath path="//cpp:include[cpp:file/src:literal[@type ='string']]">
                     <Desc>Find all include that use quotations.</Desc>
                 </XPath>
-                <XPath path="//cpp:include/cpp:file//text()">
+                <XPath path="//cpp:include/cpp:file">
                     <Desc>Find the names of all included files.</Desc>
                 </XPath>
             </XPathQueries>
@@ -169,7 +169,7 @@
             <Example file="CPreProc-pragma.txt"/>
             <XPathQueries>
                 <XPath path="//cpp:pragma">
-                    <Desc>Find all uses of `#pragma`.</Desc>
+                    <Desc>Find all uses of #pragma.</Desc>
                 </XPath>
             </XPathQueries>
         </DocEntry>
@@ -177,14 +177,29 @@
         <DocEntry title="#error">
             <Elements>
                 <Element name="error" ns="cpp" />
+                <Subelement ns="cpp" name="directive" />
             </Elements>
             <Example file="CPreProc_error.txt"/>
             <XPathQueries>
                 <XPath path="//cpp:error">
-                    <Desc>Find all uses of `#error`.</Desc>
+                    <Desc>Find all uses of #error.</Desc>
                 </XPath>
             </XPathQueries>
         </DocEntry>
+
+        <DocEntry title="#warning">
+            <Elements>
+                <Element name="warning" ns="cpp" />
+                <Subelement ns="cpp" name="directive" />
+            </Elements>
+            <Example file="CPreProc-warning.cpp"/>
+            <XPathQueries>
+                <XPath path="//cpp:warning">
+                    <Desc>Find all uses of #warning.</Desc>
+                </XPath>
+            </XPathQueries>
+        </DocEntry>
+
 
         <DocEntry title="#line">
             <Elements>
@@ -196,13 +211,13 @@
             <Example file="CPreProc-line.txt"/>
             <XPathQueries>
                 <XPath path="//cpp:line">
-                    <Desc>Find all uses of `#line`.</Desc>
+                    <Desc>Find all uses of #line.</Desc>
                 </XPath>
-                <XPath path="//cpp:line/cpp:number/lit:literal">
-                    <Desc>Find all line numbers used by all `#line` directives.</Desc>
+                <XPath path="//cpp:line/cpp:number/src:literal">
+                    <Desc>Find all line numbers used by all #line directives.</Desc>
                 </XPath>
-                <XPath path="//cpp:line[cpp:file/lit:literal = '&quot;copy.c&quot;']">
-                    <Desc>Find all `#line` directives which reference the file `"copy.c"`.</Desc>
+                <XPath path="//cpp:line[cpp:file/src:literal = '&quot;copy.c&quot;']">
+                    <Desc>Find all #line directives which reference the file "copy.c".</Desc>
                 </XPath>
             </XPathQueries>
         </DocEntry>

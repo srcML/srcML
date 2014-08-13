@@ -4,11 +4,10 @@
         <DocEntry title="if statement" shortTitle="if">
             <Elements>
                 <Element name="if" />
+                <Subelement name="condition" />
+                <Subelement name="then" />
                 <Subelement name="else" />
                 <Subelement name="elseif" />
-                <Subelement name="condition" />
-                <Subelement name="block" />
-                <Subelement name="then" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:if">
@@ -64,9 +63,7 @@
         <DocEntry title="for statement" shortTitle="for">
             <Elements>
                 <Element name="for" />
-                <Subelement name="init" />
-                <Subelement name="condition" />
-                <Subelement name="incr" />
+                <Subelement name="control" />
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
@@ -76,19 +73,19 @@
                 <XPath path="//src:for/src:init">
                     <Desc>Find all initialization statements from within the control of all for loops</Desc>
                 </XPath>
-                <XPath path="//src:for[string-length(src:init/src:decl/src:name) = 1]">
+                <XPath path="//src:for[string-length(src:control/src:init/src:decl/src:name) = 1]">
                     <Desc>Find all for loops which declare a variable with a single character name (e.g. <code class="inline">x</code>, <code class="inline">i</code> or <code class="inline">y</code>)</Desc>
                 </XPath>
-                <XPath path="//src:for[src:incr/src:expr//node()/following-sibling::op:operator[.= '++']]">
+                <XPath path="//src:for[src:control/src:incr/src:expr//node()/following-sibling::src:operator[.= '++']]">
                     <Desc>Find all for loops which use post decrement as part of the increment expression</Desc>
                 </XPath>
-                <XPath path="//src:for/src:incr">
+                <XPath path="//src:for/src:control/src:incr">
                     <Desc>Find the increment expressions from every for loops</Desc>
                 </XPath>
-                <XPath path="//src:for/src:condition">
+                <XPath path="//src:for/src:control/src:condition">
                     <Desc>Find the conditions of all for loops</Desc>
                 </XPath>
-                <XPath path="//src:for[src:range]">
+                <XPath path="//src:for[src:control/src:range]">
                     <Desc>Find all range based for loops</Desc>
                 </XPath>
             </XPathQueries>
@@ -146,6 +143,7 @@
         <DocEntry shortTitle="return" title="return statement">
             <Elements>
                 <Element name="return" />
+                <Subelement name="expr" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:return">
@@ -162,8 +160,8 @@
         <DocEntry title="switch statement" shortTitle="switch">
             <Elements>
                 <Element name="switch" />
-                <Subelement name="case" />
                 <Subelement name="condition" />
+                <Subelement name="case" />
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
@@ -323,21 +321,7 @@
             <Example file="CPP-inline-1.cpp" />
         </DocEntry>
 
-        <DocEntry title="constexpr">
-            <Elements>
-                <Element name="specifier" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:decl[src:type/src:specifier [.='constexpr']]">
-                    <Desc>Find all constexpr variables</Desc>
-                </XPath>
-                <XPath path="//src:function[src:type/src:specifier [.='constexpr']]">
-                    <Desc>Find all constexpr functions</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="CPP-constexpr-1.cpp" />
-            <Example file="CPP-constexpr-2.cpp" />
-        </DocEntry>
+
 
         <DocEntry title="volatile">
             <Elements>
@@ -390,10 +374,10 @@
 
         <DocEntry title="register">
             <Elements>
-                <Element name="name" />
+                <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:type/src:name [.='register']]">
+                <XPath path="//src:decl[src:type/src:specifier [.='register']]">
                     <Desc>Find all variables declared with the register specifier</Desc>
                 </XPath>
             </XPathQueries>
@@ -403,9 +387,9 @@
         <DocEntry title="extern block">
             <Elements>
                 <Element name="extern" />
-                <Subelement ns="lit" name="literal" >
-                    <RequiredMarkup srcMLOption="--literal"/>
-                </Subelement>
+                <Subelement name="literal"/>
+                <Subelement name="function_decl"/>
+                <Subelement name="decl_stmt"/>
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
@@ -413,18 +397,15 @@
                     <Desc>Find all extern blocks</Desc>
                 </XPath>
             </XPathQueries>
+            <Example title="external function with linkage specifier" file="../C/C-extern-linkage-1.c" />
+            <Example title="extern structure with linkage specifier" file="../C/C-extern-linkage-2.c" />
+            <Example title="extern variable with linkage specifier" file="../C/C-extern-linkage-3.c" />
             <Example title="extern block with linkage specifier" file="../C/C-extern-linkage-block.c" />
         </DocEntry>
 
         <DocEntry title="extern specifier">
             <Elements>
                 <Element name="specifier" />
-                <Subelement ns="lit" name="literal" >
-                    <RequiredMarkup srcMLOption="--literal"/>
-                </Subelement>
-                <Subelement name="decl_stmt" />
-                <Subelement name="function_stmt" />
-                <Subelement name="block" />
             </Elements>
             <XPathQueries>
                     <XPath path="//src:decl[src:type/src:specifier [.='extern']]">
@@ -437,9 +418,6 @@
             <Example title="external variable" file="../C/C-extern-1.c" />
             <Example title="external structure" file="../C/C-extern-2.c" />
             <Example title="external function" file="../C/C-extern-3.c" />
-            <Example title="external function with linkage specifier" file="../C/C-extern-linkage-1.c" />
-            <Example title="extern structure with linkage specifier" file="../C/C-extern-linkage-2.c" />
-            <Example title="extern variable with linkage specifier" file="../C/C-extern-linkage-3.c" />
         </DocEntry>
 
         <DocEntry title="mutable">
@@ -464,6 +442,22 @@
                 </XPath>
             </XPathQueries>
             <Example file="CPP-thread_local-1.cpp" />
+        </DocEntry>
+
+        <DocEntry title="constexpr">
+            <Elements>
+                <Element name="specifier" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:decl[src:type/src:specifier [.='constexpr']]">
+                    <Desc>Find all constexpr variables</Desc>
+                </XPath>
+                <XPath path="//src:function[src:type/src:specifier [.='constexpr']]">
+                    <Desc>Find all constexpr functions</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="CPP-constexpr-1.cpp" />
+            <Example file="CPP-constexpr-2.cpp" />
         </DocEntry>
 
         <DocEntry title="final">
@@ -545,7 +539,7 @@
             <Example file="CPP-default-func.cpp" />
         </DocEntry>
 
-        <DocEntry title="explict">
+        <DocEntry title="explicit">
             <Elements>
                 <Element name="specifier" />
             </Elements>
@@ -577,23 +571,25 @@
         <DocEntry title="variable declaration statement">
             <Elements>
                 <Element name="decl_stmt" />
+                <Subelement name="decl" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:decl_stmt">
                     <Desc>Find all declaration statements</Desc>
                 </XPath>
-                <XPath path="//src:decl_stmt/src:decl[src:type/text()[contains(., 'union')]]">
+                <XPath path="//src:decl_stmt/src:decl[src:type[contains(., 'union')]]">
                     <Desc>Find all variable declaration statements with the union qualifier</Desc>
                 </XPath>
             </XPathQueries>
-
-            <Example title="a trivial example" file="../C/C-variable-declaration-1.c" />
-            <Example title="struct, union and enum declarations" file="../C/C-variable-declaration-2.c" />
+            <Example file="../C/C-variable-declaration-1.c" />
+            <Example title="struct declarations" file="../C/C-variable-declaration-2.c" />
+            <Example title="template variable" file="CPP-template-variable-decl-1.cpp" />
         </DocEntry>
 
         <DocEntry title="variable declaration">
             <Elements>
                 <Element name="decl" />
+                <Subelement name="name" />
                 <Subelement name="init">
                 	<Desc>Only used when variable is initialized at declaration. See initialization examples for more details.</Desc>
                 </Subelement>
@@ -605,20 +601,20 @@
                 <XPath path="//src:decl[src:init]">
                     <Desc>Find all variable declarations which also initialize the variable</Desc>
                 </XPath>
-                <XPath path="//src:decl[src:type/text()[contains(., 'struct')]]">
+                <XPath path="//src:decl[src:type[contains(., 'struct')]]">
                     <Desc>Find all variable declarations with the struct qualifier</Desc>
                 </XPath>
             </XPathQueries>
-            <Example title="a trivial example" file="../C/C-variable-declaration-1.c" />
-            <Example title="struct, union and enum declarations" file="../C/C-variable-declaration-2.c" />
+            <Example file="../C/C-variable-declaration-1.c" />
+            <Example title="struct declarations" file="../C/C-variable-declaration-2.c" />
         </DocEntry>
         
         <DocEntry title="function declaration">
             <Elements>
                 <Element name="function_decl" />
+                <Subelement name="type" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="param" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function_decl">
@@ -636,7 +632,7 @@
                 <XPath path="//src:function_decl/src:name">
                     <Desc>Find the names of all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl[src:parameter_list/src:param/src:decl/src:type/type:modifier[.='...']]">
+                <XPath path="//src:function_decl[src:parameter_list/src:param/src:decl/src:type/src:modifier[.='...']]">
                     <Desc>Find all function declarations that has variadic arguments</Desc>
                 </XPath>
             </XPathQueries>
@@ -651,9 +647,9 @@
         <DocEntry title="function definition">
             <Elements>
                 <Element name="function" />
+                <Subelement name="type" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="param" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function">
@@ -671,7 +667,7 @@
                 <XPath path="//src:function/src:name">
                     <Desc>Find the names of all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function[src:parameter_list/src:param/src:decl/src:type/type:modifier[.='...']]">
+                <XPath path="//src:function[src:parameter_list/src:param/src:decl/src:type/src:modifier[.='...']]">
                     <Desc>Find all function definition that has variadic arguments</Desc>
                 </XPath>
                 <XPath path="//src:function[src:decl_stmt]">
@@ -701,13 +697,12 @@
 
         <DocEntry title="abstract function declaration">
             <Elements>
-                <Element ns="lit" name="literal">
+                <Element name="literal">
                 	<AttribStr>type="number"</AttribStr>
-                	<RequiredMarkup srcMLOption="--literal"/>
                 </Element>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function_decl[lit:literal[.= 0]]">
+                <XPath path="//src:function_decl[src:literal[.= 0]]">
                     <Desc>Find all abstract function declarations</Desc>
                 </XPath>
             </XPathQueries>
@@ -718,9 +713,7 @@
             <Elements>
                 <Element name="lambda" />
                 <Subelement name="parameter_list" />
-                <Subelement name="param" />
                 <Subelement name="capture" />
-                <Subelement name="argument" />
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
@@ -733,10 +726,10 @@
                 <XPath path="//src:lambda[src:type/src:name[.='int']]">
                     <Desc>Find all lambdas which have a the return type of int</Desc>
                 </XPath>
-                <XPath path="//src:lambda[count(src:capture/src:argument/type:modifier[. != '=' and . != '&amp;']) = 1]">
+                <XPath path="//src:lambda[count(src:capture/src:argument/src:modifier[. != '=' and . != '&amp;']) = 1]">
                     <Desc>Find all lambda functions which explicitly capture one variable.</Desc>
                 </XPath>
-                <XPath path="//src:lambda[src:capture/src:argument/type:modifier[.='&amp;'] and count(src:capture/src:argument)] = 1">
+                <XPath path="//src:lambda[src:capture/src:argument/src:modifier[.='&amp;'] and count(src:capture/src:argument)] = 1">
                     <Desc>Find all lambda functions which capture all variables by reference.</Desc>
                 </XPath>
             </XPathQueries>
@@ -829,10 +822,10 @@
                 <XPath path="//src:typedef[src:function_decl]">
                     <Desc>Find all typedefs that declare a function type</Desc>
                 </XPath>
-                <XPath path="//src:typedef[src:function_decl[text()[contains(., ')')]]]">
+                <XPath path="//src:typedef[src:function_decl[contains(., ')')]]">
                     <Desc>Find all typedefs of a function pointer</Desc>
                 </XPath>
-                <XPath path="//src:typedef/src:function_decl[text()[contains(., ')')]]/src:name">
+                <XPath path="//src:typedef/src:function_decl[contains(., ')')]/src:name">
                     <Desc>Find all names from all typedefs of function pointers</Desc>
                 </XPath>
             </XPathQueries>
@@ -844,15 +837,13 @@
 
         <DocEntry title="pointer declaration" cat="decl">
             <Elements>
-                <Element ns="type" name="modifier">
-                    <RequiredMarkup srcMLOption="--modifier"/>
-                </Element>
+                <Element name="modifier"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[type:modifier[.='*']]">
+                <XPath path="//src:decl[src:modifier[.='*']]">
                     <Desc>Find all of the declarations of pointers</Desc>
                 </XPath>
-                <XPath path="//src:function_decl[text()[contains(., ')')]]">
+                <XPath path="//src:function_decl[contains(., ')')]">
                     <Desc>Find all function pointers</Desc>
                 </XPath>
             </XPathQueries>
@@ -867,12 +858,10 @@
 
          <DocEntry title="reference declaration" cat="decl">
             <Elements>
-                <Element ns="type" name="modifier">
-                    <RequiredMarkup srcMLOption="--modifier"/>
-                </Element>
+                <Element name="modifier"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:type/type:modifier[.='&amp;']]">
+                <XPath path="//src:decl[src:type/src:modifier[.='&amp;']]">
                     <Desc>Find all reference variable declarations</Desc>
                 </XPath>
             </XPathQueries>
@@ -881,12 +870,10 @@
 
         <DocEntry title="rvalue Reference">
             <Elements>
-                <Element ns="type" name="modifier" >
-                	<RequiredMarkup srcMLOption="--modifier"/>
-                </Element>
+                <Element name="modifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:type/type:modifier[.='&amp;&amp;']]">
+                <XPath path="//src:decl[src:type/src:modifier[.='&amp;&amp;']]">
                     <Desc>Find all rvalue reference variable declarations</Desc>
                 </XPath>
             </XPathQueries>
@@ -903,7 +890,7 @@
                 <XPath path="//src:decl[src:name/src:name/src:index]">
                     <Desc>Find all array declarations</Desc>
                 </XPath>
-                <XPath path="//src:decl[src:name/src:name/src:index/lit:literal[number(text()) &lt; 50]]">
+                <XPath path="//src:decl[src:name/src:name/src:index/src:literal[number(.) &lt; 50]]">
                     <Desc>Find all array declarations where the number of elements is less then 50</Desc>
                 </XPath>
             </XPathQueries>
@@ -930,9 +917,7 @@
         <DocEntry title="bitfield">
             <Elements>
                 <Element name="range" />
-                <Subelement ns="lit" name="literal">
-                	<RequiredMarkup srcMLOption="--literal"/>
-                </Subelement>
+                <Subelement name="literal"/>
                 <Subelement name="name" />
             </Elements>
             <XPathQueries>
@@ -959,9 +944,9 @@
         <DocEntry title="operator overloading declaration">
             <Elements>
                 <Element name="function_decl" />
+                <Subelement name="type" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="param" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function_decl[src:name[substring(.,0, 8) = 'operator']] ">
@@ -974,9 +959,9 @@
         <DocEntry title="operator overloading definition">
             <Elements>
                 <Element name="function" />
+                <Subelement name="type" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="param" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function[src:name[substring(.,0, 8) = 'operator']]">
@@ -991,7 +976,6 @@
                 <Element name="function" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="param" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function[not(src:type)]">
@@ -1006,7 +990,6 @@
                 <Element name="function" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="param" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function[not(src:type)]">
@@ -1019,10 +1002,9 @@
         <DocEntry title="explicit conversion operator declaration">
             <Elements>
                 <Element name="function_decl" />
-                <Subelement name="specifier" />
+                <Subelement name="type" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="param" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function_decl[src:type/src:specifier[.='explicit']][src:name[substring(.,0, 8) = 'operator']]">
@@ -1035,10 +1017,9 @@
         <DocEntry title="Explicit Conversion Operator Definition">
             <Elements>
                 <Element name="function" />
-                <Subelement name="specifier" />
+                <Subelement name="type" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="param" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function[src:type/src:specifier[.='explicit']][src:name[substring(.,0, 8) = 'operator']]">
@@ -1054,6 +1035,7 @@
             <Elements>
                 <Element name="class" />
                 <Subelement name="name" />
+                <Subelement name="block" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:class">
@@ -1093,6 +1075,7 @@
         <DocEntry title="inheritance list">
             <Elements>
                 <Element name="super" />
+                <Subelement name="specifier" />
                 <Subelement name="name" />
             </Elements>
             <XPathQueries>
@@ -1105,359 +1088,6 @@
             </XPathQueries>
             <Example file="CPP-inherit-1.cpp" />
         </DocEntry>
-
-        <DocEntry title="constructor">
-            <Elements>
-                <Element name="constructor" />
-                <Subelement name="name" />
-                <Subelement name="parameter_list" />
-                <Subelement name="param" />
-                <Subelement name="member_list" />
-                <Subelement name="block" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:constuctor">
-                    <Desc>Find all constructors</Desc>
-                </XPath>
-                <XPath path="//src:constuctor[src:parameter_list[not(src:param)]]">
-                    <Desc>Find all default constructors</Desc>
-                </XPath>
-                <XPath path="//src:constructor[src:parameter_list[not(src:param)] or (count(src:parameter_list/src:param) = count(src:parameter_list/src:param/src:decl/src:init))]">
-                    <Desc>Find all possible default constructors including constructors with all default parameters</Desc>
-                </XPath>
-                <XPath path="//src:constructor[ (src:name | src:name/src:name[last()]) = (src:parameter_list/src:param[1]/src:decl/src:type/src:name | src:parameter_list/src:param[1]/src:decl/src:type/src:name[last()])] [( (count(src:parameter_list/src:param) - 1) = count(src:parameter_list/src:param/src:decl/src:init))]">
-                    <Desc>Find copy constructors</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="CPP-ctor-1.cpp" />
-            <Example file="CPP-ctor-2.cpp" />
-            <Example file="CPP-ctor-3.cpp" />
-            <Example file="CPP-ctor-4.cpp" />
-        </DocEntry>
-
-        <DocEntry title="constructor declaration">
-            <Elements>
-                <Element name="constructor_decl" />
-                <Subelement name="name" />
-                <Subelement name="parameter_list" />
-                <Subelement name="param" />
-                <Subelement name="member_list" />
-                <Subelement name="block" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:constructor_decl">
-                    <Desc>Find all constructor declarations</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="CPP-ctor-decl-1.cpp" />
-        </DocEntry>
-
-        <DocEntry title="destructor">
-            <Elements>
-                <Element name="destructor" />
-                <Subelement name="name" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:destructor">
-                    <Desc>Find all destructors</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="CPP-dtor-1.cpp" />
-            <Example file="CPP-dtor-2.cpp" />
-        </DocEntry>
-
-        <DocEntry title="destructor declaration">
-            <Elements>
-                <Element name="destructor_decl" />
-                <Subelement name="name" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:destructor_decl">
-                    <Desc>Find all destructor declarations</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="CPP-dtor-decl-1.cpp" />
-        </DocEntry>
-
-        <DocEntry title="struct declaration">
-            <Elements>
-                <Element name="struct_decl" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:struct_decl">
-                    <Desc>Find all of the forward declarations for all structs</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example title="forward declaration" file="../C/C-struct-declaration-3.c" />
-        </DocEntry>
-
-        <DocEntry title="struct definition">
-        	<Desc>See class for more examples.</Desc>
-            <Elements>
-                <Element name="struct" />
-                <Subelement name="name" />
-                <Subelement name="super" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:struct">
-                    <Desc>Find the definition of all structs</Desc>
-                </XPath>
-                <XPath path="//src:struct/src:block/src:decl_stmt">
-                    <Desc>Find the members from all structs</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example title="trivial declaration" file="../C/C-struct-declaration-1.c" />
-            <Example title="variable Of an anonymous struct type" file="../C/C-struct-declaration-2.c" />
-            <Example title="declaring a struct and instance" file="../C/C-struct-declaration-4.c" />
-        </DocEntry>
-
-        <DocEntry title="struct initialization">
-            <Elements>
-                <Element name="decl_stmt" />
-                <Subelement name="decl" />
-                <Subelement name="init" />
-                <Subelement name="block" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:decl[src:init/src:block]">
-                    <Desc>Find all of declaration of structs which also initialize it</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="../C/C-struct-initialization-1.c" />
-            <Example file="../C/C-struct-initialization-2.c" />
-            <Example file="../C/C-struct-initialization-3.c" />
-        </DocEntry>
-
-        <DocEntry title="union declaration">
-            <Elements>
-                <Element name="union_decl" />
-                <Subelement name="name" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:union_decl">
-                    <Desc>Find all of the forward declarations for all unions</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="../C/C-union-declaration-2.c" />
-        </DocEntry>
-
-        <DocEntry title="union definition">
-            <Elements>
-                <Element name="union" />
-                <Subelement name="name" />
-                <Subelement name="block" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:union">
-                    <Desc>Find all definitions of all unions</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="../C/C-union-declaration-1.c" />
-        </DocEntry>
-
-        <DocEntry title="enum definition">
-            <Elements>
-                <Element name="enum" />
-                <Subelement name="name" />
-                <Subelement name="block" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:enum">
-                    <Desc>Find all enum definitions</Desc>
-                </XPath>
-                <XPath path="//src:enum/src:decl/src:name">
-                    <Desc>Find the names of all members of all enums</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="../C/C-enum-declaration-1.c" />
-            <Example file="../C/C-enum-declaration-2.c" />
-            <Example file="../C/C-enum-declaration-3.c" />
-        </DocEntry>
-
-        <DocEntry title="enum class">
-            <Elements>
-                <Element name="enum" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:enum[contains(., 'class')]">
-                    <Desc>Find all enum class definitions</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="CPP-enum-class-1.cpp" />
-        </DocEntry>
-    </Category>
-
-
-    <Category title="Expressions">
-        <DocEntry title="function call">
-            <Elements>
-                <Element name="call"/>
-                <Subelement name="name" />
-                <Subelement name="argument_list" />
-                <Subelement name="argument" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:call">
-                    <Desc>Find all function calls</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example title="typical function call" file="../C/C-call.c" />
-            <Example title="explicit operator call" file="CPP-new-6.cpp" />
-        </DocEntry>
-
-         <DocEntry title="new">
-            <Elements>
-                <Element ns="op" name="operator">
-                    <RequiredMarkup srcMLOption="--operator"/>
-                </Element>
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:expr[op:operator[.='new']]">
-                    <Desc>Find all expressions which call new</Desc>
-                </XPath>
-                <XPath path="//src:expr[op:operator[.='new']/following-sibling::src:name/src:name/src:index]">
-                    <Desc>Find all expressions which call array new</Desc>
-                </XPath>
-                <XPath path="//src:expr[op:operator[.='new']/following-sibling::src:name[src:name[.='nothrow']]]">
-                    <Desc>Find all expressions which call no throw new</Desc>
-                </XPath>
-                <XPath path="//src:expr[op:operator[.='new']/following-sibling::node()[2]/self::op:operator[.='(']/following-sibling::node()[not(self::src:name[src:name[ .!= 'nothrow']])]]">
-                    <Desc>Find all expressions which call placement new</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example title="regular new" file="CPP-new-1.cpp" />
-            <Example title="array new 1" file="CPP-new-2.cpp" />
-            <Example title="array new 2" file="CPP-new-3.cpp" />
-            <Example title="std::nothrow new" file="CPP-new-4.cpp" />
-            <Example title="placement new" file="CPP-new-5.cpp" />
-        </DocEntry>
-
-        <DocEntry title="delete" cat="expr">
-            <Elements>
-                <Element ns="op" name="operator">
-                    <RequiredMarkup srcMLOption="--operator"/>
-                </Element>
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:expr[op:operator[.='delete']]">
-                    <Desc>Find all expressions which call delete</Desc>
-                </XPath>
-                <XPath path="//src:expr[op:operator[.='delete']][src:index]">
-                    <Desc>Find all expressions which call array delete</Desc>
-                </XPath>
-            </XPathQueries> 
-            <Example title="Regular delete" file="CPP-delete-1.cpp" />
-            <Example title="Array delete" file="CPP-delete-2.cpp" />
-        </DocEntry>
-
-        <DocEntry title="array indexing">
-            <Elements>
-                <Element name="name"/>
-                <Subelement name="name" />
-                <Subelement name="index" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:expr/src:name[src:name/src:index/node()]">
-                    <Desc>Find all array indexings</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="../C/C-array-access.c" />
-        </DocEntry>
-
-        <DocEntry title="dereference member access">
-            <Elements>
-                <Element name="expr"/>
-                <Subelement name="name" />
-                <Subelement ns="op" name="operator">
-                	<RequiredMarkup srcMLOption="--operator"/>
-                </Subelement>
-            </Elements>
-            <XPathQueries>
-                <XPath path="//op:operator[.='-&gt;']">
-                    <Desc>Find all uses of the `-&gt;` operator</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="../C/C-deref-member-access.c" />
-        </DocEntry>
-
-        <DocEntry title="member access">
-            <Elements>
-                <Element name="expr"/>
-                <Subelement name="name" />
-                <Subelement ns="op" name="operator" >
-                	<RequiredMarkup srcMLOption="--operator"/>
-                </Subelement>
-            </Elements>
-            <XPathQueries>
-                <XPath path="//op:operator[.='.']">
-                    <Desc>Find all uses of the `.` operator</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="../C/C-member-access.c" />
-        </DocEntry>
-
-        <DocEntry title="this">
-            <Elements>
-                <Element name="name" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:name[.='this']">
-                    <Desc>Find all uses of this</Desc>
-                </XPath>
-            </XPathQueries>
-            <Example file="CPP-this-1.cpp" />
-        </DocEntry>
-
-	    <OperatorEntry title="pre-increment" op="++" example="../C/C-Operator-pre_increment.c" />
-	    <OperatorEntry title="post-increment" op="++" example="../C/C-Operator-post_increment.c" />
-	    <OperatorEntry title="pre-decrement" op="--" example="../C/C-Operator-pre_decrement.c" />
-	    <OperatorEntry title="post-decrement" op="--" example="../C/C-Operator-post_decrement.c" />
-	    <OperatorEntry title="address of" op="&amp;" example="../C/C-Operator-address_of.c" />
-	    <OperatorEntry title="dereference" op="*" example="../C/C-Operator-deref.c" />
-	    <OperatorEntry title="unary minus" op="-" example="../C/C-Operator-unary-minus.c" />
-	    <OperatorEntry title="logical not" op="!" example="../C/C-Operator-logical-not.c" />
-	    <OperatorEntry title="multiplication" op="*" example="../C/C-Operator-multiplication.c" />
-	    <OperatorEntry title="division" op="/" example="../C/C-Operator-divide.c" />
-	    <OperatorEntry title="modulus" op="%" example="../C/C-Operator-modulus.c" />
-	    <OperatorEntry title="addition" op="+" example="../C/C-Operator-addition.c" />
-	    <OperatorEntry title="subtraction" op="-" example="../C/C-Operator-subtraction.c" />
-	    <OperatorEntry title="left shift" op="&lt;&lt;" example="../C/C-Operator-left-shift.c" />
-	    <OperatorEntry title="right shift" op="&gt;&gt;" example="../C/C-Operator-right-shift.c" />
-	    <OperatorEntry title="less then" op="&lt;" example="../C/C-Operator-less-then.c" />
-	    <OperatorEntry title="greater then" op="&gt;" example="../C/C-Operator-greater-then.c" />
-	    <OperatorEntry title="less then or equal to" op="&lt;=" example="../C/C-Operator-less-equal.c" />
-	    <OperatorEntry title="greater then or equal to" op="&gt;=" example="../C/C-Operator-greater-equal.c" />
-	    <OperatorEntry title="equals" op="==" example="../C/C-Operator-equal.c" />
-	    <OperatorEntry title="not equal" op="!=" example="../C/C-Operator-not-equal.c" />
-	    <OperatorEntry title="bitwise not" op="~" example="../C/C-Operator-bitwise-not.c" />
-	    <OperatorEntry title="bitwise and" op="&amp;" example="../C/C-Operator-bitwise-and.c" />
-	    <OperatorEntry title="bitwise xor" op="^" example="../C/C-Operator-bitwise-xor.c" />
-	    <OperatorEntry title="bitwise or" op="|" example="../C/C-Operator-bitwise-or.c" />
-	    <OperatorEntry title="logical and" op="&amp;&amp;" example="../C/C-Operator-logical-and.c" />
-	    <OperatorEntry title="logical or" op="||" example="../C/C-Operator-logical-or.c" />
-	    <OperatorEntry title="assignment" op="=" example="../C/C-Operator-assignment.c" />
-	    <OperatorEntry title="multiply assign" op="*=" example="../C/C-Operator-multiply-assign.c" />
-	    <OperatorEntry title="divide assign" op="/=" example="../C/C-Operator-divide-assign.c" />
-	    <OperatorEntry title="modulus assign" op="%=" example="../C/C-Operator-modulus-assign.c" />
-	    <OperatorEntry title="add assign" op="+=" example="../C/C-Operator-addition-assign.c" />
-	    <OperatorEntry title="subtract assign" op="-=" example="../C/C-Operator-sub-assign.c" />
-	    <OperatorEntry title="left shift assign" op="&lt;&lt;=" example="../C/C-Operator-left-shift-assign.c" />
-	    <OperatorEntry title="right shift assign" op="&gt;&gt;=" example="../C/C-Operator-right-shift-assign.c" />
-	    <OperatorEntry title="bitwise and assign" op="&amp;=" example="../C/C-Operator-bitwise-and-assign.c" />
-	    <OperatorEntry title="bitwise xor assign" op="^=" example="../C/C-Operator-bitwise-xor-assign.c" />
-	    <OperatorEntry title="bitwise or assign" op="|=" example="../C/C-Operator-bitwise-or-assign.c" />
-	    <OperatorEntry title="sceope" op="::" example="CPP-Operator-scope.cpp" />
-	    <OperatorEntry title="pointer oo member" op=".*" example="CPP-Operator-member-ptr.cpp" />
-	    <OperatorEntry title="dereference pointer to member" op="->*" example="CPP-Operator-deref-member-ptr.cpp" />
-	    <OperatorEntry title="comma" op="," example="../C/C-Operator-comma.c" />
-        <OperatorEntry title="conditional" op="?  :" example="../C/C-Operator-turnary.c" />
-        <OperatorEntry title="dot" op="." example="../C/C-member-access.c" />
-        <OperatorEntry title="arrow" op="-&gt;" example="../C/C-deref-member-access.c" />
-    </Category>
-
-
-
-    <Category title="Public, Private, Protected">
 
         <DocEntry title="default public visibility">
             <Elements>
@@ -1559,6 +1189,342 @@
             <Example file="CPP-public-inheritance-specifier-1.cpp" />
         </DocEntry>
 
+
+        <DocEntry title="constructor">
+            <Elements>
+                <Element name="constructor" />
+                <Subelement name="name" />
+                <Subelement name="parameter_list" />
+                <Subelement name="member_list" />
+                <Subelement name="block" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:constuctor">
+                    <Desc>Find all constructors</Desc>
+                </XPath>
+                <XPath path="//src:constuctor[src:parameter_list[not(src:param)]]">
+                    <Desc>Find all default constructors</Desc>
+                </XPath>
+                <XPath path="//src:constructor[src:parameter_list[not(src:param)] or (count(src:parameter_list/src:param) = count(src:parameter_list/src:param/src:decl/src:init))]">
+                    <Desc>Find all possible default constructors, including constructors with all default parameters</Desc>
+                </XPath>
+                <XPath path="//src:constructor[ (src:name | src:name/src:name[last()]) = (src:parameter_list/src:param[1]/src:decl/src:type/src:name | src:parameter_list/src:param[1]/src:decl/src:type/src:name[last()])] [( (count(src:parameter_list/src:param) - 1) = count(src:parameter_list/src:param/src:decl/src:init))]">
+                    <Desc>Find all possible copy constructors, including those which are not defined with the body of class and those with default parameters</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="CPP-ctor-1.cpp" />
+            <Example file="CPP-ctor-2.cpp" />
+            <Example file="CPP-ctor-3.cpp" />
+            <Example file="CPP-ctor-4.cpp" />
+        </DocEntry>
+
+        <DocEntry title="constructor declaration">
+            <Elements>
+                <Element name="constructor_decl" />
+                <Subelement name="name" />
+                <Subelement name="parameter_list" />
+                <Subelement name="member_list" />
+                <Subelement name="block" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:constructor_decl">
+                    <Desc>Find all constructor declarations</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="CPP-ctor-decl-1.cpp" />
+        </DocEntry>
+
+        <DocEntry title="destructor">
+            <Elements>
+                <Element name="destructor" />
+                <Subelement name="name" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:destructor">
+                    <Desc>Find all destructors</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="CPP-dtor-1.cpp" />
+            <Example file="CPP-dtor-2.cpp" />
+        </DocEntry>
+
+        <DocEntry title="destructor declaration">
+            <Elements>
+                <Element name="destructor_decl" />
+                <Subelement name="name" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:destructor_decl">
+                    <Desc>Find all destructor declarations</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="CPP-dtor-decl-1.cpp" />
+        </DocEntry>
+
+        <DocEntry title="struct declaration">
+            <Elements>
+                <Element name="struct_decl" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:struct_decl">
+                    <Desc>Find all of the forward declarations for all structs</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example title="forward declaration" file="../C/C-struct-declaration-3.c" />
+        </DocEntry>
+
+        <DocEntry title="struct definition">
+        	<Desc>See class for more examples.</Desc>
+            <Elements>
+                <Element name="struct" />
+                <Subelement name="name" />
+                <Subelement name="super" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:struct">
+                    <Desc>Find the definition of all structs</Desc>
+                </XPath>
+                <XPath path="//src:struct/src:block/src:decl_stmt">
+                    <Desc>Find the members from all structs</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="../C/C-struct-declaration-1.c" />
+            <Example title="variable Of an anonymous struct type" file="../C/C-struct-declaration-2.c" />
+            <Example title="declaring a struct and instance" file="../C/C-struct-declaration-4.c" />
+        </DocEntry>
+
+        <DocEntry title="struct initialization">
+            <Elements>
+                <Element name="decl_stmt" />
+                <Subelement name="decl" />
+                <Subelement name="init" />
+                <Subelement name="block" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:decl[src:init/src:block]">
+                    <Desc>Find all of declaration of structs which also initialize it</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="../C/C-struct-initialization-1.c" />
+            <Example file="../C/C-struct-initialization-2.c" />
+            <Example file="../C/C-struct-initialization-3.c" />
+        </DocEntry>
+
+        <DocEntry title="union declaration">
+            <Elements>
+                <Element name="union_decl" />
+                <Subelement name="name" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:union_decl">
+                    <Desc>Find all of the forward declarations for all unions</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="../C/C-union-declaration-2.c" />
+        </DocEntry>
+
+        <DocEntry title="union definition">
+            <Elements>
+                <Element name="union" />
+                <Subelement name="name" />
+                <Subelement name="block" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:union">
+                    <Desc>Find all definitions of all unions</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="../C/C-union-declaration-1.c" />
+        </DocEntry>
+
+        <DocEntry title="enum definition">
+            <Elements>
+                <Element name="enum" />
+                <Subelement name="name" />
+                <Subelement name="block" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:enum">
+                    <Desc>Find all enum definitions</Desc>
+                </XPath>
+                <XPath path="//src:enum/src:decl/src:name">
+                    <Desc>Find the names of all members of all enums</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="../C/C-enum-declaration-1.c" />
+            <Example file="../C/C-enum-declaration-2.c" />
+            <Example file="../C/C-enum-declaration-3.c" />
+        </DocEntry>
+
+        <DocEntry title="enum class">
+            <Elements>
+                <Element name="enum" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:enum[contains(., 'class')]">
+                    <Desc>Find all enum class definitions</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="CPP-enum-class-1.cpp" />
+        </DocEntry>
+    </Category>
+
+
+    <Category title="Expressions">
+        <DocEntry title="function call">
+            <Elements>
+                <Element name="call"/>
+                <Subelement name="name" />
+                <Subelement name="argument_list" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:call">
+                    <Desc>Find all function calls</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example title="typical function call" file="../C/C-call.c" />
+            <Example title="explicit operator call" file="CPP-new-6.cpp" />
+        </DocEntry>
+
+         <DocEntry title="new">
+            <Elements>
+                <Element name="operator"/>
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:expr[src:operator[.='new']]">
+                    <Desc>Find all expressions which call new</Desc>
+                </XPath>
+                <XPath path="//src:expr[src:operator[.='new']/following-sibling::src:name/src:name/src:index]">
+                    <Desc>Find all expressions which call array new</Desc>
+                </XPath>
+                <XPath path="//src:expr[src:operator[.='new']/following-sibling::src:name[src:name[.='nothrow']]]">
+                    <Desc>Find all expressions which call no throw new</Desc>
+                </XPath>
+                <XPath path="//src:expr[src:operator[.='new']/following-sibling::node()[2]/self::src:operator[.='(']/following-sibling::node()[not(self::src:name[src:name[ .!= 'nothrow']])]]">
+                    <Desc>Find all expressions which call placement new</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example title="regular new" file="CPP-new-1.cpp" />
+            <Example title="array new 1" file="CPP-new-2.cpp" />
+            <Example title="array new 2" file="CPP-new-3.cpp" />
+            <Example title="std::nothrow new" file="CPP-new-4.cpp" />
+            <Example title="placement new" file="CPP-new-5.cpp" />
+        </DocEntry>
+
+        <DocEntry title="delete" cat="expr">
+            <Elements>
+                <Element name="operator"/>
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:expr[src:operator[.='delete']]">
+                    <Desc>Find all expressions which call delete</Desc>
+                </XPath>
+                <XPath path="//src:expr[src:operator[.='delete']][src:index]">
+                    <Desc>Find all expressions which call array delete</Desc>
+                </XPath>
+            </XPathQueries> 
+            <Example title="Regular delete" file="CPP-delete-1.cpp" />
+            <Example title="Array delete" file="CPP-delete-2.cpp" />
+        </DocEntry>
+
+        <DocEntry title="array indexing">
+            <Elements>
+                <Element name="name"/>
+                <Subelement name="name" />
+                <Subelement name="index" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:expr/src:name[src:name/src:index/node()]">
+                    <Desc>Find all array indexings</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="../C/C-array-access.c" />
+        </DocEntry>
+
+        <DocEntry title="dereference member access">
+            <Elements>
+                <Element name="expr"/>
+                <Subelement name="name" />
+                <Subelement name="operator" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:operator[.='-&gt;']">
+                    <Desc>Find all uses of the `-&gt;` operator</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="../C/C-deref-member-access.c" />
+        </DocEntry>
+
+        <DocEntry title="member access">
+            <Elements>
+                <Element name="expr"/>
+                <Subelement name="name" />
+                <Subelement name="operator" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:operator[.='.']">
+                    <Desc>Find all uses of the `.` operator</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="../C/C-member-access.c" />
+        </DocEntry>
+
+        <DocEntry title="this">
+            <Elements>
+                <Element name="name" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:name[.='this']">
+                    <Desc>Find all uses of this</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="CPP-this-1.cpp" />
+        </DocEntry>
+
+	    <OperatorEntry title="pre/post increment" op="++" example="../C/C-Operator-pre_increment.c" />
+	    <OperatorEntry title="pre/post decrement" op="--" example="../C/C-Operator-pre_decrement.c" />
+	    <OperatorEntry title="address of" op="&amp;" example="../C/C-Operator-address_of.c" />
+	    <OperatorEntry title="dereference" op="*" example="../C/C-Operator-deref.c" />
+	    <OperatorEntry title="unary minus" op="-" example="../C/C-Operator-unary-minus.c" />
+	    <OperatorEntry title="unary plus" op="-" example="../C/C-Operator-unary-plus.c" />
+	    <OperatorEntry title="logical not" op="!" example="../C/C-Operator-logical-not.c" />
+	    <OperatorEntry title="multiplication" op="*" example="../C/C-Operator-multiplication.c" />
+	    <OperatorEntry title="division" op="/" example="../C/C-Operator-divide.c" />
+	    <OperatorEntry title="modulus" op="%" example="../C/C-Operator-modulus.c" />
+	    <OperatorEntry title="addition" op="+" example="../C/C-Operator-addition.c" />
+	    <OperatorEntry title="subtraction" op="-" example="../C/C-Operator-subtraction.c" />
+	    <OperatorEntry title="left shift" op="&lt;&lt;" example="../C/C-Operator-left-shift.c" />
+	    <OperatorEntry title="right shift" op="&gt;&gt;" example="../C/C-Operator-right-shift.c" />
+	    <OperatorEntry title="less then" op="&lt;" example="../C/C-Operator-less-then.c" />
+	    <OperatorEntry title="greater then" op="&gt;" example="../C/C-Operator-greater-then.c" />
+	    <OperatorEntry title="less then or equal to" op="&lt;=" example="../C/C-Operator-less-equal.c" />
+	    <OperatorEntry title="greater then or equal to" op="&gt;=" example="../C/C-Operator-greater-equal.c" />
+	    <OperatorEntry title="equals" op="==" example="../C/C-Operator-equal.c" />
+	    <OperatorEntry title="not equal" op="!=" example="../C/C-Operator-not-equal.c" />
+	    <OperatorEntry title="bitwise not" op="~" example="../C/C-Operator-bitwise-not.c" />
+	    <OperatorEntry title="bitwise and" op="&amp;" example="../C/C-Operator-bitwise-and.c" />
+	    <OperatorEntry title="bitwise xor" op="^" example="../C/C-Operator-bitwise-xor.c" />
+	    <OperatorEntry title="bitwise or" op="|" example="../C/C-Operator-bitwise-or.c" />
+	    <OperatorEntry title="logical and" op="&amp;&amp;" example="../C/C-Operator-logical-and.c" />
+	    <OperatorEntry title="logical or" op="||" example="../C/C-Operator-logical-or.c" />
+	    <OperatorEntry title="assignment" op="=" example="../C/C-Operator-assignment.c" />
+	    <OperatorEntry title="multiply assign" op="*=" example="../C/C-Operator-multiply-assign.c" />
+	    <OperatorEntry title="divide assign" op="/=" example="../C/C-Operator-divide-assign.c" />
+	    <OperatorEntry title="modulus assign" op="%=" example="../C/C-Operator-modulus-assign.c" />
+	    <OperatorEntry title="add assign" op="+=" example="../C/C-Operator-addition-assign.c" />
+	    <OperatorEntry title="subtract assign" op="-=" example="../C/C-Operator-sub-assign.c" />
+	    <OperatorEntry title="left shift assign" op="&lt;&lt;=" example="../C/C-Operator-left-shift-assign.c" />
+	    <OperatorEntry title="right shift assign" op="&gt;&gt;=" example="../C/C-Operator-right-shift-assign.c" />
+	    <OperatorEntry title="bitwise and assign" op="&amp;=" example="../C/C-Operator-bitwise-and-assign.c" />
+	    <OperatorEntry title="bitwise xor assign" op="^=" example="../C/C-Operator-bitwise-xor-assign.c" />
+	    <OperatorEntry title="bitwise or assign" op="|=" example="../C/C-Operator-bitwise-or-assign.c" />
+	    <OperatorEntry title="sceope" op="::" example="CPP-Operator-scope.cpp" />
+	    <OperatorEntry title="pointer oo member" op=".*" example="CPP-Operator-member-ptr.cpp" />
+	    <OperatorEntry title="dereference pointer to member" op="->*" example="CPP-Operator-deref-member-ptr.cpp" />
+	    <OperatorEntry title="comma" op="," example="../C/C-Operator-comma.c" />
+        <OperatorEntry title="conditional" op="?  :" example="../C/C-Operator-turnary.c" />
+        <OperatorEntry title="dot" op="." example="../C/C-member-access.c" />
+        <OperatorEntry title="arrow" op="-&gt;" example="../C/C-deref-member-access.c" />
     </Category>
 
     <Category title="Other">
@@ -1566,10 +1532,9 @@
             <Elements>
                 <Element name="call" />
                 <Subelement name="argument_list" />
-                <Subelement name="argument" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:call[src:name/src:nmae[.='static_cast']]">
+                <XPath path="//src:call[src:name/src:name[.='static_cast']]">
                     <Desc>Find all uses of static_cast</Desc>
                 </XPath>
             </XPathQueries>
@@ -1580,10 +1545,9 @@
             <Elements>
                 <Element name="call" />
                 <Subelement name="argument_list" />
-                <Subelement name="argument" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:call[src:name/src:nmae[.='dynamic_cast']]">
+                <XPath path="//src:call[src:name/src:name[.='dynamic_cast']]">
                     <Desc>Find all uses of dynamic_cast</Desc>
                 </XPath>
             </XPathQueries>
@@ -1594,25 +1558,35 @@
             <Elements>
                 <Element name="call" />
                 <Subelement name="argument_list" />
-                <Subelement name="argument" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:call[src:name/src:nmae[.='reinterpret_cast']]">
+                <XPath path="//src:call[src:name/src:name[.='reinterpret_cast']]">
                     <Desc>Find all uses of reinterpret_cast</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CPP-reinterpret_cast-1.cpp" />
         </DocEntry>
 
+        <DocEntry title="const_cast">
+            <Elements>
+                <Element name="call" />
+                <Subelement name="argument_list" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:call[src:name/src:name[.='const_cast']]">
+                    <Desc>Find all uses of const_cast</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="CPP-const_cast-1.cpp" />
+        </DocEntry>
+
         <DocEntry title="c-style cast">
             <Elements>
-                <Element ns="op" name="operator">
-                	<RequiredMarkup srcMLOption="--operator"/>
-                </Element>
+                <Element name="operator"/>
                 <Subelement name="name" />
             </Elements>
             <XPathQueries>
-                <XPath path="//op:operator[.='(']">
+                <XPath path="//src:operator[.='(']">
                     <Desc>Find all casts</Desc>
                 </XPath>
             </XPathQueries>
@@ -1623,11 +1597,10 @@
             <Elements>
             	<Element name="call"/>
                 <Subelement name="argument_list" />
-                <Subelement name="argument" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:call[src:name/src:nmae[.='static_cast']]">
-                    <Desc>Find all uses of static_cast</Desc>
+                <XPath path="//src:call[src:name/src:name[.='static_assert']]">
+                    <Desc>Find all uses of static_assert</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CPP-static_assert-1.cpp" />
@@ -1637,7 +1610,6 @@
             <Elements>
                 <Element name="sizeof"/>
                 <Subelement name="argument_list" />
-                <Subelement name="argument"/>
             </Elements>
             <XPathQueries>
                 <XPath path="//src:sizeof">
@@ -1650,9 +1622,8 @@
 
         <DocEntry title="typeid">
             <Elements>
-                <Element name="call" />
+                <Element name="typeid" />
                 <Subelement name="argument_list" />
-                <Subelement name="argument" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:typeid">
@@ -1666,7 +1637,6 @@
             <Elements>
                 <Element name="noexcept" />
                 <Subelement name="argument_list" />
-                <Subelement name="argument" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:noexcept">
@@ -1685,7 +1655,6 @@
             <Elements>
                 <Element name="alignof" />
                 <Subelement name="argument_list" />
-                <Subelement name="argument" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:alignof">
@@ -1699,7 +1668,6 @@
             <Elements>
                 <Element name="alignas" />
                 <Subelement name="argument_list" />
-                <Subelement name="argument" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:alignas">
@@ -1713,7 +1681,6 @@
             <Elements>
                 <Element name="decltype" />
                 <Subelement name="argument_list"/>
-                <Subelement name="argument"/>
             </Elements>
             <XPathQueries>
                 <XPath path="//src:decltype">
@@ -1812,10 +1779,10 @@
 
         <DocEntry title="template parameter pack">
             <Elements>
-                <Element ns="type" name="modifier" />
+                <Element name="modifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:template/src:parameter_list/src:param/src:type/type:modifier[.='...']]">
+                <XPath path="//src:class[src:template/src:parameter_list/src:param/src:type/src:modifier[.='...']]">
                     <Desc>Find all class templates that use a template parameter pack</Desc>
                 </XPath>
             </XPathQueries>
@@ -1857,7 +1824,6 @@
             <Elements>
                 <Element name="catch" />
                 <Subelement name="parameter_list" />
-                <Subelement name="param" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:catch">
