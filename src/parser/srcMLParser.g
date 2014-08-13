@@ -2669,20 +2669,15 @@ protocol_declaration[] { ENTRY_DEBUG } :
 
     {
 
-        startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME | MODE_LIST);
+        startNewMode(MODE_STATEMENT | MODE_LOCAL);
 
         startElement(SPROTOCOL_DECLARATION);
 
     }
-    ATPROTOCOL
+   ATPROTOCOL (variable_identifier | COMMA)*
 
 ;
 
-protocol_declaration_full[] { ENTRY_DEBUG } :
-
-    ATPROTOCOL (variable_identifier | COMMA)*
-
-;
 
 /* Declarations Definitions CFG */
 
@@ -2782,7 +2777,7 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 
 protocol[] { ENTRY_DEBUG } :
 
-    { look_past_rule(&srcMLParser::protocol_declaration_full) == TERMINATE }? protocol_declaration |
+    { look_past_rule(&srcMLParser::protocol_declaration) == TERMINATE }? protocol_declaration |
     protocol_definition
 
 ;
