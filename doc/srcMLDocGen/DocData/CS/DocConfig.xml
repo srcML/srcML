@@ -260,17 +260,17 @@
                 <XPath path="//src:goto">
                     <Desc>Find all goto statements</Desc>
                 </XPath>
-                <XPath path="N/A">
+                <XPath path="BUG">
                     <Desc>Find all goto case labels</Desc>
                 </XPath>
-                <XPath path="N/A">
+                <XPath path="BUG">
                     <Desc>Find all goto default case labels</Desc>
                 </XPath>
 
             </XPathQueries>
             <Example file="../C/C-goto.c" />
-            <!-- <Example file="CS- -1.cs" /> -->
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-goto-1.cs" />
+            <Example file="CS-goto-2.cs" />
         </DocEntry>
 
         <DocEntry title="empty statement">
@@ -337,7 +337,7 @@
                     <Desc>Find all unsafe statements</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-unsafe-1.cs" />
         </DocEntry>
 
     </Category>
@@ -368,7 +368,7 @@
                     <Desc>Find all readonly variables</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS-const-1.cs" /> -->
+            <Example file="CS-readonly-1.cs" />
         </DocEntry>
 
         <DocEntry title="public">
@@ -376,17 +376,20 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:class[src:specifier[.='public']]">
                     <Desc>Find all public classes</Desc>
                 </XPath>
-                <XPath path="None">
+                <XPath path="//src:function[src:type/src:specifier[.='public']]">
                     <Desc>Find all public methods</Desc>
                 </XPath>
-                <XPath path="None">
+                <XPath path="//src:decl_stmt[src:decl[src:block]/src:type/src:specifier[.='public']]">
                     <Desc>Find all public properties</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-public-1.cs" />
+            <Example file="CS-public-2.cs" />
+            <Example file="CS-public-3.cs" />
+            <Example file="CS-public-4.cs" />
         </DocEntry>
 
         <DocEntry title="private">
@@ -394,17 +397,20 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:class[src:specifier[.='private']]">
                     <Desc>Find all private classes</Desc>
                 </XPath>
-                <XPath path="None">
+                <XPath path="//src:function[src:type/src:specifier[.='private']]">
                     <Desc>Find all private methods</Desc>
                 </XPath>
-                <XPath path="None">
+                <XPath path="//src:decl_stmt[src:decl[src:block]/src:type/src:specifier[.='private']]">
                     <Desc>Find all private properties</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-private-1.cs" />
+            <Example file="CS-private-2.cs" />
+            <Example file="CS-private-3.cs" />
+            <Example file="CS-private-4.cs" />
         </DocEntry>
 
         <DocEntry title="protected">
@@ -412,14 +418,17 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:function[src:type/src:specifier[.='private']]">
                     <Desc>Find all protected methods</Desc>
                 </XPath>
-                <XPath path="None">
+                <XPath path="//src:decl_stmt[src:decl[src:block]/src:type/src:specifier[.='private']]">
                     <Desc>Find all protected properties</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-protected-1.cs" />
+            <Example file="CS-protected-2.cs" />
+            <Example file="CS-protected-3.cs" />
+            <Example file="CS-protected-4.cs" />
         </DocEntry>
 
         <DocEntry title="internal">
@@ -427,11 +436,14 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:class[src:specifier[.='internal']]">
                     <Desc>Find all internal classes</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-internal-1.cs" />
+            <Example file="CS-internal-2.cs" />
+            <Example file="CS-internal-3.cs" />
+            <Example file="CS-internal-4.cs" />
         </DocEntry>
 
         <DocEntry title="protected internal">
@@ -439,11 +451,11 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
-                    <Desc>Find all internal fields</Desc>
+                <XPath path="//src:decl_stmt[src:decl[not(src:block)]/src:type[src:specifier[.='protected']][src:specifier[.='internal']]]">
+                    <Desc>Find all protected internal fields</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-protected-internal-1.cs" />
         </DocEntry>
 
         <DocEntry title="static">
@@ -451,26 +463,31 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:class[src:specifier[.='static']]">
                     <Desc>Find all static classes</Desc>
                 </XPath>
-                <XPath path="None">
+                <XPath path="//src:function[src:type/src:specifier[.='static']]">
                     <Desc>Find all static function</Desc>
                 </XPath>
-                <XPath path="None">
+                <XPath path="//src:decl_stmt[src:decl[not(src:block)]/src:type/src:specifier[.='static']]">
                     <Desc>Find all static fields</Desc>
                 </XPath>
-                <XPath path="None">
+                <XPath path="BUG">
                     <Desc>Find all static events</Desc>
                 </XPath>
-                <XPath path="None">
-                    <Desc>Find all static fields</Desc>
+                <XPath path="BUG">
+                    <Desc>Find all static properties</Desc>
                 </XPath>
-                <XPath path="None">
+                <XPath path="//src:constructor[src:specifier[.='static']]">
                     <Desc>Find all static constructors</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-static-1.cs" />
+            <Example file="CS-static-2.cs" />
+            <Example file="CS-static-3.cs" />
+            <Example file="CS-static-4.cs" />
+            <Example file="CS-static-5.cs" />
+            <Example file="CS-static-6.cs" />
         </DocEntry>
 
         <DocEntry title="volatile">
@@ -479,34 +496,34 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:decl[src:type/src:specifier [.='volatile']]">
-                    <Desc>Find all volatile variables <h1>TODO: double check</h1></Desc>
+                    <Desc>Find all volatile variables</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="../C/C-volatile.c" />
         </DocEntry>
 
-        <DocEntry title="out parameter specifier">
+        <DocEntry title="out (output parameter)">
             <Elements>
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:function[src:parameter_list[last()]/src:param/src:decl/src:type/src:specifier[.='out']]">
                     <Desc>Find all functions with out parameters, that are not generic parameters</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-output-parameter-1.cs" />
         </DocEntry>
 
-        <DocEntry title="out parameter specifier">
+        <DocEntry title="ref">
             <Elements>
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:function[src:parameter_list[last()]/src:param/src:decl/src:type/src:specifier[.='ref']]">
                     <Desc>Find all functions with ref parameters</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-ref-1.cs" />
         </DocEntry>
 
         <DocEntry title="params">
@@ -514,11 +531,11 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:function[src:parameter_list[last()]/src:param/src:decl/src:type/src:specifier[.='params']]">
                     <Desc>Find all functions with a variable number of arguments</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-params-1.cs" />
         </DocEntry>
 
         <DocEntry title="extern specifier">
@@ -530,7 +547,7 @@
                     <Desc>Find all extern functions declarations</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-extern-1.cs" />
         </DocEntry>
 
         <DocEntry title="virtual">
@@ -538,11 +555,11 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function_decl[src:type/src:specifier [.='virtual']]">
-                    <Desc>Find all virtual function declarations</Desc>
+                <XPath path="//src:function[src:type/src:specifier [.='virtual']]">
+                    <Desc>Find all virtual functions</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-virtual-1.cs" />
         </DocEntry>
 
         <DocEntry title="override">
@@ -554,7 +571,7 @@
                     <Desc>Find all overridden functions</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-override-1.cs" />
         </DocEntry>
 
         <DocEntry title="new">
@@ -562,11 +579,11 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:function[src:type/src:specifier [.='new']]">
                     <Desc>Find all functions which hide a previous implementation using new</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-new-specifier-1.cs" />
         </DocEntry>
 
         <DocEntry title="sealed">
@@ -574,14 +591,15 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:class[src:specifier [.='new']]">
                     <Desc>Find all sealed classes</Desc>
                 </XPath>
-                <XPath path="None">
+                <XPath path="//src:function[src:type/src:specifier [.='new']]">
                     <Desc>Find all sealed methods</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-sealed-1.cs" />
+            <Example file="CS-sealed-1.cs" />
         </DocEntry>
 
         <DocEntry title="async">
@@ -589,11 +607,11 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:function[src:type/src:specifier [.='async']]">
                     <Desc>Find all async methods</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-async-1.cs" />
         </DocEntry>
 
         <DocEntry title="partial">
@@ -601,15 +619,18 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:class[src:specifier [.='partial']]">
                     <Desc>Find all partial classes</Desc>
                 </XPath>
-                <XPath path="None">
-                    <Desc>Find all partial methods</Desc>
+                <XPath path="//src:function[src:type/src:specifier [.='partial']]">
+                    <Desc>Find all partial functions</Desc>
+                </XPath>
+                <XPath path="//src:function_decl[src:type/src:specifier [.='partial']]">
+                    <Desc>Find all partial function declarationss</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-partial-1.cs" />
+            <Example file="CS-partial-2.cs" />
         </DocEntry>
 
         <DocEntry title="explicit">
@@ -617,11 +638,11 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:function[src:type/src:specifier [.='explicit']]">
                     <Desc>Find all explicit conversion operators</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-explicit-conversion-operator-1.cs" />
         </DocEntry>
 
         <DocEntry title="implicit">
@@ -629,11 +650,11 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:function[src:type/src:specifier [.='implicit']]">
                     <Desc>Find all implicit conversion operators</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-implicit-conversion-operator-1.cs" />
         </DocEntry>
 
         <DocEntry title="yield">
@@ -660,16 +681,14 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:function[src:parameter_list//src:name[.='this']]">
                     <Desc>Find all extension methods</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-this-extension-method-1.cs" />
         </DocEntry>
         
     </Category>
-
-
 
 
     <Category title="Declarations, Definitions and Initializations">
@@ -717,7 +736,7 @@
                     <Desc>Find all nullable variable declarations</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-nullable-1.cs" />
         </DocEntry>
 
         <DocEntry title="array declaration">
@@ -742,7 +761,7 @@
             <Example file="CS-array-decl-3.cs" />
             <Example file="CS-array-decl-4.cs" />
             <Example file="CS-array-decl-5.cs" />
-            <!-- <Example title="implicitly typed arrays" file="CS-array-decl-6.cs" /> -->
+            <Example title="implicitly typed arrays" file="CS-array-decl-6.cs" />
         </DocEntry>
 
         <DocEntry title="function declaration">
@@ -769,9 +788,7 @@
                     <Desc>Find the names of all function declarations</Desc>
                 </XPath>
             </XPathQueries>
-            <!--
-            <Example file="CS- -1.cs" />
-            -->
+            <Example file="CS-func-decl-1.cs" />
         </DocEntry>
 
         <DocEntry title="function definition">
@@ -795,9 +812,7 @@
                     <Desc>Find all function definitions with only two parameters</Desc>
                 </XPath>
             </XPathQueries>
-            <!--
-            <Example file="CS- -1.cs" />
-            -->
+            <Example file="CS-func-def-1.cs" />
         </DocEntry>
 
         <DocEntry title="default arguments">
@@ -810,48 +825,36 @@
                     <Desc>Find all function declarations with default parameters</Desc>
                 </XPath>
             </XPathQueries>
-            <!--
-            <Example file="CS- -1.cs" />
-            -->
+            <Example file="CS-default-parameter-values-1.cs" />
         </DocEntry>
 
         <DocEntry title="delegate type definition">
             <Elements>
-                <Element name="N"/>
-                <Subelement name="A" />
+                <Element name="function_decl"/>
+                <Subelement name="type" />
+                <Subelement name="name" />
+                <Subelement name="parameter_list" />
             </Elements>
             <XPathQueries>
                 <XPath path="NONE">
                     <Desc>Find all</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-delegate-type-decl-1.cs" />
         </DocEntry>
 
-        <DocEntry title="delegate definition">
+        <DocEntry title="anonymous methods">
             <Elements>
-                <Element name="N"/>
-                <Subelement name="A" />
+                <Element name="lambda"/>
+                <Subelement name="parameter_list" />
+                <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="NONE">
-                    <Desc>Find all</Desc>
+                <XPath path="//src:function[src:name[.='delegate']]">
+                    <Desc>Find all anonymous methods</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
-        </DocEntry>
-
-        <DocEntry title="anonymous delegates">
-            <Elements>
-                <Element name="N"/>
-                <Subelement name="A" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="NONE">
-                    <Desc>Find all</Desc>
-                </XPath>
-            </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-delegate-def-1.cs" />
         </DocEntry>
 
         <DocEntry title="lambda">
@@ -882,23 +885,23 @@
                 <XPath path="//src:namespace">
                     <Desc>Find all namespaces</Desc>
                 </XPath>
-
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-namespace-1.cs" />
         </DocEntry>
 
         <DocEntry title="using directive">
             <Elements>
                 <Element name="using" />
                 <Subelement name="name" />
+                <Subelement name="init" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:using">
                     <Desc>Find all using directives</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS-using-directive-1.cs" /> -->
-            <!-- <Example file="CS-using-directive-2.cs" /> this should be the version that uses the = to make the name shorter.-->
+            <Example file="CS-using-directive-1.cs" />
+            <Example file="CS-using-directive-2.cs" />
         </DocEntry>
 
         <DocEntry title="extern alias">
@@ -1331,6 +1334,21 @@
             </XPathQueries>
             <!-- <Example file="CS- -1.cs" /> -->
         </DocEntry>
+
+        <DocEntry title="named parameter function call">
+            <Elements>
+                <Element name="call"/>
+                <Subelement name="name" />
+                <Subelement name="argument_list" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:call">
+                    <Desc>Find all function calls</Desc>
+                </XPath>
+            </XPathQueries>
+            <!-- <Example file="CS- -1.cs" /> -->
+        </DocEntry>
+
 
          <DocEntry title="new">
             <Elements>

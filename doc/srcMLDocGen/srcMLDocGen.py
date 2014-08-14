@@ -51,7 +51,7 @@ def genDocIndex(docConfig):
     splitName = docConfig.outputFileName.split(".")
     splitName.insert(-1, "index")
     indexFileName = ".".join(splitName)
-
+    
     # indexEntries = []
     lang = docConfig.srcMLLanguage
     pageName = docConfig.outputFileName
