@@ -26,7 +26,7 @@
 </unit>
 
 <unit>
-<function><type><specifier>virtual</specifier> <name>int</name>*</type> <name><name>f</name><argument_list>&lt;<argument><expr><name>int</name></expr></argument>&gt;</argument_list></name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>virtual</specifier> <name>int</name><modifier>*</modifier></type> <name><name>f</name><argument_list>&lt;<argument><expr><name>int</name></expr></argument>&gt;</argument_list></name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
@@ -46,17 +46,17 @@ struct <name><name>CTest1</name><argument_list>&lt;<argument><expr><name>at_Type
 
 <unit>
 <struct><template>template <parameter_list>&lt;<param><type><typename>typename</typename></type> <name>at_Type</name></param>&gt;</parameter_list></template>
-struct <name><name>CTest1</name><argument_list>&lt;<argument><expr><name>at_Type</name></expr></argument> , <argument><expr>0</expr></argument>&gt;</argument_list></name>
+struct <name><name>CTest1</name><argument_list>&lt;<argument><expr><name>at_Type</name></expr></argument> , <argument><expr><literal type="number">0</literal></expr></argument>&gt;</argument_list></name>
 <block>{<public type="default">
 </public>}</block>;</struct>
 </unit>
 
 <unit>
-<class_decl><specifier>template</specifier> class <name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr><name>MyClass</name></expr></argument>&gt;</argument_list></name></name>;</class_decl>
+<class_decl><specifier>template</specifier> class <name><name>std</name><operator>::</operator><name><name>vector</name><argument_list>&lt;<argument><expr><name>MyClass</name></expr></argument>&gt;</argument_list></name></name>;</class_decl>
 </unit>
 
 <unit>
-<class_decl><specifier>extern</specifier> <specifier>template</specifier> class <name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr><name>MyClass</name></expr></argument>&gt;</argument_list></name></name>;</class_decl>
+<class_decl><specifier>extern</specifier> <specifier>template</specifier> class <name><name>std</name><operator>::</operator><name><name>vector</name><argument_list>&lt;<argument><expr><name>MyClass</name></expr></argument>&gt;</argument_list></name></name>;</class_decl>
 </unit>
 
 <unit>
@@ -76,59 +76,59 @@ struct <name><name>CTest1</name><argument_list>&lt;<argument><expr><name>at_Type
 </unit>
 
 <unit>
-<constructor_decl><specifier>template</specifier> <name><name>A</name>::<name><name>A</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></name><parameter_list>()</parameter_list>;</constructor_decl>
+<constructor_decl><specifier>template</specifier> <name><name>A</name><operator>::</operator><name><name>A</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></name><parameter_list>()</parameter_list>;</constructor_decl>
 </unit>
 
 <unit>
-<constructor_decl><specifier>extern</specifier> <specifier>template</specifier> <name><name>A</name>::<name><name>A</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></name><parameter_list>()</parameter_list>;</constructor_decl>
+<constructor_decl><specifier>extern</specifier> <specifier>template</specifier> <name><name>A</name><operator>::</operator><name><name>A</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></name><parameter_list>()</parameter_list>;</constructor_decl>
 </unit>
 
 <unit>
-<class>class <block>{<private type="default"> <destructor_decl><specifier>template</specifier> <name><name>A</name>::~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl> </private>}</block>;</class>
+<class>class <block>{<private type="default"> <destructor_decl><specifier>template</specifier> <name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl> </private>}</block>;</class>
 </unit>
 
 <unit>
-<class>class <block>{<private type="default"> <destructor_decl><specifier>extern</specifier> <specifier>template</specifier> <name><name>A</name>::~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl> </private>}</block>;</class>
+<class>class <block>{<private type="default"> <destructor_decl><specifier>extern</specifier> <specifier>template</specifier> <name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl> </private>}</block>;</class>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr>1&lt;2</expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>std</name><operator>::</operator><name><name>vector</name><argument_list>&lt;<argument><expr><literal type="number">1</literal><operator>&lt;</operator><literal type ="number">2</literal></expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr>(1&gt;2)</expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>std</name><operator>::</operator><name><name>vector</name><argument_list>&lt;<argument><expr><operator>(</operator><literal type="number">1</literal><operator>&gt;</operator><literal type="number">2</literal><operator>)</operator></expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr>((1&gt;2))</expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>std</name><operator>::</operator><name><name>vector</name><argument_list>&lt;<argument><expr><operator>(</operator><operator>(</operator><literal type="number">1</literal><operator>&gt;</operator><literal type="number">2</literal><operator>)</operator><operator>)</operator></expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr>(<name>A</name> &gt; (1&gt;2))</expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>std</name><operator>::</operator><name><name>vector</name><argument_list>&lt;<argument><expr><operator>(</operator><name>A</name> <operator>&gt;</operator> <operator>(</operator><literal type="number">1</literal><operator>&gt;</operator><literal type="number">2</literal><operator>)</operator><operator>)</operator></expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr><name><name>SomeType</name><argument_list>&lt;<argument><expr>1&lt;2</expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>std</name><operator>::</operator><name><name>vector</name><argument_list>&lt;<argument><expr><name><name>SomeType</name><argument_list>&lt;<argument><expr><literal type="number">1</literal><operator>&lt;</operator><literal type ="number">2</literal></expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>std</name>::<name><name>vector</name><argument_list>&lt;<argument><expr><name><name>SomeType</name><argument_list>&lt;<argument><expr>(1&gt;2)</expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>std</name><operator>::</operator><name><name>vector</name><argument_list>&lt;<argument><expr><name><name>SomeType</name><argument_list>&lt;<argument><expr><operator>(</operator><literal type="number">1</literal><operator>&gt;</operator><literal type="number">2</literal><operator>)</operator></expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<struct_decl><template>template<parameter_list>&lt;<param><type><name>bool</name> ...</type> <name>Types</name></param>&gt;</parameter_list></template> struct <name>B</name>;</struct_decl>
+<struct_decl><template>template<parameter_list>&lt;<param><type><name>bool</name> <modifier>...</modifier></type> <name>Types</name></param>&gt;</parameter_list></template> struct <name>B</name>;</struct_decl>
 </unit>
 
 <unit>
-<struct_decl><template>template<parameter_list>&lt;<param><type><name>class</name> ...</type> <name>Types</name></param>&gt;</parameter_list></template> struct <name>Tuple</name>;</struct_decl>
+<struct_decl><template>template<parameter_list>&lt;<param><type><name>class</name> <modifier>...</modifier></type> <name>Types</name></param>&gt;</parameter_list></template> struct <name>Tuple</name>;</struct_decl>
 </unit>
 
 <unit>
-<class_decl><template>template<parameter_list>&lt;<param><type><typename>typename</typename>...</type> <name>Values</name></param>&gt;</parameter_list></template> class <name>tuple</name>;</class_decl>
+<class_decl><template>template<parameter_list>&lt;<param><type><typename>typename</typename><modifier>...</modifier></type> <name>Values</name></param>&gt;</parameter_list></template> class <name>tuple</name>;</class_decl>
 </unit>
 
 <unit>
-<class_decl><template>template<parameter_list>&lt;<param><type><typename>typename</typename></type> <name>First</name></param>, <param><type><typename>typename</typename>...</type> <name>Rest</name></param>&gt;</parameter_list></template> class <name>tuple</name>;</class_decl>
+<class_decl><template>template<parameter_list>&lt;<param><type><typename>typename</typename></type> <name>First</name></param>, <param><type><typename>typename</typename><modifier>...</modifier></type> <name>Rest</name></param>&gt;</parameter_list></template> class <name>tuple</name>;</class_decl>
 </unit>
 
 <unit>
@@ -140,15 +140,15 @@ struct <name><name>CTest1</name><argument_list>&lt;<argument><expr><name>at_Type
 </unit>
 
 <unit>
-<struct_decl><template>template<parameter_list>&lt;<param><type><template>template<parameter_list>&lt;<param><type><typename>typename</typename></type></param>&gt;</parameter_list></template> <name>class</name> ...</type> <name>T</name></param>&gt;</parameter_list></template> struct <name>C</name>;</struct_decl>
+<struct_decl><template>template<parameter_list>&lt;<param><type><template>template<parameter_list>&lt;<param><type><typename>typename</typename></type></param>&gt;</parameter_list></template> <name>class</name> <modifier>...</modifier></type> <name>T</name></param>&gt;</parameter_list></template> struct <name>C</name>;</struct_decl>
 </unit>
 
 <unit>
-<function_decl><template>template<parameter_list>&lt;<param><type><name>class</name> ...</type> <name>Types</name></param>&gt;</parameter_list></template> <type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>Types</name> ...</type> <name>args</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><template>template<parameter_list>&lt;<param><type><name>class</name> <modifier>...</modifier></type> <name>Types</name></param>&gt;</parameter_list></template> <type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>Types</name> <modifier>...</modifier></type> <name>args</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function><template>template<parameter_list>&lt;<param><type><typename>typename</typename>...</type> <name>Args</name></param>&gt;</parameter_list></template> <type><specifier>inline</specifier> <name>void</name></type> <name>expand</name><parameter_list>(<param><decl><type><name>Args</name>&amp;&amp;...</type> <name>args</name></decl></param>)</parameter_list> <block>{
+<function><template>template<parameter_list>&lt;<param><type><typename>typename</typename><modifier>...</modifier></type> <name>Args</name></param>&gt;</parameter_list></template> <type><specifier>inline</specifier> <name>void</name></type> <name>expand</name><parameter_list>(<param><decl><type><name>Args</name><modifier>&amp;&amp;</modifier><modifier>...</modifier></type> <name>args</name></decl></param>)</parameter_list> <block>{
   <expr_stmt><expr><call><name>pass</name><argument_list>( <argument><expr><call><name>g</name><argument_list>(<argument><expr><name>args</name></expr></argument>)</argument_list></call>...</expr></argument> )</argument_list></call></expr>;</expr_stmt>
 }</block></function>
 </unit>
@@ -158,11 +158,11 @@ struct <name><name>CTest1</name><argument_list>&lt;<argument><expr><name>at_Type
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name><name>a</name>.<name><specifier>template</specifier> <name>f</name><argument_list>&lt;<argument><expr><name>double</name></expr></argument>&gt;</argument_list></name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name><name>a</name><operator>.</operator><name><specifier>template</specifier> <name>f</name><argument_list>&lt;<argument><expr><name>double</name></expr></argument>&gt;</argument_list></name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>ImplTypeIterator</name></type> <name>it</name> <init>= <expr><call><name><name>m_impl</name>.<name><specifier>template</specifier> <name>find</name><argument_list>&lt;<argument><expr><name>ValueType</name></expr></argument>, <argument><expr><name>Translator</name></expr></argument>&gt;</argument_list></name></name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>ImplTypeIterator</name></type> <name>it</name> <init>= <expr><call><name><name>m_impl</name><operator>.</operator><name><specifier>template</specifier> <name>find</name><argument_list>&lt;<argument><expr><name>ValueType</name></expr></argument>, <argument><expr><name>Translator</name></expr></argument>&gt;</argument_list></name></name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -172,7 +172,7 @@ struct <name><name>CTest1</name><argument_list>&lt;<argument><expr><name>at_Type
 
 <unit>
 <decl_stmt><decl><template>template<parameter_list>&lt;<param><type><typename>typename</typename></type> <name>T</name></param>&gt;</parameter_list></template>
-<type><specifier>constexpr</specifier> <name>T</name></type> <name>pi</name> <init>= <expr><call><name>T</name><argument_list>(<argument><expr>3.1415926535897932385</expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+<type><specifier>constexpr</specifier> <name>T</name></type> <name>pi</name> <init>= <expr><call><name>T</name><argument_list>(<argument><expr><literal type="number">3.1415926535897932385</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
 </unit>

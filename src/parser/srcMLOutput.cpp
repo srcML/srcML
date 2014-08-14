@@ -238,7 +238,8 @@ namespace {
     // cpp
     ELEMENT_MAP(SCPP_DIRECTIVE, "directive")
     ELEMENT_MAP(SCPP_FILENAME,  "file")
-    ELEMENT_MAP(SCPP_NUMBER,  "number")
+    ELEMENT_MAP(SCPP_NUMBER,    "number")
+    ELEMENT_MAP(SCPP_LITERAL,   "literal")
     ELEMENT_MAP(SCPP_INCLUDE,   "include")
     ELEMENT_MAP(SCPP_DEFINE,    "define")
     ELEMENT_MAP(SCPP_UNDEF,     "undef")
@@ -252,6 +253,7 @@ namespace {
     ELEMENT_MAP(SCPP_THEN,      "then")
     ELEMENT_MAP(SCPP_PRAGMA,    "pragma")
     ELEMENT_MAP(SCPP_ERROR,     "error")
+    ELEMENT_MAP(SCPP_WARNING,   "warning")
     ELEMENT_MAP(SCPP_MACRO_DEFN, "macro")
     ELEMENT_MAP(SCPP_MACRO_VALUE, "value")
 
@@ -429,6 +431,20 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 
         columnAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
         columnAttribute += ":column";
+    }
+
+    if(!isoption(options, SRCML_OPTION_OPTIONAL_MARKUP)) {
+
+        ElementPrefix[SSTRING]   = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SCHAR]     = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SLITERAL]  = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SBOOLEAN]  = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SNULL]     = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SCOMPLEX]  = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SNIL]      = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SOPERATOR] = SRCML_SRC_NS_URI_POS;
+        ElementPrefix[SMODIFIER] = SRCML_SRC_NS_URI_POS;
+
     }
 
 }
@@ -728,13 +744,13 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
         (depth == 0) && isoption(options, SRCML_OPTION_DEBUG)    ? SRCML_ERR_NS_URI : 0,
 
         // optional literal xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_LITERAL)  ? SRCML_EXT_LITERAL_NS_URI : 0,
+        (depth == 0) && isoption(options, SRCML_OPTION_OPTIONAL_MARKUP) && isoption(options, SRCML_OPTION_LITERAL)  ? SRCML_EXT_LITERAL_NS_URI : 0,
 
         // optional operator xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_OPERATOR) ? SRCML_EXT_OPERATOR_NS_URI : 0,
+        (depth == 0) && isoption(options, SRCML_OPTION_OPTIONAL_MARKUP) && isoption(options, SRCML_OPTION_OPERATOR) ? SRCML_EXT_OPERATOR_NS_URI : 0,
 
         // optional modifier xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_MODIFIER) ? SRCML_EXT_MODIFIER_NS_URI : 0,
+        (depth == 0) && isoption(options, SRCML_OPTION_OPTIONAL_MARKUP) && isoption(options, SRCML_OPTION_MODIFIER) ? SRCML_EXT_MODIFIER_NS_URI : 0,
 
         // optional position xml namespace
         (depth == 0) && isoption(options, SRCML_OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,

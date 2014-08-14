@@ -231,4 +231,7 @@ const static srcMLState::MODE_TYPE MODE_SWITCH;
 /** mode for ternary condition */
 const static srcMLState::MODE_TYPE MODE_TERNARY_CONDITION;
 
+/** mode for member initialization list */
+const static srcMLState::MODE_TYPE MODE_INITIALIZATION_LIST;
+
 #endif

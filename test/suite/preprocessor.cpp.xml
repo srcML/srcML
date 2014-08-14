@@ -97,7 +97,7 @@
 </unit>
 
 <unit>
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr><call><name>defined</name><argument_list>(<argument><expr><name>DEBUG</name></expr></argument>)</argument_list></call> &amp;&amp; <call><name>defined</name><argument_list>(<argument><expr><name>__KERNEL__</name></expr></argument>)</argument_list></call></expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><call><name>defined</name><argument_list>(<argument><expr><name>DEBUG</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <call><name>defined</name><argument_list>(<argument><expr><name>__KERNEL__</name></expr></argument>)</argument_list></call></expr></cpp:if>
 </unit>
 
 <unit>
@@ -153,7 +153,7 @@
 
 <unit>
 <expr_stmt><expr><call><name>printk</name><argument_list>(<argument><expr><name>name</name></expr></argument>, <argument><expr><name>memaddr</name></expr></argument>
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">0</literal></expr></cpp:if>
               ()
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
      ,<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
@@ -179,6 +179,42 @@
 <unit>
 <function_decl><type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>restrict</name></expr></cpp:if>
+</unit>
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <name>GCC</name></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <name>GCC</name> <name>dependency</name></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <name>GCC</name> <name>dependency</name> <cpp:literal>"string"</cpp:literal></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <name>GCC</name> <name>dependency</name> <cpp:literal>"/usr/include/time.h"</cpp:literal> <name>rerun</name> <name>fixincludes</name></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:error>#<cpp:directive>error</cpp:directive></cpp:error>
+</unit>
+
+<unit>
+<cpp:error>#<cpp:directive>error</cpp:directive> <cpp:literal>"message"</cpp:literal></cpp:error>
+</unit>
+
+<unit>
+<cpp:warning>#<cpp:directive>warning</cpp:directive></cpp:warning>
+</unit>
+
+<unit>
+<cpp:warning>#<cpp:directive>warning</cpp:directive> <cpp:literal>"message"</cpp:literal></cpp:warning>
 </unit>
 
 </unit>

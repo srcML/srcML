@@ -26,7 +26,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><atomic>_Atomic<argument_list>(<argument><expr>(<name>A</name>)</expr></argument>)</argument_list></atomic></type> <name>x1</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><atomic>_Atomic<argument_list>(<argument><expr><operator>(</operator><name>A</name><operator>)</operator></expr></argument>)</argument_list></atomic></type> <name>x1</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -34,7 +34,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>const</specifier> <atomic>_Atomic<argument_list>(<argument><expr>(<call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call>)</expr></argument>)</argument_list></atomic> <name>A</name></type> <name>b</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>const</specifier> <atomic>_Atomic<argument_list>(<argument><expr><operator>(</operator><call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call><operator>)</operator></expr></argument>)</argument_list></atomic> <name>A</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
 </unit>

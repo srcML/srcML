@@ -6,7 +6,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call> + 1</expr>;</expr_stmt>
+<expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="number">1</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -14,7 +14,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name> + <name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name> <operator>+</operator> <name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -22,19 +22,19 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call> + <name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call> <operator>+</operator> <name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call> + <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call> + <name>b</name></expr></argument>)</argument_list></call> + <name>c</name></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call> <operator>+</operator> <name>b</name></expr></argument>)</argument_list></call> <operator>+</operator> <name>c</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call> + <call><name>g</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call> <operator>+</operator> <call><name>g</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -42,7 +42,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name> + <name>b</name></expr></argument>, <argument><expr><name>c</name> + <name>d</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name> <operator>+</operator> <name>b</name></expr></argument>, <argument><expr><name>c</name> <operator>+</operator> <name>d</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -50,20 +50,20 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr>("a", (<name>mAccWrapCreated</name>-<name>mAccWrapDeleted</name>))</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><operator>(</operator><literal type="string">"a"</literal><operator>,</operator> <operator>(</operator><name>mAccWrapCreated</name><operator>-</operator><name>mAccWrapDeleted</name><operator>)</operator><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name></expr></argument>,<argument><expr>(<name>b</name>,<name>c</name>)</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name></expr></argument>,<argument><expr><operator>(</operator><name>b</name><operator>,</operator><name>c</name><operator>)</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 
 <unit>
-<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr>&amp;<name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><operator>&amp;</operator><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name>&amp;</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name><operator>&amp;</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 </unit>

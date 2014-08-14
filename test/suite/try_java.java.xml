@@ -10,11 +10,11 @@
 </unit>
 
 <unit>
-<try>try(<init><expr><name>a</name> = <name>b</name></expr></init>) <block>{}</block></try>
+<try>try(<init><expr><name>a</name> <operator>=</operator> <name>b</name></expr></init>) <block>{}</block></try>
 </unit>
 <unit>
 
-<try>try(<init><decl><type><name>A</name></type> <name>a</name> <init>= <expr>new <call><name>A</name><argument_list>()</argument_list></call></expr></init></decl></init>) <block>{}</block></try>
+<try>try(<init><decl><type><name>A</name></type> <name>a</name> <init>= <expr><operator>new</operator> <call><name>A</name><argument_list>()</argument_list></call></expr></init></decl></init>) <block>{}</block></try>
 </unit>
 
 </unit>

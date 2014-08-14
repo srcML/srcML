@@ -178,8 +178,6 @@ XSLT_SETLANGUAGE_PROBLEM_XSL=xsl/setlanguageproblem.xsl
 
 XSLT_REMOVECPP_XSL=xsl/removecpp.xsl
 XSLT_REMOVECPP_PROBLEM_XSL=xsl/removecppproblem.xsl
-XSLT_REMOVECPP_LITERAL_XSL=xsl/removecppliteral.xsl
-XSLT_REMOVECPP_OPERATOR_XSL=xsl/removecppoperator.xsl
 
 XSLT_SETLANGUAGE=${XSLT} ${XSLT_SETLANGUAGE_XSL}
 
@@ -211,8 +209,6 @@ XSLT_SETLANGUAGE_PROBLEM_ASPECTJ=${XSLT} --stringparam language "AspectJ" ${XSLT
 
 XSLT_REMOVECPP=${XSLT} ${XSLT_REMOVECPP_XSL}
 XSLT_REMOVECPP_PROBLEM=${XSLT} ${XSLT_REMOVECPP_PROBLEM_XSL}
-XSLT_REMOVECPP_LITERAL=${XSLT} ${XSLT_REMOVECPP_LITERAL_XSL}
-XSLT_REMOVECPP_OPERATOR=${XSLT} ${XSLT_REMOVECPP_OPERATOR_XSL}
 
 # try/catch/finally/throw keywords to @try/@catch/@finally/throw keywords
 XSLT_KEYWORD2MKEYWORD_XSL=xsl/keyword2mkeyword.xsl
@@ -572,10 +568,7 @@ problem.formfeed.aj.xml : problem.aj.xml
 	${XSLT_INSERTFORMFEED} $< > $@
 
 %.java.xml : %.cpp.xml
-	( test $@ != "literal.java.xml" -a $@ != "operator.java.xml" && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@ ) || echo -n ""
-	( test $@ = "literal.java.xml" && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_LITERAL} - > $@ ) || echo -n ""
-	( test $@ = "operator_base.java.xml" && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_OPERATOR} - > $@ ) || echo -n ""
-
+	${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@
 
 %.aj.xml : %.java.xml
 	${XSLT_SETLANGUAGE_ASPECTJ} $< > $@

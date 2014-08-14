@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="Objective-C" dir="operator" filename="operator_m">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Objective-C" dir="operator" filename="operator_m">
 
 <unit>
 <expr_stmt><expr><call><name><name>const_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
@@ -18,23 +18,23 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><op:operator>@(</op:operator> <name>expression</name> <op:operator>)</op:operator></expr>;</expr_stmt>
+<expr_stmt><expr><operator>@(</operator> <name>expression</name> <operator>)</operator></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name><index>[<expr>0</expr><op:operator>,</op:operator> 0]</index></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>[<expr><literal type="number">0</literal></expr><operator>,</operator> <literal type="number">0</literal>]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name><index>@[<expr>0</expr>, <expr>0</expr>]</index></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>@[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator> <block>@{<expr>0</expr><op:operator>,</op:operator> <expr>0</expr>}</block></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>=</operator> <block>@{<expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr>}</block></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><block>@{ <expr>0</expr>, <expr>0</expr> }</block></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><block>@{ <expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr> }</block></expr></init></decl>;</decl_stmt>
 </unit>
 
 </unit>

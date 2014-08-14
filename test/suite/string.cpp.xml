@@ -2,72 +2,72 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="string">
 
 <unit>
-<expr_stmt><expr>"a"</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">"a"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>"ab"</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">"ab"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>"a\"b"</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">"a\"b"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>"a'b'"</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">"a'b'"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>"a\
-b"</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">"a\
+b"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>'a'</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="char">'a'</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>'\\'</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="char">'\\'</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>'\n'</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="char">'\n'</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>'\t'</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="char">'\t'</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>'\r'</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="char">'\r'</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>'\b'</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="char">'\b'</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>'\%'</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="char">'\%'</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>'\f'</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="char">'\f'</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>'\0' '\1' '\2' '\3' '\4' '\5' '\6' '\7' '\8' '\9'</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="char">'\0'</literal> <literal type="char">'\1'</literal> <literal type="char">'\2'</literal> <literal type="char">'\3'</literal> <literal type="char">'\4'</literal> <literal type="char">'\5'</literal> <literal type="char">'\6'</literal> <literal type="char">'\7'</literal> <literal type="char">'\8'</literal> <literal type="char">'\9'</literal></literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>'\14'</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="char">'\14'</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>'\?'</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="char">'\?'</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>'\''</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="char">'\''</literal></expr>;</expr_stmt>
 </unit>
 
 </unit>

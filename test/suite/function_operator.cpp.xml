@@ -178,15 +178,15 @@
 </unit>
 
 <unit>
-<function><type><name>int</name></type> <name><name>a</name>::<name>operator+</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><name>int</name></type> <name><name>a</name><operator>::</operator><name>operator+</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><name><name>a</name>::<name>operator A</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><name><name>a</name><operator>::</operator><name>operator A</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><name><name>b</name>::<name>a</name>::<name>operator A</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><name><name>b</name><operator>::</operator><name>a</name><operator>::</operator><name>operator A</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 </unit>

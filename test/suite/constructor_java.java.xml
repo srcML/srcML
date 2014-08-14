@@ -54,7 +54,7 @@
 <unit>
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
     <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
-        <for>for<control>(<init>;</init><condition><expr>1</expr>;</condition><incr/>)</control>
+        <for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control>
           <block type="pseudo"><try>try <block>{
               <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
           }</block> <catch>catch<parameter_list>()</parameter_list><block>{
@@ -69,7 +69,7 @@
 <unit>
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
     <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
-        <while>while<condition>(<expr>1</expr>)</condition>
+        <while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition>
           <block type="pseudo"><try>try <block>{
               <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
           }</block> <catch>catch<parameter_list>()</parameter_list><block>{
@@ -84,7 +84,7 @@
 <unit>
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
     <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
-        <if>if<condition>(<expr>1</expr>)</condition><then>
+        <if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then>
           <block type="pseudo"><try>try <block>{
               <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
           }</block> <catch>catch<parameter_list>()</parameter_list><block>{

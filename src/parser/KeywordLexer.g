@@ -167,6 +167,7 @@ tokens {
 	ELIF;
     ENDIF;
     ERRORPREC;
+    WARNING;
 	IFDEF;
 	IFNDEF;
     LINE;
@@ -422,6 +423,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "elif"         , ELIF           , LANGUAGE_C_FAMILY }, 
         { "endif"        , ENDIF          , LANGUAGE_C_FAMILY }, 
         { "error"        , ERRORPREC      , LANGUAGE_C_FAMILY }, 
+        { "warning"      , WARNING       , LANGUAGE_C_FAMILY }, 
         { "ifdef"        , IFDEF          , LANGUAGE_C_FAMILY }, 
         { "ifndef"       , IFNDEF         , LANGUAGE_C_FAMILY }, 
         { "line"         , LINE           , LANGUAGE_C_FAMILY }, 

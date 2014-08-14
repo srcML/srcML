@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="unsafe" filename="unsafe_cs">
 
 <unit>
-<unsafe>unsafe <block>{<expr_stmt><expr><name>a</name> + <name>b</name></expr></expr_stmt>}</block></unsafe>
+<unsafe>unsafe <block>{<expr_stmt><expr><name>a</name> <operator>+</operator> <name>b</name></expr></expr_stmt>}</block></unsafe>
 </unit>
 
 </unit>

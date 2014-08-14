@@ -6,7 +6,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr>(<name>a</name>)</expr>;</expr_stmt>
+<expr_stmt><expr><operator>(</operator><name>a</name><operator>)</operator></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -14,59 +14,59 @@
 </unit>
 
 <unit>
-<expr_stmt><expr>1</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>1.</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1.</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>10.</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">10.</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>1.2</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">1.2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>10.20</expr>;</expr_stmt>
+<expr_stmt><expr><literal type="number">10.20</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> + <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>*<name>a</name> = <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><operator>*</operator><name>a</name> <operator>=</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> - <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>-</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> &lt; <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&lt;</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> &gt; <name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>&gt;</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> + <call><name>f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>+</operator> <call><name>f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> <operator>?</operator></condition><then> <expr><name>b</name></expr> </then><else><operator>:</operator> <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name></expr>, <expr><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name></expr><operator>,</operator> <expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name><index>[<expr><ternary><condition><expr>1 + 1 - 1 * 1 &amp; 1 % 1 ! 1 ~ 1 &lt; 1 &gt; 1 &lt;= 1 &gt;= 1 == 1 != 1 / 1 | 1 || 1 &amp;&amp; 1</expr> ?</condition><then> <expr>1</expr> </then><else>: <expr>1</expr></else></ternary></expr>]</index></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>[<expr><ternary><condition><expr><literal type="number">1</literal> <operator>+</operator> <literal type="number">1</literal> <operator>-</operator> <literal type="number">1</literal> <operator>*</operator> <literal type="number">1</literal> <operator>&amp;</operator> <literal type="number">1</literal> <operator>%</operator> <literal type="number">1</literal> <operator>!</operator> <literal type="number">1</literal> <operator>~</operator> <literal type="number">1</literal> <operator>&lt;</operator> <literal type="number">1</literal> <operator>&gt;</operator> <literal type="number">1</literal> <operator>&lt;=</operator> <literal type="number">1</literal> <operator>&gt;=</operator> <literal type="number">1</literal> <operator>==</operator> <literal type="number">1</literal> <operator>!=</operator> <literal type="number">1</literal> <operator>/</operator> <literal type="number">1</literal> <operator>|</operator> <literal type="number">1</literal> <operator>||</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <literal type="number">1</literal></expr> <operator>?</operator></condition><then> <expr><literal type="number">1</literal></expr> </then><else><operator>:</operator> <expr><literal type="number">1</literal></expr></else></ternary></expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -78,29 +78,29 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>tmp</name> &amp;= <name>f</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>tmp</name> <operator>&amp;=</operator> <name>f</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>tmp</name> *= <name>f</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>tmp</name> <operator>*=</operator> <name>f</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>base</name>.<name>a</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>base</name><operator>.</operator><name>a</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>this</name>.<name>a</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>this</name><operator>.</operator><name>a</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>num</name> = <name>value</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>num</name> <operator>=</operator> <name>value</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>L</name> + <name>U</name> + <name>u</name> + <name>R</name>
-  + <name>u8</name> + <name>LR</name> + <name>UR</name> + <name>uR</name> + <name>u8R</name>
-  + <name>LRFoo</name> + <name>URFoo</name> + <name>uRFoo</name> + <name>u8RFoo</name> + <name>RFoo</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>L</name> <operator>+</operator> <name>U</name> <operator>+</operator> <name>u</name> <operator>+</operator> <name>R</name>
+  <operator>+</operator> <name>u8</name> <operator>+</operator> <name>LR</name> <operator>+</operator> <name>UR</name> <operator>+</operator> <name>uR</name> <operator>+</operator> <name>u8R</name>
+  <operator>+</operator> <name>LRFoo</name> <operator>+</operator> <name>URFoo</name> <operator>+</operator> <name>uRFoo</name> <operator>+</operator> <name>u8RFoo</name> <operator>+</operator> <name>RFoo</name></expr>;</expr_stmt>
 </unit>
 
 </unit>

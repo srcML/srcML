@@ -92,54 +92,56 @@ __LIBSRCML_DECL const char* srcml_version_string();
 /* Options */
 /** Create an archive */
 #define SRCML_OPTION_ARCHIVE           1<<0
-/** Markups literal in special namespace */
-#define SRCML_OPTION_LITERAL           1<<1
-/** Markups modifiers in special namespace */
-#define SRCML_OPTION_MODIFIER          1<<2
-/** Markups operator in special namespace */
-#define SRCML_OPTION_OPERATOR          1<<3
-/** Markups operator in special namespace */
-#define SRCML_OPTION_DEBUG             1<<4
 /** Include line/column position attributes */
-#define SRCML_OPTION_POSITION          1<<5
+#define SRCML_OPTION_POSITION          1<<1
 /** Markup preprocessor elements (default for C, C++, C#) */
-#define SRCML_OPTION_CPP_NOMACRO       1<<6
+#define SRCML_OPTION_CPP_NOMACRO       1<<2
 /** Markup preprocessor elements (default for C, C++) */
-#define SRCML_OPTION_CPP               1 << 6 | 1<<7 
+#define SRCML_OPTION_CPP               1<<2 | 1<<3 
 /** Issue an XML declaration */
-#define SRCML_OPTION_XML_DECL          1<<8
+#define SRCML_OPTION_XML_DECL          1<<4
 /** Include any XML namespace declarations */
-#define SRCML_OPTION_NAMESPACE_DECL    1<<9
+#define SRCML_OPTION_NAMESPACE_DECL    1<<5
 /** Leave as text preprocessor else parts (default: markup) */
-#define SRCML_OPTION_CPP_TEXT_ELSE     1<<10
+#define SRCML_OPTION_CPP_TEXT_ELSE     1<<6
 /** Markup preprocessor @code #if 0 @endcode sections (default: leave as text) */
-#define SRCML_OPTION_CPP_MARKUP_IF0    1<<11
+#define SRCML_OPTION_CPP_MARKUP_IF0    1<<7
 /** Apply transformations to the entire srcML file (default: each unit */
-#define SRCML_OPTION_APPLY_ROOT        1<<12
+#define SRCML_OPTION_APPLY_ROOT        1<<8
 /** Compress the output file */
-#define SRCML_OPTION_COMPRESS          1<<13
+#define SRCML_OPTION_COMPRESS          1<<9
 /** Nest if in else if intead of elseif tag */
-#define SRCML_OPTION_NESTIF            1<<14
+#define SRCML_OPTION_NESTIF            1<<10
 /** Output hash attribute on each unit (default: on) */
-#define SRCML_OPTION_HASH              1<<15
+#define SRCML_OPTION_HASH              1<<11
 /** Wrap function/classes/etc with templates (default: on) */
-#define SRCML_OPTION_WRAP_TEMPLATE     1<<16
+#define SRCML_OPTION_WRAP_TEMPLATE     1<<12
 /** output is interactive (good for editing applications) */
-#define SRCML_OPTION_INTERACTIVE       1<<17
+#define SRCML_OPTION_INTERACTIVE       1<<13
 /** Not sure what this used for */
-#define SRCML_OPTION_XPATH_TOTAL       1<<18
+#define SRCML_OPTION_XPATH_TOTAL       1<<14
 /** expression mode */
-#define SRCML_OPTION_EXPRESSION        1<<19
+#define SRCML_OPTION_EXPRESSION        1<<15
 /** Extra processing of @code#line@endcode for position information */
-#define SRCML_OPTION_LINE              1<<20
+#define SRCML_OPTION_LINE              1<<16
 /** additional cpp:if/cpp:endif checking */
-#define SRCML_OPTION_CPPIF_CHECK       1<<21
+#define SRCML_OPTION_CPPIF_CHECK       1<<17
 /** debug time attribute */
-#define SRCML_OPTION_DEBUG_TIMER       1<<22
+#define SRCML_OPTION_DEBUG_TIMER       1<<18
 /** turn on optional ternary operator markup */
-#define SRCML_OPTION_TERNARY           1<<23
+#define SRCML_OPTION_TERNARY           1<<19
 /** turn on optional ternary operator markup */
-#define SRCML_OPTION_PSEUDO_BLOCK      1<<24
+#define SRCML_OPTION_PSEUDO_BLOCK      1<<20
+/** Turn on old optional markup behaviour */
+#define SRCML_OPTION_OPTIONAL_MARKUP   1<<21
+/** Markups literal in special namespace */
+#define SRCML_OPTION_LITERAL           1<<22
+/** Markups modifiers in special namespace */
+#define SRCML_OPTION_MODIFIER          1<<23
+/** Markups operator in special namespace */
+#define SRCML_OPTION_OPERATOR          1<<24
+/** Markups operator in special namespace */
+#define SRCML_OPTION_DEBUG             1<<25
 
 /* srcml status messages */
 /** Return status indicating no errors */
