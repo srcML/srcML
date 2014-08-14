@@ -506,7 +506,7 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function_decl[src:type/src:specifier [.='virtual']]">
-                    <Desc>Find all friend function declarations</Desc>
+                    <Desc>Find all virtual function declarations</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CPP-virtual-1.cpp" />
@@ -1223,8 +1223,6 @@
                 <Element name="constructor_decl" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
-                <Subelement name="member_list" />
-                <Subelement name="block" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:constructor_decl">
@@ -1449,7 +1447,7 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:operator[.='-&gt;']">
-                    <Desc>Find all uses of the `-&gt;` operator</Desc>
+                    <Desc>Find all uses of the -&gt; operator</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="../C/C-deref-member-access.c" />
@@ -1463,7 +1461,7 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:operator[.='.']">
-                    <Desc>Find all uses of the `.` operator</Desc>
+                    <Desc>Find all uses of the . operator</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="../C/C-member-access.c" />
