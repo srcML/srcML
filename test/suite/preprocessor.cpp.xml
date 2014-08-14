@@ -181,4 +181,40 @@
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>restrict</name></expr></cpp:if>
 </unit>
 
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <name>GCC</name></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <name>GCC</name> <name>dependency</name></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <name>GCC</name> <name>dependency</name> <cpp:literal>"string"</cpp:literal></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <name>GCC</name> <name>dependency</name> <cpp:literal>"/usr/include/time.h"</cpp:literal> <name>rerun</name> <name>fixincludes</name></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:error>#<cpp:directive>error</cpp:directive></cpp:error>
+</unit>
+
+<unit>
+<cpp:error>#<cpp:directive>error</cpp:directive> <cpp:literal>"message"</cpp:literal></cpp:error>
+</unit>
+
+<unit>
+<cpp:warning>#<cpp:directive>warning</cpp:directive></cpp:warning>
+</unit>
+
+<unit>
+<cpp:warning>#<cpp:directive>warning</cpp:directive> <cpp:literal>"message"</cpp:literal></cpp:warning>
+</unit>
+
 </unit>

@@ -493,11 +493,13 @@ tokens {
 	SCPP_DIRECTIVE;
     SCPP_FILENAME;
     SCPP_NUMBER;
+    SCPP_LITERAL;
 	SCPP_MACRO_DEFN;
 	SCPP_MACRO_VALUE;
 
     // cpp directives
 	SCPP_ERROR;
+    SCPP_WARNING;
 	SCPP_PRAGMA;
 	SCPP_INCLUDE;
 	SCPP_DEFINE;
@@ -1391,14 +1393,14 @@ lambda_capture[] { CompleteElement element(this); ENTRY_DEBUG } :
             // suppress warning most likely compound_name's can match RBRACKET and it also is matched by RBRACKET
             // after wards.  
             (options { warnWhenFollowAmbig = false; } :
-            { /* warning suppression */ LA(1) == COMMA }? comma | { LA(1) != RBRACKET }? lambda_capture_argument)* 
+            { /* warning suppression */ LA(1) == COMMA }? COMMA | { LA(1) != RBRACKET }? lambda_capture_argument)* 
             RBRACKET
     
         )
 ;
 
 // argument within the capture portion of a C++11 lambda
-lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
+lambda_capture_argument[] { bool first = true; CompleteElement element(this); ENTRY_DEBUG } :
 
         {
             startNewMode(MODE_LOCAL);
@@ -1407,7 +1409,19 @@ lambda_capture_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         // suppress warning of another case where REFOPS or something is in both alts.
-        (options { generateAmbigWarnings = false;  } : lambda_capture_modifiers | { LA(1) != RBRACKET }? expression | type_identifier)*
+        (options { generateAmbigWarnings = false;  } : (lambda_capture_modifiers)* ({ first }? variable_identifier (lambda_capture_initialization)* set_bool[first, false])*)
+;
+
+lambda_capture_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
+   {
+        startNewMode(MODE_LOCAL | MODE_END_AT_COMMA);
+
+        startElement(SDECLARATION_INITIALIZATION);
+    }
+
+    // suppress warning of another case where REFOPS or something is in both alts.
+    EQUAL complete_expression
+
 ;
 
 // completely match a C# lambda expression
@@ -2299,7 +2313,7 @@ switch_case[] { ENTRY_DEBUG } :
             // expect an expression ended by a colon
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_DETECT_COLON);
         }
-        (CASE | MACRO_CASE)
+        (CASE | macro_case_call)
 ;
 
 // default treated as a statement
@@ -2327,6 +2341,15 @@ import_statement[] { ENTRY_DEBUG } :
         }
         IMPORT
 ;
+
+// * as name
+multop_name[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+                startElement(SNAME);
+        }
+        MULTOPS
+;
+
 
 // package statement
 package_statement[] { ENTRY_DEBUG } :
@@ -2641,13 +2664,13 @@ class_directive[] { ENTRY_DEBUG } :
     {
 
         // statement
-        startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME | MODE_LIST);
+        startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_LIST);
 
         // start the namespace definition
         startElement(SCLASS_DECLARATION);
 
     }
-    ATCLASS
+    ATCLASS (identifier | COMMA)*
 
 ;
 
@@ -2655,20 +2678,15 @@ protocol_declaration[] { ENTRY_DEBUG } :
 
     {
 
-        startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME | MODE_LIST);
+        startNewMode(MODE_STATEMENT | MODE_LOCAL);
 
         startElement(SPROTOCOL_DECLARATION);
 
     }
-    ATPROTOCOL
+   ATPROTOCOL (variable_identifier | COMMA)*
 
 ;
 
-protocol_declaration_full[] { ENTRY_DEBUG } :
-
-    ATPROTOCOL (variable_identifier | COMMA)*
-
-;
 
 /* Declarations Definitions CFG */
 
@@ -2768,7 +2786,7 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 
 protocol[] { ENTRY_DEBUG } :
 
-    { look_past_rule(&srcMLParser::protocol_declaration_full) == TERMINATE }? protocol_declaration |
+    { look_past_rule(&srcMLParser::protocol_declaration) == TERMINATE }? protocol_declaration |
     protocol_definition
 
 ;
@@ -3594,7 +3612,7 @@ bar[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // handle comma
-comma[] { ENTRY_DEBUG } :
+comma[] { bool markup_comma = true; ENTRY_DEBUG } :
         {
             // comma ends the current item in a list
             // or ends the current expression
@@ -3614,8 +3632,11 @@ comma[] { ENTRY_DEBUG } :
             if(inTransparentMode(MODE_ENUM) && inMode(MODE_INIT | MODE_EXPECT))
                 endDownToModeSet(MODE_ENUM | MODE_TOP);
 
+            if(inMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_LIST) || inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
+                markup_comma = false;
+
         }
-        comma_marked
+        comma_marked[markup_comma]
         {
             if(inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA)) {
 
@@ -3628,10 +3649,11 @@ comma[] { ENTRY_DEBUG } :
 ;
 
 // marking comma operator
-comma_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
+comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if ((!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
-                 && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT) && !(inTransparentMode(MODE_IN_INIT) && inMode(MODE_EXPRESSION | MODE_LIST)) )
+            if (markup_comma && ((!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+                 && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT) && !(inTransparentMode(MODE_IN_INIT) && inMode(MODE_EXPRESSION | MODE_LIST)))
+                && !inMode(MODE_ENUM) && !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INITIALIZATION_LIST))
                 startElement(SOPERATOR);
         }
         COMMA
@@ -3651,7 +3673,14 @@ colon_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 
             }
 
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+            if(inLanguage(LANGUAGE_OBJECTIVE_C) && inTransparentMode(MODE_INTERNAL_END_CURLY)) {
+
+                endDownToMode(MODE_INTERNAL_END_CURLY);
+
+            }
+
+            if ((!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+                && (!inLanguage(LANGUAGE_OBJECTIVE_C) || !inMode(MODE_INTERNAL_END_CURLY)))
                 startElement(SOPERATOR);
 
         }
@@ -4560,7 +4589,7 @@ variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
 attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
-            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_END_AT_COMMA);
 
             startElement(SATTRIBUTE);
         }
@@ -4569,7 +4598,7 @@ attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         // do not warn as identifier list and colon are in complete expression as well, but need special processing here.
         (options { warnWhenFollowAmbig = false; } : { next_token() == COLON }? attribute_csharp_target COLON)*
 
-        complete_expression
+        attribute_inner_list
 
         RBRACKET
 ;
@@ -4582,17 +4611,24 @@ attribute_csharp_target[] { SingleElement element(this); ENTRY_DEBUG } :
         (RETURN | EVENT | identifier_list)
 ;
 
+// inner attribute list handling
+attribute_inner_list[] { ENTRY_DEBUG } :
+
+    complete_expression (COMMA complete_expression)*
+
+;
+
 // C++11 attributes
 attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
-            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_END_AT_COMMA);
 
             startElement(SATTRIBUTE);
         }
         LBRACKET LBRACKET
 
-        complete_expression
+        attribute_inner_list
 
         RBRACKET RBRACKET
 ;
@@ -4942,13 +4978,37 @@ function_pointer_name[] { CompleteElement element(this); ENTRY_DEBUG }:
 
         }
 
-        function_pointer_name_grammar (period | member_pointer | member_pointer_dereference | dot_dereference)
+        pointer_dereference (period | member_pointer | member_pointer_dereference | dot_dereference)
 
-        ({ function_pointer_name_check() }? function_pointer_name_grammar (period | member_pointer | member_pointer_dereference | dot_dereference))*
+        ({ function_pointer_name_check() }? pointer_dereference (period | member_pointer | member_pointer_dereference | dot_dereference))*
 
         compound_name_inner[false]
         
     ;
+
+pointer_dereference[] { ENTRY_DEBUG bool flag = false; } :
+
+    lparen_marked
+
+    // special case for function pointer names that don't have '*'
+    (
+        { macro_call_token_set.member(LA(1)) }?
+        (compound_name_inner[false])* |
+
+        // special name prefix of namespace or class
+        identifier (template_argument_list)* DCOLON pointer_dereference |
+
+        // typical function pointer name
+        general_operators (general_operators)* (compound_name_inner[false])*
+
+        // optional array declaration
+        (variable_identifier_array_grammar_sub[flag])*
+
+    )
+
+    rparen[true]
+
+;
 
 // Markup names
 compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
@@ -5098,7 +5158,7 @@ compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
 
         template_argument_list |
         simple_name_optional_template
-        (options { greedy = true; } : (period { iscompound = true; } (keyword_name | simple_name_optional_template | { LA(1) == MULTOPS && next_token() == TERMINATE }? general_operators)))*
+        (options { greedy = true; } : (period { iscompound = true; } (keyword_name | simple_name_optional_template | { next_token() == TERMINATE }? multop_name)))*
 
 ;
 
@@ -5331,7 +5391,7 @@ constructor_header[] { ENTRY_DEBUG } :
 member_initialization_list[] { ENTRY_DEBUG } :
         {
             // handle member initialization list as a list of calls
-            startNewMode(MODE_LIST | MODE_CALL);
+            startNewMode(MODE_LIST | MODE_CALL | MODE_INITIALIZATION_LIST);
 
             startElement(SMEMBER_INITIALIZATION_LIST);
         }
@@ -6629,7 +6689,8 @@ pure_expression_block[] { ENTRY_DEBUG } :
 // All possible operators
 general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+            if ((!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+                && (LA(1) != IN || !inTransparentMode(MODE_FOR_CONDITION)))
                 startElement(SOPERATOR);
         }
         (
@@ -6767,6 +6828,7 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
 // } matching and processing
 rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
         {
+
             if(isempty) {
 
                 // additional right parentheses indicates end of non-list modes
@@ -6781,7 +6843,8 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
             // end the single mode that started the list
             // don't end more than one since they may be nested
             if (isempty && inMode(MODE_LIST))
-                endWhileMode(MODE_LIST);
+                while(inMode(MODE_LIST) && (!inMode(MODE_INTERNAL_END_PAREN) || inMode(MODE_END_ONLY_AT_RPAREN)))
+                    endMode(MODE_LIST);
             
             else if(inTransparentMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP))
                 endWhileMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
@@ -8022,14 +8085,21 @@ preprocessor[] { ENTRY_DEBUG
             endMode();
 
             tp.setType(SCPP_PRAGMA);
-        } |
+        } (cpp_literal | cpp_symbol)* |
 
         ERRORPREC
         {
             endMode();
 
             tp.setType(SCPP_ERROR);
-        } |
+        } (cpp_literal)* |
+
+        WARNING
+        {
+            endMode();
+
+            tp.setType(SCPP_WARNING);
+        } (cpp_literal)* |
 
         (NAME | VOID)
         {
@@ -8043,7 +8113,7 @@ preprocessor[] { ENTRY_DEBUG
             endMode();
 
             tp.setType(SCPP_REGION);
-        } |
+        } (cpp_symbol)* |
 
         ENDREGION
         {
@@ -8530,4 +8600,12 @@ cpp_filename[] { SingleElement element(this); ENTRY_DEBUG } :
 // linenumber in cpp
 cpp_linenumber[] { SingleElement element(this); bool first = true; ENTRY_DEBUG } :
         (options { greedy = true; } : { if(first) { startElement(SCPP_NUMBER); first = false; } } literal[false])*
+;
+
+// literal in cpp
+cpp_literal[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SCPP_LITERAL);
+        }
+        (string_literal[false] | char_literal[false] | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
 ;

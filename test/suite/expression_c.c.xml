@@ -6,7 +6,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name><operator>(</operator><operator>*</operator><name>a</name><operator>)</operator><operator>-&gt;</operator><name /><name>b</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><operator>(</operator><operator>*</operator><name>a</name><operator>)</operator><operator>-&gt;</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>

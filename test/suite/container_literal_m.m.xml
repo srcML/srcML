@@ -35,9 +35,9 @@
 
 <unit>
     <decl_stmt><decl><type><name>NSDictionary</name> <modifier>*</modifier></type><name>dictionary</name> <init>= <expr><block>@{
-    <expr><literal type="string">@"name"</literal> : <call><name>NSUserName</name><argument_list>()</argument_list></call></expr>,
-    <expr><literal type="string">@"date"</literal> : <call>[<receiver><expr><name>NSDate</name></expr></receiver> <message><selector><name>date</name></selector></message>]</call></expr>,
-    <expr><literal type="string">@"processInfo"</literal> : <call>[<receiver><expr><name>NSProcessInfo</name></expr></receiver> <message><selector><name>processInfo</name></selector></message>]</call></expr>
+    <expr><literal type="string">@"name"</literal></expr> : <expr><call><name>NSUserName</name><argument_list>()</argument_list></call></expr>,
+    <expr><literal type="string">@"date"</literal></expr> : <expr><call>[<receiver><expr><name>NSDate</name></expr></receiver> <message><selector><name>date</name></selector></message>]</call></expr>,
+    <expr><literal type="string">@"processInfo"</literal></expr> : <expr><call>[<receiver><expr><name>NSProcessInfo</name></expr></receiver> <message><selector><name>processInfo</name></selector></message>]</call></expr>
 }</block></expr></init></decl>;</decl_stmt>
 </unit>
 </unit>

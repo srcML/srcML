@@ -10,7 +10,7 @@
 </unit>
 
 <unit>
-<import>import <name><name>graphics</name><operator>.</operator><operator>*</operator></name>;</import>
+<import>import <name><name>graphics</name><operator>.</operator><name>*</name></name>;</import>
 </unit>
 
 </unit>
