@@ -26,6 +26,9 @@
             </Desc>
             <Case title="archive unit">
                 <Desc></Desc>
+                <Grammar>
+
+                </Grammar>
                 <Languages>
                     <Lang language="C"/>
                     <Lang language="C++"/>
@@ -33,14 +36,12 @@
                 </Languages>
                 <Attributes>
                     <Attr name="filename" valueDesc="the file used to create this srcML">
+                        <Desc></Desc>
                         <Languages>
                             <Lang language="C"/>
                             <Lang language="C++"/>
                             <Lang language="Java"/>
                         </Languages>
-                        <Examples>
-                            <Example title="Example file Name">filename=""</Example>
-                        </Examples>
                     </Attr>
                 </Attributes>
                 <Examples>

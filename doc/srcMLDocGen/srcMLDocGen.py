@@ -1,20 +1,20 @@
 #!/usr/bin/python
 
-import os, sys, traceback
+import os, sys, traceback, re
 import django
 from django.conf import settings
 from django.template import Template, Context, loader
 from DocGen import *
 from DocGen.templatetags import *
-
+# import rnc2rng
 # -------------------------------------------------
 #                     Main
 # -------------------------------------------------
 
 class PageLink:
-	def __init__(self, pageTitle, pageLink):
-		self.title = pageTitle
-		self.link = pageLink
+    def __init__(self, pageTitle, pageLink):
+        self.title = pageTitle
+        self.link = pageLink
 
 def genElementsPage(tagDoc):
     global pageLinks
@@ -24,7 +24,7 @@ def genElementsPage(tagDoc):
     page = fileTemplate.render(Context({"doc": tagDoc}))
     pageLinks.append(PageLink(tagDoc.title, tagDoc.outputFileName))
     out.write(page)
-    out.close()	
+    out.close()    
 
 def genMainPage(maingPageName, pageLinks):
     out = open(maingPageName, "w")
@@ -32,7 +32,7 @@ def genMainPage(maingPageName, pageLinks):
     pageLinks.sort(key=lambda x: x.title)
     page = fileTemplate.render(Context({"pageLinks": pageLinks}))
     out.write(page)
-    out.close()	
+    out.close()    
 
 def genDocFile(docConfig):
     global pageLinks
@@ -93,7 +93,7 @@ def genDocIndex(docConfig):
             else:
                 indexDictionary[indexEntry.indexLetter()].append(indexEntry)
     for entry in indexDictionary.items():
-    	entry[1].sort()
+        entry[1].sort()
 
     pageLinks.append(PageLink(docConfig.title + " Index", indexFileName))
     out = open(indexFileName, "w")
@@ -105,16 +105,17 @@ def genDocIndex(docConfig):
     out.close()
 
 def writeAllTagNames():
-	out = open("taglisting.txt", "w")
-	for tag in getTagListing():
-		out.write("{0}\n".format(tag))
-	out.close()
-
+    out = open("taglisting.txt", "w")
+    for tag in getTagListing():
+        out.write("{0}\n".format(tag))
+    out.close()
 
 
 DocConfigFileName = "DocConfig.xml"
 TagDocFileName = "TagDoc.xml"
+relaxngFileExtRegEx = re.compile(r"\.relaxng\.xml$", re.I)
 pageLinks = []
+
 if __name__ == "__main__":
 
     if not settings.configured:
@@ -149,7 +150,18 @@ if __name__ == "__main__":
                 genElementsPage(tagDoc)
                 print "HTML Generation Complete"
             except Exception as e:
-                print "Failed with exception: ", traceback.format_exc(e)	
+                print "Failed with exception: ", traceback.format_exc(e)
+        for f in files:
+            if relaxngFileExtRegEx.search(f) != None:
+                print "-" * 80
+                print "located Relax ng File, ", os.path.join(root, f)
+                try:
+                	processRelaxNG(root, f)
+                except Exception as e:
+                	print "Failed with exception: ", traceback.format_exc(e)
+                	print e
+                	raise
+
     print "-" * 80
     print "Writing tag names"
     writeAllTagNames()

@@ -1090,9 +1090,9 @@
 
         <DocEntry title="anonymous type">
             <Elements>
-                <Element name="UNKNOWN" />
+                <Element name="expr" />
                 <Subelement name="name" />
-                <Subelement name="super" />
+                <!--<Subelement name="super" />-->
             </Elements>
             <XPathQueries>
                 <XPath path="//src:expr[op:operator[.='new']/following-sibling::src:block]">
@@ -1393,7 +1393,7 @@
 
          <DocEntry title="stackalloc">
             <Elements>
-                <Element name="Unknown"/>
+                <Element name="operator"/>
             </Elements>
             <XPathQueries>
                 <XPath path="//src:operator[.='stackalloc']">
@@ -1720,8 +1720,11 @@
 
         <DocEntry title="generic method">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="function" />
+                <Subelement name="type" />
+                <Subelement name="name" />
+                <Subelement name="parameter_list" />
+                <Subelement name="block" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function[src:name/src:argument_list]">
@@ -1776,8 +1779,7 @@
 
         <DocEntry title="new (constraint)">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="BUG" />
             </Elements>
             <XPathQueries>
                 <XPath path="BUG">
@@ -2061,7 +2063,7 @@
             <Elements>
                 <Element name="undef" ns="cpp" />
                 <Subelement name="directive" ns="cpp"/>
-                <Subelement name="name" />
+                <Subelement name="macro" ns="cpp" />
             </Elements>
             <XPathQueries>
                 <XPath path="//cpp:undef">
@@ -2101,7 +2103,8 @@
             <Elements>
                 <Element name="line" ns="cpp"/>
                 <Subelement name="directive" ns="cpp"/>
-                <Subelement name="Unknown" />
+                <Subelement name="number" ns="cpp" />
+                <Subelement name="file" ns="cpp" />
             </Elements>
             <XPathQueries>
                 <XPath path="//cpp:line">
@@ -2117,7 +2120,7 @@
             <Elements>
                 <Element name="region" ns="cpp"/>
                 <Subelement name="directive" ns="cpp"/>
-                <Subelement name="Unknown" />
+                <Subelement name="name" />
             </Elements>
             <XPathQueries>
                 <XPath path="//cpp:region">
@@ -2144,7 +2147,7 @@
             <Elements>
                 <Element name="pragma" ns="cpp"/>
                 <Subelement name="directive" ns="cpp"/>
-                <Subelement name="Unknown" />
+                <Subelement name="name" />
             </Elements>
             <XPathQueries>
                 <XPath path="//cpp:pragma">

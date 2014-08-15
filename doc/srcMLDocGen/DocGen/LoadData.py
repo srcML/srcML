@@ -351,6 +351,7 @@ RefsTag = "Refs"
 SeeTag = "See"
 AttributesTag = "Attributes"
 AttrTag = "Attr"
+GrammarTag = "Grammar"
 
 # TagDoc specific attribute names
 fileNameAttr = "fileName"
@@ -455,6 +456,9 @@ def loadTagDoc(dirPath, fileName, forceBuild = False):
             elif elem.tag == ExamplesTag:
                 useCase.examples = buildExamplesList(elem)
 
+            elif elem.tag == GrammarTag:
+                useCase.grammar = extractSubText(elem)
+
             else:
                 unexpectedOrUnknownTag(elem)
         return useCase
@@ -543,3 +547,10 @@ def loadTagDoc(dirPath, fileName, forceBuild = False):
         else:
             unexpectedOrUnknownTag(elem)
     return tagDoc
+
+
+
+def processRelaxNG(root, fileName):
+    fullPath = os.path.join(root, fileName)
+    print "Attempting to process {0}".format(fullPath)
+    grammar = ET.RelaxNG(file=fullPath)

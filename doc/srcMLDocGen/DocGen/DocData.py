@@ -165,6 +165,7 @@ class TagInfo:
         self.desc = ""
         self.useCases = []
         self.refs = []
+        self.grammar = ""
 
     def QNameTagStyle(self):
         return "<{0.ns}:{0.tag}>".format(self)
