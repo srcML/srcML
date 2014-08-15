@@ -1,0 +1,3 @@
+remove {
+    otherEvent -= value;
+}

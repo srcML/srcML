@@ -1,0 +1,4 @@
+interface IInterfaceExample
+    :ISortable, IComparable
+{
+}

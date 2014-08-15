@@ -913,12 +913,12 @@
                     <Desc>Find all externally alias declarations</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-extern-alias-1.cs" />
         </DocEntry>
 
-        <DocEntry title="operator overloading declaration">
+        <DocEntry title="operator overloading">
             <Elements>
-                <Element name="function_decl" />
+                <Element name="function" />
                 <Subelement name="type" />
                 <Subelement name="name" />
                 <Subelement name="parameter_list" />
@@ -928,11 +928,10 @@
                     <Desc>Find all operator declarations</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS-operator-overload-decl-1.cs" /> -->
-            <!-- <Example file="CS-operator-overload-decl-2.cs" /> -->
+            <Example file="CS-operator-overload-decl-1.cs" />
         </DocEntry>
 
-        <DocEntry title="Indexers method">
+        <DocEntry title="indexer property">
             <Elements>
                 <Element name="function_decl" />
                 <Subelement name="type" />
@@ -940,30 +939,15 @@
                 <Subelement name="parameter_list" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="BUG">
                     <Desc>Find all indexer method declarations</Desc>
                 </XPath>
-                <XPath path="None">
+                <XPath path="BUG">
                     <Desc>Find all indexer method declarations with more then one dimension</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
-            <!-- <Example file="CS- -2.cs" /> -->
-        </DocEntry>
-
-        <DocEntry title="operator overload definition">
-            <Elements>
-                <Element name="function" />
-                <Subelement name="type" />
-                <Subelement name="name" />
-                <Subelement name="parameter_list" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:function[src:name[substring(.,0, 8) = 'operator']]">
-                    <Desc>Find all operator overload definitions</Desc>
-                </XPath>
-            </XPathQueries>
-            <!-- <Example file="CS-operator-overload-def-1.cs" /> -->
+            <Example file="CS-index-overload-1.cs" />
+            <Example file="CS-index-overload-2.cs" />
         </DocEntry>
 
         <DocEntry title="implicit conversion operator definition">
@@ -973,11 +957,12 @@
                 <Subelement name="parameter_list" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function[not(src:type)]">
+                <XPath path="//src:function[src:type/src:specifier[.='implicit']][src:name[substring(.,0, 8) = 'operator']]">
                     <Desc>Find all implicit conversion operator definition overloads</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS-implicit-conv-operator-def-1.cs" /> -->
+            <Example file="CS-implicit-conv-operator-1.cs" />
+            <Example file="CS-implicit-conv-operator-2.cs" />
         </DocEntry>
 
         <DocEntry title="explicit conversion operator definition">
@@ -992,7 +977,7 @@
                     <Desc>Find all explicit conversion operator overloads</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS-explicit-conv-operator-def-1.cs" /> -->
+            <Example file="CS-explicit-conv-operator-1.cs" />
         </DocEntry>
 
         <DocEntry title="operator false">
@@ -1004,10 +989,10 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function[src:type/src:specifier[.='explicit']][src:name[substring(.,0, 8) = 'operator'][contains(.,'false')]]">
-                    <Desc>Find all explicit conversion operator overloads</Desc>
+                    <Desc>Find all false operator overloads</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-operator-false-overload-1.cs" />
         </DocEntry>
 
         <DocEntry title="operator true">
@@ -1019,10 +1004,10 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function[src:type/src:specifier[.='explicit']][src:name[substring(.,0, 8) = 'operator'][contains(.,'true')]]">
-                    <Desc>Find all explicit conversion operator overloads</Desc>
+                    <Desc>Find all true operator overloads</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-operator-true-overload-1.cs" />
         </DocEntry>
 
         <DocEntry title="pointer declaration">
@@ -1033,12 +1018,8 @@
                 <XPath path="//src:decl[src:modifier[.='*']]">
                     <Desc>Find all of the declarations of pointers</Desc>
                 </XPath>
-                <XPath path="//src:function_decl[contains(., ')')]">
-                    <Desc>Find all function pointers</Desc>
-                </XPath>
             </XPathQueries>
-            <!-- <Example file="CS-ptr-decl-1.cs" /> -->
-            <!-- <Example file="CS-ptr-decl-2.cs" /> -->
+            <Example file="CS-ptr-decl-1.cs" />
         </DocEntry>
     </Category>
 
@@ -1065,10 +1046,11 @@
                     <Desc>Find all function declarations within classes</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-class-1.cs" />
+            <Example file="CS-class-2.cs" />
         </DocEntry>
 
-        <DocEntry title="struct definition">
+        <DocEntry title="struct">
         	<Desc>See class for more examples.</Desc>
             <Elements>
                 <Element name="struct" />
@@ -1083,128 +1065,164 @@
                     <Desc>Find the members from all structs</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-struct-1.cs" />
+            <Example file="CS-struct-2.cs" />
         </DocEntry>
 
-        <DocEntry title="interface definition">
+        <DocEntry title="interface">
         	<Desc>See class for more examples.</Desc>
             <Elements>
-                <Element name="interface" />
+                <Element name="class" >
+                    <AttribStr>type="interface"</AttribStr>
+                </Element>
                 <Subelement name="name" />
                 <Subelement name="super" />
+                <Subelement name="block" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:interface">
-                    <Desc>Find the definition of all interfaces</Desc>
+                    <Desc>Find all interfaces</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-interface-1.cs" />
+            <Example file="CS-interface-2.cs" />
         </DocEntry>
 
-        <DocEntry title="anonymous type definition">
+        <DocEntry title="anonymous type">
             <Elements>
                 <Element name="UNKNOWN" />
                 <Subelement name="name" />
                 <Subelement name="super" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:expr[op:operator[.='new']/following-sibling::src:block]">
                     <Desc>Find all of the anonymous classes</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-anonymous-type-1.cs" />
         </DocEntry>
 
-        <DocEntry title="property definition">
+        <DocEntry title="property">
             <Elements>
-                <Element name="N"/>
-                <Subelement name="A" />
+                <Element name="decl_stmt"/>
+                <Subelement name="type" />
+                <Subelement name="name" />
+                <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="NONE">
+                <XPath path="BUG">
                     <Desc>Find all</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-property-1.cs" />
+            <Example file="CS-property-2.cs" />
         </DocEntry>
-
+    
         <DocEntry title="get">
             <Elements>
-                <Element name="N"/>
-                <Subelement name="A" />
+                <Element name="function"/>
+                <Subelement name="name" />
+                <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="NONE">
-                    <Desc>Find all</Desc>
+                <XPath path="//src:function[src:name[.='get']]">
+                    <Desc>Find all get functions with their own implementation</Desc>
                 </XPath>
-                <XPath path="NONE">
+                <XPath path="//src:function_decl[src:name[.='get']]">
                     <Desc>Find all default implemented get definitions</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
-            <!--<Example file="CS- -2.cs" />-->
+            <Example file="CS-get-1.cs" />
         </DocEntry>
+
+        <DocEntry title="get (default implementation)">
+            <Elements>
+                <Element name="function_decl"/>
+                <Subelement name="name" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:function_decl[src:name[.='get']]">
+                    <Desc>Find all default implemented get definitions</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="CS-get-2.cs" />
+        </DocEntry>
+
 
         <DocEntry title="set">
             <Elements>
-                <Element name="N"/>
-                <Subelement name="A" />
+                <Element name="function"/>
+                <Subelement name="name" />
+                <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="NONE">
+                <XPath path="//src:function[src:name[.='set']]">
                     <Desc>Find all set definitions</Desc>
                 </XPath>
-                <XPath path="NONE">
+            </XPathQueries>
+            <Example file="CS-set-1.cs" />
+        </DocEntry>
+
+        <DocEntry title="set (default implementation)">
+            <Elements>
+                <Element name="function_decl"/>
+                <Subelement name="name" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:function_decl[src:name[.='set']]">
                     <Desc>Find all default implemented set definitions</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
-            <!--<Example file="CS- -2.cs" />-->
+            <Example file="CS-set-2.cs" />
         </DocEntry>
 
-        <DocEntry title="event definition">
+        <DocEntry title="event">
             <Elements>
-                <Element name="N"/>
-                <Subelement name="A" />
+                <Element name="decl_stmt"/>
+                <Subelement name="type" />
+                <Subelement name="name" />
+                <Subelement name="block" />
             </Elements>
             <XPathQueries>
                 <XPath path="NONE">
                     <Desc>Find all events</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS-event-1.cs" />-->
+            <Example file="CS-event-1.cs" />
+            <Example file="CS-event-2.cs" />
         </DocEntry>
 
         <DocEntry title="add">
             <Elements>
-                <Element name="N"/>
-                <Subelement name="A" />
+                <Element name="function"/>
+                <Subelement name="name" />
+                <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="NONE">
+                <XPath path="//src:function[src:name[.='add']]">
                     <Desc>Find all add definitions</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-add-1.cs" />
         </DocEntry>
 
         <DocEntry title="remove">
             <Elements>
-                <Element name="N"/>
-                <Subelement name="A" />
+                <Element name="function"/>
+                <Subelement name="name" />
+                <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="NONE">
+                <XPath path="//src:function[src:name[.='remove']]">
                     <Desc>Find all remove definitions</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-remove-1.cs" />
         </DocEntry>
-
 
         <DocEntry title="inheritance list">
             <Elements>
-                <Element name="UNKNOWN" />
+                <Element name="super" />
                 <Subelement name="specifier" />
                 <Subelement name="name" />
             </Elements>
@@ -1216,7 +1234,7 @@
                     <Desc>Find all classes that inherit from <code class="inline">bar</code></Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-inheritance-1.cs" />
         </DocEntry>
 
         <DocEntry title="constructor">
@@ -1236,35 +1254,32 @@
                 <XPath path="//src:constructor[src:parameter_list[not(src:param)] or (count(src:parameter_list/src:param) = count(src:parameter_list/src:param/src:decl/src:init))]">
                     <Desc>Find all possible default constructors, including constructors with all default parameters</Desc>
                 </XPath>
-                <XPath path="//src:constructor[ (src:name | src:name/src:name[last()]) = (src:parameter_list/src:param[1]/src:decl/src:type/src:name | src:parameter_list/src:param[1]/src:decl/src:type/src:name[last()])] [( (count(src:parameter_list/src:param) - 1) = count(src:parameter_list/src:param/src:decl/src:init))]">
-                    <Desc>Find all possible copy constructors, including those which are not defined with the body of class and those with default parameters</Desc>
-                </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-ctor-1.cs" />
         </DocEntry>
 
-        <DocEntry title="this forwarding call">
+        <DocEntry title="this (constructor forwarding)">
             <Elements>
                 <Element name="name" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:name[.='this']">
+                <XPath path="//src:call[src:name[.='this']]">
                     <Desc>Find all constructors which forward to the another constructor using this</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-this-ctor-1.cs" />
         </DocEntry>
 
-        <DocEntry title="base forwarding call">
+        <DocEntry title="base (constructor selection)">
             <Elements>
                 <Element name="name" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:call[src:name[.='base']]">
                     <Desc>Find all constructors which forward to a base classes constructor</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS-base-1.cs" />-->
+            <Example file="CS-base-ctor-1.cs" />
         </DocEntry>
 
         <DocEntry title="destructor">
@@ -1277,10 +1292,10 @@
                     <Desc>Find all destructors</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-dtor-1.cs" />
         </DocEntry>
 
-        <DocEntry title="property-wise initialization">
+        <DocEntry title="object initializer">
             <Elements>
                 <Element name="decl_stmt" />
                 <Subelement name="decl" />
@@ -1292,7 +1307,7 @@
                     <Desc>Find all of declaration of structs which also initialize it</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-property-wise-init-1.cs" />
         </DocEntry>
 
         <DocEntry title="enum">
@@ -1312,10 +1327,24 @@
                     <Desc>Find the enums of type int</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS- -1.cs" />-->
-            <!--<Example file="CS- -1.cs" />-->
-            <!--<Example file="CS- -1.cs" />-->
-            <!--<Example file="CS- -1.cs" />-->
+            <Example file="CS-enum-1.cs" />
+            <Example file="CS-enum-2.cs" />
+        </DocEntry>
+
+        <DocEntry title="disambiguating function override">
+            <Elements>
+                <Element name="function" />
+                <Subelement name="type" />
+                <Subelement name="name" />
+                <Subelement name="parameter_list" />
+                <Subelement name="block" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:function[src:name[src:name][src:operator[.='.']]]">
+                    <Desc>Find all disambiguating function overrides</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="CS-disambiguating-func-override-1.cs" />
         </DocEntry>
     </Category>
 
@@ -1332,10 +1361,10 @@
                     <Desc>Find all function calls</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-call-1.cs" />
         </DocEntry>
 
-        <DocEntry title="named parameter function call">
+        <DocEntry title="named parameters">
             <Elements>
                 <Element name="call"/>
                 <Subelement name="name" />
@@ -1346,9 +1375,8 @@
                     <Desc>Find all function calls</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-named-params-1.cs" />
         </DocEntry>
-
 
          <DocEntry title="new">
             <Elements>
@@ -1359,7 +1387,8 @@
                     <Desc>Find all expressions which call new</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-new-1.cs" />
+            <Example file="CS-new-2.cs" />
         </DocEntry>
 
          <DocEntry title="stackalloc">
@@ -1367,14 +1396,12 @@
                 <Element name="Unknown"/>
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:operator[.='stackalloc']">
                     <Desc>Find all expressions which call stackalloc</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-stackalloc-1.cs" />
         </DocEntry>
-
-
 
         <DocEntry title="array indexing">
             <Elements>
@@ -1387,7 +1414,8 @@
                     <Desc>Find all array indexings</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-array-index-1.cs" />
+            <Example file="CS-array-index-2.cs" />
         </DocEntry>
 
         <DocEntry title="dereference member access">
@@ -1418,7 +1446,7 @@
             <Example file="../C/C-member-access.c" />
         </DocEntry>
 
-        <DocEntry title="this">
+        <DocEntry title="this (object)">
             <Elements>
                 <Element name="name" />
             </Elements>
@@ -1427,10 +1455,10 @@
                     <Desc>Find all uses of this</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS-this-1.cs" />-->
+            <Example file="CS-this-1.cs" />
         </DocEntry>
 
-        <DocEntry title="base">
+        <DocEntry title="base (object)">
             <Elements>
                 <Element name="name" />
             </Elements>
@@ -1439,7 +1467,7 @@
                     <Desc>Find all uses of base</Desc>
                 </XPath>
             </XPathQueries>
-            <!--<Example file="CS-base-1.cs" />-->
+            <Example file="CS-base-1.cs" />
         </DocEntry>
 
 	    <OperatorEntry title="pre/post increment" op="++" example="../C/C-Operator-pre_increment.c" />
@@ -1528,11 +1556,12 @@
                 <XPath path="//src:checked">
                     <Desc>Find all uses of checked</Desc>
                 </XPath>
-                <XPath path="N/A">
+                <XPath path="//src:checked[not(src:block)]">
                     <Desc>Find all uses of checked which don't use a block</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CS-Operator-checked-1.cs" />
+            <Example file="CS-Operator-checked-2.cs" />
         </DocEntry>
 
         <DocEntry title="unchecked">
@@ -1544,12 +1573,12 @@
                 <XPath path="//src:unchecked">
                     <Desc>Find all uses of unchecked</Desc>
                 </XPath>
-                <XPath path="N/A">
+                <XPath path="//src:unchecked[not(src:block)]">
                     <Desc>Find all uses of unchecked which don't use a block</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CS-Operator-unchecked-1.cs" />
-            <!-- <Example file="CS-Operator-unchecked-2.cs" /> -->
+            <Example file="CS-Operator-unchecked-2.cs" />
         </DocEntry>
 
         <DocEntry title="sizeof">
@@ -1562,7 +1591,7 @@
                     <Desc>Find all uses of sizeof</Desc>
                 </XPath>
             </XPathQueries>
-            <Example file="../C/C-sizeof.c" />
+            <Example file="CS-sizeof-1.cs" />
         </DocEntry>
 
      	<DocEntry title="var">
@@ -1613,7 +1642,7 @@
             <Example file="CS-string-1.cs" />
         </DocEntry>
 
-        <DocEntry title="c-style cast">
+        <DocEntry title="cast">
             <Elements>
                 <Element name="operator"/>
                 <Subelement name="name" />
@@ -1623,10 +1652,10 @@
                     <Desc>Find all casts</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-cast-1.cs" />
         </DocEntry>
 
-        <DocEntry title="attributes">
+        <DocEntry title="attribute">
             <Elements>
                 <Element name="attribute" />
                 <Subelement name="expr" />
@@ -1639,7 +1668,9 @@
                     <Desc>Find all functions with attributes</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-attribute-1.cs" />
+            <Example file="CS-attribute-2.cs" />
+            <Example file="CS-attribute-3.cs" />
         </DocEntry>
 
         <DocEntry title="global">
@@ -1649,11 +1680,11 @@
                 <Subelement name="operator" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:name[src:name[.='global']]">
                     <Desc>Find all uses of global as part of a complex name</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-global-1.cs" />
         </DocEntry>
 
     </Category>
@@ -1661,28 +1692,30 @@
     <Category title="Generics">
         <DocEntry title="generic variable declaration">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="decl" />
+                <Subelement name="src:name" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:decl[src:type/src:name/src:argument_list]">
+                    <Desc>Find all declarations of generic variables</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-generic-variable-decl-1.cs" />
         </DocEntry>
 
         <DocEntry title="generic class">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="class" />
+                <Subelement name="specifier" />
+                <Subelement name="name" />
+                <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:class[src:name/src:argument_list]">
+                    <Desc>Find all generic classes</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-generic-class-1.cs" />
         </DocEntry>
 
         <DocEntry title="generic method">
@@ -1691,96 +1724,94 @@
                 <Subelement name="Unknown" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:function[src:name/src:argument_list]">
+                    <Desc>Find all generic methods</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-generic-method-1.cs" />
         </DocEntry>
 
-        <DocEntry title="in generic parameter constraint">
+        <DocEntry title="in (generic parameter constraint)">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:argument[src:specifier[.='in']][ancestor::src:argument_list[contains(.,'&lt;')]]">
+                    <Desc>Find all generic parameters constrained with in</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-generic-in-1.cs" />
         </DocEntry>
 
-        <DocEntry title="out generic parameter constraint">
+        <DocEntry title="out (generic parameter constraint)">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:argument[src:specifier[.='out']][ancestor::src:argument_list[contains(.,'&lt;')]]">
+                    <Desc>Find all generic parameters constrained with out</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-generic-out-1.cs" />
         </DocEntry>
 
-        <DocEntry title="where constraint">
+        <DocEntry title="where (constraint)">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="where" />
+                <Subelement name="name" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
-                    <Desc>Find all constrained generic methods</Desc>
-                </XPath>
-                <XPath path="None">
+                <XPath path="//src:class[src:argument_list/src:where]">
                     <Desc>Find all constrained generic classes</Desc>
                 </XPath>
+                <XPath path="//src:function[src:where]">
+                    <Desc>Find all constrained generic methods</Desc>
+                </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-generic-where-1.cs" />
+            <Example file="CS-generic-where-2.cs" />
+            <!-- XXX FIXME BUG FIXME XXX-->
+            <Example file="CS-generic-where-3.cs" />
         </DocEntry>
 
-        <DocEntry title="new constraint">
+        <DocEntry title="new (constraint)">
             <Elements>
                 <Element name="Unknown" />
                 <Subelement name="Unknown" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="BUG">
                     <Desc>Find all uses of the new constraint</Desc>
                 </XPath>
-                <XPath path="None">
+                <XPath path="BUG">
                     <Desc>Find all classes which specify the new constraint</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-generic-new-constraint-1.cs" />
         </DocEntry>
 
-        <DocEntry title="class constraint">
+        <DocEntry title="class (constraint)">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="name" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:class[src:name/src:argument_list/src:where/src:name[.='class']]">
+                    <Desc>Find all classes which use the class constraint</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-generic-class-constraint-1.cs" />
         </DocEntry>
 
-        <DocEntry title="struct constraint">
+        <DocEntry title="struct (constraint)">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="name" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
-                    <Desc>Find all </Desc>
+                <XPath path="BUG">
+                    <Desc>Find all generic methods with struct constraints</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-generic-struct-constraint-1.cs" />
         </DocEntry>
 
     </Category>
@@ -1847,357 +1878,281 @@
 
         <DocEntry title="from">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="from" />
+                <Subelement name="expr" />
+                <Subelement name="in" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:from">
+                    <Desc>Find all uses of from</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-linq-from-1.cs" />
         </DocEntry>
 
-        <DocEntry title="where query clause">
+        <DocEntry title="where (clause)">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="where" />
+                <Subelement name="expr" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:where[ancestor::src:linq]">
+                    <Desc>Find all uses of the where clause</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-linq-where-1.cs" />
         </DocEntry>
 
         <DocEntry title="select">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="select" />
+                <Subelement name="expr" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:select">
+                    <Desc>Find all select clauses</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-linq-select-1.cs" /> 
+            <Example file="CS-linq-select-2.cs" /> 
         </DocEntry>
 
         <DocEntry title="group">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="group" />
+                <Subelement name="by" />
+                <Subelement name="into" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:group">
+                    <Desc>Find all group clauses</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-linq-group-1.cs" />
+            <Example file="CS-linq-group-2.cs" />
         </DocEntry>
 
-        <DocEntry title="into">
-            <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
-                </XPath>
-            </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
-        </DocEntry>
 
         <DocEntry title="orderby">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="orderby" />
+                <Subelement name="expr" />
+                <Subelement name="name" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:orderby">
+                    <Desc>Find all uses of the orderby clause</Desc>
+                </XPath>
+                <XPath path="//src:orderby[src:name[.='descending']]">
+                    <Desc>Find all uses of the orderby clause which sort in descending order</Desc>
+                </XPath>
+                <XPath path="//src:orderby[src:name[.='ascending'] or not(src:name)]">
+                    <Desc>Find all uses of the orderby clause which sort in ascending order </Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
-        </DocEntry>
-
-        <DocEntry title="ascending">
-            <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
-                </XPath>
-            </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
-        </DocEntry>
-
-        <DocEntry title="descending">
-            <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
-                </XPath>
-            </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-linq-orderby-1.cs" />
+            <Example file="CS-linq-orderby-2.cs" />
+            <Example file="CS-linq-orderby-3.cs" />
         </DocEntry>
 
         <DocEntry title="join">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="join" />
+                <Subelement name="in" />
+                <Subelement name="on" />
+                <Subelement name="equals" />
+                <Subelement name="into" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:join">
+                    <Desc>Find all of the join clauses</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example title="inner join" file="CS-linq-join-1.cs" />
+            <Example title="group join" file="CS-linq-join-2.cs" />
+            <Example title="subquery join" file="CS-linq-join-3.cs" />
+            <Example title="left outer join" file="CS-linq-join-4.cs" />
         </DocEntry>
 
         <DocEntry title="let">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="let" />
+                <Subelement name="expr" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:let">
+                    <Desc>Find all let clauses</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
-        </DocEntry>
-
-        <DocEntry title="on">
-            <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
-                </XPath>
-            </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
-        </DocEntry>
-
-        <DocEntry title="equals">
-            <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
-                </XPath>
-            </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
-        </DocEntry>
-
-        <DocEntry title="by">
-            <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
-                </XPath>
-            </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-linq-let-1.cs" />
         </DocEntry>
     </Category>
 
     <Category title="C# Preprocessor">
         <DocEntry title="#if">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="if" ns="cpp"/>
+                <Subelement name="directive" ns="cpp"/>
+                <Subelement name="expr" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//cpp:if">
+                    <Desc>Find all if directives</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-pp-if-1.cs" />
         </DocEntry>
 
         <DocEntry title="#else">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="else" ns="cpp"/>
+                <Subelement name="directive" ns="cpp"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//cpp:else">
+                    <Desc>Find all else directives</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-pp-else-1.cs" />
         </DocEntry>
         
         <DocEntry title="#elif">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="elif" ns="cpp" />
+                <Subelement name="directive" ns="cpp" />
+                <Subelement name="expr" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//cpp:elif">
+                    <Desc>Find all elif directives</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-pp-elif-1.cs" />
         </DocEntry>
         
         <DocEntry title="#endif">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="endif" ns="cpp"/>
+                <Subelement name="directive" ns="cpp"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//cpp:endif">
+                    <Desc>Find all endif directives</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-pp-endif-1.cs" />
         </DocEntry>
         
         <DocEntry title="#define">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="define" ns="cpp"/>
+                <Subelement name="directive" ns="cpp"/>
+                <Subelement name="expr" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//cpp:define">
+                    <Desc>Find all define directives</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-pp-define-1.cs" />
         </DocEntry>
         
         <DocEntry title="#undef">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="undef" ns="cpp" />
+                <Subelement name="directive" ns="cpp"/>
+                <Subelement name="name" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//cpp:undef">
+                    <Desc>Find all undef directives</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-pp-undef-1.cs" />
         </DocEntry>
         
         <DocEntry title="#warning">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="warning" ns="warning"/>
+                <Subelement name="directive" ns="cpp"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//cpp:warning">
+                    <Desc>Find all warning directives</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-pp-warning-1.cs" />
         </DocEntry>
         
         <DocEntry title="#error">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="error" ns="cpp"/>
+                <Subelement name="directive" ns="cpp"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//cpp:error">
+                    <Desc>Find all error directives</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-pp-error-1.cs" />
         </DocEntry>
         
         <DocEntry title="#line">
             <Elements>
-                <Element name="Unknown" />
+                <Element name="line" ns="cpp"/>
+                <Subelement name="directive" ns="cpp"/>
                 <Subelement name="Unknown" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//cpp:line">
+                    <Desc>Find all line directives</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-pp-line-1.cs" />
+            <Example file="CS-pp-line-2.cs" />
+            <Example file="CS-pp-line-3.cs" />
         </DocEntry>
         
         <DocEntry title="#region">
             <Elements>
-                <Element name="Unknown" />
+                <Element name="region" ns="cpp"/>
+                <Subelement name="directive" ns="cpp"/>
                 <Subelement name="Unknown" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//cpp:region">
+                    <Desc>Find all region directives</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-pp-region-1.cs" />
         </DocEntry>
         
         <DocEntry title="#endregion">
             <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
+                <Element name="endreion" ns="cpp" />
+                <Subelement name="directive" ns="cpp"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//cpp:endregion">
+                    <Desc>Find all endregion directives</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-pp-region-1.cs" />
         </DocEntry>
         
         <DocEntry title="#pragma">
             <Elements>
-                <Element name="Unknown" />
+                <Element name="pragma" ns="cpp"/>
+                <Subelement name="directive" ns="cpp"/>
                 <Subelement name="Unknown" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
+                <XPath path="//cpp:pragma">
+                    <Desc>Find all pragma directives</Desc>
                 </XPath>
             </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
-        </DocEntry>
-        
-        <DocEntry title="#pragma warning">
-            <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
-                </XPath>
-            </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
-        </DocEntry>
-        
-        <DocEntry title="#pragma checksum">
-            <Elements>
-                <Element name="Unknown" />
-                <Subelement name="Unknown" />
-            </Elements>
-            <XPathQueries>
-                <XPath path="//src:finally">
-                    <Desc>Find all </Desc>
-                </XPath>
-            </XPathQueries>
-            <!-- <Example file="CS- -1.cs" /> -->
+            <Example file="CS-pp-pragma-1.cs" />
         </DocEntry>
     </Category>
-
 </DocConfig>
 

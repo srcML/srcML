@@ -1,0 +1,4 @@
+struct Book
+    :ISortable<Book>
+{
+}
