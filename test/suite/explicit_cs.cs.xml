@@ -6,7 +6,7 @@
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <specifier>explicit</specifier></type> <name>operator M</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <specifier>explicit</specifier></type> <name>operator <name>M</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 </unit>
