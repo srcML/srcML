@@ -83,27 +83,27 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>a</name> &amp;</type> <name>NAME</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>a</name> <modifier>&amp;</modifier></type> <name>NAME</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>NAME</name> &amp;</type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>NAME</name> <modifier>&amp;</modifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>NAME</name> &amp;</type> <name>NAME</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>NAME</name> <modifier>&amp;</modifier></type> <name>NAME</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>a</name> &amp;&amp;</type> <name>NAME</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>a</name> <modifier>&amp;&amp;</modifier></type> <name>NAME</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>NAME</name> &amp;&amp;</type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>NAME</name> <modifier>&amp;&amp;</modifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>NAME</name> &amp;&amp;</type> <name>NAME</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>NAME</name> <modifier>&amp;&amp;</modifier></type> <name>NAME</name></decl>;</decl_stmt>
 </unit>
 
 <unit>

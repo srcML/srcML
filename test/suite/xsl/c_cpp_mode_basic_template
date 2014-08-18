@@ -23,23 +23,23 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name><operator>.</operator>*<name>NAME</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><operator>.*</operator><name>NAME</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>NAME</name><operator>.</operator>*<name>a</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>NAME</name><operator>.*</operator><name>a</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>NAME</name><operator>.</operator>*<name>NAME</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>NAME</name><operator>.*</operator><name>NAME</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>NAME</name><operator>.</operator>*<name>NAME</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>NAME</name><operator>.*</operator><name>NAME</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>NAME</name><operator>.</operator>*<name>NAME</name></name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>NAME</name><operator>.*</operator><name>NAME</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -151,7 +151,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr>~<name>NAME</name></expr>;</expr_stmt>
+<expr_stmt><expr><operator>~</operator><name>NAME</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -183,27 +183,27 @@
 </unit>
 
 <unit>
-<expr_stmt><expr>(<name>a</name> <operator>&amp;</operator> <name>NAME</name>)</expr>;</expr_stmt>
+<expr_stmt><expr><operator>(</operator><name>a</name> <operator>&amp;</operator> <name>NAME</name><operator>)</operator></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>(<name>NAME</name> <operator>&amp;</operator> <name>a</name>)</expr>;</expr_stmt>
+<expr_stmt><expr><operator>(</operator><name>NAME</name> <operator>&amp;</operator> <name>a</name><operator>)</operator></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>(<name>NAME</name> <operator>&amp;</operator> <name>NAME</name>)</expr></expr_stmt>
+<expr_stmt><expr><operator>(</operator><name>NAME</name> <operator>&amp;</operator> <name>NAME</name><operator>)</operator></expr></expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>(<name>a</name> &amp;&amp; <name>NAME</name>)</expr>;</expr_stmt>
+<expr_stmt><expr><operator>(</operator><name>a</name> <operator>&amp;&amp;</operator> <name>NAME</name><operator>)</operator></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>(<name>NAME</name> &amp;&amp; <name>a</name>)</expr>;</expr_stmt>
+<expr_stmt><expr><operator>(</operator><name>NAME</name> <operator>&amp;&amp;</operator> <name>a</name><operator>)</operator></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>(<name>NAME</name> &amp;&amp; <name>NAME</name>)</expr>;</expr_stmt>
+<expr_stmt><expr><operator>(</operator><name>NAME</name> <operator>&amp;&amp;</operator> <name>NAME</name><operator>)</operator></expr>;</expr_stmt>
 </unit>
 
 <unit>
