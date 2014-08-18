@@ -484,6 +484,7 @@ tokens {
     STYPENAME;
     SALIGNOF;
     STYPEID;
+    SENUM_CLASS;
 
     // Qt
 	SSIGNAL_ACCESS;
@@ -7934,7 +7935,10 @@ enum_preprocessing[] { ENTRY_DEBUG} :
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_ENUM | MODE_DECL);
 
             // start the enum definition
-            startElement(SENUM);
+            if(inLanguage(LANGUAGE_CXX) && (next_token() == CLASS || next_token() == CXX_CLASS || next_token() == STRUCT || next_token() == UNION))
+                startElement(SENUM_CLASS);
+            else
+                startElement(SENUM);
 
             // classes end at the end of the block
             if (intypedef) {
@@ -7956,7 +7960,7 @@ enum_definition[] { ENTRY_DEBUG } :
 
 // header for enum class
 enum_class_header[] {} :
-        (CLASS | CXX_CLASS | STRUCT)* 
+        (CLASS | CXX_CLASS | STRUCT | UNION)* 
         ({ inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
         variable_identifier (COLON enum_type)*
 
