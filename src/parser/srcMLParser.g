@@ -4014,8 +4014,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 { !inLanguage(LANGUAGE_CSHARP) || LA(1) != ASYNC }?
                 set_bool[operatorname, false]
                 compound_name set_bool[foundpure]
-                    set_bool[isoperator, isoperator || (inLanguage(LANGUAGE_CXX_FAMILY) && 
-                             operatorname && type_count == specifier_count)] 
+                set_bool[isoperator, isoperator || (inLanguage(LANGUAGE_CXX_FAMILY) && 
+                             operatorname)] 
                 set_bool[operatorname, false] |
 
                 // always count as a name for now since is always used as a type or type modifier
