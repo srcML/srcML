@@ -138,7 +138,7 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -2732,6 +2732,7 @@ class_declaration[] { ENTRY_DEBUG } :
         }
 
         class_preamble (CLASS | CXX_CLASS) class_post class_header
+        (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
 // class preprocessing items
@@ -2966,6 +2967,7 @@ struct_declaration[] { ENTRY_DEBUG } :
             startElement(SSTRUCT_DECLARATION);
         }
         class_preamble STRUCT class_post class_header
+        (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
 // handle struct union definition
@@ -2989,6 +2991,7 @@ union_declaration[] { ENTRY_DEBUG } :
             startElement(SUNION_DECLARATION);
         }
         class_preamble UNION class_post class_header
+        (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
 // default private/public section for C++
