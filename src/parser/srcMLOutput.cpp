@@ -1391,6 +1391,18 @@ void srcMLOutput::processComplex(const antlr::RefToken& token) {
     processOptional(token, "type", "complex");
 }
 
+/**
+ * processTemplateArgumentList
+ * @param token token to output as template argument list
+ *
+ * Callback to process/output token as template argument list.
+ */
+void srcMLOutput::processTemplateArgumentList(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "template");
+
+}
+
 #if DEBUG
 
 /**
