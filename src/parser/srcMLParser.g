@@ -1305,10 +1305,7 @@ lambda_expression_csharp[] { ENTRY_DEBUG } :
 
         }
 
-        (options { greedy = true; } : specifier)* (variable_identifier | lambda_parameter_list_csharp) lambda_marked
-        {
-            if(LA(1) == LCURLY) startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
-        }
+        (options { greedy = true; } : specifier)* (variable_identifier | lambda_parameter_list_csharp) lambda_csharp
 
 ;
 
@@ -1518,7 +1515,7 @@ lambda_expression_java[] { bool first = true; ENTRY_DEBUG } :
 
         }
 
-        (parameter_list | lambda_single_parameter_java) lambda_marked_java (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
+        (parameter_list | lambda_single_parameter_java) lambda_java (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
 
 ;
 
@@ -1535,6 +1532,20 @@ lambda_single_parameter_java { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // lambda character
+lambda_java[] { ENTRY_DEBUG } :
+        
+    lambda_marked_java
+
+    {
+
+        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+            startElement(SPSEUDO_BLOCK);
+
+    }
+
+;
+
+// lambda character
 lambda_marked_java[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
@@ -1543,7 +1554,6 @@ lambda_marked_java[] { LightweightElement element(this); ENTRY_DEBUG } :
         TRETURN
 
 ;
-
 
 // handle the beginning of a function definition
 function_definition[int type_count, int token = SFUNCTION_DEFINITION] { ENTRY_DEBUG } :
@@ -6432,7 +6442,7 @@ lambda_anonymous[] { ENTRY_DEBUG } :
             // treat catch block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ANONYMOUS);
         }
-        lambda_marked
+        lambda_csharp
 
         /* completely parse a function until it is done */
         (options { greedy = true; } : { inputState->guessing }? curly_pair)*
@@ -6461,6 +6471,21 @@ delegate_marked[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SNAME);
         }
         DELEGATE
+;
+
+lambda_csharp[] { ENTRY_DEBUG } :
+
+    lambda_marked
+
+    {
+
+        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+            startElement(SPSEUDO_BLOCK);
+        else if(LA(1) == LCURLY)
+            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
+
+    }
+
 ;
 
 // lambda character
