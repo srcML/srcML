@@ -181,7 +181,7 @@ namespace {
     ELEMENT_MAP(SKRPARAMETER,          "krparam")
     ELEMENT_MAP(SARGUMENT_LIST,        "argument_list")
     ELEMENT_MAP(SARGUMENT,             "argument")
-    ELEMENT_MAP(SLAMBDA_CAPTURE,  "capture")
+    ELEMENT_MAP(SLAMBDA_CAPTURE,       "capture")
 
     // struct, union
     ELEMENT_MAP(SSTRUCT, "struct")
@@ -302,10 +302,12 @@ namespace {
     ELEMENT_MAP(SANNOTATION,    "annotation")
 
     // C++
-    ELEMENT_MAP(SALIGNAS,    "alignas")
-    ELEMENT_MAP(SALIGNOF,    "alignof")
-    ELEMENT_MAP(STYPEID,     "typeid")
-    ELEMENT_MAP(SENUM_CLASS, "enum")
+    ELEMENT_MAP(SALIGNAS,                "alignas")
+    ELEMENT_MAP(SALIGNOF,                "alignof")
+    ELEMENT_MAP(STYPEID,                 "typeid")
+    ELEMENT_MAP(SENUM_CLASS,             "enum")
+    ELEMENT_MAP(SOPERATOR_FUNCTION,      "function")
+    ELEMENT_MAP(SOPERATOR_FUNCTION_DECL, "function_decl")
 
     // Objective-C
     ELEMENT_MAP(SRECEIVER,             "receiver")
@@ -1443,6 +1445,18 @@ void srcMLOutput::processCast(const antlr::RefToken& token) {
 void srcMLOutput::processEnumClass(const antlr::RefToken& token) {
 
     processOptional(token, "type", "class");
+
+}
+
+/**
+ * processOperatorFunction
+ * @param token token to output as operator function
+ *
+ * Callback to process/output token as operator function.
+ */
+void srcMLOutput::processOperatorFunction(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "operator");
 
 }
 

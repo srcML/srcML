@@ -14,11 +14,11 @@
 </unit>
 
 <unit>
-<function_decl><type><specifier>virtual</specifier> <name>NonCopyable</name> <modifier>&amp;</modifier></type> <name>operator=</name><parameter_list>(<param><decl><type><specifier>const</specifier> <name>NonCopyable</name><modifier>&amp;</modifier></type></decl></param>)</parameter_list> = <literal type="number">0</literal>;</function_decl>
+<function_decl type="operator"><type><specifier>virtual</specifier> <name>NonCopyable</name> <modifier>&amp;</modifier></type> <name>operator<name>=</name></name><parameter_list>(<param><decl><type><specifier>const</specifier> <name>NonCopyable</name><modifier>&amp;</modifier></type></decl></param>)</parameter_list> = <literal type="number">0</literal>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>NonCopyable</name> <modifier>&amp;</modifier></type> <name>operator=</name><parameter_list>(<param><decl><type><specifier>const</specifier> <name>NonCopyable</name><modifier>&amp;</modifier></type></decl></param>)</parameter_list> = <specifier>delete</specifier>;</function_decl>
+<function_decl type="operator"><type><name>NonCopyable</name> <modifier>&amp;</modifier></type> <name>operator<name>=</name></name><parameter_list>(<param><decl><type><specifier>const</specifier> <name>NonCopyable</name><modifier>&amp;</modifier></type></decl></param>)</parameter_list> = <specifier>delete</specifier>;</function_decl>
 </unit>
 
 <unit>

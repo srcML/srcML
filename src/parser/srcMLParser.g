@@ -152,7 +152,7 @@ enum STMT_TYPE {
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
     SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
     EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
-    USING_STMT
+    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL
 };
 
 enum CALL_TYPE { NOCALL, CALL, MACRO };
@@ -485,6 +485,8 @@ tokens {
     SALIGNOF;
     STYPEID;
     SENUM_CLASS;
+    SOPERATOR_FUNCTION;
+    SOPERATOR_FUNCTION_DECL;
 
     // Qt
 	SSIGNAL_ACCESS;
@@ -840,6 +842,13 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         { stmt_type == FUNCTION }?
         function_definition[type_count] |
 
+        { stmt_type == OPERATOR_FUNCTION_DECL }?
+        function_declaration[type_count, SOPERATOR_FUNCTION_DECL] |
+
+        // function definition
+        { stmt_type == OPERATOR_FUNCTION }?
+        function_definition[type_count, SOPERATOR_FUNCTION] |
+
         { stmt_type == CLASS_DEFN }?
         class_definition |
 
@@ -1044,11 +1053,11 @@ look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
 /* functions */
 
 // beginning function declaration/header
-function_declaration[int type_count] { ENTRY_DEBUG } :
+function_declaration[int type_count, int token = SFUNCTION_DECLARATION] { ENTRY_DEBUG } :
 		{
             startNewMode(MODE_STATEMENT);
 
-            startElement(SFUNCTION_DECLARATION);
+            startElement(token);
         }
         function_header[type_count]
 ;
@@ -1263,13 +1272,21 @@ function_identifier_main[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 // overloaded operator name
-overloaded_operator[] { SingleElement element(this); ENTRY_DEBUG } :
+overloaded_operator[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
+            startNewMode(MODE_LOCAL);
+
             startElement(SNAME);
         }
         set_bool[operatorname, true]
 
-        OPERATOR
+        OPERATOR 
+        {
+
+            startElement(SNAME);
+
+        }
+
         (
             // special case for 'operator()'
             { LA(1) == LPAREN }? LPAREN RPAREN |
@@ -1528,11 +1545,11 @@ lambda_marked_java[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 
 // handle the beginning of a function definition
-function_definition[int type_count] { ENTRY_DEBUG } :
+function_definition[int type_count, int token = SFUNCTION_DEFINITION] { ENTRY_DEBUG } :
 		{
             startNewMode(MODE_STATEMENT);
 
-            startElement(SFUNCTION_DEFINITION);
+            startElement(token);
         }
         function_header[type_count]
 ;
@@ -2648,7 +2665,8 @@ using_aliasing[]  { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = 
         startElement(STYPE);
     }
 
-        ({ pattern_check(stmt_type, secondtoken, type_count) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION) }? function_declaration[type_count])*
+        ({ pattern_check(stmt_type, secondtoken, type_count) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION
+            || stmt_type == OPERATOR_FUNCTION_DECL || stmt_type == OPERATOR_FUNCTION) }? function_declaration[type_count])*
 
 ;
 
@@ -3795,6 +3813,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     else if (type == FUNCTION && (fla == TERMINATE || fla == COMMA || fla == EQUAL))
         type = FUNCTION_DECL;
 
+    // declaration form
+    else if (type == OPERATOR_FUNCTION && (fla == TERMINATE || fla == COMMA || fla == EQUAL))
+        type = OPERATOR_FUNCTION_DECL;
+
     // we actually have a macro and then a constructor
     else if(type == FUNCTION && fla == COLON)
         type = SINGLE_MACRO;
@@ -3843,6 +3865,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             int template_count = 0;
             bool foundpure = false;
             bool isoperator = false;
+            bool ismain = false;
             bool isconstructor = false;
             bool saveisdestructor = false;
             bool endbracket = false;
@@ -3999,7 +4022,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 auto_keyword[false] | 
 
                 // special function name
-                MAIN set_bool[isoperator, type_count == 0] |
+                MAIN set_bool[ismain, type_count == 0] |
 
                 { is_c_class_identifier || keyword_name_token_set.member(next_token()) }?
                      keyword_name |
@@ -4075,6 +4098,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  // operator methods may not have non-specifier types also
                  !isoperator &&
 
+                 !ismain &&
+
                  !isdestructor &&
 
                  !inLanguage(LANGUAGE_OBJECTIVE_C) &&
@@ -4122,7 +4147,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                 // POF (Plain Old Function)
                 // need at least one non-specifier in the type (not including the name)
-                { (type_count - specifier_count - attribute_count - template_count > 0) || isoperator || saveisdestructor || isconstructor}?
+                { (type_count - specifier_count - attribute_count - template_count > 0) || isoperator || ismain || saveisdestructor || isconstructor}?
                 function_rest[fla]
             ) |
 
@@ -4131,13 +4156,15 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         )
 
         // since we got this far, we have a function
-        set_type[type, FUNCTION]
+        set_type[type, FUNCTION, !isoperator]
+
+        set_type[type, OPERATOR_FUNCTION, isoperator]
 
         // however, we could have a destructor
         set_type[type, DESTRUCTOR, saveisdestructor]
 
         // could also have a constructor
-        set_type[type, CONSTRUCTOR, isconstructor && !saveisdestructor && !isoperator]
+        set_type[type, CONSTRUCTOR, isconstructor && !saveisdestructor && !isoperator && !ismain]
 )
 ;
 
@@ -7480,7 +7507,8 @@ parameter[] { int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NON
         }
         (
 
-            { pattern_check(stmt_type, secondtoken, type_count, true) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION) }?
+            { pattern_check(stmt_type, secondtoken, type_count, true) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION
+                || stmt_type == OPERATOR_FUNCTION_DECL || stmt_type == OPERATOR_FUNCTION) }?
             function_declaration[type_count]
 
             function_identifier // pointer_name_grammar
