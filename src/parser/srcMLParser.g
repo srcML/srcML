@@ -549,6 +549,7 @@ tokens {
     SUNSAFE_STATEMENT;
     SLOCK_STATEMENT;
     SFIXED_STATEMENT;
+    STYPEOF;
 
     // linq
     SLINQ;
@@ -5780,7 +5781,10 @@ keyword_calls[] { ENTRY_DEBUG } :
 
 
     // Objective-C
-    encode_call | selector_call
+    encode_call | selector_call |
+
+    // C#
+    typeof_call
 
 ;
 
@@ -5791,7 +5795,10 @@ keyword_call_tokens[] { ENTRY_DEBUG } :
     SIZEOF | ALIGNOF | TYPEID | CONST_CAST | DYNAMIC_CAST | REINTERPRET_CAST | STATIC_CAST |
 
     // Objective-C
-    ENCODE | SELECTOR
+    ENCODE | SELECTOR |
+
+    // C#
+    TYPEOF
 
 ;
 
@@ -5916,6 +5923,20 @@ selector_call[] { ENTRY_DEBUG } :
             startElement(SSELECTOR);
         }
         SELECTOR
+        call_argument_list
+;
+
+// typeof
+typeof_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+
+            startElement(STYPEOF);
+        }
+        TYPEOF
         call_argument_list
 ;
 
