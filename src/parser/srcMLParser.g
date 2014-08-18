@@ -2732,6 +2732,7 @@ class_declaration[] { ENTRY_DEBUG } :
         }
 
         class_preamble (CLASS | CXX_CLASS) class_post class_header
+        (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
 // class preprocessing items
@@ -2966,6 +2967,7 @@ struct_declaration[] { ENTRY_DEBUG } :
             startElement(SSTRUCT_DECLARATION);
         }
         class_preamble STRUCT class_post class_header
+        (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
 // handle struct union definition
@@ -2989,6 +2991,7 @@ union_declaration[] { ENTRY_DEBUG } :
             startElement(SUNION_DECLARATION);
         }
         class_preamble UNION class_post class_header
+        (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
 // default private/public section for C++
@@ -3981,7 +3984,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
                 set_type[type, UNION_DEFN,     type == UNION_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, INTERFACE_DEFN, type == INTERFACE_DECL && (LA(1) == LCURLY || lcurly)]
-                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == LCURLY || lcurly)]
+                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
                 set_int[type_count, type_count + 1] |
@@ -3993,7 +3996,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
                 ({ inLanguage(LANGUAGE_JAVA) }? class_header | { inLanguage(LANGUAGE_CSHARP)}? variable_identifier | enum_class_header | LCURLY)
                 //set_type[type, ENUM_DEFN, type == ENUM_DECL     && (LA(1) == LCURLY || lcurly)]
-                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == LCURLY || lcurly)]
+                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
                 set_int[type_count, type_count + 1] |
