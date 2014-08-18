@@ -3587,7 +3587,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         rparen |
 
         // seem to end up here for colon in ternary operator
-        colon_marked
+        colon_marked |
+
+        // markup namespace tag in using namespace
+        namespace_definition
 
 ;
 
