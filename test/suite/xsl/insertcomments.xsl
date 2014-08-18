@@ -36,7 +36,7 @@
   <xsl:copy-of select="."/>
 </xsl:template>
 
-<xsl:template match="src:unit/src:unit//text()[contains(., ' ')]">
+<xsl:template match="src:unit/src:unit//text()[contains(., ' ') and not(ancestor::src:literal)]">
   <xsl:apply-templates select="." mode="replace"/>
 </xsl:template>
 
