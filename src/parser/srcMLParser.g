@@ -1416,8 +1416,8 @@ lambda_capture_argument[] { bool first = true; CompleteElement element(this); EN
             startElement(SARGUMENT);
         }
 
-        // suppress warning of another case where REFOPS or something is in both alts.
-        (options { generateAmbigWarnings = false;  } : (lambda_capture_modifiers)* ({ first }? variable_identifier (lambda_capture_initialization)* set_bool[first, false])*)
+        // suppress greedy warnings
+        ((options { greedy = true; } : lambda_capture_modifiers)* (options { greedy = true; } : { first }? variable_identifier (options { greedy = true; } : lambda_capture_initialization)* set_bool[first, false])*)
 ;
 
 lambda_capture_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -5002,7 +5002,8 @@ pointer_dereference[] { ENTRY_DEBUG bool flag = false; } :
         identifier (template_argument_list)* DCOLON pointer_dereference |
 
         // typical function pointer name
-        general_operators (general_operators)* (compound_name_inner[false])*
+        // need greedy for general operators and possibly end
+        general_operators (options { greedy = true; } : general_operators)* (options { greedy = true; } : compound_name_inner[false])*
 
         // optional array declaration
         (variable_identifier_array_grammar_sub[flag])*
@@ -8170,7 +8171,7 @@ preprocessor[] { ENTRY_DEBUG
             endMode();
 
             tp.setType(SCPP_PRAGMA);
-        } (cpp_literal | cpp_symbol)* |
+        } (options { generateAmbigWarnings = false; } : cpp_literal | cpp_symbol)* |
 
         ERRORPREC
         {
