@@ -305,6 +305,7 @@ namespace {
     ELEMENT_MAP(SALIGNAS,    "alignas")
     ELEMENT_MAP(SALIGNOF,    "alignof")
     ELEMENT_MAP(STYPEID,     "typeid")
+    ELEMENT_MAP(SENUM_CLASS, "enum")
 
     // Objective-C
     ELEMENT_MAP(SRECEIVER,             "receiver")
@@ -1430,6 +1431,18 @@ void srcMLOutput::processCast(const antlr::RefToken& token) {
         processOptional(token, "type", "static");
     else
         processOptional(token, 0, 0);
+
+}
+
+/**
+ * processEnumClass
+ * @param token token to output as enum class
+ *
+ * Callback to process/output token as enum class.
+ */
+void srcMLOutput::processEnumClass(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "class");
 
 }
 

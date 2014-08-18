@@ -59,7 +59,8 @@ enum {
     PROCESSCLASSINTERFACE,
     PROCESSCLASSIMPLEMENTATION,
     PROCESSTEMPLATEARGUMENTLIST,
-    PROCESSCAST
+    PROCESSCAST,
+    PROCESSENUMCLASS
 };
 
 /** for conversion of process numbers to callbacks */
@@ -93,7 +94,8 @@ srcMLOutput::PROCESS_PTR srcMLOutput::num2process[] = {
     &srcMLOutput::processClassInterface,
     &srcMLOutput::processClassImplementation,
     &srcMLOutput::processTemplateArgumentList,
-    &srcMLOutput::processCast
+    &srcMLOutput::processCast,
+    &srcMLOutput::processEnumClass
 };
 
 /** element map call name */
@@ -332,6 +334,7 @@ namespace {
     ELEMENT_MAP(SDYNAMIC_CAST, PROCESSCAST)
     ELEMENT_MAP(SREINTERPRET_CAST, PROCESSCAST)
     ELEMENT_MAP(SSTATIC_CAST, PROCESSCAST)
+    ELEMENT_MAP(SENUM_CLASS, PROCESSENUMCLASS)
 
 }
 
