@@ -1,13 +1,13 @@
 <unit> 
-<decl_stmt><decl><type><name>NAME</name> *</type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>NAME</name> <modifier>*</modifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit> 
-<decl_stmt><decl><type><name>a</name> *</type> <name>NAME</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>a</name> <modifier>*</modifier></type> <name>NAME</name></decl>;</decl_stmt>
 </unit>
 
 <unit> 
-<decl_stmt><decl><type><name>NAME</name> *</type> <name>NAME</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>NAME</name> <modifier>*</modifier></type> <name>NAME</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -15,7 +15,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type>struct <name>NAME</name> *</type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type>struct <name>NAME</name> <modifier>*</modifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -23,7 +23,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type>struct <name>a</name> *</type> <name>NAME</name></decl>;</decl_stmt>
+<decl_stmt><decl><type>struct <name>a</name> <modifier>*</modifier></type> <name>NAME</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -31,7 +31,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type>struct <name>NAME</name> *</type> <name>NAME</name></decl>;</decl_stmt>
+<decl_stmt><decl><type>struct <name>NAME</name> <modifier>*</modifier></type> <name>NAME</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -39,7 +39,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type>class <name>NAME</name> *</type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type>class <name>NAME</name> <modifier>*</modifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -47,7 +47,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type>class <name>a</name> *</type> <name>NAME</name></decl>;</decl_stmt>
+<decl_stmt><decl><type>class <name>a</name> <modifier>*</modifier></type> <name>NAME</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -55,7 +55,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type>class <name>NAME</name> *</type> <name>NAME</name></decl>;</decl_stmt>
+<decl_stmt><decl><type>class <name>NAME</name> <modifier>*</modifier></type> <name>NAME</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -63,7 +63,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type>union <name>NAME</name> *</type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type>union <name>NAME</name> <modifier>*</modifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -71,7 +71,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type>union <name>a</name> *</type> <name>NAME</name></decl>;</decl_stmt>
+<decl_stmt><decl><type>union <name>a</name> <modifier>*</modifier></type> <name>NAME</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -79,7 +79,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type>union <name>NAME</name> *</type> <name>NAME</name></decl>;</decl_stmt>
+<decl_stmt><decl><type>union <name>NAME</name> <modifier>*</modifier></type> <name>NAME</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -115,11 +115,11 @@
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>NAME</name> *</type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>NAME</name> <modifier>*</modifier></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>NAME</name> *</type> <name>NAME</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>NAME</name> <modifier>*</modifier></type> <name>NAME</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
@@ -131,11 +131,11 @@
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>class <name>NAME</name> *</type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>class <name>NAME</name> <modifier>*</modifier></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>class <name>NAME</name> *</type> <name>NAME</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>class <name>NAME</name> <modifier>*</modifier></type> <name>NAME</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
@@ -147,11 +147,11 @@
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>union <name>NAME</name> *</type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>union <name>NAME</name> <modifier>*</modifier></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>union <name>NAME</name> *</type> <name>NAME</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>union <name>NAME</name> <modifier>*</modifier></type> <name>NAME</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
@@ -159,7 +159,7 @@
 </unit>
 
 <unit>
-<function_decl><type>struct <name>NAME</name> *</type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><type>struct <name>NAME</name> <modifier>*</modifier></type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
@@ -167,7 +167,7 @@
 </unit>
 
 <unit>
-<function_decl><type>struct <name>a</name> *</type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><type>struct <name>a</name> <modifier>*</modifier></type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
@@ -175,7 +175,7 @@
 </unit>
 
 <unit>
-<function_decl><type>struct <name>NAME</name> *</type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><type>struct <name>NAME</name> <modifier>*</modifier></type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
@@ -183,7 +183,7 @@
 </unit>
 
 <unit>
-<function_decl><type>class <name>NAME</name> *</type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><type>class <name>NAME</name> <modifier>*</modifier></type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
@@ -191,7 +191,7 @@
 </unit>
 
 <unit>
-<function_decl><type>class <name>a</name> *</type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><type>class <name>a</name> <modifier>*</modifier></type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
@@ -199,7 +199,7 @@
 </unit>
 
 <unit>
-<function_decl><type>class <name>NAME</name> *</type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><type>class <name>NAME</name> <modifier>*</modifier></type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
@@ -207,7 +207,7 @@
 </unit>
 
 <unit>
-<function_decl><type>union <name>NAME</name> *</type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><type>union <name>NAME</name> <modifier>*</modifier></type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
@@ -215,7 +215,7 @@
 </unit>
 
 <unit>
-<function_decl><type>union <name>a</name> *</type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><type>union <name>a</name> <modifier>*</modifier></type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
@@ -223,6 +223,6 @@
 </unit>
 
 <unit>
-<function_decl><type>union <name>NAME</name> *</type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><type>union <name>NAME</name> <modifier>*</modifier></type> <name>NAME</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
