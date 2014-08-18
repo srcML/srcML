@@ -116,7 +116,7 @@ def extractSubText(element):
         out.write(element.text)
     def extract(currentElement):
         if len(currentElement.attrib) > 0:
-            out.write("<{0} {1}>".format(currentElement.tag, " ".join(["{0}=\"{1}\"".format(k[0], v) for k, v in currentElement.attrib.items()]) ) )
+            out.write("<{0} {1}>".format(currentElement.tag, " ".join(["{0}=\"{1}\"".format(k, v) for k, v in currentElement.attrib.items()])))
         else:
             out.write("<{0}>".format(currentElement.tag))
         if currentElement.text != None:
@@ -352,6 +352,13 @@ SeeTag = "See"
 AttributesTag = "Attributes"
 AttrTag = "Attr"
 GrammarTag = "Grammar"
+SubelementsTag = "Subelements"
+TerminalCaseTag = "TerminalCase"
+ValuesTag = "Values"
+ValueTag = "Value"
+RelaxNGHelpTag = "RelaxNGHelp"
+EntryTag = "Entry"
+GrammarTextTag = "GrammarText"
 
 # TagDoc specific attribute names
 fileNameAttr = "fileName"
@@ -366,16 +373,13 @@ def loadTagDoc(dirPath, fileName, forceBuild = False):
 
     def buildRef(refElement):
         reference = None
-        if nsAttr in refElement.attrib and elemAttr in refElement.attrib:
-            reference = TagRefLink()
-            reference.ns = getAttribOrFail(refElement, nsAttr)
-            reference.tag = getAttribOrFail(refElement, elemAttr)
-        elif titleAttr in refElement.attrib and urlAttr in refElement.attrib:
-            reference = OtherRefLink()
+        if titleAttr in refElement.attrib and urlAttr in refElement.attrib:
+            reference = URLRefLink()
             reference.title = getAttribOrFail(refElement, titleAttr)
             reference.url = getAttribOrFail(refElement, urlAttr)
         else:
             raise Exception("Malformed See reference. " + formatElementErrorMsg(refElement))
+        return reference
 
 
     def buildRefList(refsElement):
@@ -405,7 +409,7 @@ def loadTagDoc(dirPath, fileName, forceBuild = False):
     def buildAttr(attrElement):
         attr = TagAttr()
         attr.name = getAttribOrFail(attrElement, nameAttr)
-        attr.valueDesc = getAttribOrFail(attrElement, nameAttr)
+        attr.valueDesc = getAttribOrFail(attrElement, valueDescAttr)
 
         for elem in attrElement.iterchildren():
             if elem.tag == DescTag:
@@ -440,9 +444,40 @@ def loadTagDoc(dirPath, fileName, forceBuild = False):
                 unexpectedOrUnknownTag(elem)
         return langList
 
+    def buildTerminalCase(caseElement):
+        terminalCase = TerminalUseCase()
+        terminalCase.title = getAttribOrDefault(caseElement, titleAttr, "")
+        for elem in caseElement.iterchildren():
+            if elem.tag == DescTag:
+                terminalCase.desc = extractSubText(elem)
+            elif elem.tag == ValuesTag:
+                for valElem in elem.iterchildren():
+                    if valElem.tag == ValueTag:
+                        termValue = TerminalValue()
+                        termValue.value = extractSubText(valElem)
+                        termValue.language = getAttribOrFail(valElem, langAttr).split(",")
+                    else:
+                        unexpectedOrUnknownTag(elem)
+
+            elif elem.tag == LanguagesTag:
+                terminalCase.languages = buildLanguageList(elem)
+
+            elif elem.tag == AttributesTag:
+                terminalCase.attrs = buildAttrList(elem)
+
+            elif elem.tag == ExamplesTag:
+                terminalCase.examples = buildExamplesList(elem)
+
+            elif elem.tag == GrammarTag:
+                terminalCase.grammar = extractSubText(elem).strip()
+
+            else:
+                unexpectedOrUnknownTag(elem)
+        return terminalCase        
+
     def buildCase(caseElement):
         useCase = TagUseCase()
-        useCase.desc = getAttribOrDefault(caseElement, titleAttr, "")
+        useCase.title = getAttribOrDefault(caseElement, titleAttr, "")
         for elem in caseElement.iterchildren():
             if elem.tag == DescTag:
                 useCase.desc = extractSubText(elem)
@@ -457,8 +492,17 @@ def loadTagDoc(dirPath, fileName, forceBuild = False):
                 useCase.examples = buildExamplesList(elem)
 
             elif elem.tag == GrammarTag:
-                useCase.grammar = extractSubText(elem)
+                useCase.grammar = extractSubText(elem).strip()
 
+            elif elem.tag == SubelementsTag:
+                for subElem in elem.iterchildren():
+                    if subElem.tag == SubelementTag:
+                        gatheredSubelement = TagRef()
+                        gatheredSubelement.ns = getAttribOrDefault(subElem, nsAttr, "")
+                        gatheredSubelement.tag = getAttribOrFail(subElem, nameAttr)
+                        useCase.subelements.append(gatheredSubelement)
+                    else:
+                        unexpectedOrUnknownTag(subElem)
             else:
                 unexpectedOrUnknownTag(elem)
         return useCase
@@ -474,12 +518,34 @@ def loadTagDoc(dirPath, fileName, forceBuild = False):
         for elem in elemElement.iterchildren():
             if elem.tag == DescTag:
                 tagInfo.desc = extractSubText(elem)
+
             elif elem.tag == CaseTag:
                 tagInfo.useCases.append(buildCase(elem))
+
+            elif elem.tag == TerminalCaseTag:
+                tagInfo.useCases.append(buildTerminalCase(elem))
+
             elif elem.tag == RefsTag:
                 tagInfo.refs = buildRefList(elem)
+
             else:
                 unexpectedOrUnknownTag(elem)
+
+        # Deducing list of subelements, languages
+        subElementNameSet = set()
+        languageSet = set()
+
+        for useCase in tagInfo.useCases:
+            if not isinstance(useCase, TerminalUseCase):
+                for subElem in useCase.subelements:
+                    if not subElem.comparableTagName in subElementNameSet:
+                        subElementNameSet.add(subElem.comparableTagName)
+                        tagInfo.subelements.append(subElem)
+            for lang in useCase.languages:
+                if not lang in languageSet:
+                    languageSet.add(lang)
+        tagInfo.languages = list(languageSet)
+        elementLookupDictionary.update({tagInfo.comparableTagName(): tagInfo})
         return tagInfo
 
 
@@ -489,7 +555,16 @@ def loadTagDoc(dirPath, fileName, forceBuild = False):
             if elem.tag == ElementTag:
                 elemList.append(buildElement(elem))
             else:
-                unexpectedOrUnknownTag(nsElem)            
+                unexpectedOrUnknownTag(nsElem)
+
+        # Deducing parent elements.
+        for tagInfo in elemList:
+            for parentElement in tagInfo.subelements:
+                if parentElement.comparableTagName() in elementLookupDictionary:
+                    elementLookupDictionary[parentElement.comparableTagName()].parentElements.append(parentElement)
+                else:
+                    print "Didn't locate entry for element: {0}".format(parentElement.comparableTagName())
+
         return elemList
 
     def buildNs(nsElement):
@@ -506,14 +581,39 @@ def loadTagDoc(dirPath, fileName, forceBuild = False):
     def buildNamespaceList(namespacesElement):
         nsList = []
         for nsElem in namespacesElement.iterchildren():
-            if nsElem.tag == DescTag:
-                tagDoc.nsDesc = extractSubText(nsElem)
-            elif nsElem.tag == NsTag:
+            if nsElem.tag == NsTag:
                 nsList.append(buildNs(nsElem))
             else:
                 unexpectedOrUnknownTag(nsElem)
         return nsList
 
+    def buildRelaxNGEntry(entryElement):
+        entry = RelaxNGEntry()
+        entry.title = getAttribOrFail(entryElement, titleAttr)
+        for elem in entryElement.iterchildren():
+            if elem.tag == DescTag:
+                entry.desc = extractSubText(elem)
+        
+            elif elem.tag == GrammarTextTag:
+                entry.grammarText = extractSubText(elem)
+        
+            else:
+                unexpectedOrUnknownTag(elem)
+        return entry
+
+    def buildRelaxNGHelp(relaxNGHelpElement):
+        relaxNGDoc = RelaxNGHelpDoc()
+        relaxNGDoc.title = getAttribOrFail(relaxNGHelpElement, titleAttr)
+        for elem in relaxNGHelpElement.iterchildren():
+            if elem.tag == DescTag:
+                relaxNGDoc.desc = extractSubText(elem)
+
+            elif elem.tag == EntryTag:
+                relaxNGDoc.entries.append(buildRelaxNGEntry(elem))
+
+            else:
+                unexpectedOrUnknownTag(nsElem)
+        return relaxNGDoc
 
     # Basic set up.
     filePath = join(dirPath, fileName)
@@ -536,21 +636,19 @@ def loadTagDoc(dirPath, fileName, forceBuild = False):
         print "    Up to date."
         return None
 
+    elementLookupDictionary = dict()
+
     # Traversing all documentation entries.
     for elem in root.iterchildren():
         if elem.tag == DescTag:
-            tagDoc.desc = extractSubText(elem)    
+            tagDoc.desc = extractSubText(elem)
+        elif elem.tag == RelaxNGHelpTag:
+            tagDoc.relaxNGHelp = buildRelaxNGHelp(elem)
         elif elem.tag == NamespacesTag:
             tagDoc.namespaces = buildNamespaceList(elem)
+
         elif elem.tag == ElementsTag:
             tagDoc.tags = buildElementsList(elem)
         else:
             unexpectedOrUnknownTag(elem)
     return tagDoc
-
-
-
-def processRelaxNG(root, fileName):
-    fullPath = os.path.join(root, fileName)
-    print "Attempting to process {0}".format(fullPath)
-    grammar = ET.RelaxNG(file=fullPath)

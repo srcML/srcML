@@ -1,71 +1,156 @@
 <TagDoc title="srcML Element Documenation" fileName="srcMLElements.html">
     <Desc>Page Description</Desc>
+
+    <RelaxNGHelp title="RELAX NG Quick Reference">
+        <Desc>
+<p>RELAX NG is a simple schema language for XML, based on [RELAX] and [TREX]. A
+RELAX NG schema specifies a pattern for the structure and content of an XML document.
+A RELAX NG schema thus identifies a class of XML documents consisting of those
+documents that match the pattern.</p>
+<p>For more information please see <a href="http://relaxng.org/compact-tutorial-20030326.html">this tutorial</a></p>
+        </Desc>
+        <Entry title="element">
+            <GrammarText><span class="rn_kw">element</span> <span class="replacePartOfGrammar">identifier</span> { <span class="replacePartOfGrammar">sub rules</span> }</GrammarText>
+            <Desc>The element describes an element within an XML DTD. <code class="replacePartOfGrammar">identifier</code> represents
+the QName of an element. <span class="replacePartOfGrammar">sub rules</span> are a list 
+of patterns that can consists of attributes, elements and/or text.
+Attribute order is not enforced, however, element order must be in the same order specified.
+            </Desc>
+        </Entry>
+        <Entry title="attribute">
+            <GrammarText><span class="rn_kw">attribute</span> <span class="replacePartOfGrammar">identifier</span> { <span class="replacePartOfGrammar">sub rules</span> }</GrammarText>
+            <Desc>
+The attribute is used to describe an attribute requirement on an element within
+an XML DTD. The order in which an attribute occurs within the sub rules of an element
+isn't significant and doesn't prescribe an ordering like element does.
+            </Desc>
+        </Entry>
+        <Entry title="empty">
+            <GrammarText><span class="rn_kw">empty</span></GrammarText>
+            <Desc>The empty keyword indicates that an element not contain text.</Desc>
+        </Entry>
+        <Entry title="text">
+            <GrammarText><span class="rn_kw">text</span></GrammarText>
+            <Desc>The text keyword indicates that an element must contain text.</Desc>
+        </Entry>
+        <Entry title="subexpression">
+            <GrammarText>(<span class="replacePartOfGrammar">pattern expr</span>)</GrammarText>
+            <Desc><code>()</code> can be used to indicate a sub expression.</Desc>
+        </Entry>
+        <Entry title="or">
+            <GrammarText><span class="replacePartOfGrammar">pattern</span>|<span class="replacePartOfGrammar">pattern</span></GrammarText>
+            <Desc><code>|</code> can be used to indicate multiple acceptable matches.</Desc>
+        </Entry>
+        <Entry title="zero or more">
+            <GrammarText><span class="replacePartOfGrammar">pattern</span><span class="rn_kw">*</span></GrammarText>
+            <Desc>The star represents zero or more occurrences of a previous pattern.</Desc>
+        </Entry>
+        <Entry title="one or more">
+            <GrammarText><span class="replacePartOfGrammar">pattern</span><span class="rn_kw">+</span></GrammarText>
+            <Desc>Represents one or more occurrences of a previous pattern.</Desc>
+        </Entry>
+        <Entry title="comment">
+            <GrammarText><span class="rn_cmt">#Comment</span></GrammarText>
+            <Desc>Comments start with # and go to the end of the line</Desc>
+        </Entry>
+        <Entry title="optional">
+            <GrammarText><span class="replacePartOfGrammar">pattern</span><span class="rn_kw">?</span></GrammarText>
+            <Desc>Specifies that a previous pattern is optional.</Desc>
+        </Entry>
+        <Entry title="unordered">
+            <GrammarText><span class="replacePartOfGrammar">pattern</span> <span class="rn_kw">&amp;</span> <span class="replacePartOfGrammar">pattern</span></GrammarText>
+            <Desc>Specifies that two or more patterns may occur in any order.</Desc>
+        </Entry>
+        <Entry title="namespaces">
+            <GrammarText><span class="rn_kw">namespace</span> <span class="replacePartOfGrammar">nsName</span> = <span class="replacePartOfGrammar">"http://www.example.com/address"</span></GrammarText>
+            <Desc>
+This declares a namespace which can be used with other identifiers to indicate
+an element is a member of a namespace.
+            </Desc>
+        </Entry>
+        <Entry title="named rules">
+            <GrammarText><span class="replacePartOfGrammar">identifier</span> <span class="rn_cmt">=</span> <span class="replacePartOfGrammar">pattern</span></GrammarText>
+            <Desc>A Pattern can be named using the assignment operator. The naming of a pattern allows it to be referenced by other patterns for reuse.</Desc>
+        </Entry>
+    </RelaxNGHelp>
+
+
+
     <Namespaces>
-        <Desc></Desc>
         <Ns prefix="src" url="http://www.sdml.info/srcML/src">
-            <Desc>Put description here.</Desc>
-        </Ns>
-        <Ns prefix="op" url="http://www.sdml.info/srcML/operator">
-            <Desc>Put description here.</Desc>
+            <Desc>
+The src namespace is defined as the default namespace within a srcML archive. All
+source code marked up by srcML, that is not preprocessor directives, is part of
+this namespace.
+            </Desc>
         </Ns>
         <Ns prefix="cpp" url="http://www.sdml.info/srcML/cpp">
-            <Desc>Put description here.</Desc>
-        </Ns>
-        <Ns prefix="lit" url="http://www.sdml.info/srcML/literal">
-            <Desc>Put description here.</Desc>
-        </Ns>
-        <Ns prefix="type" url="http://www.sdml.info/srcML/modifier">
-            <Desc>Put description here.</Desc>
+            <Desc>
+The cpp namespace is used to indicate that a directive belongs to the preprocessor
+for any of the languages which have a preprocessor such as C, C++ and C#. The cpp
+namespace markup can be enabled for other languages, that don't usually have a
+preprocessor, such as Java by using the --cpp command line option when running srcML.
+            </Desc>
         </Ns>
     </Namespaces>
+
     <Elements>
         <Element ns="src" elem="unit">
-            <Desc>The unit tag is used to represent two things within srcML,
-            first a single compilation unit, and second is an archive format
-            consisting of multiple compilation units.
+            <Desc>
+The unit tag is used to represent two things within srcML: 1) the srcML archive format
+and 2) a compilation unit
             </Desc>
             <Case title="archive unit">
-                <Desc></Desc>
+                <Desc>
+The archive unit only exists when there is more then one file used to create a srcML
+document, otherwise, only a single compilation unit will be output.
+                </Desc>
                 <Grammar>
-
+ArchiveUnit = element unit {
+    CompliationUnit*
+}
                 </Grammar>
                 <Languages>
                     <Lang language="C"/>
                     <Lang language="C++"/>
                     <Lang language="Java"/>
+                    <Lang language="C#"/>
                 </Languages>
-                <Attributes>
-                    <Attr name="filename" valueDesc="the file used to create this srcML">
-                        <Desc></Desc>
-                        <Languages>
-                            <Lang language="C"/>
-                            <Lang language="C++"/>
-                            <Lang language="Java"/>
-                        </Languages>
-                    </Attr>
-                </Attributes>
-                <Examples>
-                    <Example title="Unit Tag Example"><unit></unit></Example>
-                </Examples>
             </Case>
 
             <Case title="compilation unit">
                 <Desc></Desc>
+                <Subelements>
+                    <Subelement ns="src" name="unit" />
+                </Subelements>
                 <Languages>
                     <Lang language="C"/>
                     <Lang language="C++"/>
                     <Lang language="Java"/>
+                    <Lang language="C#"/>
                 </Languages>
+                <Grammar>
+CompliationUnit = element  unit {
+    attribute language { "C++" | "C" | "Java" | "C#" },
+    attribute filename { text }
+}
+                </Grammar>
                 <Attributes>
-                    <Attr name="" value="">
+                    <Attr name="filename" valueDesc="name or path of the file used to create this compilation unit">
                         <Languages>
                             <Lang language="C"/>
                             <Lang language="C++"/>
                             <Lang language="Java"/>
+                            <Lang language="C#"/>
                         </Languages>
-                        <Examples>
-                            <Example title="title">filename=""</Example>
-                        </Examples>
+                    </Attr>
+                    <Attr name="language" valueDesc="the language that srcML used to processes the current compilation unit">
+                        <Languages>
+                            <Lang language="C"/>
+                            <Lang language="C++"/>
+                            <Lang language="Java"/>
+                            <Lang language="C#"/>
+                        </Languages>
                     </Attr>
                 </Attributes>
                 <Examples>
@@ -73,8 +158,31 @@
                 </Examples>
             </Case>
             <Refs>
-                <See ns="src" elem="unit" />
-                <See url="SOMEURI" title="" />
+                <See url="SOMEURI" title="Some title" />
+            </Refs>
+        </Element>
+
+
+        <Element ns="src" elem="name">
+            <Desc>A name can represent a single name or a complex name.</Desc>
+            <TerminalCase title="single name">
+                <Desc>Single identifier</Desc>
+                <Values>
+                    <Value lang="C,C++,C#,Java">int</Value>
+                    <Value lang="C,C++,C#,Java">i</Value>
+                </Values>
+                <Grammar>
+SingleName = element name { text }
+                </Grammar>
+                <Languages>
+                    <Lang language="C"/>
+                    <Lang language="C++"/>
+                    <Lang language="Java"/>
+                    <Lang language="C#"/>
+                </Languages>
+            </TerminalCase>
+            <Refs>
+                <See url="SOMEURI" title="Some title" />
             </Refs>
         </Element>
     </Elements>

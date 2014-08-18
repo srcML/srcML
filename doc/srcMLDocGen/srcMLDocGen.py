@@ -6,7 +6,7 @@ from django.conf import settings
 from django.template import Template, Context, loader
 from DocGen import *
 from DocGen.templatetags import *
-# import rnc2rng
+
 # -------------------------------------------------
 #                     Main
 # -------------------------------------------------
@@ -113,7 +113,6 @@ def writeAllTagNames():
 
 DocConfigFileName = "DocConfig.xml"
 TagDocFileName = "TagDoc.xml"
-relaxngFileExtRegEx = re.compile(r"\.relaxng\.xml$", re.I)
 pageLinks = []
 
 if __name__ == "__main__":
@@ -151,16 +150,6 @@ if __name__ == "__main__":
                 print "HTML Generation Complete"
             except Exception as e:
                 print "Failed with exception: ", traceback.format_exc(e)
-        for f in files:
-            if relaxngFileExtRegEx.search(f) != None:
-                print "-" * 80
-                print "located Relax ng File, ", os.path.join(root, f)
-                try:
-                	processRelaxNG(root, f)
-                except Exception as e:
-                	print "Failed with exception: ", traceback.format_exc(e)
-                	print e
-                	raise
 
     print "-" * 80
     print "Writing tag names"

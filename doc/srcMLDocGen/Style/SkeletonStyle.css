@@ -16,16 +16,15 @@ a:hover {
 }
 
 #bodyContent{
-	height: 100%;
 	position: relative;
 	margin: 0 auto;
     max-width: 75%;
     min-width: 50%;
+    margin-bottom:3em;
 }
 
 #srcMLHeader {
     margin-top:0px;
-
     background-color:black;
     height:6.2em;
     width:100%;
@@ -54,4 +53,11 @@ a:hover {
 
 .note {
     font-weight:bold;
+}
+
+pre.sourceCodeExample {
+    padding: 10px;
+    overflow:auto;
+    background-color:#eee;
+    margin-bottom:.3em;
 }

@@ -170,3 +170,7 @@ def getOperators(parser, token):
     if len(tokens) != 2:
         raise TemplateSyntaxError("Incorrect number of arguments for GetOperatorCode, expected: 1. Got: %d" % len(tokens))
     return GetOperatorCodeNode(parser.compile_filter(tokens[1]))
+
+@register.filter
+def isIn(lookingFor, collection):
+    return lookingFor in collection

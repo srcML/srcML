@@ -3,7 +3,7 @@
 }
 
 /* ToC styles. */
-table {
+table.ToC {
     border-collapse: collapse;
     border:.1em solid #D2D2CE;
     margin-left:0em;
@@ -11,27 +11,27 @@ table {
     width:100%;
 }
 
-table th{
+table.ToC th{
     padding-top:1em;
 }
-table tbody tr:nth-child(odd) {
+table.ToC tbody tr:nth-child(odd) {
    background-color: #F0F0F0;
 }
 
-table thead {
+table.ToC thead {
     border-collapse: collapse;
 }
-table td {
+table.ToC td {
     border-collapse: collapse;
     border-left:1px solid #D2D2CE;
     padding:2px;
     padding-left:5px;
 }
-table tbody {
+table.ToC tbody {
     border:1px solid #D0D0D0;
 }
 
-table th.categoryRow {
+table.ToC th.categoryRow {
     padding-top: 2em;
     font-weight: bold;
     background-color: #ffffff;
@@ -40,7 +40,7 @@ table th.categoryRow {
     padding-bottom:.3em;
 }
 
-table tbody tr td:nth-child(1) {
+table.ToC tbody tr td:nth-child(1) {
     border-left:0px solid black;
 }
 
@@ -87,12 +87,7 @@ h4.subtitle {
     margin-top:2em;
 }
 
-pre.sourceCodeExample {
-    padding: 10px;
-    overflow:auto;
-    background-color:#eee;
-    margin-bottom:.3em;
-}
+
 
 /* The link color for anchors for titles. */
 div.displayedDocDefinition h2.title a{

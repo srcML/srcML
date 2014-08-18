@@ -146,16 +146,43 @@ class TagUseCase:
         self.desc = ""
         self.attrs = []
         self.examples = []
+        self.grammar = ""
+        self.subelements = []
 
-class TagRefLink:
+class TerminalValue:
+    def __init__(self):
+        self.value = ""
+        self.languages = []
+
+class TerminalUseCase:
+    """ Represents a use case for which an element of the grammar that don't have child elements, only text. """
+    def __init__(self):
+        self.title = ""
+        self.desc = ""
+        self.attrs = []
+        self.languages = []
+        self.grammar = ""
+        self.values = []
+
+class TagRef:
     def __init__(self):
         self.ns = ""
         self.tag = ""
 
-class OtherRefLink:
+    def comparableTagName(self):
+        out = ""
+        if self.ns != "":
+            out +="{0.ns}:"
+        out += "{0.tag}"
+        return out.format(self)
+
+
+class URLRefLink:
     def __init__(self):
         self.title = ""
         self.url = ""
+
+
 
 class TagInfo:
     """ Contains information about a single tag. """
@@ -165,22 +192,52 @@ class TagInfo:
         self.desc = ""
         self.useCases = []
         self.refs = []
-        self.grammar = ""
+        self.parentElements = []
+        self.subelements = []
 
     def QNameTagStyle(self):
-        return "<{0.ns}:{0.tag}>".format(self)
+        out = "<"
+        if self.ns != "":
+            out +="{0.ns}:"
+        out += "{0.tag}>"
+        return out.format(self)
+
+    def link(self):
+        return self.ns + "_" + self.tag
+
+    def comparableTagName(self):
+        out = ""
+        if self.ns != "":
+            out +="{0.ns}:"
+        out += "{0.tag}"
+        return out.format(self)
+
+class RelaxNGEntry:
+    def __init__(self):
+        self.title = ""
+        self.grammarText = ""
+        self.desc = ""
+
+    def link(self):
+        return "-".join(self.title.strip().replace("#","").replace(",", "").replace("'","").lower().split())
+
+class RelaxNGHelpDoc:
+    def __init__(self):
+        self.title = ""
+        self.desc = ""
+        self.entries = []
 
 class TagDoc:
     """ Contains information about a all tags within the system. """
     def __init__(self):
         self.title = ""
         self.outputFileName = ""
+        self.relaxNGHelp = None
         self.namespaces = []
-        self.nsDesc = ""
         self.tags = []
         self.desc = ""
-        self.languages = []
-
+        self.languages = ["C", "C++", "C#", "Java"]
+        
     def preProcess(self):
         langSet = set()
         for t in self.tags:
@@ -195,7 +252,6 @@ class TagDoc:
 
 
     def maxLanguageCount(self):
-
         self.languageMax = tagsMax
         return 
 
