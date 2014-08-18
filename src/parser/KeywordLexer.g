@@ -150,6 +150,10 @@ tokens {
     TYPENAME;
     ALIGNOF;
     TYPEID;
+    CONST_CAST;
+    DYNAMIC_CAST;
+    REINTERPRET_CAST;
+    STATIC_CAST;
 
     // aggregate types
     UNION;
@@ -509,15 +513,19 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "override"      , OVERRIDE       , LANGUAGE_CXX },
  
         // add all C++ specific keywords to the literals table
-        { "constexpr"     , CONSTEXPR        , LANGUAGE_CXX }, 
-        { "noexcept"      , NOEXCEPT         , LANGUAGE_CXX }, 
-        { "thread_local"  , THREAD_LOCAL     , LANGUAGE_CXX }, 
-        { "nullptr"       , NULLPTR          , LANGUAGE_CXX }, 
-        { "decltype"      , DECLTYPE         , LANGUAGE_CXX }, 
-        { "alignas"       , ALIGNAS          , LANGUAGE_CXX }, 
-        { "typename"      , TYPENAME         , LANGUAGE_CXX }, 
-        { "alignof"       , ALIGNOF          , LANGUAGE_CXX }, 
-        { "typeid"        , TYPEID           , LANGUAGE_CXX }, 
+        { "constexpr"        , CONSTEXPR        , LANGUAGE_CXX }, 
+        { "noexcept"         , NOEXCEPT         , LANGUAGE_CXX }, 
+        { "thread_local"     , THREAD_LOCAL     , LANGUAGE_CXX }, 
+        { "nullptr"          , NULLPTR          , LANGUAGE_CXX }, 
+        { "decltype"         , DECLTYPE         , LANGUAGE_CXX }, 
+        { "alignas"          , ALIGNAS          , LANGUAGE_CXX }, 
+        { "typename"         , TYPENAME         , LANGUAGE_CXX }, 
+        { "alignof"          , ALIGNOF          , LANGUAGE_CXX }, 
+        { "typeid"           , TYPEID           , LANGUAGE_CXX },
+        { "const_cast"       , CONST_CAST       , LANGUAGE_CXX }, 
+        { "dynamic_cast"     , DYNAMIC_CAST     , LANGUAGE_CXX },
+        { "reinterpret_cast" , REINTERPRET_CAST , LANGUAGE_CXX },
+        { "static_cast"      , STATIC_CAST      , LANGUAGE_CXX },
 
         // Add alternative operators
         { "and"           , OPERATORS        , LANGUAGE_CXX }, 

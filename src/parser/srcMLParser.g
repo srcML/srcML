@@ -587,6 +587,13 @@ tokens {
     SCLASS_IMPLEMENTATION;
     SPROTOCOL_DECLARATION;
 
+    // casting
+    SCAST;
+    SCONST_CAST;
+    SDYNAMIC_CAST;
+    SREINTERPRET_CAST;
+    SSTATIC_CAST;
+
     // Last token used for boundary
     END_ELEMENT_TOKEN;
 }
@@ -1871,7 +1878,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty, int & call_count] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | SIZEOF (DOTDOTDOT)* | ALIGNOF | TYPEID | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair | ENCODE | SELECTOR)
+        (function_identifier | keyword_call_tokens (DOTDOTDOT | template_argument_list)* | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -3471,15 +3478,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // call list in member initialization list
         { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
-        sizeof_call |
-
-        // call list in member initialization list
-        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
-        alignof_call |
-
-        // call list in member initialization list
-        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
-        typeid_call |
+        keyword_calls |
 
         /*
           MODE_VARIABLE_NAME
@@ -4661,7 +4660,7 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
                 { LA(1) == RPAREN }? expression { --count_paren; } |
 
                 { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; }
-                    expression_process (call[call_count] | sizeof_call | alignof_call | typeid_call | encode_call | selector_call) complete_arguments |
+                    expression_process (call[call_count] | keyword_calls) complete_arguments |
 
                 expression |
 
@@ -5669,7 +5668,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
             // however I believe parameter_list matches a right paren of the call.
-           (call[call_count] | sizeof_call | alignof_call | typeid_call | encode_call | selector_call) argument |
+           (call[call_count] | keyword_calls) argument |
 
         // macro call
         { type == MACRO }? macro_call |
@@ -5741,6 +5740,29 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         variable_identifier_array_grammar_sub[flag]
 ;
 
+// Keyword based calls with special markup
+keyword_calls[] { ENTRY_DEBUG } :
+
+    // C++
+    sizeof_call | alignof_call | typeid_call | const_cast_call | dynamic_cast_call | reinterpret_cast_call | static_cast_call |
+
+
+    // Objective-C
+    encode_call | selector_call
+
+;
+
+
+keyword_call_tokens[] { ENTRY_DEBUG } :
+
+    // C++
+    SIZEOF | ALIGNOF | TYPEID | CONST_CAST | DYNAMIC_CAST | REINTERPRET_CAST | STATIC_CAST |
+
+    // Objective-C
+    ENCODE | SELECTOR
+
+;
+
 // sizeof(...)
 sizeof_call[] { ENTRY_DEBUG } :
         {
@@ -5780,6 +5802,62 @@ typeid_call[] { ENTRY_DEBUG } :
             startElement(STYPEID);
         }
         TYPEID
+        call_argument_list
+;
+
+// const_cast
+const_cast_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+
+            startElement(SCONST_CAST);
+        }
+        CONST_CAST (template_argument_list)*
+        call_argument_list
+;
+
+// dynamic_cast
+dynamic_cast_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+
+            startElement(SDYNAMIC_CAST);
+        }
+        DYNAMIC_CAST (template_argument_list)*
+        call_argument_list
+;
+
+// reinterpret_cast
+reinterpret_cast_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+
+            startElement(SREINTERPRET_CAST);
+        }
+        REINTERPRET_CAST (template_argument_list)*
+        call_argument_list
+;
+
+// static_cast
+static_cast_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+
+            startElement(SSTATIC_CAST);
+        }
+        STATIC_CAST (template_argument_list)*
         call_argument_list
 ;
 
@@ -6438,7 +6516,7 @@ generic_selection_complete_expression[] { CompleteElement element(this); int cou
             { LA(1) == RPAREN }? expression { --count_paren; } |
 
             { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } 
-                expression_process (call[call_count] | sizeof_call | alignof_call | typeid_call | encode_call | selector_call) complete_arguments  |
+                expression_process (call[call_count] | keyword_calls) complete_arguments  |
 
             expression
             )
@@ -7016,7 +7094,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
             // however I believe parameter_list matches a right paren of the call.
-           (call[call_count] | sizeof_call | alignof_call | typeid_call | encode_call | selector_call) argument |
+           (call[call_count] | keyword_calls) argument |
 
         // macro call
         { type == MACRO }? macro_call |

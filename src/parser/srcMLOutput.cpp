@@ -328,6 +328,12 @@ namespace {
     ELEMENT_MAP(SCLASS_IMPLEMENTATION, "class")
     ELEMENT_MAP(SPROTOCOL_DECLARATION, "protocol_decl")
 
+    // casts
+    ELEMENT_MAP(SCAST,             "cast")
+    ELEMENT_MAP(SCONST_CAST,      "cast")
+    ELEMENT_MAP(SDYNAMIC_CAST,     "cast")
+    ELEMENT_MAP(SREINTERPRET_CAST, "cast")
+    ELEMENT_MAP(SSTATIC_CAST,      "cast")
 
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
@@ -1307,7 +1313,8 @@ void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr
             xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
 
         ++openelementcount;
-        xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name, BAD_CAST attr_value);
+        if(attr_name)
+            xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name, BAD_CAST attr_value);
     } else {
         xmlTextWriterEndElement(xout);
         --openelementcount;
@@ -1400,6 +1407,29 @@ void srcMLOutput::processComplex(const antlr::RefToken& token) {
 void srcMLOutput::processTemplateArgumentList(const antlr::RefToken& token) {
 
     processOptional(token, "type", "template");
+
+}
+
+/**
+ * processCast
+ * @param token token to output as template argument list
+ *
+ * Callback to process/output token as template argument list.
+ */
+void srcMLOutput::processCast(const antlr::RefToken& token) {
+
+    if(token->getType() == SCAST)
+        processOptional(token, 0, 0);
+    else if(token->getType() == SCONST_CAST)
+        processOptional(token, "type", "const");
+    else if(token->getType() == SDYNAMIC_CAST)
+        processOptional(token, "type", "dynamic");
+    else if(token->getType() == SREINTERPRET_CAST)
+        processOptional(token, "type", "reinterpret");
+    else if(token->getType() == SSTATIC_CAST)
+        processOptional(token, "type", "static");
+    else
+        processOptional(token, 0, 0);
 
 }
 
