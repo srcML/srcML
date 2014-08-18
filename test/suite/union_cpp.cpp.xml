@@ -44,7 +44,7 @@
 </unit>
 
 <unit>
-<union>union <block>{<public type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type="number"0</literal></expr></range></decl>;</decl_stmt> </public>}</block>;</union>
+<union>union <block>{<public type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type="number">0</literal></expr></range></decl>;</decl_stmt> </public>}</block>;</union>
 </unit>
 
 </unit>
