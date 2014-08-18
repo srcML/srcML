@@ -598,7 +598,8 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "async"         , ASYNC         , LANGUAGE_CSHARP }, 
         { "this"          , THIS          , LANGUAGE_CSHARP }, 
         { "yield"         , YIELD         , LANGUAGE_CSHARP }, 
-        { "params"        , PARAMS        , LANGUAGE_CSHARP }, 
+        { "params"        , PARAMS        , LANGUAGE_CSHARP },
+        { "null"          , NULLLITERAL   , LANGUAGE_CSHARP }, 
 
         // C# linq
         { "from"          , FROM          , LANGUAGE_CSHARP }, 
