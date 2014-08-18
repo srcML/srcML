@@ -286,6 +286,7 @@ tokens {
     ASYNC;
     THIS;
     PARAMS;
+    TYPEOF;
 
     // linq
     FROM;
@@ -418,7 +419,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "*"            , MULTOPS       , LANGUAGE_ALL }, 
 
         // C and C++ specific keywords
-        { "main"         , MAIN            , LANGUAGE_C_FAMILY }, 
+        { "main"         , MAIN           , LANGUAGE_C_FAMILY }, 
 
         { "typedef"      , TYPEDEF        , LANGUAGE_C_FAMILY }, 
 
@@ -427,7 +428,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "elif"         , ELIF           , LANGUAGE_C_FAMILY }, 
         { "endif"        , ENDIF          , LANGUAGE_C_FAMILY }, 
         { "error"        , ERRORPREC      , LANGUAGE_C_FAMILY }, 
-        { "warning"      , WARNING       , LANGUAGE_C_FAMILY }, 
+        { "warning"      , WARNING        , LANGUAGE_C_FAMILY }, 
         { "ifdef"        , IFDEF          , LANGUAGE_C_FAMILY }, 
         { "ifndef"       , IFNDEF         , LANGUAGE_C_FAMILY }, 
         { "line"         , LINE           , LANGUAGE_C_FAMILY }, 
@@ -599,7 +600,8 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "this"          , THIS          , LANGUAGE_CSHARP }, 
         { "yield"         , YIELD         , LANGUAGE_CSHARP }, 
         { "params"        , PARAMS        , LANGUAGE_CSHARP },
-        { "null"          , NULLLITERAL   , LANGUAGE_CSHARP }, 
+        { "null"          , NULLLITERAL   , LANGUAGE_CSHARP },
+        { "typeof"        , TYPEOF        , LANGUAGE_CSHARP },
 
         // C# linq
         { "from"          , FROM          , LANGUAGE_CSHARP }, 
