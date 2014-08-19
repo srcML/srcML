@@ -3931,7 +3931,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_bool[lcurly, LA(1) == LCURLY]
                 (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
-                ({ inLanguage(LANGUAGE_JAVA) }? class_header | { inLanguage(LANGUAGE_CSHARP)}? variable_identifier | enum_class_header | LCURLY)
+                ({ inLanguage(LANGUAGE_JAVA) }? class_header | { inLanguage(LANGUAGE_CSHARP)}? variable_identifier (derived)* | enum_class_header | LCURLY)
                 //set_type[type, ENUM_DEFN, type == ENUM_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
@@ -7954,7 +7954,7 @@ enum_definition[] { ENTRY_DEBUG } :
         enum_class_definition |
 
         { inLanguage(LANGUAGE_CSHARP) }?
-        enum_preprocessing class_preamble ENUM |
+        enum_csharp_definition |
         enum_preprocessing (options { greedy = true; } : specifier)* ENUM (options { greedy = true; } : enum_class_header)*
 ;
 
@@ -7974,6 +7974,12 @@ enum_type { LightweightElement element(this); ENTRY_DEBUG } :
         // suppress warning compound_name seems to have some tokens in common with specifier.
         (options { generateAmbigWarnings = false; } : specifier | compound_name)*
     ;
+
+enum_csharp_definition[] { ENTRY_DEBUG } :
+
+    enum_preprocessing class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
+
+;
 
 // Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
 // enum must be parsed since it is part of the type.
