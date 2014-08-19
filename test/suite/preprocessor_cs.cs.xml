@@ -16,4 +16,12 @@
 <cpp:endregion>#<cpp:directive>endregion</cpp:directive></cpp:endregion>
 </unit>
 
+<unit>
+<cpp:line>#<cpp:directive>line</cpp:directive> <name>hidden</name></cpp:line>
+</unit>
+
+<unit>
+<cpp:line>#<cpp:directive>line</cpp:directive> <name>default</name></cpp:line>
+</unit>
+
 </unit>

@@ -8239,9 +8239,9 @@ preprocessor[] { ENTRY_DEBUG
 
             tp.setType(SCPP_LINE);
         }
-            cpp_linenumber
+            (cpp_linenumber
 
-            (cpp_filename)* |
+            (cpp_filename)* | { inLanguage(LANGUAGE_CSHARP) }? cpp_symbol_optional) |
 
         PRAGMA
         {
