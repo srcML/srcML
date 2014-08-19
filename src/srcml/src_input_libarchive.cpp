@@ -48,14 +48,14 @@ namespace {
     ssize_t archive_curl_read(archive *, void *client_data, const void **buff);
     int     archive_curl_close(archive *, void *client_data);
 
-	bool curl_supported(const std::string& input_protocol) {
-	    const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
-	    for (int i = 0; curl_types[i] != NULL; ++i) {
-	        if (strcmp(curl_types[i], input_protocol.c_str()) == 0)
-	            return true;
-	    }
-	    return false;
-	}
+    bool curl_supported(const std::string& input_protocol) {
+        const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
+        for (int i = 0; curl_types[i] != NULL; ++i) {
+            if (strcmp(curl_types[i], input_protocol.c_str()) == 0)
+                return true;
+        }
+        return false;
+    }
 }
 
 
@@ -158,6 +158,10 @@ void src_input_libarchive(ParseQueue& queue,
 
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;
+
+        if (srcml_request.command & SRCML_COMMAND_NOARCHIVE)
+            prequest->disk_dir = srcml_request.output_filename;
+
         if (srcml_request.att_filename || (filename != "-"))
             prequest->filename = filename;
         prequest->directory = srcml_request.att_directory;
@@ -185,7 +189,7 @@ void src_input_libarchive(ParseQueue& queue,
             // LOC count
             prequest->loc = std::count(prequest->buffer.begin(), prequest->buffer.end(), '\n');
             if (!prequest->buffer.empty() && prequest->buffer.back() != '\n')
-            	++prequest->loc;
+                ++prequest->loc;
         }
 
         // schedule for parsing

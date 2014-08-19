@@ -30,6 +30,10 @@ void src_input_file(ParseQueue& queue,
 
     // form the parsing request
     ParseRequest* prequest = new ParseRequest;
+   
+    if (srcml_request.command & SRCML_COMMAND_NOARCHIVE)
+        prequest->disk_dir = srcml_request.output_filename;
+
     if (srcml_request.att_filename)
         prequest->filename = *srcml_request.att_filename;
     else if (input_file != "_")

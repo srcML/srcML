@@ -413,7 +413,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         conflicting_options(cli_map, "output", "to-dir");
 
         // Check dependent options
-        option_dependency(cli_map, "no-archive", "directory");
+        option_dependency(cli_map, "no-archive", "to-dir");
 
         // If input was from stdin, then artificially put a "-" into the list of input files
         if (srcml_request.input.empty())

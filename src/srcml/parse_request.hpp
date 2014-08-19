@@ -42,6 +42,7 @@ struct ParseRequest {
     srcml_archive* srcml_arch;
     srcml_unit* unit;
     boost::optional<std::string> disk_filename;
+    boost::optional<std::string> disk_dir;
     int position;
     int status;
     long loc;

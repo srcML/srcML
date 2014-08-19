@@ -59,7 +59,6 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         //Filenames from directories come in as full paths
         size_t pos = request->filename->find_last_of("/\\");
-        std::string xml_filename = *request->directory;
 
         if (pos != std::string::npos) {
             ++pos;
@@ -68,7 +67,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             pos = 0;
         }
         
-        xml_filename = *request->directory + request->filename->substr(pos) + ".xml";
+        std::string xml_filename = *request->disk_dir + request->filename->substr(pos) + ".xml";
         srcml_write_open_filename(srcml_arch, xml_filename.c_str());
         request->srcml_arch = srcml_arch;
     }
