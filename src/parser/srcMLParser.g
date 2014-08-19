@@ -1298,84 +1298,18 @@ overloaded_operator[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // handle a C# lambda expression
-lambda_expression_csharp[] { ENTRY_DEBUG } :
+lambda_expression_csharp[] { bool first = true; ENTRY_DEBUG } :
 		{
+
+            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
 
             startElement(SFUNCTION_LAMBDA);
 
         }
 
-        (options { greedy = true; } : specifier)* (variable_identifier | lambda_parameter_list_csharp) lambda_csharp
+        (options { greedy = true; } : specifier)*
+        (parameter_list | lambda_single_parameter) lambda_csharp (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
 
-;
-
-// do a parameter list
-lambda_parameter_list_csharp[] { CompleteElement element(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
-        {
-            // list of parameters
-            startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
-
-            // start the parameter list element
-            startElement(SPARAMETER_LIST);
-        }
-        // parameter list must include all possible parts since it is part of
-        // function detection
-        LPAREN ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; }
-        {
-            // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
-            if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
-                endMode();
-        } comma |
-        lambda_complete_parameter_csharp { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
-;
-
-// complete parameter
-lambda_complete_parameter_csharp[] { ENTRY_DEBUG } :
-        lambda_parameter_csharp
-        // suppress ()* warning
-        (options { greedy = true; } : parameter_declaration_initialization (options { greedy = true; } : {LA(1) != RPAREN }? expression)*)*
-;
-
-// a parameter
-lambda_parameter_csharp[] { int type_count = 0; ENTRY_DEBUG } :
-        {
-            // end parameter correctly
-            startNewMode(MODE_PARAMETER);
-
-            // start the parameter element
-            startElement(SPARAMETER);
-        }
-        (
-
-            {
-                // start the declaration element
-                    startElement(SDECLARATION);
-
-            }
-            set_int[type_count, type_identifier_count_check()]
-            set_int[type_count, type_count > 0 ? type_count - 1 : type_count]
-            lambda_parameter_type_count_csharp[type_count]
-           {
-                // expect a name initialization
-                setMode(MODE_VARIABLE_NAME | MODE_INIT);
-            }
-            ( options { greedy = true; } : variable_declaration_nameinit)*
-        )
-;
-
-// count types in parameter
-lambda_parameter_type_count_csharp[int & type_count] { if(type_count < 1) return; CompleteElement element(this); ENTRY_DEBUG } :
-        {
-            // local mode so start element will end correctly
-            startNewMode(MODE_LOCAL);
-
-            // start of type
-            startElement(STYPE);
-        }
-        eat_type[type_count]
-
-        // sometimes there is no parameter name.  if so, we need to eat it
-        ( options { greedy = true; } : multops | tripledotop | LBRACKET RBRACKET)*
 ;
 
 // handle a C++11 lambda expression
@@ -1515,11 +1449,11 @@ lambda_expression_java[] { bool first = true; ENTRY_DEBUG } :
 
         }
 
-        (parameter_list | lambda_single_parameter_java) lambda_java (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
+        (parameter_list | lambda_single_parameter) lambda_java (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
 
 ;
 
-lambda_single_parameter_java { CompleteElement element(this); ENTRY_DEBUG } :
+lambda_single_parameter { CompleteElement element(this); ENTRY_DEBUG } :
         {
 
             startNewMode(MODE_LOCAL);
@@ -7582,9 +7516,9 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
                     type_count = 1;
 
                 int look_past_token = 0;
-                output_type = !(inLanguage(LANGUAGE_JAVA) && type_count == 1 && LA(1) != DOTDOTDOT && inTransparentMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS)
+                output_type = !((inLanguage(LANGUAGE_JAVA) || inLanguage(LANGUAGE_CSHARP)) && type_count == 1 && LA(1) != DOTDOTDOT && inTransparentMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS)
                     && ((look_past_token = look_past_rule(&srcMLParser::type_identifier)) == COMMA ||
-                        look_past_token == RPAREN || look_past_token == TRETURN));
+                        look_past_token == RPAREN || look_past_token == TRETURN || look_past_token == LAMBDA));
 
         }
 
