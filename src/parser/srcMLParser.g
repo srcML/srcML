@@ -138,7 +138,7 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -1780,6 +1780,8 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
     int start = mark();
     inputState->guessing++;
 
+    int save_first = LA(1);
+
     int postnametoken = 0;
     int argumenttoken = 0;
     int postcalltoken = 0;
@@ -1800,7 +1802,8 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
             || postcalltoken == TEMPLATE
             || postcalltoken == PUBLIC || postcalltoken == PRIVATE || postcalltoken == PROTECTED || postcalltoken == SIGNAL
             || postcalltoken == ATREQUIRED || postcalltoken == ATOPTIONAL
-            || postcalltoken == STATIC || postcalltoken == CONST))
+            || postcalltoken == STATIC || postcalltoken == CONST)
+            && (save_first != DECLTYPE))
 
             type = MACRO;
         if(inLanguage(LANGUAGE_CSHARP) && (postcalltoken == LAMBDA || postcalltoken == EQUAL))
@@ -5713,7 +5716,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
 keyword_calls[] { ENTRY_DEBUG } :
 
     // C++
-    sizeof_call | alignof_call | typeid_call | const_cast_call | dynamic_cast_call | reinterpret_cast_call | static_cast_call |
+    sizeof_call | alignof_call | typeid_call | const_cast_call | dynamic_cast_call | reinterpret_cast_call | static_cast_call | decltype_call |
 
 
     // Objective-C
@@ -5728,7 +5731,7 @@ keyword_calls[] { ENTRY_DEBUG } :
 keyword_call_tokens[] { ENTRY_DEBUG } :
 
     // C++
-    SIZEOF | ALIGNOF | TYPEID | CONST_CAST | DYNAMIC_CAST | REINTERPRET_CAST | STATIC_CAST |
+    SIZEOF | ALIGNOF | TYPEID | CONST_CAST | DYNAMIC_CAST | REINTERPRET_CAST | STATIC_CAST | DECLTYPE |
 
     // Objective-C
     ENCODE | SELECTOR |
