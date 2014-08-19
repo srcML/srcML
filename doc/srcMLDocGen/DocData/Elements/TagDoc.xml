@@ -116,12 +116,86 @@ ArchiveUnit = element unit {
                     <Lang language="Java"/>
                     <Lang language="C#"/>
                 </Languages>
+                <Subelements>
+                    <Subelement ns="src" name="unit" />
+                </Subelements>
             </Case>
 
             <Case title="compilation unit">
-                <Desc></Desc>
+                <Desc>A compilation unit is a single file.</Desc>
                 <Subelements>
-                    <Subelement ns="src" name="unit" />
+                    <!-- PreProcessor Stuff -->
+                    <Subelement ns="cpp" name="define" />
+                    <Subelement ns="cpp" name="elif" />
+                    <Subelement ns="cpp" name="endif" />
+                    <Subelement ns="cpp" name="endregion" />
+                    <Subelement ns="cpp" name="error" />
+                    <Subelement ns="cpp" name="if" />;
+                    <Subelement ns="cpp" name="ifdef" />
+                    <Subelement ns="cpp" name="ifndef" />
+                    <Subelement ns="cpp" name="include" />
+                    <Subelement ns="cpp" name="line" />
+                    <Subelement ns="cpp" name="pragma" />
+                    <Subelement ns="cpp" name="region" />
+                    <Subelement ns="cpp" name="undef" />
+                    <Subelement ns="cpp" name="warning" />
+
+                    <!-- Not Preprocessor Stuff-->
+                    <Subelement ns="src" name="asm" />
+                    <Subelement ns="src" name="assert" />
+                    <Subelement ns="src" name="block" />
+                    <Subelement ns="src" name="break" />
+                    <Subelement ns="src" name="case" />
+                    <Subelement ns="src" name="catch" />
+                    <Subelement ns="src" name="checked" />
+                    <Subelement ns="src" name="class" />
+                    <Subelement ns="src" name="class_decl" />
+                    <Subelement ns="src" name="comment" />
+                    <Subelement ns="src" name="constructor" />
+                    <Subelement ns="src" name="continue" />
+                    <Subelement ns="src" name="decl_stmt" />
+                    <Subelement ns="src" name="default" />
+                    <Subelement ns="src" name="destructor" />
+                    <Subelement ns="src" name="destructor_decl" />
+                    <Subelement ns="src" name="do" />
+                    <Subelement ns="src" name="else" />
+                    <Subelement ns="src" name="empty_stmt" />
+                    <Subelement ns="src" name="elseif" />
+                    <Subelement ns="src" name="enum" />
+                    <Subelement ns="src" name="expr_stmt" />
+                    <Subelement ns="src" name="extern" />
+                    <Subelement ns="src" name="finally" />
+                    <Subelement ns="src" name="fixed" />
+                    <Subelement ns="src" name="for" />
+                    <Subelement ns="src" name="foreach" />
+                    <Subelement ns="src" name="function" />
+                    <Subelement ns="src" name="function_decl" />
+                    <Subelement ns="src" name="generic_selection" />
+                    <Subelement ns="src" name="goto" />
+                    <Subelement ns="src" name="if" />
+                    <Subelement ns="src" name="import" />
+                    <Subelement ns="src" name="label" />
+                    <Subelement ns="src" name="linq" />
+                    <Subelement ns="src" name="lock" />
+                    <Subelement ns="src" name="namespace" />
+                    <Subelement ns="src" name="package" />
+                    <Subelement ns="src" name="private" />
+                    <Subelement ns="src" name="protected" />
+                    <Subelement ns="src" name="public" />
+                    <Subelement ns="src" name="return" />
+                    <Subelement ns="src" name="static" />
+                    <Subelement ns="src" name="struct" />
+                    <Subelement ns="src" name="struct_decl" />
+                    <Subelement ns="src" name="switch" />
+                    <Subelement ns="src" name="synchronized" />
+                    <Subelement ns="src" name="throw" />
+                    <Subelement ns="src" name="try" />
+                    <Subelement ns="src" name="typedef" />
+                    <Subelement ns="src" name="unchecked" />
+                    <Subelement ns="src" name="union" />
+                    <Subelement ns="src" name="union_decl" />
+                    <Subelement ns="src" name="using" />
+                    <Subelement ns="src" name="while" />
                 </Subelements>
                 <Languages>
                     <Lang language="C"/>
@@ -130,11 +204,10 @@ ArchiveUnit = element unit {
                     <Lang language="C#"/>
                 </Languages>
                 <Grammar>
-
-
 CompliationUnit = element  unit {
     attribute language { "C++" | "C" | "Java" | "C#" },
     attribute filename { text },
+    CompilationUnitContents
     
 }
 
@@ -143,7 +216,7 @@ CompilationUnitContents = (
     CPPElIf &amp;
     CPPElse &amp;
     CPPEndIf &amp;
-    CPPEndRegion&amp;
+    CPPEndRegion &amp;
     CPPError &amp;
     CPPIf &amp;
     CPPIfDef &amp;
@@ -158,130 +231,63 @@ CompilationUnitContents = (
     StaticAssert &amp;
     AssertStmt &amp;
     Block &amp;
-    Break&amp;
-    &amp;
-    &amp;
-    &amp;
-    &amp;
-    &amp;
-    &amp;
-    &amp;
-    <!--
-    <src:attribute>
-    <src:block type="pseudo">
-    <src:block>
-    <src:break>
-    <src:by>
-    <src:call>
-    <src:capture>
-    <src:case>
-    <src:catch>
-    <src:checked>
-    <src:class type="interface">
-    <src:class>
-    <src:class_decl>
-    <src:comment type="block">
-    <src:comment type="line">
-    <src:condition>
-    <src:constructor>
-    <src:constructor_decl>
-    <src:continue>
-    <src:control>
-    <src:decl>
-    <src:decl_stmt>
-    <src:decltype>
-    <src:default>
-    <src:destructor>
-    <src:destructor_decl>
-    <src:do>
-    <src:else>
-    <src:elseif>
-    <src:empty_stmt>
-    <src:enum>
-    <src:equals>
-    <src:expr>
-    <src:expr_stmt>
-    <src:extends>
-    <src:extern>
-    <src:finally>
-    <src:fixed>
-    <src:for>
-    <src:foreach>
-    <src:from>
-    <src:function>
-    <src:function_decl>
-    <src:generic_selection>
-    <src:goto>
-    <src:group>
-    <src:if>
-    <src:implements>
-    <src:import>
-    <src:in>
-    <src:incr>
-    <src:index>
-    <src:init>
-    <src:into>
-    <src:join>
-    <src:label>
-    <src:lambda>
-    <src:let>
-    <src:linq>
-    <src:literal type="boolean">
-    <src:literal type="char">
-    <src:literal type="null">
-    <src:literal type="number">
-    <src:literal type="string">
-    <src:lock>
-    <src:macro>
-    <src:member_list>
-    <src:modifier>
-    <src:name>
-    <src:namespace>
-    <src:noexcept>
-    <src:on>
-    <src:operator>
-    <src:orderby>
-    <src:package>
-    <src:param>
-    <src:parameter_list>
-    <src:private type="default">
-    <src:private>
-    <src:protected>
-    <src:public type="default">
-    <src:public>
-    <src:range>
-    <src:return>
-    <src:select>
-    <src:selector>
-    <src:sizeof>
-    <src:specifier>
-    <src:static>
-    <src:struct>
-    <src:struct_decl>
-    <src:super>
-    <src:switch>
-    <src:synchronized>
-    <src:template>
-    <src:then>
-    <src:throw>
-    <src:throws>
-    <src:try>
-    <src:type ref="prev">
-    <src:type>
-    <src:typedef>
-    <src:typeid>
-    <src:typename>
-    <src:unchecked>
-    <src:union>
-    <src:union_decl>
-    <src:unit>
-    <src:unsafe>
-    <src:using>
-    <src:where>
-    <src:while>
-
-    <src:annotation> ?
-    -->
+    Break &amp;
+    CaseStmt &amp;
+    CatchBlock &amp;
+    CheckedBlock &amp;
+    ClassInterface &amp;
+    Class &amp;
+    ClassDecl &amp;
+    CommentBlock &amp;
+    CommentLine &amp;
+    ConstructorQualified &amp;
+    ContinueStmt &amp;
+    DeclStmt &amp;
+    DefaultLabel &amp;
+    Destructor &amp;
+    DestructorQualified &amp;
+    DestructorDecl &amp;
+    DoStmt &amp;
+    ElseStmt &amp;
+    EmptyStmt &amp;
+    elseif &amp;
+    enum &amp;
+    ExprStmt &amp;
+    ExternBlock &amp;
+    FinallyBlock &amp;
+    FixedStmt &amp;
+    ForStmt &amp;
+    ForEachStmt &amp;
+    Function &amp;
+    FunctionDecl &amp;
+    GenericSelection&amp;
+    GotoStmt &amp;
+    IfStmt &amp;
+    ImportStmt &amp;
+    LabelStmt &amp;
+    LINQ &amp;
+    LockStmt&amp;
+    Namespace&amp;
+    Package &amp;
+    Private &amp;
+    Protected &amp;
+    Public &amp;
+    ReturnStmt &amp;
+    StaticInitBlock &amp;
+    Struct &amp;
+    StructDecl &amp;
+    SwitchStmt&amp;
+    SynchronizedStmt &amp;
+    ThrowStmt &amp;
+    Try &amp;
+    Typedef &amp;
+    UncheckedStmt &amp;
+    Union &amp;
+    UnionStmt &amp;
+    UnsafeStmt &amp;
+    UsingStmt &amp;
+    UsingDirective &amp;
+    WhileStmt
 )*
 
                 </Grammar>

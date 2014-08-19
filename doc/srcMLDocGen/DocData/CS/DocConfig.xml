@@ -1932,6 +1932,7 @@
             </XPathQueries>
             <Example file="CS-linq-group-1.cs" />
             <Example file="CS-linq-group-2.cs" />
+            <Example file="CS-linq-group-3.cs" />
         </DocEntry>
 
 

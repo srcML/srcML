@@ -37,6 +37,7 @@
             <Example file="C-if-4.c"/>
             <Example file="C-if-5.c"/>
             <Example file="C-if-6.c"/>
+            <Example file="C-if-7.c"/>
         </DocEntry>
 
         <DocEntry shortTitle="while" title="while statement">

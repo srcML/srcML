@@ -659,6 +659,7 @@
                 </XPath>
             </XPathQueries>
             <Example file="Java-extends.java" />
+            <!-- <Example file="Java-extends-2.java" /> -->
         </DocEntry>
         
         <DocEntry title="implements">
@@ -913,6 +914,7 @@
             <Example file="Java-throws-1.java" />
             <Example file="Java-throws-2.java" />
             <Example file="Java-throws-3.java" />
+            <Example file="Java-throws-4.java" />
         </DocEntry>
 
         <DocEntry title="try">

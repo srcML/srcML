@@ -174,8 +174,21 @@
                 </ul>
 
             </div>
-
             {% endif %}
+
+            {% if tagInfo.refs|length %}
+            <div class="elementDisplay">
+                <h3 class="title">Also See</h3>
+                <ul>
+                    {% for ref in tagInfo.refs %}
+                    <li><a href="{{ref.url}}">{{ref.title}}</a></li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+            {% endif %}
+
+
         </div>
     {% endfor %}
     </div>

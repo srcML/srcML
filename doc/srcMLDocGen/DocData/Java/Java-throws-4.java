@@ -1,0 +1,1 @@
+throws MyExceptionType, MyExceptionType2

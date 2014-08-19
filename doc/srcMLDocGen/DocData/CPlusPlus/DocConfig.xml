@@ -1745,6 +1745,7 @@
             <Example title="templated function" file="CPP-template-2.cpp" />
             <Example title="partial template specialization" file="CPP-template-4.cpp" />
             <Example title="template member function template" file="CPP-template-5.cpp" />
+            <Example file="CPP-template-6.cpp" />
         </DocEntry>
 
         <DocEntry title="template parameters">
