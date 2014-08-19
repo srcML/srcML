@@ -33,6 +33,11 @@ isn't significant and doesn't prescribe an ordering like element does.
             <GrammarText><span class="rn_kw">text</span></GrammarText>
             <Desc>The text keyword indicates that an element must contain text.</Desc>
         </Entry>
+        <Entry title="comma connector">
+            <GrammarText><span class="replacePartOfGrammar">pattern</span>, <span class="replacePartOfGrammar">pattern</span></GrammarText>
+            <Desc>The <code>,</code> is used to indicate that one pattern follows another.</Desc>
+        </Entry>
+
         <Entry title="subexpression">
             <GrammarText>(<span class="replacePartOfGrammar">pattern expr</span>)</GrammarText>
             <Desc><code>()</code> can be used to indicate a sub expression.</Desc>
