@@ -1854,7 +1854,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
 
         // record token after the start of the argument list
         markend[argumenttoken]
-        ( options { greedy = true; } :
+        ( options { greedy = true; generateAmbigWarnings = false;} :
 
             // recursive nested parentheses
             call_check_paren_pair[argumenttoken, depth + 1] set_bool[name, false] |
@@ -1863,7 +1863,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             { !name || (depth > 0) }?
             (identifier | generic_selection) set_bool[name, true] |
 
-            keyword_call_tokens (DOTDOTDOT | template_argument_list)* |
+            keyword_call_tokens (options { greedy = true; } : DOTDOTDOT | template_argument_list)* |
 
             // special case for something that looks like a declaration
             { LA(1) == DELEGATE /* eliminates ANTRL warning, will be nop */ }? delegate_anonymous |
@@ -8168,7 +8168,7 @@ preprocessor[] { ENTRY_DEBUG
 
             tp.setType(SCPP_LINE);
         }
-            (cpp_linenumber
+            (options { generateAmbigWarnings = false; } : cpp_linenumber
 
             (cpp_filename)* | { inLanguage(LANGUAGE_CSHARP) }? cpp_symbol_optional) |
 
