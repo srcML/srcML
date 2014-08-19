@@ -1703,6 +1703,7 @@
                 </XPath>
             </XPathQueries>
             <Example file="CPP-attribute-1.cpp" />
+            <Example file="CPP-attribute-2.cpp" />
         </DocEntry>
 
         <DocEntry title="asm">

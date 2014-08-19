@@ -154,11 +154,11 @@ CompilationUnitContents = (
     CPPRegion&amp;
     CPPUndef&amp;
     CPPWarning &amp;
-    &amp;
-    &amp;
-    &amp;
-    &amp;
-    &amp;
+    ASM &amp;
+    StaticAssert &amp;
+    AssertStmt &amp;
+    Block &amp;
+    Break&amp;
     &amp;
     &amp;
     &amp;
@@ -167,15 +167,6 @@ CompilationUnitContents = (
     &amp;
     &amp;
     <!--
-    <src:annotation>
-    <src:argument>
-    <src:argument_list>
-    <src:asm>
-    <src:assert type="static">
-    <src:assert>
-    <src:association>
-    <src:association_list>
-    <src:atomic>
     <src:attribute>
     <src:block type="pseudo">
     <src:block>
@@ -288,6 +279,8 @@ CompilationUnitContents = (
     <src:using>
     <src:where>
     <src:while>
+
+    <src:annotation> ?
     -->
 )*
 
