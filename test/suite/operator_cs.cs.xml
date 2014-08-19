@@ -19,10 +19,6 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>T</name></type> <name>temp</name> <init>= <expr><call><name>default</name><argument_list>(<argument><expr><name>T</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
-</unit>
-
-<unit>
 <decl_stmt><decl><type><name>int</name></type> <name>y</name> <init>= <expr><name>x</name> <operator>??</operator> <operator>-</operator><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
 </unit>
 

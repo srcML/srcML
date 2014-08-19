@@ -727,8 +727,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         // process template operator correctly @test template
         { inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) }? tempope |
 
-        // special default() call for C#
-        { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
+        // // special default() call for C#
+        // { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
 
         // statements that clearly start with a keyword
         { (isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) || (LA(1) != TEMPLATE || next_token() != TEMPOPS))
@@ -1248,20 +1248,9 @@ function_identifier[] { ENTRY_DEBUG } :
 
             function_identifier_main |
 
-            { inLanguage(LANGUAGE_CSHARP) }?
-            function_identifier_default |
-
             // function pointer identifier with name marked separately
             function_pointer_name_grammar eat_optional_macro_call
         )
-;
-
-// default function name
-function_identifier_default[] { SingleElement element(this); ENTRY_DEBUG } :
-        {
-            startElement(SNAME);
-        }
-        DEFAULT
 ;
 
 // special cases for main
@@ -1873,6 +1862,8 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             // special case for something that looks like a declaration
             { !name || (depth > 0) }?
             (identifier | generic_selection) set_bool[name, true] |
+
+            keyword_call_tokens (DOTDOTDOT | template_argument_list)* |
 
             // special case for something that looks like a declaration
             { LA(1) == DELEGATE /* eliminates ANTRL warning, will be nop */ }? delegate_anonymous |
@@ -3424,9 +3415,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // already in an expression, and run into a keyword
         // so stop the expression, and markup the keyword statement
-        { inMode(MODE_EXPRESSION) && (LA(1) == DEFAULT || next_token() != COLON)
+        { inMode(MODE_EXPRESSION)
          && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
          && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
+         && (LA(1) != DEFAULT || next_token() == COLON)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != INLINE || next_token() == NAMESPACE)
          && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
@@ -5728,7 +5720,7 @@ keyword_calls[] { ENTRY_DEBUG } :
     encode_call | selector_call |
 
     // C#
-    typeof_call
+    typeof_call | { inLanguage(LANGUAGE_CSHARP) }? default_call
 
 ;
 
@@ -5742,7 +5734,7 @@ keyword_call_tokens[] { ENTRY_DEBUG } :
     ENCODE | SELECTOR |
 
     // C#
-    TYPEOF
+    TYPEOF | DEFAULT
 
 ;
 
@@ -5881,6 +5873,19 @@ typeof_call[] { ENTRY_DEBUG } :
             startElement(STYPEOF);
         }
         TYPEOF
+        call_argument_list
+;
+
+// default
+default_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+            startElement(SDEFAULT);
+        }
+        DEFAULT
         call_argument_list
 ;
 
@@ -6568,8 +6573,6 @@ generic_selection_association_default[] { SingleElement element(this); ENTRY_DEB
     }
     DEFAULT
 
-
-
 ;
 
 
@@ -7184,14 +7187,6 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         variable_identifier | keyword_name | auto_keyword[false]) | literals | noexcept_list | 
 
         variable_identifier_array_grammar_sub[flag]
-;
-
-// default()
-expression_part_default[] { ENTRY_DEBUG } :
-
-        expression_process
-
-        call argument
 ;
 
 // rule for literals
