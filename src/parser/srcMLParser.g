@@ -6313,6 +6313,16 @@ lock_statement[] { ENTRY_DEBUG } :
 
 ;
 
+// fix the statement
+fixed_statement[] { ENTRY_DEBUG } :
+
+        for_like_statement_pre[SFIXED_STATEMENT]
+
+        FIXED LPAREN
+
+        for_like_statement_post
+;
+
 // a synchonized statement
 synchronized_statement[] { ENTRY_DEBUG } :
 
@@ -6435,23 +6445,6 @@ lambda_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         }
         LAMBDA
 
-;
-
-// fix the statement
-fixed_statement[] { ENTRY_DEBUG } :
-        {
-            // treat catch block as nested block statement
-            startNewMode(MODE_STATEMENT | MODE_NEST);
-
-            // start of the catch statement
-            startElement(SFIXED_STATEMENT);
-        }
-        FIXED
-        {
-            // looking for a LPAREN
-            if (LA(1) == LPAREN)
-                parameter_list();
-        }
 ;
 
 // throw statement
