@@ -15,15 +15,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>typeof</name><argument_list>(<argument><expr><name>C</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>i</name> <operator>=</operator> <operator>await</operator> <call><name>M</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lambda><name>w</name> <operator>=&gt;</operator> <name><name>w</name><operator>.</operator><name>Length</name></name></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><name>w</name> <operator>=&gt;</operator> <block type="pseudo"><name><name>w</name><operator>.</operator><name>Length</name></name></block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
