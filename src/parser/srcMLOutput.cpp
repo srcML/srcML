@@ -309,6 +309,7 @@ namespace {
     ELEMENT_MAP(SENUM_CLASS,             "enum")
     ELEMENT_MAP(SOPERATOR_FUNCTION,      "function")
     ELEMENT_MAP(SOPERATOR_FUNCTION_DECL, "function_decl")
+    ELEMENT_MAP(SREF_QUALIFIER,          "ref_qualifier")
 
     // Objective-C
     ELEMENT_MAP(SRECEIVER,             "receiver")

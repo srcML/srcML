@@ -82,19 +82,19 @@
 </unit>
 
 <unit>
-<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> &amp; <block>{}</block></function>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <ref_qualifier>&amp;</ref_qualifier> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> &amp;&amp; <block>{}</block></function>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <ref_qualifier>&amp;&amp;</ref_qualifier> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <specifier>const</specifier> &amp; <noexcept>noexcept<argument_list>(<noexcept>noexcept<argument_list>(<argument><expr><call><name>T</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></noexcept>)</argument_list></noexcept> <attribute>[[<expr><name>System</name></expr>]]</attribute> -&gt; <function_decl><type><name>int</name></type> (<modifier>*</modifier>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <specifier>const</specifier> <ref_qualifier>&amp;</ref_qualifier> <noexcept>noexcept<argument_list>(<noexcept>noexcept<argument_list>(<argument><expr><call><name>T</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></noexcept>)</argument_list></noexcept> <attribute>[[<expr><name>System</name></expr>]]</attribute> -&gt; <function_decl><type><name>int</name></type> (<modifier>*</modifier>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <specifier>const</specifier> &amp;&amp; <noexcept>noexcept<argument_list>(<noexcept>noexcept<argument_list>(<argument><expr><call><name>T</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></noexcept>)</argument_list></noexcept> <attribute>[[<expr><name>System</name></expr>]]</attribute> -&gt; <function_decl><type><name>int</name></type> (<modifier>*</modifier>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <specifier>const</specifier> <ref_qualifier>&amp;&amp;</ref_qualifier> <noexcept>noexcept<argument_list>(<noexcept>noexcept<argument_list>(<argument><expr><call><name>T</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></noexcept>)</argument_list></noexcept> <attribute>[[<expr><name>System</name></expr>]]</attribute> -&gt; <function_decl><type><name>int</name></type> (<modifier>*</modifier>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
 </unit>
 
 <unit>

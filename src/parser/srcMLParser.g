@@ -138,7 +138,7 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -487,6 +487,7 @@ tokens {
     SENUM_CLASS;
     SOPERATOR_FUNCTION;
     SOPERATOR_FUNCTION_DECL;
+    SREF_QUALIFIER;
 
     // Qt
 	SSIGNAL_ACCESS;
@@ -1168,8 +1169,7 @@ annotation_default_initialization[] { CompleteElement element(this); ENTRY_DEBUG
 ref_qualifier []  { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_MODIFIER))
-                startElement(SMODIFIER);
+            startElement(SREF_QUALIFIER);
         }
         (
         REFOPS | RVALUEREF
@@ -3373,6 +3373,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // throw list at end of function header
         { (inLanguage(LANGUAGE_OO)) && inMode(MODE_FUNCTION_TAIL) }?
         throw_list |
+
+        // throw list at end of function header
+        { (inLanguage(LANGUAGE_CXX))&& inTransparentMode(MODE_FUNCTION_TAIL) }?
+        ref_qualifier |
 
         // throw list at end of function header
         { (inLanguage(LANGUAGE_CXX))&& inTransparentMode(MODE_FUNCTION_TAIL) }?
