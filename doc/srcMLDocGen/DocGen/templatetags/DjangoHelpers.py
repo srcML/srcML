@@ -6,6 +6,7 @@ import lxml.sax as lxmlSAX
 import xml.sax.saxutils as SAXUtils
 from xml.sax.handler import ContentHandler
 import cStringIO
+from DocGen import *
 
 register = template.Library()
 
@@ -174,3 +175,14 @@ def getOperators(parser, token):
 @register.filter
 def isIn(lookingFor, collection):
     return lookingFor in collection
+
+
+
+@register.filter(name = "strip")
+def stripSpaces(value):
+    return value.strip()
+
+@register.filter(name = "isTerminalUseCase")
+def isTerminalUseCase(obj):
+    print obj.__class__.__name__
+    return isinstance(obj, TerminalUseCase)

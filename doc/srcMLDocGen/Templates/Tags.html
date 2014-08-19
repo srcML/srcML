@@ -106,20 +106,14 @@
                     <thead>
                         <tr>
                         {% for lang in doc.languages %}
-                            <th>{{lang}}</th>
+                            <th>{{lang|strip}}</th>
                         {%endfor%}
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                         {% for lang in doc.languages %}
-                            <td>
-                            {% if lang|isIn:useCase.languages %}
-                                X
-                            {% else %}
-                                &nbsp;
-                            {% endif %}
-                            </td>
+                            <td>{% if lang|isIn:useCase.languages %}X{% else %}&nbsp;{% endif %}</td>
                         {% endfor%}
                         </tr>
                     </tbody>
@@ -148,13 +142,7 @@
                                 <td><code>{{attr.name}}</code></td>
                                 <td>{{attr.valueDesc}}</td>
                                 {% for lang in doc.languages %}
-                                    <td>
-                                    {% if lang|isIn:attr.languages %}
-                                        X
-                                    {% else %}
-                                        &nbsp;
-                                    {% endif %}
-                                    </td>
+                                    <td>{% if lang|isIn:attr.languages %}X{% else %}&nbsp;{% endif %}</td>
                                 {% endfor%}
                             </tr>
                             {%endfor%}
@@ -164,6 +152,30 @@
                 {%endif%}
             </div>
             {% endfor %}
+            {% if tagInfo.parentElements|length > 0 %}
+            <div class="elementDisplay">
+                <h3 class="title">Parent Elements</h3>
+                <ul>
+                    {% for parentElem in tagInfo.parentElements %}
+                    <li><a href="#tag_{{parentElem.link}}">{{parentElem.comparableTagName}}</a></li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+            {% endif %}
+
+            {% if tagInfo.subelements|length %}
+            <div class="elementDisplay">
+                <h3 class="title">Subelements</h3>
+                <ul>
+                    {% for subElem in tagInfo.subelements %}
+                    <li><a href="#tag_{{subElem.comparableTagName}}">{{subElem.comparableTagName}}</a></li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+
+            {% endif %}
         </div>
     {% endfor %}
     </div>

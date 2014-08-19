@@ -2,48 +2,6 @@
     margin-top:3em;
 }
 
-/* ToC styles. */
-table.ToC {
-    border-collapse: collapse;
-    border:.1em solid #D2D2CE;
-    margin-left:0em;
-    margin-right:0em;
-    width:100%;
-}
-
-table.ToC th{
-    padding-top:1em;
-}
-table.ToC tbody tr:nth-child(odd) {
-   background-color: #F0F0F0;
-}
-
-table.ToC thead {
-    border-collapse: collapse;
-}
-table.ToC td {
-    border-collapse: collapse;
-    border-left:1px solid #D2D2CE;
-    padding:2px;
-    padding-left:5px;
-}
-table.ToC tbody {
-    border:1px solid #D0D0D0;
-}
-
-table.ToC th.categoryRow {
-    padding-top: 2em;
-    font-weight: bold;
-    background-color: #ffffff;
-    text-align:left;
-    padding-left:3px;
-    padding-bottom:.3em;
-}
-
-table.ToC tbody tr td:nth-child(1) {
-    border-left:0px solid black;
-}
-
 /* classes used internal to the displayedDocDefinition class. */
 
 .elementListing>ul ul {
@@ -117,7 +75,7 @@ div.displayedDocDefinition h2.title a:hover{
 }
 
 .opCodeCol {
-} 
+}
 
 .opsrcMLCol {
 }

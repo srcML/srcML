@@ -18,7 +18,7 @@ class PageLink:
 
 def genElementsPage(tagDoc):
     global pageLinks
-    tagDoc.preProcess()
+    # tagDoc.preProcess()
     out = open(tagDoc.outputFileName, "w")
     fileTemplate = loader.get_template("Tags.html")
     page = fileTemplate.render(Context({"doc": tagDoc}))
@@ -106,7 +106,9 @@ def genDocIndex(docConfig):
 
 def writeAllTagNames():
     out = open("taglisting.txt", "w")
-    for tag in getTagListing():
+    tagListTemp = list(getTagListing())
+    tagListTemp.sort()
+    for tag in tagListTemp:
         out.write("{0}\n".format(tag))
     out.close()
 

@@ -175,6 +175,9 @@ class TagRef:
             out +="{0.ns}:"
         out += "{0.tag}"
         return out.format(self)
+        
+    def link(self):
+        return self.ns + "_" + self.tag
 
 
 class URLRefLink:
@@ -236,21 +239,8 @@ class TagDoc:
         self.namespaces = []
         self.tags = []
         self.desc = ""
-        self.languages = ["C", "C++", "C#", "Java"]
+        self.languages = list(["C", "C++", "C#", "Java"])
         
-    def preProcess(self):
-        langSet = set()
-        for t in self.tags:
-            for c in t.useCases:
-                for atr in c.attrs:
-                    for l in atr.languages:
-                        langSet.add(l)
-                for l in c.languages:
-                    langSet.add(l)
-        self.languages = list(langSet)
-        self.languages.sort()
-
-
     def maxLanguageCount(self):
         self.languageMax = tagsMax
         return 

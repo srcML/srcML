@@ -625,6 +625,7 @@
                 </XPath>
             </XPathQueries>
             <Example file="Java-annotation-use-1.java" />
+            <Example file="Java-annotation-use-2.java" />
         </DocEntry>
 
         <DocEntry title="enum definition">

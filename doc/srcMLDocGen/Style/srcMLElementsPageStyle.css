@@ -29,6 +29,8 @@ p.pageDesc {
     color:green;
 }
 
+
+/* Language Table */
 table.languageTable {
     border-collapse: collapse;
     border:.1em solid #D2D2CE;
@@ -36,6 +38,7 @@ table.languageTable {
 
 table.languageTable th {
     padding-top:1em;
+    width:50px;
 }
 
 table.languageTable thead {
@@ -51,15 +54,15 @@ table.languageTable tbody {
 }
 
 table.languageTable tbody td {
-    min-width:2.5em;
     text-align:center;
 }
+
 
 table.languageTable tbody tr:nth-child(odd) {
    background-color: #F0F0F0;
 }
 
-
+/* Attribute table */
 table.attrTable {
     border-collapse: collapse;
     border:.1em solid #D2D2CE;
@@ -85,21 +88,21 @@ table.attrTable tbody {
 table.attrTable tbody td {
     min-width:2.5em;
     text-align:center;
-
 }
+
 table.attrTable tbody td:nth-child(1), td:nth-child(2) {
     padding:3px 1em 3px 1em;
 }
+
 table.attrTable tbody td:nth-child(2) {
     text-align:left;
 }
-
 
 table.attrTable tbody tr:nth-child(odd) {
    background-color: #F0F0F0;
 }
 
-
+/* Other Styles */
 .useCase {
     margin-top:3em;
 }
