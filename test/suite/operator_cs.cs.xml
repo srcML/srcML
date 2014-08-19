@@ -19,10 +19,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><lambda><name>w</name> <operator>=&gt;</operator> <block type="pseudo"><name><name>w</name><operator>.</operator><name>Length</name></name></block></lambda></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <decl_stmt><decl><type><name>T</name></type> <name>temp</name> <init>= <expr><call><name>default</name><argument_list>(<argument><expr><name>T</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
