@@ -101,7 +101,8 @@ grammar {
     }
 
     AnyCPPOrComment = (
-        CPPDefine |
+        CPPDefineNamed |
+        CPPDefineNoName |
         CPPElIf |
         CPPElse |
         CPPEndIf |
@@ -122,10 +123,36 @@ grammar {
 
     
     # CPP namespace related elements
-    CPPDefine = element cpp:define {
+
+    # define
+    CPPDefineNamed = element cpp:define {
+        text,
+        CPPDirective,
+        Comment*,
+        CPPMacro,
+        CommentOrText*,
+        (CPPValue | CPPNumber)?
+    }
+
+    CPPDefineNoName = element cpp:define {
+        text,
+        CPPDirective
+    }
+
+    CPPMacro = element cpp:macro {
         AnyContent*
     }
 
+    CommentOrText = (Comment | text)
+
+    CPPValue = element cpp:value { CommentOrText* }
+
+    CPPNumber = element cpp:number { CommentOrText* }
+
+    CPPDirective = element cpp:directive {
+        "define"
+    }
+    
     CPPIf = element cpp:if {
         AnyContent*
     }
