@@ -555,7 +555,7 @@ def loadTagDoc(dirPath, fileName, forceBuild = False):
             if elem.tag == ElementTag:
                 elemList.append(buildElement(elem))
             else:
-                unexpectedOrUnknownTag(nsElem)
+                unexpectedOrUnknownTag(elem)
 
         # Deducing parent elements.
         for tagInfo in elemList:
