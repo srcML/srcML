@@ -30,4 +30,5 @@ Notes.txt
 
 C.relaxng.xml
 relaxngtext.ng
-GrammarValidator/
+GrammarValidator/srcML.rng
+GrammarValidator/ValidationStatus.txt

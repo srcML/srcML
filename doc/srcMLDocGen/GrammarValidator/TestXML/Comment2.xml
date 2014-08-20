@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="/home/brian/Projects/srcML/doc/srcMLDocGen/DocData/CPlusPlus/CPP-class-3.cpp" hash="4d66566b902419deff15e1f78981bf20497c7110"></unit>
+<!-- comment thingy! -->
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="/home/brian/Projects/srcML/doc/srcMLDocGen/DocData/CPlusPlus/CPP-class-1.cpp" hash="314314b5429cc4534a1286a1a2bdcc54e20cc352"></unit>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="/home/brian/Projects/srcML/doc/srcMLDocGen/DocData/CPlusPlus/CPP-class-5.cpp" hash="735c5e93a546abad2c26ec9615df68e2dbc4594b"></unit>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="/home/brian/Projects/srcML/doc/srcMLDocGen/DocData/CPlusPlus/CPP-class-6.cpp" hash="c544f3e3a68e8386346a56f714d80ed0dde7a43d"></unit>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="/home/brian/Projects/srcML/doc/srcMLDocGen/DocData/CPlusPlus/CPP-class-7.cpp" hash="842d8176c733e847a5abd2d5ee36d4725e190d9e"></unit>
+</unit>

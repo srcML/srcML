@@ -1,0 +1,474 @@
+default namespace = "http://www.sdml.info/srcML/src"
+
+namespace cpp = "http://www.sdml.info/srcML/cpp"
+
+grammar {
+    start = ArchiveUnit | CompilationUnit
+
+    AnyContent = AnyElement* & text
+    AnyElement = element * { AnyAttribute*, AnyContent }
+    AnyAttribute = attribute * { text }
+
+    ArchiveUnit = element unit {
+        attribute language { text }?,
+        attribute filename { text }?,
+        attribute dir {text}?,
+        attribute hash { text }?,
+        attribute options { text }?,
+        MacroList*,
+        CompilationUnit*
+    }
+
+    MacroList = element macro-list {
+        attribute type { text },
+        attribute token { text }
+    }
+
+
+    CompilationUnit = element unit {
+        attribute language { text }?,
+        attribute filename { text }?,
+        attribute dir {text}?,
+        attribute hash { text }?,
+        attribute options { text }?,
+        MacroList*,
+        (AnyCPPOrComment |
+        IfStmt |
+        ASM |
+        Assert |
+        Block |
+        Break |
+        CaseStmt |
+        CatchBlock |
+        CheckedStmt |
+        Interface |
+        Class |
+        ClassDecl |
+        ConstructorQualified |
+        ContinueStmt |
+        DefaultLabel |
+        DeclStmt |
+        DestructorQualified |
+        Destructor |
+        DestructorDecl |
+        DoStmt |
+        EmptyStmt |
+        ElseStmt |
+        Elseif |
+        Enum |
+        ExprStmt |
+        ExternBlock |
+        FinallyBlock |
+        FixedStmt |
+        ForStmt |
+        ForEachStmt |
+        Function |
+        FunctionDecl |
+        GenericSelection |
+        GotoStmt |
+        ImportStmt |
+        LabelStmt |
+        LINQ |
+        LockStmt |
+        Namespace |
+        Package |
+        Private |
+        Protected |
+        Public |
+        ReturnStmt |
+        StaticInitBlock |
+        Struct |
+        StructDecl |
+        SwitchStmt |
+        SynchronizedStmt |
+        ThrowStmt |
+        Try |
+        Typedef |
+        UncheckedStmt |
+        Union |
+        UnionDecl |
+        UnsafeStmt |
+        UsingStmt |
+        UsingDirective |
+        WhileStmt |
+        Attribute |
+        ConstructorDecl |
+        Template |
+        Lambda |
+        Forever |
+        Dynamic |
+        text)*
+    }
+
+    AnyCPPOrComment = (
+        CPPDefine |
+        CPPElIf |
+        CPPElse |
+        CPPEndIf |
+        CPPEndRegion |
+        CPPError |
+        CPPIf |
+        CPPIfDef |
+        CPPIfNDef |
+        CPPInclude |
+        CPPLine |
+        CPPPragma |
+        CPPRegion |
+        CPPUndef |
+        CPPWarning |
+        Escape |
+        Macro |
+        Comment)
+
+    
+    # CPP namespace related elements
+    CPPDefine = element cpp:define {
+        AnyContent*
+    }
+
+    CPPIf = element cpp:if {
+        AnyContent*
+    }
+
+    CPPElIf = element cpp:elif {
+        AnyContent*
+    }
+
+    CPPElse = element cpp:else {
+        AnyContent*
+    }
+
+    CPPEndIf = element cpp:endif {
+        AnyContent*
+    }
+
+    CPPEndRegion = element cpp:endregion {
+        AnyContent*
+    }
+
+    CPPError = element cpp:error {
+        AnyContent*
+    }
+
+    CPPIfDef = element cpp:ifdef {
+        AnyContent*
+    }
+
+    CPPIfNDef = element cpp:ifndef {
+        AnyContent*
+    }
+
+    CPPInclude = element cpp:include {
+        AnyContent*
+    }
+
+    CPPLine = element cpp:line {
+        AnyContent*
+    }
+
+    CPPPragma = element cpp:pragma {
+        AnyContent*
+    }
+
+    CPPRegion = element cpp:region {
+        AnyContent*
+    }
+
+    CPPUndef = element cpp:undef {
+        AnyContent*
+    }
+
+    CPPWarning = element cpp:warning {
+        AnyContent*
+    }
+
+    # comment
+    Comment = element comment {
+        attribute type { "line" | string "block" },
+        attribute format {"doxygen" | "javadoc" }?,
+        text
+    }
+    
+    IfStmt = element if {
+        AnyContent*
+    }
+
+    ASM = element asm {
+        AnyContent*
+    }
+
+    # Both static and regular asserts
+    Assert = element assert {
+        attribute type { "static" }?,
+        AnyContent*
+    }
+
+    # Block and pseudo block
+    Block = element block {
+        attribute type { "pseudo" }?,
+        AnyContent*
+    }
+
+    # include C#, java and C breaks
+    Break = element break {
+        AnyContent*
+    }
+
+    CaseStmt = element case {
+        AnyContent*
+    }
+
+    # this include all types of catch statement
+    # from all covered languages.
+    CatchBlock = element catch {
+        AnyContent*
+    }
+
+    # this doesn't include the Checked used like a call.
+    CheckedStmt = element checked {
+        AnyContent*
+    }
+
+    # For now (or until I learn exactly how to handle parts of mixed content)
+    # this includes java annotations.
+    Interface = element class {
+        attribute type { "interface" },
+        AnyContent*
+    }
+
+    Class = element class {
+        AnyContent*
+    }
+
+    ClassDecl = element class_decl {
+        AnyContent*
+    }
+    
+    # This is a special case for a constructor
+    # because the other case doesn't work outside of a class.
+    ConstructorQualified = element constructor {
+        AnyContent*
+    }
+
+    ConstructorDecl = element constructor_decl {
+        AnyContent*
+    }
+
+    # This includes Javas goto-continue stmt
+    ContinueStmt = element continue {
+        AnyContent*
+    }
+
+    DeclStmt = element decl_stmt {
+        AnyContent*
+    }
+
+    DefaultLabel = element default {
+        AnyContent*
+    }
+
+    DestructorQualified = element destructor {
+        AnyContent*
+    }
+
+    Destructor = element destructor {
+        AnyContent*
+    }
+    
+    DestructorDecl = element destructor_decl {
+        AnyContent*
+    }
+
+    DoStmt = element do {
+        AnyContent*
+    }
+
+    ElseStmt = element else {
+        AnyContent*
+    }
+
+    EmptyStmt = element empty_stmt {
+        text
+    }
+
+    Elseif = element elseif {
+        AnyContent*
+    }
+
+    Enum = element enum {
+        attribute type { "class" }?,
+        AnyContent*
+    }
+    
+    ExprStmt = element expr_stmt {
+        AnyContent*
+    }
+    
+    ExternBlock = element extern {
+        AnyContent*
+    }
+    
+    FinallyBlock = element finally {
+        AnyContent*
+    }
+
+    FixedStmt = element fixed {
+        AnyContent*
+    }
+
+    ForStmt = element for {
+        AnyContent*
+    }
+
+    ForEachStmt = element foreach {
+        AnyContent*
+    }
+
+    Function = element function {
+        attribute type { "operator" }?,
+        AnyContent*
+    }
+
+    FunctionDecl = element function_decl {
+        attribute type { "operator" }?,
+        AnyContent*
+    }
+
+    GenericSelection = element generic_selection {
+        AnyContent*
+    }
+
+    GotoStmt = element goto {
+        AnyContent*
+    }
+
+    ImportStmt = element import {
+        AnyContent*
+    }
+
+    LabelStmt = element label {
+        AnyContent*
+    }
+    
+    LINQ = element linq {
+        AnyContent*
+    }   
+
+    LockStmt = element lock {
+        AnyContent*
+    }
+
+    Namespace = element namespace {
+        AnyContent*
+    }
+
+    Package = element package {
+        AnyContent*
+    }
+
+    Private = element private {
+        AnyContent*
+    }
+
+    Protected = element protected {
+        AnyContent*
+    }
+
+    Public = element public {
+        AnyContent*
+    }
+
+    ReturnStmt = element return {
+        AnyContent*
+    }
+
+    StaticInitBlock = element static {
+        AnyContent*
+    }
+
+    Struct = element struct {
+        AnyContent*
+    }
+
+    StructDecl = element struct_decl {
+        AnyContent*
+    }
+
+    SwitchStmt = element switch {
+        AnyContent*
+    }
+
+    SynchronizedStmt = element synchronized {
+        AnyContent*
+    }
+
+    ThrowStmt = element throw {
+        AnyContent*
+    }
+
+    Try = element try {
+        AnyContent*
+    }
+
+    Typedef = element typedef {
+        AnyContent*
+    }
+
+    # This doesn't include the function call like syntax.
+    UncheckedStmt = element unchecked {
+        AnyContent*
+    }
+
+    Union = element union {
+        AnyContent*
+    }
+
+    UnionDecl = element union_decl {
+        AnyContent*
+    }
+
+    UnsafeStmt = element unsafe {
+        AnyContent*
+    }
+
+    UsingStmt = element using {
+        AnyContent*
+    }
+
+    UsingDirective = element using {
+        AnyContent*
+    }
+
+    WhileStmt = element while {
+        AnyContent*
+    }
+
+    Macro = element macro {
+        AnyContent*
+    }
+
+    Escape = element escape {
+        attribute char { text}
+    }
+
+    Attribute = element attribute {
+        AnyContent*
+    }
+
+    Template = element template {
+        AnyContent*
+    }
+
+    Lambda = element lambda {
+        AnyContent*
+    }
+
+    # Objective C related stuff
+    Forever = element forever {
+        AnyContent*
+    }
+
+    Dynamic = element dynamic {
+        AnyContent*
+    }
+} # End Grammar

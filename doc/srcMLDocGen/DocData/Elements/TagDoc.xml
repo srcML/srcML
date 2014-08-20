@@ -229,8 +229,8 @@ CompilationUnitContents = (
     CPPInclude &amp;
     CPPLine &amp;
     CPPPragma &amp;
-    CPPRegion&amp;
-    CPPUndef&amp;
+    CPPRegion &amp;
+    CPPUndef &amp;
     CPPWarning &amp;
     ASM &amp;
     StaticAssert &amp;
@@ -265,14 +265,14 @@ CompilationUnitContents = (
     ForEachStmt &amp;
     Function &amp;
     FunctionDecl &amp;
-    GenericSelection&amp;
+    GenericSelection &amp;
     GotoStmt &amp;
     IfStmt &amp;
     ImportStmt &amp;
     LabelStmt &amp;
     LINQ &amp;
-    LockStmt&amp;
-    Namespace&amp;
+    LockStmt &amp;
+    Namespace &amp;
     Package &amp;
     Private &amp;
     Protected &amp;
@@ -281,7 +281,7 @@ CompilationUnitContents = (
     StaticInitBlock &amp;
     Struct &amp;
     StructDecl &amp;
-    SwitchStmt&amp;
+    SwitchStmt &amp;
     SynchronizedStmt &amp;
     ThrowStmt &amp;
     Try &amp;
