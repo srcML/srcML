@@ -154,6 +154,7 @@ namespace {
     ELEMENT_MAP(SCHECKED_STATEMENT, "checked")
     ELEMENT_MAP(SUNCHECKED_STATEMENT, "unchecked")
     ELEMENT_MAP(SUNSAFE_STATEMENT, "unsafe")
+    ELEMENT_MAP(STYPEOF, "typeof")
     ELEMENT_MAP(SDO_STATEMENT, "do")
 
     ELEMENT_MAP(SSWITCH, "switch")
@@ -181,7 +182,7 @@ namespace {
     ELEMENT_MAP(SKRPARAMETER,          "krparam")
     ELEMENT_MAP(SARGUMENT_LIST,        "argument_list")
     ELEMENT_MAP(SARGUMENT,             "argument")
-    ELEMENT_MAP(SLAMBDA_CAPTURE,  "capture")
+    ELEMENT_MAP(SLAMBDA_CAPTURE,       "capture")
 
     // struct, union
     ELEMENT_MAP(SSTRUCT, "struct")
@@ -302,9 +303,13 @@ namespace {
     ELEMENT_MAP(SANNOTATION,    "annotation")
 
     // C++
-    ELEMENT_MAP(SALIGNAS,    "alignas")
-    ELEMENT_MAP(SALIGNOF,    "alignof")
-    ELEMENT_MAP(STYPEID,     "typeid")
+    ELEMENT_MAP(SALIGNAS,                "alignas")
+    ELEMENT_MAP(SALIGNOF,                "alignof")
+    ELEMENT_MAP(STYPEID,                 "typeid")
+    ELEMENT_MAP(SENUM_CLASS,             "enum")
+    ELEMENT_MAP(SOPERATOR_FUNCTION,      "function")
+    ELEMENT_MAP(SOPERATOR_FUNCTION_DECL, "function_decl")
+    ELEMENT_MAP(SREF_QUALIFIER,          "ref_qualifier")
 
     // Objective-C
     ELEMENT_MAP(SRECEIVER,             "receiver")
@@ -328,6 +333,12 @@ namespace {
     ELEMENT_MAP(SCLASS_IMPLEMENTATION, "class")
     ELEMENT_MAP(SPROTOCOL_DECLARATION, "protocol_decl")
 
+    // casts
+    ELEMENT_MAP(SCAST,             "cast")
+    ELEMENT_MAP(SCONST_CAST,      "cast")
+    ELEMENT_MAP(SDYNAMIC_CAST,     "cast")
+    ELEMENT_MAP(SREINTERPRET_CAST, "cast")
+    ELEMENT_MAP(SSTATIC_CAST,      "cast")
 
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
@@ -1307,7 +1318,8 @@ void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr
             xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
 
         ++openelementcount;
-        xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name, BAD_CAST attr_value);
+        if(attr_name)
+            xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name, BAD_CAST attr_value);
     } else {
         xmlTextWriterEndElement(xout);
         --openelementcount;
@@ -1389,6 +1401,65 @@ void srcMLOutput::processNil(const antlr::RefToken& token) {
 void srcMLOutput::processComplex(const antlr::RefToken& token) {
 
     processOptional(token, "type", "complex");
+}
+
+/**
+ * processTemplateArgumentList
+ * @param token token to output as template argument list
+ *
+ * Callback to process/output token as template argument list.
+ */
+void srcMLOutput::processTemplateArgumentList(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "template");
+
+}
+
+/**
+ * processCast
+ * @param token token to output as template argument list
+ *
+ * Callback to process/output token as template argument list.
+ */
+void srcMLOutput::processCast(const antlr::RefToken& token) {
+
+    if(token->getType() == SCAST)
+        processOptional(token, 0, 0);
+    else if(token->getType() == SCONST_CAST)
+        processOptional(token, "type", "const");
+    else if(token->getType() == SDYNAMIC_CAST)
+        processOptional(token, "type", "dynamic");
+    else if(token->getType() == SREINTERPRET_CAST)
+        processOptional(token, "type", "reinterpret");
+    else if(token->getType() == SSTATIC_CAST)
+        processOptional(token, "type", "static");
+    else
+        processOptional(token, 0, 0);
+
+}
+
+/**
+ * processEnumClass
+ * @param token token to output as enum class
+ *
+ * Callback to process/output token as enum class.
+ */
+void srcMLOutput::processEnumClass(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "class");
+
+}
+
+/**
+ * processOperatorFunction
+ * @param token token to output as operator function
+ *
+ * Callback to process/output token as operator function.
+ */
+void srcMLOutput::processOperatorFunction(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "operator");
+
 }
 
 #if DEBUG

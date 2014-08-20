@@ -6,15 +6,15 @@
 </unit>
 
 <unit>
-<enum>enum class <name>Enum3</name>;</enum>
+<enum type="class">enum class <name>Enum3</name>;</enum>
 </unit>
 
 <unit>
-<enum>enum struct <name>Enum3</name>;</enum>
+<enum type="class">enum struct <name>Enum3</name>;</enum>
 </unit>
 
 <unit>
-<enum>enum class <name>Enum4</name> : <type><name>unsigned</name> <name>int</name></type>;</enum>
+<enum type="class">enum class <name>Enum4</name> : <type><name>unsigned</name> <name>int</name></type>;</enum>
 </unit>
 
 <unit>
@@ -22,11 +22,11 @@
 </unit>
 
 <unit>
-<enum>enum class <name>Enum2</name> : <type><name>unsigned</name> <name>int</name></type> <block>{<decl><name>Val1</name></decl>, <decl><name>Val2</name></decl>}</block>;</enum>
+<enum type="class">enum class <name>Enum2</name> : <type><name>unsigned</name> <name>int</name></type> <block>{<decl><name>Val1</name></decl>, <decl><name>Val2</name></decl>}</block>;</enum>
 </unit>
 
 <unit>
-<enum>enum class <name>Enum2</name> : <type><specifier>const</specifier> <name>unsigned</name> <name>int</name></type> <block>{<decl><name>Val1</name></decl>, <decl><name>Val2</name></decl>}</block>;</enum>
+<enum type="class">enum class <name>Enum2</name> : <type><specifier>const</specifier> <name>unsigned</name> <name>int</name></type> <block>{<decl><name>Val1</name></decl>, <decl><name>Val2</name></decl>}</block>;</enum>
 </unit>
 
 </unit>

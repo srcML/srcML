@@ -43,4 +43,8 @@ two
 three"</literal></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><literal type="null">null</literal></expr>;</expr_stmt>
+</unit>
+
 </unit>

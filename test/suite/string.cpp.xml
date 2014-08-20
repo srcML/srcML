@@ -55,7 +55,7 @@ b"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal type="char">'\0'</literal> <literal type="char">'\1'</literal> <literal type="char">'\2'</literal> <literal type="char">'\3'</literal> <literal type="char">'\4'</literal> <literal type="char">'\5'</literal> <literal type="char">'\6'</literal> <literal type="char">'\7'</literal> <literal type="char">'\8'</literal> <literal type="char">'\9'</literal></literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="char">'\0'</literal> <literal type="char">'\1'</literal> <literal type="char">'\2'</literal> <literal type="char">'\3'</literal> <literal type="char">'\4'</literal> <literal type="char">'\5'</literal> <literal type="char">'\6'</literal> <literal type="char">'\7'</literal> <literal type="char">'\8'</literal> <literal type="char">'\9'</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>

@@ -44,7 +44,15 @@
 </unit>
 
 <unit>
-<struct>struct <block>{<public type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type="number"0</literal></expr></range></decl>;</decl_stmt> </public>}</block>;</struct>
+<struct>struct <block>{<public type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type="number">0</literal></expr></range></decl>;</decl_stmt> </public>}</block>;</struct>
+</unit>
+
+<unit>
+<struct_decl>struct <name>a</name>, <name>b</name>;</struct_decl>
+</unit>
+
+<unit>
+<struct_decl>struct <name>a</name>, <name>b</name>, <name>c</name>;</struct_decl>
 </unit>
 
 </unit>

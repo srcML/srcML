@@ -98,11 +98,11 @@
 </unit>
 
 <unit>
-<enum>enum class <attribute>[[]]</attribute> <name>a</name> <block>{}</block>;</enum>
+<enum type="class">enum class <attribute>[[]]</attribute> <name>a</name> <block>{}</block>;</enum>
 </unit>
 
 <unit>
-<enum>enum class <attribute>[[]]</attribute> <name>Enum2</name> : <type><specifier>const</specifier> <name>unsigned</name> <name>int</name></type> <block>{<decl><name>Val1</name></decl>, <decl><name>Val2</name></decl>}</block>;</enum>
+<enum type="class">enum class <attribute>[[]]</attribute> <name>Enum2</name> : <type><specifier>const</specifier> <name>unsigned</name> <name>int</name></type> <block>{<decl><name>Val1</name></decl>, <decl><name>Val2</name></decl>}</block>;</enum>
 </unit>
 
 <unit>

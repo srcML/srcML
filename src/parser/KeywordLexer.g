@@ -150,6 +150,10 @@ tokens {
     TYPENAME;
     ALIGNOF;
     TYPEID;
+    CONST_CAST;
+    DYNAMIC_CAST;
+    REINTERPRET_CAST;
+    STATIC_CAST;
 
     // aggregate types
     UNION;
@@ -282,6 +286,7 @@ tokens {
     ASYNC;
     THIS;
     PARAMS;
+    TYPEOF;
 
     // linq
     FROM;
@@ -414,7 +419,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "*"            , MULTOPS       , LANGUAGE_ALL }, 
 
         // C and C++ specific keywords
-        { "main"         , MAIN            , LANGUAGE_C_FAMILY }, 
+        { "main"         , MAIN           , LANGUAGE_C_FAMILY }, 
 
         { "typedef"      , TYPEDEF        , LANGUAGE_C_FAMILY }, 
 
@@ -423,7 +428,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "elif"         , ELIF           , LANGUAGE_C_FAMILY }, 
         { "endif"        , ENDIF          , LANGUAGE_C_FAMILY }, 
         { "error"        , ERRORPREC      , LANGUAGE_C_FAMILY }, 
-        { "warning"      , WARNING       , LANGUAGE_C_FAMILY }, 
+        { "warning"      , WARNING        , LANGUAGE_C_FAMILY }, 
         { "ifdef"        , IFDEF          , LANGUAGE_C_FAMILY }, 
         { "ifndef"       , IFNDEF         , LANGUAGE_C_FAMILY }, 
         { "line"         , LINE           , LANGUAGE_C_FAMILY }, 
@@ -509,15 +514,19 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "override"      , OVERRIDE       , LANGUAGE_CXX },
  
         // add all C++ specific keywords to the literals table
-        { "constexpr"     , CONSTEXPR        , LANGUAGE_CXX }, 
-        { "noexcept"      , NOEXCEPT         , LANGUAGE_CXX }, 
-        { "thread_local"  , THREAD_LOCAL     , LANGUAGE_CXX }, 
-        { "nullptr"       , NULLPTR          , LANGUAGE_CXX }, 
-        { "decltype"      , DECLTYPE         , LANGUAGE_CXX }, 
-        { "alignas"       , ALIGNAS          , LANGUAGE_CXX }, 
-        { "typename"      , TYPENAME         , LANGUAGE_CXX }, 
-        { "alignof"       , ALIGNOF          , LANGUAGE_CXX }, 
-        { "typeid"        , TYPEID           , LANGUAGE_CXX }, 
+        { "constexpr"        , CONSTEXPR        , LANGUAGE_CXX }, 
+        { "noexcept"         , NOEXCEPT         , LANGUAGE_CXX }, 
+        { "thread_local"     , THREAD_LOCAL     , LANGUAGE_CXX }, 
+        { "nullptr"          , NULLPTR          , LANGUAGE_CXX }, 
+        { "decltype"         , DECLTYPE         , LANGUAGE_CXX }, 
+        { "alignas"          , ALIGNAS          , LANGUAGE_CXX }, 
+        { "typename"         , TYPENAME         , LANGUAGE_CXX }, 
+        { "alignof"          , ALIGNOF          , LANGUAGE_CXX }, 
+        { "typeid"           , TYPEID           , LANGUAGE_CXX },
+        { "const_cast"       , CONST_CAST       , LANGUAGE_CXX }, 
+        { "dynamic_cast"     , DYNAMIC_CAST     , LANGUAGE_CXX },
+        { "reinterpret_cast" , REINTERPRET_CAST , LANGUAGE_CXX },
+        { "static_cast"      , STATIC_CAST      , LANGUAGE_CXX },
 
         // Add alternative operators
         { "and"           , OPERATORS        , LANGUAGE_CXX }, 
@@ -590,7 +599,9 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "async"         , ASYNC         , LANGUAGE_CSHARP }, 
         { "this"          , THIS          , LANGUAGE_CSHARP }, 
         { "yield"         , YIELD         , LANGUAGE_CSHARP }, 
-        { "params"        , PARAMS        , LANGUAGE_CSHARP }, 
+        { "params"        , PARAMS        , LANGUAGE_CSHARP },
+        { "null"          , NULLLITERAL   , LANGUAGE_CSHARP },
+        { "typeof"        , TYPEOF        , LANGUAGE_CSHARP },
 
         // C# linq
         { "from"          , FROM          , LANGUAGE_CSHARP }, 

@@ -229,6 +229,10 @@ public:
     void processStaticAssert(const antlr::RefToken& token);
     void processClassInterface(const antlr::RefToken& token);
     void processClassImplementation(const antlr::RefToken& token);
+    void processTemplateArgumentList(const antlr::RefToken& token);
+    void processCast(const antlr::RefToken& token);
+    void processEnumClass(const antlr::RefToken& token);
+    void processOperatorFunction(const antlr::RefToken& token);
 
     /** method pointer for token processing dispatch */
     typedef void (srcMLOutput::*PROCESS_PTR)(const antlr::RefToken & );
