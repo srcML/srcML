@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="preprocessor">
+<if>if<condition>()</condition><then> <block>{}</block></then>
+<else>else <block>{}</block></else>
+<cpp:error>#<cpp:directive>elseif</cpp:directive></cpp:error>
+<else>else <block>{}</block></else>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<else>else <block>{}</block></else></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>

@@ -41,64 +41,64 @@ grammar {
         attribute options { text }?,
         (MacroList | text)*,
         (AnyCPPOrComment |
-        IfStmt |
+        If |
         ASM |
         Assert |
         Block |
         Break |
-        CaseStmt |
+        Case |
         CatchBlock |
-        CheckedStmt |
+        Checked |
         Interface |
         Class |
         ClassDecl |
         ConstructorQualified |
-        ContinueStmt |
+        Continue |
         DefaultLabel |
         DeclStmt |
         DestructorQualified |
         Destructor |
         DestructorDecl |
-        DoStmt |
+        Do |
         EmptyStmt |
-        ElseStmt |
+        Else |
         Elseif |
         Enum |
         ExprStmt |
         ExternBlock |
         FinallyBlock |
-        FixedStmt |
-        ForStmt |
-        ForEachStmt |
+        Fixed |
+        For |
+        ForEach |
         Function |
         FunctionDecl |
         GenericSelection |
-        GotoStmt |
-        ImportStmt |
-        LabelStmt |
+        Goto |
+        Import |
+        Label |
         LINQ |
-        LockStmt |
+        Lock |
         Namespace |
         Package |
         Private |
         Protected |
         Public |
-        ReturnStmt |
+        Return |
         StaticInitBlock |
         Struct |
         StructDecl |
-        SwitchStmt |
-        SynchronizedStmt |
-        ThrowStmt |
+        Switch |
+        Synchronized |
+        Throw |
         Try |
         Typedef |
-        UncheckedStmt |
+        UnChecked |
         Union |
         UnionDecl |
-        UnsafeStmt |
+        Unsafe |
         UsingStmt |
         UsingDirective |
-        WhileStmt |
+        While |
         Attribute |
         ConstructorDecl |
         Template |
@@ -108,6 +108,7 @@ grammar {
         text)*
     }
 
+    # utilities 
     AnyCPPOrComment = (
         CPPDefineNamed |
         CPPDefineNoName |
@@ -126,108 +127,238 @@ grammar {
         CPPUndef |
         CPPWarning |
         Escape |
+        srcMLPreprocessorErrorCase |
         Macro |
-        Comment)
+        CommentOrText)
 
+    CommentOrText = (Comment | text | Escape)    
     
-    # CPP namespace related elements
+    srcMLPreprocessorErrorCase = element cpp:error {
+        text
+    }
 
-    # define
+    Comment = element comment {
+        attribute type { "line" | string "block" },
+        attribute format {"doxygen" | "javadoc" }?,
+        text
+    }
+
+
+
+
+
+    # Preprocessor elements
+
+    # cpp:define
     CPPDefineNamed = element cpp:define {
         text,
-        CPPDirective,
+        element cpp:directive { "define" },
         CommentOrText*,
-        CPPMacro,
+        CPPMacroAny,
         CommentOrText*,
         (CPPValue | CPPNumber)?
     }
 
     CPPDefineNoName = element cpp:define {
         text,
-        CPPDirective
+        element cpp:directive { "define" }
     }
 
-    CPPMacro = element cpp:macro {
-        AnyContent*
+    # cpp:macro
+    CPPMacroAny = (CPPMacroFunctionCall | CPPMacroSimpleName)
+
+    CPPMacroSimpleName = element cpp:macro {
+        SimpleName
     }
 
-    CommentOrText = (Comment | text | Escape)
+    CPPMacroFunctionCall = element cpp:macro {
+        SimpleName,
+        MacroParameterList
+    }
 
+
+    # cpp:value
     CPPValue = element cpp:value { CommentOrText* }
 
+    
+    # cpp:number
     CPPNumber = element cpp:number { CommentOrText* }
 
+
+    # cpp:directive
     CPPDirective = element cpp:directive {
-        "define"
+        "define" |
+        "if" |
+        "elif"
     }
+
     
+    # cpp:if
     CPPIf = element cpp:if {
-        AnyContent*
+        text,
+        element cpp:directive { "if" },
+        CommentOrText*,
+        Expr?
     }
 
+
+    # cpp:elif
     CPPElIf = element cpp:elif {
-        AnyContent*
+        text,
+        element cpp:directive { "elif" },
+        CommentOrText*,
+        Expr?
     }
 
+
+    # cpp:else
     CPPElse = element cpp:else {
+        text,
+        element cpp:directive { "else" },
         AnyContent*
     }
 
+
+    # cpp:endif
     CPPEndIf = element cpp:endif {
-        AnyContent*
+        text,
+        element cpp:directive { "endif" }
     }
 
+
+    # cpp:endregion
     CPPEndRegion = element cpp:endregion {
-        AnyContent*
+        text,
+        element cpp:directive { "endregion" }
     }
 
+
+    # cpp:error
     CPPError = element cpp:error {
+        text,
+        element cpp:directive { "error" },
         AnyContent*
     }
 
+
+    # cpp:ifdef
     CPPIfDef = element cpp:ifdef {
-        AnyContent*
+        text,
+        element cpp:directive { "ifdef" },
+        CommentOrText*,
+        SimpleName?
     }
 
+
+    # cpp:ifndef
     CPPIfNDef = element cpp:ifndef {
-        AnyContent*
+        text,
+        element cpp:directive { "ifndef" },
+        CommentOrText,
+        SimpleName?
     }
 
+
+    # cpp:include
     CPPInclude = element cpp:include {
-        AnyContent*
+        text,
+        element cpp:directive { "include" },
+        CommentOrText,
+        CPPFile?
     }
 
-    CPPLine = element cpp:line {
-        AnyContent*
+
+    # cpp:file
+    CPPFile = element cpp:file {
+        CommentOrText
     }
 
+
+    # cpp:line
+    CPPLine = (CPPLineCAndCPP | CPPLineCS)
+
+    CPPLineCAndCPP = element cpp:line {
+        text,
+        element cpp:directive { "line" },
+        CommentOrText*,
+        CPPNumber?,
+        CommentOrText*,
+        CPPFile?
+    }
+
+    CPPLineCS = element cpp:line {
+        text,
+        element cpp:directive { "line" },
+        CommentOrText*,
+        SimpleName
+    }
+
+    # cpp:pragma
     CPPPragma = element cpp:pragma {
-        AnyContent*
-    }
-
-    CPPRegion = element cpp:region {
-        AnyContent*
-    }
-
-    CPPUndef = element cpp:undef {
-        AnyContent*
-    }
-
-    CPPWarning = element cpp:warning {
-        AnyContent*
-    }
-
-    # comment
-    Comment = element comment {
-        attribute type { "line" | string "block" },
-        attribute format {"doxygen" | "javadoc" }?,
-        text
+        text,
+        element cpp:directive { "pragma" },
+        (SimpleName | CPPLiteral | CommentOrText)*
     }
     
-    IfStmt = element if {
-        AnyContent*
+    # cpp:literal
+    CPPLiteral = element cpp:literal { text }
+
+
+    # cpp:region
+    CPPRegion = element cpp:region {
+        text,
+        element cpp:directive { "region" },
+        (SimpleName | CPPLiteral | CommentOrText)*
     }
 
+
+    # cpp:endif
+    CPPUndef = element cpp:undef {
+        text,
+        element cpp:directive { "undef" },
+        CommentOrText*,
+        SimpleName?
+    }
+
+
+    # cpp:warning
+    CPPWarning = element cpp:warning {
+        text,
+        element cpp:directive { "warning" },
+        (SimpleName | CPPLiteral | CommentOrText)*
+    }
+
+
+    # src namespace elements    
+    If = (IfPartial | IfTypical)
+
+    IfTypical = element if {
+        AnyCPPOrComment*,
+        Condition?,
+        AnyCPPOrComment*,
+        Then?,
+        (Elseif | AnyCPPOrComment)*,
+        (Else |  AnyCPPOrComment)*
+    }
+
+    IfPartial = element if {
+        AnyCPPOrComment*, EmptyStmt, AnyCPPOrComment*
+    }
+
+    Condition = element condition {
+        AnyCPPOrComment*,
+        (Expr | Decl)?,
+        AnyCPPOrComment*
+    }
+    
+    Then = element then {
+        AnyCPPOrComment*,
+        AnyBlock,
+        AnyCPPOrComment*
+    }
+
+
+    
     ASM = element asm {
         AnyContent*
     }
@@ -239,17 +370,23 @@ grammar {
     }
 
     # Block and pseudo block
+    AnyBlock = (PseudoBlock | Block)
+
     Block = element block {
-        attribute type { "pseudo" }?,
         AnyContent*
     }
+
+    PseudoBlock = element block {
+        attribute type { "pseudo" },
+        AnyContent*
+    } 
 
     # include C#, java and C breaks
     Break = element break {
         AnyContent*
     }
 
-    CaseStmt = element case {
+    Case = element case {
         AnyContent*
     }
 
@@ -260,7 +397,7 @@ grammar {
     }
 
     # this doesn't include the Checked used like a call.
-    CheckedStmt = element checked {
+    Checked = element checked {
         AnyContent*
     }
 
@@ -290,7 +427,7 @@ grammar {
     }
 
     # This includes Javas goto-continue stmt
-    ContinueStmt = element continue {
+    Continue = element continue {
         AnyContent*
     }
 
@@ -314,11 +451,11 @@ grammar {
         AnyContent*
     }
 
-    DoStmt = element do {
+    Do = element do {
         AnyContent*
     }
 
-    ElseStmt = element else {
+    Else = element else {
         AnyContent*
     }
 
@@ -347,15 +484,15 @@ grammar {
         AnyContent*
     }
 
-    FixedStmt = element fixed {
+    Fixed = element fixed {
         AnyContent*
     }
 
-    ForStmt = element for {
+    For = element for {
         AnyContent*
     }
 
-    ForEachStmt = element foreach {
+    ForEach = element foreach {
         AnyContent*
     }
 
@@ -373,15 +510,15 @@ grammar {
         AnyContent*
     }
 
-    GotoStmt = element goto {
+    Goto = element goto {
         AnyContent*
     }
 
-    ImportStmt = element import {
+    Import = element import {
         AnyContent*
     }
 
-    LabelStmt = element label {
+    Label = element label {
         AnyContent*
     }
     
@@ -389,7 +526,7 @@ grammar {
         AnyContent*
     }   
 
-    LockStmt = element lock {
+    Lock = element lock {
         AnyContent*
     }
 
@@ -413,7 +550,7 @@ grammar {
         AnyContent*
     }
 
-    ReturnStmt = element return {
+    Return = element return {
         AnyContent*
     }
 
@@ -429,15 +566,15 @@ grammar {
         AnyContent*
     }
 
-    SwitchStmt = element switch {
+    Switch = element switch {
         AnyContent*
     }
 
-    SynchronizedStmt = element synchronized {
+    Synchronized = element synchronized {
         AnyContent*
     }
 
-    ThrowStmt = element throw {
+    Throw = element throw {
         AnyContent*
     }
 
@@ -450,7 +587,7 @@ grammar {
     }
 
     # This doesn't include the function call like syntax.
-    UncheckedStmt = element unchecked {
+    UnChecked = element unchecked {
         AnyContent*
     }
 
@@ -462,7 +599,7 @@ grammar {
         AnyContent*
     }
 
-    UnsafeStmt = element unsafe {
+    Unsafe = element unsafe {
         AnyContent*
     }
 
@@ -474,7 +611,7 @@ grammar {
         AnyContent*
     }
 
-    WhileStmt = element while {
+    While = element while {
         AnyContent*
     }
 
@@ -505,5 +642,35 @@ grammar {
 
     Dynamic = element dynamic {
         AnyContent*
+    }
+
+    # src:name 
+    SimpleName = element name { text }
+
+    # parameter_list
+    MacroParameterList = element parameter_list {
+        text,
+        (MacroParameter, (text, MacroParameter)*)?,
+        text
+    }
+
+    # src:param
+    MacroParameter = element param {
+        AnyContent*
+    }
+
+    # src:expr
+    Expr = element expr {
+        AnyContent*
+    }
+
+    # src:decl
+    Decl = element decl {
+        AnyContent*
+    }
+
+    Literal = element literal {
+        attribute type { "number" | "string" | "null" | "boolean" | "char" }?,
+        text
     }
 } # End Grammar
