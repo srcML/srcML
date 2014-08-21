@@ -329,10 +329,12 @@ CompilationUnitContents = (
                     </Attr>
                 </Attributes>
             </Case>
-            <Refs>
+            <!-- <Refs>
                 <See url="SOMEURI" title="Some title" />
-            </Refs>
+            </Refs> -->
         </Element>
+
+
 
         <!-- CPP Elements -->
         <Element ns="cpp" elem="define" >
@@ -345,6 +347,7 @@ There are two ways that a # define is used:1) used to define a single value
                 <Subelements>
                     <Subelement ns="cpp" name="directive" />
                     <Subelement ns="src" name="name" />
+                    <Subelement ns="cpp" name="value" />
                 </Subelements>
                 <Languages>
                     <Lang language="C"/>
@@ -355,16 +358,17 @@ There are two ways that a # define is used:1) used to define a single value
 element cpp:define {
     "#",
     element cpp:directive { "define" },
-    element cpp:macro { element src:name { text } },
-    element cpp:value { text }?
+    CPPNameMacro,
+    CPPValue?
 }
 
                 </Grammar>
             </Case>
-            <Case title="function-style definition">
+            <Case title="function like definition">
                 <Subelements>
                     <Subelement ns="cpp" name="directive" />
                     <Subelement ns="src" name="name" />
+                    <Subelement ns="cpp" name="value" />
                 </Subelements>
                 <Languages>
                     <Lang language="C"/>
@@ -375,27 +379,97 @@ element cpp:define {
 element cpp:define {
     "#",
     element cpp:directive { "define" },
-    element cpp:macro {
-        element name { text },
-        element parameter_list {
-            "(",
-            (MacroParam, (",", MacroParam)*)
-            ")"
-    },
-    element cpp:value { text }?
+    CPPFunctionNameMacro
 }
+
+                </Grammar>
+            </Case>
+        </Element>
+
+        <Element ns="cpp" elem="value">
+            <Desc>This represents the value of a preprocessor define. Unlike other terminal
+elements this element can have comments within itself.</Desc>
+            <TerminalCase title="value">
+                <Grammar>
+CPPValue = element cpp:value { text } 
+                </Grammar>
+                <Languages>
+                    <Lang language="C"/>
+                    <Lang language="C++"/>
+                </Languages>
+            </TerminalCase>
+        </Element>
+
+
+        <Element ns="cpp" elem="macro">
+            <Desc>A macro represents a preprocessor defined name. It has two uses cases 1) to define a simple macro name and 2) to define a functions name.</Desc>
+            <Case title="macro name">
+                <Grammar>
+CPPNameMacro = element cpp:macro { SimpleName }
+                </Grammar>
+                <Languages>
+                    <Lang language="C"/>
+                    <Lang language="C++"/>
+                    <Lang language="C#"/>
+                </Languages>
+                <Subelements>
+                    <Subelement ns="src" name="name" />
+                </Subelements>
+            </Case>
+            <Case title="function like macro name">
+                <Grammar>
+CPPFunctionNameMacro =  element cpp:macro {
+    SimpleName,
+    element parameter_list {
+        "(", (MacroParam, (",", MacroParam)*)?, ")"
+    },
+    CPPValue?
+}
+
 MacroParam = element param {
     element type {
-        (element name{ text } | element { modifier })
+        (SimpleName | element modifier { "..." })
     }
 }
                 </Grammar>
+                <Languages>
+                    <Lang language="C"/>
+                    <Lang language="C++"/>
+                    <Lang language="C#"/>
+                </Languages>
+                <Subelements>
+                    <Subelement ns="src" name="name" />
+                    <Subelement ns="src" name="parameter_list" />
+                </Subelements>
             </Case>
 
-            <Refs>
-                <See url="SOMEURI" title="Some title" />
-            </Refs>
         </Element>
+
+
+
+        <Element ns="src" elem="name">
+            <Desc>A name can represent a simple name or a complex name.</Desc>
+            <TerminalCase title="single name">
+                <Desc>Single identifier</Desc>
+                <Values>
+                    <Value lang="C,C++,C#,Java">int</Value>
+                    <Value lang="C,C++,C#,Java">i</Value>
+                </Values>
+                <Grammar>
+SimpleName = element name { text }
+                </Grammar>
+                <Languages>
+                    <Lang language="C"/>
+                    <Lang language="C++"/>
+                    <Lang language="Java"/>
+                    <Lang language="C#"/>
+                </Languages>
+            </TerminalCase>
+            <!-- <Refs>
+                <See url="SOMEURI" title="Some title" />
+            </Refs> -->
+        </Element>
+    </Elements>
 
         <!--
         <cpp:directive>
@@ -547,28 +621,4 @@ MacroParam = element param {
         <src:while>
 -->
 
-
-        <Element ns="src" elem="name">
-            <Desc>A name can represent a single name or a complex name.</Desc>
-            <TerminalCase title="single name">
-                <Desc>Single identifier</Desc>
-                <Values>
-                    <Value lang="C,C++,C#,Java">int</Value>
-                    <Value lang="C,C++,C#,Java">i</Value>
-                </Values>
-                <Grammar>
-SingleName = element name { text }
-                </Grammar>
-                <Languages>
-                    <Lang language="C"/>
-                    <Lang language="C++"/>
-                    <Lang language="Java"/>
-                    <Lang language="C#"/>
-                </Languages>
-            </TerminalCase>
-            <Refs>
-                <See url="SOMEURI" title="Some title" />
-            </Refs>
-        </Element>
-    </Elements>
 </TagDoc>
