@@ -336,9 +336,32 @@ CompilationUnitContents = (
 
         <!-- CPP Elements -->
         <Element ns="cpp" elem="define" >
-            <Desc>Description of #define</Desc>
-            <Case title="compilation unit">
+            <Desc>
+There are two ways that a # define is used:1) used to define a single value
+2) used with function like syntax.
+</Desc>
+            <Case title="value definition">
                 <Desc>Used to define a function like macro</Desc>
+                <Subelements>
+                    <Subelement ns="cpp" name="directive" />
+                    <Subelement ns="src" name="name" />
+                </Subelements>
+                <Languages>
+                    <Lang language="C"/>
+                    <Lang language="C++"/>
+                    <Lang language="C#"/>
+                </Languages>
+                <Grammar>
+element cpp:define {
+    "#",
+    element cpp:directive { "define" },
+    element cpp:macro { element src:name { text } },
+    element cpp:value { text }?
+}
+
+                </Grammar>
+            </Case>
+            <Case title="function-style definition">
                 <Subelements>
                     <Subelement ns="cpp" name="directive" />
                     <Subelement ns="src" name="name" />
@@ -348,17 +371,27 @@ CompilationUnitContents = (
                     <Lang language="C++"/>
                 </Languages>
                 <Grammar>
-namespace cpp = "http://www.srcml.org/cpp"
-CPPDefine = element cpp:define {
-    
-}
 
-<!-- <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>WIDTH</name></cpp:macro> <cpp:value>80</cpp:value></cpp:define>
-<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>LENGTH</name></cpp:macro> <cpp:value>( WIDTH + 10 )</cpp:value></cpp:define>
-<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>multiply</name><parameter_list>( <param><type><name>f1</name></type></param>, <param><type><name>f2</name></type></param> )</parameter_list></cpp:macro> <cpp:value>( f1 * f2 )</cpp:value></cpp:define>
--->
+element cpp:define {
+    "#",
+    element cpp:directive { "define" },
+    element cpp:macro {
+        element name { text },
+        element parameter_list {
+            "(",
+            (MacroParam, (",", MacroParam)*)
+            ")"
+    },
+    element cpp:value { text }?
+}
+MacroParam = element param {
+    element type {
+        (element name{ text } | element { modifier })
+    }
+}
                 </Grammar>
             </Case>
+
             <Refs>
                 <See url="SOMEURI" title="Some title" />
             </Refs>

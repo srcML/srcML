@@ -538,8 +538,8 @@ def loadTagDoc(dirPath, fileName, forceBuild = False):
         for useCase in tagInfo.useCases:
             if not isinstance(useCase, TerminalUseCase):
                 for subElem in useCase.subelements:
-                    if not subElem.comparableTagName in subElementNameSet:
-                        subElementNameSet.add(subElem.comparableTagName)
+                    if not subElem.comparableTagName() in subElementNameSet:
+                        subElementNameSet.add(subElem.comparableTagName())
                         tagInfo.subelements.append(subElem)
             for lang in useCase.languages:
                 if not lang in languageSet:
@@ -561,7 +561,10 @@ def loadTagDoc(dirPath, fileName, forceBuild = False):
         for tagInfo in elemList:
             for parentElement in tagInfo.subelements:
                 if parentElement.comparableTagName() in elementLookupDictionary:
-                    elementLookupDictionary[parentElement.comparableTagName()].parentElements.append(parentElement)
+                    # tempRef = TagRef()
+                    # tempRef.ns = tagInfo.ns
+                    # tempRef.tag = tagInfo.tag
+                    elementLookupDictionary[parentElement.comparableTagName()].parentElements.append(tagInfo)
                 else:
                     print "Didn't locate entry for element: {0}".format(parentElement.comparableTagName())
 
