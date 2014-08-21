@@ -38,13 +38,15 @@ for xmlFile in xmlFiles:
     if (index % 1000) == 0:
         print "Processed", index
     try:
-        if grammar(ET.parse(xmlFile)):
+        doc = ET.parse(xmlFile)
+        if grammar(doc):
             out.write("Passed: {0}\n".format(xmlFile))
             passCount += 1
         else:
             out.write("Failed: {0}\n".format(xmlFile))
             failCount += 1
             failedFileList.append(xmlFile)
+            grammar.assertValid(doc)
     except Exception as e:
         print "Caught Exception: ", e
         out.write("Failed (Exception): {0}\n".format(xmlFile))
@@ -69,14 +71,21 @@ for xmlFile in xmlFiles:
             out.write("Passed: {0}\n".format(xmlFile))
             passCount += 1
         else:
-
             troubleElements = doc.xpath("/src:unit/src:unit/child::*|/src:unit/child::*", namespaces={"src": "http://www.sdml.info/srcML/src"})
             out.write("Failed: {0}\n".format(xmlFile))
             failCount += 1
             troubleElemFormat = ", ".join(set([("<" + (x.prefix + ":" if x.prefix != None else "") + ET.QName(x).localname + ">") for x in troubleElements]))
             failedFileList.append(xmlFile +"  " + troubleElemFormat)
+            try:
+                grammar.assertValid(doc)
+            except Exception as e:
+                print "Validation Error Info. File: {0}".format(xmlFile)
+                print "    ", e.message
+                # print "    Arguments: ", e.error_log
+
     except Exception as e:
-        print "Caught Exception: ", e
+        print "Caught Exception: {0} in File: {1}".format(e, xmlFile)
+        
         out.write("Failed (Exception): {0}\n".format(xmlFile))
         faildToLoadCount += 1
     index += 1
@@ -105,6 +114,7 @@ def processSourceCode(directory, globExpr, srcMLLanguage):
                 out.write("Failed: {0}\n".format(srcFile))
                 failCount += 1
                 failedFileList.append(srcFile)
+                grammar.assertValid(ET.ElementTree(ET.fromstringlist(srcMLProc.stdout.readlines())))
         except Exception as e:
             print "Caught Exception: ", e
             out.write("Failed (Exception): {0}\n".format(srcFile))
