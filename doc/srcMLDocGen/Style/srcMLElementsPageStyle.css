@@ -1,5 +1,8 @@
-p.pageDesc {
-    margin: 1em 3em 3em 3em;
+.descDisplay {
+    margin: 0 auto;
+    width:95%;
+    margin-bottom:1.5em;
+    margin-top:1.5em;
 }
 
 .displayedDocDefinition .description{

@@ -1,5 +1,19 @@
 <TagDoc title="srcML Element Documenation" fileName="srcMLElements.html">
-    <Desc>Page Description</Desc>
+    <Desc>
+<p clas="description">The following grammar documentation is presented using a notation similar to RELAX NG is used.
+We have extended RELAX NG in order to present our grammar in a simple way. The extensions
+used allow for the specification of mixed content among child elements, instead of 
+using <code>text</code>, where specific values of mixed content are known.  This
+includes things like keywords and some punctuators. Because of this the grammar
+provided here can not be used to validate the XML representation of srcML.</p>
+
+<p clas="description">The presented grammar doesn't explicitly list all places where comments,
+preprocessor directives and macros can be used. This is because, both can occur almost
+anywhere. When reading the grammar make the assumption that either a comments,
+preprocessor directives and  macros can be interleaved amongst the grammar. 
+</p>
+
+</Desc>
 
     <RelaxNGHelp title="RELAX NG Quick Reference">
         <Desc>
