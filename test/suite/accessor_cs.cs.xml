@@ -14,65 +14,65 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+<property><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
     <function><name>add</name> <block>{}</block></function>
-}</block></decl></decl_stmt>
+}</block></property>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+<property><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
     <function><name>remove</name> <block>{}</block></function>
-}</block></decl></decl_stmt>
+}</block></property>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+<property><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
     <function><name>get</name> <block>{}</block></function>
-}</block></decl></decl_stmt>
+}</block></property>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+<property><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
     <function><name>set</name> <block>{}</block></function>
-}</block></decl></decl_stmt>
+}</block></property>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>public</specifier> <specifier>abstract</specifier> <name>double</name></type> <name>Area</name> 
+<property><type><specifier>public</specifier> <specifier>abstract</specifier> <name>double</name></type> <name>Area</name> 
   <block>{
      <function_decl><name>get</name>;</function_decl>
      <function_decl><name>set</name>;</function_decl>
-  }</block></decl></decl_stmt>
+  }</block></property>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>public</specifier> <specifier>abstract</specifier> <name>double</name></type> <name>Area</name> 
+<property><type><specifier>public</specifier> <specifier>abstract</specifier> <name>double</name></type> <name>Area</name> 
   <block>{
      <function_decl><name>get</name>;</function_decl>
      <function_decl><specifier>private</specifier> <name>set</name>;</function_decl>
-  }</block></decl></decl_stmt>
+  }</block></property>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>public</specifier> <specifier>abstract</specifier> <name>double</name></type> <name>Area</name> 
+<property><type><specifier>public</specifier> <specifier>abstract</specifier> <name>double</name></type> <name>Area</name> 
   <block>{
      <function_decl><specifier>private</specifier> <name>get</name>;</function_decl>
      <function_decl><specifier>private</specifier> <name>set</name>;</function_decl>
-  }</block></decl></decl_stmt>
+  }</block></property>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+<property><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
     <function><name>get</name> <block>{}</block></function>
     <function><specifier>private</specifier> <name>set</name> <block>{}</block></function>
-}</block></decl></decl_stmt>
+}</block></property>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+<property><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
     <function><specifier>private</specifier> <name>get</name> <block>{}</block></function>
     <function><specifier>private</specifier> <name>set</name> <block>{}</block></function>
-}</block></decl></decl_stmt>
+}</block></property>
 </unit>
 
 
