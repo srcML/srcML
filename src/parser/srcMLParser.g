@@ -3845,8 +3845,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             set_bool[is_qmark, (is_qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
 
-            set_bool[is_event, is_event || LA(1) == EVENT]
-
             set_int[posin, LA(1) == IN ? posin = type_count : posin]
 
             set_bool[isoperator, isoperator || LA(1) == OPERATOR]
@@ -3971,6 +3969,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                 // always count as a name for now since is always used as a type or type modifier
                 auto_keyword[false] | 
+
+                EVENT set_bool[is_event] |
 
                 // special function name
                 MAIN set_bool[ismain, type_count == 0] |
@@ -6729,7 +6729,6 @@ event_statement[int type_count] { ENTRY_DEBUG } :
             startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
         }
-
         variable_declaration_type[type_count]
 ;
 
