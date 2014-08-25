@@ -467,6 +467,7 @@ tokens {
     SEXTERN;
 	SNAMESPACE;
 	SUSING_DIRECTIVE;
+    SUSING_STATEMENT;
 
     // C
     SATOMIC;
@@ -6259,7 +6260,7 @@ using_statement[] { ENTRY_DEBUG } :
 
         // sometimes doing something like this does not work in antlr because it looks for something like EOF instead of nothing.
         // However, this seems to work in this case possibly, becaused it is used with tokens required afterwards.
-        for_like_statement_pre[SUSING_DIRECTIVE]
+        for_like_statement_pre[SUSING_STATEMENT]
 
         USING LPAREN
 

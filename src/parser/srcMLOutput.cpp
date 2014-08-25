@@ -149,11 +149,6 @@ namespace {
     ELEMENT_MAP(SELSEIF, "elseif")
 
     ELEMENT_MAP(SWHILE_STATEMENT, "while")
-    ELEMENT_MAP(SLOCK_STATEMENT, "lock")
-    ELEMENT_MAP(SFIXED_STATEMENT, "fixed")
-    ELEMENT_MAP(SCHECKED_STATEMENT, "checked")
-    ELEMENT_MAP(SUNCHECKED_STATEMENT, "unchecked")
-    ELEMENT_MAP(SUNSAFE_STATEMENT, "unsafe")
     ELEMENT_MAP(STYPEOF, "typeof")
     ELEMENT_MAP(SDO_STATEMENT, "do")
 
@@ -270,6 +265,14 @@ namespace {
     ELEMENT_MAP(SERROR_PARSE,   "parse")
     ELEMENT_MAP(SERROR_MODE,    "mode")
 
+    // C#
+    ELEMENT_MAP(SLOCK_STATEMENT,      "lock")
+    ELEMENT_MAP(SFIXED_STATEMENT,     "fixed")
+    ELEMENT_MAP(SCHECKED_STATEMENT,   "checked")
+    ELEMENT_MAP(SUNCHECKED_STATEMENT, "unchecked")
+    ELEMENT_MAP(SUNSAFE_STATEMENT,    "unsafe")
+    ELEMENT_MAP(SUSING_STATEMENT,     "using_stmt")
+
     // Java elements
     ELEMENT_MAP(SEXTENDS,                "extends")
     ELEMENT_MAP(SIMPLEMENTS,             "implements")
@@ -284,6 +287,7 @@ namespace {
     ELEMENT_MAP(SATTRIBUTE,   "attribute")
     ELEMENT_MAP(STARGET,      "target")
 
+    // linq
     ELEMENT_MAP(SLINQ,   "linq")
     ELEMENT_MAP(SFROM, "from")
     ELEMENT_MAP(SSELECT,   "select")
