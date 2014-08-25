@@ -467,7 +467,6 @@ tokens {
     SEXTERN;
 	SNAMESPACE;
 	SUSING_DIRECTIVE;
-    SUSING_STATEMENT;
 
     // C
     SATOMIC;
@@ -552,6 +551,8 @@ tokens {
     SLOCK_STATEMENT;
     SFIXED_STATEMENT;
     STYPEOF;
+    SUSING_STATEMENT;
+    SFUNCTION_DELEGATE;
 
     // linq
     SLINQ;
@@ -6412,7 +6413,7 @@ delegate_anonymous[] { ENTRY_DEBUG } :
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ANONYMOUS);
 
             // start of the catch statement
-            startElement(SFUNCTION_LAMBDA);
+            startElement(SFUNCTION_DELEGATE);
         }
         delegate_marked
         (options { greedy = true; } : parameter_list)*

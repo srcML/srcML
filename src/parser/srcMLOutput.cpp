@@ -272,6 +272,7 @@ namespace {
     ELEMENT_MAP(SUNCHECKED_STATEMENT, "unchecked")
     ELEMENT_MAP(SUNSAFE_STATEMENT,    "unsafe")
     ELEMENT_MAP(SUSING_STATEMENT,     "using_stmt")
+    ELEMENT_MAP(SFUNCTION_DELEGATE,   "delegate")
 
     // Java elements
     ELEMENT_MAP(SEXTENDS,                "extends")
