@@ -3622,10 +3622,10 @@ comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY
 ;
 
 // mark COLON
-colon_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
+colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); LightweightElement element(this); ENTRY_DEBUG } :
         {
 
-            if(inTransparentMode(MODE_TERNARY | MODE_THEN)) {
+            if(in_ternary) {
 
                 endDownToMode(MODE_THEN);
                 flushSkip();
@@ -3641,7 +3641,7 @@ colon_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 
             }
 
-            if ((!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)) && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
                 && (!inLanguage(LANGUAGE_OBJECTIVE_C) || !inMode(MODE_INTERNAL_END_CURLY)))
                 startElement(SOPERATOR);
 
@@ -4356,9 +4356,9 @@ qmark_name[] { SingleElement element(this); ENTRY_DEBUG } :
         QMARK
 ;
 
-qmark_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
+qmark_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_CONDITION); LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)) && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR)))
                 startElement(SOPERATOR);
         }
         QMARK ({ SkipBufferSize() == 0 }? QMARK)?

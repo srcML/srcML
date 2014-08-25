@@ -58,7 +58,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> <operator>?</operator></condition><then> <expr><name>b</name></expr> </then><else><operator>:</operator> <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -66,7 +66,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name><index>[<expr><ternary><condition><expr><literal type="number">1</literal> <operator>+</operator> <literal type="number">1</literal> <operator>-</operator> <literal type="number">1</literal> <operator>*</operator> <literal type="number">1</literal> <operator>&amp;</operator> <literal type="number">1</literal> <operator>%</operator> <literal type="number">1</literal> <operator>!</operator> <literal type="number">1</literal> <operator>~</operator> <literal type="number">1</literal> <operator>&lt;</operator> <literal type="number">1</literal> <operator>&gt;</operator> <literal type="number">1</literal> <operator>&lt;=</operator> <literal type="number">1</literal> <operator>&gt;=</operator> <literal type="number">1</literal> <operator>==</operator> <literal type="number">1</literal> <operator>!=</operator> <literal type="number">1</literal> <operator>/</operator> <literal type="number">1</literal> <operator>|</operator> <literal type="number">1</literal> <operator>||</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <literal type="number">1</literal></expr> <operator>?</operator></condition><then> <expr><literal type="number">1</literal></expr> </then><else><operator>:</operator> <expr><literal type="number">1</literal></expr></else></ternary></expr>]</index></name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>[<expr><ternary><condition><expr><literal type="number">1</literal> <operator>+</operator> <literal type="number">1</literal> <operator>-</operator> <literal type="number">1</literal> <operator>*</operator> <literal type="number">1</literal> <operator>&amp;</operator> <literal type="number">1</literal> <operator>%</operator> <literal type="number">1</literal> <operator>!</operator> <literal type="number">1</literal> <operator>~</operator> <literal type="number">1</literal> <operator>&lt;</operator> <literal type="number">1</literal> <operator>&gt;</operator> <literal type="number">1</literal> <operator>&lt;=</operator> <literal type="number">1</literal> <operator>&gt;=</operator> <literal type="number">1</literal> <operator>==</operator> <literal type="number">1</literal> <operator>!=</operator> <literal type="number">1</literal> <operator>/</operator> <literal type="number">1</literal> <operator>|</operator> <literal type="number">1</literal> <operator>||</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <literal type="number">1</literal></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">1</literal></expr></else></ternary></expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
