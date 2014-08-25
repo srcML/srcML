@@ -57,7 +57,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><attribute>[<target>event</target>: <expr><name>SomeAttr</name></expr>]</attribute> <specifier>event</specifier> <name>void</name></type> <name>f</name></decl>;</decl_stmt>
+<event><type><attribute>[<target>event</target>: <expr><name>SomeAttr</name></expr>]</attribute>event <name>void</name></type> <name>f</name>;</event>
 </unit>
 
 <unit>
