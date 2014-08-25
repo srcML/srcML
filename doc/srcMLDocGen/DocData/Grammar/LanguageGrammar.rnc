@@ -1,0 +1,10 @@
+grammar {
+    start = Grammar
+
+    Grammar = element Grammar {
+    
+    }
+    TagRule = element TagRule {
+
+    }
+}

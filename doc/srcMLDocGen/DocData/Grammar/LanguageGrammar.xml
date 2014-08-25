@@ -1,0 +1,52 @@
+<Grammar>
+    <TagRule name="archiveUnit">
+        <Tag ns="src" elem="unit">
+            <Attrs>
+                <Attr rule="dirAttr" isOptional="true"/>
+                <Attr rule="filenameAttr" isOptional="true" />
+                <Attr rule="languageAttr" isOptional="true" />
+                <Attr rule="hashAttr" isOptional="true" />
+                <Attr rule="optionsAttr" isOptional="true" />
+            </Attrs>
+        </Tag>
+        <Def>
+            <Ref name="rule"/>
+        </Def>
+    </TagRule>
+
+    <AttrRule name="dirAttr">
+        <Attr name="dir" />
+        <Def>
+            <Ref name="text"/>
+        </Def>
+    </AttrRule>
+    <!--
+        <Literal value=""/>
+        <Ref name=""/>
+        OR
+        <Ref name="">
+            <Args>
+                <Arg value="Value"/>
+            </Args>
+        </Ref>
+
+        <Text/>
+
+        <ParamUse name="" />
+
+        Names for grammar elements:
+        Params
+            Param
+        Args
+            Arg
+        Optional
+        ZeroOrMore
+        OneOrMore
+        Choice
+        Ref
+            @name
+        Text
+        Literal
+        Tag ? Maybe?! Just not sure how!
+    -->
+</Grammar>

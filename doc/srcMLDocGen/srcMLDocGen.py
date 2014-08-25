@@ -115,6 +115,8 @@ def writeAllTagNames():
 
 DocConfigFileName = "DocConfig.xml"
 TagDocFileName = "TagDoc.xml"
+grammarFile = "LanguageGrammar.xml"
+languageGrammar = None
 pageLinks = []
 
 if __name__ == "__main__":
@@ -150,6 +152,17 @@ if __name__ == "__main__":
                 print "Beginning HTML generation"
                 genElementsPage(tagDoc)
                 print "HTML Generation Complete"
+            except Exception as e:
+                print "Failed with exception: ", traceback.format_exc(e)
+
+        if grammarFile in files:
+            print "-" * 80
+            print "Located a Language Grammar Document (LanguageGrammar.xml) in", root
+            try:
+                languageGrammar = loadGrammar(os.path.join(root, grammarFile))
+                # print "Beginning HTML generation"
+                # genElementsPage(tagDoc)
+                # print "HTML Generation Complete"
             except Exception as e:
                 print "Failed with exception: ", traceback.format_exc(e)
 
