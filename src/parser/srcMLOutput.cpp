@@ -164,20 +164,21 @@ namespace {
     ELEMENT_MAP(SFOR_INCREMENT, "incr")
 
     // functions
-    ELEMENT_MAP(SFUNCTION_DEFINITION,  "function")
-    ELEMENT_MAP(SFUNCTION_DECLARATION, "function_decl")
-    ELEMENT_MAP(SFUNCTION_LAMBDA,      "lambda")
-    ELEMENT_MAP(SFUNCTION_SPECIFIER,   "specifier")
-    ELEMENT_MAP(SRETURN_STATEMENT,     "return")
-    ELEMENT_MAP(SFUNCTION_CALL,        "call")
-    ELEMENT_MAP(SSIZEOF_CALL,          "sizeof")
-    ELEMENT_MAP(SPARAMETER_LIST,       "parameter_list")
-    ELEMENT_MAP(SPARAMETER,            "param")
-    ELEMENT_MAP(SKRPARAMETER_LIST,     "krparameter_list")
-    ELEMENT_MAP(SKRPARAMETER,          "krparam")
-    ELEMENT_MAP(SARGUMENT_LIST,        "argument_list")
-    ELEMENT_MAP(SARGUMENT,             "argument")
-    ELEMENT_MAP(SLAMBDA_CAPTURE,       "capture")
+    ELEMENT_MAP(SFUNCTION_DEFINITION,   "function")
+    ELEMENT_MAP(SFUNCTION_DECLARATION,  "function_decl")
+    ELEMENT_MAP(SFUNCTION_LAMBDA,       "lambda")
+    ELEMENT_MAP(SFUNCTION_SPECIFIER,    "specifier")
+    ELEMENT_MAP(SRETURN_STATEMENT,      "return")
+    ELEMENT_MAP(SFUNCTION_CALL,         "call")
+    ELEMENT_MAP(SSIZEOF_CALL,           "sizeof")
+    ELEMENT_MAP(SPARAMETER_LIST,        "parameter_list")
+    ELEMENT_MAP(SPARAMETER,             "param")
+    ELEMENT_MAP(SKRPARAMETER_LIST,      "krparameter_list")
+    ELEMENT_MAP(SKRPARAMETER,           "krparam")
+    ELEMENT_MAP(SARGUMENT_LIST,         "argument_list")
+    ELEMENT_MAP(SARGUMENT,              "argument")
+    ELEMENT_MAP(SLAMBDA_CAPTURE,        "capture")
+    ELEMENT_MAP(SPSEUDO_PARAMETER_LIST, "parameter_list")
 
     // struct, union
     ELEMENT_MAP(SSTRUCT, "struct")
@@ -1464,6 +1465,18 @@ void srcMLOutput::processEnumClass(const antlr::RefToken& token) {
 void srcMLOutput::processOperatorFunction(const antlr::RefToken& token) {
 
     processOptional(token, "type", "operator");
+
+}
+
+/**
+ * processPseudoParameterList
+ * @param token token to output as pseudo parameter list
+ *
+ * Callback to process/output token as pseudo parameter list.
+ */
+void srcMLOutput::processPseudoParameterList(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "pseudo");
 
 }
 

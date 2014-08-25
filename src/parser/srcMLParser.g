@@ -422,6 +422,7 @@ tokens {
 	SKRPARAMETER;
 	SARGUMENT_LIST;
 	SARGUMENT;
+    SPSEUDO_PARAMETER_LIST;
 
     // class, struct, union
 	SCLASS;
@@ -1449,6 +1450,7 @@ lambda_single_parameter { CompleteElement element(this); ENTRY_DEBUG } :
 
             startNewMode(MODE_LOCAL);
 
+            startElement(SPSEUDO_PARAMETER_LIST);
             startElement(SPARAMETER);
             startElement(SDECLARATION);
         }

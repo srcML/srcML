@@ -2,15 +2,15 @@
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="lambda" filename="lambda_java">
 
 <unit>
-<expr_stmt><expr><lambda><param><decl><name>a</name></decl></param> <operator>-&gt;</operator> <block type="pseudo"><expr><name>b</name></expr></block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><parameter_list type="pseudo"><param><decl><name>a</name></decl></param></parameter_list> <operator>-&gt;</operator> <block type="pseudo"><expr><name>b</name></expr></block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lambda><param><decl><name>a</name></decl></param> <operator>-&gt;</operator> <block type="pseudo"><expr><name>b</name> <operator>+</operator> <call><name>c</name><argument_list>()</argument_list></call></expr></block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><parameter_list type="pseudo"><param><decl><name>a</name></decl></param></parameter_list> <operator>-&gt;</operator> <block type="pseudo"><expr><name>b</name> <operator>+</operator> <call><name>c</name><argument_list>()</argument_list></call></expr></block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lambda><param><decl><name>a</name></decl></param> <operator>-&gt;</operator> <block>{}</block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><parameter_list type="pseudo"><param><decl><name>a</name></decl></param></parameter_list> <operator>-&gt;</operator> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit>
