@@ -1461,7 +1461,7 @@ lambda_single_parameter { CompleteElement element(this); ENTRY_DEBUG } :
 // lambda character
 lambda_java[] { ENTRY_DEBUG } :
         
-    lambda_marked_java
+    TRETURN
 
     {
 
@@ -1469,16 +1469,6 @@ lambda_java[] { ENTRY_DEBUG } :
             startElement(SPSEUDO_BLOCK);
 
     }
-
-;
-
-// lambda character
-lambda_marked_java[] { LightweightElement element(this); ENTRY_DEBUG } :
-        {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
-                startElement(SOPERATOR);
-        }
-        TRETURN
 
 ;
 
@@ -6435,7 +6425,7 @@ delegate_marked[] { SingleElement element(this); ENTRY_DEBUG } :
 
 lambda_csharp[] { ENTRY_DEBUG } :
 
-    lambda_marked
+    LAMBDA
 
     {
 
@@ -6445,16 +6435,6 @@ lambda_csharp[] { ENTRY_DEBUG } :
             startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
 
     }
-
-;
-
-// lambda character
-lambda_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
-        {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
-                startElement(SOPERATOR);
-        }
-        LAMBDA
 
 ;
 
