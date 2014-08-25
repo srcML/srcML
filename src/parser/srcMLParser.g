@@ -152,7 +152,7 @@ enum STMT_TYPE {
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
     SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
     EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
-    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL
+    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT,
 };
 
 enum CALL_TYPE { NOCALL, CALL, MACRO };
@@ -555,6 +555,7 @@ tokens {
     STYPEOF;
     SUSING_STATEMENT;
     SFUNCTION_DELEGATE;
+    SEVENT;
 
     // linq
     SLINQ;
@@ -919,6 +920,11 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
 
         { stmt_type == USING_STMT }?
         using_namespace_statement |
+
+
+        // C# event statement
+        { stmt_type == EVENT_STMT}?
+        event_statement[type_count] |
 
         // "~" which looked like destructor, but isn't
         { stmt_type == NONE }?
@@ -3816,6 +3822,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             is_qmark = false;
             int real_type_count = 0;
             bool lcurly = false;
+            bool is_event = false;
         ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
@@ -3963,6 +3970,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // always count as a name for now since is always used as a type or type modifier
                 auto_keyword[false] | 
 
+                EVENT set_bool[is_event] |
+
                 // special function name
                 MAIN set_bool[ismain, type_count == 0] |
 
@@ -4015,6 +4024,10 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         // special case for what looks like a destructor declaration
         // @todo need a case where == 1 then , merge it with > 1
         throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attribute_count - template_count) > 1 || ((type_count - specifier_count - attribute_count - template_count) == 1))]
+
+        // check if an event
+        set_type[type, EVENT_STMT, is_event]
+        throw_exception[is_event]
 
         /*
           We have a declaration (at this point a variable) if we have:
@@ -5255,7 +5268,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // C# & Java
             INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
-            DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
+            DELEGATE | PARTIAL | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
             { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP | TRANSIENT) |
 
             CONST |
@@ -6653,9 +6666,9 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 
         // match auto keyword first as special case do no warn about ambiguity
         (options { generateAmbigWarnings = false; } : 
-            { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] | lead_type_identifier) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+            { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] | lead_type_identifier | EVENT) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
-        (options { generateAmbigWarnings = false; } : keyword_name | type_identifier) { decTypeCount(); })* 
+        (options { generateAmbigWarnings = false; } : keyword_name | type_identifier | EVENT) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
@@ -6698,6 +6711,25 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
                 endMode();
             }
         }
+;
+
+
+// declartion statement
+event_statement[int type_count] { ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT);
+
+            startElement(SEVENT);
+
+            // variable declarations may be in a list
+            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+            // declaration
+            startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+        }
+        variable_declaration_type[type_count]
 ;
 
 // initializtion of a function pointer.
