@@ -33,3 +33,4 @@ relaxngtext.ng
 GrammarValidator/srcML.rng
 GrammarValidator/ValidationStatus.txt
 srcMLGrammarFiles/
+GrammarOutput.txt

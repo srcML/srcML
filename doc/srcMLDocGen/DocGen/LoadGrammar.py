@@ -4,15 +4,67 @@ import lxml.etree as ET
 from xml.sax.handler import ContentHandler
 from LoadData import *
 
-# Class that holds everything
+
+def getComparableTagName(item):
+    return "{0}{1}".format("" if item.ns == "" else (item.ns +":"), item.tag)
+
+# Class that holds everything relating to the grammar
 class GrammarDoc:
     def __init__(self):
         self.rules = []
+        self.documentation = [] # used to determine the ordering of the documentation
+        self.edgeList = []
+
 
     def toEBNFText(self, out):
         for rule in self.rules:
             rule.toEBNFText(out)
             out.write("\n\n")
+
+class RuleEdge:
+    def __init__(self):
+        self.fromTitle = ""
+        self.fromObj = None
+        self.toTitle = ""
+        self.toObj = None
+        self.ruleRef = None
+
+
+# Documentation Structure
+class DocumentationBase(object):
+    def __init__(self):
+        self.desc = ""
+        self.parentRules = []
+        self.childRules = []
+        self.otherLinks = []
+        self.languages = []
+
+    # def title(self):
+    #     assert False, "Title Not implemented yet"
+
+class RuleDocumentation(DocumentationBase):
+    def __init__(self):
+        DocumentationBase.__init__(self)
+        self.rule = None
+        self.name = ""
+
+
+class TagDocumentation(DocumentationBase):
+    def __init__(self):
+        DocumentationBase.__init__(self)
+        self.ns = ""
+        self.tag = ""
+        self.tagRules = []
+        self.parentTags = []
+        self.childTags = []
+        self.childAttributes = []
+
+class AttrRuleDocumentation(DocumentationBase):
+    def __init__(self):
+        DocumentationBase.__init__(self)
+        self.attrRule = None
+        self.parentTags = []
+
 
 # Rule Classes
 class RuleBase(object):
@@ -20,18 +72,23 @@ class RuleBase(object):
         self.name = ""
         self.parameters = None
         self.grammar = None
+        self.languages = None
+        self.desc = ""
+        self.title = ""
+        self.ruleRefs = []
 
     def toEBNFText(self, out):
-        out.write(self.name + " ")
+        out.write(self.name)
         self.toEBNFRuleStartText(out)
         if self.parameters != None:
-            out.writ(" [")
+            out.write(" [")
             out.write(", ".join(self.parameters))
-            out.write(" ]")
+            out.write("]")
         out.write(" := ")
         for grmmr in self.grammar:
             grmmr.toEBNFText(out)
-        out.write("\n;")
+            out.write(" ")
+        out.write("\n    ;")
 
     def toEBNFRuleStartText(self, out):
         assert False, "Rule didn't implement toEBNFRuleStartText"
@@ -50,9 +107,9 @@ class TagRule(RuleBase):
         self.tagInfo = None
 
     def toEBNFRuleStartText(self, out):
-        out.write("<{0}{1}> ".format("" if self.tagInfo.ns == "" else (self.tagInfo.ns +":"), self.tagInfo.tag))
+        out.write(" <{0}{1}>".format("" if self.tagInfo.ns == "" else (self.tagInfo.ns +":"), self.tagInfo.tag))
         if self.tagInfo.attrs != None:
-            out.write( "({0})".format(", ".join([ x.name + ("?" if x.isOptional else "") for x in self.tagInfo.attrs])) )
+            out.write( " ({0})".format(", ".join([ x.name + ("?" if x.isOptional else "") for x in self.tagInfo.attrs])) )
 
 class AttrRule(RuleBase):
     def __init__(self):
@@ -67,7 +124,7 @@ class RuleTagInfo:
     def __init__(self):
         self.tag = ""
         self.ns = ""
-        self.attr = None
+        self.attrs = None
 
 class AttrUseInfo:
     def __init__(self):
@@ -90,7 +147,7 @@ class ParamUse(GrammarDef):
         self.name = paramName
 
     def toEBNFText(self, out):
-        out.write(" ${0}".format(self.name))
+        out.write("${0}".format(self.name))
 
 class RuleRef(GrammarDef):
     def __init__(self, refName = ""):
@@ -99,7 +156,7 @@ class RuleRef(GrammarDef):
         self.args = None
 
     def toEBNFText(self, out):
-        out.write(" {0}".format(self.name))
+        out.write("{0}".format(self.name))
         if self.args != None:
             out.write("[")
             for arg in self.args:
@@ -129,6 +186,13 @@ class Text(GrammarDef):
     def toEBNFText(self, out):
         out.write("Text")
 
+class Number(GrammarDef):
+    def __init__(self):
+        GrammarDef.__init__(self, "Number")
+
+    def toEBNFText(self, out):
+        out.write("Number")
+
 
 # Class that's used to represent other parts of the language
 # that have a many to one relationship (i.e. groupings of things)
@@ -152,16 +216,16 @@ class GrammarExpr(GrammarDef):
             for expr in self.subExprs:
                 expr.toEBNFText(out)
                 if expr != self.subExprs[-1]:
-                    out.write(" {0}".format(self.EBNFSeparator()))
+                    out.write("{0}".format(self.EBNFSeparator()))
             out.write(")")
             out.write(self.EBNFSuffix())
 
 class OptionalExpr(GrammarExpr):
     def __init__(self):
-        super(GrammarExpr, self).__init__("OptionalExpr")
+        GrammarExpr.__init__( self, "OptionalExpr")
 
     def EBNFSeparator(self):
-        return ""
+        return " "
 
     def EBNFSuffix(self):
         return "?"
@@ -169,30 +233,40 @@ class OptionalExpr(GrammarExpr):
 
 class ZeroOrMoreExpr(GrammarExpr):
     def __init__(self):
-        super(GrammarExpr, self).__init__("ZeroOrMoreExpr")
+        GrammarExpr.__init__(self, "ZeroOrMoreExpr")
         
     def EBNFSeparator(self):
-        return ""
+        return " "
 
     def EBNFSuffix(self):
         return "*"
 
-class OneOrMoreExpr(GrammarExpr):
+class GroupExpr(GrammarExpr):
     def __init__(self):
-        super(GrammarExpr, self).__init__("OneOrMoreExpr")
+        GrammarExpr.__init__(self, "GroupExpr")
         
     def EBNFSeparator(self):
+        return " "
+
+    def EBNFSuffix(self):
         return ""
+
+class OneOrMoreExpr(GrammarExpr):
+    def __init__(self):
+        GrammarExpr.__init__(self, "OneOrMoreExpr")
+        
+    def EBNFSeparator(self):
+        return " "
 
     def EBNFSuffix(self):
         return "+"
 
 class ChoiceExpr(GrammarExpr):
     def __init__(self):
-        super(GrammarExpr, self).__init__("ChoiceExpr")
+        GrammarExpr.__init__(self, "ChoiceExpr")
         
     def EBNFSeparator(self):
-        return "|"
+        return " | " if len(self.subExprs) <= 5 else "\n    | "
 
     def EBNFSuffix(self):
         return ""
@@ -220,7 +294,11 @@ ZeroOrMoreTag = "ZeroOrMore"
 OneOrMoreTag = "OneOrMore"
 ChoiceTag = "Choice"
 TextTag = "Text"
-
+GroupTag = "Group"
+DocumentationTag = "Documentation"
+RefsTag = "Refs"
+SeeTag = "See"
+NumberTag = "Number"
 
 # Name Attribute
 nameAttr = "name"
@@ -229,29 +307,32 @@ elemAttr = "elem"
 ruleAttr = "rule"
 isOptionalAttr = "isOptional"
 valueAttr = "value"
+langAttr = "lang"
 
 def loadGrammar(fileName):
-    def buildExpr(element, exprToBuild):
+    def buildExpr(element, exprToBuild, currentRule):
         for elem in element.iterchildren():
-            exprToBuild.subexprs.append(buildGrammar(elem))
+            exprToBuild.subExprs.append(buildGrammar(elem, currentRule))
+
         if len(exprToBuild.subExprs) == 0:
             raise Exception("All expressions must have at least one child element " + formatElementErrorMsg(element))
     
-    def buildArgsList(argsListElem):
+    def buildArgsList(argsListElem, currentRule):
         ret = []
         for elem in argsListElem.iterchildren():
             if elem.tag == ArgTag:
                 if len(list(elem)) != 1:
                     raise Exception("Invalid number of grammar elements for argument")
                 else:
-                    ret.append(buildGrammar(elem))
+                    for argElem in elem.iterchildren():
+                        ret.append(buildGrammar(argElem, currentRule))
             else:
                 unexpectedOrUnknownTag(elem)
         if len(ret) == 0:
             return None
         return ret
 
-    def buildRef(refElem):
+    def buildRef(refElem, currentRule):
         ruleRef = RuleRef(getAttribOrFail(refElem, nameAttr))
         children = list(refElem)
         childCount = len(children)
@@ -261,52 +342,76 @@ def loadGrammar(fileName):
             if children[0].tag != ArgsTag:
                 unexpectedOrUnknownTag(children[0])
             else:
-                ruleRef.args = buildArgsList(children[0])
+                ruleRef.args = buildArgsList(children[0], currentRule)
         else:
             raise Exception("Invalid # of children for a reference to another rule.")
+
+        # Tracking rule References
+        newEdge = RuleEdge()
+        newEdge.fromTitle = currentRule.name
+        newEdge.fromObj = currentRule
+        newEdge.toTitle = ruleRef.name
+        newEdge.ruleRef = ruleRef
+        currentRule.ruleRefs.append(ruleRef)
+        grammarDoc.edgeList.append(newEdge)
+
         return ruleRef
 
 
-    def buildGrammar(grammarElement):
+    def buildGrammar(grammarElement, currentRule):
         if grammarElement.tag == OptionalTag:
             expr = OptionalExpr()
-            buildExpr(grammarElement, expr)
+            buildExpr(grammarElement, expr, currentRule)
             return expr
 
         elif grammarElement.tag == ZeroOrMoreTag:
             expr = ZeroOrMoreExpr()
-            buildExpr(grammarElement, expr)
+            buildExpr(grammarElement, expr, currentRule)
             return expr
 
         elif grammarElement.tag == OneOrMoreTag:
             expr = OneOrMoreExpr()
-            buildExpr(grammarElement, expr)
+            buildExpr(grammarElement, expr, currentRule)
             return expr
 
         elif grammarElement.tag == ChoiceTag:
             expr = ChoiceExpr()
-            buildExpr(grammarElement, expr)
+            buildExpr(grammarElement, expr, currentRule)
+            return expr
+
+        elif grammarElement.tag == GroupTag:
+            expr = GroupExpr()
+            buildExpr(grammarElement, expr, currentRule)
             return expr
 
         elif grammarElement.tag == LiteralTag:
             return Literal(getAttribOrFail(grammarElement, valueAttr))
 
         elif grammarElement.tag == ParamUseTag:
-            return ParamUse(getAttribOrFail(grammarElement, nameAttr))
+            paramUse = ParamUse(getAttribOrFail(grammarElement, nameAttr))
+            if currentRule == None:
+                raise Exception("Invalid current Rule!")
+            # Verifying parameter usage
+            if currentRule.parameters != None and paramUse.name not in currentRule.parameters:
+                raise Exception("Invalid parameter usage. Within Rule: " + currentRule.name + formatElementErrorMsg(grammarElement))
+            return paramUse
 
         elif grammarElement.tag == RefTag:
-            return buildRef(grammarElement)
+            return buildRef(grammarElement, currentRule)
 
         elif grammarElement.tag == TextTag:
             return Text()
 
+        elif grammarElement.tag == NumberTag:
+            return Number()
+            
         else:
             unexpectedOrUnknownTag(grammarElement)
 
-    def buildGrammarDef(defElem):
+    def buildGrammarDef(defElem, currentRule):
         ret = []
         for elem in defElem.iterchildren():
-            ret.append(buildGrammar(elem))
+            ret.append(buildGrammar(elem, currentRule))
 
         if len(ret) == 0:
             return None
@@ -324,15 +429,23 @@ def loadGrammar(fileName):
             return None
         return ret
 
+
+    # Rule Rules
     def buildRule(ruleElem):
         rule = Rule()
         rule.name = getAttribOrFail(ruleElem, nameAttr)
-
+        rule.languages = [x.strip() for x in getAttribOrFail(ruleElem, langAttr).split(',')]
+        rule.title = getAttribOrDefault(ruleElem, titleAttr, "")
         for elem in ruleElem.iterchildren():
             if elem.tag == DefTag:
-                rule.grammar = buildGrammarDef(elem)
+                rule.grammar = buildGrammarDef(elem, rule)
+
+            elif elem.tag == DescTag:
+                rule.desc = extractSubText(elem)
+
             elif elem.tag == ParamsTag:
                 rule.params = buildParameterList(elem)
+
             else:
                 unexpectedOrUnknownTag(elem)
         assert rule.grammar != None, "Post condition violation rule grammar not set"
@@ -347,6 +460,7 @@ def loadGrammar(fileName):
                 info.name = getAttribOrFail(elem, ruleAttr)
                 info.isOptional = bool(getAttribOrDefault(elem, isOptionalAttr, "False")) 
                 ret.append(info)
+
             else:
                 unexpectedOrUnknownTag(elem)
         if len(ret) == 0:
@@ -370,13 +484,17 @@ def loadGrammar(fileName):
     def buildTagRule(ruleElem):
         rule = TagRule()
         rule.name = getAttribOrFail(ruleElem, nameAttr)
-
+        rule.languages = [x.strip() for x in getAttribOrFail(ruleElem, langAttr).split(',')]
+        rule.title = getAttribOrDefault(ruleElem, titleAttr, "")
         for elem in ruleElem.iterchildren():
             if elem.tag == DefTag:
-                rule.grammar = buildGrammarDef(elem)
+                rule.grammar = buildGrammarDef(elem, rule)
 
             elif elem.tag == TagTag:
                 rule.tagInfo = buildTagInfo(elem)
+
+            elif elem.tag == DescTag:
+                rule.desc = extractSubText(elem)
 
             elif elem.tag == ParamsTag:
                 rule.parameters = buildParameterList(elem)
@@ -391,14 +509,21 @@ def loadGrammar(fileName):
     def buildAttrRule(ruleElem):
         rule = AttrRule()
         rule.name = getAttribOrFail(ruleElem, nameAttr)
-
+        rule.languages = [x.strip() for x in getAttribOrFail(ruleElem, langAttr).split(',')]
+        rule.title = getAttribOrDefault(ruleElem, titleAttr, "")
         for elem in ruleElem.iterchildren():
             if elem.tag == DefTag:
-                rule.grammar = buildGrammarDef(elem)
+                rule.grammar = buildGrammarDef(elem, rule)
+
+            elif elem.tag == DescTag:
+                rule.desc = extractSubText(elem)
+
             elif elem.tag == AttrTag:
                 rule.attrName = getAttribOrFail(elem, nameAttr)
+
             elif elem.tag == ParamsTag:
                 rule.parameters = buildParameterList(elem)
+
             else:
                 unexpectedOrUnknownTag(elem)
         assert rule.grammar != None, "Post condition violation attribute rule grammar not set"
@@ -406,8 +531,53 @@ def loadGrammar(fileName):
         return rule
 
 
+    def buildRestOfRuleDoc(ruleElem, ruleToAddTo):
+        for elem in ruleElem.iterchildren():
+            if elem.tag == DescTag:
+                ruleToAddTo.desc = extractSubText(elem)
+            elif elem.tag == RefsTag:
+                for refElem in elem.iterchildren():
+                    if refElem.tag == SeeTag:
+                        link = URLRefLink()
+                        link.ns = getAttribOrFail(refElem, titleAttr)
+                        link.url = getAttribOrFail(refElem, urlAttr)
+                        ruleToAddTo.otherLinks.append(link)
+                    else:
+                        unexpectedOrUnknownTag(refElem)
+            else:
+                unexpectedOrUnknownTag(elem)
 
+    def buildRuleDocumentation(ruleElem):
+        rule = RuleDocumentation()
+        rule.name = getAttribOrFail(ruleElem, ruleAttr)
+        buildRestOfRuleDoc(ruleElem, rule)
 
+    def buildAttrRuleDocumentation(ruleElem):
+        rule = AttrRuleDocumentation()
+        rule.name = getAttribOrFail(ruleElem, ruleAttr)
+        buildRestOfRuleDoc(ruleElem, rule)
+
+    def buildTagDocumentation(ruleElem):
+        rule = TagDocumentation()
+        rule.tag = getAttribOrFail(ruleElem, elemAttr)
+        rule.ns = getAttribOrDefault(ruleElem, nsAttr, "")
+        buildRestOfRuleDoc(ruleElem, rule)
+
+    def buildDocumentation(docElem):
+        for elem in docElem.iterchildren():
+            if elem.tag == RuleTag:
+                grammarDoc.documentation.append(buildRuleDocumentation(elem))
+
+            elif elem.tag == AttrRuleTag:
+                grammarDoc.documentation.append(buildAttrRuleDocumentation(elem))
+
+            elif elem.tag == TagTag:
+                grammarDoc.documentation.append(buildTagDocumentation(elem))
+
+            else:
+                unexpectedOrUnknownTag(elem)
+
+    currentRule = None
     grammarTree = ET.parse(fileName)
     grammarDoc = GrammarDoc()
     grammarElem = grammarTree.getroot()
@@ -416,7 +586,10 @@ def loadGrammar(fileName):
     verifyNodeNameOrFail(grammarElem, GrammarTag)
 
     for elem in grammarElem.iterchildren():
-        if elem.tag == RuleTag:
+        if elem.tag == DocumentationTag:
+            buildDocumentation(elem)
+
+        elif elem.tag == RuleTag:
             grammarDoc.rules.append(buildRule(elem)) 
 
         elif elem.tag == TagRuleTag:
@@ -428,316 +601,27 @@ def loadGrammar(fileName):
         else:
             unexpectedOrUnknownTag(elem)
 
+    # Constructing the rest of the grammar.
+    print "Extracting Documented Tags"
+    print "Extracting Documented Attributes"
+    print "Extracting Documented Rules"
+
+    print "Extracting TagRules"
+    print "Extracting AttributeRules"
+    print "Extracting Rules"
+
+    print "Verifying Documentation"
+    print "Establishing & Verifying Reference Graph"
+    print "Extracting parent & child rules from graph"
+    print "Extracting Extracting parent & child tags from graph"
+
+    print "Computing Possible Rule Languages"
     return grammarDoc
     
 if __name__ == "__main__":
-    # print "Testing"
     grmmr = loadGrammar("/home/brian/Projects/srcML/doc/srcMLDocGen/DocData/Grammar/LanguageGrammar.xml")
-    # print "Test Completed"
     assert grmmr != None, "Didn't pass test"
-    out = cStringIO.StringIO()
-    grmmr.toEBNFText(out)
-    print out.getvalue()
-
-
-# class RuleGrmr: pass
-# class TagRuleGrmr: pass
-# class AttrRuleGrmr: pass
-# class GrammarGrmr: pass
-# class TagInfoGrmr: pass
-# class RefGrmr: pass
-# class OptionalGrmr: pass
-# class ZeroOrMoreGrmr: pass
-# class OneOrMoreGrmr: pass
-# class ChoiceGrmr: pass
-# class TagGrmr: pass
-# class TextGrmr: pass
-# class LiteralGrmr: pass
-
-# class GrammarContentHandler(ContentHandler):
-#     def __init__(self, documentLocator, contentHandlerStack, validChildElemNames = set(["ZeroOrMore", "OneOrMore", "Choice", "Ref", "Text", "Literal", "Tag" ,"Optional", "Choice"])):
-#         self.locator = documentLocator
-#         self.handlerStack = contentHandlerStack
-#         self.validChildren = validChildElemNames
-
-#     def returnResult(self, value, tagName):
-#         current = self.handlerStack.pop(-1)
-#         self.handlerStack[-1].recieveResult(value, current, tagName)
-
-#     #   this needs to be implemented by another 
-#     #   GrammarContentHandler in order to receive 
-#     #   results from other handlers
-#     #   further down the stack.
-#     def recieveResult(self, value, previousContentHandler, tagName):
-#         raise Exception("Current Content handler can't receive results.")
-
-#     #   Creates an instance of a type based on a tag name 
-#     #   (only of those within validChildElemName are allowed)
-#     #   and pushes that into the stack and creates the correct instance of that
-#     #   element then invokes the startElementNS for that element with the given
-#     #   parameters
-#     def createPushAndCall(self, name, qname, attrs):
-#         instance = None
-#         if qname not in self.validChildren:
-#             raise Exception("Invalid element: {0}. At Line: {1} Col: {2}".format(qname, self.locator, self.locator))
-#         else:
-#             target = getattr(GrammarHandlerTypes, GrammarHandlerTypes.handlerToTypeName[qname])
-#             instance = target(self.locator, self.handlerStack)
-#             self.handlerStack.append(instance)
-#             instance.startElementNS(name, qname, attrs)
-
-#     def startElementNS(self, name, qname, attributes):
-#         self.createPushAndCall(name, qname, attributes)
-
-
-
-        
-# class GrammarHandlerTypes:
-#     handlerToTypeName = {
-#         "TagRule":"TagRuleHandler",
-#         "AttrRule":"AttrRuleHandler",
-#         "Rule":"RuleHandler",
-#         "Optional":"OptionalGrammarHandler",
-#         "ZeroOrMore":"ZeroOrMoreGrammarHandler",
-#         "Choice":"ChoiceGrammarHandlere",
-#         "Ref":"RefGrammarHandler",
-#         "Text": "TextGrammarHandler",
-#         "Literal": "LiteralGrammarHandler",
-#         "Tag":"TagGrammarHandler"
-#     }
-
-#     class TagRuleHandler(GrammarContentHandler):
-#         def __init__(self, documentLocator, contentHandlerStack):
-#             GrammarContentHandler.__init__(self, documentLocator, contentHandlerStack)
-#             self.tagRule = TagRuleGrmr()
-
-#         def recieveResult(self, value, previousContentHandler, tagName):
-#             pass
-
-#         def startElementNS(self, name, qname, attributes):
-#             pass
-
-#         def endElementNS(self, ns_name, qname):
-#             if qname == "TagRule":
-#                 self.returnResult(self.tagRule, qname)
-
-
-#     class AttrRuleHandler(GrammarContentHandler):
-#         def __init__(self, documentLocator, contentHandlerStack):
-#             GrammarContentHandler.__init__(self, documentLocator, contentHandlerStack)
-#             self.attrRule = AttrRuleGrmr()
-
-#         def recieveResult(self, value, previousContentHandler, tagName):
-#             pass
-
-#         def startElementNS(self, name, qname, attributes):
-#             pass
-
-#         def endElementNS(self, ns_name, qname):
-#             if qname == "AttrRule":
-#                 self.returnResult(self.attrRule, qname)
-
-
-#     class RuleHandler(GrammarContentHandler):
-#         def __init__(self, documentLocator, contentHandlerStack):
-#             GrammarContentHandler.__init__(self, documentLocator, contentHandlerStack)
-#             self.rule = RuleGrmr
-
-#         def recieveResult(self, value, previousContentHandler, tagName):
-#             pass
-
-#         def startElementNS(self, name, qname, attributes):
-#             pass
-
-#         def endElementNS(self, ns_name, qname):
-#             if qname == "Rule":
-#                 self.returnResult(self.rule, qname)
-
-
-#     class TagGrammarHandler(GrammarContentHandler):
-#         def __init__(self, documentLocator, contentHandlerStack):
-#             GrammarContentHandler.__init__(self, documentLocator, contentHandlerStack, set([]))
-#             self.tag = TagGrmr()
-
-#         def recieveResult(self, value, previousContentHandler, tagName):
-#             pass
-
-#         def startElementNS(self, name, qname, attributes):
-#             pass
-
-#         def endElementNS(self, ns_name, qname):
-#             self.returnResult(self.tag, qname)
-
-#         def characters(self, data):
-#             pass
-
-
-#     class OptionalGrammarHandler(GrammarContentHandler):
-#         def __init__(self, documentLocator, contentHandlerStack):
-#             GrammarContentHandler.__init__(self, documentLocator, contentHandlerStack)
-#             self.optional = OptonalGrmr()
-
-#         def recieveResult(self, value, previousContentHandler, tagName):
-#             pass
-
-#         def startElementNS(self, name, qname, attributes):
-#             pass
-
-#         def endElementNS(self, ns_name, qname):
-#             self.returnResult(self.optional, qname)
-
-#         def characters(self, data):
-#             pass
-
-#     class ZeroOrMoreGrammarHandler(GrammarContentHandler):
-#         def __init__(self, documentLocator, contentHandlerStack):
-#             GrammarContentHandler.__init__(self, documentLocator, contentHandlerStack)
-#             self.zeroOrMore = ZeroOrMoreGrmr()
-
-#         def recieveResult(self, value, previousContentHandler, tagName):
-#             pass
-
-#         def startElementNS(self, name, qname, attributes):
-#             pass
-
-#         def endElementNS(self, ns_name, qname):
-#             self.returnResult(self.zeroOrMore, qname)
-
-#         def characters(self, data):
-#             pass
-
-#     class OneOrMoreGrammarHandler(GrammarContentHandler):
-#         def __init__(self, documentLocator, contentHandlerStack):
-#             GrammarContentHandler.__init__(self, documentLocator, contentHandlerStack)
-#             self.oneOrMore = OneOrMoreGrmr()
-
-#         def recieveResult(self, value, previousContentHandler, tagName):
-#             pass
-
-#         def startElementNS(self, name, qname, attributes):
-#             pass
-
-#         def endElementNS(self, ns_name, qname):
-#             self.returnResult(self.oneOrMore, qname)
-
-#         def characters(self, data):
-#             pass
-
-#     class ChoiceGrammarHandler(GrammarContentHandler):
-#         def __init__(self, documentLocator, contentHandlerStack):
-#             GrammarContentHandler.__init__(self, documentLocator, contentHandlerStack)
-#             self.choice = ChoiceGrmr()
-
-#         def recieveResult(self, value, previousContentHandler, tagName):
-#             pass
-
-#         def startElementNS(self, name, qname, attributes):
-#             pass
-
-#         def endElementNS(self, ns_name, qname):
-#             self.returnResult(self.choice, qname)
-
-#         def characters(self, data):
-#             pass
-
-#     class RefGrammarHandler(GrammarContentHandler):
-#         def __init__(self, documentLocator, contentHandlerStack):
-#             GrammarContentHandler.__init__(self, documentLocator, contentHandlerStack, set([]))
-#             self.ref = RefGrmr()
-
-#         def recieveResult(self, value, previousContentHandler, tagName):
-#             pass
-
-#         def startElementNS(self, name, qname, attributes):
-#             pass
-
-#         def endElementNS(self, ns_name, qname):
-#             self.returnResult(self.ref, qname)
-
-#         def characters(self, data):
-#             pass
-
-#     class TextGrammarHandler(GrammarContentHandler):
-#         def __init__(self, documentLocator, contentHandlerStack):
-#             GrammarContentHandler.__init__(self, documentLocator, contentHandlerStack, set([]))
-#             self.text = TextGrmr()
-
-#         def recieveResult(self, value, previousContentHandler, tagName):
-#             pass
-
-#         def startElementNS(self, name, qname, attributes):
-#             pass
-
-#         def endElementNS(self, ns_name, qname):
-#             self.returnResult(self.text, qname)
-
-#         def characters(self, data):
-#             pass
-
-#     class LiteralGrammarHandler(GrammarContentHandler):
-#         def __init__(self, documentLocator, contentHandlerStack):
-#             GrammarContentHandler.__init__(self, documentLocator, contentHandlerStack, set([]))
-#             self.literal = LiteralGrmr()
-
-#         def startElementNS(self, name, qname, attributes):
-#             pass
-
-#         def endElementNS(self, ns_name, qname):
-#             self.returnResult(self.literal, qname)
-
-
-# class GrammarTagGrammarHandler(GrammarContentHandler):
-#     def __init__(self, documentLocator, contentHandlerStack, initialSAXContentHandler):
-#         GrammarContentHandler.__init__(self, documentLocator, contentHandlerStack, set(["Rule", "TagRule", "AttrRule"]))
-#         self.grammar = GrammarGrmr()
-#         self.baseParser = initialSAXContentHandler
-
-#     def recieveResult(self, value, previousContentHandler, tagName):
-#         pass
-
-#     def startElementNS(self, name, qname, attrs):
-#         if qname != "Grammar":
-#             self.createPushAndCall(name, qname, attrs)
-
-#     def endElementNS(self, ns_name, qname):
-#         self.baseParser.grammar = self.grammar
-#         self.handlerStack.pop(-1)
-
-# class GrammarHandler(ContentHandler):
-#     def __init__(self):
-#         self.locator = None
-#         self.grammar = None
-#         self.grammarStack = []
-
-#     def setDocumentLocator(self, locator):
-#         print dir(locator)
-#         print locator == None
-#         self.locator = locator
-
-#     def startDocument(self):
-#         print "Starting Document!"
-
-#     def endDocument(self):
-#         print "Parsed Document"
-
-#     def startElementNS(self, name, qname, attributes):
-#         if len(self.grammarStack) == 0:
-#             self.grammarStack.append(GrammarTagGrammarHandler(self.locator, self.grammarStack, self))
-#         self.grammarStack[-1].startElementNS(name, qname, attributes)
-
-#     def endElementNS(self, nsName, qname):
-#         if len(self.grammarStack) != 0:
-#             self.grammarStack[-1].endElementNS(nsName, qname)
-#         else:
-#             print "Called endElementNS when empty"
-
-#     def characters(self, data):
-#         pass
-
-
-# def loadGrammar(fileName):
-#     handler = GrammarHandler()
-#     lxml.sax.saxify(ET.parse(fileName), handler)
-#     print "Processed File"
-#     return handler.grammar
-#     pass
+    outFile = open("../GrammarOutput.txt", "w")
+    grmmr.toEBNFText(outFile)
+    outFile.close()
+    # print out.getvalue()
