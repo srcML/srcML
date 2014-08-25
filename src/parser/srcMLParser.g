@@ -152,7 +152,7 @@ enum STMT_TYPE {
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
     SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
     EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
-    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT,
+    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT, PROPERTY_STMT
 };
 
 enum CALL_TYPE { NOCALL, CALL, MACRO };
@@ -921,6 +921,9 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         { stmt_type == USING_STMT }?
         using_namespace_statement |
 
+        // C# property statement
+        { stmt_type == PROPERTY_STMT}?
+        property_statement[type_count] |
 
         // C# event statement
         { stmt_type == EVENT_STMT}?
@@ -4029,6 +4032,10 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_type[type, EVENT_STMT, is_event]
         throw_exception[is_event]
 
+        // check if property
+        set_type[type, PROPERTY_STMT, inLanguage(LANGUAGE_CSHARP) && (type_count - specifier_count) > 0 && LA(1) == LCURLY]
+        throw_exception[type == PROPERTY_STMT]
+
         /*
           We have a declaration (at this point a variable) if we have:
 
@@ -6713,6 +6720,23 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
         }
 ;
 
+// declartion statement
+property_statement[int type_count] { ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT);
+
+            startElement(SPROPERTY);
+
+            // variable declarations may be in a list
+            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+            // declaration
+            startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+        }
+        variable_declaration_type[type_count]
+;
 
 // declartion statement
 event_statement[int type_count] { ENTRY_DEBUG } :
