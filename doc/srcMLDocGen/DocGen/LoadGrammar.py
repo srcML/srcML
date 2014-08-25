@@ -1,5 +1,5 @@
 
-import os, sys, re, lxml, cStringIO
+import os, sys, re, lxml, cStringIO, itertools
 import lxml.etree as ET
 from xml.sax.handler import ContentHandler
 from LoadData import *
@@ -11,10 +11,24 @@ def getComparableTagName(item):
 # Class that holds everything relating to the grammar
 class GrammarDoc:
     def __init__(self):
+        self.languages = []
         self.rules = []
         self.documentation = [] # used to determine the ordering of the documentation
         self.edgeList = []
 
+
+    def dumpDocumentation(self, out):
+        for doc in self.documentation:
+            doc.dump(out)
+            out.write("\n")
+
+        out.write("\n\n\n Graph Documentation\n\n\n")
+        for e in self.edgeList:
+            out.write("""
+Edge
+    From: {0.fromTitle}
+    To: {0.toTitle}
+""".format(e, e.toObj))
 
     def toEBNFText(self, out):
         for rule in self.rules:
@@ -36,17 +50,68 @@ class DocumentationBase(object):
         self.desc = ""
         self.parentRules = []
         self.childRules = []
+        self.parentTags = []
+        self.childTags = []
         self.otherLinks = []
         self.languages = []
 
-    # def title(self):
-    #     assert False, "Title Not implemented yet"
+    def dumpDocumentationBaseFields(self, out):
+        out.write("    desc: \"{0}\"\n".format(self.desc.strip()))
+        out.write("    parentRules: ")
+        if len(self.parentRules) == 0:
+            out.write("None\n")
+        else:
+            out.write("\n")
+            for parentRule in self.parentRules:
+                out.write("        {0}\n".format(parentRule.name))
+
+        out.write("    childRules: ")
+        if len(self.childRules) == 0:
+            out.write("None\n")
+        else:
+            out.write("\n")
+            for chldRule in self.childRules:
+                out.write("        {0}\n".format(chldRule.name))
+
+        out.write("    parentTags: ")
+        if len(self.parentTags) == 0:
+            out.write("None\n")
+        else:
+            out.write("\n")
+            for parentTag in self.parentTags:
+                out.write("        {0}\n".format(parentTag))
+
+        out.write("    childTags: ")
+        if len(self.childTags) == 0:
+            out.write("None\n")
+        else:
+            out.write("\n")
+            for childTag in self.childTags:
+                out.write("        {0}\n".format(childTag))
+
+        out.write("    OtherLinks: ")
+        if len(self.otherLinks) == 0:
+            out.write("None\n")
+        else:
+            out.write("\n")
+            for lnk in self.otherLinks:
+                out.write("        Title: {0.title} URL: {0.url}\n".format(lnk))
+
+        out.write("    Languages: {0}\n".format(", ".join(self.languages)if len(self.languages) else "Not Set" ))
 
 class RuleDocumentation(DocumentationBase):
     def __init__(self):
         DocumentationBase.__init__(self)
         self.rule = None
         self.name = ""
+
+    def dump(self, out):
+        out.write("{0}\n".format(self.__class__.__name__))
+        out.write("    name: {0}\n".format(self.name))
+        out.write("    rule: {0}\n".format(self.rule))
+
+        self.dumpDocumentationBaseFields(out)
+
 
 
 class TagDocumentation(DocumentationBase):
@@ -55,15 +120,57 @@ class TagDocumentation(DocumentationBase):
         self.ns = ""
         self.tag = ""
         self.tagRules = []
-        self.parentTags = []
-        self.childTags = []
-        self.childAttributes = []
+        self.attributes = []
+
+    def dump(self, out):
+        out.write("{0}\n".format(self.__class__.__name__))
+        out.write("    {0}\n".format(getComparableTagName(self)))
+        out.write("    TagRules: ")
+        if len(self.tagRules) == 0:
+            out.write("None\n")
+        else:
+            out.write("\n")
+            for tagRule in self.tagRules:
+                out.write("        Name: {0} Title: {1}\n".format(tagRule.name, tagRule.title))
+                out.write("            Desc: \"{0}\"\n".format(tagRule.desc.strip()))
+                out.write("            RuleRefs: ")
+                if len(tagRule.ruleRefs) == 0:
+                    out.write("None\n")
+                else:
+                    out.write("\n")
+                    for ref in tagRule.ruleRefs:
+                        out.write("                {0}\n".format(ref.name))
+                        if ref.args != None:
+                            for arg in ref.arg:
+                                out.write("                    ")
+                                arg.toEBNFText(out)
+                                out.write("\n")
+        out.write("    attributes: ")
+        if len(self.attributes) == 0:
+            out.write("None\n")
+        else:
+            out.write("\n")
+            for attr in self.attributes:
+                out.write("        {0}\n".format(attr.name))
+        self.dumpDocumentationBaseFields(out)
 
 class AttrRuleDocumentation(DocumentationBase):
     def __init__(self):
         DocumentationBase.__init__(self)
+        self.name = ""
         self.attrRule = None
         self.parentTags = []
+
+    def dump(self, out):
+        out.write("{0}\n".format(self.__class__.__name__))
+        out.write("    {0}\n".format(self.name))
+        out.write("    AttrRule: ")
+        if self.attrRule == None:
+            out.write("None\n")
+        else:
+            out.write("\n")
+            out.write("        Name: {0} Title: {1}\n".format(self.attrRule.name, self.attrRule.title))
+            out.write("            Desc: \"{0}\"\n".format(self.attrRule.desc.strip()))
 
 
 # Rule Classes
@@ -308,6 +415,7 @@ ruleAttr = "rule"
 isOptionalAttr = "isOptional"
 valueAttr = "value"
 langAttr = "lang"
+languageOrderingAttr = "languageOrdering"
 
 def loadGrammar(fileName):
     def buildExpr(element, exprToBuild, currentRule):
@@ -336,6 +444,16 @@ def loadGrammar(fileName):
         ruleRef = RuleRef(getAttribOrFail(refElem, nameAttr))
         children = list(refElem)
         childCount = len(children)
+        
+        # Tracking rule References
+        newEdge = RuleEdge()
+        newEdge.fromTitle = currentRule.name
+        newEdge.fromObj = currentRule
+        newEdge.toTitle = ruleRef.name
+        newEdge.ruleRef = ruleRef
+        currentRule.ruleRefs.append(ruleRef)
+        grammarDoc.edgeList.append(newEdge)
+        
         if childCount == 0:
             return ruleRef
         elif childCount == 1:
@@ -345,16 +463,6 @@ def loadGrammar(fileName):
                 ruleRef.args = buildArgsList(children[0], currentRule)
         else:
             raise Exception("Invalid # of children for a reference to another rule.")
-
-        # Tracking rule References
-        newEdge = RuleEdge()
-        newEdge.fromTitle = currentRule.name
-        newEdge.fromObj = currentRule
-        newEdge.toTitle = ruleRef.name
-        newEdge.ruleRef = ruleRef
-        currentRule.ruleRefs.append(ruleRef)
-        grammarDoc.edgeList.append(newEdge)
-
         return ruleRef
 
 
@@ -391,6 +499,7 @@ def loadGrammar(fileName):
             paramUse = ParamUse(getAttribOrFail(grammarElement, nameAttr))
             if currentRule == None:
                 raise Exception("Invalid current Rule!")
+
             # Verifying parameter usage
             if currentRule.parameters != None and paramUse.name not in currentRule.parameters:
                 raise Exception("Invalid parameter usage. Within Rule: " + currentRule.name + formatElementErrorMsg(grammarElement))
@@ -404,7 +513,7 @@ def loadGrammar(fileName):
 
         elif grammarElement.tag == NumberTag:
             return Number()
-            
+
         else:
             unexpectedOrUnknownTag(grammarElement)
 
@@ -539,7 +648,7 @@ def loadGrammar(fileName):
                 for refElem in elem.iterchildren():
                     if refElem.tag == SeeTag:
                         link = URLRefLink()
-                        link.ns = getAttribOrFail(refElem, titleAttr)
+                        link.title = getAttribOrFail(refElem, titleAttr)
                         link.url = getAttribOrFail(refElem, urlAttr)
                         ruleToAddTo.otherLinks.append(link)
                     else:
@@ -551,17 +660,20 @@ def loadGrammar(fileName):
         rule = RuleDocumentation()
         rule.name = getAttribOrFail(ruleElem, ruleAttr)
         buildRestOfRuleDoc(ruleElem, rule)
+        return rule
 
     def buildAttrRuleDocumentation(ruleElem):
         rule = AttrRuleDocumentation()
         rule.name = getAttribOrFail(ruleElem, ruleAttr)
         buildRestOfRuleDoc(ruleElem, rule)
+        return rule
 
     def buildTagDocumentation(ruleElem):
         rule = TagDocumentation()
         rule.tag = getAttribOrFail(ruleElem, elemAttr)
         rule.ns = getAttribOrDefault(ruleElem, nsAttr, "")
         buildRestOfRuleDoc(ruleElem, rule)
+        return rule
 
     def buildDocumentation(docElem):
         for elem in docElem.iterchildren():
@@ -585,6 +697,8 @@ def loadGrammar(fileName):
     # Verifying Correct Root element.
     verifyNodeNameOrFail(grammarElem, GrammarTag)
 
+    grammarDoc.langauge = getAttribOrFail(grammarElem, languageOrderingAttr).split(",")
+
     for elem in grammarElem.iterchildren():
         if elem.tag == DocumentationTag:
             buildDocumentation(elem)
@@ -601,21 +715,190 @@ def loadGrammar(fileName):
         else:
             unexpectedOrUnknownTag(elem)
 
-    # Constructing the rest of the grammar.
-    print "Extracting Documented Tags"
-    print "Extracting Documented Attributes"
-    print "Extracting Documented Rules"
+    # for r in grammarDoc.rules:
+    #     print "{0} {1}".format(r.name, r.__class__.__name__)
 
-    print "Extracting TagRules"
-    print "Extracting AttributeRules"
-    print "Extracting Rules"
+    # Constructing the links between grammar documentation and other grammar.
+    # print "Extracting Documented Tags"
+    documentedTags = dict([(getComparableTagName(tagDoc), tagDoc) for tagDoc in grammarDoc.documentation if isinstance(tagDoc, TagDocumentation)])
+    # print "    # of extracted Documentations: ", len(documentedTags)
 
-    print "Verifying Documentation"
-    print "Establishing & Verifying Reference Graph"
+    # print "Extracting Documented Attributes"
+    documentedAttrs = dict([(attrDoc.name, attrDoc) for attrDoc in grammarDoc.documentation if isinstance(attrDoc, AttrRuleDocumentation)])
+    # print "    # of extracted Documentations: ", len(documentedAttrs)
+
+    # print "Extracting Documented Rules"
+    documentedRules = dict([(ruleDoc.name, ruleDoc) for ruleDoc in grammarDoc.documentation if isinstance(ruleDoc, RuleDocumentation)])
+    # print "    # of extracted Documentations: ", len(documentedRules)
+    
+
+    # print "Extracting Tag Rules"
+    grammarTagRules = [rule for rule in grammarDoc.rules if isinstance(rule, TagRule)]
+    # print "    # of extracted rules: ", len(grammarTagRules)
+
+    # print "Extracting AttributeRules"
+    grammarAttrRules = dict([(rule.name, rule) for rule in grammarDoc.rules if isinstance(rule, AttrRule)])
+    # print "    # of extracted rules: ", len(grammarAttrRules)
+
+    # print "Extracting Rules"
+    grammarRules = dict([(rule.name, rule) for rule in grammarDoc.rules if isinstance(rule, Rule)])
+    # print "    # of extracted rules: ", len(grammarRules)
+
+
+    print "Building Documentation"
+    print "    Checking Rules to Documentation"
+    # Consider remove all of elements as they are processed so that
+    # there is less to process maybe?
+    undocumentedRules = []
+    for rule in grammarTagRules:
+        tag = getComparableTagName(rule.tagInfo)
+        if tag in documentedTags:
+            documentedTags[tag].tagRules.append(rule)
+            if rule.tagInfo.attrs != None:
+                for attr in rule.tagInfo.attrs:
+                    located = False
+                    for item in documentedTags[tag].attributes:
+                        if item.name == attr.name:
+                            located = True
+                    if located:
+                        documentedTags[tag].attributes.append(attr)
+        else:
+            undocumentedRules.append(rule)
+            print "        Missing documentation for tag: {0} within Rule: {1}".format(tag, rule.name) 
+
+    for rule in grammarAttrRules.items():
+        if rule[1].name in documentedAttrs:
+            documentedAttrs[rule[1].name].attrRule = rule[1]
+
+        else:
+            undocumentedRules.append(rule)
+            print "        Missing documentation for attribute:", rule[1].name
+
+    for rule in grammarRules.items():
+        if rule[0] in documentedRules:
+            documentedRules[rule[0]].rule = rule[1]
+
+        else:
+            undocumentedRules.append(rule)
+            print "        Missing documentation for Regular Rule:", rule[0]
+
+
+
+    print "    Checking Documentation To Rules"
+    documentationWithoutARule = []
+
+    # Tag Rule documentation
+    # Attr Rule documentation
+    # Rule Documentation
+    for doc in documentedTags.items():
+        if len(doc[1].tagRules) == 0:
+            documentationWithoutARule.append(doc[1])
+            print "        Extra documentation for Tag: {0} within Rule: {1}".format(getComparableTagName(doc[1]), doc[1].name) 
+    
+    for doc in documentedAttrs.items():
+        if doc[1].attrRule == None:
+            documentationWithoutARule.append(doc[1])
+            print "        Extra documentation for attribute ", doc[1].name
+
+    for doc in documentedRules.items():
+        if doc[1].rule == None:
+            documentationWithoutARule.append(doc[1])
+            print "        Extra documentation for rule ", doc[1].name
+
+        
+
+    print "Completing graph references"
+    rulesByName = dict([(rule.name, rule) for rule in grammarDoc.rules])
+    namesMissingFromGraph = []
+    for edge in grammarDoc.edgeList:
+        if edge.ruleRef == None:
+            raise Exception("Didn't correctly set the rule reference for edge")
+        if edge.toTitle in rulesByName:
+            edge.toObj = rulesByName[edge.toTitle]
+        else:
+            print "    Missing Reference: {0} From within Rule: {1}".format(edge.toTitle, edge.fromTitle) 
+            namesMissingFromGraph.append(edge)
+
+
+    print "Verifying That Graph is connected"
+    notVisitedVertices = set([ e.fromTitle for e in grammarDoc.edgeList])
+    notVisitedVertices |= set([ e.toTitle for e in grammarDoc.edgeList])
+
+    queue = [startRule for startRule in grammarDoc.edgeList if grammarDoc.edgeList[0].fromTitle == startRule.fromTitle]
+    notVisitedVertices.discard(grammarDoc.edgeList[0].fromTitle)
+
+    while len(queue) != 0:
+        current = queue.pop(0)
+        if current.toTitle in notVisitedVertices:
+            notVisitedVertices.discard(current.toTitle)
+            for e in grammarDoc.edgeList:
+                if current.toTitle == e.fromTitle:
+                    queue.append(e)
+
+    if len(notVisitedVertices) > 0:
+        print "    Parts of grammar is not reachable. The following rules are unreachable:"
+        for unreachableItem in notVisitedVertices:
+            print "        {0}".format(unreachableItem) 
+
+
+
     print "Extracting parent & child rules from graph"
-    print "Extracting Extracting parent & child tags from graph"
+    edgesByFromTitle = dict([(k, list(v)) for k, v in itertools.groupby(grammarDoc.edgeList, key=lambda x:x.fromTitle)])
+    edgesByToTitle = dict([(k, list(v)) for k, v in itertools.groupby(grammarDoc.edgeList, key=lambda x:x.toTitle)])
+    
+    for tagDoc in documentedTags.items():
+        # Getting parent rules
+        for tagRule in tagDoc[1].tagRules:
+            if tagRule.name in edgesByToTitle:
+                tagDoc[1].parentRules += [rulesByName[edge.fromTitle] for edge in edgesByToTitle[tagRule.name] if edge.fromTitle in rulesByName]
 
-    print "Computing Possible Rule Languages"
+        # Getting child rules
+        for tagRule in tagDoc[1].tagRules:
+            if tagRule.name in edgesByFromTitle:
+                tagDoc[1].childRules += [rulesByName[edge.toTitle] for edge in edgesByFromTitle[tagRule.name] if edge.toTitle in rulesByName]
+
+    for ruleDoc in documentedRules.items():
+        # Getting parent rules
+        rule = ruleDoc[1].rule
+        if rule.name in edgesByToTitle:
+            ruleDoc[1].parentRules += [rulesByName[edge.fromTitle] for edge in edgesByToTitle[rule.name] if edge.fromTitle in rulesByName]
+
+        # Getting child rules
+        if rule.name in edgesByFromTitle:
+            ruleDoc[1].childRules += [rulesByName[edge.toTitle] for edge in edgesByFromTitle[rule.name] if edge.toTitle in rulesByName]
+
+    for attrDoc in documentedAttrs.items():
+        # Getting parent rules
+        rule = attrDoc[1].attrRule
+        if rule.name in edgesByToTitle:
+            attrDoc[1].parentRules += [rulesByName[edge.fromTitle] for edge in edgesByToTitle[rule.name] if edge.fromTitle in rulesByName]
+
+        # Getting child rules
+        if rule.name in edgesByFromTitle:
+            attrDoc[1].childRules += [rulesByName[edge.toTitle] for edge in edgesByFromTitle[rule.name] if edge.toTitle in rulesByName]
+
+
+    print "Extracting Extracting parent & child tags from graph"
+    for doc in grammarDoc.documentation:
+        for parentRule in doc.parentRules:
+            if isinstance(parentRule, TagRule):
+                tagName = getComparableTagName(parentRule.tagInfo)
+                if tagName not in doc.parentTags:
+                    doc.parentTags.append(tagName)
+
+        for childRule in doc.childRules:
+            if isinstance(childRule, TagRule):
+                tagName = getComparableTagName(childRule.tagInfo)
+                if tagName not in doc.childTags:
+                    doc.childTags.append(tagName)
+
+    print "Computing Languages for Documentation"
+
+    # for tagDoc in documentedTags:
+    #     for associatedRules in tagDoc.tagRules:
+
+
+
     return grammarDoc
     
 if __name__ == "__main__":
@@ -623,5 +906,8 @@ if __name__ == "__main__":
     assert grmmr != None, "Didn't pass test"
     outFile = open("../GrammarOutput.txt", "w")
     grmmr.toEBNFText(outFile)
+    outFile.close()
+    outFile = open("../grammarDocumentation.txt","w")
+    grmmr.dumpDocumentation(outFile)
     outFile.close()
     # print out.getvalue()

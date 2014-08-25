@@ -1,4 +1,4 @@
-<Grammar>
+<Grammar languageOrdering="C,C++,C#,Java">
     <Documentation>
         
         <!-- This determines overall ordering that a rule is displayed. -->
@@ -33,7 +33,7 @@
     <TagRule name="archiveUnit" lang="C,C++,C#,Java" title="archive unit">
         <Desc>
         </Desc>
-        <Tag ns="src" elem="unit">
+        <Tag elem="unit">
             <Attrs>
                 <Attr rule="dirAttr" isOptional="true"/>
                 <Attr rule="filenameAttr" isOptional="true" />
@@ -51,7 +51,7 @@
     <TagRule name="compilationUnit" lang="C,C++,C#,Java" title="compilation unit">
         <Desc>
         </Desc>
-        <Tag ns="src" elem="unit">
+        <Tag elem="unit">
             <Attrs>
                 <Attr rule="dirAttr" isOptional="true"/>
                 <Attr rule="filenameAttr" isOptional="true" />
