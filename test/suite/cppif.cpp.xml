@@ -55,7 +55,7 @@
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
 <if>if<condition>()</condition><then> <block>{}</block></then>
 <else>else <block>{}</block></else>
-<cpp:error>#<cpp:directive>elseif</cpp:directive></cpp:error>
+<cpp:elif>#<cpp:directive>elif</cpp:directive></cpp:elif>
 <else>else <block>{}</block></else>
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 <else>else <block>{}</block></else></if>

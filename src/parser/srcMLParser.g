@@ -516,6 +516,7 @@ tokens {
 	SCPP_THEN;
 	SCPP_ELSE;
 	SCPP_ELIF;
+    SCPP_EMPTY;
 
     // C# cpp directives
     SCPP_REGION;
@@ -8065,7 +8066,7 @@ preprocessor[] { ENTRY_DEBUG
 
         {
             // assume error.  will set to proper one later
-            startElement(SCPP_ERROR);
+            startElement(SCPP_EMPTY);
 
             setTokenPosition(tp);
         }
@@ -8182,13 +8183,6 @@ preprocessor[] { ENTRY_DEBUG
 
             tp.setType(SCPP_WARNING);
         } (cpp_literal)* |
-
-        (NAME | VOID)
-        {
-            endMode();
-
-            tp.setType(SCPP_ERROR);
-        } |
 
         REGION
         {
