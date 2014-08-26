@@ -1,8 +1,9 @@
 <Grammar languageOrdering="C,C++,C#,Java">
     <Documentation>
         
-        <!-- This determines overall ordering that a rule is displayed. -->
+        <!-- This determines overall ordering for rules within the grammar class. -->
         <Rule rule="start">
+            <Desc>The start rule is the starting rule for the srcML grammar.</Desc>
         </Rule>
 
         <Tag elem="unit">
@@ -17,10 +18,76 @@
         <AttrRule rule="languageAttr" />
         <AttrRule rule="hashAttr" />
         <AttrRule rule="optionsAttr" />
+        
+        <Tag elem="macro-list" />
+        <AttrRule rule="macroTokenAttr" />
+        <AttrRule rule="macroTypeAttr" />
+
+        <Tag elem="comment" />
+        <AttrRule rule="commentTypeAttr" />
+        <AttrRule rule="commentFormatAttr" />
+
+        <Rule rule="topLevelElements">
+            <Desc>All of the elements which can occur within a compilation unit.</Desc>
+        </Rule>
+        <Rule rule="anyCPPOrCommentOrText">
+            <Desc>
+                Any of the C preprocessor directives, any specially marked up
+                text or a comment. Any of the child rules contained within this
+                rule occur almost anywhere within a compilation unit.
+            </Desc>
+        </Rule>
+
+        <!-- C preprocessor -->
+        <Rule rule="cppDefine"/>
+        <Tag ns="cpp" elem="define"/>
+        <Tag ns="cpp" elem="directive" />
+        <Tag ns="cpp" elem="macro" />
+        <Tag ns="cpp" elem="number" />
+        <Tag ns="cpp" elem="value" />
+        <Tag ns="cpp" elem="if" />
+        <Tag ns="cpp" elem="ifdef" />
+        <Tag ns="cpp" elem="ifndef" />
+        <Tag ns="cpp" elem="elif" />
+        <Tag ns="cpp" elem="else" />
+        <Tag ns="cpp" elem="endif" />
+        <Tag ns="cpp" elem="region" />
+        <Tag ns="cpp" elem="endregion" />
+        <Tag ns="cpp" elem="error" />
+        <Tag ns="cpp" elem="warning" />
+        <Tag ns="cpp" elem="literal" />
+        <Tag ns="cpp" elem="include" />
+        <Rule rule="cppFile" />
+        <Tag ns="cpp" elem="file" />
+        <Rule rule="cppLine"/>
+        <Tag ns="cpp" elem="line" />
+        <Tag ns="cpp" elem="pragma" />
+        <Tag ns="cpp" elem="undef" />
+        
+        
+        <Tag elem="name" />
+        <Tag elem="parameter_list" />
+        <Tag elem="param" />
+        <Tag elem="decl" />
+        <Tag elem="type" />
+
+<!--
+        Missing documentation for tag: cpp:elif within Rule: cppElIf
+        Missing documentation for tag: cpp:else within Rule: cppElse
+        Missing documentation for tag: cpp:endif within Rule: cppEndIf
+        Missing documentation for tag: cpp:region within Rule: cppRegion
+        Missing documentation for tag: cpp:endregion within Rule: cppEndRegion
+        Missing documentation for tag: cpp:error within Rule: cppError
+        Missing documentation for tag: cpp:literal within Rule: cppLiteral
+        Missing documentation for tag: cpp:warning within Rule: cppWarning
+        Missing documentation for tag: cpp:include within Rule: cppInclude
+        Missing documentation for tag: cpp:file within Rule: cppFileRelative
+        Missing documentation for tag: cpp:file within Rule: cppFileSearch
+-->
+
     </Documentation>
 
     <!-- Grammar Rules -->
-
     <Rule name="start" lang="C,C++,C#,Java">
         <Def>
             <Choice>
@@ -30,6 +97,7 @@
         </Def>
     </Rule>
 
+    <!-- src:unit -->
     <TagRule name="archiveUnit" lang="C,C++,C#,Java" title="archive unit">
         <Desc>
         </Desc>
@@ -65,7 +133,6 @@
             <ZeroOrMore><Ref name="topLevelElements"/></ZeroOrMore>
         </Def>
     </TagRule>
-
 
     <AttrRule name="dirAttr" lang="C,C++,C#,Java">
         <Attr name="dir" />
@@ -115,31 +182,85 @@
             <Text/>
         </Def>
     </AttrRule>
+
     
+    <!-- src:macro-list -->
+    <TagRule name="macroList" lang="C,C++,C#" title="macro list">
+        <Desc>
+
+        </Desc>
+        <Tag elem="macro-list">
+            <Attrs>
+                <Attr rule="macroTokenAttr" isOptional="False"/>
+                <Attr rule="macroTypeAttr" isOptional="False" />
+            </Attrs>
+        </Tag>
+        <Def>
+            <Empty />
+        </Def>
+    </TagRule>
+
+    <AttrRule name="macroTokenAttr" lang="C,C++,C#">
+        <Attr name="token" />
+        <Desc>The element QName to mark as a macro.</Desc>
+        <Def>
+            <Text/>
+        </Def>
+    </AttrRule>
+
+    <AttrRule name="macroTypeAttr" lang="C,C++,C#">
+        <Attr name="type" />
+        <Desc>The value for the token.</Desc>
+        <Def>
+            <Text/>
+        </Def>
+    </AttrRule>
+
+    <!-- src:comment-->
+    <TagRule name="comment" lang="C,C++,C#,Java" title="">
+        <Tag elem="comment">
+            <Attrs>
+                <Attr rule="commentTypeAttr" isOptional="false" />
+                <Attr rule="commentFormatAttr" isOptional="true" />
+            </Attrs>
+        </Tag>
+        <Def>
+            <Text />
+        </Def>
+    </TagRule>
+
+    <AttrRule name="commentTypeAttr" lang="C,C++,C#,Java">
+        <Attr name="type" />
+        <Desc>The type of comment either a line comment or a block comment.</Desc>
+        <Def>
+            <Choice>
+                <Literal value="line"/>
+                <Literal value="block"/>
+            </Choice>
+        </Def>
+    </AttrRule>
+
+    <AttrRule name="commentFormatAttr" lang="C,C++,C#,Java">
+        <Attr name="format" />
+        <Desc>Indicates a possible format of a comment.</Desc>
+        <Def>
+            <Choice>
+                <Literal value="doxygen"/>
+                <Literal value="javadoc"/>
+            </Choice>
+        </Def>
+    </AttrRule>
+
+
     <Rule name="topLevelElements" lang="C,C++,C#,Java">
         <Desc>All of the elements which can occur at the top level of a compilation unit.</Desc>
-        <Def><Text/></Def>
+        <Def>
+            <Choice>
+                <Ref name="anyCPPOrCommentOrText"/>
+            </Choice>
+        </Def>
     </Rule>
     
-    <!-- anyCPPOrCommentOrText: cppDefine
-                                | cppIf
-                                | cppIfDef
-                                | cppIfNDef
-                                | cppElif
-                                | cppElse
-                                | cppEndIf
-                                | cppRegion
-                                | cppEndRegion
-                                | cppError
-                                | cppWarning
-                                | cppInclude
-                                | cppLine
-                                | cppPragma
-                                | cppUndef
-                                | comment
-                                | escape
-                     ;
-        -->
     <Rule name="anyCPPOrCommentOrText" lang="C,C++,C#,Java" title="any C preprocessor, comment or text">
         <Desc>A listing of all elements which can occur anywhere.</Desc>
         <Def>
@@ -164,13 +285,8 @@
             </Choice>
         </Def>
     </Rule>
-    <!--
-    cppDefine: cppDefineName |cppDefineFunction
-             ;
 
-    cppDefineName <cpp:define>: '#' cppDirective["define"] (cppMacro (cppValue | cppNumber)?)? ;
-    cppDefineFunction <cpp:define>: '#' cppDirective["define"] cppMacroFunction (cppValue | cppNumber)? ;
-    -->
+    <!-- cpp:directive -->
     <TagRule name="cppDirective" lang="C,C++,C#">
         <Tag ns="cpp" elem="directive"/>
         <Params>
@@ -181,6 +297,7 @@
         </Def>
     </TagRule>
 
+    <!-- cpp:define -->
     <Rule name="cppDefine" lang="C,C++,C#">
         <Def>
             <Choice>
@@ -230,6 +347,7 @@
         </Def>
     </TagRule>
 
+    <!-- cpp:macro -->
     <TagRule name="cppMacro" lang="C,C++,C#">
         <Tag ns="cpp" elem="macro"/>
         <Def>
@@ -245,6 +363,367 @@
         </Def>
     </TagRule>
 
+    <!-- cpp:number -->
+    <TagRule name="cppNumber" lang="C,C++,C#">
+        <Tag ns="cpp" elem="number" />
+        <Def>
+            <Number />
+        </Def>
+    </TagRule>
+
+    <!-- cpp:value -->
+    <TagRule name="cppValue" lang="C,C++,C#">
+        <Tag ns="cpp" elem="value" />
+        <Def>
+            <Text/>
+        </Def>
+    </TagRule>
+
+    <!-- cpp:if -->
+    <TagRule name="cppIf" lang="C,C++,C#">
+        <Tag ns="cpp" elem="if" />
+        <Def>
+            <Literal value="#"/>
+            <Ref name="cppDirective">
+                <Args>
+                    <Arg>
+                        <Literal value="if" />
+                    </Arg>
+                </Args>
+            </Ref>
+            <Optional>
+                <Ref name="expr" />
+            </Optional>
+        </Def>
+    </TagRule>
+
+    <!-- cpp:ifdef -->
+    <TagRule name="cppIfDef" lang="C,C++,C#">
+        <Tag ns="cpp" elem="ifdef" />
+        <Def>
+            <Literal value="#"/>
+            <Ref name="cppDirective">
+                <Args>
+                    <Arg>
+                        <Literal value="ifdef" />
+                    </Arg>
+                </Args>
+            </Ref>
+            <Optional>
+                <Ref name="cppMacro" />
+            </Optional>
+        </Def>
+    </TagRule>
+
+    <!-- cpp:ifndef -->
+    <TagRule name="cppIfNDef" lang="C,C++,C#">
+        <Tag ns="cpp" elem="ifndef" />
+        <Def>
+            <Literal value="#"/>
+            <Ref name="cppDirective">
+                <Args>
+                    <Arg>
+                        <Literal value="ifndef" />
+                    </Arg>
+                </Args>
+            </Ref>
+            <Optional>
+                <Ref name="cppMacro" />
+            </Optional>
+        </Def>
+    </TagRule>
+
+    <!-- cpp:elif -->
+    <TagRule name="cppElIf" lang="C,C++,C#">
+        <Tag ns="cpp" elem="elif" />
+        <Def>
+            <Literal value="#"/>
+            <Ref name="cppDirective">
+                <Args>
+                    <Arg>
+                        <Literal value="elif" />
+                    </Arg>
+                </Args>
+            </Ref>
+            <Optional>
+                <Ref name="cppMacro" />
+            </Optional>
+        </Def>
+    </TagRule>
+
+    <!-- cpp:else -->
+    <TagRule name="cppElse" lang="C,C++,C#">
+        <Tag ns="cpp" elem="else" />
+        <Def>
+            <Literal value="#"/>
+            <Ref name="cppDirective">
+                <Args>
+                    <Arg>
+                        <Literal value="else" />
+                    </Arg>
+                </Args>
+            </Ref>
+        </Def>
+    </TagRule>
+
+    <!-- cpp:endif -->
+    <TagRule name="cppEndIf" lang="C,C++,C#">
+        <Tag ns="cpp" elem="endif" />
+        <Def>
+            <Literal value="#"/>
+            <Ref name="cppDirective">
+                <Args>
+                    <Arg>
+                        <Literal value="endif" />
+                    </Arg>
+                </Args>
+            </Ref>
+        </Def>
+    </TagRule>
+
+    <!-- cpp:region -->
+    <TagRule name="cppRegion" lang="C#">
+        <Tag ns="cpp" elem="region" />
+        <Def>
+            <Literal value="#"/>
+            <Ref name="cppDirective">
+                <Args>
+                    <Arg>
+                        <Literal value="region" />
+                    </Arg>
+                </Args>
+            </Ref>
+            <ZeroOrMore>
+                <Choice>
+                    <Ref name="simpleName" /> 
+                    <Ref name="cppLiteral" />
+                    <Text />
+                </Choice>
+            </ZeroOrMore>
+        </Def>
+    </TagRule>
+
+    <!-- cpp:endregion -->
+    <TagRule name="cppEndRegion" lang="C#">
+        <Tag ns="cpp" elem="endregion" />
+        <Def>
+            <Literal value="#"/>
+            <Ref name="cppDirective">
+                <Args>
+                    <Arg>
+                        <Literal value="endregion" />
+                    </Arg>
+                </Args>
+            </Ref>
+        </Def>
+    </TagRule>
+
+    <!-- cpp:error -->
+    <TagRule name="cppError" lang="C,C++,C#">
+        <Tag ns="cpp" elem="error" />
+        <Def>
+            <Literal value="#"/>
+            <Ref name="cppDirective">
+                <Args>
+                    <Arg>
+                        <Literal value="error" />
+                    </Arg>
+                </Args>
+            </Ref>
+            <ZeroOrMore>
+                <Choice>
+                    <Ref name="simpleName" /> 
+                    <Ref name="cppLiteral" />
+                    <Text />
+                </Choice>
+            </ZeroOrMore>
+        </Def>
+    </TagRule>
+
+    <!-- cpp:literal -->
+    <TagRule name="cppLiteral" lang="C,C++,C#">
+        <Tag ns="cpp" elem="literal" />
+        <Def>
+            <Text/>
+        </Def>
+    </TagRule>
+
+    <!-- cpp:warning -->
+    <TagRule name="cppWarning" lang="C,C++,C#">
+        <Tag ns="cpp" elem="warning" />
+        <Def>
+            <Literal value="#"/>
+            <Ref name="cppDirective">
+                <Args>
+                    <Arg>
+                        <Literal value="warning" />
+                    </Arg>
+                </Args>
+            </Ref>
+            <ZeroOrMore>
+                <Choice>
+                    <Ref name="simpleName" /> 
+                    <Ref name="cppLiteral" />
+                    <Text />
+                </Choice>
+            </ZeroOrMore>
+        </Def>
+    </TagRule>
+
+    <!-- cpp:include -->
+    <TagRule name="cppInclude" lang="C,C++">
+        <Tag ns="cpp" elem="include" />
+        <Def>
+            <Literal value="#"/>
+            <Ref name="cppDirective">
+                <Args>
+                    <Arg>
+                        <Literal value="include" />
+                    </Arg>
+                </Args>
+            </Ref>
+            <Optional>
+                <Ref name="cppFile" />
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    <!-- cpp:file -->
+    <Rule name="cppFile" lang="C,C++">
+        <Def>
+            <Choice>
+                <Ref name="cppFileSearch" />
+                <Ref name="cppFileRelative" />
+            </Choice>
+        </Def>
+    </Rule>
+
+    <TagRule name="cppFileRelative" lang="C,C++">
+        <Tag ns="cpp" elem="file"/>
+        <Def>
+            <Literal value="&lt;"/>
+            <Text />
+            <Literal value="&gt;"/>
+        </Def>
+    </TagRule>
+
+    <TagRule name="cppFileSearch" lang="C,C++,C#">
+        <Tag ns="cpp" elem="file"/>
+        <Def>
+            <Literal value="\&quot;"/>
+            <Text />
+            <Literal value="\&quot;"/>
+        </Def>
+    </TagRule>
+
+    <!-- cpp:line -->
+    <Rule name="cppLine" lang="C,C++,C#">
+        <Def>
+            <Choice>
+                <Ref name="lineNumberAndFile" />
+                <Ref name="lineHiddenOrDefault" />
+            </Choice>
+        </Def>
+    </Rule>
+    
+    <TagRule name="lineNumberAndFile" lang="C,C++,C#">
+        <Tag ns="cpp" elem="line"/>
+        <Def>
+            <Literal value="#"/>
+            <Ref name="cppDirective">
+                <Args>
+                    <Arg>
+                        <Literal value="line" />
+                    </Arg>
+                </Args>
+            </Ref>
+            <Optional>
+                <Ref name="cppNumber" />
+            </Optional>
+            <Optional>
+                <Ref name="cppFileRelative" />
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    <TagRule name="lineHiddenOrDefault" lang="C#">
+        <Tag ns="cpp" elem="line"/>
+        <Def>
+            <Literal value="#"/>
+            <Ref name="cppDirective">
+                <Args>
+                    <Arg>
+                        <Literal value="line" />
+                    </Arg>
+                </Args>
+            </Ref>
+            <Tag elem="name">
+                <Choice>
+                    <Literal value="hidden"/>
+                    <Literal value="default"/>
+                </Choice>
+            </Tag>
+        </Def>
+    </TagRule>
+
+    <!-- cpp:pragma -->    
+    <TagRule name="cppPragma" lang="C,C++,C#">
+        <Tag ns="cpp" elem="pragma"/>
+        <Def>
+            <Literal value="#"/>
+            <Ref name="cppDirective">
+                <Args>
+                    <Arg>
+                        <Literal value="pragma" />
+                    </Arg>
+                </Args>
+            </Ref>
+            <ZeroOrMore>
+                <Choice>
+                    <Ref name="simpleName" /> 
+                    <Ref name="cppLiteral" />
+                    <Text />
+                </Choice>
+            </ZeroOrMore>
+        </Def>
+    </TagRule>
+    
+    <!-- cpp:undef -->    
+    <TagRule name="cppUndef" lang="C,C++,C#">
+        <Tag ns="cpp" elem="undef"/>
+        <Def>
+            <Literal value="#"/>
+            <Ref name="cppDirective">
+                <Args>
+                    <Arg>
+                        <Literal value="pragma" />
+                    </Arg>
+                </Args>
+            </Ref>
+            <Optional>
+                <Ref name="simpleName" />
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    
+    <!--
+
+    // src namespace elements
+    expr '<expr>': /* TODO: Add possible expressions here!*/ ;
+
+    // src:name
+    simpleName'<name>':  Identifier ;
+
+    Identifier: [Identifier with no spaces];
+
+    Text: [ANYTHING];
+
+    NUMBER     : [0-9]+ ;
+
+    -->
+
+    <!-- src:parameter_list -->
     <TagRule name="macroParameterList" lang="C,C++">
         <Tag elem="parameter_list"/>
         <Def>
@@ -260,7 +739,7 @@
         </Def>
     </TagRule>
 
-
+    <!-- src:param -->
     <TagRule name="macroParam" lang="C,C++">
         <Tag elem="param"/>
         <Def>
@@ -268,6 +747,7 @@
         </Def>
     </TagRule>
 
+    <!-- src:decl -->
     <TagRule name="macroParamDecl" lang="C,C++">
         <Tag elem="decl"/>
         <Def>
@@ -275,6 +755,7 @@
         </Def>
     </TagRule>
 
+    <!-- src:type -->
     <TagRule name="marcoParamDeclType" lang="C,C++">
         <Tag elem="type"/>
         <Def>
@@ -282,106 +763,13 @@
         </Def>
     </TagRule>
 
-
-    <TagRule name="cppNumber" lang="C,C++,C#">
-        <Tag ns="cpp" elem="number" />
+    <!-- src:name -->
+    <TagRule name="simpleName" lang="C,C++,C#,Java">
+        <Tag elem="name"/>
         <Def>
-            <Number />
+            <Identifier />
         </Def>
     </TagRule>
-    <!--
-
-    // cpp:number
-    cppNumber <cpp:number>: NUMBER
-             ;
-
-    // cpp:value
-    cppValue <cpp:value>: Text
-        ;
-
-    // cpp:if
-    cppIf <cpp:if>: '#' cppDirective["if"] expr? 
-         ;
-
-    // cpp:ifdef
-    cppIfDef <cpp:ifdef>: '#' cppDirective["ifdef"] cppMacro?
-            ;
-
-    // cpp:ifndef
-    cppIfNDef <cpp:ifndef>: '#' cppDirective["ifndef"] cppMacro? 
-            ;
-            
-    // cpp:elif
-    cppElif <cpp:elif>: '#' cppDirective["elif"] expr?
-           ;
-
-    // cpp:else
-    cppElse <cpp:else>: '#' cppDirective["else"]
-           ;
-
-    // cpp:endif
-    cppEndIf<cpp:endif>: '#' cppDirective["endif"]
-            ;
-
-    // cpp:region
-    cppRegion <cpp:region>: '#' cppDirective["region"] simpleName*
-             ;
-
-    // cpp:endregion
-    cppEndRegion <cpp:endregion>: '#' cppDirective["endregion"]
-             ;
-
-    // cpp:error
-    cppError<cpp:error>: '#' cppDirective["error"] cppLiteral?
-            ;
-
-    // cpp:literal
-    cppLiteral <cpp:literal>: Text
-              ;
-
-    // cpp:warning
-    cppWarning <cpp:warning>: '#' cppDirective["warning"] cppLiteral?
-              ;
-
-    // cpp:include
-    cppInclude<cpp:include>: '#' cppDirective["include"] cppFile?
-              ;
-
-    // cpp:file
-    cppFileSearch <cpp:file>: cppSearchPathFile;
-    cppFileRel<cpp:file>: cppRelativeFile ;
-    cppRelativeFile:'"' Text '"' ;
-    cppSearchPathFile: '&lt;' Text '&gt;' ;
-    cppFile: cppFileSearch | cppFileRel
-        ;
-
-    // cpp:line
-    cppLineUbiquitous <cpp:line>: '#' cppDirective["line"] cppNumber? cppFileSearch? cppFile ;
-    cppLineCS <cpp:line>: '#' cppDirective["line"] '<name>' ('hidden'| 'default') '</name>' ;
-    cppLine: cppLineUbiquitous | cppLineCS
-           ;
-
-    // cpp:pragma
-    cppPragma<cpp:pragma>: '#' cppDirective["pragma"] simpleName* 
-             ;
-
-    // cpp:undef
-    cppUndef <cpp:undef>: '#' cppDirective["undef"] simpleName?
-            ;
-
-    // src namespace elements
-    expr '<expr>': /* TODO: Add possible expressions here!*/ ;
-
-    // src:name
-    simpleName'<name>':  Identifier ;
-
-    Identifier: [Identifier with no spaces];
-
-    Text: [ANYTHING];
-
-    NUMBER     : [0-9]+ ;
-
-    -->
     <!--
         <Literal value=""/>
         <Ref name=""/>

@@ -141,7 +141,7 @@ class TagDocumentation(DocumentationBase):
                     for ref in tagRule.ruleRefs:
                         out.write("                {0}\n".format(ref.name))
                         if ref.args != None:
-                            for arg in ref.arg:
+                            for arg in ref.args:
                                 out.write("                    ")
                                 arg.toEBNFText(out)
                                 out.write("\n")
@@ -151,7 +151,7 @@ class TagDocumentation(DocumentationBase):
         else:
             out.write("\n")
             for attr in self.attributes:
-                out.write("        {0}\n".format(attr.name))
+                out.write("        {0}\n".format(attr))
         self.dumpDocumentationBaseFields(out)
 
 class AttrRuleDocumentation(DocumentationBase):
@@ -169,8 +169,9 @@ class AttrRuleDocumentation(DocumentationBase):
             out.write("None\n")
         else:
             out.write("\n")
-            out.write("        Name: {0} Title: {1}\n".format(self.attrRule.name, self.attrRule.title))
+            out.write("        Name: {0} Title: {1} AttrName: {2} \n".format(self.attrRule.name, self.attrRule.title, self.attrRule.attrName))
             out.write("            Desc: \"{0}\"\n".format(self.attrRule.desc.strip()))
+        self.dumpDocumentationBaseFields(out)
 
 
 # Rule Classes
@@ -214,7 +215,7 @@ class TagRule(RuleBase):
         self.tagInfo = None
 
     def toEBNFRuleStartText(self, out):
-        out.write(" <{0}{1}>".format("" if self.tagInfo.ns == "" else (self.tagInfo.ns +":"), self.tagInfo.tag))
+        out.write(" <{0}{1}>".format("" if self.tagInfo.ns == "" else (self.tagInfo.ns + ":"), self.tagInfo.tag))
         if self.tagInfo.attrs != None:
             out.write( " ({0})".format(", ".join([ x.name + ("?" if x.isOptional else "") for x in self.tagInfo.attrs])) )
 
@@ -300,7 +301,20 @@ class Number(GrammarDef):
     def toEBNFText(self, out):
         out.write("Number")
 
+class Empty(GrammarDef):
+    def __init__(self):
+        GrammarDef.__init__(self, "Number")
 
+    def toEBNFText(self, out):
+        out.write("Number")
+
+class Identifier(GrammarDef):
+    def __init__(self):
+        GrammarDef.__init__(self, "Identifier")
+
+    def toEBNFText(self, out):
+        out.write("Identifier")
+        
 # Class that's used to represent other parts of the language
 # that have a many to one relationship (i.e. groupings of things)
 class GrammarExpr(GrammarDef):
@@ -326,6 +340,23 @@ class GrammarExpr(GrammarDef):
                     out.write("{0}".format(self.EBNFSeparator()))
             out.write(")")
             out.write(self.EBNFSuffix())
+
+
+class TagExpr(GrammarExpr):
+    def __init__(self):
+        GrammarExpr.__init__( self, "TagExpr")
+        self.tagInfo = None
+
+    def toEBNFText(self, out):
+        out.write(" <{0}{1}>".format("" if self.tagInfo.ns == "" else (self.tagInfo.ns + ":"), self.tagInfo.tag))
+        if self.tagInfo.attrs != None:
+            out.write( " ({0})".format(", ".join([ x.name + ("?" if x.isOptional else "") for x in self.tagInfo.attrs])) )
+        out.write("{ ")
+        for expr in self.subExprs:
+            expr.toEBNFText(out)
+            out.write(" ")
+        out.write("}")
+
 
 class OptionalExpr(GrammarExpr):
     def __init__(self):
@@ -406,7 +437,8 @@ DocumentationTag = "Documentation"
 RefsTag = "Refs"
 SeeTag = "See"
 NumberTag = "Number"
-
+EmptyTag = "Empty"
+IdentifierTag = "Identifier"
 # Name Attribute
 nameAttr = "name"
 nsAttr = "ns"
@@ -465,9 +497,34 @@ def loadGrammar(fileName):
             raise Exception("Invalid # of children for a reference to another rule.")
         return ruleRef
 
+    # def buildTagInfo(tagElem, currentRule):
+    #     info = RuleTagInfo()
+    #     info.ns = getAttribOrDefault(tagElem, nsAttr, "")
+    #     info.tag = getAttribOrFail(tagElem, elemAttr)
+    #     for elem in tagElem.iterchildren():
+    #         if elem.tag == AttrsTag:
+    #             info.attrs = buildAttrsList(elem, currentRule)
+
+    #         else:
+    #             unexpectedOrUnknownTag(elem)
+    #     return info
+    def buildTagGrammar(tagElement, currentRule):
+        expr = TagExpr()
+        expr.tagInfo = RuleTagInfo()
+        expr.tagInfo.ns = getAttribOrDefault(tagElement, nsAttr, "")
+        expr.tagInfo.tag = getAttribOrFail(tagElement, elemAttr)
+        for elem in tagElement.iterchildren():
+            if elem.tag == AttrsTag:
+                expr.tagInfo.attrs = buildAttrsList(elem, currentRule)
+            else: 
+                expr.subExprs.append(buildGrammar(elem, currentRule))
+        return expr
+
 
     def buildGrammar(grammarElement, currentRule):
-        if grammarElement.tag == OptionalTag:
+        if grammarElement.tag == TagTag:
+            return buildTagGrammar(grammarElement, currentRule)
+        elif grammarElement.tag == OptionalTag:
             expr = OptionalExpr()
             buildExpr(grammarElement, expr, currentRule)
             return expr
@@ -514,6 +571,12 @@ def loadGrammar(fileName):
         elif grammarElement.tag == NumberTag:
             return Number()
 
+        elif grammarElement.tag == EmptyTag:
+            return Empty()
+
+        elif grammarElement.tag == IdentifierTag:
+            return Identifier()
+
         else:
             unexpectedOrUnknownTag(grammarElement)
 
@@ -543,7 +606,9 @@ def loadGrammar(fileName):
     def buildRule(ruleElem):
         rule = Rule()
         rule.name = getAttribOrFail(ruleElem, nameAttr)
+        validateRuleName(rule, ruleElem)
         rule.languages = [x.strip() for x in getAttribOrFail(ruleElem, langAttr).split(',')]
+        validateLanguages(rule.languages, ruleElem)
         rule.title = getAttribOrDefault(ruleElem, titleAttr, "")
         for elem in ruleElem.iterchildren():
             if elem.tag == DefTag:
@@ -561,14 +626,22 @@ def loadGrammar(fileName):
         return rule
 
 
-    def buildAttrsList(attrsElem):
+    def buildAttrsList(attrsElem, currentRule):
         ret = []
         for elem in attrsElem.iterchildren():
             if elem.tag == AttrTag:
                 info = AttrUseInfo()
                 info.name = getAttribOrFail(elem, ruleAttr)
-                info.isOptional = bool(getAttribOrDefault(elem, isOptionalAttr, "False")) 
+                info.isOptional = getAttribOrDefault(elem, isOptionalAttr, "").lower() == "true"
                 ret.append(info)
+
+                # Adding edge for rule to attribute
+                newEdge = RuleEdge()
+                newEdge.fromTitle = currentRule.name
+                newEdge.fromObj = currentRule
+                newEdge.toTitle = info.name
+                newEdge.ruleRef = info
+                grammarDoc.edgeList.append(newEdge)
 
             else:
                 unexpectedOrUnknownTag(elem)
@@ -577,13 +650,13 @@ def loadGrammar(fileName):
         return ret
 
 
-    def buildTagInfo(tagElem):
+    def buildTagInfo(tagElem, currentRule):
         info = RuleTagInfo()
         info.ns = getAttribOrDefault(tagElem, nsAttr, "")
         info.tag = getAttribOrFail(tagElem, elemAttr)
         for elem in tagElem.iterchildren():
             if elem.tag == AttrsTag:
-                info.attrs = buildAttrsList(elem)
+                info.attrs = buildAttrsList(elem, currentRule)
 
             else:
                 unexpectedOrUnknownTag(elem)
@@ -593,14 +666,16 @@ def loadGrammar(fileName):
     def buildTagRule(ruleElem):
         rule = TagRule()
         rule.name = getAttribOrFail(ruleElem, nameAttr)
+        validateRuleName(rule, ruleElem)
         rule.languages = [x.strip() for x in getAttribOrFail(ruleElem, langAttr).split(',')]
+        validateLanguages(rule.languages, ruleElem)
         rule.title = getAttribOrDefault(ruleElem, titleAttr, "")
         for elem in ruleElem.iterchildren():
             if elem.tag == DefTag:
                 rule.grammar = buildGrammarDef(elem, rule)
 
             elif elem.tag == TagTag:
-                rule.tagInfo = buildTagInfo(elem)
+                rule.tagInfo = buildTagInfo(elem, rule)
 
             elif elem.tag == DescTag:
                 rule.desc = extractSubText(elem)
@@ -618,7 +693,9 @@ def loadGrammar(fileName):
     def buildAttrRule(ruleElem):
         rule = AttrRule()
         rule.name = getAttribOrFail(ruleElem, nameAttr)
+        validateRuleName(rule, ruleElem)
         rule.languages = [x.strip() for x in getAttribOrFail(ruleElem, langAttr).split(',')]
+        validateLanguages(rule.languages, ruleElem)
         rule.title = getAttribOrDefault(ruleElem, titleAttr, "")
         for elem in ruleElem.iterchildren():
             if elem.tag == DefTag:
@@ -656,24 +733,27 @@ def loadGrammar(fileName):
             else:
                 unexpectedOrUnknownTag(elem)
 
-    def buildRuleDocumentation(ruleElem):
-        rule = RuleDocumentation()
-        rule.name = getAttribOrFail(ruleElem, ruleAttr)
-        buildRestOfRuleDoc(ruleElem, rule)
-        return rule
+    def buildRuleDocumentation(documentationElem):
+        doc = RuleDocumentation()
+        doc.name = getAttribOrFail(documentationElem, ruleAttr)
+        buildRestOfRuleDoc(documentationElem, doc)
+        validateDocName(doc, documentationElem)
+        return doc
 
-    def buildAttrRuleDocumentation(ruleElem):
-        rule = AttrRuleDocumentation()
-        rule.name = getAttribOrFail(ruleElem, ruleAttr)
-        buildRestOfRuleDoc(ruleElem, rule)
-        return rule
+    def buildAttrRuleDocumentation(documentationElem):
+        doc = AttrRuleDocumentation()
+        doc.name = getAttribOrFail(documentationElem, ruleAttr)
+        buildRestOfRuleDoc(documentationElem, doc)
+        validateDocName(doc, documentationElem)
+        return doc
 
-    def buildTagDocumentation(ruleElem):
-        rule = TagDocumentation()
-        rule.tag = getAttribOrFail(ruleElem, elemAttr)
-        rule.ns = getAttribOrDefault(ruleElem, nsAttr, "")
-        buildRestOfRuleDoc(ruleElem, rule)
-        return rule
+    def buildTagDocumentation(documentationElem):
+        doc = TagDocumentation()
+        doc.tag = getAttribOrFail(documentationElem, elemAttr)
+        doc.ns = getAttribOrDefault(documentationElem, nsAttr, "")
+        buildRestOfRuleDoc(documentationElem, doc)
+        validateTagDoc(doc, documentationElem)
+        return doc
 
     def buildDocumentation(docElem):
         for elem in docElem.iterchildren():
@@ -697,7 +777,38 @@ def loadGrammar(fileName):
     # Verifying Correct Root element.
     verifyNodeNameOrFail(grammarElem, GrammarTag)
 
-    grammarDoc.langauge = getAttribOrFail(grammarElem, languageOrderingAttr).split(",")
+    grammarDoc.languages = getAttribOrFail(grammarElem, languageOrderingAttr).split(",")
+
+    # This is used for validating that all languages read in are valid and correct.
+    validLanguageSet = set([lang for lang in grammarDoc.languages])
+    def validateLanguages(langs, elem):
+        for l in langs:
+            if l not in validLanguageSet:
+                raise Exception("Invalid language attribute set. Language: {0} is NOT a valid language ".format(l) + formatElementErrorMsg(elem))
+
+    # Used for validating the names of all rules.
+    invalidRuleNames = set()
+    def validateRuleName(rule, elem):
+        if rule.name in invalidRuleNames:
+            raise Exception("Duplicate Rule name: {0}. RuleType: {1}. ".format(rule.name, elem.tag) + formatElementErrorMsg(elem))
+        else:
+            invalidRuleNames.add(rule.name)
+
+    # Used for validating the documentation side of things.
+    invalidDocName = set()
+    invalidTagDoc = set()
+    def validateDocName(documentation, elem):
+        if documentation.name in invalidRuleNames:
+            raise Exception("Duplicate documentation name: {0}. Documentation Type: {1}. ".format(documentation.name, elem.tag) + formatElementErrorMsg(elem))
+        else:
+            invalidDocName.add(documentation.name)
+
+    def validateTagDoc(documentation, elem):
+        tag = getComparableTagName(documentation)
+        if tag in invalidRuleNames:
+            raise Exception("Duplicate tag for documentation: {0}. Documentation Type: {1}. ".format(tag, elem.tag) + formatElementErrorMsg(elem))
+        else:
+            invalidTagDoc.add(tag)
 
     for elem in grammarElem.iterchildren():
         if elem.tag == DocumentationTag:
@@ -715,40 +826,20 @@ def loadGrammar(fileName):
         else:
             unexpectedOrUnknownTag(elem)
 
-    # for r in grammarDoc.rules:
-    #     print "{0} {1}".format(r.name, r.__class__.__name__)
 
-    # Constructing the links between grammar documentation and other grammar.
-    # print "Extracting Documented Tags"
+    # Separating different types of documentation
     documentedTags = dict([(getComparableTagName(tagDoc), tagDoc) for tagDoc in grammarDoc.documentation if isinstance(tagDoc, TagDocumentation)])
-    # print "    # of extracted Documentations: ", len(documentedTags)
-
-    # print "Extracting Documented Attributes"
     documentedAttrs = dict([(attrDoc.name, attrDoc) for attrDoc in grammarDoc.documentation if isinstance(attrDoc, AttrRuleDocumentation)])
-    # print "    # of extracted Documentations: ", len(documentedAttrs)
-
-    # print "Extracting Documented Rules"
     documentedRules = dict([(ruleDoc.name, ruleDoc) for ruleDoc in grammarDoc.documentation if isinstance(ruleDoc, RuleDocumentation)])
-    # print "    # of extracted Documentations: ", len(documentedRules)
-    
 
-    # print "Extracting Tag Rules"
+    # Separating tag rules
     grammarTagRules = [rule for rule in grammarDoc.rules if isinstance(rule, TagRule)]
-    # print "    # of extracted rules: ", len(grammarTagRules)
-
-    # print "Extracting AttributeRules"
     grammarAttrRules = dict([(rule.name, rule) for rule in grammarDoc.rules if isinstance(rule, AttrRule)])
-    # print "    # of extracted rules: ", len(grammarAttrRules)
-
-    # print "Extracting Rules"
     grammarRules = dict([(rule.name, rule) for rule in grammarDoc.rules if isinstance(rule, Rule)])
-    # print "    # of extracted rules: ", len(grammarRules)
 
 
     print "Building Documentation"
     print "    Checking Rules to Documentation"
-    # Consider remove all of elements as they are processed so that
-    # there is less to process maybe?
     undocumentedRules = []
     for rule in grammarTagRules:
         tag = getComparableTagName(rule.tagInfo)
@@ -786,14 +877,10 @@ def loadGrammar(fileName):
 
     print "    Checking Documentation To Rules"
     documentationWithoutARule = []
-
-    # Tag Rule documentation
-    # Attr Rule documentation
-    # Rule Documentation
     for doc in documentedTags.items():
         if len(doc[1].tagRules) == 0:
             documentationWithoutARule.append(doc[1])
-            print "        Extra documentation for Tag: {0} within Rule: {1}".format(getComparableTagName(doc[1]), doc[1].name) 
+            print "        Extra documentation for Tag: {0}".format(getComparableTagName(doc[1])) 
     
     for doc in documentedAttrs.items():
         if doc[1].attrRule == None:
@@ -850,32 +937,32 @@ def loadGrammar(fileName):
         # Getting parent rules
         for tagRule in tagDoc[1].tagRules:
             if tagRule.name in edgesByToTitle:
-                tagDoc[1].parentRules += [rulesByName[edge.fromTitle] for edge in edgesByToTitle[tagRule.name] if edge.fromTitle in rulesByName]
+                tagDoc[1].parentRules += [rulesByName[edge.fromTitle] for edge in edgesByToTitle[tagRule.name] if edge.fromTitle in rulesByName and edge.fromObj not in tagDoc[1].parentRules]
 
         # Getting child rules
         for tagRule in tagDoc[1].tagRules:
             if tagRule.name in edgesByFromTitle:
-                tagDoc[1].childRules += [rulesByName[edge.toTitle] for edge in edgesByFromTitle[tagRule.name] if edge.toTitle in rulesByName]
+                tagDoc[1].childRules += [rulesByName[edge.toTitle] for edge in edgesByFromTitle[tagRule.name] if edge.toTitle in rulesByName and edge.toObj not in tagDoc[1].childRules]
 
     for ruleDoc in documentedRules.items():
         # Getting parent rules
         rule = ruleDoc[1].rule
         if rule.name in edgesByToTitle:
-            ruleDoc[1].parentRules += [rulesByName[edge.fromTitle] for edge in edgesByToTitle[rule.name] if edge.fromTitle in rulesByName]
+            ruleDoc[1].parentRules += [rulesByName[edge.fromTitle] for edge in edgesByToTitle[rule.name] if edge.fromTitle in rulesByName and edge.fromObj not in ruleDoc[1].parentRules]
 
         # Getting child rules
         if rule.name in edgesByFromTitle:
-            ruleDoc[1].childRules += [rulesByName[edge.toTitle] for edge in edgesByFromTitle[rule.name] if edge.toTitle in rulesByName]
+            ruleDoc[1].childRules += [rulesByName[edge.toTitle] for edge in edgesByFromTitle[rule.name] if edge.toTitle in rulesByName and edge.toObj not in ruleDoc[1].childRules]
 
     for attrDoc in documentedAttrs.items():
         # Getting parent rules
         rule = attrDoc[1].attrRule
         if rule.name in edgesByToTitle:
-            attrDoc[1].parentRules += [rulesByName[edge.fromTitle] for edge in edgesByToTitle[rule.name] if edge.fromTitle in rulesByName]
+            attrDoc[1].parentRules += [rulesByName[edge.fromTitle] for edge in edgesByToTitle[rule.name] if edge.fromTitle in rulesByName and edge.fromObj not in attrDoc[1].parentRules]
 
         # Getting child rules
         if rule.name in edgesByFromTitle:
-            attrDoc[1].childRules += [rulesByName[edge.toTitle] for edge in edgesByFromTitle[rule.name] if edge.toTitle in rulesByName]
+            attrDoc[1].childRules += [rulesByName[edge.toTitle] for edge in edgesByFromTitle[rule.name] if edge.toTitle in rulesByName and edge.toObj not in attrDoc[1].childRules]
 
 
     print "Extracting Extracting parent & child tags from graph"
@@ -892,11 +979,35 @@ def loadGrammar(fileName):
                 if tagName not in doc.childTags:
                     doc.childTags.append(tagName)
 
+    print "Extracting Attributes for documentation"
+    for tagDoc in documentedTags.values():
+        for tagRule in tagDoc.tagRules:
+            if tagRule.tagInfo == None:
+                # This should never occur
+                raise Exception("Unable to extract attributes, invalid tag info!")
+            if tagRule.tagInfo.attrs != None:
+                for attr in tagRule.tagInfo.attrs:
+                    if attr.name not in tagDoc.attributes:
+                        tagDoc.attributes.append(attr.name)
+
     print "Computing Languages for Documentation"
+    
 
-    # for tagDoc in documentedTags:
-    #     for associatedRules in tagDoc.tagRules:
+    for tagDoc in documentedTags.values():
+        tagDoc.languages = []
+        for l in grammarDoc.languages:
+            for tagRule in tagDoc.tagRules:
+                if l in tagRule.languages:
+                    tagDoc.languages.append(l)
+                    break
 
+    for ruleDoc in documentedRules.values():
+        if ruleDoc.rule != None:
+            ruleDoc.languages = ruleDoc.rule.languages
+
+    for attrDoc in documentedAttrs.values():
+        if attrDoc.attrRule != None:
+            attrDoc.languages = attrDoc.attrRule.languages
 
 
     return grammarDoc
