@@ -743,6 +743,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
          && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
          && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
          && (LA(1) != DEFAULT || next_token() == COLON)
+         && (LA(1) != CHECKED || next_token() == LCURLY)
+         && (LA(1) != UNCHECKED || next_token() == LCURLY)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != INLINE || next_token() == NAMESPACE)
          && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
@@ -3443,6 +3445,8 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
          && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
          && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
          && (LA(1) != DEFAULT || next_token() == COLON)
+         && (LA(1) != CHECKED || next_token() == LCURLY)
+         && (LA(1) != UNCHECKED || next_token() == LCURLY)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != INLINE || next_token() == NAMESPACE)
          && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
@@ -4914,7 +4918,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 // the list of identifiers that are also marked up as tokens for other things.
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
-            SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
+            SUPER | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
             SIGNAL | FINAL | OVERRIDE | VOID | ASM |
 
             // C# linq
@@ -5754,7 +5758,7 @@ keyword_calls[] { ENTRY_DEBUG } :
     encode_call | selector_call |
 
     // C#
-    typeof_call | { inLanguage(LANGUAGE_CSHARP) }? default_call
+    typeof_call | { inLanguage(LANGUAGE_CSHARP) }? default_call | checked_call | unchecked_call
 
 ;
 
@@ -5768,7 +5772,7 @@ keyword_call_tokens[] { ENTRY_DEBUG } :
     ENCODE | SELECTOR |
 
     // C#
-    TYPEOF | DEFAULT
+    TYPEOF | DEFAULT | CHECKED | UNCHECKED
 
 ;
 
@@ -5923,6 +5927,32 @@ default_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
+// checked
+checked_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+            startElement(SCHECKED_STATEMENT);
+        }
+        CHECKED
+        call_argument_list
+;
+
+
+// unchecked
+unchecked_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+            startElement(SUNCHECKED_STATEMENT);
+        }
+        UNCHECKED
+        call_argument_list
+;
 // check if macro call
 macro_call_check[] { ENTRY_DEBUG } :
         simple_identifier (options { greedy = true; } : paren_pair)*
