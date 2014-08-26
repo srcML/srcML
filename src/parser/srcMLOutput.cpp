@@ -502,9 +502,17 @@ srcMLOutput::~srcMLOutput() {
 void srcMLOutput::close() {
 
     if (xout) {
+
         xmlTextWriterEndDocument(xout);
         xmlFreeTextWriter(xout);
         xout = 0;
+        output_buffer = 0;
+
+    } else if(output_buffer) {
+
+        xmlOutputBufferClose(output_buffer);
+        output_buffer = 0;
+
     }
 }
 
