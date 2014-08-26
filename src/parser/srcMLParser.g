@@ -5112,7 +5112,7 @@ compound_name_csharp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY
             (multops)*
             (DESTOP set_bool[isdestructor])*
             (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
-            (options { greedy = true; } : multops)*
+            (options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
         )*
 
 ;
