@@ -493,6 +493,7 @@ tokens {
     // Qt
 	SSIGNAL_ACCESS;
     SFOREVER_STATEMENT;
+    SEMIT_STATEMENT;
 
     // cpp directive internal elements
 	SCPP_DIRECTIVE;
@@ -780,7 +781,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         if_statement | { !isoption(parser_options, SRCML_OPTION_NESTIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
-        while_statement | for_statement | do_statement | foreach_statement | forever_statement |
+        while_statement | for_statement | do_statement | foreach_statement |
 
         // jump statements
         return_statement | break_statement | continue_statement | goto_statement |
@@ -812,7 +813,10 @@ keyword_statements[] { ENTRY_DEBUG } :
         // Objective-C - kewywords only detected for Objective-C
         objective_c_class | protocol | objective_c_class_end | property_declaration | synthesize_statement | dynamic_statement |
 
-        autoreleasepool_block | compatibility_alias | class_directive
+        autoreleasepool_block | compatibility_alias | class_directive |
+
+        // Qt
+        forever_statement | emit_statement
 
 ;
 
@@ -2656,6 +2660,19 @@ protocol_declaration[] { ENTRY_DEBUG } :
 
 ;
 
+// Qt emit statement
+emit_statement[] { ENTRY_DEBUG } :
+        {
+            // statement with nested statement (after condition)
+            startNewMode(MODE_STATEMENT);
+
+            // start the while element
+            startElement(SEMIT_STATEMENT);
+
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+        }
+        EMIT
+;
 
 /* Declarations Definitions CFG */
 

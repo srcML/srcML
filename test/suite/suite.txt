@@ -116,6 +116,7 @@ LANGUAGE_CXX const_cast
 LANGUAGE_CXX dynamic_cast
 LANGUAGE_CXX reinterpret_cast
 LANGUAGE_CXX static_cast
+LANGUAGE_CXX emit
 
 LANGUAGE_CXX_GEN c_cpp_mode.restrict
 LANGUAGE_CXX_GEN c_cpp_mode.mutable
