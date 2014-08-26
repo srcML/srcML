@@ -3632,7 +3632,7 @@ comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY
 ;
 
 // mark COLON
-colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); bool in_for = inTransparentMode(MODE_FOR_CONDITION); LightweightElement element(this); ENTRY_DEBUG } :
+colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); LightweightElement element(this); ENTRY_DEBUG } :
         {
 
             if(in_ternary) {
@@ -3651,8 +3651,7 @@ colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); 
 
             }
 
-            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)) && !(in_for && isoption(parser_options, SRCML_OPTION_TERNARY))
-             && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)) && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
                 && (!inLanguage(LANGUAGE_OBJECTIVE_C) || !inMode(MODE_INTERNAL_END_CURLY)))
                 startElement(SOPERATOR);
 
