@@ -1,1 +1,3 @@
 {% extends "GrammarTemplates/RuleSkeleton.html" %}
+{% load GrammarFormatHelpers %}
+{% block title %}<a id="{{documentation|makeRuleLink}}" class="tagTitle">{{documentation.name}}</a>{% endblock %}

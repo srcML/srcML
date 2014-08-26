@@ -1,3 +1,11 @@
 a.tagTitle {
     font-family:"Courier New";
 }
+
+th.languageSupportHeader {
+    width:4em;
+}
+
+table.ToC thead tr th:nth-child(2) {
+    width:7em;
+}

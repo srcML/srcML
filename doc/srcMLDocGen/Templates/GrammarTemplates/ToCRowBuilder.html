@@ -1,0 +1,20 @@
+{% load GrammarFormatHelpers %}
+{% load DjangoHelpers %}
+<tr>
+{% if currentRow.typename == "RuleDocumentation" %}
+    <td><a href="#{{currentRow|makeRuleLink}}">{{currentRow.name}}</a></td>
+    <td>Rule</td>
+{% elif currentRow.typename == "AttrRuleDocumentation" %}
+    <td><a href="#{{currentRow|makeAttrRuleLink}}">{{currentRow.name}}</a></td>
+    <td>Attribute Rule</td>
+{% elif currentRow.typename == "TagDocumentation" %}
+    <td><a href="#{{currentRow|makeTagLink}}">{{currentRow|makeDisplayableTag}}</a></td>
+    <td>Tag Rule</td>
+{% else %}
+    Error Unknown type of rule!
+{% endif %}
+    {% for lang in doc.languages %}
+        <td>{% if lang|isIn:currentRow.languages %}&#x2713;{% else %}&nbsp;{% endif %}</td>
+    {% endfor%}
+    
+</tr>

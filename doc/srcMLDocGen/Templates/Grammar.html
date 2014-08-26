@@ -1,11 +1,31 @@
 {% extends "Skeleton.html" %}
 {% load DjangoHelpers %}
+
 {% block cssLinks %}
     <link rel="stylesheet" href="Style/Grammar.css" />
 {% endblock %}
+
 {% block title %}{{title}}{% endblock %}
+
 {% block body %}
-{% for documentation in doc.documentation %}
-    {% include "GrammarTemplates/RuleDispatcher.html" with documentation=documentation %}
-{% endfor %}
+    <h2>{{title}}</h2>
+    <table class="ToC">
+        <thead>
+            <tr>
+                <th>Rule</th>
+                <th>Rule Type</th>
+                {% for lang in doc.languages %}
+                <th class="languageSupportHeader">{{lang}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for documentation in doc.documentation %}
+                {% include "GrammarTemplates/ToCRowBuilder.html" with currentRow=documentation doc=doc%}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% for documentation in doc.documentation %}
+        {% include "GrammarTemplates/RuleDispatcher.html" with documentation=documentation %}
+    {% endfor %}
 {% endblock %}

@@ -12,8 +12,16 @@ def makeTagLink(tagToLink):
     return "tag_{0}{1}".format("" if tagToLink.ns == "" else (tagToLink.ns + "_"), tagToLink.tag)
 
 @register.filter(name = "makeRefLink")
-def makeTagLink(ruleToLink):
+def makeRefLink(ruleToLink):
     return "ref_{0}".format(ruleToLink.name)
+
+@register.filter(name = "makeRuleLink")
+def makeRuleLink(rule):
+    return "rule_{0}".format(rule.name)
+
+@register.filter(name = "makeAttrRuleLink")
+def makeAttrRuleLink(attrRule):
+    return "attr_{0}".format(attrRule.name)
 
 @register.filter(name = "makeDisplayableTag")
 def makeDisplayableTag(toDisplay):
