@@ -150,7 +150,7 @@ header "post_include_hpp" {
 
 enum STMT_TYPE { 
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
-    SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
+    SINGLE_MACRO, NULLOPERATOR, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
     EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
     USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT, PROPERTY_STMT
 };
@@ -898,10 +898,6 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         // standalone macro
         { stmt_type == SINGLE_MACRO }?
         macro_call |
-
-        // standalone macro
-        { stmt_type == DELEGATE_FUNCTION }?
-        delegate_anonymous |
 
         // constructor
         { stmt_type == CONSTRUCTOR }?
@@ -3858,7 +3854,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
           Process all the parts of a potential type.  Keep track of total
           parts, specifier parts, and second token
         */
-        { next_token_check(LPAREN, LCURLY) }? DELEGATE set_type[type, DELEGATE_FUNCTION] |
         (
         ({ ((inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0)) || (LA(1) != LBRACKET || next_token() == LBRACKET))
          && (LA(1) != IN || !inTransparentMode(MODE_FOR_CONDITION)) }?
