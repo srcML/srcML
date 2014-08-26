@@ -1,0 +1,15 @@
+{% load DjangoHelpers %}
+<table class="languagesTable">
+    <thead>
+    {% for lang in doc.languages %}
+        <th>{{lang}}</th>
+    {% endfor%}
+    </thead>
+    <tbody>
+    <tr>
+        {% for lang in doc.languages %}
+            <td>{% if lang|isIn:languages %}&#x2713;{% else %}&nbsp;{% endif %}</td>
+        {% endfor%}
+    </tr>
+    </tbody>
+</table>

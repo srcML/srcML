@@ -9,7 +9,10 @@ register = template.Library()
 
 @register.filter(name = "makeTagLink")
 def makeTagLink(tagToLink):
-    return "tag_{0}{1}".format("" if tagToLink.ns == "" else (tagToLink.ns + "_"), tagToLink.tag)
+    if isinstance(tagToLink, str):
+        return "tag_" + tagToLink
+    else:
+        return "tag_{0}{1}".format("" if tagToLink.ns == "" else (tagToLink.ns + "_"), tagToLink.tag)
 
 @register.filter(name = "makeRefLink")
 def makeRefLink(ruleToLink):
@@ -25,4 +28,7 @@ def makeAttrRuleLink(attrRule):
 
 @register.filter(name = "makeDisplayableTag")
 def makeDisplayableTag(toDisplay):
-    return "{0}{1}".format("" if toDisplay.ns == "" else (toDisplay.ns + ":"), toDisplay.tag)
+    if isinstance(toDisplay, str):
+        return toDisplay
+    else:
+        return "{0}{1}".format("" if toDisplay.ns == "" else (toDisplay.ns + ":"), toDisplay.tag)

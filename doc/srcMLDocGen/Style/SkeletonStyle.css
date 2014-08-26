@@ -88,6 +88,7 @@ table.ToC td {
     padding:2px;
     padding-left:5px;
 }
+
 table.ToC tbody {
     border:1px solid #D0D0D0;
 }
@@ -111,6 +112,7 @@ div.displayedDocDefinition h2.title a{
     color:black;
     text-decoration:none;
 }
+
 div.displayedDocDefinition h2.title a:hover{
     color:black;
     text-decoration:none;
