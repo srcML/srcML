@@ -221,6 +221,18 @@
                 </XPath>
             </XPathQueries>
         </DocEntry>
+        
+        <DocEntry title="blank preprocessor line">
+            <Elements>
+                <Element ns="cpp" name="empty" />
+            </Elements>
+            <Example file="CPreProc-empty.cpp"/>
+            <XPathQueries>
+                <XPath path="//cpp:empty">
+                    <Desc>Find all blank preprocessor lines</Desc>
+                </XPath>
+            </XPathQueries>
+        </DocEntry>
 
     </Category>
 </DocConfig>

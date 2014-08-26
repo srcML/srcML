@@ -27,6 +27,9 @@
         <AttrRule rule="commentTypeAttr" />
         <AttrRule rule="commentFormatAttr" />
 
+        <Tag elem="escape" />
+        <AttrRule rule="charAttr" />
+
         <Rule rule="topLevelElements">
             <Desc>All of the elements which can occur within a compilation unit.</Desc>
         </Rule>
@@ -63,6 +66,7 @@
         <Tag ns="cpp" elem="line" />
         <Tag ns="cpp" elem="pragma" />
         <Tag ns="cpp" elem="undef" />
+        <Tag ns="cpp" elem="empty" />
         
         
         <Tag elem="name" />
@@ -250,8 +254,26 @@
             </Choice>
         </Def>
     </AttrRule>
+    
+    <!-- src:escape -->
+    <TagRule name="escape" lang="C,C++,C#,Java">
+        <Tag elem="escape">
+            <Attrs>
+                <Attr rule="charAttr" isOptional="false" />
+            </Attrs>
+        </Tag>
+        <Def>
+            <Empty />
+        </Def>
+    </TagRule>
 
-
+    <AttrRule name="charAttr" lang="C,C++,C#,Java">
+        <Attr name="char" />
+        <Desc>Escaped character code.</Desc>
+        <Def>
+            <Text />
+        </Def>
+    </AttrRule>
     <Rule name="topLevelElements" lang="C,C++,C#,Java">
         <Desc>All of the elements which can occur at the top level of a compilation unit.</Desc>
         <Def>
@@ -280,6 +302,7 @@
                 <Ref name="cppLine"/>
                 <Ref name="cppPragma"/>
                 <Ref name="cppUndef"/>
+                <Ref name="cppEmpty" />
                 <Ref name="comment"/>
                 <Ref name="escape"/>
             </Choice>
@@ -703,6 +726,14 @@
             <Optional>
                 <Ref name="simpleName" />
             </Optional>
+        </Def>
+    </TagRule>
+    
+    <!-- cpp:empty -->    
+    <TagRule name="cppEmpty" lang="C,C++,C#">
+        <Tag ns="cpp" elem="empty"/>
+        <Def>
+            <Literal value="#"/>
         </Def>
     </TagRule>
     
