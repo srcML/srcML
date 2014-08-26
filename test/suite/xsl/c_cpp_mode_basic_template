@@ -155,19 +155,19 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><ternary><condition><expr><name>NAME</name></expr> <operator>?</operator></condition><then> <expr><name>a</name></expr> </then><else><operator>:</operator> <expr><name>b</name></expr></else></ternary></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>NAME</name></expr> ?</condition><then> <expr><name>a</name></expr> </then><else>: <expr><name>b</name></expr></else></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> <operator>?</operator></condition><then> <expr><name>NAME</name></expr> </then><else><operator>:</operator> <expr><name>b</name></expr></else></ternary></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>NAME</name></expr> </then><else>: <expr><name>b</name></expr></else></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> <operator>?</operator></condition><then> <expr><name>b</name></expr> </then><else><operator>:</operator> <expr><name>NAME</name></expr></else></ternary></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>NAME</name></expr></else></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><ternary><condition><expr><name>NAME</name></expr> <operator>?</operator></condition><then> <expr><name>NAME</name></expr> </then><else><operator>:</operator> <expr><name>NAME</name></expr></else></ternary></expr>;</expr_stmt>
+<expr_stmt><expr><ternary><condition><expr><name>NAME</name></expr> ?</condition><then> <expr><name>NAME</name></expr> </then><else>: <expr><name>NAME</name></expr></else></ternary></expr>;</expr_stmt>
 </unit>
 
 <unit>

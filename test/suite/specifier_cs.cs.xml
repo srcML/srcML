@@ -50,10 +50,6 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>event</specifier></type></decl>;</decl_stmt>
-</unit>
-
-<unit>
 <decl_stmt><decl><type><specifier>async</specifier></type></decl>;</decl_stmt>
 </unit>
 

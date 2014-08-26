@@ -25,9 +25,9 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>public</specifier> <name>int</name><modifier>?</modifier></type> <name>Prop</name> <block>{
+<property><type><specifier>public</specifier> <name>int</name><modifier>?</modifier></type> <name>Prop</name> <block>{
     <function_decl><name>get</name>;</function_decl>
     <function_decl><name>set</name>;</function_decl>
-}</block></decl></decl_stmt>
+}</block></property>
 </unit>
 </unit>

@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="event" filename="event_cs">
 
 <unit>
-<decl_stmt><decl><type><specifier>event</specifier> <name>void</name></type> <name>f</name></decl>;</decl_stmt>
+<event><type>event <name>void</name></type> <name>f</name>;</event>
 </unit>
 
 </unit>

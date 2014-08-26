@@ -152,7 +152,7 @@ enum STMT_TYPE {
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
     SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
     EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
-    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL
+    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT, PROPERTY_STMT
 };
 
 enum CALL_TYPE { NOCALL, CALL, MACRO };
@@ -422,6 +422,7 @@ tokens {
 	SKRPARAMETER;
 	SARGUMENT_LIST;
 	SARGUMENT;
+    SPSEUDO_PARAMETER_LIST;
 
     // class, struct, union
 	SCLASS;
@@ -515,6 +516,7 @@ tokens {
 	SCPP_THEN;
 	SCPP_ELSE;
 	SCPP_ELIF;
+    SCPP_EMPTY;
 
     // C# cpp directives
     SCPP_REGION;
@@ -551,6 +553,9 @@ tokens {
     SLOCK_STATEMENT;
     SFIXED_STATEMENT;
     STYPEOF;
+    SUSING_STATEMENT;
+    SFUNCTION_DELEGATE;
+    SEVENT;
 
     // linq
     SLINQ;
@@ -915,6 +920,14 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
 
         { stmt_type == USING_STMT }?
         using_namespace_statement |
+
+        // C# property statement
+        { stmt_type == PROPERTY_STMT}?
+        property_statement[type_count] |
+
+        // C# event statement
+        { stmt_type == EVENT_STMT}?
+        event_statement[type_count] |
 
         // "~" which looked like destructor, but isn't
         { stmt_type == NONE }?
@@ -1447,6 +1460,7 @@ lambda_single_parameter { CompleteElement element(this); ENTRY_DEBUG } :
 
             startNewMode(MODE_LOCAL);
 
+            startElement(SPSEUDO_PARAMETER_LIST);
             startElement(SPARAMETER);
             startElement(SDECLARATION);
         }
@@ -1457,7 +1471,7 @@ lambda_single_parameter { CompleteElement element(this); ENTRY_DEBUG } :
 // lambda character
 lambda_java[] { ENTRY_DEBUG } :
         
-    lambda_marked_java
+    TRETURN
 
     {
 
@@ -1465,16 +1479,6 @@ lambda_java[] { ENTRY_DEBUG } :
             startElement(SPSEUDO_BLOCK);
 
     }
-
-;
-
-// lambda character
-lambda_marked_java[] { LightweightElement element(this); ENTRY_DEBUG } :
-        {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
-                startElement(SOPERATOR);
-        }
-        TRETURN
 
 ;
 
@@ -3628,10 +3632,10 @@ comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY
 ;
 
 // mark COLON
-colon_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
+colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); LightweightElement element(this); ENTRY_DEBUG } :
         {
 
-            if(inTransparentMode(MODE_TERNARY | MODE_THEN)) {
+            if(in_ternary) {
 
                 endDownToMode(MODE_THEN);
                 flushSkip();
@@ -3647,7 +3651,7 @@ colon_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 
             }
 
-            if ((!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)) && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
                 && (!inLanguage(LANGUAGE_OBJECTIVE_C) || !inMode(MODE_INTERNAL_END_CURLY)))
                 startElement(SOPERATOR);
 
@@ -3821,6 +3825,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             is_qmark = false;
             int real_type_count = 0;
             bool lcurly = false;
+            bool is_event = false;
         ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
@@ -3968,6 +3973,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // always count as a name for now since is always used as a type or type modifier
                 auto_keyword[false] | 
 
+                EVENT set_bool[is_event] |
+
                 // special function name
                 MAIN set_bool[ismain, type_count == 0] |
 
@@ -4020,6 +4027,14 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         // special case for what looks like a destructor declaration
         // @todo need a case where == 1 then , merge it with > 1
         throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attribute_count - template_count) > 1 || ((type_count - specifier_count - attribute_count - template_count) == 1))]
+
+        // check if an event
+        set_type[type, EVENT_STMT, is_event]
+        throw_exception[is_event]
+
+        // check if property
+        set_type[type, PROPERTY_STMT, inLanguage(LANGUAGE_CSHARP) && (type_count - specifier_count) > 0 && LA(1) == LCURLY]
+        throw_exception[type == PROPERTY_STMT]
 
         /*
           We have a declaration (at this point a variable) if we have:
@@ -4362,9 +4377,9 @@ qmark_name[] { SingleElement element(this); ENTRY_DEBUG } :
         QMARK
 ;
 
-qmark_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
+qmark_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_CONDITION); LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)) && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR)))
                 startElement(SOPERATOR);
         }
         QMARK ({ SkipBufferSize() == 0 }? QMARK)?
@@ -5260,7 +5275,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // C# & Java
             INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
-            DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
+            DELEGATE | PARTIAL | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
             { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP | TRANSIENT) |
 
             CONST |
@@ -6259,7 +6274,7 @@ using_statement[] { ENTRY_DEBUG } :
 
         // sometimes doing something like this does not work in antlr because it looks for something like EOF instead of nothing.
         // However, this seems to work in this case possibly, becaused it is used with tokens required afterwards.
-        for_like_statement_pre[SUSING_DIRECTIVE]
+        for_like_statement_pre[SUSING_STATEMENT]
 
         USING LPAREN
 
@@ -6411,7 +6426,7 @@ delegate_anonymous[] { ENTRY_DEBUG } :
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ANONYMOUS);
 
             // start of the catch statement
-            startElement(SFUNCTION_LAMBDA);
+            startElement(SFUNCTION_DELEGATE);
         }
         delegate_marked
         (options { greedy = true; } : parameter_list)*
@@ -6431,7 +6446,7 @@ delegate_marked[] { SingleElement element(this); ENTRY_DEBUG } :
 
 lambda_csharp[] { ENTRY_DEBUG } :
 
-    lambda_marked
+    LAMBDA
 
     {
 
@@ -6441,16 +6456,6 @@ lambda_csharp[] { ENTRY_DEBUG } :
             startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
 
     }
-
-;
-
-// lambda character
-lambda_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
-        {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
-                startElement(SOPERATOR);
-        }
-        LAMBDA
 
 ;
 
@@ -6668,9 +6673,9 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 
         // match auto keyword first as special case do no warn about ambiguity
         (options { generateAmbigWarnings = false; } : 
-            { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] | lead_type_identifier) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+            { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] | lead_type_identifier | EVENT) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
-        (options { generateAmbigWarnings = false; } : keyword_name | type_identifier) { decTypeCount(); })* 
+        (options { generateAmbigWarnings = false; } : keyword_name | type_identifier | EVENT) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
@@ -6713,6 +6718,42 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
                 endMode();
             }
         }
+;
+
+// declartion statement
+property_statement[int type_count] { ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT);
+
+            startElement(SPROPERTY);
+
+            // variable declarations may be in a list
+            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+            // declaration
+            startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+        }
+        variable_declaration_type[type_count]
+;
+
+// declartion statement
+event_statement[int type_count] { ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT);
+
+            startElement(SEVENT);
+
+            // variable declarations may be in a list
+            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+            // declaration
+            startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+        }
+        variable_declaration_type[type_count]
 ;
 
 // initializtion of a function pointer.
@@ -8081,7 +8122,7 @@ preprocessor[] { ENTRY_DEBUG
 
         {
             // assume error.  will set to proper one later
-            startElement(SCPP_ERROR);
+            startElement(SCPP_EMPTY);
 
             setTokenPosition(tp);
         }
@@ -8198,13 +8239,6 @@ preprocessor[] { ENTRY_DEBUG
 
             tp.setType(SCPP_WARNING);
         } (cpp_literal)* |
-
-        (NAME | VOID)
-        {
-            endMode();
-
-            tp.setType(SCPP_ERROR);
-        } |
 
         REGION
         {

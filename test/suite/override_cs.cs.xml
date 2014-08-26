@@ -7,11 +7,11 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>public</specifier> <specifier>override</specifier> <name>int</name></type> <name>GetX</name> <block>{
+<property><type><specifier>public</specifier> <specifier>override</specifier> <name>int</name></type> <name>GetX</name> <block>{
       <function><name>get</name> <block>{
           <return>return <expr><name>x</name></expr>;</return>
       }</block></function>
-}</block></decl></decl_stmt>
+}</block></property>
 </unit>
 
 </unit>

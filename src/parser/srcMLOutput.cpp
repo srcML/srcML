@@ -149,11 +149,6 @@ namespace {
     ELEMENT_MAP(SELSEIF, "elseif")
 
     ELEMENT_MAP(SWHILE_STATEMENT, "while")
-    ELEMENT_MAP(SLOCK_STATEMENT, "lock")
-    ELEMENT_MAP(SFIXED_STATEMENT, "fixed")
-    ELEMENT_MAP(SCHECKED_STATEMENT, "checked")
-    ELEMENT_MAP(SUNCHECKED_STATEMENT, "unchecked")
-    ELEMENT_MAP(SUNSAFE_STATEMENT, "unsafe")
     ELEMENT_MAP(STYPEOF, "typeof")
     ELEMENT_MAP(SDO_STATEMENT, "do")
 
@@ -169,20 +164,21 @@ namespace {
     ELEMENT_MAP(SFOR_INCREMENT, "incr")
 
     // functions
-    ELEMENT_MAP(SFUNCTION_DEFINITION,  "function")
-    ELEMENT_MAP(SFUNCTION_DECLARATION, "function_decl")
-    ELEMENT_MAP(SFUNCTION_LAMBDA,      "lambda")
-    ELEMENT_MAP(SFUNCTION_SPECIFIER,   "specifier")
-    ELEMENT_MAP(SRETURN_STATEMENT,     "return")
-    ELEMENT_MAP(SFUNCTION_CALL,        "call")
-    ELEMENT_MAP(SSIZEOF_CALL,          "sizeof")
-    ELEMENT_MAP(SPARAMETER_LIST,       "parameter_list")
-    ELEMENT_MAP(SPARAMETER,            "param")
-    ELEMENT_MAP(SKRPARAMETER_LIST,     "krparameter_list")
-    ELEMENT_MAP(SKRPARAMETER,          "krparam")
-    ELEMENT_MAP(SARGUMENT_LIST,        "argument_list")
-    ELEMENT_MAP(SARGUMENT,             "argument")
-    ELEMENT_MAP(SLAMBDA_CAPTURE,       "capture")
+    ELEMENT_MAP(SFUNCTION_DEFINITION,   "function")
+    ELEMENT_MAP(SFUNCTION_DECLARATION,  "function_decl")
+    ELEMENT_MAP(SFUNCTION_LAMBDA,       "lambda")
+    ELEMENT_MAP(SFUNCTION_SPECIFIER,    "specifier")
+    ELEMENT_MAP(SRETURN_STATEMENT,      "return")
+    ELEMENT_MAP(SFUNCTION_CALL,         "call")
+    ELEMENT_MAP(SSIZEOF_CALL,           "sizeof")
+    ELEMENT_MAP(SPARAMETER_LIST,        "parameter_list")
+    ELEMENT_MAP(SPARAMETER,             "param")
+    ELEMENT_MAP(SKRPARAMETER_LIST,      "krparameter_list")
+    ELEMENT_MAP(SKRPARAMETER,           "krparam")
+    ELEMENT_MAP(SARGUMENT_LIST,         "argument_list")
+    ELEMENT_MAP(SARGUMENT,              "argument")
+    ELEMENT_MAP(SLAMBDA_CAPTURE,        "capture")
+    ELEMENT_MAP(SPSEUDO_PARAMETER_LIST, "parameter_list")
 
     // struct, union
     ELEMENT_MAP(SSTRUCT, "struct")
@@ -237,26 +233,27 @@ namespace {
     ELEMENT_MAP(STEMPLATE_PARAMETER_LIST, ELEMENT_MAP_CALL(SPARAMETER_LIST))
 
     // cpp
-    ELEMENT_MAP(SCPP_DIRECTIVE, "directive")
-    ELEMENT_MAP(SCPP_FILENAME,  "file")
-    ELEMENT_MAP(SCPP_NUMBER,    "number")
-    ELEMENT_MAP(SCPP_LITERAL,   "literal")
-    ELEMENT_MAP(SCPP_INCLUDE,   "include")
-    ELEMENT_MAP(SCPP_DEFINE,    "define")
-    ELEMENT_MAP(SCPP_UNDEF,     "undef")
-    ELEMENT_MAP(SCPP_LINE,      "line")
-    ELEMENT_MAP(SCPP_IF,        "if")
-    ELEMENT_MAP(SCPP_IFDEF,     "ifdef")
-    ELEMENT_MAP(SCPP_IFNDEF,    "ifndef")
-    ELEMENT_MAP(SCPP_ELSE,      "else")
-    ELEMENT_MAP(SCPP_ELIF,      "elif")
-    ELEMENT_MAP(SCPP_ENDIF,     "endif")
-    ELEMENT_MAP(SCPP_THEN,      "then")
-    ELEMENT_MAP(SCPP_PRAGMA,    "pragma")
-    ELEMENT_MAP(SCPP_ERROR,     "error")
-    ELEMENT_MAP(SCPP_WARNING,   "warning")
-    ELEMENT_MAP(SCPP_MACRO_DEFN, "macro")
+    ELEMENT_MAP(SCPP_DIRECTIVE,   "directive")
+    ELEMENT_MAP(SCPP_FILENAME,    "file")
+    ELEMENT_MAP(SCPP_NUMBER,      "number")
+    ELEMENT_MAP(SCPP_LITERAL,     "literal")
+    ELEMENT_MAP(SCPP_INCLUDE,     "include")
+    ELEMENT_MAP(SCPP_DEFINE,      "define")
+    ELEMENT_MAP(SCPP_UNDEF,       "undef")
+    ELEMENT_MAP(SCPP_LINE,        "line")
+    ELEMENT_MAP(SCPP_IF,          "if")
+    ELEMENT_MAP(SCPP_IFDEF,       "ifdef")
+    ELEMENT_MAP(SCPP_IFNDEF,      "ifndef")
+    ELEMENT_MAP(SCPP_ELSE,        "else")
+    ELEMENT_MAP(SCPP_ELIF,        "elif")
+    ELEMENT_MAP(SCPP_ENDIF,       "endif")
+    ELEMENT_MAP(SCPP_THEN,        "then")
+    ELEMENT_MAP(SCPP_PRAGMA,      "pragma")
+    ELEMENT_MAP(SCPP_ERROR,       "error")
+    ELEMENT_MAP(SCPP_WARNING,     "warning")
+    ELEMENT_MAP(SCPP_MACRO_DEFN,  "macro")
     ELEMENT_MAP(SCPP_MACRO_VALUE, "value")
+    ELEMENT_MAP(SCPP_EMPTY,       "empty")
 
     // C# cpp
     ELEMENT_MAP(SCPP_REGION,    "region")
@@ -269,6 +266,16 @@ namespace {
     ELEMENT_MAP(SMARKER,        "marker")
     ELEMENT_MAP(SERROR_PARSE,   "parse")
     ELEMENT_MAP(SERROR_MODE,    "mode")
+
+    // C#
+    ELEMENT_MAP(SLOCK_STATEMENT,      "lock")
+    ELEMENT_MAP(SFIXED_STATEMENT,     "fixed")
+    ELEMENT_MAP(SCHECKED_STATEMENT,   "checked")
+    ELEMENT_MAP(SUNCHECKED_STATEMENT, "unchecked")
+    ELEMENT_MAP(SUNSAFE_STATEMENT,    "unsafe")
+    ELEMENT_MAP(SUSING_STATEMENT,     "using_stmt")
+    ELEMENT_MAP(SFUNCTION_DELEGATE,   "delegate")
+    ELEMENT_MAP(SEVENT,               "event")
 
     // Java elements
     ELEMENT_MAP(SEXTENDS,                "extends")
@@ -284,6 +291,7 @@ namespace {
     ELEMENT_MAP(SATTRIBUTE,   "attribute")
     ELEMENT_MAP(STARGET,      "target")
 
+    // linq
     ELEMENT_MAP(SLINQ,   "linq")
     ELEMENT_MAP(SFROM, "from")
     ELEMENT_MAP(SSELECT,   "select")
@@ -1459,6 +1467,18 @@ void srcMLOutput::processEnumClass(const antlr::RefToken& token) {
 void srcMLOutput::processOperatorFunction(const antlr::RefToken& token) {
 
     processOptional(token, "type", "operator");
+
+}
+
+/**
+ * processPseudoParameterList
+ * @param token token to output as pseudo parameter list
+ *
+ * Callback to process/output token as pseudo parameter list.
+ */
+void srcMLOutput::processPseudoParameterList(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "pseudo");
 
 }
 
