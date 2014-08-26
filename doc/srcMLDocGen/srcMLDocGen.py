@@ -43,6 +43,15 @@ def genDocFile(docConfig):
     out.write(page)
     out.close()
 
+def generateSrcMLGrammar(fileName, grmmr):
+    global pageLinks
+    pageLinks.append(PageLink("srcML Grammar", fileName))
+    out = open(fileName, "w")
+    fileTemplate = loader.get_template("Grammar.html")
+    page = fileTemplate.render(Context({"doc": grmmr, "title": "srcML Grammar"}))
+    out.write(page)
+    out.close()
+
 #
 # Generate documentation index for a language.
 #
@@ -116,7 +125,7 @@ def writeAllTagNames():
 DocConfigFileName = "DocConfig.xml"
 TagDocFileName = "TagDoc.xml"
 grammarFile = "LanguageGrammar.xml"
-languageGrammar = None
+grammarOutputFileName = "srcMLGrammar.html"
 pageLinks = []
 
 if __name__ == "__main__":
@@ -144,25 +153,25 @@ if __name__ == "__main__":
             except Exception as e:
                 print "Failed with exception: ", traceback.format_exc(e)
         
-        if TagDocFileName in files:
-            print "-" * 80
-            print "Located a Page Creation Document (TagDoc.xml) in", root
-            try:
-                tagDoc = loadTagDoc(root, TagDocFileName, True)
-                print "Beginning HTML generation"
-                genElementsPage(tagDoc)
-                print "HTML Generation Complete"
-            except Exception as e:
-                print "Failed with exception: ", traceback.format_exc(e)
+        # if TagDocFileName in files:
+        #     print "-" * 80
+        #     print "Located a Page Creation Document (TagDoc.xml) in", root
+        #     try:
+        #         tagDoc = loadTagDoc(root, TagDocFileName, True)
+        #         print "Beginning HTML generation"
+        #         genElementsPage(tagDoc)
+        #         print "HTML Generation Complete"
+        #     except Exception as e:
+        #         print "Failed with exception: ", traceback.format_exc(e)
 
         if grammarFile in files:
             print "-" * 80
             print "Located a Language Grammar Document (LanguageGrammar.xml) in", root
             try:
                 languageGrammar = loadGrammar(os.path.join(root, grammarFile))
-                # print "Beginning HTML generation"
-                # genElementsPage(tagDoc)
-                # print "HTML Generation Complete"
+                print "Beginning HTML generation"
+                generateSrcMLGrammar(grammarOutputFileName, languageGrammar)
+                print "HTML Generation Complete"
             except Exception as e:
                 print "Failed with exception: ", traceback.format_exc(e)
 

@@ -47,29 +47,6 @@ h4.subtitle {
 
 
 
-/* The link color for anchors for titles. */
-div.displayedDocDefinition h2.title a{
-    color:black;
-    text-decoration:none;
-}
-div.displayedDocDefinition h2.title a:hover{
-    color:black;
-    text-decoration:none;
-}
-
-
-
-/* Doc display page. */
-.displayedDocDefinition {
-    padding:.8em;
-    padding-top:1em;
-    margin-top:1em;
-    margin-right:0em;
-    margin-left:0em;
-    border: 1px solid #D2D2CE;
-    border-radius:1em;
-    box-shadow: 0.3em 0.3em 0.3em #888888;
-}
 
 .opTitle {
 }

@@ -75,20 +75,6 @@
         <Tag elem="decl" />
         <Tag elem="type" />
 
-<!--
-        Missing documentation for tag: cpp:elif within Rule: cppElIf
-        Missing documentation for tag: cpp:else within Rule: cppElse
-        Missing documentation for tag: cpp:endif within Rule: cppEndIf
-        Missing documentation for tag: cpp:region within Rule: cppRegion
-        Missing documentation for tag: cpp:endregion within Rule: cppEndRegion
-        Missing documentation for tag: cpp:error within Rule: cppError
-        Missing documentation for tag: cpp:literal within Rule: cppLiteral
-        Missing documentation for tag: cpp:warning within Rule: cppWarning
-        Missing documentation for tag: cpp:include within Rule: cppInclude
-        Missing documentation for tag: cpp:file within Rule: cppFileRelative
-        Missing documentation for tag: cpp:file within Rule: cppFileSearch
--->
-
     </Documentation>
 
     <!-- Grammar Rules -->
@@ -274,11 +260,72 @@
             <Text />
         </Def>
     </AttrRule>
+    
+    
     <Rule name="topLevelElements" lang="C,C++,C#,Java">
         <Desc>All of the elements which can occur at the top level of a compilation unit.</Desc>
         <Def>
             <Choice>
                 <Ref name="anyCPPOrCommentOrText"/>
+                <Ref name="asm" />
+                <Ref name="staticAssert" />
+                <Ref name="assert" />
+                <Ref name="block" />
+                <Ref name="break" />
+                <Ref name="case" />
+                <Ref name="catch" />
+                <Ref name="checkedBlock" />
+                <Ref name="classInterface" />
+                <Ref name="class" />
+                <Ref name="classDecl" />
+                <Ref name="constructorQualified" />
+                <Ref name="continue" />
+                <Ref name="declStmt" />
+                <Ref name="defaultLabel" />
+                <Ref name="destructor" />
+                <Ref name="destructorDecl" />
+                <Ref name="destructorQualified" />
+                <Ref name="do" />
+                <Ref name="else" />
+                <Ref name="elseif" />
+                <Ref name="emptyStmt" />
+                <Ref name="exprStmt" />
+                <Ref name="enum" />
+                <Ref name="externBlock" />
+                <Ref name="finallyBlock" />
+                <Ref name="fixed" />
+                <Ref name="for" />
+                <Ref name="forEach" />
+                <Ref name="function" />
+                <Ref name="functionDecl" />
+                <Ref name="genericSelection" />
+                <Ref name="goTo" />
+                <Ref name="if" />
+                <Ref name="import" />
+                <Ref name="label" />
+                <Ref name="linq" />
+                <Ref name="lock" />
+                <Ref name="namespace" />
+                <Ref name="package" />
+                <Ref name="private" />
+                <Ref name="protected" />
+                <Ref name="public" />
+                <Ref name="return" />
+                <Ref name="staticInitializationBlock" />
+                <Ref name="struct" />
+                <Ref name="structDecl" />
+                <Ref name="switch" />
+                <Ref name="synchronized" />
+                <Ref name="throw" />
+                <Ref name="try" />
+                <Ref name="typedef" />
+                <Ref name="unchecked" />
+                <Ref name="union" />
+                <Ref name="unionDecl" />
+                <Ref name="unsafe" />
+                <Ref name="usingStmt" />
+                <Ref name="usingDirective" />
+                <Ref name="while" />
             </Choice>
         </Def>
     </Rule>
@@ -287,24 +334,24 @@
         <Desc>A listing of all elements which can occur anywhere.</Desc>
         <Def>
             <Choice>
-                <Ref name="cppDefine"/>
-                <Ref name="cppIf"/>
-                <Ref name="cppIfDef"/>
-                <Ref name="cppIfNDef"/>
-                <Ref name="cppElIf"/>
-                <Ref name="cppElse"/>
-                <Ref name="cppEndIf"/>
-                <Ref name="cppRegion"/>
-                <Ref name="cppEndRegion"/>
-                <Ref name="cppError"/>
-                <Ref name="cppWarning"/>
-                <Ref name="cppInclude"/>
-                <Ref name="cppLine"/>
-                <Ref name="cppPragma"/>
-                <Ref name="cppUndef"/>
+                <Ref name="cppDefine" />
+                <Ref name="cppIf" />
+                <Ref name="cppIfDef" />
+                <Ref name="cppIfNDef" />
+                <Ref name="cppElIf" />
+                <Ref name="cppElse" />
+                <Ref name="cppEndIf" />
+                <Ref name="cppRegion" />
+                <Ref name="cppEndRegion" />
+                <Ref name="cppError" />
+                <Ref name="cppWarning" />
+                <Ref name="cppInclude" />
+                <Ref name="cppLine" />
+                <Ref name="cppPragma" />
+                <Ref name="cppUndef" />
                 <Ref name="cppEmpty" />
-                <Ref name="comment"/>
-                <Ref name="escape"/>
+                <Ref name="comment" />
+                <Ref name="escape" />
             </Choice>
         </Def>
     </Rule>

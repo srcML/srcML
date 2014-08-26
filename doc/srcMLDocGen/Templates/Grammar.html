@@ -1,0 +1,11 @@
+{% extends "Skeleton.html" %}
+{% load DjangoHelpers %}
+{% block cssLinks %}
+    <link rel="stylesheet" href="Style/Grammar.css" />
+{% endblock %}
+{% block title %}{{title}}{% endblock %}
+{% block body %}
+{% for documentation in doc.documentation %}
+    {% include "GrammarTemplates/RuleDispatcher.html" with documentation=documentation %}
+{% endfor %}
+{% endblock %}

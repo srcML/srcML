@@ -48,6 +48,7 @@ class RuleEdge:
 class DocumentationBase(object):
     def __init__(self):
         self.desc = ""
+        self.typename = self.__class__.__name__
         self.parentRules = []
         self.childRules = []
         self.parentTags = []
@@ -314,7 +315,7 @@ class Identifier(GrammarDef):
 
     def toEBNFText(self, out):
         out.write("Identifier")
-        
+
 # Class that's used to represent other parts of the language
 # that have a many to one relationship (i.e. groupings of things)
 class GrammarExpr(GrammarDef):
@@ -329,7 +330,9 @@ class GrammarExpr(GrammarDef):
         assert False, "GrammarExpr didn't implement EBNFSuffix"
 
     def toEBNFText(self, out):
-        if len(self.subExprs) == 1:
+        if len(self.subExprs) == 0:
+            raise Exception("Invalid # of subelements within {0}".format(self.__class__.__name__))
+        elif len(self.subExprs) == 1:
             self.subExprs[0].toEBNFText(out)
             out.write(self.EBNFSuffix())
         else:
@@ -497,17 +500,6 @@ def loadGrammar(fileName):
             raise Exception("Invalid # of children for a reference to another rule.")
         return ruleRef
 
-    # def buildTagInfo(tagElem, currentRule):
-    #     info = RuleTagInfo()
-    #     info.ns = getAttribOrDefault(tagElem, nsAttr, "")
-    #     info.tag = getAttribOrFail(tagElem, elemAttr)
-    #     for elem in tagElem.iterchildren():
-    #         if elem.tag == AttrsTag:
-    #             info.attrs = buildAttrsList(elem, currentRule)
-
-    #         else:
-    #             unexpectedOrUnknownTag(elem)
-    #     return info
     def buildTagGrammar(tagElement, currentRule):
         expr = TagExpr()
         expr.tagInfo = RuleTagInfo()
