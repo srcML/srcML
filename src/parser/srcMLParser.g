@@ -3651,7 +3651,8 @@ colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); 
 
             }
 
-            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)) && !in_for && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)) && !(in_for && isoption(parser_options, SRCML_OPTION_TERNARY))
+             && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
                 && (!inLanguage(LANGUAGE_OBJECTIVE_C) || !inMode(MODE_INTERNAL_END_CURLY)))
                 startElement(SOPERATOR);
 

@@ -21,8 +21,10 @@
 <block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
 
+<!--
 <unit>
 <for>for<control>(<init><expr><name>a</name> : <name>b</name></expr></init>)</control><block type="pseudo"><empty_stmt>;</empty_stmt></block></for>
 </unit>
+-->
 
 </unit>
