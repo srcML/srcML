@@ -5339,11 +5339,19 @@ alignas_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // default specifier (Java Methods)
-default_specifier[]  { SingleElement element(this); ENTRY_DEBUG } :
+default_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
         DEFAULT
+
+;
+
+this_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        THIS
 
 ;
 
@@ -7633,7 +7641,7 @@ parameter_type_count[int & type_count, bool output_type = true] { CompleteElemen
 
 
         // match auto keyword first as special case do no warn about ambiguity
-        ((options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+        ((options { generateAmbigWarnings = false; } : this_specifier | auto_keyword[type_count > 1] | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 
         // sometimes there is no parameter name.  if so, we need to eat it
         ( options { greedy = true; generateAmbigWarnings = false; } : multops | tripledotop | LBRACKET RBRACKET |
