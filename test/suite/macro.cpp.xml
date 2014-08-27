@@ -12,7 +12,7 @@
 -->
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>int i = 0;</argument>)</argument_list></macro>
+<macro><name>D</name><argument_list>(<argument>int i = <literal type="number">0</literal>;</argument>)</argument_list></macro>
 </unit>
 
 <!--
@@ -22,7 +22,7 @@
 -->
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>{ int i = 0;}</argument>)</argument_list></macro>
+<macro><name>D</name><argument_list>(<argument>{ int i = <literal type="number">0</literal>;}</argument>)</argument_list></macro>
 </unit>
 
 <!--
@@ -48,27 +48,27 @@
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>int i = 0</argument>)</argument_list></macro>
+<macro><name>D</name><argument_list>(<argument>int i = <literal type="number">0</literal></argument>)</argument_list></macro>
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>(int i = 0)</argument>)</argument_list></macro>
+<macro><name>D</name><argument_list>(<argument>(int i = <literal type="number">0</literal>)</argument>)</argument_list></macro>
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>a</argument>, <argument>int i = 0</argument>)</argument_list></macro>
+<macro><name>D</name><argument_list>(<argument>a</argument>, <argument>int i = <literal type="number">0</literal></argument>)</argument_list></macro>
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>int i = 0</argument>, <argument>a</argument>)</argument_list></macro>
+<macro><name>D</name><argument_list>(<argument>int i = <literal type="number">0</literal></argument>, <argument>a</argument>)</argument_list></macro>
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>a</argument>, <argument>(int i = 0)</argument>)</argument_list></macro>
+<macro><name>D</name><argument_list>(<argument>a</argument>, <argument>(int i = <literal type="number">0</literal>)</argument>)</argument_list></macro>
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>(int i = 0)</argument>, <argument>a</argument>)</argument_list></macro>
+<macro><name>D</name><argument_list>(<argument>(int i = <literal type="number">0</literal>)</argument>, <argument>a</argument>)</argument_list></macro>
 </unit>
 
 <unit>
@@ -84,7 +84,7 @@
 </unit>
 
 <unit>
-<macro><name>A</name><argument_list>(<argument>1</argument>)</argument_list></macro> <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<macro><name>A</name><argument_list>(<argument><literal type="number">1</literal></argument>)</argument_list></macro> <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
@@ -130,6 +130,18 @@
 <expr_stmt><expr><operator>.</operator><name>macro</name></expr>
 <cpp:empty># (</cpp:empty>
 ;</expr_stmt>
+</unit>
+
+<unit>
+<macro><name>M</name><argument_list>(<argument><literal type="string">"foobar"</literal></argument>)</argument_list></macro> <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<macro><name>M</name><argument_list>(<argument><literal type="char">'f'</literal></argument>)</argument_list></macro> <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<macro><name>M</name><argument_list>(<argument><literal type="complex">3i</literal></argument>)</argument_list></macro> <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 </unit>

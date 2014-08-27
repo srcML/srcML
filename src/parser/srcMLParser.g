@@ -652,6 +652,7 @@ public:
 #endif
 
     static const antlr::BitSet enum_preprocessing_token_set;
+    static const antlr::BitSet literal_tokens_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -6251,7 +6252,12 @@ macro_call_contents[] {
             endMode();
             start = true;
         }
-        consume();
+
+        if(literal_tokens_set.member(LA(1)))
+            literals();
+        else
+            consume();
+
     }
 
 } :;
