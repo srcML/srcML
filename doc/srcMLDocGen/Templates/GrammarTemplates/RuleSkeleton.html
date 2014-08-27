@@ -1,11 +1,18 @@
 {% load DjangoHelpers %}
 {% load GrammarFormatHelpers %}
 <div class="displayedDocDefinition">
+    {%block langTable %}
     <div class="languagesDisplayDiv">
         {% include "GrammarTemplates/LanguagesTable.html" with doc=doc languages=documentation.languages %}
     </div>
+    {%endblock %}
     <h2 class="title">{% block title %}<a id="{{documentation.name}}">{{documentation.name}}</a>{% endblock %}</h2>
     <hr />
+    
+    {% if documentation.desc != "" %}
+    <div class="description">{{documentation.desc|safe}}</div>
+    {% endif %}
+    
     {% block useCases %}{% endblock %}
     {% if documentation.parentRules|length > 0 %}
         <h3 class="subtitle">Parent Rules</h3>
@@ -40,5 +47,15 @@
         {% endfor %}
         </ul>
     {% endif %}
+    
+    {% if documentation.otherLinks|length > 0 %}
+        <h3 class="subtitle">Also See</h3>
+        <ul>
+        {% for link in documentation.otherLinks %}
+            <li><a href="{{link.url|safe}}">{{link.title|title}}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    
     
 </div>

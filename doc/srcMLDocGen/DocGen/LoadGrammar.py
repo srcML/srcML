@@ -819,6 +819,10 @@ def loadGrammar(fileName):
             unexpectedOrUnknownTag(elem)
 
 
+    # -------------------------------------
+    # Verifying Grammar
+    # -------------------------------------
+
     # Separating different types of documentation
     documentedTags = dict([(getComparableTagName(tagDoc), tagDoc) for tagDoc in grammarDoc.documentation if isinstance(tagDoc, TagDocumentation)])
     documentedAttrs = dict([(attrDoc.name, attrDoc) for attrDoc in grammarDoc.documentation if isinstance(attrDoc, AttrRuleDocumentation)])

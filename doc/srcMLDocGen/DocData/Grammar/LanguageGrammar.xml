@@ -89,8 +89,7 @@
 
     <!-- src:unit -->
     <TagRule name="archiveUnit" lang="C,C++,C#,Java" title="archive unit">
-        <Desc>
-        </Desc>
+        <Desc>An archive is a collection of compilation units.</Desc>
         <Tag elem="unit">
             <Attrs>
                 <Attr rule="dirAttr" isOptional="true"/>

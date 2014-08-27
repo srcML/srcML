@@ -9,11 +9,11 @@
     <td>Attribute Rule</td>
 {% elif currentRow.typename == "TagDocumentation" %}
     <td><a href="#{{currentRow|makeTagLink}}">{{currentRow|makeDisplayableTag}}</a></td>
-    <td>Tag Rule</td>
+    <td>Element Rule</td>
 {% else %}
     Error Unknown type of rule!
 {% endif %}
     {% for lang in doc.languages %}
-        <td>{% if lang|isIn:currentRow.languages %}&#x2713;{% else %}&nbsp;{% endif %}</td>
+        <td class="checkMarkCell">{% if lang|isIn:currentRow.languages %}&#x2713;{% else %}&nbsp;{% endif %}</td>
     {% endfor%}
 </tr>
