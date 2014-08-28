@@ -444,6 +444,7 @@ SeeTag = "See"
 NumberTag = "Number"
 EmptyTag = "Empty"
 IdentifierTag = "Identifier"
+
 # Name Attribute
 nameAttr = "name"
 nsAttr = "ns"
@@ -453,6 +454,7 @@ isOptionalAttr = "isOptional"
 valueAttr = "value"
 langAttr = "lang"
 languageOrderingAttr = "languageOrdering"
+urlAttr = "url"
 
 def loadGrammar(fileName):
     def buildExpr(element, exprToBuild, currentRule):

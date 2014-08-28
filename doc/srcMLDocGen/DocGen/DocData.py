@@ -115,69 +115,65 @@ class IndexEntry:
         return self.title[0].upper()
 
 
-#
-# Types used for holding information about srcML elements.
-#
+# class TagExample:
+#     def __init__(self):
+#         self.title = ""
+#         self.text = ""    
 
-class TagExample:
-    def __init__(self):
-        self.title = ""
-        self.text = ""    
+# class TagAttr:
+#     def __init__(self):
+#         self.name = ""    
+#         self.valueDesc = ""
+#         self.languages = []
+#         self.desc = ""
+#         self.exampleValue = ""
 
-class TagAttr:
-    def __init__(self):
-        self.name = ""    
-        self.valueDesc = ""
-        self.languages = []
-        self.desc = ""
-        self.exampleValue = ""
+# class NsEntry:
+#     """ Documentation for an XML namespaces within srcML. """
+#     def __init__(self):
+#         self.prefix = ""
+#         self.url = ""
+#         self.desc = ""
 
-class NsEntry:
-    """ Documentation for an XML namespaces within srcML. """
-    def __init__(self):
-        self.prefix = ""
-        self.url = ""
-        self.desc = ""
+# class TagUseCase:
+#     def __init__(self):
+#         self.title = ""
+#         self.languages = []
+#         self.desc = ""
+#         self.attrs = []
+#         self.examples = []
+#         self.grammar = ""
+#         self.subelements = []
 
-class TagUseCase:
-    def __init__(self):
-        self.title = ""
-        self.languages = []
-        self.desc = ""
-        self.attrs = []
-        self.examples = []
-        self.grammar = ""
-        self.subelements = []
+# class TerminalValue:
+#     def __init__(self):
+#         self.value = ""
+#         self.languages = []
 
-class TerminalValue:
-    def __init__(self):
-        self.value = ""
-        self.languages = []
+# class TerminalUseCase:
+#     """ Represents a use case for which an element of the grammar that don't have child elements, only text. """
+#     def __init__(self):
+#         self.title = ""
+#         self.desc = ""
+#         self.attrs = []
+#         self.languages = []
+#         self.grammar = ""
+#         self.values = []
 
-class TerminalUseCase:
-    """ Represents a use case for which an element of the grammar that don't have child elements, only text. """
-    def __init__(self):
-        self.title = ""
-        self.desc = ""
-        self.attrs = []
-        self.languages = []
-        self.grammar = ""
-        self.values = []
+# class TagRef:
+#     def __init__(self):
+#         self.ns = ""
+#         self.tag = ""
 
-class TagRef:
-    def __init__(self):
-        self.ns = ""
-        self.tag = ""
-
-    def comparableTagName(self):
-        out = ""
-        if self.ns != "":
-            out +="{0.ns}:"
-        out += "{0.tag}"
-        return out.format(self)
+#     def comparableTagName(self):
+#         out = ""
+#         if self.ns != "":
+#             out +="{0.ns}:"
+#         out += "{0.tag}"
+#         return out.format(self)
         
-    def link(self):
-        return self.ns + "_" + self.tag
+#     def link(self):
+#         return self.ns + "_" + self.tag
 
 
 class URLRefLink:
@@ -187,63 +183,63 @@ class URLRefLink:
 
 
 
-class TagInfo:
-    """ Contains information about a single tag. """
-    def __init__(self):
-        self.ns = ""
-        self.tag = ""
-        self.desc = ""
-        self.useCases = []
-        self.refs = []
-        self.parentElements = []
-        self.subelements = []
+# class TagInfo:
+#     """ Contains information about a single tag. """
+#     def __init__(self):
+#         self.ns = ""
+#         self.tag = ""
+#         self.desc = ""
+#         self.useCases = []
+#         self.refs = []
+#         self.parentElements = []
+#         self.subelements = []
 
-    def QNameTagStyle(self):
-        out = "<"
-        if self.ns != "":
-            out +="{0.ns}:"
-        out += "{0.tag}>"
-        return out.format(self)
+#     def QNameTagStyle(self):
+#         out = "<"
+#         if self.ns != "":
+#             out +="{0.ns}:"
+#         out += "{0.tag}>"
+#         return out.format(self)
 
-    def link(self):
-        return self.ns + "_" + self.tag
+#     def link(self):
+#         return self.ns + "_" + self.tag
 
-    def comparableTagName(self):
-        out = ""
-        if self.ns != "":
-            out +="{0.ns}:"
-        out += "{0.tag}"
-        return out.format(self)
+#     def comparableTagName(self):
+#         out = ""
+#         if self.ns != "":
+#             out +="{0.ns}:"
+#         out += "{0.tag}"
+#         return out.format(self)
 
-class RelaxNGEntry:
-    def __init__(self):
-        self.title = ""
-        self.grammarText = ""
-        self.desc = ""
+# class RelaxNGEntry:
+#     def __init__(self):
+#         self.title = ""
+#         self.grammarText = ""
+#         self.desc = ""
 
-    def link(self):
-        return "-".join(self.title.strip().replace("#","").replace(",", "").replace("'","").lower().split())
+#     def link(self):
+#         return "-".join(self.title.strip().replace("#","").replace(",", "").replace("'","").lower().split())
 
-class RelaxNGHelpDoc:
-    def __init__(self):
-        self.title = ""
-        self.desc = ""
-        self.entries = []
+# class RelaxNGHelpDoc:
+#     def __init__(self):
+#         self.title = ""
+#         self.desc = ""
+#         self.entries = []
 
-class TagDoc:
-    """ Contains information about a all tags within the system. """
-    def __init__(self):
-        self.title = ""
-        self.outputFileName = ""
-        self.relaxNGHelp = None
-        self.namespaces = []
-        self.tags = []
-        self.desc = ""
-        self.languages = list(["C", "C++", "C#", "Java"])
+# class TagDoc:
+#     """ Contains information about a all tags within the system. """
+#     def __init__(self):
+#         self.title = ""
+#         self.outputFileName = ""
+#         self.relaxNGHelp = None
+#         self.namespaces = []
+#         self.tags = []
+#         self.desc = ""
+#         self.languages = list(["C", "C++", "C#", "Java"])
         
-    def maxLanguageCount(self):
-        self.languageMax = tagsMax
-        return 
+#     def maxLanguageCount(self):
+#         self.languageMax = tagsMax
+#         return 
 
-    def link(self):
-        return self.outputFileName
+#     def link(self):
+#         return self.outputFileName
