@@ -6,7 +6,7 @@
 {% if documentation.tagRules|length > 1 %}
 <div class="useCaseWithLanguageHeader">
     <div class="languagesDisplayDiv">
-        {% include "GrammarTemplates/LanguagesTable.html" with doc=doc languages=documentation.languages %}
+        {% include "GrammarTemplates/LanguagesTable.html" with doc=doc languages=useCase.languages %}
     </div>
 {% else %}
 <div class="useCaseTitleHeader">

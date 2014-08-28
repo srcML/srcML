@@ -6,7 +6,7 @@ from django.conf import settings
 from django.template import Template, Context, loader
 from DocGen import *
 from DocGen.templatetags import *
-
+import DocGen.TagTracker
 # -------------------------------------------------
 #                     Main
 # -------------------------------------------------
@@ -29,7 +29,7 @@ def genDocFile(docConfig):
     pageLinks.append(PageLink(docConfig.title, docConfig.outputFileName))
     out = open(docConfig.outputFileName, "w")
     fileTemplate = loader.get_template("DefaultPage.html")
-    page = fileTemplate.render(Context({"doc": docConfig}))
+    page = fileTemplate.render(Context({"doc": docConfig, "pageName" : docConfig.outputFileName}))
     out.write(page)
     out.close()
 
@@ -159,4 +159,8 @@ if __name__ == "__main__":
     print "-" * 80
     print "Writing main page"
     genMainPage("MainPage.html", pageLinks)
+    print "-" * 80
+    tempOutFile = open("tagLocationDoc.html", "w")
+    DocGen.TagTracker.Tracker.trackerData.dumpByTagToHTML(tempOutFile)
+    tempOutFile.close()
     print "-" * 80

@@ -7,6 +7,7 @@ import xml.sax.saxutils as SAXUtils
 from xml.sax.handler import ContentHandler
 import cStringIO
 from DocGen import *
+import DocGen.TagTracker
 
 register = template.Library()
 
@@ -20,6 +21,7 @@ uriToPrefix = {
 
 
 tagListing = set(["<src:unit>"])
+
 def getTagListing():
     return tagListing
 
@@ -97,6 +99,7 @@ class SyntaxHighlighter(ContentHandler):
         if name[1] == "unit":
             return
         tagListing.add(formatTagName(name[0], name[1], attributes))
+        DocGen.TagTracker.Tracker.recordTag(uriToPrefix[name[0]], name[1], dict() if len(attributes) ==0 else dict([(k[1],v) for k, v in attributes.items()]))
         if name[1] == "comment":
             self.iscomment = True
         self.out.write(SyntaxHighlighter.spanStart.format(self.getNormalizedStyleName(name)))
@@ -186,3 +189,37 @@ def stripSpaces(value):
 def isTerminalUseCase(obj):
     print obj.__class__.__name__
     return isinstance(obj, TerminalUseCase)
+
+
+
+class TrackPageNameNode(template.Node):
+    def __init__(self, pageNameIndicator):
+        self.pageNameRef = pageNameIndicator
+
+    def render(self, context):
+        pageName = self.pageNameRef.resolve(context)
+        DocGen.TagTracker.Tracker.setCurrentPageURL(pageName)
+        return ""
+        
+@register.tag(name="TrackPageName")
+def TrackPageName(parser, token):
+    tokens = token.split_contents()
+    if len(tokens) != 2:
+        raise TemplateSyntaxError("Incorrect number of arguments for TrackPageName, expected: 2. Got: %d" % len(tokens))
+    return TrackPageNameNode(parser.compile_filter(tokens[1]))
+
+class TrackAnchorIdNode(template.Node):
+    def __init__(self, anchorIdIndicator):
+        self.anchorIdRef = anchorIdIndicator
+
+    def render(self, context):
+        anchorId = self.anchorIdRef.resolve(context)
+        DocGen.TagTracker.Tracker.setCurrentAnchor(anchorId)
+        return ""
+
+@register.tag(name="TrackAnchorId")
+def TrackAnchorId(parser, token):
+    tokens = token.split_contents()
+    if len(tokens) != 2:
+        raise TemplateSyntaxError("Incorrect number of arguments for TrackAnchorId, expected: 2. Got: %d" % len(tokens))
+    return TrackAnchorIdNode(parser.compile_filter(tokens[1]))

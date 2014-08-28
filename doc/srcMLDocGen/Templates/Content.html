@@ -2,7 +2,7 @@
 {% for cat in doc.categories %}
     {% for entry in cat.entries %}
         <div class="displayedDocDefinition">
-            <h2 class="title"><a id="{{entry.linkName}}">{{entry.title}}</a></h2>
+            <h2 class="title"><a id="{{entry.linkName}}{% TrackAnchorId entry.linkName %}">{{entry.title}}</a></h2>
             <hr/>
             {% if entry.desc != "" %}
             <div class="discription">

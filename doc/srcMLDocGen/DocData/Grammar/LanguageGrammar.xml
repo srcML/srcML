@@ -68,13 +68,39 @@
         <Tag ns="cpp" elem="undef" />
         <Tag ns="cpp" elem="empty" />
         
+        <!-- src elements -->
+        <Tag elem="asm" />
+        <Tag elem="assert" />
+        <AttrRule rule="typeStaticAttr"/>
+        <Tag elem="block" />
+        <AttrRule rule="typePseudoAttr" />
         
-        <Tag elem="name" />
+        <Rule rule="breakStmt"/>
+        <Tag elem="break"/>
+        
+        <Tag elem="case" />
+        
+        <Rule rule="catchStmt" />
+        <Tag elem="catch" />
+        
+        <Tag elem="checked" />
+        
+        <Rule rule="classInterfaceOrAnnotation" />
+        <Tag elem="class"/>
+        <AttrRule rule="classTypeAttr"/>
+        
+        <Tag elem="argument_list" />
         <Tag elem="parameter_list" />
         <Tag elem="param" />
         <Tag elem="decl" />
+        <Tag elem="init" />
         <Tag elem="type" />
+        
+        <Rule rule="name"/>
+        <Tag elem="name" />
 
+        <Tag elem="literal"/>
+        <AttrRule rule="literalTypeAttr"/>
     </Documentation>
 
     <!-- Grammar Rules -->
@@ -266,16 +292,15 @@
         <Def>
             <Choice>
                 <Ref name="anyCPPOrCommentOrText"/>
-                <Ref name="asm" />
+                <Ref name="ASM" />
                 <Ref name="staticAssert" />
-                <Ref name="assert" />
+                <Ref name="assertStmt" />
                 <Ref name="block" />
-                <Ref name="break" />
+                <Ref name="breakStmt" />
                 <Ref name="case" />
-                <Ref name="catch" />
+                <Ref name="catchStmt" />
                 <Ref name="checkedBlock" />
-                <Ref name="classInterface" />
-                <Ref name="class" />
+                <Ref name="classInterfaceOrAnnotation"/>
                 <Ref name="classDecl" />
                 <Ref name="constructorQualified" />
                 <Ref name="continue" />
@@ -430,7 +455,7 @@
         <Tag ns="cpp" elem="macro" />
         <Def>
             <Ref name="simpleName" />
-            <Ref name="macroParameterList" />
+            <Ref name="parameterList" />
         </Def>
     </TagRule>
 
@@ -784,6 +809,356 @@
             <Literal value="#"/>
         </Def>
     </TagRule>
+
+
+    <!-- src:asm -->    
+    <TagRule name="ASM" lang="C,C++">
+        <Tag elem="asm"/>
+        <Def>
+            <Choice>
+                <Literal value="asm" />
+                <Literal value="__asm__"/>
+                <Literal value="__asm"/>
+            </Choice>
+            <ZeroOrMore>            
+                <Choice>
+                    <Text />
+                    <Ref name="ASM" />
+                </Choice>
+            </ZeroOrMore>
+        </Def>
+    </TagRule>
+    
+    <!-- src:assert -->    
+    <TagRule name="assertStmt" lang="Java">
+        <Tag elem="assert"/>
+        <Def>
+            <Literal value="assert" />
+            <Optional>
+                <Ref name="expr" />
+            </Optional>
+            <Optional>
+                <Tag elem="operator">
+                    <Literal value=":" />
+                </Tag>
+                <Optional>
+                    <Ref name="expr" />
+                </Optional>
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    <!-- src:assert -->    
+    <TagRule name="staticAssert" lang="C">
+        <Tag elem="assert">
+            <Attrs>
+                <Attr rule="typeStaticAttr" />
+            </Attrs>
+        </Tag>
+        <Def>
+            <Literal value="_Static_assert" />
+            <Optional>
+                <Ref name="argumentList" />
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    <AttrRule name="typeStaticAttr" lang="C">
+        <Attr name="type" />
+        <Def>
+            <Literal value="static"/>
+        </Def>
+    </AttrRule>
+    
+    <!-- src:block -->
+    <TagRule name="block" lang="C,C++,C#,Java">
+        <Tag elem="block" />
+        <Def>
+            <Literal value="{"/>
+            <ZeroOrMore>
+                <Ref name="topLevelElements" />
+            </ZeroOrMore>
+            <Literal value="}"/>
+        </Def>
+    </TagRule>
+    
+    <!-- TODO: Add this to part of the grammar. -->
+    <TagRule name="pseudoBlock" lang="C,C++,C#,Java">
+        <Tag elem="block">
+            <Attrs>
+                <Attr rule="typePseudoAttr" />
+            </Attrs>
+        </Tag>
+        <Def>
+            <Optional>
+                <Ref name="topLevelElements" />
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    <AttrRule name="typePseudoAttr" lang="C,C++,C#,Java">
+        <Attr name="type" />
+        <Def>
+            <Literal value="pseudo"/>
+        </Def>
+    </AttrRule>
+    
+    <!-- src:break -->
+    <Rule name="breakStmt" lang="C,C++,C#,Java">
+        <Def>
+            <Choice>
+                <Ref name="break"/>
+                <Ref name="yieldBreak" />
+                <Ref name="breakTo"/>
+            </Choice>
+        </Def>
+    </Rule>
+    
+    <TagRule name="break" lang="C,C++,C#,Java">
+        <Tag elem="break" />
+        <Def>
+            <Literal value="break" />
+            <Optional>
+                <Literal value=";" />
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    <TagRule name="yieldBreak" lang="C#">
+        <Tag elem="break" />
+        <Def>
+            <Optional>
+                <Tag elem="specifier">
+                    <Literal value="yield" />
+                </Tag>
+            </Optional>
+            <Literal value="break" />
+            <Optional>
+                <Literal value=";" />
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    <TagRule name="breakTo" lang="Java">
+        <Tag elem="break" />
+        <Def>
+            <Literal value="break" />
+            <Optional>
+                <Ref name="simpleName" />
+            </Optional>
+            <Optional>
+                <Literal value=";" />
+            </Optional>
+        </Def>
+    </TagRule>
+
+    <!-- src:case -->
+    <TagRule name="case" lang="C,C++,C#,Java">
+        <Tag elem="case" />
+        <Def>
+            <Literal value="case" />
+            <Optional>
+                <Choice>
+                    <Ref name="name" />
+                    <Ref name="literal" />
+                </Choice>
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    
+    <!-- src:catch-->
+    <Rule name="catchStmt" lang="C++,C#,Java">
+        <Def>
+            <Choice>
+                <Ref name="catch" />
+                <Ref name="multiTypeCatch" />
+            </Choice>
+        </Def>
+    </Rule>
+    
+    <TagRule name="catch" lang="C++,C#,Java">
+        <Tag elem="catch"/>
+        <Def>
+            <Literal value="catch" />
+            <Optional>
+                <Ref name="parameterList"/>
+            </Optional>
+            <Optional>
+                <Ref name="block" />
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    <TagRule name="multiTypeCatch" lang="Java">
+        <Tag elem="catch" />
+        <Def>
+            <Literal value="catch" />
+            <Tag elem="parameter_list">
+                <Tag elem="param">
+                    <Ref name="decl"/>
+                    <ZeroOrMore>
+                        <Literal value="|" />
+                        <Ref name="decl" />
+                    </ZeroOrMore>
+                    <Optional>
+                        <Ref name="simpleName" />
+                    </Optional>
+                </Tag>
+            </Tag>
+            <Optional>
+                <Ref name="block" />
+            </Optional>
+        </Def>
+    </TagRule>
+
+    <!-- src:checked -->
+    <TagRule name="checkedBlock" lang="C#">
+        <Tag elem="checked"/>
+        <Def>
+            <Literal value="checked" />
+            <Ref name="block" />
+        </Def>
+    </TagRule>
+
+    <!-- class-->
+    <Rule name="classInterfaceOrAnnotation" lang="C++,C#,Java">
+        <Def>
+            <Choice>
+                <Ref name="CPlusPlusClass" />
+                <Ref name="JavaClassInterfaceAndAnnotation" />
+                <Ref name="CSharpClass" />
+            </Choice>
+        </Def>
+    </Rule>
+    
+    <TagRule name="CPlusPlusClass" lang="C++">
+        <Tag elem="class">
+            <Attrs>
+                <Attr rule="classTypeAttr" isOptional="true"/>
+            </Attrs>
+        </Tag>
+        <Def>
+            <ZeroOrMore>
+                <Ref name="template" />
+            </ZeroOrMore>
+            <Literal value="class" />
+            <Ref name="name" />
+            <Ref name="block" />
+            <Optional>
+                <Literal value=";" />
+            </Optional>
+        </Def>
+    </TagRule>
+
+    <TagRule name="CSharpClass" lang="C#">
+        <Tag elem="class">
+            <Attrs>
+                <Attr rule="classTypeAttr" isOptional="true"/>
+            </Attrs>
+        </Tag>
+        <Def>
+            <ZeroOrMore>
+                <Ref name="template" />
+            </ZeroOrMore>
+            <Literal value="class" />
+            <Ref name="simpleName" />
+            <Optional>
+                <Ref name="memberList" />
+            </Optional>
+            <Ref name="block" />
+            <Optional>
+                <Literal value=";" />
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    <TagRule name="JavaClassInterfaceAndAnnotation" lang="Java">
+        <Tag elem="class"/>
+        <Def>
+            <ZeroOrMore>
+                <Ref name="template" />
+            </ZeroOrMore>
+            <Literal value="class" />
+
+            <Ref name="simpleName"/>
+            <Ref name="block" />
+            <Optional>
+                <Literal value=";" />
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    <AttrRule name="classTypeAttr" lang="C#,Java">
+        <Attr name="type"/>
+        <Def>
+            <Choice>
+                <Literal value="interface" />
+            </Choice>
+        </Def>
+    </AttrRule>
+
+    <!-- src:class_decl -->
+    <TagRule name="classDecl" lang="C,C++,C#,Java">
+        <Tag elem="alignas"/>
+        <Def><NoImpl/></Def>
+    </TagRule>
+    
+    <!--
+        <Ref name="class" />
+        <Ref name="classInterface" />
+        <Ref name="classDecl" />
+        <Ref name="constructorQualified" />
+        <Ref name="continue" />
+        <Ref name="declStmt" />
+        <Ref name="defaultLabel" />
+        <Ref name="destructor" />
+        <Ref name="destructorDecl" />
+        <Ref name="destructorQualified" />
+        <Ref name="do" />
+        <Ref name="else" />
+        <Ref name="elseif" />
+        <Ref name="emptyStmt" />
+        <Ref name="exprStmt" />
+        <Ref name="enum" />
+        <Ref name="event" />
+        <Ref name="externBlock" />
+        <Ref name="finallyBlock" />
+        <Ref name="fixed" />
+        <Ref name="for" />
+        <Ref name="forEach" />
+        <Ref name="function" />
+        <Ref name="functionDecl" />
+        <Ref name="genericSelection" />
+        <Ref name="goTo" />
+        <Ref name="if" />
+        <Ref name="import" />
+        <Ref name="label" />
+        <Ref name="linq" />
+        <Ref name="lock" />
+        <Ref name="namespace" />
+        <Ref name="package" />
+        <Ref name="private" />
+        <Ref name="property" />
+        <Ref name="protected" />
+        <Ref name="public" />
+        <Ref name="return" />
+        <Ref name="staticInitializationBlock" />
+        <Ref name="struct" />
+        <Ref name="structDecl" />
+        <Ref name="switch" />
+        <Ref name="synchronized" />
+        <Ref name="throw" />
+        <Ref name="try" />
+        <Ref name="typedef" />
+        <Ref name="unchecked" />
+        <Ref name="union" />
+        <Ref name="unionDecl" />
+        <Ref name="unsafe" />
+        <Ref name="usingStmt" />
+        <Ref name="usingDirective" />
+        <Ref name="while" />
+    -->
     
     <!-- cpp:define -->
     <!-- cpp:directive -->
@@ -810,104 +1185,577 @@
     
     
     <!-- src:alignas -->
+    <TagRule name="alignasCPlusPlus" lang="C,C++">
+        <Tag elem="alignas"/>
+        <Def><NoImpl/></Def>
+    </TagRule>
+    
     <!-- src:alignof -->
+    <TagRule name="alignof" lang="C,C++">
+        <Tag elem="alignof"/>
+        <Def><NoImpl/></Def>
+    </TagRule>
+
     <!-- src:annotation -->
+    <TagRule name="annotation" lang="Java">
+        <Tag elem="annotation"/>
+        <Def><NoImpl/></Def>
+    </TagRule>    
+    
     <!-- src:argument -->
-    <!-- src:argument_list type="template" -->
-    <!-- src:argument_list -->
-    <!-- src:asm -->
-    <!-- src:assert type="static" -->
-    <!-- src:assert -->
+    <TagRule name="argument" lang="C,C++,C#,Java">
+        <Tag elem="argument"/>
+        <Def><NoImpl/></Def>
+    </TagRule>
+   
     <!-- src:association -->
+    <TagRule name="association" lang="C">
+        <Tag elem="association"/>
+        <Def><NoImpl/></Def>
+    </TagRule>
+    
     <!-- src:association_list -->
+    <TagRule name="associationList" lang="C">
+        <Tag elem="association_list"/>
+        <Def><NoImpl/></Def>
+    </TagRule>
+    
     <!-- src:atomic -->
+    <TagRule name="atomic" lang="C,C++">
+        <Tag elem="atomic"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:attribute -->
-    <!-- src:block type="pseudo" -->
-    <!-- src:block -->
-    <!-- src:break -->
+    <TagRule name="attribute" lang="C++,C#">
+        <Tag elem="attribute"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:by -->
+    <TagRule name="by" lang="C#">
+        <Tag elem="by"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+        
     <!-- src:call -->
+    <TagRule name="call" lang="C,C++,C#,Java">
+        <Tag elem="call"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+
     <!-- src:capture -->
-    <!-- src:case -->
+    <TagRule name="capture" lang="C++">
+        <Tag elem="capture"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:cast type="const" -->
+    <TagRule name="constCast" lang="C++">
+        <Tag elem="cast"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
     <!-- src:cast type="dynamic" -->
+    <TagRule name="dynamictCast" lang="C++">
+        <Tag elem="cast"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:cast type="reinterpret" -->
+    <TagRule name="reinterpretCast" lang="C++">
+        <Tag elem="cast"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:cast type="static" -->
-    <!-- src:catch -->
-    <!-- src:checked -->
-    <!-- src:class type="interface" -->
-    <!-- src:class -->
-    <!-- src:class_decl -->
-    <!-- src:comment type="block" -->
-    <!-- src:comment type="line" -->
+    <TagRule name="staticCast" lang="C++">
+        <Tag elem="cast"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:condition -->
+    <TagRule name="condition" lang="C,C++,C#,Java">
+        <Tag elem="condition"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:constructor -->
+    <TagRule name="constructor" lang="C,C++,C#,Java">
+        <Tag elem="constructor"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:constructor_decl -->
+    <TagRule name="constructorDecl" lang="C,C++,C#,Java">
+        <Tag elem="constructor_decl"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:continue -->
+    <TagRule name="continue" lang="C,C++,C#,Java">
+        <Tag elem="continue"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:control -->
-    <!-- src:decl -->
+    <TagRule name="control" lang="C,C++,C#,Java">
+        <Tag elem="control"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+
     <!-- src:decl_stmt -->
+    <TagRule name="declStmt" lang="C,C++,C#,Java">
+        <Tag elem="decl_stmt"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:decltype -->
+    <TagRule name="decltype" lang="C++">
+        <Tag elem="decltype"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:default -->
+    <TagRule name="defaultCase" lang="C,C++,C#,Java">
+        <Tag elem="default"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
+    <TagRule name="defaultCall" lang="Java">
+        <Tag elem="default"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
+        
     <!-- src:delegate -->
+    <TagRule name="delegate" lang="C#">
+        <Tag elem="delegate"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:destructor -->
+    <TagRule name="destructor" lang="C,C++,C#,Java">
+        <Tag elem="destructor"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:destructor_decl -->
+    <TagRule name="destructor_decl" lang="C,C++,C#,Java">
+        <Tag elem="destructor_decl" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:do -->
+    <TagRule name="do" lang="C,C++,C#,Java">
+        <Tag elem="do" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:else -->
+    <TagRule name="else" lang="C,C++,C#,Java">
+        <Tag elem="else" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:elseif -->
+    <TagRule name="elseif" lang="C,C++,C#,Java">
+        <Tag elem="elseif" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:empty_stmt -->
+    <TagRule name="emptyStmt" lang="C,C++,C#,Java">
+        <Tag elem="empty_stmt" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:enum type="class" -->
+    <TagRule name="enumClass" lang="C++">
+        <Tag elem="enum" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:enum -->
+    <TagRule name="enum" lang="C,C++,C#,Java">
+        <Tag elem="enum" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:equals -->
+    <TagRule name="equals" lang="C#">
+        <Tag elem="equals" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:event -->
-    <!-- src:expr -->
+    <TagRule name="event" lang="C#">
+        <Tag elem="event" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:expr_stmt -->
+    <TagRule name="exprStmt" lang="C,C++,C#,Java">
+        <Tag elem="expr_stmt" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:extends -->
+    <TagRule name="extends" lang="Java">
+        <Tag elem="extends" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:extern -->
+    <TagRule name="externBlock" lang="C,C++">
+        <Tag elem="extends" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:finally -->
+    <TagRule name="finally" lang="C#,Java">
+        <Tag elem="finally" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:fixed -->
+    <TagRule name="fixedBlock" lang="C#">
+        <Tag elem="fixed" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
     <!-- src:for -->
+    <TagRule name="for" lang="C,C++,C#,Java">
+        <Tag elem="for" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:foreach -->
+    <TagRule name="foreach" lang="C#">
+        <Tag elem="foreach" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:from -->
+    <TagRule name="from" lang="C#">
+        <Tag elem="from" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:function type="operator" -->
+    <TagRule name="functionOperator" lang="C,C++,C#">
+        <Tag elem="function">
+            <Attrs>
+                <Attr rule="functionTypeAttr" />
+            </Attrs>
+        </Tag>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:function -->
+    <TagRule name="function" lang="C,C++,C#,Java">
+        <Tag elem="function"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:function_decl type="operator" -->
+    <TagRule name="functionDeclOperator" lang="C,C++,C#,Java">
+        <Tag elem="function_decl">
+            <Attrs>
+                <Attr rule="functionTypeAttr" />
+            </Attrs>
+        </Tag>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:function_decl -->
+    <TagRule name="functionDecl" lang="C,C++,C#">
+        <Tag elem="function_decl"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:generic_selection -->
+    <TagRule name="genericSelction" lang="C">
+        <Tag elem="generic_selection"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:goto -->
+    <TagRule name="goto" lang="C,C++,C#">
+        <Tag elem="goto"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:group -->
+    <TagRule name="group" lang="C#">
+        <Tag elem="group"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
+    
     <!-- src:if -->
+    <TagRule name="if" lang="C,C++,C#,Java">
+        <Tag elem="if"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:implements -->
+    <TagRule name="implements" lang="Java">
+        <Tag elem="implements"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:import -->
+    <TagRule name="import" lang="Java">
+        <Tag elem="import"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:in -->
+    <TagRule name="in" lang="C#">
+        <Tag elem="in"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:incr -->
+    <TagRule name="incr" lang="C,C++,C#,Java">
+        <Tag elem="incr"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:index -->
-    <!-- src:init -->
+    <TagRule name="index" lang="C,C++,C#,Java">
+        <Tag elem="index"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:into -->
+    <TagRule name="into" lang="C#">
+        <Tag elem="into"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:join -->
+    <TagRule name="join" lang="C#">
+        <Tag elem="join"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:label -->
+    <TagRule name="label" lang="C,C++,C#,Java">
+        <Tag elem="label"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:lambda -->
+    <TagRule name="lambda" lang="C++,C#">
+        <Tag elem="into"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:let -->
+    <TagRule name="let" lang="C#">
+        <Tag elem="let"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:linq -->
-    <!-- src:literal type="boolean" -->
-    <!-- src:literal type="char" -->
-    <!-- src:literal type="null" -->
-    <!-- src:literal type="number" -->
-    <!-- src:literal type="string" -->
+    <TagRule name="linq" lang="C#">
+        <Tag elem="linq"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
+
     <!-- src:lock -->
+    <TagRule name="lock" lang="C#">
+        <Tag elem="lock"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:macro -->
+    <TagRule name="macro" lang="C,C++">
+        <Tag elem="macro"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:member_list -->
+    <TagRule name="member_list" lang="C,C++,C#">
+        <Tag elem="member_list"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:modifier -->
-    <!-- src:name -->
+    <TagRule name="modifier" lang="C,C++,C#,Java">
+        <Tag elem="modifier"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:namespace -->
+    <TagRule name="namespace" lang="C,C++,C#">
+        <Tag elem="namespace"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:noexcept -->
+    <TagRule name="noexcept" lang="C++">
+        <Tag elem="noexcept"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:on -->
+    <TagRule name="on" lang="C#">
+        <Tag elem="on"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:operator -->
+    <TagRule name="operator" lang="C,C++,C#,Java">
+        <Tag elem="operator"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:orderby -->
+    <TagRule name="orderby" lang="C#">
+        <Tag elem="orderby"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:package -->
-    <!-- src:param -->
-    <!-- src:parameter_list type="pseudo" -->
-    <!-- src:parameter_list -->
+    <TagRule name="package" lang="Java">
+        <Tag elem="package" />
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
     <!-- src:private type="default" -->
     <!-- src:private -->
     <!-- src:property -->
@@ -952,64 +1800,167 @@
     // src namespace elements
     expr '<expr>': /* TODO: Add possible expressions here!*/ ;
 
-    // src:name
-    simpleName'<name>':  Identifier ;
-
-    Identifier: [Identifier with no spaces];
-
-    Text: [ANYTHING];
-
-    NUMBER     : [0-9]+ ;
 
     -->
+    
+    <!-- src:argument_list -->
+    <TagRule name="argumentList" lang="C,C++,C#,Java">
+        <Tag elem="argument_list"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+
+    <TagRule name="templateArgumentList" lang="C,C++,C#,Java">
+        <Tag elem="argument_list">
+            <Attrs>
+                <Attr rule="agrumentListTypeAttr" isOptional="true"/>
+            </Attrs>
+        </Tag>
+        <Def><NoImpl/></Def>
+    </TagRule>
+    
+    <AttrRule name="agrumentListTypeAttr" lang="C,C++,C#,Java">
+        <Attr name="type"/>
+        <Def>
+            <Literal value="template"/>
+        </Def>
+    </AttrRule>
 
     <!-- src:parameter_list -->
-    <TagRule name="macroParameterList" lang="C,C++">
+    
+    <TagRule name="parameterList" lang="C,C++,C#,Java">
         <Tag elem="parameter_list"/>
         <Def>
             <Literal value="(" />
             <Optional>
-                <Ref name="macroParam"/>
+                <Ref name="param"/>
                 <ZeroOrMore>
                     <Literal value="," />
-                    <Ref name="macroParam"/>
+                    <Ref name="param"/>
                 </ZeroOrMore>
             </Optional>
             <Literal value=")" />
         </Def>
     </TagRule>
+    <!-- src:parameter_list type="pseudo"  Add me C# only? need to check. -->
 
     <!-- src:param -->
-    <TagRule name="macroParam" lang="C,C++">
+    <TagRule name="param" lang="C,C++,C#,Java">
         <Tag elem="param"/>
         <Def>
-            <Ref name="macroParamDecl"/>
+            <Ref name="decl"/>
         </Def>
     </TagRule>
 
     <!-- src:decl -->
-    <TagRule name="macroParamDecl" lang="C,C++">
+    <TagRule name="decl" lang="C,C++,C#,Java">
         <Tag elem="decl"/>
         <Def>
-            <Ref name="marcoParamDeclType"/>
+            <Ref name="type"/>
+            <Optional>
+                <Ref name="name" />
+            </Optional>
+            <Optional>
+                <Ref name="init" />
+            </Optional>
         </Def>
     </TagRule>
 
+    <!-- init -->
+    <TagRule name="init" lang="C,C++,C#,Java">
+        <Tag elem="init"/>
+        <Desc>TODO: Finish this once I fully understand it. </Desc>
+        <Def>
+            <Literal value="="/>
+            <Ref name="expr"/>
+        </Def>
+    </TagRule>
+    
     <!-- src:type -->
-    <TagRule name="marcoParamDeclType" lang="C,C++">
+    <TagRule name="type" lang="C,C++,C#,Java">
         <Tag elem="type"/>
         <Def>
-            <Ref name="simpleName"/>
+            <ZeroOrMore>
+                <Choice>
+                    <Ref name="specifier" />
+                    <Ref name="modifier"/>
+                </Choice>
+            </ZeroOrMore>
+            <Optional>
+                <Ref name="name"/>
+            </Optional>
+            <ZeroOrMore>
+                <Choice>
+                    <Ref name="specifier" />
+                    <Ref name="modifier"/>
+                </Choice>
+            </ZeroOrMore>
         </Def>
     </TagRule>
 
+    <AttrRule name="typeTypeAttr" lang="C,C++,C#,Java">
+        <Attr name="type"/>
+        <Def>
+            <Literal value="prev"/>
+        </Def>
+    </AttrRule>
+
     <!-- src:name -->
+    <Rule name="name" lang="C,C++,C#,Java">
+        <Def>
+            <Choice>
+                <Ref name="complexName"/>
+                <Ref name="simpleName"/>
+            </Choice>
+        </Def>
+    </Rule>
+
+    <TagRule name="complexName" lang="C,C++,C#,Java">
+        <Tag elem="name"/>
+        <Desc>TODO:Finish implementing this once I fully understand it.</Desc>
+        <Def>
+            <Identifier />
+        </Def>
+    </TagRule>
+    
     <TagRule name="simpleName" lang="C,C++,C#,Java">
         <Tag elem="name"/>
         <Def>
             <Identifier />
         </Def>
     </TagRule>
+    
+    <!-- src:literal -->
+    <TagRule name="literal" lang="C,C++,C#,Java">
+        <Tag elem="literal">
+            <Attrs>
+                <Attr rule="literalTypeAttr"/>
+            </Attrs>
+        </Tag>
+        <Def><Text/></Def>
+    </TagRule>
+    
+    
+
+    <!-- src:literal type="boolean" -->
+    <!-- src:literal type="char" -->
+    <!-- src:literal type="null" -->
+    <!-- src:literal type="number" -->
+    <!-- src:literal type="string" -->
+    <AttrRule name="literalTypeAttr" lang="C,C++,C#,Java">
+        <Attr name="type" />
+        <Def>
+            <Choice>
+                <Literal value="boolean"/>
+                <Literal value="char"/>
+                <Literal value="null"/>
+                <Literal value="number"/>
+                <Literal value="string"/>
+            </Choice>
+        </Def>
+    </AttrRule>
+    
     <!--
         <Literal value=""/>
         <Ref name=""/>

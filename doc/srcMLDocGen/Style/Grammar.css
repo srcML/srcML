@@ -117,7 +117,8 @@ span.gArg:first-child>span:first-child::before,
 }
 
 /* Super special case where I actaully want the space */
-.gHasParens>span.gExprSuffix:last-child::after
+.gHasParens>span.gExprSuffix:last-child::after,
+span.gTag>span.gTagSubExpr:last-child::after
 {
     content:" ";
 }

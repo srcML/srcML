@@ -138,6 +138,11 @@ def BuildAnnotatedEBNF(grammarRule):
             out.write("\"{0}\"".format(node.value))
             createTagEnd("span")
 
+        elif isinstance(node, DG.NotImplementedYet):
+            createTagStart("span", "gNotImplemented gKW", "This has yet to be implemented yet!")
+            out.write("NotImplementedYet")
+            createTagEnd("span")
+
         elif isinstance(node, DG.Text):
             createTagStart("span", "gText gKW", "Any text, this may include whitespace and special characters.")
             out.write("Text")
@@ -267,18 +272,4 @@ def BuildAnnotatedEBNF(grammarRule):
     ruleDispatch(grammarRule)
 
     return out.getvalue()
-# class GrammarGeneratorNode(template.Node):
-#     def __init__(self, operatorListVar):
-#         self.operatorListVariable = operatorListVar
-
-#     def render(self, context):
-#         opList = self.operatorListVariable.resolve(context)
-#         return "<br/>".join([formatTagOrStrOutStr(x) for x in opList])
-        
-# @register.tag(name="BuildAnnotatedEBNF")
-# def buildGrammar(parser, token):
-#     tokens = token.split_contents()
-#     if len(tokens) != 2:
-#         raise TemplateSyntaxError("Incorrect number of arguments for GetOperatorCode, expected: 1. Got: %d" % len(tokens))
-#     return GetOperatorCodeNode(parser.compile_filter(tokens[1]))
 

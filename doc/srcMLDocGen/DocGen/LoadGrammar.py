@@ -318,6 +318,13 @@ class Identifier(GrammarDef):
     def toEBNFText(self, out):
         out.write("Identifier")
 
+class NotImplementedYet(GrammarDef):
+    def __init__(self):
+        GrammarDef.__init__(self, "NotImplementedYet")
+
+    def toEBNFText(self, out):
+        out.write("NotImplementedYet")
+
 # Class that's used to represent other parts of the language
 # that have a many to one relationship (i.e. groupings of things)
 class GrammarExpr(GrammarDef):
@@ -444,6 +451,7 @@ SeeTag = "See"
 NumberTag = "Number"
 EmptyTag = "Empty"
 IdentifierTag = "Identifier"
+NoImplTag = "NoImpl"
 
 # Name Attribute
 nameAttr = "name"
@@ -572,7 +580,9 @@ def loadGrammar(fileName):
 
         elif grammarElement.tag == IdentifierTag:
             return Identifier()
-
+            
+        elif grammarElement.tag == NoImplTag:
+            return NotImplementedYet()
         else:
             unexpectedOrUnknownTag(grammarElement)
 
