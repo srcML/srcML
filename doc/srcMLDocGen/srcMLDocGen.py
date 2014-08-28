@@ -16,16 +16,6 @@ class PageLink:
         self.title = pageTitle
         self.link = pageLink
 
-def genElementsPage(tagDoc):
-    global pageLinks
-    # tagDoc.preProcess()
-    out = open(tagDoc.outputFileName, "w")
-    fileTemplate = loader.get_template("Tags.html")
-    page = fileTemplate.render(Context({"doc": tagDoc}))
-    pageLinks.append(PageLink(tagDoc.title, tagDoc.outputFileName))
-    out.write(page)
-    out.close()    
-
 def genMainPage(maingPageName, pageLinks):
     out = open(maingPageName, "w")
     fileTemplate = loader.get_template("MainPage.html")
@@ -152,18 +142,6 @@ if __name__ == "__main__":
                     print "Index HTML Generation Complete"
             except Exception as e:
                 print "Failed with exception: ", traceback.format_exc(e)
-        
-        # if TagDocFileName in files:
-        #     print "-" * 80
-        #     print "Located a Page Creation Document (TagDoc.xml) in", root
-        #     try:
-        #         tagDoc = loadTagDoc(root, TagDocFileName, True)
-        #         print "Beginning HTML generation"
-        #         genElementsPage(tagDoc)
-        #         print "HTML Generation Complete"
-        #     except Exception as e:
-        #         print "Failed with exception: ", traceback.format_exc(e)
-
         if grammarFile in files:
             print "-" * 80
             print "Located a Language Grammar Document (LanguageGrammar.xml) in", root
