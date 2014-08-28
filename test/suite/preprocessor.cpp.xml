@@ -217,4 +217,16 @@
 <cpp:warning>#<cpp:directive>warning</cpp:directive> <cpp:literal>"message"</cpp:literal></cpp:warning>
 </unit>
 
+<unit>
+<cpp:empty>#</cpp:empty>
+</unit>
+
+<unit>
+<cpp:empty>#  </cpp:empty>
+</unit>
+
+<unit>
+<cpp:empty># A comment line.  foobar</cpp:empty>
+</unit>
+
 </unit>

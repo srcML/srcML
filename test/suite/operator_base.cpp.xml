@@ -182,10 +182,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> <operator>?</operator></condition><then> <expr><name>b</name></expr> </then><else><operator>:</operator> <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><operator>(</operator><name>type</name><operator>)</operator> <name>a</name></expr>;</expr_stmt>
 </unit>
 

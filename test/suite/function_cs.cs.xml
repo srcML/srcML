@@ -34,4 +34,12 @@
 <function><type>enum <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
+<unit>
+<function><type><specifier>static</specifier> <name>int</name></type> <name>WordCount</name><parameter_list>(<param><decl><type><specifier>this</specifier> <name>String</name></type> <name>str</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><specifier>static</specifier> <name>int</name></type> <name>WordCount</name><parameter_list>(<param><decl><type><name>String</name></type> <name>this</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
 </unit>

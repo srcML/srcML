@@ -38,22 +38,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name><name>const_cast</name><argument_list>&lt;<argument><expr><name>type</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><call><name><name>static_cast</name><argument_list>&lt;<argument><expr><name>type</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><call><name><name>dynamic_cast</name><argument_list>&lt;<argument><expr><name>type</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><call><name><name>reinterpret_cast</name><argument_list>&lt;<argument><expr><name>type</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><operator>delete</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -210,7 +194,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name><name>A</name><argument_list>&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><operator>::</operator><modifier>*</modifier><name>b</name></name></type> <name>c</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name><name>A</name><argument_list type="template">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><operator>::</operator><modifier>*</modifier><name>b</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
 <unit>

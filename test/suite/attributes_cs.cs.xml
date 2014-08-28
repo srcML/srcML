@@ -57,7 +57,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><attribute>[<target>event</target>: <expr><name>SomeAttr</name></expr>]</attribute> <specifier>event</specifier> <name>void</name></type> <name>f</name></decl>;</decl_stmt>
+<event><type><attribute>[<target>event</target>: <expr><name>SomeAttr</name></expr>]</attribute>event <name>void</name></type> <name>f</name>;</event>
 </unit>
 
 <unit>
@@ -65,9 +65,9 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>public</specifier> <name>byte</name></type> <name>this</name><parameter_list>[<param><decl><type><name>int</name></type> <name>i</name></decl></param>]</parameter_list> <block>{
+<property><type><specifier>public</specifier> <name>byte</name></type> <name>this</name><parameter_list>[<param><decl><type><name>int</name></type> <name>i</name></decl></param>]</parameter_list> <block>{
     <function><attribute>[<target>property</target>: <expr><name>SomeAttr</name></expr>]</attribute><name>get</name> <block>{}</block></function>
-}</block></decl></decl_stmt>
+}</block></property>
 </unit>
 
 <unit>

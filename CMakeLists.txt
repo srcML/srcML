@@ -31,7 +31,7 @@ include (srcml)
 set(CMAKE_MACOSX_RPATH 1)
 
 # Setting up source include directories.
-include_directories(src/srcml src/libsrcml src/parser src/srcSAX)
+include_directories(BEFORE src/srcml src/libsrcml src/parser src/srcSAX)
 
 # Setting major and minor version numbers (TODO fix this so that it is set using something
 # more correct that being input from within the build system).

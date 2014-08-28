@@ -184,6 +184,8 @@ void srcml_translator::close() {
 
     }
 
+    first = false;
+
     if(is_outputting_unit) add_end_unit();
 
     out.close();

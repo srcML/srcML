@@ -24,9 +24,9 @@
 <!-- change the directory attribute on any unit from "if" to "while" -->
 <xsl:template match="src:condition/src:expr">
 	<xsl:copy>
-		<xsl:text>(</xsl:text>
+		<operator>(</operator>
 		<xsl:apply-templates/>
-		<xsl:text>)</xsl:text>
+		<operator>)</operator>
 	</xsl:copy>
 </xsl:template>
 

@@ -111,6 +111,13 @@ LANGUAGE_CXX qt_foreach
 LANGUAGE_CXX auto_cpp
 LANGUAGE_CXX for_cpp
 LANGUAGE_CXX typeid
+LANGUAGE_CXX using_namespace
+LANGUAGE_CXX const_cast
+LANGUAGE_CXX dynamic_cast
+LANGUAGE_CXX reinterpret_cast
+LANGUAGE_CXX static_cast
+LANGUAGE_CXX emit
+LANGUAGE_CXX macro_cpp
 
 LANGUAGE_CXX_GEN c_cpp_mode.restrict
 LANGUAGE_CXX_GEN c_cpp_mode.mutable
@@ -173,6 +180,8 @@ LANGUAGE_CSHARP modifier_cs
 LANGUAGE_CSHARP function_decl_cs
 LANGUAGE_CSHARP decl_simple_cs
 LANGUAGE_CSHARP preprocessor_cs
+LANGUAGE_CSHARP typeof_cs
+LANGUAGE_CSHARP default_cs
 
 LANGUAGE_OBJECTIVE_C objective_c_call_m
 LANGUAGE_OBJECTIVE_C class_interface_m
@@ -193,6 +202,7 @@ LANGUAGE_OBJECTIVE_C autoreleasepool_m
 LANGUAGE_OBJECTIVE_C compatibility_alias_m
 LANGUAGE_OBJECTIVE_C class_directive_m
 LANGUAGE_OBJECTIVE_C protocol_declaration_m
+LANGUAGE_OBJECTIVE_C macro_m
 
 LANGUAGE_OBJECTIVE_C_GEN class_implementation_m
 LANGUAGE_OBJECTIVE_C_GEN try_m
