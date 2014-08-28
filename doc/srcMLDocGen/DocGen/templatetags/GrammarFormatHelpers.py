@@ -11,7 +11,7 @@ register = template.Library()
 @register.filter(name = "makeTagLink")
 def makeTagLink(tagToLink):
     if isinstance(tagToLink, str):
-        return "tag_" + tagToLink
+        return "tag_" + tagToLink.replace(":", "_")
     else:
         return "tag_{0}{1}".format("" if tagToLink.ns == "" else (tagToLink.ns + "_"), tagToLink.tag)
 

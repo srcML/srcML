@@ -97,9 +97,6 @@ span.gParameters::before
     content:" ";
 }
 
-
-
-
 .gGeaterThenFive>.gSeparator:before {
     content:"\a    ";
     white-space: pre;

@@ -3,5 +3,5 @@
 {% block title %}<a id="{{documentation|makeRuleLink}}" class="tagTitle">{{documentation.name}}</a>{% endblock %}
 
 {% block useCases %}
-        {% include "GrammarTemplates/MultiUseCase.html" with useCase=documentation.rule doc=doc documentation=documentation%}
+        {% include "GrammarTemplates/SingleUseCase.html" with useCase=documentation.rule doc=doc documentation=documentation%}
 {% endblock %}

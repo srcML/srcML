@@ -28,6 +28,8 @@ class GrammarDoc:
 Edge
     From: {0.fromTitle}
     To: {0.toTitle}
+    From Obj: {0.fromObj} 
+    to Obj: {0.toObj} 
 """.format(e, e.toObj))
 
     def toEBNFText(self, out):
@@ -926,14 +928,45 @@ def loadGrammar(fileName):
 
 
     print "Extracting parent & child rules from graph"
-    edgesByFromTitle = dict([(k, list(v)) for k, v in itertools.groupby(grammarDoc.edgeList, key=lambda x:x.fromTitle)])
-    edgesByToTitle = dict([(k, list(v)) for k, v in itertools.groupby(grammarDoc.edgeList, key=lambda x:x.toTitle)])
+    edgesByFromTitle = dict()
+    for e in grammarDoc.edgeList:
+        if e.fromTitle in edgesByFromTitle:
+            edgesByFromTitle[e.fromTitle].append(e)
+        else:
+            edgesByFromTitle.update({e.fromTitle: [e]})
+
+    edgesByToTitle = dict()
+    for e in grammarDoc.edgeList:
+        if e.toTitle in edgesByToTitle:
+            edgesByToTitle[e.toTitle].append(e)
+        else:
+            edgesByToTitle.update({e.toTitle: [e]})
     
+    for e in grammarDoc.edgeList:
+        if e.fromTitle == "cppDirective":
+            print e.fromTitle
+
     for tagDoc in documentedTags.items():
         # Getting parent rules
         for tagRule in tagDoc[1].tagRules:
-            if tagRule.name in edgesByToTitle:
-                tagDoc[1].parentRules += [rulesByName[edge.fromTitle] for edge in edgesByToTitle[tagRule.name] if edge.fromTitle in rulesByName and edge.fromObj not in tagDoc[1].parentRules]
+            # if tagRule.name == "cppDirective":
+                
+            #     print "Processing cpp directive!"
+            #     print edgesByToTitle[tagRule.name]
+            #     if tagRule.name in edgesByToTitle:
+            #         locatedRules = 
+            #         print "Located Rules: ", locatedRules
+            #         tagDoc[1].parentRules += locatedRules
+            #         print "Parent Rules!"
+            #         for r in tagDoc[1].parentRules:
+            #             print "  Rule: %s"%r.name
+            #     else:
+            #         print "Didn't locate parent rule edges!"
+
+            #     print "~"*80
+            # else:
+                if tagRule.name in edgesByToTitle:
+                    tagDoc[1].parentRules += [rulesByName[edge.fromTitle] for edge in edgesByToTitle[tagRule.name] if edge.fromTitle in rulesByName and edge.fromObj not in tagDoc[1].parentRules]
 
         # Getting child rules
         for tagRule in tagDoc[1].tagRules:
