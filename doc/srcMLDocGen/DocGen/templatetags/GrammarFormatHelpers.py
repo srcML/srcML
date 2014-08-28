@@ -69,8 +69,11 @@ def makeDisplayableTag(toDisplay):
 def BuildAnnotatedEBNF(grammarRule):
 
     # Utility functions.
-    def createTagStart(tagName, tagClass):
-        out.write("<{0} class=\"{1}\">".format(tagName, tagClass))
+    def createTagStart(tagName, tagClass, toolTip = ""):
+        if toolTip != "":
+            out.write("<{0} class=\"{1}\" title=\"{2}\">".format(tagName, tagClass, toolTip))
+        else:
+            out.write("<{0} class=\"{1}\">".format(tagName, tagClass))
 
     def createTagEnd(tagName):
         out.write("</{0}>".format(tagName))
@@ -131,37 +134,37 @@ def BuildAnnotatedEBNF(grammarRule):
             createTagEnd("span") # end gRef
 
         elif isinstance(node, DG.Literal):
-            createTagStart("span", "gLiteral")
+            createTagStart("span", "gLiteral", "The text within the &quot;s.")
             out.write("\"{0}\"".format(node.value))
             createTagEnd("span")
 
         elif isinstance(node, DG.Text):
-            createTagStart("span", "gText gKW")
+            createTagStart("span", "gText gKW", "Any text, this may include whitespace and special characters.")
             out.write("Text")
             createTagEnd("span")
 
         elif isinstance(node, DG.Number):
-            createTagStart("span", "gNumber gKW")
+            createTagStart("span", "gNumber gKW", "Any floating point or integer representation.")
             out.write("Number")
             createTagEnd("span")
 
         elif isinstance(node, DG.Empty):
-            createTagStart("span", "gEmpty gKW")
+            createTagStart("span", "gEmpty gKW", "This element has no content.")
             out.write("Empty")
             createTagEnd("span")
 
         elif isinstance(node, DG.Identifier):
-            createTagStart("span", "gIdentifier gKW")
+            createTagStart("span", "gIdentifier gKW", "Any valid identifier in any of the supported languages.")
             out.write("Identifier")
             createTagEnd("span")
 
         elif isinstance(node, DG.TagExpr):
             createTagStart("span", "gTag")
-            out.write("&lt;")
             createTagStart("span", "gTagName")
+            out.write("&lt;")
             writeLink(makeTagLink(node.tagInfo), "gTagLink", DG.getComparableTagName(node.tagInfo))
-            createTagEnd("span") # end tagName
             out.write("&gt;")
+            createTagEnd("span") # end tagName
             if node.tagInfo.attrs != None:
                 createTagStart("span", "gAttrs")
                 out.write("(")
@@ -212,11 +215,11 @@ def BuildAnnotatedEBNF(grammarRule):
             pass
         elif isinstance(rule, DG.TagRule):
             createTagStart("span", "gTag")
-            out.write("&lt;")
             createTagStart("span", "gTagName")
+            out.write("&lt;")
             writeLink(makeTagLink(rule.tagInfo), "gTagLink", DG.getComparableTagName(rule.tagInfo))
-            createTagEnd("span") # end tagName
             out.write("&gt;")
+            createTagEnd("span") # end tagName
             if rule.tagInfo.attrs != None:
                 createTagStart("span", "gAttrs")
                 out.write("(")

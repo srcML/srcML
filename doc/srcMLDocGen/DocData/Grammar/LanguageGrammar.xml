@@ -290,6 +290,7 @@
                 <Ref name="emptyStmt" />
                 <Ref name="exprStmt" />
                 <Ref name="enum" />
+                <Ref name="event" />
                 <Ref name="externBlock" />
                 <Ref name="finallyBlock" />
                 <Ref name="fixed" />
@@ -307,6 +308,7 @@
                 <Ref name="namespace" />
                 <Ref name="package" />
                 <Ref name="private" />
+                <Ref name="property" />
                 <Ref name="protected" />
                 <Ref name="public" />
                 <Ref name="return" />
@@ -783,9 +785,170 @@
         </Def>
     </TagRule>
     
+    <!-- cpp:define -->
+    <!-- cpp:directive -->
+    <!-- cpp:elif -->
+    <!-- cpp:else -->
+    <!-- cpp:empty -->
+    <!-- cpp:endif -->
+    <!-- cpp:endregion -->
+    <!-- cpp:error -->
+    <!-- cpp:file -->
+    <!-- cpp:if -->
+    <!-- cpp:ifdef -->
+    <!-- cpp:ifndef -->
+    <!-- cpp:include -->
+    <!-- cpp:line -->
+    <!-- cpp:literal -->
+    <!-- cpp:macro -->
+    <!-- cpp:number -->
+    <!-- cpp:pragma -->
+    <!-- cpp:region -->
+    <!-- cpp:undef -->
+    <!-- cpp:value -->
+    <!-- cpp:warning -->
+    
+    
+    <!-- src:alignas -->
+    <!-- src:alignof -->
+    <!-- src:annotation -->
+    <!-- src:argument -->
+    <!-- src:argument_list type="template" -->
+    <!-- src:argument_list -->
+    <!-- src:asm -->
+    <!-- src:assert type="static" -->
+    <!-- src:assert -->
+    <!-- src:association -->
+    <!-- src:association_list -->
+    <!-- src:atomic -->
+    <!-- src:attribute -->
+    <!-- src:block type="pseudo" -->
+    <!-- src:block -->
+    <!-- src:break -->
+    <!-- src:by -->
+    <!-- src:call -->
+    <!-- src:capture -->
+    <!-- src:case -->
+    <!-- src:cast type="const" -->
+    <!-- src:cast type="dynamic" -->
+    <!-- src:cast type="reinterpret" -->
+    <!-- src:cast type="static" -->
+    <!-- src:catch -->
+    <!-- src:checked -->
+    <!-- src:class type="interface" -->
+    <!-- src:class -->
+    <!-- src:class_decl -->
+    <!-- src:comment type="block" -->
+    <!-- src:comment type="line" -->
+    <!-- src:condition -->
+    <!-- src:constructor -->
+    <!-- src:constructor_decl -->
+    <!-- src:continue -->
+    <!-- src:control -->
+    <!-- src:decl -->
+    <!-- src:decl_stmt -->
+    <!-- src:decltype -->
+    <!-- src:default -->
+    <!-- src:delegate -->
+    <!-- src:destructor -->
+    <!-- src:destructor_decl -->
+    <!-- src:do -->
+    <!-- src:else -->
+    <!-- src:elseif -->
+    <!-- src:empty_stmt -->
+    <!-- src:enum type="class" -->
+    <!-- src:enum -->
+    <!-- src:equals -->
+    <!-- src:event -->
+    <!-- src:expr -->
+    <!-- src:expr_stmt -->
+    <!-- src:extends -->
+    <!-- src:extern -->
+    <!-- src:finally -->
+    <!-- src:fixed -->
+    <!-- src:for -->
+    <!-- src:foreach -->
+    <!-- src:from -->
+    <!-- src:function type="operator" -->
+    <!-- src:function -->
+    <!-- src:function_decl type="operator" -->
+    <!-- src:function_decl -->
+    <!-- src:generic_selection -->
+    <!-- src:goto -->
+    <!-- src:group -->
+    <!-- src:if -->
+    <!-- src:implements -->
+    <!-- src:import -->
+    <!-- src:in -->
+    <!-- src:incr -->
+    <!-- src:index -->
+    <!-- src:init -->
+    <!-- src:into -->
+    <!-- src:join -->
+    <!-- src:label -->
+    <!-- src:lambda -->
+    <!-- src:let -->
+    <!-- src:linq -->
+    <!-- src:literal type="boolean" -->
+    <!-- src:literal type="char" -->
+    <!-- src:literal type="null" -->
+    <!-- src:literal type="number" -->
+    <!-- src:literal type="string" -->
+    <!-- src:lock -->
+    <!-- src:macro -->
+    <!-- src:member_list -->
+    <!-- src:modifier -->
+    <!-- src:name -->
+    <!-- src:namespace -->
+    <!-- src:noexcept -->
+    <!-- src:on -->
+    <!-- src:operator -->
+    <!-- src:orderby -->
+    <!-- src:package -->
+    <!-- src:param -->
+    <!-- src:parameter_list type="pseudo" -->
+    <!-- src:parameter_list -->
+    <!-- src:private type="default" -->
+    <!-- src:private -->
+    <!-- src:property -->
+    <!-- src:protected -->
+    <!-- src:public type="default" -->
+    <!-- src:public -->
+    <!-- src:range -->
+    <!-- src:ref_qualifier -->
+    <!-- src:return -->
+    <!-- src:select -->
+    <!-- src:selector -->
+    <!-- src:sizeof -->
+    <!-- src:specifier -->
+    <!-- src:static -->
+    <!-- src:struct -->
+    <!-- src:struct_decl -->
+    <!-- src:super -->
+    <!-- src:switch -->
+    <!-- src:synchronized -->
+    <!-- src:template -->
+    <!-- src:then -->
+    <!-- src:throw -->
+    <!-- src:throws -->
+    <!-- src:try -->
+    <!-- src:type ref="prev" -->
+    <!-- src:type -->
+    <!-- src:typedef -->
+    <!-- src:typeid -->
+    <!-- src:typename -->
+    <!-- src:typeof -->
+    <!-- src:unchecked -->
+    <!-- src:union -->
+    <!-- src:union_decl -->
+    <!-- src:unit -->
+    <!-- src:unsafe -->
+    <!-- src:using -->
+    <!-- src:using_stmt -->
+    <!-- src:where -->
+    <!-- src:while -->
     
     <!--
-
     // src namespace elements
     expr '<expr>': /* TODO: Add possible expressions here!*/ ;
 

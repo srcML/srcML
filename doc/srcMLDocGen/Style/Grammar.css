@@ -14,7 +14,7 @@ div.grammarDisplay {
     margin-bottom:.3em;
     margin-right:0px;
     font-family:"Courier New";
-    font-size:12px;
+    font-size:13px;
 }
 
 .useCaseWithLanguageHeader {
@@ -42,6 +42,10 @@ table.ToC thead tr th:nth-child(2) {
 }
 div.languagesDisplayDiv {
     float:right;
+}
+
+table.ToC tbody tr td.subRules {
+    padding-left:2em;
 }
 
 
@@ -116,6 +120,18 @@ span.gArg:first-child>span:first-child::before,
 .gHasParens>span.gExprSuffix:last-child::after
 {
     content:" ";
+}
+span.gKW {
+    font-weight:bold;
+}
+span.gLiteral {
+    color:red;
+}
+span.gAttrName {
+    color:blue;
+}
+span.gTagName {
+    color:blue;
 }
 /*
 Span Classes:
