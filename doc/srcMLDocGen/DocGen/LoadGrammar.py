@@ -3,7 +3,7 @@ import os, sys, re, lxml, cStringIO, itertools
 import lxml.etree as ET
 from xml.sax.handler import ContentHandler
 from LoadData import *
-
+import pydot
 
 def getComparableTagName(item):
     return "{0}{1}".format("" if item.ns == "" else (item.ns +":"), item.tag)
@@ -691,8 +691,8 @@ def loadGrammar(fileName):
 
             else:
                 unexpectedOrUnknownTag(elem)
-        assert rule.tagInfo != None, "Post condition violation tag rule's tag information not set"
-        assert rule.grammar != None, "Post condition violation tag rule grammar not set"
+        assert rule.tagInfo != None, "Post condition violation tag rule's tag information not set" + formatElementErrorMsg(ruleElem)
+        assert rule.grammar != None, "Post condition violation tag rule grammar not set" + formatElementErrorMsg(ruleElem)
         return rule
 
 
@@ -937,9 +937,6 @@ def loadGrammar(fileName):
         for unreachableItem in notVisitedVertices:
             print "        {0}".format(unreachableItem) 
 
-
-
-    print "Extracting parent & child rules from graph"
     edgesByFromTitle = dict()
     for e in grammarDoc.edgeList:
         if e.fromTitle in edgesByFromTitle:
@@ -953,32 +950,22 @@ def loadGrammar(fileName):
             edgesByToTitle[e.toTitle].append(e)
         else:
             edgesByToTitle.update({e.toTitle: [e]})
-    
-    for e in grammarDoc.edgeList:
-        if e.fromTitle == "cppDirective":
-            print e.fromTitle
 
+    notInEdgeList = []
+    for rule in grammarDoc.rules:
+        if rule.name not in edgesByToTitle and rule.name not in edgesByFromTitle:
+            print "        {0}".format(rule.name) 
+            notInEdgeList.append(rule)
+
+
+
+    print "Extracting parent & child rules from graph"
+    
     for tagDoc in documentedTags.items():
         # Getting parent rules
         for tagRule in tagDoc[1].tagRules:
-            # if tagRule.name == "cppDirective":
-                
-            #     print "Processing cpp directive!"
-            #     print edgesByToTitle[tagRule.name]
-            #     if tagRule.name in edgesByToTitle:
-            #         locatedRules = 
-            #         print "Located Rules: ", locatedRules
-            #         tagDoc[1].parentRules += locatedRules
-            #         print "Parent Rules!"
-            #         for r in tagDoc[1].parentRules:
-            #             print "  Rule: %s"%r.name
-            #     else:
-            #         print "Didn't locate parent rule edges!"
-
-            #     print "~"*80
-            # else:
-                if tagRule.name in edgesByToTitle:
-                    tagDoc[1].parentRules += [rulesByName[edge.fromTitle] for edge in edgesByToTitle[tagRule.name] if edge.fromTitle in rulesByName and edge.fromObj not in tagDoc[1].parentRules]
+            if tagRule.name in edgesByToTitle:
+                tagDoc[1].parentRules += [rulesByName[edge.fromTitle] for edge in edgesByToTitle[tagRule.name] if edge.fromTitle in rulesByName and edge.fromObj not in tagDoc[1].parentRules]
 
         # Getting child rules
         for tagRule in tagDoc[1].tagRules:
@@ -1050,16 +1037,21 @@ def loadGrammar(fileName):
         if attrDoc.attrRule != None:
             attrDoc.languages = attrDoc.attrRule.languages
 
-
+    graph = pydot.graph_from_edges(edge_list=[(e.fromTitle, e.toTitle) for e in grammarDoc.edgeList], directed=True)
+    for missedNode in notInEdgeList:
+        graph.add_node(pydot.Node(missedNode.name))
+    # def write(self, path, prog=None, format='raw'):
+    graph.write("Gammar.svg", format="svg")
     return grammarDoc
     
-if __name__ == "__main__":
-    grmmr = loadGrammar("/home/brian/Projects/srcML/doc/srcMLDocGen/DocData/Grammar/LanguageGrammar.xml")
-    assert grmmr != None, "Didn't pass test"
-    outFile = open("../GrammarOutput.txt", "w")
-    grmmr.toEBNFText(outFile)
-    outFile.close()
-    outFile = open("../grammarDocumentation.txt","w")
-    grmmr.dumpDocumentation(outFile)
-    outFile.close()
-    # print out.getvalue()
+# if __name__ == "__main__":
+
+#     grmmr = loadGrammar("/home/brian/Projects/srcML/doc/srcMLDocGen/DocData/Grammar/LanguageGrammar.xml")
+#     assert grmmr != None, "Didn't pass test"
+#     outFile = open("../GrammarOutput.txt", "w")
+#     grmmr.toEBNFText(outFile)
+#     outFile.close()
+#     outFile = open("../grammarDocumentation.txt","w")
+#     grmmr.dumpDocumentation(outFile)
+#     outFile.close()
+#     # print out.getvalue()
