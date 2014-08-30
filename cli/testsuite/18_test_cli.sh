@@ -38,7 +38,7 @@ rm -f sub/a.cpp sub/b.cpp;
 #validate(open("sub/b.cpp" "r").read() <<< "b;"
 
 # srcml2src extract nested unit
-define nestedfileextra <<- 'STDOUT'
+define nestedfileextra <<- 'STDIN'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src">
 
@@ -51,7 +51,7 @@ define nestedfileextra <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+	STDIN
 
 define file1 <<- 'STDOUT'
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
