@@ -90,6 +90,18 @@
 </unit>
 
 <unit>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><operator>&amp;</operator><name>ir</name></expr>;</return>  }</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><name>foo</name> <operator>&amp;</operator> <name>bar</name></expr>;</return>  }</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><name>foo</name> <operator>&amp;&amp;</operator> <name>bar</name></expr>;</return>  }</block></function>
+</unit>
+
+<unit>
 <function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <specifier>const</specifier> <ref_qualifier>&amp;</ref_qualifier> <noexcept>noexcept<argument_list>(<noexcept>noexcept<argument_list>(<argument><expr><call><name>T</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></noexcept>)</argument_list></noexcept> <attribute>[[<expr><name>System</name></expr>]]</attribute> -&gt; <function_decl><type><name>int</name></type> (<modifier>*</modifier>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl> <block>{}</block></function>
 </unit>
 

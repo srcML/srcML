@@ -3395,7 +3395,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         throw_list |
 
         // throw list at end of function header
-        { (inLanguage(LANGUAGE_CXX))&& inTransparentMode(MODE_FUNCTION_TAIL) }?
+        { (inLanguage(LANGUAGE_CXX))&& inMode(MODE_FUNCTION_TAIL) }?
         ref_qualifier |
 
         // throw list at end of function header
