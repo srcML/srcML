@@ -1799,7 +1799,7 @@
     </AttrRule>
 
     <!-- src:super -->
-    <TagRule name="super" lang="C,C++,C#">
+    <TagRule name="super" lang="C++,C#">
         <Tag elem="super" />
         <Def>
             <Literal value=":"/>

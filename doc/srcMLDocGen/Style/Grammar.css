@@ -48,6 +48,16 @@ table.ToC tbody tr td.subRules {
     padding-left:2em;
 }
 
+table.Toc tbody tr {
+    border-width:1px solid white;
+}
+
+table.ToC tbody tr:hover {
+    font-weight:bold;
+    /* border:1px solid black; */
+    /*background-color:white;*/
+}
+
 
 /* Languages table */
 table.languagesTable {
