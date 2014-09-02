@@ -499,7 +499,7 @@ int main() {
 
     {
         srcml_sax2_reader reader("project.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, filename, directory, version, hash;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -508,10 +508,10 @@ int main() {
         int tabstop = 0;
         std::vector<std::string> user_macro_list;
 
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
@@ -520,7 +520,7 @@ int main() {
 
     {
         srcml_sax2_reader reader("project_ns.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, filename, directory, version, hash;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -529,10 +529,10 @@ int main() {
         int tabstop = 0;
         std::vector<std::string> user_macro_list;
 
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
@@ -541,7 +541,7 @@ int main() {
 
     {
         srcml_sax2_reader reader("project_single.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, filename, directory, version, hash;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -550,10 +550,10 @@ int main() {
         int tabstop = 0;
         std::vector<std::string> user_macro_list;
 
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
@@ -562,7 +562,7 @@ int main() {
 
     {
         srcml_sax2_reader reader("project_empty_single.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, filename, directory, version, hash;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -571,10 +571,10 @@ int main() {
         int tabstop = 0;
         std::vector<std::string> user_macro_list;
 
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
@@ -583,7 +583,7 @@ int main() {
 
     {
         srcml_sax2_reader reader("project_empty_nested.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, filename, directory, version, hash;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -592,10 +592,10 @@ int main() {
         int tabstop = 0;
         std::vector<std::string> user_macro_list;
 
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory,
                                                  version, attributes, prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
@@ -608,31 +608,32 @@ int main() {
 
     {
         srcml_sax2_reader reader("project.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, filename, directory, version, hash;
         std::vector<std::string> attributes;
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "a.cpp");
         dassert(*directory, "test");
         dassert(*version, "1");
+        dassert(hash, 0)
         dassert(attributes.size(), 0);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "b.cpp");
         dassert(directory, 0);
         dassert(version, 0);
         dassert(attributes.size(), 0);
-        dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
-        dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, hash, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, hash, attributes), 0);
     }
 
     {
         srcml_sax2_reader reader("project_ns.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, filename, directory, version, hash;
         std::vector<std::string> attributes;
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "a.cpp");
         dassert(directory, 0);
@@ -640,21 +641,21 @@ int main() {
         dassert(attributes.size(), 0);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "b.cpp");
         dassert(directory, 0);
         dassert(version, 0);
         dassert(attributes.size(), 0);
-        dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
-        dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, hash, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, hash, attributes), 0);
     }
 
     {
         srcml_sax2_reader reader("project_single.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, filename, directory, version, hash;
         std::vector<std::string> attributes;
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -662,15 +663,15 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
-        dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, hash, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, hash, attributes), 0);
     }
 
     {
         srcml_sax2_reader reader("project_empty_single.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, filename, directory, version, hash;
         std::vector<std::string> attributes;
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -678,15 +679,15 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
-        dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, hash, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, hash, attributes), 0);
     }
 
     {
         srcml_sax2_reader reader("project_empty_nested.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, filename, directory, version, hash;
         std::vector<std::string> attributes;
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "a.cpp");
         dassert(directory, 0);
@@ -694,14 +695,14 @@ int main() {
         dassert(attributes.size(), 0);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "b.cpp");
         dassert(directory, 0);
         dassert(version, 0);
         dassert(attributes.size(), 0);
-        dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
-        dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, hash, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, hash, attributes), 0);
     }
 
     /*
@@ -775,7 +776,7 @@ int main() {
 
     {
         srcml_sax2_reader reader("project.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, filename, directory, version, hash;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -813,18 +814,19 @@ int main() {
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "a.cpp");
         dassert(*directory, "test");
         dassert(*version, "1");
+        dassert(hash, 0)
         dassert(attributes.size(), 0);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
         boost::optional<std::string> unit;
         reader.read_srcml(unit);
         dassert(*unit, srcml_a);
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "b.cpp");
         dassert(directory, 0);
@@ -836,13 +838,13 @@ int main() {
         dassert(unit, 0);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
-        dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, hash, attributes), 0);
         dassert(reader.read_srcml(unit), 0);
     }
 
     {
         srcml_sax2_reader reader("project_ns.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, filename, directory, version, hash;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -880,7 +882,7 @@ int main() {
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "a.cpp");
         dassert(directory, 0);
@@ -891,7 +893,7 @@ int main() {
         boost::optional<std::string> unit;
         reader.read_srcml(unit);
         dassert(*unit, srcml_ns_a);
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "b.cpp");
         dassert(directory, 0);
@@ -903,13 +905,13 @@ int main() {
         dassert(unit, 0);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
-        dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, hash, attributes), 0);
         dassert(reader.read_srcml(unit), 0);
     }
 
     {
         srcml_sax2_reader reader("project_single.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, filename, directory, version, hash;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -948,7 +950,7 @@ int main() {
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -963,13 +965,13 @@ int main() {
         dassert(*unit, srcml_single_a);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
-        dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, hash, attributes), 0);
         dassert(reader.read_srcml(unit), 0);
     }
 
     {
         srcml_sax2_reader reader("project_empty_single.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, filename, directory, version, hash;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -1008,7 +1010,7 @@ int main() {
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "project");
         dassert(*directory, "test");
@@ -1023,13 +1025,13 @@ int main() {
         dassert(*unit, srcml_empty_single_as_unit);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
-        dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, hash, attributes), 0);
         dassert(reader.read_srcml(unit), 0);
     }
 
     {
         srcml_sax2_reader reader("project_empty_nested.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, filename, directory, version, hash;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -1067,7 +1069,7 @@ int main() {
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
-        reader.read_unit_attributes(language, filename, directory, version, attributes);
+        reader.read_unit_attributes(language, filename, directory, version, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "a.cpp");
         dassert(directory, 0);
@@ -1082,7 +1084,7 @@ int main() {
         dassert(*unit, srcml_empty_nested_b);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
-        dassert(reader.read_unit_attributes(language, filename, directory, version, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, hash, attributes), 0);
         dassert(reader.read_srcml(unit), 0);
     }
 
