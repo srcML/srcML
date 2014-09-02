@@ -143,6 +143,11 @@ def BuildAnnotatedEBNF(grammarRule):
             out.write("NotImplementedYet")
             createTagEnd("span")
 
+        elif isinstance(node, DG.Operator):
+            createTagStart("span", "gOperator gKW", "Any operator.")
+            out.write("Operator")
+            createTagEnd("span")
+
         elif isinstance(node, DG.Text):
             createTagStart("span", "gText gKW", "Any text, this may include whitespace and special characters.")
             out.write("Text")

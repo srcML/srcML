@@ -318,6 +318,13 @@ class Identifier(GrammarDef):
     def toEBNFText(self, out):
         out.write("Identifier")
 
+class Operator(GrammarDef):
+    def __init__(self):
+        GrammarDef.__init__(self, "Operator")
+
+    def toEBNFText(self, out):
+        out.write("Operator")
+
 class NotImplementedYet(GrammarDef):
     def __init__(self):
         GrammarDef.__init__(self, "NotImplementedYet")
@@ -452,6 +459,7 @@ NumberTag = "Number"
 EmptyTag = "Empty"
 IdentifierTag = "Identifier"
 NoImplTag = "NoImpl"
+OperatorTag = "Operator"
 
 # Name Attribute
 nameAttr = "name"
@@ -580,6 +588,9 @@ def loadGrammar(fileName):
 
         elif grammarElement.tag == IdentifierTag:
             return Identifier()
+
+        elif grammarElement.tag == OperatorTag:
+            return Operator()
             
         elif grammarElement.tag == NoImplTag:
             countHelper.notImplemnted += 1
@@ -954,7 +965,7 @@ def loadGrammar(fileName):
         print "    Parts of grammar is not reachable. The following rules are unreachable:"
         for unreachableItem in notVisitedVertices:
             print "        {0}".format(unreachableItem) 
-            countHelper.unconnectedGraphRules += 1
+            # countHelper.unconnectedGraphRules += 1
 
     edgesByFromTitle = dict()
     for e in grammarDoc.edgeList:
@@ -1072,7 +1083,7 @@ def loadGrammar(fileName):
     print "    # of unconnected graph rules: {0}".format(countHelper.unconnectedGraphRules)
     print "    # of missing references rules: {0}".format(countHelper.missingReferences)
     print "    # of rules not in edge list: {0}".format(countHelper.notInEdgeList)
-    
+    print "    Total # of rules: {0}".format(len(grammarDoc.rules))
     print "    "+("-"*76)
     return grammarDoc
     

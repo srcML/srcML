@@ -106,7 +106,8 @@ table.languagesTable td {
 span.gRuleRHS:nth-last-child(1)::after,
 .gAttrName::before,
 span.gAttrs::before,
-span.gParameters::before
+span.gParameters::before,
+span.gOperator::before
 {
     content:" ";
 }
