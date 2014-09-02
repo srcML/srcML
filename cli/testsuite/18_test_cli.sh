@@ -42,7 +42,7 @@ define nestedfileextra <<- 'STDIN'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6" language="C++" dir="sub" filename="a.cpp">
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6" language="C" dir="sub" filename="a.cpp">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
@@ -55,7 +55,7 @@ define nestedfileextra <<- 'STDIN'
 
 define file1 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="sub" filename="a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT
@@ -74,10 +74,8 @@ check 3<<< "a.cpp"
 
 srcml2src --xml --unit "2" --get-filename <<< "$nestedfileextra"
 
-check 3<<- 'STDOUT'
-	b.cpp
-	STDOUT
-	
+check 3<<< "b.cpp"
+
 srcml2src --xml --unit "1" --get-directory <<< "$nestedfileextra"
 
 check 3<<< "sub"
@@ -88,13 +86,8 @@ check 3<<< "sub"
 
 srcml2src --xml --unit "1" --get-language <<< "$nestedfileextra"
 
-check 3<<- 'STDOUT'
-	C
-	STDOUT
+check 3<<< "C"
 	
 srcml2src --xml --unit "2" --get-language <<< "$nestedfileextra"
 
-check 3<<- 'STDOUT'
-	Java
-	STDOUT
-	
+check 3<<< "Java"
