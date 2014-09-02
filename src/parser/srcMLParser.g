@@ -5173,7 +5173,7 @@ compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
 ;
 
 
-keyword_name { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
+keyword_name[] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
