@@ -86,5 +86,8 @@
 <expr_stmt><expr><typeof>typeof<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></typeof> <operator>+</operator> <typeof>typeof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></typeof></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><typeof>typeof<argument_list>(<argument><expr>struct <name>x</name></expr></argument>)</argument_list></typeof></expr>;</expr_stmt>
+</unit>
 
 </unit>

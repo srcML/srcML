@@ -86,6 +86,7 @@ public :
     */
     int read_unit_attributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
                              boost::optional<std::string> & directory, boost::optional<std::string> & version,
+                             boost::optional<std::string> & hash, 
                              std::vector<std::string> & attributes);
 
     // reads the next unit and returns it in parameter as srcML

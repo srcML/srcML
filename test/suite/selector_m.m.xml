@@ -86,4 +86,8 @@
 <expr_stmt><expr><selector>@selector<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></selector> <operator>+</operator> <selector>@selector<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></selector></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><selector>@selector<argument_list>(<argument><expr>struct <name>x</name></expr></argument>)</argument_list></selector></expr>;</expr_stmt>
+</unit>
+
 </unit>
