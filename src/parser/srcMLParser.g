@@ -5806,7 +5806,6 @@ alignof_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-
             startElement(SALIGNOF);
         }
         ALIGNOF
@@ -5820,7 +5819,6 @@ typeid_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-
             startElement(STYPEID);
         }
         TYPEID
@@ -5834,7 +5832,6 @@ const_cast_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-
             startElement(SCONST_CAST);
         }
         CONST_CAST (template_argument_list)*
@@ -5848,7 +5845,6 @@ dynamic_cast_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-
             startElement(SDYNAMIC_CAST);
         }
         DYNAMIC_CAST (template_argument_list)*
@@ -5862,7 +5858,6 @@ reinterpret_cast_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-
             startElement(SREINTERPRET_CAST);
         }
         REINTERPRET_CAST (template_argument_list)*
@@ -5876,7 +5871,6 @@ static_cast_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-
             startElement(SSTATIC_CAST);
         }
         STATIC_CAST (template_argument_list)*
@@ -5916,7 +5910,6 @@ typeof_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-
             startElement(STYPEOF);
         }
         TYPEOF
