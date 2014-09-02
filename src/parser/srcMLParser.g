@@ -4669,7 +4669,7 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
                 { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; }
                     expression_process (call[call_count] | keyword_calls) complete_arguments |
 
-                expression |
+                expression | (type_identifier) => expression_process type_identifier |
 
                 comma
                 {
