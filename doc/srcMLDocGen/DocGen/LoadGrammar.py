@@ -582,6 +582,7 @@ def loadGrammar(fileName):
             return Identifier()
             
         elif grammarElement.tag == NoImplTag:
+            countHelper.notImplemnted += 1
             return NotImplementedYet()
         else:
             unexpectedOrUnknownTag(grammarElement)
@@ -780,6 +781,12 @@ def loadGrammar(fileName):
     grammarDoc = GrammarDoc()
     grammarElem = grammarTree.getroot()
 
+    class SpecialCount: pass
+    countHelper = SpecialCount()
+    countHelper.notImplemnted = 0
+    countHelper.unconnectedGraphRules = 0
+    countHelper.missingReferences = 0
+
     # Verifying Correct Root element.
     verifyNodeNameOrFail(grammarElem, GrammarTag)
 
@@ -850,6 +857,7 @@ def loadGrammar(fileName):
 
     print "Building Documentation"
     print "    Checking Rules to Documentation"
+    countHelper.missingDocumentation = 0
     undocumentedRules = []
     for rule in grammarTagRules:
         tag = getComparableTagName(rule.tagInfo)
@@ -866,6 +874,7 @@ def loadGrammar(fileName):
         else:
             undocumentedRules.append(rule)
             print "        Missing documentation for tag: {0} within Rule: {1}".format(tag, rule.name) 
+            countHelper.missingDocumentation += 1
 
     for rule in grammarAttrRules.items():
         if rule[1].name in documentedAttrs:
@@ -874,6 +883,7 @@ def loadGrammar(fileName):
         else:
             undocumentedRules.append(rule)
             print "        Missing documentation for attribute:", rule[1].name
+            countHelper.missingDocumentation += 1
 
     for rule in grammarRules.items():
         if rule[0] in documentedRules:
@@ -882,25 +892,30 @@ def loadGrammar(fileName):
         else:
             undocumentedRules.append(rule)
             print "        Missing documentation for Regular Rule:", rule[0]
+            countHelper.missingDocumentation += 1
 
 
 
     print "    Checking Documentation To Rules"
+    countHelper.extraDocumentation = 0
     documentationWithoutARule = []
     for doc in documentedTags.items():
         if len(doc[1].tagRules) == 0:
             documentationWithoutARule.append(doc[1])
             print "        Extra documentation for Tag: {0}".format(getComparableTagName(doc[1])) 
+            countHelper.extraDocumentation += 1
     
     for doc in documentedAttrs.items():
         if doc[1].attrRule == None:
             documentationWithoutARule.append(doc[1])
             print "        Extra documentation for attribute ", doc[1].name
+            countHelper.extraDocumentation += 1
 
     for doc in documentedRules.items():
         if doc[1].rule == None:
             documentationWithoutARule.append(doc[1])
             print "        Extra documentation for rule ", doc[1].name
+            countHelper.extraDocumentation += 1
 
         
 
@@ -915,6 +930,8 @@ def loadGrammar(fileName):
         else:
             print "    Missing Reference: {0} From within Rule: {1}".format(edge.toTitle, edge.fromTitle) 
             namesMissingFromGraph.append(edge)
+            countHelper.missingReferences += 1
+
 
 
     print "Verifying That Graph is connected"
@@ -932,10 +949,12 @@ def loadGrammar(fileName):
                 if current.toTitle == e.fromTitle:
                     queue.append(e)
 
+    countHelper.unconnectedGraphRules = len(notVisitedVertices)
     if len(notVisitedVertices) > 0:
         print "    Parts of grammar is not reachable. The following rules are unreachable:"
         for unreachableItem in notVisitedVertices:
             print "        {0}".format(unreachableItem) 
+            countHelper.unconnectedGraphRules += 1
 
     edgesByFromTitle = dict()
     for e in grammarDoc.edgeList:
@@ -951,16 +970,18 @@ def loadGrammar(fileName):
         else:
             edgesByToTitle.update({e.toTitle: [e]})
 
+    print "    Not in Edge List"
+    countHelper.notInEdgeList = 0
     notInEdgeList = []
     for rule in grammarDoc.rules:
         if rule.name not in edgesByToTitle and rule.name not in edgesByFromTitle:
             print "        {0}".format(rule.name) 
             notInEdgeList.append(rule)
+            countHelper.notInEdgeList += 1
 
 
 
     print "Extracting parent & child rules from graph"
-    
     for tagDoc in documentedTags.items():
         # Getting parent rules
         for tagRule in tagDoc[1].tagRules:
@@ -1041,7 +1062,18 @@ def loadGrammar(fileName):
     for missedNode in notInEdgeList:
         graph.add_node(pydot.Node(missedNode.name))
     # def write(self, path, prog=None, format='raw'):
-    graph.write("Gammar.svg", format="svg")
+    graph.write("Grammar.svg", format="svg")
+
+    print "    "+("-"*76)
+    print "    Summary"
+    print "    # of extra documentation: {0}".format(countHelper.extraDocumentation)
+    print "    # of missing documentation: {0}".format(countHelper.missingDocumentation)
+    print "    # of rules not implemented yet: {0}".format(countHelper.notImplemnted)
+    print "    # of unconnected graph rules: {0}".format(countHelper.unconnectedGraphRules)
+    print "    # of missing references rules: {0}".format(countHelper.missingReferences)
+    print "    # of rules not in edge list: {0}".format(countHelper.notInEdgeList)
+    
+    print "    "+("-"*76)
     return grammarDoc
     
 # if __name__ == "__main__":
