@@ -86,5 +86,8 @@
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="template">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></cast> <operator>+</operator> <cast type="dynamic">dynamic_cast<argument_list type="template">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list>(<argument><expr>struct <name>x</name></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
+</unit>
 
 </unit>
