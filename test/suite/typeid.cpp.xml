@@ -87,10 +87,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><typeid>typeid<argument_list>(<argument><expr>struct <name>x</name></expr></argument>)</argument_list></typeid>;</expr></expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><typeid>typeid<argument_list>(<argument><expr>struct <name>x</name></expr></argument>)</argument_list></typeid></expr>;</expr_stmt>
 </unit>
 
