@@ -1130,6 +1130,16 @@
         </Def>
     </TagRule>
 
+    <TagRule name="typeInit" lang="C++">
+        <Tag elem="init"/>
+        <Def>
+            <Literal value="="/>
+            <Tag elem="type">
+                <Ref name="expr"/>
+            </Tag>
+        </Def>
+    </TagRule>
+
     <TagRule name="init" lang="C,C++,C#,Java">
         <Tag elem="init"/>
         <Def>
@@ -1629,9 +1639,32 @@
     <TagRule name="usingDirectiveCPlusPlus" lang="C++">
         <Tag elem="using" />
         <Def>
+            <ZeroOrMore>
+                <Ref name="template"/>
+            </ZeroOrMore>
             <Literal value="using"/>
             <Optional>
+                <Ref name="simpleName"/>
+                <Optional>
+                    <Ref name="typeInit" />
+                </Optional>
+            </Optional>
+            <Optional>
+                <Literal value=";"/>
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    <TagRule name="usingNamespace" lang="C++">
+        <Tag elem="using" />
+        <Def>
+            <Literal value="using"/>
+            <Literal value="namespace"/>
+            <Optional>
                 <Ref name="name"/>
+            </Optional>
+            <Optional>
+                <Literal value=";"/>
             </Optional>
         </Def>
     </TagRule>
@@ -1643,20 +1676,120 @@
             <Optional>
                 <Ref name="name"/>
             </Optional>
-        </Def>
-    </TagRule>
-    
-    <TagRule name="usingNamespace" lang="C++">
-        <Tag elem="using" />
-        <Def>
-            <Literal value="using"/>
             <Optional>
-                <Ref name="name"/>
+                <Ref name="init"/>
+            </Optional>
+            <Optional>
+                <Literal value=";"/>
             </Optional>
         </Def>
     </TagRule>
     
+    <!-- src:extern -->
+    <TagRule name="externBlock" lang="C,C++">
+        <Tag elem="extern" />
+        <Def>
+            <Literal value="extern"/>
+            <Ref name="literal"/>
+            <Choice>
+                <Ref name="block"/>
+                <Ref name="declStmt"/>
+                <Ref name="functionDecl"/>
+            </Choice>
+        </Def>
+    </TagRule>
+
+    <!-- src:import -->
+    <TagRule name="import" lang="Java">
+        <Tag elem="import"/>
+        <Def>
+            <Literal value="import"/>
+            <Optional>
+                <Ref name="name"/>
+            </Optional>
+            <Optional>
+                <Literal value=";"/>
+            </Optional>
+        </Def>
+    </TagRule>
+   
+    <!-- src:package -->
+    <TagRule name="package" lang="Java">
+        <Tag elem="package" />
+        <Def>
+            <Literal value="package"/>
+            <Optional>
+                <Ref name="name"/>
+            </Optional>
+            <Optional>
+                <Literal value=";"/>
+            </Optional>
+        </Def>
+    </TagRule>
+
+    <!-- src:template -->
+    <TagRule name="template" lang="C++">
+        <Tag elem="template" />
+        <Def>
+            <Literal value="template"/>
+            <Optional>
+                <Ref name="templateParameterList"/>
+            </Optional>
+        </Def>
+    </TagRule>
     
+   <!-- src:typename -->
+    <TagRule name="typename" lang="C++">
+        <Tag elem="typename" />
+        <Def>
+            <Literal value="typename"/>
+        </Def>
+    </TagRule>
+
+    <!-- src:function -->
+    <TagRule name="function" lang="C,C++,C#,Java">
+        <Tag elem="function"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    <!-- add special cases for getters, setters adders and removers C#
+        I need to look into other functions which occur within other
+        languages.
+    -->
+    <!-- src:function type="operator" -->
+    <TagRule name="functionOperator" lang="C,C++,C#">
+        <Tag elem="function">
+            <Attrs>
+                <Attr rule="functionTypeAttr" />
+            </Attrs>
+        </Tag>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
+    <!-- src:function_decl type="operator" -->
+    <TagRule name="functionDeclOperator" lang="C,C++,C#,Java">
+        <Tag elem="function_decl">
+            <Attrs>
+                <Attr rule="functionTypeAttr" />
+            </Attrs>
+        </Tag>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+    
+    <!-- src:function_decl -->
+    <TagRule name="functionDecl" lang="C,C++,C#">
+        <Tag elem="function_decl"/>
+        <Def>
+            <NoImpl/>
+        </Def>
+    </TagRule>
+   
+   
     <!--
     *****************************************
             Not Sorted yet!
@@ -1818,7 +1951,7 @@
     </TagRule>
 
     <!-- src:class_decl -->
-    <TagRule name="classDecl" lang="C,C++,C#,Java">
+    <TagRule name="classDecl" lang="C++,C#,Java">
         <Tag elem="alignas"/>
         <Def><NoImpl/></Def>
     </TagRule>
@@ -2028,14 +2161,6 @@
         </Def>
     </TagRule>
     
-    <!-- src:extern -->
-    <TagRule name="externBlock" lang="C,C++">
-        <Tag elem="extern" />
-        <Def>
-            <NoImpl/>
-        </Def>
-    </TagRule>
-    
     <!-- src:finally -->
     <TagRule name="finally" lang="C#,Java">
         <Tag elem="finally" />
@@ -2047,46 +2172,6 @@
     <!-- src:from -->
     <TagRule name="from" lang="C#">
         <Tag elem="from" />
-        <Def>
-            <NoImpl/>
-        </Def>
-    </TagRule>
-    
-    <!-- src:function type="operator" -->
-    <TagRule name="functionOperator" lang="C,C++,C#">
-        <Tag elem="function">
-            <Attrs>
-                <Attr rule="functionTypeAttr" />
-            </Attrs>
-        </Tag>
-        <Def>
-            <NoImpl/>
-        </Def>
-    </TagRule>
-    
-    <!-- src:function -->
-    <TagRule name="function" lang="C,C++,C#,Java">
-        <Tag elem="function"/>
-        <Def>
-            <NoImpl/>
-        </Def>
-    </TagRule>
-    
-    <!-- src:function_decl type="operator" -->
-    <TagRule name="functionDeclOperator" lang="C,C++,C#,Java">
-        <Tag elem="function_decl">
-            <Attrs>
-                <Attr rule="functionTypeAttr" />
-            </Attrs>
-        </Tag>
-        <Def>
-            <NoImpl/>
-        </Def>
-    </TagRule>
-    
-    <!-- src:function_decl -->
-    <TagRule name="functionDecl" lang="C,C++,C#">
-        <Tag elem="function_decl"/>
         <Def>
             <NoImpl/>
         </Def>
@@ -2104,14 +2189,6 @@
     <!-- src:implements -->
     <TagRule name="implements" lang="Java">
         <Tag elem="implements"/>
-        <Def>
-            <NoImpl/>
-        </Def>
-    </TagRule>
-    
-    <!-- src:import -->
-    <TagRule name="import" lang="Java">
-        <Tag elem="import"/>
         <Def>
             <NoImpl/>
         </Def>
@@ -2226,14 +2303,6 @@
     <!-- src:orderby -->
     <TagRule name="orderby" lang="C#">
         <Tag elem="orderby"/>
-        <Def>
-            <NoImpl/>
-        </Def>
-    </TagRule>
-    
-    <!-- src:package -->
-    <TagRule name="package" lang="Java">
-        <Tag elem="package" />
         <Def>
             <NoImpl/>
         </Def>
@@ -2388,14 +2457,6 @@
         </Def>
     </TagRule>
     
-    <!-- src:template -->
-    <TagRule name="template" lang="C++">
-        <Tag elem="template" />
-        <Def>
-            <NoImpl/>
-        </Def>
-    </TagRule>
-    
     <!-- src:throw -->
     <TagRule name="throw" lang="C++,C#,Java">
         <Tag elem="throw" />
@@ -2423,14 +2484,6 @@
     <!-- src:typeid -->
     <TagRule name="typeid" lang="C++">
         <Tag elem="typeid" />
-        <Def>
-            <NoImpl/>
-        </Def>
-    </TagRule>
-    
-    <!-- src:typename -->
-    <TagRule name="typename" lang="C++">
-        <Tag elem="typename" />
         <Def>
             <NoImpl/>
         </Def>
@@ -2523,6 +2576,21 @@
             <Literal value=")" />
         </Def>
     </TagRule>
+    
+    <TagRule name="templateParameterList" lang="C++,C#,Java">
+        <Tag elem="parameter_list"/>
+        <Def>
+            <Literal value="&lt;"/>
+            <Optional>
+                <Ref name="typeParam"/>
+                <ZeroOrMore>
+                    <Literal value=","/>
+                    <Ref name="typeParam"/>
+                </ZeroOrMore>
+            </Optional>
+            <Literal value="&gt;"/>
+        </Def>
+    </TagRule> 
     <!-- src:parameter_list type="pseudo"  Add me C# only? need to check. -->
 
     <!-- src:param -->
@@ -2530,6 +2598,16 @@
         <Tag elem="param"/>
         <Def>
             <Ref name="decl"/>
+        </Def>
+    </TagRule>
+    
+    <TagRule name="typeParam" lang="C++">
+        <Tag elem="param"/>
+        <Def>
+            <Ref name="type"/>
+            <Optional>
+                <Ref name="simpleName"/>
+            </Optional>
         </Def>
     </TagRule>
     
@@ -2592,6 +2670,8 @@
                     <Ref name="CPlusPlusClass"/>
                     <Ref name="struct"/>
                     <Ref name="union"/>
+                    <Ref name="template"/>
+                    <Ref name="typename" />
                 </Choice>
             </Optional>
             <ZeroOrMore>
