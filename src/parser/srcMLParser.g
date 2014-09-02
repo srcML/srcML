@@ -7541,7 +7541,7 @@ argument[] { ENTRY_DEBUG } :
         (
         { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }? expression |
 
-        type_identifier
+        (type_identifier) => expression_process type_identifier
         )
 
 ;
