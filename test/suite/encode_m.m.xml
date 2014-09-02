@@ -86,4 +86,8 @@
 <expr_stmt><expr><encode>@encode<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></encode> <operator>+</operator> <encode>@encode<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></encode></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><encode>@encode<argument_list>(<argument><expr>struct <name>x</name></expr></argument>)</argument_list></encode></expr>;</expr_stmt>
+</unit>
+
 </unit>

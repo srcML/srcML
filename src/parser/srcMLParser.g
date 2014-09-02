@@ -4669,7 +4669,7 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
                 { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; }
                     expression_process (call[call_count] | keyword_calls) complete_arguments |
 
-                expression |
+                expression | (type_identifier) => expression_process type_identifier |
 
                 comma
                 {
@@ -5173,7 +5173,7 @@ compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
 ;
 
 
-keyword_name { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
+keyword_name[] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -5806,7 +5806,6 @@ alignof_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-
             startElement(SALIGNOF);
         }
         ALIGNOF
@@ -5820,7 +5819,6 @@ typeid_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-
             startElement(STYPEID);
         }
         TYPEID
@@ -5834,7 +5832,6 @@ const_cast_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-
             startElement(SCONST_CAST);
         }
         CONST_CAST (template_argument_list)*
@@ -5848,7 +5845,6 @@ dynamic_cast_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-
             startElement(SDYNAMIC_CAST);
         }
         DYNAMIC_CAST (template_argument_list)*
@@ -5862,7 +5858,6 @@ reinterpret_cast_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-
             startElement(SREINTERPRET_CAST);
         }
         REINTERPRET_CAST (template_argument_list)*
@@ -5876,7 +5871,6 @@ static_cast_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-
             startElement(SSTATIC_CAST);
         }
         STATIC_CAST (template_argument_list)*
@@ -5916,7 +5910,6 @@ typeof_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-
             startElement(STYPEOF);
         }
         TYPEOF
@@ -7548,7 +7541,7 @@ argument[] { ENTRY_DEBUG } :
         (
         { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }? expression |
 
-        type_identifier
+        (type_identifier) => expression_process type_identifier
         )
 
 ;

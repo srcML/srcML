@@ -33,4 +33,8 @@
 <function_decl><type><decltype>decltype<argument_list>(<argument><expr><operator>(</operator><call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call><operator>)</operator></expr></argument>)</argument_list></decltype></type> <name>A</name><parameter_list>()</parameter_list> -&gt; <type><decltype>decltype<argument_list>(<argument><expr><operator>(</operator><call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call><operator>)</operator></expr></argument>)</argument_list></decltype></type>;</function_decl>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><decltype>decltype<argument_list>(<argument><expr>struct <name>X</name></expr></argument>)</argument_list></decltype></type> <name>y</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
