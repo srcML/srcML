@@ -199,15 +199,16 @@ namespace {
     // Qt
     ELEMENT_MAP(SSIGNAL_ACCESS,           "signals")
     ELEMENT_MAP(SFOREVER_STATEMENT,       "forever")
+    ELEMENT_MAP(SEMIT_STATEMENT,          "emit")
 
     ELEMENT_MAP(SMEMBER_INITIALIZATION_LIST, "member_list")
-    ELEMENT_MAP(SCONSTRUCTOR_DEFINITION, "constructor")
-    ELEMENT_MAP(SCONSTRUCTOR_DECLARATION, "constructor_decl")
-    ELEMENT_MAP(SDESTRUCTOR_DEFINITION,   "destructor")
-    ELEMENT_MAP(SDESTRUCTOR_DECLARATION, "destructor_decl")
-    ELEMENT_MAP(SDERIVATION_LIST,         "super")
-    ELEMENT_MAP(SFRIEND,                  "friend")
-    ELEMENT_MAP(SCLASS_SPECIFIER,         "specifier")
+    ELEMENT_MAP(SCONSTRUCTOR_DEFINITION,     "constructor")
+    ELEMENT_MAP(SCONSTRUCTOR_DECLARATION,    "constructor_decl")
+    ELEMENT_MAP(SDESTRUCTOR_DEFINITION,      "destructor")
+    ELEMENT_MAP(SDESTRUCTOR_DECLARATION,     "destructor_decl")
+    ELEMENT_MAP(SDERIVATION_LIST,            "super")
+    ELEMENT_MAP(SFRIEND,                     "friend")
+    ELEMENT_MAP(SCLASS_SPECIFIER,            "specifier")
 
     // extern definition
     ELEMENT_MAP(SEXTERN, "extern")
@@ -502,9 +503,17 @@ srcMLOutput::~srcMLOutput() {
 void srcMLOutput::close() {
 
     if (xout) {
+
         xmlTextWriterEndDocument(xout);
         xmlFreeTextWriter(xout);
         xout = 0;
+        output_buffer = 0;
+
+    } else if(output_buffer) {
+
+        xmlOutputBufferClose(output_buffer);
+        output_buffer = 0;
+
     }
 }
 

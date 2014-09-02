@@ -213,13 +213,15 @@ tokens {
 	PUBLIC;
 	PRIVATE;
 	PROTECTED;
-    SIGNAL;
     VIRTUAL;
 	FRIEND;
 	OPERATOR;
     EXPLICIT;
 
+    // Qt
     FOREVER;
+    SIGNAL;
+    EMIT;
 
     // namespaces
 	NAMESPACE;
@@ -483,7 +485,8 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         // Qt
         { "signals"      , SIGNAL        , LANGUAGE_CXX }, 
         { "foreach"      , FOREACH       , LANGUAGE_CXX }, 
-        { "forever"      , FOREVER       , LANGUAGE_CXX }, 
+        { "forever"      , FOREVER       , LANGUAGE_CXX },
+        { "emit"         , EMIT          , LANGUAGE_CXX },  
 
         // add all C++ specific keywords to the literals table
         // class

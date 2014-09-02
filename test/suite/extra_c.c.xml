@@ -34,8 +34,8 @@
 <return>return <macro><name>snprintf</name> <argument_list>(<argument>buf</argument>, <argument>size</argument>,
 		 <argument>({ char *s;
                  switch (urb-&gt;dev-&gt;speed) {
-                 case USB_SPEED_LOW:    s = "ls"; break;
-                 default:               s = "?"; break;
+                 case USB_SPEED_LOW:    s = <literal type="string">"ls"</literal>; break;
+                 default:               s = <literal type="string">"?"</literal>; break;
                  }; s; })</argument>,
 		 <argument>urb-&gt;actual_length</argument>, <argument>urb-&gt;transfer_buffer_length</argument>)</argument_list></macro>;</return>
 }</block>

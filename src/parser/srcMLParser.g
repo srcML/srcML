@@ -150,7 +150,7 @@ header "post_include_hpp" {
 
 enum STMT_TYPE { 
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
-    SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
+    SINGLE_MACRO, NULLOPERATOR, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
     EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
     USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT, PROPERTY_STMT
 };
@@ -493,6 +493,7 @@ tokens {
     // Qt
 	SSIGNAL_ACCESS;
     SFOREVER_STATEMENT;
+    SEMIT_STATEMENT;
 
     // cpp directive internal elements
 	SCPP_DIRECTIVE;
@@ -651,6 +652,7 @@ public:
 #endif
 
     static const antlr::BitSet enum_preprocessing_token_set;
+    static const antlr::BitSet literal_tokens_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -742,6 +744,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
          && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
          && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
          && (LA(1) != DEFAULT || next_token() == COLON)
+         && (LA(1) != CHECKED || next_token() == LCURLY)
+         && (LA(1) != UNCHECKED || next_token() == LCURLY)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != INLINE || next_token() == NAMESPACE)
          && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
@@ -780,7 +784,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         if_statement | { !isoption(parser_options, SRCML_OPTION_NESTIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
-        while_statement | for_statement | do_statement | foreach_statement | forever_statement |
+        while_statement | for_statement | do_statement | foreach_statement |
 
         // jump statements
         return_statement | break_statement | continue_statement | goto_statement |
@@ -812,7 +816,10 @@ keyword_statements[] { ENTRY_DEBUG } :
         // Objective-C - kewywords only detected for Objective-C
         objective_c_class | protocol | objective_c_class_end | property_declaration | synthesize_statement | dynamic_statement |
 
-        autoreleasepool_block | compatibility_alias | class_directive
+        autoreleasepool_block | compatibility_alias | class_directive |
+
+        // Qt
+        forever_statement | emit_statement
 
 ;
 
@@ -894,10 +901,6 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         // standalone macro
         { stmt_type == SINGLE_MACRO }?
         macro_call |
-
-        // standalone macro
-        { stmt_type == DELEGATE_FUNCTION }?
-        delegate_anonymous |
 
         // constructor
         { stmt_type == CONSTRUCTOR }?
@@ -2656,6 +2659,19 @@ protocol_declaration[] { ENTRY_DEBUG } :
 
 ;
 
+// Qt emit statement
+emit_statement[] { ENTRY_DEBUG } :
+        {
+            // statement with nested statement (after condition)
+            startNewMode(MODE_STATEMENT);
+
+            // start the while element
+            startElement(SEMIT_STATEMENT);
+
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+        }
+        EMIT
+;
 
 /* Declarations Definitions CFG */
 
@@ -3379,7 +3395,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         throw_list |
 
         // throw list at end of function header
-        { (inLanguage(LANGUAGE_CXX))&& inTransparentMode(MODE_FUNCTION_TAIL) }?
+        { (inLanguage(LANGUAGE_CXX))&& inMode(MODE_FUNCTION_TAIL) }?
         ref_qualifier |
 
         // throw list at end of function header
@@ -3430,6 +3446,8 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
          && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
          && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
          && (LA(1) != DEFAULT || next_token() == COLON)
+         && (LA(1) != CHECKED || next_token() == LCURLY)
+         && (LA(1) != UNCHECKED || next_token() == LCURLY)
          && (LA(1) != CXX_TRY || next_token() == LCURLY)
          && (LA(1) != INLINE || next_token() == NAMESPACE)
          && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
@@ -3841,7 +3859,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
           Process all the parts of a potential type.  Keep track of total
           parts, specifier parts, and second token
         */
-        { next_token_check(LPAREN, LCURLY) }? DELEGATE set_type[type, DELEGATE_FUNCTION] |
         (
         ({ ((inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0)) || (LA(1) != LBRACKET || next_token() == LBRACKET))
          && (LA(1) != IN || !inTransparentMode(MODE_FOR_CONDITION)) }?
@@ -4902,7 +4919,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 // the list of identifiers that are also marked up as tokens for other things.
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
-            SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
+            SUPER | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
             SIGNAL | FINAL | OVERRIDE | VOID | ASM |
 
             // C# linq
@@ -5112,7 +5129,7 @@ compound_name_csharp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY
             (multops)*
             (DESTOP set_bool[isdestructor])*
             (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
-            (options { greedy = true; } : multops)*
+            (options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
         )*
 
 ;
@@ -5322,11 +5339,19 @@ alignas_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // default specifier (Java Methods)
-default_specifier[]  { SingleElement element(this); ENTRY_DEBUG } :
+default_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
         DEFAULT
+
+;
+
+this_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        THIS
 
 ;
 
@@ -5742,7 +5767,7 @@ keyword_calls[] { ENTRY_DEBUG } :
     encode_call | selector_call |
 
     // C#
-    typeof_call | { inLanguage(LANGUAGE_CSHARP) }? default_call
+    typeof_call | { inLanguage(LANGUAGE_CSHARP) }? default_call | checked_call | unchecked_call
 
 ;
 
@@ -5756,7 +5781,7 @@ keyword_call_tokens[] { ENTRY_DEBUG } :
     ENCODE | SELECTOR |
 
     // C#
-    TYPEOF | DEFAULT
+    TYPEOF | DEFAULT | CHECKED | UNCHECKED
 
 ;
 
@@ -5911,6 +5936,32 @@ default_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
+// checked
+checked_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+            startElement(SCHECKED_STATEMENT);
+        }
+        CHECKED
+        call_argument_list
+;
+
+
+// unchecked
+unchecked_call[] { ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+            startElement(SUNCHECKED_STATEMENT);
+        }
+        UNCHECKED
+        call_argument_list
+;
 // check if macro call
 macro_call_check[] { ENTRY_DEBUG } :
         simple_identifier (options { greedy = true; } : paren_pair)*
@@ -6209,7 +6260,12 @@ macro_call_contents[] {
             endMode();
             start = true;
         }
-        consume();
+
+        if(literal_tokens_set.member(LA(1)))
+            literals();
+        else
+            consume();
+
     }
 
 } :;
@@ -7585,7 +7641,7 @@ parameter_type_count[int & type_count, bool output_type = true] { CompleteElemen
 
 
         // match auto keyword first as special case do no warn about ambiguity
-        ((options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+        ((options { generateAmbigWarnings = false; } : this_specifier | auto_keyword[type_count > 1] | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 
         // sometimes there is no parameter name.  if so, we need to eat it
         ( options { greedy = true; generateAmbigWarnings = false; } : multops | tripledotop | LBRACKET RBRACKET |

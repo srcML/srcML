@@ -57,7 +57,7 @@
 </unit>
 
 <unit>
-<delegate><name>delegate</name> <block>{ <return>return <expr><literal type="number">1</literal> <operator>+</operator> <literal type="number">1</literal></expr>;</return> }</block></delegate>
+<expr_stmt><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><name>b</name></expr></expr_stmt> }</block></delegate></expr>;</expr_stmt>
 </unit>
 
 </unit>
