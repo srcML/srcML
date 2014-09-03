@@ -1236,7 +1236,8 @@
     <TagRule name="defaultCall" lang="Java">
         <Tag elem="default"/>
         <Def>
-            <NoImpl/>
+            <Literal value="default"/>
+            <Ref name="argumentList"/>
         </Def>
     </TagRule>
 
@@ -1663,13 +1664,6 @@
                 <Ref name="block"/>
                 <Ref name="pseudoBlock"/>
             </Choice>
-        </Def>
-    </TagRule>
-    
-    <TagRule name="fixedCall" lang="C#">
-        <Tag elem="fixed" />
-        <Def>
-            <NoImpl/>
         </Def>
     </TagRule>
 
@@ -3131,7 +3125,16 @@
     <TagRule name="whereConstraint" lang="C#">
         <Tag elem="where" />
         <Def>
-            <NoImpl/>
+            <Literal value="where"/>
+            <Ref name="name"/>
+            <Literal value=":"/>
+            <Optional>
+                <Ref name="name"/>
+                <ZeroOrMore>
+                    <Literal value=","/>
+                    <Ref name="name"/>
+                </ZeroOrMore>
+            </Optional>
         </Def>
     </TagRule>
     
@@ -3529,7 +3532,6 @@
                     <Ref name="call"/>
                     <Ref name="defaultCall"/>
                     <Ref name="name"/>
-                    <Ref name="fixedCall"/>
                     <Ref name="initBlock"/>
                     <Ref name="operator"/>
                     <Ref name="literal"/>
