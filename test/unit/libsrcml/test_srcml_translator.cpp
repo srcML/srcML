@@ -246,7 +246,7 @@ int main() {
 
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-        OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_LITERAL;
+        OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_LITERAL;
         srcml_archive * archive = srcml_create_archive();
         srcml_unit * unit = srcml_create_unit(archive);
         unit->attributes = attributes;
@@ -270,7 +270,7 @@ int main() {
 
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-        OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_LITERAL;
+        OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_LITERAL;
         srcml_archive * archive = srcml_create_archive();
         srcml_unit * unit = srcml_create_unit(archive);
         unit->attributes = attributes;
@@ -294,7 +294,7 @@ int main() {
 
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-        OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_OPERATOR;
+        OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_OPERATOR;
         srcml_archive * archive = srcml_create_archive();
         srcml_unit * unit = srcml_create_unit(archive);
         unit->attributes = attributes;
@@ -318,7 +318,7 @@ int main() {
 
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-        OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_OPERATOR;
+        OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_OPERATOR;
         srcml_archive * archive = srcml_create_archive();
         srcml_unit * unit = srcml_create_unit(archive);
         unit->attributes = attributes;
@@ -342,7 +342,7 @@ int main() {
 
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-        OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_MODIFIER;
+        OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_MODIFIER;
         srcml_archive * archive = srcml_create_archive();
         srcml_unit * unit = srcml_create_unit(archive);
         unit->attributes = attributes;
@@ -366,7 +366,7 @@ int main() {
 
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-        OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_MODIFIER;
+        OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_MODIFIER;
         srcml_archive * archive = srcml_create_archive();
         srcml_unit * unit = srcml_create_unit(archive);
         unit->attributes = attributes;
@@ -488,7 +488,7 @@ int main() {
 
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-        OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_CPP | SRCML_OPTION_LITERAL | SRCML_OPTION_OPERATOR | SRCML_OPTION_MODIFIER | SRCML_OPTION_POSITION;
+        OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_CPP | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_LITERAL | SRCML_OPTION_OPERATOR | SRCML_OPTION_MODIFIER | SRCML_OPTION_POSITION;
         srcml_archive * archive = srcml_create_archive();
         srcml_archive_register_namespace(archive, "foo", "bar");
         srcml_unit * unit = srcml_create_unit(archive);
@@ -513,7 +513,7 @@ int main() {
 
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
-        OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_CPP | SRCML_OPTION_LITERAL | SRCML_OPTION_OPERATOR | SRCML_OPTION_MODIFIER | SRCML_OPTION_POSITION;
+        OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_CPP | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_LITERAL | SRCML_OPTION_OPERATOR | SRCML_OPTION_MODIFIER | SRCML_OPTION_POSITION;
         srcml_archive * archive = srcml_create_archive();
         srcml_archive_register_namespace(archive, "foo", "bar");
         srcml_unit * unit = srcml_create_unit(archive);
