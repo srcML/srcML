@@ -70,22 +70,22 @@
                 <XPath path="//src:for">
                     <Desc>Find all for loops</Desc>
                 </XPath>
-                <XPath path="//src:for/src:init">
+                <XPath path="//src:for/src:control/src:init">
                     <Desc>Find all initialization statements from within the control of all for loops</Desc>
                 </XPath>
-                <XPath path="//src:for[string-length(src:init/src:decl/src:name) = 1]">
+                <XPath path="//src:for[string-length(src:control/src:init/src:decl/src:name) = 1]">
                     <Desc>Find all for loops which declare a variable with a single character name (e.g. <code class="inline">x</code>, <code class="inline">i</code> or <code class="inline">y</code>)</Desc>
                 </XPath>
-                <XPath path="//src:for[src:incr/src:expr//node()/following-sibling::src:operator[.= '++']]">
+                <XPath path="//src:for[src:control/src:incr/src:expr//node()/following-sibling::src:operator[.= '++']]">
                     <Desc>Find all for loops which use post decrement as part of the increment expression</Desc>
                 </XPath>
-                <XPath path="//src:for/src:incr">
+                <XPath path="//src:for/src:control/src:incr">
                     <Desc>Find the increment expressions from every for loops</Desc>
                 </XPath>
-                <XPath path="//src:for/src:condition">
+                <XPath path="//src:for/src:control/src:condition">
                     <Desc>Find the conditions of all for loops</Desc>
                 </XPath>
-                <XPath path="//src:for[src:range]">
+                <XPath path="//src:for[src:control/src:init/src:range]">
                     <Desc>Find all range based for loops</Desc>
                 </XPath>
             </XPathQueries>

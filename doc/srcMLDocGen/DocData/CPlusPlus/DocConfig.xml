@@ -70,7 +70,7 @@
                 <XPath path="//src:for">
                     <Desc>Find all for loops</Desc>
                 </XPath>
-                <XPath path="//src:for/src:init">
+                <XPath path="//src:for/src:control/src:init">
                     <Desc>Find all initialization statements from within the control of all for loops</Desc>
                 </XPath>
                 <XPath path="//src:for[string-length(src:control/src:init/src:decl/src:name) = 1]">
