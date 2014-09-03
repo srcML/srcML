@@ -3,7 +3,7 @@ import os, sys, re, lxml, cStringIO, itertools
 import lxml.etree as ET
 from xml.sax.handler import ContentHandler
 from LoadData import *
-import pydot
+# import pydot
 
 def getComparableTagName(item):
     return "{0}{1}".format("" if item.ns == "" else (item.ns +":"), item.tag)
@@ -1069,11 +1069,11 @@ def loadGrammar(fileName):
         if attrDoc.attrRule != None:
             attrDoc.languages = attrDoc.attrRule.languages
 
-    graph = pydot.graph_from_edges(edge_list=[(e.fromTitle, e.toTitle) for e in grammarDoc.edgeList], directed=True)
-    for missedNode in notInEdgeList:
-        graph.add_node(pydot.Node(missedNode.name))
-    # def write(self, path, prog=None, format='raw'):
-    graph.write("Grammar.svg", format="svg")
+    # graph = pydot.graph_from_edges(edge_list=[(e.fromTitle, e.toTitle) for e in grammarDoc.edgeList], directed=True)
+    # for missedNode in notInEdgeList:
+    #     graph.add_node(pydot.Node(missedNode.name))
+    # # def write(self, path, prog=None, format='raw'):
+    # graph.write("Grammar.svg", format="svg")
 
     print "    "+("-"*76)
     print "    Summary"

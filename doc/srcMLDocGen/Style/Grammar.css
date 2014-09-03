@@ -107,7 +107,8 @@ span.gRuleRHS:nth-last-child(1)::after,
 .gAttrName::before,
 span.gAttrs::before,
 span.gParameters::before,
-span.gOperator::before
+span.gOperator::before,
+span.gNotImplemented::before
 {
     content:" ";
 }
