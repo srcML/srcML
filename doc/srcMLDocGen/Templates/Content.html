@@ -76,8 +76,8 @@
                         {%else%}
                         <h4 class="subtitle">{{entry.examples.0.title}}</h4>
                         {%endifequal%}
-                        <pre class="sourceCodeExample">{% HighlightSyntaxFromTree entry.examples.0.srcML doc.srcMLLanguage "code" %}</pre>
-                        <pre class="sourceCodeExample">{% HighlightSyntaxFromTree entry.examples.0.srcML doc.srcMLLanguage "srcML" %}</pre>
+                        <pre class="sourceCodeExample">{% HighlightSyntaxFromTree entry.examples.0.srcML doc.srcMLLanguage "code" grammarFileName %}</pre>
+                        <pre class="sourceCodeExample">{% HighlightSyntaxFromTree entry.examples.0.srcML doc.srcMLLanguage "srcML" grammarFileName %}</pre>
                     </div>
                 {% else %}
                     <h3>Examples</h3>
@@ -90,8 +90,8 @@
                             {%else%}
                             <h4 class="subtitle">{{example.title}}</h4>
                             {%endifequal%}
-                            <pre class="sourceCodeExample">{% HighlightSyntaxFromTree example.srcML doc.srcMLLanguage "code" %}</pre>
-                            <pre class="sourceCodeExample">{% HighlightSyntaxFromTree example.srcML doc.srcMLLanguage "srcML" %}</pre>
+                            <pre class="sourceCodeExample">{% HighlightSyntaxFromTree example.srcML doc.srcMLLanguage "code" grammarFileName %}</pre>
+                            <pre class="sourceCodeExample">{% HighlightSyntaxFromTree example.srcML doc.srcMLLanguage "srcML" grammarFileName %}</pre>
                         </div>
                     {% endfor %}
                 {% endif %}

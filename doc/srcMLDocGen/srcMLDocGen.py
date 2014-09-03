@@ -29,7 +29,7 @@ def genDocFile(docConfig):
     pageLinks.append(PageLink(docConfig.title, docConfig.outputFileName))
     out = open(docConfig.outputFileName, "w")
     fileTemplate = loader.get_template("DefaultPage.html")
-    page = fileTemplate.render(Context({"doc": docConfig, "pageName" : docConfig.outputFileName}))
+    page = fileTemplate.render(Context({"doc": docConfig, "pageName" : docConfig.outputFileName, "grammarFileName" : grammarOutputFileName}))
     out.write(page)
     out.close()
 

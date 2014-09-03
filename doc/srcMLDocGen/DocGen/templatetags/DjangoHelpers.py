@@ -54,19 +54,24 @@ keywordRegExDictionary = {
     "c#":re.compile("\\b(?P<kw>{0})\\b".format( "|".join(keywordDictionary["c#"])))
 }
 kwSubPattern = "<span class=\"kw\">\g<kw></span>"
+grammarOutputFileName = "srcMLGrammar.html"
+linkStart = "<a href=\"srcMLGrammar.html#{0}\" title=\"View grammar for tag.\">"
+linkEnd = "</a>"
 
 class SyntaxHighlighter(ContentHandler):
     htmlEscapeTable = {'"': "&quot;", "'": "&apos;" }
     spanStart = "<span class=\"{0}\">"
     spanEnd = "</span>"
+    # def makeLinkStart(self, name):
 
-    def __init__(self, codeIssrcML, language):
+    def __init__(self, codeIssrcML, language, gammarDocumentationFile):
         self.out = cStringIO.StringIO()
         self.content = ""
         self.displayXML = codeIssrcML
         self.language = language
         self.keywordRegEx = keywordRegExDictionary[language.lower()]
         self.iscomment = False
+        self.grammarFileURL = gammarDocumentationFile
 
     def getNormalizedStyleName(self, name):
         return uriToPrefix[name[0]] + "_" + name[1]
@@ -104,18 +109,30 @@ class SyntaxHighlighter(ContentHandler):
             self.iscomment = True
         self.out.write(SyntaxHighlighter.spanStart.format(self.getNormalizedStyleName(name)))
         if self.displayXML:
+            tagLinkName = "tag_"
+            if uriToPrefix[name[0]] != "src":
+                tagLinkName += uriToPrefix[name[0]] + "_"
+            tagLinkName += name[1]
+            self.out.write(linkStart.format(tagLinkName))
             self.writeTagStart(name, attributes)
+            self.out.write(linkEnd)
 
 
     def endElementNS(self, name, qname):
-
         if name[1] == "unit":
             return
         if name[1] == "comment":
             self.iscomment = False
         self.out.write(SyntaxHighlighter.spanEnd)
         if self.displayXML:
+            tagLinkName = "tag_"
+            if uriToPrefix[name[0]] != "src":
+                tagLinkName += uriToPrefix[name[0]] + "_"
+            tagLinkName += name[1]
+            self.out.write(linkStart.format(tagLinkName))
             self.writeTagEnd(name)
+            self.out.write(linkEnd)
+
 
 
     def characters(self, data):
@@ -131,25 +148,35 @@ class SyntaxHighlighter(ContentHandler):
 
 
 class SyntaxHighlightedNode(template.Node):
-    def __init__(self, nameOfSource, language, isSourceCode):
+    def __init__(self, nameOfSource, language, isSourceCode, grammarDocURL=grammarOutputFileName):
         self.nameOfTreeLoc = nameOfSource
         self.language = language
         self.isSourceOrXml = isSourceCode
+        self.grammarFile = grammarDocURL
 
     def render(self, context):
         tree = self.nameOfTreeLoc.resolve(context)
         language = self.language.resolve(context)
         sourceCodeOrXML = self.isSourceOrXml.resolve(context)
-        contentHandler = SyntaxHighlighter(sourceCodeOrXML == "srcML", language)
+        grammarFileURL = ""
+        if isinstance(self.grammarFile, str):
+            grammarFileURL = self.grammarFile
+        else:
+            grammarFileURL = self.grammarFile.resolve(context)
+        contentHandler = SyntaxHighlighter(sourceCodeOrXML == "srcML", language, grammarFileURL)
         lxmlSAX.saxify(ET.fromstring(tree), contentHandler)
         return contentHandler.content
         
 @register.tag(name="HighlightSyntaxFromTree")
 def highlightSyntaxFromsrcML(parser, token):
     tokens = token.split_contents()
-    if len(tokens) != 4:
-        raise TemplateSyntaxError("Incorrect number of arguments for HighlightSyntaxFromTree, expected: 4. Got: %d" % len(tokens))
-    return SyntaxHighlightedNode(parser.compile_filter(tokens[1]), parser.compile_filter(tokens[2]), parser.compile_filter(tokens[3]))
+    if len(tokens) < 4 and len(tokens) >5:
+        raise Exception("Incorrect number of arguments for HighlightSyntaxFromTree, expected: either 4 or 5. Got: %d" % len(tokens))
+
+    if len(tokens) == 4:
+        return SyntaxHighlightedNode(parser.compile_filter(tokens[1]), parser.compile_filter(tokens[2]), parser.compile_filter(tokens[3]))
+    else:
+        return SyntaxHighlightedNode(parser.compile_filter(tokens[1]), parser.compile_filter(tokens[2]), parser.compile_filter(tokens[3]), parser.compile_filter(tokens[4]))
 
 
 def formatTagOrStrOutStr(var):

@@ -100,7 +100,6 @@ def BuildAnnotatedEBNF(grammarRule):
             if expr != subExprNode.subExprs[-1]:
                 if separator == "" or separator == " ":
                     createTagStart("span", "gSpaceSeparator")
-                    # out.write("&nbsp;")
                 else:
                     createTagStart("span", "gSeparator")
                     out.write("{0}".format(separator))

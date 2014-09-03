@@ -3545,7 +3545,9 @@
     <TagRule name="decl" lang="C,C++,C#,Java">
         <Tag elem="decl"/>
         <Def>
-            <Ref name="type"/>
+            <Optional>
+                <Ref name="type"/>
+            </Optional>
             <Optional>
                 <Ref name="name" />
             </Optional>
