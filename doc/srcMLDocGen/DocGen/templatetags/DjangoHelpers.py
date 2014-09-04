@@ -55,7 +55,7 @@ keywordRegExDictionary = {
 }
 kwSubPattern = "<span class=\"kw\">\g<kw></span>"
 grammarOutputFileName = "srcMLGrammar.html"
-linkStart = "<a href=\"srcMLGrammar.html#{0}\" title=\"View grammar for tag.\">"
+linkStart = "<a href=\"{0}#{1}\" title=\"View grammar for tag.\">"
 linkEnd = "</a>"
 
 class SyntaxHighlighter(ContentHandler):
@@ -113,7 +113,7 @@ class SyntaxHighlighter(ContentHandler):
             if uriToPrefix[name[0]] != "src":
                 tagLinkName += uriToPrefix[name[0]] + "_"
             tagLinkName += name[1]
-            self.out.write(linkStart.format(tagLinkName))
+            self.out.write(linkStart.format(self.grammarFileURL, tagLinkName))
             self.writeTagStart(name, attributes)
             self.out.write(linkEnd)
 
@@ -129,7 +129,7 @@ class SyntaxHighlighter(ContentHandler):
             if uriToPrefix[name[0]] != "src":
                 tagLinkName += uriToPrefix[name[0]] + "_"
             tagLinkName += name[1]
-            self.out.write(linkStart.format(tagLinkName))
+            self.out.write(linkStart.format(self.grammarFileURL, tagLinkName))
             self.writeTagEnd(name)
             self.out.write(linkEnd)
 

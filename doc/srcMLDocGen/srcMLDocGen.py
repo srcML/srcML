@@ -158,8 +158,9 @@ if __name__ == "__main__":
     writeAllTagNames()
     print "-" * 80
     print "Writing main page"
-    genMainPage("MainPage.html", pageLinks)
+    genMainPage("index.html", pageLinks)
     print "-" * 80
+    print "Dumping tracker info"
     tempOutFile = open("tagLocationDoc.html", "w")
     DocGen.TagTracker.Tracker.trackerData.dumpByTagToHTML(tempOutFile)
     tempOutFile.close()
