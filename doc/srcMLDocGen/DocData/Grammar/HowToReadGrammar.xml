@@ -12,7 +12,7 @@ XML data description languages.
     
     <Entry title="rules">
         <Desc>
-There are three types of rules within the grammar: 1)an EBNF Rule 2) an Element Rule and 3) an Attribute Rule. 
+There are three types of rules within the grammar: 1) an EBNF Rule 2) an Element Rule and 3) an Attribute Rule. 
 All of the rules follow one of two forms:
 <pre class="sourceCodeExample"><span class="replacableText">rule-name</span> : <span class="replacableText">rule-contents</span> ;</pre>
 or
