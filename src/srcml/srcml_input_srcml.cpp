@@ -47,7 +47,9 @@ void srcml_input_srcml(ParseQueue& queue,
         int nsSize = srcml_archive_get_namespace_size(srcml_input_archive);
         
         for (int i = 0; i < nsSize; ++i) {
-            srcml_archive_register_namespace(srcml_output_archive, srcml_archive_get_namespace_prefix(srcml_input_archive, i), srcml_archive_get_namespace_uri(srcml_input_archive, i));
+            srcml_archive_register_namespace(srcml_output_archive,
+                srcml_archive_get_namespace_prefix(srcml_input_archive, i),
+                srcml_archive_get_namespace_uri(srcml_input_archive, i));
         }
     }
 
