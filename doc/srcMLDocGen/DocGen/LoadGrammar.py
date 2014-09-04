@@ -3,6 +3,7 @@ import os, sys, re, lxml, cStringIO, itertools
 import lxml.etree as ET
 from xml.sax.handler import ContentHandler
 from LoadData import *
+from LoadGrammarHowTo import *
 # import pydot
 
 def getComparableTagName(item):
@@ -15,6 +16,7 @@ class GrammarDoc:
         self.rules = []
         self.documentation = [] # used to determine the ordering of the documentation
         self.edgeList = []
+        self.howToReadDoc = None
 
 
     def dumpDocumentation(self, out):
@@ -460,6 +462,7 @@ EmptyTag = "Empty"
 IdentifierTag = "Identifier"
 NoImplTag = "NoImpl"
 OperatorTag = "Operator"
+HowToReadTag = "HowToRead"
 
 # Name Attribute
 nameAttr = "name"
@@ -773,10 +776,28 @@ def loadGrammar(fileName):
         validateTagDoc(doc, documentationElem)
         return doc
 
+    def buildHowToRead(element):
+        currentDir = os.path.dirname(fileName)
+        howToFile = getAttribOrFail(element, fileAttr)
+        currentHowToPath = os.path.join(currentDir, howToFile)
+        if not os.path.exists(currentHowToPath):
+            raise Exception("Unable to locate how to file location: " + currentHowToPath)
+
+        print "    " +("-"*76)
+        print "    Processing how to file: {0}".format(currentHowToPath) 
+        ret = buildHowToReadDocumentation(currentHowToPath)
+        assert ret != None, "Didn't get documentation"
+        print "    " +("-"*76)
+        return ret
+
+
     def buildDocumentation(docElem):
         for elem in docElem.iterchildren():
             if elem.tag == RuleTag:
                 grammarDoc.documentation.append(buildRuleDocumentation(elem))
+
+            elif elem.tag == HowToReadTag:
+                grammarDoc.howToReadDoc = buildHowToRead(elem)
 
             elif elem.tag == AttrRuleTag:
                 grammarDoc.documentation.append(buildAttrRuleDocumentation(elem))

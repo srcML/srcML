@@ -3,7 +3,7 @@
 <tr>
 {% if currentRow.typename == "RuleDocumentation" %}
     <td><a href="#{{currentRow|makeRuleLink}}">{{currentRow.name}}</a></td>
-    <td>Rule</td>
+    <td>EBNF Rule</td>
 {% elif currentRow.typename == "AttrRuleDocumentation" %}
     <td><a href="#{{currentRow|makeAttrRuleLink}}">{{currentRow.name}}</a></td>
     <td>Attribute Rule</td>

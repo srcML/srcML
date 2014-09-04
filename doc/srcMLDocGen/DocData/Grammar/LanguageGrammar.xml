@@ -1,13 +1,12 @@
 <Grammar languageOrdering="C,C++,C#,Java">
     <Documentation>
-        
+        <HowToRead file="HowToReadGrammar.xml"/>        
         <!-- This determines overall ordering for rules within the grammar class. -->
         <Rule rule="start">
             <Desc>The start rule is the starting rule for the srcML grammar.</Desc>
         </Rule>
 
         <Tag elem="unit">
-            <Desc>Stuff about unit.</Desc>
             <Refs>
                 <See title="Main Documentation Page" url="http://www.cs.kent.edu/~bbartman/srcML/" />
             </Refs>

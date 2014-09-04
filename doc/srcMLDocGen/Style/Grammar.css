@@ -182,4 +182,6 @@ Link Classes:
     gAttrLink
 */
 
-
+span.replacableText {
+    font-style: italic;
+}
