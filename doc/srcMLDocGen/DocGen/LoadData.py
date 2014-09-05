@@ -227,10 +227,10 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         example.sourceCode = srcMLExResults[0]
         example.srcML = "".join(srcMLExResults[1])
         # Attempting to get validator attribute from example
-        if validatorAttr in exampleElement.keys():
-            validate(exampleElement.get(validatorAttr), ET.ElementTree(ET.fromstring(example.srcML)))
-        else:
-            recordMissingValidator()
+        validate(exampleElement.get(validatorAttr, default="start.rng"), ET.ElementTree(ET.fromstring(example.srcML)))
+        # if validatorAttr in exampleElement.keys():
+        # else:
+        #     recordMissingValidator()
 
         return example
 

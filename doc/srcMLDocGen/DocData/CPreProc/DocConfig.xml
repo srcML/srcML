@@ -8,9 +8,9 @@
                 <Subelement name="macro" ns="cpp" />
                 <Subelement name="value" ns="cpp" />
             </Elements>
-            <Example file="CPreProc-define_undef_1.cpp" title="trivial #define" validator="define.rng"/>
-            <Example file="CPreProc-define_undef_2.cpp" title="#define used like a function" validator="define.rng"/>
-            <Example file="CPreProc-define_undef_3.cpp" title="#define a variadic macro" validator="define.rng"/>
+            <Example file="CPreProc-define_undef_1.cpp" title="trivial #define" validator="start.rng"/>
+            <Example file="CPreProc-define_undef_2.cpp" title="#define used like a function" validator="start.rng"/>
+            <Example file="CPreProc-define_undef_3.cpp" title="#define a variadic macro" validator="start.rng"/>
             <XPathQueries>
                 <XPath path="//cpp:define">
                     <Desc>Find all of the uses of #define.</Desc>
