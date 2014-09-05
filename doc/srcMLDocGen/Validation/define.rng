@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns="http://relaxng.org/ns/structure/1.0">
+    <start>
+        <element name="unit">
+            <attribute name="language"><text/></attribute>
+            <attribute name="filename"><text/></attribute>
+            <optional>
+                <attribute name="dir"><text/></attribute>
+            </optional>
+            <optional>
+                <attribute name="hash"><text/></attribute>
+            </optional>
+            <zeroOrMore>
+                <element name="cpp:define">
+                    <text/>
+                    <element name="cpp:directive">
+                        <value>define</value>
+                    </element>
+                    <optional>
+                        <element name="cpp:macro">
+                            <element name="name">
+                                <text/>
+                            </element>
+                            <optional>
+                                <externalRef href="parameter_list.rng"/>
+                            </optional>
+                        </element>
+                        <optional>
+                            <element name="cpp:value">
+                                <text/>
+                            </element>
+                        </optional>
+                    </optional>
+                </element>
+            </zeroOrMore>
+        </element>
+    </start>
+</grammar>

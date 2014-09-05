@@ -31,7 +31,7 @@
                     <Desc>Find all else-if statements</Desc>
                 </XPath>
             </XPathQueries>
-            <Example file="C-if-1.c"/>
+            <Example file="C-if-1.c" validator="if.rng" />
             <Example file="C-if-2.c"/>
             <Example file="C-if-3.c"/>
             <Example file="C-if-4.c"/>

@@ -1,0 +1,9 @@
+<element name="parameter_list" ns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns="http://relaxng.org/ns/structure/1.0">
+    <text/>
+    <externalRef href="param.rng"/>
+    <zeroOrMore>
+        <text/>
+        <externalRef href="param.rng"/>
+    </zeroOrMore>
+    <text/>
+</element>

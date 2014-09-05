@@ -3,6 +3,7 @@ import lxml.etree as ET
 from DocData import *
 from os.path import join, getsize
 import cStringIO
+from ValidationChecker import *
 
 # Constants
 srcMLExec = "srcml"
@@ -34,6 +35,7 @@ fileAttr="file"
 opAttr = "op"
 exampleAttr ="example"
 pathAttr = "path"
+validatorAttr = "validator"
 
 
 namespaceDict={
@@ -182,7 +184,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         xpathExample = XPathExample()
         xpathExample.xpath = getAttribOrFail(xpathNode, pathAttr)
         try:
-            textCompiledXPath = ET.XPath(xpathExample.xpath, namespaces=namespaceDict)
+            testCompiledXPath = ET.XPath(xpathExample.xpath, namespaces=namespaceDict)
         except Exception as e:
             print e
             print "Title=", xpathNode.xpath("ancestor::DocEntry/@title")[0]
@@ -191,7 +193,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
 
         descElem = locateSingleChildOf_Optional(xpathNode, "Desc")
         if descElem != None:
-            xpathExample.desc =extractSubText(descElem)
+            xpathExample.desc = extractSubText(descElem)
         else:
             raise Exception("ERROR: All XPath Expressions must provide a description. " + formatElementErrorMsg(element))
         return xpathExample
@@ -211,7 +213,9 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
 
         # reading Example attributes
         example.title = getAttribOrDefault(exampleElement, titleAttr, "")
+        setValidatorCurrentExampleTitle(example.title)
         fileName = getAttribOrFail(exampleElement, fileAttr)
+        setValidatorCurrentExamplePath(fileName)
         if not os.path.isabs(fileName):
             fileName = os.path.join(dirPath, fileName)
 
@@ -222,6 +226,12 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         srcMLExResults = srcMLFile(fileName, doc.srcMLLanguage)
         example.sourceCode = srcMLExResults[0]
         example.srcML = "".join(srcMLExResults[1])
+        # Attempting to get validator attribute from example
+        if validatorAttr in exampleElement.keys():
+            validate(exampleElement.get(validatorAttr), ET.ElementTree(ET.fromstring(example.srcML)))
+        else:
+            recordMissingValidator()
+
         return example
 
     def buildEntry(entryElement):
@@ -229,6 +239,8 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
 
         # read in attributes.
         entry.title = getAttribOrFail(entryElement, titleAttr)
+        setValidatorCurrentDocEntryTitle(entry.title)
+
         # print entry.title
         entry.shortTitle = getAttribOrDefault(entryElement, shortTilteAttr, "")
         
@@ -239,6 +251,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
                 buildXPathQueries(entryPart, entry)
             elif entryPart.tag == ExampleTag:
                 entry.examples.append(buildExample(entryPart))
+                incrementValidatorExampleIndex()
             elif entryPart.tag == DescTag:
                 entry.desc = entryPart.text + "".join([ET.tostring(x) + x.tail for x in entryPart.iterdescendants()])
             else:
@@ -299,6 +312,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
 
     # Basic set up.
     filePath = join(dirPath, fileName)
+    setValidatorCurrentDocPath(filePath)
     docFile = ET.parse(filePath)
     doc = DocConfig()
 
@@ -310,8 +324,11 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
 
     # Getting all of the root attributes.
     doc.title = getAttribOrFail(root, titleAttr)
+    setValidatorCurrentDocTitle(doc.title)
+
     doc.outputFileName = getAttribOrFail(root, outputFileAttr)
     doc.srcMLLanguage = getAttribOrFail(root, langAttr)
+    setValidatorCurrentsrcMLLang(doc.srcMLLanguage)
 
     if (os.path.exists(doc.outputFileName)
             and os.path.getmtime(filePath) < os.path.getmtime(doc.outputFileName)

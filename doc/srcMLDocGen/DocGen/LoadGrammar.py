@@ -429,7 +429,6 @@ class ChoiceExpr(GrammarExpr):
 
     def EBNFSuffix(self):
         return ""
-# Tag
 
 
 # Tag Names
@@ -1119,3 +1118,154 @@ def loadGrammar(fileName):
 #     grmmr.dumpDocumentation(outFile)
 #     outFile.close()
 #     # print out.getvalue()
+
+
+# def GenerateRelaxNGFromGrammar(outputLocation, grammar):
+#     def handleDispatch(node):
+#         traversalStack.append(node)
+#         if isinstance(node, ParamUse):
+#             pass
+
+#         elif isinstance(node, RuleRef):
+#             if node.args != None:
+#                 if node.name == "cppDirective":
+#                     treeBuilder.start("element", {"name":"cpp:directive"})
+#                     treeBuilder.start("text", {})
+#                     treeBuilder.end("text")                    
+#                     treeBuilder.end("element")                    
+#                 else:
+#                     raise Exception("Super derp. located another rule with parameters that isn't cppDirective: {0}".format(node.name))
+#             else:
+#                 treeBuilder.start("ref", {"name":node.name})
+#                 treeBuilder.end("ref")
+#             pass
+
+#         elif isinstance(node, Literal):
+#             treeBuilder.start("text", {})
+#             treeBuilder.end("text")
+
+#         elif isinstance(node, NotImplementedYet):
+#             raise Exception("Not implemented yet")
+
+#         elif isinstance(node, Operator):
+#             treeBuilder.start("text", {})
+#             treeBuilder.end("text")
+
+#         elif isinstance(node, Text):
+#             treeBuilder.start("text", {})
+#             treeBuilder.end("text")
+
+#         elif isinstance(node, Number):
+#             treeBuilder.start("text", {})
+#             treeBuilder.end("text")
+
+#         elif isinstance(node, Empty):
+#             treeBuilder.start("empty", {})
+#             treeBuilder.end("empty")
+
+#         elif isinstance(node, Identifier):
+#             treeBuilder.start("text", {})
+#             treeBuilder.end("text")
+
+#         elif isinstance(node, TagExpr):
+#             treeBuilder.start("element", {"name":getComparableTagName(node.tagInfo)})
+#             dispatchFromList(node.subExprs)
+#             treeBuilder.end("element")
+
+#         elif isinstance(node, OptionalExpr):
+#             treeBuilder.start("optional", {})
+#             dispatchFromList(node.subExprs)
+#             treeBuilder.end("optional")
+
+#         elif isinstance(node, ZeroOrMoreExpr):
+#             treeBuilder.start("zeroOrMore", {})
+#             dispatchFromList(node.subExprs)
+#             treeBuilder.end("zeroOrMore")
+
+#         elif isinstance(node, GroupExpr):
+#             treeBuilder.start("group", {})
+#             dispatchFromList(node.subExprs)
+#             treeBuilder.end("group")
+
+#         elif isinstance(node, OneOrMoreExpr):
+#             treeBuilder.start("oneOrMore", {})
+#             dispatchFromList(node.subExprs)
+#             treeBuilder.end("oneOrMore")
+
+#         elif isinstance(node, ChoiceExpr):
+#             treeBuilder.start("choice", {})
+#             dispatchFromList(node.subExprs)
+#             treeBuilder.end("choice")
+
+#         else:
+#             raise Exception("Unknown or unhandled grammar type: {0}".format(node.__class__.__name__))
+#         traversalStack.pop()
+
+
+#     def dispatchFromList(listOfGrammarItems):
+#         for item in listOfGrammarItems:
+#             handleDispatch(item)
+#     treeBuilder = ET.TreeBuilder()
+#     # ns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns="http://relaxng.org/ns/structure/1.0"
+#     nsMap = {"cpp":"http://www.sdml.info/srcML/cpp"}
+
+#     attrs = dict()
+#     attrs["ns"] = "http://www.sdml.info/srcML/src"
+#     attrs["xmlns"] = "http://relaxng.org/ns/structure/1.0"
+#     treeBuilder.start("grammar", attrs, nsMap)
+
+
+#     traversalStack = []
+#     for rule in grammar.rules:
+#         if rule.parameters != None:
+#             print "Rule with parameters: ", rule.name
+#             continue
+
+#         traversalStack.append(rule)
+#         if isinstance(rule, Rule):
+#             if rule.name == "start":
+#                 treeBuilder.start("start", {})
+#             else:
+#                 treeBuilder.start("define", {"name":rule.name})
+#             dispatchFromList(rule.grammar)
+#             if rule.name == "start":
+#                 treeBuilder.end("start")
+#             else:
+#                 treeBuilder.end("define")
+
+#         elif isinstance(rule, TagRule):
+#             treeBuilder.start("define", {"name":rule.name})
+#             treeBuilder.start("element", {"name":getComparableTagName(rule.tagInfo)})
+#             if rule.tagInfo.attrs != None:
+#                 for attr in rule.tagInfo.attrs:
+#                     if attr.isOptional:
+#                         treeBuilder.start("optional", {})
+#                         treeBuilder.start("ref", {"name":attr.name})
+#                         treeBuilder.end("ref")
+#                         treeBuilder.end("optional")
+#                     else:
+#                         treeBuilder.start("ref", {"name":attr.name})
+#                         treeBuilder.end("ref")
+
+#             # build element stuff here
+#             dispatchFromList(rule.grammar)
+#             treeBuilder.end("element")
+#             treeBuilder.end("define")
+
+#         elif isinstance(rule, AttrRule):
+#             treeBuilder.start("define", {"name":rule.name})
+#             # build attribute stuff here
+#             treeBuilder.start("attribute", {"name":rule.attrName})
+#             dispatchFromList(rule.grammar)
+#             treeBuilder.end("attribute")
+#             treeBuilder.end("define")
+
+#         else:
+#             raise Exception("Unhandled rule type: {0}".format(rule.__class__.__name__))
+#         traversalStack.pop()
+
+#     treeBuilder.end("grammar")
+#     doc = treeBuilder.close()
+
+#     relaxDoc = ET.RelaxNG(etree=doc)
+#     print ET.tostring(doc,pretty_print=True)

@@ -5,6 +5,7 @@ import django
 from django.conf import settings
 from django.template import Template, Context, loader
 from DocGen import *
+from DocGen.ValidationChecker import *
 from DocGen.templatetags import *
 import DocGen.TagTracker
 # -------------------------------------------------
@@ -122,6 +123,11 @@ if __name__ == "__main__":
 
     if not settings.configured:
         django.conf.settings.configure(DEBUG=True, TEMPLATE_DEBUG=True, TEMPLATE_DIRS=("Templates", ), INSTALLED_APPS=("DocGen",))
+    print "-"*80
+    print "Loading Validators"
+    loadValidators("Validation/")
+    # print validationManager.validators
+    print "Loading complete"
 
     for root, dirs, files in os.walk(os.path.abspath("./DocData")):
         if os.path.basename(root) == "DocData":
@@ -147,6 +153,7 @@ if __name__ == "__main__":
             print "Located a Language Grammar Document (LanguageGrammar.xml) in", root
             try:
                 languageGrammar = loadGrammar(os.path.join(root, grammarFile))
+                # GenerateRelaxNGFromGrammar("GeneratedGrammar", languageGrammar)
                 print "Beginning HTML generation"
                 generateSrcMLGrammar(grammarOutputFileName, languageGrammar)
                 print "HTML Generation Complete"
@@ -164,4 +171,9 @@ if __name__ == "__main__":
     tempOutFile = open("tagLocationDoc.html", "w")
     DocGen.TagTracker.Tracker.trackerData.dumpByTagToHTML(tempOutFile)
     tempOutFile.close()
+    print "-" * 80
+    print "Dumping validation report"
+    validationReportFile = open("ValidationReport.txt","w")
+    validationManager.makeReport(validationReportFile)
+    validationReportFile.close()
     print "-" * 80
