@@ -119,6 +119,46 @@ grammarFile = "LanguageGrammar.xml"
 grammarOutputFileName = "srcMLGrammar.html"
 pageLinks = []
 
+class Page:
+    def __self__(init):
+        self.pageURL = ""
+        self.pageName = ""
+        self.pageIndexURL = ""
+
+class PagesToGenerate:
+    def __init__(self):
+        self.languageGrammar = None
+        self.mainPageTitle = "srcML Language Documentation"
+        self.mainPageURL = "index.html"
+        self.docConfigs = []
+
+    def genPages(self):
+        print 80*"-"
+        print "Generated Grammar Page"
+        print "Beginning HTML generation"
+        generateSrcMLGrammar(grammarOutputFileName, languageGrammar)
+        print "HTML Generation Complete"
+
+        for docConfig in self.docConfigs:
+            print 80*"-"
+            print "Page Generation"
+            # print "Beginning HTML generation"
+            # generateSrcMLGrammar(grammarOutputFileName, languageGrammar)
+            # print "HTML Generation Complete"
+            print "Beginning HTML Generation"
+            genDocFile(docConfig)
+            print "HTML Generation Complete"
+            print "Generating HTML Index"
+            genDocIndex(docConfig)
+            print "Index HTML Generation Complete"
+        print "-" * 80
+        print "Writing main page"
+        genMainPage("index.html", pageLinks)
+
+
+pagesToGenerate = PagesToGenerate()
+grammarToGenerate = None
+
 if __name__ == "__main__":
 
     if not settings.configured:
@@ -128,18 +168,17 @@ if __name__ == "__main__":
     grammarRoot = "DocData/Grammar/"
     print "Located a Language Grammar Document (LanguageGrammar.xml) in", grammarRoot
     grammarPath = os.path.join(grammarRoot, grammarFile)
+
     if not os.path.exists(grammarPath):
         raise Exception("missing Grammar file at location:", grammarPath)
     try:
         languageGrammar = loadGrammar(grammarPath)
-        setValidator(GenerateRelaxNGFromGrammar("GeneratedGrammar", languageGrammar))
-        print "Beginning HTML generation"
-        generateSrcMLGrammar(grammarOutputFileName, languageGrammar)
-        print "HTML Generation Complete"
+        pagesToGenerate.languageGrammar = languageGrammar
+        # setValidator(GenerateRelaxNGFromGrammar("GeneratedGrammar", languageGrammar))
     except Exception as e:
         print "Failed with exception: ", traceback.format_exc(e)
     # loadValidators("Validation/")
-    print "Loading complete"
+    print "Loading grammar complete"
 
     for root, dirs, files in os.walk(os.path.abspath("./DocData")):
         if os.path.basename(root) == "DocData":
@@ -150,32 +189,24 @@ if __name__ == "__main__":
             print "Located a Page Creation Document (DocConfig.xml) in", root
             try:
                 docConfig = loadXmlDocFile(root, DocConfigFileName, True)
-                if docConfig != None:
-                    print "Beginning HTML Generation"
-                    genDocFile(docConfig)
-                    print "HTML Generation Complete"
-
-                    print "Generating HTML Index"
-                    genDocIndex(docConfig)
-                    print "Index HTML Generation Complete"
+                pagesToGenerate.docConfigs.append(docConfig)
             except Exception as e:
                 print "Failed with exception: ", traceback.format_exc(e)
 
+    print "Generating pages"
+    pagesToGenerate.genPages()
 
     print "-" * 80
     print "Writing tag names"
     writeAllTagNames()
     print "-" * 80
-    print "Writing main page"
-    genMainPage("index.html", pageLinks)
-    print "-" * 80
     print "Dumping tracker info"
     tempOutFile = open("tagLocationDoc.html", "w")
     DocGen.TagTracker.Tracker.trackerData.dumpByTagToHTML(tempOutFile)
     tempOutFile.close()
-    print "-" * 80
-    print "Dumping validation report"
-    validationReportFile = open("ValidationReport.txt","w")
-    validationManager.makeReport(validationReportFile)
-    validationReportFile.close()
+    # print "-" * 80
+    # print "Dumping validation report"
+    # validationReportFile = open("ValidationReport.txt","w")
+    # validationManager.makeReport(validationReportFile)
+    # validationReportFile.close()
     print "-" * 80

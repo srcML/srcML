@@ -1256,12 +1256,14 @@ def GenerateRelaxNGFromGrammar(outputLocation, grammar):
     treeBuilder.end("grammar")
     doc = treeBuilder.close()
 
-    # relaxDoc = ET.RelaxNG(etree=doc)
-    # print 
     # validationFileName = "validationTreeFromGrammar.rng"
     # validationTreeStrm = open(validationFileName,"w")
-    validationDoc = ET.fromstring(ET.tostring(doc, pretty_print=True))
-    relaxDoc = ET.RelaxNG(etree=validationDoc)
+    # validationTreeStrm.write(ET.tostring(doc, pretty_print=True))
+    # validationTreeStrm.close()
+    # validationDoc = ET.fromstring(ET.tostring(doc, pretty_print=True))
+    # relaxDoc = ET.RelaxNG(etree=validationDoc)
+    relaxDoc = ET.RelaxNG(etree=ET.parse("validationTreeFromGrammar.rng"))
+    
     return relaxDoc
 
     

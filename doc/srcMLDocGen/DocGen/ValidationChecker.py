@@ -58,8 +58,9 @@ class ValidationLookUp:
         if self.validator == None:
             raise Exception("Missing validator. Grammar validation not set.")
         self.totalValidations += 1
+        validatedDoc = ET.fromstring(ET.tostring(docToValidate, pretty_print=True))
         try:
-            self.validator.assertValid(docToValidate)
+            self.validator.assertValid(validatedDoc)
             self.passedValidations += 1
         except Exception as e:
             self.failedValidations += 1
@@ -67,23 +68,28 @@ class ValidationLookUp:
             print "    Entry: ", self.currentEntryTitle
             print "    File: ", self.currentExamplePath
             print "    ", str(e)
-            report = ValidationFailureReport(self, exceptionErrorMessage=str(e))
-            report.docToBeValidated = docToValidate
+            # print dir(e)
+            report = ValidationFailureReport(self, exceptionErrorMessage=(str(e) + "\nErrorLog: " + "\n".join([(str(logEntry) +" Line: {0.line} Col: {0.column}".format(logEntry)) for logEntry in e.error_log]) + "\nArgs: " + str(e.args) +"\n"))
+            report.docToBeValidated = validatedDoc
             self.reports.append(report)
 
+
     def makeReport(self, out):
+        out.write(("-"*80) +"\n")
+        out.write("                 Summary\n")
+        out.write("-"*80 + "\n")
+        out.write("    Passed: {0}\n".format(self.passedValidations))
+        out.write("    Failed: {0}\n".format(self.failedValidations))
+        out.write("    total: {0}\n".format(self.totalValidations))
+        out.write(("-"*80) +"\n")
+        out.write("\n\n")
         for rep in self.reports:
             out.write("-"*80)
             out.write("\n")
             out.write(str(rep))
             out.write("\n")
 
-        out.write("\n\n" + ("-"*80) +"\n")
-        out.write("                 Summary\n")
-        out.write("-"*80 + "\n")
-        out.write("    Passed: {0}\n".format(self.passedValidations))
-        out.write("    Failed: {0}\n".format(self.failedValidations))
-        out.write("    total: {0}\n".format(self.totalValidations))
+
 
 
 
@@ -110,10 +116,10 @@ def setValidatorCurrentExampleTitle(title):
     validationManager.currentExampleTitle = title
 
 def validate(tree):
-    validationManager.validateAndReport(tree)
+    pass
+    # validationManager.validateAndReport(tree)
 
 validationManager = ValidationLookUp()
 
 def setValidator(validator):
-    global validationManager
     validationManager.validator = validator

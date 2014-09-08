@@ -15,7 +15,6 @@ a:hover {
 }
 
 #bodyContent{
-	position: relative;
 	margin: 0 auto;
     max-width: 75%;
     min-width: 50%;
@@ -30,9 +29,16 @@ a:hover {
 }
 
 #navHeader {
-
+	margin: 0 auto;
+    max-width: 75%;
+    min-width: 50%;
+    height:3em;
+    border-bottom:2px solid black;
 }
 
+div.navItem {
+
+}
 
 #logo {
     display:block;

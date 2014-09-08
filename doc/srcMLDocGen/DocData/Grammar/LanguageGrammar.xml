@@ -535,8 +535,8 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
     <Rule name="cppDefine" lang="C,C++,C#">
         <Def>
             <Choice>
-                <Ref name="cppDefineName"/>
                 <Ref name="cppDefineFunction"/>
+                <Ref name="cppDefineName"/>
             </Choice>
         </Def>
     </Rule>
@@ -644,7 +644,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
                 </Args>
             </Ref>
             <Optional>
-                <Ref name="cppMacro" />
+                <Ref name="simpleName" />
             </Optional>
         </Def>
     </TagRule>
@@ -662,7 +662,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
                 </Args>
             </Ref>
             <Optional>
-                <Ref name="cppMacro" />
+                <Ref name="name" />
             </Optional>
         </Def>
     </TagRule>
@@ -680,7 +680,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
                 </Args>
             </Ref>
             <Optional>
-                <Ref name="cppMacro" />
+                <Ref name="name" />
             </Optional>
         </Def>
     </TagRule>
@@ -3451,10 +3451,10 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         <Def>
             <Literal value="&lt;"/>
             <Optional>
-                <Ref name="typeParam"/>
+                <Ref name="param"/>
                 <ZeroOrMore>
                     <Literal value=","/>
-                    <Ref name="typeParam"/>
+                    <Ref name="param"/>
                 </ZeroOrMore>
             </Optional>
             <Literal value="&gt;"/>
@@ -3483,17 +3483,15 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
     <TagRule name="param" lang="C,C++,C#,Java">
         <Tag elem="param"/>
         <Def>
-            <Ref name="decl"/>
-        </Def>
-    </TagRule>
-    
-    <TagRule name="typeParam" lang="C++">
-        <Tag elem="param"/>
-        <Def>
-            <Ref name="type"/>
-            <Optional>
-                <Ref name="simpleName"/>
-            </Optional>
+            <Choice>
+                <Ref name="decl"/>
+                <Group>
+                    <Ref name="type"/>
+                    <Optional>
+                        <Ref name="simpleName"/>
+                    </Optional>
+                </Group>
+            </Choice>
         </Def>
     </TagRule>
     
@@ -3629,6 +3627,9 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
                 <Choice>
                     <Ref name="name" />
                     <Ref name="templateArgumentList"/>
+                    <Ref name="argumentList"/>
+                    <Ref name="parameterList"/>
+                    <Ref name="templateParameterList"/>
                     <Ref name="specifier" />
                     <Ref name="operator"/>
                     <Ref name="index"/>
