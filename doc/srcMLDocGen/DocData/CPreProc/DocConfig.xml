@@ -1,4 +1,4 @@
-<DocConfig lang="C" outputFile="cpreproc_srcML.html" title="C Preprocessor srcML">
+<DocConfig lang="C" outputFile="cpreproc_srcML.html" title="C Preprocessor srcML" navTitle="C Preprocessor">
    <Category title="C Preprocessor">
         
         <DocEntry title="#define">

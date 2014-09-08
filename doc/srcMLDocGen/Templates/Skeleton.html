@@ -16,17 +16,16 @@
         {% block navigationHeader %}
         <div id="navHeader">
             <ul>
-                <li><a href="#"><span>Home</span></a></li>
+                <li><a href="{{nav.home.link}}"><span>{{nav.home.title}}</span></a></li>
                 {% for menuItem in nav.menuNavigation %}
-                <li class="has-sub"><a href="#"><span>Products</span></a>
+                <li class="has-sub"><span>{{menuItem.navTitle}}</span>
                     <ul>
-                        <li><a href="#"><span>Product 1</span></a></li>
-                        <li><a href="#"><span>Product 2</span></a></li>
+                        <li><a href="{{menuItem.pageURL}}"><span>{{menuItem.pageName}}</span></a></li>
+                        <li><a href="{{menuItem.indexPageURL}}"><span>{{menuItem.indexPageName}}</span></a></li>
                     </ul>
                 </li>
                 {% endfor %}
-                <li><a href="#"><span>About</span></a></li>
-                <li><a href="#"><span>Contact</span></a></li>
+                <li><a href="{{nav.grammarPage.link}}"><span>{{nav.grammarPage.title}}</span></a></li>
             </ul>
         </div>
         {% endblock %}
