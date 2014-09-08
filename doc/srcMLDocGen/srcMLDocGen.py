@@ -17,40 +17,42 @@ class PageLink:
         self.title = pageTitle
         self.link = pageLink
 
-def genMainPage(maingPageName, pageLinks):
+def genMainPage(maingPageName, pageLinks, nav):
     out = open(maingPageName, "w")
     fileTemplate = loader.get_template("MainPage.html")
     pageLinks.sort(key=lambda x: x.title)
-    page = fileTemplate.render(Context({"pageLinks": pageLinks}))
+    page = fileTemplate.render(Context({"pageLinks": pageLinks, "nav":nav}))
     out.write(page)
     out.close()    
 
-def genDocFile(docConfig):
+def genDocFile(docConfig, nav):
     global pageLinks
     pageLinks.append(PageLink(docConfig.title, docConfig.outputFileName))
     out = open(docConfig.outputFileName, "w")
     fileTemplate = loader.get_template("DefaultPage.html")
-    page = fileTemplate.render(Context({"doc": docConfig, "pageName" : docConfig.outputFileName, "grammarFileName" : grammarOutputFileName}))
+    page = fileTemplate.render(Context({"doc": docConfig, "pageName" : docConfig.outputFileName, "grammarFileName" : grammarOutputFileName, "nav":nav}))
     out.write(page)
     out.close()
 
-def generateSrcMLGrammar(fileName, grmmr):
+def generateSrcMLGrammar(fileName, grmmr, nav):
     global pageLinks
     pageLinks.append(PageLink("srcML Grammar", fileName))
     out = open(fileName, "w")
     fileTemplate = loader.get_template("Grammar.html")
-    page = fileTemplate.render(Context({"doc": grmmr, "title": "srcML Grammar"}))
+    page = fileTemplate.render(Context({"doc": grmmr, "title": "srcML Grammar", "nav":nav}))
     out.write(page)
     out.close()
 
+def getDocIndexFileName(docConfig):
+    splitName = docConfig.outputFileName.split(".")
+    splitName.insert(-1, "index")
+    return ".".join(splitName)
 #
 # Generate documentation index for a language.
 #
-def genDocIndex(docConfig):
+def genDocIndex(docConfig, nav):
     global pageLinks
-    splitName = docConfig.outputFileName.split(".")
-    splitName.insert(-1, "index")
-    indexFileName = ".".join(splitName)
+    indexFileName = getDocIndexFileName(docConfig)
     
     # indexEntries = []
     lang = docConfig.srcMLLanguage
@@ -100,7 +102,7 @@ def genDocIndex(docConfig):
     fileTemplate = loader.get_template("IndexPage.html")
     sortedIndexItems = indexDictionary.items()
     sortedIndexItems.sort(key=lambda x: x[0].lower())
-    page = fileTemplate.render(Context({"indexItems": sortedIndexItems, "pageTitle": docConfig.title}))
+    page = fileTemplate.render(Context({"indexItems": sortedIndexItems, "pageTitle": docConfig.title, "nav":nav}))
     out.write(page)
     out.close()
 
@@ -119,11 +121,19 @@ grammarFile = "LanguageGrammar.xml"
 grammarOutputFileName = "srcMLGrammar.html"
 pageLinks = []
 
-class Page:
-    def __self__(init):
+class DocConfigPageLink:
+    def __init__(self):
+        self.navTitle = ""
         self.pageURL = ""
         self.pageName = ""
-        self.pageIndexURL = ""
+        self.indexPageURL = ""
+        self.indexPageName = ""
+
+class Navigation:
+    def __init__(self):
+        self.home = PageLink("","")
+        self.menuNavigation = []
+        self.grammarPage = PageLink("","")
 
 class PagesToGenerate:
     def __init__(self):
@@ -131,12 +141,27 @@ class PagesToGenerate:
         self.mainPageTitle = "srcML Language Documentation"
         self.mainPageURL = "index.html"
         self.docConfigs = []
+        self.nav = Navigation()
+
+    def buildNavigation(self):
+        self.nav.home.title = "Home"
+        self.nav.home.link = "index.html"
+        self.nav.grammarPage = PageLink("srcML Grammar", grammarOutputFileName)
+        for docConfig in self.docConfigs:
+            configMenu = DocConfigPageLink()
+            configMenu.navTitle = docConfig.navTitle
+            configMenu.pageURL = docConfig.outputFileName
+            configMenu.pageName = docConfig.navSubTitle
+            configMenu.indexPageURL = getDocIndexFileName(docConfig)
+            configMenu.indexPageName = "Index"
+            self.nav.menuNavigation.append(configMenu)
 
     def genPages(self):
+        self.buildNavigation()
         print 80*"-"
         print "Generated Grammar Page"
         print "Beginning HTML generation"
-        generateSrcMLGrammar(grammarOutputFileName, languageGrammar)
+        generateSrcMLGrammar(grammarOutputFileName, languageGrammar, self.nav)
         print "HTML Generation Complete"
 
         for docConfig in self.docConfigs:
@@ -146,14 +171,14 @@ class PagesToGenerate:
             # generateSrcMLGrammar(grammarOutputFileName, languageGrammar)
             # print "HTML Generation Complete"
             print "Beginning HTML Generation"
-            genDocFile(docConfig)
+            genDocFile(docConfig, self.nav)
             print "HTML Generation Complete"
             print "Generating HTML Index"
-            genDocIndex(docConfig)
+            genDocIndex(docConfig, self.nav)
             print "Index HTML Generation Complete"
         print "-" * 80
         print "Writing main page"
-        genMainPage("index.html", pageLinks)
+        genMainPage("index.html", pageLinks, self.nav)
 
 
 pagesToGenerate = PagesToGenerate()

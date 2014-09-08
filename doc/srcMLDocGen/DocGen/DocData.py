@@ -77,6 +77,8 @@ class DocConfig:
     def __init__(self):
         self.srcMLLanguage = "NOT SET"
         self.title = ""
+        self.navTitle = ""
+        self.navSubTitle = ""
         self.outputFileName = ""
         self.desc = ""
         self.categories = []

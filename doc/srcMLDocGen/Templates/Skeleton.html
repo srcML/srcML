@@ -6,6 +6,7 @@
         {% endblock %}
         <link rel="shortcut icon" href="Images/favicon.ico" type="image/x-icon">
         <link rel="icon" href="Images/favicon.ico" type="image/x-icon">
+        <script src="JS/skeleton.js"></script>
         <title>{% block title %}{% endblock %}</title>
     </head>
     <body>
@@ -14,11 +15,19 @@
         </div>
         {% block navigationHeader %}
         <div id="navHeader">
-            <a href="http://www.google.com">
-                <div class="navItem">
-                    link
-                </div>
-            </a>
+            <ul>
+                <li><a href="#"><span>Home</span></a></li>
+                {% for menuItem in nav.menuNavigation %}
+                <li class="has-sub"><a href="#"><span>Products</span></a>
+                    <ul>
+                        <li><a href="#"><span>Product 1</span></a></li>
+                        <li><a href="#"><span>Product 2</span></a></li>
+                    </ul>
+                </li>
+                {% endfor %}
+                <li><a href="#"><span>About</span></a></li>
+                <li><a href="#"><span>Contact</span></a></li>
+            </ul>
         </div>
         {% endblock %}
         <div id="bodyContent">

@@ -36,7 +36,8 @@ opAttr = "op"
 exampleAttr ="example"
 pathAttr = "path"
 validatorAttr = "validator"
-
+navTitleAttr = "navTitle"
+navSubTitleAttr = "navSubTitle"
 
 namespaceDict={
     "src":"http://www.sdml.info/srcML/src",
@@ -326,7 +327,10 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
 
     doc.outputFileName = getAttribOrFail(root, outputFileAttr)
     doc.srcMLLanguage = getAttribOrFail(root, langAttr)
+    doc.navTitle = getAttribOrDefault(root, navTitleAttr, doc.title)
+    doc.navSubTitle = getAttribOrDefault(root, navSubTitleAttr, "Documentation")
     setValidatorCurrentsrcMLLang(doc.srcMLLanguage)
+
 
     if (os.path.exists(doc.outputFileName)
             and os.path.getmtime(filePath) < os.path.getmtime(doc.outputFileName)
