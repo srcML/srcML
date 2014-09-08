@@ -424,6 +424,7 @@ tokens {
 	SARGUMENT_LIST;
 	SARGUMENT;
     SPSEUDO_PARAMETER_LIST;
+    SINDEXER_PARAMETER_LIST;
 
     // class, struct, union
 	SCLASS;
@@ -7499,7 +7500,7 @@ indexer_parameter_list[] { bool lastwasparam = false; ENTRY_DEBUG } :
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
 
             // start the parameter list element
-            startElement(SPARAMETER_LIST);
+            startElement(SINDEXER_PARAMETER_LIST);
         }
         // parameter list must include all possible parts since it is part of
         // function detection
