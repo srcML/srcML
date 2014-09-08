@@ -2095,7 +2095,7 @@ for_initialization[] { int type_count = 0;  int secondtoken = 0; STMT_TYPE stmt_
             { pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
 
-            expression
+            { if(secondtoken == COLON) setMode(MODE_RANGED_FOR); } expression
         )
 ;
 
@@ -3650,7 +3650,7 @@ comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY
 ;
 
 // mark COLON
-colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); LightweightElement element(this); ENTRY_DEBUG } :
+colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); bool markup_colon = true; LightweightElement element(this); ENTRY_DEBUG } :
         {
 
             if(in_ternary) {
@@ -3661,6 +3661,21 @@ colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); 
                 startNewMode(MODE_ELSE | MODE_EXPRESSION | MODE_EXPECT);
                 startElement(SELSE);
 
+                markup_colon = false;
+
+            }
+
+            // only needed when ranged for and not a declaration
+            if(inTransparentMode(MODE_RANGED_FOR)) {
+
+                // start a new mode that will end after the argument list
+                startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
+
+                // start the initialization element
+                startElement(SDECLARATION_RANGE);
+
+                markup_colon = false;
+
             }
 
             if(inLanguage(LANGUAGE_OBJECTIVE_C) && inTransparentMode(MODE_INTERNAL_END_CURLY)) {
@@ -3669,7 +3684,8 @@ colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); 
 
             }
 
-            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)) && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+            if (markup_colon && !(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY))
+                && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
                 && (!inLanguage(LANGUAGE_OBJECTIVE_C) || !inMode(MODE_INTERNAL_END_CURLY)))
                 startElement(SOPERATOR);
 
