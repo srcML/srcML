@@ -50,35 +50,26 @@ a:hover {
 #navHeader>ul>li {
     display: inline-block;
     position:relative;
-    font-size:20px;
+    font-size:18px;
     padding:14px;
     border-right:1px solid #aaa;
     border-bottom:1px solid #aaa;
     border-left:1px solid #aaa;
     border-bottom-right-radius:.7em;
     border-bottom-left-radius:.7em;
-    margin-left:-7px;
+    margin-left:5px;
     color:black;
-    background-color:white;
+    background-color:#ddd;
     z-index:1;
     float: left;
 }
-
-#navHeader>ul>li:hover:after {
-    content: '';
-    display: block;
-    width: 0;
-    height: 0;
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-bottom: 4px solid black;
-    margin-left: -20px;
+#navHeader>ul>li:first-child {
+    margin-left:0px;
 }
+
 #navHeader>ul>li:hover{
     z-index: 2;
+    background-color:white;
 }
 
 #navHeader a {
@@ -115,12 +106,20 @@ a:hover {
 }
 
 #navHeader .has-sub ul li a {
-    background: white;
-    border:1px solid #eee;
+    min-width:175px;
+    text-align:center;
+    background: #ddd;
+    border:1px solid #aaa;
     display: block;
     line-height: 120%;
+    font-size:15px;
     padding: 7px;
 }
+
+#navHeader .has-sub ul li a:hover {
+    background: white;
+}
+
 
 
 /*
