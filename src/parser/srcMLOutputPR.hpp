@@ -62,7 +62,8 @@ enum {
     PROCESSCAST,
     PROCESSENUMCLASS,
     PROCESSOPERATORFUNCTION,
-    PROCESSPSEUDOPARAMETERLIST
+    PROCESSPSEUDOPARAMETERLIST,
+    PROCESSINDEXERPARAMETERLIST
 };
 
 /** for conversion of process numbers to callbacks */
@@ -99,7 +100,8 @@ srcMLOutput::PROCESS_PTR srcMLOutput::num2process[] = {
     &srcMLOutput::processCast,
     &srcMLOutput::processEnumClass,
     &srcMLOutput::processOperatorFunction,
-    &srcMLOutput::processPseudoParameterList
+    &srcMLOutput::processPseudoParameterList,
+    &srcMLOutput::processIndexerParameterList
 };
 
 /** element map call name */
@@ -350,6 +352,7 @@ namespace {
     ELEMENT_MAP(SEVENT, PROCESSTOKEN)
     ELEMENT_MAP(SEMIT_STATEMENT, PROCESSTOKEN)
     ELEMENT_MAP(SFOR_LIKE_CONTROL, PROCESSTOKEN)
+    ELEMENT_MAP(SINDEXER_PARAMETER_LIST, PROCESSINDEXERPARAMETERLIST)
 
 }
 

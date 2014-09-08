@@ -234,6 +234,7 @@ public:
     void processEnumClass(const antlr::RefToken& token);
     void processOperatorFunction(const antlr::RefToken& token);
     void processPseudoParameterList(const antlr::RefToken& token);
+    void processIndexerParameterList(const antlr::RefToken& token);
 
     /** method pointer for token processing dispatch */
     typedef void (srcMLOutput::*PROCESS_PTR)(const antlr::RefToken & );
