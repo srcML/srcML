@@ -4675,9 +4675,9 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
             // start the argument
             startElement(SARGUMENT);
         }
-        (options {warnWhenFollowAmbig = false; } : { count_paren > 0 && (count_paren != 1 || LA(1) != RPAREN) }?
+        (options { warnWhenFollowAmbig = false; } : { count_paren > 0 && (count_paren != 1 || LA(1) != RPAREN) }?
 
-            (
+            (options { generateAmbigWarnings = false; } :
                 { LA(1) == LPAREN }? expression { ++count_paren; } |
 
                 { LA(1) == RPAREN }? expression { --count_paren; } |
