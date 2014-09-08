@@ -391,6 +391,7 @@ tokens {
 	SFOR_INITIALIZATION;
 	SFOR_CONDITION;
 	SFOR_INCREMENT;
+    SFOR_LIKE_CONTROL;
 
 	SEXPRESSION_STATEMENT;
 	SEXPRESSION;
@@ -6295,7 +6296,7 @@ try_statement[] { ENTRY_DEBUG } :
 try_statement_with_resource[] { ENTRY_DEBUG } :
         for_like_statement_pre[STRY_BLOCK]
 
-        TRY LPAREN
+        TRY
 
         for_like_statement_post 
 
@@ -6341,7 +6342,7 @@ using_statement[] { ENTRY_DEBUG } :
         // However, this seems to work in this case possibly, becaused it is used with tokens required afterwards.
         for_like_statement_pre[SUSING_STATEMENT]
 
-        USING LPAREN
+        USING 
 
         for_like_statement_post
 
@@ -6362,6 +6363,14 @@ for_like_statement_pre[int tag] { ENTRY_DEBUG } :
 ;
 
 for_like_statement_post[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+
+    {
+
+        startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
+
+        startElement(SFOR_LIKE_CONTROL);
+    }
+    LPAREN
     {
 
         startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
@@ -6394,7 +6403,7 @@ lock_statement[] { ENTRY_DEBUG } :
 
         for_like_statement_pre[SLOCK_STATEMENT]
 
-        LOCK LPAREN
+        LOCK
 
         for_like_statement_post
 
@@ -6405,7 +6414,7 @@ fixed_statement[] { ENTRY_DEBUG } :
 
         for_like_statement_pre[SFIXED_STATEMENT]
 
-        FIXED LPAREN
+        FIXED
 
         for_like_statement_post
 ;
@@ -6415,7 +6424,7 @@ synchronized_statement[] { ENTRY_DEBUG } :
 
         for_like_statement_pre[SSYNCHRONIZED_STATEMENT]
 
-        SYNCHRONIZED LPAREN
+        SYNCHRONIZED
 
         for_like_statement_post
 ;
