@@ -1,6 +1,0 @@
-<element name="param" ns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns="http://relaxng.org/ns/structure/1.0">
-    <externalRef href="type.rng"/>
-    <optional>
-        <externalRef href="simpleName.rng"/>
-    </optional>
-</element>

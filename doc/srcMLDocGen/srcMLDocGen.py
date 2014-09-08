@@ -124,9 +124,21 @@ if __name__ == "__main__":
     if not settings.configured:
         django.conf.settings.configure(DEBUG=True, TEMPLATE_DEBUG=True, TEMPLATE_DIRS=("Templates", ), INSTALLED_APPS=("DocGen",))
     print "-"*80
-    print "Loading Validators"
-    loadValidators("Validation/")
-    # print validationManager.validators
+    print "Loading Grammar"
+    grammarRoot = "DocData/Grammar/"
+    print "Located a Language Grammar Document (LanguageGrammar.xml) in", grammarRoot
+    grammarPath = os.path.join(grammarRoot, grammarFile)
+    if not os.path.exists(grammarPath):
+        raise Exception("missing Grammar file at location:", grammarPath)
+    try:
+        languageGrammar = loadGrammar(grammarPath)
+        setValidator(GenerateRelaxNGFromGrammar("GeneratedGrammar", languageGrammar))
+        print "Beginning HTML generation"
+        generateSrcMLGrammar(grammarOutputFileName, languageGrammar)
+        print "HTML Generation Complete"
+    except Exception as e:
+        print "Failed with exception: ", traceback.format_exc(e)
+    # loadValidators("Validation/")
     print "Loading complete"
 
     for root, dirs, files in os.walk(os.path.abspath("./DocData")):
@@ -148,17 +160,7 @@ if __name__ == "__main__":
                     print "Index HTML Generation Complete"
             except Exception as e:
                 print "Failed with exception: ", traceback.format_exc(e)
-        if grammarFile in files:
-            print "-" * 80
-            print "Located a Language Grammar Document (LanguageGrammar.xml) in", root
-            try:
-                languageGrammar = loadGrammar(os.path.join(root, grammarFile))
-                # GenerateRelaxNGFromGrammar("GeneratedGrammar", languageGrammar)
-                print "Beginning HTML generation"
-                generateSrcMLGrammar(grammarOutputFileName, languageGrammar)
-                print "HTML Generation Complete"
-            except Exception as e:
-                print "Failed with exception: ", traceback.format_exc(e)
+
 
     print "-" * 80
     print "Writing tag names"

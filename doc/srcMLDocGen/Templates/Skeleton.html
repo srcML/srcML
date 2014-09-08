@@ -12,6 +12,10 @@
         <div id="srcMLHeader">
             <div id="logo"></div><div id="srcMLText"></div>
         </div>
+        {% block navigationHeader %}
+        <div id="navHeader">
+        </div>
+        {% endblock %}
         <div id="bodyContent">
         {% block body %}
         {% endblock %}

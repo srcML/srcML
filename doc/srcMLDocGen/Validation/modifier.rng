@@ -1,3 +1,0 @@
-<element name="modifier" ns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns="http://relaxng.org/ns/structure/1.0">
-    <text/>
-</element>
