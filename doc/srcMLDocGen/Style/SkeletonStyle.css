@@ -4,7 +4,9 @@ html, body {
 	padding: 0;
     margin-bottom:3em;
 }
-
+body {
+/*    background-color: #D1D1D1;*/
+}
 a {
     text-decoration:none;
     color:blue;
@@ -19,6 +21,7 @@ a:hover {
     max-width: 75%;
     min-width: 50%;
     margin-bottom:3em;
+    background-color:white;
 }
 #srcMLHeader {
     margin-top:0px;
@@ -111,6 +114,19 @@ a:hover {
 }
 
 #navHeader .has-sub ul li a {
+    min-width:175px;
+    text-align:center;
+    background: white;
+    border-left:1px solid #aaa;
+    border-right:1px solid #aaa;
+    border-bottom:1px solid #aaa;
+    display: block;
+    line-height: 120%;
+    font-size:15px;
+    padding: 7px;
+}
+
+#navHeader .has-sub ul li:first-child a {
     min-width:175px;
     text-align:center;
     background: white;
