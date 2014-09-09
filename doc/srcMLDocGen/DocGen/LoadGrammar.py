@@ -1,6 +1,7 @@
 
 import os, sys, re, lxml, cStringIO, itertools
 import lxml.etree as ET
+from lxml import *
 from xml.sax.handler import ContentHandler
 from LoadData import *
 from LoadGrammarHowTo import *
@@ -9,6 +10,10 @@ from LoadGrammarHowTo import *
 def getComparableTagName(item):
     return "{0}{1}".format("" if item.ns == "" else (item.ns +":"), item.tag)
 
+
+# -----------------------------------------------------------------
+#                    GrammarDoc Class
+# -----------------------------------------------------------------
 # Class that holds everything relating to the grammar
 class GrammarDoc:
     def __init__(self):
@@ -17,7 +22,7 @@ class GrammarDoc:
         self.documentation = [] # used to determine the ordering of the documentation
         self.edgeList = []
         self.howToReadDoc = None
-
+        self.compiledGrammar = None
 
     def dumpDocumentation(self, out):
         for doc in self.documentation:
@@ -39,6 +44,15 @@ Edge
             rule.toEBNFText(out)
             out.write("\n\n")
 
+    def assertValid(self, treeOrNodeToValidate):
+        validationInfo = ValidationInfo(self, treeOrNodeToValidate)
+        if not validationInfo.startValidation():
+            validationInfo.dump()
+            raise Exception("Validation Failed!")
+
+# -----------------------------------------------------------------
+#                           Graph Stuff 
+# -----------------------------------------------------------------
 class RuleEdge:
     def __init__(self):
         self.fromTitle = ""
@@ -47,6 +61,10 @@ class RuleEdge:
         self.toObj = None
         self.ruleRef = None
 
+
+# -----------------------------------------------------------------
+#           Documentation Classes
+# -----------------------------------------------------------------
 
 # Documentation Structure
 class DocumentationBase(object):
@@ -114,7 +132,6 @@ class RuleDocumentation(DocumentationBase):
         out.write("{0}\n".format(self.__class__.__name__))
         out.write("    name: {0}\n".format(self.name))
         out.write("    rule: {0}\n".format(self.rule))
-
         self.dumpDocumentationBaseFields(out)
 
 
@@ -178,8 +195,51 @@ class AttrRuleDocumentation(DocumentationBase):
             out.write("            Desc: \"{0}\"\n".format(self.attrRule.desc.strip()))
         self.dumpDocumentationBaseFields(out)
 
+# ------------------------------------------------------------------
+#                   Validation Helper classes
+# ------------------------------------------------------------------
+class ValidationInfo:
+    def __init__(self, grammarInput, nodeToValidate):
+        self.ruleStack = []
+        self.grammarDefinitionStack = []
+        self.parameterLookUpStack = []
+        self.ruleLookUp = dict([(x.name,x) for x in grammarInput.rules])
+        self.initialRule = grammarInput.rules[0]
+        self.elementStack = [nodeToValidate if isinstance(nodeToValidate, ET._Element) else nodeToValidate.getroot()]
+        self.grammar = grammarInput
+        self.validationLocation = self.elementStack[0]
+        self.independentRules = [x for x in grammarInput.rules if x.canOccurAnyWhere]
+        self.grammarLog = []
 
-# Rule Classes
+    def dump(self):
+        for entry in self.grammarLog:
+            print entry
+
+    def startValidation(self):
+        return self.initialRule.validate(self)
+
+    def currentRule(self):
+        return self.ruleStack[-1]
+
+    def getParameter(self, paramName):
+        return self.parameterLookUpStack[-1][param]
+
+    def pushAndMapParams(self, ruleName, parameterValueList):
+        self.parameterLookUpStack.apped(dict(map(lambda p,v:(p,v), self.ruleLookUp[ruleName].parameters, parameterValueList)))
+
+    def pushRule(self, rule):
+        self.ruleStack.append(rule)
+        self.grammarLog.append("Entered: " + rule.name)
+
+    def popRuleStack(self):
+        if self.ruleStack[-1].parameters != None:
+            self.parameterLookUpStack.pop()
+        temp = self.ruleStack.pop()
+        self.grammarLog.append("Exited: " + temp.name)
+
+# ------------------------------------------------------------------
+#                   Rule Classes
+# ------------------------------------------------------------------
 class RuleBase(object):
     def __init__(self):
         self.name = ""
@@ -189,6 +249,7 @@ class RuleBase(object):
         self.desc = ""
         self.title = ""
         self.ruleRefs = []
+        self.canOccurAnyWhere = False
 
     def toEBNFText(self, out):
         out.write(self.name)
@@ -206,12 +267,34 @@ class RuleBase(object):
     def toEBNFRuleStartText(self, out):
         assert False, "Rule didn't implement toEBNFRuleStartText"
 
+    def ruleValidation(self, validationUnfo):
+        assert False, "ruleValidation Not implemented by rule"
+
+    def validate(self, validationInfo):
+        validationInfo.pushRule(self)
+        if self.ruleValidation(validationInfo):
+            for expr in self.grammar:
+                if not expr.validate(validationInfo):
+                    validationInfo.popRuleStack()
+                    return False
+            validationInfo.popRuleStack()
+            return True
+        else:
+            validationInfo.popRuleStack()
+            return False
+
+
+
+
 class Rule(RuleBase):
     def __init__(self):
         RuleBase.__init__(self)
 
     def toEBNFRuleStartText(self, out):
-        pass
+        pass        
+
+    def ruleValidation(self, validationUnfo):
+        return True
 
 
 class TagRule(RuleBase):
@@ -224,6 +307,9 @@ class TagRule(RuleBase):
         if self.tagInfo.attrs != None:
             out.write( " ({0})".format(", ".join([ x.name + ("?" if x.isOptional else "") for x in self.tagInfo.attrs])) )
 
+    def ruleValidation(self, validationInfo):
+        return tagInfo.validate(validationInfo)
+
 class AttrRule(RuleBase):
     def __init__(self):
         RuleBase.__init__(self)
@@ -232,6 +318,14 @@ class AttrRule(RuleBase):
     def toEBNFRuleStartText(self, out):
         out.write(" @{0}".format(self.attrName))
 
+    def validate(self, validationInfo):
+        if self.attrName in validationInfo.currentElement:
+        else:
+
+
+# ------------------------------------------------------------------
+#                   Grammar Definition classes
+# ------------------------------------------------------------------
 # Rule related classes
 class RuleTagInfo:
     def __init__(self):
@@ -239,10 +333,16 @@ class RuleTagInfo:
         self.ns = ""
         self.attrs = None
 
+    def validate(self, validationInfo):
+        return False
+
 class AttrUseInfo:
     def __init__(self):
         self.name = ""
         self.isOptional = False
+
+    def validate(self, validationInfo):
+        return False
 
 
 # Grammar Definition Related Classes
@@ -253,6 +353,14 @@ class GrammarDef(object):
     def toEBNFText(self, out):
         assert False, "Part of grammar didn't implement toEBNFText"
 
+    def validate(self, validationInfo):
+        validationInfo.grammarDefinitionStack.append(self)
+        ret = self.testGrammar(validationInfo)
+        validationInfo.grammarDefinitionStack.pop()
+
+    def testGrammar(self, validationInfo):
+        assert False, "Sub class doesn't implement textGrammar"
+
 
 class ParamUse(GrammarDef):
     def __init__(self, paramName = ""):
@@ -261,6 +369,9 @@ class ParamUse(GrammarDef):
 
     def toEBNFText(self, out):
         out.write("${0}".format(self.name))
+
+    def testGrammar(self, validationInfo):
+        return False
 
 class RuleRef(GrammarDef):
     def __init__(self, refName = ""):
@@ -283,6 +394,8 @@ class RuleRef(GrammarDef):
                     out.write(", ")
             out.write("]")
 
+    def testGrammar(self, validationInfo):
+        return False
 
 class Literal(GrammarDef):
     def __init__(self, litValue = ""):
@@ -292,12 +405,18 @@ class Literal(GrammarDef):
     def toEBNFText(self, out):
         out.write("\"{0}\"".format(self.value))
 
+    def testGrammar(self, validationInfo):
+        return False
+
 class Text(GrammarDef):
     def __init__(self):
         GrammarDef.__init__(self, "Text")
 
     def toEBNFText(self, out):
         out.write("Text")
+
+    def testGrammar(self, validationInfo):
+        return False
 
 class Number(GrammarDef):
     def __init__(self):
@@ -306,12 +425,18 @@ class Number(GrammarDef):
     def toEBNFText(self, out):
         out.write("Number")
 
+    def testGrammar(self, validationInfo):
+        return False
+
 class Empty(GrammarDef):
     def __init__(self):
         GrammarDef.__init__(self, "Number")
 
     def toEBNFText(self, out):
         out.write("Number")
+
+    def testGrammar(self, validationInfo):
+        return False
 
 class Identifier(GrammarDef):
     def __init__(self):
@@ -320,12 +445,18 @@ class Identifier(GrammarDef):
     def toEBNFText(self, out):
         out.write("Identifier")
 
+    def testGrammar(self, validationInfo):
+        return False
+
 class Operator(GrammarDef):
     def __init__(self):
         GrammarDef.__init__(self, "Operator")
 
     def toEBNFText(self, out):
         out.write("Operator")
+
+    def testGrammar(self, validationInfo):
+        return False
 
 class NotImplementedYet(GrammarDef):
     def __init__(self):
@@ -334,6 +465,13 @@ class NotImplementedYet(GrammarDef):
     def toEBNFText(self, out):
         out.write("NotImplementedYet")
 
+    def testGrammar(self, validationInfo):
+        return False
+
+
+# ------------------------------------------------------------------
+#         Complex Grammar Expression Definition classes
+# ------------------------------------------------------------------
 # Class that's used to represent other parts of the language
 # that have a many to one relationship (i.e. groupings of things)
 class GrammarExpr(GrammarDef):
@@ -378,6 +516,9 @@ class TagExpr(GrammarExpr):
             out.write(" ")
         out.write("}")
 
+    def testGrammar(self, validationInfo):
+        return False
+
 
 class OptionalExpr(GrammarExpr):
     def __init__(self):
@@ -388,6 +529,9 @@ class OptionalExpr(GrammarExpr):
 
     def EBNFSuffix(self):
         return "?"
+
+    def testGrammar(self, validationInfo):
+        return False
 
 
 class ZeroOrMoreExpr(GrammarExpr):
@@ -400,6 +544,9 @@ class ZeroOrMoreExpr(GrammarExpr):
     def EBNFSuffix(self):
         return "*"
 
+    def testGrammar(self, validationInfo):
+        return False
+
 class GroupExpr(GrammarExpr):
     def __init__(self):
         GrammarExpr.__init__(self, "GroupExpr")
@@ -409,6 +556,9 @@ class GroupExpr(GrammarExpr):
 
     def EBNFSuffix(self):
         return ""
+
+    def testGrammar(self, validationInfo):
+        return False
 
 class OneOrMoreExpr(GrammarExpr):
     def __init__(self):
@@ -420,6 +570,9 @@ class OneOrMoreExpr(GrammarExpr):
     def EBNFSuffix(self):
         return "+"
 
+    def testGrammar(self, validationInfo):
+        return False
+
 class ChoiceExpr(GrammarExpr):
     def __init__(self):
         GrammarExpr.__init__(self, "ChoiceExpr")
@@ -429,6 +582,9 @@ class ChoiceExpr(GrammarExpr):
 
     def EBNFSuffix(self):
         return ""
+
+    def testGrammar(self, validationInfo):
+        return False
 
 
 # Tag Names
@@ -473,6 +629,7 @@ valueAttr = "value"
 langAttr = "lang"
 languageOrderingAttr = "languageOrdering"
 urlAttr = "url"
+canOccurAnyWhereAttr = "canOccurAnyWhere"
 
 def loadGrammar(fileName):
     def buildExpr(element, exprToBuild, currentRule):
@@ -626,6 +783,7 @@ def loadGrammar(fileName):
     def buildRule(ruleElem):
         rule = Rule()
         rule.name = getAttribOrFail(ruleElem, nameAttr)
+        rule.canOccurAnyWhere = getAttribOrDefault(ruleElem, canOccurAnyWhereAttr, "false").lower() == "true"
         validateRuleName(rule, ruleElem)
         rule.languages = [x.strip() for x in getAttribOrFail(ruleElem, langAttr).split(',')]
         validateLanguages(rule.languages, ruleElem)
@@ -1105,156 +1263,161 @@ def loadGrammar(fileName):
     print "    # of rules not in edge list: {0}".format(countHelper.notInEdgeList)
     print "    Total # of rules: {0}".format(len(grammarDoc.rules))
     print "    "+("-"*76)
+    
+    def compileGrammarToValidator(languageGrammar):
+        startingRule = languageGrammar.rules[0]
+        print startingRule.title
+    grammarDoc.compiledGrammar = compileGrammarToValidator(grammarDoc)
     return grammarDoc
 
 
 
-def GenerateRelaxNGFromGrammar(outputLocation, grammar):
-    def handleDispatch(node):
-        traversalStack.append(node)
-        if isinstance(node, ParamUse):
-            pass
+# def GenerateRelaxNGFromGrammar(outputLocation, grammar):
+#     def handleDispatch(node):
+#         traversalStack.append(node)
+#         if isinstance(node, ParamUse):
+#             pass
 
-        elif isinstance(node, RuleRef):
-            if node.args != None:
-                if node.name == "cppDirective":
-                    treeBuilder.start("element", {"name":"cpp:directive"})
-                    treeBuilder.start("text", {})
-                    treeBuilder.end("text")                    
-                    treeBuilder.end("element")                    
-                else:
-                    raise Exception("Super derp. located another rule with parameters that isn't cppDirective: {0}".format(node.name))
-            else:
-                treeBuilder.start("ref", {"name":node.name})
-                treeBuilder.end("ref")
-            pass
+#         elif isinstance(node, RuleRef):
+#             if node.args != None:
+#                 if node.name == "cppDirective":
+#                     treeBuilder.start("element", {"name":"cpp:directive"})
+#                     treeBuilder.start("text", {})
+#                     treeBuilder.end("text")                    
+#                     treeBuilder.end("element")                    
+#                 else:
+#                     raise Exception("Super derp. located another rule with parameters that isn't cppDirective: {0}".format(node.name))
+#             else:
+#                 treeBuilder.start("ref", {"name":node.name})
+#                 treeBuilder.end("ref")
+#             pass
 
-        elif isinstance(node, Literal):
-            treeBuilder.start("text", {})
-            treeBuilder.end("text")
+#         elif isinstance(node, Literal):
+#             treeBuilder.start("text", {})
+#             treeBuilder.end("text")
 
-        elif isinstance(node, NotImplementedYet):
-            raise Exception("Not implemented yet")
+#         elif isinstance(node, NotImplementedYet):
+#             raise Exception("Not implemented yet")
 
-        elif isinstance(node, Operator):
-            treeBuilder.start("text", {})
-            treeBuilder.end("text")
+#         elif isinstance(node, Operator):
+#             treeBuilder.start("text", {})
+#             treeBuilder.end("text")
 
-        elif isinstance(node, Text):
-            treeBuilder.start("text", {})
-            treeBuilder.end("text")
+#         elif isinstance(node, Text):
+#             treeBuilder.start("text", {})
+#             treeBuilder.end("text")
 
-        elif isinstance(node, Number):
-            treeBuilder.start("text", {})
-            treeBuilder.end("text")
+#         elif isinstance(node, Number):
+#             treeBuilder.start("text", {})
+#             treeBuilder.end("text")
 
-        elif isinstance(node, Empty):
-            treeBuilder.start("empty", {})
-            treeBuilder.end("empty")
+#         elif isinstance(node, Empty):
+#             treeBuilder.start("empty", {})
+#             treeBuilder.end("empty")
 
-        elif isinstance(node, Identifier):
-            treeBuilder.start("text", {})
-            treeBuilder.end("text")
+#         elif isinstance(node, Identifier):
+#             treeBuilder.start("text", {})
+#             treeBuilder.end("text")
 
-        elif isinstance(node, TagExpr):
-            treeBuilder.start("element", {"name":getComparableTagName(node.tagInfo)})
-            dispatchFromList(node.subExprs)
-            treeBuilder.end("element")
+#         elif isinstance(node, TagExpr):
+#             treeBuilder.start("element", {"name":getComparableTagName(node.tagInfo)})
+#             dispatchFromList(node.subExprs)
+#             treeBuilder.end("element")
 
-        elif isinstance(node, OptionalExpr):
-            treeBuilder.start("optional", {})
-            dispatchFromList(node.subExprs)
-            treeBuilder.end("optional")
+#         elif isinstance(node, OptionalExpr):
+#             treeBuilder.start("optional", {})
+#             dispatchFromList(node.subExprs)
+#             treeBuilder.end("optional")
 
-        elif isinstance(node, ZeroOrMoreExpr):
-            treeBuilder.start("zeroOrMore", {})
-            dispatchFromList(node.subExprs)
-            treeBuilder.end("zeroOrMore")
+#         elif isinstance(node, ZeroOrMoreExpr):
+#             treeBuilder.start("zeroOrMore", {})
+#             dispatchFromList(node.subExprs)
+#             treeBuilder.end("zeroOrMore")
 
-        elif isinstance(node, GroupExpr):
-            treeBuilder.start("group", {})
-            dispatchFromList(node.subExprs)
-            treeBuilder.end("group")
+#         elif isinstance(node, GroupExpr):
+#             treeBuilder.start("group", {})
+#             dispatchFromList(node.subExprs)
+#             treeBuilder.end("group")
 
-        elif isinstance(node, OneOrMoreExpr):
-            treeBuilder.start("oneOrMore", {})
-            dispatchFromList(node.subExprs)
-            treeBuilder.end("oneOrMore")
+#         elif isinstance(node, OneOrMoreExpr):
+#             treeBuilder.start("oneOrMore", {})
+#             dispatchFromList(node.subExprs)
+#             treeBuilder.end("oneOrMore")
 
-        elif isinstance(node, ChoiceExpr):
-            treeBuilder.start("choice", {})
-            dispatchFromList(node.subExprs)
-            treeBuilder.end("choice")
+#         elif isinstance(node, ChoiceExpr):
+#             treeBuilder.start("choice", {})
+#             dispatchFromList(node.subExprs)
+#             treeBuilder.end("choice")
 
-        else:
-            raise Exception("Unknown or unhandled grammar type: {0}".format(node.__class__.__name__))
-        traversalStack.pop()
-
-
-    def dispatchFromList(listOfGrammarItems):
-        for item in listOfGrammarItems:
-            handleDispatch(item)
-    treeBuilder = ET.TreeBuilder()
-    # ns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns="http://relaxng.org/ns/structure/1.0"
-    nsMap = {"cpp":"http://www.sdml.info/srcML/cpp"}
-
-    attrs = dict()
-    attrs["ns"] = "http://www.sdml.info/srcML/src"
-    attrs["xmlns"] = "http://relaxng.org/ns/structure/1.0"
-    treeBuilder.start("grammar", attrs, nsMap)
+#         else:
+#             raise Exception("Unknown or unhandled grammar type: {0}".format(node.__class__.__name__))
+#         traversalStack.pop()
 
 
-    traversalStack = []
-    for rule in grammar.rules:
-        if rule.parameters != None:
-            print "Rule with parameters: ", rule.name
-            continue
+#     def dispatchFromList(listOfGrammarItems):
+#         for item in listOfGrammarItems:
+#             handleDispatch(item)
+#     treeBuilder = ET.TreeBuilder()
+#     # ns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns="http://relaxng.org/ns/structure/1.0"
+#     nsMap = {"cpp":"http://www.sdml.info/srcML/cpp"}
 
-        traversalStack.append(rule)
-        if isinstance(rule, Rule):
-            if rule.name == "start":
-                treeBuilder.start("start", {})
-            else:
-                treeBuilder.start("define", {"name":rule.name})
-            dispatchFromList(rule.grammar)
-            if rule.name == "start":
-                treeBuilder.end("start")
-            else:
-                treeBuilder.end("define")
+#     attrs = dict()
+#     attrs["ns"] = "http://www.sdml.info/srcML/src"
+#     attrs["xmlns"] = "http://relaxng.org/ns/structure/1.0"
+#     treeBuilder.start("grammar", attrs, nsMap)
 
-        elif isinstance(rule, TagRule):
-            treeBuilder.start("define", {"name":rule.name})
-            treeBuilder.start("element", {"name":getComparableTagName(rule.tagInfo)})
-            if rule.tagInfo.attrs != None:
-                for attr in rule.tagInfo.attrs:
-                    if attr.isOptional:
-                        treeBuilder.start("optional", {})
-                        treeBuilder.start("ref", {"name":attr.name})
-                        treeBuilder.end("ref")
-                        treeBuilder.end("optional")
-                    else:
-                        treeBuilder.start("ref", {"name":attr.name})
-                        treeBuilder.end("ref")
 
-            # build element stuff here
-            dispatchFromList(rule.grammar)
-            treeBuilder.end("element")
-            treeBuilder.end("define")
+#     traversalStack = []
+#     for rule in grammar.rules:
+#         if rule.parameters != None:
+#             print "Rule with parameters: ", rule.name
+#             continue
 
-        elif isinstance(rule, AttrRule):
-            treeBuilder.start("define", {"name":rule.name})
-            # build attribute stuff here
-            treeBuilder.start("attribute", {"name":rule.attrName})
-            dispatchFromList(rule.grammar)
-            treeBuilder.end("attribute")
-            treeBuilder.end("define")
+#         traversalStack.append(rule)
+#         if isinstance(rule, Rule):
+#             if rule.name == "start":
+#                 treeBuilder.start("start", {})
+#             else:
+#                 treeBuilder.start("define", {"name":rule.name})
+#             dispatchFromList(rule.grammar)
+#             if rule.name == "start":
+#                 treeBuilder.end("start")
+#             else:
+#                 treeBuilder.end("define")
 
-        else:
-            raise Exception("Unhandled rule type: {0}".format(rule.__class__.__name__))
-        traversalStack.pop()
+#         elif isinstance(rule, TagRule):
+#             treeBuilder.start("define", {"name":rule.name})
+#             treeBuilder.start("element", {"name":getComparableTagName(rule.tagInfo)})
+#             if rule.tagInfo.attrs != None:
+#                 for attr in rule.tagInfo.attrs:
+#                     if attr.isOptional:
+#                         treeBuilder.start("optional", {})
+#                         treeBuilder.start("ref", {"name":attr.name})
+#                         treeBuilder.end("ref")
+#                         treeBuilder.end("optional")
+#                     else:
+#                         treeBuilder.start("ref", {"name":attr.name})
+#                         treeBuilder.end("ref")
 
-    treeBuilder.end("grammar")
-    doc = treeBuilder.close()
+#             # build element stuff here
+#             dispatchFromList(rule.grammar)
+#             treeBuilder.end("element")
+#             treeBuilder.end("define")
+
+#         elif isinstance(rule, AttrRule):
+#             treeBuilder.start("define", {"name":rule.name})
+#             # build attribute stuff here
+#             treeBuilder.start("attribute", {"name":rule.attrName})
+#             dispatchFromList(rule.grammar)
+#             treeBuilder.end("attribute")
+#             treeBuilder.end("define")
+
+#         else:
+#             raise Exception("Unhandled rule type: {0}".format(rule.__class__.__name__))
+#         traversalStack.pop()
+
+#     treeBuilder.end("grammar")
+#     doc = treeBuilder.close()
 
     # validationFileName = "validationTreeFromGrammar.rng"
     # validationTreeStrm = open(validationFileName,"w")
@@ -1262,9 +1425,9 @@ def GenerateRelaxNGFromGrammar(outputLocation, grammar):
     # validationTreeStrm.close()
     # validationDoc = ET.fromstring(ET.tostring(doc, pretty_print=True))
     # relaxDoc = ET.RelaxNG(etree=validationDoc)
-    relaxDoc = ET.RelaxNG(etree=ET.parse("validationTreeFromGrammar.rng"))
+    # relaxDoc = ET.RelaxNG(etree=ET.parse("validationTreeFromGrammar.rng"))
     
-    return relaxDoc
+    # return relaxDoc
 
     
 # if __name__ == "__main__":

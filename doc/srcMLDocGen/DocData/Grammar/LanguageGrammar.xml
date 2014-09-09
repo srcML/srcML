@@ -494,7 +494,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         </Def>
     </Rule>
     
-    <Rule name="anyCPPOrCommentOrText" lang="C,C++,C#,Java" title="any C preprocessor, comment or text">
+    <Rule name="anyCPPOrCommentOrText" lang="C,C++,C#,Java" title="any C preprocessor, comment or text" canOccurAnyWhere="true">
         <Desc>A listing of all elements which can occur anywhere.</Desc>
         <Def>
             <Choice>

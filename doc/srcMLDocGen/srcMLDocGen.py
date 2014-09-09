@@ -200,10 +200,10 @@ if __name__ == "__main__":
     try:
         languageGrammar = loadGrammar(grammarPath)
         pagesToGenerate.languageGrammar = languageGrammar
-        # setValidator(GenerateRelaxNGFromGrammar("GeneratedGrammar", languageGrammar))
+        setValidator(languageGrammar)
+
     except Exception as e:
         print "Failed with exception: ", traceback.format_exc(e)
-    # loadValidators("Validation/")
     print "Loading grammar complete"
 
     for root, dirs, files in os.walk(os.path.abspath("./DocData")):

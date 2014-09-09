@@ -68,8 +68,7 @@ class ValidationLookUp:
             print "    Entry: ", self.currentEntryTitle
             print "    File: ", self.currentExamplePath
             print "    ", str(e)
-            # print dir(e)
-            report = ValidationFailureReport(self, exceptionErrorMessage=(str(e) + "\nErrorLog: " + "\n".join([(str(logEntry) +" Line: {0.line} Col: {0.column}".format(logEntry)) for logEntry in e.error_log]) + "\nArgs: " + str(e.args) +"\n"))
+            report = ValidationFailureReport(self, exceptionErrorMessage=(str(e)))
             report.docToBeValidated = validatedDoc
             self.reports.append(report)
 
@@ -116,8 +115,7 @@ def setValidatorCurrentExampleTitle(title):
     validationManager.currentExampleTitle = title
 
 def validate(tree):
-    pass
-    # validationManager.validateAndReport(tree)
+    validationManager.validateAndReport(tree)
 
 validationManager = ValidationLookUp()
 
