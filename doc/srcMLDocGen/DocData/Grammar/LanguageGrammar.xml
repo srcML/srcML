@@ -407,6 +407,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
             <Choice>
                 <Ref name="anyCPPOrCommentOrText"/>
                 <Ref name="ASM" />
+                <Ref name="CSharpAttribute"/>
                 <Ref name="staticAssert" />
                 <Ref name="assertStmt" />
                 <Ref name="block" />
@@ -778,6 +779,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
 
     <!-- cpp:literal -->
     <TagRule name="cppLiteral" lang="C,C++,C#">
+        <Desc>A preprocessor literal can be a single or double quoted string literal.</Desc>
         <Tag ns="cpp" elem="literal" />
         <Def>
             <Text/>
@@ -875,9 +877,9 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
             </Ref>
             <Optional>
                 <Ref name="cppNumber" />
-            </Optional>
-            <Optional>
-                <Ref name="cppFileRelative" />
+                <Optional>
+                    <Ref name="cppFile" />
+                </Optional>
             </Optional>
         </Def>
     </TagRule>
@@ -932,7 +934,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
             <Ref name="cppDirective">
                 <Args>
                     <Arg>
-                        <Literal value="pragma" />
+                        <Literal value="undef" />
                     </Arg>
                 </Args>
             </Ref>
@@ -956,15 +958,15 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         <Def>
             <Literal value="if"/>
             <Optional>
-                <Ref name="condition"/>
+                <Ref name="condition"/>            
+                <Ref name="then"/>
+                <ZeroOrMore>
+                    <Choice>
+                        <Ref name="else"/>
+                        <Ref name="elseif"/>
+                    </Choice>
+                </ZeroOrMore>
             </Optional>
-            <Ref name="then"/>
-            <ZeroOrMore>
-                <Choice>
-                    <Ref name="else"/>
-                    <Ref name="elseif"/>
-                </Choice>
-            </ZeroOrMore>
         </Def>
     </TagRule>
     
@@ -1027,11 +1029,11 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
             <Literal value="while"/>            
             <Optional>
                 <Ref name="condition" />
+                <Choice>
+                    <Ref name="block"/>
+                    <Ref name="pseudoBlock"/>
+                </Choice>
             </Optional>
-            <Choice>
-                <Ref name="block"/>
-                <Ref name="pseudoBlock"/>
-            </Choice>
         </Def>
     </TagRule>
     
@@ -1046,9 +1048,9 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
             </Choice>            
             <Optional>
                 <Literal value="while" />
-            </Optional>
-            <Optional>
-                <Ref name="condition"/>
+                <Optional>
+                    <Ref name="condition"/>
+                </Optional>
             </Optional>
             <Optional>
                 <Literal value=";" />
@@ -1063,11 +1065,11 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
             <Literal value="for"/>
             <Optional>
                 <Ref name="forControl" />
+                <Choice>
+                    <Ref name="block"/>
+                    <Ref name="pseudoBlock"/>
+                </Choice>
             </Optional>
-            <Choice>
-                <Ref name="block"/>
-                <Ref name="pseudoBlock"/>
-            </Choice>
         </Def>
     </TagRule>
     
@@ -1075,14 +1077,14 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
     <TagRule name="foreach" lang="C#">
         <Tag elem="foreach" />
         <Def>
-            <Literal value="for"/>
+            <Literal value="foreach"/>
             <Optional>
                 <Ref name="foreachControl" />
+                <Choice>
+                    <Ref name="block"/>
+                    <Ref name="pseudoBlock"/>
+                </Choice>
             </Optional>
-            <Choice>
-                <Ref name="block"/>
-                <Ref name="pseudoBlock"/>
-            </Choice>
         </Def>
     </TagRule>
 
@@ -1176,7 +1178,10 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
     <TagRule name="forIncr" lang="C,C++,C#,Java">
         <Tag elem="incr"/>
         <Def>
-            <Ref name="expr" />
+            <Choice>
+                <Ref name="expr" />
+                <Empty/>
+            </Choice>
         </Def>
     </TagRule>
 
@@ -1734,10 +1739,12 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         <Tag elem="using" />
         <Def>
             <Literal value="using"/>
-            <Literal value="namespace"/>
-            <Optional>
-                <Ref name="name"/>
-            </Optional>
+            <Tag elem="namespace">
+                <Literal value="namespace"/>
+                <Optional>
+                    <Ref name="name"/>
+                </Optional>
+            </Tag>
             <Optional>
                 <Literal value=";"/>
             </Optional>
@@ -1993,13 +2000,15 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
             <Optional>
                 <Literal value="="/>
                 <Group>
-                    <Tag elem="specifier">
-                        <Choice>
-                            <Literal value="default" />
-                            <Literal value="delete" />
-                            <Literal value="0" />
-                        </Choice>
-                    </Tag>
+                    <Choice>
+                        <Tag elem="specifier">
+                            <Choice>
+                                <Literal value="default" />
+                                <Literal value="delete" />
+                            </Choice>
+                        </Tag>
+                        <Ref name="literal" />
+                    </Choice>
                 </Group>
             </Optional>
             <ZeroOrMore>
@@ -2071,13 +2080,15 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
             <Optional>
                 <Literal value="="/>
                 <Group>
-                    <Tag elem="specifier">
-                        <Choice>
-                            <Literal value="default" />
-                            <Literal value="delete" />
-                            <Literal value="0"/>
-                        </Choice>
-                    </Tag>
+                    <Choice>
+                        <Tag elem="specifier">
+                            <Choice>
+                                <Literal value="default" />
+                                <Literal value="delete" />
+                            </Choice>
+                        </Tag>
+                        <Ref name="literal"/>
+                    </Choice>
                 </Group>
             </Optional>
             <ZeroOrMore>
