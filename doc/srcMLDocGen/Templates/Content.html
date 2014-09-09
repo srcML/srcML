@@ -1,4 +1,5 @@
 {% load DjangoHelpers %}
+{% load GrammarFormatHelpers %}
 {% for cat in doc.categories %}
     {% for entry in cat.entries %}
         <div class="displayedDocDefinition">
@@ -14,7 +15,7 @@
                 <h3 class="subtitle">Element{% if entry.elements|length > 1 %}s{%endif%}</h3>
                 <ul>
                 {% for elem in entry.elements %}
-                    <li><code class="xmlTags">{{elem.QName|safe}}</code>
+                    <li><code class="xmlTags"><a href="{{grammarFileName}}#{{elem|makeTagLink}}">{{elem.QName|safe}}</a></code>
                     {% if elem.markupOptionsRequired|length > 0 %}
                         <ul>
                             <li><span class="note">Note</span>: This mark up is disabled by default and is enabled using the following command line argument/s with srcML:
@@ -36,7 +37,7 @@
                 <h3 class="subtitle">Subelement{% if entry.subelements|length > 1 %}s{% endif %}</h3>
                 <ul>
                 {% for elem in entry.subelements %}
-                    <li><code class="xmlTags">{{elem.QName|safe}}</code>
+                    <li><code class="xmlTags"><a href="{{grammarFileName}}#{{elem|makeTagLink}}">{{elem.QName|safe}}</a></code>
                         {% if elem.markupOptionsRequired|length > 0 %}
                         <ul>
                             <li><span class="note">Note</span>: This mark up is disabled by default and is enabled using the following command line argument/s with srcML:

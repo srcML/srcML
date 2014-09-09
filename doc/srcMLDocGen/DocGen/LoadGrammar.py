@@ -319,8 +319,9 @@ class AttrRule(RuleBase):
         out.write(" @{0}".format(self.attrName))
 
     def validate(self, validationInfo):
-        if self.attrName in validationInfo.currentElement:
-        else:
+        # if self.attrName in validationInfo.currentElement:
+        # else:
+        return False
 
 
 # ------------------------------------------------------------------

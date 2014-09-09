@@ -227,8 +227,9 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         srcMLExResults = srcMLFile(fileName, doc.srcMLLanguage)
         example.sourceCode = srcMLExResults[0]
         example.srcML = "".join(srcMLExResults[1])
+        
         # Attempting to get validator attribute from example
-        validate(ET.ElementTree(ET.fromstring(example.srcML)))
+        # validate(ET.ElementTree(ET.fromstring(example.srcML)))
         
 
         return example

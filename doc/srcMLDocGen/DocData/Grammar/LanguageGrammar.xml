@@ -305,7 +305,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
 
     <AttrRule name="optionsAttr" lang="C,C++,C#,Java">
         <Attr name="options" />
-        <Desc>Not Sure.</Desc>
+        <!--<Desc>Not Sure.</Desc>-->
         <Def>
             <Text/>
         </Def>
@@ -314,8 +314,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
     
     <!-- src:macro-list -->
     <TagRule name="macroList" lang="C,C++,C#" title="macro list">
-        <Desc>
-
+        <Desc>A macro definition provided to the srcML client.
         </Desc>
         <Tag elem="macro-list">
             <Attrs>
@@ -346,6 +345,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
 
     <!-- src:comment-->
     <TagRule name="comment" lang="C,C++,C#,Java" title="">
+        <Desc>A comment within the supported programming languages.</Desc>
         <Tag elem="comment">
             <Attrs>
                 <Attr rule="commentTypeAttr" isOptional="false" />
@@ -381,6 +381,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
     
     <!-- src:escape -->
     <TagRule name="escape" lang="C,C++,C#,Java">
+        <Desc>A special character, such as a form feed.</Desc>
         <Tag elem="escape">
             <Attrs>
                 <Attr rule="charAttr" isOptional="false" />
@@ -392,8 +393,8 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
     </TagRule>
 
     <AttrRule name="charAttr" lang="C,C++,C#,Java">
-        <Attr name="char" />
         <Desc>Escaped character code.</Desc>
+        <Attr name="char" />
         <Def>
             <Text />
         </Def>
@@ -522,6 +523,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
 
     <!-- cpp:directive -->
     <TagRule name="cppDirective" lang="C,C++,C#">
+        <Desc>The name of preprocessor directive.</Desc>
         <Tag ns="cpp" elem="directive"/>
         <Params>
             <Param name="value" />
