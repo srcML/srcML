@@ -14,19 +14,21 @@
             <div id="logo"></div><div id="srcMLText"></div>
         </div>
         {% block navigationHeader %}
-        <div id="navHeader">
-            <ul>
-                <li><a href="{{nav.home.link}}"><span>{{nav.home.title}}</span></a></li>
-                {% for menuItem in nav.menuNavigation %}
-                <li class="has-sub"><span>{{menuItem.navTitle}}</span>
-                    <ul>
-                        <li><a href="{{menuItem.pageURL}}"><span>{{menuItem.pageName}}</span></a></li>
-                        <li><a href="{{menuItem.indexPageURL}}"><span>{{menuItem.indexPageName}}</span></a></li>
-                    </ul>
-                </li>
-                {% endfor %}
-                <li><a href="{{nav.grammarPage.link}}"><span>{{nav.grammarPage.title}}</span></a></li>
-            </ul>
+        <div id="navHolster">
+            <div id="navHeader">
+                <ul>
+                    <li><a href="{{nav.home.link}}"><span>{{nav.home.title}}</span></a></li>
+                    {% for menuItem in nav.menuNavigation %}
+                    <li class="has-sub"><span>{{menuItem.navTitle}}</span>
+                        <ul>
+                            <li><a href="{{menuItem.pageURL}}"><span>{{menuItem.pageName}}</span></a></li>
+                            <li><a href="{{menuItem.indexPageURL}}"><span>{{menuItem.indexPageName}}</span></a></li>
+                        </ul>
+                    </li>
+                    {% endfor %}
+                    <li><a href="{{nav.grammarPage.link}}"><span>{{nav.grammarPage.title}}</span></a></li>
+                </ul>
+            </div>
         </div>
         {% endblock %}
         <div id="bodyContent">

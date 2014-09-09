@@ -20,7 +20,6 @@ a:hover {
     min-width: 50%;
     margin-bottom:3em;
 }
-
 #srcMLHeader {
     margin-top:0px;
     background-color:black;
@@ -28,10 +27,16 @@ a:hover {
     width:100%;
 }
 
+#navHolster { 
+    width:100%;
+    background-color:black;
+    padding-top:3px;
+}
 #navHeader {
 	margin: 0 auto;
-    max-width: 75%;
-    min-width: 50%;
+    max-width:75%;
+    min-width:50%;
+    color:white;
     padding:0px;
 }
 
@@ -50,31 +55,31 @@ a:hover {
 #navHeader>ul>li {
     display: inline-block;
     position:relative;
-    font-size:18px;
-    padding:14px;
-    border-right:1px solid #aaa;
+
+    padding:11px;
+    border-top-right-radius:.7em;
+    border-top-left-radius:.7em;
+    /*border-right:1px solid #aaa;
     border-bottom:1px solid #aaa;
     border-left:1px solid #aaa;
-    border-bottom-right-radius:.7em;
+    
     border-bottom-left-radius:.7em;
     margin-left:5px;
     color:black;
     background-color:#ddd;
-    z-index:1;
+    z-index:1;*/
     float: left;
 }
-#navHeader>ul>li:first-child {
-    margin-left:0px;
+#navHeader li>a {
+    color:white;
 }
-
-#navHeader>ul>li:hover{
-    z-index: 2;
+#navHeader>ul>li:hover,
+#navHeader>ul>li:hover a
+{
     background-color:white;
-}
-
-#navHeader a {
     color:black;
 }
+
 
 #navHeader a:hover {
     text-decoration:none;
@@ -97,7 +102,7 @@ a:hover {
     position: absolute;
     top: 100%;
     margin-top:1px;
-    left: .5em;
+    left: 0;
 }
 
 #navHeader.align-right .has-sub ul {
@@ -108,7 +113,7 @@ a:hover {
 #navHeader .has-sub ul li a {
     min-width:175px;
     text-align:center;
-    background: #ddd;
+    background: white;
     border:1px solid #aaa;
     display: block;
     line-height: 120%;

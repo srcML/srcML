@@ -145,7 +145,7 @@ class PagesToGenerate:
 
     def buildNavigation(self):
         self.docConfigs.sort(key=lambda x:x.title)
-        self.nav.home.title = "Home"
+        self.nav.home.title = "Directory"
         self.nav.home.link = "index.html"
         self.nav.grammarPage = PageLink("srcML Grammar", grammarOutputFileName)
         for docConfig in self.docConfigs:
