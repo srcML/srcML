@@ -297,7 +297,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
 
     <AttrRule name="hashAttr" lang="C,C++,C#,Java">
         <Attr name="hash" />
-        <!-- <Desc>Not Sure.</Desc> -->
+        <Desc>Hash of the source file.</Desc>
         <Def>
             <Text/>
         </Def>
@@ -305,7 +305,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
 
     <AttrRule name="optionsAttr" lang="C,C++,C#,Java">
         <Attr name="options" />
-        <!--<Desc>Not Sure.</Desc>-->
+        <Desc>What options were used to build this document.</Desc>
         <Def>
             <Text/>
         </Def>
@@ -314,7 +314,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
     
     <!-- src:macro-list -->
     <TagRule name="macroList" lang="C,C++,C#" title="macro list">
-        <Desc>A macro definition provided to the srcML client.
+        <Desc>A user defined macro definition provided to the srcML client.
         </Desc>
         <Tag elem="macro-list">
             <Attrs>
@@ -393,7 +393,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
     </TagRule>
 
     <AttrRule name="charAttr" lang="C,C++,C#,Java">
-        <Desc>Escaped character code.</Desc>
+        <Desc>Escaped character code in hex.</Desc>
         <Attr name="char" />
         <Def>
             <Text />
