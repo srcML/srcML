@@ -318,37 +318,35 @@ public :
             if(attr_name) {
 
                 for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
- 
+
                     onode = result_nodes->nodesetval->nodeTab[i];
 
                     xmlAttrPtr last_attr = onode->properties;
-                    for(; last_attr->next; last_attr = last_attr->next)
+
+                    for(; last_attr && last_attr->next; last_attr = last_attr->next)
                         ;
 
                     xmlAttrPtr result_attr = (xmlAttrPtr)xmlMalloc((sizeof(xmlAttr)));
                     memset(result_attr, 0, sizeof(xmlAttr));
-                    result_attr->_private = last_attr->_private;
-                    result_attr->type = last_attr->type;
+                    result_attr->type = XML_ATTRIBUTE_NODE;
                     result_attr->name = (const xmlChar *)attr_name;
-
                     xmlNodePtr attr_value_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
                     memset(attr_value_node, 0, sizeof(xmlNode));                    
                     result_attr->children = attr_value_node;
 
-                    result_attr->parent = last_attr->parent;
+                    result_attr->parent = onode;
                     result_attr->prev = last_attr;
-                    result_attr->doc = last_attr->doc;
-
+                    result_attr->doc = onode->doc;
                     xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
                     memset(result_attr, 0, sizeof(xmlNs));                    
                     ns->href = (const xmlChar *)uri;
                     ns->prefix = (const xmlChar *)prefix;
                     result_attr->ns = ns;
 
-                    result_attr->atype = last_attr->atype;
-                    result_attr->psvi = last_attr->psvi;
-
-                    last_attr->next = result_attr;
+                    if(last_attr)
+                        last_attr->next = result_attr;
+                    else
+                        onode->properties = result_attr;
 
                 }
 
