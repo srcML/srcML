@@ -2362,8 +2362,18 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
             <Optional>
                 <Ref name="simpleName"/>
             </Optional>
-            <Optional><Ref name="javaSuper"/></Optional>
+            <Optional><Ref name="JavaSuper"/></Optional>
 
+            <Ref name="block" />
+        </Def>
+    </TagRule>
+    
+    <TagRule name="JavaAnonymousClass" lang="Java">
+        <Tag elem="class"/>
+        <Def>
+            <Literal value="class" />
+            <Ref name="JavaSuper"/>
+            <Ref name="argumentList"/>
             <Ref name="block" />
         </Def>
     </TagRule>
@@ -2748,11 +2758,28 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         </Def>
     </TagRule>
 
-    <TagRule name="javaSuper" lang="Java">
+    <TagRule name="JavaSuper" lang="Java">
+        <Desc>
+        There are two ways that the super element is used. 1) Within a class,
+        interface or annotation definition. 2) Within an enum or an anonymous class.
+        <br/>
+        In the first case super will contain some combination of at least
+        extends and/or implements.
+        <br/>
+        In the second case only a name appears within the super indicating
+        the enum type or class.
+        </Desc>
         <Tag elem="super"/>
         <Def>
-            <Optional><Ref name="extends"/></Optional>
-            <Optional><Ref name="implements"/></Optional>
+            <Choice>
+                <Group>
+                    <OneOrMore>
+                        <Ref name="extends"/>
+                        <Ref name="implements"/>
+                    </OneOrMore>
+                </Group>
+                <Ref name="name"/>
+            </Choice>
         </Def>
     </TagRule>
     
@@ -3470,15 +3497,30 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
     <TagRule name="argumentList" lang="C,C++,C#,Java">
         <Tag elem="argument_list"/>
         <Def>
-            <Literal value="("/>
-            <Optional>
-                <Ref name="argument"/>
-                <ZeroOrMore>
-                    <Literal value=","/>
-                    <Ref name="argument"/>
-                </ZeroOrMore>
-            </Optional>
-            <Literal value=")"/>
+            <Choice>
+                <Group>
+                    <Literal value="("/>
+                    <Optional>
+                        <Ref name="argument"/>
+                        <ZeroOrMore>
+                            <Literal value=","/>
+                            <Ref name="argument"/>
+                        </ZeroOrMore>
+                    </Optional>
+                    <Literal value=")"/>
+                </Group>
+                <Group>
+                    <Literal value="{"/>
+                    <Optional>
+                        <Ref name="argument"/>
+                        <ZeroOrMore>
+                            <Literal value=","/>
+                            <Ref name="argument"/>
+                        </ZeroOrMore>
+                    </Optional>
+                    <Literal value="}"/>
+                </Group>
+            </Choice>
         </Def>
     </TagRule>
     
@@ -3616,6 +3658,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
                     <Ref name="initBlock"/>
                     <Ref name="operator"/>
                     <Ref name="literal"/>
+                    <Ref name="JavaAnonymousClass"/>
                     <Ref name="expr"/>
                 </Choice>
             </OneOrMore>
