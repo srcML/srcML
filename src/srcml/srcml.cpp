@@ -57,8 +57,10 @@ int main(int argc, char * argv[]) {
     // global access to options
     SRCMLOptions::set(srcml_request.command);
 
-    // convert the list of input filenames to input sources
+    // create input sources from the list of input filenames
     srcml_input_t input_sources(srcml_request.input.begin(), srcml_request.input.end());
+    if (input_sources.size() == 1 && srcml_request.unit != 0)
+        input_sources[0].unit = srcml_request.unit;
 
     // standard input handled as FILE* to determine if srcML or src
     if (srcml_request.stdindex) {
@@ -86,7 +88,7 @@ int main(int argc, char * argv[]) {
     // output destination
     srcml_output_dest destination(srcml_request.output_filename ? *srcml_request.output_filename : "");
 
-    // determine what processing needs to occur by setting up an internal pipeline
+    // steps in the internal pipeline
     processing_steps_t pipeline;
 
     // src->srcml
@@ -103,7 +105,6 @@ int main(int argc, char * argv[]) {
 
     // srcml->metadata
     if (request_display_metadata(srcml_request, input_sources, destination)) {
-
         pipeline.push_back(srcml_display_metadata);
     }
     
@@ -135,12 +136,13 @@ int main(int argc, char * argv[]) {
     return 0;
 }
 
-bool request_create_srcml(const srcml_request_t& /* srcml_request */, 
+bool request_create_srcml(const srcml_request_t& srcml_request, 
                           const srcml_input_t& input_sources,
                           const srcml_output_dest& destination) {
 
     return std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end() ||
-        (input_sources.size() > 1 && destination.state == SRCML);
+        (input_sources.size() > 1 && destination.state == SRCML) ||
+        (input_sources.size() == 1 && input_sources[0].unit > 0 && (srcml_request.command & SRCML_COMMAND_XML));
 }
 
 bool request_transform_srcml(const srcml_request_t& srcml_request,
@@ -154,7 +156,7 @@ bool request_display_metadata(const srcml_request_t& srcml_request,
                               const srcml_input_t& /* input_sources */,
                               const srcml_output_dest& /* destination */) {
 
-    return (srcml_request.command & SRCML_COMMAND_INSRCML) || srcml_request.unit > 0;
+    return (srcml_request.command & SRCML_COMMAND_INSRCML || srcml_request.xmlns_prefix_query);
 }
 
 bool request_additional_compression(const srcml_request_t& /* srcml_request */,
@@ -171,5 +173,6 @@ bool request_create_src(const srcml_request_t& srcml_request,
 
     return !request_create_srcml(srcml_request, input_sources, destination) &&
             destination.state != SRCML &&
-            !request_display_metadata(srcml_request, input_sources, destination);
+            !request_display_metadata(srcml_request, input_sources, destination) &&
+            !request_transform_srcml(srcml_request, input_sources, destination);
 }

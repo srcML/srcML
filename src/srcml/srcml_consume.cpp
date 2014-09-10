@@ -29,6 +29,9 @@
 #include <write_queue.hpp>
 #include <boost/static_assert.hpp>
 #include <sha1utilities.hpp>
+#include <srcml_options.hpp>
+#include <srcml_cli.hpp>
+#include <string>
 
 // creates initial unit, parses, and then sends unit to write queue
 void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
@@ -42,13 +45,42 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
     // NOTE: thread task cannot throw exception
 
+    // global access to options
+    bool isseparatearchive = SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get();
+
+    // current output archive
+    srcml_archive* srcml_arch = request->srcml_arch;
+    if (isseparatearchive) {
+        srcml_arch = srcml_clone_archive(request->srcml_arch);
+        srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+        srcml_archive_enable_option(srcml_arch, SRCML_OPTION_HASH);
+
+        //Build the output filename
+
+        //Filenames from directories come in as full paths
+        size_t pos = request->filename->find_last_of("/\\");
+
+        if (pos != std::string::npos) {
+            ++pos;
+        }
+        else {
+            pos = 0;
+        }
+        
+        std::string xml_filename = *request->disk_dir + request->filename->substr(pos) + ".xml";
+        srcml_write_open_filename(srcml_arch, xml_filename.c_str());
+        request->srcml_arch = srcml_arch;
+    }
+
     // construct and parse the unit
-    srcml_unit* unit = 0;
+    srcml_unit* unit = request->unit;
     int status = SRCML_STATUS_OK;
     try {
+
         // create the unit start tag
-        if (!(unit = srcml_create_unit(request->srcml_arch)))
-            throw SRCML_STATUS_ERROR;
+        if (!unit)
+            if (!(unit = srcml_create_unit(srcml_arch)))
+                throw SRCML_STATUS_ERROR;
 
         // language attribute, required if from memory
         if ((status = srcml_unit_set_language(unit, request->language.c_str())) != SRCML_STATUS_OK)
@@ -68,7 +100,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         // sha1 attribute, if hash is on
         // sha1 value based on the code as encoded (source text encoding) in the original file
-        if (!request->disk_filename && srcml_archive_get_options(request->srcml_arch) & SRCML_OPTION_HASH) {
+        if (!request->disk_filename && srcml_archive_get_options(srcml_arch) & SRCML_OPTION_HASH) {
 
 #ifdef _MSC_BUILD
             unsigned char md[20];
@@ -100,20 +132,23 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
                 "Wrong size for SHA_DIGEST_LENGTH conversion");
 #endif
 
-            fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, outmd);
+//            fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, outmd);
             
             srcml_unit_set_hash(unit, outmd);
         }
 
-        // parse the buffer/file
-        status = request->disk_filename ?
-                                    srcml_parse_unit_filename(unit, request->disk_filename->c_str()) :
-                                    srcml_parse_unit_memory(unit, &request->buffer.front(), request->buffer.size());
+        // parse the buffer/file (unless it is already form a srcml archive)
+        if (request->disk_filename)
+            status = srcml_parse_unit_filename(unit, request->disk_filename->c_str());
+        else if (!request->unit)
+            status = srcml_parse_unit_memory(unit, &request->buffer.front(), request->buffer.size());
+
         if (status != SRCML_STATUS_OK)
+            // FIXME: Cannot throw exception from thread
             throw status;
 
     } catch (...) {
-        std::cerr << "Error in constructing srcml\n";
+        fprintf(stderr, "Error in constructing srcml\n");
         if (unit)
             srcml_free_unit(unit);
         unit = 0;

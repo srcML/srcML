@@ -27,12 +27,7 @@
 #include <src_output_libarchive.hpp>
 #include <src_output_filesystem.hpp>
 
-struct srcMLReadArchiveError {
-    srcMLReadArchiveError(int status, const std::string& emsg)
-        : status(status), errmsg(emsg) {}
-    int status;
-    std::string errmsg;
-};
+
 
 class srcMLReadArchive {
 public:
@@ -42,13 +37,7 @@ public:
         if (!arch)
             throw srcMLReadArchiveError(0, input_source);
 
-        int status;
-        if (contains<int>(input_source))
-            status = srcml_read_open_fd(arch, input_source);
-        else if (contains<FILE*>(input_source))
-            status = srcml_read_open_FILE(arch, input_source);
-        else
-            status = srcml_read_open_filename(arch, input_source.c_str());
+        int status = srcml_read_open(arch, input_source);
         if (status != SRCML_STATUS_OK)
             throw status;
     }
@@ -76,7 +65,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             // srcml->src extract all archives to the filesystem
 
-            TraceLog log(std::cerr, *srcml_request.markup_options);
+            TraceLog log(*srcml_request.markup_options);
 
             BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
                 srcMLReadArchive arch(input_source);

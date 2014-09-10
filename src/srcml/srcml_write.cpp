@@ -26,6 +26,7 @@
 #include <iostream>
 #include <srcml_options.hpp>
 #include <trace_log.hpp>
+#include <srcml_cli.hpp>
 
 // Public consumption thread function
 void srcml_write_request(ParseRequest* request, TraceLog& log) {
@@ -34,14 +35,28 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
         return;
 
     bool isarchive = (srcml_archive_get_options(request->srcml_arch) & SRCML_OPTION_ARCHIVE) != 0;
+    isarchive = 1; //Print output for all processed files 
 
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
 
         srcml_write_unit(request->srcml_arch, request->unit);
 
-        if (isarchive)
-            log << 'a' << (request->filename ? *request->filename : "");
+        if (isarchive) {
+            std::string s = request->filename ? *request->filename : "";
+            s += "\t";
+            s += request->language;
+            s += "\t";
+
+            char str[5] = { 0 };
+            sprintf(str,"%ld", request->loc);
+
+            s += str;
+            s += "\t";
+            s += "HASH";
+
+            log << 'a' << s;
+        }
 
     } else if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
 
@@ -55,9 +70,15 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
     }
 
     // free the unit
-    if (request->unit)
+    if (request->unit) {
         srcml_free_unit(request->unit);
-    request->unit = 0;
+
+        // close the archive (if per-unit)
+        if (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) {
+            srcml_close_archive(request->srcml_arch);
+            srcml_free_archive(request->srcml_arch);
+        }
+    }
 
     delete request;
     request = 0;
