@@ -321,10 +321,6 @@ public :
 
                     onode = result_nodes->nodesetval->nodeTab[i];
 
-                    xmlAttrPtr last_attr = onode->properties;
-
-                    for(; last_attr && last_attr->next; last_attr = last_attr->next)
-                        ;
 
                     xmlAttrPtr result_attr = (xmlAttrPtr)xmlMalloc((sizeof(xmlAttr)));
                     memset(result_attr, 0, sizeof(xmlAttr));
@@ -335,7 +331,12 @@ public :
                     result_attr->children = attr_value_node;
 
                     result_attr->parent = onode;
+
+                    xmlAttrPtr last_attr = onode->properties;
+                    for(; last_attr && last_attr->next; last_attr = last_attr->next)
+                        ;
                     result_attr->prev = last_attr;
+
                     result_attr->doc = onode->doc;
                     xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
                     memset(result_attr, 0, sizeof(xmlNs));                    
@@ -350,222 +351,228 @@ public :
 
                 }
 
-            } else if (needroot /*&& !isoption(options, SRCML_OPTION_APPLY_ROOT)*/) {
+                xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
 
-                // xml declaration
-                if (isoption(options, SRCML_OPTION_XML_DECL))
-                    xml_output_buffer_write_xml_decl(ctxt, buf);
+            } else {
 
-                xml_output_buffer_write_processing_instruction(buf, processing_instruction);
+                if (needroot /*&& !isoption(options, SRCML_OPTION_APPLY_ROOT)*/) {
 
-                // output a root element, just like the one read in
-                // note that this has to be ended somewhere
-                xml_output_buffer_write_element_ns(buf, root->localname, root->prefix, root->URI,
-                                                   root->nb_namespaces, root->namespaces,
-                                                   is_archive ? root->nb_attributes : 0, root->nb_defaulted, is_archive ? root->attributes : 0);
+                    // xml declaration
+                    if (isoption(options, SRCML_OPTION_XML_DECL))
+                        xml_output_buffer_write_xml_decl(ctxt, buf);
 
-                closetag = true;
+                    xml_output_buffer_write_processing_instruction(buf, processing_instruction);
 
-                if(meta_tags->size()) {
+                    // output a root element, just like the one read in
+                    // note that this has to be ended somewhere
+                    xml_output_buffer_write_element_ns(buf, root->localname, root->prefix, root->URI,
+                                                       root->nb_namespaces, root->namespaces,
+                                                       is_archive ? root->nb_attributes : 0, root->nb_defaulted, is_archive ? root->attributes : 0);
 
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
-                    for(std::vector<std::string>::size_type i = 0; i < meta_tags->size(); ++i) {
-                        xml_output_buffer_write_element_ns(buf, meta_tags->at(i).localname, meta_tags->at(i).prefix, meta_tags->at(i).URI,
-                                                           meta_tags->at(i).nb_namespaces, meta_tags->at(i).namespaces,
-                                                           meta_tags->at(i).nb_attributes, meta_tags->at(i).nb_defaulted, meta_tags->at(i).attributes);
+                    closetag = true;
 
+                    if(meta_tags->size()) {
+
+                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
+                        for(std::vector<std::string>::size_type i = 0; i < meta_tags->size(); ++i) {
+                            xml_output_buffer_write_element_ns(buf, meta_tags->at(i).localname, meta_tags->at(i).prefix, meta_tags->at(i).URI,
+                                                               meta_tags->at(i).nb_namespaces, meta_tags->at(i).namespaces,
+                                                               meta_tags->at(i).nb_attributes, meta_tags->at(i).nb_defaulted, meta_tags->at(i).attributes);
+
+                            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
+
+                        }
+
+
+                    }
+
+                }
+                needroot = false;
+
+                // may not have any values or results
+                result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
+                if (isoption(options, SRCML_OPTION_APPLY_ROOT) && result_size == 0) {
+
+                    if(meta_tags->size())
+                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
+                    else
                         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
-                    }
-
-
                 }
 
-            }
-            needroot = false;
+                if (result_size == 0)
+                    break;
 
-            // may not have any values or results
-            result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
-            if (isoption(options, SRCML_OPTION_APPLY_ROOT) && result_size == 0) {
+                // opened the root start element before, now need to close it.
+                // why not do this when it is started?  May not have any results, and
+                // need an empty element
+                if (closetag) {
+                    if(meta_tags->size())
+                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+                    else
+                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
 
-                if(meta_tags->size())
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
-                else
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
+                    closetag = false;
+                }
 
-            }
+                found = true;
 
-            if (result_size == 0)
-                break;
+                // output all the found nodes
+                for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
-            // opened the root start element before, now need to close it.
-            // why not do this when it is started?  May not have any results, and
-            // need an empty element
-            if (closetag) {
-                if(meta_tags->size())
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
-                else
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
+                    // index into results
+                    onode = result_nodes->nodesetval->nodeTab[i];
 
-                closetag = false;
-            }
+                    // output a unit element around the fragment, unless
+                    // is is already a unit
+                    outputunit = !onode->name || strcmp("unit", (const char*) onode->name) != 0;
 
-            found = true;
+                    // if we need a unit, output the start tag.  Line number starts at 1, not 0
+                    if (outputunit) {
 
-            // output all the found nodes
-            for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
+                        // form text for wrapping unit.  Cached in a string since we may need it for
+                        // each result
+                        if (wrap == "") {
 
-                // index into results
-                onode = result_nodes->nodesetval->nodeTab[i];
+                            // output a wrapping element, just like the one read in
+                            // note that this has to be ended somewhere
+                            xml_output_buffer_write_element_ns(wrap, root->localname, root->prefix, root->URI,
+                                                               (int)((data.size() - rootsize) / 2), &data[rootsize],
+                                                               0, 0, 0);
 
-                // output a unit element around the fragment, unless
-                // is is already a unit
-                outputunit = !onode->name || strcmp("unit", (const char*) onode->name) != 0;
+                            // output all the current attributes from the individual unit
+                            for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next) {
 
-                // if we need a unit, output the start tag.  Line number starts at 1, not 0
-                if (outputunit) {
+                                wrap.append(LITERALPLUSSIZE(" "));
+                                if (pAttr->ns && pAttr->ns->prefix) {
+                                    wrap.append((const char*) pAttr->ns->prefix);
+                                    wrap.append(LITERALPLUSSIZE(":"));
+                                }
+                                wrap.append((const char*) pAttr->name);
+                                wrap.append(LITERALPLUSSIZE("=\""));
 
-                    // form text for wrapping unit.  Cached in a string since we may need it for
-                    // each result
-                    if (wrap == "") {
+                                for (xmlNodePtr child = pAttr->children; child; child = child->next)
+                                    wrap.append((const char*) child->content);
 
-                        // output a wrapping element, just like the one read in
-                        // note that this has to be ended somewhere
-                        xml_output_buffer_write_element_ns(wrap, root->localname, root->prefix, root->URI,
-                                                           (int)((data.size() - rootsize) / 2), &data[rootsize],
-                                                           0, 0, 0);
-
-                        // output all the current attributes from the individual unit
-                        for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next) {
-
-                            wrap.append(LITERALPLUSSIZE(" "));
-                            if (pAttr->ns && pAttr->ns->prefix) {
-                                wrap.append((const char*) pAttr->ns->prefix);
-                                wrap.append(LITERALPLUSSIZE(":"));
+                                wrap.append(LITERALPLUSSIZE("\""));
                             }
-                            wrap.append((const char*) pAttr->name);
-                            wrap.append(LITERALPLUSSIZE("=\""));
 
-                            for (xmlNodePtr child = pAttr->children; child; child = child->next)
-                                wrap.append((const char*) child->content);
+                            wrap.append(LITERALPLUSSIZE(" item=\""));
 
-                            wrap.append(LITERALPLUSSIZE("\""));
                         }
 
-                        wrap.append(LITERALPLUSSIZE(" item=\""));
+                        // output the start of the wrapping unit
+                        xmlOutputBufferWrite(buf, (int)wrap.size(), wrap.c_str());
 
+                        // append line number and close unit start tag
+                        const int MAXSSIZE = 50;
+                        static char itoabuf[MAXSSIZE];
+                        snprintf(itoabuf, MAXSSIZE, "%d", i + 1);
+                        xmlOutputBufferWriteString(buf, itoabuf);
+                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+
+                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" "));
+                        xmlOutputBufferWrite(buf, (int)strlen(simple_xpath_attribute_name), simple_xpath_attribute_name);
+                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
+                        std::string simple_xpath = form_simple_xpath(onode);
+                        xmlOutputBufferWriteString(buf, simple_xpath.c_str());
+                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\">"));
                     }
 
-                    // output the start of the wrapping unit
-                    xmlOutputBufferWrite(buf, (int)wrap.size(), wrap.c_str());
+                    /*
+                      Three possibilities:
 
-                    // append line number and close unit start tag
-                    const int MAXSSIZE = 50;
-                    static char itoabuf[MAXSSIZE];
-                    snprintf(itoabuf, MAXSSIZE, "%d", i + 1);
-                    xmlOutputBufferWriteString(buf, itoabuf);
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+                      - Input was an archive, and XPath result is a unit
+                      Resulting namespaces are those that were on the original unit
 
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" "));
-                    xmlOutputBufferWrite(buf, (int)strlen(simple_xpath_attribute_name), simple_xpath_attribute_name);
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
-                    std::string simple_xpath = form_simple_xpath(onode);
-                    xmlOutputBufferWriteString(buf, simple_xpath.c_str());
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\">"));
-                }
+                      - Input was not an archive, and XPath result is a unit
+                      Need to split the name
 
-                /*
-                  Three possibilities:
+                      - XPath result was a node, but not a unit
+                    */
 
-                  - Input was an archive, and XPath result is a unit
-                  Resulting namespaces are those that were on the original unit
+                    // input was an archive, xpath result is a unit
+                    if (onode->type == XML_ELEMENT_NODE && is_archive && !outputunit) {
 
-                  - Input was not an archive, and XPath result is a unit
-                  Need to split the name
-
-                  - XPath result was a node, but not a unit
-                */
-
-                // input was an archive, xpath result is a unit
-                if (onode->type == XML_ELEMENT_NODE && is_archive && !outputunit) {
-
-                    // create a new list of namespaces
-                    // skip over the namespaces on the root
-                    xmlNsPtr savens = onode->nsDef;
-                    if(!isoption(options, SRCML_OPTION_APPLY_ROOT)) {
-                        onode->nsDef = savens;
-                        for (std::vector<const xmlChar*>::size_type i = 0; i < unit_dom::rootsize / 2; ++i)
-                            onode->nsDef = onode->nsDef->next;
-                    }
-                    // dump the namespace-modified tree
-                    xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
-
-                    // restore original namespaces
-                    onode->nsDef = savens;
-
-                    // space between internal units
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
-
-                } else if (onode->type == XML_ELEMENT_NODE && !is_archive && !outputunit) {
-
-                    // input was not an archive, xpath result is a unit
-
-                    // namespace list only need the cpp namespace, if it exists
-                    if(!isoption(options, SRCML_OPTION_APPLY_ROOT)) {
+                        // create a new list of namespaces
+                        // skip over the namespaces on the root
                         xmlNsPtr savens = onode->nsDef;
-                        for (onode->nsDef = savens; onode->nsDef; onode->nsDef = onode->nsDef->next)
-                            if (strcmp((const char*) onode->nsDef->href, SRCML_CPP_NS_URI) == 0)
-                                break;
-
-                        // if we found it, then
-                        xmlNsPtr keepcppnext = 0;
-                        if (onode->nsDef) {
-                            keepcppnext = onode->nsDef->next;
-                            onode->nsDef->next = 0;
+                        if(!isoption(options, SRCML_OPTION_APPLY_ROOT)) {
+                            onode->nsDef = savens;
+                            for (std::vector<const xmlChar*>::size_type i = 0; i < unit_dom::rootsize / 2; ++i)
+                                onode->nsDef = onode->nsDef->next;
                         }
-
                         // dump the namespace-modified tree
                         xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
 
                         // restore original namespaces
-                        if (onode->nsDef)
-                            onode->nsDef->next = keepcppnext;
                         onode->nsDef = savens;
 
                         // space between internal units
                         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
+                    } else if (onode->type == XML_ELEMENT_NODE && !is_archive && !outputunit) {
+
+                        // input was not an archive, xpath result is a unit
+
+                        // namespace list only need the cpp namespace, if it exists
+                        if(!isoption(options, SRCML_OPTION_APPLY_ROOT)) {
+                            xmlNsPtr savens = onode->nsDef;
+                            for (onode->nsDef = savens; onode->nsDef; onode->nsDef = onode->nsDef->next)
+                                if (strcmp((const char*) onode->nsDef->href, SRCML_CPP_NS_URI) == 0)
+                                    break;
+
+                            // if we found it, then
+                            xmlNsPtr keepcppnext = 0;
+                            if (onode->nsDef) {
+                                keepcppnext = onode->nsDef->next;
+                                onode->nsDef->next = 0;
+                            }
+
+                            // dump the namespace-modified tree
+                            xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
+
+                            // restore original namespaces
+                            if (onode->nsDef)
+                                onode->nsDef->next = keepcppnext;
+                            onode->nsDef = savens;
+
+                            // space between internal units
+                            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+
+                        } else {
+
+                            // dump the namespace-modified tree
+                            xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
+
+                            // space between internal units
+                            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+
+                        }
+
+
+                    } else if (onode->type == XML_ATTRIBUTE_NODE) {
+
+                        // xpath of attribute is value of attribute
+
+                        // dump the namespace-modified tree
+                        xmlNodeDumpOutput(buf, ctxt->myDoc, onode->children, 0, 0, 0);
+
+                        // wrapped in a unit, so output the end tag
+                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n\n"));
+
                     } else {
+
+                        // xpath of nodeset, that is not a unit
 
                         // dump the namespace-modified tree
                         xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
 
-                        // space between internal units
-                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
-
+                        // wrapped in a unit, so output the end tag
+                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n\n"));
                     }
-
-
-                } else if (onode->type == XML_ATTRIBUTE_NODE) {
-
-                    // xpath of attribute is value of attribute
-
-                    // dump the namespace-modified tree
-                    xmlNodeDumpOutput(buf, ctxt->myDoc, onode->children, 0, 0, 0);
-
-                    // wrapped in a unit, so output the end tag
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n\n"));
-
-                } else {
-
-                    // xpath of nodeset, that is not a unit
-
-                    // dump the namespace-modified tree
-                    xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
-
-                    // wrapped in a unit, so output the end tag
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n\n"));
                 }
+
             }
 
             break;
