@@ -34,10 +34,14 @@ machines = [
  , '"Mac OS X Mountain Lion Test"'
  , '"Mac OS X Mavericks Build"'
  , '"Mac OS X Mavericks Test"'
- , '"Mint Linux 16 Build"'
- , '"Mint Linux 16 Test"'
- , '"Mint Linux 16 Build (64-bit)"'
- , '"Mint Linux 16 Test (64-bit)"'
+ , '"Mint Linux 13 Build"'
+ , '"Mint Linux 13 Test"'
+ , '"Mint Linux 13 Build (64-bit)"'
+ , '"Mint Linux 13 Test (64-bit)"'
+ , '"Mint Linux 17 Build"'
+ , '"Mint Linux 17 Test"'
+ , '"Mint Linux 17 Build (64-bit)"'
+ , '"Mint Linux 17 Test (64-bit)"'
 ]
 
 options = []

@@ -34,10 +34,14 @@ machines = [
     , "macmountainliontest"
     , "macmavericksbuild"
     , "macmaverickstest"
-    , "mint16build"
-    , "mint16test"
-    , "mint16build64"
-    , "mint16test64"
+    , "mint13build"
+    , "mint13test"
+    , "mint13build64"
+    , "mint13test64"
+    , "mint17build"
+    , "mint17test"
+    , "mint17build64"
+    , "mint17test64"
 ]
 
 options = []
