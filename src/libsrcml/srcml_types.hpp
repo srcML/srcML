@@ -63,7 +63,7 @@ class srcml_translator;
  *
  * Transformation types, xpath, xslt, and relaxng
  */
-enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XPATH_ATTRIBUTE, SRCML_XSLT, SRCML_RELAXNG };
+enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
 
 /**
  * xpath_arguments

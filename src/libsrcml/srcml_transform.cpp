@@ -90,7 +90,7 @@ int srcml_append_transform_xpath_attribute (struct srcml_archive* archive, const
 
     struct xpath_arguments arguments = { xpath_string, prefix, namespace_uri, attr_name, attr_value };
 
-    transform tran = { SRCML_XPATH_ATTRIBUTE, std::vector<const char *>(1, (const char *)0), arguments, 0 };
+    transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -444,6 +444,8 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
                 error = srcml_xpath(pinput, "src:unit",
                                     iarchive->transformations.at(i).arguments.str,
+                                    iarchive->transformations.at(i).arguments.prefix, iarchive->transformations.at(i).arguments.uri,
+                                    iarchive->transformations.at(i).arguments.attr_name, iarchive->transformations.at(i).arguments.attr_value,
                                     transform_fd, oarchive->options);
                 break;
             }
