@@ -434,7 +434,10 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
                 <Ref name="elseif" />
                 <Ref name="emptyStmt" />
                 <Ref name="exprStmt" />
-                <Ref name="enum" />
+                <Ref name="CEnum" />
+                <Ref name="CPlusPlusEnum"/>
+                <Ref name="CSharpEnum"/>
+                <Ref name="JavaEnum"/>
                 <Ref name="enumClass" />
                 <Ref name="event" />
                 <Ref name="externBlock" />
@@ -1494,7 +1497,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         </Def>
     </TagRule>
     
-    <TagRule name="javaEnumBlock" lang="Java">
+    <TagRule name="JavaEnumBlock" lang="Java">
         <Tag elem="block"/>
         <Def>
             <Optional>
@@ -2356,7 +2359,9 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
                     <Literal value="@interface" />
                 </Tag>
             </Choice>
-            <Ref name="simpleName"/>
+            <Optional>
+                <Ref name="simpleName"/>
+            </Optional>
             <Optional><Ref name="javaSuper"/></Optional>
 
             <Ref name="block" />
@@ -2394,30 +2399,81 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
     </TagRule>
     
     <!-- src:enum -->
-    <TagRule name="enum" lang="C,C++,C#,Java">
+    <TagRule name="CEnum" lang="C,C++,C#,Java">
+        <Tag elem="enum" />
+        <Def>
+            <Literal value="enum"/>
+            <Optional>
+                <Ref name="name"/>
+            </Optional>
+            <Optional>
+                    <Ref name="enumBlock"/>
+            </Optional>
+            <Optional>
+                <Ref name="decl"/>
+            </Optional>
+            <Optional>
+                <Literal value=";"/>
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    <TagRule name="CPlusPlusEnum" lang="C++">
         <Tag elem="enum" />
         <Def>
             <ZeroOrMore>
-                <Choice>
-                    <Ref name="specifier"/>
-                    <Ref name="annotation"/>
-                    <Ref name="CSharpAttribute"/>
                     <Ref name="CPlusPlusAttribute"/>
-                </Choice>
             </ZeroOrMore>
             <Literal value="enum"/>
-            <Ref name="name"/>
             <Optional>
-                <Ref name="super"/>
+                <Ref name="name"/>
             </Optional>
             <Optional>
                 <Choice>
                     <Ref name="enumBlock"/>
-                    <Ref name="javaEnumBlock"/>
                 </Choice>
             </Optional>
             <Optional>
+                <Ref name="decl"/>
+            </Optional>
+            <Optional>
                 <Literal value=";"/>
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    <TagRule name="CSharpEnum" lang="C#">
+        <Tag elem="enum" />
+        <Def>
+            <ZeroOrMore>
+                <Ref name="CSharpAttribute"/>
+            </ZeroOrMore>
+            <Literal value="enum"/>
+            <Optional>
+                <Ref name="name"/>
+            </Optional>
+            <Optional>
+                <Choice>
+                    <Ref name="enumBlock"/>
+                </Choice>
+            </Optional>
+        </Def>
+    </TagRule>
+    
+    <TagRule name="JavaEnum" lang="Java">
+        <Tag elem="enum" />
+        <Def>
+            <ZeroOrMore>
+                <Ref name="annotation"/>
+            </ZeroOrMore>
+            <Literal value="enum"/>
+            <Optional>
+                <Ref name="name"/>
+            </Optional>
+            <Optional>
+                <Choice>
+                    <Ref name="JavaEnumBlock"/>
+                </Choice>
             </Optional>
         </Def>
     </TagRule>
@@ -2439,7 +2495,13 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
                 <Ref name="name"/>
             </Optional>
             <Optional>
+                <Ref name="super"/>
+            </Optional>
+            <Optional>
                 <Ref name="enumBlock" />
+            </Optional>
+            <Optional>
+                <Ref name="decl"/>
             </Optional>
             <Optional>
                 <Literal value=";"/>
@@ -2465,6 +2527,9 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
             </Optional>
             <Ref name="block" />
             <Optional>
+                <Ref name="decl"/>
+            </Optional>
+            <Optional>
                 <Literal value=";"/>
             </Optional>
         </Def>
@@ -2484,6 +2549,9 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
                 <Ref name="name"/>
             </Optional>
             <Ref name="CPlusPlusStructBodyBlock" />
+            <Optional>
+                <Ref name="decl"/>
+            </Optional>
             <Optional>
                 <Literal value=";"/>
             </Optional>
@@ -2524,6 +2592,9 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
             </Optional>
             <Ref name="block"/>
             <Optional>
+                <Ref name="decl"/>
+            </Optional>
+            <Optional>
                 <Literal value=";"/>
             </Optional>
         </Def>
@@ -2543,6 +2614,9 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
                 <Ref name="name"/>
             </Optional>
             <Ref name="CPlusPlusStructBodyBlock"/>
+            <Optional>
+                <Ref name="decl"/>
+            </Optional>
             <Optional>
                 <Literal value=";"/>
             </Optional>
@@ -3281,9 +3355,11 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
                 <Ref name="block"/>
             </Optional>
             <ZeroOrMore>
-                <Ref name="catch" />
-                <Ref name="multiTypeCatch" />
-                <Ref name="finally"/>
+                <Choice>
+                    <Ref name="catch" />
+                    <Ref name="multiTypeCatch" />
+                    <Ref name="finally"/>
+                </Choice>
             </ZeroOrMore>
         </Def>
     </TagRule>
@@ -3725,6 +3801,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
                 <Literal value="null"/>
                 <Literal value="number"/>
                 <Literal value="string"/>
+                <Literal value="complex"/>
             </Choice>
         </Def>
     </AttrRule>
