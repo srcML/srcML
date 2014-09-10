@@ -404,6 +404,13 @@ __LIBSRCML_DECL int srcml_unparse_unit_io      (struct srcml_unit*, void * conte
 /* srcML XPath query and XSLT transform functions */
 __LIBSRCML_DECL int srcml_clear_transforms                 (struct srcml_archive*);
 __LIBSRCML_DECL int srcml_append_transform_xpath           (struct srcml_archive*, const char* xpath_string);
+__LIBSRCML_DECL int srcml_append_transform_xpath_attribute (struct srcml_archive*, const char* xpath_string,
+                                                            const char* prefix, const char* namespace_uri,
+                                                            const char* attr_name, const char* attr_value);
+__LIBSRCML_DECL int srcml_append_transform_xpath_element   (struct srcml_archive*, const char* xpath_string,
+                                                            const char* prefix, const char* namespace_uri,
+                                                            const char* attr_name, const char* attr_value,
+                                                            const char* element);
 __LIBSRCML_DECL int srcml_append_transform_xslt_filename   (struct srcml_archive*, const char* xslt_filename);
 __LIBSRCML_DECL int srcml_append_transform_xslt_memory     (struct srcml_archive*, const char* xslt_buffer, size_t size);
 __LIBSRCML_DECL int srcml_append_transform_xslt_FILE       (struct srcml_archive*, FILE* xslt_file);
