@@ -26,21 +26,21 @@ define input <<- 'INPUT'
 
 define file1 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:lc="http://www.sdml.info/srcML/linecol" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="sub" mytag="foo" filename="a.cpp">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="C" dir="sub" filename="a.cpp" mytag="foo">
 	<expr_stmt lc:line="1"><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT
 
 define file2 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:lc="http://www.sdml.info/srcML/linecol" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="sub" mytag="foo" filename="b.cpp">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="Java" dir="sub" filename="b.cpp" mytag="foo">
 	<expr_stmt lc:line="1"><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT
 
 define file3 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:lc="http://www.sdml.info/srcML/linecol" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" mytag="foo" filename="c.cpp">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="C++" dir="sub" filename="c.cpp" mytag="foo">
 	<expr_stmt lc:line="1"><expr><name>c</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT

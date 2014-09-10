@@ -105,7 +105,6 @@ int main(int argc, char * argv[]) {
 
     // srcml->metadata
     if (request_display_metadata(srcml_request, input_sources, destination)) {
-
         pipeline.push_back(srcml_display_metadata);
     }
     
@@ -157,7 +156,7 @@ bool request_display_metadata(const srcml_request_t& srcml_request,
                               const srcml_input_t& /* input_sources */,
                               const srcml_output_dest& /* destination */) {
 
-    return (srcml_request.command & SRCML_COMMAND_INSRCML) /* || srcml_request.unit > 0 */;
+    return (srcml_request.command & SRCML_COMMAND_INSRCML || srcml_request.xmlns_prefix_query);
 }
 
 bool request_additional_compression(const srcml_request_t& /* srcml_request */,
