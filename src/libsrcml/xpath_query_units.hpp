@@ -321,14 +321,14 @@ public :
 
                     onode = result_nodes->nodesetval->nodeTab[i];
 
-
                     xmlAttrPtr result_attr = (xmlAttrPtr)xmlMalloc((sizeof(xmlAttr)));
                     memset(result_attr, 0, sizeof(xmlAttr));
                     result_attr->type = XML_ATTRIBUTE_NODE;
-                    result_attr->name = (const xmlChar *)attr_name;
-                    xmlNodePtr attr_value_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
-                    memset(attr_value_node, 0, sizeof(xmlNode));                    
-                    result_attr->children = attr_value_node;
+                    result_attr->name = (const xmlChar *)strdup(attr_name);
+                    // xmlNodePtr attr_value_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
+                    // memset(attr_value_node, 0, sizeof(xmlNode));                    
+                    // attr_value_node->content = (xmlChar *)attr_value;
+                    // result_attr->children = attr_value_node;
 
                     result_attr->parent = onode;
 
@@ -339,7 +339,7 @@ public :
 
                     result_attr->doc = onode->doc;
                     xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
-                    memset(result_attr, 0, sizeof(xmlNs));                    
+                    memset(ns, 0, sizeof(xmlNs));                    
                     ns->href = (const xmlChar *)uri;
                     ns->prefix = (const xmlChar *)prefix;
                     result_attr->ns = ns;
