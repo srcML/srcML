@@ -24,6 +24,7 @@
 #include <src_prefix.hpp>
 #include <boost/program_options.hpp>
 #include <boost/foreach.hpp>
+#include <stdlib.h>
 
 namespace prog_opts = boost::program_options;
 
@@ -426,9 +427,15 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 #endif
 
     }
+    // Unknown Option
+    catch(boost::program_options::error_with_no_option_name& e) {
+      std::cerr << "srcML: " << e.what() << "\n";
+      exit(3);
+    }
+    // Catch all other issues with generic error
     catch(std::exception& e) {
-        std::cerr << e.what() << "\n";
-        exit(1);
+        std::cerr << "srcML: " << e.what() << "\n";
+        std::exit(1);
     }
     
     return srcml_request;

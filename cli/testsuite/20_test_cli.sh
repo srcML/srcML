@@ -6,7 +6,7 @@ source $(dirname "$0")/framework_test.sh
 # test invalid_input
 
 # unknown file
-src2srcml -l C++ foobar
+#src2srcml -l C++ foobar
 
 #sd inputflename
 #src2srcml sub/a.cpp" -o sub/a.cpp None) 2)
