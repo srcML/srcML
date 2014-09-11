@@ -342,10 +342,13 @@ public :
                     xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
 
                     // may need to add to nsDef as well
-                    memset(ns, 0, sizeof(xmlNs));                    
-                    ns->href = (const xmlChar *)uri;
-                    ns->prefix = (const xmlChar *)prefix;
+                    memset(ns, 0, sizeof(xmlNs));
+                    ns->type = XML_NAMESPACE_DECL;
+                    ns->href = (const xmlChar *)strdup(uri);
+                    ns->prefix = (const xmlChar *)strdup(prefix);
                     result_attr->ns = ns;
+
+                    onode->nsDef = ns;
 
                     if(last_attr)
                         last_attr->next = result_attr;
