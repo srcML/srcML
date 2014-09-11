@@ -428,9 +428,14 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
     }
     // Unknown Option
-    catch(boost::program_options::error_with_no_option_name& e) {
-      std::cerr << "srcML: " << e.what() << "\n";
-      exit(3);
+    catch(boost::program_options::unknown_option& e) {
+        std::cerr << "srcML: " << e.what() << "\n";
+        exit(3);
+    }
+    // Missing Option Value
+    catch(boost::program_options::error_with_option_name& e) {
+        std::cerr << "srcML: " << e.what() << "\n";
+        exit(7);
     }
     // Catch all other issues with generic error
     catch(std::exception& e) {
