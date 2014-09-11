@@ -97,6 +97,36 @@ int srcml_append_transform_xpath_attribute (struct srcml_archive* archive, const
 }
 
 /**
+ * srcml_append_transform_xpath_element
+ * @param archive a srcml archive
+ * @param xpath_string an XPath expression
+ * @param prefix the element prefix
+ * @param namespace_uri the element namespace
+ * @param element the element name
+ *
+ * Append the XPath expression to the list
+ * of transformation/queries.  As of yet no way to specify context.
+ * Instead of outputting the results each in a separte unit tag.  Output the complete
+ * archive marking the xpath results with a user provided element.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
+ */
+// int srcml_append_transform_xpath_element (struct srcml_archive* archive, const char* xpath_string,
+//                                                             const char* prefix, const char* namespace_uri,
+//                                                             const char* element) {
+
+//     if(archive == NULL || xpath_string == 0 || attr_name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+//     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+//     //struct xpath_arguments arguments = { xpath_string, prefix, namespace_uri, attr_name, attr_value };
+
+//     transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
+//     archive->transformations.push_back(tran);
+
+//     return SRCML_STATUS_OK;
+// }
+
+/**
  * srcml_append_transform_xslt_filename
  * @param archive a srcml_archive
  * @param xslt_filename an XSLT program filename path
