@@ -315,6 +315,69 @@ public :
             // node set result
         case XPATH_NODESET:
 
+            if (needroot /*&& !isoption(options, SRCML_OPTION_APPLY_ROOT)*/) {
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+                // xml declaration
+                if (isoption(options, SRCML_OPTION_XML_DECL))
+                    xml_output_buffer_write_xml_decl(ctxt, buf);
+
+                xml_output_buffer_write_processing_instruction(buf, processing_instruction);
+
+                // output a root element, just like the one read in
+                // note that this has to be ended somewhere
+                xml_output_buffer_write_element_ns(buf, root->localname, root->prefix, root->URI,
+                                                   root->nb_namespaces, root->namespaces,
+                                                   is_archive ? root->nb_attributes : 0, root->nb_defaulted, is_archive ? root->attributes : 0);
+
+                closetag = true;
+
+                if(meta_tags->size()) {
+
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
+                    for(std::vector<std::string>::size_type i = 0; i < meta_tags->size(); ++i) {
+                        xml_output_buffer_write_element_ns(buf, meta_tags->at(i).localname, meta_tags->at(i).prefix, meta_tags->at(i).URI,
+                                                           meta_tags->at(i).nb_namespaces, meta_tags->at(i).namespaces,
+                                                           meta_tags->at(i).nb_attributes, meta_tags->at(i).nb_defaulted, meta_tags->at(i).attributes);
+
+                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
+
+                    }
+
+
+                }
+
+            }
+            needroot = false;
+
+            // may not have any values or results
+            result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
+            fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, result_size);
+            if (isoption(options, SRCML_OPTION_APPLY_ROOT) && result_size == 0) {
+
+                if(meta_tags->size())
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
+                else
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
+
+            }
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+            if (result_size == 0)
+                break;
+
+            // opened the root start element before, now need to close it.
+            // why not do this when it is started?  May not have any results, and
+            // need an empty element
+            if (closetag) {
+                if(meta_tags->size())
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+                else
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
+
+                closetag = false;
+            }
+
+            found = true;
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
             if(attr_name) {
 
                 for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
@@ -360,68 +423,6 @@ public :
                 xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
 
             } else {
-
-                if (needroot /*&& !isoption(options, SRCML_OPTION_APPLY_ROOT)*/) {
-
-                    // xml declaration
-                    if (isoption(options, SRCML_OPTION_XML_DECL))
-                        xml_output_buffer_write_xml_decl(ctxt, buf);
-
-                    xml_output_buffer_write_processing_instruction(buf, processing_instruction);
-
-                    // output a root element, just like the one read in
-                    // note that this has to be ended somewhere
-                    xml_output_buffer_write_element_ns(buf, root->localname, root->prefix, root->URI,
-                                                       root->nb_namespaces, root->namespaces,
-                                                       is_archive ? root->nb_attributes : 0, root->nb_defaulted, is_archive ? root->attributes : 0);
-
-                    closetag = true;
-
-                    if(meta_tags->size()) {
-
-                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
-                        for(std::vector<std::string>::size_type i = 0; i < meta_tags->size(); ++i) {
-                            xml_output_buffer_write_element_ns(buf, meta_tags->at(i).localname, meta_tags->at(i).prefix, meta_tags->at(i).URI,
-                                                               meta_tags->at(i).nb_namespaces, meta_tags->at(i).namespaces,
-                                                               meta_tags->at(i).nb_attributes, meta_tags->at(i).nb_defaulted, meta_tags->at(i).attributes);
-
-                            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
-
-                        }
-
-
-                    }
-
-                }
-                needroot = false;
-
-                // may not have any values or results
-                result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
-                if (isoption(options, SRCML_OPTION_APPLY_ROOT) && result_size == 0) {
-
-                    if(meta_tags->size())
-                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
-                    else
-                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
-
-                }
-
-                if (result_size == 0)
-                    break;
-
-                // opened the root start element before, now need to close it.
-                // why not do this when it is started?  May not have any results, and
-                // need an empty element
-                if (closetag) {
-                    if(meta_tags->size())
-                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
-                    else
-                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
-
-                    closetag = false;
-                }
-
-                found = true;
 
                 // output all the found nodes
                 for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
