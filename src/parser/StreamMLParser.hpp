@@ -89,7 +89,7 @@ public:
     void startElement(int id) {
 
         srcMLParser::currentState().push(id);
-        pushSToken(id, true);
+        pushSTokenFlush(id);
     }
 
     /**
@@ -102,7 +102,7 @@ public:
     void startNoSkipElement(int id) {
 
         srcMLParser::currentState().push(id);
-        pushSToken(id, false);
+        pushSToken(id);
     }
 
     /**
@@ -114,7 +114,7 @@ public:
     void endElement(int id) {
 
         if((srcMLParser::getMode() & srcMLParser::MODE_ISSUE_EMPTY_AT_POP).any()) 
-            pushSToken(id, false);
+            pushSToken(id);
 
         pushEToken(id);
         srcMLParser::currentState().pop();
@@ -129,7 +129,7 @@ public:
     void emptyElement(int id) {
 
         // push a empty element token
-        pushToken(antlr::RefToken(EmptyTokenFactory(id)));
+        pushTokenFlush(antlr::RefToken(EmptyTokenFactory(id)));
     }
 
     /**
@@ -228,10 +228,16 @@ private:
      * Push the start token token onto the output token stream flushing skipped tokens before output
      * if requested.
      */
-    void pushSToken(int token, bool flush = true) {
+    void pushSToken(int token) {
 
         // push a new start token
-        pushToken(antlr::RefToken(StartTokenFactory(token)), flush);
+        pushToken(antlr::RefToken(StartTokenFactory(token)));
+    }
+
+    void pushSTokenFlush(int token) {
+
+        // push a new start token
+        pushTokenFlush(antlr::RefToken(StartTokenFactory(token)));
     }
 
     /**
@@ -244,7 +250,7 @@ private:
     void pushEToken(int token) {
 
         // push a new end token
-        pushToken(antlr::RefToken(EndTokenFactory(token)), false);
+        pushToken(antlr::RefToken(EndTokenFactory(token)));
     }
 
     /**
@@ -440,20 +446,34 @@ private:
     /**
      * pushToken
      * @param rtoken token to push onto output stream
-     * @param flush do we flush output (skip tokens) before rtoken
      *
-     * Push the token onto the output token stream flushing skip tokens if requested (default yes).
+     * Push the token onto the output token stream.
      */
-    void pushToken(const antlr::RefToken& rtoken, bool flush = true) {
+    void pushToken(const antlr::RefToken& rtoken) {
+
+        // don't push any tokens during guessing stage
+        if (srcMLParser::inputState->guessing)
+            return;
+
+        // push the new token into the token buffer
+        output().push_back(rtoken);
+    }
+
+
+    /**
+     * pushTokenFlush
+     * @param rtoken token to push onto output stream
+     *
+     * Push the token onto the output token stream flushing skip tokens
+     */
+    void pushTokenFlush(const antlr::RefToken& rtoken) {
 
         // don't push any tokens during guessing stage
         if (srcMLParser::inputState->guessing)
             return;
 
         // if it isn't an end token flush whitespace tokens
-        if (flush) {
-            flushSkip(output());
-        }
+        flushSkip(output());
 
         // push the new token into the token buffer
         output().push_back(rtoken);
@@ -538,7 +558,7 @@ private:
      */
     void pushToken() {
 
-        pushToken(srcMLParser::LT(1));
+        pushTokenFlush(srcMLParser::LT(1));
     }
 
     /**

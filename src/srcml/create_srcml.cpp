@@ -85,9 +85,9 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str());
 
     // for single input src archives (e.g., .tar), filename attribute is the source filename (if not already given)
-    if (srcml_request.att_filename)
+    if (srcml_request.att_filename) {
         srcml_archive_set_filename(srcml_arch, srcml_request.att_filename->c_str());
-    else if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
+    } else if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
         srcml_archive_set_filename(srcml_arch, input_sources[0].filename.c_str());
     }
 
@@ -99,6 +99,11 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     if (srcml_request.markup_options)
         srcml_archive_set_options(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options);
+
+    if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL)
+        srcml_archive_disable_option(srcml_arch, SRCML_OPTION_XML_DECL);
+    else
+        srcml_archive_enable_option(srcml_arch, SRCML_OPTION_XML_DECL);
 
     if (srcml_request.att_language)
         srcml_archive_set_language(srcml_arch, srcml_request.att_language->c_str());
@@ -137,9 +142,15 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // create the srcML output file
     int status = 0;
-    if (contains<int>(destination)) {
+    if (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) {
+
+        /* when no archive, this one is just used as a clone, so just don't open it */
+
+    } else if (contains<int>(destination)) {
+
         status = srcml_write_open_fd(srcml_arch, *destination.fd);
     } else {
+
         status = srcml_write_open_filename(srcml_arch, destination.c_str());
     }
 
@@ -148,7 +159,8 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_COMPRESS);
 
     // setup the parsing queue
-    TraceLog log(std::cerr, SRCMLOptions::get());
+    TraceLog log(SRCMLOptions::get());
+    log.header();
     WriteQueue write_queue(boost::bind(srcml_write_request, _1, boost::ref(log)), srcml_request.command & SRCML_COMMAND_OUTPUT_ORDERED);
     ParseQueue parse_queue(srcml_request.max_threads, boost::bind(srcml_consume, _1, &write_queue));
 
@@ -169,6 +181,8 @@ return; // stdin was requested, but no data was received
     parse_queue.wait();
     write_queue.wait();
 
+    log.report();
+    
     // close the created srcML archive
     srcml_close_archive(srcml_arch);
     srcml_free_archive(srcml_arch);

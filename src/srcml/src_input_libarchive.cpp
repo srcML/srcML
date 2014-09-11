@@ -28,6 +28,7 @@
 #include <curl/curl.h>
 #include <archive.h>
 #include <archive_entry.h>
+#include <algorithm>
 
 namespace {
     struct curl {
@@ -47,14 +48,14 @@ namespace {
     ssize_t archive_curl_read(archive *, void *client_data, const void **buff);
     int     archive_curl_close(archive *, void *client_data);
 
-	bool curl_supported(const std::string& input_protocol) {
-	    const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
-	    for (int i = 0; curl_types[i] != NULL; ++i) {
-	        if (strcmp(curl_types[i], input_protocol.c_str()) == 0)
-	            return true;
-	    }
-	    return false;
-	}
+    bool curl_supported(const std::string& input_protocol) {
+        const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
+        for (int i = 0; curl_types[i] != NULL; ++i) {
+            if (strcmp(curl_types[i], input_protocol.c_str()) == 0)
+                return true;
+        }
+        return false;
+    }
 }
 
 
@@ -104,7 +105,7 @@ void src_input_libarchive(ParseQueue& queue,
 
         status = archive_read_open_FILE(arch, input_file);
 
-    } else if (curl_supported(input_file.protocol)) {
+    } else if (input_file.protocol != "file" && curl_supported(input_file.protocol)) {
 
         curling.source = input_file.filename;
         status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
@@ -157,6 +158,10 @@ void src_input_libarchive(ParseQueue& queue,
 
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;
+
+        if (srcml_request.command & SRCML_COMMAND_NOARCHIVE)
+            prequest->disk_dir = srcml_request.output_filename;
+
         if (srcml_request.att_filename || (filename != "-"))
             prequest->filename = filename;
         prequest->directory = srcml_request.att_directory;
@@ -180,6 +185,11 @@ void src_input_libarchive(ParseQueue& queue,
 #endif
             while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
                 prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
+
+            // LOC count
+            prequest->loc = std::count(prequest->buffer.begin(), prequest->buffer.end(), '\n');
+            if (!prequest->buffer.empty() && prequest->buffer.back() != '\n')
+                ++prequest->loc;
         }
 
         // schedule for parsing

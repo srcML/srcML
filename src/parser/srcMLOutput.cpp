@@ -622,17 +622,19 @@ void srcMLOutput::consume(const char* language, const char* directory, const cha
     unit_language = language;
     unit_hash = hash;
 
-    // consume all input until EOF
-    while (consume_next() != antlr::Token::EOF_TYPE) {
+    if (!isoption(options, SRCML_OPTION_INTERACTIVE)) {
 
-        // in interactive mode flush after each token is discovered
-        if (isoption(options, SRCML_OPTION_INTERACTIVE)) {
+        // consume all input until EOF
+        while (consume_next() != antlr::Token::EOF_TYPE) {}
+
+    } else {
+
+        // consume all input until EOF
+        while (consume_next() != antlr::Token::EOF_TYPE) {
+
+            // in interactive mode flush after each token is discovered
             xmlTextWriterFlush(xout);
-
-            //if(isoption(OPTION_TERMINATE)) break;
-
         }
-
     }
 }
 

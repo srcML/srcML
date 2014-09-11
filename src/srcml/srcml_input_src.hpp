@@ -32,6 +32,7 @@
 #include <algorithm>
 #include <src_archive.hpp>
 #include <boost/foreach.hpp>
+#include <archive.h>
 
 #ifdef WIN32
 #include <io.h>
@@ -50,8 +51,8 @@
  class srcml_input_src {
  public:
 
-    srcml_input_src() {}
-    srcml_input_src(const std::string& other) : state(INDETERMINATE), isdirectory(false) { 
+    srcml_input_src() : unit(0) {}
+    srcml_input_src(const std::string& other) : arch(0), state(INDETERMINATE), isdirectory(false), unit(0) { 
 
         filename = src_prefix_add_uri(other);
 
@@ -90,7 +91,7 @@
             fd = STDOUT_FILENO;
     }
 
-    srcml_input_src(const std::string& other, int fds) {
+    srcml_input_src(const std::string& other, int fds) : unit(0) {
 
         srcml_input_src s(other);
         s = fds;
@@ -98,7 +99,7 @@
         swap(s);
     }
 
-    srcml_input_src(int fds) {
+    srcml_input_src(int fds) : unit(0) {
 
         srcml_input_src s("-");
         s = fds;
@@ -128,6 +129,7 @@
         std::swap(extension, other.extension);
         std::swap(fileptr, other.fileptr);
         std::swap(fd, other.fd);
+        std::swap(arch, other.arch);
         std::swap(state, other.state);
         std::swap(compressions, other.compressions);
         std::swap(archives, other.archives);
@@ -141,10 +143,23 @@
     std::string extension;
     boost::optional<FILE*> fileptr;
     boost::optional<int> fd;
+    archive* arch;
     enum STATES state;
     std::list<std::string> compressions;
     std::list<std::string> archives;
     bool isdirectory;
+    int unit;
+};
+
+int srcml_read_callback(void* context, char * buffer, int len);
+
+int srcml_close_callback(void* context);
+
+struct srcMLReadArchiveError {
+    srcMLReadArchiveError(int status, const std::string& emsg)
+        : status(status), errmsg(emsg) {}
+    int status;
+    std::string errmsg;
 };
 
 template <typename T>
@@ -178,5 +193,7 @@ inline std::ostream& operator<<(std::ostream& out, const srcml_input_src& input)
 
     return out;
 }
+
+int srcml_read_open(srcml_archive* arch, const srcml_input_src& input_source);
 
 #endif

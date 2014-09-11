@@ -24,8 +24,10 @@
 #include <parse_queue.hpp>
 #include <srcml_input_src.hpp>
 #include <srcml.h>
- 
-void srcml_input_srcml(ParseQueue&,
+#include <srcml_options.hpp>
+#include <srcml_cli.hpp>
+
+void srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
                        const srcml_input_src& srcml_input) {
 
@@ -38,16 +40,38 @@ void srcml_input_srcml(ParseQueue&,
     else
         srcml_read_open_filename(srcml_input_archive, srcml_input.c_str());
 
-    // process each entry in the input srcml archive
-    while (srcml_unit* unit = srcml_read_unit(srcml_input_archive)) {
+    if (SRCML_COMMAND_XML & SRCMLOptions::get()) {
+        unsigned long long opts  = srcml_archive_get_options(srcml_input_archive);
+        srcml_archive_set_options(srcml_output_archive, opts);
+        srcml_archive_disable_option(srcml_output_archive, SRCML_OPTION_ARCHIVE);
+        int nsSize = srcml_archive_get_namespace_size(srcml_input_archive);
+        
+        for (int i = 0; i < nsSize; ++i) {
+            srcml_archive_register_namespace(srcml_output_archive,
+                srcml_archive_get_namespace_prefix(srcml_input_archive, i),
+                srcml_archive_get_namespace_uri(srcml_input_archive, i));
+        }
+    }
 
-        // write the just-read unit to the output srcml archive
-        srcml_write_unit(srcml_output_archive, unit);
-
+    // move to the correct unit
+    for (int i = 1; i < srcml_input.unit; ++i) {
+        srcml_unit* unit = srcml_read_unit_header(srcml_input_archive);
         srcml_free_unit(unit);
     }
 
-    // done with the input srcml archive
-    srcml_close_archive(srcml_input_archive);
-    srcml_free_archive(srcml_input_archive);
+    // process each entry in the input srcml archive
+    while (srcml_unit* unit = srcml_read_unit(srcml_input_archive)) {
+
+        // form the parsing request
+        ParseRequest* prequest = new ParseRequest;
+        prequest->srcml_arch = srcml_output_archive;
+        prequest->unit = unit;
+
+        // hand request off to the processing queue
+        queue.schedule(prequest);
+
+        // one-time through for individual unit
+        if (srcml_input.unit)
+            break;
+    }
 }

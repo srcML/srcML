@@ -3,17 +3,6 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-# test archive
-define fileasrcml <<- 'STDOUT'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src">
-	
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6">
-	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-	</unit>
-
-	</unit>
-	STDOUT
 
 define nestedfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -45,29 +34,37 @@ define nestedfilesrc <<- 'STDOUT'
 	</src:unit>
 	STDOUT
 
-mkdir -p sub
-echo -e "\na;" > sub/a.cpp
-echo -e "\nb;" > sub/b.cpp
 
-src2srcml sub/a.cpp sub/b.cpp -o - 
+# test
+srcml2src --units <<< "$nestedfile"
 
-check 3<<< "$nestedfile"
+check 3<<< "2"
 
-src2srcml --archive sub/a.cpp -o -
+srcml2src --units <<< "$nestedfilesrc"
 
-check 3<<< "$fileasrcml"
+check 3<<< "2"
 
-define filelist <<- 'STDOUT'
-	sub/a.cpp
-	# fff
-	sub/b.cpp
-	STDOUT
+srcml2src -U "1" <<< "$nestedfile"
 
-createfile filelistab "$filelist"
+check 3<<< $'\na;\n'
 
-#src2srcml --files-from filelistab
+srcml2src --unit "1" <<< "$nestedfile"
 
-#check 3<< "$nestedfile"
+check 3<<< $'\na;\n'
 
-rm -f filelistab
+srcml2src --unit="1" <<< "$nestedfile"
+
+check 3<<< $'\na;\n'
+
+srcml2src -U "2" <<< "$nestedfile"
+
+check 3<<< $'\nb;\n'
+
+srcml2src --unit "2" <<< "$nestedfile"
+
+check 3<<< $'\nb;\n'
+
+srcml2src --unit="2" <<< "$nestedfile"
+
+check 3<<< $'\nb;\n'
 

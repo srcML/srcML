@@ -95,7 +95,7 @@ check() {
     # verify expected stderr to the captured stdout
     if [ $# -ge 1 ]; then
         # compare the parameter file to the expected output
-        diff $STDOUT $1
+        diff $1 <(perl -0 -pe 's/\n\n$/\n/m' /dev/fd/3)
 
     elif [ -e /dev/fd/3 ]; then
         # redirection using immediate here document (<<) adds newline
@@ -109,10 +109,10 @@ check() {
     # verify expected stderr to the captured stderr
     if [ $# -ge 2 ]; then
         # compare the captured stderr to the required stderr
-        diff $STDERR $2
+        diff $2 <(perl -0 -pe 's/\n\n$/\n/m' /dev/fd/4)
 
     elif [ -e /dev/fd/4 ]; then
-        diff $STDERR /dev/fd/4
+        diff $STDERR <(perl -0 -pe 's/\n\n$/\n/m' /dev/fd/4)
 
     else
         # check that the captured stderr is empty

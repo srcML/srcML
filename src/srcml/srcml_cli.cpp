@@ -260,6 +260,10 @@ void option_help(const std::string& help_opt) {
    at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2);
 
+
+// Determine dependent options
+void option_dependency(const prog_opts::variables_map& vm, const char* option, const char* dependent_option);
+
 // Custom Parser Definition
 std::pair<std::string, std::string> custom_parser(const std::string& s);
 
@@ -272,16 +276,15 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         general.add_options()
             ("compress,z", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_COMPRESS>), "output in gzip format")
             ("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
+            ("no-archive", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_NOARCHIVE>), "output individual srcml units")
             ("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NAMESPACE_DECL>), "do not output any namespace declarations")
             ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_XML_DECL>), "do not output the XML declaration")
             ("output,o", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::output_filename>)->default_value("stdout://-"), "write result ouput to arg which is a FILE or URI")
             ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "suppresses status messages")
-            ("src-encoding,t", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::src_encoding>), "set the input source encoding to arg (default:  ISO-8859-1)")
+            ("src-encoding,t", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::src_encoding>)->default_value("ISO-8859-1"), "set the input source encoding to arg (default:  ISO-8859-1)")
             ("max-threads", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->default_value(4), "set the maximum number of threads srcml can spawn")
             ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")
             ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "display version number and exit")
-            //("src", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRC>), "explicitly declare src->srcml mode")
-            //("srcml", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRCML>), "explicitly declare srcml->src mode")
             ("ordered", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OUTPUT_ORDERED>), "enable strict output ordering")
             ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "output and update existing srcml")
             ;
@@ -289,7 +292,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         src2srcml_options.add_options()
             ("archive,r", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_ARCHIVE>), "store output in a srcML archive, default for multiple input files")
             ("debug,g", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_DEBUG>), "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
-            ("encoding,x", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_xml_encoding>),"set the output XML encoding to ENC (default:  UTF-8)")
+            ("encoding,x", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_xml_encoding>)->default_value("UTF-8"),"set the output XML encoding to ENC (default:  UTF-8)")
             ("timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TIMESTAMP>), "add timestamp to srcml output")
             ("hash", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_HASH>), "add hash to srcml output")
             ("expression,e", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
@@ -327,6 +330,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("literal", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_LITERAL>), "markup literal values, namespace 'http://www.sdml.info/srcML/literal'")
             ("modifier", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_MODIFIER>), "markup type modifiers, namespace 'http://www.sdml.info/srcML/modifier'")
             ("operator", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_OPERATOR>), "markup operators, namespace 'http://www.sdml.info/srcML/operator'")
+            ("xml-processing", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xml_processing>), "add XML processing instruction")
             ;
 
         src2srcml_metadata.add_options()
@@ -341,11 +345,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("longinfo,L", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LONGINFO>), "display all metadata including file count (individual units) and exit")
             ("prefix,p", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xmlns_prefix_query>), "display prefix of namespace given by URI arg and exit")
             ("count", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UNITS>), "display number of srcML files and exit")
-            //("show-directory", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO_DIRECTORY>), "display source directory name and exit")
-            //("show-encoding", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO_ENCODING>), "display xml encoding and exit")
-            //("show-filename", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO_FILENAME>), "display source filename and exit")
-            //("show-language", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO_LANGUAGE>), "display source language and exit")
-            //("show-src-version", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO_SRC_VERSION>), "display source version and exit")
             ;
 
         prefix.add_options()
@@ -411,6 +410,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // Check option conflicts
         conflicting_options(cli_map, "quiet", "verbose");
+        conflicting_options(cli_map, "output", "to-dir");
+
+        // Check dependent options
+        option_dependency(cli_map, "no-archive", "to-dir");
 
         // If input was from stdin, then artificially put a "-" into the list of input files
         if (srcml_request.input.empty())
@@ -427,7 +430,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         std::cerr << e.what() << "\n";
         exit(1);
     }
-
+    
     return srcml_request;
 }
 
@@ -444,5 +447,17 @@ void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, c
     if (vm.count(opt1) && !vm[opt1].defaulted() && vm.count(opt2) && !vm[opt2].defaulted()) {
         throw std::logic_error(std::string("Conflicting options '")
                                + opt1 + "' and '" + opt2 + "'.");
+    }
+}
+
+// Check for dependent options
+void option_dependency(const prog_opts::variables_map& vm,
+                        const char* option, const char* dependent_option)
+{
+    if (vm.count(option) && !vm[option].defaulted()) {
+        if (vm.count(dependent_option) == 0) {
+            throw std::logic_error(std::string("Option '") + option 
+                                    + "' requires option '" + dependent_option + "'.");
+        }
     }
 }
