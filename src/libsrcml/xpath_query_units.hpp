@@ -316,7 +316,7 @@ public :
         case XPATH_NODESET:
 
             if (needroot /*&& !isoption(options, SRCML_OPTION_APPLY_ROOT)*/) {
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
                 // xml declaration
                 if (isoption(options, SRCML_OPTION_XML_DECL))
                     xml_output_buffer_write_xml_decl(ctxt, buf);
@@ -351,7 +351,6 @@ fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
             // may not have any values or results
             result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
-            fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, result_size);
             if (isoption(options, SRCML_OPTION_APPLY_ROOT) && result_size == 0) {
 
                 if(meta_tags->size())
@@ -360,7 +359,7 @@ fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
             }
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
             if (result_size == 0)
                 break;
 
@@ -377,7 +376,7 @@ fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
             }
 
             found = true;
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
             if(attr_name) {
 
                 for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
