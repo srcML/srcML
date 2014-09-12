@@ -25,11 +25,12 @@ src2srcml -l C++ --encoding="ISO" <<< "a;"
 
 check 4<< "4"
 
-# missing value
+# invalid language
 src2srcml --language bad_language "foobar"
 
 check 4<< "6"
 
+# missing value
 src2srcml --language
 
 check 4<< "7"

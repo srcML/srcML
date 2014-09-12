@@ -22,11 +22,10 @@ srcml2src --src-encoding="ISO"
 
 check 4<<< "4"
 
+# source encoding not given
 srcml2src --src-encoding
 
 check 4<<< "1"
-	
-# source encoding not given
 
 # unit option selected but no value
 srcml2src --unit
