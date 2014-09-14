@@ -165,13 +165,24 @@ void option_field<&srcml_request_t::files_from>(const std::vector<std::string>& 
     }
 }
 
+// option src encoding
+template <>
+void option_field<&srcml_request_t::src_encoding>(const std::string& value) {
+
+    if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
+        std::cerr << "srcml: invalid src encoding.\n";
+        exit(4);
+    }
+    srcml_request.att_xml_encoding = value;
+}
+
 // option xml encoding attribute
 template <>
 void option_field<&srcml_request_t::att_xml_encoding>(const std::string& value) {
 
     if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
-        std::cerr << "srcmlCLI: invalid encoding.\n";
-        exit(1); //ERROR CODE TBD
+        std::cerr << "srcml: invalid xml encoding.\n";
+        exit(4);
     }
     srcml_request.att_xml_encoding = value;
 }
@@ -182,7 +193,7 @@ void option_field<&srcml_request_t::att_language>(const std::string& value) {
 
     // check language
     if (value.empty() || srcml_check_language(value.c_str()) == 0) {
-        std::cerr << "srcmlCLI: invalid language.\n";
+        std::cerr << "srcml: invalid language.\n";
         exit(1); //ERROR CODE TBD
     }
     srcml_request.att_language = value;
@@ -194,7 +205,7 @@ void option_field<&srcml_request_t::tabs>(int value) {
 
     // check tabstop
     if (value < 1) {
-        std::cerr << "srcmlCLI: " << value << " is an invalid tab stop. Tab stops must be 1 or higher.\n";
+        std::cerr << "srcml: " << value << " is an invalid tab stop. Tab stops must be 1 or higher.\n";
         exit(1); //ERROR CODE TBD
     }
     srcml_request.tabs = value;
@@ -429,17 +440,17 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
     }
     // Unknown Option
     catch(boost::program_options::unknown_option& e) {
-        std::cerr << "srcML: " << e.what() << "\n";
+        std::cerr << "srcml: " << e.what() << "\n";
         exit(3);
     }
     // Missing Option Value
     catch(boost::program_options::error_with_option_name& e) {
-        std::cerr << "srcML: " << e.what() << "\n";
+        std::cerr << "srcml: " << e.what() << "\n";
         exit(7);
     }
     // Catch all other issues with generic error
     catch(std::exception& e) {
-        std::cerr << "srcML: " << e.what() << "\n";
+        std::cerr << "srcml: " << e.what() << "\n";
         std::exit(1);
     }
     
