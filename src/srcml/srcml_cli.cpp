@@ -173,7 +173,7 @@ void option_field<&srcml_request_t::src_encoding>(const std::string& value) {
         std::cerr << "srcml: invalid src encoding.\n";
         exit(4);
     }
-    srcml_request.att_xml_encoding = value;
+    srcml_request.src_encoding = value;
 }
 
 // option xml encoding attribute
