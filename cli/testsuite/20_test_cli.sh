@@ -35,15 +35,15 @@ src2srcml --language
 
 check 4<< "7"
 
-src2srcml -l C++ --filename 8
+src2srcml -l C++ --filename
 
 check 4<< "8"
 
-src2srcml -l C++ --directory 9
+src2srcml -l C++ --directory
 
 check 4<< "9"
 
-src2srcml -l C++ --src-version 9
+src2srcml -l C++ --src-version
 
 check 4<< "9"
 
