@@ -239,7 +239,7 @@ int main() {
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
                         "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:foo=\"bar\">\n\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" foo:name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" foo:name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
                         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
