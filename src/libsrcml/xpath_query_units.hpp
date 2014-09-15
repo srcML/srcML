@@ -379,11 +379,12 @@ public :
 
             if(element) {
 
+                xmlNodePtr element_node = 0;
                 for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
                     onode = result_nodes->nodesetval->nodeTab[i];
 
-                    xmlNodePtr element_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
+                    element_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
                     memset(element_node, 0, sizeof(xmlNode));                    
                     element_node->type = XML_ELEMENT_NODE;
                     element_node->name = (xmlChar *)strdup(element);
@@ -405,7 +406,6 @@ public :
 
                         if(element_node->next)
                             element_node->next->prev = element_node;
-
 
                     } 
 
@@ -430,6 +430,8 @@ public :
                 }
 
                 xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
+                if(element_node && a_node == element_node)
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
             } else if(attr_name) {
 
