@@ -385,8 +385,8 @@ public :
 
                     xmlNodePtr element_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
                     memset(element_node, 0, sizeof(xmlNode));                    
-                    element_node->type = XML_TEXT_NODE;
-                    element_node->content = (xmlChar *)strdup(attr_value);
+                    element_node->type = XML_ELEMENT_NODE;
+                    element_node->name = (xmlChar *)strdup(element);
 
                     xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
                     // may need to add to nsDef as well
