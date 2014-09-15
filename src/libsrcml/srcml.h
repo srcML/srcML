@@ -409,7 +409,6 @@ __LIBSRCML_DECL int srcml_append_transform_xpath_attribute (struct srcml_archive
                                                             const char* attr_name, const char* attr_value);
 __LIBSRCML_DECL int srcml_append_transform_xpath_element   (struct srcml_archive*, const char* xpath_string,
                                                             const char* prefix, const char* namespace_uri,
-                                                            const char* attr_name, const char* attr_value,
                                                             const char* element);
 __LIBSRCML_DECL int srcml_append_transform_xslt_filename   (struct srcml_archive*, const char* xslt_filename);
 __LIBSRCML_DECL int srcml_append_transform_xslt_memory     (struct srcml_archive*, const char* xslt_buffer, size_t size);
