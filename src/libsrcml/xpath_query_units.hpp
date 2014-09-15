@@ -400,6 +400,8 @@ public :
 
                                 child->prev->next = element_node;
                                 child->next->prev = element_node;
+                                child->next = 0;
+                                child->prev = 0;
                                 break;
 
                             }
