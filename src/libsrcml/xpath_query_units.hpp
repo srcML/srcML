@@ -391,22 +391,21 @@ public :
                     element_node->children = onode;
                     xmlNodePtr parent = onode->parent;
                     onode->parent = element_node;
+                    element_node->next = onode->next;
+                    element_node->prev = onode->prev;
+                    onode->next = 0;
+                    onode->prev = 0;
 
                     if(parent) {
 
-                        for(xmlNodePtr child = parent->children; child; child = child->next) {
+                        if(parent->children == onode)
+                            parent->children = element_node;
+                        else
+                            element_node->prev->next = element_node;
 
-                            if(child == onode) {
+                    if(element_node->next)
+                        element_node->next->prev = element_node;
 
-                                child->prev->next = element_node;
-                                child->next->prev = element_node;
-                                child->next = 0;
-                                child->prev = 0;
-                                break;
-
-                            }
-
-                        }
 
                     } else {
 
