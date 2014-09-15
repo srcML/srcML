@@ -56,7 +56,7 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
     if(archive == NULL || xpath_string == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    struct xpath_arguments arguments = { xpath_string, 0, 0, 0, 0 };
+    struct xpath_arguments arguments = { xpath_string, 0, 0, 0, 0, 0 };
 
     transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
     archive->transformations.push_back(tran);
@@ -88,7 +88,7 @@ int srcml_append_transform_xpath_attribute (struct srcml_archive* archive, const
     if(archive == NULL || xpath_string == 0 || attr_name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    struct xpath_arguments arguments = { xpath_string, prefix, namespace_uri, attr_name, attr_value };
+    struct xpath_arguments arguments = { xpath_string, prefix, namespace_uri, 0, attr_name, attr_value };
 
     transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
     archive->transformations.push_back(tran);
@@ -111,20 +111,20 @@ int srcml_append_transform_xpath_attribute (struct srcml_archive* archive, const
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
-// int srcml_append_transform_xpath_element (struct srcml_archive* archive, const char* xpath_string,
-//                                                             const char* prefix, const char* namespace_uri,
-//                                                             const char* element) {
+int srcml_append_transform_xpath_element (struct srcml_archive* archive, const char* xpath_string,
+                                                            const char* prefix, const char* namespace_uri,
+                                                            const char* element) {
 
-//     if(archive == NULL || xpath_string == 0 || attr_name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-//     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+    if(archive == NULL || xpath_string == 0 || element == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-//     //struct xpath_arguments arguments = { xpath_string, prefix, namespace_uri, attr_name, attr_value };
+    struct xpath_arguments arguments = { xpath_string, prefix, namespace_uri, element, 0, 0 };
 
-//     transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
-//     archive->transformations.push_back(tran);
+    transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
+    archive->transformations.push_back(tran);
 
-//     return SRCML_STATUS_OK;
-// }
+    return SRCML_STATUS_OK;
+}
 
 /**
  * srcml_append_transform_xslt_filename
@@ -475,6 +475,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
                 error = srcml_xpath(pinput, "src:unit",
                                     iarchive->transformations.at(i).arguments.str,
                                     iarchive->transformations.at(i).arguments.prefix, iarchive->transformations.at(i).arguments.uri,
+                                    iarchive->transformations.at(i).arguments.element,
                                     iarchive->transformations.at(i).arguments.attr_name, iarchive->transformations.at(i).arguments.attr_value,
                                     transform_fd, oarchive->options);
                 break;

@@ -66,9 +66,9 @@ public :
      * Constructor.
      */
     xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath,
-                      const char * prefix = 0, const char * uri = 0, const char * attr_name = 0, const char * attr_value = 0, int fd = 0)
+                      const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_name = 0, const char * attr_value = 0, int fd = 0)
         : unit_dom(options), options(options), compiled_xpath(compiled_xpath),
-          prefix(prefix), uri(uri), attr_name(attr_name), attr_value(attr_value),
+          prefix(prefix), uri(uri), element(element), attr_name(attr_name), attr_value(attr_value),
           total(0), found(false), needroot(true), closetag(false), fd(fd) {
     }
 
@@ -377,7 +377,9 @@ public :
 
             found = true;
 
-            if(attr_name) {
+            if(element) {
+
+            } else if(attr_name) {
 
                 for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
@@ -904,6 +906,7 @@ private :
     xmlXPathCompExprPtr compiled_xpath;
     const char * prefix;
     const char * uri;
+    const char * element;
     const char * attr_name;
     const char * attr_value;
     double total;
