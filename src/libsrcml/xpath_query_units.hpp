@@ -323,10 +323,30 @@ public :
 
                 xml_output_buffer_write_processing_instruction(buf, processing_instruction);
 
+                std::vector<const xmlChar *> namespaces;
+                namespaces.reserve((root->nb_namespaces + 1) * 2);
+                bool found = false;
+                for(size_t pos = 0; pos < (size_t)root->nb_namespaces; ++pos) {
+
+                    namespaces.push_back(root->namespaces[pos * 2]);
+                    namespaces.push_back(root->namespaces[pos * 2 + 1]);
+
+                    if(uri && root->namespaces[pos * 2 + 1] && strcmp(uri, (const char *)root->namespaces[pos * 2 + 1]) == 0)
+                        found = true;
+
+                }
+
+                if(uri && !found) {
+
+                    namespaces.push_back((const xmlChar *)prefix);
+                    namespaces.push_back((const xmlChar *)uri);
+
+                }
+
                 // output a root element, just like the one read in
                 // note that this has to be ended somewhere
                 xml_output_buffer_write_element_ns(buf, root->localname, root->prefix, root->URI,
-                                                   root->nb_namespaces, root->namespaces,
+                                                   (int)(namespaces.size() / 2), &namespaces.front(),
                                                    is_archive ? root->nb_attributes : 0, root->nb_defaulted, is_archive ? root->attributes : 0);
 
                 closetag = true;
@@ -425,8 +445,6 @@ public :
                     ns->prefix = (const xmlChar *)strdup(prefix);
                     element_node->ns = ns;
 
-                    element_node->nsDef = ns;
-
                 }
 
                 xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
@@ -465,8 +483,6 @@ public :
                     ns->href = (const xmlChar *)strdup(uri);
                     ns->prefix = (const xmlChar *)strdup(prefix);
                     result_attr->ns = ns;
-
-                    onode->nsDef = ns;
 
                     if(last_attr)
                         last_attr->next = result_attr;
