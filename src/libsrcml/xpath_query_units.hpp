@@ -383,32 +383,35 @@ public :
 
                     onode = result_nodes->nodesetval->nodeTab[i];
 
-                    // start node
                     xmlNodePtr element_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
                     memset(element_node, 0, sizeof(xmlNode));                    
                     element_node->type = XML_ELEMENT_NODE;
                     element_node->name = (xmlChar *)strdup(element);
                     element_node->children = onode;
-                    xmlNodePtr parent = onode->parent;
+                    element_node->last = onode;
+                    element_node->parent = onode->parent;
                     onode->parent = element_node;
                     element_node->next = onode->next;
                     element_node->prev = onode->prev;
                     onode->next = 0;
                     onode->prev = 0;
 
-                    if(parent) {
+                    if(element_node->parent) {
 
-                        if(parent->children == onode)
-                            parent->children = element_node;
+                        if(element_node->parent->children == onode)
+                            element_node->parent->children = element_node;
                         else
                             element_node->prev->next = element_node;
 
-                    if(element_node->next)
-                        element_node->next->prev = element_node;
+                        if(element_node->next)
+                            element_node->next->prev = element_node;
 
 
-                    } else {
+                    } 
 
+                    if(a_node == onode) {
+
+                        a_node->doc->children = element_node;
                         a_node = element_node;
 
                     }
@@ -416,7 +419,6 @@ public :
                     element_node->doc = onode->doc;
 
                     xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
-                    // may need to add to nsDef as well
                     memset(ns, 0, sizeof(xmlNs));
                     ns->type = XML_NAMESPACE_DECL;
                     ns->href = (const xmlChar *)strdup(uri);
@@ -456,7 +458,6 @@ public :
                     result_attr->doc = onode->doc;
 
                     xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
-                    // may need to add to nsDef as well
                     memset(ns, 0, sizeof(xmlNs));
                     ns->type = XML_NAMESPACE_DECL;
                     ns->href = (const xmlChar *)strdup(uri);
