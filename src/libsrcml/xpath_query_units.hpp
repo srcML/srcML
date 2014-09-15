@@ -446,8 +446,22 @@ public :
 
                 }
 
+                xmlNsPtr src_ns = 0;
+                if(a_node->nsDef && strcmp((const char *)a_node->nsDef->href, "http://www.sdml.info/srcML/src") == 0) {
+
+                    src_ns = a_node->nsDef;
+                    a_node->nsDef = a_node->nsDef->next;
+
+                }
+
                 xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+
+                if(src_ns) {
+
+                    a_node->nsDef = src_ns;
+
+                }
 
             } else if(attr_name) {
 
@@ -489,9 +503,23 @@ public :
 
                 }
 
+                xmlNsPtr src_ns = 0;
+                if(a_node->nsDef && strcmp((const char *)a_node->nsDef->href, "http://www.sdml.info/srcML/src") == 0) {
+
+                    src_ns = a_node->nsDef;
+                    a_node->nsDef = a_node->nsDef->next;
+
+                }
+
                 xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
+                if(src_ns) {
+
+                    a_node->nsDef = src_ns;
+
+                }
+                
             } else {
 
                 // output all the found nodes
