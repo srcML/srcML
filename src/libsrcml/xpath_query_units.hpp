@@ -379,7 +379,50 @@ public :
 
             if(element) {
 
+                for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
+
+                    onode = result_nodes->nodesetval->nodeTab[i];
+
+                    xmlNodePtr element_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
+                    memset(element_node, 0, sizeof(xmlNode));                    
+                    element_node->type = XML_TEXT_NODE;
+                    element_node->content = (xmlChar *)strdup(attr_value);
+
+                    xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
+                    // may need to add to nsDef as well
+                    memset(ns, 0, sizeof(xmlNs));
+                    ns->type = XML_NAMESPACE_DECL;
+                    ns->href = (const xmlChar *)strdup(uri);
+                    ns->prefix = (const xmlChar *)strdup(prefix);
+                    element_node->ns = ns;
+
+                    element_node->nsDef = ns;
+
+                    xmlNodePtr parent = onode->parent;
+                    onode->parent = element_node;
+
+                    if(parent) {
+
+                        for(xmlNodePtr child = parent->children; child; child = child->next) {
+
+                            if(child == onode) {
+
+                                child->prev->next = element_node;
+                                child->next->prev = element_node;
+                                break;
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
+
             } else if(attr_name) {
+
 
                 for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
@@ -403,8 +446,8 @@ public :
                     result_attr->prev = last_attr;
 
                     result_attr->doc = onode->doc;
-                    xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
 
+                    xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
                     // may need to add to nsDef as well
                     memset(ns, 0, sizeof(xmlNs));
                     ns->type = XML_NAMESPACE_DECL;
