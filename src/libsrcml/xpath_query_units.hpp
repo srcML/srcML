@@ -383,23 +383,14 @@ public :
 
                     onode = result_nodes->nodesetval->nodeTab[i];
 
+                    // start node
                     xmlNodePtr element_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
                     memset(element_node, 0, sizeof(xmlNode));                    
                     element_node->type = XML_ELEMENT_NODE;
                     element_node->name = (xmlChar *)strdup(element);
-
-                    xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
-                    // may need to add to nsDef as well
-                    memset(ns, 0, sizeof(xmlNs));
-                    ns->type = XML_NAMESPACE_DECL;
-                    ns->href = (const xmlChar *)strdup(uri);
-                    ns->prefix = (const xmlChar *)strdup(prefix);
-                    element_node->ns = ns;
-
-                    element_node->nsDef = ns;
-
                     xmlNodePtr parent = onode->parent;
                     onode->parent = element_node;
+                    element_node->children = onode;
 
                     if(parent) {
 
@@ -415,7 +406,23 @@ public :
 
                         }
 
+                    } else {
+
+                        a_node = element_node;
+
                     }
+
+                    element_node->doc = onode->doc;
+
+                    xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
+                    // may need to add to nsDef as well
+                    memset(ns, 0, sizeof(xmlNs));
+                    ns->type = XML_NAMESPACE_DECL;
+                    ns->href = (const xmlChar *)strdup(uri);
+                    ns->prefix = (const xmlChar *)strdup(prefix);
+                    element_node->ns = ns;
+
+                    element_node->nsDef = ns;
 
                 }
 
