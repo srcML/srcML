@@ -388,9 +388,9 @@ public :
                     memset(element_node, 0, sizeof(xmlNode));                    
                     element_node->type = XML_ELEMENT_NODE;
                     element_node->name = (xmlChar *)strdup(element);
+                    element_node->children = onode;
                     xmlNodePtr parent = onode->parent;
                     onode->parent = element_node;
-                    element_node->children = onode;
 
                     if(parent) {
 
