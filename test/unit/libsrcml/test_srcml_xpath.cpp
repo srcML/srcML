@@ -57,7 +57,7 @@ int main() {
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
         int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-        dassert(srcml_xpath(buffer_input, "src:unit", "//src:unit", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
+        dassert(srcml_xpath(buffer_input, "src:unit", "//src:unit", 0, 0, 0, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
         std::ifstream in("project.xml");
         std::string output;
         std::string temp;
@@ -71,7 +71,7 @@ int main() {
 
     {
         int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-        dassert(srcml_xpath(0, "src:unit", "//src:unit", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_xpath(0, "src:unit", "//src:unit", 0, 0, 0, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         UNLINK("project.xml");
     }
 
@@ -82,7 +82,7 @@ int main() {
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
         int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-        dassert(srcml_xpath(buffer_input, 0, "//src:unit", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_xpath(buffer_input, 0, "//src:unit", 0, 0, 0, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeParserInputBuffer(buffer_input);
         UNLINK("input.xml");
         UNLINK("project.xml");
@@ -95,7 +95,7 @@ int main() {
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
         int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-        dassert(srcml_xpath(buffer_input, "src:unit", 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_xpath(buffer_input, "src:unit", 0, 0, 0, 0, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeParserInputBuffer(buffer_input);
         UNLINK("input.xml");
         UNLINK("project.xml");
@@ -107,7 +107,7 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        dassert(srcml_xpath(buffer_input, "src:unit", "//src:unit", -1, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_xpath(buffer_input, "src:unit", "//src:unit", 0, 0, 0, 0, 0, -1, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
         xmlFreeParserInputBuffer(buffer_input);
         UNLINK("input.xml");
     }
@@ -131,7 +131,7 @@ int main() {
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
         int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-        dassert(srcml_xpath(buffer_input, "src:unit", "//src:function_decl", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
+        dassert(srcml_xpath(buffer_input, "src:unit", "//src:function_decl", 0, 0, 0, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
         std::ifstream in("project.xml");
         std::string output;
         char temp;
@@ -164,7 +164,7 @@ int main() {
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
         int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-        dassert(srcml_xpath(buffer_input, "src:unit", "//src:function_decl[src:name='g']", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
+        dassert(srcml_xpath(buffer_input, "src:unit", "//src:function_decl[src:name='g']", 0, 0, 0, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
         std::ifstream in("project.xml");
         std::string output;
         char temp;
@@ -195,7 +195,7 @@ int main() {
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
         int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-        dassert(srcml_xpath(buffer_input, "src:unit", "//src:function_decl//src:param[src:decl/src:name='b']", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
+        dassert(srcml_xpath(buffer_input, "src:unit", "//src:function_decl//src:param[src:decl/src:name='b']", 0, 0, 0, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
         std::ifstream in("project.xml");
         std::string output;
         char temp;
