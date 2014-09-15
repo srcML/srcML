@@ -323,6 +323,7 @@ public :
 
                 xml_output_buffer_write_processing_instruction(buf, processing_instruction);
 
+                // append namespace for inserted element/attributes
                 std::vector<const xmlChar *> namespaces;
                 namespaces.reserve((root->nb_namespaces + 1) * 2);
                 bool found = false;
@@ -403,6 +404,7 @@ public :
 
                     onode = result_nodes->nodesetval->nodeTab[i];
 
+                    // set up node to insert
                     xmlNodePtr element_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
                     memset(element_node, 0, sizeof(xmlNode));                    
                     element_node->type = XML_ELEMENT_NODE;
@@ -416,6 +418,7 @@ public :
                     onode->next = 0;
                     onode->prev = 0;
 
+                    // update former root siblings
                     if(element_node->parent) {
 
                         if(element_node->parent->children == onode)
@@ -437,6 +440,7 @@ public :
 
                     element_node->doc = onode->doc;
 
+                    // set up namespace
                     xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
                     memset(ns, 0, sizeof(xmlNs));
                     ns->type = XML_NAMESPACE_DECL;
@@ -446,6 +450,7 @@ public :
 
                 }
 
+                // remove src namespace and save for reassignment
                 xmlNsPtr src_ns = 0;
                 if(a_node->nsDef && strcmp((const char *)a_node->nsDef->href, "http://www.sdml.info/srcML/src") == 0) {
 
@@ -457,6 +462,7 @@ public :
                 xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
+                // reassign src namespace
                 if(src_ns) {
 
                     a_node->nsDef = src_ns;
@@ -470,10 +476,13 @@ public :
 
                     onode = result_nodes->nodesetval->nodeTab[i];
 
+                    // set up inserted attribute
                     xmlAttrPtr result_attr = (xmlAttrPtr)xmlMalloc((sizeof(xmlAttr)));
                     memset(result_attr, 0, sizeof(xmlAttr));
                     result_attr->type = XML_ATTRIBUTE_NODE;
                     result_attr->name = (const xmlChar *)strdup(attr_name);
+
+                    // set up attribute value
                     xmlNodePtr attr_value_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
                     memset(attr_value_node, 0, sizeof(xmlNode));                    
                     attr_value_node->type = XML_TEXT_NODE;
@@ -482,6 +491,7 @@ public :
 
                     result_attr->parent = onode;
 
+                    // place as last attribute
                     xmlAttrPtr last_attr = onode->properties;
                     for(; last_attr && last_attr->next; last_attr = last_attr->next)
                         ;
@@ -489,6 +499,7 @@ public :
 
                     result_attr->doc = onode->doc;
 
+                    // set up namespace
                     xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
                     memset(ns, 0, sizeof(xmlNs));
                     ns->type = XML_NAMESPACE_DECL;
@@ -503,6 +514,7 @@ public :
 
                 }
 
+                // remove src namespace and save for reassignment
                 xmlNsPtr src_ns = 0;
                 if(a_node->nsDef && strcmp((const char *)a_node->nsDef->href, "http://www.sdml.info/srcML/src") == 0) {
 
@@ -514,12 +526,13 @@ public :
                 xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
+                // reassign src namespace
                 if(src_ns) {
 
                     a_node->nsDef = src_ns;
 
                 }
-                
+
             } else {
 
                 // output all the found nodes
