@@ -125,3 +125,32 @@ check() {
 
     true
 }
+
+##
+# checks the exit status of a command
+#   $1 expected return value
+#
+# NOTE: Requires the following in test file header:
+#   set +e
+check_exit() {
+
+    local exit_status=$?
+
+    # return stdout and stderr to standard streams
+    [ "$CAPTURE_STDOUT" = true ] && exec 1>&5
+    [ "$CAPTURE_STDERR" = true ] && exec 2>&6
+
+    # trace the command
+    echo $(history | head -n 1 | cut -c 8-)
+
+    # verify expected stderr to the captured stdout
+    if [ $exit_status -ne $1 ]; then
+        exit 8
+    fi
+
+    # # return to capturing stdout and stderr
+    [ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
+    [ "$CAPTURE_STDERR" = true ] && exec 6>&2 2>$STDERR
+
+    true
+}
