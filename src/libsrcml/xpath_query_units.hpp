@@ -323,6 +323,8 @@ public :
 
                 xml_output_buffer_write_processing_instruction(buf, processing_instruction);
 
+                /** @todo make more efficient so do not need temp array */
+
                 // append namespace for inserted element/attributes
                 std::vector<const xmlChar *> namespaces;
                 namespaces.reserve((root->nb_namespaces + 1) * 2);
@@ -340,8 +342,16 @@ public :
 
                 if(uri && !found_ns) {
 
-                    namespaces.push_back((const xmlChar *)prefix);
-                    namespaces.push_back((const xmlChar *)uri);
+                    for(size_t pos = 0; pos < (size_t)context->nsNr; ++pos)
+                        if(strcmp((const char *)context->namespaces[pos], uri) == 0)
+                            found_ns = true;
+
+                    if(!found_ns) {
+
+                        namespaces.push_back((const xmlChar *)prefix);
+                        namespaces.push_back((const xmlChar *)uri);
+
+                    }
 
                 }
 
