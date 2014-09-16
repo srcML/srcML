@@ -326,18 +326,19 @@ public :
                 // append namespace for inserted element/attributes
                 std::vector<const xmlChar *> namespaces;
                 namespaces.reserve((root->nb_namespaces + 1) * 2);
-                bool found = false;
+                bool found_ns = false;
+
                 for(size_t pos = 0; pos < (size_t)root->nb_namespaces; ++pos) {
 
                     namespaces.push_back(root->namespaces[pos * 2]);
                     namespaces.push_back(root->namespaces[pos * 2 + 1]);
 
                     if(uri && root->namespaces[pos * 2 + 1] && strcmp(uri, (const char *)root->namespaces[pos * 2 + 1]) == 0)
-                        found = true;
+                        found_ns = true;
 
                 }
 
-                if(uri && !found) {
+                if(uri && !found_ns) {
 
                     namespaces.push_back((const xmlChar *)prefix);
                     namespaces.push_back((const xmlChar *)uri);
@@ -453,8 +454,8 @@ public :
                     xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
                     memset(ns, 0, sizeof(xmlNs));
                     ns->type = XML_NAMESPACE_DECL;
-                    ns->href = (const xmlChar *)strdup(uri);
-                    ns->prefix = (const xmlChar *)strdup(prefix);
+                    ns->href = uri ? (const xmlChar *)strdup(uri) : 0;
+                    ns->prefix = prefix ? (const xmlChar *)strdup(prefix) : 0;
                     element_node->ns = ns;
 
                 }
@@ -512,8 +513,8 @@ public :
                     xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
                     memset(ns, 0, sizeof(xmlNs));
                     ns->type = XML_NAMESPACE_DECL;
-                    ns->href = (const xmlChar *)strdup(uri);
-                    ns->prefix = (const xmlChar *)strdup(prefix);
+                    ns->href = uri ? (const xmlChar *)strdup(uri) : 0;
+                    ns->prefix = prefix ? (const xmlChar *)strdup(prefix) : 0;
                     result_attr->ns = ns;
 
                     if(last_attr)
