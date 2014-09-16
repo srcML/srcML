@@ -409,32 +409,41 @@ public :
                     memset(element_node, 0, sizeof(xmlNode));                    
                     element_node->type = XML_ELEMENT_NODE;
                     element_node->name = (xmlChar *)strdup(element);
-                    element_node->children = onode;
-                    element_node->last = onode;
-                    element_node->parent = onode->parent;
-                    onode->parent = element_node;
-                    element_node->next = onode->next;
-                    element_node->prev = onode->prev;
-                    onode->next = 0;
-                    onode->prev = 0;
 
-                    // update former root siblings
-                    if(element_node->parent) {
 
-                        if(element_node->parent->children == onode)
-                            element_node->parent->children = element_node;
-                        else
-                            element_node->prev->next = element_node;
+                    if(a_node != onode) {                    
 
-                        if(element_node->next)
-                            element_node->next->prev = element_node;
+                        element_node->children = onode;
+                        element_node->last = onode;
+                        element_node->parent = onode->parent;
+                        onode->parent = element_node;
+                        element_node->next = onode->next;
+                        element_node->prev = onode->prev;
+                        onode->next = 0;
+                        onode->prev = 0;
 
-                    } 
+                        // update former root siblings
+                        if(element_node->parent) {
 
-                    if(a_node == onode) {
+                            if(element_node->parent->children == onode)
+                                element_node->parent->children = element_node;
+                            else
+                                element_node->prev->next = element_node;
 
-                        a_node->doc->children = element_node;
-                        a_node = element_node;
+                            if(element_node->next)
+                                element_node->next->prev = element_node;
+
+                        } 
+
+                    } else {
+
+                        element_node->children = onode->children;
+                        element_node->last = onode->last;
+                        element_node->parent = onode;
+                        element_node->next = 0;
+                        element_node->prev = 0;
+                        onode->children = element_node;
+                        onode->last = element_node;
 
                     }
 
