@@ -60,7 +60,7 @@ void srcml_input_srcml(ParseQueue& queue,
             std::cerr << "Requested unit " << srcml_input.unit << " out of range.\n";
             exit(4);
         }
-
+        
         srcml_free_unit(unit);
 
     }

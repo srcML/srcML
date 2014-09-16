@@ -111,7 +111,7 @@ int main(int argc, char * argv[]) {
     
     // srcml->src
     if (request_create_src(srcml_request, input_sources, destination)) {
-
+        
         pipeline.push_back(create_src);
     }
 
