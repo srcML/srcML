@@ -66,6 +66,30 @@ class srcml_translator;
 enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
 
 /**
+ * xpath_arguments
+ *
+ * Data structure to hold xpath arguments
+ */
+ struct xpath_arguments {
+
+    /** the xpath expression */
+    const char * str;
+
+    /** the optional attribute prefix */
+    const char * prefix;
+    /** the attribute uri */
+    const char * uri;
+    /** the tag name */
+    const char * element;
+    /** the attribute name */
+    const char * attr_name;
+    /** the optional attribute value */
+    const char * attr_value;
+
+
+ };
+
+/**
  * transform
  *
  * Struct to hold transformation information for latter application.
@@ -78,16 +102,11 @@ struct transform {
     /** XSLT parameters */
     std::vector<const char *> xsl_parameters;
 
-    /** union holding the transformation */
-    union {
+    /** the transformation to perform for XPath */
+    struct xpath_arguments arguments;
 
-        /** the transformation to perform for XPath */
-        const char * str;
-        /** the transformation to perform for XSLT and relaxng */
-        xmlDocPtr doc;
-
-    } transformation;
-
+    /** the transformation to perform for XSLT and relaxng */
+    xmlDocPtr doc;
 };
 
 /**

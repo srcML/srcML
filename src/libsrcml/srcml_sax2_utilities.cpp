@@ -96,6 +96,11 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
  * @param input_buffer a parser input buffer
  * @param context_element a srcML element that is to be used as the context
  * @param xpath the xpath expression
+ * @param prefix an element or attribute namepace prefix
+ * @param uri an element or attribute namepace uri
+ * @param element the tag name
+ * @param attr_name the attribute name
+ * @param attr_value the attribute value
  * @param fd output file descriptor
  * @param options srcml options
  *
@@ -103,7 +108,9 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpath, int fd, OPTION_TYPE options) {
+int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpath,
+                const char* prefix, const char* uri, const char * element, const char* attr_name, const char* attr_value, int fd,
+                OPTION_TYPE options) {
 
     if(input_buffer == NULL || context_element == NULL ||
        xpath == NULL || fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
@@ -121,7 +128,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
     }
 
     // setup process handling
-    xpath_query_units process(options, compiled_xpath, fd);
+    xpath_query_units process(options, compiled_xpath, prefix, uri, element, attr_name, attr_value, fd);
     srcMLControlHandler control(input_buffer);
 
     try {
