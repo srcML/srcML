@@ -32,6 +32,24 @@
 # make sure to find the srcml executable
 export PATH=.:$PATH
 
+echo "$SRC2SRCML"
+
+if [ -z "$SRC2SRCML" ]; then
+    SRC2SRCML='../../bin/srcml'
+fi
+
+if [ -z "$SRCML2SRC" ]; then
+    SRCML2SRC='../../bin/srcml'
+fi
+
+function src2srcml () {
+    $SRC2SRCML "$@"
+}
+
+function srcml2src () {
+    $SRCML2SRC "$@"
+}
+
 # always exit when a command exits with a non-zero status
 set -e
 
