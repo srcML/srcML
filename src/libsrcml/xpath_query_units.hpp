@@ -574,9 +574,42 @@ public :
 
                             // output a wrapping element, just like the one read in
                             // note that this has to be ended somewhere
-                            xml_output_buffer_write_element_ns(wrap, root->localname, root->prefix, root->URI,
-                                                               (int)((data.size() - rootsize) / 2), &data[rootsize],
-                                                               0, 0, 0);
+                            if(is_archive)
+                                xml_output_buffer_write_element_ns(wrap, root->localname, root->prefix, root->URI,
+                                                                   (int)((data.size() - rootsize) / 2), &data[rootsize],
+                                                                   0, 0, 0);
+                            else {
+
+                                std::vector<const xmlChar *>::size_type pos;
+                                for(pos = 1; pos < data.size(); pos += 2)
+                                    if(strcmp((const char *)data[pos], "http://www.sdml.info/srcML/cpp") == 0)
+                                        break;
+
+
+                                if(pos < data.size() && pos < rootsize) {
+
+                                    std::vector<const xmlChar *> temp_ns;
+                                    temp_ns.push_back(data[pos - 1]);
+                                    temp_ns.push_back(data[pos]);
+
+                                    for(std::vector<const xmlChar *>::size_type i = rootsize; i < data.size(); ++i)
+                                        temp_ns.push_back(data[i]);
+
+                                    xml_output_buffer_write_element_ns(wrap, root->localname, root->prefix, root->URI,
+                                                                    (int)temp_ns.size() / 2, &temp_ns.front(),
+                                                                    0, 0, 0);
+
+
+                                } else {
+
+                                    xml_output_buffer_write_element_ns(wrap, root->localname, root->prefix, root->URI,
+                                                                    (int)((data.size() - rootsize) / 2), &data[rootsize],
+                                                                    0, 0, 0);
+
+                                }
+
+
+                            }
 
                             // output all the current attributes from the individual unit
                             for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next) {
