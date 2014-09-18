@@ -3,6 +3,7 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
+set +e
 # test invalid_input
 
 # unknown file
@@ -12,48 +13,48 @@ source $(dirname "$0")/framework_test.sh
 #src2srcml sub/a.cpp" -o sub/a.cpp None) 2)
 #wn option
 
-src2srcml -l C++ --strip << "a;"
+echo "a;" | src2srcml -l C++ --strip
 
-check 4<< "3"
+check_exit 3
 
 # unknown encoding
-src2srcml -l C++ --src-encoding="ISO" <<< "a;"
+echo "a;" | src2srcml -l C++ --src-encoding="ISO"
 
-check 4<< "4"
+check_exit 4
 
-src2srcml -l C++ --encoding="ISO" <<< "a;"
+echo "a;" | src2srcml -l C++ --encoding="ISO"
 
-check 4<< "4"
+check_exit 4
 
 # invalid language
-src2srcml --language bad_language "foobar"
+echo "a;" | src2srcml --language bad_language "foobar"
 
-check 4<< "6"
+check_exit 6
 
 # missing value
-src2srcml --language
+echo "a;" | src2srcml --language
 
-check 4<< "7"
+check_exit 7
 
-src2srcml -l C++ --filename
+echo "a;" | src2srcml -l C++ --filename
 
-check 4<< "8"
+check_exit 7
 
-src2srcml -l C++ --directory
+echo "a;" | src2srcml -l C++ --directory
 
-check 4<< "9"
+check_exit 7
 
-src2srcml -l C++ --src-version
+echo "a;" | src2srcml -l C++ --src-version
 
-check 4<< "9"
+check_exit 7
 
 # source encoding not given
-src2srcml -l C++ --src-encoding
+echo "a;" | src2srcml -l C++ --src-encoding
 
-check 4<< "11"
+check_exit 7
 
 # xml encoding not given
-src2srcml -l C++ --encoding
+echo "a;" | src2srcml -l C++ --encoding
 
-check 4<< "12"
+check_exit 7
 
