@@ -56,18 +56,14 @@ void srcml_input_srcml(ParseQueue& queue,
     // move to the correct unit
     for (int i = 1; i < srcml_input.unit; ++i) {
         srcml_unit* unit = srcml_read_unit_header(srcml_input_archive);
-        if (!unit) {
-            std::cerr << "Requested unit " << srcml_input.unit << " out of range.\n";
-            exit(4);
-        }
-        
         srcml_free_unit(unit);
-
     }
+
+    bool unitPresent = false;
 
     // process each entry in the input srcml archive
     while (srcml_unit* unit = srcml_read_unit(srcml_input_archive)) {
-
+        unitPresent = true;
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;
         prequest->srcml_arch = srcml_output_archive;
@@ -80,4 +76,10 @@ void srcml_input_srcml(ParseQueue& queue,
         if (srcml_input.unit)
             break;
     }
+
+    if (!unitPresent) {
+        std::cerr << "Requested unit " << srcml_input.unit << " out of range.\n";
+        exit(4);
+    }
+
 }
