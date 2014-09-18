@@ -21,8 +21,8 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-src2srcml -l C++ cpp_if0 cpp_textonly_srcml)
-src2srcml -l C++ --cpp-text-if0 cpp_if0 cpp_textonly_srcml)
+src2srcml -l C++ cpp_if0 cpp_textonly_srcml
+src2srcml -l C++ --cpp-text-if0 cpp_if0 cpp_textonly_srcml
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
