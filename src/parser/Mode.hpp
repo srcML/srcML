@@ -234,4 +234,7 @@ const static srcMLState::MODE_TYPE MODE_TERNARY_CONDITION;
 /** mode for member initialization list */
 const static srcMLState::MODE_TYPE MODE_INITIALIZATION_LIST;
 
+/** mode for C++ ranged for */
+const static srcMLState::MODE_TYPE MODE_RANGED_FOR;
+
 #endif
