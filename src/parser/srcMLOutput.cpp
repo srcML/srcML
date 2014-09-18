@@ -162,23 +162,25 @@ namespace {
     ELEMENT_MAP(SFOR_INITIALIZATION, "init")
     ELEMENT_MAP(SFOR_CONDITION, ELEMENT_MAP_CALL(SCONDITION))
     ELEMENT_MAP(SFOR_INCREMENT, "incr")
+    ELEMENT_MAP(SFOR_LIKE_CONTROL, "")
 
     // functions
-    ELEMENT_MAP(SFUNCTION_DEFINITION,   "function")
-    ELEMENT_MAP(SFUNCTION_DECLARATION,  "function_decl")
-    ELEMENT_MAP(SFUNCTION_LAMBDA,       "lambda")
-    ELEMENT_MAP(SFUNCTION_SPECIFIER,    "specifier")
-    ELEMENT_MAP(SRETURN_STATEMENT,      "return")
-    ELEMENT_MAP(SFUNCTION_CALL,         "call")
-    ELEMENT_MAP(SSIZEOF_CALL,           "sizeof")
-    ELEMENT_MAP(SPARAMETER_LIST,        "parameter_list")
-    ELEMENT_MAP(SPARAMETER,             "param")
-    ELEMENT_MAP(SKRPARAMETER_LIST,      "krparameter_list")
-    ELEMENT_MAP(SKRPARAMETER,           "krparam")
-    ELEMENT_MAP(SARGUMENT_LIST,         "argument_list")
-    ELEMENT_MAP(SARGUMENT,              "argument")
-    ELEMENT_MAP(SLAMBDA_CAPTURE,        "capture")
-    ELEMENT_MAP(SPSEUDO_PARAMETER_LIST, "parameter_list")
+    ELEMENT_MAP(SFUNCTION_DEFINITION,    "function")
+    ELEMENT_MAP(SFUNCTION_DECLARATION,   "function_decl")
+    ELEMENT_MAP(SFUNCTION_LAMBDA,        "lambda")
+    ELEMENT_MAP(SFUNCTION_SPECIFIER,     "specifier")
+    ELEMENT_MAP(SRETURN_STATEMENT,       "return")
+    ELEMENT_MAP(SFUNCTION_CALL,          "call")
+    ELEMENT_MAP(SSIZEOF_CALL,            "sizeof")
+    ELEMENT_MAP(SPARAMETER_LIST,         "parameter_list")
+    ELEMENT_MAP(SPARAMETER,              "param")
+    ELEMENT_MAP(SKRPARAMETER_LIST,       "krparameter_list")
+    ELEMENT_MAP(SKRPARAMETER,            "krparam")
+    ELEMENT_MAP(SARGUMENT_LIST,          "argument_list")
+    ELEMENT_MAP(SARGUMENT,               "argument")
+    ELEMENT_MAP(SLAMBDA_CAPTURE,         "capture")
+    ELEMENT_MAP(SPSEUDO_PARAMETER_LIST,  "parameter_list")
+    ELEMENT_MAP(SINDEXER_PARAMETER_LIST, "parameter_list")
 
     // struct, union
     ELEMENT_MAP(SSTRUCT, "struct")
@@ -1490,6 +1492,18 @@ void srcMLOutput::processOperatorFunction(const antlr::RefToken& token) {
 void srcMLOutput::processPseudoParameterList(const antlr::RefToken& token) {
 
     processOptional(token, "type", "pseudo");
+
+}
+
+/**
+ * processIndexerParameterList
+ * @param token token to output as indexer parameter list
+ *
+ * Callback to process/output token as indexer parameter list.
+ */
+void srcMLOutput::processIndexerParameterList(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "indexer");
 
 }
 

@@ -107,7 +107,7 @@ endmacro()
 
 # 
 # copyDependentFile 
-# This copies a file given as TARGET_NAME to the current bunary directory
+# This copies a file given as TARGET_NAME to the current binary directory
 # of the build.
 # 
 macro(copyDependentFile TARGET_NAME)

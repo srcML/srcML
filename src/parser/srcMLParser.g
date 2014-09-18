@@ -391,6 +391,7 @@ tokens {
 	SFOR_INITIALIZATION;
 	SFOR_CONDITION;
 	SFOR_INCREMENT;
+    SFOR_LIKE_CONTROL;
 
 	SEXPRESSION_STATEMENT;
 	SEXPRESSION;
@@ -423,6 +424,7 @@ tokens {
 	SARGUMENT_LIST;
 	SARGUMENT;
     SPSEUDO_PARAMETER_LIST;
+    SINDEXER_PARAMETER_LIST;
 
     // class, struct, union
 	SCLASS;
@@ -2095,7 +2097,7 @@ for_initialization[] { int type_count = 0;  int secondtoken = 0; STMT_TYPE stmt_
             { pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
 
-            expression
+            { if(secondtoken == COLON) setMode(MODE_RANGED_FOR); } expression
         )
 ;
 
@@ -3650,7 +3652,7 @@ comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY
 ;
 
 // mark COLON
-colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); LightweightElement element(this); ENTRY_DEBUG } :
+colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); bool markup_colon = true; LightweightElement element(this); ENTRY_DEBUG } :
         {
 
             if(in_ternary) {
@@ -3661,6 +3663,21 @@ colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); 
                 startNewMode(MODE_ELSE | MODE_EXPRESSION | MODE_EXPECT);
                 startElement(SELSE);
 
+                markup_colon = false;
+
+            }
+
+            // only needed when ranged for and not a declaration
+            if(inTransparentMode(MODE_RANGED_FOR)) {
+
+                // start a new mode that will end after the argument list
+                startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
+
+                // start the initialization element
+                startElement(SDECLARATION_RANGE);
+
+                markup_colon = false;
+
             }
 
             if(inLanguage(LANGUAGE_OBJECTIVE_C) && inTransparentMode(MODE_INTERNAL_END_CURLY)) {
@@ -3669,7 +3686,8 @@ colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); 
 
             }
 
-            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)) && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+            if (markup_colon && !(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY))
+                && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
                 && (!inLanguage(LANGUAGE_OBJECTIVE_C) || !inMode(MODE_INTERNAL_END_CURLY)))
                 startElement(SOPERATOR);
 
@@ -4659,9 +4677,9 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
             // start the argument
             startElement(SARGUMENT);
         }
-        (options {warnWhenFollowAmbig = false; } : { count_paren > 0 && (count_paren != 1 || LA(1) != RPAREN) }?
+        (options { warnWhenFollowAmbig = false; } : { count_paren > 0 && (count_paren != 1 || LA(1) != RPAREN) }?
 
-            (
+            (options { generateAmbigWarnings = false; } :
                 { LA(1) == LPAREN }? expression { ++count_paren; } |
 
                 { LA(1) == RPAREN }? expression { --count_paren; } |
@@ -6279,7 +6297,7 @@ try_statement[] { ENTRY_DEBUG } :
 try_statement_with_resource[] { ENTRY_DEBUG } :
         for_like_statement_pre[STRY_BLOCK]
 
-        TRY LPAREN
+        TRY
 
         for_like_statement_post 
 
@@ -6325,7 +6343,7 @@ using_statement[] { ENTRY_DEBUG } :
         // However, this seems to work in this case possibly, becaused it is used with tokens required afterwards.
         for_like_statement_pre[SUSING_STATEMENT]
 
-        USING LPAREN
+        USING 
 
         for_like_statement_post
 
@@ -6346,6 +6364,14 @@ for_like_statement_pre[int tag] { ENTRY_DEBUG } :
 ;
 
 for_like_statement_post[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+
+    {
+
+        startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
+
+        startElement(SFOR_LIKE_CONTROL);
+    }
+    LPAREN
     {
 
         startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
@@ -6378,7 +6404,7 @@ lock_statement[] { ENTRY_DEBUG } :
 
         for_like_statement_pre[SLOCK_STATEMENT]
 
-        LOCK LPAREN
+        LOCK
 
         for_like_statement_post
 
@@ -6389,7 +6415,7 @@ fixed_statement[] { ENTRY_DEBUG } :
 
         for_like_statement_pre[SFIXED_STATEMENT]
 
-        FIXED LPAREN
+        FIXED
 
         for_like_statement_post
 ;
@@ -6399,7 +6425,7 @@ synchronized_statement[] { ENTRY_DEBUG } :
 
         for_like_statement_pre[SSYNCHRONIZED_STATEMENT]
 
-        SYNCHRONIZED LPAREN
+        SYNCHRONIZED
 
         for_like_statement_post
 ;
@@ -7474,7 +7500,7 @@ indexer_parameter_list[] { bool lastwasparam = false; ENTRY_DEBUG } :
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
 
             // start the parameter list element
-            startElement(SPARAMETER_LIST);
+            startElement(SINDEXER_PARAMETER_LIST);
         }
         // parameter list must include all possible parts since it is part of
         // function detection
