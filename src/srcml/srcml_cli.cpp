@@ -194,7 +194,7 @@ void option_field<&srcml_request_t::att_language>(const std::string& value) {
     // check language
     if (value.empty() || srcml_check_language(value.c_str()) == 0) {
         std::cerr << "srcml: invalid language.\n";
-        exit(7); //ERROR CODE TBD
+        exit(6); //ERROR CODE TBD
     }
     srcml_request.att_language = value;
 }
