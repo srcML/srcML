@@ -361,7 +361,7 @@ public :
         is_empty = true;
 
         // collect attributes
-        for(int pos = 0; pos < num_attributes; ++ipos) {
+        for(int pos = 0; pos < num_attributes; ++pos) {
 
             std::string attribute = attributes[pos].localname;
             std::string value = attributes[pos].value;
@@ -426,10 +426,11 @@ public :
 
                     try {
 
-                        srcml_element & element = meta_tags->at(i);
-                        write_startTag(element.localname, element.prefix, element.nb_namespaces, element.namespaces,
-                                       element.nb_attributes, element.attributes);
-                        write_endTag(element.localname, element.prefix, true);
+                        //srcml_element & element = meta_tags->at(i);
+                        // @todo need to be modified to work with new atrribute/namespaces
+                        // write_startTag(element.localname, element.prefix, element.nb_namespaces, element.namespaces,
+                        //                element.nb_attributes, element.attributes);
+                        // write_endTag(element.localname, element.prefix, true);
 
                     } catch(...) { /** @todo handle */ continue; }
 
@@ -459,7 +460,7 @@ public :
      *
      * Overidden startElementNs to handle collection of srcML elements.
      */
-    virtual void startElement((const char * localname, const char * prefix, const char * URI,
+    virtual void startElement(const char * localname, const char * prefix, const char * URI,
                                 int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                                 const struct srcsax_attribute * attributes) {
 
@@ -470,9 +471,9 @@ public :
         if(collect_src && localname[0] == 'e' && localname[1] == 's'
            && strcmp((const char *)localname, "escape") == 0) {
 
-            char value = (int)strtol((const char*) attributes[3], NULL, 0);
+            char value = (int)strtol((const char*) attributes[0].value, NULL, 0);
 
-            charactersUnit((xmlChar *)&value, 1);
+            charactersUnit(&value, 1);
 
 
         }
@@ -482,7 +483,7 @@ public :
 
         if(collect_srcml) {
 
-            write_startTag(localname, prefix, nb_namespaces, namespaces, nb_attributes, attributes);
+            write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, attributes);
 
         }
 
@@ -672,60 +673,60 @@ private :
 
     /**
      * write_startTag
-     * @param localname tag name
-     * @param prefix prefix for the tag
-     * @param URI uri for tag
-     * @param nb_namespaces number of xml namespaces
-     * @param namespaces the prefix/namespaces pairs
-     * @param nb_attributes number of attributes
-     * @param nb_defaulted number defaulted attributes
-     * @param attributes the attributes (name/prefix/uri/value start/value end/)
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param num_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param num_attributes the number of attributes on the tag
+     * @param attributes list of attributes
      *
      * Write out the start tag to the unit string.
      */
-    void write_startTag(const char * localname, const char * prefix, int nb_namespaces,
-                        const char ** namespaces, int nb_attributes, const char ** attributes) {
+    void write_startTag(const char * localname, const char * prefix,
+                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                           const struct srcsax_attribute * attributes) {
 
         *unit->unit += "<";
         if(prefix) {
-            *unit->unit += (const char *)prefix;
+            *unit->unit += prefix;
             *unit->unit += ":";
         }
-        *unit->unit += (const char *)localname;
+        *unit->unit += localname;
 
-        for(int i = 0, pos = 0; i < nb_namespaces; ++i, pos += 2) {
+        for(int pos = 0; pos < num_namespaces; ++pos) {
 
-            if(is_archive && strcmp((const char *)localname, "unit") == 0 && strcmp((const char *)namespaces[pos + 1], SRCML_CPP_NS_URI) != 0)
+            if(is_archive && strcmp(localname, "unit") == 0 && strcmp(namespaces[pos].uri, SRCML_CPP_NS_URI) != 0)
                 continue;
 
             *unit->unit += " xmlns";
-            if(namespaces[pos]) {
+            if(namespaces[pos].prefix) {
 
                 *unit->unit += ":";
-                *unit->unit += (const char *)namespaces[pos];
+                *unit->unit += namespaces[pos].prefix;
 
             }
 
             *unit->unit += "=\"";
-            *unit->unit += (const char *)namespaces[pos + 1];
+            *unit->unit += namespaces[pos].uri;
             *unit->unit += "\"";
 
         }
 
 
-        for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
+        for(int pos = 0; pos < num_attributes; ++pos) {
 
             *unit->unit += " ";
-            if(attributes[pos + 1]) {
+            if(attributes[pos].prefix) {
 
-                *unit->unit += (const char *)attributes[pos + 1];
+                *unit->unit += attributes[pos].prefix;
                 *unit->unit += ":";
 
             }
-            *unit->unit += (const char *)attributes[pos];
+            *unit->unit += attributes[pos].localname;
 
             *unit->unit += "=\"";
-            unit->unit->append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
+            *unit->unit += attributes[pos].value;
             *unit->unit += "\"";
 
 
