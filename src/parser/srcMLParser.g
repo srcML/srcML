@@ -2609,12 +2609,16 @@ using_aliasing[]  { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = 
         }
         EQUAL 
 
-    {
-        startElement(STYPE);
-    }
+        (
+            { pattern_check(stmt_type, secondtoken, type_count) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION
+            || stmt_type == OPERATOR_FUNCTION_DECL || stmt_type == OPERATOR_FUNCTION) }?
+            {
+                startElement(STYPE);
+            }
+            function_declaration[type_count] |
 
-        ({ pattern_check(stmt_type, secondtoken, type_count) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION
-            || stmt_type == OPERATOR_FUNCTION_DECL || stmt_type == OPERATOR_FUNCTION) }? function_declaration[type_count])*
+            set_int[type_count, type_count + 1] variable_declaration_type[type_count]
+            )*
 
 ;
 
