@@ -1,14 +1,14 @@
 /**
- * @file srcMLElement.hpp
+ * @file srcml_element.hpp
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
- * The srcML Toolkit is free software; you can redistribute it and/or modify
+ * srcSAX is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * The srcML Toolkit is distributed in the hope that it will be useful,
+ * srcSAX is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -28,33 +28,36 @@
 #define STRDUP _strdup
 #endif
 
-#include <srcSAX_utilities.hpp>
+#include <srcsax.h>
 
 #include <libxml/parser.h>
 
 #include <string.h>
 #include <string>
 
+/** Check if a copy was actually allocated */
+#define CHECK_COPY(ORIGINAL, COPY) if(ORIGINAL && !COPY) { fprintf(stderr, "ERROR allocating memory"); srcsax_stop_parser(context); return; }
+
 /**
- * srcMLElement
+ * srcml_element
  *
  * Data structure to hold an element
  * mainly root element
  */
-struct srcMLElement {
+struct srcml_element {
 
-    /** Default constructor to Zero out srcMLElement */
-    srcMLElement() : ctxt(0), localname(0), prefix(0), URI(0),
+    /** Default constructor to Zero out srcml_element */
+    srcml_element() : context(0), localname(0), prefix(0), URI(0),
                      nb_namespaces(0), namespaces(0),
                      nb_attributes(0), nb_defaulted(0),
                      attributes(0)
     {}
 
     /** Constructor to initialize using start element items */
-    srcMLElement(xmlParserCtxtPtr ctxt, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
+    srcml_element(srcsax_context * context, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                  int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                  const xmlChar ** attributes)
-        : ctxt(ctxt), localname(0), prefix(0), URI(0),
+        : context(context), localname(0), prefix(0), URI(0),
           nb_namespaces(0), namespaces(0),
           nb_attributes(0), nb_defaulted(0),
           attributes(0) {
@@ -119,8 +122,8 @@ struct srcMLElement {
     }
 
     /** Copy constructor */
-    srcMLElement(const srcMLElement & element)
-        : ctxt(element.ctxt), localname(0), prefix(0), URI(0),
+    srcml_element(const srcml_element & element)
+        : context(element.context), localname(0), prefix(0), URI(0),
           nb_namespaces(0), namespaces(0),
           nb_attributes(0), nb_defaulted(0),
           attributes(0) {
@@ -176,7 +179,7 @@ struct srcMLElement {
     }
 
     /** Overloaded assignment operator */
-    srcMLElement & operator=(srcMLElement element) {
+    srcml_element & operator=(srcml_element element) {
 
         swap(element);
         return *this;
@@ -184,7 +187,7 @@ struct srcMLElement {
     }
 
     /** swap operator */
-    void swap(srcMLElement & element) {
+    void swap(srcml_element & element) {
 
         std::swap(localname, element.localname);
         std::swap(prefix, element.prefix);
@@ -194,12 +197,11 @@ struct srcMLElement {
         std::swap(nb_attributes, element.nb_attributes);
         std::swap(nb_defaulted, element.nb_defaulted);
         std::swap(attributes, element.attributes);
-        std::swap(characters, element.characters);
 
     }
 
     /** destructor */
-    ~srcMLElement() {
+    ~srcml_element() {
 
         if(namespaces) {
 
@@ -233,7 +235,7 @@ struct srcMLElement {
     }
 
     /** parser context */
-    xmlParserCtxtPtr ctxt;
+    srcsax_context * context;
 
     /** local name of an element*/
     const xmlChar* localname;
@@ -258,9 +260,6 @@ struct srcMLElement {
 
     /** attributes of an element*/
     const xmlChar** attributes;
-
-    /** text characters (most likely only those right after root tag */
-    std::string characters;
 
 };
 
