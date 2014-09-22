@@ -2,14 +2,6 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="specifier" filename="specifier_cs">
 
 <unit>
-<decl_stmt><decl><type><specifier>ref</specifier></type></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><specifier>out</specifier></type></decl>;</decl_stmt>
-</unit>
-
-<unit>
 <decl_stmt><decl><type><specifier>in</specifier></type></decl>;</decl_stmt>
 </unit>
 

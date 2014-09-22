@@ -2609,12 +2609,16 @@ using_aliasing[]  { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = 
         }
         EQUAL 
 
-    {
-        startElement(STYPE);
-    }
+        (
+            { pattern_check(stmt_type, secondtoken, type_count) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION
+            || stmt_type == OPERATOR_FUNCTION_DECL || stmt_type == OPERATOR_FUNCTION) }?
+            {
+                startElement(STYPE);
+            }
+            function_declaration[type_count] |
 
-        ({ pattern_check(stmt_type, secondtoken, type_count) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION
-            || stmt_type == OPERATOR_FUNCTION_DECL || stmt_type == OPERATOR_FUNCTION) }? function_declaration[type_count])*
+            set_int[type_count, type_count + 1] variable_declaration_type[type_count]
+            )*
 
 ;
 
@@ -5135,6 +5139,7 @@ catch[antlr::RecognitionException] {
 // compound name for C#
 compound_name_csharp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
+        (modifiers_csharp)*
         (dcolon { iscompound = true; })*
         (DESTOP set_bool[isdestructor] { iscompound = true; })*
         (simple_name_optional_template | push_namestack overloaded_operator)
@@ -5309,7 +5314,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             CRESTRICT | 
 
             // C# & Java
-            INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
+            INTERNAL | SEALED | OVERRIDE | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
             DELEGATE | PARTIAL | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
             { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP | TRANSIENT) |
 
@@ -6908,7 +6913,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         (
             OPERATORS | ASSIGNMENT | TEMPOPS |
             TEMPOPE ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? TEMPOPE)? |
-            EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR |
+            EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR | REF | OUT |
 
             // others are not combined
             NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA |
@@ -6943,7 +6948,7 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
 /** list of operators @todo is this still needed */
 general_operators_list[] { ENTRY_DEBUG } :
         OPERATORS | ASSIGNMENT  | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
-        DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC | BLOCKOP
+        DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC | BLOCKOP | REF | OUT
 ;
 
 // mark up )
@@ -7677,6 +7682,16 @@ multops[] { LightweightElement element(this); ENTRY_DEBUG } :
         (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[is_qmark, true] | BLOCKOP)
 ;
 
+modifiers_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
+    {
+        // markup type modifiers if option is on
+        if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_MODIFIER))
+            startElement(SMODIFIER);
+    }
+    (REF | OUT)
+
+ ;
+
 // ...
 tripledotop[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
@@ -7881,6 +7896,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } :
         { LA(1) != SUPER && LA(1) != QMARK }?
 
+        (generic_specifiers_csharp)*
         ((options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators)*
 
         (type_identifier | literals)
@@ -7893,7 +7909,6 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
             template_argument_expression
         )+ 
 ;
-
 
 // template argument expression
 template_argument_expression[] { ENTRY_DEBUG } :
@@ -7916,6 +7931,13 @@ template_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         OPERATORS | TRETURN | TEMPOPS | EQUAL | MULTOPS | REFOPS | DOTDOT | RVALUEREF |
         QMARK | NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
         )
+;
+
+generic_specifiers_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
+    {
+        startElement(SFUNCTION_SPECIFIER);
+    }
+    (IN | OUT)
 ;
 
 // template extends
