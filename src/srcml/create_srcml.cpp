@@ -104,6 +104,11 @@ void create_srcml(const srcml_request_t& srcml_request,
     else
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_XML_DECL);
 
+    if (*srcml_request.markup_options & SRCML_OPTION_NAMESPACE_DECL)
+        srcml_archive_disable_option(srcml_arch, SRCML_OPTION_NAMESPACE_DECL);
+    else
+        srcml_archive_enable_option(srcml_arch, SRCML_OPTION_NAMESPACE_DECL);
+
     if (srcml_request.att_language)
         srcml_archive_set_language(srcml_arch, srcml_request.att_language->c_str());
     else
