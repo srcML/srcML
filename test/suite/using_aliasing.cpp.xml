@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="using_aliasing">
 
 <unit>
-<using>using <name>a</name> <init>= <type><expr>const <name>int</name></expr></type></init>;</using>
+<using>using <name>a</name> <init>= <type><specifier>const</specifier> <name>int</name></type></init>;</using>
 </unit>
 
 <unit>
@@ -10,11 +10,11 @@
 </unit>
 
 <unit>
-<using><template>template<parameter_list>&lt;&gt;</parameter_list></template> using <name>foo</name> <init>= <type><expr><name><name>bar</name><argument_list type="template">&lt;&gt;</argument_list></name></expr></type></init>;</using>
+<using><template>template<parameter_list>&lt;&gt;</parameter_list></template> using <name>foo</name> <init>= <type><name><name>bar</name><argument_list type="template">&lt;&gt;</argument_list></name></type></init>;</using>
 </unit>
 
 <unit>
-<using><template>template<parameter_list>&lt;<param><type><name>class</name></type> <name>T</name></param>&gt;</parameter_list></template> using <name>Vec</name> <init>= <type><expr><name><name>vector</name><argument_list type="template">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name><name>Alloc</name><argument_list type="template">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></expr></type></init>;</using>
+<using><template>template<parameter_list>&lt;<param><type><name>class</name></type> <name>T</name></param>&gt;</parameter_list></template> using <name>Vec</name> <init>= <type><name><name>vector</name><argument_list type="template">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name><name>Alloc</name><argument_list type="template">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></type></init>;</using>
 </unit>
 
 </unit>

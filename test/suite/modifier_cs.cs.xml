@@ -30,4 +30,13 @@
     <function_decl><name>set</name>;</function_decl>
 }</block></property>
 </unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>foo</name><parameter_list>(<param><decl><type><modifier>ref</modifier> <name>bar</name></type></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>foo</name><parameter_list>(<param><decl><type><modifier>out</modifier> <name>bar</name></type></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
 </unit>
