@@ -7,69 +7,72 @@ source $(dirname "$0")/framework_test.sh
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit language="C++"/>
-	STDOT
-INPUT
-define output <<- 'STDOUT'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit language="C++" filename=sub/a.cpp/>
 	STDOUT
-INPUT
-src2srcml --no-namespace-decl sub/a.cpp
-src2srcml -l C++ --no-namespace-decl -o sub/a.cpp.xml sfile1
-validate(open(sub/a.cpp.xml 'r').read() srcml)
+
+echo -n "" | src2srcml -l C++ --no-namespace-decl
+
+check 3<<< "$output"
+
+define output2 <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit language="C++" filename="sub/a.cpp"/>
+	STDOUT
+
+
+createfile sub/a.cpp ""
+
 src2srcml --no-namespace-decl sub/a.cpp -o sub/a.cpp.xml
 
-validate(open(sub/a.cpp.xml 'r').read() fsrcml)
-
-
+check sub/a.cpp.xml 3<<< "$output2"
 
 ##
 
 # cpp markup else
 
-cpp_src = STDOUT
-#if A
-brea;
-#else
-return;
-#endif
+define cpp_src <<- 'STDOUT'
+	#if A
+	break;
+	#else
+	return;
+	#endif
 	STDOUT
 
 define output <<- 'STDOUT'
 	cpp_marked_<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 	<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
-INPUT
-<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
-<return>return;</return>
-<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
-</unit>
+	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+	<return>return;</return>
+	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+	</unit>
 	STDOUT
 
-define output <<- 'STDOUT'
+define output2 <<- 'STDOUT'
 	cpp_marked_<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename=sub/a.cpp>
-	INPUT
-<break>break;</break>
-<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
-<return>return;</return>
-<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
-</unit>
+	<break>break;</break>
+	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+	<return>return;</return>
+	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+	</unit>
 	STDOUT
 
-f = open(sub/a.cpp 'w')
-f.write(cpp_src)
-f.close()
+createfile sub/a.cpp "$cpp_src"
 
-src2srcml sub/a.cpp "" fcpp_marked_srcml)
-if sys.platform != 'cygwin':
-	src2srcml -l C++ -o sub/a.cpp.xml cpp_src
-	validate(open(sub/a.cpp.xml 'r').read() cpp_marked_srcml)
+src2srcml sub/a.cpp
+
+check 3<<<"$output"
+
+exit 0
+
+src2srcml -l C++ -o sub/a.cpp.xml <<- "$cpp_src"
+
+check sub/a.cpp.xml 3<<<"$output"
+
+
 src2srcml sub/a.cpp -o sub/a.cpp.xml
 
-validate(open(sub/a.cpp.xml 'r').read() fcpp_marked_srcml)
-
-
+check sub/a.cpp.xml 3<<<"$output"
 
 src2srcml --cpp-markup-else sub/a.cpp "" fcpp_marked_srcml)
 
