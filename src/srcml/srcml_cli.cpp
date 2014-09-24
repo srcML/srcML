@@ -423,6 +423,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         // Check option conflicts
         conflicting_options(cli_map, "quiet", "verbose");
         conflicting_options(cli_map, "output", "to-dir");
+        conflicting_options(cli_map, "cpp-text-else", "cpp-markup-else");
 
         // Check dependent options
         option_dependency(cli_map, "no-archive", "to-dir");
@@ -451,7 +452,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
     // Catch all other issues with generic error
     catch(std::exception& e) {
         std::cerr << "srcml: " << e.what() << "\n";
-        std::exit(1);
+        exit(1);
     }
     
     return srcml_request;
@@ -468,8 +469,8 @@ std::pair<std::string, std::string> custom_parser(const std::string& s) {
 // Set to detect option conflicts
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2) {
     if (vm.count(opt1) && !vm[opt1].defaulted() && vm.count(opt2) && !vm[opt2].defaulted()) {
-        throw std::logic_error(std::string("Conflicting options '")
-                               + opt1 + "' and '" + opt2 + "'.");
+        std::cerr << "srcml: " << "Conflicting options '" << opt1 << "' and '" << opt2 << "'.\n";
+        exit(15);
     }
 }
 
