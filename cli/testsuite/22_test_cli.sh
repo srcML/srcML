@@ -2,7 +2,7 @@
 
 # test framework
 source $(dirname "$0")/framework_test.sh
-
+set +e
 # test
 ##
 # cpp markup else
@@ -46,15 +46,15 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-echo -n "" | src2srcml -l C++ --cpp-text-else --cpp_textonly_srcml
+#echo -n "" | src2srcml -l C++ --cpp-text-else --cpp_textonly_srcml
 
-check 4<<< "15"
+#check 4<<< "15"
 
 src2srcml -l C++ --cpp-markup-else --cpp-text-else foobar
 
-check 4<<< "15"
+check_exit 15
 
 src2srcml -l C++ --cpp-text-else --cpp-markup-else foobar
 
-check 4<<< "15"
+check_exit 15
 
