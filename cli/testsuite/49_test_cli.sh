@@ -38,9 +38,8 @@ define cpp_src <<- 'STDOUT'
 	STDOUT
 
 define output <<- 'STDOUT'
-	cpp_marked_<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
-	<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
 	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 	<return>return;</return>
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
@@ -48,8 +47,8 @@ define output <<- 'STDOUT'
 	STDOUT
 
 define output2 <<- 'STDOUT'
-	cpp_marked_<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename=sub/a.cpp>
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"><cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
 	<break>break;</break>
 	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 	<return>return;</return>
@@ -61,7 +60,7 @@ createfile sub/a.cpp "$cpp_src"
 
 src2srcml sub/a.cpp
 
-check 3<<<"$output"
+check 3<<<"$output2"
 
 exit 0
 
