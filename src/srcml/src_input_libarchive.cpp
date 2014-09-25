@@ -240,8 +240,6 @@ namespace {
         curl_easy_cleanup(ping);
         if (http_code != 200)
         {   
-            // Easy handle won't be used, clean it up.
-            curl_easy_cleanup(curldata->handle);
             return -1;
         }
 
