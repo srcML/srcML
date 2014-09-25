@@ -237,12 +237,13 @@ namespace {
         
         long http_code = 0;
         curl_easy_getinfo (ping, CURLINFO_RESPONSE_CODE, &http_code);
+        curl_easy_cleanup(ping);
         if (http_code != 200)
-        {
-            curl_easy_cleanup(ping);
+        {   
             return -1;
         }
 
+        // The resource is there, so lets go get it!
         curldata->multi_handle = curl_multi_init();
         curl_multi_add_handle(curldata->multi_handle, curldata->handle);
         curl_multi_perform(curldata->multi_handle, &curldata->still_running);
