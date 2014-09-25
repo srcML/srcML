@@ -248,7 +248,6 @@ namespace {
         curl_multi_add_handle(curldata->multi_handle, curldata->handle);
         curl_multi_perform(curldata->multi_handle, &curldata->still_running);
 
-        // TODO: SOMETHING HERE TO MAKE SURE THE FILE IS ACTUALLY PRESENT
         return ARCHIVE_OK;
     }
 
