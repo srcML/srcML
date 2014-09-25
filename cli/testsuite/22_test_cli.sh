@@ -50,10 +50,6 @@ src2srcml -l C++ --cpp-text-else <<< "$input"
 
 check 3<<< "$output2"
 
-#echo -n "" | src2srcml -l C++ --cpp-text-else --cpp_textonly_srcml
-
-#check 4<<< "15"
-
 src2srcml -l C++ --cpp-markup-else --cpp-text-else foobar
 
 check_exit 15
