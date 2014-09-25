@@ -114,6 +114,7 @@ void src_input_libarchive(ParseQueue& queue,
 
         status = archive_read_open_filename(arch, input_file.c_str(), 16384);
     }
+
     if (status != ARCHIVE_OK) {
         std::cerr << "Unable to open file " << input_file.filename << '\n';
         exit(1);
@@ -229,6 +230,19 @@ namespace {
         curl_easy_setopt(curldata->handle, CURLOPT_WRITEDATA, curldata);
         curl_easy_setopt(curldata->handle, CURLOPT_URL, curldata->source.c_str());
 
+        // Quick check to see if the remote location exists or is available
+        CURL* ping = curl_easy_duphandle(curldata->handle);
+        curl_easy_setopt(ping, CURLOPT_NOBODY, 1L);
+        curl_easy_perform(ping);
+        
+        long http_code = 0;
+        curl_easy_getinfo (ping, CURLINFO_RESPONSE_CODE, &http_code);
+        if (http_code != 200)
+        {
+            curl_easy_cleanup(ping);
+            return -1;
+        }
+
         curldata->multi_handle = curl_multi_init();
         curl_multi_add_handle(curldata->multi_handle, curldata->handle);
         curl_multi_perform(curldata->multi_handle, &curldata->still_running);
@@ -254,16 +268,6 @@ namespace {
     int archive_curl_close(archive*, void* client_data) {
 
         curl* curldata = (curl*) client_data;
-        /*
-          while ((curldata->msg = curl_multi_info_read(curldata->multi_handle, &curldata->msgs_left))) {
-          if (curldata->msg->msg == CURLMSG_DONE) {
-          if (curldata->msg->data.result) {
-          //                std::cerr << "Download status: " << curldata->msg->data.result << "\n";
-          }
-          break;
-          }
-          }
-        */
         curl_multi_cleanup(curldata->multi_handle);
         curl_easy_cleanup(curldata->handle);
 
