@@ -8,53 +8,50 @@ define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 	STDOUT
-INPUT
-define output <<- 'STDOUT'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename=sub/a.cpp/>
-	INPUT
 
-f = open(sub/a.cpp 'w')
-f.write(sfile1)
-f.close()
+define foutput <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+	STDOUT
+
+createfile sub/a.cpp ""
 
 # separate
 src2srcml --xmlns="http://www.sdml.info/srcML/src" sub/a.cpp
-src2srcml -l C++ --xmlns="http://www.sdml.info/srcML/src" -o sub/a.cpp.xml sfile1
-validate(open(sub/a.cpp.xml 'r').read() srcml)
 
+check 3<<< "$foutput"
+
+echo -n "" | src2srcml -l C++ --xmlns="http://www.sdml.info/srcML/src" -o sub/a.cpp.xml
+
+check sub/a.cpp.xml 3<<< "$output"
 
 src2srcml --xmlns="http://www.sdml.info/srcML/src" sub/a.cpp -o sub/a.cpp.xml
 
-
-validate(open(sub/a.cpp.xml 'r').read() fsrcml)
+check sub/a.cpp.xml 3<<< "$foutput"
 
 src2srcml --xmlns:cpp="http://www.sdml.info/srcML/cpp" sub/a.cpp
 
+check 3<<< "$foutput"
 
+echo -n "" | src2srcml -l C++ --xmlns:cpp="http://www.sdml.info/srcML/cpp" -o sub/a.cpp.xml
 
-src2srcml -l C++ --xmlns:cpp="http://www.sdml.info/srcML/cpp" -o sub/a.cpp.xml sfile1
-validate(open(sub/a.cpp.xml 'r').read() srcml)
-
+check sub/a.cpp.xml 3<<< "$output"
 
 src2srcml --xmlns:cpp="http://www.sdml.info/srcML/cpp" sub/a.cpp -o sub/a.cpp.xml
 
-validate(open(sub/a.cpp.xml 'r').read() fsrcml)
-
-
-
+check sub/a.cpp.xml 3<<< "$foutput"
 
 # multiple
-src2srcml --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" sub/a.cpp "" 
+echo -n "" | src2srcml --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" sub/a.cpp
 
-fsrcml)
-src2srcml -l C++ --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" -o 'sub/a
-.cpp.xml' sfile1
+check 3<<< "$foutput"
 
-validate(open(sub/a.cpp.xml 'r').read() srcml)
-src2srcml --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" sub/a.cpp -o 
-sub/a.cpp.xml
+echo -n "" | src2srcml -l C++ --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" -o sub/a.cpp.xml
 
-validate(open(sub/a.cpp.xml 'r').read() fsrcml)
+check sub/a.cpp.xml 3<<< "$output"
 
+src2srcml --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" sub/a.cpp -o sub/a.cpp.xml
 
+check sub/a.cpp.xml 3<<< "$foutput"
+
+exit 0
