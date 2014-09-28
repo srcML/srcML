@@ -14,7 +14,7 @@ define output <<- 'STDOUT'
 INPUT
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename=sub/a.cpp/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="sub/a.cpp"/>
 	INPUT
 src2srcml sub/a.cpp -d "bar"
 src2srcml sub/a.cpp --directory "bar"

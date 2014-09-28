@@ -12,7 +12,7 @@ define output <<- 'STDOUT'
 INPUT
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" language="Java" filename=sub/a.cpp/>
+	<unit xmlns="http://www.sdml.info/srcML/src" language="Java" filename="sub/a.cpp"/>
 	STDOUT
 INPUT
 src2srcml sub/a.cpp -l --language "Java"
