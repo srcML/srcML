@@ -36,7 +36,7 @@ src2srcml -l C++ --cpp-markup-else <<< "$input"
 
 check 3<<< "$output"
 
-define output <<- 'STDOUT'
+define output2 <<- 'STDOUT'
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 	<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
@@ -46,9 +46,9 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-#echo -n "" | src2srcml -l C++ --cpp-text-else --cpp_textonly_srcml
+src2srcml -l C++ --cpp-text-else <<< "$input"
 
-#check 4<<< "15"
+check 3<<< "$output2"
 
 src2srcml -l C++ --cpp-markup-else --cpp-text-else foobar
 
