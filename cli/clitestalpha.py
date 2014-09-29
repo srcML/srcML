@@ -1217,7 +1217,7 @@ break;
 
 cpp_textonly_srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">0</literal></expr></cpp:if>
 break;
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
@@ -1225,7 +1225,7 @@ break;
 
 fcpp_textonly_srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">0</literal></expr></cpp:if>
 break;
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
@@ -1251,7 +1251,7 @@ validate(open('sub/a.cpp.xml', 'r').read(), fcpp_textonly_srcml)
 
 cpp_marked_srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">0</literal></expr></cpp:if>
 <break>break;</break>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
@@ -1259,7 +1259,7 @@ cpp_marked_srcml = xml_declaration + """
 
 fcpp_marked_srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">0</literal></expr></cpp:if>
 <break>break;</break>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
