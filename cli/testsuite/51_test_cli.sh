@@ -9,45 +9,48 @@ define sfile <<< "a;"
 
 define sxmlfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
-	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	</unit>
 	STDOUT
 
 define fxmlfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp.gz">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp.gz"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT
 
-if platform.system() != "Windows" :
+createfile sub/a.cpp "a;\n"
 
-	f = open('sub/a.cpp.gz' 'r')
-	gzipped = f.read()
-	f.close()
+rmfile sub/a.cpp.gz
 
-	src2srcml -l C++ gzipped sxmlfile)
-	src2srcml sub/a.cpp.gz' "" fxmlfile)
-	if sys.platform != 'cygwin' :
-	src2srcml -l C++ -o sub/a.cpp.xml gzipped
-	validate(open(sub/a.cpp.xml 'r').read() sxmlfile)
-	src2srcml sub/a.cpp.gz' -o sub/a.cpp.xml
+gzip sub/a.cpp
 
-	validate(open(sub/a.cpp.xml 'r').read() fxmlfile)
+src2srcml sub/a.cpp.gz
 
+check 3<<< "$fxmlfile"
+
+cat sub/a.cpp.gz | src2srcml -l C++ -o sub/a.cpp.xml
+
+check sub/a.cpp.xml 3<<< "$sxmlfile"
+
+src2srcml sub/a.cpp.gz -o sub/a.cpp.xml
+
+check sub/a.cpp.xml 3<<< "$fxmlfile"
+
+src2srcml sub/a.cpp.gz -o sub/a.cpp.xml.gz
 	
+cat sub/a.cpp.xml.gz | srcml2src
 
-	f = open('sub/a.cpp.xml.gz' 'r')
+check 3<<< "a;"
 
-	gzipped = f.read()
-	f.close()
+srcml2src sub/a.cpp.xml.gz
 
-	srcml2src gzipped sfile)
-	srcml2src 'sub/a.cpp.xml.gz' <<< "a")
-	if sys.platform != 'cygwin' :
-	srcml2src -o sub/a.cpp gzipped
-	validate(open(sub/a.cpp 'r').read() sfile)
-	srcml2src 'sub/a.cpp.xml.gz' -o sub/a.cpp ""
-	validate(open(sub/a.cpp 'r').read() sfile)
+check 3<<< "a;"
 
-##
-# src2srcml Markup Extensions
+cat sub/a.cpp.xml.gz | srcml2src -o sub/a.cpp
+
+check sub/a.cpp 3<<< "a;"
+
+srcml2src sub/a.cpp.xml.gz -o sub/a.cpp
+
+check sub/a.cpp 3<<< "a;"

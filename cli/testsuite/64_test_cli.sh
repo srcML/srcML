@@ -11,14 +11,19 @@ define srcml <<- STDOUT
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 	STDOUT
 
+define srcmlout <<- STDOUT
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+	STDOUT
 
-createfile sub/a.cpp.xml "$srcml"
 
-srcml2src --xml --no-xml-declaration
+srcml2src --xml --no-xml-declaration <<< "$srcml"
+
+check 3<<< "$srcmlout"
+
+srcml2src --xml --no-xml-declaration -o sub/a.cpp.xml <<< "$srcml"
 
 check sub/a.cpp.xml 3<<< "$srcmlout"
 
 srcml2src --no-xml-declaration <<< "$srcml"
 
-check sub/b.cpp.xml 3<<< "$srcmlout"
-
+check 3<<< "$srcmlout"

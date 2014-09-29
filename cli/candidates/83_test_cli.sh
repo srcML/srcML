@@ -76,7 +76,7 @@ define output <<- 'STDOUT'
 
 define output <<- 'STDOUT'
 	sxmlfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" filename=sub/a.cpp pos:tabs="8"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" filename="sub/a.cpp" pos:tabs="8"/>
 	INPUT
 
 f = open(sub/a.cpp 'w')
@@ -102,7 +102,7 @@ define output <<- 'STDOUT'
 
 define output <<- 'STDOUT'
 	sxmlfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" filename=sub/a.cpp pos:tabs="4"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" filename="sub/a.cpp" pos:tabs="4"/>
 	INPUT
 
 f = open(sub/a.cpp 'w')

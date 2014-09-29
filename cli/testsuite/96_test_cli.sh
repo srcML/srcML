@@ -3,6 +3,8 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
+exit 1
+
 # test
 srcml_new = f.read()
 f.close()

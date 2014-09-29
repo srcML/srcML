@@ -3,7 +3,8 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-# test
+# src2srcml Markup Extensions
+
 createfile sub/a.cpp ""
 
 define sfilelit <<- 'STDOUT'
@@ -27,3 +28,4 @@ src2srcml --literal sub/a.cpp -o sub/a.cpp.xml
 
 check sub/a.cpp.xml 3<<< "$sfilelit"
 
+exit 0
