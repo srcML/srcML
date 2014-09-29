@@ -1482,13 +1482,13 @@ sxmlfile1 = xml_declaration + """
 f = open('sub/a.cpp', 'w')
 f.write(sfile1)
 f.close()
-checkallforms(srcml2src, "", option.SRC_ENCODING_DISPLAY_FLAG, "ISO-8859-1", sxmlfile1, sfile1)
-checkallformsfile(srcml2src, 'sub/a.cpp.xml', "", option.SRC_ENCODING_DISPLAY_FLAG, "ISO-8859-1", "", sfile1)
-check([srcml2src, option.SRC_ENCODING_DISPLAY_FLAG, "ISO-8859-1", 'sub/a.cpp.xml'], "", sfile1)
+checkallforms(srcml2src, "", option.SRC_ENCODING_FLAG, "ISO-8859-1", sxmlfile1, sfile1)
+checkallformsfile(srcml2src, 'sub/a.cpp.xml', "", option.SRC_ENCODING_FLAG, "ISO-8859-1", "", sfile1)
+check([srcml2src, option.SRC_ENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml'], "", sfile1)
 if sys.platform != 'cygwin' :
-        check([srcml2src, option.SRC_ENCODING_DISPLAY_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp'], sxmlfile1, "")
+        check([srcml2src, option.SRC_ENCODING_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp'], sxmlfile1, "")
         validate(open('sub/a.cpp', 'r').read(), sfile1)
-check([srcml2src, option.SRC_ENCODING_DISPLAY_FLAG, "ISO-8859-1", 'sub/a.cpp.xml', '-o', 'sub/a.cpp'], "", "")
+check([srcml2src, option.SRC_ENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml', '-o', 'sub/a.cpp'], "", "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
 
 ##
