@@ -24,6 +24,7 @@
 #include <src_prefix.hpp>
 #include <boost/program_options.hpp>
 #include <boost/foreach.hpp>
+#include <stdlib.h>
 
 namespace prog_opts = boost::program_options;
 
@@ -164,13 +165,24 @@ void option_field<&srcml_request_t::files_from>(const std::vector<std::string>& 
     }
 }
 
+// option src encoding
+template <>
+void option_field<&srcml_request_t::src_encoding>(const std::string& value) {
+
+    if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
+        std::cerr << "srcml: invalid src encoding.\n";
+        exit(4);
+    }
+    srcml_request.src_encoding = value;
+}
+
 // option xml encoding attribute
 template <>
 void option_field<&srcml_request_t::att_xml_encoding>(const std::string& value) {
 
     if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
-        std::cerr << "srcmlCLI: invalid encoding.\n";
-        exit(1); //ERROR CODE TBD
+        std::cerr << "srcml: invalid xml encoding.\n";
+        exit(4);
     }
     srcml_request.att_xml_encoding = value;
 }
@@ -181,8 +193,8 @@ void option_field<&srcml_request_t::att_language>(const std::string& value) {
 
     // check language
     if (value.empty() || srcml_check_language(value.c_str()) == 0) {
-        std::cerr << "srcmlCLI: invalid language.\n";
-        exit(1); //ERROR CODE TBD
+        std::cerr << "srcml: invalid language.\n";
+        exit(6); //ERROR CODE TBD
     }
     srcml_request.att_language = value;
 }
@@ -193,7 +205,7 @@ void option_field<&srcml_request_t::tabs>(int value) {
 
     // check tabstop
     if (value < 1) {
-        std::cerr << "srcmlCLI: " << value << " is an invalid tab stop. Tab stops must be 1 or higher.\n";
+        std::cerr << "srcml: " << value << " is an invalid tab stop. Tab stops must be 1 or higher.\n";
         exit(1); //ERROR CODE TBD
     }
     srcml_request.tabs = value;
@@ -411,6 +423,8 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         // Check option conflicts
         conflicting_options(cli_map, "quiet", "verbose");
         conflicting_options(cli_map, "output", "to-dir");
+        conflicting_options(cli_map, "cpp-text-else", "cpp-markup-else");
+        conflicting_options(cli_map, "cpp-text-if0", "cpp-markup-if0");
 
         // Check dependent options
         option_dependency(cli_map, "no-archive", "to-dir");
@@ -426,8 +440,19 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 #endif
 
     }
+    // Unknown Option
+    catch(boost::program_options::unknown_option& e) {
+        std::cerr << "srcml: " << e.what() << "\n";
+        exit(3);
+    }
+    // Missing Option Value
+    catch(boost::program_options::error_with_option_name& e) {
+        std::cerr << "srcml: " << e.what() << "\n";
+        exit(7);
+    }
+    // Catch all other issues with generic error
     catch(std::exception& e) {
-        std::cerr << e.what() << "\n";
+        std::cerr << "srcml: " << e.what() << "\n";
         exit(1);
     }
     
@@ -445,8 +470,8 @@ std::pair<std::string, std::string> custom_parser(const std::string& s) {
 // Set to detect option conflicts
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2) {
     if (vm.count(opt1) && !vm[opt1].defaulted() && vm.count(opt2) && !vm[opt2].defaulted()) {
-        throw std::logic_error(std::string("Conflicting options '")
-                               + opt1 + "' and '" + opt2 + "'.");
+        std::cerr << "srcml: " << "Conflicting options '" << opt1 << "' and '" << opt2 << "'.\n";
+        exit(15);
     }
 }
 
