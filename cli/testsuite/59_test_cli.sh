@@ -8,33 +8,35 @@ source $(dirname "$0")/framework_test.sh
 ##
 # srcml2src info and longinfo
 
-info = STDOUTxmlns="http://www.sdml.info/srcML/src"
-xmlns:cpp="http://www.sdml.info/srcML/cpp"
-encoding="UTF-8"
-language="C++"
-directory="sub"
-filename="a.cpp"
+define info <<- 'STDOUT'
+	xmlns="http://www.sdml.info/srcML/src"
+	xmlns:cpp="http://www.sdml.info/srcML/cpp"
+	encoding="UTF-8"
+	language="C++"
+	directory="sub"
+	filename="a.cpp"
 	STDOUT
 
-longinfo = STDOUTxmlns="http://www.sdml.info/srcML/src"
-xmlns:cpp="http://www.sdml.info/srcML/cpp"
-encoding="UTF-8"
-language="C++"
-directory="sub"
-filename="a.cpp"
-units="1"
+define longinfo <<- 'STDOUT'
+	xmlns="http://www.sdml.info/srcML/src"
+	xmlns:cpp="http://www.sdml.info/srcML/cpp"
+	encoding="UTF-8"
+	language="C++"
+	directory="sub"
+	filename="a.cpp"
+	units="1"
 	STDOUT
 
-longinfonested = STDOUTxmlns="http://www.sdml.info/srcML/src"
-encoding="UTF-8"
-units="2"
+define longinfonested <<- 'STDOUT'
+	xmlns="http://www.sdml.info/srcML/src"
+	encoding="UTF-8"
+	units="2"
 	STDOUT
 
 define output <<- 'STDOUT'
-	sxmlfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
-	INPUT
-</unit>
+	</unit>
 	STDOUT
 
 define nestedfile <<- 'STDOUT'
