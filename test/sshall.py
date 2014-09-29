@@ -36,10 +36,10 @@ machines = [
     , "macmaverickstest"
     , "mint13build"
     , "mint13test"
-    , "mint13build64"
-    , "mint13test64"
     , "mint17build"
     , "mint17test"
+    , "mint13build64"
+    , "mint13test64"
     , "mint17build64"
     , "mint17test64"
 ]
