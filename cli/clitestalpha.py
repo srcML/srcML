@@ -34,20 +34,22 @@ checkallforms(src2srcml, option.DEBUG_FLAG_SHORT, option.DEBUG_FLAG, "", "", src
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
-checkallforms(src2srcml, option.LANGUAGE_DISPLAY_FLAG, option.LANGUAGE_DISPLAY_FLAG, "C++", "", srcml)
+
+checkallforms(src2srcml, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C++", "", srcml)
+
 
 # test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C"/>
 """
-checkallforms(src2srcml, option.LANGUAGE_DISPLAY_FLAG, option.LANGUAGE_DISPLAY_FLAG, "C", "", srcml)
+checkallforms(src2srcml, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C", "", srcml)
 
 
 # test
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java"/>
 """
-checkallforms(src2srcml, option.LANGUAGE_DISPLAY_FLAG, option.LANGUAGE_DISPLAY_FLAG, "Java", "", srcml)
+checkallforms(src2srcml, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "Java", "", srcml)
 
 # test
 ##
