@@ -153,7 +153,7 @@ nestedfile = xml_declaration + """
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp" hash="aecf18b52d520ab280119febd8ff6c803135ddfc">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp" hash="aecf18b52d520ab280119febd8ff6c803135ddfc">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
