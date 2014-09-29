@@ -930,7 +930,7 @@ b;
 nestedfile1 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
@@ -940,11 +940,11 @@ nestedfile1 = xml_declaration + """
 nestedfile = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp" hash="aecf18b52d520ab280119febd8ff6c803135ddfc">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -954,11 +954,11 @@ nestedfile = xml_declaration + """
 nestedfilesrc = xml_declaration + """
 <src:unit xmlns:src="http://www.sdml.info/srcML/src">
 
-<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6">
 <src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt>
 </src:unit>
 
-<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp" hash="aecf18b52d520ab280119febd8ff6c803135ddfc">
 <src:expr_stmt><src:expr><src:name>b</src:name></src:expr>;</src:expr_stmt>
 </src:unit>
 
@@ -984,11 +984,11 @@ validate(open('sub/a.cpp.xml').read(), nestedfilesrc)
 nestedfile = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp" hash="aecf18b52d520ab280119febd8ff6c803135ddfc">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
