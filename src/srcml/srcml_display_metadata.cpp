@@ -176,10 +176,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         if (srcml_request.xmlns_prefix_query) {
             const char* prefix = srcml_archive_get_prefix_from_uri(srcml_arch, srcml_request.xmlns_prefix_query->c_str());
             if (prefix) {
-                std::cout << prefix << "\n";
-            }
-            else {
-                std::cout << "" << "\n";
+                std::cout << prefix;
             }
         }
 
