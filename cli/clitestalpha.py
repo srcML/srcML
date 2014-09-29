@@ -333,7 +333,7 @@ nestedfileextra = xml_declaration + """
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="sub" filename="b.cpp" mytag="foo" >
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="sub" filename="b.cpp" mytag="foo">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -364,11 +364,11 @@ nestedfileextra = xml_declaration + """
 <expr_stmt lc:line="1"><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="sub" filename="b.cpp" mytag="foo" >
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="sub" filename="b.cpp" mytag="foo">
 <expr_stmt lc:line="1"><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="sub" filename="c.cpp" mytag="foo" >
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="sub" filename="c.cpp" mytag="foo">
 <expr_stmt lc:line="1"><expr><name>c</name></expr>;</expr_stmt>
 </unit>
 
@@ -382,13 +382,13 @@ sxmlfile1extra = xml_declaration + """
 """
 
 sxmlfile2extra = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="Java" dir="sub" filename="b.cpp" mytag="foo" >
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="Java" dir="sub" filename="b.cpp" mytag="foo">
 <expr_stmt lc:line="1"><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 """
 
 sxmlfile3extra = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="C++" dir="sub" filename="c.cpp" mytag="foo" >
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="C++" dir="sub" filename="c.cpp" mytag="foo">
 <expr_stmt lc:line="1"><expr><name>c</name></expr>;</expr_stmt>
 </unit>
 """
@@ -1425,7 +1425,7 @@ nestedfileextra = xml_declaration + """
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="emptysrc" mytag="foo" filename="empty.java">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="emptysrc" filename="empty.java" mytag="foo">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
