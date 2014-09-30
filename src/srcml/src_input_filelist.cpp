@@ -44,6 +44,10 @@ void src_input_filelist(ParseQueue& queue,
 		if (line[0] == '#')
 			continue;
 
+        // TODO: Trim leading and trailing whitespace
+        if (line[0] == '\n')
+            continue;
+
         srcml_handler_dispatch(queue, srcml_arch, srcml_request, line);
     }
 }
