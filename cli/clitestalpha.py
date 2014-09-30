@@ -624,17 +624,17 @@ check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.NO_NAMESPACE_DECLARA
 # test
 ##
 # check missingfile
-srcml = "src2srcml: Unable to open file foo.c\n"
+srcml = "srcml: Unable to open file foo.c\n"
 
 checkError([src2srcml, 'foo.c'], "", srcml)
 
 # test
-srcml = "src2srcml: Unable to open file abc.c\n"
+srcml = "srcml: Unable to open file abc.c\n"
 
 checkError([src2srcml, 'abc.c'], "", srcml)
 
 # test
-srcml = "src2srcml: Unable to open file ../src/foo.c\n"
+srcml = "srcml: Unable to open file ../src/foo.c\n"
 
 checkError([src2srcml, '../src/foo.c'], "", srcml)
 
