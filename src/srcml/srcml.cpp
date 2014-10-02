@@ -93,24 +93,25 @@ int main(int argc, char * argv[]) {
 
     // src->srcml
     if (request_create_srcml(srcml_request, input_sources, destination)) {
-
+        
         pipeline.push_back(create_srcml);
     }
 
     // srcml->srcml
     if (request_transform_srcml(srcml_request, input_sources, destination)) {
-
+        
         pipeline.push_back(transform_srcml);
     }
 
     // srcml->metadata
     if (request_display_metadata(srcml_request, input_sources, destination)) {
+        
         pipeline.push_back(srcml_display_metadata);
     }
     
     // srcml->src
     if (request_create_src(srcml_request, input_sources, destination)) {
-
+        
         pipeline.push_back(create_src);
     }
 

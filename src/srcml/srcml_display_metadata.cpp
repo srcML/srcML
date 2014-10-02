@@ -27,6 +27,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <iomanip>
+#include <string.h>
 
 // display unit names and total count
 int srcml_unit_count(srcml_archive* srcml_arch) {
@@ -52,10 +53,25 @@ void srcml_list_unit_files(srcml_archive* srcml_arch) {
 
 void srcml_display_info(srcml_archive* srcml_arch) {
 
-    if(srcml_archive_get_namespace_uri(srcml_arch, 0))
-        std::cout << "xmlns=" << "\"" << srcml_archive_get_namespace_uri(srcml_arch, 0) << "\"\n";
-    if(srcml_archive_get_encoding(srcml_arch))
+    int nsSize = srcml_archive_get_namespace_size(srcml_arch);
+
+    for (int i = 0; i < nsSize; ++i) {
+        if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
+            if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "") == 0)
+                std::cout << "xmlns=\"" << srcml_archive_get_namespace_uri(srcml_arch, i) << "\"\n";
+            if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "cpp") == 0)
+                std::cout << "xmlns:" << srcml_archive_get_namespace_prefix(srcml_arch, i) << "=\"" << srcml_archive_get_namespace_uri(srcml_arch, i) << "\"\n";
+        }
+    }
+
+    if (srcml_archive_get_encoding(srcml_arch))
         std::cout << "encoding=" << "\"" << srcml_archive_get_encoding(srcml_arch) << "\"\n";
+    if (srcml_archive_get_language(srcml_arch))
+        std::cout << "language=" << "\"" << srcml_archive_get_language(srcml_arch) << "\"\n"; 
+    if (srcml_archive_get_directory(srcml_arch))
+        std::cout << "directory=" << "\"" << srcml_archive_get_directory(srcml_arch) << "\"\n";
+    if (srcml_archive_get_filename(srcml_arch))
+        std::cout << "filename=" << "\"" << srcml_archive_get_filename(srcml_arch) << "\"\n";
 }
 
 void srcml_display_unit_count(srcml_archive* srcml_arch) {
@@ -108,7 +124,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             }
             else {
                 if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)
-                    std::cout << "\n";
+                    std::cout << "";
                 else
                     std::cout << "language=\"\"\n";
             }
@@ -124,7 +140,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             }
             else {
                 if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_FILENAME)
-                    std::cout << "\n";
+                    std::cout << "";
                 else
                     std::cout << "filename=\"\"\n";
             }
@@ -140,7 +156,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             }
             else {
                 if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY)
-                    std::cout << "\n";
+                    std::cout << "";
                 else
                     std::cout << "directory=\"\"\n";
             }
@@ -156,7 +172,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             }
             else {
                 if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION)
-                    std::cout << "\n";
+                    std::cout << "";
                 else
                     std::cout << "version=\"\"\n";
             }
@@ -176,10 +192,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         if (srcml_request.xmlns_prefix_query) {
             const char* prefix = srcml_archive_get_prefix_from_uri(srcml_arch, srcml_request.xmlns_prefix_query->c_str());
             if (prefix) {
-                std::cout << prefix << "\n";
-            }
-            else {
-                std::cout << "" << "\n";
+                std::cout << prefix;
             }
         }
 

@@ -36,10 +36,10 @@ machines = [
  , '"Mac OS X Mavericks Test"'
  , '"Mint Linux 13 Build"'
  , '"Mint Linux 13 Test"'
- , '"Mint Linux 13 Build (64-bit)"'
- , '"Mint Linux 13 Test (64-bit)"'
  , '"Mint Linux 17 Build"'
  , '"Mint Linux 17 Test"'
+ , '"Mint Linux 13 Build (64-bit)"'
+ , '"Mint Linux 13 Test (64-bit)"'
  , '"Mint Linux 17 Build (64-bit)"'
  , '"Mint Linux 17 Test (64-bit)"'
 ]

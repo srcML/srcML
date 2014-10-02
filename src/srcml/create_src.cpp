@@ -84,7 +84,13 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_unit* unit = srcml_read_unit_header(arch);
                 srcml_free_unit(unit);
             }
+
             srcml_unit* unit = srcml_read_unit_header(arch);
+
+            if (!unit) {
+                std::cerr << "Requested unit " << srcml_request.unit << " out of range.\n";
+                exit(4);
+            }
 
             srcml_archive* oarch = srcml_create_archive();
             srcml_archive_disable_option(oarch, SRCML_OPTION_ARCHIVE);
@@ -116,8 +122,14 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_unit* unit = srcml_read_unit_header(arch);
                 srcml_free_unit(unit);
             }
+
             srcml_unit* unit = srcml_read_unit_header(arch);
 
+            if (!unit) {
+                std::cerr << "Requested unit " << srcml_request.unit << " out of range.\n";
+                exit(4);
+            }
+            
             srcml_unparse_unit_fd(unit, destination);
 
             srcml_free_unit(unit);
@@ -133,7 +145,13 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_unit* unit = srcml_read_unit_header(arch);
                 srcml_free_unit(unit);
             }
+
             srcml_unit* unit = srcml_read_unit_header(arch);
+
+            if (!unit) {
+                std::cerr << "Requested unit " << srcml_request.unit << " out of range.\n";
+                exit(4);
+            }
 
             srcml_unparse_unit_filename(unit, destination.c_str());
 

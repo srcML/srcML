@@ -8424,9 +8424,15 @@ ENTRY_DEBUG } :
                 bool end_statement = inMode(MODE_END_AT_ENDIF);
                 while(inMode(MODE_END_AT_ENDIF))
                     endMode();
-                
+
                 if(end_statement)
                     else_handling();
+
+                if(LA(1) == 1) {
+
+                    eol_post(directive_token, markblockzero);
+                    return;
+                }
 
             }
 
