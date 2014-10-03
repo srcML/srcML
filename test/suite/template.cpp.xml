@@ -175,4 +175,8 @@
 <decl_stmt><decl><type><specifier>constexpr</specifier> <name>T</name></type> <name>pi</name> <init>= <expr><call><name>T</name><argument_list>(<argument><expr><literal type="number">3.1415926535897932385</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt></template>
 </unit>
 
+<unit>
+<template>template<parameter_list>&lt;<param><type><typename>typename</typename><modifier>...</modifier></type></param>&gt;</parameter_list> <struct>struct <name>Tuple</name> <block>{<public type="default"/>}</block>;</struct></template>
+</unit>
+
 </unit>

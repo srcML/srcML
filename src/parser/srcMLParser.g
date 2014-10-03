@@ -3848,6 +3848,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
               int& posin            /* */
         ] {
             token = 0;
+            int parameter_pack_pos = -1;
             fla = 0;
             type_count = 0;
             type = NONE;
@@ -3892,6 +3893,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             set_bool[is_qmark, (is_qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
 
             set_int[posin, LA(1) == IN ? posin = type_count : posin]
+            set_int[parameter_pack_pos, LA(1) == DOTDOTDOT ? parameter_pack_pos = type_count : parameter_pack_pos]
 
             set_bool[isoperator, isoperator || LA(1) == OPERATOR]
 
@@ -4064,7 +4066,11 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         // have a sequence of type tokens, last one is function/variable name
         // (except for function pointer, which is handled later).
         // Using also has no name so counter operation.
-        set_int[type_count, inMode(MODE_USING) ? type_count + 1: type_count]
+        set_int[type_count, inMode(MODE_USING) ? type_count + 1 : type_count]
+
+        set_int[type_count, type_count > 1 && inLanguage(LANGUAGE_CXX) && parameter_pack_pos >= 0
+             && parameter_pack_pos == (type_count - 1) ? type_count + 1 : type_count]
+
         set_int[type_count, type_count > 1 ? type_count - 1 : 0]
 
         // special case for what looks like a destructor declaration
