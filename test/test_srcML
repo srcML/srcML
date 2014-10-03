@@ -50,8 +50,10 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
     fi
 
     if [[ $OS = "mint" || $OS = "" ]]; then
-        scp ~/Dropbox/srcML/Unix/Mint16/srcML.tar.gz mint16test:/srcML
-        scp ~/Dropbox/srcML/Unix/Mint16-64/srcML.tar.gz mint16test64:/srcML
+        scp ~/Dropbox/srcML/Unix/Mint13/srcML.tar.gz mint13test:/srcML
+        scp ~/Dropbox/srcML/Unix/Mint13-64/srcML.tar.gz mint13test64:/srcML
+        scp ~/Dropbox/srcML/Unix/Mint17/srcML.tar.gz mint17test:/srcML
+        scp ~/Dropbox/srcML/Unix/Mint17-64/srcML.tar.gz mint17test64:/srcML
     fi
 
     if [[ $OS = "" ]]; then

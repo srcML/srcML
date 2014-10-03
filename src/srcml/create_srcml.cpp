@@ -44,7 +44,6 @@ void srcml_handler_dispatch(ParseQueue& queue,
 
     // call appropriate handler
     if (input.state == SRCML) {
-
         // libsrcml can apply gz decompression
         // all other srcml compressions require a per-input decompression stage
         srcml_input_src uninput = input;
@@ -104,6 +103,11 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_disable_option(srcml_arch, SRCML_OPTION_XML_DECL);
     else
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_XML_DECL);
+
+    if (*srcml_request.markup_options & SRCML_OPTION_NAMESPACE_DECL)
+        srcml_archive_disable_option(srcml_arch, SRCML_OPTION_NAMESPACE_DECL);
+    else
+        srcml_archive_enable_option(srcml_arch, SRCML_OPTION_NAMESPACE_DECL);
 
     if (srcml_request.att_language)
         srcml_archive_set_language(srcml_arch, srcml_request.att_language->c_str());

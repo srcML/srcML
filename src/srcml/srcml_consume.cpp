@@ -148,7 +148,8 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             throw status;
 
     } catch (...) {
-        fprintf(stderr, "Error in constructing srcml\n");
+        // TODO: Fix for proper filename
+        fprintf(stderr, "srcml: Unable to open file %s\n", request->filename->c_str());
         if (unit)
             srcml_free_unit(unit);
         unit = 0;

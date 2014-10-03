@@ -255,7 +255,7 @@ Files".  Then, set lib/antlr/cpp/antlr as an include directory.
 * boost will need to be compiled.  The zip file is large, and can take a
 large amount of time on Windows.  Then, run:
 
-	./bootstrap.sh
+	./bootstrap.bat
 
 This will create a project-config.jam file copy the following contents
 replacing everything (Using boostrap.sh to configure does not seem to

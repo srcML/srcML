@@ -40,6 +40,9 @@
 #define STDOUT_FILENO   1       /* standard output file descriptor */
 #define STDERR_FILENO   2       /* standard error file descriptor */
 #endif
+#ifdef _MSC_BUILD 
+#define ssize_t long
+#endif
 
  class srcml_input_src;
 
@@ -166,10 +169,10 @@ template <typename T>
 inline bool contains(const srcml_input_src&) { return false; }
 
 template <>
-inline bool contains<FILE*>(const srcml_input_src& input) { return input.fileptr; }
+inline bool contains<FILE*>(const srcml_input_src& input) { return bool(input.fileptr); }
 
 template <>
-inline bool contains<int>(const srcml_input_src& input) { return input.fd; }
+inline bool contains<int>(const srcml_input_src& input) { return bool(input.fd); }
 
 inline bool is_src(const srcml_input_src& input) { return input.state == SRC; }
 
