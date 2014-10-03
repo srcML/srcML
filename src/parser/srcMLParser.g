@@ -3417,6 +3417,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
           pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
         kr_parameter[type_count] |
 
+        // function try block, must be before function_specifier
+        { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
+        try_statement |
+
         // function specifier at end of function header
         { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL)
             && (LA(1) != EQUAL || (inLanguage(LANGUAGE_CXX) && (next_token() == CONSTANTS || next_token() == DEFAULT || next_token() == DELETE))) }?
@@ -5459,7 +5463,7 @@ destructor_definition[] { ENTRY_DEBUG } :
         destructor_header
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
-        
+
 ;
 
 // destructor declaration
