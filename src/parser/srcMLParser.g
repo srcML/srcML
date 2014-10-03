@@ -5457,6 +5457,9 @@ destructor_definition[] { ENTRY_DEBUG } :
             startElement(SDESTRUCTOR_DEFINITION);
         }
         destructor_header
+
+        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
+        
 ;
 
 // destructor declaration
