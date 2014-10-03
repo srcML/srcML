@@ -45,4 +45,13 @@
 <template>template <parameter_list>&lt;<param><type><name>T</name></type></param>&gt;</parameter_list> <constructor><name><name><name>K</name><argument_list type="template">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>K</name></name><parameter_list>()</parameter_list> <block>{}</block></constructor></template>
 </unit>
 
+<unit>
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <try>try <block>{}</block> <catch>catch<parameter_list>(<param><decl><type><modifier>...</modifier></type></decl></param>)</parameter_list> <block>{}</block></catch></try></constructor>
+</unit>
+
+<unit>
+<constructor><name><name>S</name><operator>::</operator><name>S</name></name><parameter_list>(<param><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>string</name></name><modifier>&amp;</modifier></type> <name>arg</name></decl></param>)</parameter_list> <try>try <member_list>: <call><name>m</name><argument_list>(<argument><expr><name>arg</name></expr></argument>, <argument><expr><literal type="number">100</literal></expr></argument>)</argument_list></call> </member_list><block>{
+}</block> <catch>catch<parameter_list>(<param><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>exception</name></name><modifier>&amp;</modifier></type> <name>e</name></decl></param>)</parameter_list> <block>{}</block></catch></try></constructor>
+</unit>
+
 </unit>

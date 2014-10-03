@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="destructor">
+
+<unit>
+<destructor><name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>()</parameter_list> <try>try <block>{}</block> <catch>catch<parameter_list>(<param><decl><type><modifier>...</modifier></type></decl></param>)</parameter_list> <block>{}</block></catch></try></destructor>
+</unit>
+
+</unit>
