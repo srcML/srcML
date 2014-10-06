@@ -2314,7 +2314,7 @@ xpath_error = """srcml2src: Start tag expected, '<' not found in '-'
 xpath = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 
 </unit>
 """
