@@ -6926,7 +6926,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         }
         (
             OPERATORS | ASSIGNMENT | TEMPOPS |
-            TEMPOPE (({ SkipBufferSize() == 0 }? TEMPOPE) ({ SkipBufferSize() == 0 }? TEMPOPE)?
+            TEMPOPE (options { greedy = true;  } : ({ SkipBufferSize() == 0 }? TEMPOPE) ({ SkipBufferSize() == 0 }? TEMPOPE)?
              | ({ inLanguage(LANGUAGE_JAVA) && LT(1)->getText() == "&gt;&gt;=" }? ASSIGNMENT))? |
             EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR | REF | OUT |
 
@@ -7911,7 +7911,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } :
         { LA(1) != SUPER && LA(1) != QMARK }?
 
-        (generic_specifiers_csharp)*
+        (options { generateAmbigWarnings = false; } : generic_specifiers_csharp)*
         ((options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators)*
 
         (type_identifier | literals)
