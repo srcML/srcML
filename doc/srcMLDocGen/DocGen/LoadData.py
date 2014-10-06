@@ -388,16 +388,16 @@ def loadLanguageSupport(inputFileName):
 
             standardXpathResult = elem.xpath("Standard")
             if len(standardXpathResult) > 0:
-                currentLangInfo.standardOrDraft = ("Standard", standardXpathResult[0])
+                currentLangInfo.standardOrDraft = ("Standard", standardXpathResult[0].text)
 
             draftXpathResult = elem.xpath("Draft")
             if len(draftXpathResult) > 0:
-                currentLangInfo.standardOrDraft = ("Draft", draftXpathResult[0])
+                currentLangInfo.standardOrDraft = ("Draft", draftXpathResult[0].text)
 
             descXpathResult = elem.xpath("Desc")
             for descNode in descXpathResult:
                 currentLangInfo.desc += extractSubText(descNode)
-                
+
             ret.supportInfo.append(currentLangInfo)
         else:
             unexpectedOrUnknownTag(elem)
