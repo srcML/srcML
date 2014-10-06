@@ -90,7 +90,7 @@ void srcml_sax2_reader::init_constructor() {
 srcml_sax2_reader::srcml_sax2_reader(const char * filename, const char * encoding)
     : control(filename, encoding), read_root(false) {
 
-        init_constructor();
+    init_constructor();
 
 }
 
