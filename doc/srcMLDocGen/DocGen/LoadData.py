@@ -357,3 +357,48 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         else:
             pass
     return doc
+
+
+LanguageSupportTag = "LanguageSupport"
+LanguageTag = "Language"
+
+
+def loadLanguageSupport(inputFileName):
+    tree = ET.parse(inputFileName)
+
+    ret = LanguageSupportInfo() 
+    root = tree.getroot()
+    verifyNodeNameOrFail(root, LanguageSupportTag)
+    ret.outputFile = getAttribOrFail(root, outputFileAttr)
+
+
+    for elem in root.iterchildren():
+        if elem.tag == LanguageTag:
+            currentLangInfo = LangInfo()
+            
+            currentLangInfo.language = getAttribOrFail(elem, langAttr)
+            supportLevelXPathResult = elem.xpath("SupportLevel")
+            if len(supportLevelXPathResult) != 1:
+                raise Exception("Missing or to many SupportLevels specified.")
+            currentLangInfo.supportLevel = supportLevelXPathResult[0].text
+
+            linkXPathResult = elem.xpath("Link")
+            for l in linkXPathResult:
+                currentLangInfo.links.append((getAttribOrFail(l, nameAttr), l.text))
+
+            standardXpathResult = elem.xpath("Standard")
+            if len(standardXpathResult) > 0:
+                currentLangInfo.standardOrDraft = ("Standard", standardXpathResult[0])
+
+            draftXpathResult = elem.xpath("Draft")
+            if len(draftXpathResult) > 0:
+                currentLangInfo.standardOrDraft = ("Draft", draftXpathResult[0])
+
+            descXpathResult = elem.xpath("Desc")
+            for descNode in descXpathResult:
+                currentLangInfo.desc += extractSubText(descNode)
+                
+            ret.supportInfo.append(currentLangInfo)
+        else:
+            unexpectedOrUnknownTag(elem)
+    return ret

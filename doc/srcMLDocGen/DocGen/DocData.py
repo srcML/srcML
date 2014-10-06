@@ -121,3 +121,22 @@ class URLRefLink:
     def __init__(self):
         self.title = ""
         self.url = ""
+
+class LangInfo:
+    def __init__(self):
+        self.language = ""
+        self.supportLevel = ""
+        self.desc = ""
+        self.links = []
+        self.standardOrDraft = None
+    def __str__(self):
+        return """ {language}""".format(**self.__dict__)
+
+class LanguageSupportInfo:
+    def __init__(self):
+        self.outputFile = ""
+        self.supportInfo = []
+    def __str__(self):
+        return """LanguageSupportInfo
+OutputFile: {0.outputFile}
+    {1}""".format(self, "\n    ".join([str(x) for x in self.supportInfo]) )

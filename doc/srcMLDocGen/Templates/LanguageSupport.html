@@ -1,0 +1,13 @@
+{% extends "Skeleton.html" %}
+
+{% block cssLinks %}<link rel="stylesheet" href="Style/LanguageSupport.css" />{% endblock %}
+
+{% block body %}
+    <h2>srcML Language Support</h2>
+    {% for supportedLang in doc.supportInfo %}
+    <div class="languageSupport">
+        <h3 class="subtitle">Support Information for the {{supportedLang.language}} Programming Language</h3>
+        <hr/>
+    </div>
+    {% endfor %}
+{% endblock %}

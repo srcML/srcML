@@ -47,6 +47,23 @@ def getDocIndexFileName(docConfig):
     splitName = docConfig.outputFileName.split(".")
     splitName.insert(-1, "index")
     return ".".join(splitName)
+
+def genLangSupportFile(langSupport, nav):
+    global pageLinks
+    print langSupport
+    pageLinks.append(PageLink("srcML Language Support", langSupport.outputFile))
+    out = open(langSupport.outputFile, "w")
+    fileTemplate = loader.get_template("LanguageSupport.html")
+    page = fileTemplate.render(
+        Context({
+            "doc" : langSupport,
+            "title" : "srcML Language Support",
+            "nav" : nav
+        })
+    )
+    out.write(page)
+    out.close()
+    pass
 #
 # Generate documentation index for a language.
 #
@@ -119,6 +136,8 @@ DocConfigFileName = "DocConfig.xml"
 TagDocFileName = "TagDoc.xml"
 grammarFile = "LanguageGrammar.xml"
 grammarOutputFileName = "srcMLGrammar.html"
+languageSupportFileName = "LanguageSupportInfo.xml"
+# languageSupportOutputFileName = "LanguageSupportInfo.html"
 pageLinks = []
 
 class DocConfigPageLink:
@@ -134,6 +153,7 @@ class Navigation:
         self.home = PageLink("","")
         self.menuNavigation = []
         self.grammarPage = PageLink("","")
+        self.langSupport = PageLink("","")
 
 class PagesToGenerate:
     def __init__(self):
@@ -142,12 +162,14 @@ class PagesToGenerate:
         self.mainPageURL = "index.html"
         self.docConfigs = []
         self.nav = Navigation()
+        self.languageSupportInfo = None # LanguageSupportInfo()
 
     def buildNavigation(self):
         self.docConfigs.sort(key=lambda x:x.title)
         self.nav.home.title = "Directory"
         self.nav.home.link = "index.html"
         self.nav.grammarPage = PageLink("srcML Grammar", grammarOutputFileName)
+        self.nav.langSupport = PageLink("Language Support", self.languageSupportInfo.outputFile)
         for docConfig in self.docConfigs:
             configMenu = DocConfigPageLink()
             configMenu.navTitle = docConfig.navTitle
@@ -159,6 +181,13 @@ class PagesToGenerate:
 
     def genPages(self):
         self.buildNavigation()
+
+        print 80*"-"
+        print "Generating Language Support "
+        print "Beginning HTML generation"
+        genLangSupportFile(self.languageSupportInfo, self.nav)
+        print "HTML Generation Complete"
+
         print 80*"-"
         print "Generated Grammar Page"
         print "Beginning HTML generation"
@@ -168,9 +197,6 @@ class PagesToGenerate:
         for docConfig in self.docConfigs:
             print 80*"-"
             print "Page Generation"
-            # print "Beginning HTML generation"
-            # generateSrcMLGrammar(grammarOutputFileName, languageGrammar)
-            # print "HTML Generation Complete"
             print "Beginning HTML Generation"
             genDocFile(docConfig, self.nav)
             print "HTML Generation Complete"
@@ -189,6 +215,11 @@ if __name__ == "__main__":
 
     if not settings.configured:
         django.conf.settings.configure(DEBUG=True, TEMPLATE_DEBUG=True, TEMPLATE_DIRS=("Templates", ), INSTALLED_APPS=("DocGen",))
+
+    print "-"*80
+    print "Language Support"
+    pagesToGenerate.languageSupportInfo = loadLanguageSupport("DocData/" + languageSupportFileName)
+
     print "-"*80
     print "Loading Grammar"
     grammarRoot = "DocData/Grammar/"
