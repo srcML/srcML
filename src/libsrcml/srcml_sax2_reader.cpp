@@ -70,19 +70,85 @@ void * start_routine(void * arguments) {
 
 }
 
-/**
- * srcml_sax2_reader
- * @param filename name of a file
- *
- * Construct a srcml_sax2_reader using a filename
- */
-srcml_sax2_reader::srcml_sax2_reader(const char * filename)
-    : control(filename), read_root(false) {
+void srcml_sax2_reader::init_constructor() {
+
 
     thread_args args = { &control, &handler };
 
     thread = new boost::thread(start_routine, &args);
     handler.wait();
+
+}
+
+/**
+ * srcml_sax2_reader
+ * @param filename name of a file
+ * @param encoding the character encoding
+ *
+ * Construct a srcml_sax2_reader using a filename
+ */
+srcml_sax2_reader::srcml_sax2_reader(const char * filename, const char * encoding)
+    : control(filename, encoding), read_root(false) {
+
+        init_constructor();
+
+}
+
+/**
+ * srcml_sax2_reader
+ * @param srcml_buffer memory buffer containing srcML
+ * @param encoding the character encoding
+ *
+ * Construct a srcml_sax2_reader using a filename
+ */
+srcml_sax2_reader::srcml_sax2_reader(std::string srcml_buffer, const char * encoding)
+    : control(srcml_buffer, encoding), read_root(false) {
+
+    init_constructor();
+
+}
+
+/**
+ * srcml_sax2_reader
+ * @param srcml_file a FILE * struct
+ * @param encoding the character encoding
+ *
+ * Construct a srcml_sax2_reader using a filename
+ */
+srcml_sax2_reader::srcml_sax2_reader(FILE * srcml_file, const char * encoding)
+    : control(srcml_file, encoding), read_root(false) {
+
+    init_constructor();
+
+}
+
+/**
+ * srcml_sax2_reader
+ * @param srcml_fd a file descriptor
+ * @param encoding the character encoding
+ *
+ * Construct a srcml_sax2_reader using a filename
+ */
+srcml_sax2_reader::srcml_sax2_reader(int srcml_fd, const char * encoding)
+    : control(srcml_fd, encoding), read_root(false) {
+
+    init_constructor();
+
+}
+
+/**
+ * srcml_sax2_reader
+ * @param srcml_context a context
+ * @param read_callback a read callback function
+ * @param close_callback a close callback function
+ * @param encoding the character encoding
+ *
+ * Construct a srcml_sax2_reader using a filename
+ */
+srcml_sax2_reader::srcml_sax2_reader(void * srcml_context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context), const char * encoding)
+    : control(srcml_context, read_callback, close_callback, encoding), read_root(false) {
+
+    init_constructor();
 
 }
 

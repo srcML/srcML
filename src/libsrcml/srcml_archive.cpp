@@ -968,17 +968,6 @@ int srcml_write_open_io(srcml_archive* archive, void * context, int (*write_call
  */
 static int srcml_read_open_internal(srcml_archive * archive) {
 
-    try {
-
-        archive->reader = new srcml_sax2_reader(archive->input);
-
-    } catch(...) {
-
-        xmlFreeParserInputBuffer(archive->input);
-        return SRCML_STATUS_IO_ERROR;
-
-    }
-
     archive->type = SRCML_ARCHIVE_READ;
 
     boost::optional<std::string> encoding, language, filename, directory, version;
@@ -1017,7 +1006,15 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
 
     if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->input = xmlParserInputBufferCreateFilename(srcml_filename, XML_CHAR_ENCODING_NONE);
+    try {
+
+        archive->reader = new srcml_sax2_reader(srcml_filename, 0);
+
+    } catch(...) {
+
+        return SRCML_STATUS_IO_ERROR;
+
+    }
 
     return srcml_read_open_internal(archive);
 
@@ -1038,7 +1035,15 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
 
     if(archive == NULL || buffer == NULL || buffer_size <= 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, XML_CHAR_ENCODING_NONE);
+    try {
+
+        archive->reader = new srcml_sax2_reader(std::string(buffer), 0);
+
+    } catch(...) {
+
+        return SRCML_STATUS_IO_ERROR;
+
+    }
 
     return srcml_read_open_internal(archive);
 
@@ -1058,7 +1063,15 @@ int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
     if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->input = xmlParserInputBufferCreateFile(srcml_file, XML_CHAR_ENCODING_NONE);
+    try {
+
+        archive->reader = new srcml_sax2_reader(srcml_file, 0);
+
+    } catch(...) {
+
+        return SRCML_STATUS_IO_ERROR;
+
+    }
     
     return srcml_read_open_internal(archive);
 
@@ -1080,8 +1093,15 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
 
     if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->input = xmlParserInputBufferCreateFd(srcml_fd, XML_CHAR_ENCODING_NONE);
-    archive->input->closecallback = 0;
+    try {
+
+        archive->reader = new srcml_sax2_reader(srcml_fd, 0);
+
+    } catch(...) {
+
+        return SRCML_STATUS_IO_ERROR;
+
+    }
 
     return srcml_read_open_internal(archive);
 
@@ -1103,7 +1123,15 @@ int srcml_read_open_io(srcml_archive* archive, void * context, int (*read_callba
 
     if(archive == NULL || context == NULL || read_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->input = xmlParserInputBufferCreateIO(read_callback, close_callback, context, XML_CHAR_ENCODING_NONE);
+    try {
+
+        archive->reader = new srcml_sax2_reader(context, read_callback, close_callback, 0);
+
+    } catch(...) {
+
+        return SRCML_STATUS_IO_ERROR;
+
+    }
 
     return srcml_read_open_internal(archive);
 

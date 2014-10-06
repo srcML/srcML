@@ -59,6 +59,8 @@ private :
     /** thread running execution */
     boost::thread * thread;
 
+    void init_constructor();
+
 public :
 
     // constructors
