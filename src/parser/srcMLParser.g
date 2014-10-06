@@ -3417,6 +3417,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
           pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
         kr_parameter[type_count] |
 
+        // function try block, must be before function_specifier
+        { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
+        try_statement |
+
         // function specifier at end of function header
         { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL)
             && (LA(1) != EQUAL || (inLanguage(LANGUAGE_CXX) && (next_token() == CONSTANTS || next_token() == DEFAULT || next_token() == DELETE))) }?
@@ -3844,6 +3848,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
               int& posin            /* */
         ] {
             token = 0;
+            int parameter_pack_pos = -1;
             fla = 0;
             type_count = 0;
             type = NONE;
@@ -3888,6 +3893,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             set_bool[is_qmark, (is_qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
 
             set_int[posin, LA(1) == IN ? posin = type_count : posin]
+            set_int[parameter_pack_pos, LA(1) == DOTDOTDOT ? parameter_pack_pos = type_count : parameter_pack_pos]
 
             set_bool[isoperator, isoperator || LA(1) == OPERATOR]
 
@@ -4060,7 +4066,11 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         // have a sequence of type tokens, last one is function/variable name
         // (except for function pointer, which is handled later).
         // Using also has no name so counter operation.
-        set_int[type_count, inMode(MODE_USING) ? type_count + 1: type_count]
+        set_int[type_count, inMode(MODE_USING) ? type_count + 1 : type_count]
+
+        set_int[type_count, type_count > 1 && inLanguage(LANGUAGE_CXX) && parameter_pack_pos >= 0
+             && parameter_pack_pos == (type_count - 1) ? type_count + 1 : type_count]
+
         set_int[type_count, type_count > 1 ? type_count - 1 : 0]
 
         // special case for what looks like a destructor declaration
@@ -5051,7 +5061,8 @@ compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_
 ;
 
 // name markup internals
-compound_name_inner[bool index] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
+compound_name_inner[bool index] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG 
+} :
         {
             // There is a problem detecting complex names from
             // complex names of operator methods in namespaces or
@@ -5093,7 +5104,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
 
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
-        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) && (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}?
+        (options { greedy = true; } : { index && /*!inTransparentMode(MODE_EAT_TYPE) &&*/ (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}?
             variable_identifier_array_grammar_sub[iscompound]
         )*
 
@@ -5215,7 +5226,7 @@ keyword_name[] { CompleteElement element(this); TokenPosition tp; bool iscompoun
 
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
-        (options { greedy = true; } : { !inTransparentMode(MODE_EAT_TYPE) && (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}?
+        (options { greedy = true; } : { /*!inTransparentMode(MODE_EAT_TYPE) &&*/ (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}?
             variable_identifier_array_grammar_sub[iscompound]
         )*
 
@@ -5457,6 +5468,9 @@ destructor_definition[] { ENTRY_DEBUG } :
             startElement(SDESTRUCTOR_DEFINITION);
         }
         destructor_header
+
+        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
+
 ;
 
 // destructor declaration
@@ -6781,7 +6795,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
         }
 
         // Mark as name before mark without name
-        (options { generateAmbigWarnings = false;} :  { inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[false] | compound_name | keyword_name)
+        (options { generateAmbigWarnings = false;} :  { inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[!isthis] | compound_name | keyword_name)
         {
             // expect a possible initialization
             setMode(MODE_INIT | MODE_EXPECT);
@@ -6912,7 +6926,8 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         }
         (
             OPERATORS | ASSIGNMENT | TEMPOPS |
-            TEMPOPE ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? TEMPOPE)? |
+            TEMPOPE (({ SkipBufferSize() == 0 }? TEMPOPE) ({ SkipBufferSize() == 0 }? TEMPOPE)?
+             | ({ inLanguage(LANGUAGE_JAVA) && LT(1)->getText() == "&gt;&gt;=" }? ASSIGNMENT))? |
             EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR | REF | OUT |
 
             // others are not combined
