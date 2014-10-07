@@ -38,6 +38,9 @@
 
 #include <libxml/tree.h>
 
+
+#include <srcexfun_impl.hpp>
+
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>
 #else
