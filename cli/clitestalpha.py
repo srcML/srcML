@@ -464,12 +464,14 @@ missing_unit = "3";
 if sys.platform != 'cygwin' :
         validate(getreturn([srcml2src, option.UNIT_FLAG, missing_unit], nestedfile), status.STATUS_UNIT_INVALID)
         validate(getreturn([srcml2src, option.UNIT_FLAG, missing_unit, option.XML_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
-        validate(getreturn([srcml2src, option.UNIT_FLAG, missing_unit, option.FILENAME_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
-        validate(getreturn([srcml2src, option.UNIT_FLAG, missing_unit, option.DIRECTORY_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
-        validate(getreturn([srcml2src, option.UNIT_FLAG, missing_unit, option.SRCVERSION_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
+        validate(getreturn([srcml2src, option.UNIT_FLAG, missing_unit, option.FILENAME_DISPLAY_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
+        validate(getreturn([srcml2src, option.UNIT_FLAG, missing_unit, option.DIRECTORY_DISPLAY_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
+        validate(getreturn([srcml2src, option.UNIT_FLAG, missing_unit, option.SRCVERSION_DISPLAY_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
 
 # invalid combinations
 validate(getreturn([srcml2src, option.XML_FLAG, option.SRC_ENCODING_FLAG, "UTF-8", "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
+
+print "HELLO"
 
 # test
 ##
