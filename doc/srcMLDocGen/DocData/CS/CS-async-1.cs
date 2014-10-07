@@ -1,1 +1,1 @@
-async Task ExampleMethodAsync()
+async Task ExampleMethodAsync();

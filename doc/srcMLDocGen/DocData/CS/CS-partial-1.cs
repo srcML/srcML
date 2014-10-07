@@ -1,1 +1,1 @@
-partial class Employee
+partial class Employee;

@@ -559,8 +559,8 @@
                 <Subelement name="typename" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:type[src:specifier[.='template']]">
-                    <Desc>Find all types which contain a template specifier</Desc>
+                <XPath path="//src:name[src:name/src:specifier[.='template']]">
+                    <Desc>Find all names which contain a template specifier</Desc>
                 </XPath>
             </XPathQueries>
             <Example title="template used as a specifier" file="CPP-template-3.cpp" />
@@ -757,10 +757,10 @@
                 <XPath path="//src:namespace[src:specifier[.='inline']]">
                     <Desc>Find all inline namespaces</Desc>
                 </XPath>
-                <XPath path="//src:using[contains(.,'namespace')]">
+                <XPath path="//src:using[src:namespace]">
                     <Desc>Find all using namespace declarations</Desc>
                 </XPath>
-                <XPath path="//src:namespace[contains(.,'=')]">
+                <XPath path="//src:namespace[count(src:name) > 1]">
                     <Desc>Find all namespace assignments</Desc>
                 </XPath>
                 <XPath path="//src:namespace[not(src:name)]">
@@ -784,10 +784,10 @@
                 <XPath path="//src:using">
                     <Desc>Find all using declarations</Desc>
                 </XPath>
-                <XPath path="//src:using[contains(.,'namespace')]">
+                <XPath path="//src:using[src:namespace]">
                     <Desc>Find all using namespace declarations</Desc>
                 </XPath>
-                <XPath path="//src:using[not(contains(.,'namespace')) and not(src:template)]">
+                <XPath path="//src:using[not(src:namespace) and not(src:template)]">
                     <Desc>Find all using declarations that import a single item which isn't a namespace</Desc>
                 </XPath>
                 <XPath path="//src:using[src:template]">
@@ -949,7 +949,7 @@
                 <Subelement name="parameter_list" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function_decl[src:name[substring(.,0, 8) = 'operator']] ">
+                <XPath path="//src:function_decl[@type='operator'] ">
                     <Desc>Find all operator declarations</Desc>
                 </XPath>
             </XPathQueries>
@@ -964,7 +964,7 @@
                 <Subelement name="parameter_list" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function[src:name[substring(.,0, 8) = 'operator']]">
+                <XPath path="//src:function[@type='operator']">
                     <Desc>Find all operator overload definitions</Desc>
                 </XPath>
             </XPathQueries>
@@ -978,7 +978,7 @@
                 <Subelement name="parameter_list" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function_decl[not(src:type)]">
+                <XPath path="//src:function_decl[@type='operator'][not(src:type)]">
                     <Desc>Find all implicit conversion operator overload declarations</Desc>
                 </XPath>
             </XPathQueries>
@@ -992,7 +992,7 @@
                 <Subelement name="parameter_list" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function[not(src:type)]">
+                <XPath path="//src:function[@type='operator'][not(src:type)]">
                     <Desc>Find all implicit conversion operator overloads</Desc>
                 </XPath>
             </XPathQueries>
@@ -1007,7 +1007,7 @@
                 <Subelement name="parameter_list" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function_decl[src:type/src:specifier[.='explicit']][src:name[substring(.,0, 8) = 'operator']]">
+                <XPath path="//src:function_decl[@type='operator'][src:type/src:specifier[.='explicit']]">
                     <Desc>Find all explicit conversion operator declarations</Desc>
                 </XPath>
             </XPathQueries>
@@ -1022,7 +1022,7 @@
                 <Subelement name="parameter_list" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function[src:type/src:specifier[.='explicit']][src:name[substring(.,0, 8) = 'operator']]">
+                <XPath path="//src:function[@type='operator'][src:type/src:specifier[.='explicit']]">
                     <Desc>Find all explicit conversion operator overloads</Desc>
                 </XPath>
             </XPathQueries>
@@ -1359,7 +1359,7 @@
                 <Element name="enum" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:enum[contains(., 'class')]">
+                <XPath path="//src:enum[@type='class']">
                     <Desc>Find all enum class definitions</Desc>
                 </XPath>
             </XPathQueries>
@@ -1528,11 +1528,11 @@
     <Category title="Other">
      	<DocEntry title="static_cast">
             <Elements>
-                <Element name="call" />
+                <Element name="cast" />
                 <Subelement name="argument_list" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:call[src:name/src:name[.='static_cast']]">
+                <XPath path="//src:cast[@type='static']">
                     <Desc>Find all uses of static_cast</Desc>
                 </XPath>
             </XPathQueries>
@@ -1541,11 +1541,11 @@
 
         <DocEntry title="dynamic_cast">
             <Elements>
-                <Element name="call" />
+                <Element name="cast" />
                 <Subelement name="argument_list" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:call[src:name/src:name[.='dynamic_cast']]">
+                <XPath path="//src:cast[@type='dynamic']">
                     <Desc>Find all uses of dynamic_cast</Desc>
                 </XPath>
             </XPathQueries>
@@ -1554,11 +1554,11 @@
 
         <DocEntry title="reinterpret_cast">
             <Elements>
-                <Element name="call" />
+                <Element name="cast" />
                 <Subelement name="argument_list" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:call[src:name/src:name[.='reinterpret_cast']]">
+                <XPath path="//src:cast[@type='reinterpret']">
                     <Desc>Find all uses of reinterpret_cast</Desc>
                 </XPath>
             </XPathQueries>
@@ -1567,11 +1567,11 @@
 
         <DocEntry title="const_cast">
             <Elements>
-                <Element name="call" />
+                <Element name="cast" />
                 <Subelement name="argument_list" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:call[src:name/src:name[.='const_cast']]">
+                <XPath path="//src:cast[@type='const']">
                     <Desc>Find all uses of const_cast</Desc>
                 </XPath>
             </XPathQueries>

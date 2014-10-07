@@ -22,7 +22,7 @@
                 <XPath path="//src:if/src:else">
                     <Desc>Find all else statements</Desc>
                 </XPath>
-                <XPath path="//src:if[count(src:else) = 0]">
+                <XPath path="//src:if[not(src:else)]">
                     <Desc>Find all if statements without an else statement</Desc>
                 </XPath>
                 <XPath path="//src:if//src:if">
@@ -586,7 +586,7 @@
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[@type='interface' and not(contains(src:name, '@'))]">
+                <XPath path="//src:class[@type='interface' and not(src:annotation[.='@interface'])]">
                     <Desc>Find all interfaces</Desc>
                 </XPath>
             </XPathQueries>
@@ -602,7 +602,7 @@
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[@type='interface' and contains(src:name, '@')]">
+                <XPath path="//src:class[@type='interface' and src:annotation[.='@interface']]">
                     <Desc>Find all annotation definitions</Desc>
                 </XPath>
             </XPathQueries>
@@ -952,7 +952,7 @@
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:catch[src:finally][src:catch]">
+                <XPath path="//src:catch">
                     <Desc>Find all catch blocks</Desc>
                 </XPath>
             </XPathQueries>

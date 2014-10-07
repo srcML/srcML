@@ -1,3 +1,3 @@
 class Foo {
-    event ReadHandler OnRead;
+    static event ReadHandler OnRead;
 }
