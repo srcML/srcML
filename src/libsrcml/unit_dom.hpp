@@ -65,12 +65,49 @@ public :
     virtual OPTION_TYPE get_options() const { return options; }
 
     /**
+     * srcsax_namespace2libxml2namespace
+     * @param num_namespaces number of namespaces
+     * @param namespaces the srcsax namespaces
      *
+     * Convert the srcsax namespaces to libxml2 namespaces.
+     * @returns the libxml2 namespaces.
      */
-     const xmlChar * srcsax_attribute2libxml2attribute(int num_attributes, srcsax_attribute attributes) {
+     const xmlChar ** srcsax_namespace2libxml2namespace(int num_namespaces, const struct srcsax_namespace * namespaces) {
 
+        const xmlChar ** libxml2_namespaces = (const xmlChar **)malloc((num_namespaces * 2) * sizeof(const xmlChar *));
+        for(int pos = 0; pos < num_namespaces; ++pos) {
 
+            libxml2_namespaces[pos] = (const xmlChar *)namespaces->prefix;
+            libxml2_namespaces[pos + 1] = (const xmlChar *)namespaces->uri;
 
+        }
+
+        return libxml2_namespaces;
+
+     }
+
+    /**
+     * srcsax_attribute2libxml2attribute
+     * @param num_attributes number of attributes
+     * @param attributes the srcsax attributes
+     *
+     * Convert the srcsax attributes to libxml2 attributes.
+     * @returns the libxml2 attributes.
+     */
+     const xmlChar ** srcsax_attribute2libxml2attribute(int num_attributes, const struct srcsax_attribute * attributes) {
+
+        const xmlChar ** libxml2_attributes = (const xmlChar **)malloc((num_attributes * 5) * sizeof(const xmlChar *));
+        for(int pos = 0; pos < num_attributes; ++pos) {
+
+            libxml2_attributes[pos] = (const xmlChar *)attributes->localname;
+            libxml2_attributes[pos + 1] = (const xmlChar *)attributes->prefix;
+            libxml2_attributes[pos + 2] = (const xmlChar *)attributes->uri;
+            libxml2_attributes[pos + 3] = (const xmlChar *)attributes->value;
+            libxml2_attributes[pos + 3] = (const xmlChar *)attributes->value + strlen(attributes->value);
+
+        }
+
+        return libxml2_attributes;
 
      }
 
@@ -145,8 +182,8 @@ public :
         // record namespaces in an extensible list so we can add the per unit
         for (int i = 0; i < num_namespaces; ++i) {
 
-            data.push_back(namespaces[i * 2]);
-            data.push_back(namespaces[i * 2 + 1]);
+            data.push_back((const xmlChar *)namespaces->prefix);
+            data.push_back((const xmlChar *)namespaces->uri);
 
         }
         rootsize = data.size();
@@ -154,8 +191,13 @@ public :
         // if we are building the entire tree, start now
         if (isoption(options, SRCML_OPTION_APPLY_ROOT)) {
 
-            xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes,
-                                  0, attributes);
+            const xmlChar ** libxml2_namespaces = srcsax_namespace2libxml2namespace(num_namespaces, namespaces);
+            const xmlChar ** libxml2_attributes = srcsax_attribute2libxml2attribute(num_attributes, attributes);
+            xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, libxml2_namespaces, num_attributes,
+                                  0, libxml2_attributes);
+
+            free(libxml2_namespaces);
+            free(libxml2_attributes);
 
         }
 
