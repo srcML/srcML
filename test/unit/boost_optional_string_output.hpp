@@ -24,7 +24,10 @@
 
 std::ostream & operator<<(std::ostream & out, boost::optional<std::string> str) {
 
-    out << *str;
+	if(bool(str))
+	    out << *str;
+	else
+		out << "NOT SET";
 
     return out;
 
