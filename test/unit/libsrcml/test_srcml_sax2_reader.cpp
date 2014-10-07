@@ -43,7 +43,7 @@
 #include <srcml_sax2_reader.hpp>
 #include <srcmlns.hpp>
 
-#include "dassert.hpp"
+#include <unit_tests.hpp>
 
 #include <boost/optional.hpp>
 

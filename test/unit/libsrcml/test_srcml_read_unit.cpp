@@ -33,7 +33,7 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
-#include "dassert.hpp"
+#include <unit_tests.hpp>
 
 int main() {
     const std::string srcml_a = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
