@@ -1,0 +1,11 @@
+{% load GrammarFormatHelpers %}
+
+<div class="useCaseDisplay">
+    {%block title %}
+    <h4 class="subtitle">{{useCase.name}}</h4>
+    {% endblock %}
+    {% if useCase.desc != "" %}
+    <div class="description">{{useCase.desc|safe}}</div>
+    {% endif %}
+    <div class="grammarDisplay">{{useCase|BuildAnnotatedEBNF|safe}}</div>
+</div>

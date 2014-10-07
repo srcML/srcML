@@ -1,0 +1,24 @@
+<LanguageSupport outputFile="srcMLLangSupport.html">
+    <Language lang="Java">
+        <SupportLevel>Java SE 8 Edition</SupportLevel>
+        <Link name="Java SE 8 Language Standard">http://docs.oracle.com/javase/specs/jls/se8/html/index.html</Link>
+    </Language>
+    
+    <Language lang="C">
+        <SupportLevel>C11 and backwards support to all previous versions of the syntax including K&amp;R C style functions.</SupportLevel>
+        <Link name="WG14 for ISO C">http://www.open-std.org/jtc1/sc22/wg14/</Link>
+    </Language>
+    
+    <Language lang="C#">
+        <SupportLevel>C# Standard ECMA-334 </SupportLevel>
+        <Standard>Standard ECMA-334</Standard>
+        <Link name="ECMA Language Standard for C#">http://www.ecma-international.org/publications/standards/Ecma-334.htm</Link>
+        <Desc>This include the LINQ language extension.</Desc>
+    </Language>
+    
+    <Language lang="C++">
+        <SupportLevel>C++14</SupportLevel>
+        <Draft>n3797</Draft>
+        <Link name="WG21 for ISO C++">http://www.open-std.org/jtc1/sc22/wg21/</Link>
+    </Language>
+</LanguageSupport>

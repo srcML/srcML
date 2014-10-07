@@ -1,0 +1,3 @@
+add {
+    otherEvent += value;
+}

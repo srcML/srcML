@@ -1,0 +1,16 @@
+{% extends "GrammarTemplates/RuleSkeleton.html" %}
+{% load GrammarFormatHelpers %}
+{% block title %}<a id="{{ documentation|makeTagLink}}" class="tagTitle">&lt;{{documentation|makeDisplayableTag}}&gt;</a>{% endblock %}
+{% block useCases %}
+    {% if documentation.tagRules|length > 1 %}
+        <h3 class="subtitle">Element Use Cases</h3>
+        <ul>
+        {% for useCase in documentation.tagRules %}
+            <li><a href="#{{useCase|makeRuleLink}}">{{useCase.name}}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% for useCase in documentation.tagRules %}
+        {% include "GrammarTemplates/MultiUseCase.html" with useCase=useCase doc=doc documentation=documentation%}
+    {% endfor %}
+{% endblock %}

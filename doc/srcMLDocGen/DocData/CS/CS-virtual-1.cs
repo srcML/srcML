@@ -1,0 +1,3 @@
+virtual double Area() 
+{
+}

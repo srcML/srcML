@@ -1,1 +1,2 @@
-int x(f...);
+template<typename... Args>
+class Foo { };

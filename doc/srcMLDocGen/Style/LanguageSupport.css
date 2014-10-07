@@ -1,0 +1,20 @@
+#bodyContent>h2 {
+    margin-bottom:35px;
+}
+
+.languageSupport {
+    margin-bottom:2.5em;;
+}
+.subtitle {
+    margin-bottom:5px;
+}
+
+.languageSupport>hr {
+    margin-top:20px;
+}
+
+.infoTitle {
+    font-weight:bold;
+    color:grey;
+    margin-right:4px;
+}

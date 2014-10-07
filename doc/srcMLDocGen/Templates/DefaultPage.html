@@ -1,0 +1,7 @@
+{% extends "DocPage.html" %}
+
+{% block title %}{{doc.title}}{% endblock %}
+
+{% block ToC %}{% include "ToC.html" with doc=doc %}{% endblock %}
+
+{% block Content %}{% include "Content.html" with doc=doc %}{% endblock %}

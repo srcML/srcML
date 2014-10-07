@@ -1,0 +1,27 @@
+{% extends "Skeleton.html" %}
+
+{% block cssLinks %}<link rel="stylesheet" href="Style/LanguageSupport.css" />{% endblock %}
+
+{% block body %}
+    <h2>srcML Language Support</h2>
+    {% for supportedLang in doc.supportInfo %}
+    <div class="languageSupport">
+        <h3 class="subtitle">Support Information for the {{supportedLang.language}} Programming Language</h3>
+        <span class="infoTitle">Supported Version:</span> <span>{{supportedLang.supportLevel}}</span><br/>
+        {% if supportedLang.standardOrDraft != None %}
+        <span class="infoTitle">{{supportedLang.standardOrDraft.0}}:</span> <span>{{supportedLang.standardOrDraft.1}}</span><br/>
+        {% endif %}
+        
+        {% if supportedLang.desc != "" %}
+        <span class="infoTitle">Additional Info:</span><span>{{supportedLang.desc}}</span>
+        {% endif %}
+        {% if supportedLang.links|length > 0 %}
+        <ul>
+            {% for lnk in supportedLang.links %}
+                <li><a href="{{lnk.1}}">{{lnk.0}}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+{% endblock %}
