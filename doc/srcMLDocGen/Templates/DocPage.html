@@ -1,0 +1,18 @@
+{% extends "Skeleton.html" %}
+{% load DjangoHelpers %}
+{% block cssLinks %}<link rel="stylesheet" href="Style/DocPageStyle.css" />{% endblock %}
+
+{%block body %}
+{% TrackPageName pageName %}
+<div id="content">
+    <h2>{{doc.title}} Language Documentation</h2>
+    <div id="ToCDiv">
+        {% block ToC %}
+        {% endblock %}
+    </div>
+
+    <div id="entries">
+        {% block Content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

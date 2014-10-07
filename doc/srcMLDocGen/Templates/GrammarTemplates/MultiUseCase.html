@@ -1,0 +1,16 @@
+{% extends "GrammarTemplates/UseCaseTemplate.html" %}
+{% load GrammarFormatHelpers %}
+{% load DjangoHelpers %}
+
+{% block title %}
+{% if documentation.tagRules|length > 1 %}
+<div class="useCaseWithLanguageHeader">
+    <div class="languagesDisplayDiv">
+        {% include "GrammarTemplates/LanguagesTable.html" with doc=doc languages=useCase.languages %}
+    </div>
+{% else %}
+<div class="useCaseTitleHeader">
+{% endif %}
+    <h4 class="subtitle"><a id="{{useCase|makeRuleLink}}">{{useCase.name}}</a></h4>
+</div>
+{% endblock %}

@@ -1,0 +1,115 @@
+.descDisplay {
+    margin: 0 auto;
+    width:95%;
+    margin-bottom:1.5em;
+    margin-top:1.5em;
+}
+
+.displayedDocDefinition .description{
+    margin:1em 1.5em 1em 1.5em;
+    text-align:justify;
+}
+.displayedDocDefinition span.nsURL {
+    font-size:15px;
+    font-family:"Courier New";
+}
+.contentDisplay h2.title {
+    color:black;
+}
+
+.replacePartOfGrammar {
+    font-style: italic;
+}
+
+.rn_kw {
+    font-weight:bold;
+}
+
+.RELAXNGEntry {
+    margin-top:2em;
+}
+.rn_cmt {
+    color:green;
+}
+
+
+/* Language Table */
+table.languageTable {
+    border-collapse: collapse;
+    border:.1em solid #D2D2CE;
+}
+
+table.languageTable th {
+    padding-top:1em;
+    width:50px;
+}
+
+table.languageTable thead {
+    border-collapse: collapse;
+}
+table.languageTable td {
+    border-collapse: collapse;
+    border-left:1px solid #D2D2CE;
+}
+
+table.languageTable tbody {
+    border:1px solid #D0D0D0;
+}
+
+table.languageTable tbody td {
+    text-align:center;
+}
+
+
+table.languageTable tbody tr:nth-child(odd) {
+   background-color: #F0F0F0;
+}
+
+/* Attribute table */
+table.attrTable {
+    border-collapse: collapse;
+    border:.1em solid #D2D2CE;
+    margin-top:2em;
+}
+
+table.attrTable th {
+    padding-top:1em;
+}
+
+table.attrTable thead {
+    border-collapse: collapse;
+}
+table.attrTable td {
+    border-collapse: collapse;
+    border-left:1px solid #D2D2CE;
+}
+
+table.attrTable tbody {
+    border:1px solid #D0D0D0;
+}
+
+table.attrTable tbody td {
+    min-width:2.5em;
+    text-align:center;
+}
+
+table.attrTable tbody td:nth-child(1), td:nth-child(2) {
+    padding:3px 1em 3px 1em;
+}
+
+table.attrTable tbody td:nth-child(2) {
+    text-align:left;
+}
+
+table.attrTable tbody tr:nth-child(odd) {
+   background-color: #F0F0F0;
+}
+
+/* Other Styles */
+.useCase {
+    margin-top:3em;
+}
+
+.ValueDesc {
+    font-style: italic;
+}

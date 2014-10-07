@@ -1,1 +1,1 @@
-public static void process(List<? extends Foo> list)
+public static void process(List<? extends Foo> list) { }

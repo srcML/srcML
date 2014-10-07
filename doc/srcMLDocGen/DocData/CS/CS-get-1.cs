@@ -1,0 +1,3 @@
+get {
+    return x;
+}

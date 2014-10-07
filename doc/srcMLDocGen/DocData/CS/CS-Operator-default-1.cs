@@ -1,0 +1,1 @@
+T temp = default(T);

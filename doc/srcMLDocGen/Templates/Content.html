@@ -1,0 +1,137 @@
+{% load DjangoHelpers %}
+{% load GrammarFormatHelpers %}
+{% for cat in doc.categories %}
+    {% for entry in cat.entries %}
+        <div class="displayedDocDefinition">
+            <h2 class="title"><a id="{{entry.linkName}}{% TrackAnchorId entry.linkName %}">{{entry.title}}</a></h2>
+            <hr/>
+            {% if entry.desc != "" %}
+            <div class="discription">
+                  <p>{{entry.desc}}</p>
+            </div>
+            {% endif %}
+
+            <div class="elementListing">
+                <h3 class="subtitle">Element{% if entry.elements|length > 1 %}s{%endif%}</h3>
+                <ul>
+                {% for elem in entry.elements %}
+                    <li><code class="xmlTags"><a href="{{grammarFileName}}#{{elem|makeTagLink}}">{{elem.QName|safe}}</a></code>
+                    {% if elem.markupOptionsRequired|length > 0 %}
+                        <ul>
+                            <li><span class="note">Note</span>: This mark up is disabled by default and is enabled using the following command line argument/s with srcML:
+                                <ul>
+                                    {% for markup in elem.markupOptionsRequired %}
+                                    <li>{{markup}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        </ul>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+            
+            {% if entry.subelements|length > 0 %}
+            <div class="elementListing">
+                <h3 class="subtitle">Subelement{% if entry.subelements|length > 1 %}s{% endif %}</h3>
+                <ul>
+                {% for elem in entry.subelements %}
+                    <li><code class="xmlTags"><a href="{{grammarFileName}}#{{elem|makeTagLink}}">{{elem.QName|safe}}</a></code>
+                        {% if elem.markupOptionsRequired|length > 0 %}
+                        <ul>
+                            <li><span class="note">Note</span>: This mark up is disabled by default and is enabled using the following command line argument/s with srcML:
+                                <ul>
+                                    {% for markup in elem.markupOptionsRequired %}
+                                    <li>{{markup}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        </ul>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <!-- XPathQueries -->
+            {% if entry.xpathQueries|length > 0 %}
+            <div class="xpathQueries">
+                <h3 class="subtitle">XPath Quer{% if entry.subelements|length > 1 %}ies{% else %}y{% endif %}</h3>
+                {% for xpExample in entry.xpathQueries %}
+                    <div class="xpathQueryExample">
+                        <span class="xpathDesc">{{xpExample.desc|safe}}</span>&nbsp;<code class="xpathExample">{{xpExample.xpath|safe}}</code>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Example/s -->
+            {% if entry.examples|length %}
+            <div class="exampleListing">
+                {% if entry.examples|length == 1 %}
+                    <h3>Example</h3>
+                    <div class="example">
+                        {% ifequal entry.examples.0.title "" %}
+                        {%else%}
+                        <h4 class="subtitle">{{entry.examples.0.title}}</h4>
+                        {%endifequal%}
+                        <pre class="sourceCodeExample">{% HighlightSyntaxFromTree entry.examples.0.srcML doc.srcMLLanguage "code" grammarFileName %}</pre>
+                        <pre class="sourceCodeExample">{% HighlightSyntaxFromTree entry.examples.0.srcML doc.srcMLLanguage "srcML" grammarFileName %}</pre>
+                    </div>
+                {% else %}
+                    <h3>Examples</h3>
+                    {% for example in entry.examples %}
+                        <div class="example">
+                            {% ifequal example.title "" %}
+                            {% if forloop.counter != 1 %}
+                            <br class="exampleBreak"/>
+                            {% endif %}
+                            {%else%}
+                            <h4 class="subtitle">{{example.title}}</h4>
+                            {%endifequal%}
+                            <pre class="sourceCodeExample">{% HighlightSyntaxFromTree example.srcML doc.srcMLLanguage "code" grammarFileName %}</pre>
+                            <pre class="sourceCodeExample">{% HighlightSyntaxFromTree example.srcML doc.srcMLLanguage "srcML" grammarFileName %}</pre>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+{% if doc.hasOperators %}
+<!-- Operators table. -->
+<div class="displayedDocDefinition">
+    <h2 class="title"><a id="operators">Operators</a></h2>
+    <hr />
+    <div class="xpathQueries">
+        <h3 class="exampleTitle">XPath queries for locating operators</h3>
+        <div class="xpathQueryOperatorExample">
+            <span class="xpathDesc">Find all occurrences of the <code class="inline">++</code> operator</span>&nbsp;<code class="xpathExample">//src:operator[.='++']</code>
+        </div>
+    </div>
+    <table class="ToC OpsTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Operator</th>
+                <th>srcML</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        {% for cat in doc.categories %}
+            {% for entry in cat.operators %}
+            	{% include "OperatorTableEntry.html" with entry=entry %}    
+            {% endfor %}
+        {% endfor %}
+        {% for entry in doc.operators %}
+            {% include "OperatorTableEntry.html" with entry=entry %}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}

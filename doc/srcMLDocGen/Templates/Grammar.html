@@ -1,0 +1,53 @@
+{% extends "Skeleton.html" %}
+{% load DjangoHelpers %}
+
+{% block cssLinks %}
+    <link rel="stylesheet" href="Style/Grammar.css" />
+{% endblock %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block body %}
+    <h2>{{title}}</h2>
+    <table class="ToC">
+        <thead>
+            <tr>
+                <th>Rule</th>
+                <th>Rule Type</th>
+                {% for lang in doc.languages %}
+                <th class="languageSupportHeader">{{lang}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        
+        <tbody>
+            <tr>
+                <td colspan="{{doc.languages|length|add:"2"}}"><a href="#howToRead">{{doc.howToReadDoc.title}}</a></td>
+            </tr>
+            {% for documentation in doc.documentation %}
+                {% include "GrammarTemplates/ToCRowBuilder.html" with currentRow=documentation doc=doc%}
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="displayedDocDefinition">
+        <h2 class="title"><a id="howToRead">{{doc.howToReadDoc.title}}</a></h2>
+        <hr/>
+        <div class="description">{{doc.howToReadDoc.desc|safe}}</div>
+        
+        {% for entry in doc.howToReadDoc.entries %}
+            <br/>
+            <h3 class="subtitle">{{entry.title|safe}}</h3>
+            <div class="description">{{entry.desc|safe}}</div>
+            {% for ex in entry.grammarExamples %}
+            {% if ex.type == "pre" %}
+                <pre class="sourceCodeExample">{{ex.text|safe}}</pre>
+            {% elif ex.type == "svg" %}
+                {{ex.text|safe}}
+            {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% for documentation in doc.documentation %}
+        {% include "GrammarTemplates/RuleDispatcher.html" with documentation=documentation %}
+    {% endfor %}
+{% endblock %}

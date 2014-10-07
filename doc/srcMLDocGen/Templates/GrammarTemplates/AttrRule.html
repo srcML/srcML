@@ -1,0 +1,7 @@
+{% extends "GrammarTemplates/RuleSkeleton.html" %}
+{% load GrammarFormatHelpers %}
+{% block title %}<a id="{{documentation|makeRuleLink}}"></a><a id="{{documentation|makeAttrRuleLink}}" class="tagTitle">{{documentation.name}}</a>{% endblock %}
+
+{% block useCases %}
+        {% include "GrammarTemplates/SingleUseCase.html" with useCase=documentation.attrRule %}
+{% endblock %}

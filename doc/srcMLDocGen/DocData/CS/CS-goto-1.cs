@@ -1,0 +1,1 @@
+goto case 1;

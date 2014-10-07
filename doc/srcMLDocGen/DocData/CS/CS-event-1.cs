@@ -1,0 +1,1 @@
+public event SampleEventHandler SampleEvent;

@@ -1,0 +1,5 @@
+The following dependencies are required for building the srcML documentation 
+
+1. Django
+2. lxml
+
