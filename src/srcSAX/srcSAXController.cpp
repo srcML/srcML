@@ -102,6 +102,21 @@ srcSAXController::srcSAXController(void * srcml_context, int (*read_callback)(vo
 
 }
 
+
+/**
+ * srcSAXController
+ * @param input a parser input buffer
+ *
+ * Constructor
+ */
+srcSAXController::srcSAXController(xmlParserInputBufferPtr input) {
+
+    context = srcsax_create_context_parser_input_buffer(input);
+
+    if(context == NULL) throw std::string("File does not exist");
+
+}
+
 /**
  * ~srcSAXController
  *

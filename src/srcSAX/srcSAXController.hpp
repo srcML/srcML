@@ -104,6 +104,14 @@ public :
     srcSAXController(void * srcml_context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context), const char * encoding = 0);
 
     /**
+     * srcSAXController
+     * @param input a parser input buffer
+     *
+     * Constructor
+     */
+    srcSAXController(xmlParserInputBufferPtr input);
+
+    /**
      * getCtxt
      *
      * Return the used parser context.

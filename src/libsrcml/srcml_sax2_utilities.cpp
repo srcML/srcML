@@ -129,7 +129,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
 
     // setup process handling
     xpath_query_units process(options, compiled_xpath, prefix, uri, element, attr_name, attr_value, fd);
-    srcSAXControlHandler control(input_buffer);
+    srcSAXController control(input_buffer);
 
     try {
 
@@ -253,7 +253,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 
     // setup process handling
     xslt_units process(context_element, options, stylesheet, params, fd);
-    srcMLControlHandler control(input_buffer);
+    srcSAXController control(input_buffer);
 
     try {
 
@@ -297,7 +297,7 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, int f
     xmlRelaxNGValidCtxtPtr rngctx = xmlRelaxNGNewValidCtxt(rng);
 
     relaxng_units process(options, rngctx, fd);
-    srcMLControlHandler control(input_buffer);
+    srcSAXController control(input_buffer);
 
     try {
 

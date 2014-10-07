@@ -71,6 +71,7 @@ struct srcsax_context * srcsax_create_context_memory(const char * buffer, size_t
 struct srcsax_context * srcsax_create_context_FILE(FILE * srcml_file, const char * encoding);
 struct srcsax_context * srcsax_create_context_fd(int srcml_fd, const char * encoding);
 struct srcsax_context * srcsax_create_context_io(void * srcml_context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context), const char * encoding);
+struct srcsax_context * srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input);
 
 /* srcSAX free function */
 void srcsax_free_context(struct srcsax_context * context);

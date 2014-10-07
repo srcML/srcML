@@ -271,6 +271,27 @@ struct srcsax_context * srcsax_create_context_io(void * srcml_context, int (*rea
 }
 
 /**
+ * srcsax_create_context_parser_input_buffer
+ * @param srcml_context an opened context for opened srcML document
+ * @param read_callback a read callback function
+ * @close_callback a close callback function
+ * @param encoding the files character encoding
+ *
+ * Create a srcsSAX context from a general context and read/close callbacks with the specified encoding.
+ *
+ * @returns srcsax_context context to be used for srcML parsing.
+ */
+struct srcsax_context * srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input) {
+
+    if(input == 0) return 0;
+
+    srcsax_controller_init();
+
+    return srcsax_create_context_inner(input);
+
+}
+
+/**
  * srcsax_free_context
  * @param context a srcSAX context
  *

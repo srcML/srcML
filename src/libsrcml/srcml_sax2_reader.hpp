@@ -64,11 +64,9 @@ private :
 public :
 
     // constructors
-    srcml_sax2_reader(const char * filename, const char * encoding);
-    srcml_sax2_reader(std::string srcml_buffer, const char * encoding);
-    srcml_sax2_reader(FILE * srcml_file, const char * encoding);
-    srcml_sax2_reader(int srcml_fd, const char * encoding);
-    srcml_sax2_reader(void * srcml_context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context), const char * encoding);
+    srcml_sax2_reader(const char * filename, const char * encoding = 0);
+    srcml_sax2_reader(xmlParserInputBufferPtr input);
+
 
     // destructors
     ~srcml_sax2_reader();
