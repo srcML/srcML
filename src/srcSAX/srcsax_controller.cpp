@@ -148,6 +148,7 @@ static struct srcsax_context * srcsax_create_context_inner(xmlParserInputBufferP
 
     }
 
+    /** @todo this does not make sense */
     libxml2_context->_private = context;
 
     context->libxml2_context = libxml2_context;

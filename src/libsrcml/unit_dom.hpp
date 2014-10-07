@@ -65,6 +65,16 @@ public :
     virtual OPTION_TYPE get_options() const { return options; }
 
     /**
+     *
+     */
+     const xmlChar * srcsax_attribute2libxml2attribute(int num_attributes, srcsax_attribute attributes) {
+
+
+
+
+     }
+
+    /**
      * start_output
      *
      * Pure virtual that is called exactly once at beginnning of document  Override for intended behavior.
@@ -129,8 +139,8 @@ public :
                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                            const struct srcsax_attribute * attributes) {
 
-        sax2_srcsax_handler * handler = ( sax2_srcsax_handler *)ctxt->_private;
-        root = &handler->root;
+        //sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
+        //root = &handler->root;
 
         // record namespaces in an extensible list so we can add the per unit
         for (int i = 0; i < num_namespaces; ++i) {
@@ -144,7 +154,7 @@ public :
         // if we are building the entire tree, start now
         if (isoption(options, SRCML_OPTION_APPLY_ROOT)) {
 
-            xmlSAX2StartElementNs(ctxt, localname, prefix, URI, num_namespaces, namespaces, num_attributes,
+            xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes,
                                   0, attributes);
 
         }
@@ -200,7 +210,7 @@ public :
           static bool started = false;
           if(!is_archive && !started) xmlSAX2StartDocument(ctxt);
           started = true;
-          xmlSAX2StartElementNs(ctxt, localname, prefix, URI, num_namespaces, namespaces, num_attributes,
+          xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes,
           0, attributes);
 
           return;
@@ -211,7 +221,7 @@ public :
         //xmlSAX2StartDocument(ctxt);
 
         // start the unit (element) at the root using the merged namespaces
-        xmlSAX2StartElementNs(ctxt, localname, prefix, URI, (int)(data.size() / 2),
+        xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, (int)(data.size() / 2),
                               &data[0], num_attributes, 0, attributes);
 
     }
@@ -233,7 +243,7 @@ public :
                                 int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                                 const struct srcsax_attribute * attributes) {
 
-        xmlSAX2StartElementNs(ctxt, localname, prefix, URI, num_namespaces, namespaces, num_attributes, 0, attributes);
+        xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes, 0, attributes);
     }
 
     /**
@@ -247,7 +257,7 @@ public :
      */
     virtual void endElement(const char * localname, const char * prefix, const char * URI) {
 
-        xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
+        xmlSAX2EndElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI);
     }
 
     /**
@@ -260,7 +270,7 @@ public :
      */
     virtual void charactersUnit(const char * ch, int len) {
 
-        xmlSAX2Characters(ctxt, ch, len);
+        xmlSAX2Characters(ctxt, (const xmlChar *)ch, len);
     }
 
     /**
@@ -274,7 +284,7 @@ public :
     virtual void charactersRoot(const char * ch, int len) {
 
         if(isoption(options, SRCML_OPTION_APPLY_ROOT))
-            xmlSAX2Characters(ctxt, ch, len);
+            xmlSAX2Characters(ctxt, (const xmlChar *)ch, len);
     }
 
     /**
@@ -287,7 +297,7 @@ public :
      */
     virtual void cdatablock(const char * value, int len) {
 
-        xmlSAX2CDataBlock(ctxt, value, len);
+        xmlSAX2CDataBlock(ctxt, (const xmlChar *)value, len);
     }
 
      /**
@@ -299,7 +309,7 @@ public :
      */
     virtual void comments(const char * value) {
 
-        xmlSAX2Comment(ctxt, value);
+        xmlSAX2Comment(ctxt, (const xmlChar *)value);
     }
 
     /**
@@ -312,7 +322,7 @@ public :
      */
     virtual void processingInstruction(const char * target, const char * data) {
 
-        processing_instruction = std::pair<std::string, std::string>(target ? (const char *)target : "", data ? (const char *)data : "");
+        processing_instruction = std::pair<std::string, std::string>(target ? target : "", data ? data : "");
         //xmlSAX2ProcessingInstruction(ctxt, target, data);
 
     }
@@ -329,7 +339,7 @@ public :
     virtual void endUnit(const char * localname, const char * prefix, const char * URI) {
 
         // finish building the unit tree
-        xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
+        xmlSAX2EndElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI);
 
         // End the document and free it if applied to unit individually
         if(!isoption(options, SRCML_OPTION_APPLY_ROOT)) {
@@ -363,7 +373,7 @@ public :
         if(isoption(options, SRCML_OPTION_APPLY_ROOT)) {
 
             // finish building the unit tree
-            xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
+            xmlSAX2EndElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI);
 
             // End the document and free it if applied to unit individually
             xmlSAX2EndDocument(ctxt);

@@ -129,7 +129,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
 
     // setup process handling
     xpath_query_units process(options, compiled_xpath, prefix, uri, element, attr_name, attr_value, fd);
-    srcMLControlHandler control(input_buffer);
+    srcSAXControlHandler control(input_buffer);
 
     try {
 
