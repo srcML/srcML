@@ -1440,13 +1440,13 @@ f = open('sub/a.cpp.xml', 'w')
 f.write(nestedfileextra)
 f.close()
 
-check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "1", option.LANGUAGE_FLAG, 'sub/a.cpp.xml'], "", "C++\n")
-check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "1", option.DIRECTORY_FLAG, 'sub/a.cpp.xml'], "", "sub\n")
-check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "1", option.FILENAME_FLAG, 'sub/a.cpp.xml'], "", "a.cpp\n")
+check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "1", option.LANGUAGE_DISPLAY_FLAG, 'sub/a.cpp.xml'], "", "C++\n")
+check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "1", option.DIRECTORY_DISPLAY_FLAG, 'sub/a.cpp.xml'], "", "sub\n")
+check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "1", option.FILENAME_DISPLAY_FLAG, 'sub/a.cpp.xml'], "", "a.cpp\n")
 
-check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", option.LANGUAGE_FLAG, 'sub/a.cpp.xml'], "", "Java\n")
-check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", option.DIRECTORY_FLAG, 'sub/a.cpp.xml'], "", "emptysrc\n")
-check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", option.FILENAME_FLAG, 'sub/a.cpp.xml'], "", "empty.java\n")
+check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", option.LANGUAGE_DISPLAY_FLAG, 'sub/a.cpp.xml'], "", "Java\n")
+check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", option.DIRECTORY_DISPLAY_FLAG, 'sub/a.cpp.xml'], "", "emptysrc\n")
+check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", option.FILENAME_DISPLAY_FLAG, 'sub/a.cpp.xml'], "", "empty.java\n")
 
 # prefix extraction
 
