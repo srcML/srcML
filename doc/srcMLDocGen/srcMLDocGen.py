@@ -50,7 +50,7 @@ def getDocIndexFileName(docConfig):
 
 def genLangSupportFile(langSupport, nav):
     global pageLinks
-    print langSupport
+    # print langSupport
     pageLinks.append(PageLink("srcML Language Support", langSupport.outputFile))
     out = open(langSupport.outputFile, "w")
     fileTemplate = loader.get_template("LanguageSupport.html")
@@ -63,7 +63,7 @@ def genLangSupportFile(langSupport, nav):
     )
     out.write(page)
     out.close()
-    pass
+    # pass
 #
 # Generate documentation index for a language.
 #
