@@ -1327,11 +1327,11 @@ f = open('sub/a.cpp.xml', 'w')
 f.write(sxmlfile1)
 f.close()
 # check metadata options
-checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "", "", "C++\n")
-checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "", "", "sub\n")
-checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "", "", "a.cpp\n")
-checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "", "", "1.2\n")
-checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "", "", default_srcml2src_encoding + "\n")
+checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.LANGUAGE_DISPLAY_FLAG, option.LANGUAGE_DISPLAY_FLAG, "", "", "C++\n")
+checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.DIRECTORY_DISPLAY_FLAG, option.DIRECTORY_DISPLAY_FLAG, "", "", "sub\n")
+checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.FILENAME_DISPLAY_FLAG, option.FILENAME_DISPLAY_FLAG, "", "", "a.cpp\n")
+checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.SRCVERSION_DISPLAY_FLAG, option.SRCVERSION_DISPLAY_FLAG, "", "", "1.2\n")
+checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.ENCODING_DISPLAY_FLAG, option.ENCODING_DISPLAY_FLAG, "", "", default_srcml2src_encoding + "\n")
 
 check([srcml2src, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "1\n")
 
