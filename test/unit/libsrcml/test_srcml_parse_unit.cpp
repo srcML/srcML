@@ -41,7 +41,7 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
-#include "dassert.hpp"
+#include <unit_tests.hpp>
 
 int read_callback(void * context, char * buffer, int len) {
 
