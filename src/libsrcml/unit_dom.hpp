@@ -291,8 +291,9 @@ public :
         const xmlChar ** libxml2_attributes = srcsax_attribute2libxml2attribute(num_attributes, attributes);
         xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, libxml2_namespaces, num_attributes, 0, libxml2_attributes);
 
-            free(libxml2_namespaces);
-            free(libxml2_attributes);
+        free(libxml2_namespaces);
+        free(libxml2_attributes);
+
     }
 
     /**
