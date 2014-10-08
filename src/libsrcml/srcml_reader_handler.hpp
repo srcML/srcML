@@ -730,6 +730,30 @@ public :
                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                            const struct srcsax_attribute * attributes) {
 
+        if(strcmp(localname, "macro-list") == 0) {
+
+            std::string token;
+            std::string type;
+
+            for(int pos = 0; pos < num_attributes; ++pos) {
+
+                if(strcmp(attributes[pos].localname, "token") == 0)
+                    token = attributes[pos].value;
+                else if(strcmp(attributes[pos].localname, "type") == 0)
+                    type = attributes[pos].value;
+
+
+            }
+
+            if(token != "" && type != "") {
+
+                archive->user_macro_list.push_back(token);
+                archive->user_macro_list.push_back(type);
+
+            }
+
+        }
+
         if(is_archive) {
 
             write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, attributes);
