@@ -362,6 +362,8 @@ void srcSAXController::enable_function(bool enable) {
  */
 void srcSAXController::parse(srcSAXHandler * handler) {
 
+    handler->set_controller(this);
+
     cppCallbackAdapter adapter(handler);
     context->data = &adapter;
     srcsax_handler sax_handler = cppCallbackAdapter::factory();
