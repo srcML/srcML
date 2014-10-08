@@ -20,6 +20,10 @@
 #include <srcexfun_impl.hpp>
 #include <libxml/xpathInternals.h>
 #include <libxml/dict.h>
+#include <libxml/xmlstring.h>
+#include <libxml/tree.h>
+
+#include <srcmlns.hpp>
 
 /*
 VectorNodeSet forALLDescendentsAndSelfOptimized(xmlNodePtr input, char const* ns, char const* nodeName) {
@@ -77,19 +81,200 @@ VectorNodeSet forALLDescendentsAndSelfOptimized(xmlNodePtr input, char const* ns
         return ret;
 }
 */
-void xpath_exfun_has_return(xmlXPathParserContextPtr ctxt, int nargs) {
-    
+/* Static constants used by this file that don't need to be visible to other areas of the language. */
+namespace {
+
 }
 
+void xpath_exfun_has_return(xmlXPathParserContextPtr ctxt, int nargs) {
+
+
+    CHECK_ARITY(0);
+    
+    // Attempting to locate the srcML namespace.
+    // xmlNsPtr currentNs = docPtr->oldNs;
+    // while(currentNs) {
+    //     if(xmlStrEqual(currentNs->href, BAD_CAST SRCML_SRC_NS_URI) == 0) {
+    //         expectedNS = currentNs;
+    //         break;
+    //     }
+    //     currentNs = currentNs->next;
+    // }
+
+}
 
 void xpath_exfun_is_nested(xmlXPathParserContextPtr ctxt, int nargs) {
-
+    CHECK_ARITY(0);
 }
 
-void xpath_exfun_is_partial_template_specialization(xmlXPathParserContextPtr ctxt, int nargs) {
-
+void xpath_exfun_is_class_template_partial_specialization(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
 }
 
 void xpath_exfun_is_local(xmlXPathParserContextPtr ctxt, int nargs) {
-    
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_is_simple_asm(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_is_within_catch(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_is_within_finally(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_has_break(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_is_fixed(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_is_resource(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_is_unsafe(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_is_mutually_exclusive(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_returns(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_throw_stmts(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_attributes(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_parameters(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_arguments(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_templates(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_friends(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_enum_decls(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_initializers(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_owning_function(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_compute_prev_decl_type(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_indexing_expr(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_true_expr(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_false_expr(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_capture_variable_names(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_captures(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_caught_exception_parameter(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_remaining_catches(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_condition(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_function_call_name(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_case_labels(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_statements(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_declarations(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_functions(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_member_functions(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_members(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_data_members(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_public_members(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_private_members(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_protected_members(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_internal_members(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_protected_internal_members(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
 }

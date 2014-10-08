@@ -48,10 +48,23 @@ addUnitTest(test_language_extension_registry test_language_extension_registry.cp
 addUnitTest(test_srcml_translator test_srcml_translator.cpp ${LIBXML2_LIBRARIES})
 addUnitTest(test_srcexfun_impl test_srcexfun_impl.cpp)
 
+
+add_custom_target(copy_test_data_target ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/xpath_test_data" "${CMAKE_BINARY_DIR}/bin/xpath_test_data")
+add_dependencies(test_srcexfun_impl copy_test_data_target)
+file(GLOB_RECURSE xpath_test_files "${CMAKE_CURRENT_SOURCE_DIR}/xpath_test_data/*")
+foreach(x ${xpath_test_files})
+    message(STATUS "${x}")
+endforeach()
+
+add_dependencies(test_srcexfun_impl ${xpath_test_files})
+
+# Copying xpath test data into correct loction.
 if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
     copyDependentFile(copy.xsl)
     copyDependentFile(setlanguage.xsl)
     copyDependentFile(schema.rng)   
     copyDependentFile(test_srcml_xpath.cpp)
-    
+
+#    file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/xpath_test_data" DESTINATION "${CMAKE_BINARY_DIR}/bin")
 endif()
+
