@@ -586,7 +586,7 @@ public :
      *
      * Overidden endElementNs to collect srcML.
      */
-    virtual void endElementNs(const char * localname, const char * prefix, const char * URI) {
+    virtual void endElement(const char * localname, const char * prefix, const char * URI) {
 
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
