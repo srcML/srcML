@@ -101,7 +101,7 @@ private :
      */
      struct meta_tag {
 
-        meta_tag(const char * localname, const char * prefix, int num_attributes, struct srcsax_attribute * attributes) {
+        meta_tag(const char * localname, const char * prefix, int num_attributes, const struct srcsax_attribute * attributes) {
 
             this->localname = localname ? strdup(localname) : 0;
             this->prefix = prefix ? strdup(prefix) : 0;
@@ -487,11 +487,9 @@ public :
 
                     try {
 
-                        //srcml_element & element = meta_tags->at(i);
-                        // @todo need to be modified to work with new atrribute/namespaces
-                        // write_startTag(element.localname, element.prefix, element.nb_namespaces, element.namespaces,
-                        //                element.nb_attributes, element.attributes);
-                        // write_endTag(element.localname, element.prefix, true);
+                        meta_tag & meta_tag = meta_tags.at(i);
+                        write_startTag(meta_tag.localname, meta_tag.prefix, 0, 0, meta_tag.num_attributes, meta_tag.attributes);
+                        write_endTag(meta_tag.localname, meta_tag.prefix, true);
 
                     } catch(...) { /** @todo handle */ continue; }
 
@@ -732,8 +730,16 @@ public :
                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                            const struct srcsax_attribute * attributes) {
 
+        if(is_archive) {
 
+            write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, attributes);
+            write_endTag(localname, prefix, true);
 
+        } else {
+
+            meta_tags.push_back(meta_tag(localname, prefix, num_attributes, attributes));
+
+        }
 
     }
 
