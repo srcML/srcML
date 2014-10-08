@@ -120,6 +120,8 @@ public:
 
         cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
 
+        cpp_adapter->handler->set_encoding(context->encoding);
+
         cpp_adapter->handler->startDocument();
 
     }
