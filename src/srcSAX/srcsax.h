@@ -60,6 +60,9 @@ struct srcsax_context {
     /** xml parser input buffer */
     xmlParserInputBufferPtr input;
 
+    /** boolean to indicate need to free input buffer */
+    int free_input;
+
     /** internally used libxml2 context */
     xmlParserCtxtPtr libxml2_context;
 
