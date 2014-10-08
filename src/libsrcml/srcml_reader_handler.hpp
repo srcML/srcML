@@ -414,7 +414,7 @@ public :
 
             if(!is_archive) {
 
-                if(meta_tags->size()) {
+                if(meta_tags && meta_tags->size()) {
 
                     *unit->unit += ">";
                     is_empty = false;
