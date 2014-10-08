@@ -1,5 +1,5 @@
 /**
- * @file test_srcml_create_unit.cpp
+ * @file boost_optional_string_output.hpp
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
@@ -18,45 +18,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
+#include <string>
+#include <iostream>
+#include <boost/optional.hpp>
 
-  Test cases for srcml_create_unit.
-*/
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
+std::ostream & operator<<(std::ostream & out, boost::optional<std::string> str) {
 
-#include <srcml.h>
-#include <srcml_types.hpp>
-#include <srcmlns.hpp>
+	if(bool(str))
+	    out << *str;
+	else
+		out << "NOT SET";
 
-#include <unit_tests.hpp>
+    return out;
 
-int main() {
-
-    {
-
-        srcml_archive * archive = srcml_create_archive();
-        srcml_unit * unit = srcml_create_unit(archive);
-
-        dassert(unit->archive, archive);
-        dassert(unit->language, 0);
-        dassert(unit->filename, 0);
-        dassert(unit->directory, 0);
-        dassert(unit->version, 0);
-        dassert(unit->timestamp, 0);
-        dassert(unit->hash, 0);
-        dassert(unit->unit, 0);
-
-        srcml_free_unit(unit);
-        srcml_free_archive(archive);
-    }
-
-    {
-
-        dassert(srcml_create_unit(0), 0);
-
-    }
-
-    return 0;
 }
