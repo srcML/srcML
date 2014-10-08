@@ -25,13 +25,15 @@
 #include <stdexcept>
 #include <memory>
 #include <cstdlib>
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+#include <boost/shared_ptr.hpp>
 
+typedef boost::shared_ptr<xmlDoc> xml_doc_shared_ptr_t; 
 using namespace std;
 
-int main() {
+xml_doc_shared_ptr_t run_xpath(std::string const& inputFileName, std::string const& xpathExpression) {
 
-    string inputFileName = "xpath_test_data/has_return/has_return.cpp";
-    string xpathExpression = "//src:unit";
     char* archiveBuffer = 0;
     int archiveBufferSize = 0;
     int rc = 0;
@@ -130,72 +132,20 @@ int main() {
         throw std::runtime_error("Failed on srcml_apply_transforms.");
     }
     srcml_close_archive(xpathResultArchive);
-    
 
-    cout.write(xpathResultArchiveBuffer, xpathResultArchiveBufferSize);
-    cout << endl;
-
-    free(xpathResultArchiveBuffer);
     free(archiveBuffer);
-    // srcml_archive* oarchive;
-    // srcml_read_open_filename(iarchive, "project.xml");
-    // oarchive = srcml_clone_archive(iarchive);
-    // srcml_write_open_filename(oarchive, "xpath.xml");
 
-    // srcml_append_transform_xpath(iarchive, "//src:unit");
+    // Turning XPath document into libxml2 xmlDoc.
+    xmlDocPtr ret = xmlParseMemory(xpathResultArchiveBuffer, xpathResultArchiveBufferSize);
+    srcml_free_archive(processedArchive);
+    srcml_free_archive(xpathResultArchive);
+    free(xpathResultArchiveBuffer);
+    return xml_doc_shared_ptr_t(ret, xmlFreeDoc);
+}
 
-    // srcml_apply_transforms(iarchive, oarchive);
-/*    
-    srcml_close_archive(iarchive);
-    srcml_close_archive(oarchive);
+int main() {
 
-    srcml_free_archive(iarchive);
-    srcml_free_archive(oarchive);
-
-
-    int i;
-    struct srcml_archive* archive;
-    struct srcml_unit* unit;
-    char * s;
-    int size;
-    int srcml_input;
-
-    // create a new srcml archive structure
-    archive = srcml_create_archive();
-
-    //open a srcML archive for output
-    srcml_write_open_memory(archive, &s, &size);
-
-    //add all the files to the archive
-    for (i = 1; i < argc; ++i) {
-
-        unit = srcml_create_unit(archive);
-
-        // Translate to srcml and append to the archive
-        char buffer[256];
-        srcml_input = OPEN(argv[i], O_RDONLY, 0);
-        int num_read = READ(srcml_input, buffer, 256);
-        CLOSE(srcml_input);
-        srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
-
-        srcml_parse_unit_memory(unit, buffer, num_read);
-
-        // Translate to srcml and append to the archive
-        srcml_write_unit(archive, unit);
-
-        srcml_free_unit(unit);
-    }
-
-    // close the srcML archive 
-    srcml_close_archive(archive);
-
-    // free the srcML archive data
-    srcml_free_archive(archive);
-
-    // now dump the contents of the archive
-    puts(s);
-    free(s);
-*/
+    xml_doc_shared_ptr_t doc = run_xpath("xpath_test_data/has_return/has_return.cpp", "//src:unit");
     return 0;
 }
 
