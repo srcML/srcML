@@ -94,8 +94,69 @@ private :
     /** skip internal unit elements */
     bool skip;
 
+    /**
+     * meta_tag
+     *
+     * Store a meta tag for later output.
+     */
+     struct meta_tag {
+
+        meta_tag(const char * localname, const char * prefix, int num_attributes, struct srcsax_attribute * attributes) {
+
+            this->localname = localname ? strdup(localname) : 0;
+            this->prefix = prefix ? strdup(prefix) : 0;
+            this->num_attributes = num_attributes;
+            this->attributes = (struct srcsax_attribute *)calloc(num_attributes, sizeof(struct srcsax_attribute));
+            for(int pos = 0; pos < num_attributes; ++pos) {
+
+                this->attributes[pos].localname = strdup(attributes[pos].localname);
+                this->attributes[pos].prefix = strdup(attributes[pos].prefix);
+                this->attributes[pos].uri = strdup(attributes[pos].uri);
+                this->attributes[pos].value = strdup(attributes[pos].value);
+
+            }
+
+        }
+
+        ~meta_tag() {
+
+            if(localname) free((void *)localname), localname = 0;
+            if(prefix) free((void *)prefix), prefix = 0;
+
+            if(attributes) {
+
+                for(int pos = 0; pos < num_attributes; ++pos) {
+
+                    free((void *)attributes[pos].localname);
+                    free((void *)attributes[pos].prefix);
+                    free((void *)attributes[pos].uri);
+                    free((void *)attributes[pos].value);
+
+                }
+
+                free(attributes), attributes = 0;
+
+            }
+
+        }
+
+        /** metatags localname */
+        const char * localname;
+
+        /** metatags prefix */
+        const char * prefix;
+
+        /** metatags number of attributes */
+        int num_attributes;
+
+        /** meta tags attributes */
+        struct srcsax_attribute * attributes;
+
+
+     };
+
     /** save meta tags to use when non-archive write unit */
-    std::vector<srcml_element> * meta_tags;
+    std::vector<meta_tag> meta_tags;
 
 public :
 
@@ -414,14 +475,14 @@ public :
 
             if(!is_archive) {
 
-                if(meta_tags && meta_tags->size()) {
+                if(meta_tags.size()) {
 
                     *unit->unit += ">";
                     is_empty = false;
 
                 }
 
-                for(std::vector<srcml_element>::size_type i = 0; i < meta_tags->size(); ++i) {
+                for(std::vector<meta_tag>::size_type i = 0; i < meta_tags.size(); ++i) {
 
 
                     try {
@@ -651,6 +712,28 @@ public :
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
+
+    }
+
+    /**
+     * metaTag
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param num_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param num_attributes the number of attributes on the tag
+     * @param attributes list of attributes\
+     *
+     * SAX handler function for a meta tags.
+     * Overide for desired behaviour.
+     */
+    virtual void metaTag(const char * localname, const char * prefix, const char * URI,
+                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                           const struct srcsax_attribute * attributes) {
+
+
+
 
     }
 
