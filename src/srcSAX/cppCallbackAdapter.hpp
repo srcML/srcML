@@ -160,6 +160,8 @@ public:
 
         cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
 
+        cpp_adapter->handler->set_is_archive(context->is_archive);
+
         if(context->is_archive)
             cpp_adapter->srcml_element_stack_push((const char *)prefix, (const char *)localname);
 
