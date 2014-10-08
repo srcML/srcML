@@ -109,10 +109,10 @@ private :
             this->attributes = (struct srcsax_attribute *)calloc(num_attributes, sizeof(struct srcsax_attribute));
             for(int pos = 0; pos < num_attributes; ++pos) {
 
-                this->attributes[pos].localname = strdup(attributes[pos].localname);
-                this->attributes[pos].prefix = strdup(attributes[pos].prefix);
-                this->attributes[pos].uri = strdup(attributes[pos].uri);
-                this->attributes[pos].value = strdup(attributes[pos].value);
+                this->attributes[pos].localname = attributes[pos].localname ? strdup(attributes[pos].localname) : 0;
+                this->attributes[pos].prefix = attributes[pos].prefix ? strdup(attributes[pos].prefix) : 0;
+                this->attributes[pos].uri = attributes[pos].uri ? strdup(attributes[pos].uri) : 0;
+                this->attributes[pos].value = attributes[pos].value ? strdup(attributes[pos].value) : 0;
 
             }
 
@@ -127,10 +127,10 @@ private :
 
                 for(int pos = 0; pos < num_attributes; ++pos) {
 
-                    free((void *)attributes[pos].localname);
-                    free((void *)attributes[pos].prefix);
-                    free((void *)attributes[pos].uri);
-                    free((void *)attributes[pos].value);
+                    if(attributes[pos].localname) free((void *)attributes[pos].localname);
+                    if(attributes[pos].prefix) free((void *)attributes[pos].prefix);
+                    if(attributes[pos].uri) free((void *)attributes[pos].uri);
+                    if(attributes[pos].value) free((void *)attributes[pos].value);
 
                 }
 
@@ -376,18 +376,7 @@ public :
 
         }
 
-        // pause
-        // @todo this may need to change because, meta tags have separate call now
-        {
-            boost::unique_lock<boost::mutex> lock(mutex);
-            if(terminate) stop_parser();
-            wait_root = false;
-            cond.notify_all();
-            cond.wait(lock);
-            read_root = true;
-        }
 
-        if(terminate) stop_parser();
 
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -415,6 +404,31 @@ public :
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
+
+        // pause
+        // @todo this may need to change because, meta tags have separate call now
+        if(!read_root) {
+
+            {
+                
+                boost::unique_lock<boost::mutex> lock(mutex);
+                if(terminate) stop_parser();
+                wait_root = false;
+                cond.notify_all();
+                cond.wait(lock);
+                read_root = true;
+        
+            }
+
+            if(terminate) {
+
+                stop_parser();
+                return;
+
+            }
+
+        }
+
 
         unit = srcml_create_unit(archive);
         unit->unit = "";
@@ -567,6 +581,27 @@ public :
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
+        if(!read_root) {
+
+            {
+                
+                boost::unique_lock<boost::mutex> lock(mutex);
+                if(terminate) stop_parser();
+                wait_root = false;
+                cond.notify_all();
+                cond.wait(lock);
+                read_root = true;
+        
+            }
+
+            if(terminate) {
+
+                stop_parser();
+                return;
+
+            }
+
+        }
 
         {
             boost::unique_lock<boost::mutex> lock(mutex);
@@ -754,12 +789,7 @@ public :
 
         }
 
-        if(is_archive) {
-
-            write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, attributes);
-            write_endTag(localname, prefix, true);
-
-        } else {
+        if(!is_archive) {
 
             meta_tags.push_back(meta_tag(localname, prefix, num_attributes, attributes));
 
@@ -825,7 +855,6 @@ private :
             *unit->unit += "\"";
 
         }
-
 
         for(int pos = 0; pos < num_attributes; ++pos) {
 
