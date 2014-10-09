@@ -26,6 +26,7 @@
 #include <libxml/SAX2.h>
 
 #include <srcSAXHandler.hpp>
+#include <sax2_srcsax_handler.hpp>
 
 #include <string>
 #include <vector>
@@ -176,8 +177,8 @@ public :
                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                            const struct srcsax_attribute * attributes) {
 
-        //sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
-        //root = &handler->root;
+        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
+        root = &handler->root;
 
         // record namespaces in an extensible list so we can add the per unit
         for (int i = 0; i < num_namespaces; ++i) {
@@ -498,7 +499,7 @@ protected:
     srcml_element * root;
 
     /**  The meta tags for the root element */
-    std::vector<srcml_element> * meta_tags;
+    std::vector<srcml_element> meta_tags;
 
     /** The pre-root processing instruction */
     boost::optional<std::pair<std::string, std::string> > processing_instruction;
