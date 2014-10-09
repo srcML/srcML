@@ -100,11 +100,11 @@ public :
         const xmlChar ** libxml2_attributes = (const xmlChar **)malloc((num_attributes * 5) * sizeof(const xmlChar *));
         for(int pos = 0; pos < num_attributes; ++pos) {
 
-            libxml2_attributes[pos] = (const xmlChar *)attributes[pos].localname;
-            libxml2_attributes[pos + 1] = (const xmlChar *)attributes[pos].prefix;
-            libxml2_attributes[pos + 2] = (const xmlChar *)attributes[pos].uri;
-            libxml2_attributes[pos + 3] = (const xmlChar *)strdup(attributes[pos].value);
-            libxml2_attributes[pos + 4] = libxml2_attributes[pos + 3] + strlen(attributes[pos].value);
+            libxml2_attributes[pos * 5] = (const xmlChar *)attributes[pos].localname;
+            libxml2_attributes[pos * 5 + 1] = (const xmlChar *)attributes[pos].prefix;
+            libxml2_attributes[pos * 5 + 2] = (const xmlChar *)attributes[pos].uri;
+            libxml2_attributes[pos * 5 + 3] = (const xmlChar *)strdup(attributes[pos].value);
+            libxml2_attributes[pos * 5 + 4] = libxml2_attributes[pos + 3] + strlen(attributes[pos].value);
 
         }
 

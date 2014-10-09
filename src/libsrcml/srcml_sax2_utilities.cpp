@@ -126,15 +126,15 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
         fprintf(stderr, "srcml2src:  Unable to compile XPath '%s'\n", s.c_str());
         return SRCML_STATUS_INVALID_INPUT;
     }
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     // setup process handling
     xpath_query_units process(options, compiled_xpath, prefix, uri, element, attr_name, attr_value, fd);
     srcSAXController control(input_buffer);
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     try {
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
         control.parse(&process);
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     } catch(SAXError error) {
 
         fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
