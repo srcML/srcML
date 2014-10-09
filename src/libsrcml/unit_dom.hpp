@@ -102,8 +102,8 @@ public :
             libxml2_attributes[pos] = (const xmlChar *)attributes[pos].localname;
             libxml2_attributes[pos + 1] = (const xmlChar *)attributes[pos].prefix;
             libxml2_attributes[pos + 2] = (const xmlChar *)attributes[pos].uri;
-            libxml2_attributes[pos + 3] = (const xmlChar *)attributes[pos].value;
-            libxml2_attributes[pos + 3] = (const xmlChar *)attributes[pos].value + strlen(attributes[pos].value);
+            libxml2_attributes[pos + 3] = (const xmlChar *)strdup(attributes[pos].value);
+            libxml2_attributes[pos + 4] = libxml2_attributes[pos + 3] + strlen(attributes[pos].value);
 
         }
 
