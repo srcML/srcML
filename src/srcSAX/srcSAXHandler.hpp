@@ -1,14 +1,14 @@
 /**
- * @file srcMLHandler.hpp
+ * @file srcSAXHandler.hpp
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
- * The srcML Toolkit is free software; you can redistribute it and/or modify
+ * srcSAX is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * The srcML Toolkit is distributed in the hope that it will be useful,
+ * srcSAX is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -18,27 +18,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_SRCMLHANDLER_HPP
-#define INCLUDED_SRCMLHANDLER_HPP
+#ifndef INCLUDED_SRCSAX_HANDLER_HPP
+#define INCLUDED_SRCSAX_HANDLER_HPP
 
-#include <srcMLElement.hpp>
-#include <srcMLControlHandler.hpp>
+#include <srcSAXController.hpp>
 
 #include <libxml/parser.h>
 
 #include <vector>
 
 /**
- * srcMLHandler
+ * srcSAXHandler
  *
  * Base class that provides hooks for SAX processing.
  */
-class srcMLHandler {
+class srcSAXHandler {
 
 private :
 
-    /** Control handler for parser */
-    srcMLControlHandler * control_handler;
+    /** Controller for parser */
+    srcSAXController * controller;
 
 protected:
 
@@ -48,35 +47,38 @@ protected:
     /** the current unit count */
     int unit_count;
 
+    /** open srcML element stack */
+    std::vector<std::string> srcml_element_stack;
+
     /** the xml documents encoding */
     const char * encoding;
 
 public :
 
     /**
-     * srcMLHandler
+     * srcSAXHandler
      *
      * Default constructor default values to everything
      */
-    srcMLHandler() : control_handler(0), is_archive(false), unit_count(0), encoding(0) {}
+    srcSAXHandler() : controller(0), is_archive(false), unit_count(0), encoding(0) {}
 
     /**
-     * set_control_handler
-     * @param control_handler pointer to control class
+     * set_controller
+     * @param controller pointer to control class
      *
-     * Used by srcMLControlHandler to provide access to self
+     * Used by srcSAXController to provide access to self
      * for such things as disabeling sax parsing.
      */
-    void set_control_handler(srcMLControlHandler * control_handler) {
+    void set_controller(srcSAXController * controller) {
 
-        this->control_handler = control_handler;
+        this->controller = controller;
 
     }
 
     /**
      * increment_unit_count
      *
-     * Internally used to increment the count in SAX2srcMLHandler.
+     * Internally used to increment the count in SAX2srcSAXHandler.
      */
     void increment_unit_count() {
 
@@ -85,13 +87,24 @@ public :
     }
 
     /**
-     * get_control_handler
+     * get_stack
+     *
+     * Used internally to update the stack.
+     */
+    std::vector<std::string> & get_stack() {
+
+        return srcml_element_stack;
+
+    }
+
+    /**
+     * get_controller
      *
      * Get the control handler.
      */
-    srcMLControlHandler & get_control_handler() {
+    srcSAXController & get_controller() {
 
-        return *control_handler;
+        return *controller;
 
     }
 
@@ -102,16 +115,7 @@ public :
      */
     void stop_parser() {
 
-        control_handler->getSAX().startDocument = 0;
-        control_handler->getSAX().endDocument = 0;
-        control_handler->getSAX().startElementNs = 0;
-        control_handler->getSAX().endElementNs = 0;
-        control_handler->getSAX().characters = 0;
-        control_handler->getSAX().cdataBlock = 0;
-        control_handler->getSAX().comment = 0;
-        control_handler->getSAX().ignorableWhitespace = 0;
-
-        xmlStopParser(control_handler->getCtxt());
+        srcsax_stop_parser(controller->getContext());
 
     } 
 
@@ -119,7 +123,7 @@ public :
      * set_encoding
      * @param encoding set the encoding
      *
-     * Used by SAX2srcMLHandler when determined
+     * Used by SAX2srcSAXHandler when determined
      * encoding.  Set the input encoding if any.
      */
     void set_encoding(const char * encoding) {
@@ -131,7 +135,7 @@ public :
      * set_is_archive
      * @param is_archive is the srcML document an archive
      *
-     * Used by SAX2srcMLHandler when determined
+     * Used by SAX2srcSAXHandler when determined
      * if an archive.  Sets if srcML document is an archive.
      */
     void set_is_archive(bool is_archive) {
@@ -164,38 +168,35 @@ public :
      * @param localname the name of the element tag
      * @param prefix the tag prefix
      * @param URI the namespace of tag
-     * @param nb_namespaces number of namespaces definitions
+     * @param num_namespaces number of namespaces definitions
      * @param namespaces the defined namespaces
-     * @param nb_attributes the number of attributes on the tag
-     * @param nb_defaulted the number of defaulted attributes
-     * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
-     * @param meta_tags vector of elements composed of metage tags defined after root tag
+     * @param num_attributes the number of attributes on the tag
+     * @param attributes list of attributes
      *
      * SAX handler function for start of the root element.
      * Overide for desired behaviour.
      */
-    virtual void startRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                           int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                           const xmlChar ** attributes, std::vector<srcMLElement> * meta_tags) {}
+    virtual void startRoot(const char * localname, const char * prefix, const char * URI,
+                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                           const struct srcsax_attribute * attributes) {}
 
     /**
      * startUnit
      * @param localname the name of the element tag
      * @param prefix the tag prefix
      * @param URI the namespace of tag
-     * @param nb_namespaces number of namespaces definitions
+     * @param num_namespaces number of namespaces definitions
      * @param namespaces the defined namespaces
-     * @param nb_attributes the number of attributes on the tag
-     * @param nb_defaulted the number of defaulted attributes
-     * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
+     * @param num_attributes the number of attributes on the tag
+     * @param attributes list of attributes
      *
      * SAX handler function for start of an unit.
      * Overide for desired behaviour.
      */
-    virtual void startUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                           int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                           const xmlChar ** attributes) {}
-
+    virtual void startUnit(const char * localname, const char * prefix, const char * URI,
+                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                           const struct srcsax_attribute * attributes) {}
+#if 0
     /**
      * startFunction
      * @param name the function's name
@@ -209,24 +210,23 @@ public :
      * Overide for desired behaviour.
      */
     virtual void startFunction(const std::string & name, const std::string & return_type, const std::vector<declaration> & parameter_list, bool is_decl) {}
-
+#endif
     /**
-     * startElementNs
+     * startElement
      * @param localname the name of the element tag
      * @param prefix the tag prefix
      * @param URI the namespace of tag
-     * @param nb_namespaces number of namespaces definitions
+     * @param num_namespaces number of namespaces definitions
      * @param namespaces the defined namespaces
-     * @param nb_attributes the number of attributes on the tag
-     * @param nb_defaulted the number of defaulted attributes
-     * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
+     * @param num_attributes the number of attributes on the tag
+     * @param attributes list of attributes
      *
      * SAX handler function for start of an element.
      * Overide for desired behaviour.
      */
-    virtual void startElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                                int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                                const xmlChar ** attributes) {}
+    virtual void startElement(const char * localname, const char * prefix, const char * URI,
+                                int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                                const struct srcsax_attribute * attributes) {}
 
     /**
      * endRoot
@@ -237,7 +237,7 @@ public :
      * SAX handler function for end of the root element.
      * Overide for desired behaviour.
      */
-    virtual void endRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {}
+    virtual void endRoot(const char * localname, const char * prefix, const char * URI) {}
 
     /**
      * endUnit
@@ -248,8 +248,8 @@ public :
      * SAX handler function for end of an unit.
      * Overide for desired behaviour.
      */
-    virtual void endUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {}
-
+    virtual void endUnit(const char * localname, const char * prefix, const char * URI) {}
+#if 0
     /**
      * endFunction
      *
@@ -257,9 +257,9 @@ public :
      * Overide for desired behaviour.
      */
     virtual void endFunction() {}
-
+#endif
     /**
-     * endElementNs
+     * endElement
      * @param localname the name of the element tag
      * @param prefix the tag prefix
      * @param URI the namespace of tag
@@ -267,7 +267,7 @@ public :
      * SAX handler function for end of an element.
      * Overide for desired behaviour.
      */
-    virtual void endElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {}
+    virtual void endElement(const char * localname, const char * prefix, const char * URI) {}
 
     /**
      * charactersRoot
@@ -277,7 +277,7 @@ public :
      * SAX handler function for character handling at the root level.
      * Overide for desired behaviour.
      */
-    virtual void charactersRoot(const xmlChar * ch, int len) {}
+    virtual void charactersRoot(const char * ch, int len) {}
 
     /**
      * charactersUnit
@@ -287,7 +287,24 @@ public :
      * SAX handler function for character handling within a unit.
      * Overide for desired behaviour.
      */
-    virtual void charactersUnit(const xmlChar * ch, int len) {}
+    virtual void charactersUnit(const char * ch, int len) {}
+
+    /**
+     * metaTag
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param num_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param num_attributes the number of attributes on the tag
+     * @param attributes list of attributes\
+     *
+     * SAX handler function for a meta tags.
+     * Overide for desired behaviour.
+     */
+    virtual void metaTag(const char * localname, const char * prefix, const char * URI,
+                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                           const struct srcsax_attribute * attributes) {}
 
     /**
      * comment
@@ -296,7 +313,7 @@ public :
      * A comment has been parsed.
      * Overide for desired behaviour.
      */
-    virtual void comment(const xmlChar * value) {}
+    virtual void comment(const char * value) {}
 
     /**
      * cdataBlock
@@ -306,7 +323,7 @@ public :
      * Called when a pcdata block has been parsed.
      * Overide for desired behaviour.
      */
-    virtual void cdataBlock(const xmlChar * value, int len) {}
+    virtual void cdataBlock(const char * value, int len) {}
 
     /**
      * processingInstruction
@@ -316,7 +333,7 @@ public :
      * Called when a processing instruction has been parsed.
      * Overide for desired behaviour.
      */
-    virtual void processingInstruction(const xmlChar * target, const xmlChar * data) {}
+    virtual void processingInstruction(const char * target, const char * data) {}
 
 #pragma GCC diagnostic pop
 

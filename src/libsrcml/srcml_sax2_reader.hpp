@@ -23,7 +23,7 @@
 
 #include <srcml_reader_handler.hpp>
 
-#include <srcMLControlHandler.hpp>
+#include <srcSAXController.hpp>
 
 #include <srcml_types.hpp>
 #include <srcml_macros.hpp>
@@ -50,7 +50,7 @@ class srcml_sax2_reader {
 private :
 
     /** control for sax parsing */
-    srcMLControlHandler control;
+    srcSAXController control;
     /** boolean for marking if read root */
     bool read_root;
     /** handler with hooks for sax parsing */
@@ -59,11 +59,14 @@ private :
     /** thread running execution */
     boost::thread * thread;
 
+    void init_constructor();
+
 public :
 
     // constructors
-    srcml_sax2_reader(const char * filename);
+    srcml_sax2_reader(const char * filename, const char * encoding = 0);
     srcml_sax2_reader(xmlParserInputBufferPtr input);
+
 
     // destructors
     ~srcml_sax2_reader();

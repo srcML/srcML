@@ -39,7 +39,7 @@
 struct thread_args {
 
     /** control for sax processing */
-    srcMLControlHandler * control;
+    srcSAXController * control;
 
     /** handler with hooks for sax processing */
     srcml_reader_handler * handler;
@@ -70,19 +70,27 @@ void * start_routine(void * arguments) {
 
 }
 
-/**
- * srcml_sax2_reader
- * @param filename name of a file
- *
- * Construct a srcml_sax2_reader using a filename
- */
-srcml_sax2_reader::srcml_sax2_reader(const char * filename)
-    : control(filename), read_root(false) {
+void srcml_sax2_reader::init_constructor() {
+
 
     thread_args args = { &control, &handler };
 
     thread = new boost::thread(start_routine, &args);
     handler.wait();
+
+}
+
+/**
+ * srcml_sax2_reader
+ * @param filename name of a file
+ * @param encoding the character encoding
+ *
+ * Construct a srcml_sax2_reader using a filename
+ */
+srcml_sax2_reader::srcml_sax2_reader(const char * filename, const char * encoding)
+    : control(filename, encoding), read_root(false) {
+
+    init_constructor();
 
 }
 
@@ -95,10 +103,7 @@ srcml_sax2_reader::srcml_sax2_reader(const char * filename)
 srcml_sax2_reader::srcml_sax2_reader(xmlParserInputBufferPtr input)
     : control(input), read_root(false) {
 
-    thread_args args = { &control, &handler };
-
-    thread = new boost::thread(start_routine, &args);
-    handler.wait();
+    init_constructor();
 
 }
 
