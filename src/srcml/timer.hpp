@@ -43,10 +43,6 @@ public:
 		return ((((clock() - start_time)/CLOCKS_PER_SEC) >= time_limit) && time_limit != 0);
 	}
 
-	//inline void reset() {
-	//	start_time = clock();
-	//}
-
 	inline void set_limit(double limit) {
 		time_limit = limit;
 	}
