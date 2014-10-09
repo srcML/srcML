@@ -105,6 +105,7 @@ public :
             libxml2_attributes[pos * 5 + 2] = (const xmlChar *)attributes[pos].uri;
             libxml2_attributes[pos * 5 + 3] = (const xmlChar *)strdup(attributes[pos].value);
             libxml2_attributes[pos * 5 + 4] = libxml2_attributes[pos * 5 + 3] + strlen(attributes[pos].value);
+            attribute_value_pool.push_back(libxml2_attributes[pos * 5 + 3]);
 
         }
 
@@ -400,6 +401,9 @@ public :
             if ((error = !apply()))
                 stop_parser();
 
+            for(std::vector<const xmlChar *>::const_iterator citr = attribute_value_pool.begin(); citr != attribute_value_pool.end(); ++citr)
+                free((void *)*citr);
+
             // free up the document that has this particular unit
             xmlNodePtr aroot = ctxt->myDoc->children;
             xmlUnlinkNode(ctxt->myDoc->children);
@@ -432,6 +436,9 @@ public :
             // apply the necessary processing
             if ((error = !apply()))
                 stop_parser();
+
+            for(std::vector<const xmlChar *>::const_iterator citr = attribute_value_pool.begin(); citr != attribute_value_pool.end(); ++citr)
+                free((void *)*citr);
 
             // free up the document that has this particular unit
             xmlNodePtr aroot = ctxt->myDoc->children;
@@ -503,6 +510,9 @@ protected:
 
     /** The pre-root processing instruction */
     boost::optional<std::pair<std::string, std::string> > processing_instruction;
+
+    /** libxml2 attribute values */
+    std::vector<const xmlChar *> attribute_value_pool;
 
 };
 
