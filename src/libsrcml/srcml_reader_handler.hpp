@@ -101,6 +101,27 @@ private :
      */
      struct meta_tag {
 
+        /** metatags localname */
+        const char * localname;
+
+        /** metatags prefix */
+        const char * prefix;
+
+        /** metatags number of attributes */
+        int num_attributes;
+
+        /** meta tags attributes */
+        struct srcsax_attribute * attributes;
+
+        /**
+         * meta_tag
+         * @param localname the meta tag name
+         * @param prefix the meta tag prefix
+         * @param num_attributes the number attributes on the meta tag
+         * @param attributes the attributes on the meta tag
+         *
+         * Construct meta_tag from SAX data.
+         */
         meta_tag(const char * localname, const char * prefix, int num_attributes, const struct srcsax_attribute * attributes) {
 
             this->localname = localname ? strdup(localname) : 0;
@@ -118,6 +139,65 @@ private :
 
         }
 
+        /**
+         * meta_tag
+         * @param other another meta_tag
+         *
+         * Copy constructor.
+         */
+        meta_tag(const meta_tag & other) {
+
+            this->localname = other.localname ? strdup(other.localname) : 0;
+            this->prefix = other.prefix ? strdup(other.prefix) : 0;
+            this->num_attributes = other.num_attributes;
+            this->attributes = (struct srcsax_attribute *)calloc(other.num_attributes, sizeof(struct srcsax_attribute));
+            for(int pos = 0; pos < other.num_attributes; ++pos) {
+
+                this->attributes[pos].localname = other.attributes[pos].localname ? strdup(other.attributes[pos].localname) : 0;
+                this->attributes[pos].prefix = other.attributes[pos].prefix ? strdup(other.attributes[pos].prefix) : 0;
+                this->attributes[pos].uri = other.attributes[pos].uri ? strdup(other.attributes[pos].uri) : 0;
+                this->attributes[pos].value = other.attributes[pos].value ? strdup(other.attributes[pos].value) : 0;
+
+            }
+
+        }
+
+
+        /**
+         * operator=
+         * @param other another meta_tag
+         *
+         * Overloaded assignment operator
+         * Returns the assigned to meta_tag
+         */
+        meta_tag & operator=(meta_tag other) {
+
+
+            this->swap(other);
+            return *this;
+
+        }
+
+        /**
+         * swap
+         * @param other another meta_tag
+         *
+         * swap the contents of the meta tags.
+         */
+        void swap(meta_tag & other) {
+
+            std::swap(localname, other.localname);
+            std::swap(prefix, other.prefix);
+            std::swap(num_attributes, other.num_attributes);
+            std::swap(attributes, other.attributes);
+
+        }
+
+        /**
+         * ~meta_tag
+         *
+         * Destructor
+         */
         ~meta_tag() {
 
             if(localname) free((void *)localname), localname = 0;
@@ -139,19 +219,6 @@ private :
             }
 
         }
-
-        /** metatags localname */
-        const char * localname;
-
-        /** metatags prefix */
-        const char * prefix;
-
-        /** metatags number of attributes */
-        int num_attributes;
-
-        /** meta tags attributes */
-        struct srcsax_attribute * attributes;
-
 
      };
 
@@ -767,8 +834,8 @@ public :
 
         if(strcmp(localname, "macro-list") == 0) {
 
-            std::string token;
-            std::string type;
+            std::string token("");
+            std::string type("");
 
             for(int pos = 0; pos < num_attributes; ++pos) {
 
@@ -791,7 +858,7 @@ public :
 
         if(!is_archive) {
 
-            meta_tags.push_back(meta_tag(localname, prefix, num_attributes, attributes));
+            //meta_tags.push_back(meta_tag(localname, prefix, num_attributes, attributes));
 
         }
 
