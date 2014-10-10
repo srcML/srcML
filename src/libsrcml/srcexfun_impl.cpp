@@ -104,12 +104,13 @@ namespace {
 
     xmlChar const* const return_tag = BAD_CAST "return";
     xmlChar const* const expr_stmt_tag = BAD_CAST "expr_stmt";
+    xmlChar const* const decl_stmt_tag = BAD_CAST "decl_stmt";
 }
 
 void xpath_exfun_has_return(xmlXPathParserContextPtr ctxt, int nargs) {
 
     CHECK_ARITY(0);
-    std::cout << "Starting has_return" << std::endl;
+    // std::cout << "Starting has_return" << std::endl;
     xmlNodePtr currentNode = ctxt->context->node;
     xmlNodePtr input = currentNode;
     // xmlNsPtr srcNs = 0;
@@ -153,13 +154,18 @@ void xpath_exfun_has_return(xmlXPathParserContextPtr ctxt, int nargs) {
     if(!currentNode) {
         goto EXIT;
     }
+    // else {
+    //     goto 
+    // }
 VISIT:
     if(currentNode->type == XML_ELEMENT_NODE) {
         if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI)) {
             if(xmlStrEqual(return_tag, currentNode->name)) {
-                std::cout << "Located return" << std::endl;
+                // std::cout << "Located return" << std::endl;
                 xmlXPathReturnTrue(ctxt); return;
 
+            }else if (xmlStrEqual(decl_stmt_tag, currentNode->name)) {
+                goto STRAIF_SIBLINGS;
 
             }else if (xmlStrEqual(expr_stmt_tag, currentNode->name)) {
                 goto STRAIF_SIBLINGS;
