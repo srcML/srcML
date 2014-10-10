@@ -132,7 +132,10 @@ def extract_all(src, encoding):
         while unit != None :
                 unit.unparse_memory()
                 src_all.append(unit.src())
-                all.append(unit.get_xml())
+                srcml = unit.get_xml()
+                if archive.get_directory() != None and (archive.get_directory().find(".all") != -1 or archive.get_directory().find("unicode") != -1):
+                	srcml = "<unit>" + srcml[srcml.find(">") + 1:]
+                all.append(srcml)
 		unit = archive.read_unit()
 
         archive.close()
@@ -221,18 +224,11 @@ def src2srcML(text_file, encoding, language, directory, filename, read_archive):
         if directory.find("unicode") != -1 :
                 unit.set_encoding("UTF-8")
 
-        is_all =  directory.find(".all") 
-        is_unicode = directory.find("unicode")
-
-        if is_all != -1 or is_unicode != -1:
-                unit.set_filename(filename)
-                unit.set_directory(directory)
-
         unit.parse_memory(text_file)
         srcml = unit.get_xml()
         archive.close()
-        if is_all == -1 and is_unicode == -1:
-                srcml = "<unit>" + srcml[srcml.find(">") + 1:]
+
+        srcml = "<unit>" + srcml[srcml.find(">") + 1:]
 
         return srcml
 
