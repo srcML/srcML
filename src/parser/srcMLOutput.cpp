@@ -879,6 +879,8 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     // list of attributes
     const char* const attrs[][2] = {
 
+        {UNIT_ATTRIBUTE_REVISION, depth == 0 ? srcml_version_string() : 0 },
+
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },
 
