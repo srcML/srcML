@@ -73,44 +73,16 @@ void xpath_exfun_has_return(xmlXPathParserContextPtr ctxt, int nargs);
 /**
  *  XPath Signature: bool is_nested()
  *  
- *  Checks to see if a statement is inside another statement (for all
- *  statements), for type declarations it checks if the type inside another type
- *  declaration, for namespaces it checks if it is inside another namespace (or
- *  package for Java). For constructors, functions and destructors it is nested
- *  if it's within a class or namespace.
- *  
+ *  Checks to see if a class or type declaration is nested within another
+ *  scope. This function only works for parts of the language which
+ *  can occur at a global scope.
+ *
  *  Languages: C, C++, C#, Java
  *  
  *  Works with srcML elements:
- *      decl_stmt
- *      empty_stmt
- *      if
- *      switch
- *      else
- *      elseif
- *      for
- *      do
- *      while
- *      foreach
- *      break
- *      continue
- *      return
- *      default
- *      block
- *      label
- *      goto
  *      asm
- *      synchronized
- *      assert
- *      fixed
- *      using_stmt
- *      unsafe
- *      lock
- *      try
- *      catch
- *      finally
  *      typedef
- *      throw
+ *      using
  *      function
  *      function_decl
  *      constructor
@@ -127,7 +99,6 @@ void xpath_exfun_has_return(xmlXPathParserContextPtr ctxt, int nargs);
  *      struct_decl
  *      enum
  *      namespace
- *      package
  *  
  */
 void xpath_exfun_is_nested(xmlXPathParserContextPtr ctxt, int nargs);

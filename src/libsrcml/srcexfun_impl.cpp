@@ -252,6 +252,28 @@ EXIT:
 
 void xpath_exfun_is_nested(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
+    
+    // asm
+    // typedef
+    // using
+    // function
+    // function_decl
+    // constructor
+    // constructor_decl
+    // destructor
+    // destructor_decl
+    // property
+    // event
+    // union
+    // union_decl
+    // class
+    // class_decl
+    // struct
+    // struct_decl
+    // enum
+    // namespace
+
+
 }
 
 void xpath_exfun_is_class_template_partial_specialization(xmlXPathParserContextPtr ctxt, int nargs) {

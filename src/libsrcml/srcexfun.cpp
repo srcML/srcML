@@ -294,6 +294,10 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
     xmlXPathRegisterFuncNS(context, (const xmlChar *)"has_return",
                            BAD_CAST SRCML_SRC_NS_URI,
                            xpath_exfun_has_return);
+                           
+    xmlXPathRegisterFuncNS(context, (const xmlChar *)"is_nested",
+                           BAD_CAST SRCML_SRC_NS_URI,
+                           xpath_exfun_is_nested);
 
     // register all the xpath extension functions
     for (std::vector<struct xpath_ext_function>::size_type i = 0; i < MACROS.size(); ++i) {

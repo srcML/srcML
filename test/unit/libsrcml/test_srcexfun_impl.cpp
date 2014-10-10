@@ -399,6 +399,35 @@ int main() {
         4
     );
 
+
+    // is_nested()
+    run_xpath_test(
+        "xpath_test_data/is_nested/is_nested.cpp",
+        "//src:asm[src:is_nested()]"
+        "| //src:typedef[src:is_nested()]"
+        "| //src:using[src:is_nested()]"
+        "| //src:function[src:is_nested()]"
+        "| //src:function_decl[src:is_nested()]"
+        "| //src:constructor[src:is_nested()]"
+        "| //src:constructor_decl[src:is_nested()]"
+        "| //src:destructor[src:is_nested()]"
+        "| //src:destructor_decl[src:is_nested()]"
+        "| //src:property[src:is_nested()]"
+        "| //src:event[src:is_nested()]"
+        "| //src:union[src:is_nested()]"
+        "| //src:union_decl[src:is_nested()]"
+        "| //src:class[src:is_nested()]"
+        "| //src:class_decl[src:is_nested()]"
+        "| //src:struct[src:is_nested()]"
+        "| //src:struct_decl[src:is_nested()]"
+        "| //src:enum[src:is_nested()]"
+        "| //src:namespace[src:is_nested()]",
+        4
+    );
+
+
+
+
     xmlCleanupParser();
 
 
