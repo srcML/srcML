@@ -194,11 +194,11 @@ public :
                                                    is_archive ? root->nb_attributes : 0, root->nb_defaulted, root->attributes);
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
 
-                for(std::vector<std::string>::size_type i = 0; i < meta_tags->size(); ++i) {
+                for(std::vector<std::string>::size_type i = 0; i < meta_tags.size(); ++i) {
 
-                    xml_output_buffer_write_element_ns(buf, meta_tags->at(i).localname, meta_tags->at(i).prefix, meta_tags->at(i).URI,
-                                                       meta_tags->at(i).nb_namespaces, meta_tags->at(i).namespaces,
-                                                       meta_tags->at(i).nb_attributes, meta_tags->at(i).nb_defaulted, meta_tags->at(i).attributes);
+                    xml_output_buffer_write_element_ns(buf, meta_tags.at(i).localname, meta_tags.at(i).prefix, meta_tags.at(i).URI,
+                                                       meta_tags.at(i).nb_namespaces, meta_tags.at(i).namespaces,
+                                                       meta_tags.at(i).nb_attributes, meta_tags.at(i).nb_defaulted, meta_tags.at(i).attributes);
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
                 }
@@ -283,7 +283,7 @@ public :
             }
             end_unit += "unit>\n";
 
-            xmlOutputBufferWriteString(buf, found || meta_tags->size() ? end_unit.c_str() : "/>\n");
+            xmlOutputBufferWriteString(buf, found || meta_tags.size() ? end_unit.c_str() : "/>\n");
 
         } else if (result_type == XML_ELEMENT_NODE && found && !is_archive) {
             xmlOutputBufferWriteString(buf, "\n");

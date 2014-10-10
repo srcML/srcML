@@ -21,7 +21,8 @@
 #ifndef INCLUDED_SRCML_READER_HANDLER_HPP
 #define INCLUDED_SRCML_READER_HANDLER_HPP
 
-#include <srcMLHandler.hpp>
+#include <srcSAXHandler.hpp>
+#include <srcml_element.hpp>
 #include <srcml_types.hpp>
 #include <srcml_macros.hpp>
 #include <srcml.h>
@@ -51,7 +52,7 @@
  * threads.  Collects attributes, namespaces and srcML
  * from units.
  */
-class srcml_reader_handler : public srcMLHandler {
+class srcml_reader_handler : public srcSAXHandler {
 
 private :
 
@@ -93,8 +94,136 @@ private :
     /** skip internal unit elements */
     bool skip;
 
+    /**
+     * meta_tag
+     *
+     * Store a meta tag for later output.
+     */
+     struct meta_tag {
+
+        /** metatags localname */
+        const char * localname;
+
+        /** metatags prefix */
+        const char * prefix;
+
+        /** metatags number of attributes */
+        int num_attributes;
+
+        /** meta tags attributes */
+        struct srcsax_attribute * attributes;
+
+        /**
+         * meta_tag
+         * @param localname the meta tag name
+         * @param prefix the meta tag prefix
+         * @param num_attributes the number attributes on the meta tag
+         * @param attributes the attributes on the meta tag
+         *
+         * Construct meta_tag from SAX data.
+         */
+        meta_tag(const char * localname, const char * prefix, int num_attributes, const struct srcsax_attribute * attributes) {
+
+            this->localname = localname ? strdup(localname) : 0;
+            this->prefix = prefix ? strdup(prefix) : 0;
+            this->num_attributes = num_attributes;
+            this->attributes = (struct srcsax_attribute *)calloc(num_attributes, sizeof(struct srcsax_attribute));
+            for(int pos = 0; pos < num_attributes; ++pos) {
+
+                this->attributes[pos].localname = attributes[pos].localname ? strdup(attributes[pos].localname) : 0;
+                this->attributes[pos].prefix = attributes[pos].prefix ? strdup(attributes[pos].prefix) : 0;
+                this->attributes[pos].uri = attributes[pos].uri ? strdup(attributes[pos].uri) : 0;
+                this->attributes[pos].value = attributes[pos].value ? strdup(attributes[pos].value) : 0;
+
+            }
+
+        }
+
+        /**
+         * meta_tag
+         * @param other another meta_tag
+         *
+         * Copy constructor.
+         */
+        meta_tag(const meta_tag & other) {
+
+            this->localname = other.localname ? strdup(other.localname) : 0;
+            this->prefix = other.prefix ? strdup(other.prefix) : 0;
+            this->num_attributes = other.num_attributes;
+            this->attributes = (struct srcsax_attribute *)calloc(other.num_attributes, sizeof(struct srcsax_attribute));
+            for(int pos = 0; pos < other.num_attributes; ++pos) {
+
+                this->attributes[pos].localname = other.attributes[pos].localname ? strdup(other.attributes[pos].localname) : 0;
+                this->attributes[pos].prefix = other.attributes[pos].prefix ? strdup(other.attributes[pos].prefix) : 0;
+                this->attributes[pos].uri = other.attributes[pos].uri ? strdup(other.attributes[pos].uri) : 0;
+                this->attributes[pos].value = other.attributes[pos].value ? strdup(other.attributes[pos].value) : 0;
+
+            }
+
+        }
+
+
+        /**
+         * operator=
+         * @param other another meta_tag
+         *
+         * Overloaded assignment operator
+         * Returns the assigned to meta_tag
+         */
+        meta_tag & operator=(meta_tag other) {
+
+
+            this->swap(other);
+            return *this;
+
+        }
+
+        /**
+         * swap
+         * @param other another meta_tag
+         *
+         * swap the contents of the meta tags.
+         */
+        void swap(meta_tag & other) {
+
+            std::swap(localname, other.localname);
+            std::swap(prefix, other.prefix);
+            std::swap(num_attributes, other.num_attributes);
+            std::swap(attributes, other.attributes);
+
+        }
+
+        /**
+         * ~meta_tag
+         *
+         * Destructor
+         */
+        ~meta_tag() {
+
+            if(localname) free((void *)localname), localname = 0;
+            if(prefix) free((void *)prefix), prefix = 0;
+
+            if(attributes) {
+
+                for(int pos = 0; pos < num_attributes; ++pos) {
+
+                    if(attributes[pos].localname) free((void *)attributes[pos].localname);
+                    if(attributes[pos].prefix) free((void *)attributes[pos].prefix);
+                    if(attributes[pos].uri) free((void *)attributes[pos].uri);
+                    if(attributes[pos].value) free((void *)attributes[pos].value);
+
+                }
+
+                free(attributes), attributes = 0;
+
+            }
+
+        }
+
+     };
+
     /** save meta tags to use when non-archive write unit */
-    std::vector<srcMLElement> * meta_tags;
+    std::vector<meta_tag> meta_tags;
 
 public :
 
@@ -201,21 +330,19 @@ public :
 
     /**
      * startRoot
-     * @param localname tag name
-     * @param prefix prefix for the tag
-     * @param URI uri for tag
-     * @param nb_namespaces number of xml namespaces
-     * @param namespaces the prefix/namespaces pairs
-     * @param nb_attributes number of attributes
-     * @param nb_defaulted number defaulted attributes
-     * @param attributes the attributes (name/prefix/uri/value start/value end/)
-     * @param meta_tags vector of elements composed of metage tags defined after root tag
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param num_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param num_attributes the number of attributes on the tag
+     * @param attributes list of attributes
      *
      * Overidden startRoot to handle collection of root attributes. Stop before continue
      */
-    virtual void startRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                           int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                           const xmlChar ** attributes, std::vector<srcMLElement> * meta_tags) {
+    virtual void startRoot(const char * localname, const char * prefix, const char * URI,
+                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                           const struct srcsax_attribute * attributes) {
 
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -224,11 +351,10 @@ public :
         if(!is_archive) srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
 
         // collect attributes
-        for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
+        for(int pos = 0; pos < num_attributes; ++pos) {
 
-            std::string attribute = (const char *)attributes[pos];
-            std::string value = "";
-            value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
+            std::string attribute = attributes[pos].localname;
+            std::string value = attributes[pos].value;
 
             if(attribute == "language")
                 srcml_archive_set_language(archive, value.c_str());
@@ -286,10 +412,10 @@ public :
         }
 
         // collect namespaces
-        for(int i = 0, pos = 0; i < nb_namespaces; ++i, pos += 2) {
+        for(int pos = 0; pos < num_namespaces; ++pos) {
 
-            std::string prefix = namespaces[pos] ? (const char *)namespaces[pos] : "";
-            std::string uri = namespaces[pos + 1] ? (const char *)namespaces[pos + 1] : "";
+            std::string prefix = namespaces[pos].prefix ? namespaces[pos].prefix : "";
+            std::string uri = namespaces[pos].uri ? namespaces[pos].uri  : "";
 
             if(uri == SRCML_CPP_NS_URI) {
 
@@ -317,53 +443,7 @@ public :
 
         }
 
-        this->meta_tags = meta_tags;
 
-        // collect meta_data from tags
-        for(std::vector<srcMLElement>::size_type i = 0; i < meta_tags->size(); ++i) {
-
-            try {
-
-                srcMLElement & element = meta_tags->at(i);
-
-                std::string token;
-                std::string type;
-                for(int i = 0, pos = 0; i < element.nb_attributes; ++i, pos += 5) {
-
-                    std::string attribute = (const char *)element.attributes[pos];
-                    std::string value = "";
-                    value.append((const char *)element.attributes[pos + 3], element.attributes[pos + 4] - element.attributes[pos + 3]);
-
-                    if(attribute == "token")
-                        token = value;
-                    else if(attribute == "type")
-                        type = value;
-
-                }
-
-                if(token != "" && type != "") {
-
-                    archive->user_macro_list.push_back(token);
-                    archive->user_macro_list.push_back(type);
-
-                }
-
-            } catch(...) { /* @todo actually quit */continue; }
-
-
-        }
-
-        // pause
-        {
-            boost::unique_lock<boost::mutex> lock(mutex);
-            if(terminate) stop_parser();
-            wait_root = false;
-            cond.notify_all();
-            cond.wait(lock);
-            read_root = true;
-        }
-
-        if(terminate) stop_parser();
 
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -373,25 +453,49 @@ public :
 
     /**
      * startUnit
-     * @param localname tag name
-     * @param prefix prefix for the tag
-     * @param URI uri for tag
-     * @param nb_namespaces number of xml namespaces
-     * @param namespaces the prefix/namespaces pairs
-     * @param nb_attributes number of attributes
-     * @param nb_defaulted number defaulted attributes
-     * @param attributes the attributes (name/prefix/uri/value start/value end/)
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param num_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param num_attributes the number of attributes on the tag
+     * @param attributes list of attributes
      *
      * Overidden startUnit to handle collection of Unit attributes and tag. Stop before continue
      * if collecting attributes.
      */
-    virtual void startUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                           int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                           const xmlChar ** attributes) {
+    virtual void startUnit(const char * localname, const char * prefix, const char * URI,
+                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                           const struct srcsax_attribute * attributes) {
 
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
+
+        // pause
+        // @todo this may need to change because, meta tags have separate call now
+        if(!read_root) {
+
+            {
+                
+                boost::unique_lock<boost::mutex> lock(mutex);
+                if(terminate) stop_parser();
+                wait_root = false;
+                cond.notify_all();
+                cond.wait(lock);
+                read_root = true;
+        
+            }
+
+            if(terminate) {
+
+                stop_parser();
+                return;
+
+            }
+
+        }
+
 
         unit = srcml_create_unit(archive);
         unit->unit = "";
@@ -399,11 +503,10 @@ public :
         is_empty = true;
 
         // collect attributes
-        for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
+        for(int pos = 0; pos < num_attributes; ++pos) {
 
-            std::string attribute = (const char *)attributes[pos];
-            std::string value = "";
-            value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
+            std::string attribute = attributes[pos].localname;
+            std::string value = attributes[pos].value;
 
             if(attribute == "timestamp")
                 srcml_unit_set_timestamp(unit, value.c_str());
@@ -440,35 +543,34 @@ public :
 
         if(skip) {
 
-            get_control_handler().enable_startElementNs(false);
-            get_control_handler().enable_characters(false);
-            get_control_handler().enable_comment(false);
-            get_control_handler().enable_cdataBlock(false);
+            get_controller().enable_startElement(false);
+            get_controller().enable_charactersUnit(false);
+            get_controller().enable_comment(false);
+            get_controller().enable_cdataBlock(false);
 
         }
 
         if(collect_srcml) {
 
-            write_startTag(localname, prefix, nb_namespaces, namespaces, nb_attributes, attributes);
+            write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, attributes);
 
             if(!is_archive) {
 
-                if(meta_tags->size()) {
+                if(meta_tags.size()) {
 
                     *unit->unit += ">";
                     is_empty = false;
 
                 }
 
-                for(std::vector<srcMLElement>::size_type i = 0; i < meta_tags->size(); ++i) {
+                for(std::vector<meta_tag>::size_type i = 0; i < meta_tags.size(); ++i) {
 
 
                     try {
 
-                        srcMLElement & element = meta_tags->at(i);
-                        write_startTag(element.localname, element.prefix, element.nb_namespaces, element.namespaces,
-                                       element.nb_attributes, element.attributes);
-                        write_endTag(element.localname, element.prefix, true);
+                        meta_tag & meta_tag = meta_tags.at(i);
+                        write_startTag(meta_tag.localname, meta_tag.prefix, 0, 0, meta_tag.num_attributes, meta_tag.attributes);
+                        write_endTag(meta_tag.localname, meta_tag.prefix, true);
 
                     } catch(...) { /** @todo handle */ continue; }
 
@@ -487,21 +589,20 @@ public :
     }
 
     /**
-     * startElementNs
-     * @param localname tag name
-     * @param prefix prefix for the tag
-     * @param URI uri for tag
-     * @param nb_namespaces number of xml namespaces
-     * @param namespaces the prefix/namespaces pairs
-     * @param nb_attributes number of attributes
-     * @param nb_defaulted number defaulted attributes
-     * @param attributes the attributes (name/prefix/uri/value start/value end/)
+     * startElement
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param num_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param num_attributes the number of attributes on the tag
+     * @param attributes list of attributes
      *
      * Overidden startElementNs to handle collection of srcML elements.
      */
-    virtual void startElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                                int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                                const xmlChar ** attributes) {
+    virtual void startElement(const char * localname, const char * prefix, const char * URI,
+                                int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                                const struct srcsax_attribute * attributes) {
 
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -510,9 +611,9 @@ public :
         if(collect_src && localname[0] == 'e' && localname[1] == 's'
            && strcmp((const char *)localname, "escape") == 0) {
 
-            char value = (int)strtol((const char*) attributes[3], NULL, 0);
+            char value = (int)strtol((const char*) attributes[0].value, NULL, 0);
 
-            charactersUnit((xmlChar *)&value, 1);
+            charactersUnit(&value, 1);
 
 
         }
@@ -522,7 +623,7 @@ public :
 
         if(collect_srcml) {
 
-            write_startTag(localname, prefix, nb_namespaces, namespaces, nb_attributes, attributes);
+            write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, attributes);
 
         }
 
@@ -542,11 +643,32 @@ public :
      *
      * Overidden endRoot to indicate done with parsing and free any waiting process.
      */
-    virtual void endRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
+    virtual void endRoot(const char * localname, const char * prefix, const char * URI) {
 
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
+        if(!read_root) {
+
+            {
+                
+                boost::unique_lock<boost::mutex> lock(mutex);
+                if(terminate) stop_parser();
+                wait_root = false;
+                cond.notify_all();
+                cond.wait(lock);
+                read_root = true;
+        
+            }
+
+            if(terminate) {
+
+                stop_parser();
+                return;
+
+            }
+
+        }
 
         {
             boost::unique_lock<boost::mutex> lock(mutex);
@@ -571,7 +693,7 @@ public :
      *
      * Overidden endUnit to collect srcml and stop parsing.  Clear collect srcML after pause.
      */
-    virtual void endUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
+    virtual void endUnit(const char * localname, const char * prefix, const char * URI) {
 
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -579,10 +701,10 @@ public :
 
         if(skip) {
 
-            get_control_handler().enable_startElementNs(true);
-            get_control_handler().enable_characters(true);
-            get_control_handler().enable_comment(true);
-            get_control_handler().enable_cdataBlock(true);
+            get_controller().enable_startElement(true);
+            get_controller().enable_charactersUnit(true);
+            get_controller().enable_comment(true);
+            get_controller().enable_cdataBlock(true);
 
         }
 
@@ -625,7 +747,7 @@ public :
      *
      * Overidden endElementNs to collect srcML.
      */
-    virtual void endElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
+    virtual void endElement(const char * localname, const char * prefix, const char * URI) {
 
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -653,7 +775,7 @@ public :
      *
      * Overidden charactersUnit to collect srcML.
      */
-    virtual void charactersUnit(const xmlChar * ch, int len) {
+    virtual void charactersUnit(const char * ch, int len) {
 
 #ifdef DEBUG
         std::string chars;
@@ -694,13 +816,62 @@ public :
     }
 
     /**
+     * metaTag
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param num_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param num_attributes the number of attributes on the tag
+     * @param attributes list of attributes\
+     *
+     * SAX handler function for a meta tags.
+     * Overide for desired behaviour.
+     */
+    virtual void metaTag(const char * localname, const char * prefix, const char * URI,
+                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                           const struct srcsax_attribute * attributes) {
+
+        if(strcmp(localname, "macro-list") == 0) {
+
+            std::string token("");
+            std::string type("");
+
+            for(int pos = 0; pos < num_attributes; ++pos) {
+
+                if(strcmp(attributes[pos].localname, "token") == 0)
+                    token = attributes[pos].value;
+                else if(strcmp(attributes[pos].localname, "type") == 0)
+                    type = attributes[pos].value;
+
+
+            }
+
+            if(token != "" && type != "") {
+
+                archive->user_macro_list.push_back(token);
+                archive->user_macro_list.push_back(type);
+
+            }
+
+        }
+
+        if(!is_archive) {
+
+            //meta_tags.push_back(meta_tag(localname, prefix, num_attributes, attributes));
+
+        }
+
+    }
+
+    /**
      * processingInstruction
      * @param target the processing instruction target.
      * @param data the processing instruction data.
      *
      * Overrident processingInstruction to collect srcML.
      */
-    virtual void processingInstruction(const xmlChar * target, const xmlChar * data) {
+    virtual void processingInstruction(const char * target, const char * data) {
         
         srcml_archive_set_processing_instruction(archive, (const char*)target, (const char *)data);
 
@@ -712,60 +883,59 @@ private :
 
     /**
      * write_startTag
-     * @param localname tag name
-     * @param prefix prefix for the tag
-     * @param URI uri for tag
-     * @param nb_namespaces number of xml namespaces
-     * @param namespaces the prefix/namespaces pairs
-     * @param nb_attributes number of attributes
-     * @param nb_defaulted number defaulted attributes
-     * @param attributes the attributes (name/prefix/uri/value start/value end/)
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param num_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param num_attributes the number of attributes on the tag
+     * @param attributes list of attributes
      *
      * Write out the start tag to the unit string.
      */
-    void write_startTag(const xmlChar * localname, const xmlChar * prefix, int nb_namespaces,
-                        const xmlChar ** namespaces, int nb_attributes, const xmlChar ** attributes) {
+    void write_startTag(const char * localname, const char * prefix,
+                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                           const struct srcsax_attribute * attributes) {
 
         *unit->unit += "<";
         if(prefix) {
-            *unit->unit += (const char *)prefix;
+            *unit->unit += prefix;
             *unit->unit += ":";
         }
-        *unit->unit += (const char *)localname;
+        *unit->unit += localname;
 
-        for(int i = 0, pos = 0; i < nb_namespaces; ++i, pos += 2) {
+        for(int pos = 0; pos < num_namespaces; ++pos) {
 
-            if(is_archive && strcmp((const char *)localname, "unit") == 0 && strcmp((const char *)namespaces[pos + 1], SRCML_CPP_NS_URI) != 0)
+            if(is_archive && strcmp(localname, "unit") == 0 && strcmp(namespaces[pos].uri, SRCML_CPP_NS_URI) != 0)
                 continue;
 
             *unit->unit += " xmlns";
-            if(namespaces[pos]) {
+            if(namespaces[pos].prefix) {
 
                 *unit->unit += ":";
-                *unit->unit += (const char *)namespaces[pos];
+                *unit->unit += namespaces[pos].prefix;
 
             }
 
             *unit->unit += "=\"";
-            *unit->unit += (const char *)namespaces[pos + 1];
+            *unit->unit += namespaces[pos].uri;
             *unit->unit += "\"";
 
         }
 
-
-        for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
+        for(int pos = 0; pos < num_attributes; ++pos) {
 
             *unit->unit += " ";
-            if(attributes[pos + 1]) {
+            if(attributes[pos].prefix) {
 
-                *unit->unit += (const char *)attributes[pos + 1];
+                *unit->unit += attributes[pos].prefix;
                 *unit->unit += ":";
 
             }
-            *unit->unit += (const char *)attributes[pos];
+            *unit->unit += attributes[pos].localname;
 
             *unit->unit += "=\"";
-            unit->unit->append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
+            *unit->unit += attributes[pos].value;
             *unit->unit += "\"";
 
 
@@ -782,7 +952,7 @@ private :
      *
      * Write out the end tag to the unit string.
      */
-    void write_endTag(const xmlChar * localname, const xmlChar * prefix, bool is_empty) {
+    void write_endTag(const char * localname, const char * prefix, bool is_empty) {
 
         if(is_empty) {
 
