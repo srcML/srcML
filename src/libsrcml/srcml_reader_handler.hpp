@@ -858,7 +858,7 @@ public :
 
         if(!is_archive) {
 
-            //meta_tags.push_back(meta_tag(localname, prefix, num_attributes, attributes));
+            meta_tags.push_back(meta_tag(localname, prefix, num_attributes, attributes));
 
         }
 
