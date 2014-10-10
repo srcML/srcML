@@ -502,6 +502,18 @@ const char* srcml_archive_get_encoding(const struct srcml_archive* archive) {
 }
 
 /**
+ * srcml_archive_get_revision
+ * @param archive a srcml_archive
+ *
+ * @returns Retrieve the currently set srcML revision or NULL.
+ */
+const char* srcml_archive_get_revision(const struct srcml_archive* archive) {
+
+    return archive && archive->revision ? archive->revision->c_str() : 0;
+
+}
+
+/**
  * srcml_archive_get_language
  * @param archive a srcml_archive
  *

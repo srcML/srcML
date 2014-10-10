@@ -29,6 +29,7 @@ _srcml_archive_get_namespace_size
 _srcml_archive_get_options
 _srcml_archive_get_processing_instruction_data
 _srcml_archive_get_processing_instruction_target
+_srcml_archive_get_revision
 _srcml_archive_get_uri_from_prefix
 _srcml_archive_get_prefix_from_uri
 _srcml_archive_get_src_encoding
@@ -85,6 +86,7 @@ _srcml_get_timestamp
 _srcml_get_hash
 _srcml_get_language_list
 _srcml_get_language_list_size
+_srcml_get_revision
 _srcml_parse_unit_fd
 _srcml_parse_unit_filename
 _srcml_parse_unit_io

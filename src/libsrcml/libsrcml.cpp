@@ -532,6 +532,17 @@ const char* srcml_get_encoding() {
 }
 
 /**
+ * srcml_get_revision
+ *
+ * @returns Get the srcML revision on success and NULL on failure.
+ */
+const char* srcml_get_revision() {
+
+    return srcml_archive_get_encoding(&global_archive);
+
+}
+
+/**
  * srcml_get_language
  *
  * @returns Get the language on success and NULL on failure.
