@@ -71,6 +71,7 @@ srcml_archive* srcml_create_archive()
 
     archive->type = SRCML_ARCHIVE_INVALID;
     archive->options = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH | SRCML_OPTION_PSEUDO_BLOCK;
+    archive->revision = srcml_version_string();
     archive->tabstop = 8;
     archive->translator = 0;
     archive->reader = 0;
@@ -126,6 +127,7 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
     new_archive->filename = archive->filename;
     new_archive->encoding = archive->encoding;
+    new_archive->revision = archive->revision;
     new_archive->language = archive->language;
     new_archive->directory = archive->directory;
     new_archive->version = archive->version;
@@ -809,6 +811,7 @@ if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
                                                 archive->processing_instruction,
                                                 archive->tabstop,
                                                 srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                                archive->revision ? archive->revision->c_str() : 0,
                                                 archive->directory ? archive->directory->c_str() : 0,
                                                 archive->filename ? archive->filename->c_str() : 0,
                                                 archive->version ? archive->version->c_str() : 0,
@@ -876,6 +879,7 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
                                                 archive->processing_instruction,
                                                 archive->tabstop,
                                                 srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                                archive->revision ? archive->revision->c_str() : 0,
                                                 archive->directory ? archive->directory->c_str() : 0,
                                                 archive->filename ? archive->filename->c_str() : 0,
                                                 archive->version ? archive->version->c_str() : 0,
