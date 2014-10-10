@@ -14,10 +14,5 @@ void foo() {
         foo() {
             return /* 3 & 4 */;
         }
-    };
-}
-
-void foo() {
-    x = (x) => { return x; };
-    x = delegate() { return; };
+    }
 }

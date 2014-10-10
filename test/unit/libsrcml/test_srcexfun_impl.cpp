@@ -335,11 +335,70 @@ int main() {
         0
     );
 
-    // xml_doc_shared_ptr_t doc = run_xpath("xpath_test_data/has_return/has_return.cpp", "//src:unit[src:has_return()] | //src:function[src:has_return()] | //src:if[src:has_return()] ");
-    // dbgDoc(doc);
+    run_xpath_test(
+        "xpath_test_data/has_return/has_return.cs",
+        "//src:block[src:has_return()]"
+        "| //src:function[src:has_return()]"
+        "| //src:constructor[src:has_return()]"
+        "| //src:destructor[src:has_return()]"
+        "| //src:while[src:has_return()]"
+        "| //src:if[src:has_return()]"
+        "| //src:then[src:has_return()]"
+        "| //src:elseif[src:has_return()]"
+        "| //src:else[src:has_return()]"
+        "| //src:try[src:has_return()]"
+        "| //src:catch[src:has_return()]"
+        "| //src:finally[src:has_return()]"
+        "| //src:do[src:has_return()]"
+        "| //src:for[src:has_return()]"
+        "| //src:foreach[src:has_return()]"
+        "| //src:switch[src:has_return()]"
+        "| //src:lambda[src:has_return()]"
+        "| //src:delegate[src:has_return()]"
+        "| //src:using_stmt[src:has_return()]"
+        "| //src:fixed[src:has_return()]"
+        "| //src:lock[src:has_return()]"
+        "| //src:synchronized[src:has_return()]"
+        "| //src:fixed[src:has_return()]"
+        "| //src:unsafe[src:has_return()]"
+        "| //src:static[src:has_return()]"
+        "| //src:checked[src:has_return()]"
+        "| //src:unchecked[src:has_return()]",
+        8
+    );
 
-    // xml_doc_shared_ptr_t doc2 = run_xpath("xpath_test_data/has_return/has_return_fail.cpp", "//cpp:define[src:has_return()]");
-    // dbgDoc(doc2);
+    run_xpath_test(
+        "xpath_test_data/has_return/has_return.java",
+        "//src:block[src:has_return()]"
+        "| //src:function[src:has_return()]"
+        "| //src:constructor[src:has_return()]"
+        "| //src:destructor[src:has_return()]"
+        "| //src:while[src:has_return()]"
+        "| //src:if[src:has_return()]"
+        "| //src:then[src:has_return()]"
+        "| //src:elseif[src:has_return()]"
+        "| //src:else[src:has_return()]"
+        "| //src:try[src:has_return()]"
+        "| //src:catch[src:has_return()]"
+        "| //src:finally[src:has_return()]"
+        "| //src:do[src:has_return()]"
+        "| //src:for[src:has_return()]"
+        "| //src:foreach[src:has_return()]"
+        "| //src:switch[src:has_return()]"
+        "| //src:lambda[src:has_return()]"
+        "| //src:delegate[src:has_return()]"
+        "| //src:using_stmt[src:has_return()]"
+        "| //src:fixed[src:has_return()]"
+        "| //src:lock[src:has_return()]"
+        "| //src:synchronized[src:has_return()]"
+        "| //src:fixed[src:has_return()]"
+        "| //src:unsafe[src:has_return()]"
+        "| //src:static[src:has_return()]"
+        "| //src:checked[src:has_return()]"
+        "| //src:unchecked[src:has_return()]",
+        4
+    );
+
     xmlCleanupParser();
 
 

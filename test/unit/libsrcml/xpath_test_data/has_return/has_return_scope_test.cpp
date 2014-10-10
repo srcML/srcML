@@ -19,5 +19,5 @@ void foo() {
 
 void foo() {
     
-    x = []() -> { return/* 5 & 6 */; };
+    x = [](){ return/* 5 & 6 */; };
 }
