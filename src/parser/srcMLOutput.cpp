@@ -317,6 +317,7 @@ namespace {
     ELEMENT_MAP(SALIGNAS,                "alignas")
     ELEMENT_MAP(SALIGNOF,                "alignof")
     ELEMENT_MAP(STYPEID,                 "typeid")
+    ELEMENT_MAP(SSIZEOF_PACK,            "sizeof")
     ELEMENT_MAP(SENUM_CLASS,             "enum")
     ELEMENT_MAP(SOPERATOR_FUNCTION,      "function")
     ELEMENT_MAP(SOPERATOR_FUNCTION_DECL, "function_decl")
@@ -346,7 +347,7 @@ namespace {
 
     // casts
     ELEMENT_MAP(SCAST,             "cast")
-    ELEMENT_MAP(SCONST_CAST,      "cast")
+    ELEMENT_MAP(SCONST_CAST,       "cast")
     ELEMENT_MAP(SDYNAMIC_CAST,     "cast")
     ELEMENT_MAP(SREINTERPRET_CAST, "cast")
     ELEMENT_MAP(SSTATIC_CAST,      "cast")
@@ -1504,6 +1505,18 @@ void srcMLOutput::processPseudoParameterList(const antlr::RefToken& token) {
 void srcMLOutput::processIndexerParameterList(const antlr::RefToken& token) {
 
     processOptional(token, "type", "indexer");
+
+}
+
+/**
+ * processSizeofPack
+ * @param token token to output as parameter pack sizeof
+ *
+ * Callback to process/output token as parameter pack sizeof
+ */
+void srcMLOutput::processSizeofPack(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "pack");
 
 }
 

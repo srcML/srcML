@@ -487,6 +487,7 @@ tokens {
     STYPENAME;
     SALIGNOF;
     STYPEID;
+    SSIZEOF_PACK;
     SENUM_CLASS;
     SOPERATOR_FUNCTION;
     SOPERATOR_FUNCTION_DECL;
@@ -5829,7 +5830,11 @@ sizeof_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-            startElement(SSIZEOF_CALL);
+            if(next_token() != DOTDOTDOT)
+                startElement(SSIZEOF_CALL);
+            else
+                startElement(SSIZEOF_PACK);
+
         }
         SIZEOF
         (DOTDOTDOT)*
