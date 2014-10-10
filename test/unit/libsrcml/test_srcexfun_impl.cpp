@@ -31,7 +31,9 @@
 
 typedef boost::shared_ptr<xmlDoc> xml_doc_shared_ptr_t; 
 using namespace std;
-
+/*  Builds the xml document for libxml2 so that the results can be more
+ *  easily inspected during testing.
+ */
 xml_doc_shared_ptr_t run_xpath(std::string const& inputFileName, std::string const& xpathExpression) {
 
     char* archiveBuffer = 0;
@@ -92,6 +94,7 @@ xml_doc_shared_ptr_t run_xpath(std::string const& inputFileName, std::string con
         cout << "Last Error string: " << srcml_error_string() << endl;
         throw std::runtime_error("Failed creating processed archive for 2nd time..");
     }
+
     rc = srcml_read_open_memory(processedArchive, archiveBuffer, archiveBufferSize);
     if(rc != SRCML_STATUS_OK) {
         cout << "Last Error string: " << srcml_error_string() << endl;
@@ -143,9 +146,26 @@ xml_doc_shared_ptr_t run_xpath(std::string const& inputFileName, std::string con
     return xml_doc_shared_ptr_t(ret, xmlFreeDoc);
 }
 
-int main() {
+void dbgDoc(xml_doc_shared_ptr_t docPtr) {
+    xmlChar* buf = 0;
+    int bufSize = 0;
+    xmlDocDumpFormatMemory(docPtr.get(), &buf, &bufSize, 0);
+    if(buf) {
+        typedef char* CharPtr;
+        cout.write(CharPtr(buf), bufSize);
+        cout << endl;
+        xmlFree(buf);
+    }
+}
 
-    xml_doc_shared_ptr_t doc = run_xpath("xpath_test_data/has_return/has_return.cpp", "//src:unit");
+int main() {
+    xmlInitParser();
+    xml_doc_shared_ptr_t doc = run_xpath("xpath_test_data/has_return/has_return.cpp", "//src:unit[src:has_return()] | //src:function[src:has_return()] | //src:if[src:has_return()] ");
+    dbgDoc(doc);
+
+    xml_doc_shared_ptr_t doc2 = run_xpath("xpath_test_data/has_return/has_return_fail.cpp", "//cpp:define[src:has_return()]");
+    dbgDoc(doc2);
+    xmlCleanupParser();
     return 0;
 }
 

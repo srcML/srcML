@@ -22,9 +22,11 @@
 #include <libxml/dict.h>
 #include <libxml/xmlstring.h>
 #include <libxml/tree.h>
+#include <libxml/xmlerror.h>
 
 #include <srcmlns.hpp>
 
+#include <iostream> // for debugging only
 /*
 VectorNodeSet forALLDescendentsAndSelfOptimized(xmlNodePtr input, char const* ns, char const* nodeName) {
     xmlNodePtr currentNode = input;
@@ -83,23 +85,106 @@ VectorNodeSet forALLDescendentsAndSelfOptimized(xmlNodePtr input, char const* ns
 */
 /* Static constants used by this file that don't need to be visible to other areas of the language. */
 namespace {
+    typedef const xmlChar* ConstXmlCharPtr;
+    typedef const char* ConstCharPtr;
 
+    /* Utility function for extracting a namespace from an XPath context. */
+    inline xmlNsPtr locate_ns(xmlXPathParserContextPtr ctxt, char const* const nsUrl) {
+        xmlNsPtr srcNs = 0;
+        xmlNsPtr currentNs = xmlFirstElementChild(xmlNodePtr(ctxt->context->doc))->ns;
+        while(currentNs) {
+            if(xmlStrEqual(currentNs->href, BAD_CAST nsUrl) == 0){
+                srcNs = currentNs;
+                break;
+            }
+            currentNs = currentNs->next;
+        }
+        return srcNs;
+    }
+
+    xmlChar const* const return_tag = BAD_CAST "return";
+    xmlChar const* const expr_stmt_tag = BAD_CAST "expr_stmt";
 }
 
 void xpath_exfun_has_return(xmlXPathParserContextPtr ctxt, int nargs) {
 
-
     CHECK_ARITY(0);
-    
-    // Attempting to locate the srcML namespace.
-    // xmlNsPtr currentNs = docPtr->oldNs;
-    // while(currentNs) {
-    //     if(xmlStrEqual(currentNs->href, BAD_CAST SRCML_SRC_NS_URI) == 0) {
-    //         expectedNS = currentNs;
-    //         break;
-    //     }
-    //     currentNs = currentNs->next;
+    std::cout << "Starting has_return" << std::endl;
+    xmlNodePtr currentNode = ctxt->context->node;
+    xmlNodePtr input = currentNode;
+    // xmlNsPtr srcNs = 0;
+
+    // srcNs = locate_ns(ctxt, SRCML_SRC_NS_URI);
+    // // If I can't locate the src namespace
+    // // then there are no statements.
+    // if (!srcNs) {
+    //     std::cout << "Can't locate src namespace" << std::endl;
+    //     xmlXPathReturnFalse(ctxt); return;
     // }
+    
+    // Searching out required nodes.
+    // int dictSize = xmlDictSize(currentNode->doc->dict);
+    // if(!currentNode->doc->dict) {
+    //     std::cout << "Invalid dictionary" << std::endl;
+    // }
+    // std::cout << "Current # of items in Dictionary: " << dictSize << std::endl;
+    // if(dictSize == -1) {
+    //     xmlErrorPtr err = xmlGetLastError();
+    //     if(err) {
+    //         std::cout << "Current error Information: \n"
+    //             << "    Domain: " << err->domain << "\n"
+    //             << "    Error Code: " << err->code << "\n"
+    //             << "    Message: "  << err->message << "\n"
+    //             << "    Files: " << err->file << std::endl;
+    //     }else{
+    //         std::cout << "The last error wasn't set correctly" << std::endl;
+    //     }
+    // }
+    // ConstXmlCharPtr returnNodeName = 0;
+    // returnNodeName = xmlDictExists(currentNode->doc->dict, ConstXmlCharPtr("return"), -1);
+    // if(!returnNodeName) {
+    //     std::cout << "Can't locate return statement" << std::endl;
+    //     xmlXPathReturnFalse(ctxt); return;
+    // }
+    // std::cout << "Everythings OK moving on." << std::endl;
+
+    xmlNodePtr temp = 0;
+// START:
+    if(!currentNode) {
+        goto EXIT;
+    }
+VISIT:
+    if(currentNode->type == XML_ELEMENT_NODE) {
+        if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI)) {
+            if(xmlStrEqual(return_tag, currentNode->name)) {
+                std::cout << "Located return" << std::endl;
+                xmlXPathReturnTrue(ctxt); return;
+
+
+            }else if (xmlStrEqual(expr_stmt_tag, currentNode->name)) {
+                goto STRAIF_SIBLINGS;
+            }
+        }
+    }
+// DESCENDING:
+    temp = currentNode->children;
+    if (temp) {
+        currentNode = temp;
+        goto VISIT;
+    } 
+STRAIF_SIBLINGS:
+    temp = currentNode->next;
+    if (temp && currentNode != input) {
+        currentNode = temp;
+        goto VISIT;
+    }
+// ASCENDING:
+    if (currentNode->parent != input) {
+        currentNode = currentNode->parent;
+        goto STRAIF_SIBLINGS;
+    }
+EXIT:
+    xmlXPathReturnFalse(ctxt); return;
 
 }
 
