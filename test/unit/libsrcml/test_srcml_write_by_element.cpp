@@ -35,12 +35,12 @@
 int main() {
 
     std::string xml_decl ="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
-    std::string empty_unit = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"dir\" filename=\"a.cpp\" version=\"1\" timestamp=\"today\" hash=\"0123456789abcdef\"/>\n";
+    std::string empty_unit = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" dir=\"dir\" filename=\"a.cpp\" version=\"1\" timestamp=\"today\" hash=\"0123456789abcdef\"/>\n";
     std::string empty_inner_unit = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"dir\" filename=\"a.cpp\" version=\"1\" timestamp=\"today\" hash=\"0123456789abcdef\"/>\n";
-    std::string start_root_unit_tag = "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n";
+    std::string start_root_unit_tag = "<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">\n\n";
     std::string end_root_unit_tag = "\n</unit>\n";
 
-    std::string start_unit = "<unit xmlns=\"http://www.sdml.info/srcML/src\">";
+    std::string start_unit = "<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">";
     std::string end_unit = "</unit>\n";
 
 
