@@ -233,7 +233,7 @@ void srcml_translator::translate(UTF8CharBuffer * parser_input) {
         selector.select(&lexer);
 
         // base stream parser srcML connected to lexical analyzer
-        StreamMLParser parser(selector,  getLanguage(), options);
+        StreamMLParser parser(selector, getLanguage(), options);
 
         // connect local parser to attribute for output
         out.setTokenStream(parser);
@@ -314,7 +314,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
     OPTION_TYPE save_options = options;
     if(is_cpp) options |= SRCML_OPTION_CPP;
 
-    out.startUnit(language_start_value ? language_start_value + 1 : 0, 0, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
+    out.startUnit(language_start_value ? language_start_value + 1 : 0, revision, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
                          unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, unit->attributes, false);
 
     if(language_start_name) (*language_end_value) = '"';
@@ -372,7 +372,7 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     OPTION_TYPE save_options = options;
 
-    out.startUnit(unit->language ? unit->language->c_str() : (unit->archive->language ? unit->archive->language->c_str() : 0), 0, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
+    out.startUnit(unit->language ? unit->language->c_str() : (unit->archive->language ? unit->archive->language->c_str() : 0), revision, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
                           unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, unit->attributes, false);
 
     options = save_options;
