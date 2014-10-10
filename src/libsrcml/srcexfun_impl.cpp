@@ -25,8 +25,10 @@
 #include <libxml/xmlerror.h>
 
 #include <srcmlns.hpp>
-
+#include <boost/unordered_set.hpp>
+#include <algorithm>
 #include <iostream> // for debugging only
+
 /*
 VectorNodeSet forALLDescendentsAndSelfOptimized(xmlNodePtr input, char const* ns, char const* nodeName) {
     xmlNodePtr currentNode = input;
@@ -103,76 +105,130 @@ namespace {
     }
 
     xmlChar const* const return_tag = BAD_CAST "return";
+    
     xmlChar const* const expr_stmt_tag = BAD_CAST "expr_stmt";
     xmlChar const* const decl_stmt_tag = BAD_CAST "decl_stmt";
+    xmlChar const* const constructor_tag = BAD_CAST "constructor";
+    xmlChar const* const constructor_decl_tag = BAD_CAST "constructor_decl";
+    
+    xmlChar const* const destructor_tag = BAD_CAST "destructor";
+    xmlChar const* const destructor_decl_tag = BAD_CAST "destructor_decl";
+
+    // Compound statements
+    xmlChar const* const block_tag = BAD_CAST "block";
+    xmlChar const* const while_tag = BAD_CAST "while";
+    xmlChar const* const if_tag = BAD_CAST "if";
+    xmlChar const* const then_tag = BAD_CAST "then";
+    xmlChar const* const else_tag = BAD_CAST "else";
+    xmlChar const* const elseif_tag = BAD_CAST "elseif";
+    xmlChar const* const try_tag = BAD_CAST "try";
+    xmlChar const* const catch_tag = BAD_CAST "catch";
+    xmlChar const* const finally_tag = BAD_CAST "finally";
+    xmlChar const* const do_tag = BAD_CAST "do";
+    xmlChar const* const for_tag = BAD_CAST "for";
+    xmlChar const* const foreach_tag = BAD_CAST "foreach";
+    xmlChar const* const switch_tag = BAD_CAST "switch";
+    xmlChar const* const using_stmt_tag = BAD_CAST "using_stmt";
+    xmlChar const* const fixed_tag = BAD_CAST "fixed";
+    xmlChar const* const lock_tag = BAD_CAST "lock";
+    xmlChar const* const synchronized_tag = BAD_CAST "synchronized";
+    xmlChar const* const unsafe_tag = BAD_CAST "unsafe";
+    xmlChar const* const checked_tag = BAD_CAST "checked";
+    xmlChar const* const unchecked_tag = BAD_CAST "unchecked";
+    
+
+    xmlChar const* const goto_tag = BAD_CAST "goto";
+
+    xmlChar const* const function_tag = BAD_CAST "function";
+    
+    xmlChar const* const class_tag = BAD_CAST "class";
+    xmlChar const* const class_decl_tag = BAD_CAST "class_decl";
+    
+    xmlChar const* const struct_tag = BAD_CAST "struct";
+    xmlChar const* const struct_decl_tag = BAD_CAST "struct_decl";
+
+    xmlChar const* const union_tag = BAD_CAST "union";
+    xmlChar const* const union_decl_tag = BAD_CAST "union_decl";
+
+    typedef xmlChar const* XmlCharConstPtr;
+    typedef char const* CharConstPtr;
+
+    struct XmlCharHasher
+        :boost::hash<char const*>
+    {
+        typedef std::size_t result_type;
+        result_type operator()(XmlCharConstPtr tagName) const {
+            result_type ret = 0;
+            XmlCharConstPtr cur = tagName;
+            while(*cur) {
+                ret += *cur;
+                ++cur;
+            }
+            return ret;
+        }
+    };
+    struct XmlCharEqualityComparer {
+        bool operator()(XmlCharConstPtr lhs, XmlCharConstPtr rhs) const {
+            return xmlStrEqual(lhs, rhs);
+        }
+    };
+
+    typedef boost::unordered_set<XmlCharConstPtr, XmlCharHasher, XmlCharEqualityComparer> NodeNameSet;
+
+    NodeNameSet has_return_node_init() {
+        NodeNameSet ret;
+        ret.insert(block_tag);
+        ret.insert(while_tag);
+        ret.insert(if_tag);
+        ret.insert(then_tag);
+        ret.insert(else_tag);
+        ret.insert(elseif_tag);
+        ret.insert(try_tag);
+        ret.insert(catch_tag);
+        ret.insert(finally_tag);
+        ret.insert(do_tag);
+        ret.insert(for_tag);
+        ret.insert(foreach_tag);
+        ret.insert(switch_tag);
+        ret.insert(using_stmt_tag);
+        ret.insert(fixed_tag);
+        ret.insert(lock_tag);
+        ret.insert(synchronized_tag);
+        ret.insert(unsafe_tag);
+        ret.insert(checked_tag);
+        ret.insert(unchecked_tag);
+        return ret;
+    }    
 }
 
 void xpath_exfun_has_return(xmlXPathParserContextPtr ctxt, int nargs) {
 
     CHECK_ARITY(0);
-    // std::cout << "Starting has_return" << std::endl;
+    static NodeNameSet hasReturnValidNodes = has_return_node_init();
     xmlNodePtr currentNode = ctxt->context->node;
     xmlNodePtr input = currentNode;
-    // xmlNsPtr srcNs = 0;
-
-    // srcNs = locate_ns(ctxt, SRCML_SRC_NS_URI);
-    // // If I can't locate the src namespace
-    // // then there are no statements.
-    // if (!srcNs) {
-    //     std::cout << "Can't locate src namespace" << std::endl;
-    //     xmlXPathReturnFalse(ctxt); return;
-    // }
-    
-    // Searching out required nodes.
-    // int dictSize = xmlDictSize(currentNode->doc->dict);
-    // if(!currentNode->doc->dict) {
-    //     std::cout << "Invalid dictionary" << std::endl;
-    // }
-    // std::cout << "Current # of items in Dictionary: " << dictSize << std::endl;
-    // if(dictSize == -1) {
-    //     xmlErrorPtr err = xmlGetLastError();
-    //     if(err) {
-    //         std::cout << "Current error Information: \n"
-    //             << "    Domain: " << err->domain << "\n"
-    //             << "    Error Code: " << err->code << "\n"
-    //             << "    Message: "  << err->message << "\n"
-    //             << "    Files: " << err->file << std::endl;
-    //     }else{
-    //         std::cout << "The last error wasn't set correctly" << std::endl;
-    //     }
-    // }
-    // ConstXmlCharPtr returnNodeName = 0;
-    // returnNodeName = xmlDictExists(currentNode->doc->dict, ConstXmlCharPtr("return"), -1);
-    // if(!returnNodeName) {
-    //     std::cout << "Can't locate return statement" << std::endl;
-    //     xmlXPathReturnFalse(ctxt); return;
-    // }
-    // std::cout << "Everythings OK moving on." << std::endl;
-
     xmlNodePtr temp = 0;
+    
 // START:
     if(!currentNode) {
         goto EXIT;
+    } else {
+        goto DESCENDING;
     }
-    // else {
-    //     goto 
-    // }
 VISIT:
     if(currentNode->type == XML_ELEMENT_NODE) {
         if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI)) {
             if(xmlStrEqual(return_tag, currentNode->name)) {
-                // std::cout << "Located return" << std::endl;
                 xmlXPathReturnTrue(ctxt); return;
-
-            }else if (xmlStrEqual(decl_stmt_tag, currentNode->name)) {
-                goto STRAIF_SIBLINGS;
-
-            }else if (xmlStrEqual(expr_stmt_tag, currentNode->name)) {
-                goto STRAIF_SIBLINGS;
+            } else {
+                NodeNameSet::iterator locatedElementIter = hasReturnValidNodes.find(currentNode->name);
+                if(locatedElementIter == hasReturnValidNodes.end()) {
+                    goto STRAIF_SIBLINGS;
+                }
             }
         }
     }
-// DESCENDING:
+DESCENDING:
     temp = currentNode->children;
     if (temp) {
         currentNode = temp;

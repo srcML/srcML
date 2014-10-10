@@ -222,7 +222,7 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
         for(int resultIndex = 0; resultIndex < xpathObj->nodesetval->nodeNr; ++resultIndex) {
 
             xmlBufferPtr buff = xmlBufferCreate();
-            xmlNodeDump(buff, doc.get(), xpathObj->nodesetval->nodeTab[resultIndex], 0, xmlKeepBlanksDefault(0));
+            xmlNodeDump(buff, doc.get(),  xmlFirstElementChild(xpathObj->nodesetval->nodeTab[resultIndex]), 0, xmlKeepBlanksDefault(0));
             cout << "Result: " << resultIndex << " " << endl;
             cout.write(ConstCharPtr(buff->content), xmlBufferLength(buff));
             cout << std::endl;
@@ -246,21 +246,8 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
 
 }
 
-int main() {
-    cout << "---------------------------------------------------" << endl;
-    cout << "                   Running XPath Tests" << endl;
-    cout << "---------------------------------------------------" << endl;
-    xmlInitParser();
-    run_xpath_test("xpath_test_data/has_return/has_return.cpp", "//src:unit[src:has_return()] | //src:function[src:has_return()] | //src:if[src:has_return()] | //src:destructor[src:has_return()]", 3);
-    // xml_doc_shared_ptr_t doc = run_xpath("xpath_test_data/has_return/has_return.cpp", "//src:unit[src:has_return()] | //src:function[src:has_return()] | //src:if[src:has_return()] ");
-    // dbgDoc(doc);
 
-    // xml_doc_shared_ptr_t doc2 = run_xpath("xpath_test_data/has_return/has_return_fail.cpp", "//cpp:define[src:has_return()]");
-    // dbgDoc(doc2);
-    xmlCleanupParser();
-
-
-    // Checking for and displaying failed tests.
+int summaryAndResultsDisplay() {
     bool hasFailed = false;
     for (TestResultsContainer::iterator iter = testResults.begin();
         iter != testResults.end();
@@ -286,7 +273,78 @@ int main() {
                 cout << "    " << iter->fileName << " " << iter->actual << " " << iter->expected << endl;
             }
         }
+        return -1;
     }
     return 0;
+}
+
+int main() {
+    cout << "---------------------------------------------------" << endl;
+    cout << "                   Running XPath Tests" << endl;
+    cout << "---------------------------------------------------" << endl;
+    xmlInitParser();
+
+    // has_return()
+    run_xpath_test(
+        "xpath_test_data/has_return/has_return.cpp",
+        "//src:unit[src:has_return()] "
+        "| //src:function[src:has_return()] "
+        "| //src:destructor[src:has_return()]"
+        "| //src:if[src:has_return()] "
+        "| //src:else[src:has_return()] "
+        "| //src:elseif[src:has_return()] "
+        "| //src:then[src:has_return()] "
+        "| //src:switch[src:has_return()]",
+        12);
+
+    run_xpath_test(
+        "xpath_test_data/has_return/has_return_scope_test.cpp",
+        "//src:block[src:has_return()]"
+        "| //src:function[src:has_return()]"
+        "| //src:constructor[src:has_return()]"
+        "| //src:destructor[src:has_return()]"
+        "| //src:while[src:has_return()]"
+        "| //src:if[src:has_return()]"
+        "| //src:then[src:has_return()]"
+        "| //src:elseif[src:has_return()]"
+        "| //src:else[src:has_return()]"
+        "| //src:try[src:has_return()]"
+        "| //src:catch[src:has_return()]"
+        "| //src:finally[src:has_return()]"
+        "| //src:do[src:has_return()]"
+        "| //src:for[src:has_return()]"
+        "| //src:foreach[src:has_return()]"
+        "| //src:switch[src:has_return()]"
+        "| //src:lambda[src:has_return()]"
+        "| //src:delegate[src:has_return()]"
+        "| //src:using_stmt[src:has_return()]"
+        "| //src:fixed[src:has_return()]"
+        "| //src:lock[src:has_return()]"
+        "| //src:synchronized[src:has_return()]"
+        "| //src:fixed[src:has_return()]"
+        "| //src:unsafe[src:has_return()]"
+        "| //src:static[src:has_return()]"
+        "| //src:checked[src:has_return()]"
+        "| //src:unchecked[src:has_return()]",
+        6
+    );
+
+    run_xpath_test(
+        "xpath_test_data/has_return/has_return_return_stmt_test.cpp",
+        "//src:return[src:has_return()] ",
+        0
+    );
+
+    // xml_doc_shared_ptr_t doc = run_xpath("xpath_test_data/has_return/has_return.cpp", "//src:unit[src:has_return()] | //src:function[src:has_return()] | //src:if[src:has_return()] ");
+    // dbgDoc(doc);
+
+    // xml_doc_shared_ptr_t doc2 = run_xpath("xpath_test_data/has_return/has_return_fail.cpp", "//cpp:define[src:has_return()]");
+    // dbgDoc(doc2);
+    xmlCleanupParser();
+
+
+    // Checking for and displaying failed tests.
+
+    return summaryAndResultsDisplay();
 }
 

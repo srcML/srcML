@@ -28,13 +28,25 @@
  *  statement. This is scope respecting, in that it doesn't search within
  *  closures functions or local classes.
  *  
+ *  has_return can be called on almost anything but the typical case 
+ *  is for it to be used on statements or functions, The behavior it has
+ *  when called on non-complex statements (those that don't combine multiple
+ *  statements using a block such as return, throw, expr_stmt and decl_stmt)
+ *  is to search those statements for a return including the sub elements 
+ *  excluding  lambdas and delegates, This means that because only the sub
+ *  elements are searched that a return doesn't have a return (because it is
+ *  one).
+ *  
  *  Languages: C, C++, C#, Java
  *  
  *  Works with srcML elements:
  *      block
  *      function
+ *      constructor
+ *      destructor
  *      while
  *      if
+ *      then
  *      elseif
  *      else
  *      try
@@ -50,11 +62,7 @@
  *      fixed
  *      lock
  *      synchronized
- *      fixed
  *      unsafe
- *      constructor
- *      destructor
- *      delegate
  *      static
  *      checked
  *      unchecked
