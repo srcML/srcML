@@ -90,20 +90,6 @@ namespace {
     typedef const xmlChar* ConstXmlCharPtr;
     typedef const char* ConstCharPtr;
 
-    /* Utility function for extracting a namespace from an XPath context. */
-    inline xmlNsPtr locate_ns(xmlXPathParserContextPtr ctxt, char const* const nsUrl) {
-        xmlNsPtr srcNs = 0;
-        xmlNsPtr currentNs = xmlFirstElementChild(xmlNodePtr(ctxt->context->doc))->ns;
-        while(currentNs) {
-            if(xmlStrEqual(currentNs->href, BAD_CAST nsUrl) == 0){
-                srcNs = currentNs;
-                break;
-            }
-            currentNs = currentNs->next;
-        }
-        return srcNs;
-    }
-
     xmlChar const* const asm_tag = BAD_CAST "asm";
     xmlChar const* const return_tag = BAD_CAST "return";
     xmlChar const* const typedef_tag = BAD_CAST "typedef";    
@@ -114,6 +100,9 @@ namespace {
     xmlChar const* const enum_tag = BAD_CAST "enum";
     xmlChar const* const expr_stmt_tag = BAD_CAST "expr_stmt";
     xmlChar const* const decl_stmt_tag = BAD_CAST "decl_stmt";
+
+    xmlChar const* const param_tag = BAD_CAST "param";
+    xmlChar const* const argument_list_tag = BAD_CAST "argument_list";
 
 
     xmlChar const* const constructor_tag = BAD_CAST "constructor";
@@ -144,6 +133,9 @@ namespace {
     xmlChar const* const unchecked_tag = BAD_CAST "unchecked";
     
 
+    xmlChar const* const template_tag = BAD_CAST "template";
+    xmlChar const* const name_tag = BAD_CAST "name";
+
     xmlChar const* const goto_tag = BAD_CAST "goto";
 
     xmlChar const* const function_tag = BAD_CAST "function";
@@ -158,6 +150,9 @@ namespace {
     xmlChar const* const union_tag = BAD_CAST "union";
     xmlChar const* const union_decl_tag = BAD_CAST "union_decl";
     xmlChar const* const namespace_tag = BAD_CAST "namespace";
+
+    xmlChar const* const type_attr = BAD_CAST "type";
+    xmlChar const* const template_attr_value = template_tag;
 
     typedef xmlChar const* XmlCharConstPtr;
     typedef char const* CharConstPtr;
@@ -178,7 +173,7 @@ namespace {
     };
     struct XmlCharEqualityComparer {
         bool operator()(XmlCharConstPtr lhs, XmlCharConstPtr rhs) const {
-            return xmlStrEqual(lhs, rhs);
+            return xmlStrEqual(lhs, rhs) != 0;
         }
     };
 
@@ -226,8 +221,8 @@ void xpath_exfun_has_return(xmlXPathParserContextPtr ctxt, int nargs) {
     }
 VISIT:
     if(currentNode->type == XML_ELEMENT_NODE) {
-        if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI)) {
-            if(xmlStrEqual(return_tag, currentNode->name)) {
+        if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+            if(xmlStrEqual(return_tag, currentNode->name) != 0) {
                 xmlXPathReturnTrue(ctxt); return;
             } else {
                 NodeNameSet::iterator locatedElementIter = hasReturnValidNodes.find(currentNode->name);
@@ -262,49 +257,49 @@ EXIT:
 void xpath_exfun_is_nested(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
     xmlNodePtr currentNode = ctxt->context->node;
-    if(currentNode->type == XML_ELEMENT_NODE && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI)) {
-        if (xmlStrEqual(asm_tag, currentNode->name)) {
+    if(currentNode->type == XML_ELEMENT_NODE && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+        if (xmlStrEqual(asm_tag, currentNode->name) != 0) {
             // ASM tag is nested if it's within another asm tag.
             if (currentNode->parent->type == XML_ELEMENT_NODE
-                && xmlStrEqual(currentNode->parent->ns->href, BAD_CAST SRCML_SRC_NS_URI)
-                && xmlStrEqual(asm_tag, currentNode->parent->name))
+                && xmlStrEqual(currentNode->parent->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0
+                && xmlStrEqual(asm_tag, currentNode->parent->name) != 0)
             {
                 xmlXPathReturnTrue(ctxt); return;
             }else {
                 xmlXPathReturnFalse(ctxt); return;
             }
-        }else if (xmlStrEqual(typedef_tag, currentNode->name)
-            || xmlStrEqual(using_tag, currentNode->name)
-            || xmlStrEqual(function_tag, currentNode->name)
-            || xmlStrEqual(function_decl_tag, currentNode->name)
-            || xmlStrEqual(constructor_tag, currentNode->name)
-            || xmlStrEqual(constructor_decl_tag, currentNode->name)
-            || xmlStrEqual(destructor_tag, currentNode->name)
-            || xmlStrEqual(destructor_decl_tag, currentNode->name)
-            || xmlStrEqual(property_tag, currentNode->name)
-            || xmlStrEqual(event_tag, currentNode->name)
-            || xmlStrEqual(union_tag, currentNode->name)
-            || xmlStrEqual(union_decl_tag, currentNode->name)
-            || xmlStrEqual(struct_tag, currentNode->name)
-            || xmlStrEqual(struct_decl_tag, currentNode->name)
-            || xmlStrEqual(class_tag, currentNode->name)
-            || xmlStrEqual(class_decl_tag, currentNode->name)
-            || xmlStrEqual(enum_tag, currentNode->name)
-            || xmlStrEqual(namespace_tag, currentNode->name))
+        }else if (xmlStrEqual(typedef_tag, currentNode->name) != 0
+            || xmlStrEqual(using_tag, currentNode->name) != 0
+            || xmlStrEqual(function_tag, currentNode->name) != 0
+            || xmlStrEqual(function_decl_tag, currentNode->name) != 0
+            || xmlStrEqual(constructor_tag, currentNode->name) != 0
+            || xmlStrEqual(constructor_decl_tag, currentNode->name) != 0
+            || xmlStrEqual(destructor_tag, currentNode->name) != 0
+            || xmlStrEqual(destructor_decl_tag, currentNode->name) != 0
+            || xmlStrEqual(property_tag, currentNode->name) != 0
+            || xmlStrEqual(event_tag, currentNode->name) != 0
+            || xmlStrEqual(union_tag, currentNode->name) != 0
+            || xmlStrEqual(union_decl_tag, currentNode->name) != 0
+            || xmlStrEqual(struct_tag, currentNode->name) != 0
+            || xmlStrEqual(struct_decl_tag, currentNode->name) != 0
+            || xmlStrEqual(class_tag, currentNode->name) != 0
+            || xmlStrEqual(class_decl_tag, currentNode->name) != 0
+            || xmlStrEqual(enum_tag, currentNode->name) != 0
+            || xmlStrEqual(namespace_tag, currentNode->name) != 0)
         {
             currentNode = currentNode->parent;
             while(currentNode) {
 
-                if(xmlStrEqual(function_tag, currentNode->name)
-                    || xmlStrEqual(constructor_tag, currentNode->name)
-                    || xmlStrEqual(destructor_tag, currentNode->name)
-                    || xmlStrEqual(property_tag, currentNode->name)
-                    || xmlStrEqual(event_tag, currentNode->name)
-                    || xmlStrEqual(union_tag, currentNode->name)
-                    || xmlStrEqual(struct_tag, currentNode->name)
-                    || xmlStrEqual(class_tag, currentNode->name)
-                    || xmlStrEqual(enum_tag, currentNode->name)
-                    || xmlStrEqual(namespace_tag, currentNode->name))
+                if(xmlStrEqual(function_tag, currentNode->name) != 0
+                    || xmlStrEqual(constructor_tag, currentNode->name) != 0
+                    || xmlStrEqual(destructor_tag, currentNode->name) != 0
+                    || xmlStrEqual(property_tag, currentNode->name) != 0
+                    || xmlStrEqual(event_tag, currentNode->name) != 0
+                    || xmlStrEqual(union_tag, currentNode->name) != 0
+                    || xmlStrEqual(struct_tag, currentNode->name) != 0
+                    || xmlStrEqual(class_tag, currentNode->name) != 0
+                    || xmlStrEqual(enum_tag, currentNode->name) != 0
+                    || xmlStrEqual(namespace_tag, currentNode->name) != 0)
                 {
                     xmlXPathReturnTrue(ctxt); return;
                 }
@@ -317,6 +312,147 @@ void xpath_exfun_is_nested(xmlXPathParserContextPtr ctxt, int nargs) {
 
 void xpath_exfun_is_class_template_partial_specialization(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
+    std::cout << "Reached " << __FUNCTION__ << std::endl;
+    xmlNodePtr currentNode = ctxt->context->node;
+    if(currentNode->type == XML_ELEMENT_NODE) {
+        if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+            if (    xmlStrEqual(class_tag, currentNode->name) != 0
+                ||  xmlStrEqual(class_decl_tag, currentNode->name) != 0
+                ||  xmlStrEqual(struct_tag, currentNode->name) != 0
+                ||  xmlStrEqual(struct_decl_tag, currentNode->name) != 0
+                ||  xmlStrEqual(union_tag, currentNode->name) != 0
+                ||  xmlStrEqual(union_decl_tag, currentNode->name) != 0
+                )
+            {
+                // Checking for template element if I don't find one then false.
+                xmlNodePtr currentChildNode = xmlFirstElementChild(currentNode);
+                xmlNodePtr lastNameNode = 0;
+                xmlNodePtr lastTemplate = 0;
+                // std::size_t templateCount = 0;
+                while(currentChildNode) {
+                    if(currentChildNode->type == XML_ELEMENT_NODE && xmlStrEqual(currentChildNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+                        if(xmlStrEqual(template_tag, currentChildNode->name) != 0) {
+                            lastTemplate = currentChildNode;
+                        } else if(xmlStrEqual(name_tag, currentChildNode->name) != 0) {
+                            lastNameNode = currentChildNode;
+                        } else if(xmlStrEqual(block_tag, currentChildNode->name) != 0) {
+                            break;
+                        }
+                    }
+                    currentChildNode = currentChildNode->next;
+                }
+
+                // Ignore anonymous structs and things.
+                if(!lastTemplate or !lastNameNode) {
+                    std::cout << "Exited at: !lastTemplate or !lastNameNode" << std::endl;
+                    xmlXPathReturnFalse(ctxt); return;
+                }
+
+                // Check the last template for children.
+                // It must have at least one child, otherwise this is an explicit specialization.
+                // OR a member specialization of some sort.
+                xmlNodePtr templateParameterListNode = xmlFirstElementChild(lastTemplate);
+                xmlNodePtr possibleParameter = xmlFirstElementChild(templateParameterListNode);
+                if(!(possibleParameter != 0
+                    && possibleParameter->type == XML_ELEMENT_NODE
+                    && xmlStrEqual(possibleParameter->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0
+                    && xmlStrEqual(param_tag, possibleParameter->name) != 0) )
+                {
+                    std::cout << "Exited at: !(possibleParameter != 0\
+    && possibleParameter->type == XML_ELEMENT_NODE\
+    && xmlStrEqual(possibleParameter->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0\
+    && xmlStrEqual(param_tag, currentChildNode->name) != 0) )" << std::endl;
+                    xmlXPathReturnFalse(ctxt); return;
+                }
+
+                // Check for template arguments within the name.
+                /*
+1. <name>Bar</name>
+
+2. <name>
+    <name>Foo1</name>
+    <argument_list type="template">&lt;
+        <argument><expr><name><name>vector</name><argument_list type="template">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></expr></argument>&gt;
+    </argument_list>
+</name>
+
+BUG here!!! but this is still handled using the same situation
+<macro><name>Name</name></macro>
+3. <name>
+    <operator>::</operator>
+    <name>
+        <name>Bar</name>
+        <argument_list type="template">&lt;
+            <argument><expr><name>int</name></expr></argument>&gt;
+        </argument_list>
+    </name>
+</name>
+
+4. <name>
+    <name>
+        <name>Name</name>
+        <argument_list type="template">&lt;
+            <argument><expr><name>int</name></expr></argument>&gt;
+        </argument_list>
+    </name>
+    <operator>::</operator>
+    <name>
+        <name>Bar</name>
+        <argument_list type="template">&lt;
+            <argument><expr><name>int</name></expr></argument>&gt;
+        </argument_list>
+    </name>
+</name>
+                */
+                xmlNodePtr nameElem = xmlFirstElementChild(lastNameNode);
+                // Handling case 1
+                if(!nameElem) {
+                    xmlXPathReturnFalse(ctxt); return;
+                }
+                xmlChar const* currentAttrValue = 0;
+                // Handling case 2.
+                xmlNodePtr lastNameInClassName = 0;
+                xmlNodePtr possibleArgListNode = nameElem;
+                while(possibleArgListNode) {
+                    if (possibleArgListNode->type == XML_ELEMENT_NODE
+                        && xmlStrEqual(possibleArgListNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+                        if (xmlStrEqual(argument_list_tag, possibleArgListNode->name) != 0
+                            && (currentAttrValue = xmlGetProp(possibleArgListNode, type_attr))
+                            && xmlStrEqual(currentAttrValue, template_attr_value) != 0)
+                        {
+                            // Handles case 2
+                            xmlXPathReturnTrue(ctxt); return;
+                        }else if(xmlStrEqual(name_tag, possibleArgListNode->name) != 0) {
+                            // Used for case 3 and 4.
+                            lastNameInClassName = possibleArgListNode;
+                        }
+                    }
+                    possibleArgListNode = possibleArgListNode->next;
+                }
+
+                // Used for case 3 and 4.
+                possibleArgListNode = xmlFirstElementChild(lastNameInClassName);
+                // If only text then this isn't a partial specialization.
+                if(!possibleArgListNode) {
+                    xmlXPathReturnFalse(ctxt); return;
+                }
+                while(possibleArgListNode) {
+                    if (possibleArgListNode->type == XML_ELEMENT_NODE
+                        && xmlStrEqual(possibleArgListNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+                        if (xmlStrEqual(argument_list_tag, possibleArgListNode->name) != 0
+                            && (currentAttrValue = xmlGetProp(possibleArgListNode, type_attr))
+                            && xmlStrEqual(currentAttrValue, template_attr_value) != 0)
+                        {
+                            // Handles case 2
+                            xmlXPathReturnTrue(ctxt); return;
+                        }
+                    }
+                    possibleArgListNode = possibleArgListNode->next;
+                }
+            }
+        }
+    }
+    xmlXPathReturnFalse(ctxt); return;
 }
 
 void xpath_exfun_is_local(xmlXPathParserContextPtr ctxt, int nargs) {

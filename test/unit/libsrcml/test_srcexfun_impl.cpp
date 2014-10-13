@@ -426,6 +426,17 @@ int main() {
     );
 
 
+    // is_class_template_partial_specialization()
+    run_xpath_test(
+        "xpath_test_data/is_class_template_partial_specialization/is_class_template_partial_specialization.cpp",
+        "//src:union[src:is_class_template_partial_specialization()]"
+        "| //src:union_decl[src:is_class_template_partial_specialization()]"
+        "| //src:class[src:is_class_template_partial_specialization()]"
+        "| //src:class_decl[src:is_class_template_partial_specialization()]"
+        "| //src:struct[src:is_class_template_partial_specialization()]"
+        "| //src:struct_decl[src:is_class_template_partial_specialization()]",
+        2
+    );
 
 
     xmlCleanupParser();
