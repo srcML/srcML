@@ -454,31 +454,53 @@ BUG here!!! but this is still handled using the same situation
 
 void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
+
+    enum JumpToLocation {
+        DECL_IS_CHILD,
+        INIT_IS_CHILD,
+        IS_INVALD
+    };
     xmlNodePtr currentNode = ctxt->context->node;
     if(currentNode->type == XML_ELEMENT_NODE) {
         if(xmlStrEqual(BAD_CAST SRCML_SRC_NS_URI, currentNode->ns->href) != 0) {
-            if (    xmlStrEqual(decl_stmt_tag, currentNode->name) != 0
-                ||  xmlStrEqual(decl_tag, currentNode->name) != 0
-                ||  xmlStrEqual(param_tag, currentNode->name) != 0
-                ||  xmlStrEqual(using_tag, currentNode->name) != 0)
+            JumpToLocation jumpTo = IS_INVALD;
+            xmlNodePtr declParent = 0;
+            xmlNodePtr initParent = 0;
+            if (xmlStrEqual(decl_stmt_tag, currentNode->name) != 0
+                ||  xmlStrEqual(param_tag, currentNode->name) != 0)
             {
-
+                declParent = currentNode;
+                jumpTo = DECL_IS_CHILD;
             } else if (xmlStrEqual(using_stmt_tag, currentNode->name) != 0
                 ||  xmlStrEqual(try_tag, currentNode->name) != 0
                 ||  xmlStrEqual(synchronized_tag, currentNode->name) != 0
                 ||  xmlStrEqual(fixed_tag, currentNode->name) != 0
                 ||  xmlStrEqual(checked_tag, currentNode->name) != 0
                 ||  xmlStrEqual(unchecked_tag, currentNode->name) != 0
-                ||  xmlStrEqual(lock, currentNode->name) != 0)
+                ||  xmlStrEqual(lock_tag, currentNode->name) != 0
+                ||  xmlStrEqual(decl_tag, currentNode->name) != 0
+                ||  xmlStrEqual(using_tag, currentNode->name) != 0)
             {
+                initParent = currentNode;
+                jumpTo = INIT_IS_CHILD;
+            }
 
-            } else {
-                // If this isn't called on one of the above named tags then 
-                // simply return with an error because this is
-                // considered an invalid predicate.
-                xmlXPathErr(ctxt, XPATH_INVALID_PREDICATE_ERROR);
-                return;
-                // void xmlXPathErr (xmlXPathParserContextPtr ctxt, int error);
+
+            switch(jumpTo) {
+                case DECL_IS_CHILD:
+
+
+                case INIT_IS_CHILD:
+
+
+                    break;
+                case IS_INVALD:
+                default:
+                    // If this isn't called on one of the above named tags then 
+                    // simply return with an error because this is
+                    // considered an invalid predicate.
+                    xmlXPathErr(ctxt, XPATH_INVALID_PREDICATE_ERROR);
+                    return;
             }
         }
     }
