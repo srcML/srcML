@@ -29,6 +29,7 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <algorithm>
+#include <timer.hpp>
 
 namespace {
     struct curl {
@@ -40,6 +41,7 @@ namespace {
         size_t data_len;
         char* data_buffer;
         std::string source;
+        Timer stopwatch;
     };
 
     size_t curl_cb(void* buffer, size_t len, size_t nmemb, void* data);
@@ -247,6 +249,7 @@ namespace {
         curldata->multi_handle = curl_multi_init();
         curl_multi_add_handle(curldata->multi_handle, curldata->handle);
         curl_multi_perform(curldata->multi_handle, &curldata->still_running);
+        curldata->stopwatch = Timer(10.0); // 10 second timeout
 
         return ARCHIVE_OK;
     }
@@ -256,8 +259,16 @@ namespace {
         curl* curldata = (curl*) client_data;
 
         curldata->data_len = 0;
+        curldata->stopwatch.start();
         while (curldata->data_len == 0 && curldata->still_running) {
             curl_multi_perform(curldata->multi_handle, &curldata->still_running);
+           
+           // Connection lost mid-transfer time to give up
+            if (curldata->stopwatch.is_expired()) {
+                curldata->data_len = 0;
+                curldata->data_buffer = 0;
+                break;
+            }
         }
 
         *buff = curldata->data_buffer;
