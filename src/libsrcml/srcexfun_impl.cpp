@@ -312,7 +312,6 @@ void xpath_exfun_is_nested(xmlXPathParserContextPtr ctxt, int nargs) {
 
 void xpath_exfun_is_class_template_partial_specialization(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
-    std::cout << "Reached " << __FUNCTION__ << std::endl;
     xmlNodePtr currentNode = ctxt->context->node;
     if(currentNode->type == XML_ELEMENT_NODE) {
         if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
@@ -344,7 +343,6 @@ void xpath_exfun_is_class_template_partial_specialization(xmlXPathParserContextP
 
                 // Ignore anonymous structs and things.
                 if(!lastTemplate or !lastNameNode) {
-                    std::cout << "Exited at: !lastTemplate or !lastNameNode" << std::endl;
                     xmlXPathReturnFalse(ctxt); return;
                 }
 
@@ -358,10 +356,6 @@ void xpath_exfun_is_class_template_partial_specialization(xmlXPathParserContextP
                     && xmlStrEqual(possibleParameter->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0
                     && xmlStrEqual(param_tag, possibleParameter->name) != 0) )
                 {
-                    std::cout << "Exited at: !(possibleParameter != 0\
-    && possibleParameter->type == XML_ELEMENT_NODE\
-    && xmlStrEqual(possibleParameter->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0\
-    && xmlStrEqual(param_tag, currentChildNode->name) != 0) )" << std::endl;
                     xmlXPathReturnFalse(ctxt); return;
                 }
 
