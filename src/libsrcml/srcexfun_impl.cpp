@@ -104,13 +104,20 @@ namespace {
         return srcNs;
     }
 
+    xmlChar const* const asm_tag = BAD_CAST "asm";
     xmlChar const* const return_tag = BAD_CAST "return";
-    
+    xmlChar const* const typedef_tag = BAD_CAST "typedef";    
+    xmlChar const* const using_tag = BAD_CAST "using";
+
+    xmlChar const* const property_tag = BAD_CAST "property";
+    xmlChar const* const event_tag = BAD_CAST "event";
+    xmlChar const* const enum_tag = BAD_CAST "enum";
     xmlChar const* const expr_stmt_tag = BAD_CAST "expr_stmt";
     xmlChar const* const decl_stmt_tag = BAD_CAST "decl_stmt";
+
+
     xmlChar const* const constructor_tag = BAD_CAST "constructor";
     xmlChar const* const constructor_decl_tag = BAD_CAST "constructor_decl";
-    
     xmlChar const* const destructor_tag = BAD_CAST "destructor";
     xmlChar const* const destructor_decl_tag = BAD_CAST "destructor_decl";
 
@@ -140,6 +147,7 @@ namespace {
     xmlChar const* const goto_tag = BAD_CAST "goto";
 
     xmlChar const* const function_tag = BAD_CAST "function";
+    xmlChar const* const function_decl_tag = BAD_CAST "function_decl";
     
     xmlChar const* const class_tag = BAD_CAST "class";
     xmlChar const* const class_decl_tag = BAD_CAST "class_decl";
@@ -149,6 +157,7 @@ namespace {
 
     xmlChar const* const union_tag = BAD_CAST "union";
     xmlChar const* const union_decl_tag = BAD_CAST "union_decl";
+    xmlChar const* const namespace_tag = BAD_CAST "namespace";
 
     typedef xmlChar const* XmlCharConstPtr;
     typedef char const* CharConstPtr;
@@ -252,28 +261,37 @@ EXIT:
 
 void xpath_exfun_is_nested(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
-    
-    // asm
-    // typedef
-    // using
-    // function
-    // function_decl
-    // constructor
-    // constructor_decl
-    // destructor
-    // destructor_decl
-    // property
-    // event
-    // union
-    // union_decl
-    // class
-    // class_decl
-    // struct
-    // struct_decl
-    // enum
-    // namespace
+    xmlNodePtr currentNode = ctxt->context->node;
+    if(currentNode->type == XML_ELEMENT_NODE && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI)) {
+        if (xmlStrEqual(asm_tag, currentNode->name)) {
+            // ASM tag is nested if it's within another asm tag.
+            
+        }else if (xmlStrEqual(typedef_tag, currentNode->name)
+            || xmlStrEqual(using_tag, currentNode->name)
+            || xmlStrEqual(function_tag, currentNode->name)
+            || xmlStrEqual(function_decl_tag, currentNode->name)
+            || xmlStrEqual(constructor_tag, currentNode->name)
+            || xmlStrEqual(constructor_decl_tag, currentNode->name)
+            || xmlStrEqual(destructor_tag, currentNode->name)
+            || xmlStrEqual(destructor_decl_tag, currentNode->name)
+            || xmlStrEqual(property_tag, currentNode->name)
+            || xmlStrEqual(event_tag, currentNode->name)
+            || xmlStrEqual(union_tag, currentNode->name)
+            || xmlStrEqual(union_decl_tag, currentNode->name)
+            || xmlStrEqual(struct_tag, currentNode->name)
+            || xmlStrEqual(struct_decl_tag, currentNode->name)
+            || xmlStrEqual(class_tag, currentNode->name)
+            || xmlStrEqual(class_decl_tag, currentNode->name)
+            || xmlStrEqual(enum_tag, currentNode->name)
+            || xmlStrEqual(namespace_tag, currentNode->name))
+        {
+            // typedefis nested if it's within a function/method/constructor/destructor/namespace/class/
+            // union/struct/class.
+        }
 
-
+    }else{
+        xmlXPathReturnFalse(ctxt); return;
+    }
 }
 
 void xpath_exfun_is_class_template_partial_specialization(xmlXPathParserContextPtr ctxt, int nargs) {
