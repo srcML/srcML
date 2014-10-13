@@ -100,6 +100,7 @@ namespace {
     xmlChar const* const enum_tag = BAD_CAST "enum";
     xmlChar const* const expr_stmt_tag = BAD_CAST "expr_stmt";
     xmlChar const* const decl_stmt_tag = BAD_CAST "decl_stmt";
+    xmlChar const* const decl_tag = BAD_CAST "decl";
 
     xmlChar const* const param_tag = BAD_CAST "param";
     xmlChar const* const argument_list_tag = BAD_CAST "argument_list";
@@ -453,6 +454,48 @@ BUG here!!! but this is still handled using the same situation
 
 void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
+    xmlNodePtr currentNode = ctxt->context->node;
+    if(currentNode->type == XML_ELEMENT_NODE) {
+        if(xmlStrEqual(BAD_CAST SRCML_SRC_NS_URI, currentNode->ns->href) != 0) {
+            if (    xmlStrEqual(decl_stmt_tag, currentNode->name) != 0
+                ||  xmlStrEqual(decl_tag, currentNode->name) != 0
+                ||  xmlStrEqual(param_tag, currentNode->name) != 0
+                ||  xmlStrEqual(using_tag, currentNode->name) != 0)
+            {
+
+            } else if (xmlStrEqual(using_stmt_tag, currentNode->name) != 0
+                ||  xmlStrEqual(try_tag, currentNode->name) != 0
+                ||  xmlStrEqual(synchronized_tag, currentNode->name) != 0
+                ||  xmlStrEqual(fixed_tag, currentNode->name) != 0
+                ||  xmlStrEqual(checked_tag, currentNode->name) != 0
+                ||  xmlStrEqual(unchecked_tag, currentNode->name) != 0
+                ||  xmlStrEqual(lock, currentNode->name) != 0)
+            {
+
+            } else {
+                // If this isn't called on one of the above named tags then 
+                // simply return with an error because this is
+                // considered an invalid predicate.
+                xmlXPathErr(ctxt, XPATH_INVALID_PREDICATE_ERROR);
+                return;
+                // void xmlXPathErr (xmlXPathParserContextPtr ctxt, int error);
+            }
+        }
+    }
+
+    // decl_stmt
+    // decl
+    // param
+    // argument
+    // using_stmt
+    // using
+    // try
+    // synchronized
+    // 
+    // 
+    // unchecked
+    // lock
+    xmlXPathReturnFalse(ctxt); return;
 }
 
 void xpath_exfun_is_simple_asm(xmlXPathParserContextPtr ctxt, int nargs) {
