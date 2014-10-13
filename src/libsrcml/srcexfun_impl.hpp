@@ -128,30 +128,6 @@ void xpath_exfun_is_nested(xmlXPathParserContextPtr ctxt, int nargs);
 void xpath_exfun_is_class_template_partial_specialization(xmlXPathParserContextPtr ctxt, int nargs);
 
 /**
- *  XPath Signature: bool is_local()
- *  
- *  Checks variable declarations to see if they are local to a function. For,
- *  classes and other type declarations occur within a function.
- *  
- *  Languages: C, C++, C#, Java
- *  
- *  Works with srcML elements:
- *      class
- *      class_decl
- *      union
- *      union_decl
- *      struct
- *      struct_decl
- *      decl
- *      decl_stmt
- *      type
- *      param
- *      argument
- *  
- */
-void xpath_exfun_is_local(xmlXPathParserContextPtr ctxt, int nargs);
-
-/**
  *  XPath Signature: bool has_init()
  *  
  *  Checks for an initialization within a declaration statement or the init

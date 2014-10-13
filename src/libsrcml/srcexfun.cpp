@@ -304,6 +304,10 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
                            xpath_exfun_is_class_template_partial_specialization);
 
 
+    xmlXPathRegisterFuncNS(context, (const xmlChar *)"has_init",
+                           BAD_CAST SRCML_SRC_NS_URI,
+                           xpath_exfun_has_init);
+
 
     // register all the xpath extension functions
     for (std::vector<struct xpath_ext_function>::size_type i = 0; i < MACROS.size(); ++i) {

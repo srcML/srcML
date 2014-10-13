@@ -154,6 +154,8 @@ namespace {
     xmlChar const* const type_attr = BAD_CAST "type";
     xmlChar const* const template_attr_value = template_tag;
 
+    xmlChar const* const init_tag = BAD_CAST "init";
+
     typedef xmlChar const* XmlCharConstPtr;
     typedef char const* CharConstPtr;
 
@@ -447,10 +449,6 @@ BUG here!!! but this is still handled using the same situation
         }
     }
     xmlXPathReturnFalse(ctxt); return;
-}
-
-void xpath_exfun_is_local(xmlXPathParserContextPtr ctxt, int nargs) {
-    CHECK_ARITY(0);
 }
 
 void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs) {
