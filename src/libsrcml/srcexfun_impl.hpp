@@ -77,6 +77,28 @@ void xpath_exfun_has_return(xmlXPathParserContextPtr ctxt, int nargs);
  *  scope. This function only works for parts of the language which
  *  can occur at a global scope.
  *
+ *  asm
+ *      - Checks to see of the current ASM statement is within another ASM statement.
+ *  typedef
+ *  using
+ *  function
+ *  function_decl
+ *  constructor
+ *  constructor_decl
+ *  destructor
+ *  destructor_decl
+ *  property
+ *  event
+ *  union
+ *  union_decl
+ *  class
+ *  class_decl
+ *  struct
+ *  struct_decl
+ *  enum
+ *  namespace
+ *
+ *
  *  Languages: C, C++, C#, Java
  *  
  *  Works with srcML elements:

@@ -223,7 +223,7 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
 
             xmlBufferPtr buff = xmlBufferCreate();
             xmlNodeDump(buff, doc.get(),  xmlFirstElementChild(xpathObj->nodesetval->nodeTab[resultIndex]), 0, xmlKeepBlanksDefault(0));
-            cout << "Result: " << resultIndex << " " << endl;
+            cout << "Result: " << (resultIndex + 1) << " " << endl;
             cout.write(ConstCharPtr(buff->content), xmlBufferLength(buff));
             cout << std::endl;
             xmlBufferFree(buff);
@@ -422,7 +422,7 @@ int main() {
         "| //src:struct_decl[src:is_nested()]"
         "| //src:enum[src:is_nested()]"
         "| //src:namespace[src:is_nested()]",
-        4
+        11
     );
 
 

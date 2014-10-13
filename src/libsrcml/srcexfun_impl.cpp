@@ -265,7 +265,14 @@ void xpath_exfun_is_nested(xmlXPathParserContextPtr ctxt, int nargs) {
     if(currentNode->type == XML_ELEMENT_NODE && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI)) {
         if (xmlStrEqual(asm_tag, currentNode->name)) {
             // ASM tag is nested if it's within another asm tag.
-            
+            if (currentNode->parent->type == XML_ELEMENT_NODE
+                && xmlStrEqual(currentNode->parent->ns->href, BAD_CAST SRCML_SRC_NS_URI)
+                && xmlStrEqual(asm_tag, currentNode->parent->name))
+            {
+                xmlXPathReturnTrue(ctxt); return;
+            }else {
+                xmlXPathReturnFalse(ctxt); return;
+            }
         }else if (xmlStrEqual(typedef_tag, currentNode->name)
             || xmlStrEqual(using_tag, currentNode->name)
             || xmlStrEqual(function_tag, currentNode->name)
@@ -285,13 +292,27 @@ void xpath_exfun_is_nested(xmlXPathParserContextPtr ctxt, int nargs) {
             || xmlStrEqual(enum_tag, currentNode->name)
             || xmlStrEqual(namespace_tag, currentNode->name))
         {
-            // typedefis nested if it's within a function/method/constructor/destructor/namespace/class/
-            // union/struct/class.
-        }
+            currentNode = currentNode->parent;
+            while(currentNode) {
 
-    }else{
-        xmlXPathReturnFalse(ctxt); return;
+                if(xmlStrEqual(function_tag, currentNode->name)
+                    || xmlStrEqual(constructor_tag, currentNode->name)
+                    || xmlStrEqual(destructor_tag, currentNode->name)
+                    || xmlStrEqual(property_tag, currentNode->name)
+                    || xmlStrEqual(event_tag, currentNode->name)
+                    || xmlStrEqual(union_tag, currentNode->name)
+                    || xmlStrEqual(struct_tag, currentNode->name)
+                    || xmlStrEqual(class_tag, currentNode->name)
+                    || xmlStrEqual(enum_tag, currentNode->name)
+                    || xmlStrEqual(namespace_tag, currentNode->name))
+                {
+                    xmlXPathReturnTrue(ctxt); return;
+                }
+                currentNode = currentNode->parent;
+            }
+        }
     }
+    xmlXPathReturnFalse(ctxt); return;
 }
 
 void xpath_exfun_is_class_template_partial_specialization(xmlXPathParserContextPtr ctxt, int nargs) {
