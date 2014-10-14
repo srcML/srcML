@@ -232,55 +232,119 @@ namespace {
         return ret;
     }    
 
+
+    enum Scoping {
+        EXCLUSIVE, /* Excludes items in the set */
+        INCLUSIVE /* Includes items in the set. */
+    };
+    template<Scoping> struct ScopedDescendentsTraversalImpl;
+
+    template<> struct ScopedDescendentsTraversalImpl<INCLUSIVE> {
+        static void traverse(NodeNameSet const& scope, xmlChar const* const returnTrueOn, xmlXPathParserContextPtr ctxt) {
+            xmlNodePtr currentNode = ctxt->context->node;
+            xmlNodePtr input = currentNode;
+            xmlNodePtr temp = 0;
+            
+        // START:
+            if(!currentNode) {
+                goto EXIT;
+            } else {
+                goto DESCENDING;
+            }
+        VISIT:
+            if(currentNode->type == XML_ELEMENT_NODE) {
+                if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+                    if(xmlStrEqual(currentNode->name, returnTrueOn) != 0) {
+                        xmlXPathReturnTrue(ctxt); return;
+                    } else {
+                        NodeNameSet::const_iterator locatedElementIter = scope.find(currentNode->name);
+                        if(locatedElementIter == scope.end()) {
+                            goto STRAIF_SIBLINGS;
+                        }
+                    }
+                }
+            }
+        DESCENDING:
+            temp = currentNode->children;
+            if (temp) {
+                currentNode = temp;
+                goto VISIT;
+            } 
+        STRAIF_SIBLINGS:
+            temp = currentNode->next;
+            if (temp && currentNode != input) {
+                currentNode = temp;
+                goto VISIT;
+            }
+        // ASCENDING:
+            if (currentNode->parent != input) {
+                currentNode = currentNode->parent;
+                goto STRAIF_SIBLINGS;
+            }
+        EXIT:
+            xmlXPathReturnFalse(ctxt); return;
+        }
+    };
+
+    template<> struct ScopedDescendentsTraversalImpl<EXCLUSIVE> {
+        static void traverse(NodeNameSet const& scope, xmlChar const* const returnTrueOn, xmlXPathParserContextPtr ctxt) {
+            xmlNodePtr currentNode = ctxt->context->node;
+            xmlNodePtr input = currentNode;
+            xmlNodePtr temp = 0;
+            
+        // START:
+            if(!currentNode) {
+                goto EXIT;
+            } else {
+                goto DESCENDING;
+            }
+        VISIT:
+            if(currentNode->type == XML_ELEMENT_NODE) {
+                if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+                    if(xmlStrEqual(returnTrueOn, currentNode->name) != 0) {
+                        xmlXPathReturnTrue(ctxt); return;
+                    } else {
+                        NodeNameSet::iterator locatedElementIter = scope.find(currentNode->name);
+                        if(locatedElementIter != scope.end()) {
+                            goto STRAIF_SIBLINGS;
+                        }
+                    }
+                }
+            }
+        DESCENDING:
+            temp = currentNode->children;
+            if (temp) {
+                currentNode = temp;
+                goto VISIT;
+            } 
+        STRAIF_SIBLINGS:
+            temp = currentNode->next;
+            if (temp && currentNode != input) {
+                currentNode = temp;
+                goto VISIT;
+            }
+        // ASCENDING:
+            if (currentNode->parent != input) {
+                currentNode = currentNode->parent;
+                goto STRAIF_SIBLINGS;
+            }
+        EXIT:
+            xmlXPathReturnFalse(ctxt); return;
+        }
+    };
+
+    template<Scoping NodeSetScoping>
+    inline void scopedDescendentsTraversal(NodeNameSet const& scope, xmlChar const* const returnTrueOn, xmlXPathParserContextPtr ctxt) {
+        ScopedDescendentsTraversalImpl<NodeSetScoping>::traverse(scope, returnTrueOn, ctxt);
+    }
+
 }
 
 void xpath_exfun_has_return(xmlXPathParserContextPtr ctxt, int nargs) {
 
     CHECK_ARITY(0);
     static NodeNameSet hasReturnValidNodes = has_return_node_init();
-    xmlNodePtr currentNode = ctxt->context->node;
-    xmlNodePtr input = currentNode;
-    xmlNodePtr temp = 0;
-    
-// START:
-    if(!currentNode) {
-        goto EXIT;
-    } else {
-        goto DESCENDING;
-    }
-VISIT:
-    if(currentNode->type == XML_ELEMENT_NODE) {
-        if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
-            if(xmlStrEqual(return_tag, currentNode->name) != 0) {
-                xmlXPathReturnTrue(ctxt); return;
-            } else {
-                NodeNameSet::iterator locatedElementIter = hasReturnValidNodes.find(currentNode->name);
-                if(locatedElementIter == hasReturnValidNodes.end()) {
-                    goto STRAIF_SIBLINGS;
-                }
-            }
-        }
-    }
-DESCENDING:
-    temp = currentNode->children;
-    if (temp) {
-        currentNode = temp;
-        goto VISIT;
-    } 
-STRAIF_SIBLINGS:
-    temp = currentNode->next;
-    if (temp && currentNode != input) {
-        currentNode = temp;
-        goto VISIT;
-    }
-// ASCENDING:
-    if (currentNode->parent != input) {
-        currentNode = currentNode->parent;
-        goto STRAIF_SIBLINGS;
-    }
-EXIT:
-    xmlXPathReturnFalse(ctxt); return;
-
+    scopedDescendentsTraversal<INCLUSIVE>(hasReturnValidNodes, return_tag, ctxt);
 }
 
 void xpath_exfun_is_nested(xmlXPathParserContextPtr ctxt, int nargs) {
@@ -562,48 +626,7 @@ void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs) {
 void xpath_exfun_has_break(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
     static NodeNameSet hasBreakInvalidNodes = has_break_node_init();
-    xmlNodePtr currentNode = ctxt->context->node;
-    xmlNodePtr input = currentNode;
-    xmlNodePtr temp = 0;
-    
-// START:
-    if(!currentNode) {
-        goto EXIT;
-    } else {
-        goto DESCENDING;
-    }
-VISIT:
-    if(currentNode->type == XML_ELEMENT_NODE) {
-        if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
-            if(xmlStrEqual(break_tag, currentNode->name) != 0) {
-                xmlXPathReturnTrue(ctxt); return;
-            } else {
-                NodeNameSet::iterator locatedElementIter = hasBreakInvalidNodes.find(currentNode->name);
-                if(locatedElementIter != hasBreakInvalidNodes.end()) {
-                    goto STRAIF_SIBLINGS;
-                }
-            }
-        }
-    }
-DESCENDING:
-    temp = currentNode->children;
-    if (temp) {
-        currentNode = temp;
-        goto VISIT;
-    } 
-STRAIF_SIBLINGS:
-    temp = currentNode->next;
-    if (temp && currentNode != input) {
-        currentNode = temp;
-        goto VISIT;
-    }
-// ASCENDING:
-    if (currentNode->parent != input) {
-        currentNode = currentNode->parent;
-        goto STRAIF_SIBLINGS;
-    }
-EXIT:
-    xmlXPathReturnFalse(ctxt); return;
+    scopedDescendentsTraversal<EXCLUSIVE>(hasBreakInvalidNodes, break_tag, ctxt);
 }
 
 void xpath_exfun_is_fixed(xmlXPathParserContextPtr ctxt, int nargs) {
