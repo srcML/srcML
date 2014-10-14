@@ -78,6 +78,7 @@ char * strnstr(const char *s1, const char *s2, size_t n) {
  * @param processing_instruciton a pre-root processing instuction
  * @param tabsize size of tabstop
  * @param language what language to parse in
+ * @param revision what version of srcML
  * @param directory unit directory attribute
  * @param filename unit directory attribute
  * @param version unit directory attribute
@@ -95,6 +96,7 @@ srcml_translator::srcml_translator(char ** str_buf,
                                  boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  int tabsize,
                                  int language,
+                                 const char* revision,
                                  const char* directory,
                                  const char* filename,
                                  const char* version,
@@ -102,7 +104,7 @@ srcml_translator::srcml_translator(char ** str_buf,
                                  const char* timestamp,
                                  const char* hash)
     :  Language(language), first(true),
-       directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), attributes(attributes),
+       revision(revision), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), attributes(attributes),
        options(op), buffer(0),
        out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, attributes, processing_instruction, tabsize), tabsize(tabsize),
        str_buffer(str_buf), size(size), is_outputting_unit(false), output_unit_depth(0) {
@@ -123,6 +125,7 @@ srcml_translator::srcml_translator(char ** str_buf,
  * @param processing_instruciton a pre-root processing instuction
  * @param tabsize size of tabstop
  * @param language what language to parse in
+ * @param revision what version of srcML
  * @param directory unit directory attribute
  * @param filename unit directory attribute
  * @param version unit directory attribute
@@ -139,6 +142,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  int tabsize,
                                  int language,
+                                 const char * revision,
                                  const char* directory,
                                  const char* filename,
                                  const char* version,
@@ -146,7 +150,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* timestamp, 
                                  const char* hash)
     : Language(language), first(true),
-      directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), attributes(attributes),
+      revision(revision), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), attributes(attributes),
       options(op), buffer(0),
       out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, attributes, processing_instruction, tabsize), tabsize(tabsize),
       str_buffer(0), size(0), is_outputting_unit(false), output_unit_depth(0) {}
@@ -180,7 +184,7 @@ void srcml_translator::close() {
         out.outputPreRootProcessingInstruction();
 
         // root unit for compound srcML documents
-        out.startUnit(0, directory, filename, version, 0, 0, attributes, true);
+        out.startUnit(0, revision, directory, filename, version, 0, 0, attributes, true);
 
     }
 
@@ -229,13 +233,13 @@ void srcml_translator::translate(UTF8CharBuffer * parser_input) {
         selector.select(&lexer);
 
         // base stream parser srcML connected to lexical analyzer
-        StreamMLParser parser(selector,  getLanguage(), options);
+        StreamMLParser parser(selector, getLanguage(), options);
 
         // connect local parser to attribute for output
         out.setTokenStream(parser);
 
         // parse and form srcML output with unit attributes
-        out.consume(getLanguageString(), directory, filename, version, timestamp, hash);
+        out.consume(getLanguageString(), revision, directory, filename, version, timestamp, hash);
 
     } catch (const std::exception& e) {
         fprintf(stderr, "SRCML Exception: %s\n", e.what());
@@ -279,7 +283,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
         // root unit for compound srcML documents
 
         if((options & SRCML_OPTION_ARCHIVE) > 0)
-            out.startUnit(0, directory, filename, version, 0, 0, attributes, true);
+            out.startUnit(0, revision, directory, filename, version, 0, 0, attributes, true);
 
         if ((options & SRCML_OPTION_ARCHIVE) > 0)
             out.processText("\n\n", 2);
@@ -310,7 +314,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
     OPTION_TYPE save_options = options;
     if(is_cpp) options |= SRCML_OPTION_CPP;
 
-    out.startUnit(language_start_value ? language_start_value + 1 : 0, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
+    out.startUnit(language_start_value ? language_start_value + 1 : 0, revision, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
                          unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, unit->attributes, false);
 
     if(language_start_name) (*language_end_value) = '"';
@@ -368,7 +372,7 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     OPTION_TYPE save_options = options;
 
-    out.startUnit(unit->language ? unit->language->c_str() : (unit->archive->language ? unit->archive->language->c_str() : 0), unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
+    out.startUnit(unit->language ? unit->language->c_str() : (unit->archive->language ? unit->archive->language->c_str() : 0), revision, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
                           unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, unit->attributes, false);
 
     options = save_options;

@@ -132,6 +132,8 @@ struct srcml_archive {
     boost::optional<std::string> encoding;
     /** source encoding */
     boost::optional<std::string> src_encoding;
+    /** an attribute for a revision */
+    boost::optional<std::string> revision;
     /** an attribute for a language */
     boost::optional<std::string> language;
     /** an attribute for a directory path */

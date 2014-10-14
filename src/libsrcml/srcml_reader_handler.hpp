@@ -358,6 +358,8 @@ public :
 
             if(attribute == "language")
                 srcml_archive_set_language(archive, value.c_str());
+            else if(attribute == "revision")
+                archive->revision = value;
             else if(attribute == "filename")
                 srcml_archive_set_filename(archive, value.c_str());
             else if(attribute == "dir")
