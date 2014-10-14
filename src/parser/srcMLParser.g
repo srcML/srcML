@@ -4802,11 +4802,13 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
 
+fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (getFirstMode(MODE_END_ONLY_AT_RPAREN | MODE_END_AT_COMMA) & MODE_END_AT_COMMA) == 0 ? "true" : "false");
+
         }
         (options { greedy = true; } :
 
             // commas as in a list
-            { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA) }?
+            { (inTransparentMode(MODE_END_ONLY_AT_RPAREN) && (getFirstMode(MODE_END_ONLY_AT_RPAREN | MODE_END_AT_COMMA) & MODE_END_AT_COMMA) == 0) || !inTransparentMode(MODE_END_AT_COMMA) }?
             comma |
 
             // right parentheses, unless we are in a pair of parentheses in an expression

@@ -198,9 +198,9 @@ protected:
      */
     srcMLState::MODE_TYPE getFirstMode(const srcMLState::MODE_TYPE& m) const {
 
-        for(std::list<srcMLState>::const_reverse_iterator citr = st.rbegin(); citr != st.rend(); --citr) {
+        for(std::list<srcMLState>::const_reverse_iterator citr = st.rbegin(); citr != st.rend(); ++citr) {
 
-            if(citr->inMode(m)) return m;
+            if((citr->getMode() & m) != 0) return m;
 
         }
 
