@@ -295,6 +295,10 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
                            BAD_CAST SRCML_SRC_NS_URI,
                            xpath_exfun_has_return);
                            
+    xmlXPathRegisterFuncNS(context, (const xmlChar *)"has_throw",
+                           BAD_CAST SRCML_SRC_NS_URI,
+                           xpath_exfun_has_throw);
+                           
     xmlXPathRegisterFuncNS(context, (const xmlChar *)"is_nested",
                            BAD_CAST SRCML_SRC_NS_URI,
                            xpath_exfun_is_nested);

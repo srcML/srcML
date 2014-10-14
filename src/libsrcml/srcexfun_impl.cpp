@@ -111,6 +111,7 @@ namespace {
     xmlChar const* const constructor_decl_tag = BAD_CAST "constructor_decl";
     xmlChar const* const destructor_tag = BAD_CAST "destructor";
     xmlChar const* const destructor_decl_tag = BAD_CAST "destructor_decl";
+    xmlChar const* const throw_tag = BAD_CAST "throw";
 
     // Compound statements
     xmlChar const* const block_tag = BAD_CAST "block";
@@ -195,6 +196,30 @@ namespace {
         ret.insert(try_tag);
         ret.insert(catch_tag);
         ret.insert(finally_tag);
+        ret.insert(do_tag);
+        ret.insert(for_tag);
+        ret.insert(foreach_tag);
+        ret.insert(switch_tag);
+        ret.insert(using_stmt_tag);
+        ret.insert(fixed_tag);
+        ret.insert(lock_tag);
+        ret.insert(synchronized_tag);
+        ret.insert(unsafe_tag);
+        ret.insert(checked_tag);
+        ret.insert(unchecked_tag);
+        return ret;
+    }
+
+    NodeNameSet has_throw_node_init() {
+        NodeNameSet ret;
+        ret.insert(block_tag);
+        ret.insert(while_tag);
+        ret.insert(if_tag);
+        ret.insert(then_tag);
+        ret.insert(else_tag);
+        ret.insert(elseif_tag);
+        ret.insert(try_tag);
+        // ret.insert(finally_tag);
         ret.insert(do_tag);
         ret.insert(for_tag);
         ret.insert(foreach_tag);
@@ -345,6 +370,12 @@ void xpath_exfun_has_return(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
     static NodeNameSet hasReturnValidNodes = has_return_node_init();
     scopedDescendentsTraversal<INCLUSIVE>(hasReturnValidNodes, return_tag, ctxt);
+}
+
+void xpath_exfun_has_throw(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+    static NodeNameSet hasThrowValidNodes = has_throw_node_init();
+    scopedDescendentsTraversal<INCLUSIVE>(hasThrowValidNodes, throw_tag, ctxt);
 }
 
 void xpath_exfun_is_nested(xmlXPathParserContextPtr ctxt, int nargs) {
@@ -627,14 +658,6 @@ void xpath_exfun_has_break(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
     static NodeNameSet hasBreakInvalidNodes = has_break_node_init();
     scopedDescendentsTraversal<EXCLUSIVE>(hasBreakInvalidNodes, break_tag, ctxt);
-}
-
-void xpath_exfun_is_fixed(xmlXPathParserContextPtr ctxt, int nargs) {
-    CHECK_ARITY(0);
-}
-
-void xpath_exfun_is_resource(xmlXPathParserContextPtr ctxt, int nargs) {
-    CHECK_ARITY(0);
 }
 
 void xpath_exfun_is_unsafe(xmlXPathParserContextPtr ctxt, int nargs) {

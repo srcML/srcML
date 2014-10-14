@@ -71,6 +71,45 @@
 void xpath_exfun_has_return(xmlXPathParserContextPtr ctxt, int nargs);
 
 /**
+ *  XPath Signature: bool has_throw()
+ *  
+ *  Just like has_return but for throw instead.
+ *  
+ *  Languages: C, C++, C#, Java
+ *  
+ *  Works with srcML elements:
+ *      block
+ *      function
+ *      constructor
+ *      destructor
+ *      while
+ *      if
+ *      then
+ *      elseif
+ *      else
+ *      try
+ *      catch
+ *      finally
+ *      do
+ *      for
+ *      foreach
+ *      switch
+ *      lambda
+ *      delegate
+ *      using_stmt
+ *      fixed
+ *      lock
+ *      synchronized
+ *      unsafe
+ *      static
+ *      checked
+ *      unchecked
+ *  
+ */
+void xpath_exfun_has_throw(xmlXPathParserContextPtr ctxt, int nargs);
+
+
+/**
  *  XPath Signature: bool is_nested()
  *  
  *  Checks to see if a class or type declaration is nested within another
@@ -168,60 +207,6 @@ void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs);
  *
  */
 void xpath_exfun_has_break(xmlXPathParserContextPtr ctxt, int nargs);
-
-/**
- *  XPath Signature: bool is_fixed()
- *  
- *  Checks to see if the current declaration is within a fixed statement's init.
- *  
- *  Languages: C#
- *  
- *  Works with srcML elements:
- *      decl
- *      init
- *      name
- *      type
- *      expr
- *      Any thing that can occur within the init, see grammar
- *  
- */
-void xpath_exfun_is_fixed(xmlXPathParserContextPtr ctxt, int nargs);
-
-/**
- *  XPath Signature: bool is_resource()
- *  
- *  Checks to see of the declaration is part of the init block of a using, lock
- *  , synchronized, Java's resource try fixed or related.
- *  
- *  Languages: C#, Java
- *  
- *  Works with srcML elements:
- *      expr
- *      decl_stmt
- *      decl
- *  
- */
-void xpath_exfun_is_resource(xmlXPathParserContextPtr ctxt, int nargs);
-
-/**
- *  XPath Signature: bool is_unsafe()
- *  
- *  Determine if something is within the scope of an unsafe block or function or
- *  if the function, function_decl constructor etc... then this also tree.
- *  
- *  Languages: C#
- *  
- *  Works with srcML elements:
- *      function
- *      function_decl
- *      constructor
- *      constructor_decl
- *      destructor
- *      destructor_decl
- *      Anything other then a function declaration.
- *  
- */
-void xpath_exfun_is_unsafe(xmlXPathParserContextPtr ctxt, int nargs);
 
 /**
  *  XPath Signature: bool is_mutually_exclusive()

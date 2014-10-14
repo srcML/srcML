@@ -297,9 +297,7 @@ int main() {
         "| //src:switch[src:has_return()]",
         12);
 
-    run_xpath_test(
-        "xpath_test_data/has_return/has_return_scope_test.cpp",
-        "//src:block[src:has_return()]"
+    string hasReturnXPath = "//src:block[src:has_return()]"
         "| //src:function[src:has_return()]"
         "| //src:constructor[src:has_return()]"
         "| //src:destructor[src:has_return()]"
@@ -325,7 +323,11 @@ int main() {
         "| //src:unsafe[src:has_return()]"
         "| //src:static[src:has_return()]"
         "| //src:checked[src:has_return()]"
-        "| //src:unchecked[src:has_return()]",
+        "| //src:unchecked[src:has_return()]";
+
+    run_xpath_test(
+        "xpath_test_data/has_return/has_return_scope_test.cpp",
+        hasReturnXPath,
         6
     );
 
@@ -337,68 +339,62 @@ int main() {
 
     run_xpath_test(
         "xpath_test_data/has_return/has_return.cs",
-        "//src:block[src:has_return()]"
-        "| //src:function[src:has_return()]"
-        "| //src:constructor[src:has_return()]"
-        "| //src:destructor[src:has_return()]"
-        "| //src:while[src:has_return()]"
-        "| //src:if[src:has_return()]"
-        "| //src:then[src:has_return()]"
-        "| //src:elseif[src:has_return()]"
-        "| //src:else[src:has_return()]"
-        "| //src:try[src:has_return()]"
-        "| //src:catch[src:has_return()]"
-        "| //src:finally[src:has_return()]"
-        "| //src:do[src:has_return()]"
-        "| //src:for[src:has_return()]"
-        "| //src:foreach[src:has_return()]"
-        "| //src:switch[src:has_return()]"
-        "| //src:lambda[src:has_return()]"
-        "| //src:delegate[src:has_return()]"
-        "| //src:using_stmt[src:has_return()]"
-        "| //src:fixed[src:has_return()]"
-        "| //src:lock[src:has_return()]"
-        "| //src:synchronized[src:has_return()]"
-        "| //src:fixed[src:has_return()]"
-        "| //src:unsafe[src:has_return()]"
-        "| //src:static[src:has_return()]"
-        "| //src:checked[src:has_return()]"
-        "| //src:unchecked[src:has_return()]",
+        hasReturnXPath,
         8
     );
 
     run_xpath_test(
         "xpath_test_data/has_return/has_return.java",
-        "//src:block[src:has_return()]"
-        "| //src:function[src:has_return()]"
-        "| //src:constructor[src:has_return()]"
-        "| //src:destructor[src:has_return()]"
-        "| //src:while[src:has_return()]"
-        "| //src:if[src:has_return()]"
-        "| //src:then[src:has_return()]"
-        "| //src:elseif[src:has_return()]"
-        "| //src:else[src:has_return()]"
-        "| //src:try[src:has_return()]"
-        "| //src:catch[src:has_return()]"
-        "| //src:finally[src:has_return()]"
-        "| //src:do[src:has_return()]"
-        "| //src:for[src:has_return()]"
-        "| //src:foreach[src:has_return()]"
-        "| //src:switch[src:has_return()]"
-        "| //src:lambda[src:has_return()]"
-        "| //src:delegate[src:has_return()]"
-        "| //src:using_stmt[src:has_return()]"
-        "| //src:fixed[src:has_return()]"
-        "| //src:lock[src:has_return()]"
-        "| //src:synchronized[src:has_return()]"
-        "| //src:fixed[src:has_return()]"
-        "| //src:unsafe[src:has_return()]"
-        "| //src:static[src:has_return()]"
-        "| //src:checked[src:has_return()]"
-        "| //src:unchecked[src:has_return()]",
+        hasReturnXPath,
         4
     );
 
+    // has_throw
+    string hasThrowXPath = "//src:block[src:has_throw()]"
+        "| //src:function[src:has_throw()]"
+        "| //src:constructor[src:has_throw()]"
+        "| //src:destructor[src:has_throw()]"
+        "| //src:while[src:has_throw()]"
+        "| //src:if[src:has_throw()]"
+        "| //src:then[src:has_throw()]"
+        "| //src:elseif[src:has_throw()]"
+        "| //src:else[src:has_throw()]"
+        "| //src:try[src:has_throw()]"
+        "| //src:catch[src:has_throw()]"
+        "| //src:finally[src:has_throw()]"
+        "| //src:do[src:has_throw()]"
+        "| //src:for[src:has_throw()]"
+        "| //src:foreach[src:has_throw()]"
+        "| //src:switch[src:has_throw()]"
+        "| //src:lambda[src:has_throw()]"
+        "| //src:delegate[src:has_throw()]"
+        "| //src:using_stmt[src:has_throw()]"
+        "| //src:fixed[src:has_throw()]"
+        "| //src:lock[src:has_throw()]"
+        "| //src:synchronized[src:has_throw()]"
+        "| //src:fixed[src:has_throw()]"
+        "| //src:unsafe[src:has_throw()]"
+        "| //src:static[src:has_throw()]"
+        "| //src:checked[src:has_throw()]"
+        "| //src:unchecked[src:has_throw()]";
+
+    run_xpath_test(
+        "xpath_test_data/has_throw/has_throw.cpp",
+        hasThrowXPath,
+        19
+    );
+
+    run_xpath_test(
+        "xpath_test_data/has_throw/has_throw.cs",
+        hasThrowXPath,
+        8
+    );
+
+    run_xpath_test(
+        "xpath_test_data/has_throw/has_throw.java",
+        hasThrowXPath,
+        4
+    );
 
     // is_nested()
     run_xpath_test(
