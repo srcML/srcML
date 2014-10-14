@@ -153,19 +153,19 @@ void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs);
  *  XPath Signature: bool has_break()
  *  
  *  Checks using scope rules and attempts to locate a break statement within
- *  some scope.
+ *  a loop construct or switch statement. This respects the scope of other loops
+ *  by not searching their children when they are not the contexts of the
+ *  predicate.
  *  
  *  Languages: C, C++, C#, Java
  *  
- *  Works with srcML elements:
+ *  Works any expression like statement:
  *      switch
  *      do
  *      while
  *      foreach
  *      for
- *      foreach
- *      Anything that has a block as a child
- *  
+ *
  */
 void xpath_exfun_has_break(xmlXPathParserContextPtr ctxt, int nargs);
 

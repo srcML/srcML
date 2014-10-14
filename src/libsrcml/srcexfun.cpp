@@ -303,10 +303,13 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
                            BAD_CAST SRCML_SRC_NS_URI,
                            xpath_exfun_is_class_template_partial_specialization);
 
-
     xmlXPathRegisterFuncNS(context, (const xmlChar *)"has_init",
                            BAD_CAST SRCML_SRC_NS_URI,
                            xpath_exfun_has_init);
+
+    xmlXPathRegisterFuncNS(context, (const xmlChar *)"has_break",
+                           BAD_CAST SRCML_SRC_NS_URI,
+                           xpath_exfun_has_break);
 
 
     // register all the xpath extension functions

@@ -483,6 +483,26 @@ int main() {
         3
     );
 
+
+    // has_break()
+    run_xpath_test(
+        "xpath_test_data/has_break/has_break.cpp",
+        "//*[src:has_init()]",
+        7
+    );
+
+    run_xpath_test(
+        "xpath_test_data/has_break/has_break.cs",
+        "//*[src:has_init()]",
+        7
+    );
+
+    run_xpath_test(
+        "xpath_test_data/has_break/has_break.java",
+        "//*[src:has_init()]",
+        7
+    );
+
     xmlCleanupParser();
 
 
