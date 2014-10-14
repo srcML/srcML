@@ -487,6 +487,7 @@ tokens {
     STYPENAME;
     SALIGNOF;
     STYPEID;
+    SSIZEOF_PACK;
     SENUM_CLASS;
     SOPERATOR_FUNCTION;
     SOPERATOR_FUNCTION_DECL;
@@ -1308,7 +1309,7 @@ overloaded_operator[] { CompleteElement element(this); ENTRY_DEBUG } :
 lambda_expression_csharp[] { bool first = true; ENTRY_DEBUG } :
 		{
 
-            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS | MODE_END_AT_COMMA);      
 
             startElement(SFUNCTION_LAMBDA);
 
@@ -4800,11 +4801,12 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
+
         }
         (options { greedy = true; } :
 
             // commas as in a list
-            { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
+            { (inTransparentMode(MODE_END_ONLY_AT_RPAREN) && (getFirstMode(MODE_END_ONLY_AT_RPAREN | MODE_END_AT_COMMA) & MODE_END_AT_COMMA) == 0) || !inTransparentMode(MODE_END_AT_COMMA) }?
             comma |
 
             // right parentheses, unless we are in a pair of parentheses in an expression
@@ -5688,7 +5690,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         { inTransparentMode(MODE_INTERNAL_END_PAREN) && (LA(1) != CXX_CLASS || !keyword_name_token_set.member(next_token())) }?
         (CLASS | CXX_CLASS) |
 
-        { next_token() == LPAREN }?
+        { next_token() == LPAREN | next_token() == LCURLY }?
         delegate_anonymous |
 
         { next_token() == LCURLY }?
@@ -5829,7 +5831,11 @@ sizeof_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-            startElement(SSIZEOF_CALL);
+            if(next_token() != DOTDOTDOT)
+                startElement(SSIZEOF_CALL);
+            else
+                startElement(SSIZEOF_PACK);
+
         }
         SIZEOF
         (DOTDOTDOT)*
@@ -6544,9 +6550,11 @@ lambda_csharp[] { ENTRY_DEBUG } :
 
     {
 
-        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY) {
+
             startElement(SPSEUDO_BLOCK);
-        else if(LA(1) == LCURLY)
+
+        } else if(LA(1) == LCURLY)
             startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
 
     }
@@ -7212,7 +7220,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         { inTransparentMode(MODE_INTERNAL_END_PAREN) && (LA(1) != CXX_CLASS || !keyword_name_token_set.member(next_token())) }?
         (CLASS | CXX_CLASS) |
 
-        { next_token() == LPAREN }?
+        { next_token() == LPAREN | next_token() == LCURLY }?
         delegate_anonymous |
 
         { next_token() == LCURLY }?

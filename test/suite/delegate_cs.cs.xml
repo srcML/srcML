@@ -60,4 +60,8 @@
 <expr_stmt><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><name>b</name></expr></expr_stmt> }</block></delegate></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><delegate><name>delegate</name> <block>{ <expr_stmt><expr><name>b</name></expr></expr_stmt> }</block></delegate></expr>;</expr_stmt>
+</unit>
+
 </unit>

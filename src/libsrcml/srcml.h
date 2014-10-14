@@ -212,6 +212,7 @@ __LIBSRCML_DECL int srcml_register_macro            (const char* token, const ch
 
 __LIBSRCML_DECL const char*        srcml_get_src_encoding ();
 __LIBSRCML_DECL const char*        srcml_get_encoding ();
+__LIBSRCML_DECL const char*        srcml_get_revision ();
 __LIBSRCML_DECL const char*        srcml_get_language ();
 __LIBSRCML_DECL const char*        srcml_get_filename ();
 __LIBSRCML_DECL const char*        srcml_get_directory();
@@ -311,6 +312,7 @@ __LIBSRCML_DECL int srcml_archive_register_macro            (struct srcml_archiv
 /* Query of the options for srcml archive */
 __LIBSRCML_DECL const char*        srcml_archive_get_encoding                     (const struct srcml_archive*);
 __LIBSRCML_DECL const char*        srcml_archive_get_src_encoding                 (const struct srcml_archive*);
+__LIBSRCML_DECL const char*        srcml_archive_get_revision                     (const struct srcml_archive*);
 __LIBSRCML_DECL const char*        srcml_archive_get_language                     (const struct srcml_archive*);
 __LIBSRCML_DECL const char*        srcml_archive_get_filename                     (const struct srcml_archive*);
 __LIBSRCML_DECL const char*        srcml_archive_get_directory                    (const struct srcml_archive*);

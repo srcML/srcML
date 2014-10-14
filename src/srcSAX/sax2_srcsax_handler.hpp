@@ -1,5 +1,5 @@
 /**
- * @file SAX2srcMLHandler.hpp
+ * @file sax2_srcsax_handler.hpp
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
  *
@@ -20,11 +20,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_SAX2SRCMLHANDLER_HPP
-#define INCLUDED_SAX2SRCMLHANDLER_HPP
+#ifndef INCLUDED_SAX2_SRCSAX_HANDLER_HPP
+#define INCLUDED_SAX2_SRCSAX_HANDLER_HPP
 
-#include <srcMLElement.hpp>
-class srcMLHandler;
+#include <srcml_element.hpp>
+#include <srcsax.h>
 
 #include <libxml/parser.h>
 
@@ -38,6 +38,7 @@ class srcMLHandler;
  */
 enum srcMLMode {
 
+    START,
     ROOT,
     UNIT,
     END_UNIT,
@@ -94,27 +95,33 @@ struct function_prototype {
 };
 
 /**
- * SAX2srcMLHandler
+ * sax2_srcsax_handler
  *
  * Data structure to hold process during
  * sax parsing.
  */
-struct SAX2srcMLHandler {
+struct sax2_srcsax_handler {
 
     /** default constructor */
-    SAX2srcMLHandler() : process(0), root(), meta_tags(), is_archive(false), mode(ROOT), parse_function(false), in_function_header(false), current_function() {}
+    sax2_srcsax_handler() : context(0), root(), meta_tags(), characters(), is_archive(false), mode(START), parse_function(false), in_function_header(false), current_function() {}
 
     /** hooks for processing */
-    srcMLHandler * process;
+    srcsax_context * context;
 
     /** temporary storage for root unit */
-    srcMLElement root;
+    srcml_element root;
 
-    /** temporary storage for meta data */
-    std::vector<srcMLElement> meta_tags;
+    /** temporary storage of meta-tags */
+    std::vector<srcml_element> meta_tags;
+
+    /** temporary storate of root characters */
+    std::string characters;
 
     /** used to detect root unit */
     bool is_archive;
+
+    /** open srcMLElement stack */
+    std::vector<const char *> srcml_element_stack;
 
     /** the current parsing mode */
     srcMLMode mode;
@@ -131,33 +138,33 @@ struct SAX2srcMLHandler {
 };
 
 /**
- * factory
+ * srcsax_sax2_factory
  *
  * Create SAX handler.
  */
-xmlSAXHandler factory();
+xmlSAXHandler srcsax_sax2_factory();
 
 /**
- * startDocument
+ * start_document
  * @param ctx an xmlParserCtxtPtr
  *
  * SAX handler function for start of document.
  * Immediately calls supplied handlers function.
  */
-void startDocument(void * ctx);
+void start_document(void * ctx);
 
 /**
- * endDocument
+ * end_document
  * @param ctx an xmlParserCtxtPtr
  *
  * SAX handler function for end of document.
  * Calls endRoot if needed then
  * immediately calls supplied handlers function.
  */
-void endDocument(void * ctx);
+void end_document(void * ctx);
 
 /**
- * startRoot
+ * start_root
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
  * @param prefix the tag prefix
@@ -171,13 +178,13 @@ void endDocument(void * ctx);
  * SAX handler function for start of root element.
  * Caches root info and immediately calls supplied handlers function.
  */
-void startRoot(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
+void start_root(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                const xmlChar ** attributes);
 
 
 /**
- * startElementNsFirst
+ * start_element_ns_first
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
  * @param prefix the tag prefix
@@ -191,11 +198,11 @@ void startRoot(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
  * SAX handler function for start of first element after root
  * Detects archive and acts accordingly.
  */
-void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
+void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                          int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar ** attributes);
 /**
- * startUnit
+ * start_unit
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
  * @param prefix the tag prefix
@@ -209,12 +216,12 @@ void startElementNsFirst(void * ctx, const xmlChar * localname, const xmlChar * 
  * SAX handler function for start of an unit.
  * Immediately calls supplied handlers function.
  */
-void startUnit(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
+void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                const xmlChar ** attributes);
 
 /**
- * startElementNs
+ * start_element_ns
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
  * @param prefix the tag prefix
@@ -228,12 +235,12 @@ void startUnit(void * ctx, const xmlChar * localname, const xmlChar * prefix, co
  * SAX handler function for start of an element.
  * Immediately calls supplied handlers function.
  */
-void startElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
+void start_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                     int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                     const xmlChar ** attributes);
 
 /**
- * endElementNs
+ * end_element_ns
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
  * @param prefix the tag prefix
@@ -241,12 +248,12 @@ void startElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefi
  *
  * SAX handler function for end of an element.
  * Detects end of unit and calls correct functions
- * for either endRoot endUnit or endElementNs.
+ * for either end_root end_unit or end_element_ns.
  */
-void endElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI);
+void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI);
 
 /**
- * charactersFirst
+ * characters_first
  * @param ctx an xmlParserCtxtPtr
  * @param ch the characers
  * @param len number of characters
@@ -255,10 +262,10 @@ void endElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix,
  * know if we have an archive or not.
  * Immediately calls supplied handlers function.
  */
-void charactersFirst(void * ctx, const xmlChar * ch, int len);
+void characters_first(void * ctx, const xmlChar * ch, int len);
 
 /**
- * charactersRoot
+ * characters_root
  * @param ctx an xmlParserCtxtPtr
  * @param ch the characers
  * @param len number of characters
@@ -266,10 +273,10 @@ void charactersFirst(void * ctx, const xmlChar * ch, int len);
  * SAX handler function for character handling at the root level.
  * Immediately calls supplied handlers function.
  */
-void charactersRoot(void * ctx, const xmlChar * ch, int len);
+void characters_root(void * ctx, const xmlChar * ch, int len);
 
 /**
- * charactersUnit
+ * characters_unit
  * @param ctx an xmlParserCtxtPtr
  * @param ch the characers
  * @param len number of characters
@@ -277,7 +284,7 @@ void charactersRoot(void * ctx, const xmlChar * ch, int len);
  * SAX handler function for character handling within a unit.
  * Immediately calls supplied handlers function.
  */
-void charactersUnit(void * ctx, const xmlChar * ch, int len);
+void characters_unit(void * ctx, const xmlChar * ch, int len);
 
 /**
  * comment
@@ -290,7 +297,7 @@ void charactersUnit(void * ctx, const xmlChar * ch, int len);
 void comment(void * ctx, const xmlChar * value);
 
 /**
- * cdataBlock
+ * cdata_block
  * @param ctx an xmlParserCtxtPtr
  * @param value the pcdata content
  * @param len the block length
@@ -298,10 +305,10 @@ void comment(void * ctx, const xmlChar * value);
  * Called when a pcdata block has been parsed.
  * Immediately calls supplied handlers function.
  */
-void cdataBlock(void * ctx, const xmlChar * value, int len);
+void cdata_block(void * ctx, const xmlChar * value, int len);
 
 /**
- * processingInstruction
+ * processing_instruction
  * @param ctx an xmlParserCtxtPtr
  * @param target the processing instruction target.
  * @param data the processing instruction data.
@@ -309,6 +316,6 @@ void cdataBlock(void * ctx, const xmlChar * value, int len);
  * Called when a processing instruction has been parsed.
  * Immediately calls supplied handlers function.
  */
-void processingInstruction(void * ctx, const xmlChar * target, const xmlChar * data);
+void processing_instruction(void * ctx, const xmlChar * target, const xmlChar * data);
 
 #endif

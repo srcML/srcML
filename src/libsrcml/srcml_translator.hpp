@@ -65,6 +65,7 @@ public:
                      boost::optional<std::pair<std::string, std::string> > processing_instruction,
                      int tabsize,
                      int language,
+                     const char* revision,
                      const char* directory,
                      const char* filename,
                      const char* version,
@@ -81,6 +82,7 @@ public:
                      boost::optional<std::pair<std::string, std::string> > processing_instruction,
                      int tabsize,
                      int language,
+                     const char* revision,
                      const char* directory,
                      const char* filename,
                      const char* version,
@@ -110,6 +112,9 @@ private:
 
     /** is this the first unit */
     bool first;
+
+    /** the unit revision attribute */
+    const char* revision;
 
     /** the unit directory attribute */
     const char* directory;
