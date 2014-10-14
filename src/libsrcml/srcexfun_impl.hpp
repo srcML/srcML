@@ -249,6 +249,7 @@ void xpath_exfun_is_mutually_exclusive(xmlXPathParserContextPtr ctxt, int nargs)
  *      function
  *      constructor
  *      destructor
+ *      or anything thing that has a block
  *  
  */
 void xpath_exfun_returns(xmlXPathParserContextPtr ctxt, int nargs);

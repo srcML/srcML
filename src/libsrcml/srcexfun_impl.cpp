@@ -163,9 +163,13 @@ namespace {
 
     xmlChar const* const init_tag = BAD_CAST "init";
 
+
+
+    /* Implementation helper functions, typedefs and templates. */
     typedef xmlChar const* XmlCharConstPtr;
     typedef char const* CharConstPtr;
 
+    /* Used for hashing the xml document string (poorly). */
     struct XmlCharHasher
         :boost::hash<char const*>
     {
@@ -185,7 +189,7 @@ namespace {
             return xmlStrEqual(lhs, rhs) != 0;
         }
     };
-
+    /* Type used for handling nodesets without storing any more then then a pointer to the statically allocated tag name. */
     typedef boost::unordered_set<XmlCharConstPtr, XmlCharHasher, XmlCharEqualityComparer> NodeNameSet;
 
     NodeNameSet has_return_node_init() {
@@ -289,7 +293,6 @@ namespace {
             xmlNodePtr input = currentNode;
             xmlNodePtr temp = 0;
             
-        // START:
             if(!currentNode) {
                 goto EXIT;
             } else {
@@ -326,7 +329,7 @@ namespace {
                 goto STRAIF_SIBLINGS;
             }
         EXIT:
-            xmlXPathReturnFalse(ctxt); return;
+            xmlXPathReturnFalse(ctxt);
         }
     };
 
@@ -336,7 +339,6 @@ namespace {
             xmlNodePtr input = currentNode;
             xmlNodePtr temp = 0;
             
-        // START:
             if(!currentNode) {
                 goto EXIT;
             } else {
@@ -373,7 +375,7 @@ namespace {
                 goto STRAIF_SIBLINGS;
             }
         EXIT:
-            xmlXPathReturnFalse(ctxt); return;
+            xmlXPathReturnFalse(ctxt);
         }
     };
 
@@ -382,6 +384,175 @@ namespace {
         ScopedDescendentsTraversalImpl<NodeSetScoping>::traverse(scope, returnTrueOn, ctxt);
     }
 
+
+    /* Scope respecting Descendent's traversal that collects nodes as it goes. */
+    // template<Scoping NodeSetScoping> struct ScopedDescendentsCollectingTraversalImpl;
+    // template<> struct ScopedDescendentsCollectingTraversalImpl<EXCLUSIVE> {
+    //     static void collect(NodeNameSet const& scope, xmlChar const* const collectOn, xmlXPathParserContextPtr ctxt) {
+    //         xmlNodePtr currentNode = ctxt->context->node;
+    //         xmlNodePtr input = currentNode;
+    //         xmlNodePtr temp = 0;
+            
+    //         if(!currentNode) {
+    //             goto EXIT;
+    //         } else {
+    //             goto DESCENDING;
+    //         }
+    //     VISIT:
+    //         if(currentNode->type == XML_ELEMENT_NODE) {
+    //             if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+    //                 if(xmlStrEqual(collectOn, currentNode->name) != 0) {
+    //                     xmlXPathReturnTrue(ctxt); return;
+    //                 } else {
+    //                     NodeNameSet::iterator locatedElementIter = scope.find(currentNode->name);
+    //                     if(locatedElementIter != scope.end()) {
+    //                         goto STRAIF_SIBLINGS;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     DESCENDING:
+    //         temp = currentNode->children;
+    //         if (temp) {
+    //             currentNode = temp;
+    //             goto VISIT;
+    //         } 
+    //     STRAIF_SIBLINGS:
+    //         temp = currentNode->next;
+    //         if (temp && currentNode != input) {
+    //             currentNode = temp;
+    //             goto VISIT;
+    //         }
+    //     // ASCENDING:
+    //         if (currentNode->parent != input) {
+    //             currentNode = currentNode->parent;
+    //             goto STRAIF_SIBLINGS;
+    //         }
+    //     EXIT:
+    //         xmlXPathReturnFalse(ctxt); return;
+    //     }
+    // };
+
+    // template<> struct ScopedDescendentsCollectingTraversalImpl<INCLUSIVE> {
+    //     static void collect(NodeNameSet const& scope, xmlChar const* const collectOn, xmlXPathParserContextPtr ctxt) {
+    //         xmlNodePtr currentNode = ctxt->context->node;
+    //         xmlNodePtr input = currentNode;
+    //         xmlNodePtr temp = 0;
+            
+    //         if(!currentNode) {
+    //             goto EXIT;
+    //         } else {
+    //             goto DESCENDING;
+    //         }
+    //     VISIT:
+    //         if(currentNode->type == XML_ELEMENT_NODE) {
+    //             if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+    //                 if(xmlStrEqual(collectOn, currentNode->name) != 0) {
+    //                     xmlXPathReturnTrue(ctxt); return;
+    //                 } else {
+    //                     NodeNameSet::iterator locatedElementIter = scope.find(currentNode->name);
+    //                     if(locatedElementIter != scope.end()) {
+    //                         goto STRAIF_SIBLINGS;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     DESCENDING:
+    //         temp = currentNode->children;
+    //         if (temp) {
+    //             currentNode = temp;
+    //             goto VISIT;
+    //         } 
+    //     STRAIF_SIBLINGS:
+    //         temp = currentNode->next;
+    //         if (temp && currentNode != input) {
+    //             currentNode = temp;
+    //             goto VISIT;
+    //         }
+    //     // ASCENDING:
+    //         if (currentNode->parent != input) {
+    //             currentNode = currentNode->parent;
+    //             goto STRAIF_SIBLINGS;
+    //         }
+    //     EXIT:
+    //         xmlXPathReturnFalse(ctxt);
+    //     }
+    // };
+
+    template<typename T>
+    struct ScopedDescendentsCollectorBase {
+        static void collect(NodeNameSet const& scope, xmlChar const* const collectOn, xmlXPathParserContextPtr ctxt) {
+                xmlNodePtr currentNode = ctxt->context->node;
+                xmlNodePtr input = currentNode;
+                xmlNodePtr temp = 0;
+                xmlNodeSetPtr ret = xmlXPathNodeSetCreate(0);
+
+                if(!currentNode) {
+                    goto EXIT;
+                } else {
+                    goto DESCENDING;
+                }
+            VISIT:
+                if(currentNode->type == XML_ELEMENT_NODE) {
+                    if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+                        if(xmlStrEqual(collectOn, currentNode->name) != 0) {
+                            if(xmlXPathNodeSetAdd(ret, currentNode) == -1) {
+                                xmlXPathErr(ctxt, XPATH_MEMORY_ERROR); return;
+                            }
+                        } else {
+                            if(T::testScope(scope, currentNode->name)) {
+                                goto STRAIF_SIBLINGS;
+                            }
+                        }
+                    }
+                }
+            DESCENDING:
+                temp = currentNode->children;
+                if (temp) {
+                    currentNode = temp;
+                    goto VISIT;
+                } 
+            STRAIF_SIBLINGS:
+                temp = currentNode->next;
+                if (temp && currentNode != input) {
+                    currentNode = temp;
+                    goto VISIT;
+                }
+            // ASCENDING:
+                if (currentNode->parent != input) {
+                    currentNode = currentNode->parent;
+                    goto STRAIF_SIBLINGS;
+                }
+            EXIT:
+                xmlXPathReturnNodeSet(ctxt, ret);
+        }
+    };
+
+
+    template<Scoping> struct ScopedDescendentsCollectorImpl;
+
+    template<> struct ScopedDescendentsCollectorImpl<EXCLUSIVE>
+        :ScopedDescendentsCollectorBase< ScopedDescendentsCollectorImpl<EXCLUSIVE> >
+    {
+        static bool testScope(NodeNameSet const& scope, xmlChar const* name) {
+            NodeNameSet::iterator locatedElementIter = scope.find(name);
+            return locatedElementIter != scope.end();
+        }
+    };
+
+    template<> struct ScopedDescendentsCollectorImpl<INCLUSIVE>
+        :ScopedDescendentsCollectorBase< ScopedDescendentsCollectorImpl<INCLUSIVE> >
+    {
+        static bool testScope(NodeNameSet const& scope, xmlChar const* name) {
+            NodeNameSet::iterator locatedElementIter = scope.find(name);
+            return locatedElementIter == scope.end();
+        }
+    };
+
+    template<Scoping NodeSetScoping>
+    inline void scopedDescendentsCollectingTraversal(NodeNameSet const& scope, xmlChar const* const returnTrueOn, xmlXPathParserContextPtr ctxt) {
+        ScopedDescendentsCollectorImpl<NodeSetScoping>::collect(scope, returnTrueOn, ctxt);
+    }
 }
 
 void xpath_exfun_has_return(xmlXPathParserContextPtr ctxt, int nargs) {
@@ -699,7 +870,6 @@ void xpath_exfun_is_mutually_exclusive(xmlXPathParserContextPtr ctxt, int nargs)
     xmlNodePtr currentNode = ctxt->context->node;
     xmlChar const* language = getSrcMLDocLanguage(currentNode);
     if(xmlStrcasecmp(language, BAD_CAST "C#") == 0) {
-        // std::cout << "Processing C#" << std::endl;
         while(currentNode) {
             if (currentNode->type == XML_ELEMENT_NODE
                 && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
@@ -710,7 +880,6 @@ void xpath_exfun_is_mutually_exclusive(xmlXPathParserContextPtr ctxt, int nargs)
             currentNode = currentNode->parent;
         }
     }else if(xmlStrcasecmp(language, BAD_CAST "java") == 0) {
-        // std::cout << "Processing Java" << std::endl;
         while(currentNode) {
             if (currentNode->type == XML_ELEMENT_NODE
                 && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
@@ -752,6 +921,8 @@ void xpath_exfun_is_mutually_exclusive(xmlXPathParserContextPtr ctxt, int nargs)
 
 void xpath_exfun_returns(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
+    static NodeNameSet returnTraversalNodeNames = has_return_node_init();
+    scopedDescendentsCollectingTraversal<EXCLUSIVE>(returnTraversalNodeNames, return_tag, ctxt);
 }
 
 void xpath_exfun_throw_stmts(xmlXPathParserContextPtr ctxt, int nargs) {
