@@ -487,19 +487,19 @@ int main() {
     // has_break()
     run_xpath_test(
         "xpath_test_data/has_break/has_break.cpp",
-        "//*[src:has_init()]",
+        "//src:*[src:has_break()]",
         7
     );
 
     run_xpath_test(
         "xpath_test_data/has_break/has_break.cs",
-        "//*[src:has_init()]",
+        "//src:*[src:has_break()]",
         7
     );
 
     run_xpath_test(
         "xpath_test_data/has_break/has_break.java",
-        "//*[src:has_init()]",
+        "//*[src:has_break()]",
         7
     );
 

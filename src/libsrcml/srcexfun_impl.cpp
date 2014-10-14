@@ -550,8 +550,9 @@ void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs) {
                     // If this isn't called on one of the above named tags then 
                     // simply return with an error because this is
                     // considered an invalid predicate.
-                    xmlXPathErr(ctxt, XPATH_INVALID_PREDICATE_ERROR);
-                    return;
+                    // xmlXPathErr(ctxt, XPATH_INVALID_PREDICATE_ERROR);
+                    // return;
+                    xmlXPathReturnFalse(ctxt); return;
             }
         }
     }
@@ -560,49 +561,50 @@ void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs) {
 
 void xpath_exfun_has_break(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
-    static NodeNameSet hasReturnValidNodes = has_return_node_init();
-    xmlNodePtr currentNode = ctxt->context->node;
-    xmlNodePtr input = currentNode;
-    xmlNodePtr temp = 0;
-    
-// START:
-    if(!currentNode) {
-        goto EXIT;
-    } else {
-        goto DESCENDING;
-    }
-VISIT:
-    if(currentNode->type == XML_ELEMENT_NODE) {
-        if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
-            if(xmlStrEqual(return_tag, currentNode->name) != 0) {
-                xmlXPathReturnTrue(ctxt); return;
-            } else {
-                NodeNameSet::iterator locatedElementIter = hasReturnValidNodes.find(currentNode->name);
-                if(locatedElementIter == hasReturnValidNodes.end()) {
-                    goto STRAIF_SIBLINGS;
-                }
-            }
-        }
-    }
-DESCENDING:
-    temp = currentNode->children;
-    if (temp) {
-        currentNode = temp;
-        goto VISIT;
-    } 
-STRAIF_SIBLINGS:
-    temp = currentNode->next;
-    if (temp && currentNode != input) {
-        currentNode = temp;
-        goto VISIT;
-    }
-// ASCENDING:
-    if (currentNode->parent != input) {
-        currentNode = currentNode->parent;
-        goto STRAIF_SIBLINGS;
-    }
-EXIT:
+    static NodeNameSet hasReturnValidNodes = has_break_node_init();
     xmlXPathReturnFalse(ctxt); return;
+//     xmlNodePtr currentNode = ctxt->context->node;
+//     xmlNodePtr input = currentNode;
+//     xmlNodePtr temp = 0;
+    
+// // START:
+//     if(!currentNode) {
+//         goto EXIT;
+//     } else {
+//         goto DESCENDING;
+//     }
+// VISIT:
+//     if(currentNode->type == XML_ELEMENT_NODE) {
+//         if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+//             if(xmlStrEqual(return_tag, currentNode->name) != 0) {
+//                 xmlXPathReturnTrue(ctxt); return;
+//             } else {
+//                 NodeNameSet::iterator locatedElementIter = hasReturnValidNodes.find(currentNode->name);
+//                 if(locatedElementIter == hasReturnValidNodes.end()) {
+//                     goto STRAIF_SIBLINGS;
+//                 }
+//             }
+//         }
+//     }
+// DESCENDING:
+//     temp = currentNode->children;
+//     if (temp) {
+//         currentNode = temp;
+//         goto VISIT;
+//     } 
+// STRAIF_SIBLINGS:
+//     temp = currentNode->next;
+//     if (temp && currentNode != input) {
+//         currentNode = temp;
+//         goto VISIT;
+//     }
+// // ASCENDING:
+//     if (currentNode->parent != input) {
+//         currentNode = currentNode->parent;
+//         goto STRAIF_SIBLINGS;
+//     }
+// EXIT:
+//     xmlXPathReturnFalse(ctxt); return;
 }
 
 void xpath_exfun_is_fixed(xmlXPathParserContextPtr ctxt, int nargs) {
