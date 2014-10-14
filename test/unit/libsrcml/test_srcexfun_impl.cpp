@@ -556,7 +556,6 @@ int main() {
         3
     );
 
-
     // is_mutually_exclusive
     string isMutuallyExclusiveXPath =
         "//src:while[src:is_mutually_exclusive()]"
