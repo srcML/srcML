@@ -49,6 +49,8 @@
 #define snprintf _snprintf
 #endif
 
+#include <boost/foreach.hpp>
+
 /**
  * xpath_query_units
  *
@@ -235,7 +237,6 @@ public :
         typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
         #define dlsymvar(type, name) type name;  *(VOIDPTR *)(&name) = dlsym(handle, #name)
 
-
         void* handle = dlopen("libexslt.so", RTLD_LAZY);
         if (!handle) {
             handle = dlopen("libexslt.so.0", RTLD_LAZY);
@@ -248,46 +249,24 @@ public :
 
         if (handle) {
 
-            dlerror();
-            dlsymvar(exsltXpathCtxtRegister,exsltDateXpathCtxtRegister);
-            if (dlerror() == NULL)  {
-                // register exslt functions for XPath usage
-                if (exsltDateXpathCtxtRegister(context, BAD_CAST "date") == -1) {
-                    fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-                            "srcml2src", "date");
+            struct exslt_register { const char* name; const char* prefix; };
+            exslt_register extension_func[] = {
+
+                { "exsltDateXpathCtxtRegister", "date"},
+                { "exsltMathXpathCtxtRegister", "math"},
+                { "exsltSetsXpathCtxtRegister", "set"},
+                { "exsltStrXpathCtxtRegister",  "str"},
+            };
+
+            BOOST_FOREACH(exslt_register& extension, extension_func) {
+                dlerror();
+                exsltXpathCtxtRegister exslt_register_func = (exsltXpathCtxtRegister) dlsym(handle, extension.name);
+                if (dlerror() == NULL)  {
+                    // register exslt functions for XPath usage
+                    if (exslt_register_func(context, BAD_CAST extension.prefix) == -1) {
+                        fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n", "srcml2src", extension.prefix);
+                    }
                 }
-            }
-
-            dlerror();
-            dlsymvar(exsltXpathCtxtRegister,exsltMathXpathCtxtRegister);
-            if (dlerror() == NULL)  {
-                if (exsltMathXpathCtxtRegister(context, BAD_CAST "math") == -1) {
-                    fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-                            "srcml2src", "math");
-                }
-
-            }
-
-            dlerror();
-            dlsymvar(exsltXpathCtxtRegister,exsltSetsXpathCtxtRegister);
-            if (dlerror() == NULL)  {
-
-                if (exsltSetsXpathCtxtRegister(context, BAD_CAST "set") == -1) {
-                    fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-                            "srcml2src", "set");
-                }
-
-            }
-
-            dlerror();
-            dlsymvar(exsltXpathCtxtRegister,exsltStrXpathCtxtRegister);
-            if (dlerror() == NULL)  {
-
-                if (exsltStrXpathCtxtRegister(context, BAD_CAST "str") == -1) {
-                    fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-                            "srcml2src", "str");
-                }
-
             }
         }
 
