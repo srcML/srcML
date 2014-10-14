@@ -532,10 +532,6 @@ void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs) {
     xmlXPathReturnFalse(ctxt); return;
 }
 
-void xpath_exfun_is_simple_asm(xmlXPathParserContextPtr ctxt, int nargs) {
-    CHECK_ARITY(0);
-}
-
 void xpath_exfun_is_within_catch(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
 }
@@ -689,5 +685,13 @@ void xpath_exfun_internal_members(xmlXPathParserContextPtr ctxt, int nargs) {
 }
 
 void xpath_exfun_protected_internal_members(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_is_upper_bound(xmlXPathParserContextPtr ctxt, int nargs) {
+    CHECK_ARITY(0);
+}
+
+void xpath_exfun_is_lower_bound(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
 }

@@ -150,45 +150,6 @@ void xpath_exfun_is_class_template_partial_specialization(xmlXPathParserContextP
 void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs);
 
 /**
- *  XPath Signature: bool is_simple_asm()
- *  
- *  Not sure
- *  
- *  Languages: C, C++
- *  
- *  Works with srcML elements:
- *      ASM
- *  
- */
-void xpath_exfun_is_simple_asm(xmlXPathParserContextPtr ctxt, int nargs);
-
-/**
- *  XPath Signature: bool is_within_catch()
- *  
- *  Checks if the current element is within a catch statement, uses scope rules
- *  
- *  Languages: C++, C#, Java
- *  
- *  Works with srcML elements:
- *      Anything
- *  
- */
-void xpath_exfun_is_within_catch(xmlXPathParserContextPtr ctxt, int nargs);
-
-/**
- *  XPath Signature: bool is_within_finally()
- *  
- *  Checks if the current element is within a catch statement
- *  
- *  Languages: C#, Java
- *  
- *  Works with srcML elements:
- *      Anything
- *  
- */
-void xpath_exfun_is_within_finally(xmlXPathParserContextPtr ctxt, int nargs);
-
-/**
  *  XPath Signature: bool has_break()
  *  
  *  Checks using scope rules and attempts to locate a break statement within
@@ -832,4 +793,20 @@ void xpath_exfun_internal_members(xmlXPathParserContextPtr ctxt, int nargs);
  */
 void xpath_exfun_protected_internal_members(xmlXPathParserContextPtr ctxt, int nargs);
 
+/**
+ *  XPath Signature: bool is_upper_bound()
+ *  Languages java
+ *  Checks for an upper bound generic parameter (Not sure if I can actually do this but I'm gonna try).
+ *      argument
+ */
+void xpath_exfun_is_upper_bound(xmlXPathParserContextPtr ctxt, int nargs);
+
+/**
+ *  XPath Signature: bool is_lower_bound()
+ *  Languages java
+ *  Checks for a lower bound on a generic parameter (Not sure if I can actually do this but I'm gonna try).
+ *      argument
+ *
+ */
+void xpath_exfun_is_lower_bound(xmlXPathParserContextPtr ctxt, int nargs);
 #endif
