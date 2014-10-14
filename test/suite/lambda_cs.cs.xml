@@ -41,4 +41,12 @@
 <expr_stmt><expr><lambda><specifier>async</specifier> <parameter_list>(<param><decl><name>t1</name></decl></param>,<param><decl><name>t2</name></decl></param>)</parameter_list>=&gt; <block type="pseudo"><expr><operator>await</operator> <name>t1</name> <operator>+</operator> <operator>await</operator> <name>t2</name></expr></block></lambda></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> =&gt; <block type="pseudo"><expr><literal type="boolean">true</literal></expr></block></lambda></expr></argument>, <argument><expr><delegate><name>delegate</name> <block>{
+    <if>if <condition>(<expr><literal type="boolean">true</literal></expr>)</condition><then> <block>{
+
+    }</block></then></if>
+}</block></delegate></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
 </unit>

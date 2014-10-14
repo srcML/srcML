@@ -200,7 +200,7 @@ protected:
 
         for(std::list<srcMLState>::const_reverse_iterator citr = st.rbegin(); citr != st.rend(); ++citr) {
 
-            if((citr->getMode() & m) != 0) return m;
+            if((citr->getMode() & m) != 0) return citr->getMode();
 
         }
 
