@@ -41,7 +41,7 @@
 
 #include <libxml/xmlIO.h>
 
-#include "dassert.hpp"
+#include <unit_tests.hpp>
 
 int main() {
 

@@ -1,0 +1,1 @@
+interface IContravariant<in A> { }

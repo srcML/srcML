@@ -87,6 +87,9 @@ const char* const SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT = "type";
 const char* const SRCML_EXT_POSITION_NS_PREFIX_DEFAULT = "pos";
 
 // srcML standard attributes
+/** revision attribute @todo see if still needed */
+const char* const UNIT_ATTRIBUTE_REVISION = "revision";
+
 /** language attribute */
 const char* const UNIT_ATTRIBUTE_LANGUAGE = "language";
 
@@ -98,9 +101,6 @@ const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
 
 /** version attribute */
 const char* const UNIT_ATTRIBUTE_VERSION = "version";
-
-/** srcml-revision attribute @todo see if still needed */
-const char* const UNIT_ATTRIBUTE_REVISION = "srcml-revision";
 
 /** options attribute */
 const char* const UNIT_ATTRIBUTE_OPTIONS = "options";

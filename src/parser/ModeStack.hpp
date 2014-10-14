@@ -64,7 +64,7 @@ public:
     TokenParser* parser;
 
     /** stack of states/modes */
-    std::stack<srcMLState> st;
+    std::list<srcMLState> st;
 
 protected:
 
@@ -79,7 +79,7 @@ protected:
         if (st.empty())
             throw Segmentation_Fault();
 
-        return st.top();
+        return st.back();
     }
 
     /**
@@ -93,7 +93,7 @@ protected:
         if (st.empty())
             throw Segmentation_Fault();
 
-        return st.top();
+        return st.back();
     }
 
     /**
@@ -105,7 +105,7 @@ protected:
     void startNewMode(const srcMLState::MODE_TYPE& m) {
 
         // prepare for the new stack
-        st.push(srcMLState(m, !empty() ? getTransparentMode() : 0, !empty() ? getMode() : 0));
+        st.push_back(srcMLState(m, !empty() ? getTransparentMode() : 0, !empty() ? getMode() : 0));
     }
 
     /**
@@ -160,7 +160,7 @@ protected:
      */
     srcMLState::MODE_TYPE getMode() const {
 
-        return !st.empty() ? st.top().getMode() : 0;
+        return !st.empty() ? st.back().getMode() : 0;
     }
 
     /**
@@ -172,7 +172,7 @@ protected:
      */
     srcMLState::MODE_TYPE getPrevMode() const {
 
-        return !st.empty() ? st.top().getMode() : 0;
+        return !st.empty() ? st.back().getMode() : 0;
     }
 
     /**
@@ -184,9 +184,30 @@ protected:
      */
     srcMLState::MODE_TYPE getTransparentMode() const {
 
-        return !st.empty() ? st.top().getTransparentMode() : 0;
+        return !st.empty() ? st.back().getTransparentMode() : 0;
     }
 
+
+    /**
+     * getFirstMode
+     * @param m modes to query for
+     *
+     * Get the first mode matching m
+     *
+     * @returns the matching mode
+     */
+    srcMLState::MODE_TYPE getFirstMode(const srcMLState::MODE_TYPE& m) const {
+
+        for(std::list<srcMLState>::const_reverse_iterator citr = st.rbegin(); citr != st.rend(); ++citr) {
+
+            if((citr->getMode() & m) != 0) return m;
+
+        }
+
+        return 0;
+
+    }
+        
     /**
      * setMode
      * @param m modes to add to current mode
@@ -197,7 +218,7 @@ protected:
         if (st.empty())
             throw Segmentation_Fault();
 
-        st.top().setMode(m);
+        st.back().setMode(m);
     }
 
     /**
@@ -210,7 +231,7 @@ protected:
         if (st.empty())
             throw Segmentation_Fault();
 
-        st.top().clearMode(m);
+        st.back().clearMode(m);
     }
 
     /**
@@ -223,7 +244,7 @@ protected:
         if (st.empty())
             throw Segmentation_Fault();
 
-        st.top().push(id);
+        st.back().push(id);
     }
 
     /**
@@ -235,7 +256,7 @@ protected:
         if (st.empty())
             throw Segmentation_Fault();
 
-        st.top().pop();
+        st.back().pop();
     }
 
     /**
@@ -272,7 +293,7 @@ protected:
      */
     bool inMode(const srcMLState::MODE_TYPE& m) const {
 
-        return !st.empty() ? st.top().inMode(m) : false;
+        return !st.empty() ? st.back().inMode(m) : false;
     }
 
     /**
@@ -285,7 +306,7 @@ protected:
      */
     bool inPrevMode(const srcMLState::MODE_TYPE& m) const {
 
-        return st.size() > 1 ? st.top().inPrevMode(m) : false;
+        return st.size() > 1 ? st.back().inPrevMode(m) : false;
     }
 
      /**
@@ -298,7 +319,7 @@ protected:
      */
     bool inTransparentMode(const srcMLState::MODE_TYPE& m) const {
 
-        return !st.empty() ? st.top().inTransparentMode(m) : false;
+        return !st.empty() ? st.back().inTransparentMode(m) : false;
     }
 
     /**
@@ -309,7 +330,7 @@ protected:
      * @returns number of open parethesis in current mode
      */
     int getParen() const {
-        return !st.empty() ? st.top().getParen() : 0;
+        return !st.empty() ? st.back().getParen() : 0;
     }
 
     /**
@@ -321,7 +342,7 @@ protected:
         if (st.empty())
             throw Segmentation_Fault();
 
-        st.top().incParen();
+        st.back().incParen();
     }
 
     /**
@@ -333,7 +354,7 @@ protected:
         if (st.empty())
             throw Segmentation_Fault();
 
-        st.top().decParen();
+        st.back().decParen();
     }
 
     /**
@@ -344,7 +365,7 @@ protected:
      * @returns number of open curly braces in current mode
      */
     int getCurly() const {
-        return !st.empty() ? st.top().getCurly() : 0;
+        return !st.empty() ? st.back().getCurly() : 0;
     }
 
     /**
@@ -356,7 +377,7 @@ protected:
         if (st.empty())
             throw Segmentation_Fault();
 
-        st.top().incCurly();
+        st.back().incCurly();
     }
 
     /**
@@ -368,7 +389,7 @@ protected:
         if (st.empty())
             throw Segmentation_Fault();
 
-        st.top().decCurly();
+        st.back().decCurly();
     }
 
     /**
@@ -379,7 +400,7 @@ protected:
      * @returns number of types in current mode
      */
     int getTypeCount() const {
-        return !st.empty() ? st.top().getTypeCount() : 0;
+        return !st.empty() ? st.back().getTypeCount() : 0;
     }
 
     /**
@@ -392,7 +413,7 @@ protected:
         if (st.empty())
             throw Segmentation_Fault();
 
-        st.top().setTypeCount(n);
+        st.back().setTypeCount(n);
     }
 
     /**
@@ -404,7 +425,7 @@ protected:
         if (st.empty())
             throw Segmentation_Fault();
 
-        st.top().incTypeCount();
+        st.back().incTypeCount();
     }
 
     /**
@@ -416,7 +437,7 @@ protected:
         if (st.empty())
             throw Segmentation_Fault();
 
-        st.top().decTypeCount();
+        st.back().decTypeCount();
     }
 
     /**
@@ -442,11 +463,11 @@ protected:
             throw Segmentation_Fault();
 
         // close all open elements
-        while (!st.empty() && !st.top().openelements.empty()) {
-            parser->endElement(st.top().openelements.top());
+        while (!st.empty() && !st.back().openelements.empty()) {
+            parser->endElement(st.back().openelements.top());
         }
 
-        st.pop();
+        st.pop_back();
     }
 
     /**
@@ -482,27 +503,27 @@ protected:
     void dupDownOverMode(const srcMLState::MODE_TYPE& m) {
 
         std::list<srcMLState> alist;
-        while((st.top().getMode() & m).none()) {
+        while((st.back().getMode() & m).none()) {
 
-            alist.push_front(st.top());
-            st.pop();
+            alist.push_front(st.back());
+            st.pop_back();
 
         }
 
-        alist.push_front(st.top());
-        st.pop();
+        alist.push_front(st.back());
+        st.pop_back();
 
 
         alist.front().setMode(MODE_TOP | MODE_END_AT_ENDIF);
         for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i) {
             i->setMode(MODE_END_AT_ENDIF);
-            st.push(*i);
+            st.push_back(*i);
         }
 
         alist.front().openelements = std::stack<int>();
         for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i) {
             i->setMode(MODE_ISSUE_EMPTY_AT_POP);
-            st.push(*i);
+            st.push_back(*i);
 
         }
 

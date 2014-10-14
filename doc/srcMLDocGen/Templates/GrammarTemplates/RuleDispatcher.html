@@ -1,0 +1,9 @@
+{% if documentation.typename == "RuleDocumentation" %}
+    {% include "GrammarTemplates/Rule.html" %}
+{% elif documentation.typename == "AttrRuleDocumentation" %}
+    {% include "GrammarTemplates/AttrRule.html" %}
+{% elif documentation.typename == "TagDocumentation" %}
+    {% include "GrammarTemplates/TagRule.html" %}
+{% else %}
+    Error Unknown type of rule!
+{% endif %}

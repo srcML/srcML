@@ -1,0 +1,38 @@
+
+/* Index page style */
+.indexLinks {
+    column-width:13em;
+    -moz-column-width:13em; /* Firefox */
+    -webkit-column-width:13em; /* Safari and Chrome */
+    min-width:50em;
+    margin-bottom:0em;
+    margin-top:0em;
+}
+
+.indexLetterSection {
+    display: inline-block;
+    margin-top:1em;
+    width:13em;
+    padding:0em 0em 0em 0em;
+}
+
+.indexLetterSection h3 {
+    margin:0em 0em 0em .4em;
+    line-height:1.4;
+}
+
+.indexLetterSection ul {
+    list-style-type: none;
+    margin-top:.20em;
+    padding:0em 0em 0em 1em;
+}
+.indexLetterSection li {
+    line-height:1.2;
+}
+
+.indexLetterSection hr {
+    margin:0em .1em 0em .1em;
+    line-height:0;
+}
+
+

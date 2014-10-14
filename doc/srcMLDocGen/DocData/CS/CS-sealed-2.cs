@@ -1,0 +1,1 @@
+sealed override double area() {  }

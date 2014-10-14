@@ -1,0 +1,61 @@
+{% load DjangoHelpers %}
+{% load GrammarFormatHelpers %}
+<div class="displayedDocDefinition">
+    {%block langTable %}
+    <div class="languagesDisplayDiv">
+        {% include "GrammarTemplates/LanguagesTable.html" with doc=doc languages=documentation.languages %}
+    </div>
+    {%endblock %}
+    <h2 class="title">{% block title %}<a id="{{documentation.name}}">{{documentation.name}}</a>{% endblock %}</h2>
+    <hr />
+    
+    {% if documentation.desc != "" %}
+    <div class="description">{{documentation.desc|safe}}</div>
+    {% endif %}
+    
+    {% block useCases %}{% endblock %}
+    {% if documentation.parentRules|length > 0 %}
+        <h3 class="subtitle">Parent Rules</h3>
+        <ul>
+        {% for parentRule in documentation.parentRules %}
+                <li><a href="#{{parentRule|makeRuleLink}}">{{parentRule.name}}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% if documentation.childRules|length > 0 %}
+        <h3 class="subtitle">Child Rules</h3>
+        <ul>
+        {% for childRule in documentation.childRules %}
+                <li><a href="#{{childRule|makeRuleLink}}">{{childRule.name}}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% if documentation.parentTags|length > 0 %}
+        <h3 class="subtitle">Parent Tags</h3>
+        <ul>
+        {% for tag in documentation.parentTags %}
+                <li><a href="#{{tag|makeTagLink}}">{{tag|makeDisplayableTag}}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    
+    {% if documentation.childTags|length > 0 %}
+        <h3 class="subtitle">Child Tags</h3>
+        <ul>
+        {% for tag in documentation.childTags %}
+            <li><a href="#{{tag|makeTagLink}}">{{tag|makeDisplayableTag}}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    
+    {% if documentation.otherLinks|length > 0 %}
+        <h3 class="subtitle">Also See</h3>
+        <ul>
+        {% for link in documentation.otherLinks %}
+            <li><a href="{{link.url|safe}}">{{link.title|title}}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    
+    
+</div>

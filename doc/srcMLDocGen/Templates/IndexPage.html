@@ -1,0 +1,21 @@
+{% extends "Skeleton.html" %}
+
+{% block cssLinks %}<link rel="stylesheet" href="Style/IndexStyle.css" />{% endblock %}
+{% block title %}{{pageTitle}} Language Index{% endblock %}
+
+{% block body %}
+    <h2>{{pageTitle}} Language Index</h2>
+    <div class="indexLinks">
+        {% for item in indexItems %}
+            <div class="indexLetterSection">
+                <h3>{{item.0}}</h3>
+                <hr/>
+                <ul class="indexList">
+                {% for entry in item.1 %}
+                    <li><span class="indexEntry"><a href="{{entry.basePageName}}#{{entry.linkName}}">{{entry.title}}</a></span></li>
+                {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}        
+    </div>
+{% endblock %}
