@@ -680,8 +680,17 @@ void xpath_exfun_has_break(xmlXPathParserContextPtr ctxt, int nargs) {
 
 void xpath_exfun_is_unsafe(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
-
-
+    xmlNodePtr currentNode = ctxt->context->node;
+    while(currentNode) {
+        if (currentNode->type == XML_ELEMENT_NODE
+            && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+            if (xmlStrEqual(currentNode->name, unsafe_tag) != 0) {
+                xmlXPathReturnTrue(ctxt); return;
+            }
+        }
+        currentNode = currentNode->parent;
+    }
+    xmlXPathReturnFalse(ctxt); return;
 }
 
 void xpath_exfun_is_mutually_exclusive(xmlXPathParserContextPtr ctxt, int nargs) {

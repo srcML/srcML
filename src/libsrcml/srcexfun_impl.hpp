@@ -212,15 +212,13 @@ void xpath_exfun_has_break(xmlXPathParserContextPtr ctxt, int nargs);
  *  XPath Signature: bool is_unsafe()
  *  
  *  Checks to see if the current statement, declaration or other element is within
- *  an unsafe method or unsafe block.
+ *  an unsafe block.
  *  
  *  Languages: C#
  *  
  *  Works with srcML elements:
  *      Anything
- *      When called on functions, methods, constructors or destructors etc.. it
- *          checks for the unsafe specifier. 
- *  
+ *
  */
 void xpath_exfun_is_unsafe(xmlXPathParserContextPtr ctxt, int nargs);
 
