@@ -5689,7 +5689,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         { inTransparentMode(MODE_INTERNAL_END_PAREN) && (LA(1) != CXX_CLASS || !keyword_name_token_set.member(next_token())) }?
         (CLASS | CXX_CLASS) |
 
-        { next_token() == LPAREN }?
+        { next_token() == LPAREN | next_token() == LCURLY }?
         delegate_anonymous |
 
         { next_token() == LCURLY }?
@@ -7217,7 +7217,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         { inTransparentMode(MODE_INTERNAL_END_PAREN) && (LA(1) != CXX_CLASS || !keyword_name_token_set.member(next_token())) }?
         (CLASS | CXX_CLASS) |
 
-        { next_token() == LPAREN }?
+        { next_token() == LPAREN | next_token() == LCURLY }?
         delegate_anonymous |
 
         { next_token() == LCURLY }?
