@@ -145,8 +145,6 @@ void xpath_exfun_is_class_template_partial_specialization(xmlXPathParserContextP
  *      try
  *      synchronized
  *      fixed
- *      checked
- *      unchecked
  *      lock 
  */
 void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs);

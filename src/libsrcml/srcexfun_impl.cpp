@@ -475,8 +475,6 @@ void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs) {
                 ||  xmlStrEqual(try_tag, currentNode->name) != 0
                 ||  xmlStrEqual(synchronized_tag, currentNode->name) != 0
                 ||  xmlStrEqual(fixed_tag, currentNode->name) != 0
-                ||  xmlStrEqual(checked_tag, currentNode->name) != 0
-                ||  xmlStrEqual(unchecked_tag, currentNode->name) != 0
                 ||  xmlStrEqual(lock_tag, currentNode->name) != 0
                 ||  xmlStrEqual(decl_tag, currentNode->name) != 0
                 ||  xmlStrEqual(using_tag, currentNode->name) != 0)
@@ -485,14 +483,41 @@ void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs) {
                 jumpTo = INIT_IS_CHILD;
             }
 
-
+            xmlNodePtr initLocator = 0;
             switch(jumpTo) {
                 case DECL_IS_CHILD:
-
+                    initParent = xmlFirstElementChild(declParent);
+                    while(initParent) {
+                        if(initParent->type == XML_ELEMENT_NODE
+                            && xmlStrEqual(BAD_CAST SRCML_SRC_NS_URI, initParent->ns->href) != 0
+                            && xmlStrEqual(decl_tag, initParent->name) != 0)
+                        {
+                            initLocator = xmlFirstElementChild(initParent);
+                            while (initLocator) {
+                                if(initLocator->type == XML_ELEMENT_NODE
+                                    && xmlStrEqual(BAD_CAST SRCML_SRC_NS_URI, initLocator->ns->href) != 0
+                                    && xmlStrEqual(init_tag, initLocator->name) != 0)
+                                {
+                                    xmlXPathReturnTrue(ctxt); return;
+                                }
+                                initLocator = initLocator->next;
+                            }
+                        }
+                        initParent = initParent->next;
+                    }
+                    break;
 
                 case INIT_IS_CHILD:
-
-
+                    initLocator = xmlFirstElementChild(initParent);
+                    while (initLocator) {
+                        if(initLocator->type == XML_ELEMENT_NODE
+                            && xmlStrEqual(BAD_CAST SRCML_SRC_NS_URI, initLocator->ns->href) != 0
+                            && xmlStrEqual(init_tag, initLocator->name) != 0)
+                        {
+                            xmlXPathReturnTrue(ctxt); return;
+                        }
+                        initLocator = initLocator->next;
+                    }
                     break;
                 case IS_INVALD:
                 default:
@@ -504,19 +529,6 @@ void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs) {
             }
         }
     }
-
-    // decl_stmt
-    // decl
-    // param
-    // argument
-    // using_stmt
-    // using
-    // try
-    // synchronized
-    // 
-    // 
-    // unchecked
-    // lock
     xmlXPathReturnFalse(ctxt); return;
 }
 

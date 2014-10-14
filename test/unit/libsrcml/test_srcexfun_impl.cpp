@@ -451,10 +451,8 @@ int main() {
         "| //src:try[src:has_init()]"
         "| //src:synchronized[src:has_init()]"
         "| //src:fixed[src:has_init()]"
-        "| //src:checked[src:has_init()]"
-        "| //src:unchecked[src:has_init()]"
         "| //src:lock[src:has_init()]",
-        2
+        7
     );
 
     run_xpath_test(
@@ -467,10 +465,8 @@ int main() {
         "| //src:try[src:has_init()]"
         "| //src:synchronized[src:has_init()]"
         "| //src:fixed[src:has_init()]"
-        "| //src:checked[src:has_init()]"
-        "| //src:unchecked[src:has_init()]"
         "| //src:lock[src:has_init()]",
-        2
+        5
     );
 
     run_xpath_test(
@@ -483,10 +479,8 @@ int main() {
         "| //src:try[src:has_init()]"
         "| //src:synchronized[src:has_init()]"
         "| //src:fixed[src:has_init()]"
-        "| //src:checked[src:has_init()]"
-        "| //src:unchecked[src:has_init()]"
         "| //src:lock[src:has_init()]",
-        2
+        3
     );
 
     xmlCleanupParser();

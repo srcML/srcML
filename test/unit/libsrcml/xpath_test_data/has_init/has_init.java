@@ -1,4 +1,4 @@
 
 synchronized(x) { }
 
-try (x = new THINGY()) { }
+try (THINGY x = new THINGY()) { }
