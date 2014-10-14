@@ -138,7 +138,7 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -1309,7 +1309,7 @@ overloaded_operator[] { CompleteElement element(this); ENTRY_DEBUG } :
 lambda_expression_csharp[] { bool first = true; ENTRY_DEBUG } :
 		{
 
-            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS | MODE_END_AT_COMMA);      
 
             startElement(SFUNCTION_LAMBDA);
 
@@ -4801,11 +4801,12 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
+
         }
         (options { greedy = true; } :
 
             // commas as in a list
-            { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
+            { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA) }?
             comma |
 
             // right parentheses, unless we are in a pair of parentheses in an expression
@@ -6549,9 +6550,11 @@ lambda_csharp[] { ENTRY_DEBUG } :
 
     {
 
-        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY) {
+
             startElement(SPSEUDO_BLOCK);
-        else if(LA(1) == LCURLY)
+
+        } else if(LA(1) == LCURLY)
             startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
 
     }
