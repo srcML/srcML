@@ -553,8 +553,47 @@ int main() {
     run_xpath_test(
         "xpath_test_data/is_unsafe/is_unsafe.cs",
         isUnsafeXPath,
-        11
+        3
     );
+
+
+    // is_mutually_exclusive
+    string isMutuallyExclusiveXPath =
+        "//src:while[src:is_mutually_exclusive()]"
+        "| //src:if[src:is_mutually_exclusive()]"
+        "| //src:then[src:is_mutually_exclusive()]"
+        "| //src:elseif[src:is_mutually_exclusive()]"
+        "| //src:else[src:is_mutually_exclusive()]"
+        "| //src:try[src:is_mutually_exclusive()]"
+        "| //src:catch[src:is_mutually_exclusive()]"
+        "| //src:finally[src:is_mutually_exclusive()]"
+        "| //src:do[src:is_mutually_exclusive()]"
+        "| //src:for[src:is_mutually_exclusive()]"
+        "| //src:foreach[src:is_mutually_exclusive()]"
+        "| //src:switch[src:is_mutually_exclusive()]"
+        "| //src:using_stmt[src:is_mutually_exclusive()]"
+        "| //src:fixed[src:is_mutually_exclusive()]"
+        "| //src:synchronized[src:is_mutually_exclusive()]"
+        "| //src:fixed[src:is_mutually_exclusive()]"
+        "| //src:unsafe[src:is_mutually_exclusive()]"
+        "| //src:static[src:is_mutually_exclusive()]"
+        "| //src:checked[src:is_mutually_exclusive()]"
+        "| //src:unchecked[src:is_mutually_exclusive()]"
+        "| //src:expr_stmt[src:is_mutually_exclusive()]"
+        "| //src:decl_stmt[src:is_mutually_exclusive()]";
+
+    run_xpath_test(
+        "xpath_test_data/is_mutually_exclusive/is_mutually_exclusive.cs",
+        isMutuallyExclusiveXPath,
+        2
+    );
+
+    run_xpath_test(
+        "xpath_test_data/is_mutually_exclusive/is_mutually_exclusive.java",
+        isMutuallyExclusiveXPath,
+        2
+    );
+
 
     xmlCleanupParser();
 

@@ -318,6 +318,10 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
     xmlXPathRegisterFuncNS(context, (const xmlChar *)"is_unsafe",
                            BAD_CAST SRCML_SRC_NS_URI,
                            xpath_exfun_is_unsafe);
+                           
+    xmlXPathRegisterFuncNS(context, (const xmlChar *)"is_mutually_exclusive",
+                           BAD_CAST SRCML_SRC_NS_URI,
+                           xpath_exfun_is_mutually_exclusive);
 
 
 

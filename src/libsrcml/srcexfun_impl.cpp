@@ -690,11 +690,38 @@ void xpath_exfun_is_unsafe(xmlXPathParserContextPtr ctxt, int nargs) {
         }
         currentNode = currentNode->parent;
     }
-    xmlXPathReturnFalse(ctxt); return;
+    xmlXPathReturnFalse(ctxt);
 }
 
 void xpath_exfun_is_mutually_exclusive(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
+    xmlNodePtr currentNode = ctxt->context->node;
+    xmlChar const* language = getSrcMLDocLanguage(currentNode);
+    if(xmlStrcasecmp(language, BAD_CAST "C#") == 0) {
+        std::cout << "Processing C#" << std::endl;
+        while(currentNode) {
+            if (currentNode->type == XML_ELEMENT_NODE
+                && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+                if (xmlStrEqual(currentNode->name, unsafe_tag) != 0) {
+                    xmlXPathReturnTrue(ctxt); return;
+                }
+            }
+            currentNode = currentNode->parent;
+        }
+
+    }else if(xmlStrcasecmp(language, BAD_CAST "java") == 0) {
+        std::cout << "Processing Java" << std::endl;
+        while(currentNode) {
+            if (currentNode->type == XML_ELEMENT_NODE
+                && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+                if (xmlStrEqual(currentNode->name, unsafe_tag) != 0) {
+                    xmlXPathReturnTrue(ctxt); return;
+                }
+            }
+            currentNode = currentNode->parent;
+        }
+    }
+    xmlXPathReturnFalse(ctxt);
 }
 
 void xpath_exfun_returns(xmlXPathParserContextPtr ctxt, int nargs) {

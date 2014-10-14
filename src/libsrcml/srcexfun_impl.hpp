@@ -222,7 +222,6 @@ void xpath_exfun_has_break(xmlXPathParserContextPtr ctxt, int nargs);
  */
 void xpath_exfun_is_unsafe(xmlXPathParserContextPtr ctxt, int nargs);
 
-
 /**
  *  XPath Signature: bool is_mutually_exclusive()
  *  
