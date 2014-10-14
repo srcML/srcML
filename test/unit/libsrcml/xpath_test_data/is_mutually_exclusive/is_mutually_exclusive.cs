@@ -1,4 +1,4 @@
-lock(X)
+lock(X){
     x = 5;
     int x = 5;
 }

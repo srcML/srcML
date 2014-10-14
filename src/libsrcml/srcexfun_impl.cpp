@@ -91,7 +91,7 @@ namespace {
     typedef const char* ConstCharPtr;
     xmlChar const* const unit_tag = BAD_CAST "unit";
     xmlChar const* const language_attr = BAD_CAST "language";
-
+    xmlChar const* const specifier_tag = BAD_CAST "specifier";
     xmlChar const* const asm_tag = BAD_CAST "asm";
     xmlChar const* const return_tag = BAD_CAST "return";
     xmlChar const* const break_tag = BAD_CAST "break";
@@ -114,6 +114,7 @@ namespace {
     xmlChar const* const destructor_tag = BAD_CAST "destructor";
     xmlChar const* const destructor_decl_tag = BAD_CAST "destructor_decl";
     xmlChar const* const throw_tag = BAD_CAST "throw";
+    xmlChar const* const type_tag = BAD_CAST "type";
 
     // Compound statements
     xmlChar const* const block_tag = BAD_CAST "block";
@@ -695,32 +696,57 @@ void xpath_exfun_is_unsafe(xmlXPathParserContextPtr ctxt, int nargs) {
 
 void xpath_exfun_is_mutually_exclusive(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
-    // xmlNodePtr currentNode = ctxt->context->node;
-    // xmlChar const* language = getSrcMLDocLanguage(currentNode);
-    // if(xmlStrcasecmp(language, BAD_CAST "C#") == 0) {
-    //     std::cout << "Processing C#" << std::endl;
-    //     while(currentNode) {
-    //         if (currentNode->type == XML_ELEMENT_NODE
-    //             && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
-    //             if (xmlStrEqual(currentNode->name, unsafe_tag) != 0) {
-    //                 xmlXPathReturnTrue(ctxt); return;
-    //             }
-    //         }
-    //         currentNode = currentNode->parent;
-    //     }
-
-    // }else if(xmlStrcasecmp(language, BAD_CAST "java") == 0) {
-    //     std::cout << "Processing Java" << std::endl;
-    //     while(currentNode) {
-    //         if (currentNode->type == XML_ELEMENT_NODE
-    //             && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
-    //             if (xmlStrEqual(currentNode->name, unsafe_tag) != 0) {
-    //                 xmlXPathReturnTrue(ctxt); return;
-    //             }
-    //         }
-    //         currentNode = currentNode->parent;
-    //     }
-    // }
+    xmlNodePtr currentNode = ctxt->context->node;
+    xmlChar const* language = getSrcMLDocLanguage(currentNode);
+    if(xmlStrcasecmp(language, BAD_CAST "C#") == 0) {
+        // std::cout << "Processing C#" << std::endl;
+        while(currentNode) {
+            if (currentNode->type == XML_ELEMENT_NODE
+                && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+                if (xmlStrEqual(currentNode->name, lock_tag) != 0) {
+                    xmlXPathReturnTrue(ctxt); return;
+                }
+            }
+            currentNode = currentNode->parent;
+        }
+    }else if(xmlStrcasecmp(language, BAD_CAST "java") == 0) {
+        // std::cout << "Processing Java" << std::endl;
+        while(currentNode) {
+            if (currentNode->type == XML_ELEMENT_NODE
+                && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+                if (xmlStrEqual(currentNode->name, synchronized_tag) != 0) {
+                    xmlXPathReturnTrue(ctxt); return;
+                }else if(xmlStrEqual(currentNode->name, function_tag) != 0) {
+                    xmlNodePtr typeNode = xmlFirstElementChild(currentNode);
+                    // Function without a return type.
+                    if (!typeNode) {
+                        xmlXPathReturnFalse(ctxt); return;
+                    }
+                    if ( !(currentNode->type == XML_ELEMENT_NODE
+                        && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0
+                        && xmlStrEqual(currentNode->name, type_tag) != 0))
+                    {
+                        xmlXPathReturnFalse(ctxt); return;
+                    }
+                    xmlNodePtr currentTypeElement = xmlFirstElementChild(typeNode);
+                    while(currentTypeElement) {
+                        if (currentTypeElement->type == XML_ELEMENT_NODE
+                            && xmlStrEqual(currentTypeElement->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0
+                            && xmlStrEqual(currentTypeElement->name, specifier_tag) != 0
+                            && currentTypeElement->children
+                            && currentTypeElement->children->type == XML_TEXT_NODE
+                            && xmlStrEqual(currentTypeElement->children->content, BAD_CAST "synchronized") != 0)
+                        {
+                            xmlXPathReturnTrue(ctxt); return;
+                        }
+                        currentTypeElement = currentTypeElement->next;
+                    }
+                    xmlXPathReturnFalse(ctxt); return;
+                }
+            }
+            currentNode = currentNode->parent;
+        }
+    }
     xmlXPathReturnFalse(ctxt);
 }
 
