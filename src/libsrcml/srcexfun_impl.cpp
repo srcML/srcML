@@ -562,6 +562,7 @@ void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs) {
 void xpath_exfun_has_break(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
     static NodeNameSet hasReturnValidNodes = has_break_node_init();
+    
     xmlXPathReturnFalse(ctxt); return;
 //     xmlNodePtr currentNode = ctxt->context->node;
 //     xmlNodePtr input = currentNode;

@@ -485,21 +485,44 @@ int main() {
 
 
     // has_break()
+    string hasBreakXPath = "//src:while[src:has_break()]"
+        "| //src:if[src:has_break()]"
+        "| //src:then[src:has_break()]"
+        "| //src:elseif[src:has_break()]"
+        "| //src:else[src:has_break()]"
+        "| //src:try[src:has_break()]"
+        "| //src:catch[src:has_break()]"
+        "| //src:finally[src:has_break()]"
+        "| //src:do[src:has_break()]"
+        "| //src:for[src:has_break()]"
+        "| //src:foreach[src:has_break()]"
+        "| //src:switch[src:has_break()]"
+        "| //src:using_stmt[src:has_break()]"
+        "| //src:fixed[src:has_break()]"
+        "| //src:lock[src:has_break()]"
+        "| //src:synchronized[src:has_break()]"
+        "| //src:fixed[src:has_break()]"
+        "| //src:unsafe[src:has_break()]"
+        "| //src:static[src:has_break()]"
+        "| //src:checked[src:has_break()]"
+        "| //src:unchecked[src:has_break()]";
+
+
     run_xpath_test(
         "xpath_test_data/has_break/has_break.cpp",
-        "//src:*[src:has_break()]",
+        hasBreakXPath,
         7
     );
 
     run_xpath_test(
         "xpath_test_data/has_break/has_break.cs",
-        "//src:*[src:has_break()]",
+        hasBreakXPath,
         7
     );
 
     run_xpath_test(
         "xpath_test_data/has_break/has_break.java",
-        "//*[src:has_break()]",
+        hasBreakXPath,
         7
     );
 
