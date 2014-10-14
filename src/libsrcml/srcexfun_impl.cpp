@@ -92,6 +92,7 @@ namespace {
 
     xmlChar const* const asm_tag = BAD_CAST "asm";
     xmlChar const* const return_tag = BAD_CAST "return";
+    xmlChar const* const break_tag = BAD_CAST "break";
     xmlChar const* const typedef_tag = BAD_CAST "typedef";    
     xmlChar const* const using_tag = BAD_CAST "using";
 
@@ -100,8 +101,8 @@ namespace {
     xmlChar const* const enum_tag = BAD_CAST "enum";
     xmlChar const* const expr_stmt_tag = BAD_CAST "expr_stmt";
     xmlChar const* const decl_stmt_tag = BAD_CAST "decl_stmt";
+    xmlChar const* const empty_stmt_tag = BAD_CAST "empty_stmt";
     xmlChar const* const decl_tag = BAD_CAST "decl";
-
     xmlChar const* const param_tag = BAD_CAST "param";
     xmlChar const* const argument_list_tag = BAD_CAST "argument_list";
 
@@ -124,6 +125,7 @@ namespace {
     xmlChar const* const do_tag = BAD_CAST "do";
     xmlChar const* const for_tag = BAD_CAST "for";
     xmlChar const* const foreach_tag = BAD_CAST "foreach";
+    xmlChar const* const forever_tag = BAD_CAST "forever";
     xmlChar const* const switch_tag = BAD_CAST "switch";
     xmlChar const* const using_stmt_tag = BAD_CAST "using_stmt";
     xmlChar const* const fixed_tag = BAD_CAST "fixed";
@@ -136,12 +138,12 @@ namespace {
 
     xmlChar const* const template_tag = BAD_CAST "template";
     xmlChar const* const name_tag = BAD_CAST "name";
-
     xmlChar const* const goto_tag = BAD_CAST "goto";
-
     xmlChar const* const function_tag = BAD_CAST "function";
     xmlChar const* const function_decl_tag = BAD_CAST "function_decl";
-    
+    xmlChar const* const delegate_tag = BAD_CAST "delegate";
+    xmlChar const* const lambda_tag = BAD_CAST "lambda";
+
     xmlChar const* const class_tag = BAD_CAST "class";
     xmlChar const* const class_decl_tag = BAD_CAST "class_decl";
     
@@ -207,28 +209,26 @@ namespace {
         return ret;
     }
 
+    /* 
+        has_break_node_init
+        Initializes the set of nodes used to restrict the scope of the 
+        has_break to not search into other loop structures, or statements
+        that shouldn't be searched.
+     */
     NodeNameSet has_break_node_init() {
         NodeNameSet ret;
-        // ret.insert(block_tag);
-        // ret.insert(while_tag);
-        // ret.insert(if_tag);
-        // ret.insert(then_tag);
-        // ret.insert(else_tag);
-        // ret.insert(elseif_tag);
-        // ret.insert(try_tag);
-        // ret.insert(catch_tag);
-        // ret.insert(finally_tag);
-        // ret.insert(do_tag);
-        // ret.insert(for_tag);
-        // ret.insert(foreach_tag);
-        // ret.insert(switch_tag);
-        // ret.insert(using_stmt_tag);
-        // ret.insert(fixed_tag);
-        // ret.insert(lock_tag);
-        // ret.insert(synchronized_tag);
-        // ret.insert(unsafe_tag);
-        // ret.insert(checked_tag);
-        // ret.insert(unchecked_tag);
+        ret.insert(do_tag);
+        ret.insert(while_tag);
+        ret.insert(for_tag);
+        ret.insert(foreach_tag);
+        ret.insert(forever_tag);
+        ret.insert(switch_tag);
+        ret.insert(expr_stmt_tag);
+        ret.insert(decl_stmt_tag);
+        ret.insert(empty_stmt_tag);
+        ret.insert(delegate_tag);
+        ret.insert(lambda_tag);
+        // ret.insert(delegate_tag);
         return ret;
     }    
 
@@ -561,51 +561,49 @@ void xpath_exfun_has_init(xmlXPathParserContextPtr ctxt, int nargs) {
 
 void xpath_exfun_has_break(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
-    static NodeNameSet hasReturnValidNodes = has_break_node_init();
+    static NodeNameSet hasBreakInvalidNodes = has_break_node_init();
+    xmlNodePtr currentNode = ctxt->context->node;
+    xmlNodePtr input = currentNode;
+    xmlNodePtr temp = 0;
     
+// START:
+    if(!currentNode) {
+        goto EXIT;
+    } else {
+        goto DESCENDING;
+    }
+VISIT:
+    if(currentNode->type == XML_ELEMENT_NODE) {
+        if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
+            if(xmlStrEqual(break_tag, currentNode->name) != 0) {
+                xmlXPathReturnTrue(ctxt); return;
+            } else {
+                NodeNameSet::iterator locatedElementIter = hasBreakInvalidNodes.find(currentNode->name);
+                if(locatedElementIter != hasBreakInvalidNodes.end()) {
+                    goto STRAIF_SIBLINGS;
+                }
+            }
+        }
+    }
+DESCENDING:
+    temp = currentNode->children;
+    if (temp) {
+        currentNode = temp;
+        goto VISIT;
+    } 
+STRAIF_SIBLINGS:
+    temp = currentNode->next;
+    if (temp && currentNode != input) {
+        currentNode = temp;
+        goto VISIT;
+    }
+// ASCENDING:
+    if (currentNode->parent != input) {
+        currentNode = currentNode->parent;
+        goto STRAIF_SIBLINGS;
+    }
+EXIT:
     xmlXPathReturnFalse(ctxt); return;
-//     xmlNodePtr currentNode = ctxt->context->node;
-//     xmlNodePtr input = currentNode;
-//     xmlNodePtr temp = 0;
-    
-// // START:
-//     if(!currentNode) {
-//         goto EXIT;
-//     } else {
-//         goto DESCENDING;
-//     }
-// VISIT:
-//     if(currentNode->type == XML_ELEMENT_NODE) {
-//         if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
-//             if(xmlStrEqual(return_tag, currentNode->name) != 0) {
-//                 xmlXPathReturnTrue(ctxt); return;
-//             } else {
-//                 NodeNameSet::iterator locatedElementIter = hasReturnValidNodes.find(currentNode->name);
-//                 if(locatedElementIter == hasReturnValidNodes.end()) {
-//                     goto STRAIF_SIBLINGS;
-//                 }
-//             }
-//         }
-//     }
-// DESCENDING:
-//     temp = currentNode->children;
-//     if (temp) {
-//         currentNode = temp;
-//         goto VISIT;
-//     } 
-// STRAIF_SIBLINGS:
-//     temp = currentNode->next;
-//     if (temp && currentNode != input) {
-//         currentNode = temp;
-//         goto VISIT;
-//     }
-// // ASCENDING:
-//     if (currentNode->parent != input) {
-//         currentNode = currentNode->parent;
-//         goto STRAIF_SIBLINGS;
-//     }
-// EXIT:
-//     xmlXPathReturnFalse(ctxt); return;
 }
 
 void xpath_exfun_is_fixed(xmlXPathParserContextPtr ctxt, int nargs) {

@@ -486,6 +486,7 @@ int main() {
 
     // has_break()
     string hasBreakXPath = "//src:while[src:has_break()]"
+        "| //src:block[src:has_break()]"
         "| //src:if[src:has_break()]"
         "| //src:then[src:has_break()]"
         "| //src:elseif[src:has_break()]"
@@ -511,19 +512,19 @@ int main() {
     run_xpath_test(
         "xpath_test_data/has_break/has_break.cpp",
         hasBreakXPath,
-        7
+        9
     );
 
     run_xpath_test(
         "xpath_test_data/has_break/has_break.cs",
         hasBreakXPath,
-        7
+        11
     );
 
     run_xpath_test(
         "xpath_test_data/has_break/has_break.java",
         hasBreakXPath,
-        7
+        11
     );
 
     xmlCleanupParser();
