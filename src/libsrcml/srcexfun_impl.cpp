@@ -89,6 +89,8 @@ VectorNodeSet forALLDescendentsAndSelfOptimized(xmlNodePtr input, char const* ns
 namespace {
     typedef const xmlChar* ConstXmlCharPtr;
     typedef const char* ConstCharPtr;
+    xmlChar const* const unit_tag = BAD_CAST "unit";
+    xmlChar const* const language_attr = BAD_CAST "language";
 
     xmlChar const* const asm_tag = BAD_CAST "asm";
     xmlChar const* const return_tag = BAD_CAST "return";
@@ -257,6 +259,22 @@ namespace {
         return ret;
     }    
 
+
+    xmlChar const* getSrcMLDocLanguage(xmlNodePtr node) {
+        xmlChar const* currentAttrValue = 0;
+        xmlNodePtr currentNode = node;
+        while(currentNode) {
+            if (currentNode->type == XML_ELEMENT_NODE
+                && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0
+                && xmlStrEqual(unit_tag, currentNode->name) != 0
+                && (currentAttrValue = xmlGetProp(currentNode, language_attr)))
+            {
+                return currentAttrValue;
+            }
+            currentNode = currentNode->parent;
+        }
+        return currentAttrValue;
+    }
 
     enum Scoping {
         EXCLUSIVE, /* Excludes items in the set */
@@ -662,6 +680,8 @@ void xpath_exfun_has_break(xmlXPathParserContextPtr ctxt, int nargs) {
 
 void xpath_exfun_is_unsafe(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
+
+
 }
 
 void xpath_exfun_is_mutually_exclusive(xmlXPathParserContextPtr ctxt, int nargs) {

@@ -523,6 +523,39 @@ int main() {
         11
     );
 
+
+    // is_unsafe()
+    string isUnsafeXPath = "//src:while[src:is_unsafe()]"
+        "| //src:block[src:is_unsafe()]"
+        "| //src:if[src:is_unsafe()]"
+        "| //src:then[src:is_unsafe()]"
+        "| //src:elseif[src:is_unsafe()]"
+        "| //src:else[src:is_unsafe()]"
+        "| //src:try[src:is_unsafe()]"
+        "| //src:catch[src:is_unsafe()]"
+        "| //src:finally[src:is_unsafe()]"
+        "| //src:do[src:is_unsafe()]"
+        "| //src:for[src:is_unsafe()]"
+        "| //src:foreach[src:is_unsafe()]"
+        "| //src:switch[src:is_unsafe()]"
+        "| //src:using_stmt[src:is_unsafe()]"
+        "| //src:fixed[src:is_unsafe()]"
+        "| //src:lock[src:is_unsafe()]"
+        "| //src:synchronized[src:is_unsafe()]"
+        "| //src:fixed[src:is_unsafe()]"
+        "| //src:unsafe[src:is_unsafe()]"
+        "| //src:static[src:is_unsafe()]"
+        "| //src:checked[src:is_unsafe()]"
+        "| //src:unchecked[src:is_unsafe()]"
+        "| //src:expr_stmt[src:is_unsafe()]"
+        "| //src:decl_stmt[src:is_unsafe()]";
+
+    run_xpath_test(
+        "xpath_test_data/is_unsafe/is_unsafe.cs",
+        isUnsafeXPath,
+        11
+    );
+
     xmlCleanupParser();
 
 

@@ -314,6 +314,12 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
     xmlXPathRegisterFuncNS(context, (const xmlChar *)"has_break",
                            BAD_CAST SRCML_SRC_NS_URI,
                            xpath_exfun_has_break);
+                           
+    xmlXPathRegisterFuncNS(context, (const xmlChar *)"is_unsafe",
+                           BAD_CAST SRCML_SRC_NS_URI,
+                           xpath_exfun_is_unsafe);
+
+
 
 
     // register all the xpath extension functions
