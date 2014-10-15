@@ -648,6 +648,10 @@ int main() {
 
 
 
+    // has_default_property_value()
+    run_xpath_test("has_default_property_value/has_default_property_value.java", "//src:function_decl[src:has_default_property_value()]", 1);
+
+
     // string returnsXPath =
     //     "//src:while[src:is_mutually_exclusive()]"
     //     "| //src:if[src:is_mutually_exclusive()]"
