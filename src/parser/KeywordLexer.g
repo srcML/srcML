@@ -289,6 +289,7 @@ tokens {
     THIS;
     PARAMS;
     TYPEOF;
+    ALIAS;
 
     // linq
     FROM;
@@ -605,6 +606,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "params"        , PARAMS        , LANGUAGE_CSHARP },
         { "null"          , NULLLITERAL   , LANGUAGE_CSHARP },
         { "typeof"        , TYPEOF        , LANGUAGE_CSHARP },
+        { "alias"         , ALIAS         , LANGUAGE_CSHARP },
 
         // C# linq
         { "from"          , FROM          , LANGUAGE_CSHARP }, 

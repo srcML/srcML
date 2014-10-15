@@ -2527,6 +2527,14 @@ visual_cxx_asm_inner[] { ENTRY_DEBUG } :
 
 ;
 
+extern_alias[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        ALIAS
+
+;
+
 // extern definition
 extern_definition[] { ENTRY_DEBUG } :
         {
@@ -2536,7 +2544,7 @@ extern_definition[] { ENTRY_DEBUG } :
             // start the namespace definition
             startElement(SEXTERN);
         }
-        EXTERN
+        EXTERN (extern_alias)*
 ;
 
 // name of extern section
@@ -3920,7 +3928,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
-                (specifier | template_specifier set_bool[sawtemplate, true] | { next_token() == COLON }? SIGNAL | ATREQUIRED | ATOPTIONAL | { inLanguage(LANGUAGE_JAVA) }? default_specifier)
+                (options { generateAmbigWarnings = false; } : EXTERN (options { greedy = true; } : ALIAS set_int[specifier_count, specifier_count + 1])* | specifier | template_specifier set_bool[sawtemplate, true] |
+                    { next_token() == COLON }? SIGNAL | ATREQUIRED | ATOPTIONAL | { inLanguage(LANGUAGE_JAVA) }? default_specifier)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
                         ((inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON) || inLanguage(LANGUAGE_OBJECTIVE_C)) 
@@ -4958,7 +4967,7 @@ identifier_list[] { ENTRY_DEBUG } :
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
-            INTO | THIS |
+            INTO | THIS | ALIAS |
 
             // Objective-C
             IMPORT | ATPROTOCOL |

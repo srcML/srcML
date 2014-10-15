@@ -73,4 +73,10 @@
 <decl_stmt><decl><type><name>restrict</name></type> <name>restrict</name></decl>;</decl_stmt>
 </unit>
 
+
+
+<unit>
+<decl_stmt><decl><type><name>alias</name></type> <name>alias</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
