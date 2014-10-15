@@ -594,6 +594,43 @@ int main() {
     );
 
 
+    // string returnsXPath =
+    //     "//src:while[src:is_mutually_exclusive()]"
+    //     "| //src:if[src:is_mutually_exclusive()]"
+    //     "| //src:then[src:is_mutually_exclusive()]"
+    //     "| //src:elseif[src:is_mutually_exclusive()]"
+    //     "| //src:else[src:is_mutually_exclusive()]"
+    //     "| //src:try[src:is_mutually_exclusive()]"
+    //     "| //src:catch[src:is_mutually_exclusive()]"
+    //     "| //src:finally[src:is_mutually_exclusive()]"
+    //     "| //src:do[src:is_mutually_exclusive()]"
+    //     "| //src:for[src:is_mutually_exclusive()]"
+    //     "| //src:foreach[src:is_mutually_exclusive()]"
+    //     "| //src:switch[src:is_mutually_exclusive()]"
+    //     "| //src:using_stmt[src:is_mutually_exclusive()]"
+    //     "| //src:fixed[src:is_mutually_exclusive()]"
+    //     "| //src:synchronized[src:is_mutually_exclusive()]"
+    //     "| //src:fixed[src:is_mutually_exclusive()]"
+    //     "| //src:unsafe[src:is_mutually_exclusive()]"
+    //     "| //src:static[src:is_mutually_exclusive()]"
+    //     "| //src:checked[src:is_mutually_exclusive()]"
+    //     "| //src:unchecked[src:is_mutually_exclusive()]"
+    //     "| //src:expr_stmt[src:is_mutually_exclusive()]"
+    //     "| //src:decl_stmt[src:is_mutually_exclusive()]";
+
+    // node_set returns()
+    run_xpath_test(
+        "xpath_test_data/returns/returns.cpp",
+        "//src:unit/returns()",
+        1
+    );
+
+    // run_xpath_test(
+    //     "xpath_test_data/is_mutually_exclusive/is_mutually_exclusive.java",
+    //     returnsXPath,
+    //     2
+    // );
+
     xmlCleanupParser();
 
 

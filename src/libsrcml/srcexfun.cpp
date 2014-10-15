@@ -323,10 +323,10 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
                            BAD_CAST SRCML_SRC_NS_URI,
                            xpath_exfun_is_mutually_exclusive);
                            
-    xmlXPathRegisterFuncNS(context, (const xmlChar *)"returns",
-                           BAD_CAST SRCML_SRC_NS_URI,
-                           xpath_exfun_returns);
-
+//    xmlXPathRegisterFuncNS(context, (const xmlChar *)"returns",
+//                           BAD_CAST SRCML_SRC_NS_URI,
+//                           xpath_exfun_returns);
+    xmlXPathRegisterFunc(context, BAD_CAST"returns", xpath_exfun_returns);
 
 
 
