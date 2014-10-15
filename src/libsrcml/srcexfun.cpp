@@ -322,19 +322,6 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
     xmlXPathRegisterFuncNS(context, (const xmlChar *)"is_mutually_exclusive",
                            BAD_CAST SRCML_SRC_NS_URI,
                            xpath_exfun_is_mutually_exclusive);
-                           
-/*    xmlXPathRegisterFuncNS(context, (const xmlChar *)"returns",
-                           BAD_CAST SRCML_SRC_NS_URI,
-                           xpath_exfun_returns);
-*/
-//    xmlXPathRegisterFunc(context, BAD_CAST"returns", xpath_exfun_returns);
-//    static ;
-//    static xmlXPathAxis extensionAxis[] = {
-//        { BAD_CAST "axisreturns", &xpath_exaxis_returns }
-//    };
-//    context->axis=extensionAxis;
-//    context->max_axis=1;
-//    context->nb_axis=1;
 
     // register all the xpath extension functions
     for (std::vector<struct xpath_ext_function>::size_type i = 0; i < MACROS.size(); ++i) {

@@ -588,6 +588,14 @@ int main() {
     );
 
 
+    // is_static()
+    string isStaticXPath = "";
+
+    run_xpath_test(
+        "is_static/is_static.c",
+        isStaticXPath,
+        1
+    );    
     // string returnsXPath =
     //     "//src:while[src:is_mutually_exclusive()]"
     //     "| //src:if[src:is_mutually_exclusive()]"
