@@ -618,7 +618,7 @@ int main() {
 
     run_xpath_test("block_is_static/block_is_static.java", blockIsStaticXPath, 1);    
 
-
+    // is_abstract()
     string isAbstractXPath = 
         "//src:function_decl[src:is_abstract()]"
         "| //src:function[src:is_abstract()]"
@@ -633,6 +633,20 @@ int main() {
     run_xpath_test("is_abstract/is_abstract.cpp", isAbstractXPath, 3);
     run_xpath_test("is_abstract/is_abstract.cs", isAbstractXPath, 18);
     run_xpath_test("is_abstract/is_abstract.java", isAbstractXPath, 4);
+
+
+    // has_default_impl()
+    string hasDefaultImplXPath = 
+        "//src:function_decl[src:has_default_impl()]"
+        "| //src:function[src:has_default_impl()]"
+        "| //src:destructor_decl[src:has_default_impl()]"
+        "| //src:constructor_decl[src:has_default_impl()]"
+    ;
+
+    run_xpath_test("has_default_impl/has_default_impl.cpp", hasDefaultImplXPath, 3);
+    run_xpath_test("has_default_impl/has_default_impl.java", hasDefaultImplXPath, 1);
+
+
 
     // string returnsXPath =
     //     "//src:while[src:is_mutually_exclusive()]"
