@@ -328,7 +328,10 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
         "src:decl/src:type[src:specifier[.= 'static']] or src:type[src:specifier[.= 'static']] or src:specifier[.='static']"
     );
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "block_is_static", "parent::src:static");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI,
+        "block_is_static",
+        "parent::src:static"
+    );
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_abstract", "( src:type/src:specifier[.='abstract'] or src:specifier[.='abstract'] or src:literal[@type='number'][.='0'] or src:block[ (src:private | src:protected | src:public)[ (src:function_decl | src:destructor_decl)[ src:literal[@type='number'][.='0'] ] ] ] or ancestor::node()[name()='struct' or name()='class'][1][@type='interface' and not(src:annotation)] or (ancestor::src:event | ancestor::src:property)[src:type/src:specifier[.='abstract']] ) or (@type='interface' and not(src:annotation))");
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_pure_virtual", "( src:type/src:specifier[.='abstract'] or src:specifier[.='abstract'] or src:literal[@type='number'][.='0'] or src:block[ (src:private | src:protected | src:public)[ (src:function_decl | src:destructor_decl)[ src:literal[@type='number'][.='0'] ] ] ] or ancestor::node()[name()='struct' or name()='class'][1][@type='interface' and not(src:annotation)] or (ancestor::src:event | ancestor::src:property)[src:type/src:specifier[.='abstract']] ) or (@type='interface' and not(src:annotation))");

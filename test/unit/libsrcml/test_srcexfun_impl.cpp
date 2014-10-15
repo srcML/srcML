@@ -175,9 +175,6 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
     free(xpathResultArchiveBuffer);
     xml_doc_shared_ptr_t doc(ret, xmlFreeDoc);
 
-
-    cout << "Created new context" << endl;
-
     xmlXPathContextPtr xpathCtx; 
     xpathCtx = xmlXPathNewContext(doc.get());
     if(!xpathCtx) {
@@ -613,6 +610,14 @@ int main() {
     run_xpath_test("is_static/is_static.c", isStaticXPath, 3);
     run_xpath_test("is_static/is_static.cs", isStaticXPath, 9);
     run_xpath_test("is_static/is_static.java", isStaticXPath, 4);
+
+    // block_is_static()
+    string blockIsStaticXPath = 
+        "//src:block[ src:block_is_static() ]"
+    ;
+
+    run_xpath_test("block_is_static/block_is_static.java", blockIsStaticXPath, 1);    
+
     // string returnsXPath =
     //     "//src:while[src:is_mutually_exclusive()]"
     //     "| //src:if[src:is_mutually_exclusive()]"
