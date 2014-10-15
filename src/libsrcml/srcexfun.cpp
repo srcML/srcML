@@ -322,104 +322,11 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
     xmlXPathRegisterFuncNS(context, (const xmlChar *)"is_mutually_exclusive",
                            BAD_CAST SRCML_SRC_NS_URI,
                            xpath_exfun_is_mutually_exclusive);
-
-    // register all the xpath extension functions
-    for (std::vector<struct xpath_ext_function>::size_type i = 0; i < MACROS.size(); ++i) {
-
-        xmlXPathRegisterFuncNS(context, BAD_CAST MACROS[i].name.c_str(),
-                               BAD_CAST MACROS[i].prefix.c_str(),
-                               srcMacrosFunction);
-    }
-
-    xmlXPathRegisterFuncNS(context, (const xmlChar *)"in",
-                           BAD_CAST SRCML_SRC_NS_URI,
-                           srcInFunction);
-}
-
-/**
- * xsltsrcMLRegister
- *
- * Register srcML XSLT extension functions.
- */
-void xsltsrcMLRegister () {
-
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-    typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
-    typedef int (*xsltRegisterExtModuleFunction_function) (const xmlChar *, const xmlChar *, xmlXPathFunction);
-    void* handle = dlopen("libexslt.so", RTLD_LAZY);
-    if (!handle) {
-        handle = dlopen("libexslt.so.0", RTLD_LAZY);
-        if (!handle) {
-            handle = dlopen("libexslt.dylib", RTLD_LAZY);
-            if (!handle) {
-                fprintf(stderr, "Unable to open libexslt library\n");
-                return;
-            }
-        }
-    }
-
-    dlerror();
-    xsltRegisterExtModuleFunction_function xsltRegisterExtModuleFunction;
-    *(VOIDPTR *)(&xsltRegisterExtModuleFunction) = dlsym(handle, "xsltRegisterExtModuleFunction");
-    char* error;
-    if ((error = dlerror()) != NULL) {
-        dlclose(handle);
-        return;
-    }
-#endif
-
-    xsltRegisterExtModuleFunction(BAD_CAST "unit",
-                                  BAD_CAST SRCML_SRC_NS_URI,
-                                  srcContextFunction);
-
-    xsltRegisterExtModuleFunction(BAD_CAST "archive",
-                                  BAD_CAST SRCML_SRC_NS_URI,
-                                  srcRootFunction);
-
-    xsltRegisterExtModuleFunction(BAD_CAST "powerset",
-                                  BAD_CAST SRCML_SRC_NS_URI,
-                                  srcPowersetFunction);
-
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "statement", "/src:unit//node()[self::src:while or self::src:if or self::src:return or self::src:for]");
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "statement_node", "[self::src:while or self::src:if or self::src:return or self::src:for]");
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "if", "/src:unit//src:if");
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "while", "/src:unit//src:while");
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "nestedwhile", ".//src:while//src:while");
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "returntype", "/src:unit//src:function/src:type");
-
-    // srcdiff containing functions
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hascommon",
-                                   "self::*[not(descendant::diff:*) or descendant::diff:common]");
-
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasinsert",
-                                   "descendant::diff:insert[1]");
-
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasdelete",
-                                   "descendant::diff:delete[1]");
-
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasdifference",
-                                   "descendant::diff:*[self::diff:insert or self::diff:delete]");
-
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "haschange",
-                                   "descendant::diff:insert[following-sibling::node()[1][self::diff:delete] or preceding-sibling::node()[1][self::diff:delete]][1]");
-
-    // srcdiff includes functions
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "common",
-                                   "not(ancestor::diff:*[1][self::diff:insert or self::diff:delete])");
-
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "inserted",
-                                   "ancestor::diff:*[1][self::diff:insert]");
-
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "deleted",
-                                   "ancestor::diff:*[1][self::diff:delete]");
-
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "difference",
-                                   "ancestor::diff:*[1][self::diff:insert or self::diff:delete]");
-
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "changed",
-                                   "ancestor::diff:*[1][self::diff:insert[following-sibling::node()[1][self::diff:delete] or preceding-sibling::node()[1][self::diff:delete]] or self::diff:delete[following-sibling::node()[1][self::diff:insert] or preceding-sibling::node()[1][self::diff:insert]]]");
-
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_static", "src:decl/src:type[src:specifier[.= 'static']] or src:type[src:specifier[.= 'static']] or src:specifier[.='static']");
+                           
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI,
+        "is_static",
+        "src:decl/src:type[src:specifier[.= 'static']] or src:type[src:specifier[.= 'static']] or src:specifier[.='static']"
+    );
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "block_is_static", "parent::src:static");
 
@@ -702,6 +609,102 @@ void xsltsrcMLRegister () {
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "ref_qualifiers", "src:ref_qualifier");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "return_type", "src:type/*[ not( self::src:specifier[ .='static' or .='extern' or .='public' or .='internal' or .='protected' or .='private' or .='unsafe' or .='synchronized' or .='partial' or .='inline' or .='constexpr' or .='override' or .='friend' or .='virtual' or .='explicit' or .='implicit' or .='async' or .='new' or .='sealed' or .='final' or .='native' or .='abstract' or .='default' ] or self::src:annotation or self::src:attribute ) ]");
+
+    // register all the xpath extension functions
+    for (std::vector<struct xpath_ext_function>::size_type i = 0; i < MACROS.size(); ++i) {
+
+        xmlXPathRegisterFuncNS(context, BAD_CAST MACROS[i].name.c_str(),
+                               BAD_CAST MACROS[i].prefix.c_str(),
+                               srcMacrosFunction);
+    }
+
+    xmlXPathRegisterFuncNS(context, (const xmlChar *)"in",
+                           BAD_CAST SRCML_SRC_NS_URI,
+                           srcInFunction);
+}
+
+/**
+ * xsltsrcMLRegister
+ *
+ * Register srcML XSLT extension functions.
+ */
+void xsltsrcMLRegister () {
+
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+    typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
+    typedef int (*xsltRegisterExtModuleFunction_function) (const xmlChar *, const xmlChar *, xmlXPathFunction);
+    void* handle = dlopen("libexslt.so", RTLD_LAZY);
+    if (!handle) {
+        handle = dlopen("libexslt.so.0", RTLD_LAZY);
+        if (!handle) {
+            handle = dlopen("libexslt.dylib", RTLD_LAZY);
+            if (!handle) {
+                fprintf(stderr, "Unable to open libexslt library\n");
+                return;
+            }
+        }
+    }
+
+    dlerror();
+    xsltRegisterExtModuleFunction_function xsltRegisterExtModuleFunction;
+    *(VOIDPTR *)(&xsltRegisterExtModuleFunction) = dlsym(handle, "xsltRegisterExtModuleFunction");
+    char* error;
+    if ((error = dlerror()) != NULL) {
+        dlclose(handle);
+        return;
+    }
+#endif
+
+    xsltRegisterExtModuleFunction(BAD_CAST "unit",
+                                  BAD_CAST SRCML_SRC_NS_URI,
+                                  srcContextFunction);
+
+    xsltRegisterExtModuleFunction(BAD_CAST "archive",
+                                  BAD_CAST SRCML_SRC_NS_URI,
+                                  srcRootFunction);
+
+    xsltRegisterExtModuleFunction(BAD_CAST "powerset",
+                                  BAD_CAST SRCML_SRC_NS_URI,
+                                  srcPowersetFunction);
+
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "statement", "/src:unit//node()[self::src:while or self::src:if or self::src:return or self::src:for]");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "statement_node", "[self::src:while or self::src:if or self::src:return or self::src:for]");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "if", "/src:unit//src:if");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "while", "/src:unit//src:while");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "nestedwhile", ".//src:while//src:while");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "returntype", "/src:unit//src:function/src:type");
+
+    // srcdiff containing functions
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hascommon",
+                                   "self::*[not(descendant::diff:*) or descendant::diff:common]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasinsert",
+                                   "descendant::diff:insert[1]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasdelete",
+                                   "descendant::diff:delete[1]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasdifference",
+                                   "descendant::diff:*[self::diff:insert or self::diff:delete]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "haschange",
+                                   "descendant::diff:insert[following-sibling::node()[1][self::diff:delete] or preceding-sibling::node()[1][self::diff:delete]][1]");
+
+    // srcdiff includes functions
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "common",
+                                   "not(ancestor::diff:*[1][self::diff:insert or self::diff:delete])");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "inserted",
+                                   "ancestor::diff:*[1][self::diff:insert]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "deleted",
+                                   "ancestor::diff:*[1][self::diff:delete]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "difference",
+                                   "ancestor::diff:*[1][self::diff:insert or self::diff:delete]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "changed",
+                                   "ancestor::diff:*[1][self::diff:insert[following-sibling::node()[1][self::diff:delete] or preceding-sibling::node()[1][self::diff:delete]] or self::diff:delete[following-sibling::node()[1][self::diff:insert] or preceding-sibling::node()[1][self::diff:insert]]]");
 
 
     // register all the xpath extension functions

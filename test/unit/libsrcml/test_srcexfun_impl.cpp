@@ -175,13 +175,15 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
     free(xpathResultArchiveBuffer);
     xml_doc_shared_ptr_t doc(ret, xmlFreeDoc);
 
+
+    cout << "Created new context" << endl;
+
     xmlXPathContextPtr xpathCtx; 
     xpathCtx = xmlXPathNewContext(doc.get());
     if(!xpathCtx) {
         cout << "Failed to create XPath context" << endl;
         throw std::runtime_error("Failed to create XPath context.");
     }
-
 
     // Registering namespaces.
     if(xmlXPathRegisterNs(xpathCtx, BAD_CAST "src", BAD_CAST SRCML_SRC_NS_URI) != 0) {
@@ -198,6 +200,13 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
 
     xmlXPathObjectPtr xpathObj;
     xpathObj = xmlXPathEvalExpression(BAD_CAST "/src:unit/*", xpathCtx);
+    if(!xpathObj) {
+        throw std::runtime_error("Didn't receive xpathObject");
+    }
+
+    if(!xpathObj->nodesetval) {
+        throw std::runtime_error("Didn't receive nodesetval");
+    }
     int totalResultCount = xpathObj->nodesetval->nodeNr;
     // Recording test status.
     TestResult testResult;
@@ -589,13 +598,21 @@ int main() {
 
 
     // is_static()
-    string isStaticXPath = "";
+    string isStaticXPath = 
+        "//src:decl_stmt[ src:is_static() ]"
+        "| //src:function_decl[src:is_static()]"
+        "| //src:function[src:is_static()]"
+        "| //src:event[src:is_static()]"
+        "| //src:property[src:is_static()]"
+        "| //src:class[src:is_static()]"
+        "| //src:struct[src:is_static()]"
+        "| //src:constructor[src:is_static()]"
+        "| //src:constructor_decl[src:is_static()]"
+    ;
 
-    run_xpath_test(
-        "is_static/is_static.c",
-        isStaticXPath,
-        1
-    );    
+    run_xpath_test("is_static/is_static.c", isStaticXPath, 3);
+    run_xpath_test("is_static/is_static.cs", isStaticXPath, 9);
+    run_xpath_test("is_static/is_static.java", isStaticXPath, 4);
     // string returnsXPath =
     //     "//src:while[src:is_mutually_exclusive()]"
     //     "| //src:if[src:is_mutually_exclusive()]"
