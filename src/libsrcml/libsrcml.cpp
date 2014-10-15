@@ -62,7 +62,7 @@ std::string srcml_error;
 #ifdef STATIC_GLOBALS
 static
 #endif
-srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(),
+srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, 0, std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL,
                                  8, std::vector<std::string>(), std::vector<std::string>(), boost::optional<std::pair<std::string, std::string> >(),
                                  language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>() };
@@ -526,6 +526,17 @@ const char* srcml_get_src_encoding() {
  * @returns Get the xml encoding on success and NULL on failure.
  */
 const char* srcml_get_encoding() {
+
+    return srcml_archive_get_encoding(&global_archive);
+
+}
+
+/**
+ * srcml_get_revision
+ *
+ * @returns Get the srcML revision on success and NULL on failure.
+ */
+const char* srcml_get_revision() {
 
     return srcml_archive_get_encoding(&global_archive);
 

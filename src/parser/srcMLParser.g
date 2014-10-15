@@ -1309,7 +1309,7 @@ overloaded_operator[] { CompleteElement element(this); ENTRY_DEBUG } :
 lambda_expression_csharp[] { bool first = true; ENTRY_DEBUG } :
 		{
 
-            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS | MODE_END_AT_COMMA);      
 
             startElement(SFUNCTION_LAMBDA);
 
@@ -2527,6 +2527,14 @@ visual_cxx_asm_inner[] { ENTRY_DEBUG } :
 
 ;
 
+extern_alias[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        ALIAS
+
+;
+
 // extern definition
 extern_definition[] { ENTRY_DEBUG } :
         {
@@ -2536,7 +2544,7 @@ extern_definition[] { ENTRY_DEBUG } :
             // start the namespace definition
             startElement(SEXTERN);
         }
-        EXTERN
+        EXTERN (extern_alias)*
 ;
 
 // name of extern section
@@ -3920,7 +3928,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
-                (specifier | template_specifier set_bool[sawtemplate, true] | { next_token() == COLON }? SIGNAL | ATREQUIRED | ATOPTIONAL | { inLanguage(LANGUAGE_JAVA) }? default_specifier)
+                (options { generateAmbigWarnings = false; } : EXTERN (options { greedy = true; } : ALIAS set_int[specifier_count, specifier_count + 1])* | specifier | template_specifier set_bool[sawtemplate, true] |
+                    { next_token() == COLON }? SIGNAL | ATREQUIRED | ATOPTIONAL | { inLanguage(LANGUAGE_JAVA) }? default_specifier)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
                         ((inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON) || inLanguage(LANGUAGE_OBJECTIVE_C)) 
@@ -4801,11 +4810,12 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
+
         }
         (options { greedy = true; } :
 
             // commas as in a list
-            { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
+            { (inTransparentMode(MODE_END_ONLY_AT_RPAREN) && (getFirstMode(MODE_END_ONLY_AT_RPAREN | MODE_END_AT_COMMA) & MODE_END_AT_COMMA) == 0) || !inTransparentMode(MODE_END_AT_COMMA) }?
             comma |
 
             // right parentheses, unless we are in a pair of parentheses in an expression
@@ -4957,7 +4967,7 @@ identifier_list[] { ENTRY_DEBUG } :
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
-            INTO | THIS |
+            INTO | THIS | ALIAS |
 
             // Objective-C
             IMPORT | ATPROTOCOL |
@@ -5689,7 +5699,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         { inTransparentMode(MODE_INTERNAL_END_PAREN) && (LA(1) != CXX_CLASS || !keyword_name_token_set.member(next_token())) }?
         (CLASS | CXX_CLASS) |
 
-        { next_token() == LPAREN }?
+        { next_token() == LPAREN | next_token() == LCURLY }?
         delegate_anonymous |
 
         { next_token() == LCURLY }?
@@ -6549,9 +6559,11 @@ lambda_csharp[] { ENTRY_DEBUG } :
 
     {
 
-        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY) {
+
             startElement(SPSEUDO_BLOCK);
-        else if(LA(1) == LCURLY)
+
+        } else if(LA(1) == LCURLY)
             startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
 
     }
@@ -7217,7 +7229,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         { inTransparentMode(MODE_INTERNAL_END_PAREN) && (LA(1) != CXX_CLASS || !keyword_name_token_set.member(next_token())) }?
         (CLASS | CXX_CLASS) |
 
-        { next_token() == LPAREN }?
+        { next_token() == LPAREN | next_token() == LCURLY }?
         delegate_anonymous |
 
         { next_token() == LCURLY }?

@@ -604,6 +604,7 @@ void srcMLOutput::setTokenStream(TokenStream& ints) {
 /**
  * consume
  * @param language unit language attribute
+ * @param revision unit revision attribute
  * @param directory unit directory attribute
  * @param filename unit filename attribute
  * @param version unit version attribute
@@ -612,10 +613,11 @@ void srcMLOutput::setTokenStream(TokenStream& ints) {
  *
  * Start consumption of tokens/parsing of source code with unit attributes.
  */
-void srcMLOutput::consume(const char* language, const char* directory, const char* filename,
+void srcMLOutput::consume(const char* language, const char* revision, const char* directory, const char* filename,
                           const char* version, const char* timestamp, const char* hash) {
 
     // store attributes so that first occurrence of unit element will be correct
+    unit_revision = revision;
     unit_dir = directory;
     unit_filename = filename;
     unit_version = version;
@@ -823,6 +825,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 /**
  * startUnit
  * @param language the language attribute
+ * @param revision what version of srcML
  * @param dir the directory attribute
  * @param filename the filename attribute
  * @param version the version attribute
@@ -832,7 +835,8 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
  *
  * Output the start of a unit tag.
  */
-void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename,
+void srcMLOutput::startUnit(const char* language, const char* revision,
+                            const char* dir, const char* filename,
                             const char* version, const char* timestamp,
                             const char* hash,
                             const std::vector<std::string> & attributes,
@@ -878,6 +882,8 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
     // list of attributes
     const char* const attrs[][2] = {
+
+        { UNIT_ATTRIBUTE_REVISION, depth == 0 ? revision : 0 },
 
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },
@@ -964,7 +970,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
         // keep track of number of open elements
         openelementcount = 0;
-        startUnit(unit_language, unit_dir, unit_filename, unit_version, unit_timestamp, unit_hash, unit_attributes, !isoption(options, SRCML_OPTION_ARCHIVE));
+        startUnit(unit_language, unit_revision, unit_dir, unit_filename, unit_version, unit_timestamp, unit_hash, unit_attributes, !isoption(options, SRCML_OPTION_ARCHIVE));
 
     } else {
 
