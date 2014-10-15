@@ -52,9 +52,6 @@ addUnitTest(test_srcexfun_impl test_srcexfun_impl.cpp)
 add_custom_target(copy_test_data_target ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/xpath_test_data" "${CMAKE_BINARY_DIR}/bin/xpath_test_data")
 add_dependencies(test_srcexfun_impl copy_test_data_target)
 file(GLOB_RECURSE xpath_test_files "${CMAKE_CURRENT_SOURCE_DIR}/xpath_test_data/*")
-foreach(x ${xpath_test_files})
-    message(STATUS "${x}")
-endforeach()
 
 add_dependencies(test_srcexfun_impl ${xpath_test_files})
 

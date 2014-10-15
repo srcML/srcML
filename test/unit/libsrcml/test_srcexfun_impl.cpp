@@ -619,11 +619,11 @@ int main() {
     //     "| //src:decl_stmt[src:is_mutually_exclusive()]";
 
     // node_set returns()
-    run_xpath_test(
-        "xpath_test_data/returns/returns.cpp",
-        "//src:unit[src:returns()]",
-        1
-    );
+    // run_xpath_test(
+    //     "xpath_test_data/returns/returns.cpp",
+    //     "//src:unit[src:returns()]",
+    //     1
+    // );
 
     // run_xpath_test(
     //     "xpath_test_data/is_mutually_exclusive/is_mutually_exclusive.java",
