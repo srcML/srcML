@@ -100,8 +100,8 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
         cout << "Last Error string: " << srcml_error_string() << endl;
         throw std::runtime_error("Failed to set language.");
     }
-
-    rc = srcml_parse_unit_filename(unit, testFile.c_str());
+    string fullTestFilePath = SRCML_XPATH_EXFUN_TEST_DIR + string("/") + testFile;
+    rc = srcml_parse_unit_filename(unit, fullTestFilePath.c_str());
     if(rc != SRCML_STATUS_OK) {
         cout << rc << endl;
         cout << "Last Error string: " << srcml_error_string() << endl;
@@ -286,7 +286,7 @@ int main() {
 
     // has_return()
     run_xpath_test(
-        "xpath_test_data/has_return/has_return.cpp",
+        "has_return/has_return.cpp",
         "//src:unit[src:has_return()] "
         "| //src:function[src:has_return()] "
         "| //src:destructor[src:has_return()]"
@@ -326,25 +326,19 @@ int main() {
         "| //src:unchecked[src:has_return()]";
 
     run_xpath_test(
-        "xpath_test_data/has_return/has_return_scope_test.cpp",
+        "has_return/has_return_scope_test.cpp",
         hasReturnXPath,
         6
     );
 
     run_xpath_test(
-        "xpath_test_data/has_return/has_return_return_stmt_test.cpp",
-        "//src:return[src:has_return()] ",
-        0
-    );
-
-    run_xpath_test(
-        "xpath_test_data/has_return/has_return.cs",
+        "has_return/has_return.cs",
         hasReturnXPath,
         8
     );
 
     run_xpath_test(
-        "xpath_test_data/has_return/has_return.java",
+        "has_return/has_return.java",
         hasReturnXPath,
         4
     );
@@ -379,26 +373,26 @@ int main() {
         "| //src:unchecked[src:has_throw()]";
 
     run_xpath_test(
-        "xpath_test_data/has_throw/has_throw.cpp",
+        "has_throw/has_throw.cpp",
         hasThrowXPath,
         19
     );
 
     run_xpath_test(
-        "xpath_test_data/has_throw/has_throw.cs",
+        "has_throw/has_throw.cs",
         hasThrowXPath,
         8
     );
 
     run_xpath_test(
-        "xpath_test_data/has_throw/has_throw.java",
+        "has_throw/has_throw.java",
         hasThrowXPath,
         4
     );
 
     // is_nested()
     run_xpath_test(
-        "xpath_test_data/is_nested/is_nested.cpp",
+        "is_nested/is_nested.cpp",
         "//src:asm[src:is_nested()]"
         "| //src:typedef[src:is_nested()]"
         "| //src:using[src:is_nested()]"
@@ -424,7 +418,7 @@ int main() {
 
     // is_class_template_partial_specialization()
     run_xpath_test(
-        "xpath_test_data/is_class_template_partial_specialization/is_class_template_partial_specialization.cpp",
+        "is_class_template_partial_specialization/is_class_template_partial_specialization.cpp",
         "//src:union[src:is_class_template_partial_specialization()]"
         "| //src:union_decl[src:is_class_template_partial_specialization()]"
         "| //src:class[src:is_class_template_partial_specialization()]"
@@ -438,7 +432,7 @@ int main() {
 
     // has_init()
     run_xpath_test(
-        "xpath_test_data/has_init/has_init.cpp",
+        "has_init/has_init.cpp",
         "//src:decl[src:has_init()]"
         "| //src:decl_stmt[src:has_init()]"
         "| //src:param[src:has_init()]"
@@ -452,7 +446,7 @@ int main() {
     );
 
     run_xpath_test(
-        "xpath_test_data/has_init/has_init.cs",
+        "has_init/has_init.cs",
         "//src:decl[src:has_init()]"
         "| //src:decl_stmt[src:has_init()]"
         "| //src:param[src:has_init()]"
@@ -466,7 +460,7 @@ int main() {
     );
 
     run_xpath_test(
-        "xpath_test_data/has_init/has_init.java",
+        "has_init/has_init.java",
         "//src:decl[src:has_init()]"
         "| //src:decl_stmt[src:has_init()]"
         "| //src:param[src:has_init()]"
@@ -506,19 +500,19 @@ int main() {
 
 
     run_xpath_test(
-        "xpath_test_data/has_break/has_break.cpp",
+        "has_break/has_break.cpp",
         hasBreakXPath,
         9
     );
 
     run_xpath_test(
-        "xpath_test_data/has_break/has_break.cs",
+        "has_break/has_break.cs",
         hasBreakXPath,
         11
     );
 
     run_xpath_test(
-        "xpath_test_data/has_break/has_break.java",
+        "has_break/has_break.java",
         hasBreakXPath,
         11
     );
@@ -551,7 +545,7 @@ int main() {
         "| //src:decl_stmt[src:is_unsafe()]";
 
     run_xpath_test(
-        "xpath_test_data/is_unsafe/is_unsafe.cs",
+        "is_unsafe/is_unsafe.cs",
         isUnsafeXPath,
         3
     );
@@ -582,13 +576,13 @@ int main() {
         "| //src:decl_stmt[src:is_mutually_exclusive()]";
 
     run_xpath_test(
-        "xpath_test_data/is_mutually_exclusive/is_mutually_exclusive.cs",
+        "is_mutually_exclusive/is_mutually_exclusive.cs",
         isMutuallyExclusiveXPath,
         2
     );
 
     run_xpath_test(
-        "xpath_test_data/is_mutually_exclusive/is_mutually_exclusive.java",
+        "is_mutually_exclusive/is_mutually_exclusive.java",
         isMutuallyExclusiveXPath,
         2
     );
@@ -620,7 +614,7 @@ int main() {
 
     // node_set returns()
     // run_xpath_test(
-    //     "xpath_test_data/returns/returns.cpp",
+    //     "returns/returns.cpp",
     //     "//src:unit[src:returns()]",
     //     1
     // );
@@ -632,7 +626,7 @@ int main() {
     // );
 
     xmlCleanupParser();
-
+    // cout <<  << endl;
 
     // Checking for and displaying failed tests.
 

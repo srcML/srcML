@@ -46,6 +46,10 @@ addUnitTest(test_srcml_xpath test_srcml_xpath.cpp ${LIBXML2_LIBRARIES})
 addUnitTest(test_srcml_xslt test_srcml_xslt.cpp ${LIBXML2_LIBRARIES})
 addUnitTest(test_language_extension_registry test_language_extension_registry.cpp)
 addUnitTest(test_srcml_translator test_srcml_translator.cpp ${LIBXML2_LIBRARIES})
+
+
+
+add_definitions(-DSRCML_XPATH_EXFUN_TEST_DIR="${CMAKE_BINARY_DIR}/bin/xpath_test_data")
 addUnitTest(test_srcexfun_impl test_srcexfun_impl.cpp)
 
 
