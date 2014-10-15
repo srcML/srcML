@@ -646,10 +646,23 @@ int main() {
     run_xpath_test("has_default_impl/has_default_impl.cpp", hasDefaultImplXPath, 3);
     run_xpath_test("has_default_impl/has_default_impl.java", hasDefaultImplXPath, 1);
 
-
-
     // has_default_property_value()
     run_xpath_test("has_default_property_value/has_default_property_value.java", "//src:function_decl[src:has_default_property_value()]", 1);
+
+
+    // is_final()
+    string tempXPath = 
+        "//src:function_decl[src:is_final()]"
+        "| //src:function[src:is_final()]"
+        "| //src:decl_stmt[src:is_final()]"
+        "| //src:event[src:is_final()]"
+        "| //src:property[src:is_final()]"
+        "| //src:class[src:is_final()]"
+        "| //src:struct[src:is_final()]"
+    ;
+
+    run_xpath_test("is_final/is_final.cpp", tempXPath, 1);
+    run_xpath_test("is_final/is_final.java", tempXPath, 4);
 
 
     // string returnsXPath =
