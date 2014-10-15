@@ -921,8 +921,17 @@ void xpath_exfun_is_mutually_exclusive(xmlXPathParserContextPtr ctxt, int nargs)
 
 void xpath_exfun_returns(xmlXPathParserContextPtr ctxt, int nargs) {
     CHECK_ARITY(0);
-    static NodeNameSet returnTraversalNodeNames = has_return_node_init();
-    scopedDescendentsCollectingTraversal<EXCLUSIVE>(returnTraversalNodeNames, return_tag, ctxt);
+    std::cout << "Reached Returns function" << std::endl;
+    std::cout << "number of XPath axis: " << ctxt->context->nb_axis << std::endl;
+    std::cout << "Max number of XPath axis: " << ctxt->context->max_axis << std::endl;
+    std::cout << "XPath axis ptr: " << ctxt->context->axis << std::endl;
+    xmlXPathReturnFalse(ctxt);
+    // static NodeNameSet returnTraversalNodeNames = has_return_node_init();
+    // scopedDescendentsCollectingTraversal<EXCLUSIVE>(returnTraversalNodeNames, return_tag, ctxt);
+}
+
+xmlXPathObjectPtr xpath_exaxis_returns(xmlXPathParserContextPtr ctxt, xmlXPathObjectPtr cur) {
+    return 0;
 }
 
 void xpath_exfun_throw_stmts(xmlXPathParserContextPtr ctxt, int nargs) {

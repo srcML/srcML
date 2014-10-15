@@ -621,7 +621,7 @@ int main() {
     // node_set returns()
     run_xpath_test(
         "xpath_test_data/returns/returns.cpp",
-        "//src:unit/returns()",
+        "//src:unit[src:returns()]",
         1
     );
 

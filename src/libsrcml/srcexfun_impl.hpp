@@ -254,6 +254,8 @@ void xpath_exfun_is_mutually_exclusive(xmlXPathParserContextPtr ctxt, int nargs)
  */
 void xpath_exfun_returns(xmlXPathParserContextPtr ctxt, int nargs);
 
+xmlXPathObjectPtr xpath_exaxis_returns(xmlXPathParserContextPtr ctxt, xmlXPathObjectPtr cur);
+
 /**
  *  XPath Signature: node_set throw_stmts()
  *  
