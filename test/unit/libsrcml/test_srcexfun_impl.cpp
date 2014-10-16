@@ -884,8 +884,16 @@ int main() {
     run_xpath_test("is_virtual/is_virtual.cs", tempXPath, 31);
     run_xpath_test("is_virtual/is_virtual.java", tempXPath, 2);
 
-
-
+    // is_overridable
+    tempXPath =
+        "//src:function[src:is_overridable()]"
+        "| //src:function_decl[src:is_overridable()]"
+        "| //src:event[src:is_overridable()]"
+        "| //src:property[src:is_overridable()]"
+    ;
+    run_xpath_test("is_overridable/is_overridable.cpp", tempXPath, 4);
+    run_xpath_test("is_overridable/is_overridable.cs", tempXPath, 25);
+    run_xpath_test("is_overridable/is_overridable.java", tempXPath, 2);
 
 
 
