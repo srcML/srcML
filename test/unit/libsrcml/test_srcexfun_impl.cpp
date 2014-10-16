@@ -1009,8 +1009,14 @@ int main() {
     run_xpath_test("is_pointer/is_pointer.cpp", tempXPath, 18);
 
 
-
-
+    // is_parameter_pack
+    tempXPath =
+        "//src:type[src:is_parameter_pack()]"
+        "| //src:decl[src:is_parameter_pack()]"
+        "| //src:param[src:is_parameter_pack()]"
+        "| //src:argument[src:is_parameter_pack()]"
+    ;
+    run_xpath_test("is_parameter_pack/is_parameter_pack.cpp", tempXPath, 12);
 
 
 

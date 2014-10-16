@@ -397,14 +397,9 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_default", "src:specifier[.='default'] | src:type/src:specifier[.='default']");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_pointer",
-    "(self::src:decl and src:type/src:modifier[.='*']) or\
-    ((self::src:decl_stmt or self::src:param) and src:decl/src:type/src:modifier[.='*']) or\
-    (self::src:argument and src:expr/src:modifier[.='*']) or\
-    ((self::src:type or self::src:name)and src:modifier[.='*']) or\
-    (self::src:function_decl and src:modifier[.='*'])");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_pointer", "(self::src:decl and src:type/src:modifier[.='*']) or ((self::src:decl_stmt or self::src:param) and src:decl/src:type/src:modifier[.='*']) or (self::src:argument and src:expr/src:modifier[.='*']) or ((self::src:type or self::src:name)and src:modifier[.='*']) or (self::src:function_decl and src:modifier[.='*'])");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_parameter_pack", "(name()='decl' and src:type/src:modifier[.='...']) or (name()='param' and ( src:decl/src:type/src:modifier[.='...'] or src:type/src:modifier[.='...'] ) ) or (name()='argument' and src:expr/src:modifier[.='...']) or (name()='type' and src:modifier[.='...'])");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_parameter_pack", "(self::src:decl and src:type/src:modifier[.='...']) or (self::src:param and ( src:decl/src:type/src:modifier[.='...'] or src:type/src:modifier[.='...'] ) ) or (self::src:argument and src:expr/src:modifier[.='...']) or (self::src:type and src:modifier[.='...'])");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_generic", "( ancestor::src:unit[@language='C#'] and ( (name()='class' or name()='struct' or name()='function' or name()='function_decl') and (src:name[last()]/src:argument_list[@type='template'] or src:name/src:name[last()]/src:argument_list[@type='template']) ) ) or ( ancestor::src:unit[@language='C++'] and src:template ) or ( ancestor::src:unit[@language='Java'] and ( ( (name()='class') and (src:name[last()]/src:argument_list[@type='template'] or src:name/src:name[last()]/src:argument_list[@type='template']) ) or ( (name()='function' or name()='function_decl') and src:type/src:argument_list[@type='template'] ) ) )");
 
