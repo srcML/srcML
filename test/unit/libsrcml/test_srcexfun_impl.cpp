@@ -985,6 +985,16 @@ int main() {
     run_xpath_test("is_member/is_member.java", tempXPath, 5);
 
 
+    // is_default
+    tempXPath =
+        "//src:function_decl[src:is_default()]"
+        "| //src:function[src:is_default()]"
+        "| //src:constructor[src:is_default()]"
+        "| //src:constructor_decl[src:is_default()]"
+        "| //src:destructor_decl[src:is_default()]"
+    ;
+    run_xpath_test("is_default/is_default.cpp", tempXPath, 3);
+    run_xpath_test("is_default/is_default.java", tempXPath, 2);
 
 
 
