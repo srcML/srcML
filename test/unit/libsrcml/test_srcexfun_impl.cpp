@@ -712,7 +712,28 @@ int main() {
     run_xpath_test("is_private/is_private.java", tempXPath, 5);
 
 
-
+    // is_protected
+    tempXPath =
+        "//src:function_decl[src:is_protected()]"
+        "| //src:function[src:is_protected()]"
+        "| //src:constructor[src:is_protected()]"
+        "| //src:constructor_decl[src:is_protected()]"
+        "| //src:destructor[src:is_protected()]"
+        "| //src:destructor_decl[src:is_protected()]"
+        "| //src:decl_stmt[src:is_protected()]"
+        "| //src:class[src:is_protected()]"
+        "| //src:class_decl[src:is_protected()]"
+        "| //src:struct[src:is_protected()]"
+        "| //src:struct_decl[src:is_protected()]"
+        "| //src:enum[src:is_protected()]"
+        "| //src:property[src:is_protected()]"
+        "| //src:event[src:is_protected()]"
+        "| //src:using[src:is_protected()]"
+        "| //src:typedef[src:is_protected()]"
+    ;
+    run_xpath_test("is_protected/is_protected.cpp", tempXPath, 32);
+    run_xpath_test("is_protected/is_protected.cs", tempXPath, 12);
+    run_xpath_test("is_protected/is_protected.java", tempXPath, 6);
 
 
 
