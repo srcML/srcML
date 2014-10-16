@@ -1074,8 +1074,13 @@ int main() {
     run_xpath_test("is_noreturn/is_noreturn.cpp", tempXPath, 2);
     run_xpath_test("is_noreturn/is_noreturn.c", tempXPath, 2);
 
-
-
+    // is_readonly
+    tempXPath = 
+        "//src:decl[src:is_readonly()]"
+        "| //src:decl_stmt[src:is_readonly()]"
+        "| //src:type[src:is_readonly()]"
+    ;
+    run_xpath_test("is_readonly/is_readonly.cs", tempXPath, 3);
 
 
 
