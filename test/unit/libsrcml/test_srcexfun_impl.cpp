@@ -844,6 +844,15 @@ int main() {
     ;
     run_xpath_test("is_mutable/is_mutable.cpp", tempXPath, 3);
 
+    // is_thread_local
+    tempXPath =
+        "//src:decl[src:is_thread_local()]"
+        "| //src:decl_stmt[src:is_thread_local()]"
+        "| //src:lambda[src:is_thread_local()]"
+    ;
+    run_xpath_test("is_thread_local/is_thread_local.c", tempXPath, 2);
+    run_xpath_test("is_thread_local/is_thread_local.cpp", tempXPath, 2);
+
 
 
 
