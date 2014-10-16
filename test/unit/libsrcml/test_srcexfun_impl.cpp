@@ -928,7 +928,6 @@ int main() {
     run_xpath_test("has_deduced_type/has_deduced_type.cpp", tempXPath, 7);
     run_xpath_test("has_deduced_type/has_deduced_type.cs", tempXPath, 2);
 
-
     // is_deleted
     tempXPath =
         "//src:function_decl[src:is_deleted()]"
@@ -936,6 +935,42 @@ int main() {
         "| //src:destructor_decl[src:is_deleted()]"
     ;
     run_xpath_test("is_deleted/is_deleted.cpp", tempXPath, 3);
+
+    // is_explicit
+    tempXPath =
+        "//src:function[src:is_explicit()]"
+        "| //src:function_decl[src:is_explicit()]"
+        "| //src:constructor[src:is_explicit()]"
+        "| //src:constructor_decl[src:is_explicit()]"
+    ;
+    run_xpath_test("is_explicit/is_explicit.cpp", tempXPath, 3);
+    run_xpath_test("is_explicit/is_explicit.cs", tempXPath, 2);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // string returnsXPath =
     //     "//src:while[src:is_mutually_exclusive()]"
