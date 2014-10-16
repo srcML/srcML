@@ -811,6 +811,15 @@ int main() {
     run_xpath_test("is_const/is_const.cpp", tempXPath, 8);
     run_xpath_test("is_const/is_const.cs", tempXPath, 4);
 
+    // is_inline
+    tempXPath =
+        "//src:function_decl[src:is_inline()]"
+        "| //src:function[src:is_inline()]"
+        "| //src:namespace[src:is_inline()]"
+    ;
+    run_xpath_test("is_inline/is_inline.c", tempXPath, 2);
+    run_xpath_test("is_inline/is_inline.cpp", tempXPath, 1);
+
 
 
 

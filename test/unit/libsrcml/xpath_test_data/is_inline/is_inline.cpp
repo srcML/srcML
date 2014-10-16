@@ -1,0 +1,3 @@
+inline namespace X {
+}
+
