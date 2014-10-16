@@ -780,8 +780,21 @@ int main() {
     ;
     run_xpath_test("is_internal/is_internal.cs", tempXPath, 13);
 
-
-
+    // is_volatile
+    tempXPath =
+        "//src:function_decl[src:is_volatile()]"
+        "| //src:function[src:is_volatile()]"
+        "| //src:decl_stmt[src:is_volatile()]"
+        "| //src:decl[src:is_volatile()]"
+        "| //src:asm[src:is_volatile()]"
+        "| //src:using[src:is_volatile()]"
+        "| //src:type[src:is_volatile()]"
+        "| //src:typedef[src:is_volatile()]"
+    ;
+    run_xpath_test("is_volatile/is_volatile.c", tempXPath, 3);
+    run_xpath_test("is_volatile/is_volatile.cpp", tempXPath, 9);
+    run_xpath_test("is_volatile/is_volatile.cs", tempXPath, 4);
+    run_xpath_test("is_volatile/is_volatile.java", tempXPath, 3);
 
 
 
