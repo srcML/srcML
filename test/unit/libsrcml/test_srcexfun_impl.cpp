@@ -946,8 +946,12 @@ int main() {
     run_xpath_test("is_explicit/is_explicit.cpp", tempXPath, 3);
     run_xpath_test("is_explicit/is_explicit.cs", tempXPath, 2);
 
-
-
+    // is_bitfield
+    tempXPath =
+        "//src:decl_stmt[src:is_bitfield()]"
+        "| //src:decl[src:is_bitfield()]"
+    ;
+    run_xpath_test("is_bitfield/is_bitfield.cpp", tempXPath, 4);
 
 
 
