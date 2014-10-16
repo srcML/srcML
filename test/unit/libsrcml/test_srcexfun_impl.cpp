@@ -906,9 +906,16 @@ int main() {
     tempXPath =
         "//src:block[src:is_extern_block()]"
     ;
-    run_xpath_test("is_extern_block/is_extern_block.cpp", tempXPath, 1);    
+    run_xpath_test("is_extern_block/is_extern_block.cpp", tempXPath, 1);
 
-
+    // is_extern
+    tempXPath =
+        "//src:function[src:is_extern()]"
+        "| //src:function_decl[src:is_extern()]"
+        "| //src:decl_stmt[src:is_extern()]"
+    ;
+    run_xpath_test("is_extern/is_extern.cpp", tempXPath, 1);
+    run_xpath_test("is_extern/is_extern.cs", tempXPath, 2);
 
 
 
