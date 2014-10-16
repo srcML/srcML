@@ -853,8 +853,12 @@ int main() {
     run_xpath_test("is_thread_local/is_thread_local.c", tempXPath, 2);
     run_xpath_test("is_thread_local/is_thread_local.cpp", tempXPath, 2);
 
-
-
+    // is_constexpr
+    tempXPath =
+        "//src:function[src:is_constexpr()]"
+        "| //src:function_decl[src:is_constexpr()]"
+    ;
+    run_xpath_test("is_constexpr/is_constexpr.cpp", tempXPath, 2);
 
 
 
