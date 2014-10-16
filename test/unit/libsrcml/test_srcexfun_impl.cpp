@@ -929,6 +929,14 @@ int main() {
     run_xpath_test("has_deduced_type/has_deduced_type.cs", tempXPath, 2);
 
 
+    // is_deleted
+    tempXPath =
+        "//src:function_decl[src:is_deleted()]"
+        "| //src:constructor_decl[src:is_deleted()]"
+        "| //src:destructor_decl[src:is_deleted()]"
+    ;
+    run_xpath_test("is_deleted/is_deleted.cpp", tempXPath, 3);
+
     // string returnsXPath =
     //     "//src:while[src:is_mutually_exclusive()]"
     //     "| //src:if[src:is_mutually_exclusive()]"
