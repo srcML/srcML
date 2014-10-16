@@ -1066,6 +1066,14 @@ int main() {
     ;
     run_xpath_test("is_rvalue_reference/is_rvalue_reference.cpp", tempXPath, 7);
 
+    // is_noreturn
+    tempXPath = 
+        "//src:function[src:is_noreturn()]"
+        "| //src:function_decl[src:is_noreturn()]"
+    ;
+    run_xpath_test("is_noreturn/is_noreturn.cpp", tempXPath, 2);
+    run_xpath_test("is_noreturn/is_noreturn.c", tempXPath, 2);
+
 
 
 
