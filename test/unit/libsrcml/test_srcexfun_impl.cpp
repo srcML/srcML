@@ -828,6 +828,14 @@ int main() {
     run_xpath_test("is_restrict/is_restrict.c", tempXPath, 2);
     run_xpath_test("is_restrict/is_restrict.cpp", tempXPath, 2);
 
+    // is_register
+    tempXPath =
+        "//src:decl[src:is_register()]"
+        "| //src:decl_stmt[src:is_register()]"
+    ;
+    run_xpath_test("is_register/is_register.c", tempXPath, 2);
+    run_xpath_test("is_register/is_register.cpp", tempXPath, 2);
+
 
 
 
