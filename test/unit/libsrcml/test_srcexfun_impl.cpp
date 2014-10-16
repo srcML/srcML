@@ -682,8 +682,11 @@ int main() {
     run_xpath_test("is_transient/is_transient.java", tempXPath, 2);
 
 
+    // is_native
+    tempXPath = "//src:function_decl[src:is_native()]";
 
-
+    run_xpath_test("is_native/is_native.cs", tempXPath, 2);
+    run_xpath_test("is_native/is_native.java", tempXPath, 1);
 
 
 
