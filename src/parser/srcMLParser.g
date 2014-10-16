@@ -3924,7 +3924,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                     (argument_token_set_one.member(LA(1)) || argument_token_set_two.member(LA(1)) || argument_token_set_three.member(LA(1)))
 #endif
                     && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
-                     && (LA(1) != TEMPLATE || next_token() != TEMPOPS) 
+                     && (LA(1) != TEMPLATE || next_token() != TEMPOPS) && (LA(1) != ATOMIC || next_token() != LPAREN)
                  }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
@@ -4043,7 +4043,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // if elaborated type specifier should also be handled above. Reached here because 
                 // non-specifier then class/struct/union.
                 { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != CXX_CLASS && LA(1) != STRUCT && LA(1) != UNION) }?
-                ({ LA(1) == DECLTYPE || LA(1) == ATOMIC }? type_specifier_call | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
+                ({ LA(1) == DECLTYPE }? type_specifier_call | { next_token() == LPAREN }? atomic |pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
                 non_lead_type_identifier throw_exception[!foundpure]
@@ -4327,7 +4327,7 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         enum_definition_complete |
 
-        type_specifier_call
+        { LA(1) == DECLTYPE }? type_specifier_call | atomic
 
         )
 
@@ -4383,7 +4383,7 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
 
 type_specifier_call[] { ENTRY_DEBUG } :
 
-    {inputState->guessing }? (decltype_call_full | atomic_call_full) | decltype_call | atomic_call
+    { inputState->guessing }? (decltype_call_full) | decltype_call
 
 ;
 
@@ -4407,8 +4407,23 @@ decltype_call_full[] { ENTRY_DEBUG } :
         DECLTYPE paren_pair
 ;
 
-
 // C11 markup _Atomic 
+atomic[] { ENTRY_DEBUG } :
+
+    { next_token() == LPAREN }? ({ inputState->guessing }? atomic_call_full | atomic_call) | atomic_specifier
+
+;
+
+// C11 markup _Atomic as specifier
+atomic_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        ATOMIC
+
+;
+
+// C11 markup _Atomic as call
 atomic_call[] { CompleteElement element(this);  int save_type_count = getTypeCount(); ENTRY_DEBUG } :
         {
 
@@ -4421,6 +4436,7 @@ atomic_call[] { CompleteElement element(this);  int save_type_count = getTypeCou
         }
         ATOMIC (options { greedy = true; } : complete_argument_list)?
         { setTypeCount(save_type_count); }
+
 ;
 
 // C++ completely match without markup _Atomic
@@ -5312,7 +5328,7 @@ function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 // mark specifiers
 specifier[] { ENTRY_DEBUG } :
-        single_keyword_specifier | alignas_specifier | macro_specifier_call
+        single_keyword_specifier | alignas_specifier | macro_specifier_call | atomic
 
 ;
 
