@@ -3016,7 +3016,7 @@ class_default_access_action[int access_token] { ENTRY_DEBUG } :
 // handle class header
 class_header[] { ENTRY_DEBUG } :
 
-        { isoption(parser_options, SRCML_OPTION_CPP) }?
+        { isoption(parser_options, SRCML_OPTION_CPP) && next_token() != DCOLON }?
         (macro_call_check class_header_base LCURLY)=>
            macro_call class_header_base |
 
@@ -3027,7 +3027,7 @@ class_header[] { ENTRY_DEBUG } :
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         // suppress ()* warning
-        ({ LA(1) != FINAL }? compound_name_inner[false] | keyword_name) (options { greedy = true; } : specifier)*
+        ({ LA(1) != FINAL }? compound_name | keyword_name) (options { greedy = true; } : specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
