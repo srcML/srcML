@@ -681,12 +681,35 @@ int main() {
 
     run_xpath_test("is_transient/is_transient.java", tempXPath, 2);
 
-
     // is_native
     tempXPath = "//src:function_decl[src:is_native()]";
 
     run_xpath_test("is_native/is_native.cs", tempXPath, 2);
     run_xpath_test("is_native/is_native.java", tempXPath, 1);
+
+
+    // is_private
+    tempXPath =
+        "//src:function_decl[src:is_private()]"
+        "| //src:function[src:is_private()]"
+        "| //src:constructor[src:is_private()]"
+        "| //src:constructor_decl[src:is_private()]"
+        "| //src:destructor[src:is_private()]"
+        "| //src:destructor_decl[src:is_private()]"
+        "| //src:decl_stmt[src:is_private()]"
+        "| //src:class[src:is_private()]"
+        "| //src:class_decl[src:is_private()]"
+        "| //src:struct[src:is_private()]"
+        "| //src:struct_decl[src:is_private()]"
+        "| //src:enum[src:is_private()]"
+        "| //src:property[src:is_private()]"
+        "| //src:event[src:is_private()]"
+        "| //src:using[src:is_private()]"
+        "| //src:typedef[src:is_private()]"
+    ;
+    run_xpath_test("is_private/is_private.cpp", tempXPath, 32);
+    run_xpath_test("is_private/is_private.cs", tempXPath, 14);
+    run_xpath_test("is_private/is_private.java", tempXPath, 5);
 
 
 
