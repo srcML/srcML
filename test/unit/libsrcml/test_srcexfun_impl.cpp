@@ -1056,6 +1056,16 @@ int main() {
     run_xpath_test("is_reference/is_reference.cpp", tempXPath, 7);
     run_xpath_test("is_reference/is_reference.cs", tempXPath, 6);
 
+    // is_rvalue_reference
+    tempXPath = 
+        "//src:argument[src:is_rvalue_reference()]"
+        "| //src:param[src:is_rvalue_reference()]"
+        "| //src:decl[src:is_rvalue_reference()]"
+        "| //src:decl_stmt[src:is_rvalue_reference()]"
+        "| //src:type[src:is_rvalue_reference()]"
+    ;
+    run_xpath_test("is_rvalue_reference/is_rvalue_reference.cpp", tempXPath, 7);
+
 
 
 
