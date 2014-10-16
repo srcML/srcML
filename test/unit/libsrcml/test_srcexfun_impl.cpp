@@ -917,7 +917,16 @@ int main() {
     run_xpath_test("is_extern/is_extern.cpp", tempXPath, 1);
     run_xpath_test("is_extern/is_extern.cs", tempXPath, 2);
 
-
+    // has_deduced_type
+    tempXPath =
+        "//src:function[src:has_deduced_type()]"
+        "| //src:function_decl[src:has_deduced_type()]"
+        "| //src:decl_stmt[src:has_deduced_type()]"
+        "| //src:decl[src:has_deduced_type()]"
+        "| //src:lambda[src:has_deduced_type()]"
+    ;
+    run_xpath_test("has_deduced_type/has_deduced_type.cpp", tempXPath, 7);
+    run_xpath_test("has_deduced_type/has_deduced_type.cs", tempXPath, 2);
 
 
     // string returnsXPath =
