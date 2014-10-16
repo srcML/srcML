@@ -902,7 +902,11 @@ int main() {
     ;
     run_xpath_test("has_auto_specifier/has_auto_specifier.cpp", tempXPath, 2);
 
-    
+    // is_extern_block
+    tempXPath =
+        "//src:block[src:is_extern_block()]"
+    ;
+    run_xpath_test("is_extern_block/is_extern_block.cpp", tempXPath, 1);    
 
 
 
