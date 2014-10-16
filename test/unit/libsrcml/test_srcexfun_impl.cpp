@@ -895,7 +895,12 @@ int main() {
     run_xpath_test("is_overridable/is_overridable.cs", tempXPath, 25);
     run_xpath_test("is_overridable/is_overridable.java", tempXPath, 2);
 
-
+    // has_auto_specifier
+    tempXPath =
+        "//src:decl[src:has_auto_specifier()]"
+        "| //src:decl_stmt[src:has_auto_specifier()]"
+    ;
+    run_xpath_test("has_auto_specifier/has_auto_specifier.cpp", tempXPath, 2);
 
 
 
