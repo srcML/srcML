@@ -63,7 +63,7 @@ extern "C" {
 /** number representing libsrcml version */
 #define SRCML_VERSION_NUMBER 8000
 /** string containing libsrcml version */
-#define SRCML_VERSION_STRING "libsrcml 0.8"
+#define SRCML_VERSION_STRING "0.8.0"
 
 /* Cleanup the globally allocated items */
 __LIBSRCML_DECL void srcml_cleanup_globals();

@@ -152,7 +152,7 @@ enum STMT_TYPE {
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
     SINGLE_MACRO, NULLOPERATOR, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
     EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
-    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT, PROPERTY_STMT
+    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT, PROPERTY_STMT, ANNOTATION_DEFN
 };
 
 enum CALL_TYPE { NOCALL, CALL, MACRO };
@@ -546,6 +546,7 @@ tokens {
     SINTERFACE;
     SSYNCHRONIZED_STATEMENT;
     SANNOTATION;
+    SANNOTATION_DEFN;
     SSTATIC_BLOCK;
 
     // C#
@@ -886,6 +887,9 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
 
         { stmt_type == UNION_DECL }?
         union_declaration |
+
+        { stmt_type == ANNOTATION_DEFN }?
+        annotation_definition |
 
         { stmt_type == ACCESS_REGION }?
         access_specifier_region |
@@ -2928,7 +2932,7 @@ interface_definition[] { ENTRY_DEBUG } :
             // java interfaces end at the end of the block
             setMode(MODE_END_AT_BLOCK);
         }
-        class_preamble (interface_annotation | INTERFACE) class_header lcurly
+        class_preamble INTERFACE class_header lcurly
 ;
 
 // match struct declaration
@@ -2966,6 +2970,20 @@ union_declaration[] { ENTRY_DEBUG } :
         }
         class_preamble UNION class_post class_header
         (options { greedy = true; } : COMMA class_post class_header)*
+;
+
+annotation_definition[] { ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS);
+
+            // start the interface definition
+            startElement(SANNOTATION_DEFN);
+
+            // java interfaces end at the end of the block
+            setMode(MODE_END_AT_BLOCK);
+        }
+        class_preamble ATSIGN INTERFACE class_header lcurly
 ;
 
 // default private/public section for C++
@@ -3973,12 +3991,12 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                                                || (!keyword_name_token_set.member(next_token())
                                                 || (next_token() == LBRACKET && next_token_two() == LBRACKET)))
                                                }?
-                (CLASS               set_type[type, CLASS_DECL]     |
-                 CXX_CLASS           set_type[type, CLASS_DECL]     |
-                 STRUCT              set_type[type, STRUCT_DECL]    |
-                 UNION               set_type[type, UNION_DECL]     |
-                 INTERFACE           set_type[type, INTERFACE_DECL] |
-                 ATSIGN INTERFACE set_type[type, INTERFACE_DECL])
+                (CLASS               set_type[type, CLASS_DECL]       |
+                 CXX_CLASS           set_type[type, CLASS_DECL]       |
+                 STRUCT              set_type[type, STRUCT_DECL]      |
+                 UNION               set_type[type, UNION_DECL]       |
+                 INTERFACE           set_type[type, INTERFACE_DECL]   |
+                 ATSIGN INTERFACE    set_type[type, ANNOTATION_DEFN])
                 set_bool[lcurly, LA(1) == LCURLY]
                 (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
@@ -5532,16 +5550,6 @@ destructor_header[] { ENTRY_DEBUG } :
         {
             setMode(MODE_FUNCTION_TAIL);
         }
-;
-
-// @interface
-interface_annotation[] { LightweightElement element(this); ENTRY_DEBUG } :
-        {
-            // start the function call element
-            startElement(SANNOTATION);
-        }
-        ATSIGN INTERFACE
-
 ;
 
 // Java annotation

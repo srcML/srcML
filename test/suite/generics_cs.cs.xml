@@ -2,11 +2,11 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="generics" filename="generics_cs">
 
 <unit>
-<class type="interface">interface <name><name>I</name><argument_list type="template">&lt;<argument><specifier>in</specifier> <name>A</name></argument>&gt;</argument_list></name> <block>{}</block></class>
+<interface>interface <name><name>I</name><argument_list type="template">&lt;<argument><specifier>in</specifier> <name>A</name></argument>&gt;</argument_list></name> <block>{}</block></interface>
 </unit>
 
 <unit>
-<class type="interface">interface <name><name>I</name><argument_list type="template">&lt;<argument><specifier>out</specifier> <name>A</name></argument>&gt;</argument_list></name> <block>{}</block></class>
+<interface>interface <name><name>I</name><argument_list type="template">&lt;<argument><specifier>out</specifier> <name>A</name></argument>&gt;</argument_list></name> <block>{}</block></interface>
 </unit>
 
 <unit>
