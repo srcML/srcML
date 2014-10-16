@@ -51,7 +51,6 @@ enum {
     PROCESSBOOLEAN,
     PROCESSNULL,
     PROCESSCOMPLEX,
-    PROCESSINTERFACE,
     PROCESSESCAPE,
     PROCESSTYPEPREV,
     PROCESSSTATICASSERT,
@@ -90,7 +89,6 @@ srcMLOutput::PROCESS_PTR srcMLOutput::num2process[] = {
     &srcMLOutput::processBoolean,
     &srcMLOutput::processNull,
     &srcMLOutput::processComplex,
-    &srcMLOutput::processInterface,
     &srcMLOutput::processEscape,
     &srcMLOutput::processTypePrevious,
     &srcMLOutput::processStaticAssert,
@@ -154,7 +152,8 @@ namespace {
     ELEMENT_MAP(SBOOLEAN, PROCESSBOOLEAN)
     ELEMENT_MAP(SNULL, PROCESSNULL)
     ELEMENT_MAP(SCOMPLEX, PROCESSCOMPLEX)
-    ELEMENT_MAP(SINTERFACE, PROCESSINTERFACE)
+    ELEMENT_MAP(SINTERFACE, PROCESSTOKEN)
+    ELEMENT_MAP(SANNOTATION_DEFN, PROCESSTOKEN)
     ELEMENT_MAP(CONTROL_CHAR, PROCESSESCAPE)
 
     ELEMENT_MAP(SNOP, PROCESSTOKEN)

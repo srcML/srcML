@@ -287,7 +287,8 @@ namespace {
     ELEMENT_MAP(SPACKAGE,                "package")
     ELEMENT_MAP(SASSERT_STATEMENT,       "assert")
     ELEMENT_MAP(SSYNCHRONIZED_STATEMENT, "synchronized")
-    ELEMENT_MAP(SINTERFACE,              "class")
+    ELEMENT_MAP(SINTERFACE,              "interface")
+    ELEMENT_MAP(SANNOTATION_DEFN,        "annotation_defn")
     ELEMENT_MAP(SSTATIC_BLOCK,           "static")
 
     // special characters
@@ -1556,17 +1557,6 @@ void srcMLOutput::processMarker(const antlr::RefToken& token) {
 }
 
 #endif
-
-/**
- * processInterface
- * @param token token to output as class interface
- *
- * Callback to process/output token as class interface.
- */
-void srcMLOutput::processInterface(const antlr::RefToken& token) {
-
-    processOptional(token, "type", "interface");
-}
 
 /**
  * outputToken
