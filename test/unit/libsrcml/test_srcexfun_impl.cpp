@@ -820,7 +820,13 @@ int main() {
     run_xpath_test("is_inline/is_inline.c", tempXPath, 2);
     run_xpath_test("is_inline/is_inline.cpp", tempXPath, 1);
 
-
+    // is_restrict
+    tempXPath =
+        "//src:decl[src:is_restrict()]"
+        "| //src:decl_stmt[src:is_restrict()]"
+    ;
+    run_xpath_test("is_restrict/is_restrict.c", tempXPath, 2);
+    run_xpath_test("is_restrict/is_restrict.cpp", tempXPath, 2);
 
 
 
