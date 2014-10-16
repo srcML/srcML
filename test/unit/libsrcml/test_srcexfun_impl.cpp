@@ -1045,6 +1045,17 @@ int main() {
     ;
     run_xpath_test("is_noexcept/is_noexcept.cpp", tempXPath, 4);
 
+    // is_reference
+    tempXPath = 
+        "//src:argument[src:is_reference()]"
+        "| //src:param[src:is_reference()]"
+        "| //src:decl[src:is_reference()]"
+        "| //src:decl_stmt[src:is_reference()]"
+        "| //src:type[src:is_reference()]"
+    ;
+    run_xpath_test("is_reference/is_reference.cpp", tempXPath, 7);
+    run_xpath_test("is_reference/is_reference.cs", tempXPath, 6);
+
 
 
 
