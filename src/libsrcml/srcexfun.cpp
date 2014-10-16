@@ -381,9 +381,9 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "has_auto_specifier", "(src:decl/src:type/src:specifier[.='auto']) or (src:type/src:specifier[.='auto'])");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_extern", "parent::src:extern");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_extern_block", "parent::src:extern");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_overridable", "(parent::src:extern) or (src:type/src:specifier[.='extern']) or (src:decl/src:type/src:specifier[.='extern'])");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_extern", "(parent::src:extern) or (src:type/src:specifier[.='extern']) or (src:decl/src:type/src:specifier[.='extern'])");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "has_deduced_type", "src:type/src:name[.='auto'] or src:decl/src:type/src:name[.='auto'] or src:type/src:name[.='var'] or src:decl/src:type/src:name[.='var']");
 
