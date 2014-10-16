@@ -665,6 +665,44 @@ int main() {
     run_xpath_test("is_final/is_final.java", tempXPath, 4);
 
 
+    // is_synchronized
+    tempXPath = 
+        "//src:function_decl[src:is_synchronized()]"
+        "| //src:function[src:is_synchronized()]"
+    ;
+
+    run_xpath_test("is_synchronized/is_synchronized.java", tempXPath, 2);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // string returnsXPath =
     //     "//src:while[src:is_mutually_exclusive()]"
     //     "| //src:if[src:is_mutually_exclusive()]"
