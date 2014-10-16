@@ -759,6 +759,27 @@ int main() {
     run_xpath_test("is_public/is_public.cs", tempXPath, 17);
     run_xpath_test("is_public/is_public.java", tempXPath, 6);
 
+    // is_internal
+    tempXPath =
+        "//src:function_decl[src:is_internal()]"
+        "| //src:function[src:is_internal()]"
+        "| //src:constructor[src:is_internal()]"
+        "| //src:constructor_decl[src:is_internal()]"
+        "| //src:destructor[src:is_internal()]"
+        "| //src:destructor_decl[src:is_internal()]"
+        "| //src:decl_stmt[src:is_internal()]"
+        "| //src:class[src:is_internal()]"
+        "| //src:class_decl[src:is_internal()]"
+        "| //src:struct[src:is_internal()]"
+        "| //src:struct_decl[src:is_internal()]"
+        "| //src:enum[src:is_internal()]"
+        "| //src:property[src:is_internal()]"
+        "| //src:event[src:is_internal()]"
+        "| //src:using[src:is_internal()]"
+        "| //src:typedef[src:is_internal()]"
+    ;
+    run_xpath_test("is_internal/is_internal.cs", tempXPath, 13);
+
 
 
 
