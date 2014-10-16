@@ -953,8 +953,36 @@ int main() {
     ;
     run_xpath_test("is_bitfield/is_bitfield.cpp", tempXPath, 4);
 
-
-
+    // is_member
+    tempXPath =
+        "//src:typedef[src:is_member()]"
+        "| //src:function[src:is_member()]"
+        "| //src:function_decl[src:is_member()]"
+        "| //src:using[src:is_member()]"
+        "| //src:decl_stmt[src:is_member()]"
+        "| //src:decl[src:is_member()]"
+        "| //src:class[src:is_member()]"
+        "| //src:struct[src:is_member()]"
+        "| //src:enum[src:is_member()]"
+        "| //src:friend[src:is_member()]"
+        "| //src:class_decl[src:is_member()]"
+        "| //src:struct_decl[src:is_member()]"
+        "| //src:union[src:is_member()]"
+        "| //src:union_decl[src:is_member()]"
+        "| //src:public[src:is_member()]"
+        "| //src:private[src:is_member()]"
+        "| //src:protected[src:is_member()]"
+        "| //src:constructor[src:is_member()]"
+        "| //src:constructor_decl[src:is_member()]"
+        "| //src:destructor[src:is_member()]"
+        "| //src:destructor_decl[src:is_member()]"
+        "| //src:event[src:is_member()]"
+        "| //src:property[src:is_member()]"
+    ;
+    run_xpath_test("is_member/is_member.c", tempXPath, 6);
+    run_xpath_test("is_member/is_member.cpp", tempXPath, 21);
+    run_xpath_test("is_member/is_member.cs", tempXPath, 15);
+    run_xpath_test("is_member/is_member.java", tempXPath, 5);
 
 
 
