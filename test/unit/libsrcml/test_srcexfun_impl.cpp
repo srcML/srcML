@@ -996,7 +996,17 @@ int main() {
     run_xpath_test("is_default/is_default.cpp", tempXPath, 3);
     run_xpath_test("is_default/is_default.java", tempXPath, 2);
 
-
+    // is_pointer
+    tempXPath =
+        "//src:function_decl[src:is_pointer()]"
+        "| //src:function[src:is_pointer()]"
+        "| //src:decl_stmt[src:is_pointer()]"
+        "| //src:decl[src:is_pointer()]"
+        "| //src:type[src:is_pointer()]"
+        "| //src:param[src:is_pointer()]"
+        "| //src:argument[src:is_pointer()]"
+    ;
+    run_xpath_test("is_pointer/is_pointer.cpp", tempXPath, 18);
 
 
 

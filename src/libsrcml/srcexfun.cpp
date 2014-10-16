@@ -397,7 +397,12 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_default", "src:specifier[.='default'] | src:type/src:specifier[.='default']");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_pointer", "(name()='decl' and src:type/src:modifier[.='*']) or ((name()='decl_stmt' or name()='param')and src:decl/src:type/src:modifier[.='*']) or (name()='argument' and src:expr/src:modifier[.='*']) or ((name()='type' or name()='name')and src:modifier[.='*']) or (name()='function_decl' and src:modifier[.='*'])");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_pointer",
+    "(self::src:decl and src:type/src:modifier[.='*']) or\
+    ((self::src:decl_stmt or self::src:param) and src:decl/src:type/src:modifier[.='*']) or\
+    (self::src:argument and src:expr/src:modifier[.='*']) or\
+    ((self::src:type or self::src:name)and src:modifier[.='*']) or\
+    (self::src:function_decl and src:modifier[.='*'])");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_parameter_pack", "(name()='decl' and src:type/src:modifier[.='...']) or (name()='param' and ( src:decl/src:type/src:modifier[.='...'] or src:type/src:modifier[.='...'] ) ) or (name()='argument' and src:expr/src:modifier[.='...']) or (name()='type' and src:modifier[.='...'])");
 
