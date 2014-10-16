@@ -673,6 +673,14 @@ int main() {
 
     run_xpath_test("is_synchronized/is_synchronized.java", tempXPath, 2);
 
+    // is_transient
+    tempXPath = 
+        "//src:decl_stmt[src:is_transient()]"
+        "| //src:decl[src:is_transient()]"
+    ;
+
+    run_xpath_test("is_transient/is_transient.java", tempXPath, 2);
+
 
 
 
