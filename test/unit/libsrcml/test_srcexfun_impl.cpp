@@ -796,7 +796,20 @@ int main() {
     run_xpath_test("is_volatile/is_volatile.cs", tempXPath, 4);
     run_xpath_test("is_volatile/is_volatile.java", tempXPath, 3);
 
-
+    // is_const
+    tempXPath =
+        "//src:function_decl[src:is_const()]"
+        "| //src:function[src:is_const()]"
+        "| //src:decl_stmt[src:is_const()]"
+        "| //src:decl[src:is_const()]"
+        "| //src:asm[src:is_const()]"
+        "| //src:using[src:is_const()]"
+        "| //src:type[src:is_const()]"
+        "| //src:typedef[src:is_const()]"
+    ;
+    run_xpath_test("is_const/is_const.c", tempXPath, 3);
+    run_xpath_test("is_const/is_const.cpp", tempXPath, 8);
+    run_xpath_test("is_const/is_const.cs", tempXPath, 4);
 
 
 
