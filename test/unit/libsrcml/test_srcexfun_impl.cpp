@@ -1038,20 +1038,12 @@ int main() {
     run_xpath_test("is_generic/is_generic.cs", tempXPath, 8);
     run_xpath_test("is_generic/is_generic.java", tempXPath, 5);
 
-    // is_aligned
+    // is_noexcept
     tempXPath = 
-        "//src:decl[src:is_aligned()]"
-        "| //src:decl_stmt[src:is_aligned()]"
-        "| //src:type[src:is_aligned()]"
-        "| //src:union[src:is_aligned()]"
-        "| //src:union_decl[src:is_aligned()]"
-        "| //src:class[src:is_aligned()]"
-        "| //src:class_decl[src:is_aligned()]"
-        "| //src:struct[src:is_aligned()]"
-        "| //src:struct_decl[src:is_aligned()]"
+        "//src:function_decl[src:is_noexcept()]"
+        "| //src:function[src:is_noexcept()]"
     ;
-    run_xpath_test("is_aligned/is_aligned.cpp", tempXPath, 4);
-    run_xpath_test("is_aligned/is_aligned.c", tempXPath, 5);
+    run_xpath_test("is_noexcept/is_noexcept.cpp", tempXPath, 4);
 
 
 
