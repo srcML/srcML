@@ -860,7 +860,16 @@ int main() {
     ;
     run_xpath_test("is_constexpr/is_constexpr.cpp", tempXPath, 2);
 
-
+    // is_override
+    tempXPath =
+        "//src:function[src:is_override()]"
+        "| //src:function_decl[src:is_override()]"
+        "| //src:event[src:is_override()]"
+        "| //src:property[src:is_override()]"
+    ;
+    run_xpath_test("is_override/is_override.cpp", tempXPath, 2);
+    run_xpath_test("is_override/is_override.cs", tempXPath, 1);
+    run_xpath_test("is_override/is_override.java", tempXPath, 1);
 
 
 
