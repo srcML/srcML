@@ -836,6 +836,14 @@ int main() {
     run_xpath_test("is_register/is_register.c", tempXPath, 2);
     run_xpath_test("is_register/is_register.cpp", tempXPath, 2);
 
+    // is_mutable
+    tempXPath =
+        "//src:decl[src:is_mutable()]"
+        "| //src:decl_stmt[src:is_mutable()]"
+        "| //src:lambda[src:is_mutable()]"
+    ;
+    run_xpath_test("is_mutable/is_mutable.cpp", tempXPath, 3);
+
 
 
 
