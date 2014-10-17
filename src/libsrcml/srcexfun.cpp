@@ -49,6 +49,8 @@
 #include <libxslt/extensions.h>
 #endif
 
+#include <iostream>
+
 /** @todo these might block treading. */
 /** postion */
 static int Position;
@@ -184,9 +186,12 @@ static void srcMacrosFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
     // evaluate the expression on the given context
     xmlXPathObjectPtr ret = xmlXPathEval(BAD_CAST MACROS[i].expr.c_str(), ctxt->context);
+    CHECK_ERROR;
 
     if (ret) {
         valuePush(ctxt, ret);
+    }else{
+        xmlXPathReturnFalse(ctxt);
     }
 }
 
@@ -333,8 +338,83 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
         "parent::src:static"
     );
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_abstract", "( src:type/src:specifier[.='abstract'] or src:specifier[.='abstract'] or src:literal[@type='number'][.='0'] or src:block[ (src:private | src:protected | src:public)[ (src:function_decl | src:destructor_decl)[ src:literal[@type='number'][.='0'] ] ] ] or ancestor::node()[name()='struct' or name()='class'][1][@type='interface' and not(src:annotation)] or (ancestor::src:event | ancestor::src:property)[src:type/src:specifier[.='abstract']] ) or (@type='interface' and not(src:annotation))");
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_pure_virtual", "( src:type/src:specifier[.='abstract'] or src:specifier[.='abstract'] or src:literal[@type='number'][.='0'] or src:block[ (src:private | src:protected | src:public)[ (src:function_decl | src:destructor_decl)[ src:literal[@type='number'][.='0'] ] ] ] or ancestor::node()[name()='struct' or name()='class'][1][@type='interface' and not(src:annotation)] or (ancestor::src:event | ancestor::src:property)[src:type/src:specifier[.='abstract']] ) or (@type='interface' and not(src:annotation))");
+    char const* const is_abstract_or_is_pure_virtual_xpath =
+    "("
+        "ancestor::src:unit[@language[.=\"C++\"]]"
+        "  and "
+        "("
+            "("
+                "(self::src:destructor_decl or self::src:function_decl) and src:literal[@type='number'][.='0']"
+            ")"
+            "  or  "
+            "("
+                "(self::src:struct or self::src:class or self::src:union) "
+                " and "
+                "src:block["
+                    " (src:private | src:protected | src:public)["
+                        " (src:function_decl | src:destructor_decl)["
+                            "src:literal[@type='number'][.='0'] "
+                        "]"
+                    "]"
+                "]"
+            ")"
+        ")"
+    ")"
+    "   or "
+    "("
+        "ancestor::src:unit[@language[.=\"C#\"]]"
+        "  and "
+        "("
+            "("
+                "(self::src:destructor_decl or self::src:struct or self::src:class or self::src:union)"
+                "  and "
+                "(src:specifier[.='abstract'] or src:type/src:specifier[.='abstract'])"
+            ")"
+            "  or "
+            "("
+                "(self::src:property or self::src:event)"
+                "  and "
+                "src:type/src:specifier[.='abstract']"
+            ")"
+            "  or "
+            "("
+                "(self::src:function_decl)"
+                "  and "
+                "("
+                    "src:type/src:specifier[.='abstract']"
+                    "  or "
+                    "parent::src:block["
+                        "(parent::src:property | parent::src:event)[src:type/src:specifier[.='abstract']]"
+                    "]"
+                ")"
+            ")"
+            "  or "
+            "((self::src:property or self::src:event or self::src:function_decl) and parent::src:block/parent::src:interface)"
+            "  or "
+            "self::src::interface"
+        ")"
+    ")"
+    "   or "
+    "("
+        "ancestor::src:unit[@language[.=\"Java\"]]"
+        "  and "
+        "("
+            "self::src:banana"
+        ")"
+    ")"
+    ;
+
+    // std::cout << is_abstract_or_is_pure_virtual_xpath << std::endl;
+    xpathRegisterExtensionFunction(
+        SRCML_SRC_NS_URI,
+        "is_abstract",
+        is_abstract_or_is_pure_virtual_xpath
+    );
+    xpathRegisterExtensionFunction(
+        SRCML_SRC_NS_URI,
+        "is_pure_virtual",
+        is_abstract_or_is_pure_virtual_xpath
+    );
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "has_default_impl", "src:specifier[.='default'] or src:type[src:specifier[.='default']]");
 

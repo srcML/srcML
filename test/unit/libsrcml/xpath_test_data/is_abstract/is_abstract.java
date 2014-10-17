@@ -1,11 +1,11 @@
 abstract class Foo {
-    abstract void derp();
+    abstract void derp1();
 }
 
 interface IFoo {
-    void derp();
+    void derp2();
 }
 
 @interface ClassPreambleAnnotation {
-    void derp();
+    void derp3();
 }
