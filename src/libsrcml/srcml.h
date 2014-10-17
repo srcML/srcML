@@ -388,6 +388,7 @@ __LIBSRCML_DECL struct srcml_unit* srcml_read_unit(struct srcml_archive*);
 
 /* Query options of srcml unit */
 __LIBSRCML_DECL const char* srcml_unit_get_encoding (const struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_revision (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_language (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_filename (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_directory(const struct srcml_unit*);

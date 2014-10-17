@@ -75,7 +75,7 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, 0, std::vec
 #ifdef STATIC_GLOBALS
 static
 #endif
-srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0, 0, 0, 0 };
+srcml_unit global_unit = { &global_archive, 0, 0, 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0, 0, 0, 0 };
 
 /**
  * @var register_languages
