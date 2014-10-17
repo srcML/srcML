@@ -538,7 +538,7 @@ const char* srcml_get_encoding() {
  */
 const char* srcml_get_revision() {
 
-    return srcml_archive_get_encoding(&global_archive);
+    return srcml_archive_get_revision(&global_archive);
 
 }
 
