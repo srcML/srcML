@@ -846,7 +846,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
                             const char* hash,
                             const std::vector<std::string> & attributes,
                             bool output_macrolist) {
-std::vector<std::string>()
+
     const char * prefix = num2prefix[0].c_str();
     std::string maintag = prefix ? prefix : "";
     if (!maintag.empty())
