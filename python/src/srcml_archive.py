@@ -143,6 +143,10 @@ libsrcml.srcml_archive_get_src_encoding.argtypes = [c_void_p]
 libsrcml.srcml_archive_get_encoding.restype = c_char_p
 libsrcml.srcml_archive_get_encoding.argtypes = [c_void_p]
 
+# const char* srcml_archive_get_revision (const struct srcml_archive*);
+libsrcml.srcml_archive_get_revision.restype = c_char_p
+libsrcml.srcml_archive_get_revision.argtypes = [c_void_p]
+
 # const char* srcml_archive_get_language (const struct srcml_archive*);
 libsrcml.srcml_archive_get_language.restype = c_char_p
 libsrcml.srcml_archive_get_language.argtypes = [c_void_p]
@@ -382,6 +386,9 @@ class srcml_archive :
 
     def get_encoding(self) :
         return libsrcml.srcml_archive_get_encoding(self.archive)
+
+    def get_revision(self) :
+        return libsrcml.srcml_archive_get_revision(self.archive)
 
     def get_language(self) :
         return libsrcml.srcml_archive_get_language(self.archive)
