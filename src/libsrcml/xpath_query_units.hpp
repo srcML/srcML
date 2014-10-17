@@ -222,7 +222,7 @@ public :
 
         for (unsigned int i = 0; prefixes[i] != 0; i += 2){
             if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1) {
-                fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "srcml2src", prefixes[i + 1], prefixes[i]);
+                fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefixes[i + 1], prefixes[i]);
                 exit(1);
             }
         }
@@ -254,7 +254,7 @@ public :
                 // register exslt functions for XPath usage
                 if (exsltDateXpathCtxtRegister(context, BAD_CAST "date") == -1) {
                     fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-                            "srcml2src", "date");
+                            "libsrcml", "date");
                 }
             }
 
@@ -263,7 +263,7 @@ public :
             if (dlerror() == NULL)  {
                 if (exsltMathXpathCtxtRegister(context, BAD_CAST "math") == -1) {
                     fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-                            "srcml2src", "math");
+                            "libsrcml", "math");
                 }
 
             }
@@ -274,7 +274,7 @@ public :
 
                 if (exsltSetsXpathCtxtRegister(context, BAD_CAST "set") == -1) {
                     fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-                            "srcml2src", "set");
+                            "libsrcml", "set");
                 }
 
             }
@@ -285,7 +285,7 @@ public :
 
                 if (exsltStrXpathCtxtRegister(context, BAD_CAST "str") == -1) {
                     fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-                            "srcml2src", "str");
+                            "libsrcml", "str");
                 }
 
             }
@@ -298,7 +298,7 @@ public :
         // evaluate the xpath
         xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
         if (result_nodes == 0) {
-            fprintf(stderr, "%s: Error in executing xpath\n", "srcml2src");
+            fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
             return false;
         }
 
