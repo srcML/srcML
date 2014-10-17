@@ -43,15 +43,15 @@ extern srcml_archive global_archive;
 std::string src = "int a;\n";
 
 std::string asrcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-    "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>\n"
+    "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" filename=\"a.cpp\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>\n"
     "</unit>\n";
 
 std::string srcml_c = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-    "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" filename=\"a.cpp\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>\n"
+    "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\" filename=\"a.cpp\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>\n"
     "</unit>\n";
 
 std::string srcml_full = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-    "<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"dir\" filename=\"file\" version=\"1\"><s:decl_stmt><s:decl><s:type><s:name>int</s:name></s:type> <s:name>a</s:name></s:decl>;</s:decl_stmt>\n"
+    "<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" dir=\"dir\" filename=\"file\" version=\"1\"><s:decl_stmt><s:decl><s:type><s:name>int</s:name></s:type> <s:name>a</s:name></s:decl>;</s:decl_stmt>\n"
     "</s:unit>\n";
 
 int main() {
