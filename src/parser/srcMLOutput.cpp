@@ -483,8 +483,11 @@ void srcMLOutput::initWriter() {
     // open the output text writer stream
     xout = xmlNewTextWriter(output_buffer);
     if (!xout) {
+
         fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
-        exit(2);
+        //return SRCML_STATUS_ERROR;
+        /** @todo throw an error or something to better handle this. */
+
     }
 
 }

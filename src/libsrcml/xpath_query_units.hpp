@@ -221,10 +221,14 @@ public :
         };
 
         for (unsigned int i = 0; prefixes[i] != 0; i += 2){
+
             if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1) {
+
                 fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefixes[i + 1], prefixes[i]);
-                exit(1);
+                return SRCML_STATUS_ERROR;
+
             }
+
         }
 
 #if LIBEXSLT_VERSION > 813
