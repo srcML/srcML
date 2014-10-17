@@ -69,7 +69,7 @@ public:
                 int tabsize);
 
     void setOutputBuffer(xmlOutputBufferPtr output_buffer);
-    void initWriter();
+    int initWriter();
     xmlTextWriter * getWriter();
     void setDepth(int thedepth);
 
