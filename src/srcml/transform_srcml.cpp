@@ -27,7 +27,15 @@
 #include <string>
 #include <boost/foreach.hpp>
 
- int apply_xpath(srcml_archive* in_arch, const std::string& transform_input) {
+ int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, const std::pair< boost::optional<std::string>, boost::optional<std::string> >& xpath_support, const std::vector<std::string>& xmlns_prefix) {
+ 	// Check for elemet
+ 	//if (xpath_support.first)
+ 		//return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(), const char* prefix, const char* namespace_uri, const char* element);
+
+ 	// Check for attribute
+ 	//if (xpath_support.second)
+ 		//return srcml_append_transform_xpath_attribute (in_arch, transform_input.c_str(), const char* prefix, const char* namespace_uri, const char* attr_name, const char* attr_value);
+
  	return srcml_append_transform_xpath(in_arch, transform_input.c_str());
  }
  
@@ -93,13 +101,14 @@ void transform_srcml(const srcml_request_t& srcml_request,
             throw status;
 
 		// iterate through all transformations added during cli parsing
+		int xpath_index = -1;
 		BOOST_FOREACH(const std::string& trans, srcml_request.transformations) {
 			std::string protocol;
 			std::string resource;
 			src_prefix_split_uri(trans, protocol, resource);
 
 			if (protocol == "xpath") {
-				if (apply_xpath(in_arch, resource) != SRCML_STATUS_OK)
+				if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support.at(++xpath_index), srcml_request.xmlns_prefix) != SRCML_STATUS_OK)
 					throw status;
 			}
 			else if (protocol == "xslt") {
