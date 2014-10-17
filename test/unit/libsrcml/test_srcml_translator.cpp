@@ -123,14 +123,14 @@ int main() {
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = 0;
 
-        srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0);
+        srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, "archive", 0, 0, 0, attributes, 0, 0);
 
         UTF8CharBuffer * input = new UTF8CharBuffer("a;", 2, "UTF-8", 0);
 
         translator.translate(input);
         translator.close();
 
-        dassert((char *)buffer->content, std::string("<unit language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>\n"));
+        dassert((char *)buffer->content, std::string("<unit revision=\"archive\" language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>\n"));
 
         xmlBufferFree(buffer);
 
@@ -708,6 +708,62 @@ int main() {
         translator.close();
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" foo=\"bar\">\n\n" + "</unit>\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    /*
+
+      add_unit revision
+    */
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL;
+        srcml_archive * archive = srcml_create_archive();
+        archive->revision = "archive";
+        srcml_unit * unit = srcml_create_unit(archive);
+        unit->revision = "unit";
+
+        srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, archive->revision->c_str(), 0, 0, 0, std::vector<std::string>(), 0, 0);
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+        std::string s_before = "<unit xmlns=\"http://www.sdml.info/srcML/src\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"archive\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+
+        translator.add_unit(unit, s_before.c_str());
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "\n" + s + "\n");
+
+        xmlBufferFree(buffer);
+
+    }
+
+    {
+
+        xmlBufferPtr buffer = xmlBufferCreate();
+        xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+        OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL;
+        srcml_archive * archive = srcml_create_archive();
+        archive->revision = "archive";
+        srcml_unit * unit = srcml_create_unit(archive);
+        unit->revision = "unit";
+
+        srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, archive->revision->c_str(), 0, 0, 0, std::vector<std::string>(), 0, 0);
+
+        std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+        std::string s_before = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"unit\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+
+        translator.add_unit(unit, s_before.c_str());
+        translator.add_unit(unit, s_before.c_str());
+        translator.close();
+        std::string result = (const char *)buffer->content;
+        dassert(result, decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"archive\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
         xmlBufferFree(buffer);
 
