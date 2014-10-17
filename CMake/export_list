@@ -119,6 +119,7 @@ _srcml_unit_get_directory
 _srcml_unit_get_encoding
 _srcml_unit_get_filename
 _srcml_unit_get_language
+_srcml_unit_get_revision
 _srcml_unit_get_version
 _srcml_unit_get_timestamp
 _srcml_unit_get_hash

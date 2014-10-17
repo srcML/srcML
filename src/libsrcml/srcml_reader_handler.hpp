@@ -516,6 +516,8 @@ public :
                 srcml_unit_set_hash(unit, value.c_str());
             else if(attribute == "language")
                 srcml_unit_set_language(unit, value.c_str());
+            else if(attribute == "revision")
+                unit->revision = value;
             else if(attribute == "filename")
                 srcml_unit_set_filename(unit, value.c_str());
             else if(attribute == "dir")

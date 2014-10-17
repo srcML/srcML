@@ -105,6 +105,10 @@ libsrcml.srcml_unit_set_hash.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_unit_get_encoding.restype = c_char_p
 libsrcml.srcml_unit_get_encoding.argtypes = [c_void_p]
 
+# const char* srcml_unit_get_revision (const struct srcml_unit*);
+libsrcml.srcml_unit_get_revision.restype = c_char_p
+libsrcml.srcml_unit_get_revision.argtypes = [c_void_p]
+
 # const char* srcml_unit_get_language (const struct srcml_unit*);
 libsrcml.srcml_unit_get_language.restype = c_char_p
 libsrcml.srcml_unit_get_language.argtypes = [c_void_p]
@@ -196,6 +200,9 @@ class srcml_unit :
 
     def get_encoding(self) :
         return libsrcml.srcml_unit_get_encoding(self.unit)
+
+    def get_revision(self) :
+        return libsrcml.srcml_unit_get_revision(self.unit)
 
     def get_language(self) :
         return libsrcml.srcml_unit_get_language(self.unit)

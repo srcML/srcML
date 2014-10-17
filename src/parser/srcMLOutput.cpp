@@ -888,7 +888,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     // list of attributes
     const char* const attrs[][2] = {
 
-        { UNIT_ATTRIBUTE_REVISION, depth == 0 ? revision : 0 },
+        { UNIT_ATTRIBUTE_REVISION, revision },
 
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },
