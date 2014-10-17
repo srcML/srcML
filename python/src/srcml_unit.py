@@ -45,6 +45,34 @@ libsrcml.srcml_parse_unit_fd.argtypes = [c_void_p, c_int]
 libsrcml.srcml_parse_unit_io.restype = c_int
 libsrcml.srcml_parse_unit_io.argtypes = [c_void_p, c_void_p, read_callback_t, close_callback_t]
 
+# int srcml_write_start_unit(struct srcml_unit*);
+libsrcml.srcml_write_start_unit.restype = c_int
+libsrcml.srcml_write_start_unit.argtypes = [c_void_p]
+
+# int srcml_write_end_unit(struct srcml_unit*);
+libsrcml.srcml_write_end_unit.restype = c_int
+libsrcml.srcml_write_end_unit.argtypes = [c_void_p]
+
+# int srcml_write_start_element(struct srcml_unit*, const char * prefix, const char * name, const char * uri);
+libsrcml.srcml_write_start_element.restype = c_int
+libsrcml.srcml_write_start_element.argtypes = [c_void_p, c_char_p, c_char_p, c_char_p]
+
+# int srcml_write_end_element(struct srcml_unit*);
+libsrcml.srcml_write_end_element.restype = c_int
+libsrcml.srcml_write_end_element.argtypes = [c_void_p]
+
+# int srcml_write_namespace(struct srcml_unit*, const char * prefix, const char * uri);
+libsrcml.srcml_write_namespace.restype = c_int
+libsrcml.srcml_write_namespace.argtypes = [c_void_p, c_char_p, c_char_p]
+
+# int srcml_write_attribute(struct srcml_unit*, const char * prefix, const char * name, const char * uri, const char * content);
+libsrcml.srcml_write_attribute.restype = c_int
+libsrcml.srcml_write_attribute.argtypes = [c_void_p, c_char_p, c_char_p, c_char_p, c_char_p]
+
+# int srcml_write_string(struct srcml_unit*, const char * content);
+libsrcml.srcml_write_string.restype = c_int
+libsrcml.srcml_write_string.argtypes = [c_void_p, c_char_p]
+
 # int srcml_unparse_unit_filename(struct srcml_unit*, const char* src_filename);
 libsrcml.srcml_unparse_unit_filename.restype = c_int
 libsrcml.srcml_unparse_unit_filename.argtypes = [c_void_p, c_char_p]
@@ -176,6 +204,27 @@ class srcml_unit :
 
     def unparse_io(self, context, write_callback, close_callback) :
         check_return(libsrcml.srcml_unparse_unit_io(self.unit, context, write_callback, close_callback))
+
+    def write_start_unit(self) :
+        check_return(libsrcml.srcml_write_start_unit(self.unit))
+
+    def write_end_unit(self) :
+        check_return(libsrcml.srcml_write_end_unit(self.unit))
+
+    def write_start_element(self, prefix, name, uri) :
+        check_return(libsrcml.srcml_write_start_element(self.unit, prefix, name, uri))
+
+    def write_end_element(self) :
+        check_return(libsrcml.srcml_write_end_element(self.unit))
+
+    def write_namespace(self, prefix, uri) :
+        check_return(libsrcml.srcml_write_namespace(self.unit, prefix, uri))
+
+    def write_attribute(self, prefix, name, uri, content) :
+        check_return(libsrcml.srcml_write_attribute(self.unit, prefix, name, uri, content))
+
+    def write_string(self, content) :
+        check_return(libsrcml.srcml_write_string(self.unit, content))
 
     def set_encoding(self, encoding) :
         check_return(libsrcml.srcml_unit_set_encoding(self.unit, encoding))

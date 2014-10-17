@@ -215,34 +215,6 @@ libsrcml.srcml_archive_check_extension.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_write_unit.restype = c_int
 libsrcml.srcml_write_unit.argtypes = [c_void_p, c_void_p]
 
-# int srcml_write_start_unit(struct srcml_archive*, const struct srcml_unit*);
-libsrcml.srcml_write_start_unit.restype = c_int
-libsrcml.srcml_write_start_unit.argtypes = [c_void_p, c_void_p]
-
-# int srcml_write_end_unit(struct srcml_archive*);
-libsrcml.srcml_write_end_unit.restype = c_int
-libsrcml.srcml_write_end_unit.argtypes = [c_void_p]
-
-# int srcml_write_start_element(struct srcml_archive*, const char * prefix, const char * name, const char * uri);
-libsrcml.srcml_write_start_element.restype = c_int
-libsrcml.srcml_write_start_element.argtypes = [c_void_p, c_char_p, c_char_p, c_char_p]
-
-# int srcml_write_end_element(struct srcml_archive*);
-libsrcml.srcml_write_end_element.restype = c_int
-libsrcml.srcml_write_end_element.argtypes = [c_void_p]
-
-# int srcml_write_namespace(struct srcml_archive*, const char * prefix, const char * uri);
-libsrcml.srcml_write_namespace.restype = c_int
-libsrcml.srcml_write_namespace.argtypes = [c_void_p, c_char_p, c_char_p]
-
-# int srcml_write_attribute(struct srcml_archive*, const char * prefix, const char * name, const char * uri, const char * content);
-libsrcml.srcml_write_attribute.restype = c_int
-libsrcml.srcml_write_attribute.argtypes = [c_void_p, c_char_p, c_char_p, c_char_p, c_char_p]
-
-# int srcml_write_string(struct srcml_archive*, const char * content);
-libsrcml.srcml_write_string.restype = c_int
-libsrcml.srcml_write_string.argtypes = [c_void_p, c_char_p]
-
 # struct srcml_unit* srcml_read_unit(struct srcml_archive*);
 libsrcml.srcml_read_unit.restype = c_void_p
 libsrcml.srcml_read_unit.argtypes = [c_void_p]
@@ -443,27 +415,6 @@ class srcml_archive :
 
     def write_unit(self, unit) :
         check_return(libsrcml.srcml_write_unit(self.archive, unit.unit))
-
-    def write_start_unit(self, unit) :
-        check_return(libsrcml.srcml_write_start_unit(self.archive, unit.unit))
-
-    def write_end_unit(self) :
-        check_return(libsrcml.srcml_write_end_unit(self.archive))
-
-    def write_start_element(self, prefix, name, uri) :
-        check_return(libsrcml.srcml_write_start_element(self.archive, prefix, name, uri))
-
-    def write_end_element(self) :
-        check_return(libsrcml.srcml_write_end_element(self.archive))
-
-    def write_namespace(self, prefix, uri) :
-        check_return(libsrcml.srcml_write_namespace(self.archive, prefix, uri))
-
-    def write_attribute(self, prefix, name, uri, content) :
-        check_return(libsrcml.srcml_write_attribute(self.archive, prefix, name, uri, content))
-
-    def write_string(self, content) :
-        check_return(libsrcml.srcml_write_string(self.archive, content))
 
     def read_unit(self) :
         unit = libsrcml.srcml_read_unit(self.archive)
