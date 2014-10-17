@@ -200,6 +200,8 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
     }
 
     if(!xpathObj->nodesetval) {
+        cout.write(archiveBuffer, archiveBufferSize);
+        cout << endl << endl << endl;
         throw std::runtime_error("Didn't receive nodesetval");
     }
     int totalResultCount = xpathObj->nodesetval->nodeNr;
