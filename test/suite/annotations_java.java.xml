@@ -7,8 +7,8 @@
 </unit>
 
 <unit>
-<class type="interface"><specifier>public</specifier> <annotation>@interface</annotation> <name>Twizzle</name> <block>{
-  }</block></class>
+<annotation_defn><specifier>public</specifier> @interface <name>Twizzle</name> <block>{
+  }</block></annotation_defn>
 </unit>
 
 <unit>
@@ -27,10 +27,10 @@
 </unit>
 
 <unit>
-<class type="interface"><specifier>public</specifier> <annotation>@interface</annotation> <name>Author</name> <block>{
+<annotation_defn><specifier>public</specifier> @interface <name>Author</name> <block>{
     <function_decl><type><name>String</name></type> <name>first</name><parameter_list>()</parameter_list>;</function_decl>
     <function_decl><type><name>String</name></type> <name>last</name><parameter_list>()</parameter_list>;</function_decl>
-  }</block></class>
+  }</block></annotation_defn>
 </unit>
 
 <unit>
@@ -52,9 +52,9 @@ class <name>Person</name> <super><implements>implements <name>Serializable</name
 </unit>
 
 <unit>
-<class type="interface"><specifier>public</specifier> <annotation>@interface</annotation> <name>Edible</name> <block>{
+<annotation_defn><specifier>public</specifier> @interface <name>Edible</name> <block>{
 <function_decl><type><name>boolean</name></type> <name>value</name><parameter_list>()</parameter_list> <default>default <init><expr><literal type="boolean">false</literal></expr></init></default>;</function_decl>
-}</block></class>
+}</block></annotation_defn>
 </unit>
 
 <unit>
@@ -79,7 +79,7 @@ class <name>Person</name> <super><implements>implements <name>Serializable</name
 </unit>
 
 <unit>
-<class type="interface"><annotation>@interface</annotation> <name>ClassPreamble</name> <block>{}</block></class>
+<annotation_defn>@interface <name>ClassPreamble</name> <block>{}</block></annotation_defn>
 </unit>
 
 </unit>

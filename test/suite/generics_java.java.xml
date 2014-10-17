@@ -54,11 +54,11 @@
 </unit>
 
 <unit>
-<class type="interface"><specifier>public</specifier> interface <name><name>Cage</name><argument_list type="template">&lt;<argument><name>E</name></argument>&gt;</argument_list></name> <block>{}</block></class>
+<interface><specifier>public</specifier> interface <name><name>Cage</name><argument_list type="template">&lt;<argument><name>E</name></argument>&gt;</argument_list></name> <block>{}</block></interface>
 </unit>
 
 <unit>
-<class type="interface"><specifier>public</specifier> interface <name><name>Cage</name><argument_list type="template">&lt;<argument><name>E</name></argument>&gt;</argument_list></name> <super><extends>extends <name><name>Collection</name><argument_list type="template">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></extends></super> <block>{}</block></class>
+<interface><specifier>public</specifier> interface <name><name>Cage</name><argument_list type="template">&lt;<argument><name>E</name></argument>&gt;</argument_list></name> <super><extends>extends <name><name>Collection</name><argument_list type="template">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></extends></super> <block>{}</block></interface>
 </unit>
 
 </unit>
