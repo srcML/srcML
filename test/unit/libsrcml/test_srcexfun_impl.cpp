@@ -34,8 +34,6 @@
 #include <libxml/xpathInternals.h>
 #include <srcmlns.hpp>
 
-
-
 typedef boost::shared_ptr<xmlDoc> xml_doc_shared_ptr_t; 
 
 typedef const char* ConstCharPtr;
