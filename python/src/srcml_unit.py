@@ -205,26 +205,26 @@ class srcml_unit :
     def unparse_io(self, context, write_callback, close_callback) :
         check_return(libsrcml.srcml_unparse_unit_io(self.unit, context, write_callback, close_callback))
 
-    def write_start_unit(self, unit) :
-        check_return(libsrcml.srcml_write_start_unit(self.archive, unit.unit))
+    def write_start_unit(self) :
+        check_return(libsrcml.srcml_write_start_unit(self.unit))
 
     def write_end_unit(self) :
-        check_return(libsrcml.srcml_write_end_unit(self.archive))
+        check_return(libsrcml.srcml_write_end_unit(self.unit))
 
     def write_start_element(self, prefix, name, uri) :
-        check_return(libsrcml.srcml_write_start_element(self.archive, prefix, name, uri))
+        check_return(libsrcml.srcml_write_start_element(self.unit, prefix, name, uri))
 
     def write_end_element(self) :
-        check_return(libsrcml.srcml_write_end_element(self.archive))
+        check_return(libsrcml.srcml_write_end_element(self.unit))
 
     def write_namespace(self, prefix, uri) :
-        check_return(libsrcml.srcml_write_namespace(self.archive, prefix, uri))
+        check_return(libsrcml.srcml_write_namespace(self.unit, prefix, uri))
 
     def write_attribute(self, prefix, name, uri, content) :
-        check_return(libsrcml.srcml_write_attribute(self.archive, prefix, name, uri, content))
+        check_return(libsrcml.srcml_write_attribute(self.unit, prefix, name, uri, content))
 
     def write_string(self, content) :
-        check_return(libsrcml.srcml_write_string(self.archive, content))
+        check_return(libsrcml.srcml_write_string(self.unit, content))
 
     def set_encoding(self, encoding) :
         check_return(libsrcml.srcml_unit_set_encoding(self.unit, encoding))
