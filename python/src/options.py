@@ -31,42 +31,62 @@ SRCML_LANGUAGE_CXX    = "C++"
 SRCML_LANGUAGE_JAVA   = "Java"
 # string for language C#
 SRCML_LANGUAGE_CSHARP = "C#"
+# string for language C#
+SRCML_LANGUAGE_OBJECTIVE_C = "Objective-C"
 # string for language XML
 SRCML_LANGUAGE_XML    = "xml"
 # Create an archive
 SRCML_OPTION_ARCHIVE           = 1<<0
-# Markups literal in special namespace
-SRCML_OPTION_LITERAL           = 1<<1
-# Markups modifiers in special namespace
-SRCML_OPTION_MODIFIER          = 1<<2
-# Markups operator in special namespace
-SRCML_OPTION_OPERATOR          = 1<<3
-# Markups operator in special namespace
-SRCML_OPTION_DEBUG             = 1<<4
 # Include line/column position attributes
-SRCML_OPTION_POSITION          = 1<<5
-# Markup preprocessor elements (default for C, C++)
-SRCML_OPTION_CPP               = 1<<6
+SRCML_OPTION_POSITION          = 1<<1
 # Markup preprocessor elements (default for C, C++, C#)
-SRCML_OPTION_CPP_NOMACRO       = 1<<7
-# Do not issue an XML declaration
-SRCML_OPTION_XML_DECL       = 1<<8
-# Do not include any XML namespace declarations
-SRCML_OPTION_NAMESPACE_DECL = 1<<9
+SRCML_OPTION_CPP_NOMACRO       = 1<<2
+# Markup preprocessor elements (default for C, C++)
+SRCML_OPTION_CPP               = 1<<2 | 1<<3
+# Issue an XML declaration
+SRCML_OPTION_XML_DECL          = 1<<4
+# Include any XML namespace declarations
+SRCML_OPTION_NAMESPACE_DECL    = 1<<5
 # Leave as text preprocessor else parts (default: markup)
-SRCML_OPTION_CPP_TEXT_ELSE     = 1<<10
+SRCML_OPTION_CPP_TEXT_ELSE     = 1<<6
 # Markup preprocessor @code #if 0 @endcode sections (default: leave as text)
-SRCML_OPTION_CPP_MARKUP_IF0    = 1<<11
+SRCML_OPTION_CPP_MARKUP_IF0    = 1<<7
 # Apply transformations to the entire srcML file (default: each unit
-SRCML_OPTION_APPLY_ROOT        = 1<<12
+SRCML_OPTION_APPLY_ROOT        = 1<<8
 # Compress the output file
-SRCML_OPTION_COMPRESS          = 1<<13
+SRCML_OPTION_COMPRESS          = 1<<9
 # Nest if in else if intead of elseif tag
-SRCML_OPTION_NESTIF            = 1<<14
-# Output timestamp attribute on each unit (default: on)
-SRCML_OPTION_TIMESTAMP         = 1<<15
+SRCML_OPTION_NESTIF            = 1<<10
 # Output hash attribute on each unit (default: on)
-SRCML_OPTION_HASH              = 1<<16
+SRCML_OPTION_HASH              = 1<<11
+# Wrap function/classes/etc with templates (default: on)
+SRCML_OPTION_WRAP_TEMPLATE     = 1<<12
+# output is interactive (good for editing applications)
+SRCML_OPTION_INTERACTIVE       = 1<<13
+# Not sure what this used for
+SRCML_OPTION_XPATH_TOTAL       = 1<<14
+# expression mode
+SRCML_OPTION_EXPRESSION        = 1<<15
+# Extra processing of @code#line@endcode for position information
+SRCML_OPTION_LINE              = 1<<16
+# additional cpp:if/cpp:endif checking
+SRCML_OPTION_CPPIF_CHECK       = 1<<17
+# debug time attribute
+SRCML_OPTION_DEBUG_TIMER       = 1<<18
+# turn on optional ternary operator markup
+SRCML_OPTION_TERNARY           = 1<<19
+# turn on optional ternary operator markup
+SRCML_OPTION_PSEUDO_BLOCK      = 1<<20
+# Turn on old optional markup behaviour
+SRCML_OPTION_OPTIONAL_MARKUP   = 1<<21
+# Markups literal in special namespace
+SRCML_OPTION_LITERAL           = 1<<22
+# Markups modifiers in special namespace
+SRCML_OPTION_MODIFIER          = 1<<23
+# Markups operator in special namespace
+SRCML_OPTION_OPERATOR          = 1<<24
+# Markups operator in special namespace
+SRCML_OPTION_DEBUG             = 1<<25
 # Return status indicating no errors
 SRCML_STATUS_OK                   = 0
 # Return status indicating errors occurred
@@ -83,3 +103,5 @@ SRCML_STATUS_IO_ERROR             = 5
 SRCML_STATUS_UNINITIALIZED_UNIT   = 6
 # Return status indicating an unset language
 SRCML_STATUS_UNSET_LANGUAGE       = 7
+# Return status inidicating their are no transformations
+SRCML_STATUS_NO_TRANSFORMATION    = 8
