@@ -27,6 +27,10 @@
 #include <string>
 #include <boost/foreach.hpp>
 
+ int apply_xpath(srcml_archive* in_arch, const std::string& transform_input) {
+ 	return srcml_append_transform_xpath(in_arch, transform_input.c_str());
+ }
+ 
  int apply_xslt(srcml_archive* in_arch, const std::string& transform_input) {
  	// xslt has file input, which may need to be processed
  	int status;
@@ -95,7 +99,8 @@ void transform_srcml(const srcml_request_t& srcml_request,
 			src_prefix_split_uri(trans, protocol, resource);
 
 			if (protocol == "xpath") {
-				srcml_append_transform_xpath(in_arch, resource.c_str());
+				if (apply_xpath(in_arch, resource) != SRCML_STATUS_OK)
+					throw status;
 			}
 			else if (protocol == "xslt") {
 		        if (apply_xslt(in_arch, resource) != SRCML_STATUS_OK)
