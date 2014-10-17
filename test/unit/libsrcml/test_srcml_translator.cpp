@@ -177,7 +177,7 @@ int main() {
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-        std::string s = "<unit language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s.c_str());
         translator.add_unit(unit, s.c_str());
@@ -206,7 +206,7 @@ int main() {
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-        std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s_before = "<unit revision=\"" SRCML_VERSION_STRING "\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s_before.c_str());
@@ -230,7 +230,7 @@ int main() {
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-        std::string s = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s.c_str());
         translator.add_unit(unit, s.c_str());
@@ -254,7 +254,7 @@ int main() {
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-        std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s_before = "<unit revision=\"" SRCML_VERSION_STRING "\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:lit=\"http://www.sdml.info/srcML/literal\" language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s_before.c_str());
@@ -278,7 +278,7 @@ int main() {
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-        std::string s = "<unit language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s.c_str());
         translator.add_unit(unit, s.c_str());
@@ -302,7 +302,7 @@ int main() {
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-        std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s_before = "<unit revision=\"" SRCML_VERSION_STRING "\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:op=\"http://www.sdml.info/srcML/operator\" language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s_before.c_str());
@@ -326,7 +326,7 @@ int main() {
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-        std::string s = "<unit language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s.c_str());
         translator.add_unit(unit, s.c_str());
@@ -350,7 +350,7 @@ int main() {
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-        std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s_before = "<unit revision=\"" SRCML_VERSION_STRING "\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:type=\"http://www.sdml.info/srcML/modifier\" language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s_before.c_str());
@@ -374,7 +374,7 @@ int main() {
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-        std::string s = "<unit language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s.c_str());
         translator.add_unit(unit, s.c_str());
@@ -398,7 +398,7 @@ int main() {
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-        std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s_before = "<unit revision=\"" SRCML_VERSION_STRING "\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:pos=\"http://www.sdml.info/srcML/position\" language=\"C++\" pos:tabs=\"4\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s_before.c_str());
@@ -422,7 +422,7 @@ int main() {
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-        std::string s = "<unit language=\"C++\" pos:tabs=\"4\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" pos:tabs=\"4\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s.c_str());
         translator.add_unit(unit, s.c_str());
@@ -447,7 +447,7 @@ int main() {
         srcml_translator translator(output_buffer, "ISO-8859-1", op, archive->prefixes, archive->namespaces, archive->processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, archive->attributes, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-        std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s_before = "<unit revision=\"" SRCML_VERSION_STRING "\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:foo=\"bar\" language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s_before.c_str());
@@ -472,7 +472,7 @@ int main() {
         srcml_translator translator(output_buffer, "ISO-8859-1", op, archive->prefixes, archive->namespaces, archive->processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, archive->attributes, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-        std::string s = "<unit language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s.c_str());
         translator.add_unit(unit, s.c_str());
@@ -497,7 +497,7 @@ int main() {
         srcml_translator translator(output_buffer, "ISO-8859-1", op, archive->prefixes, archive->namespaces, archive->processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, archive->attributes, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-        std::string s_before = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s_before = "<unit revision=\"" SRCML_VERSION_STRING "\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
         std::string s = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" xmlns:lit=\"http://www.sdml.info/srcML/literal\" xmlns:op=\"http://www.sdml.info/srcML/operator\" xmlns:type=\"http://www.sdml.info/srcML/modifier\" xmlns:pos=\"http://www.sdml.info/srcML/position\" xmlns:foo=\"bar\" language=\"C++\" pos:tabs=\"4\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s_before.c_str());
@@ -522,7 +522,7 @@ int main() {
         srcml_translator translator(output_buffer, "ISO-8859-1", op, archive->prefixes, archive->namespaces, archive->processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, archive->attributes, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
-        std::string s = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" pos:tabs=\"4\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" pos:tabs=\"4\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s.c_str());
         translator.add_unit(unit, s.c_str());
@@ -653,7 +653,7 @@ int main() {
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s_before = "<unit hash=\"\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
-        std::string s = "<unit language=\"C++\" hash=\"0123456789abcdef\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+        std::string s = "<unit revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" hash=\"0123456789abcdef\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
 
         translator.add_unit(unit, s_before.c_str());
         translator.add_unit(unit, s_before.c_str());
