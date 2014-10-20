@@ -1298,6 +1298,63 @@ int main() {
     ;
     run_xpath_test("is_KnR_C/is_KnR_C.c", tempXPath, 1);
 
+    // is_template_parameter
+    tempXPath = 
+        "//src:param[src:is_template_parameter()]"
+        "| //src:argument[src:is_template_parameter()]"
+    ;
+    run_xpath_test("is_template_parameter/is_template_parameter.cpp", tempXPath, 7);
+    run_xpath_test("is_template_parameter/is_template_parameter.cs", tempXPath, 5);
+    run_xpath_test("is_template_parameter/is_template_parameter.java", tempXPath, 4);
+
+    // is_template_parameter_pack
+    tempXPath = 
+        "//src:param[src:is_template_parameter_pack()]"
+    ;
+    run_xpath_test("is_template_parameter_pack/is_template_parameter_pack.cpp", tempXPath, 3);
+
+    // is_template_template_parameter
+    tempXPath = 
+        "//src:param[src:is_template_template_parameter()]"
+    ;
+    run_xpath_test("is_template_template_parameter/is_template_template_parameter.cpp", tempXPath, 1);
+
+    // is_template
+    tempXPath = 
+        "//src:class[src:is_template()]"
+        "| //src:class_decl[src:is_template()]"
+        "| //src:union[src:is_template()]"
+        "| //src:union_decl[src:is_template()]"
+        "| //src:struct[src:is_template()]"
+        "| //src:struct_decl[src:is_template()]"
+        "| //src:decl[src:is_template()]"
+        "| //src:decl_stmt[src:is_template()]"
+        "| //src:function[src:is_template()]"
+        "| //src:function_decl[src:is_template()]"
+        "| //src:constructor[src:is_template()]"
+        "| //src:constructor_decl[src:is_template()]"
+        "| //src:destructor[src:is_template()]"
+        "| //src:destructor_decl[src:is_template()]"
+        "| //src:call[src:is_template()]"
+        "| //src:name[src:is_template()]"
+        "| //src:type[src:is_template()]"
+        "| //src:param[src:is_template()]"
+        "| //src:argument[src:is_template()]"
+    ;
+    run_xpath_test("is_template/is_template.cpp", tempXPath, 11);
+    run_xpath_test("is_template/is_template.cs", tempXPath, 12);
+    run_xpath_test("is_template/is_template.java", tempXPath, 6);
+
+    // is_default_parameter
+    tempXPath = 
+        "//src:param[src:is_default_parameter()]"
+    ;
+    run_xpath_test("is_default_parameter/is_default_parameter.c", tempXPath, 2);
+    run_xpath_test("is_default_parameter/is_default_parameter.cpp", tempXPath, 1);
+    run_xpath_test("is_default_parameter/is_default_parameter.cs", tempXPath, 0);
+
+
+
     // Not implemented yet!
     // // has_friends
     // tempXPath = 
@@ -1309,6 +1366,8 @@ int main() {
     //     "| //src:protected[src:has_friends()]"
     // ;
     // run_xpath_test("has_friends/has_friends.cpp", tempXPath, 6);
+
+
 
 
     xmlCleanupParser();
