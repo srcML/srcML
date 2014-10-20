@@ -75,12 +75,17 @@ enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
     /** the xpath expression */
     const char * str;
 
-    /** the optional attribute prefix */
+    /** the optional element prefix */
     const char * prefix;
-    /** the attribute uri */
+    /** the element uri */
     const char * uri;
     /** the tag name */
     const char * element;
+
+    /** the optional attribute prefix */
+    const char * attr_prefix;
+    /** the attribute uri */
+    const char * attr_uri;
     /** the attribute name */
     const char * attr_name;
     /** the optional attribute value */

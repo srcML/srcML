@@ -113,12 +113,14 @@ int srcml_append_transform_xpath_attribute (struct srcml_archive* archive, const
  */
 int srcml_append_transform_xpath_element (struct srcml_archive* archive, const char* xpath_string,
                                                             const char* prefix, const char* namespace_uri,
-                                                            const char* element) {
+                                                            const char* element
+                                                            const char* attr_prefix, const char* attr_namespace_uri,
+                                                            const char* attr_name, const char* attr_value) {
 
     if(archive == NULL || xpath_string == 0 || element == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    struct xpath_arguments arguments = { xpath_string, prefix, namespace_uri, element, 0, 0 };
+    struct xpath_arguments arguments = { xpath_string, prefix, namespace_uri, element, attr_name, attr_value };
 
     transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
     archive->transformations.push_back(tran);
