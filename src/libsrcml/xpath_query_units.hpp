@@ -174,6 +174,48 @@ public :
     }
 
     /**
+     */
+    void append_attribute_to_node(xmlNodePtr node, const char * attr_prefix, const char * attr_uri) {
+
+           // set up inserted attribute
+        xmlAttrPtr result_attr = (xmlAttrPtr)xmlMalloc((sizeof(xmlAttr)));
+        memset(result_attr, 0, sizeof(xmlAttr));
+        result_attr->type = XML_ATTRIBUTE_NODE;
+        result_attr->name = (const xmlChar *)strdup(attr_name);
+
+        // set up attribute value
+        xmlNodePtr attr_value_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
+        memset(attr_value_node, 0, sizeof(xmlNode));                    
+        attr_value_node->type = XML_TEXT_NODE;
+        attr_value_node->content = (xmlChar *)strdup(attr_value);
+        result_attr->children = attr_value_node;
+
+        result_attr->parent = node;
+
+        // place as last attribute
+        xmlAttrPtr last_attr = node->properties;
+        for(; last_attr && last_attr->next; last_attr = last_attr->next)
+            ;
+        result_attr->prev = last_attr;
+
+        result_attr->doc = node->doc;
+
+        // set up namespace
+        xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
+        memset(ns, 0, sizeof(xmlNs));
+        ns->type = XML_NAMESPACE_DECL;
+        ns->href = attr_uri ? (const xmlChar *)strdup(attr_uri) : 0;
+        ns->prefix = attr_prefix ? (const xmlChar *)strdup(attr_prefix) : 0;
+        result_attr->ns = ns;
+
+        if(last_attr)
+            last_attr->next = result_attr;
+        else
+            node->properties = result_attr;
+
+    }
+
+    /**
      * start_output
      *
      * Create the output buffer and setup XPath.
@@ -359,7 +401,6 @@ public :
 
                 }
 
-
                 if(attr_uri) {
 
                     found_ns = false;
@@ -453,6 +494,7 @@ public :
                     element_node->type = XML_ELEMENT_NODE;
                     element_node->name = (xmlChar *)strdup(element);
 
+                    if(attr_name) append_attribute_to_node(element_node, attr_uri ? attr_prefix : prefix, attr_uri ? attr_uri : uri);
 
                     if(a_node != onode) {                    
 
@@ -528,41 +570,7 @@ public :
 
                     onode = result_nodes->nodesetval->nodeTab[i];
 
-                    // set up inserted attribute
-                    xmlAttrPtr result_attr = (xmlAttrPtr)xmlMalloc((sizeof(xmlAttr)));
-                    memset(result_attr, 0, sizeof(xmlAttr));
-                    result_attr->type = XML_ATTRIBUTE_NODE;
-                    result_attr->name = (const xmlChar *)strdup(attr_name);
-
-                    // set up attribute value
-                    xmlNodePtr attr_value_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
-                    memset(attr_value_node, 0, sizeof(xmlNode));                    
-                    attr_value_node->type = XML_TEXT_NODE;
-                    attr_value_node->content = (xmlChar *)strdup(attr_value);
-                    result_attr->children = attr_value_node;
-
-                    result_attr->parent = onode;
-
-                    // place as last attribute
-                    xmlAttrPtr last_attr = onode->properties;
-                    for(; last_attr && last_attr->next; last_attr = last_attr->next)
-                        ;
-                    result_attr->prev = last_attr;
-
-                    result_attr->doc = onode->doc;
-
-                    // set up namespace
-                    xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
-                    memset(ns, 0, sizeof(xmlNs));
-                    ns->type = XML_NAMESPACE_DECL;
-                    ns->href = attr_uri ? (const xmlChar *)strdup(attr_uri) : 0;
-                    ns->prefix = attr_prefix ? (const xmlChar *)strdup(attr_prefix) : 0;
-                    result_attr->ns = ns;
-
-                    if(last_attr)
-                        last_attr->next = result_attr;
-                    else
-                        onode->properties = result_attr;
+                    append_attribute_to_node(onode, attr_prefix, attr_uri);
 
                 }
 
