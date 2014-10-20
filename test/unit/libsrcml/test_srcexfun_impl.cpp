@@ -1913,6 +1913,47 @@ int main() {
     ;
     run_xpath_test("is_enum_class/is_enum_class.cpp", tempXPath, 2);
 
+    // is_interface
+    tempXPath = 
+        "//src:*[src:is_interface()]"
+    ;
+    run_xpath_test("is_interface/is_interface.cs", tempXPath, 1);
+    run_xpath_test("is_interface/is_interface.java", tempXPath, 1);
+
+    // is_partial
+    tempXPath = 
+        "//src:*[src:is_partial()]"
+    ;
+    run_xpath_test("is_partial/is_partial.cs", tempXPath, 2);
+
+    // is_struct
+    tempXPath = 
+        "//src:*[src:is_struct()]"
+    ;
+    run_xpath_test("is_struct/is_struct.c", tempXPath, 2);
+    run_xpath_test("is_struct/is_struct.cpp", tempXPath, 2);
+    run_xpath_test("is_struct/is_struct.cs", tempXPath, 2);
+
+    // is_union
+    tempXPath = 
+        "//src:*[src:is_union()]"
+    ;
+    run_xpath_test("is_union/is_union.c", tempXPath, 2);
+    run_xpath_test("is_union/is_union.cpp", tempXPath, 2);
+
+    // is_delegate_type
+    tempXPath = 
+        "//src:*[src:is_delegate_type()]"
+    ;
+    run_xpath_test("is_delegate_type/is_delegate_type.cs", tempXPath, 1);
+
+    // is_annotation
+    tempXPath = 
+        "//src:*[src:is_annotation()]"
+    ;
+    run_xpath_test("is_annotation/is_annotation.java", tempXPath, 1);
+
+
     // Not implemented yet!
     // // has_friends
     // tempXPath = 

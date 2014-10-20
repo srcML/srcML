@@ -1464,7 +1464,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_nullable", "src:decl/src:type/src:modifier[.='?'] or src:type/src:modifier[.='?'] or src:modifier[.='?']");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_type_definition", "self::src:class or self::src:union or self::src:struct or self::src:typedef or self::src:using[src:init] or self::src:enum");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_type_definition", "self::src:interface or self::src:class or self::src:union or self::src:struct or self::src:typedef or self::src:using[src:init] or self::src:enum");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_class", "self::src:class[not(@type)] or self::src:class_decl[not(@type)]");
 
@@ -1476,9 +1476,15 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_union", "self::src:union or self::src:union_decl");
 
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_partial", "src:specifier[.='partial']");
+
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_delegate_type", "self::src:function_decl/src:type/src:specifier[.='delegate']");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "ref_qualifiers", "src:ref_qualifier");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_interface", "self::src:interface");
+
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_annotation", "self::src:annotation_defn");
+
+    // xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "ref_qualifiers", "src:ref_qualifier");
 
     // xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "return_type", "src:type/*[ not( self::src:specifier[ .='static' or .='extern' or .='public' or .='internal' or .='protected' or .='private' or .='unsafe' or .='synchronized' or .='partial' or .='inline' or .='constexpr' or .='override' or .='friend' or .='virtual' or .='explicit' or .='implicit' or .='async' or .='new' or .='sealed' or .='final' or .='native' or .='abstract' or .='default' ] or self::src:annotation or self::src:attribute ) ]");
 
