@@ -1407,6 +1407,79 @@ int main() {
     ;
     run_xpath_test("is_lower_bound/is_lower_bound.java", tempXPath, 1);
 
+
+    // is_anonymous
+    tempXPath = 
+        "//src:namespace[src:is_anonymous()]"
+        "| //src:class[src:is_anonymous()]"
+        "| //src:struct[src:is_anonymous()]"
+        "| //src:union[src:is_anonymous()]"
+        "| //src:enum[src:is_anonymous()]"
+        "| //src:decl[src:is_anonymous()]"
+        "| //src:param[src:is_anonymous()]"
+        "| //src:argument[src:is_anonymous()]"
+    ;
+    run_xpath_test("is_anonymous/is_anonymous.c", tempXPath, 7);
+    run_xpath_test("is_anonymous/is_anonymous.cpp", tempXPath, 3);
+    run_xpath_test("is_anonymous/is_anonymous.java", tempXPath, 3);
+
+    // enum_specifies_integer_type
+    tempXPath = 
+        "//src:enum[src:enum_specifies_integer_type()]"
+    ;
+    run_xpath_test("enum_specifies_integer_type/enum_specifies_integer_type.cpp", tempXPath, 1);
+    run_xpath_test("enum_specifies_integer_type/enum_specifies_integer_type.cs", tempXPath, 1);
+
+    // is_complete
+    tempXPath = 
+        "//src:enum[src:is_complete()]"
+        "| //src:class[src:is_complete()]"
+        "| //src:class_decl[src:is_complete()]"
+        "| //src:struct[src:is_complete()]"
+        "| //src:struct_decl[src:is_complete()]"
+        "| //src:union[src:is_complete()]"
+        "| //src:union_decl[src:is_complete()]"
+        "| //src:function[src:is_complete()]"
+        "| //src:function_decl[src:is_complete()]"
+        "| //src:constructor[src:is_complete()]"
+        "| //src:constructor_decl[src:is_complete()]"
+        "| //src:destructor[src:is_complete()]"
+        "| //src:destructor_decl[src:is_complete()]"
+    ;
+    run_xpath_test("is_complete/is_complete.c", tempXPath, 4);
+    run_xpath_test("is_complete/is_complete.cpp", tempXPath, 2);
+    run_xpath_test("is_complete/is_complete.cs", tempXPath, 2);
+
+    // enum_is_scoped
+    tempXPath = 
+        "//src:enum[src:enum_is_scoped()]"
+    ;
+    run_xpath_test("enum_is_scoped/enum_is_scoped.cpp", tempXPath, 8);
+
+    // is_using_access_decl
+    tempXPath = 
+        "//src:using[src:is_using_access_decl()]"
+    ;
+    run_xpath_test("is_using_access_decl/is_using_access_decl.cpp", tempXPath, 2);
+
+    // is_type_alias
+    tempXPath = 
+        "//src:using[src:is_type_alias()]"
+    ;
+    run_xpath_test("is_type_alias/is_type_alias.cpp", tempXPath, 3);
+
+    // is_using_namespace
+    tempXPath = 
+        "//src:using[src:is_using_namespace()]"
+    ;
+    run_xpath_test("is_using_namespace/is_using_namespace.cpp", tempXPath, 2);
+
+    // has_initializers
+    tempXPath = 
+        "//src:constructor[src:has_initializers()]"
+    ;
+    run_xpath_test("has_initializers/has_initializers.cpp", tempXPath, 2);
+
     // Not implemented yet!
     // // has_friends
     // tempXPath = 
