@@ -1145,6 +1145,15 @@ int main() {
     run_xpath_test("accepts_variable_arguments/accepts_variable_arguments_5.cpp", tempXPath, 4);
     run_xpath_test("accepts_variable_arguments/accepts_variable_arguments.java", tempXPath, 4);
 
+
+    // is_new_override
+    tempXPath = 
+        "//src:function[src:is_new_override()]"
+        "| //src:function_decl[src:is_new_override()]"
+    ;
+    run_xpath_test("is_new_override/is_new_override.cs", tempXPath, 2);
+    
+
     xmlCleanupParser();
     // Checking for and displaying failed tests.
     return summaryAndResultsDisplay();
