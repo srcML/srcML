@@ -1188,6 +1188,13 @@ int main() {
     ;
     run_xpath_test("is_yield/is_yield.cs", tempXPath, 2);
 
+
+    // is_extension_method
+    tempXPath = 
+        "//src:function[src:is_extension_method()]"
+        "| //src:function_decl[src:is_extension_method()]"
+    ;
+    run_xpath_test("is_extension_method/is_extension_method.cs", tempXPath, 2);
     xmlCleanupParser();
     // Checking for and displaying failed tests.
     return summaryAndResultsDisplay();
