@@ -1827,6 +1827,50 @@ int main() {
     ;
     run_xpath_test("is_unsigned_shift_operator/is_unsigned_shift_operator.java", tempXPath, 2);
 
+    // is_ranged_for
+    tempXPath = 
+        "//src:for[src:is_ranged_for()]"
+        "| //src:foreach[src:is_ranged_for()]"
+    ;
+    run_xpath_test("is_ranged_for/is_ranged_for.cpp", tempXPath, 1);
+    run_xpath_test("is_ranged_for/is_ranged_for.java", tempXPath, 1);
+
+    // has_default_case
+    tempXPath = 
+        "//src:switch[src:has_default_case()]"
+    ;
+    run_xpath_test("has_default_case/has_default_case.c", tempXPath, 1);
+    run_xpath_test("has_default_case/has_default_case.cpp", tempXPath, 1);
+    run_xpath_test("has_default_case/has_default_case.cs", tempXPath, 1);
+    run_xpath_test("has_default_case/has_default_case.java", tempXPath, 1);
+
+    // is_continue_to_label
+    tempXPath = 
+        "//src:continue[src:is_continue_to_label()]"
+    ;
+    run_xpath_test("is_continue_to_label/is_continue_to_label.java", tempXPath, 1);
+
+    // is_break_to_label
+    tempXPath = 
+        "//src:break[src:is_break_to_label()]"
+    ;
+    run_xpath_test("is_break_to_label/is_break_to_label.java", tempXPath, 1);
+
+    // is_goto_case
+    tempXPath = 
+        "//src:goto[src:is_goto_case()]"
+    ;
+    run_xpath_test("is_goto_case/is_goto_case.cs", tempXPath, 1);
+
+    // is_rethrow
+    tempXPath = 
+        "//src:throw[src:is_rethrow()]"
+    ;
+    run_xpath_test("is_rethrow/is_rethrow.cpp", tempXPath, 1);
+    run_xpath_test("is_rethrow/is_rethrow.cs", tempXPath, 1);
+    run_xpath_test("is_rethrow/is_rethrow.java", tempXPath, 1);
+
+
     // Not implemented yet!
     // // has_friends
     // tempXPath = 
