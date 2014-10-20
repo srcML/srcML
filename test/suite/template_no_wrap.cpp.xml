@@ -149,7 +149,7 @@ struct <name><name>CTest1</name><argument_list type="template">&lt;<argument><ex
 
 <unit>
 <function><template>template<parameter_list>&lt;<param><type><typename>typename</typename><modifier>...</modifier></type> <name>Args</name></param>&gt;</parameter_list></template> <type><specifier>inline</specifier> <name>void</name></type> <name>expand</name><parameter_list>(<param><decl><type><name>Args</name><modifier>&amp;&amp;</modifier><modifier>...</modifier></type> <name>args</name></decl></param>)</parameter_list> <block>{
-  <expr_stmt><expr><call><name>pass</name><argument_list>( <argument><expr><call><name>g</name><argument_list>(<argument><expr><name>args</name></expr></argument>)</argument_list></call>...</expr></argument> )</argument_list></call></expr>;</expr_stmt>
+  <expr_stmt><expr><call><name>pass</name><argument_list>( <argument><expr><call><name>g</name><argument_list>(<argument><expr><name>args</name></expr></argument>)</argument_list></call><operator>...</operator></expr></argument> )</argument_list></call></expr>;</expr_stmt>
 }</block></function>
 </unit>
 
