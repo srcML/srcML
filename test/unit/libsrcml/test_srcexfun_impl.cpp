@@ -1231,6 +1231,14 @@ int main() {
     ;
     run_xpath_test("is_global/is_global.cpp", tempXPath, 25);
 
+    // is_operator
+    tempXPath = 
+        "//src:function[src:is_operator()]"
+        "| //src:function_decl[src:is_operator()]"
+    ;
+    run_xpath_test("is_operator/is_operator.cs", tempXPath, 2);
+    run_xpath_test("is_operator/is_operator.cpp", tempXPath, 2);
+
     xmlCleanupParser();
     // Checking for and displaying failed tests.
     return summaryAndResultsDisplay();
