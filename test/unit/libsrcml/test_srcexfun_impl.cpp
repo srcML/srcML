@@ -1089,9 +1089,24 @@ int main() {
     ;
     run_xpath_test("is_readonly/is_readonly.cs", tempXPath, 3);
 
-    tempXPath =
-        "";
-
+    // is_protected_internal
+    tempXPath = 
+        "//src:class[src:is_protected_internal()]"
+        "| //src:class_decl[src:is_protected_internal()]"
+        "| //src:struct[src:is_protected_internal()]"
+        "| //src:struct_decl[src:is_protected_internal()]"
+        "| //src:function[src:is_protected_internal()]"
+        "| //src:function_decl[src:is_protected_internal()]"
+        "| //src:decl_stmt[src:is_protected_internal()]"
+        "| //src:decl[src:is_protected_internal()]"
+        "| //src:constructor[src:is_protected_internal()]"
+        "| //src:constructor_decl[src:is_protected_internal()]"
+        "| //src:destructor[src:is_protected_internal()]"
+        "| //src:destructor_decl[src:is_protected_internal()]"
+        "| //src:event[src:is_protected_internal()]"
+        "| //src:property[src:is_protected_internal()]"
+    ;
+    run_xpath_test("is_protected_internal/is_protected_internal.cs", tempXPath, 7);
 
     xmlCleanupParser();
     // Checking for and displaying failed tests.
