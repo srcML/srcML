@@ -1480,6 +1480,49 @@ int main() {
     ;
     run_xpath_test("has_initializers/has_initializers.cpp", tempXPath, 2);
 
+
+    // is_converting_constructor
+    tempXPath = 
+        "//src:constructor[src:is_converting_constructor()]"
+        "| //src:constructor_decl[src:is_converting_constructor()]"
+    ;
+    run_xpath_test("is_converting_constructor/is_converting_constructor.cpp", tempXPath, 4);
+
+    // has_local_storage
+    tempXPath = 
+        "//src:decl_stmt[src:has_local_storage()]"
+        "| //src:decl[src:has_local_storage()]"
+        "| //src:type[src:has_local_storage()]"
+        "| //src:param[src:has_local_storage()]"
+    ;
+    run_xpath_test("has_local_storage/has_local_storage.c", tempXPath, 9);
+    run_xpath_test("has_local_storage/has_local_storage.cpp", tempXPath, 9);
+
+    // is_scoped_to_file
+    tempXPath = 
+        "//src:decl_stmt[src:is_scoped_to_file()]"
+        "| //src:using[src:is_scoped_to_file()]"
+        "| //src:class[src:is_scoped_to_file()]"
+        "| //src:class_decl[src:is_scoped_to_file()]"
+        "| //src:struct[src:is_scoped_to_file()]"
+        "| //src:struct_decl[src:is_scoped_to_file()]"
+        "| //src:union[src:is_scoped_to_file()]"
+        "| //src:union_decl[src:is_scoped_to_file()]"
+        "| //src:function[src:is_scoped_to_file()]"
+        "| //src:function_decl[src:is_scoped_to_file()]"
+    ;
+    run_xpath_test("is_scoped_to_file/is_scoped_to_file.c", tempXPath, 3);
+    run_xpath_test("is_scoped_to_file/is_scoped_to_file.cpp", tempXPath, 8);
+
+    // is_single_decl
+    tempXPath = 
+        "//src:decl_stmt[src:is_single_decl()]"
+    ;
+    run_xpath_test("is_single_decl/is_single_decl.c", tempXPath, 1);
+    run_xpath_test("is_single_decl/is_single_decl.cpp", tempXPath, 1);
+    run_xpath_test("is_single_decl/is_single_decl.cs", tempXPath, 1);
+    run_xpath_test("is_single_decl/is_single_decl.java", tempXPath, 1);
+
     // Not implemented yet!
     // // has_friends
     // tempXPath = 
