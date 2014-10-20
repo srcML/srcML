@@ -12,9 +12,9 @@ class Foo {
         set         /* 11 */;
     }
     event EventType foo12; /* 12 */
-    interface Foo14 /* 14 */{ } 
-    class Foo15     /* 15 */{ } 
-    struct Foo16    /* 16 */{ } 
+    interface Foo14 /* 13 */{ } 
+    class Foo15     /* 14 */{ } 
+    struct Foo16    /* 15 */{ } 
 }
 
 class Foo1;
