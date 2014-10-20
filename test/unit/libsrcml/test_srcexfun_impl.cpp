@@ -1213,6 +1213,24 @@ int main() {
     ;
     run_xpath_test("is_extern_c/is_extern_c.cpp", tempXPath, 5);
 
+    // is_global
+    tempXPath = 
+        "//src:function[src:is_global()]"
+        "| //src:function_decl[src:is_global()]"
+        "| //src:decl_stmt[src:is_global()]"
+        "| //src:union[src:is_global()]"
+        "| //src:union_decl[src:is_global()]"
+        "| //src:class[src:is_global()]"
+        "| //src:class_decl[src:is_global()]"
+        "| //src:struct[src:is_global()]"
+        "| //src:struct_decl[src:is_global()]"
+        "| //src:namespace[src:is_global()]"
+        "| //src:using[src:is_global()]"
+        "| //src:typedef[src:is_global()]"
+        "| //src:enum[src:is_global()]"
+    ;
+    run_xpath_test("is_global/is_global.cpp", tempXPath, 25);
+
     xmlCleanupParser();
     // Checking for and displaying failed tests.
     return summaryAndResultsDisplay();
