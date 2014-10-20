@@ -408,7 +408,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "has_default_property_value", "src:default");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_final", "src:specifier[.='final'] or src:decl[src:type[src:specifier[.='final']]] or src:type[src:specifier[.='final']]");
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_sealed", "src:specifier[.='final'] or src:decl[src:type[src:specifier[.='final']]] or src:type[src:specifier[.='final']]");
+    // xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_sealed", "src:specifier[.='final'] or src:decl[src:type[src:specifier[.='final']]] or src:type[src:specifier[.='final']]");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_synchronized", "src:type[src:specifier[.='synchronized']]");
 
@@ -1210,7 +1210,20 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_new_override", "src:type/src:specifier[.='new']");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_sealed", "src:specifier[.='sealed'] or src:type/src:specifier[.='sealed'] or ( ancestor::node()[self::src:property or self::src:event or self::src:class or self::src:struct or self::src:unit][1] [ (self::src:property or self::src:event) and src:type/src:specifier[.='sealed'] ] )");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_sealed",
+        "("
+            "src:specifier[.='sealed']"
+            " or "
+            "src:type/src:specifier[.='sealed']"
+            " or "
+            "("
+                "parent::src:block["
+                    "(parent::src:class | parent::src:struct)[src:specifier[.='sealed']]"
+                    " or "
+                    "(parent::src:event | parent::src:property)[src:type/src:specifier[.='sealed']]"
+                "]"
+            ")"
+        ")");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_async", "src:type/src:specifier[.='async']");
 

@@ -1152,7 +1152,20 @@ int main() {
         "| //src:function_decl[src:is_new_override()]"
     ;
     run_xpath_test("is_new_override/is_new_override.cs", tempXPath, 2);
-    
+
+
+    // is_sealed
+    tempXPath = 
+        "//src:function[src:is_sealed()]"
+        "| //src:function_decl[src:is_sealed()]"
+        "| //src:class[src:is_sealed()]"
+        "| //src:class_decl[src:is_sealed()]"
+        "| //src:struct[src:is_sealed()]"
+        "| //src:struct_decl[src:is_sealed()]"
+        "| //src:event[src:is_sealed()]"
+        "| //src:property[src:is_sealed()]"
+    ;
+    run_xpath_test("is_sealed/is_sealed.cs", tempXPath, 7);
 
     xmlCleanupParser();
     // Checking for and displaying failed tests.
