@@ -1,0 +1,5 @@
+
+@interface x { }
+
+interface x { }
+
