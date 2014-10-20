@@ -478,6 +478,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
                                     iarchive->transformations.at(i).arguments.str,
                                     iarchive->transformations.at(i).arguments.prefix, iarchive->transformations.at(i).arguments.uri,
                                     iarchive->transformations.at(i).arguments.element,
+                                    iarchive->transformations.at(i).arguments.attr_prefix, iarchive->transformations.at(i).arguments.attr_uri,
                                     iarchive->transformations.at(i).arguments.attr_name, iarchive->transformations.at(i).arguments.attr_value,
                                     transform_fd, oarchive->options);
                 break;
