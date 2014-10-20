@@ -1205,6 +1205,14 @@ int main() {
     run_xpath_test("is_main/is_main.cs", tempXPath, 2);
     run_xpath_test("is_main/is_main.java", tempXPath, 1);
 
+    // is_extern_c
+    tempXPath = 
+        "//src:function[src:is_extern_c()]"
+        "| //src:function_decl[src:is_extern_c()]"
+        "| //src:decl_stmt[src:is_extern_c()]"
+    ;
+    run_xpath_test("is_extern_c/is_extern_c.cpp", tempXPath, 5);
+
     xmlCleanupParser();
     // Checking for and displaying failed tests.
     return summaryAndResultsDisplay();

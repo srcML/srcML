@@ -1235,7 +1235,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_main", "( ancestor::src:unit[@language='C#' or @language='Java'] and src:type/src:specifier[.='static'] and ( src:name[.='main'] or src:name[.='Main'] ) ) or ( ancestor::src:unit[@language='C++' or @language='C'] and parent::src:unit and ( src:name[.='main'] or src:name[.='_tmain'] or src:name[.='_Tmain'] ) )");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_extern_c", "ancestor::src:extern[src:literal[.=''C'' or .=''c'' ]]");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_extern_c", "ancestor::src:extern[src:literal[.='\"C\"' or .='\"c\"' ]]");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_global", "parent::src:unit or ( not( ancestor::src:block[ not( parent::src:extern or parent::src:namespace[ not( src:name ) ] ) ] ) )");
 
