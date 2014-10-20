@@ -6972,7 +6972,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR | REF | OUT |
 
             // others are not combined
-            NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA |
+            NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA | DOTDOTDOT |
 
             // Objective-C
             CSPEC | MSPEC |
@@ -7004,7 +7004,7 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
 /** list of operators @todo is this still needed */
 general_operators_list[] { ENTRY_DEBUG } :
         OPERATORS | ASSIGNMENT  | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
-        DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC | BLOCKOP | REF | OUT
+        DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC | BLOCKOP | REF | OUT | DOTDOTDOT
 ;
 
 // mark up )
