@@ -739,29 +739,29 @@ int main() {
     run_xpath_test("is_protected/is_protected.cs", tempXPath, 12);
     run_xpath_test("is_protected/is_protected.java", tempXPath, 6);
 
-
-    // // is_public
-    // tempXPath =
-    //     "//src:function_decl[src:is_public()]"
-    //     "| //src:function[src:is_public()]"
-    //     "| //src:constructor[src:is_public()]"
-    //     "| //src:constructor_decl[src:is_public()]"
-    //     "| //src:destructor[src:is_public()]"
-    //     "| //src:destructor_decl[src:is_public()]"
-    //     "| //src:decl_stmt[src:is_public()]"
-    //     "| //src:class[src:is_public()]"
-    //     "| //src:class_decl[src:is_public()]"
-    //     "| //src:struct[src:is_public()]"
-    //     "| //src:struct_decl[src:is_public()]"
-    //     "| //src:enum[src:is_public()]"
-    //     "| //src:property[src:is_public()]"
-    //     "| //src:event[src:is_public()]"
-    //     "| //src:using[src:is_public()]"
-    //     "| //src:typedef[src:is_public()]"
-    // ;
-    // run_xpath_test("is_public/is_public.cpp", tempXPath, 32);
-    // run_xpath_test("is_public/is_public.cs", tempXPath, 17);
-    // run_xpath_test("is_public/is_public.java", tempXPath, 6);
+    // is_public
+    tempXPath =
+        "//src:function_decl[src:is_public()]"
+        "| //src:function[src:is_public()]"
+        "| //src:constructor[src:is_public()]"
+        "| //src:constructor_decl[src:is_public()]"
+        "| //src:destructor[src:is_public()]"
+        "| //src:destructor_decl[src:is_public()]"
+        "| //src:decl_stmt[src:is_public()]"
+        "| //src:class[src:is_public()]"
+        "| //src:class_decl[src:is_public()]"
+        "| //src:struct[src:is_public()]"
+        "| //src:struct_decl[src:is_public()]"
+        "| //src:enum[src:is_public()]"
+        "| //src:property[src:is_public()]"
+        "| //src:event[src:is_public()]"
+        "| //src:using[src:is_public()]"
+        "| //src:typedef[src:is_public()]"
+        "| //src:interface[src:is_public()]"
+    ;
+    run_xpath_test("is_public/is_public.cpp", tempXPath, 32);
+    run_xpath_test("is_public/is_public.cs", tempXPath, 17);
+    run_xpath_test("is_public/is_public.java", tempXPath, 8);
 
     // // is_internal
     // tempXPath =

@@ -20,3 +20,7 @@ class Employee2
 public interface IEmployee { // 5
     string GetName(); // 6
 }
+
+interface IEmployee2 { // 7
+    string GetName2(); // 8
+}
