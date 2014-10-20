@@ -1565,6 +1565,36 @@ int main() {
     run_xpath_test("defined_event_function/defined_event_function.cs", tempXPath, 3);
 
 
+    // has_add
+    tempXPath = 
+        "//src:event[src:has_add()]"
+    ;
+    run_xpath_test("has_add/has_add.cs", tempXPath, 2);
+
+    // has_remove
+    tempXPath = 
+        "//src:event[src:has_remove()]"
+    ;
+    run_xpath_test("has_remove/has_remove.cs", tempXPath, 2);
+
+    // defined_property_function
+    tempXPath = 
+        "//src:property[src:defined_property_function()]"
+    ;
+    run_xpath_test("defined_property_function/defined_property_function.cs", tempXPath, 3);
+
+    // has_get
+    tempXPath = 
+        "//src:property[src:has_get()]"
+    ;
+    run_xpath_test("has_get/has_get.cs", tempXPath, 2);
+
+    // has_set
+    tempXPath = 
+        "//src:property[src:has_set()]"
+    ;
+    run_xpath_test("has_set/has_set.cs", tempXPath, 2);
+
 
     // Not implemented yet!
     // // has_friends
