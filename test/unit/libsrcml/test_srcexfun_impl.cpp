@@ -1108,6 +1108,16 @@ int main() {
     ;
     run_xpath_test("is_protected_internal/is_protected_internal.cs", tempXPath, 7);
 
+    // is_out_param
+    tempXPath = 
+        "//src:param[src:is_out_param()]"
+        "| //src:decl[src:is_out_param()]"
+        "| //src:type[src:is_out_param()]"
+        "| //src:argument[src:is_out_param()]"
+        "| //src:expr[src:is_out_param()]"
+    ;
+    run_xpath_test("is_out_param/is_out_param.cs", tempXPath, 4);
+
     xmlCleanupParser();
     // Checking for and displaying failed tests.
     return summaryAndResultsDisplay();
