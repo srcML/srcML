@@ -875,18 +875,18 @@ int main() {
     run_xpath_test("is_override/is_override.cs", tempXPath, 1);
     run_xpath_test("is_override/is_override.java", tempXPath, 1);
 
-    // // is_virtual
-    // tempXPath =
-    //     "//src:function[src:is_virtual()]"
-    //     "| //src:function_decl[src:is_virtual()]"
-    //     "| //src:destructor[src:is_virtual()]"
-    //     "| //src:destructor_decl[src:is_virtual()]"
-    //     "| //src:event[src:is_virtual()]"
-    //     "| //src:property[src:is_virtual()]"
-    // ;
-    // run_xpath_test("is_virtual/is_virtual.cpp", tempXPath, 8);
-    // run_xpath_test("is_virtual/is_virtual.cs", tempXPath, 31);
-    // run_xpath_test("is_virtual/is_virtual.java", tempXPath, 2);
+    // is_virtual
+    tempXPath =
+        "//src:function[src:is_virtual()]"
+        "| //src:function_decl[src:is_virtual()]"
+        "| //src:destructor[src:is_virtual()]"
+        "| //src:destructor_decl[src:is_virtual()]"
+        "| //src:event[src:is_virtual()]"
+        "| //src:property[src:is_virtual()]"
+    ;
+    run_xpath_test("is_virtual/is_virtual.cpp", tempXPath, 8);
+    run_xpath_test("is_virtual/is_virtual.cs", tempXPath, 31);
+    run_xpath_test("is_virtual/is_virtual.java", tempXPath, 2);
 
     // // is_overridable
     // tempXPath =
