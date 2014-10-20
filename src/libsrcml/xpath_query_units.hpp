@@ -66,9 +66,9 @@ public :
      * Constructor.
      */
     xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath,
-                      const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_name = 0, const char * attr_value = 0, int fd = 0)
+                      const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_prefix = 0, const char * attr_uri = 0, const char * attr_name = 0, const char * attr_value = 0, int fd = 0)
         : unit_dom(options), options(options), compiled_xpath(compiled_xpath),
-          prefix(prefix), uri(uri), element(element), attr_name(attr_name), attr_value(attr_value),
+          prefix(prefix), uri(uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value),
           total(0), found(false), needroot(true), closetag(false), fd(fd) {
     }
 
@@ -170,6 +170,48 @@ public :
         child_offset_string << child_count;
 
         return child_offset_string.str();
+
+    }
+
+    /**
+     */
+    void append_attribute_to_node(xmlNodePtr node, const char * attr_prefix, const char * attr_uri) {
+
+           // set up inserted attribute
+        xmlAttrPtr result_attr = (xmlAttrPtr)xmlMalloc((sizeof(xmlAttr)));
+        memset(result_attr, 0, sizeof(xmlAttr));
+        result_attr->type = XML_ATTRIBUTE_NODE;
+        result_attr->name = (const xmlChar *)strdup(attr_name);
+
+        // set up attribute value
+        xmlNodePtr attr_value_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
+        memset(attr_value_node, 0, sizeof(xmlNode));                    
+        attr_value_node->type = XML_TEXT_NODE;
+        attr_value_node->content = (xmlChar *)strdup(attr_value);
+        result_attr->children = attr_value_node;
+
+        result_attr->parent = node;
+
+        // place as last attribute
+        xmlAttrPtr last_attr = node->properties;
+        for(; last_attr && last_attr->next; last_attr = last_attr->next)
+            ;
+        result_attr->prev = last_attr;
+
+        result_attr->doc = node->doc;
+
+        // set up namespace
+        xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
+        memset(ns, 0, sizeof(xmlNs));
+        ns->type = XML_NAMESPACE_DECL;
+        ns->href = attr_uri ? (const xmlChar *)strdup(attr_uri) : 0;
+        ns->prefix = attr_prefix ? (const xmlChar *)strdup(attr_prefix) : 0;
+        result_attr->ns = ns;
+
+        if(last_attr)
+            last_attr->next = result_attr;
+        else
+            node->properties = result_attr;
 
     }
 
@@ -331,7 +373,7 @@ public :
 
                 // append namespace for inserted element/attributes
                 std::vector<const xmlChar *> namespaces;
-                namespaces.reserve((root->nb_namespaces + 1) * 2);
+                namespaces.reserve((root->nb_namespaces + 2) * 2);
                 bool found_ns = false;
 
                 for(size_t pos = 0; pos < (size_t)root->nb_namespaces; ++pos) {
@@ -354,6 +396,33 @@ public :
 
                         namespaces.push_back((const xmlChar *)prefix);
                         namespaces.push_back((const xmlChar *)uri);
+
+                    }
+
+                }
+
+                if(attr_uri) {
+
+                    found_ns = false;
+                    for(std::vector<const xmlChar *>::size_type pos = 0; pos < namespaces.size() / 2; ++pos) {
+
+                        if(namespaces[pos * 2 + 1] && strcmp(attr_uri, (const char *)namespaces[pos * 2 + 1]) == 0)
+                            found_ns = true;
+
+                    }
+
+                    if(!found_ns) {
+
+                        for(size_t pos = 0; pos < (size_t)context->nsNr; ++pos)
+                            if(strcmp((const char *)context->namespaces[pos], attr_uri) == 0)
+                                found_ns = true;
+
+                        if(!found_ns) {
+
+                            namespaces.push_back((const xmlChar *)attr_prefix);
+                            namespaces.push_back((const xmlChar *)attr_uri);
+
+                        }
 
                     }
 
@@ -425,6 +494,7 @@ public :
                     element_node->type = XML_ELEMENT_NODE;
                     element_node->name = (xmlChar *)strdup(element);
 
+                    if(attr_name) append_attribute_to_node(element_node, attr_uri ? attr_prefix : prefix, attr_uri ? attr_uri : uri);
 
                     if(a_node != onode) {                    
 
@@ -500,41 +570,7 @@ public :
 
                     onode = result_nodes->nodesetval->nodeTab[i];
 
-                    // set up inserted attribute
-                    xmlAttrPtr result_attr = (xmlAttrPtr)xmlMalloc((sizeof(xmlAttr)));
-                    memset(result_attr, 0, sizeof(xmlAttr));
-                    result_attr->type = XML_ATTRIBUTE_NODE;
-                    result_attr->name = (const xmlChar *)strdup(attr_name);
-
-                    // set up attribute value
-                    xmlNodePtr attr_value_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
-                    memset(attr_value_node, 0, sizeof(xmlNode));                    
-                    attr_value_node->type = XML_TEXT_NODE;
-                    attr_value_node->content = (xmlChar *)strdup(attr_value);
-                    result_attr->children = attr_value_node;
-
-                    result_attr->parent = onode;
-
-                    // place as last attribute
-                    xmlAttrPtr last_attr = onode->properties;
-                    for(; last_attr && last_attr->next; last_attr = last_attr->next)
-                        ;
-                    result_attr->prev = last_attr;
-
-                    result_attr->doc = onode->doc;
-
-                    // set up namespace
-                    xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
-                    memset(ns, 0, sizeof(xmlNs));
-                    ns->type = XML_NAMESPACE_DECL;
-                    ns->href = uri ? (const xmlChar *)strdup(uri) : 0;
-                    ns->prefix = prefix ? (const xmlChar *)strdup(prefix) : 0;
-                    result_attr->ns = ns;
-
-                    if(last_attr)
-                        last_attr->next = result_attr;
-                    else
-                        onode->properties = result_attr;
+                    append_attribute_to_node(onode, attr_prefix, attr_uri);
 
                 }
 
@@ -1074,6 +1110,8 @@ private :
     const char * prefix;
     const char * uri;
     const char * element;
+    const char * attr_prefix;
+    const char * attr_uri;
     const char * attr_name;
     const char * attr_value;
     double total;
