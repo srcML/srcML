@@ -13,10 +13,11 @@ private class Employee2 // 1
     class FooCls2 { } //5
 }
 
-class Employee2
+class Employee2 // 6
 {
 }
 
-interface IEmployee {
+interface IEmployee // 7
+{
     string GetName();
 }
