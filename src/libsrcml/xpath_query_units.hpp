@@ -61,6 +61,13 @@ public :
      * xpath_query_units
      * @param options list of srcML options
      * @param compiled_xpath Combined XPath expression
+     * @param prefix an element namepace prefix
+     * @param uri an element namepace uri
+     * @param element the tag name
+     * @param attr_prefix an attribute namepace prefix
+     * @param attr_uri an attribute namepace uri
+     * @param attr_name the attribute name
+     * @param attr_value the attribute value
      * @param fd file descriptor in which to write
      *
      * Constructor.
@@ -174,6 +181,13 @@ public :
     }
 
     /**
+     * append_attribute_to_node
+     * @param node an xmlNode to append the attribute
+     * @param attr_name the attribute name
+     * @param attr_value the attribute value
+     *
+     * Append an attribute to the given node.  Only the prefix and uri can vary.  The
+     * rest are the same throughout all calls and are part of the class.
      */
     void append_attribute_to_node(xmlNodePtr node, const char * attr_prefix, const char * attr_uri) {
 
