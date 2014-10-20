@@ -1167,6 +1167,14 @@ int main() {
     ;
     run_xpath_test("is_sealed/is_sealed.cs", tempXPath, 7);
 
+    // is_async
+    tempXPath = 
+        "//src:function[src:is_async()]"
+        "| //src:function_decl[src:is_async()]"
+    ;
+    run_xpath_test("is_async/is_async.cs", tempXPath, 2);
+    
+
     xmlCleanupParser();
     // Checking for and displaying failed tests.
     return summaryAndResultsDisplay();
