@@ -1246,6 +1246,95 @@ int main() {
     ;
     run_xpath_test("has_ref_qualifier/has_ref_qualifier.cpp", tempXPath, 6);
 
+    // has_trailing_return_type
+    tempXPath = 
+        "//src:function[src:has_trailing_return_type()]"
+        "| //src:function_decl[src:has_trailing_return_type()]"
+    ;
+    run_xpath_test("has_trailing_return_type/has_trailing_return_type.cpp", tempXPath, 3);
+
+    // is_empty_return
+    tempXPath = 
+        "//src:return[src:is_empty_return()]"
+    ;
+    run_xpath_test("is_empty_return/is_empty_return.cpp", tempXPath, 1);
+
+    // // has_return
+    // tempXPath = 
+    //     "//src:unit[src:has_return()]"
+    //     "| //src:block[src:has_return()]"
+    //     "| //src:function[src:has_return()]"
+    //     "| //src:while[src:has_return()]"
+    //     "| //src:if[src:has_return()]"
+    //     "| //src:then[src:has_return()]"
+    //     "| //src:elseif[src:has_return()]"
+    //     "| //src:else[src:has_return()]"
+    //     "| //src:try[src:has_return()]"
+    //     "| //src:catch[src:has_return()]"
+    //     "| //src:finally[src:has_return()]"
+    //     "| //src:do[src:has_return()]"
+    //     "| //src:for[src:has_return()]"
+    //     "| //src:foreach[src:has_return()]"
+    //     "| //src:switch[src:has_return()]"
+    //     "| //src:lambda[src:has_return()]"
+    //     "| //src:delegate[src:has_return()]"
+    //     "| //src:using_stmt[src:has_return()]"
+    //     "| //src:fixed[src:has_return()]"
+    //     "| //src:lock[src:has_return()]"
+    //     "| //src:synchronized[src:has_return()]"
+    //     "| //src:unsafe[src:has_return()]"
+    //     "| //src:constructor[src:has_return()]"
+    //     "| //src:destructor[src:has_return()]"
+    //     "| //src:delegate[src:has_return()]"
+    //     "| //src:unchecked[src:has_return()]"
+    //     "| //src:checked[src:has_return()]"
+    //     "| //src:static[src:has_return()]"
+    // ;
+    // run_xpath_test("has_return/has_return.cs", tempXPath, 13);
+    // run_xpath_test("has_return/has_return.cs", tempXPath, 11);
+    // run_xpath_test("has_return/has_return.cs", tempXPath, 18);
+    // run_xpath_test("has_return/has_return.cs", tempXPath, 4);
+    // run_xpath_test("has_return/has_return.cpp", tempXPath, 8);
+    // run_xpath_test("has_return/has_return.cpp", tempXPath, 2);
+    // run_xpath_test("has_return/has_return.java", tempXPath, 9);
+    // run_xpath_test("has_return/has_return.java", tempXPath, 16);
+
+    // // has_throw_stmts
+    // tempXPath = 
+    //     "//src:unit[src:has_throw_stmts()]"
+    //     "| //src:block[src:has_throw_stmts()]"
+    //     "| //src:function[src:has_throw_stmts()]"
+    //     "| //src:while[src:has_throw_stmts()]"
+    //     "| //src:if[src:has_throw_stmts()]"
+    //     "| //src:then[src:has_throw_stmts()]"
+    //     "| //src:elseif[src:has_throw_stmts()]"
+    //     "| //src:else[src:has_throw_stmts()]"
+    //     "| //src:try[src:has_throw_stmts()]"
+    //     "| //src:catch[src:has_throw_stmts()]"
+    //     "| //src:finally[src:has_throw_stmts()]"
+    //     "| //src:do[src:has_throw_stmts()]"
+    //     "| //src:for[src:has_throw_stmts()]"
+    //     "| //src:foreach[src:has_throw_stmts()]"
+    //     "| //src:switch[src:has_throw_stmts()]"
+    //     "| //src:lambda[src:has_throw_stmts()]"
+    //     "| //src:delegate[src:has_throw_stmts()]"
+    //     "| //src:using_stmt[src:has_throw_stmts()]"
+    //     "| //src:fixed[src:has_throw_stmts()]"
+    //     "| //src:lock[src:has_throw_stmts()]"
+    //     "| //src:synchronized[src:has_throw_stmts()]"
+    //     "| //src:unsafe[src:has_throw_stmts()]"
+    //     "| //src:constructor[src:has_throw_stmts()]"
+    //     "| //src:destructor[src:has_throw_stmts()]"
+    //     "| //src:delegate[src:has_throw_stmts()]"
+    //     "| //src:unchecked[src:has_throw_stmts()]"
+    //     "| //src:checked[src:has_throw_stmts()]"
+    //     "| //src:static[src:has_throw_stmts()]"
+    // ;
+    // run_xpath_test("has_throw_stmts/has_throw_stmts.cs", tempXPath, 13);
+    // run_xpath_test("has_throw_stmts/has_throw_stmts.cs", tempXPath, 4);
+    // run_xpath_test("has_throw_stmts/has_throw_stmts.cpp", tempXPath, 2);
+    // run_xpath_test("has_throw_stmts/has_throw_stmts.java", tempXPath, 9);
+
     xmlCleanupParser();
     // Checking for and displaying failed tests.
     return summaryAndResultsDisplay();
